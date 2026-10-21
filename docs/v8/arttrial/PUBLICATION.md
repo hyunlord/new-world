@@ -2,9 +2,9 @@
 
 Branch: `v8/art-trial`. Base: `3183e77dfbe6373f1c3d3e0d08a1121fb546b694`. No other branch pushed; no PR or merge.
 
-**Outcome: visual acceptance FAIL; required person coverage PARTIAL. Publication does not certify all original requirements complete.**
+**Outcome: visual acceptance FAIL; required person coverage PARTIAL. Current package:404assets,256/612wardrobe,22/24complete board requests. Publication does not certify all original requirements complete.**
 
-Each listed SHA was pushed and independently returned by `git ls-remote origin v8/art-trial` at that milestone.
+Every recorded SHA was pushed and independently returned by `git ls-remote origin v8/art-trial` at its milestone. Historical records retain their original file lists.
 
 ## Part0 — a799b4bd451fe3f55a7a96321e6e8221caf33a17
 
@@ -130,9 +130,68 @@ Changed paths:
 - `docs/v8/arttrial/visual_scene_round1.json`
 - `docs/v8/arttrial/visual_scene_round2.json`
 
-## Part5 report commit
+## Part5 — caf2557916c2fa35be47d492d051d87116204343
 
-This document is included in the Part5 report commit, so its own resulting SHA cannot be embedded in its content. The final user report and external `preflight/publication.json` contain the observed Part5 SHA and final remote equality.
+[Commit](https://github.com/hyunlord/new-world/commit/caf2557916c2fa35be47d492d051d87116204343)
+
+Remote: `caf2557916c2fa35be47d492d051d87116204343 refs/heads/v8/art-trial`
+
+Changed paths:
+
+- `docs/v8/arttrial/DECISION_BRIEF.md`
+- `docs/v8/arttrial/EXECUTION_PLAN.md`
+- `docs/v8/arttrial/PEOPLE.md`
+- `docs/v8/arttrial/PUBLICATION.md`
+- `docs/v8/arttrial/TRIAL_REPORT.md`
+
+## Part2 continuation — a849de65dc2e1f5174d0bfbca4116abf46fd4365
+
+[Commit](https://github.com/hyunlord/new-world/commit/a849de65dc2e1f5174d0bfbca4116abf46fd4365)
+
+Remote: `a849de65dc2e1f5174d0bfbca4116abf46fd4365 refs/heads/v8/art-trial`
+
+Changed paths:
+
+- `art/trial/CHECKS.md`
+- `art/trial/registry_stats.json`
+- `art/trial/sheet.json`
+- `art/trial/sheet.png`
+- `docs/v8/arttrial/ASSET_REGISTRY.json`
+- `docs/v8/arttrial/ATLAS_PROVENANCE.json`
+- `docs/v8/arttrial/PEOPLE.md`
+- `docs/v8/arttrial/PEOPLE_COVERAGE.json`
+- `docs/v8/arttrial/TRIAL_DECISIONS.md`
+- `docs/v8/arttrial/CONTINUATION.md`
+- `docs/v8/arttrial/CONTINUATION_VERIFICATION.json`
+
+## Part3 continuation — 973435a7706e7b4e807d238b53df285b655cd7ed
+
+[Commit](https://github.com/hyunlord/new-world/commit/973435a7706e7b4e807d238b53df285b655cd7ed)
+
+Remote: `973435a7706e7b4e807d238b53df285b655cd7ed refs/heads/v8/art-trial`
+
+Changed paths:
+
+- `docs/images/arttrial_people.png`
+- `docs/v8/arttrial/BOARD_PROVENANCE.json`
+- `docs/v8/arttrial/CONTINUATION_VISUAL_QA.json`
+
+## Part4 continuation — 3fe552c67df73431250a920ede33adb018a7fec1
+
+[Commit](https://github.com/hyunlord/new-world/commit/3fe552c67df73431250a920ede33adb018a7fec1)
+
+Remote: `3fe552c67df73431250a920ede33adb018a7fec1 refs/heads/v8/art-trial`
+
+Changed paths:
+
+- `docs/v8/arttrial/COST.md`
+- `docs/v8/arttrial/REFERENCE_DISTRIBUTION.json`
+- `docs/v8/arttrial/REFERENCE_DISTRIBUTION.md`
+- `docs/v8/arttrial/VALIDATION.md`
+
+## Current Part5 continuation report commit
+
+This document is included in the current report commit; its resulting SHA is recorded after publication in the final response and external `preflight/publication.json`.
 
 Changed paths:
 
@@ -140,12 +199,11 @@ Changed paths:
 - `docs/v8/arttrial/DECISION_BRIEF.md`
 - `docs/v8/arttrial/EXECUTION_PLAN.md`
 - `docs/v8/arttrial/PUBLICATION.md`
-- `docs/v8/arttrial/PEOPLE.md` (calibration wording correction)
 
-## Byte and scope gate
+## Byte, scope and preservation gates
 
-Final byte and allowed-path evidence is saved at `/Users/rexxa/work/arttrial-data/preflight/final-committed-budget.json`. Pre-publication scope was approximately2.2MB, maximum579,406bytes/file; limits are <12MB total and ≤1.5MB/file.
+The allowed-path package remains below12MB total and1.5MB per file. Exact committed path/byte/hash evidence is saved externally in `continuation_accounting/final_committed_budget.json` after this publication. Only final atlas/swatch and comparison images are committed; all raw images, rejections and intermediates remain external.
 
-Only final atlas/swatch and comparison images are committed. Raw generations, rejections, processing intermediates, call logs and archive copies remain under `/Users/rexxa/work/arttrial-data/`.
+The pre-existing `.gitignore` modification, untracked `.ignore` and unrelated `docs/art/` are preserved and excluded. This is not a claim of a globally clean worktree. All383prior source hashes,12frozen scene artifacts and6sample recompositions remain unchanged. See `CONTINUATION_VERIFICATION.json`.
 
-The pre-existing `.gitignore` modification, untracked `.ignore`, and unrelated `docs/art/` are preserved and excluded. The trial does not claim a globally clean worktree.
+Historical cost snapshots remain byte-identical in `continuation_accounting/baseline/`; current costs and their remaining historical unknowns are disclosed in `COST.md`.

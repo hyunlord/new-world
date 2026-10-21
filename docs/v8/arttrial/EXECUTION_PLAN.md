@@ -11,10 +11,10 @@ Raw images, rejected candidates, logs and working files: `/Users/rexxa/work/artt
 |---|---|---|
 | 0 | English STYLE with Korean summary; reproducible 48-colour palette; all eight pipeline steps; three synthetic fixtures, negative checks; commit/push/ref equality | COMPLETE: a799b4bd; remote SHA verified |
 | 1 | Two candidates per generated environment asset; selection/reject ledger; references; ground seam tests and permitted fallback; packed sheet | COMPLETE: eaf9442d; 51/51 mechanical PASS; remote SHA verified; visual limits retained |
-| 2 | Four bodies × two directions × four upright frames plus south sleep; generated-on-body hair/beard, tops and tools, subtraction extraction; PERSON_SPEC | PUBLISHED821f702e; PARTIAL:235/612wardrobe, spear absent;383submitted assets checked |
-| 3 | Native-scale1920×1080 comparison;24labelled requests; anonymous crops | PUBLISHEDa9fec1a9; PARTIAL:21complete/3incomplete |
-| 4 | Fresh-context blind/variation, consistency and costs | EXECUTED:scene3/10→3/10FAIL;variation10/24FAIL;383/383mechanical PASS; published0b4454fc |
-| 5 | Korean report in §9's exact headings, decision brief, changed files by commit, final remote verification | REPORT WRITTEN; publication is this Part5 commit |
+| 2 | Four bodies × two directions × four upright frames plus south sleep; generated-on-body hair/beard, tops and tools, subtraction extraction; PERSON_SPEC | PUBLISHEDa849de65 continuation; PARTIAL:256/612wardrobe, spear absent;404submitted assets checked |
+| 3 | Native-scale1920×1080 comparison;24labelled requests; anonymous crops | PUBLISHED973435a7 continuation; PARTIAL:22complete/2incomplete |
+| 4 | Fresh-context blind/variation, consistency and costs | EXECUTED:scene3/10→3/10FAIL;variation10/24FAIL;404/404mechanical PASS; continuation published3fe552c6 |
+| 5 | Korean report in §9's exact headings, decision brief, changed files by commit, final remote verification | REPORT UPDATED; original caf25579 and current continuation report commit |
 
 No acceptance is inferred from generation success, metadata, or passing unit tests.
 Optional drops follow the contract order; mandatory assets and tests are never dropped.
@@ -32,7 +32,7 @@ Each milestone is committed with `v8-arttrial(pN):` intent and Lore trailers, pu
 
 Synthetic tests exercise each pipeline step, including overflow rejection, off-palette/stray-pixel rejection, channel preservation, hat subtraction and schema compatibility. Real generated assets then pass through the same steps. Record per-asset dimensions, palette/outline/alpha checks and reference ΔE distribution. A fresh reviewer receives images only with neutral identifiers; answers and scoring key are joined only after the answer is frozen. Keep generation prompts, tool outcomes, source hashes, candidate decisions and timings externally, with a compact committed provenance index.
 
-## Final outcome checkpoint
+## Historical caf25579 outcome checkpoint
 
 - Foundation and environment were published at a799b4bd and eaf9442d.
 - Part2 published821f702e:36bodies+36shadows,43hair+11beard+144tops+37tools+9carry,51environment,16versioned scene revisions;383submitted assets. Mandatory wardrobe remains235/612under D14's explicit interpretation.
@@ -41,3 +41,18 @@ Synthetic tests exercise each pipeline step, including overflow rejection, off-p
 - Final383/383mechanical PASS; all atlas rectangles/anchors match sources exactly. Final scene/AB/ten crop files retain their frozen hashes.
 - Final65Python tests PASS11.582s; Ruff PASS; basedpyright0errors/0warnings/0notes; Rust workspace tests+clippy exit0.
 - Part4 published0b4454fcwith remote equality. Part5 contains the final report and this ledger; its exact SHA/remote result is recorded in the final response and external publication evidence. This workflow can publish the failed experiment; it does not waive missing mandatory person outputs or claim that all original acceptance criteria passed.
+
+## Mandatory-coverage continuation
+
+The checkpoint above is historical, at `caf2557916c2fa35be47d492d051d87116204343`; its counts and failed evaluations remain preserved. The original goal is still active.
+
+| Step | Deliverable | State |
+|---|---|---|
+| 1 | Preserve historical ledgers, registry, atlas, board and frozen evaluation hashes | COMPLETE: external `continuation_accounting/baseline/`; all 383 old sources, 12 scene files and six samples verified unchanged |
+| 2 | Generate and validate only missing keys within the registered 142-call cap | COMPLETE:142calls,140returns,2refusals,21accepted frames; all producers finished |
+| 3 | Add accepted keys in a separate integration directory, preserve old assets and evaluations | COMPLETE:404assets,256/612wardrobe,22complete board requests; all prior sources/scenes/samples preserved |
+| 4 | Reconcile delta and cumulative costs, regenerate coverage and publish verified evidence | COMPLETE: final ledger frozen; Part2a849de65, Part3973435a7, Part43fe552c6pushed and verified; report update in this Part5commit |
+
+No second blind scene revision, random-sample replacement, body-pixel repair, acceptance relaxation or deadline reset is authorized. Decisions D22–D24 record the continuation and the failed bounded spear diagnostic.
+
+Original goal remains unfulfilled:356mandatory wardrobe keys and2complete board requests are missing; the failed blind/variation scores remain unchanged. Finishing this bounded continuation is not completion of Parts0–5 against the original contract.
