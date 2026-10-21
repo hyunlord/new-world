@@ -2,18 +2,22 @@
 # Five modes — 베기 / 비축 구역 / 오두막 / 구역 지우기 / 취소 — chosen by a click or F1–F5 (the number keys
 #   1–4 set the speed; M1 DECISIONS D24); Esc or a right click leaves the mode. Shows the mode's hint (with no
 #   mode: the order keys and Home/H = centre on the camp, camera_controller.gd) and, on a backing panel above the
-#   bar, a short toast with each order's result (count with its noun, or the reject reason).
+#   bar, a short toast with each order's result (count with its noun, or the reject reason). Each button carries its
+#   12×12 icon from the colony sheet (scripts/world/colony/view.gd) drawn at 2× with nearest filtering; the active
+#   mode's button is pressed and its label gold. On macOS the idle hint reads "fn + F1–F5" (the F-keys need fn).
 # Bridge methods: none (OrderTool sends the commands).
 extends Control
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
+const View = preload("res://scripts/world/colony/view.gd")
 const MODES: Array[Dictionary] = [
-	{"mode": 1, "key": "UI_ORDER_CHOP", "hotkey": KEY_F1, "hint": "UI_ORDER_HINT_AREA"},
-	{"mode": 2, "key": "UI_ORDER_STOCKPILE", "hotkey": KEY_F2, "hint": "UI_ORDER_HINT_AREA"},
-	{"mode": 3, "key": "UI_ORDER_HUT", "hotkey": KEY_F3, "hint": "UI_ORDER_HINT_PLACE"},
-	{"mode": 4, "key": "UI_ORDER_REMOVE_ZONE", "hotkey": KEY_F4, "hint": "UI_ORDER_HINT_AREA"},
-	{"mode": 5, "key": "UI_ORDER_CANCEL", "hotkey": KEY_F5, "hint": "UI_ORDER_HINT_AREA"},
+	{"mode": 1, "key": "UI_ORDER_CHOP", "hotkey": KEY_F1, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_chop"},
+	{"mode": 2, "key": "UI_ORDER_STOCKPILE", "hotkey": KEY_F2, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_stockpile"},
+	{"mode": 3, "key": "UI_ORDER_HUT", "hotkey": KEY_F3, "hint": "UI_ORDER_HINT_PLACE", "icon": "icon_hut"},
+	{"mode": 4, "key": "UI_ORDER_REMOVE_ZONE", "hotkey": KEY_F4, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_remove"},
+	{"mode": 5, "key": "UI_ORDER_CANCEL", "hotkey": KEY_F5, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_cancel"},
 ]
+const ACTIVE: Color = Color("e8c46e")
 const TOAST_SECONDS: float = 2.0
 
 var _tool: Node = null
@@ -43,6 +47,9 @@ func _ready() -> void:
 		button.toggle_mode = true
 		button.focus_mode = Control.FOCUS_NONE
 		button.text = "%s %s" % [OS.get_keycode_string(int(entry["hotkey"])), _loc(str(entry["key"]))]
+		button.icon = _icon(str(entry["icon"]))
+		button.add_theme_color_override("font_pressed_color", ACTIVE)
+		button.add_theme_color_override("font_hover_pressed_color", ACTIVE)
 		button.pressed.connect(_on_button.bind(int(entry["mode"])))
 		row.add_child(button)
 		_buttons.append(button)
@@ -50,7 +57,7 @@ func _ready() -> void:
 	_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_hint.add_theme_color_override("font_color", Color("c8b89a"))
 	row.add_child(_hint)
-	_hint.text = _loc("UI_ORDER_HINT_IDLE")
+	_hint.text = _loc(_idle_hint())
 	# The toast sits on its own panel just above the bar; the panel shrinks to the text on every show.
 	_toast_panel = ArtUI.panel(self, Rect2(12, 1080 - 76 - 8 - 48, 0, 0))
 	_toast = Label.new()
@@ -61,6 +68,25 @@ func _ready() -> void:
 	_tool = get_node_or_null("/root/Main/ColonyView/OrderTool")
 	if _tool != null:
 		_tool.connect("mode_changed", _on_mode_changed)
+
+
+## The idle hint key: macOS keyboards need fn for the F-keys.
+static func _idle_hint() -> String:
+	return "UI_ORDER_HINT_IDLE_MAC" if OS.get_name() == "macOS" else "UI_ORDER_HINT_IDLE"
+
+
+## The sheet's 12×12 icon `name` as a 24×24 texture (nearest), or null.
+static func _icon(name: String) -> Texture2D:
+	var sheet: Texture2D = View.texture()
+	if sheet == null or not View.has(name):
+		return null
+	var image: Image = sheet.get_image()
+	if image == null:
+		return null
+	var r: Rect2 = View.rect(name)
+	var region: Image = image.get_region(Rect2i(r))
+	region.resize(int(r.size.x) * 2, int(r.size.y) * 2, Image.INTERPOLATE_NEAREST)
+	return ImageTexture.create_from_image(region)
 
 
 func _on_button(mode: int) -> void:
@@ -81,7 +107,7 @@ func current_mode() -> int:
 func _on_mode_changed(mode: int) -> void:
 	for i: int in _buttons.size():
 		_buttons[i].set_pressed_no_signal(int(MODES[i]["mode"]) == mode)
-	_hint.text = _loc("UI_ORDER_HINT_IDLE") if mode == 0 else ""
+	_hint.text = _loc(_idle_hint()) if mode == 0 else ""
 	for entry: Dictionary in MODES:
 		if int(entry["mode"]) == mode:
 			_hint.text = _loc(str(entry["hint"]))

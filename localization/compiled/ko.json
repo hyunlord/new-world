@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 190,
+    "active_key_count": 191,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 190,
+    "key_count": 191,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -158,7 +158,7 @@
     "UI_CAUSAL_EVENT_MEMORY_RECALLED_CASCADE": "기억 회상됨 (연쇄)",
     "UI_CAUSAL_EVENT_STAMP_DIRTY": "영역 갱신",
     "UI_CAUSAL_NO_HISTORY": "이 타일의 인과 기록이 없습니다",
-    "UI_CAUSAL_PANEL_PLACEHOLDER": "타일을 클릭하면 현재 상태에 이르기까지의 사건 사슬이 표시됩니다. (γ-2-β)",
+    "UI_CAUSAL_PANEL_PLACEHOLDER": "타일을 클릭하면 현재 상태에 이르기까지의 사건 사슬이 표시됩니다.",
     "UI_CAUSAL_PANEL_TITLE": "왜? — 인과 기록",
     "UI_CAUSAL_REASON_COMBAT": "전투 결정",
     "UI_CAUSAL_REASON_MEMORY": "기억 회상",
@@ -193,6 +193,7 @@
     "UI_ORDER_CHOP": "베기",
     "UI_ORDER_HINT_AREA": "드래그해서 영역을 고르세요",
     "UI_ORDER_HINT_IDLE": "F1–F5 명령 · Home/H 캠프로",
+    "UI_ORDER_HINT_IDLE_MAC": "fn + F1–F5 명령 · Home/H 캠프로",
     "UI_ORDER_HINT_PLACE": "클릭해서 놓으세요",
     "UI_ORDER_HUT": "오두막",
     "UI_ORDER_REMOVE_ZONE": "구역 지우기",

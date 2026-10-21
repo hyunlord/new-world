@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 190,
+    "active_key_count": 191,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 190,
+    "key_count": 191,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -158,7 +158,7 @@
     "UI_CAUSAL_EVENT_MEMORY_RECALLED_CASCADE": "Memory recalled (cascade)",
     "UI_CAUSAL_EVENT_STAMP_DIRTY": "Region marked dirty",
     "UI_CAUSAL_NO_HISTORY": "No causal history for this tile",
-    "UI_CAUSAL_PANEL_PLACEHOLDER": "Click a tile to see the chain of events that led to its current state. (γ-2-β)",
+    "UI_CAUSAL_PANEL_PLACEHOLDER": "Click a tile to see the chain of events that led to its current state.",
     "UI_CAUSAL_PANEL_TITLE": "Why? — Causal History",
     "UI_CAUSAL_REASON_COMBAT": "Combat decision",
     "UI_CAUSAL_REASON_MEMORY": "Memory recall",
@@ -193,6 +193,7 @@
     "UI_ORDER_CHOP": "Chop",
     "UI_ORDER_HINT_AREA": "Drag to select an area",
     "UI_ORDER_HINT_IDLE": "F1–F5 orders · Home/H camp",
+    "UI_ORDER_HINT_IDLE_MAC": "fn + F1–F5 orders · Home/H camp",
     "UI_ORDER_HINT_PLACE": "Click to place",
     "UI_ORDER_HUT": "Hut",
     "UI_ORDER_REMOVE_ZONE": "Remove zone",

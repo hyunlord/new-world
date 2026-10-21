@@ -5,7 +5,7 @@ extends Control
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
-const NOTABLE: Array[int] = [0, 2, 11, 13, 14, 15, 16, 18, 19, 20, 21]
+const NOTABLE: Array[int] = [0, 2, 11, 13, 14, 15, 16, 18, 19, 20, 21, 22]
 var _world: Node
 var _locale: Node
 var _title: Label

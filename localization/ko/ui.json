@@ -21,7 +21,7 @@
 	"PANEL_FAMILY_SPOUSE": "배우자",
 	"PANEL_FAMILY_NONE": "없음",
 	"UI_CAUSAL_PANEL_TITLE": "왜? — 인과 기록",
-	"UI_CAUSAL_PANEL_PLACEHOLDER": "타일을 클릭하면 현재 상태에 이르기까지의 사건 사슬이 표시됩니다. (γ-2-β)",
+	"UI_CAUSAL_PANEL_PLACEHOLDER": "타일을 클릭하면 현재 상태에 이르기까지의 사건 사슬이 표시됩니다.",
 	"UI_CAUSAL_EVENT_BUILDING_PLACED": "건물 배치",
 	"UI_CAUSAL_EVENT_STAMP_DIRTY": "영역 갱신",
 	"UI_CAUSAL_EVENT_INFLUENCE_CHANGED": "영향력 변화",
@@ -186,5 +186,6 @@
 	"UI_ORDER_TOAST_HUT": "오두막 청사진 {count}개 놓음",
 	"UI_ORDER_TOAST_REMOVE_ZONE": "구역 {count}칸 지움",
 	"UI_ORDER_TOAST_CANCEL": "명령 {count}개 취소",
-	"UI_ORDER_HINT_IDLE": "F1–F5 명령 · Home/H 캠프로"
+	"UI_ORDER_HINT_IDLE": "F1–F5 명령 · Home/H 캠프로",
+	"UI_ORDER_HINT_IDLE_MAC": "fn + F1–F5 명령 · Home/H 캠프로"
 }

@@ -21,7 +21,7 @@
 	"PANEL_FAMILY_SPOUSE": "Spouse",
 	"PANEL_FAMILY_NONE": "None",
 	"UI_CAUSAL_PANEL_TITLE": "Why? — Causal History",
-	"UI_CAUSAL_PANEL_PLACEHOLDER": "Click a tile to see the chain of events that led to its current state. (γ-2-β)",
+	"UI_CAUSAL_PANEL_PLACEHOLDER": "Click a tile to see the chain of events that led to its current state.",
 	"UI_CAUSAL_EVENT_BUILDING_PLACED": "Building placed",
 	"UI_CAUSAL_EVENT_STAMP_DIRTY": "Region marked dirty",
 	"UI_CAUSAL_EVENT_INFLUENCE_CHANGED": "Influence changed",
@@ -186,5 +186,6 @@
 	"UI_ORDER_TOAST_HUT": "{count} hut blueprint placed",
 	"UI_ORDER_TOAST_REMOVE_ZONE": "{count} zone tiles removed",
 	"UI_ORDER_TOAST_CANCEL": "{count} orders cancelled",
-	"UI_ORDER_HINT_IDLE": "F1–F5 orders · Home/H camp"
+	"UI_ORDER_HINT_IDLE": "F1–F5 orders · Home/H camp",
+	"UI_ORDER_HINT_IDLE_MAC": "fn + F1–F5 orders · Home/H camp"
 }
