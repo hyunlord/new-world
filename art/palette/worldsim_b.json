@@ -1,0 +1,596 @@
+{
+  "colors": [
+    {
+      "name": "outline",
+      "hex": "#141210",
+      "source": "TRIAL_GOAL.md exact semantic channel"
+    },
+    {
+      "name": "skin",
+      "hex": "#9A9A9A",
+      "source": "TRIAL_GOAL.md exact semantic channel"
+    },
+    {
+      "name": "loincloth",
+      "hex": "#6E6E6E",
+      "source": "TRIAL_GOAL.md exact semantic channel"
+    },
+    {
+      "name": "hair",
+      "hex": "#B0B0B0",
+      "source": "TRIAL_GOAL.md exact semantic channel"
+    },
+    {
+      "name": "top",
+      "hex": "#C0C0C0",
+      "source": "TRIAL_GOAL.md exact semantic channel"
+    },
+    {
+      "name": "skins_0",
+      "hex": "#D8A884",
+      "source": "assets/v8/tiles.json palettes; tools/v8/gen_tiles.py PALETTES skins"
+    },
+    {
+      "name": "skins_1",
+      "hex": "#B9815F",
+      "source": "trial-derived warm-earth skin; D2"
+    },
+    {
+      "name": "skins_2",
+      "hex": "#915C40",
+      "source": "trial-derived warm-earth skin; D2"
+    },
+    {
+      "name": "skins_3",
+      "hex": "#68402E",
+      "source": "trial-derived warm-earth skin; D2"
+    },
+    {
+      "name": "hairs_0",
+      "hex": "#2A1E16",
+      "source": "assets/v8/tiles.json palettes; tools/v8/gen_tiles.py PALETTES hairs"
+    },
+    {
+      "name": "hairs_1",
+      "hex": "#5A3A22",
+      "source": "assets/v8/tiles.json palettes; tools/v8/gen_tiles.py PALETTES hairs"
+    },
+    {
+      "name": "hairs_2",
+      "hex": "#8A6A3A",
+      "source": "assets/v8/tiles.json palettes; tools/v8/gen_tiles.py PALETTES hairs"
+    },
+    {
+      "name": "hairs_3",
+      "hex": "#3A2A1E",
+      "source": "assets/v8/tiles.json palettes; tools/v8/gen_tiles.py PALETTES hairs"
+    },
+    {
+      "name": "tunics_0",
+      "hex": "#EFE2C0",
+      "source": "assets/v8/tiles.json palettes; tools/v8/gen_tiles.py PALETTES tunics"
+    },
+    {
+      "name": "tunics_1",
+      "hex": "#6FB0E8",
+      "source": "assets/v8/tiles.json palettes; tools/v8/gen_tiles.py PALETTES tunics"
+    },
+    {
+      "name": "tunics_2",
+      "hex": "#E0604C",
+      "source": "assets/v8/tiles.json palettes; tools/v8/gen_tiles.py PALETTES tunics"
+    },
+    {
+      "name": "tunics_3",
+      "hex": "#50C0A8",
+      "source": "assets/v8/tiles.json palettes; tools/v8/gen_tiles.py PALETTES tunics"
+    },
+    {
+      "name": "tunics_4",
+      "hex": "#B088E0",
+      "source": "assets/v8/tiles.json palettes; tools/v8/gen_tiles.py PALETTES tunics"
+    },
+    {
+      "name": "tunics_5",
+      "hex": "#E888B0",
+      "source": "assets/v8/tiles.json palettes; tools/v8/gen_tiles.py PALETTES tunics"
+    },
+    {
+      "name": "elder_hair",
+      "hex": "#E8E8E8",
+      "source": "assets/v8/tiles.json palettes.elder_hair"
+    },
+    {
+      "name": "source_cluster_00",
+      "hex": "#303E28",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_09",
+      "hex": "#3A4A2E",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_06",
+      "hex": "#2E2B29",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_03",
+      "hex": "#544634",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_08",
+      "hex": "#5C5650",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_14",
+      "hex": "#62523E",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_12",
+      "hex": "#45403C",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_22",
+      "hex": "#645537",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_27",
+      "hex": "#574F3F",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_10",
+      "hex": "#705032",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_18",
+      "hex": "#374739",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_26",
+      "hex": "#405541",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_25",
+      "hex": "#4B5B37",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_31",
+      "hex": "#4C462D",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_23",
+      "hex": "#503924",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_02",
+      "hex": "#E2D6BE",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_24",
+      "hex": "#37532B",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_37",
+      "hex": "#785C3C",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_11",
+      "hex": "#968A76",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_21",
+      "hex": "#776F68",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_07",
+      "hex": "#E8C46E",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_19",
+      "hex": "#4B6662",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_04",
+      "hex": "#96C86E",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_15",
+      "hex": "#719340",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_16",
+      "hex": "#334D5F",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_29",
+      "hex": "#966C42",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_05",
+      "hex": "#DC6E5A",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    },
+    {
+      "name": "source_cluster_28",
+      "hex": "#A58F4C",
+      "source": "opaque source pixel nearest weighted Lab k-means center"
+    }
+  ],
+  "channels": {
+    "outline": "#141210",
+    "skin": "#9A9A9A",
+    "loincloth": "#6E6E6E",
+    "hair": "#B0B0B0",
+    "top": "#C0C0C0"
+  },
+  "people": {
+    "skins": [
+      "#D8A884",
+      "#B9815F",
+      "#915C40",
+      "#68402E"
+    ],
+    "hairs": [
+      "#2A1E16",
+      "#5A3A22",
+      "#8A6A3A",
+      "#3A2A1E"
+    ],
+    "tunics": [
+      "#EFE2C0",
+      "#6FB0E8",
+      "#E0604C",
+      "#50C0A8",
+      "#B088E0",
+      "#E888B0"
+    ],
+    "elder_hair": "#E8E8E8"
+  },
+  "blueprint": "#6FB0E8",
+  "method": {
+    "color_space": "CIE Lab, sRGB transfer, D65 white, Euclidean DeltaE76",
+    "algorithm": "40-cluster weighted Lloyd k-means; snap final centers to nearest existing opaque RGB",
+    "frequency_weighting": "Every alpha=255 pixel has weight one across both images; no image normalization or subsampling",
+    "initialization": "Most frequent RGB first; maximize pixel_count * squared nearest-center Lab distance thereafter",
+    "tie_break": "RGB lexicographic order; cluster index for equal center distances",
+    "clusters_requested": 40,
+    "iterations": 20,
+    "converged": true,
+    "iteration_cap": 200,
+    "unique_opaque_colors": 13124,
+    "sources": [
+      {
+        "path": "assets/v8/tiles.png",
+        "sha256": "7dd1fc82f2981b2bcdd5d074dac60b59726e6ad508c3f52020586f00894d1faf",
+        "opaque_pixels": 22728
+      },
+      {
+        "path": "docs/images/v8_target_view_b.png",
+        "sha256": "b9cc1efccdf0b96310c3eba6a5dda050247c039c4d1e8582855e66649e4d8c4a",
+        "opaque_pixels": 2073600
+      }
+    ],
+    "people_source_hashes": {
+      "assets/v8/tiles.json": "8066d694467e604d518a486e08604fe7b8b314a6811906b191412c1085f6e445",
+      "tools/v8/gen_tiles.py": "d96a83fbd4842b548a756a81e41c78178f0a96cde762eac70614deec7b7584c4",
+      "scripts/world/colony/view.gd": "772c6b6d48515e83b3eeb7561cdb02977057b8a87e0014ccd2686ce9157374a1"
+    },
+    "selection": "Reserve semantic and people entries first; clusters descending population; reject DeltaE <4; cap 48",
+    "trial_skins": "D2: source #D8A884 plus authored darker warm-earth tones #B9815F #915C40 #68402E; not claimed as source pixels",
+    "blueprint": "Reuse legacy household tunic #6FB0E8; no extra palette slot",
+    "clusters": [
+      {
+        "name": "source_cluster_01",
+        "hex": "#1A1715",
+        "population": 371736
+      },
+      {
+        "name": "source_cluster_00",
+        "hex": "#303E28",
+        "population": 301052
+      },
+      {
+        "name": "source_cluster_09",
+        "hex": "#3A4A2E",
+        "population": 208814
+      },
+      {
+        "name": "source_cluster_33",
+        "hex": "#1B1915",
+        "population": 206000
+      },
+      {
+        "name": "source_cluster_06",
+        "hex": "#2E2B29",
+        "population": 166369
+      },
+      {
+        "name": "source_cluster_03",
+        "hex": "#544634",
+        "population": 137440
+      },
+      {
+        "name": "source_cluster_08",
+        "hex": "#5C5650",
+        "population": 83273
+      },
+      {
+        "name": "source_cluster_14",
+        "hex": "#62523E",
+        "population": 67312
+      },
+      {
+        "name": "source_cluster_12",
+        "hex": "#45403C",
+        "population": 58101
+      },
+      {
+        "name": "source_cluster_22",
+        "hex": "#645537",
+        "population": 51892
+      },
+      {
+        "name": "source_cluster_27",
+        "hex": "#574F3F",
+        "population": 44776
+      },
+      {
+        "name": "source_cluster_32",
+        "hex": "#141210",
+        "population": 42760
+      },
+      {
+        "name": "source_cluster_10",
+        "hex": "#705032",
+        "population": 35987
+      },
+      {
+        "name": "source_cluster_18",
+        "hex": "#374739",
+        "population": 30684
+      },
+      {
+        "name": "source_cluster_39",
+        "hex": "#4B4038",
+        "population": 26951
+      },
+      {
+        "name": "source_cluster_26",
+        "hex": "#405541",
+        "population": 23280
+      },
+      {
+        "name": "source_cluster_38",
+        "hex": "#262017",
+        "population": 23090
+      },
+      {
+        "name": "source_cluster_25",
+        "hex": "#4B5B37",
+        "population": 20495
+      },
+      {
+        "name": "source_cluster_31",
+        "hex": "#4C462D",
+        "population": 20037
+      },
+      {
+        "name": "source_cluster_23",
+        "hex": "#503924",
+        "population": 19994
+      },
+      {
+        "name": "source_cluster_02",
+        "hex": "#E2D6BE",
+        "population": 19310
+      },
+      {
+        "name": "source_cluster_20",
+        "hex": "#3D2C1B",
+        "population": 16795
+      },
+      {
+        "name": "source_cluster_24",
+        "hex": "#37532B",
+        "population": 16219
+      },
+      {
+        "name": "source_cluster_37",
+        "hex": "#785C3C",
+        "population": 12495
+      },
+      {
+        "name": "source_cluster_11",
+        "hex": "#968A76",
+        "population": 9670
+      },
+      {
+        "name": "source_cluster_21",
+        "hex": "#776F68",
+        "population": 9271
+      },
+      {
+        "name": "source_cluster_07",
+        "hex": "#E8C46E",
+        "population": 8695
+      },
+      {
+        "name": "source_cluster_19",
+        "hex": "#4B6662",
+        "population": 8360
+      },
+      {
+        "name": "source_cluster_04",
+        "hex": "#96C86E",
+        "population": 8156
+      },
+      {
+        "name": "source_cluster_15",
+        "hex": "#719340",
+        "population": 7455
+      },
+      {
+        "name": "source_cluster_16",
+        "hex": "#334D5F",
+        "population": 7170
+      },
+      {
+        "name": "source_cluster_29",
+        "hex": "#966C42",
+        "population": 5719
+      },
+      {
+        "name": "source_cluster_05",
+        "hex": "#DC6E5A",
+        "population": 4734
+      },
+      {
+        "name": "source_cluster_28",
+        "hex": "#A58F4C",
+        "population": 4472
+      },
+      {
+        "name": "source_cluster_13",
+        "hex": "#7AACD2",
+        "population": 3776
+      },
+      {
+        "name": "source_cluster_30",
+        "hex": "#C8BA96",
+        "population": 3455
+      },
+      {
+        "name": "source_cluster_35",
+        "hex": "#B08C64",
+        "population": 3378
+      },
+      {
+        "name": "source_cluster_34",
+        "hex": "#9C603E",
+        "population": 2544
+      },
+      {
+        "name": "source_cluster_17",
+        "hex": "#AA2832",
+        "population": 2357
+      },
+      {
+        "name": "source_cluster_36",
+        "hex": "#5B8097",
+        "population": 2254
+      }
+    ],
+    "dropped": [
+      {
+        "name": "source_cluster_01",
+        "hex": "#1A1715",
+        "reason": "delta_e_below_4",
+        "nearest": "#141210",
+        "delta_e": 2.541647
+      },
+      {
+        "name": "source_cluster_33",
+        "hex": "#1B1915",
+        "reason": "delta_e_below_4",
+        "nearest": "#141210",
+        "delta_e": 3.703206
+      },
+      {
+        "name": "source_cluster_32",
+        "hex": "#141210",
+        "reason": "delta_e_below_4",
+        "nearest": "#141210",
+        "delta_e": 0.0
+      },
+      {
+        "name": "source_cluster_39",
+        "hex": "#4B4038",
+        "reason": "delta_e_below_4",
+        "nearest": "#45403C",
+        "delta_e": 3.975677
+      },
+      {
+        "name": "source_cluster_38",
+        "hex": "#262017",
+        "reason": "delta_e_below_4",
+        "nearest": "#2A1E16",
+        "delta_e": 3.411838
+      },
+      {
+        "name": "source_cluster_20",
+        "hex": "#3D2C1B",
+        "reason": "delta_e_below_4",
+        "nearest": "#3A2A1E",
+        "delta_e": 3.461929
+      },
+      {
+        "name": "source_cluster_13",
+        "hex": "#7AACD2",
+        "reason": "48_color_cap",
+        "nearest": "#6FB0E8",
+        "delta_e": 10.134178
+      },
+      {
+        "name": "source_cluster_30",
+        "hex": "#C8BA96",
+        "reason": "48_color_cap",
+        "nearest": "#E2D6BE",
+        "delta_e": 12.238743
+      },
+      {
+        "name": "source_cluster_35",
+        "hex": "#B08C64",
+        "reason": "48_color_cap",
+        "nearest": "#B9815F",
+        "delta_e": 9.562345
+      },
+      {
+        "name": "source_cluster_34",
+        "hex": "#9C603E",
+        "reason": "48_color_cap",
+        "nearest": "#915C40",
+        "delta_e": 5.542481
+      },
+      {
+        "name": "source_cluster_17",
+        "hex": "#AA2832",
+        "reason": "48_color_cap",
+        "nearest": "#E0604C",
+        "delta_e": 20.985934
+      },
+      {
+        "name": "source_cluster_36",
+        "hex": "#5B8097",
+        "reason": "48_color_cap",
+        "nearest": "#6E6E6E",
+        "delta_e": 18.58808
+      }
+    ],
+    "semantic_delta_e_exceptions": []
+  }
+}
