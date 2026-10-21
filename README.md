@@ -11,11 +11,14 @@
 
 > 지금(M1)의 게임은 192×192 세계에 창설자 10명으로 시작하는 첫 정착지다. F1–F5로 지시 모드를 고른다: F1 나무 베기(끌어서 범위), F2 비축 구역, F3 오두막 청사진(3×3, 통나무 12개), F4 구역 지우기, F5 취소. Home/H 키는 캠프로 화면을 옮긴다. 사람들이 나무를 베어 통나무를 나르고 비축 구역에 쌓고 오두막을 짓는다. 사람을 클릭하면 상세 정보와 지금 하는 일, 들고 있는 것이 보인다. 화면의 타일셋은 임시(코드로 그림)다.
 
-**지금 화면:** [docs/images/m1_contact_sheet.png](docs/images/m1_contact_sheet.png) (M1 스크린샷 12장) · 정직한 평가는 [docs/v8/play/SCREEN_REPORT.md](docs/v8/play/SCREEN_REPORT.md).
+**지금 화면:** [docs/images/m1_contact_sheet.png](docs/images/m1_contact_sheet.png) (M1 10장 + 비교용 V7 2장; 지금 `v8/main` = M1) · 정직한 평가는 [docs/v8/play/SCREEN_REPORT.md](docs/v8/play/SCREEN_REPORT.md).
 
 ## 빌드와 실행
 
-필요한 것: Godot 4.6(`Godot.app`; `~/Downloads`나 `/Applications`에 두면 저절로 찾는다), Rust(`cargo`, 버전은 `rust/rust-toolchain.toml`이 정한다), 그리고 이 저장소의 클론(`/Users/rexxa/work/new-world-pass4`).
+필요한 것 (처음 한 번):
+- **Godot 4.6** — `Godot.app` 이름 그대로 `/Users/rexxa/Downloads`나 `/Applications`에 둔다(저절로 찾는다; 다른 곳이면 Spotlight로 찾는다). 내려받은 Godot.app은 처음 한 번 Finder에서 더블클릭해 열어 두면(macOS 확인 창 → 열기) 이후 막히지 않는다.
+- **Rust** — 터미널에서 `cargo --version`이 안 되면 https://rustup.rs 의 한 줄 설치 명령을 터미널에 붙여 넣는다(`rust/rust-toolchain.toml`이 정한 버전을 저절로 받는다). 맥에 Apple 명령줄 도구가 없으면 `xcode-select --install`도 한 번(터미널에서 `git`이 되면 이미 있다).
+- **이 저장소의 클론** — `/Users/rexxa/work/new-world-pass4`, 브랜치 `v8/wip`(또는 `v8/main`; 실행기 `tools/play/`가 있는 브랜치). 실행기 자체를 최신으로 하려면 가끔 `git -C /Users/rexxa/work/new-world-pass4 pull --ff-only`. 첫 실행 때는 인터넷이 필요하다(`git fetch`, Rust 패키지 내려받기). 버전마다 작업 트리와 빌드가 따로 생겨 디스크를 지금 게임 약 1.4 GB, V7 약 4.3 GB 쓴다.
 
 ### 가장 쉬운 방법: 바탕화면의 `WorldSim.command`를 더블클릭
 
@@ -26,10 +29,23 @@ ln -sf /Users/rexxa/work/new-world-pass4/tools/play/WorldSim.command ~/Desktop/W
 ln -sf /Users/rexxa/work/new-world-pass4/tools/play/WorldSim-v7.command ~/Desktop/WorldSim-v7.command
 ```
 
-- `WorldSim.command` = 지금 게임(`v8/main`), `WorldSim-v7.command` = 비교용 V7 게임(`v7-final-art`).
-- 처음 더블클릭하면 macOS가 "확인되지 않은 개발자" 등으로 막을 수 있다. 그때는 바탕화면의 파일을 **오른쪽 클릭 → 열기 → 열기**로 한 번 허용하면 다음부터는 더블클릭으로 열린다.
-- 터미널 창이 열리고 준비(아래 1–4단계)를 한 뒤 1920×1080 게임 창이 뜬다. 첫 실행은 빌드와 가져오기 때문에 1분 안팎 걸리고, 다음부터는 몇 초 만에 뜬다. 게임 창을 닫으면 끝난다. 실패하면 터미널 창이 열린 채로 남아 이유와 로그 경로를 보여 준다(아무 키나 누르면 닫힌다).
-- 게임 안 조작: F1–F5 지시 모드(F1 베기 · F2 비축 구역 · F3 오두막 · F4 구역 지우기 · F5 취소, 끌거나 클릭해서 지시, Esc/오른쪽 클릭으로 취소), 1–4 속도, P 일시정지, C 연대기, Home/H 캠프로, 마우스 휠 또는 -·= 확대/축소(1–4배), WASD·화살표 이동, 사람이나 땅을 클릭하면 정보 패널.
+- `WorldSim.command` = 지금 게임(GitHub의 `v8/main` 최신), `WorldSim-v7.command` = 비교용 V7 게임(`v7-final-art`).
+- macOS가 처음 한 번 막을 수 있다. "열 수 없음/확인되지 않은 개발자"가 뜨면 바탕화면의 파일을 **오른쪽 클릭 → 열기 → 열기**; 최근 macOS에서 그래도 막히면 **시스템 설정 → 개인정보 보호 및 보안 → 맨 아래 "그래도 열기"**. "터미널이 '다운로드' 폴더에 접근하려고 합니다"가 뜨면 **허용**을 누른다(거부하면 Godot을 못 찾아 "Godot 4.6을 찾지 못했습니다"로 끝난다; 그때는 Godot.app을 `/Applications`로 옮기면 된다).
+- 터미널 창이 열리고 `play:`로 시작하는 줄이 나온 뒤 1920×1080 게임 창이 뜬다. 이 맥에서 잰 첫 실행(새 작업 트리: 빌드 + 가져오기 두 번)은 지금 게임 약 30초, V7 약 1분이었다(Rust 패키지를 처음 받는 맥은 몇 분). 빌드 중에는 한동안 아무것도 안 나와도 정상이다. 다음부터는 빌드와 가져오기를 건너뛰어("빌드 생략", "가져오기 생략") 약 5초 만에 뜬다. `v8/main`이 새로 올라오면 그때 한 번 바뀐 만큼 다시 빌드·가져오기를 한다.
+- 맥북 화면은 대부분 1920×1080보다 작아서 창이 화면보다 크게 뜬다. 창 제목 줄을 더블클릭하면 화면에 맞춰진다(게임 화면은 창 크기에 맞게 늘거나 준다). 게임은 1일차 08:00, 2배 확대, 캠프가 가운데인 화면으로 시작한다.
+- 게임 창을 닫으면(또는 ⌘Q) 끝나고, 남은 터미널 창은 ⌘W로 닫는다. 게임 중에 터미널 창을 닫으면 게임도 꺼진다. 실패하면 터미널 창에 이유가(빌드·가져오기 단계면 로그 경로도) 남고, 아무 키나 누르면 스크립트가 끝난다.
+
+**처음 할 일 (명령을 내리기 전에는 사람들이 먹을 것을 모으고 쉴 뿐, 나무를 베거나 집을 짓지 않는다).** 1배속에서 하루가 2분이라 08:00에 시작하면 약 1분 뒤(21시)에 밤이 된다. 먼저 **P**로 멈추고 명령을 내린 뒤 다시 **P**로 풀면 낮에 오두막이 서는 것을 볼 수 있다(멈춘 동안에도 명령은 바로 들어간다).
+1. **F1**(베기)을 누르고 캠프 근처 숲을 마우스로 끌어 덮는다 → 나무에 노란 X.
+2. **F2**(비축 구역)를 누르고 빈 땅을 4×4쯤 끈다 → 옅은 노란 네모.
+3. **F3**(오두막)을 누르고 초록 유령이 뜨는 곳을 클릭한다(빨강 = 놓을 수 없음) → "통나무 0/12".
+4. 사람들이 나무를 베어 통나무를 나르고 오두막을 짓는다. 1배속에서 30–40초쯤 지나면 오두막이 선다(스크린샷의 시드에서 놓은 뒤 405틱 ≈ 34초). 밤에는 화면이 많이 어두워진다.
+
+**키보드 주의:** 글자 키(P, C, H, WASD)가 안 먹으면 입력 소스를 한글에서 ABC로 바꿔 본다(Ctrl+Space 또는 Caps Lock). 맥북·애플 키보드에서 F1–F5는 밝기·Mission Control 같은 시스템 키라서 **fn을 누른 채로** 눌러야 게임에 들어간다(또는 시스템 설정 → 키보드 → 키보드 단축키 → 기능 키 → "F1, F2 등의 키를 표준 기능 키로 사용" 켜기). 명령 막대의 버튼을 마우스로 눌러도 된다. Home 키가 없으면 **H**.
+
+게임 안 조작: F1–F5 지시 모드(F1 베기: 끈 범위의 나무에 표시 · F2 비축 구역: 끈 범위를 구역으로 · F3 오두막: 클릭한 곳에 청사진 · F4 구역 지우기: 끈 범위의 비축 구역 칸을 지움 · F5 취소: 끈 범위의 베기 표시와 청사진을 지움; Esc/오른쪽 클릭으로 모드 끄기), 숫자 1–4 속도, P 일시정지, C 연대기, H(또는 Home) 캠프로, 마우스 휠 또는 -·= 확대/축소(1–4배 확대), WASD·화살표 화면 이동, 사람을 클릭하면 정보 패널(지금 하는 일, 들고 있는 것), 빈 땅을 클릭하면 "왜?" 패널.
+
+지금 화면은 V7보다 단순하다(임시 타일셋, 사람 한 명이 타일 한 칸). 알려진 문제 2건 — 오두막이 완성돼도 연대기(C)에 그 줄이 안 나온다, "왜?" 패널에 개발용 표식 "(γ-2-β)"가 보인다 — 은 [SCREEN_REPORT](docs/v8/play/SCREEN_REPORT.md)에 있다.
 
 ### 터미널: `tools/play.sh` (`main` / `m1` / `v7` …)
 
@@ -38,22 +54,28 @@ usage: tools/play.sh [version] [--seed N] [--speed 1-4] [--no-build] [--headless
   version: main (default, = v8/main), wip, m1, v8-0, v7, or any commit/tag/branch
 ```
 
+- 예: `cd /Users/rexxa/work/new-world-pass4 && tools/play.sh` (= 바탕화면 `WorldSim.command`), `tools/play.sh v7`, `tools/play.sh m1`.
 - 버전: `main`(기본값, 원격 `v8/main` 최신) · `wip`(원격 `v8/wip` 최신) · `m1`(`892edca1`) · `v8-0`(`24e16677`) · `v7`(태그 `v7-final-art`) · 그 밖의 커밋/태그/브랜치.
-- 하는 일: ① Godot 찾기(`GODOT_BIN` → `tools/v8/godot_bin.sh`의 경로 → Spotlight → `/Applications/Godot.app`) ② 버전마다 따로 작업 트리 `/Users/rexxa/work/new-world-play/<버전>/`을 만들거나 다시 쓰기(이 클론 자체로는 실행하지 않는다) ③ Rust가 바뀌었을 때만 `cargo build -p sim-bridge`(Godot 편집기 실행 파일이 debug 라이브러리를 읽으므로 debug로 빌드; 아니면 "빌드 생략") ④ 필요할 때만 가져오기(import; 새 작업 트리는 두 번) ⑤ 게임 창 실행. 실행 전에 버전·커밋·빌드·가져오기·시드·속도를 한 줄로 보여 준다.
-- `--seed`, `--speed`: 지금 어느 버전도 명령줄에서 읽지 않는다. 주면 "이 버전은 --seed를 지원하지 않습니다"라고 알리고 무시한다(게임은 기본 시드 `20261010`, 1배속으로 시작; 속도는 게임 안에서 1–4 키).
+- 하는 일: ① Godot 찾기(`GODOT_BIN`이 있으면 그것만 → `tools/v8/godot_bin.sh`의 경로(`~/Downloads/Godot.app`) → Spotlight → `/Applications/Godot.app`; 4.6이 아니면 경고) ② `git fetch` 뒤 버전마다 따로 작업 트리 `/Users/rexxa/work/new-world-play/<버전>/`을 만들거나 그 버전으로 옮기기(이 클론의 작업 파일로는 실행하지 않는다; 작업 트리는 이 클론의 `.git`에 묶여 있으니 클론을 옮기거나 지우지 않는다) ③ Rust가 바뀌었을 때만 `cargo build -p sim-bridge` — `.gdextension`이 Godot 편집기 실행 파일에 읽히는 라이브러리(`macos.debug`, 지금은 모든 버전이 debug)를 가리키므로 그 프로필로 빌드; 아니면 "빌드 생략" ④ 필요할 때만 가져오기(import; 새 작업 트리는 두 번) ⑤ 게임 창 실행. 실행 전에 버전·커밋·빌드·가져오기·시드·속도를 한 줄로 보여 준다.
+- `--seed`, `--speed`: 그 버전의 `scripts/`가 이 인자를 읽을 때만 넘긴다. 지금(M1, V7 포함) 어느 버전도 읽지 않아서 "이 버전은 --seed를 지원하지 않습니다 (무시)"라고 알리고 무시한다(게임은 기본 시드 `20261010`, 1배속으로 시작; 속도는 게임 안에서 1–4 키). 값이 잘못되면(예: `--speed 7`) 종료 코드 4.
+- `--no-build`: 빌드 단계를 건너뛴다(라이브러리가 아직 없으면 종료 코드 1).
 - `--headless-check`: 창을 띄우지 않고 준비 후 300프레임만 돌려 오류(`SCRIPT ERROR`)가 0줄인지 확인한다.
-- 로그: `/Users/rexxa/work/play-data/logs/<버전>-<시각>.log` (시작할 때 경로를 출력).
-- 종료 코드: 0 정상, 1 빌드/가져오기/확인 실패, 2 Godot 없음, 3 모르는 버전, 4 잘못된 인자.
+- `-- <Godot 인자>`: 그 뒤는 Godot에 그대로 넘긴다(예: `tools/play.sh main -- --print-fps`).
+- 로그: `/Users/rexxa/work/play-data/logs/<버전>-<시각>.log` (버전을 알아낸 뒤 만들고 경로를 출력; 지우지 않으니 가끔 비운다).
+- 종료 코드: 0 정상, 1 빌드/가져오기/확인 실패·작업 트리 문제·게임 비정상 종료, 2 Godot 없음, 3 모르는 버전(인터넷이 끊겨 원격 브랜치를 못 받은 경우 포함), 4 잘못된 인자. 작업 트리가 꼬이면("옮기지 못했습니다", "git worktree add 실패") `rm -rf /Users/rexxa/work/new-world-play/<버전>` 다음 `git -C /Users/rexxa/work/new-world-pass4 worktree prune`을 하고 다시 실행하면 새로 만든다.
 
 ### 수동으로
 
+지금 클론(체크아웃된 브랜치와 고친 파일 그대로)을 실행한다. 다른 버전은 위의 `tools/play.sh`를 쓴다.
+
 ```bash
+source tools/v8/godot_bin.sh                                  # GODOT_BIN = /Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot (이미 있으면 그대로)
 cd rust && cargo build -p sim-bridge && cd ..                 # Godot이 읽는 libsim_bridge 빌드
 "$GODOT_BIN" --headless --path . --import --editor --quit     # 가져오기: 새로 받은 체크아웃에서는 두 번(두 번째 결과로 판단), 에셋이 바뀐 뒤에는 한 번
-"$GODOT_BIN" --path .                                         # 게임 실행
+"$GODOT_BIN" --path . --resolution 1920x1080                  # 게임 실행
 ```
 
-`GODOT_BIN`의 기본값은 `/Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot`(`source tools/v8/godot_bin.sh`). Rust를 고친 뒤에는 Godot을 띄우기 전에 반드시 `cargo build -p sim-bridge`를 다시 한다 (`cargo test`는 Godot이 읽는 라이브러리를 다시 만들지 않는다).
+Rust를 고친 뒤에는 Godot을 띄우기 전에 반드시 `cargo build -p sim-bridge`를 다시 한다 (`cargo test`는 Godot이 읽는 라이브러리를 다시 만들지 않는다).
 
 ## 게이트
 

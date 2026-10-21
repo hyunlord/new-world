@@ -79,6 +79,11 @@ if ! GODOT="$(resolve_godot)"; then
     echo "play: Godot 4.6을 찾지 못했습니다 — Godot.app을 /Applications 또는 ~/Downloads에 두거나 GODOT_BIN=<.../Godot.app/Contents/MacOS/Godot>로 알려 주세요 (GODOT_BIN=${GODOT_BIN:-없음})" >&2
     exit 2
 fi
+godot_version="$("$GODOT" --version 2>/dev/null | head -1)"
+case "$godot_version" in
+    4.6*) ;;
+    *) echo "play: 경고 — $GODOT 은(는) Godot ${godot_version:-버전 모름}입니다; 이 게임은 Godot 4.6용입니다" >&2 ;;
+esac
 
 # --- 2. Version → worktree ----------------------------------------------------------------------
 git -C "$REPO" fetch -q origin 2>/dev/null || echo "play: git fetch 실패 — 마지막으로 받아 둔 원격 상태를 씁니다" >&2
@@ -99,6 +104,7 @@ esac
 commit="$(git -C "$REPO" rev-parse -q --verify "$target^{commit}" 2>/dev/null)" || commit=""
 if [[ -z "$commit" ]]; then
     echo "play: 모르는 버전 '$version' — main, wip, m1, v8-0, v7 또는 커밋/태그/브랜치를 주세요" >&2
+    [[ -n "$branch" || "$version" == main || "$version" == wip ]] && echo "play: (원격 브랜치를 아직 받지 못했다면 인터넷 연결을 확인하고 다시 실행하세요: git fetch origin)" >&2
     exit 3
 fi
 short="$(git -C "$REPO" rev-parse --short "$commit")"
@@ -154,8 +160,9 @@ if (( build == 0 )); then
     build_state="생략(--no-build)"
     [[ -f "$lib_path" ]] || { say "play: --no-build인데 ${lib_path}가 없습니다"; exit 1; }
 elif (( needs_build == 1 )); then
+    command -v cargo > /dev/null 2>&1 || { say "play: Rust(cargo)가 없습니다 — https://rustup.rs 의 설치 명령을 터미널에 붙여 넣어 설치한 뒤 다시 실행하세요"; exit 1; }
     [[ "$profile" == debug ]] && say "play: Godot 편집기 실행 파일은 .gdextension의 macos.debug($lib_path)를 읽으므로 release가 아니라 debug로 빌드합니다"
-    say "play: cargo build -p sim-bridge ${cargo_flags[*]+${cargo_flags[*]}} …"
+    say "play: cargo build -p sim-bridge ${cargo_flags[*]+${cargo_flags[*]}} … (처음에는 수십 초~몇 분, 그동안 화면에 아무것도 안 나옵니다)"
     started=$(date +%s)
     (cd rust && cargo build -p sim-bridge ${cargo_flags[@]+"${cargo_flags[@]}"}) >> "$LOG" 2>&1 || { say "play: 빌드 실패 — $LOG"; exit 1; }
     build_secs=$(( $(date +%s) - started ))

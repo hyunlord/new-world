@@ -12,8 +12,8 @@ cd "$here/../.." || exit 1
 code=$?
 if [ $code -ne 0 ]; then
     echo
-    echo "WorldSim을 실행하지 못했습니다 (exit $code). 위의 메시지와 로그 경로를 확인하세요."
-    echo "아무 키나 누르면 창이 닫힙니다."
+    echo "WorldSim을 실행하지 못했습니다 (exit $code). 위의 메시지(있으면 로그 경로)를 확인하세요."
+    echo "아무 키나 누르면 끝납니다 (그다음 터미널 창은 ⌘W로 닫으세요)."
     read -n 1 -s
 fi
 exit $code
