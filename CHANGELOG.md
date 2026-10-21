@@ -5,6 +5,26 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## M1-ART — 2026-10-21
+
+The colony view drawn like the mock-up: real ground, a canopy that reads as forest, buildings and log piles you can read, people you can find (`docs/v8/m1art/ART_GOAL.md`, report `docs/v8/m1art/ART_REPORT.md`). No simulation change (`rust/` untouched; identity, colony determinism and replay pass).
+
+### Added
+- `tools/v8/gen_tiles.py` → `assets/v8/tiles.png` + `tiles.json`: one code-painted sheet (ground families, forest floor, worn earth with dither edges, hill, rock tops and cliffs, deep/shallow water with 15 bank masks and 4 inner corners, stockpile floor parts, 3 species × 3 sizes of 24×24 crowns and their shadow, stump, log piles, hut with walls/bedrolls/hearth, blueprint ghosts, lean-to, two hearth frames, layered people with stand/stride/sleep frames and halo, carried logs, tools, axe chop glyph, hover frame, order-bar icons, people palettes); `tools/v8/test_gen_tiles.py` (23 tests).
+- Terrain: value-noise grass clusters on the world seed, forest floor around trees, an eroded camp clearing, the water autotile (`terrain_layer.gd`).
+- Canopy chunks with y-ordered overlapping crowns, shadows (not at 1×) and stumps for a game day (`tree_layer.gd`); ground-level overlay pass for stockpile floors, log piles and blueprint ghosts with delivered piles; backed blueprint label and a 3-px bar (`overlay_layer.gd`); two-frame hearth fire, lean-to shelter (`building_layer.gd`).
+- People: outline and halo layers, walking frames, west flip, logs across the shoulders, sleepers on the hut's bedrolls, warm light near a fire at night (`agent_layer.gd`).
+- Order bar icons, gold active mode, macOS hint `UI_ORDER_HINT_IDLE_MAC` (en/ko); `tools/v8/capture.gd --m1-set` dumps on-screen positions per shot and adds `m1_10_morning_2x.png`; `tools/v8/m1_gui_test.gd --no-vsync`; `tools/v8/contact_sheet.py --columns` and blank cells.
+- `docs/images/m1art_contact_sheet.png`; ADR 0015; `docs/v8/m1art/` (goal, checklist, decisions, report).
+
+### Changed
+- `chronicle_panel.gd` shows HutBuilt (kind 22); `UI_CAUSAL_PANEL_PLACEHOLDER` lost its dev marker "(γ-2-β)".
+- `daylight_controller.gd`: the hearth glow is centred on the hearth (it sat half a tile off); the night curve is shared (`tint_at`, `night_factor_at`).
+- `worldsim-godot` (craft rules, procedures 11–12, lessons), `worldsim-pitfalls` (lessons), `rendering-m1.md`, ARCHITECTURE §7, inventory rules.
+
+### Removed
+- `tools/v8/gen_temp_tiles.py` (540 lines) and `test_gen_temp_tiles.py` (renamed and rewritten as `gen_tiles.py` / `test_gen_tiles.py`); `assets/v8/temp/` (the placeholder sheet); `docs/images/m1_contact_sheet.png` (replaced).
+
 ## V8-PLAY — 2026-10-21
 
 Screenshots of the current game for the owner and a one-command way to play any version (`docs/v8/play/PLAY_GOAL.md`, report `docs/v8/play/PLAY_REPORT.md`). No simulation or game code changed.

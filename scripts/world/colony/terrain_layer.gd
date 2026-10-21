@@ -1,6 +1,6 @@
 # terrain_layer.gd (ColonyView/TerrainLayer in scenes/main.tscn): the ground of the M1 colony view.
-# A TileMapLayer built once per world (rebuilt only on `world_reset`; pending until the first tick registers the
-#   hearth) from the terrain snapshot and the trees standing at that moment:
+# A TileMapLayer built once per world (rebuilt only on `world_reset`, and once more when the first tick registers
+#   the hearth — checked each frame by one cached read, never by a full rebuild) from the terrain snapshot and the trees standing at that moment:
 #   - grass in two families clustered by value noise on the world seed (`View.cluster_noise`), never per-tile
 #     random colour;
 #   - forest floor under every tree and its 8 neighbours;
@@ -40,6 +40,7 @@ const EDGE_TRANSFORMS: Array[int] = [
 var _world_sim: Node = null
 var _coords: Dictionary = {}
 var _pending: bool = true
+var _drawn: bool = false
 
 
 func _ready() -> void:
@@ -63,11 +64,18 @@ func _ready() -> void:
 
 func _on_world_reset() -> void:
 	_pending = true
+	_drawn = false
 
 
 func _process(_delta: float) -> void:
-	if _pending and _world_sim != null:
+	# Draw once at once; while the hearth is unknown, rebuild only when it appears (not every frame).
+	if _pending and _world_sim != null and (not _drawn or _hearth_known()):
 		refresh()
+
+
+func _hearth_known() -> bool:
+	var kinds: PackedByteArray = (SimReads.read(_world_sim, "get_building_snapshot") as Dictionary).get("kinds", PackedByteArray())
+	return kinds.has(0)
 
 
 ## Rebuild every cell from the terrain snapshot.
@@ -89,6 +97,7 @@ func refresh() -> void:
 			break
 	# Buildings register on the first tick: until then draw the ground and retry for the clearing.
 	_pending = hearth.x < 0
+	_drawn = true
 	var seed: int = int((SimReads.read(_world_sim, "get_world_info") as Dictionary).get("seed", 0))
 	var floor_mask: PackedByteArray = _forest_floor(w, h, terrain)
 	var worn: PackedByteArray = PackedByteArray()

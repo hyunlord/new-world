@@ -19,11 +19,16 @@ So for M1: budget the **renderer**, keep per-agent GDScript loops short, and rea
 
 ## Tiles: `TileMapLayer`
 
-- Godot 4.3+ uses one `TileMapLayer` node per layer (the old multi-layer `TileMap` is deprecated). M1's
-  `scripts/world/colony/view.gd` builds one `TileSet` + `TileSetAtlasSource` from `assets/v8/temp/tiles.png` and
-  `tiles.json` (name → rect) and returns the name → atlas-coords map; `terrain_layer.gd` and `tree_layer.gd` fill
-  cells with `set_cell(Vector2i(x, y), 0, coords[name])`. The 192 × 192 terrain is filled once per world (and
-  again only while the hearth is unknown); trees refill when `get_colony_versions` reports a new trees version.
+- Godot 4.3+ uses one `TileMapLayer` node per layer (the old multi-layer `TileMap` is deprecated). The colony's
+  `scripts/world/colony/view.gd` builds one `TileSet` + `TileSetAtlasSource` from `assets/v8/tiles.png` and
+  `tiles.json` (name → rect; M1-ART) and returns the name → atlas-coords map; `terrain_layer.gd` fills cells with
+  `set_cell(Vector2i(x, y), 0, coords[name], alternative)`, where `alternative` may carry the runtime transform
+  flags (`TileSetAtlasSource.TRANSFORM_FLIP_H | FLIP_V | TRANSPOSE`) to turn one tile four ways without creating
+  alternative tiles. The 192 × 192 terrain is filled once per world (and again only while the hearth is unknown).
+- Sprites larger than a tile that must overlap their neighbours (24×24 crowns) do not fit a tile map:
+  `tree_layer.gd` draws them from child `Node2D` chunks (16×16 tiles each, created in row order) with
+  `draw_texture_rect_region`, sorted by (y, x) inside a chunk; a felled tree redraws one chunk. ~10,000 trees
+  with shadows are ~20,000 cached quads, culled per chunk.
 - Fill on world reset or when the terrain snapshot changes, not every frame (terrain is cached per world in
   `SimReads`). `set_cell` on an unchanged cell still costs; diff before writing.
 - A `TileMapLayer` batches its cells into quadrants; many layers × full-map redraws are what cost. Keep the layer

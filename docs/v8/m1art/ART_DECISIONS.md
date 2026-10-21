@@ -78,3 +78,10 @@ Decisions taken without asking the owner (goal §0). One line of context, the de
   a doorway and faint bedroll/hearth plan lines; the blueprint crop was re-centred (the site's dumped tile is its
   top-left) and the question asks for the main thing the crop is centred on. Round 2 uses a new subagent and the
   final capture; find-the-people is rerun on the same final capture.
+- **D20 (Part 5) — independent review and its fixes.** A fresh read-only reviewer (report
+  `/Users/rexxa/work/m1art-data/review/REVIEW.md`) found no `rust/` change and nothing new that scales with the map
+  or the tree count per frame in normal play. Fixed: the terrain layer no longer rebuilds the whole map every frame
+  while the hearth is unknown (it draws once, then waits on one cached building read); the sleeper pass runs only
+  when someone sleeps. Kept: per-person work that scales with the colony's 10–30 people (`under_canopy`, the warm
+  check). Noted, pre-existing: the blueprint's "작업 n%" can lag, because construction progress does not bump the
+  overlay version (`construction_system.rs` touches the colony only on completion).

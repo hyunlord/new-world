@@ -73,6 +73,21 @@ smoke are this repo's validators).
 - **Don't** use `self_modulate` when children must follow. *Reason:* it is not inherited; a child Label kept its colour.
 - **Do** measure every GDScript "optimisation" before keeping it. *Reason:* caching `get_meta`/`get_node_or_null` in GDScript made W500 19.5 % slower.
 
+### Pixel-art craft rules (M1-ART; `tools/v8/gen_tiles.py` and its tests enforce the measurable ones)
+1. Every sprite has a 1-px dark outline `(20, 18, 16)` on its silhouette; ground tiles have none.
+2. Three to four values per material (shadow, base, light, highlight); no gradients, no anti-aliasing.
+3. Light from the top-left; cast shadows fall down-right, 1 px, in a darker ground colour, never black.
+4. The ground is the calmest layer: variation comes from clusters (value noise on the world seed in the
+   terrain layer), never from per-tile random colour.
+5. Nothing on the ground competes with a person in value contrast: ground and ground-level items stay in the
+   mid range; people carry the brightest skin and tunic values and the heaviest outline (a halo where they could
+   be lost: under a crown, at night away from a fire).
+6. Text on the map sits on a dark backing box (the `art_ui.gd` panel colours; `overlay_layer.gd` `_label`).
+
+*Reason:* the M1 placeholders (flat 16-px circles per forest tile, a grey square hut, 16-px people without an
+outline) made a forest read as green dots that hid the people and 34 logs read as four small squares
+(`docs/v8/m1art/ART_GOAL.md` "Why this pass exists").
+
 ## Procedures
 
 ### 1. Prepare a checkout for Godot
@@ -144,6 +159,28 @@ smoke are this repo's validators).
 3. `tools/play/WorldSim.command` (main) and `WorldSim-v7.command` (v7) are the double-click launchers; they follow a `~/Desktop` symlink back to the clone and keep Terminal open on a non-zero exit.
 4. `--seed`/`--speed` are passed only when the version's `scripts/` (outside `scripts/test/`) contain `"--seed"`/`"--speed"`; no version does today.
 
+### 11. Add or change a colony sprite (M1-ART)
+1. Paint it in `tools/v8/gen_tiles.py`: a painter returning an RGBA image, seeded by its own `rr(k)` with an
+   unused `k`; outline with `outline_alpha` or `OUTLINE`; register it in `build_sprites` with `add(section, name, im)`
+   (a ground tile goes in section "ground", 16×16, opaque). A person frame is an ASCII table (`ADULT`, `CHILD`,
+   `*_SLEEP`): each character maps to a layer (`LAYER`) and a grey value (`VALUE`); `figure_layers` splits it into
+   skin/hair/tunic/outline and derives the halo.
+2. Add the name and size to `SIZE` in `tools/v8/test_gen_tiles.py` (and to `OUTLINED` for an object).
+3. `python3 tools/v8/gen_tiles.py`, then `python3 -m unittest tools/v8/test_gen_tiles.py` (`test_committed_sheet_is_current`
+   fails until the sheet is regenerated).
+4. Re-import headless (the PNG changed; its `.import` is local), draw it with `View.rect(name)`; a ground tile must
+   also be in `terrain_layer.gd`'s TileSet name list.
+5. Look before capturing: compose the sprites with PIL in context (a few lines; M1-ART caught a hut floor erased by
+   its wall helper this way), then a windowed capture at 2× and 1×.
+
+### 12. Turn one tile four ways; the water autotile
+- `set_cell(cell, 0, coords, alt)` takes the runtime transform flags in `alt`; for a tile drawn with its feature on
+  the NORTH side: north `0`, east `TRANSPOSE | FLIP_H`, south `FLIP_V`, west `TRANSPOSE` (`terrain_layer.gd`
+  `EDGE_TRANSFORMS`, the clearing's grass-dither edge).
+- Water (`terrain_layer.gd` `_water`): the 4-bit mask of land neighbours (N=1, E=2, S=4, W=8) picks `bank_<mask>`
+  (15 tiles, a sand lip on each land side); mask 0 with land on a diagonal picks `bank_in_<ne/nw/se/sw>`; land within
+  2 tiles gives `shallow_*`; the rest is `water_*` (deep).
+
 ## Lessons
 
 | date | symptom | root cause | fix | source |
@@ -202,3 +239,7 @@ smoke are this repo's validators).
 | 2026-10-21 | The chronicle panel (C) never showed "오두막이 완성됨" although `get_chronicle_since` held the HutBuilt row (kind 22) | `chronicle_panel.gd` keeps only the kinds in its `NOTABLE` list, and M1 added kind 22 to `chronicle_text.gd` but not to `NOTABLE` | add every new chronicle kind to `NOTABLE` and look at the panel in a windowed run (not fixed yet: a game change was out of V8-PLAY's scope) | `docs/v8/play/SCREEN_REPORT.md` P4; `scripts/ui/panels/chronicle_panel.gd` |
 | 2026-10-21 | Running the game for play: which library does it load? | the Godot editor binary always has the debug feature, so a non-exported run loads `.gdextension`'s `macos.debug` path (`rust/target/debug/…`), never the release one | build the profile `macos.debug` names (`tools/play.sh` reads it); measure release only by copying it to the debug path | `tools/play.sh`; `sim_bridge.gdextension` |
 | 2026-10-21 | A capture planned for "work in progress at tick 900" showed 23:00 with nobody carrying | the colony clock starts at 08:00 (tick 360 = 14:00) and the hut was finished at tick 766 | find the tick with a frameless scan pass, then `reset_world(seed)` and shoot the same world (same hut tick both passes); caption shots with the real tick and clock | `docs/v8/play/PLAY_DECISIONS.md` D2; `tools/v8/capture.gd` |
+| 2026-10-21 | The M1 forest read as rows of green dots and hid the people; the first M1-ART 1× impostor (16×16 crown per tile) brought the dots back | a tile map draws one 16×16 cell per tile, so crowns cannot overhang their neighbours; outlined crowns that fit their tile leave a gap and an outline ring around every tree | draw 24×24 crowns from y-ordered `Node2D` chunks below the people layer; at 1× drop only the shadows | `scripts/world/colony/tree_layer.gd`; `docs/v8/m1art/ART_DECISIONS.md` D8, D9 |
+| 2026-10-21 | At night several people on one shelter tile and three in the hut showed as one figure | the simulation puts every sleeper of a building on the building's tile | spread sleepers for drawing only (hut: its bedrolls; elsewhere a fan along y); the drawn rect stays the click target | `scripts/world/colony/agent_layer.gd` `_place_sleepers`; `docs/v8/m1art/ART_DECISIONS.md` D12 |
+| 2026-10-21 | A fresh blind tester named a child "a villager", a sleeper "a hearth stone" and the blueprint "a zone outline" (6/10) | the child was a slightly shorter adult; the sleep frame's eyes and belt read as a pattern; the ghost was a plain dashed square | children need child proportions (big head, small body, 10 px), sleepers a head and a blanket, a blueprint plan marks (hatched walls, door, faint furniture) | `tools/v8/gen_tiles.py` `CHILD`, `ADULT_SLEEP`, `hut_ghost`; `docs/v8/m1art/ART_REPORT.md` 8.2 |
+| 2026-10-21 | The halo around fire-lit people turned into a bright orange box at night | the warm `modulate` (> 1) multiplies every child sprite, the halo included | show the halo only where a person would be lost (under a crown, dark and away from a fire), never on sleepers | `scripts/world/colony/agent_layer.gd`; `docs/v8/m1art/ART_DECISIONS.md` D13 |

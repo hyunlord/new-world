@@ -66,7 +66,7 @@ Godot loads.
 4. An ADR in `docs/decisions/` for each design decision.
 5. `docs/ARCHITECTURE.md`: regenerate the system table (`python3 tools/v8/system_table.py --write`), update maps if structure changed.
 6. Skills: add a lesson when a problem needed more than one attempt, a better method was found, or Godot/gdext surprised you — in the same pass.
-7. `tools/play.sh --headless-check main` passes; replace `docs/images/m1_contact_sheet.png` with `<pass>_contact_sheet.png` when the view changed (≤ 12 images; delete the previous sheet).
+7. `tools/play.sh --headless-check main` passes; replace the current `docs/images/<pass>_contact_sheet.png` (now `m1art_contact_sheet.png`) with the new pass's sheet when the view changed (≤ 12 images; delete the previous sheet).
 8. `bash tools/v8/check_docs.sh` green.
 
 Details: `.claude/skills/worldsim-docs-upkeep/SKILL.md`.

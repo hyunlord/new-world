@@ -186,6 +186,7 @@ func _process(delta: float) -> void:
 	var night: float = Daylight.night_factor_at(hour)
 	if night > 0.0:
 		_refresh_warm_sources()
+	var sleepers: int = 0
 	var inspector: Node = get_node_or_null("/root/Main/UI/AgentInspectorPanel")
 	_selected_bits = int(inspector.call("get_selected_entity_bits")) if inspector != null and (inspector as Control).visible else -1
 	for i: int in n:
@@ -209,6 +210,8 @@ func _process(delta: float) -> void:
 		var asleep: bool = i < states.size() and i < targets.size() and states[i] == STATE_CONSUMING and targets[i] == TARGET_SLEEP
 		var moving: bool = person.elapsed < person.duration
 		var frame: String = "sleep" if asleep else ("1" if moving and person.steps % 2 == 1 else "0")
+		if asleep:
+			sleepers += 1
 		_set_look(person, stage, frame)
 		var household: int = int(_households.get(ids[i], ids[i]))
 		(person.layers["tunic"] as Sprite2D).modulate = _tunics[posmod(household, _tunics.size())]
@@ -232,7 +235,8 @@ func _process(delta: float) -> void:
 		if person.seen != _frame:
 			person.queue_free()
 			_persons.erase(key)
-	_place_sleepers()
+	if sleepers > 0:
+		_place_sleepers()
 	for person: Person in _persons.values():
 		if person.frame == "sleep":
 			person.position = person.to_pos + person.bed
