@@ -101,8 +101,8 @@
 무겁게 만듦)과 중간 1건(잠자는 사람 처리)을 고쳤다(D20). 사람 수에 비례하는 중간 항목 2건은 10–30명 규모라 그대로
 뒀다. 보고서: `/Users/rexxa/work/m1art-data/review/REVIEW.md`.
 
-**8.6 시뮬레이션 불변:** `git diff --stat bba3110e..HEAD -- rust/` = 비어 있음. identity·colony 결정성·replay는 게이트
-결과(아래)로 판정.
+**8.6 시뮬레이션 불변 — 통과:** `git diff --stat bba3110e..HEAD -- rust/` = 비어 있음. 게이트(`2f701621`)에서
+identity(10단계, 32세계×120일) 통과, determinism 통과, colony_determinism·replay 통과.
 
 ### 변경된 파일 목록 (커밋별)
 - `a4a7eaf4` p0: `docs/v8/m1art/ART_GOAL.md`.
@@ -142,7 +142,15 @@
 3. 다음 순서: M1.5 달력(권고 유지) 또는 M2.
 
 ### Gate 결과
-PENDING — 최종 커밋에서 `bash tools/v8/gate.sh` 실행 후 채운다.
+`bash tools/v8/gate.sh /Users/rexxa/work/m1art-data/gate1` — 커밋 `2f7016216ecad63b37777a49b003e7d9efca11f1`, dirty 0,
+2026-10-21 19:26:28 → 20:23:12, **status 0, 21단계 모두 exit 0**:
+fmt · bridge_build · godot_import · test_debug(1782 통과, 0 실패) · test_release(1782 통과, 0 실패) · clippy ·
+forbidden_math · gdscript_strict · smoke · identity · determinism · perf(평균 +10 % 초과 없음) · bridge_api · docs ·
+inventory_closure · python_unittest · m1_tests(36 통과) · colony_determinism · replay · uid_check · play_check(6/6).
+`v8/main`을 `2f701621`로 빨리감기했다. 이 보고서 커밋은 문서만 바꾼다(ROADMAP·HISTORY의 게이트 커밋 해시와 이 절).
 
 git ls-remote 결과
-PENDING
+```
+2f7016216ecad63b37777a49b003e7d9efca11f1	refs/heads/v8/main   (게이트 통과 커밋)
+(같은 해시)	refs/heads/v8/wip, v8/main — 이 보고서 커밋(문서만, 게이트 커밋 위 1개; docs 검사 통과 후 빨리감기)
+```
