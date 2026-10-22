@@ -1,0 +1,280 @@
+{
+  "status": "accepted under judge v2, TRIAL2b",
+  "asset": "hide",
+  "family": "items",
+  "try_count": 3,
+  "prompt": "Use case: stylized-concept. Final permitted retry3. Draw a NEW version of this WorldSim asset: one spread animal hide with soft short pale buff fur, subtle taupe patches. Reference images1 and2 establish the required ink-and-tone medium; image3 only identifies the object, do not copy its high contrast rendering. Thin dark hand-drawn contours and fine irregular internal ink marks, gentle muted brown-grey watercolor. Essential change: extremely gentle internal tonal transitions. Wood or fur is middle-value taupe throughout with pale buff highlights only slightly lighter; shadows soft brown only slightly darker. No bright cream streaks, no broad near-black patches, no dramatically shaded round volumes, no hard painted bands. Preserve detailed naturally hand-inked material texture with small broken lines, unlike a flat vector icon. Overhead map camera, upper-left soft light. Center one whole object on perfectly flat pure magenta #ff00ff, with12 percent clear margin. No ground, no scene, no cast shadow on background, no labels or extra objects. Match restrained reference medium, avoid the previous object's dramatic tonal contrast.",
+  "anchors": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+      "sha256": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+      "hash_basis": "recomputed preserved source bytes",
+      "unavailable_reason": null
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png",
+      "sha256": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+      "hash_basis": "recomputed preserved source bytes",
+      "unavailable_reason": null
+    },
+    {
+      "path": "/Users/rexxa/work/arttrial2-data/items/hide_try1_raw.png",
+      "sha256": "caa87d1d2a2341b252848aa857b46c74c84cc9df190f114c526a5700f83d1c09",
+      "hash_basis": "recomputed preserved source bytes",
+      "unavailable_reason": null
+    }
+  ],
+  "generation_id": "exec-fa37b8fa-5a8e-4e96-b392-a78908958d51",
+  "generation_id_note": "Tool output artifact identifier; no separate generation ID returned",
+  "original": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/hide_try3_raw.png",
+  "original_sha256": "63b67796c8a0775b7f68a4c0f53c050ab628c0ea3856b8ddf54d457b9c3debca",
+  "working_source": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/hide_try3_working.png",
+  "working_sha256": "86ad39457f8f516e88bbd10b7c8aa6c1e1afeecb3a206b33cdb19e67cbddbf6e",
+  "working_size": [
+    64,
+    64
+  ],
+  "operations": [
+    "art.pipeline2.autotile.extract: magenta and mixed fringe key, alpha-bounds crop",
+    "Lanczos thumbnail into original canvas dimensions minus four pixels",
+    "center on transparent original-size canvas; no RGB adjustment, quantization or outline forcing"
+  ],
+  "anchor_point": [
+    32.0,
+    32.0
+  ],
+  "anchor_point_note": "origin top-left; x right, y down",
+  "generation_started_at": null,
+  "generation_completed_at": null,
+  "generation_timestamp_note": "Generation UTC start/end were not recorded; recorded wall_seconds retained without inventing timestamps",
+  "wall_seconds": 26.686,
+  "wall_seconds_note": null,
+  "numeric": {
+    "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/hide_try3_raw.png",
+    "sha256": "63b67796c8a0775b7f68a4c0f53c050ab628c0ea3856b8ddf54d457b9c3debca",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.20742476636849475,
+      "saturation_q25": 0.4143901249773213,
+      "saturation_q75": 0.47992197934984293,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.012178169426486264,
+      "foreground_pixels": 37184
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 5,
+      "line": 4,
+      "light": 4,
+      "palette": 4,
+      "sentence": "The hide matches the references\u2019 watercolor-and-ink medium with similar textured washes, hand-drawn linework, soft tonal shading, and earthy brown/ochre palette, with only slight variation in fine detail density."
+    },
+    "model_status": "SAME_FAMILY_VERIFIED",
+    "passed": true
+  },
+  "numeric_thresholds": {
+    "features": [
+      "edge_density",
+      "saturation_q25",
+      "saturation_q75",
+      "stroke_q25",
+      "stroke_q50",
+      "stroke_q75",
+      "stroke_q90",
+      "wash_flatness"
+    ],
+    "family": "items",
+    "lower": [
+      0.14375745143418192,
+      0.16932656739677926,
+      0.25762963464540434,
+      1.0,
+      0.8284271247461903,
+      2.0,
+      2.7221359549995796,
+      0.002562857136716717
+    ],
+    "upper": [
+      0.4313261215138976,
+      0.6661527448313658,
+      0.8126448169938499,
+      3.0,
+      6.0,
+      6.0,
+      6.22213595499958,
+      0.020179014811321002
+    ],
+    "comparison_size": 256,
+    "stroke_comparison_size": 1024
+  },
+  "calibration_path": "/Users/rexxa/work/new-world-art-prod/docs/v8/arttrial2/JUDGE_V2_CALIBRATION.json",
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "model": {
+    "scores": {
+      "medium": 5,
+      "line": 4,
+      "light": 4,
+      "palette": 4,
+      "sentence": "The hide matches the references\u2019 watercolor-and-ink medium with similar textured washes, hand-drawn linework, soft tonal shading, and earthy brown/ochre palette, with only slight variation in fine detail density."
+    },
+    "references": [
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "sha256": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458"
+      },
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "sha256": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832"
+      }
+    ],
+    "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/hide_try3_scorecard.png",
+    "scorecard_sha256": "43f3d6c69a64fd7db975a077c388cc50474ae264c912b295c390f06b0a7a7f88",
+    "review_manifest": "/Users/rexxa/work/arttrial2-data/trial2b/environment-all-model-reviews.json",
+    "review_manifest_sha256": "cee5e92c6a1e54e0b73c7434029e6e118fac3076bbf89fff465582ad0e2264c8",
+    "full_record": {
+      "name": "hide_try3",
+      "family": "items",
+      "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/hide_try3_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/hide_try3_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "tool": "image_gen__imagegen",
+      "started_at": {
+        "current_time": "2026-10-22 02:56:25 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:58:38 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1617c-d43e-7193-bcc9-faeebf54a95a/exec-8a914154-b6d7-4e77-ba68-5481d514ad42.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/hide_try3_scorecard.png",
+      "scores": {
+        "medium": 5,
+        "line": 4,
+        "light": 4,
+        "palette": 4
+      },
+      "reason": "The hide matches the references\u2019 watercolor-and-ink medium with similar textured washes, hand-drawn linework, soft tonal shading, and earthy brown/ochre palette, with only slight variation in fine detail density.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+        "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/hide_try3_raw.png": "63b67796c8a0775b7f68a4c0f53c050ab628c0ea3856b8ddf54d457b9c3debca"
+      },
+      "scorecard_sha256": "43f3d6c69a64fd7db975a077c388cc50474ae264c912b295c390f06b0a7a7f88",
+      "source_sha256": "43f3d6c69a64fd7db975a077c388cc50474ae264c912b295c390f06b0a7a7f88",
+      "model_rule_pass": true,
+      "usable_transcription": true,
+      "printed_verdict": null,
+      "format_deviation": "Illustrated scorecard despite plain-scorecard request; four scores and reason legible; printed verdict omitted.",
+      "transcription_method": "Manual verbatim reading of actual scorecard via view_image"
+    },
+    "identity_note": "Actual image-generation model scorecard; underlying model version not exposed; call context is in full_record"
+  },
+  "acceptance_evidence": "docs/v8/arttrial2/ENV_ACCEPTANCE_V2.json",
+  "acceptance_evidence_sha256": "144ebcb5da913e6b2752cb8189779a879171cbb6534f1798743b9a1346c1ce6b",
+  "generation_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/hide_try3_generation.json",
+    "sha256": "bf4fb412893cbad8bfaf90870922d6cde54eb1f22bd3e3db822026edd0f50bea",
+    "full_record": {
+      "name": "hide",
+      "production_family": "items",
+      "family": "items",
+      "try": 3,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1617c-d43e-7193-bcc9-faeebf54a95a/exec-fa37b8fa-5a8e-4e96-b392-a78908958d51.png",
+      "raw": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/hide_try3_raw.png",
+      "prompt": "Use case: stylized-concept. Final permitted retry3. Draw a NEW version of this WorldSim asset: one spread animal hide with soft short pale buff fur, subtle taupe patches. Reference images1 and2 establish the required ink-and-tone medium; image3 only identifies the object, do not copy its high contrast rendering. Thin dark hand-drawn contours and fine irregular internal ink marks, gentle muted brown-grey watercolor. Essential change: extremely gentle internal tonal transitions. Wood or fur is middle-value taupe throughout with pale buff highlights only slightly lighter; shadows soft brown only slightly darker. No bright cream streaks, no broad near-black patches, no dramatically shaded round volumes, no hard painted bands. Preserve detailed naturally hand-inked material texture with small broken lines, unlike a flat vector icon. Overhead map camera, upper-left soft light. Center one whole object on perfectly flat pure magenta #ff00ff, with12 percent clear margin. No ground, no scene, no cast shadow on background, no labels or extra objects. Match restrained reference medium, avoid the previous object's dramatic tonal contrast.",
+      "reference_images": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/items/hide_try1_raw.png"
+      ],
+      "tool": "image_gen__imagegen",
+      "wall_seconds": 26.686,
+      "model_status": "MISSING",
+      "accepted": false
+    }
+  },
+  "processing_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/hide_try3_working.json",
+    "sha256": "15ca280bbe889992ac9a67c0584c679e844277df101e284ae12c69861d6b6a7a",
+    "full_record": {
+      "name": "hide",
+      "production_family": "items",
+      "family": "items",
+      "try": 3,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1617c-d43e-7193-bcc9-faeebf54a95a/exec-fa37b8fa-5a8e-4e96-b392-a78908958d51.png",
+      "raw": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/hide_try3_raw.png",
+      "prompt": "Use case: stylized-concept. Final permitted retry3. Draw a NEW version of this WorldSim asset: one spread animal hide with soft short pale buff fur, subtle taupe patches. Reference images1 and2 establish the required ink-and-tone medium; image3 only identifies the object, do not copy its high contrast rendering. Thin dark hand-drawn contours and fine irregular internal ink marks, gentle muted brown-grey watercolor. Essential change: extremely gentle internal tonal transitions. Wood or fur is middle-value taupe throughout with pale buff highlights only slightly lighter; shadows soft brown only slightly darker. No bright cream streaks, no broad near-black patches, no dramatically shaded round volumes, no hard painted bands. Preserve detailed naturally hand-inked material texture with small broken lines, unlike a flat vector icon. Overhead map camera, upper-left soft light. Center one whole object on perfectly flat pure magenta #ff00ff, with12 percent clear margin. No ground, no scene, no cast shadow on background, no labels or extra objects. Match restrained reference medium, avoid the previous object's dramatic tonal contrast.",
+      "reference_images": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/items/hide_try1_raw.png"
+      ],
+      "tool": "image_gen__imagegen",
+      "wall_seconds": 26.686,
+      "model_status": "MISSING",
+      "accepted": false,
+      "generation_id": "exec-fa37b8fa-5a8e-4e96-b392-a78908958d51",
+      "generation_id_note": "Tool output artifact identifier; no separate generation ID returned",
+      "started_at": null,
+      "completed_at": null,
+      "timestamp_note": "Generation UTC start/end were not recorded; recorded wall_seconds retained without inventing timestamps",
+      "reference_sha256": [
+        "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+        "caa87d1d2a2341b252848aa857b46c74c84cc9df190f114c526a5700f83d1c09"
+      ],
+      "raw_sha256": "63b67796c8a0775b7f68a4c0f53c050ab628c0ea3856b8ddf54d457b9c3debca",
+      "working_path": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/hide_try3_working.png",
+      "working_sha256": "86ad39457f8f516e88bbd10b7c8aa6c1e1afeecb3a206b33cdb19e67cbddbf6e",
+      "working_size": [
+        64,
+        64
+      ],
+      "anchor_point": [
+        32.0,
+        32.0
+      ],
+      "anchor_point_source": "/Users/rexxa/work/arttrial2-data/items/hide_try1.json",
+      "anchor_point_source_sha256": "c330f989ee3abed16c6d7e8a5b8c3a5941e977c26fbb593ef9e92f97ddddca66",
+      "operations": [
+        "art.pipeline2.autotile.extract: magenta and mixed fringe key, alpha-bounds crop",
+        "Lanczos thumbnail into original canvas dimensions minus four pixels",
+        "center on transparent original-size canvas; no RGB adjustment, quantization or outline forcing"
+      ],
+      "keyed_crop_size": [
+        967,
+        1080
+      ],
+      "sprite_size": [
+        54,
+        60
+      ],
+      "placement": [
+        5,
+        2
+      ],
+      "processing_implementation": "art/pipeline2/autotile.py",
+      "processing_implementation_sha256": "12b3e8297f2987186c398fc0ef2eec5d7440e7651113141e1771cd93314f10a1",
+      "working_visual_evidence": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/working_visual_notes.md",
+      "working_visual_evidence_sha256": "069575a24d0d54a28d79a9e85e5731733a8cb55c255ead4db111f35b476f80dd",
+      "status": "candidate only; awaiting acceptance join"
+    }
+  },
+  "historical_record_note": "Nested historical numeric/status fields are preserved as history; top-level status and numeric/model are TRIAL2b decisions."
+}

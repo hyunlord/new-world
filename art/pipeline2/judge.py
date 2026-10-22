@@ -2,12 +2,11 @@
 # requires-python = ">=3.11"
 # dependencies = ["pillow", "numpy", "scikit-image"]
 # ///
-# How to run: python art/pipeline2/judge.py calibrate --output calibration.json
-"""Frozen-anchor numeric style measurements plus a fail-closed external model vote.
+# How to run: uv run art/pipeline2/judge.py calibrate --output calibration-v2.json
+"""Family-conditioned style judge; no global colour histogram or content palette.
 
-All images use the same foreground crop and 256-px longest-edge normalization.
-This removes canvas-size bias, not information loss in tiny working sprites.
-Wash is local HSV saturation, not physically measurable pigment opacity.
+Model evidence must independently establish two same-family references. Numeric
+calibration is not semantic acceptance, and missing review always fails closed.
 """
 from __future__ import annotations
 
@@ -21,44 +20,64 @@ from typing import Final
 import numpy as np
 from numpy.typing import NDArray
 from PIL import Image
-from scipy.ndimage import binary_erosion, distance_transform_edt, uniform_filter
-from skimage.color import lab2rgb, rgb2gray, rgb2hsv, rgb2lab
+from scipy.ndimage import (
+    binary_closing,
+    binary_erosion,
+    distance_transform_edt,
+    uniform_filter,
+)
+from skimage.color import rgb2gray, rgb2hsv
 from skimage.feature import canny
+from skimage.measure import label
 from skimage.morphology import skeletonize
 
-NAMES: Final = ("person", "hut", "props", "ground", "scene", "portrait")
 SIZE: Final = 256
 FloatArray = NDArray[np.float64]
-
+FEATURES: Final = ("edge_density", "saturation_q25", "saturation_q75", "stroke_q25", "stroke_q50", "stroke_q75", "stroke_q90", "wash_flatness")
+# Frozen before candidate scoring. Multiplicative factors allow texture variation;
+# absolute floors avoid near-zero feature instability. Never fit to candidates.
+FLOORS: Final = (0.04, 0.12, 0.12, 1.0, 2.0, 2.0, 1.0, 0.003)
 
 @dataclass(frozen=True, slots=True)
 class Metrics:
-    histogram: list[float]
     edge_density: float
-    wash: float
-    stroke_width_at_1024: float
+    saturation_q25: float
+    saturation_q75: float
+    stroke_q25: float
+    stroke_q50: float
+    stroke_q75: float
+    stroke_q90: float
+    wash_flatness: float
     foreground_pixels: int
-
 
 @dataclass(frozen=True, slots=True)
 class Anchor:
     name: str
+    family: str
+    file: str
     sha256: str
     metrics: Metrics
 
+@dataclass(frozen=True, slots=True)
+class FamilyRange:
+    family: str
+    lower: list[float]
+    upper: list[float]
+
+@dataclass(frozen=True, slots=True)
+class Fold:
+    name: str
+    family: str
+    passed: bool
+    checks: dict[str, bool]
 
 @dataclass(frozen=True, slots=True)
 class Calibration:
     anchors: list[Anchor]
-    histogram: list[float]
-    histogram_limit: float
-    palette_lab: list[list[float]]
-    loo_distances: list[float]
-    edge_range: tuple[float, float]
-    wash_range: tuple[float, float]
+    ranges: list[FamilyRange]
+    leave_one_out: list[Fold]
     comparison_size: int = SIZE
-    version: int = 1
-
+    version: int = 2
 
 @dataclass(frozen=True, slots=True)
 class ModelScores:
@@ -86,19 +105,18 @@ class ModelScores:
 class Verdict:
     candidate: str
     sha256: str
+    family: str
     metrics: Metrics
-    histogram_distance: float
     numeric_checks: dict[str, bool]
     numeric_pass: bool
     model_scores: ModelScores | None
     model_status: str
     passed: bool
 
-
 def foreground(path: Path, comparison_size: int = SIZE) -> tuple[FloatArray, NDArray[np.bool_]]:
     """Remove alpha/chroma background for measurement only; never modify assets."""
     with Image.open(path) as source:
-        rgba = np.asarray(source.convert("RGBA"))
+        rgba: NDArray[np.uint8] = np.asarray(source.convert("RGBA"))
     rgb = rgba[:, :, :3].astype(np.float64) / 255.0
     mask = (rgba[:, :, 3] >= 128) & ~(
         (rgb[:, :, 0] > 0.65) & (rgb[:, :, 2] > 0.65)
@@ -109,7 +127,7 @@ def foreground(path: Path, comparison_size: int = SIZE) -> tuple[FloatArray, NDA
         message = f"Insufficient visible foreground: {path}"
         raise ValueError(message)
     bounds = np.s_[rows.min():rows.max() + 1, cols.min():cols.max() + 1]
-    crop = rgba[bounds].copy()
+    crop: NDArray[np.uint8] = rgba[bounds].copy()
     crop[:, :, 3] = mask[bounds] * 255
     height, width = crop.shape[:2]
     size = (max(1, round(width * comparison_size / max(width, height))),
@@ -119,146 +137,150 @@ def foreground(path: Path, comparison_size: int = SIZE) -> tuple[FloatArray, NDA
     return scaled[:, :, :3].astype(np.float64) / 255.0, visible
 
 
-def measure(path: Path, palette: list[list[float]] | None = None) -> Metrics:
-    """Canny luminance edges, Lab histogram, local saturation and stroke estimate."""
+def measure(path: Path) -> Metrics:
+    """Measure local saturation, edge-bounded wash variance and ink widths.
+
+    Stroke widths are distance-transform samples on the skeleton of dark ridges
+    within four pixels of a Canny edge, normalized at 1024px. Canny itself is
+    one pixel wide, so its direct transform would measure detector width only.
+    """
     rgb, mask = foreground(path)
-    luminance = rgb2gray(rgb)
+    gray: FloatArray = rgb2gray(rgb)
     interior = np.asarray(binary_erosion(mask, iterations=2), dtype=np.bool_)
     if int(interior.sum()) < 16:
         message = f"Insufficient foreground interior: {path}"
         raise ValueError(message)
-    edges = canny(luminance, sigma=1.0, low_threshold=0.08,
-                  high_threshold=0.20, mask=interior)
-    histogram, _ = np.histogramdd(rgb2lab(rgb)[mask], bins=(8, 8, 8),
-                                range=((0, 100), (-128, 128), (-128, 128)))
-    histogram = histogram.ravel() / histogram.sum()
-    if palette is not None:
-        histogram = palette_histogram(rgb2lab(rgb)[mask], palette)
-    weights = uniform_filter(mask.astype(np.float64), size=9)
-    saturation = uniform_filter(rgb2hsv(rgb)[:, :, 1] * mask, size=9)
-    wash = float(np.mean(saturation[interior] / weights[interior]))
-    # Measure strokes independently at 1024 px; 256-px edges lose fine ink.
-    stroke_rgb, stroke_mask = foreground(path, 1024)
-    stroke_luminance = rgb2gray(stroke_rgb)
-    stroke_edges = canny(stroke_luminance, sigma=1.0, low_threshold=0.08,
-                         high_threshold=0.20, mask=stroke_mask)
-    local = uniform_filter(stroke_luminance, size=15)
-    stroke_interior = np.asarray(binary_erosion(stroke_mask, iterations=2), dtype=np.bool_)
-    ink = (stroke_luminance < local - 0.12) & stroke_interior
-    edge_distance = np.asarray(distance_transform_edt(~stroke_edges), dtype=np.float64)
-    ink &= edge_distance <= 4
-    skeleton = skeletonize(ink)
-    ink_distance = np.asarray(distance_transform_edt(ink), dtype=np.float64)
-    widths = 2 * ink_distance[skeleton]
-    stroke = float(np.mean(widths)) if widths.size else 0.0
-    return Metrics(histogram.tolist(), float(edges.sum() / interior.sum()),
-                   wash, stroke, int(mask.sum()))
+    edges: NDArray[np.bool_] = canny(gray, sigma=1, low_threshold=0.08, high_threshold=0.20, mask=interior)
+    weights: FloatArray = uniform_filter(mask.astype(np.float64), size=9)
+    saturation: FloatArray = uniform_filter(rgb2hsv(rgb)[:, :, 1] * mask, size=9)
+    sq = np.quantile(saturation[interior] / weights[interior], [0.25, 0.75])
+    closed = np.asarray(binary_closing(edges, iterations=1), dtype=np.bool_)
+    regions: NDArray[np.int64] = np.asarray(label(interior & ~closed, connectivity=1))
+    count = int(regions.max())
+    variances: list[tuple[int, float]] = []
+    for region in range(1, count + 1):
+        region_mask = regions == region
+        # Retain region interiors: edge antialiasing is not pigment wash.
+        region_interior = np.asarray(binary_erosion(region_mask, iterations=1), dtype=np.bool_)
+        pixels = gray[region_interior]
+        if pixels.size >= 16:
+            variances.append((int(pixels.size), float(np.var(pixels))))
+    flatness = sum(n * v for n, v in variances) / max(1, sum(n for n, _ in variances))
+    srgb, smask = foreground(path, 1024)
+    lum: FloatArray = rgb2gray(srgb)
+    sedges: NDArray[np.bool_] = canny(lum, sigma=1, low_threshold=0.08, high_threshold=0.20, mask=smask)
+    ink: NDArray[np.bool_] = (lum < uniform_filter(lum, size=15) - 0.12) & np.asarray(binary_erosion(smask, iterations=2), dtype=np.bool_)
+    ink &= np.asarray(distance_transform_edt(~sedges), dtype=np.float64) <= 4
+    widths = 2 * np.asarray(distance_transform_edt(ink), dtype=np.float64)[skeletonize(ink)]
+    quantiles = np.quantile(widths, [0.25, 0.5, 0.75, 0.9]) if widths.size else np.zeros(4)
+    return Metrics(float(edges.sum() / interior.sum()), float(sq[0]), float(sq[1]),
+                   float(quantiles[0]), float(quantiles[1]), float(quantiles[2]), float(quantiles[3]),
+                   flatness, int(mask.sum()))
 
 
-def chi_square(left: list[float], right: list[float]) -> float:
-    """Symmetric normalized chi-square in [0, 1]."""
-    a, b = np.asarray(left), np.asarray(right)
-    return float(0.5 * np.sum((a - b) ** 2 / (a + b + 1e-15)))
+def bounds(family: str, anchors: list[Anchor]) -> FamilyRange:
+    """Fit only same-family references with preregistered tolerances."""
+    values = np.asarray([[getattr(a.metrics, key) for key in FEATURES] for a in anchors])
+    minimum, maximum = values.min(axis=0), values.max(axis=0)
+    margin = np.maximum((maximum + minimum) * 0.25, FLOORS)
+    # Region variance is positive and scale-like; permit a 120% ratio variation.
+    lower, upper = np.maximum(0, minimum - margin), maximum + margin
+    lower[-1], upper[-1] = minimum[-1] / 2.2, maximum[-1] * 2.2
+    # Upper tail avoids the 2px quantization shared by fine-line medians.
+    tail_margin = max(1.75, float((minimum[-2] + maximum[-2]) * 0.125))
+    lower[-2], upper[-2] = minimum[-2] - tail_margin, maximum[-2] + tail_margin
+    return FamilyRange(family, lower.tolist(), upper.tolist())
 
 
-def dominant_palette(samples: FloatArray) -> list[list[float]]:
-    """Select 24 most populous Lab cells and their measured colour centroids."""
-    bins = np.floor((samples + [0, 128, 128]) / [100 / 12, 256 / 12, 256 / 12]).astype(int)
-    bins = np.clip(bins, 0, 11)
-    keys = bins[:, 0] * 144 + bins[:, 1] * 12 + bins[:, 2]
-    counts = np.bincount(keys, minlength=1728)
-    ranked = np.argsort(-counts, kind="stable")[:24]
-    return [samples[keys == key].mean(axis=0).tolist() for key in ranked if counts[key] > 0]
-
-
-def palette_histogram(samples: FloatArray, palette: list[list[float]]) -> FloatArray:
-    """Assign measured colours to nearest reference Lab centroid, without editing art."""
-    distance = np.sum((samples[:, None, :] - np.asarray(palette)[None, :, :]) ** 2, axis=2)
-    counts = np.bincount(distance.argmin(axis=1), minlength=len(palette)).astype(np.float64)
-    return counts / counts.sum()
+def compare(metrics: Metrics, reference: FamilyRange) -> dict[str, bool]:
+    """All eight measured components must lie inside the reference bounds."""
+    return {key: low - 1e-12 <= getattr(metrics, key) <= high + 1e-12
+            for key, low, high in zip(FEATURES, reference.lower, reference.upper, strict=True)}
 
 
 def calibrate(directory: Path) -> Calibration:
-    """Rebuild a 24-colour palette on the other five anchors for every LOO fold."""
-    samples = []
-    for name in NAMES:
-        rgb, mask = foreground(directory / f"{name}.png")
-        samples.append(rgb2lab(rgb)[mask])
-    palette = dominant_palette(np.concatenate(samples))
-    anchors = [Anchor(name, hashlib.sha256((directory / f"{name}.png").read_bytes()).hexdigest(),
-                      measure(directory / f"{name}.png", palette)) for name in NAMES]
-    loo = []
-    for index in range(6):
-        others = [sample for position, sample in enumerate(samples) if position != index]
-        fold_palette = dominant_palette(np.concatenate(others))
-        reference = np.mean([palette_histogram(sample, fold_palette) for sample in others], axis=0)
-        loo.append(chi_square(palette_histogram(samples[index], fold_palette).tolist(), reference.tolist()))
-    edges = [anchor.metrics.edge_density for anchor in anchors]
-    washes = [anchor.metrics.wash for anchor in anchors]
-    histograms = np.asarray([anchor.metrics.histogram for anchor in anchors])
-    return Calibration(anchors, histograms.mean(axis=0).tolist(), max(loo), palette, loo,
-                       (min(edges) * 0.7, max(edges) * 1.3), (min(washes), max(washes)))
+    """Fit family references and evaluate true held-out crops against the others."""
+    manifest = json.loads((directory / "manifest.json").read_text())
+    if manifest["version"] != 2:
+        message = "Requires crop manifest version 2"
+        raise ValueError(message)
+    anchors: list[Anchor] = []
+    for entry in manifest["crops"]:
+        if entry["status"] != "active":
+            continue
+        path = directory / entry["file"]
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        if digest != entry["sha256"]:
+            message = f"Anchor hash changed: {path}"
+            raise ValueError(message)
+        anchors.append(Anchor(entry["name"], entry["family"], entry["file"], digest, measure(path)))
+    ranges: list[FamilyRange] = []
+    folds: list[Fold] = []
+    for family in sorted({a.family for a in anchors}):
+        group = [a for a in anchors if a.family == family]
+        if len(group) < 2:
+            message = f"Two same-family crops required: {family}"
+            raise ValueError(message)
+        ranges.append(bounds(family, group))
+        for held in group:
+            checks = compare(held.metrics, bounds(family, [a for a in group if a.name != held.name]))
+            folds.append(Fold(held.name, family, all(checks.values()), checks))
+    return Calibration(anchors, ranges, folds)
 
 
-def judge(candidate: Path, calibration: Calibration,
-          model: ModelScores | None = None) -> Verdict:
-    """Both independent signals must pass; absent model review cannot pass."""
-    metrics = measure(candidate, calibration.palette_lab)
-    distance = chi_square(metrics.histogram, calibration.histogram)
-    checks = {
-        "lab_histogram": distance <= calibration.histogram_limit + 1e-12,
-        "line_density": calibration.edge_range[0] <= metrics.edge_density <= calibration.edge_range[1],
-        "local_saturation": calibration.wash_range[0] - 1e-12 <= metrics.wash <= calibration.wash_range[1] + 1e-12,
-    }
+def judge(candidate: Path, calibration: Calibration, model: ModelScores | None = None,
+          *, family: str, model_family_verified: bool = False) -> Verdict:
+    """A supplied legacy score cannot establish same-family model acceptance."""
+    references = [r for r in calibration.ranges if r.family == family]
+    if len(references) != 1:
+        message = f"Unknown or ambiguous anchor family: {family}"
+        raise ValueError(message)
+    metrics = measure(candidate)
+    checks = compare(metrics, references[0])
     numeric = all(checks.values())
-    return Verdict(str(candidate), hashlib.sha256(candidate.read_bytes()).hexdigest(),
-                   metrics, distance, checks, numeric, model,
-                   "MISSING" if model is None else "SUPPLIED",
-                   numeric and model is not None and model.passed)
+    status = "MISSING" if model is None else "SAME_FAMILY_VERIFIED" if model_family_verified else "LEGACY_REFERENCE_UNVERIFIED"
+    return Verdict(str(candidate), hashlib.sha256(candidate.read_bytes()).hexdigest(), family,
+                   metrics, checks, numeric, model, status,
+                   numeric and model is not None and model.passed and model_family_verified
+                   and len(calibration.leave_one_out) == len(calibration.anchors)
+                   and bool(calibration.leave_one_out) and all(f.passed for f in calibration.leave_one_out))
 
 
 def load_calibration(path: Path) -> Calibration:
-    """Read the generated calibration including immutable anchor provenance."""
+    """Reject incompatible v1 global-histogram calibrations."""
     data = json.loads(path.read_text())
-    anchors = [Anchor(item["name"], item["sha256"], Metrics(**item["metrics"]))
-               for item in data["anchors"]]
-    if len(anchors) != 6 or data["comparison_size"] != SIZE or data["version"] != 1:
+    if data["version"] != 2 or data["comparison_size"] != SIZE:
         message = "Calibration schema or comparison size mismatch"
         raise ValueError(message)
-    return Calibration(anchors, data["histogram"], data["histogram_limit"], data["palette_lab"],
-                       data["loo_distances"], tuple(data["edge_range"]), tuple(data["wash_range"]))
+    return Calibration([Anchor(a["name"], a["family"], a["file"], a["sha256"], Metrics(**a["metrics"]))
+                        for a in data["anchors"]], [FamilyRange(**r) for r in data["ranges"]],
+                       [Fold(**f) for f in data["leave_one_out"]])
 
 
 def main() -> int:
-    """Emit reproducible calibration or candidate JSON; rejection exits 1."""
+    """Emit reproducible calibration or fail-closed candidate JSON."""
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
-    calibration_parser = commands.add_parser("calibrate")
-    calibration_parser.add_argument("--anchors", type=Path, default=Path("art/style05/anchors"))
-    calibration_parser.add_argument("--output", required=True, type=Path)
-    calibration_parser.add_argument("--palette-output", type=Path)
-    candidate_parser = commands.add_parser("judge")
-    candidate_parser.add_argument("candidate", type=Path)
-    candidate_parser.add_argument("--calibration", required=True, type=Path)
-    candidate_parser.add_argument("--model-scores", type=Path)
-    candidate_parser.add_argument("--output", required=True, type=Path)
+    cal = commands.add_parser("calibrate")
+    cal.add_argument("--anchors", type=Path, default=Path("art/style05/anchors"))
+    cal.add_argument("--output", required=True, type=Path)
+    candidate = commands.add_parser("judge")
+    candidate.add_argument("candidate", type=Path)
+    candidate.add_argument("--family", required=True)
+    candidate.add_argument("--calibration", required=True, type=Path)
+    candidate.add_argument("--model-scores", type=Path)
+    candidate.add_argument("--model-family-verified", action="store_true")
+    candidate.add_argument("--output", required=True, type=Path)
     args = parser.parse_args()
     if args.command == "calibrate":
         result = calibrate(args.anchors)
-        args.output.write_text(json.dumps(asdict(result), indent=2) + "\n")
-        if args.palette_output is not None:
-            rgb = np.round(lab2rgb(np.asarray(result.palette_lab)[None, :, :])[0] * 255).astype(np.uint8)
-            palette_data = {"purpose": "judging only; never quantize assets", "lab": result.palette_lab,
-                            "rgb": rgb.tolist(), "anchor_sha256": {a.name: a.sha256 for a in result.anchors}}
-            args.palette_output.write_text(json.dumps(palette_data, indent=2) + "\n")
-            swatch = np.repeat(np.repeat(rgb.reshape(4, 6, 3), 64, axis=0), 64, axis=1)
-            Image.fromarray(swatch).save(args.palette_output.with_suffix(".png"))
-        return 0
+        _ = args.output.write_text(json.dumps(asdict(result), indent=2) + "\n")
+        return 0 if all(f.passed for f in result.leave_one_out) else 1
     model = ModelScores(**json.loads(args.model_scores.read_text())) if args.model_scores else None
-    verdict = judge(args.candidate, load_calibration(args.calibration), model)
-    args.output.write_text(json.dumps(asdict(verdict), indent=2) + "\n")
+    verdict = judge(args.candidate, load_calibration(args.calibration), model,
+                    family=args.family, model_family_verified=args.model_family_verified)
+    _ = args.output.write_text(json.dumps(asdict(verdict), indent=2) + "\n")
     return 0 if verdict.passed else 1
-
 
 if __name__ == "__main__":
     raise SystemExit(main())

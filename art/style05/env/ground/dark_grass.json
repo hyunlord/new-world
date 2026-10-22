@@ -1,0 +1,286 @@
+{
+  "status": "accepted under judge v2, TRIAL2b",
+  "asset": "dark_grass",
+  "family": "ground",
+  "try_count": 1,
+  "prompt": "Create ONE square seamless tileable ground texture, filling entire canvas, not panels. Attached image 1 is locked ground anchor; image 2 locked scene anchor. Match fine ink outlines, restrained natural color wash, two-tone shading, upper-left light, botanical detail at anchor scale. Orthographic 90-degree overhead, uniform density at every edge with exact wrap continuity. No people, objects, buildings, text, borders, vignette, isometric, photo, 3D render, pixel art, gradient blur. DARK GRASS: deep olive and sage short grass with muted moss and fine dry stalks, darker woodland-edge meadow, occasional tiny earth patches, quiet readable background.",
+  "anchors": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
+      "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+      "hash_basis": "recorded generation hash",
+      "unavailable_reason": null
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+      "hash_basis": "recorded generation hash",
+      "unavailable_reason": null
+    }
+  ],
+  "generation_id": null,
+  "generation_id_note": "No explicit generation ID in retained metadata; source path preserved without inventing an ID",
+  "original": "/Users/rexxa/work/arttrial2-data/ground/dark_grass_try1.png",
+  "original_sha256": "d75ccdcf7daeb3fa3e7a5ef7c266b5555677fdd342c4c14c08f1474eb3bd5877",
+  "working_source": "/Users/rexxa/work/arttrial2-data/ground/dark_grass_try1/candidate.png",
+  "working_sha256": "ea8f844c7cded47183b38d2763041ac4aabd7a47db2e40b68081cdd83efd66a1",
+  "working_size": [
+    512,
+    512
+  ],
+  "operations": [
+    "RGB conversion",
+    "Lanczos downscale to 512x512"
+  ],
+  "anchor_point": null,
+  "anchor_point_note": "Not recorded or not applicable; no placement coordinate invented",
+  "generation_started_at": "2026-10-21T23:48:22.226Z",
+  "generation_completed_at": "2026-10-21T23:49:00.383Z",
+  "generation_timestamp_note": "Retained recorded values; missing values were not captured",
+  "wall_seconds": null,
+  "wall_seconds_note": "Generation wall time unavailable in retained metadata; not estimated from review timing",
+  "numeric": {
+    "candidate": "/Users/rexxa/work/arttrial2-data/ground/dark_grass_try1.png",
+    "sha256": "d75ccdcf7daeb3fa3e7a5ef7c266b5555677fdd342c4c14c08f1474eb3bd5877",
+    "family": "ground",
+    "metrics": {
+      "edge_density": 0.32481418493323255,
+      "saturation_q25": 0.6307949723033328,
+      "saturation_q75": 0.710836587555693,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.007052736917815686,
+      "foreground_pixels": 65536
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "sentence": "The candidate shows the same fine ink-and-wash/tonal illustration style with crisp ink outlines, detailed textured rendering of grass, leaves, rocks and soil, and matching natural earthy green-brosn palette and lighting, with no noticeable stylistic drift from the references."
+    },
+    "model_status": "SAME_FAMILY_VERIFIED",
+    "passed": true
+  },
+  "numeric_thresholds": {
+    "features": [
+      "edge_density",
+      "saturation_q25",
+      "saturation_q75",
+      "stroke_q25",
+      "stroke_q50",
+      "stroke_q75",
+      "stroke_q90",
+      "wash_flatness"
+    ],
+    "family": "ground",
+    "lower": [
+      0.14186507936507936,
+      0.059843547343970405,
+      0.20462696348322162,
+      1.0,
+      0.0,
+      0.8284271247461903,
+      2.25,
+      0.0038233960726937514
+    ],
+    "upper": [
+      0.49595301083396326,
+      0.7750679734042174,
+      0.9095358055238305,
+      3.0,
+      4.0,
+      6.0,
+      5.75,
+      0.027749767647260854
+    ],
+    "comparison_size": 256,
+    "stroke_comparison_size": 1024
+  },
+  "calibration_path": "/Users/rexxa/work/new-world-art-prod/docs/v8/arttrial2/JUDGE_V2_CALIBRATION.json",
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "model": {
+    "scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "sentence": "The candidate shows the same fine ink-and-wash/tonal illustration style with crisp ink outlines, detailed textured rendering of grass, leaves, rocks and soil, and matching natural earthy green-brosn palette and lighting, with no noticeable stylistic drift from the references."
+    },
+    "references": [
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png",
+        "sha256": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d"
+      },
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png",
+        "sha256": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9"
+      }
+    ],
+    "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-dark_grass-scorecard.png",
+    "scorecard_sha256": "aaadfc85931f87bbc3c7f31857fb08057ca4129541771bfc8cf1c1859190cd9a",
+    "review_manifest": "/Users/rexxa/work/arttrial2-data/trial2b/environment-all-model-reviews.json",
+    "review_manifest_sha256": "cee5e92c6a1e54e0b73c7434029e6e118fac3076bbf89fff465582ad0e2264c8",
+    "full_record": {
+      "family": "ground",
+      "name": "dark_grass",
+      "candidate": "/Users/rexxa/work/arttrial2-data/ground/dark_grass_try1.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png",
+        "/Users/rexxa/work/arttrial2-data/ground/dark_grass_try1.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9",
+        "/Users/rexxa/work/arttrial2-data/ground/dark_grass_try1.png": "d75ccdcf7daeb3fa3e7a5ef7c266b5555677fdd342c4c14c08f1474eb3bd5877"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 02:40:27 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:43:17 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-72554624-2804-4709-89db-cf4371a893c6.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-dark_grass-scorecard.png",
+      "scorecard_sha256": "aaadfc85931f87bbc3c7f31857fb08057ca4129541771bfc8cf1c1859190cd9a",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason": "The candidate shows the same fine ink-and-wash/tonal illustration style with crisp ink outlines, detailed textured rendering of grass, leaves, rocks and soil, and matching natural earthy green-brosn palette and lighting, with no noticeable stylistic drift from the references.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible."
+    },
+    "identity_note": "Actual image-generation model scorecard; underlying model version not exposed; call context is in full_record"
+  },
+  "acceptance_evidence": "docs/v8/arttrial2/ENV_ACCEPTANCE_V2.json",
+  "acceptance_evidence_sha256": "144ebcb5da913e6b2752cb8189779a879171cbb6534f1798743b9a1346c1ce6b",
+  "generation_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/ground/dark_grass_try1.json",
+    "sha256": "1745dfec48b6c8a05dfa8017a8add3888b82751e98b5dd446ee4de1d469b676a",
+    "full_record": {
+      "asset": "dark_grass",
+      "family": "ground",
+      "try": 1,
+      "prompt": "Create ONE square seamless tileable ground texture, filling entire canvas, not panels. Attached image 1 is locked ground anchor; image 2 locked scene anchor. Match fine ink outlines, restrained natural color wash, two-tone shading, upper-left light, botanical detail at anchor scale. Orthographic 90-degree overhead, uniform density at every edge with exact wrap continuity. No people, objects, buildings, text, borders, vignette, isometric, photo, 3D render, pixel art, gradient blur. DARK GRASS: deep olive and sage short grass with muted moss and fine dry stalks, darker woodland-edge meadow, occasional tiny earth patches, quiet readable background.",
+      "anchors": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+      ],
+      "start_utc": "2026-10-21T23:48:22.226Z",
+      "end_utc": "2026-10-21T23:49:00.383Z",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160dd-2a23-7160-9b72-72cc095697ef/exec-2d2a1b3c-e418-4c9d-aca3-e9fcf7d40e3e.png",
+      "status": "PENDING_MODEL_REVIEW",
+      "sha256": "d75ccdcf7daeb3fa3e7a5ef7c266b5555677fdd342c4c14c08f1474eb3bd5877",
+      "original": "/Users/rexxa/work/arttrial2-data/ground/dark_grass_try1.png",
+      "anchor_sha256": {
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      }
+    }
+  },
+  "processing_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/ground/dark_grass_try1/candidate.json",
+    "sha256": "bdb84ddd89ad6bca8d696e840b53f05c0faf26018a7929671c7fbdde6d7bf534",
+    "full_record": {
+      "asset": "dark_grass",
+      "family": "ground",
+      "try": 1,
+      "prompt": "Create ONE square seamless tileable ground texture, filling entire canvas, not panels. Attached image 1 is locked ground anchor; image 2 locked scene anchor. Match fine ink outlines, restrained natural color wash, two-tone shading, upper-left light, botanical detail at anchor scale. Orthographic 90-degree overhead, uniform density at every edge with exact wrap continuity. No people, objects, buildings, text, borders, vignette, isometric, photo, 3D render, pixel art, gradient blur. DARK GRASS: deep olive and sage short grass with muted moss and fine dry stalks, darker woodland-edge meadow, occasional tiny earth patches, quiet readable background.",
+      "anchors": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+      ],
+      "start_utc": "2026-10-21T23:48:22.226Z",
+      "end_utc": "2026-10-21T23:49:00.383Z",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160dd-2a23-7160-9b72-72cc095697ef/exec-2d2a1b3c-e418-4c9d-aca3-e9fcf7d40e3e.png",
+      "status": "PENDING_MODEL_REVIEW",
+      "sha256": "d75ccdcf7daeb3fa3e7a5ef7c266b5555677fdd342c4c14c08f1474eb3bd5877",
+      "working_size": [
+        512,
+        512
+      ],
+      "operations": [
+        "RGB conversion",
+        "Lanczos downscale to 512x512"
+      ],
+      "judge_scores": {
+        "numeric": {
+          "candidate": "/Users/rexxa/work/arttrial2-data/ground/dark_grass_try1/candidate.png",
+          "sha256": "ea8f844c7cded47183b38d2763041ac4aabd7a47db2e40b68081cdd83efd66a1",
+          "metrics": {
+            "histogram": [
+              0.011566162109375,
+              0.01904296875,
+              0.007720947265625,
+              0.011993408203125,
+              0.01043701171875,
+              0.0107421875,
+              0.0229949951171875,
+              0.0205230712890625,
+              0.00970458984375,
+              0.1661529541015625,
+              0.009857177734375,
+              0.0091094970703125,
+              0.1429443359375,
+              0.0272064208984375,
+              0.00872802734375,
+              0.214324951171875,
+              0.0076751708984375,
+              0.144744873046875,
+              0.1193389892578125,
+              0.0083770751953125,
+              0.0073699951171875,
+              0.0069427490234375,
+              0.001678466796875,
+              0.000823974609375
+            ],
+            "edge_density": 0.32557004283194757,
+            "wash": 0.664282949679526,
+            "stroke_width_at_1024": 2.4122564934978636,
+            "foreground_pixels": 65536
+          },
+          "histogram_distance": 0.43851651281727694,
+          "numeric_checks": {
+            "lab_histogram": false,
+            "line_density": true,
+            "local_saturation": false
+          },
+          "numeric_pass": false,
+          "model_scores": null,
+          "model_status": "MISSING",
+          "passed": false
+        },
+        "model": "PENDING"
+      },
+      "seam": {
+        "horizontal_mae": 24.125,
+        "vertical_mae": 22.813802083333332,
+        "horizontal_ratio": 0.8160772899823274,
+        "vertical_ratio": 0.8165455605710144,
+        "passed": false
+      },
+      "candidate": "/Users/rexxa/work/arttrial2-data/ground/dark_grass_try1/candidate.png"
+    }
+  },
+  "historical_record_note": "Nested historical numeric/status fields are preserved as history; top-level status and numeric/model are TRIAL2b decisions."
+}

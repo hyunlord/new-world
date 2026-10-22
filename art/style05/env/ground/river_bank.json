@@ -1,0 +1,286 @@
+{
+  "status": "accepted under judge v2, TRIAL2b",
+  "asset": "river_bank",
+  "family": "ground",
+  "try_count": 1,
+  "prompt": "Create ONE square seamless tileable ground texture, filling entire canvas, not panels. Attached image 1 is locked ground anchor; image 2 locked scene anchor. Match fine ink outlines, restrained natural color wash, two-tone shading, upper-left light, botanical detail at anchor scale. Orthographic 90-degree overhead, uniform density at every edge with exact wrap continuity. No people, objects, buildings, text, borders, vignette, isometric, photo, 3D render, pixel art, gradient blur. RIVER BANK / SHALLOWS: rounded small grey and warm tan pebbles under very shallow muted grey-green clear water, subtle ink ripple arcs and restrained pale wash reflections, no shoreline divide, entirely shallow pebbled streambed, evenly repeated scale.",
+  "anchors": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
+      "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+      "hash_basis": "recorded generation hash",
+      "unavailable_reason": null
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+      "hash_basis": "recorded generation hash",
+      "unavailable_reason": null
+    }
+  ],
+  "generation_id": null,
+  "generation_id_note": "No explicit generation ID in retained metadata; source path preserved without inventing an ID",
+  "original": "/Users/rexxa/work/arttrial2-data/ground/river_bank_try1.png",
+  "original_sha256": "dee0e187becb221cda21be6dd5bca108a8d22657d6ab5d1d6e23e262eff6ccfa",
+  "working_source": "/Users/rexxa/work/arttrial2-data/ground/river_bank_try1/candidate.png",
+  "working_sha256": "5315fbbb5e4eac329fd6f18d51920e46d161325596f34427bedb956ee2f065ce",
+  "working_size": [
+    512,
+    512
+  ],
+  "operations": [
+    "RGB conversion",
+    "Lanczos downscale to 512x512"
+  ],
+  "anchor_point": null,
+  "anchor_point_note": "Not recorded or not applicable; no placement coordinate invented",
+  "generation_started_at": "2026-10-21T23:50:28.464Z",
+  "generation_completed_at": "2026-10-21T23:51:02.516Z",
+  "generation_timestamp_note": "Retained recorded values; missing values were not captured",
+  "wall_seconds": null,
+  "wall_seconds_note": "Generation wall time unavailable in retained metadata; not estimated from review timing",
+  "numeric": {
+    "candidate": "/Users/rexxa/work/arttrial2-data/ground/river_bank_try1.png",
+    "sha256": "dee0e187becb221cda21be6dd5bca108a8d22657d6ab5d1d6e23e262eff6ccfa",
+    "family": "ground",
+    "metrics": {
+      "edge_density": 0.3110355253212396,
+      "saturation_q25": 0.2669680441015696,
+      "saturation_q75": 0.3669014412573273,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.010956563537478961,
+      "foreground_pixels": 65536
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "sentence": "Candidate depicts a different subject (shallow water with stones) but uses the same fine ink and textured watercolor-like rendering with crisp linework, detailed organic marks, soft tonal transitions, and a matching earthy, natural palette with similar lighting treatment."
+    },
+    "model_status": "SAME_FAMILY_VERIFIED",
+    "passed": true
+  },
+  "numeric_thresholds": {
+    "features": [
+      "edge_density",
+      "saturation_q25",
+      "saturation_q75",
+      "stroke_q25",
+      "stroke_q50",
+      "stroke_q75",
+      "stroke_q90",
+      "wash_flatness"
+    ],
+    "family": "ground",
+    "lower": [
+      0.14186507936507936,
+      0.059843547343970405,
+      0.20462696348322162,
+      1.0,
+      0.0,
+      0.8284271247461903,
+      2.25,
+      0.0038233960726937514
+    ],
+    "upper": [
+      0.49595301083396326,
+      0.7750679734042174,
+      0.9095358055238305,
+      3.0,
+      4.0,
+      6.0,
+      5.75,
+      0.027749767647260854
+    ],
+    "comparison_size": 256,
+    "stroke_comparison_size": 1024
+  },
+  "calibration_path": "/Users/rexxa/work/new-world-art-prod/docs/v8/arttrial2/JUDGE_V2_CALIBRATION.json",
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "model": {
+    "scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "sentence": "Candidate depicts a different subject (shallow water with stones) but uses the same fine ink and textured watercolor-like rendering with crisp linework, detailed organic marks, soft tonal transitions, and a matching earthy, natural palette with similar lighting treatment."
+    },
+    "references": [
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png",
+        "sha256": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d"
+      },
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png",
+        "sha256": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9"
+      }
+    ],
+    "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-river_bank-scorecard.png",
+    "scorecard_sha256": "69e7911ff28d5ba5e9b6e2043a29313be94044c0ed816b8557568e9198b65e93",
+    "review_manifest": "/Users/rexxa/work/arttrial2-data/trial2b/environment-all-model-reviews.json",
+    "review_manifest_sha256": "cee5e92c6a1e54e0b73c7434029e6e118fac3076bbf89fff465582ad0e2264c8",
+    "full_record": {
+      "family": "ground",
+      "name": "river_bank",
+      "candidate": "/Users/rexxa/work/arttrial2-data/ground/river_bank_try1.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png",
+        "/Users/rexxa/work/arttrial2-data/ground/river_bank_try1.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9",
+        "/Users/rexxa/work/arttrial2-data/ground/river_bank_try1.png": "dee0e187becb221cda21be6dd5bca108a8d22657d6ab5d1d6e23e262eff6ccfa"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 02:40:27 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:43:17 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-40594a65-53a2-48b4-bcd1-7ec28083094c.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-river_bank-scorecard.png",
+      "scorecard_sha256": "69e7911ff28d5ba5e9b6e2043a29313be94044c0ed816b8557568e9198b65e93",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason": "Candidate depicts a different subject (shallow water with stones) but uses the same fine ink and textured watercolor-like rendering with crisp linework, detailed organic marks, soft tonal transitions, and a matching earthy, natural palette with similar lighting treatment.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible."
+    },
+    "identity_note": "Actual image-generation model scorecard; underlying model version not exposed; call context is in full_record"
+  },
+  "acceptance_evidence": "docs/v8/arttrial2/ENV_ACCEPTANCE_V2.json",
+  "acceptance_evidence_sha256": "144ebcb5da913e6b2752cb8189779a879171cbb6534f1798743b9a1346c1ce6b",
+  "generation_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/ground/river_bank_try1.json",
+    "sha256": "08a200b7bb24aeafb4aa41adaf546ba62f1f50f8e1742d45fcecba7fb60b10f7",
+    "full_record": {
+      "asset": "river_bank",
+      "family": "ground",
+      "try": 1,
+      "prompt": "Create ONE square seamless tileable ground texture, filling entire canvas, not panels. Attached image 1 is locked ground anchor; image 2 locked scene anchor. Match fine ink outlines, restrained natural color wash, two-tone shading, upper-left light, botanical detail at anchor scale. Orthographic 90-degree overhead, uniform density at every edge with exact wrap continuity. No people, objects, buildings, text, borders, vignette, isometric, photo, 3D render, pixel art, gradient blur. RIVER BANK / SHALLOWS: rounded small grey and warm tan pebbles under very shallow muted grey-green clear water, subtle ink ripple arcs and restrained pale wash reflections, no shoreline divide, entirely shallow pebbled streambed, evenly repeated scale.",
+      "anchors": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+      ],
+      "start_utc": "2026-10-21T23:50:28.464Z",
+      "end_utc": "2026-10-21T23:51:02.516Z",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160dd-2a23-7160-9b72-72cc095697ef/exec-3e2a5bee-da65-42d6-883c-03786bb22a50.png",
+      "status": "PENDING_MODEL_REVIEW",
+      "sha256": "dee0e187becb221cda21be6dd5bca108a8d22657d6ab5d1d6e23e262eff6ccfa",
+      "original": "/Users/rexxa/work/arttrial2-data/ground/river_bank_try1.png",
+      "anchor_sha256": {
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      }
+    }
+  },
+  "processing_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/ground/river_bank_try1/candidate.json",
+    "sha256": "1bab7b83c0ec14455658c830526968963aa005b2cfbe626beca3c7cd32d81613",
+    "full_record": {
+      "asset": "river_bank",
+      "family": "ground",
+      "try": 1,
+      "prompt": "Create ONE square seamless tileable ground texture, filling entire canvas, not panels. Attached image 1 is locked ground anchor; image 2 locked scene anchor. Match fine ink outlines, restrained natural color wash, two-tone shading, upper-left light, botanical detail at anchor scale. Orthographic 90-degree overhead, uniform density at every edge with exact wrap continuity. No people, objects, buildings, text, borders, vignette, isometric, photo, 3D render, pixel art, gradient blur. RIVER BANK / SHALLOWS: rounded small grey and warm tan pebbles under very shallow muted grey-green clear water, subtle ink ripple arcs and restrained pale wash reflections, no shoreline divide, entirely shallow pebbled streambed, evenly repeated scale.",
+      "anchors": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+      ],
+      "start_utc": "2026-10-21T23:50:28.464Z",
+      "end_utc": "2026-10-21T23:51:02.516Z",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160dd-2a23-7160-9b72-72cc095697ef/exec-3e2a5bee-da65-42d6-883c-03786bb22a50.png",
+      "status": "PENDING_MODEL_REVIEW",
+      "sha256": "dee0e187becb221cda21be6dd5bca108a8d22657d6ab5d1d6e23e262eff6ccfa",
+      "working_size": [
+        512,
+        512
+      ],
+      "operations": [
+        "RGB conversion",
+        "Lanczos downscale to 512x512"
+      ],
+      "judge_scores": {
+        "numeric": {
+          "candidate": "/Users/rexxa/work/arttrial2-data/ground/river_bank_try1/candidate.png",
+          "sha256": "5315fbbb5e4eac329fd6f18d51920e46d161325596f34427bedb956ee2f065ce",
+          "metrics": {
+            "histogram": [
+              0.0280609130859375,
+              0.0309295654296875,
+              0.0102996826171875,
+              0.0084991455078125,
+              0.0342559814453125,
+              0.052642822265625,
+              0.0181121826171875,
+              0.0071258544921875,
+              0.089874267578125,
+              0.0140228271484375,
+              0.1204376220703125,
+              0.1012420654296875,
+              0.0169525146484375,
+              0.0045623779296875,
+              0.022491455078125,
+              0.009979248046875,
+              0.0984039306640625,
+              0.0185089111328125,
+              0.012176513671875,
+              0.0632476806640625,
+              0.00048828125,
+              0.022735595703125,
+              0.127655029296875,
+              0.0872955322265625
+            ],
+            "edge_density": 0.31130322499370117,
+            "wash": 0.32140713297005313,
+            "stroke_width_at_1024": 2.4095595049216345,
+            "foreground_pixels": 65536
+          },
+          "histogram_distance": 0.3025221419809321,
+          "numeric_checks": {
+            "lab_histogram": false,
+            "line_density": true,
+            "local_saturation": false
+          },
+          "numeric_pass": false,
+          "model_scores": null,
+          "model_status": "MISSING",
+          "passed": false
+        },
+        "model": "PENDING"
+      },
+      "seam": {
+        "horizontal_mae": 23.127604166666668,
+        "vertical_mae": 25.4453125,
+        "horizontal_ratio": 1.0486268084325179,
+        "vertical_ratio": 1.0829380113772906,
+        "passed": false
+      },
+      "candidate": "/Users/rexxa/work/arttrial2-data/ground/river_bank_try1/candidate.png"
+    }
+  },
+  "historical_record_note": "Nested historical numeric/status fields are preserved as history; top-level status and numeric/model are TRIAL2b decisions."
+}

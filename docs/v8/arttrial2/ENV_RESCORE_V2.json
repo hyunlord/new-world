@@ -1,0 +1,2026 @@
+{
+  "version": 2,
+  "cohort": "38 first-attempt raw generations; working bytes separately retained",
+  "calibration_status": "PASS",
+  "strict_acceptance": "NOT_VERIFIED: fresh same-family model review missing",
+  "numeric_pass": 30,
+  "numeric_and_legacy_model_pass": 28,
+  "accepted": 0,
+  "counts": {
+    "buildings:legacy_combined_pass": 4,
+    "buildings:numeric_pass": 5,
+    "buildings:total": 6,
+    "ground:legacy_combined_pass": 6,
+    "ground:numeric_pass": 6,
+    "ground:total": 6,
+    "items:legacy_combined_pass": 4,
+    "items:numeric_pass": 4,
+    "items:total": 10,
+    "misc:legacy_combined_pass": 6,
+    "misc:numeric_pass": 6,
+    "misc:total": 7,
+    "plants:legacy_combined_pass": 8,
+    "plants:numeric_pass": 9,
+    "plants:total": 9
+  },
+  "limitations": [
+    "Misc mapped to props/items; smoke has no genuinely matched anchor.",
+    "Two plants are planner-selected first-attempt references: their self-scores are not independent validation.",
+    "Legacy model references include whole scenes; reused scores are diagnostic only.",
+    "Numeric comparison uses native raw crops and raw candidates,256px local measures and1024px stroke normalization; delivered-size QA separate."
+  ],
+  "negatives": [
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/negative_painterly.png",
+      "sha256": "83785dc9e933598a4c3e4fd7e5dd8e8305d9eae96ad246d41063c647b3eed76d",
+      "family": "person",
+      "metrics": {
+        "edge_density": 0.246897833207357,
+        "saturation_q25": 0.4098452267976646,
+        "saturation_q75": 0.48354798732077836,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.009392636612974984,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": false,
+        "stroke_q90": false,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/negative_woodcut.png",
+      "sha256": "555adc7e283d9c1ed02efa2793718d3cdd8ef190c9150462f7526473b78e548e",
+      "family": "person",
+      "metrics": {
+        "edge_density": 0.2401581002771479,
+        "saturation_q25": 0.6307616325115623,
+        "saturation_q75": 0.6660704173253539,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.001658567089815866,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": false,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/negative_photo_try1.png",
+      "sha256": "0f3ac1e665c19e4dab1c011067e1ccc9e29d2424f3797a651a50d15015d36a08",
+      "family": "person",
+      "metrics": {
+        "edge_density": 0.2901864449483497,
+        "saturation_q25": 0.38063352448526416,
+        "saturation_q75": 0.4843761704523152,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.014404297439150513,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": false,
+        "wash_flatness": true
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    }
+  ],
+  "records": [
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/buildings/drying_rack_try1_raw.png",
+      "sha256": "9260e2ecddf023899e47a7d6372f3b415b58e2dfd75efe80120df6dc8796ad04",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.21537721092527976,
+        "saturation_q25": 0.46728278063323186,
+        "saturation_q75": 0.5681064693444409,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.0417491206955875,
+        "foreground_pixels": 12794
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": {
+        "medium": 3,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "The asset uses heavier colouring with stronger browns and highlights, reducing the intended two-tone ink-and-wash look."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "drying_rack",
+      "production_family": "buildings",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/buildings/drying_rack_try1.png",
+      "working_sha256": "40f6e5647cafc5f6cc08b1cb3a698ac320017fd4b7b0ca8049e2d1f04a7eefef",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/buildings_drying_rack-scorecard.png",
+      "legacy_scorecard_sha256": "a2b46aa2522c38e7f77a386256550855487ed43afb23ee3ea35da2958bb03ed5",
+      "legacy_reference_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "40f6e5647cafc5f6cc08b1cb3a698ac320017fd4b7b0ca8049e2d1f04a7eefef"
+      ],
+      "numeric_and_legacy_model": false,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/buildings/hut_try1_raw.png",
+      "sha256": "7c9245285c94b2197a37c7197d3a2c6362832281274699f12dab1edc478e349c",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.27465064182341853,
+        "saturation_q25": 0.48849678052817014,
+        "saturation_q75": 0.6062514245324893,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.014633916319606114,
+        "foreground_pixels": 58384
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 2,
+        "line": 3,
+        "light": 3,
+        "palette": 3,
+        "sentence": "The candidate is too low-resolution and pixelated, with heavier lines, weaker lighting, and a less restrained palette than the anchors."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "hut",
+      "production_family": "buildings",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/buildings/hut_try1.png",
+      "working_sha256": "8b0f0f2571d73af0581de5574b8ac496538ec03142b100881901c8d30a5abb54",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/buildings_hut-scorecard.png",
+      "legacy_scorecard_sha256": "4e077cf5d94112943f2a69781fd2797d98146161197483ba0d4a8c2712980e91",
+      "legacy_reference_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "8b0f0f2571d73af0581de5574b8ac496538ec03142b100881901c8d30a5abb54"
+      ],
+      "numeric_and_legacy_model": false,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/buildings/knapping_spot_try1_raw.png",
+      "sha256": "5366e8a986fef2c7be0265dda2173aa59813c94625f83de53892a7d7353668b6",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.2608929836995039,
+        "saturation_q25": 0.3054772049157167,
+        "saturation_q75": 0.4293607002527029,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.016642975021063162,
+        "foreground_pixels": 37189
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "The asset matches the established style with fine ink and two-tone wash, controlled linework, consistent upper-left lighting, and a restrained earth-toned palette."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "knapping_spot",
+      "production_family": "buildings",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/buildings/knapping_spot_try1.png",
+      "working_sha256": "4f80d25470aa948a19167c18324f63c0ca70a5405d523be3ea661df2516ebc05",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/buildings_knapping_spot-scorecard.png",
+      "legacy_scorecard_sha256": "c2813d8b0abb4ec1c074e92b395bab9aaa27a594be35efb3257aaafeb3218f93",
+      "legacy_reference_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "4f80d25470aa948a19167c18324f63c0ca70a5405d523be3ea661df2516ebc05"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/buildings/lean_to_try1_raw.png",
+      "sha256": "da16377401004d8bbe94e214269779424be80812f4e98c1ca46b747a1f76a860",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.2752896466179304,
+        "saturation_q25": 0.42654524354498136,
+        "saturation_q75": 0.5683411661411417,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.016460854960285265,
+        "foreground_pixels": 40365
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "The asset matches the established ink-and-wash style with consistent linework, lighting and earthy palette."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "lean_to",
+      "production_family": "buildings",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/buildings/lean_to_try1.png",
+      "working_sha256": "e430f1d83d0fd754e02252aaa628247749c22f12b2b669a29b19e62deb8e1696",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/buildings_lean_to-scorecard.png",
+      "legacy_scorecard_sha256": "5af038a56524d0af135bfb1b215e676b41e593c9af8d5b0738fb352365d84065",
+      "legacy_reference_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "e430f1d83d0fd754e02252aaa628247749c22f12b2b669a29b19e62deb8e1696"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/buildings/storage_pit_try1_raw.png",
+      "sha256": "7329f70b059fa51357a73879719b037304eebf6dd1f6d32002efd159346c6846",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.2946932469260316,
+        "saturation_q25": 0.6339671681651886,
+        "saturation_q75": 0.701570102835833,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.8284271247461903,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.47213595499958,
+        "wash_flatness": 0.022876999744773814,
+        "foreground_pixels": 48165
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 4,
+        "sentence": "The asset matches the ink-and-tone, line quality, lighting direction, and earth-toned palette of the references."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "storage_pit",
+      "production_family": "buildings",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/buildings/storage_pit_try1.png",
+      "working_sha256": "9e47f02230ff6edb311a34c1632c5b52a844fe0f0382233aee87af6c1a8bef80",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/buildings_storage_pit-scorecard.png",
+      "legacy_scorecard_sha256": "3b8f5630653bfbef1c9f424cb9b8db0bc7eae16fae5b6cb52da992d7b65cc1ab",
+      "legacy_reference_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "9e47f02230ff6edb311a34c1632c5b52a844fe0f0382233aee87af6c1a8bef80"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/buildings/woodworking_bench_try1_raw.png",
+      "sha256": "ef89981eecd35eedb7f7346aa0ef74806810837bb4048af7dc12693bc8045c95",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.26852756454989535,
+        "saturation_q25": 0.4875970902102365,
+        "saturation_q75": 0.5662215493718525,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.01783511628015899,
+        "foreground_pixels": 15887
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 4,
+        "line": 5,
+        "light": 4,
+        "palette": 5,
+        "sentence": "The piece matches the ink-and-wash style, clean linework, upper-left lighting, and restrained earth palette of the anchors."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "woodworking_bench",
+      "production_family": "buildings",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/buildings/woodworking_bench_try1.png",
+      "working_sha256": "9368eb1ecbdc8b2a65bf61a61b7163ab9a9e3aa8204131d725fb7f5a3427283b",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/buildings_woodworking_bench-scorecard.png",
+      "legacy_scorecard_sha256": "8a4495f680215e2085b3376af4d9b7e550bd209a0be0efb4d914823d108a5bd6",
+      "legacy_reference_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "9368eb1ecbdc8b2a65bf61a61b7163ab9a9e3aa8204131d725fb7f5a3427283b"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/ground/dark_grass_try1.png",
+      "sha256": "d75ccdcf7daeb3fa3e7a5ef7c266b5555677fdd342c4c14c08f1474eb3bd5877",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.32481418493323255,
+        "saturation_q25": 0.6307949723033328,
+        "saturation_q75": 0.710836587555693,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.007052736917815686,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 4,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "The image matches the reference style with consistent medium, linework, lighting, and earthy palette."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "dark_grass",
+      "production_family": "ground",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/ground/dark_grass_try1/candidate.png",
+      "working_sha256": "ea8f844c7cded47183b38d2763041ac4aabd7a47db2e40b68081cdd83efd66a1",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/ground_dark_grass-scorecard.png",
+      "legacy_scorecard_sha256": "1cdebf7f24f84abdf19fab75cddb52c4cdd9c7d2b9efd2214bcf237dae86158d",
+      "legacy_reference_sha256": [
+        "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "ea8f844c7cded47183b38d2763041ac4aabd7a47db2e40b68081cdd83efd66a1"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/ground/forest_floor_try1.png",
+      "sha256": "2c9b89f62288521acca421e6cdcda9e507bc28f9ac63cc5631c353b9d5d3bdf3",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.32933358528596623,
+        "saturation_q25": 0.6203673436832138,
+        "saturation_q75": 0.6759047316240299,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.009806448824918794,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "sentence": "The texture matches the anchors with fine controlled linework, medium ink wash and consistent upper-left lighting in a restrained earth palette."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "forest_floor",
+      "production_family": "ground",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/ground/forest_floor_try1/candidate.png",
+      "working_sha256": "d0c2fc846442b5b0a2c0edd8711a360ed3d1e1904724a72827cace91fa97daf2",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/ground_forest_floor-scorecard.png",
+      "legacy_scorecard_sha256": "3b47c5f01384b2f590a5af71ab5c3509dfc4ff68b0a6d5ddcd537333990231a2",
+      "legacy_reference_sha256": [
+        "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "d0c2fc846442b5b0a2c0edd8711a360ed3d1e1904724a72827cace91fa97daf2"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/ground/hill_rock_try1.png",
+      "sha256": "b5adda31a55d978afa0ae7dd1964dd721416733aa253f3a586fc582427aa9387",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.337096875787352,
+        "saturation_q25": 0.4638619068564155,
+        "saturation_q75": 0.5969147803636622,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.010687654546277271,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 5,
+        "sentence": "The texture uses fine controlled ink lines with a two-tone wash, consistent upper-left lighting, and a restrained natural earth palette matching the anchors."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "hill_rock",
+      "production_family": "ground",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/ground/hill_rock_try1/candidate.png",
+      "working_sha256": "bc56d04b30b3b338cdb219a90e6c65d7e6b1e5cf5aac060b416f7283bce93233",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/ground_hill_rock-scorecard.png",
+      "legacy_scorecard_sha256": "5f80aafc4da87afe6f866ec1aba312ac0131cb0f428fed87db694a947cb6c38e",
+      "legacy_reference_sha256": [
+        "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "bc56d04b30b3b338cdb219a90e6c65d7e6b1e5cf5aac060b416f7283bce93233"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/ground/meadow_try1.png",
+      "sha256": "b3210a96d3fa952fce70812bc4bae6cd57167b354d152cb0c13080f06f6e4e69",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.3484347442680776,
+        "saturation_q25": 0.6392182116497316,
+        "saturation_q75": 0.697294572949656,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.007828380798559728,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Matches the locked ink-and-tone style with consistent linework, lighting and restrained earth palette."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "meadow",
+      "production_family": "ground",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/ground/meadow_try1/candidate.png",
+      "working_sha256": "294cba46ffa927d5cb737a3f77d9ff931c52fa7b80a6e1d5b69cbd082ec4ec23",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/ground_meadow-scorecard.png",
+      "legacy_scorecard_sha256": "e96376215954ad7b5bd6468a546a99b2ae9986eb30b14727bca598b59a3565e9",
+      "legacy_reference_sha256": [
+        "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "294cba46ffa927d5cb737a3f77d9ff931c52fa7b80a6e1d5b69cbd082ec4ec23"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/ground/packed_earth_try1.png",
+      "sha256": "a113faed21b7d7c2119becce8bed398e270ba54814fcf4c0679bacf3238d3a07",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.3414115646258503,
+        "saturation_q25": 0.5438769188564436,
+        "saturation_q75": 0.5933877547251667,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.008773069132101057,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 5,
+        "sentence": "While consistent with the style, the texture lacks the medium\u2019s ink-and-wash definition and reads more like a photo texture than a drawn illustration."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "packed_earth",
+      "production_family": "ground",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/ground/packed_earth_try1/candidate.png",
+      "working_sha256": "d726d1ee0bb5c3a74df45bc47016129e5a0ee8146cdbd61341a2ec42eab6b8ff",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/ground_packed_earth-scorecard.png",
+      "legacy_scorecard_sha256": "cfab8f95f46917981bb1b2ea212ae9b0692e840035f00d7439502c2611f154b9",
+      "legacy_reference_sha256": [
+        "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "d726d1ee0bb5c3a74df45bc47016129e5a0ee8146cdbd61341a2ec42eab6b8ff"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/ground/river_bank_try1.png",
+      "sha256": "dee0e187becb221cda21be6dd5bca108a8d22657d6ab5d1d6e23e262eff6ccfa",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.3110355253212396,
+        "saturation_q25": 0.2669680441015696,
+        "saturation_q75": 0.3669014412573273,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.010956563537478961,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 5,
+        "sentence": "The pebble texture matches the established ink-and-wash style with consistent lighting and a restrained natural palette."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "river_bank",
+      "production_family": "ground",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/ground/river_bank_try1/candidate.png",
+      "working_sha256": "5315fbbb5e4eac329fd6f18d51920e46d161325596f34427bedb956ee2f065ce",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/ground_river_bank-scorecard.png",
+      "legacy_scorecard_sha256": "42b40c4c4fb432b9ef9067973457941910a6924fd83b9fa8858e0eb28c5cb714",
+      "legacy_reference_sha256": [
+        "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "5315fbbb5e4eac329fd6f18d51920e46d161325596f34427bedb956ee2f065ce"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/items/berry_basket_try1_raw.png",
+      "sha256": "c2c9c4295bc441e13b2eb44e37eaa27e6f674482316aa211e66ffd0e74227d7e",
+      "family": "items",
+      "metrics": {
+        "edge_density": 0.29543183143166485,
+        "saturation_q25": 0.4778921693037422,
+        "saturation_q75": 0.6954524961326085,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.016193020424628713,
+        "foreground_pixels": 49482
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 4,
+        "line": 5,
+        "light": 4,
+        "palette": 5,
+        "sentence": "The medium looks more detailed and textured than a two-tone wash."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "berry_basket",
+      "production_family": "items",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/items/berry_basket_try1.png",
+      "working_sha256": "98de3c5733f34b0aa058aac8fd1f0e3de085b43f4eba3b6479bb0826ba04760c",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/items_berry_basket-scorecard.png",
+      "legacy_scorecard_sha256": "462afe0ffa61c7711595474e96163c233119f03402b48fdb75020c05dd2c667d",
+      "legacy_reference_sha256": [
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "98de3c5733f34b0aa058aac8fd1f0e3de085b43f4eba3b6479bb0826ba04760c"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/items/firewood_bundle_try1_raw.png",
+      "sha256": "b79067ceb3f1bf3ea5614abde41a8268148b875141cf2a2c9d9aa9ccc5dbbb24",
+      "family": "items",
+      "metrics": {
+        "edge_density": 0.28075159287366586,
+        "saturation_q25": 0.5166429227798204,
+        "saturation_q75": 0.6433447380914709,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.029047201306313993,
+        "foreground_pixels": 26093
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "The candidate uses the same ink-and-wash look with fine controlled contours, upper-left lighting, and a restrained earth-toned palette consistent with the anchors."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "firewood_bundle",
+      "production_family": "items",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/items/firewood_bundle_try1.png",
+      "working_sha256": "31bf633609fc7b5dcb1c24160cdac49fa34494012afa44c71aeb6b1da27c0b54",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/items_firewood_bundle-scorecard.png",
+      "legacy_scorecard_sha256": "5b1e4e0246b77ccf88b3d88df28cbd6bcc9133d48bc2a05db02cf483a1c2859b",
+      "legacy_reference_sha256": [
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "31bf633609fc7b5dcb1c24160cdac49fa34494012afa44c71aeb6b1da27c0b54"
+      ],
+      "numeric_and_legacy_model": false,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/items/flint_blade_try1_raw.png",
+      "sha256": "72327fc0c0977e3fe82e289dd512282f203102f1c90ca2c295fa8e498ef6c902",
+      "family": "items",
+      "metrics": {
+        "edge_density": 0.24093280533031616,
+        "saturation_q25": 0.24764554168421166,
+        "saturation_q75": 0.3794235196058462,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.019100086034678457,
+        "foreground_pixels": 16976
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 4,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Matches the ink-and-wash style, lighting, and earth-toned palette of the reference images."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "flint_blade",
+      "production_family": "items",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/items/flint_blade_try1.png",
+      "working_sha256": "f152aa1c52f98b5a73259e484ccdcaaa53539f824176da8c62a6795bc8d3ed4d",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/items_flint_blade-scorecard.png",
+      "legacy_scorecard_sha256": "c089ddd2f73e5a6add3f54c15fb81cc6c8898cb84787e3c95756fc41e623d562",
+      "legacy_reference_sha256": [
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "f152aa1c52f98b5a73259e484ccdcaaa53539f824176da8c62a6795bc8d3ed4d"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/items/flint_pile_try1_raw.png",
+      "sha256": "9282863c3d914dfc90f53be509dd524ce94cdf2b7947318e4669bad9cd6b930f",
+      "family": "items",
+      "metrics": {
+        "edge_density": 0.23839634421743405,
+        "saturation_q25": 0.3157189278716088,
+        "saturation_q75": 0.5285475707924444,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.02455166989510091,
+        "foreground_pixels": 39490
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": {
+        "medium": 3,
+        "line": 5,
+        "light": 5,
+        "palette": 4,
+        "sentence": "The asset reads too painterly with soft multi-tone shading rather than a clear two-tone ink-and-wash look."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "flint_pile",
+      "production_family": "items",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/items/flint_pile_try1.png",
+      "working_sha256": "7edb5d697cf19d6a8291094598cdb8a905bc332c9253d5fb4a03930c7c8a4234",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/items_flint_pile-scorecard.png",
+      "legacy_scorecard_sha256": "194ae5b81795c57e716e6c4b4ef218fae044ff933685c0c47f30c942141070fe",
+      "legacy_reference_sha256": [
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "7edb5d697cf19d6a8291094598cdb8a905bc332c9253d5fb4a03930c7c8a4234"
+      ],
+      "numeric_and_legacy_model": false,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/items/hide_try1_raw.png",
+      "sha256": "caa87d1d2a2341b252848aa857b46c74c84cc9df190f114c526a5700f83d1c09",
+      "family": "items",
+      "metrics": {
+        "edge_density": 0.23856824798766912,
+        "saturation_q25": 0.5037706498303616,
+        "saturation_q75": 0.63340702904502,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.022604115477997146,
+        "foreground_pixels": 37223
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": {
+        "medium": 3,
+        "line": 4,
+        "light": 4,
+        "palette": 5,
+        "sentence": "The hide shows softer, blended texture and tonal variation beyond the reference\u2019s crisp inked two-tone style."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "hide",
+      "production_family": "items",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/items/hide_try1.png",
+      "working_sha256": "8d15847c7889f2f6e0f061fc7c0d81a47c582cfb9b830b383d0e73cc03c00093",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/items_hide-scorecard.png",
+      "legacy_scorecard_sha256": "23016b45247ac9d591324a27bdaa03ae195b084223e872bcf7cacc283d5d3207",
+      "legacy_reference_sha256": [
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "8d15847c7889f2f6e0f061fc7c0d81a47c582cfb9b830b383d0e73cc03c00093"
+      ],
+      "numeric_and_legacy_model": false,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/items/log_pile_large_try1_raw.png",
+      "sha256": "86b7eb2f5a13f7bfa062e1f7b1d1dc19554e519b0cc4867741199efff3084de3",
+      "family": "items",
+      "metrics": {
+        "edge_density": 0.2831800262812089,
+        "saturation_q25": 0.5035713702807527,
+        "saturation_q75": 0.660429755461671,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.03177330694845908,
+        "foreground_pixels": 61282
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": {
+        "medium": 4,
+        "line": 5,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Matches the locked style with fine ink lines, two-tone wash, upper-left lighting and restrained earth tones."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "log_pile_large",
+      "production_family": "items",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/items/log_pile_large_try1.png",
+      "working_sha256": "342159ceb7e090785639b4b4ef58ce7ab59d765e1f0e9356f5419e98cebb30b0",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/items_log_pile_large-scorecard.png",
+      "legacy_scorecard_sha256": "2dfcfd5f81575eadef2d0c2dbb1a5b97bcdfa81c2b56276eb9461d774c05dfa1",
+      "legacy_reference_sha256": [
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "342159ceb7e090785639b4b4ef58ce7ab59d765e1f0e9356f5419e98cebb30b0"
+      ],
+      "numeric_and_legacy_model": false,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/items/log_pile_medium_try1_raw.png",
+      "sha256": "4eac3a54f3c36c345a4354b9595664ca2a4879560ecdb108ad8b90d728bd21da",
+      "family": "items",
+      "metrics": {
+        "edge_density": 0.28983538695385014,
+        "saturation_q25": 0.5118084042449773,
+        "saturation_q75": 0.6214735210966336,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.01631870275192084,
+        "foreground_pixels": 32393
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "The log pile matches the reference style with fine ink, two-tone wash, consistent upper-left lighting, and a restrained earth-tone palette."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "log_pile_medium",
+      "production_family": "items",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/items/log_pile_medium_try1.png",
+      "working_sha256": "7e13ab188c634172e59b189ed2a2e0063bf0a3dba5df1fbe3d5792fbbd91df9a",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/items_log_pile_medium-scorecard.png",
+      "legacy_scorecard_sha256": "cd1938571f9135277939cac17c483f070ef13af81f78d07b9afb2e362b173559",
+      "legacy_reference_sha256": [
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "7e13ab188c634172e59b189ed2a2e0063bf0a3dba5df1fbe3d5792fbbd91df9a"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/items/log_pile_small_try1_raw.png",
+      "sha256": "171f434320e7882c8d10e8747609bc57f5c2cb63154c164285cb42355f7ce03e",
+      "family": "items",
+      "metrics": {
+        "edge_density": 0.29454109178164367,
+        "saturation_q25": 0.47049165404379406,
+        "saturation_q75": 0.6339067982532698,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.8284271247461903,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.47213595499958,
+        "wash_flatness": 0.029027690395596564,
+        "foreground_pixels": 34857
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "The icon matches the reference style with consistent ink work, lighting, and restrained earth-tone palette."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "log_pile_small",
+      "production_family": "items",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/items/log_pile_small_try1.png",
+      "working_sha256": "a653a2a3a0bb1551c78ea6d2d02f998ffb07c4438be2472e3ae7f3b1b3fc9626",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/items_log_pile_small-scorecard.png",
+      "legacy_scorecard_sha256": "a05ce72dfcd58a09e4fca909d431f8e2686425f7ee4f13b9ed9b1ef5a32acf30",
+      "legacy_reference_sha256": [
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "a653a2a3a0bb1551c78ea6d2d02f998ffb07c4438be2472e3ae7f3b1b3fc9626"
+      ],
+      "numeric_and_legacy_model": false,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/items/stone_axe_try1_raw.png",
+      "sha256": "4b3036e4b09a885faf52a4a2652720a9d84f137db2714496e75446ed58a0a949",
+      "family": "items",
+      "metrics": {
+        "edge_density": 0.2798175957229342,
+        "saturation_q25": 0.4428376708445058,
+        "saturation_q75": 0.5919559881947329,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.021374905531511435,
+        "foreground_pixels": 14024
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": {
+        "medium": 4,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "The axe matches the inked, two-tone style, controlled linework, upper-left lighting and restrained earth-tone palette."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "stone_axe",
+      "production_family": "items",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/items/stone_axe_try1.png",
+      "working_sha256": "07e47b61b4c852a6bbf29b4d5fe45b6b72e812c401398bad6eb191a568a99014",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/items_stone_axe-scorecard.png",
+      "legacy_scorecard_sha256": "0c05e24b92a0d7833e0e6ed5f3290a493be1243530e97e86f6411bd9ba4410be",
+      "legacy_reference_sha256": [
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "07e47b61b4c852a6bbf29b4d5fe45b6b72e812c401398bad6eb191a568a99014"
+      ],
+      "numeric_and_legacy_model": false,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/items/stone_pile_try1_raw.png",
+      "sha256": "9312d5d8c0968bf43b79777a45653015e678a4851cce4d47edd567afc98f3f57",
+      "family": "items",
+      "metrics": {
+        "edge_density": 0.2756217709960351,
+        "saturation_q25": 0.35168816385310975,
+        "saturation_q75": 0.5092139425662796,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.013647766916981269,
+        "foreground_pixels": 34649
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 5,
+        "line": 4,
+        "light": 4,
+        "palette": 5,
+        "sentence": "The rock pile matches the references in inked detail, lighting from the upper left, and restrained earthy colours."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "stone_pile",
+      "production_family": "items",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/items/stone_pile_try1.png",
+      "working_sha256": "0021fc6202894a18168d406d8865c43f4d91d50de939b66cf790a6cccecda1a7",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/items_stone_pile-scorecard.png",
+      "legacy_scorecard_sha256": "9d7d899fbd423ed5e383dd7d8f3e77cb3449f54c51bb88e77439da8fe6b1f9c5",
+      "legacy_reference_sha256": [
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "0021fc6202894a18168d406d8865c43f4d91d50de939b66cf790a6cccecda1a7"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/misc/boulder_large_try1_raw.png",
+      "sha256": "3f8fa6707dc3b0520cbee786be7404b82463e7aefd10dbac5f5f5eef932cb3e4",
+      "family": "items",
+      "metrics": {
+        "edge_density": 0.28097458426542327,
+        "saturation_q25": 0.3695367256063451,
+        "saturation_q75": 0.5203736671859398,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.013361492896948697,
+        "foreground_pixels": 38406
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5,
+        "sentence": "Matches the established ink-and-wash style, line control, lighting direction and restrained earth-tone palette."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "boulder_large",
+      "production_family": "misc",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/misc/boulder_large_try1.png",
+      "working_sha256": "ef8cc6fbd33e932c6a293d18224b31f1f834860406df6ac55d85ac04735957f3",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/misc_boulder_large-scorecard.png",
+      "legacy_scorecard_sha256": "5c2f9261bb1c80a28f78d74cb5124b8e3f36255c38ac763ef85fbfbfbb279f4c",
+      "legacy_reference_sha256": [
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "ef8cc6fbd33e932c6a293d18224b31f1f834860406df6ac55d85ac04735957f3"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/misc/boulder_small_try1_raw.png",
+      "sha256": "a21c391bb48be9e4d444b44c5a79c60ca72aa20994b21f012f2c70e0dc973b66",
+      "family": "items",
+      "metrics": {
+        "edge_density": 0.26320545257396605,
+        "saturation_q25": 0.36889133853319644,
+        "saturation_q75": 0.48534641483809193,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.015414490522927465,
+        "foreground_pixels": 40026
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "The rock matches the established style with fine ink lines, two-tone wash, upper-left lighting, and a restrained earthy palette."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "boulder_small",
+      "production_family": "misc",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/misc/boulder_small_try1.png",
+      "working_sha256": "e00188ea5147543addd704e66471ffb91f8137fa2b5b0edb463e3796384f437b",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/misc_boulder_small-scorecard.png",
+      "legacy_scorecard_sha256": "6d691aa09577940d8bed716e6bdef4c512084f54f1e289f75627ab3b3daecb73",
+      "legacy_reference_sha256": [
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "e00188ea5147543addd704e66471ffb91f8137fa2b5b0edb463e3796384f437b"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/misc/deadwood_try1_raw.png",
+      "sha256": "f70402a6330d49f80c02734fcca0aea868717cc5f2eed685b1bf7ece90df61da",
+      "family": "items",
+      "metrics": {
+        "edge_density": 0.2565550119182035,
+        "saturation_q25": 0.44598878301421185,
+        "saturation_q75": 0.5792527351319501,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.04118722833762723,
+        "foreground_pixels": 9657
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "The branch matches the established ink-and-wash style, with consistent line control, upper-left lighting, and a restrained earthy palette."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "deadwood",
+      "production_family": "misc",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/misc/deadwood_try1.png",
+      "working_sha256": "b693e7b660881af5385e23aa207ec05f796a89a9b7a0af701e73af5ea41bc0e8",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/misc_deadwood-scorecard.png",
+      "legacy_scorecard_sha256": "d39ad2d9c2f24e2b7a870bfa3e5dff6d3e649a34766cca07bc434a15b1c38a06",
+      "legacy_reference_sha256": [
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "b693e7b660881af5385e23aa207ec05f796a89a9b7a0af701e73af5ea41bc0e8"
+      ],
+      "numeric_and_legacy_model": false,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/misc/hearth_0_try1_raw.png",
+      "sha256": "6464701d4ee34ffe19b9490357a5a58170c9c4decdaf060d34d255b35c2ff1ea",
+      "family": "items",
+      "metrics": {
+        "edge_density": 0.28224517132610294,
+        "saturation_q25": 0.4417443471485727,
+        "saturation_q75": 0.6846310426743332,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.018259325062893662,
+        "foreground_pixels": 47856
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 4,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Matches the locked examples\u2019 ink-and-wash style, fine linework, upper-left lighting, and restrained earthy palette."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "hearth_0",
+      "production_family": "misc",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/misc/hearth_0_try1.png",
+      "working_sha256": "99d4c1c3a12c9159b160c2482010e776c10f8b2f05a4ee01381fe4a99b1c5f4c",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/misc_hearth_0-scorecard.png",
+      "legacy_scorecard_sha256": "e74533741950a33a177f33cec46f2da3af195d4cdc2b4eec004698805bc3611b",
+      "legacy_reference_sha256": [
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "99d4c1c3a12c9159b160c2482010e776c10f8b2f05a4ee01381fe4a99b1c5f4c"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/misc/hearth_1_try1_raw.png",
+      "sha256": "ac22e3c934dc94b34e54e24ebec34bda137914ee8ab9bf18addf5c18b35068ee",
+      "family": "items",
+      "metrics": {
+        "edge_density": 0.2843419372985136,
+        "saturation_q25": 0.4608737000471206,
+        "saturation_q75": 0.700662319703037,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.01636811842544473,
+        "foreground_pixels": 47779
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5,
+        "sentence": "The icon matches the reference style with consistent ink, lighting, line work and earth-tone palette."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "hearth_1",
+      "production_family": "misc",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/misc/hearth_1_try1.png",
+      "working_sha256": "284715b4475e1e4124c547ab0fa7f65d70bdad3d510c3ef38d35e99c6bf3e936",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/misc_hearth_1-scorecard.png",
+      "legacy_scorecard_sha256": "1c55d0658acdb9e0921be7f86c64f1914ea1bacc901955d1e8acef4b50586f20",
+      "legacy_reference_sha256": [
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "284715b4475e1e4124c547ab0fa7f65d70bdad3d510c3ef38d35e99c6bf3e936"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/misc/smoke_puff_try1_raw.png",
+      "sha256": "1767524682b0e5e8feb98000336dc7b7096ce0de70e59c8894519b07bf3fed67",
+      "family": "items",
+      "metrics": {
+        "edge_density": 0.14514384598745403,
+        "saturation_q25": 0.2618741628932388,
+        "saturation_q75": 0.3297674002158519,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.8284271247461903,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.013770601060615516,
+        "foreground_pixels": 15787
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "The smoke sprite matches the established ink-and-wash map style with clean fine contours, limited two-tone shading, consistent upper-left lighting, and a restrained earthy palette."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "smoke_puff",
+      "production_family": "misc",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/misc/smoke_puff_try1.png",
+      "working_sha256": "b0778c8071942a371ec1e10b57524a49e5dcd520f70cf9df509646590c30812c",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/misc_smoke_puff-scorecard.png",
+      "legacy_scorecard_sha256": "f0733d863552f0422aeff7f860d8f42a9fa8d32cbe0c300d0448379797c84074",
+      "legacy_reference_sha256": [
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "b0778c8071942a371ec1e10b57524a49e5dcd520f70cf9df509646590c30812c"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/misc/stump_try1_raw.png",
+      "sha256": "b228b0c685b03f7c395579ab4e094703a56ae3f68523033e0310341594f8e0ba",
+      "family": "items",
+      "metrics": {
+        "edge_density": 0.27435026085291725,
+        "saturation_q25": 0.42873197465663415,
+        "saturation_q75": 0.6648945960945474,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.01271202456512139,
+        "foreground_pixels": 43469
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Matches the reference style with controlled fine ink lines, two-tone washes, consistent upper-left lighting, and restrained earth colours."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "stump",
+      "production_family": "misc",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/misc/stump_try1.png",
+      "working_sha256": "fd73d14e1d5616e488aab9069e7c05c478074387f679ec82c02dae56505a9776",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/misc_stump-scorecard.png",
+      "legacy_scorecard_sha256": "b6f50e6ef9b30c6b3ebd236fd411cb64b6bd63f906ff4372bd27d8bc33c38b27",
+      "legacy_reference_sha256": [
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "fd73d14e1d5616e488aab9069e7c05c478074387f679ec82c02dae56505a9776"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/plants/berry_bare_try1_raw.png",
+      "sha256": "2b97bfe15775d055c744c5085a1a32d342663355a97c5083379caf3757faf7fd",
+      "family": "plants",
+      "metrics": {
+        "edge_density": 0.2436502428868841,
+        "saturation_q25": 0.5554165710649437,
+        "saturation_q75": 0.6343375803671045,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.027028211131253463,
+        "foreground_pixels": 34686
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 4,
+        "line": 5,
+        "light": 4,
+        "palette": 5,
+        "sentence": "The asset matches the established hand-drawn ink-and-wash style, with clean linework, consistent upper-left lighting, and a restrained earthy palette."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "berry_bare",
+      "production_family": "plants",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/plants/berry_bare_try1.png",
+      "working_sha256": "78f86ef2770f0d3f23ffc920c195c5a6b0df5075b1e1c58f555979eac324947b",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/plants_berry_bare-scorecard.png",
+      "legacy_scorecard_sha256": "9f708f377ade7ee5f647f5df3796bf3ede1cd310423749de7808d3f0fa7f4ec6",
+      "legacy_reference_sha256": [
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "78f86ef2770f0d3f23ffc920c195c5a6b0df5075b1e1c58f555979eac324947b"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/plants/berry_full_try1_raw.png",
+      "sha256": "733ea5343add84d78bf95fd06e8ef57e77391524b65295b4d56cf4dca128ecbe",
+      "family": "plants",
+      "metrics": {
+        "edge_density": 0.26227341932147885,
+        "saturation_q25": 0.5682369030000592,
+        "saturation_q75": 0.6767425057045617,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.025201227380245335,
+        "foreground_pixels": 40081
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "The bush matches the established hand-drawn ink-and-wash style, lighting, and restrained earthy palette of the anchors."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "berry_full",
+      "production_family": "plants",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/plants/berry_full_try1.png",
+      "working_sha256": "207e19060c9714802937ebba638ebf74b1dafdab673e1e472fd8440dff86ac5a",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/plants_berry_full-scorecard.png",
+      "legacy_scorecard_sha256": "1dc7c683e1c687a22f918ff9b4319a3df85487c9b19ec194bc922bd5d9c2b76e",
+      "legacy_reference_sha256": [
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "207e19060c9714802937ebba638ebf74b1dafdab673e1e472fd8440dff86ac5a"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/plants/birch_large_try1_raw.png",
+      "sha256": "127de65cf9c87bc6955d6065c274a4e9cc00c91ff2bc40dabbe629459bef7099",
+      "family": "plants",
+      "metrics": {
+        "edge_density": 0.27439024390243905,
+        "saturation_q25": 0.5618312049651317,
+        "saturation_q75": 0.6191638217254474,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.018893024656220003,
+        "foreground_pixels": 39395
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5,
+        "sentence": "The tree matches the established inked linework, two-tone wash, upper-left lighting, and restrained earth-tone palette."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "birch_large",
+      "production_family": "plants",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/plants/birch_large_try1.png",
+      "working_sha256": "f01cf36193f9b4c15c926256676df44b4a074e24e396fb91ff535675a80e46c4",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/plants_birch_large-scorecard.png",
+      "legacy_scorecard_sha256": "90f685e541a3b69616ceded70c3b20674e61af81305179af104a2fa9966f6ea1",
+      "legacy_reference_sha256": [
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "f01cf36193f9b4c15c926256676df44b4a074e24e396fb91ff535675a80e46c4"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/plants/birch_small_try1_raw.png",
+      "sha256": "f74c0f2b80f8eb51f8cc8c7fd6756c9ff9b2441a1d311112d24f7214ec32d7af",
+      "family": "plants",
+      "metrics": {
+        "edge_density": 0.24593047316871292,
+        "saturation_q25": 0.5468624309049702,
+        "saturation_q75": 0.605055227896083,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.02955639510853157,
+        "foreground_pixels": 36373
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 5,
+        "sentence": "The asset matches the style with clean fine ink lines, two-tone earthy washes, consistent upper-left lighting, and a restrained palette."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "birch_small",
+      "production_family": "plants",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/plants/birch_small_try1.png",
+      "working_sha256": "974f2b1b1678efdc91c4d4996cd0ed58283cd296a8819c800c9d54bbd71284df",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/plants_birch_small-scorecard.png",
+      "legacy_scorecard_sha256": "ff8a5fc3b9c3c71a4aab7f50c16268d976e3b559ccbef682148920c77cada70f",
+      "legacy_reference_sha256": [
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "974f2b1b1678efdc91c4d4996cd0ed58283cd296a8819c800c9d54bbd71284df"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/plants/oak_large_try1_raw.png",
+      "sha256": "84d9d90936d06762f40f64bb349d0b45475bc069c3dbb901939cb4a6c3965d7b",
+      "family": "plants",
+      "metrics": {
+        "edge_density": 0.27267832346189813,
+        "saturation_q25": 0.5405289684023044,
+        "saturation_q75": 0.5957428141848337,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.022217039284516397,
+        "foreground_pixels": 40556
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "The tree matches the established ink-and-wash style with consistent line quality, lighting, and earth-toned palette."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "oak_large",
+      "production_family": "plants",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/plants/oak_large_try1.png",
+      "working_sha256": "879ffc811385276e560a17b56e5b25b61ffb63988d8acbcb706fda7d92120900",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/plants_oak_large-scorecard.png",
+      "legacy_scorecard_sha256": "661bba0e1d0647593cc275debc57834301aea5fc09938f1e72fc97b76d1beb61",
+      "legacy_reference_sha256": [
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "879ffc811385276e560a17b56e5b25b61ffb63988d8acbcb706fda7d92120900"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/plants/oak_small_try1_raw.png",
+      "sha256": "a96bf42e2b5c30b35db8d9744ef4158e698406fbb677cfa4cea53e3d66c236a5",
+      "family": "plants",
+      "metrics": {
+        "edge_density": 0.2551575853246965,
+        "saturation_q25": 0.565916288252951,
+        "saturation_q75": 0.6300308247916659,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.021266619152173125,
+        "foreground_pixels": 40665
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 3,
+        "line": 4,
+        "light": 4,
+        "palette": 5,
+        "sentence": "The foliage is painted with multi-tonal, soft painterly shading rather than the required two-tone wash, so the medium is too rich."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "oak_small",
+      "production_family": "plants",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/plants/oak_small_try1.png",
+      "working_sha256": "60fdad1dd222f9eb8a76710866502c9cc87d06f7485987b42e1d7f30d8e5fb2c",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/plants_oak_small-scorecard.png",
+      "legacy_scorecard_sha256": "1151aa131c429d41bfcbf0affd75a7ca616b670fa16da4178ac0052788463a8c",
+      "legacy_reference_sha256": [
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "60fdad1dd222f9eb8a76710866502c9cc87d06f7485987b42e1d7f30d8e5fb2c"
+      ],
+      "numeric_and_legacy_model": false,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/plants/pine_large_try1_raw.png",
+      "sha256": "0c1171b148c8f9d1235173bff8821de1167150b4f32687789b5c46c1b52d2e2c",
+      "family": "plants",
+      "metrics": {
+        "edge_density": 0.2703702561889201,
+        "saturation_q25": 0.4918629249908938,
+        "saturation_q75": 0.5820427357258579,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.018707520989613084,
+        "foreground_pixels": 38356
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "The tree matches the locked style with fine ink work, two-tone earthy washes, consistent lighting and palette."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "pine_large",
+      "production_family": "plants",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/plants/pine_large_try1.png",
+      "working_sha256": "5012b23fb5bcb085dea7f1b2e20f69444e9e7418d94a90b282fe377d7dc0da5f",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/plants_pine_large-scorecard.png",
+      "legacy_scorecard_sha256": "adfb61f906560a0c5f8cf66a4956f07d88b5406318bbbf13341e5ba5ff5e7810",
+      "legacy_reference_sha256": [
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "5012b23fb5bcb085dea7f1b2e20f69444e9e7418d94a90b282fe377d7dc0da5f"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/plants/pine_small_try1_raw.png",
+      "sha256": "d4574cbfc5d71735022cf05448a1ced6ec1006752d03f3c72e2c3923c0e91194",
+      "family": "plants",
+      "metrics": {
+        "edge_density": 0.28361296253734775,
+        "saturation_q25": 0.575629710827188,
+        "saturation_q75": 0.6708435433770686,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.021123229418835914,
+        "foreground_pixels": 36221
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 4,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "The pine matches the established fine ink-and-wash style, lighting from the upper left, and restrained earth-tone palette."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "pine_small",
+      "production_family": "plants",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/plants/pine_small_try1.png",
+      "working_sha256": "9c303ad6fb6bb544698897de1bd3c40bdcffb8bd24bb7066cda0f344a0d765e8",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/plants_pine_small-scorecard.png",
+      "legacy_scorecard_sha256": "21d379e53d452dc02ca8927558d27b1c215b440931448910005ea2c309b6a620",
+      "legacy_reference_sha256": [
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "9c303ad6fb6bb544698897de1bd3c40bdcffb8bd24bb7066cda0f344a0d765e8"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/plants/reeds_try1_raw.png",
+      "sha256": "18997778bade3735c5aedbd754e9cd0e5cabe6110a33b9f6f18f2343defe7430",
+      "family": "plants",
+      "metrics": {
+        "edge_density": 0.2301410541945063,
+        "saturation_q25": 0.6139997363162523,
+        "saturation_q75": 0.7129344217941824,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.03018117881347738,
+        "foreground_pixels": 23445
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 4,
+        "line": 5,
+        "light": 4,
+        "palette": 5,
+        "sentence": "The grass matches the established map style with fine ink lines, two-tone wash, consistent upper-left lighting, and restrained earth tones."
+      },
+      "model_status": "LEGACY_REFERENCE_UNVERIFIED",
+      "passed": false,
+      "name": "reeds",
+      "production_family": "plants",
+      "working_candidate": "/Users/rexxa/work/arttrial2-data/plants/reeds_try1.png",
+      "working_sha256": "668fdecce7ea230daa037f988b7d6b9aa1fc0b78f725986b9ea6c173420fd0b1",
+      "legacy_model_source": "docs/v8/arttrial2/ENV_MODEL_REVIEW.json",
+      "legacy_scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-environment/plants_reeds-scorecard.png",
+      "legacy_scorecard_sha256": "4118ab5e787d2574f0d81b6e90fe1642f31b51863a570b8abce3b4b208a9c1c4",
+      "legacy_reference_sha256": [
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "668fdecce7ea230daa037f988b7d6b9aa1fc0b78f725986b9ea6c173420fd0b1"
+      ],
+      "numeric_and_legacy_model": true,
+      "fresh_same_family_review_required": true
+    }
+  ]
+}

@@ -1,0 +1,286 @@
+{
+  "status": "accepted under judge v2, TRIAL2b",
+  "asset": "forest_floor",
+  "family": "ground",
+  "try_count": 1,
+  "prompt": "Create ONE square seamless tileable ground texture, filling entire canvas, not panels. Attached image 1 is locked ground anchor; image 2 locked scene anchor. Match fine ink outlines, restrained natural color wash, two-tone shading, upper-left light, botanical detail at anchor scale. Orthographic 90-degree overhead, uniform density at every edge with exact wrap continuity. No people, objects, buildings, text, borders, vignette, isometric, photo, 3D render, pixel art, gradient blur. FOREST FLOOR: warm umber leaf litter, scattered small oak leaves, thin twigs, small grey pebbles and sparse muted moss. No tree trunks or roots, no dominant features, calm woodland ground.",
+  "anchors": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
+      "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+      "hash_basis": "recorded generation hash",
+      "unavailable_reason": null
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+      "hash_basis": "recorded generation hash",
+      "unavailable_reason": null
+    }
+  ],
+  "generation_id": null,
+  "generation_id_note": "No explicit generation ID in retained metadata; source path preserved without inventing an ID",
+  "original": "/Users/rexxa/work/arttrial2-data/ground/forest_floor_try1.png",
+  "original_sha256": "2c9b89f62288521acca421e6cdcda9e507bc28f9ac63cc5631c353b9d5d3bdf3",
+  "working_source": "/Users/rexxa/work/arttrial2-data/ground/forest_floor_try1/candidate.png",
+  "working_sha256": "d0c2fc846442b5b0a2c0edd8711a360ed3d1e1904724a72827cace91fa97daf2",
+  "working_size": [
+    512,
+    512
+  ],
+  "operations": [
+    "RGB conversion",
+    "Lanczos downscale to 512x512"
+  ],
+  "anchor_point": null,
+  "anchor_point_note": "Not recorded or not applicable; no placement coordinate invented",
+  "generation_started_at": "2026-10-21T23:49:00.740Z",
+  "generation_completed_at": "2026-10-21T23:49:38.552Z",
+  "generation_timestamp_note": "Retained recorded values; missing values were not captured",
+  "wall_seconds": null,
+  "wall_seconds_note": "Generation wall time unavailable in retained metadata; not estimated from review timing",
+  "numeric": {
+    "candidate": "/Users/rexxa/work/arttrial2-data/ground/forest_floor_try1.png",
+    "sha256": "2c9b89f62288521acca421e6cdcda9e507bc28f9ac63cc5631c353b9d5d3bdf3",
+    "family": "ground",
+    "metrics": {
+      "edge_density": 0.32933358528596623,
+      "saturation_q25": 0.6203673436832138,
+      "saturation_q75": 0.6759047316240299,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.009806448824918794,
+      "foreground_pixels": 65536
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "sentence": "Candidate depicts a leaf-littered dirt ground with rocks and sticks, and its rendering closely matches the references in fine inked linework, textured tonal shading, natural diffuse lighting, and the same earthy green-brown palette."
+    },
+    "model_status": "SAME_FAMILY_VERIFIED",
+    "passed": true
+  },
+  "numeric_thresholds": {
+    "features": [
+      "edge_density",
+      "saturation_q25",
+      "saturation_q75",
+      "stroke_q25",
+      "stroke_q50",
+      "stroke_q75",
+      "stroke_q90",
+      "wash_flatness"
+    ],
+    "family": "ground",
+    "lower": [
+      0.14186507936507936,
+      0.059843547343970405,
+      0.20462696348322162,
+      1.0,
+      0.0,
+      0.8284271247461903,
+      2.25,
+      0.0038233960726937514
+    ],
+    "upper": [
+      0.49595301083396326,
+      0.7750679734042174,
+      0.9095358055238305,
+      3.0,
+      4.0,
+      6.0,
+      5.75,
+      0.027749767647260854
+    ],
+    "comparison_size": 256,
+    "stroke_comparison_size": 1024
+  },
+  "calibration_path": "/Users/rexxa/work/new-world-art-prod/docs/v8/arttrial2/JUDGE_V2_CALIBRATION.json",
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "model": {
+    "scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "sentence": "Candidate depicts a leaf-littered dirt ground with rocks and sticks, and its rendering closely matches the references in fine inked linework, textured tonal shading, natural diffuse lighting, and the same earthy green-brown palette."
+    },
+    "references": [
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png",
+        "sha256": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d"
+      },
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png",
+        "sha256": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9"
+      }
+    ],
+    "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-forest_floor-scorecard.png",
+    "scorecard_sha256": "6f1ea64b87cf7aba74d1619f4fea6910c539f1fa2569baf9cf8397811a4d881a",
+    "review_manifest": "/Users/rexxa/work/arttrial2-data/trial2b/environment-all-model-reviews.json",
+    "review_manifest_sha256": "cee5e92c6a1e54e0b73c7434029e6e118fac3076bbf89fff465582ad0e2264c8",
+    "full_record": {
+      "family": "ground",
+      "name": "forest_floor",
+      "candidate": "/Users/rexxa/work/arttrial2-data/ground/forest_floor_try1.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png",
+        "/Users/rexxa/work/arttrial2-data/ground/forest_floor_try1.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9",
+        "/Users/rexxa/work/arttrial2-data/ground/forest_floor_try1.png": "2c9b89f62288521acca421e6cdcda9e507bc28f9ac63cc5631c353b9d5d3bdf3"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 02:40:27 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:43:17 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-36096052-a00b-4586-825c-c4cefeb2f683.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-forest_floor-scorecard.png",
+      "scorecard_sha256": "6f1ea64b87cf7aba74d1619f4fea6910c539f1fa2569baf9cf8397811a4d881a",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason": "Candidate depicts a leaf-littered dirt ground with rocks and sticks, and its rendering closely matches the references in fine inked linework, textured tonal shading, natural diffuse lighting, and the same earthy green-brown palette.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible."
+    },
+    "identity_note": "Actual image-generation model scorecard; underlying model version not exposed; call context is in full_record"
+  },
+  "acceptance_evidence": "docs/v8/arttrial2/ENV_ACCEPTANCE_V2.json",
+  "acceptance_evidence_sha256": "144ebcb5da913e6b2752cb8189779a879171cbb6534f1798743b9a1346c1ce6b",
+  "generation_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/ground/forest_floor_try1.json",
+    "sha256": "ad88d3d0dceb608acac7f23985e45983401bf80947447cf833191cd63fea5d40",
+    "full_record": {
+      "asset": "forest_floor",
+      "family": "ground",
+      "try": 1,
+      "prompt": "Create ONE square seamless tileable ground texture, filling entire canvas, not panels. Attached image 1 is locked ground anchor; image 2 locked scene anchor. Match fine ink outlines, restrained natural color wash, two-tone shading, upper-left light, botanical detail at anchor scale. Orthographic 90-degree overhead, uniform density at every edge with exact wrap continuity. No people, objects, buildings, text, borders, vignette, isometric, photo, 3D render, pixel art, gradient blur. FOREST FLOOR: warm umber leaf litter, scattered small oak leaves, thin twigs, small grey pebbles and sparse muted moss. No tree trunks or roots, no dominant features, calm woodland ground.",
+      "anchors": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+      ],
+      "start_utc": "2026-10-21T23:49:00.740Z",
+      "end_utc": "2026-10-21T23:49:38.552Z",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160dd-2a23-7160-9b72-72cc095697ef/exec-018a8fc7-2ed6-4097-8459-c0eac9a568ac.png",
+      "status": "PENDING_MODEL_REVIEW",
+      "sha256": "2c9b89f62288521acca421e6cdcda9e507bc28f9ac63cc5631c353b9d5d3bdf3",
+      "original": "/Users/rexxa/work/arttrial2-data/ground/forest_floor_try1.png",
+      "anchor_sha256": {
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      }
+    }
+  },
+  "processing_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/ground/forest_floor_try1/candidate.json",
+    "sha256": "94fac0772082793ee2be0aa5384e27cf622cf1e8c4b4698b8c5378593580e4b4",
+    "full_record": {
+      "asset": "forest_floor",
+      "family": "ground",
+      "try": 1,
+      "prompt": "Create ONE square seamless tileable ground texture, filling entire canvas, not panels. Attached image 1 is locked ground anchor; image 2 locked scene anchor. Match fine ink outlines, restrained natural color wash, two-tone shading, upper-left light, botanical detail at anchor scale. Orthographic 90-degree overhead, uniform density at every edge with exact wrap continuity. No people, objects, buildings, text, borders, vignette, isometric, photo, 3D render, pixel art, gradient blur. FOREST FLOOR: warm umber leaf litter, scattered small oak leaves, thin twigs, small grey pebbles and sparse muted moss. No tree trunks or roots, no dominant features, calm woodland ground.",
+      "anchors": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+      ],
+      "start_utc": "2026-10-21T23:49:00.740Z",
+      "end_utc": "2026-10-21T23:49:38.552Z",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160dd-2a23-7160-9b72-72cc095697ef/exec-018a8fc7-2ed6-4097-8459-c0eac9a568ac.png",
+      "status": "PENDING_MODEL_REVIEW",
+      "sha256": "2c9b89f62288521acca421e6cdcda9e507bc28f9ac63cc5631c353b9d5d3bdf3",
+      "working_size": [
+        512,
+        512
+      ],
+      "operations": [
+        "RGB conversion",
+        "Lanczos downscale to 512x512"
+      ],
+      "judge_scores": {
+        "numeric": {
+          "candidate": "/Users/rexxa/work/arttrial2-data/ground/forest_floor_try1/candidate.png",
+          "sha256": "d0c2fc846442b5b0a2c0edd8711a360ed3d1e1904724a72827cace91fa97daf2",
+          "metrics": {
+            "histogram": [
+              0.0804595947265625,
+              0.1033477783203125,
+              0.0181732177734375,
+              0.0921630859375,
+              0.05694580078125,
+              0.0129547119140625,
+              0.1161651611328125,
+              0.0460052490234375,
+              0.0083465576171875,
+              0.040283203125,
+              0.0074005126953125,
+              0.0065460205078125,
+              0.0495452880859375,
+              0.18408203125,
+              0.0321044921875,
+              0.0316314697265625,
+              0.0053863525390625,
+              0.0701446533203125,
+              0.0166168212890625,
+              0.0006866455078125,
+              0.013641357421875,
+              0.007293701171875,
+              6.103515625e-05,
+              1.52587890625e-05
+            ],
+            "edge_density": 0.32927059712774,
+            "wash": 0.6434796419658367,
+            "stroke_width_at_1024": 2.5470748269311656,
+            "foreground_pixels": 65536
+          },
+          "histogram_distance": 0.17314806117302523,
+          "numeric_checks": {
+            "lab_histogram": false,
+            "line_density": true,
+            "local_saturation": false
+          },
+          "numeric_pass": false,
+          "model_scores": null,
+          "model_status": "MISSING",
+          "passed": false
+        },
+        "model": "PENDING"
+      },
+      "seam": {
+        "horizontal_mae": 25.9609375,
+        "vertical_mae": 31.7578125,
+        "horizontal_ratio": 0.9038996890745999,
+        "vertical_ratio": 1.0836063297552174,
+        "passed": false
+      },
+      "candidate": "/Users/rexxa/work/arttrial2-data/ground/forest_floor_try1/candidate.png"
+    }
+  },
+  "historical_record_note": "Nested historical numeric/status fields are preserved as history; top-level status and numeric/model are TRIAL2b decisions."
+}

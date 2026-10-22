@@ -1,145 +1,286 @@
 {
+  "status": "accepted under judge v2, TRIAL2b",
   "asset": "hill_rock",
   "family": "ground",
-  "try": 2,
-  "prompt": "Generate ONE square seamless tileable texture. Attached locked ground and camp scene anchors define exact fine dark ink, restrained natural colour wash, two-tone shade, upper-left light. Topdown orthographic90degrees, uniform low-detail density, tiny game ground. Important colour target: muted earth colours, mean saturation around0.48, restrained neutral warm tones. Exact periodic left-right and top-bottom edge continuity, no cut features at edge, NO border, panels, objects, people, trees, isometric, photo, 3D render, pixels, gradients, blur. HILL ROCK continuous walkable flat grey rock plates and gravel with warm umber earth and sparse subdued olive moss, match existing ground anchor's rocky quarter, no giant boulders.",
+  "try_count": 1,
+  "prompt": "Create ONE square seamless tileable ground texture, filling entire canvas, not panels. Attached image 1 is locked ground anchor; image 2 locked scene anchor. Match fine ink outlines, restrained natural color wash, two-tone shading, upper-left light, botanical detail at anchor scale. Orthographic 90-degree overhead, uniform density at every edge with exact wrap continuity. No people, objects, buildings, text, borders, vignette, isometric, photo, 3D render, pixel art, gradient blur. HILL ROCK: low flat exposed weathered grey limestone plates and small gravel, fine ink cracks, sparse muted olive moss and warm earth between stones; continuous walkable rocky ground, no cliffs or large boulders, no focal rock.",
   "anchors": [
-    "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
-    "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
+      "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+      "hash_basis": "recorded generation hash",
+      "unavailable_reason": null
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+      "hash_basis": "recorded generation hash",
+      "unavailable_reason": null
+    }
   ],
-  "start_utc": "2026-10-22T00:37:03.556Z",
-  "end_utc": "2026-10-22T00:38:03.918Z",
-  "wall_seconds": 60.362,
-  "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160dd-2a23-7160-9b72-72cc095697ef/exec-a5f7720e-d2be-4b16-be10-6ad8b761cfbd.png",
-  "status": "ACCEPTED_BY_TRIAL_V2_COMBINED_RULE",
-  "original": "/Users/rexxa/work/arttrial2-data/ground/hill_rock_try2.png",
-  "anchor_sha256": {
-    "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
-    "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
-  },
-  "candidate": "/Users/rexxa/work/arttrial2-data/ground/hill_rock_try2_mirror/candidate.png",
+  "generation_id": null,
+  "generation_id_note": "No explicit generation ID in retained metadata; source path preserved without inventing an ID",
+  "original": "/Users/rexxa/work/arttrial2-data/ground/hill_rock_try1.png",
+  "original_sha256": "b5adda31a55d978afa0ae7dd1964dd721416733aa253f3a586fc582427aa9387",
+  "working_source": "/Users/rexxa/work/arttrial2-data/ground/hill_rock_try1/candidate.png",
+  "working_sha256": "bc56d04b30b3b338cdb219a90e6c65d7e6b1e5cf5aac060b416f7283bce93233",
   "working_size": [
     512,
     512
   ],
   "operations": [
     "RGB conversion",
-    "Lanczos downscale512",
-    {
-      "mirror_blend": {
-        "strip_width_px": 32,
-        "weight": "0.25*(1+cos(pi*min(distance_to_edge,32)/32))",
-        "axes": [
-          "horizontal",
-          "vertical"
-        ],
-        "interior_unchanged": [
-          448,
-          448
-        ],
-        "prerequisite": "two generated seam failures preserved in try1 and try2 seam.json"
-      }
-    }
+    "Lanczos downscale to 512x512"
   ],
-  "judge_scores": {
-    "candidate": "/Users/rexxa/work/arttrial2-data/ground/hill_rock_try2_mirror/candidate.png",
-    "sha256": "2df231d62d20d2e6a3c7f9064697fc8a3cd4c8f7107fbf7cde0db722b7b17f79",
+  "anchor_point": null,
+  "anchor_point_note": "Not recorded or not applicable; no placement coordinate invented",
+  "generation_started_at": "2026-10-21T23:51:02.733Z",
+  "generation_completed_at": "2026-10-21T23:51:36.570Z",
+  "generation_timestamp_note": "Retained recorded values; missing values were not captured",
+  "wall_seconds": null,
+  "wall_seconds_note": "Generation wall time unavailable in retained metadata; not estimated from review timing",
+  "numeric": {
+    "candidate": "/Users/rexxa/work/arttrial2-data/ground/hill_rock_try1.png",
+    "sha256": "b5adda31a55d978afa0ae7dd1964dd721416733aa253f3a586fc582427aa9387",
+    "family": "ground",
     "metrics": {
-      "histogram": [
-        0.069580078125,
-        0.0756683349609375,
-        0.056427001953125,
-        0.036468505859375,
-        0.0605621337890625,
-        0.0657958984375,
-        0.0633392333984375,
-        0.012786865234375,
-        0.0734710693359375,
-        0.0294036865234375,
-        0.08819580078125,
-        0.0871124267578125,
-        0.0392913818359375,
-        0.0441741943359375,
-        0.031341552734375,
-        0.023681640625,
-        0.0592803955078125,
-        0.0321197509765625,
-        0.0156097412109375,
-        0.0060272216796875,
-        0.0024566650390625,
-        0.0175933837890625,
-        0.0087127685546875,
-        0.0009002685546875
-      ],
-      "edge_density": 0.3236174099269337,
-      "wash": 0.4630527163492,
-      "stroke_width_at_1024": 2.5544823667053764,
+      "edge_density": 0.337096875787352,
+      "saturation_q25": 0.4638619068564155,
+      "saturation_q75": 0.5969147803636622,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.010687654546277271,
       "foreground_pixels": 65536
     },
-    "histogram_distance": 0.07325256368428362,
     "numeric_checks": {
-      "lab_histogram": true,
-      "line_density": true,
-      "local_saturation": true
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
     },
     "numeric_pass": true,
     "model_scores": {
       "medium": 5,
       "line": 5,
-      "light": 5,
+      "light": 4,
       "palette": 5,
-      "sentence": "The candidate shows a rocky dirt ground tile, matching the references’ hand-painted ink and watercolor style with consistent linework, textured brushwork, lighting, and earthy green-brown-gray palette."
+      "sentence": "The rocky ground subject matches the references\u2019 fine inked linework, textured brushy painting, and earthy green-brown palette, with only a slightly brighter, more direct sunlight contrast than the more shaded reference scenes."
     },
-    "model_status": "SUPPLIED",
+    "model_status": "SAME_FAMILY_VERIFIED",
     "passed": true
   },
-  "seam": {
-    "horizontal_mae": 0.0,
-    "vertical_mae": 0.0,
-    "horizontal_ratio": 0.0,
-    "vertical_ratio": 0.0,
-    "passed": true
-  },
-  "try_count": 2,
-  "anchor_point": [
-    0,
-    0
-  ],
-  "anchor_point_note": "Ground tile origin; not a tall-object pivot",
-  "working_path": "art/style05/env/ground/hill_rock.png",
-  "working_sha256": "2df231d62d20d2e6a3c7f9064697fc8a3cd4c8f7107fbf7cde0db722b7b17f79",
-  "raw_sha256": "02ec1f4afe860df6ef7e46cf15a585c1383cceeaf32924f0ff148948e39b0b2c",
-  "generation_id": "exec-a5f7720e-d2be-4b16-be10-6ad8b761cfbd",
-  "generation_id_note": "Tool output artifact identifier; separate generation ID not exposed",
-  "model_review": {
-    "name": "hill_rock_try2_mirror",
-    "candidate": "/Users/rexxa/work/arttrial2-data/ground/hill_rock_try2_mirror/candidate.png",
-    "refs": [
-      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
-      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
-      "/Users/rexxa/work/arttrial2-data/ground/hill_rock_try2_mirror/candidate.png"
+  "numeric_thresholds": {
+    "features": [
+      "edge_density",
+      "saturation_q25",
+      "saturation_q75",
+      "stroke_q25",
+      "stroke_q50",
+      "stroke_q75",
+      "stroke_q90",
+      "wash_flatness"
     ],
-    "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
-    "protocol": "V2",
-    "started_at": {
-      "current_time": "2026-10-22 01:12:47 UTC"
-    },
-    "completed_at": {
-      "current_time": "2026-10-22 01:13:51 UTC"
-    },
-    "source_card": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160da-7c83-72a2-92d7-3018c7309f01/exec-372e56c4-1dfb-4e5b-831a-8a65dfc68bda.png",
-    "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160da-7c83-72a2-92d7-3018c7309f01 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160da-7c83-72a2-92d7-3018c7309f01/exec-372e56c4-1dfb-4e5b-831a-8a65dfc68bda.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
-    "scorecard_sha256": "1b32c7c0940355e6f934d3711db9acb054f23eaefc483958c554a13e83698ab5",
+    "family": "ground",
+    "lower": [
+      0.14186507936507936,
+      0.059843547343970405,
+      0.20462696348322162,
+      1.0,
+      0.0,
+      0.8284271247461903,
+      2.25,
+      0.0038233960726937514
+    ],
+    "upper": [
+      0.49595301083396326,
+      0.7750679734042174,
+      0.9095358055238305,
+      3.0,
+      4.0,
+      6.0,
+      5.75,
+      0.027749767647260854
+    ],
+    "comparison_size": 256,
+    "stroke_comparison_size": 1024
+  },
+  "calibration_path": "/Users/rexxa/work/new-world-art-prod/docs/v8/arttrial2/JUDGE_V2_CALIBRATION.json",
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "model": {
     "scores": {
       "medium": 5,
       "line": 5,
-      "light": 5,
+      "light": 4,
       "palette": 5,
-      "sentence": "The candidate shows a rocky dirt ground tile, matching the references’ hand-painted ink and watercolor style with consistent linework, textured brushwork, lighting, and earthy green-brown-gray palette."
+      "sentence": "The rocky ground subject matches the references\u2019 fine inked linework, textured brushy painting, and earthy green-brown palette, with only a slightly brighter, more direct sunlight contrast than the more shaded reference scenes."
+    },
+    "references": [
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png",
+        "sha256": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d"
+      },
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png",
+        "sha256": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9"
+      }
+    ],
+    "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-hill_rock-scorecard.png",
+    "scorecard_sha256": "e0624594f1e60130471fb1acd2b65c4f7c145277c1785b9e503cb4f9933d58e7",
+    "review_manifest": "/Users/rexxa/work/arttrial2-data/trial2b/environment-all-model-reviews.json",
+    "review_manifest_sha256": "cee5e92c6a1e54e0b73c7434029e6e118fac3076bbf89fff465582ad0e2264c8",
+    "full_record": {
+      "family": "ground",
+      "name": "hill_rock",
+      "candidate": "/Users/rexxa/work/arttrial2-data/ground/hill_rock_try1.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png",
+        "/Users/rexxa/work/arttrial2-data/ground/hill_rock_try1.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9",
+        "/Users/rexxa/work/arttrial2-data/ground/hill_rock_try1.png": "b5adda31a55d978afa0ae7dd1964dd721416733aa253f3a586fc582427aa9387"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 02:40:27 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:42:50 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-bb844f03-480d-4150-96f9-b63712a59e68.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-hill_rock-scorecard.png",
+      "scorecard_sha256": "e0624594f1e60130471fb1acd2b65c4f7c145277c1785b9e503cb4f9933d58e7",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "reason": "The rocky ground subject matches the references\u2019 fine inked linework, textured brushy painting, and earthy green-brown palette, with only a slightly brighter, more direct sunlight contrast than the more shaded reference scenes.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible."
+    },
+    "identity_note": "Actual image-generation model scorecard; underlying model version not exposed; call context is in full_record"
+  },
+  "acceptance_evidence": "docs/v8/arttrial2/ENV_ACCEPTANCE_V2.json",
+  "acceptance_evidence_sha256": "144ebcb5da913e6b2752cb8189779a879171cbb6534f1798743b9a1346c1ce6b",
+  "generation_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/ground/hill_rock_try1.json",
+    "sha256": "591f701f35c93812fd78a618578f5d07d308683e98e3954c0f78c757029001d3",
+    "full_record": {
+      "asset": "hill_rock",
+      "family": "ground",
+      "try": 1,
+      "prompt": "Create ONE square seamless tileable ground texture, filling entire canvas, not panels. Attached image 1 is locked ground anchor; image 2 locked scene anchor. Match fine ink outlines, restrained natural color wash, two-tone shading, upper-left light, botanical detail at anchor scale. Orthographic 90-degree overhead, uniform density at every edge with exact wrap continuity. No people, objects, buildings, text, borders, vignette, isometric, photo, 3D render, pixel art, gradient blur. HILL ROCK: low flat exposed weathered grey limestone plates and small gravel, fine ink cracks, sparse muted olive moss and warm earth between stones; continuous walkable rocky ground, no cliffs or large boulders, no focal rock.",
+      "anchors": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+      ],
+      "start_utc": "2026-10-21T23:51:02.733Z",
+      "end_utc": "2026-10-21T23:51:36.570Z",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160dd-2a23-7160-9b72-72cc095697ef/exec-048fb6d1-f4ea-430a-b0f9-0ee461e0d9ea.png",
+      "status": "PENDING_MODEL_REVIEW",
+      "sha256": "b5adda31a55d978afa0ae7dd1964dd721416733aa253f3a586fc582427aa9387",
+      "original": "/Users/rexxa/work/arttrial2-data/ground/hill_rock_try1.png",
+      "anchor_sha256": {
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      }
     }
   },
-  "limitations": [
-    "V2 model alone failed to reject all three calibration negatives",
-    "Repeated motifs and softened mirrored strips remain; accepted by specified metrics, not a universal visual endorsement"
-  ]
+  "processing_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/ground/hill_rock_try1/candidate.json",
+    "sha256": "f2583f77ef0e1173b125bcf6341842562530b0027daaa9090e0ad77bf317e847",
+    "full_record": {
+      "asset": "hill_rock",
+      "family": "ground",
+      "try": 1,
+      "prompt": "Create ONE square seamless tileable ground texture, filling entire canvas, not panels. Attached image 1 is locked ground anchor; image 2 locked scene anchor. Match fine ink outlines, restrained natural color wash, two-tone shading, upper-left light, botanical detail at anchor scale. Orthographic 90-degree overhead, uniform density at every edge with exact wrap continuity. No people, objects, buildings, text, borders, vignette, isometric, photo, 3D render, pixel art, gradient blur. HILL ROCK: low flat exposed weathered grey limestone plates and small gravel, fine ink cracks, sparse muted olive moss and warm earth between stones; continuous walkable rocky ground, no cliffs or large boulders, no focal rock.",
+      "anchors": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+      ],
+      "start_utc": "2026-10-21T23:51:02.733Z",
+      "end_utc": "2026-10-21T23:51:36.570Z",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160dd-2a23-7160-9b72-72cc095697ef/exec-048fb6d1-f4ea-430a-b0f9-0ee461e0d9ea.png",
+      "status": "PENDING_MODEL_REVIEW",
+      "sha256": "b5adda31a55d978afa0ae7dd1964dd721416733aa253f3a586fc582427aa9387",
+      "working_size": [
+        512,
+        512
+      ],
+      "operations": [
+        "RGB conversion",
+        "Lanczos downscale to 512x512"
+      ],
+      "judge_scores": {
+        "numeric": {
+          "candidate": "/Users/rexxa/work/arttrial2-data/ground/hill_rock_try1/candidate.png",
+          "sha256": "bc56d04b30b3b338cdb219a90e6c65d7e6b1e5cf5aac060b416f7283bce93233",
+          "metrics": {
+            "histogram": [
+              0.06683349609375,
+              0.07891845703125,
+              0.0303192138671875,
+              0.0239410400390625,
+              0.0586090087890625,
+              0.0408935546875,
+              0.06402587890625,
+              0.0138092041015625,
+              0.0460968017578125,
+              0.048492431640625,
+              0.0508270263671875,
+              0.0535888671875,
+              0.0646209716796875,
+              0.049652099609375,
+              0.0407257080078125,
+              0.042694091796875,
+              0.05914306640625,
+              0.0892486572265625,
+              0.0275726318359375,
+              0.0070953369140625,
+              0.0042724609375,
+              0.03131103515625,
+              0.0060577392578125,
+              0.001251220703125
+            ],
+            "edge_density": 0.3373960695389267,
+            "wash": 0.5294795725953557,
+            "stroke_width_at_1024": 2.5898357167578934,
+            "foreground_pixels": 65536
+          },
+          "histogram_distance": 0.08662887117924854,
+          "numeric_checks": {
+            "lab_histogram": true,
+            "line_density": true,
+            "local_saturation": true
+          },
+          "numeric_pass": true,
+          "model_scores": null,
+          "model_status": "MISSING",
+          "passed": false
+        },
+        "model": "PENDING"
+      },
+      "seam": {
+        "horizontal_mae": 29.877604166666668,
+        "vertical_mae": 32.834635416666664,
+        "horizontal_ratio": 0.9622791430406935,
+        "vertical_ratio": 1.031867083207445,
+        "passed": false
+      },
+      "candidate": "/Users/rexxa/work/arttrial2-data/ground/hill_rock_try1/candidate.png"
+    }
+  },
+  "historical_record_note": "Nested historical numeric/status fields are preserved as history; top-level status and numeric/model are TRIAL2b decisions."
 }

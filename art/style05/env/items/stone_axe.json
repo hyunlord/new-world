@@ -1,0 +1,280 @@
+{
+  "status": "accepted under judge v2, TRIAL2b",
+  "asset": "stone_axe",
+  "family": "items",
+  "try_count": 2,
+  "prompt": "Use case: stylized-concept. Generate ONE isolated WorldSim stone-age environment sprite: one stone axe with chipped grey flint head bound to a wooden handle with flax cord. Input 1 and input 2 are authoritative same-family style references: delicate dark hand-ink contours, restrained translucent earthy pigment washes, hand-painted natural material shapes. Input 3 is subject and layout reference only. Re-render the subject with finer lines and quieter softer wash, lower internal contrast, no broad black shadow masses or bright ivory highlights. Preserve enough fine interior ink marks to read material. Camera overhead map view with slight visible side faces, light upper-left. Muted taupe, grey-brown and buff palette. One centered object with generous 12 percent margin on perfectly flat solid magenta #ff00ff, visible through gaps. No ground, scene, extra object, frame, label, watermark. Not vector, not photorealistic, not 3D.",
+  "anchors": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+      "sha256": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+      "hash_basis": "recomputed preserved source bytes",
+      "unavailable_reason": null
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png",
+      "sha256": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+      "hash_basis": "recomputed preserved source bytes",
+      "unavailable_reason": null
+    },
+    {
+      "path": "/Users/rexxa/work/arttrial2-data/items/stone_axe_try1_raw.png",
+      "sha256": "4b3036e4b09a885faf52a4a2652720a9d84f137db2714496e75446ed58a0a949",
+      "hash_basis": "recomputed preserved source bytes",
+      "unavailable_reason": null
+    }
+  ],
+  "generation_id": "exec-67b04ff5-764a-4cf1-bbb4-059a2d94db67",
+  "generation_id_note": "Tool output artifact identifier; no separate generation ID returned",
+  "original": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/stone_axe_try2_raw.png",
+  "original_sha256": "cab92c6838baa4e77f698e17951bed83797a8e0910f9f60ca2b8a1bd39665f99",
+  "working_source": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/stone_axe_try2_working.png",
+  "working_sha256": "31b0d4138f790e8e1379ca23930198809e925452fc50ee3148a5d95592df8dab",
+  "working_size": [
+    48,
+    48
+  ],
+  "operations": [
+    "art.pipeline2.autotile.extract: magenta and mixed fringe key, alpha-bounds crop",
+    "Lanczos thumbnail into original canvas dimensions minus four pixels",
+    "center on transparent original-size canvas; no RGB adjustment, quantization or outline forcing"
+  ],
+  "anchor_point": [
+    24.0,
+    24.0
+  ],
+  "anchor_point_note": "origin top-left; x right, y down",
+  "generation_started_at": null,
+  "generation_completed_at": null,
+  "generation_timestamp_note": "Generation UTC start/end were not recorded; recorded wall_seconds retained without inventing timestamps",
+  "wall_seconds": 27.993,
+  "wall_seconds_note": null,
+  "numeric": {
+    "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/stone_axe_try2_raw.png",
+    "sha256": "cab92c6838baa4e77f698e17951bed83797a8e0910f9f60ca2b8a1bd39665f99",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.2724907063197026,
+      "saturation_q25": 0.37843737419987544,
+      "saturation_q75": 0.5212196876220927,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.019782327793415565,
+      "foreground_pixels": 14777
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 4,
+      "line": 4,
+      "light": 4,
+      "palette": 4,
+      "sentence": "Same hand-painted, inked cartoon look with textured, mottled color blocks, dark outlines and warm earthy palette as the references, with only minor stylistic drift in slightly cleaner, more uniform shading on the stone and wood."
+    },
+    "model_status": "SAME_FAMILY_VERIFIED",
+    "passed": true
+  },
+  "numeric_thresholds": {
+    "features": [
+      "edge_density",
+      "saturation_q25",
+      "saturation_q75",
+      "stroke_q25",
+      "stroke_q50",
+      "stroke_q75",
+      "stroke_q90",
+      "wash_flatness"
+    ],
+    "family": "items",
+    "lower": [
+      0.14375745143418192,
+      0.16932656739677926,
+      0.25762963464540434,
+      1.0,
+      0.8284271247461903,
+      2.0,
+      2.7221359549995796,
+      0.002562857136716717
+    ],
+    "upper": [
+      0.4313261215138976,
+      0.6661527448313658,
+      0.8126448169938499,
+      3.0,
+      6.0,
+      6.0,
+      6.22213595499958,
+      0.020179014811321002
+    ],
+    "comparison_size": 256,
+    "stroke_comparison_size": 1024
+  },
+  "calibration_path": "/Users/rexxa/work/new-world-art-prod/docs/v8/arttrial2/JUDGE_V2_CALIBRATION.json",
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "model": {
+    "scores": {
+      "medium": 4,
+      "line": 4,
+      "light": 4,
+      "palette": 4,
+      "sentence": "Same hand-painted, inked cartoon look with textured, mottled color blocks, dark outlines and warm earthy palette as the references, with only minor stylistic drift in slightly cleaner, more uniform shading on the stone and wood."
+    },
+    "references": [
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "sha256": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458"
+      },
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "sha256": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832"
+      }
+    ],
+    "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/stone_axe_try2_scorecard.png",
+    "scorecard_sha256": "1e748a90fc3f953d2ee8ce46019d631c5bb965aee53e4c3140d335815f9021d9",
+    "review_manifest": "/Users/rexxa/work/arttrial2-data/trial2b/environment-all-model-reviews.json",
+    "review_manifest_sha256": "cee5e92c6a1e54e0b73c7434029e6e118fac3076bbf89fff465582ad0e2264c8",
+    "full_record": {
+      "name": "stone_axe_try2",
+      "family": "items",
+      "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/stone_axe_try2_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/stone_axe_try2_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "tool": "image_gen__imagegen",
+      "started_at": {
+        "current_time": "2026-10-22 02:56:25 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:58:38 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1617c-d43e-7193-bcc9-faeebf54a95a/exec-7051d579-2ebb-4327-b0bf-ecb2f17d6319.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/stone_axe_try2_scorecard.png",
+      "scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4
+      },
+      "reason": "Same hand-painted, inked cartoon look with textured, mottled color blocks, dark outlines and warm earthy palette as the references, with only minor stylistic drift in slightly cleaner, more uniform shading on the stone and wood.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+        "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/stone_axe_try2_raw.png": "cab92c6838baa4e77f698e17951bed83797a8e0910f9f60ca2b8a1bd39665f99"
+      },
+      "scorecard_sha256": "1e748a90fc3f953d2ee8ce46019d631c5bb965aee53e4c3140d335815f9021d9",
+      "source_sha256": "1e748a90fc3f953d2ee8ce46019d631c5bb965aee53e4c3140d335815f9021d9",
+      "model_rule_pass": true,
+      "usable_transcription": true,
+      "printed_verdict": null,
+      "format_deviation": "Illustrated scorecard despite plain-scorecard request; four scores and reason legible; printed verdict omitted.",
+      "transcription_method": "Manual verbatim reading of actual scorecard via view_image"
+    },
+    "identity_note": "Actual image-generation model scorecard; underlying model version not exposed; call context is in full_record"
+  },
+  "acceptance_evidence": "docs/v8/arttrial2/ENV_ACCEPTANCE_V2.json",
+  "acceptance_evidence_sha256": "144ebcb5da913e6b2752cb8189779a879171cbb6534f1798743b9a1346c1ce6b",
+  "generation_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/stone_axe_try2_generation.json",
+    "sha256": "b91f366a77b1da0d50c9b1902837a704f338df80d16825aa66b8f1be7803169e",
+    "full_record": {
+      "name": "stone_axe",
+      "production_family": "items",
+      "family": "items",
+      "try": 2,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1617c-d43e-7193-bcc9-faeebf54a95a/exec-67b04ff5-764a-4cf1-bbb4-059a2d94db67.png",
+      "raw": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/stone_axe_try2_raw.png",
+      "prompt": "Use case: stylized-concept. Generate ONE isolated WorldSim stone-age environment sprite: one stone axe with chipped grey flint head bound to a wooden handle with flax cord. Input 1 and input 2 are authoritative same-family style references: delicate dark hand-ink contours, restrained translucent earthy pigment washes, hand-painted natural material shapes. Input 3 is subject and layout reference only. Re-render the subject with finer lines and quieter softer wash, lower internal contrast, no broad black shadow masses or bright ivory highlights. Preserve enough fine interior ink marks to read material. Camera overhead map view with slight visible side faces, light upper-left. Muted taupe, grey-brown and buff palette. One centered object with generous 12 percent margin on perfectly flat solid magenta #ff00ff, visible through gaps. No ground, scene, extra object, frame, label, watermark. Not vector, not photorealistic, not 3D.",
+      "reference_images": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/items/stone_axe_try1_raw.png"
+      ],
+      "tool": "image_gen__imagegen",
+      "wall_seconds": 27.993,
+      "model_status": "MISSING",
+      "accepted": false
+    }
+  },
+  "processing_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/stone_axe_try2_working.json",
+    "sha256": "1b6997f6af091d4effd022412be1334b31e3e8e747358c7435a1ce43a4bf043a",
+    "full_record": {
+      "name": "stone_axe",
+      "production_family": "items",
+      "family": "items",
+      "try": 2,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1617c-d43e-7193-bcc9-faeebf54a95a/exec-67b04ff5-764a-4cf1-bbb4-059a2d94db67.png",
+      "raw": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/stone_axe_try2_raw.png",
+      "prompt": "Use case: stylized-concept. Generate ONE isolated WorldSim stone-age environment sprite: one stone axe with chipped grey flint head bound to a wooden handle with flax cord. Input 1 and input 2 are authoritative same-family style references: delicate dark hand-ink contours, restrained translucent earthy pigment washes, hand-painted natural material shapes. Input 3 is subject and layout reference only. Re-render the subject with finer lines and quieter softer wash, lower internal contrast, no broad black shadow masses or bright ivory highlights. Preserve enough fine interior ink marks to read material. Camera overhead map view with slight visible side faces, light upper-left. Muted taupe, grey-brown and buff palette. One centered object with generous 12 percent margin on perfectly flat solid magenta #ff00ff, visible through gaps. No ground, scene, extra object, frame, label, watermark. Not vector, not photorealistic, not 3D.",
+      "reference_images": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/items/stone_axe_try1_raw.png"
+      ],
+      "tool": "image_gen__imagegen",
+      "wall_seconds": 27.993,
+      "model_status": "MISSING",
+      "accepted": false,
+      "generation_id": "exec-67b04ff5-764a-4cf1-bbb4-059a2d94db67",
+      "generation_id_note": "Tool output artifact identifier; no separate generation ID returned",
+      "started_at": null,
+      "completed_at": null,
+      "timestamp_note": "Generation UTC start/end were not recorded; recorded wall_seconds retained without inventing timestamps",
+      "reference_sha256": [
+        "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+        "4b3036e4b09a885faf52a4a2652720a9d84f137db2714496e75446ed58a0a949"
+      ],
+      "raw_sha256": "cab92c6838baa4e77f698e17951bed83797a8e0910f9f60ca2b8a1bd39665f99",
+      "working_path": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/stone_axe_try2_working.png",
+      "working_sha256": "31b0d4138f790e8e1379ca23930198809e925452fc50ee3148a5d95592df8dab",
+      "working_size": [
+        48,
+        48
+      ],
+      "anchor_point": [
+        24.0,
+        24.0
+      ],
+      "anchor_point_source": "/Users/rexxa/work/arttrial2-data/items/stone_axe_try1.json",
+      "anchor_point_source_sha256": "88b8ec32e7c07cf5bdcf8cb85926531a582724abbe7281810af767080d10bc3d",
+      "operations": [
+        "art.pipeline2.autotile.extract: magenta and mixed fringe key, alpha-bounds crop",
+        "Lanczos thumbnail into original canvas dimensions minus four pixels",
+        "center on transparent original-size canvas; no RGB adjustment, quantization or outline forcing"
+      ],
+      "keyed_crop_size": [
+        949,
+        1066
+      ],
+      "sprite_size": [
+        39,
+        44
+      ],
+      "placement": [
+        4,
+        2
+      ],
+      "processing_implementation": "art/pipeline2/autotile.py",
+      "processing_implementation_sha256": "12b3e8297f2987186c398fc0ef2eec5d7440e7651113141e1771cd93314f10a1",
+      "working_visual_evidence": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/working_visual_notes.md",
+      "working_visual_evidence_sha256": "069575a24d0d54a28d79a9e85e5731733a8cb55c255ead4db111f35b476f80dd",
+      "status": "candidate only; awaiting acceptance join"
+    }
+  },
+  "historical_record_note": "Nested historical numeric/status fields are preserved as history; top-level status and numeric/model are TRIAL2b decisions."
+}

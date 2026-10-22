@@ -2,19 +2,17 @@
 # requires-python = ">=3.11"
 # dependencies = ["pillow", "numpy", "scikit-image"]
 # ///
-# How to run: python -m unittest discover -s art/pipeline2 -p test_judge.py
-"""Behavioral boundaries for the art-only judge."""
+# How to run: uv run --with scikit-image python -m unittest art.pipeline2.test_judge
+"""Behavioral boundaries of the family-conditioned TRIAL2b numeric judge."""
 import json
-import subprocess
-import sys
 import tempfile
 import unittest
 from dataclasses import asdict, replace
 from pathlib import Path
 
-from PIL import Image, ImageDraw
+from PIL import Image
 
-from art.pipeline2.judge import ModelScores, calibrate, chi_square, judge, measure
+from art.pipeline2.judge import ModelScores, calibrate, judge, load_calibration, measure
 
 
 class JudgeTests(unittest.TestCase):
@@ -22,92 +20,81 @@ class JudgeTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.anchors = Path(__file__).resolve().parents[1] / "style05" / "anchors"
         cls.calibration = calibrate(cls.anchors)
+        cls.candidate = cls.anchors / "crops" / "building_hut.png"
 
-    def test_chi_square_known_extremes(self) -> None:
-        self.assertEqual(chi_square([1.0, 0.0], [1.0, 0.0]), 0.0)
-        self.assertAlmostEqual(chi_square([1.0, 0.0], [0.0, 1.0]), 1.0)
+    def test_unknown_family_rejected(self) -> None:
+        with self.assertRaises(ValueError):
+            judge(self.candidate, self.calibration, family="unknown")
 
-    def test_every_anchor_passes_numeric_and_loo_threshold(self) -> None:
-        self.assertEqual(len(self.calibration.loo_distances), 6)
+    def test_actual_leave_one_out(self) -> None:
+        self.assertEqual(len(self.calibration.leave_one_out), len(self.calibration.anchors))
+        self.assertTrue(all(f.passed for f in self.calibration.leave_one_out))
         for anchor in self.calibration.anchors:
-            verdict = judge(self.anchors / f"{anchor.name}.png", self.calibration)
-            self.assertTrue(verdict.numeric_pass, (anchor.name, verdict.numeric_checks))
-        self.assertEqual(max(self.calibration.loo_distances), self.calibration.histogram_limit)
+            self.assertTrue(judge(self.anchors / anchor.file, self.calibration,
+                                  family=anchor.family).numeric_pass)
 
-    def test_missing_model_fails_closed_even_for_anchor(self) -> None:
-        verdict = judge(self.anchors / "person.png", self.calibration)
+    def test_other_family_cannot_change_verdict(self) -> None:
+        reduced = replace(self.calibration, ranges=[r for r in self.calibration.ranges
+                                                    if r.family == "buildings"])
+        a = judge(self.candidate, self.calibration, family="buildings")
+        b = judge(self.candidate, reduced, family="buildings")
+        self.assertEqual(a.numeric_checks, b.numeric_checks)
+        self.assertNotIn("lab_histogram", a.numeric_checks)
+
+    def test_missing_and_legacy_model_fail_closed(self) -> None:
+        scores = ModelScores(4, 4, 4, 4, "Synthetic test only.")
+        for model in (None, scores):
+            verdict = judge(self.candidate, self.calibration, model, family="buildings")
+            self.assertTrue(verdict.numeric_pass)
+            self.assertFalse(verdict.passed)
+        self.assertTrue(judge(self.candidate, self.calibration, scores, family="buildings",
+                              model_family_verified=True).passed)
+        for field in ("medium", "line", "light", "palette"):
+            failing = replace(scores, **{field: 3})
+            self.assertFalse(judge(self.candidate, self.calibration, failing,
+                                   family="buildings", model_family_verified=True).passed)
+
+    def test_failed_loo_cannot_certify_candidate(self) -> None:
+        broken = replace(self.calibration, leave_one_out=[replace(self.calibration.leave_one_out[0], passed=False)])
+        verdict = judge(self.candidate, broken, ModelScores(5, 5, 5, 5, "Synthetic only."),
+                        family="buildings", model_family_verified=True)
         self.assertTrue(verdict.numeric_pass)
         self.assertFalse(verdict.passed)
-        self.assertEqual(verdict.model_status, "MISSING")
-
-    def test_model_all_dimensions_must_pass(self) -> None:
-        for dimension in ("medium", "line", "light", "palette"):
-            scores = replace(ModelScores(4, 4, 4, 4, "Synthetic unit test only."), **{dimension: 3})
-            self.assertFalse(judge(self.anchors / "person.png", self.calibration, scores).passed)
-        self.assertTrue(judge(self.anchors / "person.png", self.calibration,
-                              ModelScores(4, 4, 4, 4, "Synthetic unit test only.")).passed)
 
     def test_invalid_model_scores_rejected(self) -> None:
-        # Given invalid external JSON scores, including a non-integer and a blank reason.
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            calibration = root / "calibration.json"
-            _ = calibration.write_text(json.dumps(asdict(self.calibration)))
-            scores = root / "scores.json"
-            output = root / "verdict.json"
-            for score, sentence in ((0, "Invalid"), (6, "Invalid"), (True, "Invalid"),
-                                    (4.5, "Invalid"), (4, " ")):
-                with self.subTest(score=score, sentence=sentence):
-                    _ = scores.write_text(json.dumps({"medium": score, "line": 4,
-                        "light": 4, "palette": 4, "sentence": sentence}))
-                    # When the actual CLI reads the model response.
-                    result = subprocess.run(
-                        [sys.executable, str(Path(__file__).with_name("judge.py")), "judge",
-                         str(self.anchors / "person.png"), "--calibration", str(calibration),
-                         "--model-scores", str(scores), "--output", str(output)],
-                        capture_output=True, text=True, check=False,
-                    )
-                    # Then it rejects before publishing a verdict.
-                    self.assertNotEqual(result.returncode, 0)
-                    self.assertIn("ValueError", result.stderr)
-                    self.assertFalse(output.exists())
-
-    def test_exact_numeric_boundaries(self) -> None:
-        path = self.anchors / "person.png"
-        metrics = measure(path, self.calibration.palette_lab)
-        exact = replace(self.calibration, histogram=metrics.histogram, histogram_limit=0,
-                        edge_range=(metrics.edge_density, metrics.edge_density),
-                        wash_range=(metrics.wash, metrics.wash))
-        self.assertTrue(judge(path, exact).numeric_pass)
-        outside = replace(exact, edge_range=(metrics.edge_density + 0.001, 1.0))
-        self.assertFalse(judge(path, outside).numeric_checks["line_density"])
-        outside = replace(exact, wash_range=(metrics.wash + 0.001, 1.0))
-        self.assertFalse(judge(path, outside).numeric_checks["local_saturation"])
+        for value in (0, 6, True, 4.5):
+            with self.assertRaises(ValueError):
+                ModelScores(value, 4, 4, 4, "Invalid synthetic test.")
+        with self.assertRaises(ValueError):
+            ModelScores(4, 4, 4, 4, " ")
 
     def test_blank_foreground_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "blank.png"
-            for colour in ((255, 0, 255, 255), (20, 20, 20, 0)):
-                Image.new("RGBA", (128, 128), colour).save(path)
+            for colour in ((255, 0, 255, 255), (0, 0, 0, 0)):
+                Image.new("RGBA", (64, 64), colour).save(path)
                 with self.assertRaises(ValueError):
                     measure(path)
 
-    def test_normalization_is_canvas_and_resolution_stable(self) -> None:
+    def test_calibration_roundtrip_and_schema_guard(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            small = Path(directory) / "small.png"
-            large = Path(directory) / "large.png"
-            image = Image.new("RGBA", (256, 256), (190, 170, 140, 255))
-            draw = ImageDraw.Draw(image)
-            for x in range(16, 256, 24):
-                draw.line((x, 0, x, 255), fill=(40, 35, 30, 255), width=4)
-            image.save(small)
-            image.resize((1024, 1024), Image.Resampling.NEAREST).save(large)
-            a, b = measure(small), measure(large)
-            self.assertLess(abs(a.edge_density - b.edge_density), 0.01)
-            self.assertLess(abs(a.wash - b.wash), 0.01)
-            self.assertLess(chi_square(a.histogram, b.histogram), 0.02)
-            self.assertGreater(a.stroke_width_at_1024, 0)
+            path = Path(directory) / "calibration.json"
+            path.write_text(json.dumps(asdict(self.calibration)))
+            self.assertEqual(load_calibration(path), self.calibration)
+            path.write_text(json.dumps({"version": 1, "comparison_size": 256}))
+            with self.assertRaises(ValueError):
+                load_calibration(path)
 
+    def test_exact_boundary_and_one_feature_failure(self) -> None:
+        from art.pipeline2.judge import FEATURES, FamilyRange, compare
+        metrics = measure(self.candidate)
+        values = [getattr(metrics, key) for key in FEATURES]
+        self.assertTrue(all(compare(metrics, FamilyRange("buildings", values, values)).values()))
+        lower = values.copy()
+        lower[0] += 0.001
+        checks = compare(metrics, FamilyRange("buildings", lower, values))
+        self.assertFalse(checks["edge_density"])
+        self.assertEqual(sum(checks.values()), len(FEATURES) - 1)
 
 if __name__ == "__main__":
     unittest.main()

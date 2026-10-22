@@ -1,0 +1,353 @@
+{
+  "status": "accepted under judge v2, TRIAL2b",
+  "asset": "hut",
+  "family": "buildings",
+  "try_count": 1,
+  "prompt": "Use case: stylized-concept. Produce one isolated Stone Age game building sprite. Attached image 1 (hut) and image 2 (camp scene) are locked style anchors: closely match their fine controlled dark ink contours, sparse interior linework, restrained natural earth-tone wash, two-tone upper-left illumination. Orthographic vertically overhead camera with only a slight front-face cheat, no isometric perspective. Uniform solid pure #FF00FF magenta backdrop everywhere outside the object, including holes. No extraneous surrounding ground apron, cast shadow, text, labels, people, photo, 3D rendering, pixel art, gradients, modern objects, or metal. Center with margin, crisp edges. South is bottom of image. A square roofless 3x3-tile hut, low lashed-log walls, interior packed-earth floor enclosed ONLY within walls, exactly four hide bedrolls and central small stone hearth, clear wide opening through south wall. All interior plainly visible from directly above.",
+  "anchors": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+      "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+      "hash_basis": "recomputed preserved source bytes",
+      "unavailable_reason": null
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+      "hash_basis": "recomputed preserved source bytes",
+      "unavailable_reason": null
+    }
+  ],
+  "generation_id": "exec-ee9b0f2b-76a2-47ad-9768-f1c495f8c872",
+  "generation_id_note": "tool output artifact identifier; no separate generation ID returned",
+  "original": "/Users/rexxa/work/arttrial2-data/buildings/hut_try1_raw.png",
+  "original_sha256": "7c9245285c94b2197a37c7197d3a2c6362832281274699f12dab1edc478e349c",
+  "working_source": "/Users/rexxa/work/arttrial2-data/buildings/hut_try1.png",
+  "working_sha256": "8b0f0f2571d73af0581de5574b8ac496538ec03142b100881901c8d30a5abb54",
+  "working_size": [
+    192,
+    192
+  ],
+  "operations": [
+    {
+      "operation": "chroma_key",
+      "rule": "R>.65 and B>.65 and G<.4 and abs(R-B)<.3; keyed RGBA zeroed"
+    },
+    {
+      "operation": "crop",
+      "bbox": [
+        145,
+        103,
+        1110,
+        1051
+      ]
+    },
+    {
+      "operation": "Lanczos_contain",
+      "resized_size": [
+        188,
+        185
+      ],
+      "target_canvas": [
+        192,
+        192
+      ],
+      "offset": [
+        2,
+        3
+      ],
+      "margin_px": 2
+    }
+  ],
+  "anchor_point": [
+    96.0,
+    96.0
+  ],
+  "anchor_point_note": "origin top-left; x right, y down",
+  "generation_started_at": "2026-10-21T23:49:10.029Z",
+  "generation_completed_at": "2026-10-21T23:49:42.522Z",
+  "generation_timestamp_note": "Retained recorded values; missing values were not captured",
+  "wall_seconds": 32.493,
+  "wall_seconds_note": null,
+  "numeric": {
+    "candidate": "/Users/rexxa/work/arttrial2-data/buildings/hut_try1_raw.png",
+    "sha256": "7c9245285c94b2197a37c7197d3a2c6362832281274699f12dab1edc478e349c",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.27465064182341853,
+      "saturation_q25": 0.48849678052817014,
+      "saturation_q75": 0.6062514245324893,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.014633916319606114,
+      "foreground_pixels": 58384
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 4,
+      "palette": 5,
+      "sentence": "Content differs (full hut with interior and campfire vs. close-up fragments), but the candidate uses the same hand-drawn ink-and-watercolor medium, linework, lighting treatment, and earthy natural palette as the references."
+    },
+    "model_status": "SAME_FAMILY_VERIFIED",
+    "passed": true
+  },
+  "numeric_thresholds": {
+    "features": [
+      "edge_density",
+      "saturation_q25",
+      "saturation_q75",
+      "stroke_q25",
+      "stroke_q50",
+      "stroke_q75",
+      "stroke_q90",
+      "wash_flatness"
+    ],
+    "family": "buildings",
+    "lower": [
+      0.12422246676448356,
+      0.12617702596737473,
+      0.2544745181379646,
+      1.0,
+      0.0,
+      0.8284271247461903,
+      2.25,
+      0.0040104335591106205
+    ],
+    "upper": [
+      0.4417498480873831,
+      0.6771399455560541,
+      0.8765250322440128,
+      3.0,
+      6.0,
+      6.0,
+      7.406854249492381,
+      0.023011283254146208
+    ],
+    "comparison_size": 256,
+    "stroke_comparison_size": 1024
+  },
+  "calibration_path": "/Users/rexxa/work/new-world-art-prod/docs/v8/arttrial2/JUDGE_V2_CALIBRATION.json",
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "model": {
+    "scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 4,
+      "palette": 5,
+      "sentence": "Content differs (full hut with interior and campfire vs. close-up fragments), but the candidate uses the same hand-drawn ink-and-watercolor medium, linework, lighting treatment, and earthy natural palette as the references."
+    },
+    "references": [
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_hut.png",
+        "sha256": "e98dac4d6e5c3c1010595fbcd9915beb6f1967b153ae666399e81806c28e743e"
+      },
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_roof.png",
+        "sha256": "abcc7e568094356e5a7fd89478ca87e8ddc932a0b55e19ccbca6675104148c1c"
+      }
+    ],
+    "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-hut-scorecard.png",
+    "scorecard_sha256": "8910f3e5d32e0c3b0b7868d7a245f4987bcc253c6b56dcb4957bd043fa7bb2db",
+    "review_manifest": "/Users/rexxa/work/arttrial2-data/trial2b/environment-all-model-reviews.json",
+    "review_manifest_sha256": "cee5e92c6a1e54e0b73c7434029e6e118fac3076bbf89fff465582ad0e2264c8",
+    "full_record": {
+      "family": "buildings",
+      "name": "hut",
+      "candidate": "/Users/rexxa/work/arttrial2-data/buildings/hut_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_hut.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_roof.png",
+        "/Users/rexxa/work/arttrial2-data/buildings/hut_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_hut.png": "e98dac4d6e5c3c1010595fbcd9915beb6f1967b153ae666399e81806c28e743e",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_roof.png": "abcc7e568094356e5a7fd89478ca87e8ddc932a0b55e19ccbca6675104148c1c",
+        "/Users/rexxa/work/arttrial2-data/buildings/hut_try1_raw.png": "7c9245285c94b2197a37c7197d3a2c6362832281274699f12dab1edc478e349c"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 02:36:17 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:39:04 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-8a08a759-bacf-4047-96e0-98dced23f30f.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-hut-scorecard.png",
+      "scorecard_sha256": "8910f3e5d32e0c3b0b7868d7a245f4987bcc253c6b56dcb4957bd043fa7bb2db",
+      "ocr": "MEDIUM\n5\nLINE\n5\nLIGHT\n4\nPALETTE\n5\nREASON\nContent differs (full hut with interior and campfire vs. close-up fragments), but the\ncandidate uses the same hand-drawn ink-and-watercolor medium, linework, lighting\ntreatment, and earthy natural palette as the references.\n",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "reason": "Content differs (full hut with interior and campfire vs. close-up fragments), but the candidate uses the same hand-drawn ink-and-watercolor medium, linework, lighting treatment, and earthy natural palette as the references.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    "identity_note": "Actual image-generation model scorecard; underlying model version not exposed; call context is in full_record"
+  },
+  "acceptance_evidence": "docs/v8/arttrial2/ENV_ACCEPTANCE_V2.json",
+  "acceptance_evidence_sha256": "144ebcb5da913e6b2752cb8189779a879171cbb6534f1798743b9a1346c1ce6b",
+  "generation_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/buildings/hut_try1.json",
+    "sha256": "f252a884329a110d6f0462f9161981ec15f4b14580ade45566c6cf9f4be116c7",
+    "full_record": {
+      "name": "hut",
+      "prompt": "Use case: stylized-concept. Produce one isolated Stone Age game building sprite. Attached image 1 (hut) and image 2 (camp scene) are locked style anchors: closely match their fine controlled dark ink contours, sparse interior linework, restrained natural earth-tone wash, two-tone upper-left illumination. Orthographic vertically overhead camera with only a slight front-face cheat, no isometric perspective. Uniform solid pure #FF00FF magenta backdrop everywhere outside the object, including holes. No extraneous surrounding ground apron, cast shadow, text, labels, people, photo, 3D rendering, pixel art, gradients, modern objects, or metal. Center with margin, crisp edges. South is bottom of image. A square roofless 3x3-tile hut, low lashed-log walls, interior packed-earth floor enclosed ONLY within walls, exactly four hide bedrolls and central small stone hearth, clear wide opening through south wall. All interior plainly visible from directly above.",
+      "anchors": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+      ],
+      "try_count": 1,
+      "started_at": "2026-10-21T23:49:10.029Z",
+      "ended_at": "2026-10-21T23:49:42.522Z",
+      "tool": "image_gen.imagegen",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160dd-c0f9-7482-9a36-6e5a865ba39b as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160dd-c0f9-7482-9a36-6e5a865ba39b/exec-ee9b0f2b-76a2-47ad-9768-f1c495f8c872.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "judge_status": "PENDING",
+      "raw_path": "/Users/rexxa/work/arttrial2-data/buildings/hut_try1_raw.png",
+      "raw_sha256": "7c9245285c94b2197a37c7197d3a2c6362832281274699f12dab1edc478e349c",
+      "working_path": "/Users/rexxa/work/arttrial2-data/buildings/hut_try1.png",
+      "working_sha256": "8b0f0f2571d73af0581de5574b8ac496538ec03142b100881901c8d30a5abb54",
+      "working_size": [
+        192,
+        192
+      ],
+      "anchor_point": [
+        96.0,
+        96.0
+      ],
+      "generation_id": "exec-ee9b0f2b-76a2-47ad-9768-f1c495f8c872",
+      "generation_id_note": "tool output artifact identifier; no separate generation ID returned",
+      "duration_seconds": 32.493,
+      "operations": [
+        {
+          "operation": "chroma_key",
+          "rule": "R>.65 and B>.65 and G<.4 and abs(R-B)<.3; keyed RGBA zeroed"
+        },
+        {
+          "operation": "crop",
+          "bbox": [
+            145,
+            103,
+            1110,
+            1051
+          ]
+        },
+        {
+          "operation": "Lanczos_contain",
+          "resized_size": [
+            188,
+            185
+          ],
+          "target_canvas": [
+            192,
+            192
+          ],
+          "offset": [
+            2,
+            3
+          ],
+          "margin_px": 2
+        }
+      ],
+      "judge_scores": null,
+      "numeric_judge_path": "/Users/rexxa/work/arttrial2-data/buildings/hut_try1_numeric.json",
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": true,
+        "local_saturation": false
+      }
+    }
+  },
+  "processing_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/buildings/hut_try1.json",
+    "sha256": "f252a884329a110d6f0462f9161981ec15f4b14580ade45566c6cf9f4be116c7",
+    "full_record": {
+      "name": "hut",
+      "prompt": "Use case: stylized-concept. Produce one isolated Stone Age game building sprite. Attached image 1 (hut) and image 2 (camp scene) are locked style anchors: closely match their fine controlled dark ink contours, sparse interior linework, restrained natural earth-tone wash, two-tone upper-left illumination. Orthographic vertically overhead camera with only a slight front-face cheat, no isometric perspective. Uniform solid pure #FF00FF magenta backdrop everywhere outside the object, including holes. No extraneous surrounding ground apron, cast shadow, text, labels, people, photo, 3D rendering, pixel art, gradients, modern objects, or metal. Center with margin, crisp edges. South is bottom of image. A square roofless 3x3-tile hut, low lashed-log walls, interior packed-earth floor enclosed ONLY within walls, exactly four hide bedrolls and central small stone hearth, clear wide opening through south wall. All interior plainly visible from directly above.",
+      "anchors": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+      ],
+      "try_count": 1,
+      "started_at": "2026-10-21T23:49:10.029Z",
+      "ended_at": "2026-10-21T23:49:42.522Z",
+      "tool": "image_gen.imagegen",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160dd-c0f9-7482-9a36-6e5a865ba39b as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160dd-c0f9-7482-9a36-6e5a865ba39b/exec-ee9b0f2b-76a2-47ad-9768-f1c495f8c872.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "judge_status": "PENDING",
+      "raw_path": "/Users/rexxa/work/arttrial2-data/buildings/hut_try1_raw.png",
+      "raw_sha256": "7c9245285c94b2197a37c7197d3a2c6362832281274699f12dab1edc478e349c",
+      "working_path": "/Users/rexxa/work/arttrial2-data/buildings/hut_try1.png",
+      "working_sha256": "8b0f0f2571d73af0581de5574b8ac496538ec03142b100881901c8d30a5abb54",
+      "working_size": [
+        192,
+        192
+      ],
+      "anchor_point": [
+        96.0,
+        96.0
+      ],
+      "generation_id": "exec-ee9b0f2b-76a2-47ad-9768-f1c495f8c872",
+      "generation_id_note": "tool output artifact identifier; no separate generation ID returned",
+      "duration_seconds": 32.493,
+      "operations": [
+        {
+          "operation": "chroma_key",
+          "rule": "R>.65 and B>.65 and G<.4 and abs(R-B)<.3; keyed RGBA zeroed"
+        },
+        {
+          "operation": "crop",
+          "bbox": [
+            145,
+            103,
+            1110,
+            1051
+          ]
+        },
+        {
+          "operation": "Lanczos_contain",
+          "resized_size": [
+            188,
+            185
+          ],
+          "target_canvas": [
+            192,
+            192
+          ],
+          "offset": [
+            2,
+            3
+          ],
+          "margin_px": 2
+        }
+      ],
+      "judge_scores": null,
+      "numeric_judge_path": "/Users/rexxa/work/arttrial2-data/buildings/hut_try1_numeric.json",
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": true,
+        "local_saturation": false
+      }
+    }
+  },
+  "historical_record_note": "Nested historical numeric/status fields are preserved as history; top-level status and numeric/model are TRIAL2b decisions."
+}

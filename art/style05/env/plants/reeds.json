@@ -1,0 +1,420 @@
+{
+  "status": "accepted under judge v2, TRIAL2b",
+  "asset": "reeds",
+  "family": "plants",
+  "try_count": 1,
+  "prompt": "Use case: stylized-concept. Create ONE isolated clump of wetland reeds, for a stone-age top-down settlement game. Both attached images are locked style references: props anchors fine ink edges, restrained wash and natural materials; scene anchors overhead camera, muted olive earth palette and upper-left light. Match them precisely. View vertically from above: a small tuft of slender green-ochre blades splaying radially from a compact base, with a few slender brown seed heads, only a tiny south-facing stem/trunk front-face cheat where relevant. Fine controlled dark ink linework, restrained olive and warm sage wash, two-tone upper-left lighting, crisp natural foliage groupings. Center one complete plant with 10% margin on uniform solid #FF00FF magenta. No ground, cast shadow, scenery, frame, labels or text. No isometric camera, photo, 3D render, pixel art or gradient blur. Output square 1024px image.",
+  "anchors": [
+    {
+      "path": "art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+      "hash_basis": "recorded generation hash",
+      "unavailable_reason": null
+    },
+    {
+      "path": "art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+      "hash_basis": "recorded generation hash",
+      "unavailable_reason": null
+    }
+  ],
+  "generation_id": "exec-aafcf312-ca4f-45c9-a279-277b5ed58e02",
+  "generation_id_note": "tool output filename identifier; no separate generation id returned",
+  "original": "/Users/rexxa/work/arttrial2-data/plants/reeds_try1_raw.png",
+  "original_sha256": "18997778bade3735c5aedbd754e9cd0e5cabe6110a33b9f6f18f2343defe7430",
+  "working_source": "/Users/rexxa/work/arttrial2-data/plants/reeds_try1.png",
+  "working_sha256": "668fdecce7ea230daa037f988b7d6b9aa1fc0b78f725986b9ea6c173420fd0b1",
+  "working_size": [
+    96,
+    96
+  ],
+  "operations": [
+    {
+      "operation": "chroma_key_and_residual_chroma_alpha_cleanup",
+      "predicate": "R-G>20 and B-G>20 on 8-bit channels",
+      "transparent_rgb": "zeroed",
+      "reason": "remove mixed magenta edge pixels without palette edits"
+    },
+    {
+      "operation": "crop",
+      "box": [
+        102,
+        75,
+        1151,
+        1156
+      ]
+    },
+    {
+      "operation": "Lanczos_downscale",
+      "fitted_size": [
+        93,
+        96
+      ]
+    },
+    {
+      "operation": "transparent_canvas_composition",
+      "size": [
+        96,
+        96
+      ],
+      "offset": [
+        1,
+        0
+      ]
+    },
+    {
+      "operation": "derived_shadow_separate_file",
+      "ellipse": [
+        7,
+        26,
+        88,
+        82
+      ],
+      "rgba": [
+        28,
+        25,
+        20,
+        90
+      ]
+    }
+  ],
+  "anchor_point": [
+    48.0,
+    69.12
+  ],
+  "anchor_point_note": "normalized canopy placement registration, not inferred exact trunk root",
+  "generation_started_at": "2026-10-21T23:53:15.104Z",
+  "generation_completed_at": "2026-10-21T23:53:36.851Z",
+  "generation_timestamp_note": "Retained recorded values; missing values were not captured",
+  "wall_seconds": 21.747,
+  "wall_seconds_note": null,
+  "numeric": {
+    "candidate": "/Users/rexxa/work/arttrial2-data/plants/reeds_try1_raw.png",
+    "sha256": "18997778bade3735c5aedbd754e9cd0e5cabe6110a33b9f6f18f2343defe7430",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.2301410541945063,
+      "saturation_q25": 0.6139997363162523,
+      "saturation_q75": 0.7129344217941824,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.03018117881347738,
+      "foreground_pixels": 23445
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 4,
+      "line": 4,
+      "light": 4,
+      "palette": 4,
+      "sentence": "The candidate (cattail grass) matches the reference's fine ink and watercolor-like rendering with similar line weight, textured brushy fills, and layered greens and warm earth tones, with only minor differences in subject matter."
+    },
+    "model_status": "SAME_FAMILY_VERIFIED",
+    "passed": true
+  },
+  "numeric_thresholds": {
+    "features": [
+      "edge_density",
+      "saturation_q25",
+      "saturation_q75",
+      "stroke_q25",
+      "stroke_q50",
+      "stroke_q75",
+      "stroke_q90",
+      "wash_flatness"
+    ],
+    "family": "plants",
+    "lower": [
+      0.13896196397954375,
+      0.26651110967306624,
+      0.29225613136829465,
+      1.0,
+      0.0,
+      0.8284271247461903,
+      2.25,
+      0.006730936996842502
+    ],
+    "upper": [
+      0.43714016680087125,
+      0.8379357170538613,
+      0.9483177825286166,
+      3.0,
+      4.82842712474619,
+      6.0,
+      6.22213595499958,
+      0.037443292536065015
+    ],
+    "comparison_size": 256,
+    "stroke_comparison_size": 1024
+  },
+  "calibration_path": "/Users/rexxa/work/new-world-art-prod/docs/v8/arttrial2/JUDGE_V2_CALIBRATION.json",
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "model": {
+    "scores": {
+      "medium": 4,
+      "line": 4,
+      "light": 4,
+      "palette": 4,
+      "sentence": "The candidate (cattail grass) matches the reference's fine ink and watercolor-like rendering with similar line weight, textured brushy fills, and layered greens and warm earth tones, with only minor differences in subject matter."
+    },
+    "references": [
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_oak.png",
+        "sha256": "a627b9d3b335cb3d2e09804df8d49cabe21572736b88a27e4b7ecc4330d69dc3"
+      },
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_birch.png",
+        "sha256": "49becd9296dfcd3751a8ec7c6785b3eee823d53b545d52a20b6e8d0f237f9615"
+      }
+    ],
+    "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-reeds-scorecard.png",
+    "scorecard_sha256": "194aae7434171263f7b3c40a15e469a1dc1622135786355fa694d7574cfadd97",
+    "review_manifest": "/Users/rexxa/work/arttrial2-data/trial2b/environment-all-model-reviews.json",
+    "review_manifest_sha256": "cee5e92c6a1e54e0b73c7434029e6e118fac3076bbf89fff465582ad0e2264c8",
+    "full_record": {
+      "family": "plants",
+      "name": "reeds",
+      "candidate": "/Users/rexxa/work/arttrial2-data/plants/reeds_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_oak.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_birch.png",
+        "/Users/rexxa/work/arttrial2-data/plants/reeds_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_oak.png": "a627b9d3b335cb3d2e09804df8d49cabe21572736b88a27e4b7ecc4330d69dc3",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_birch.png": "49becd9296dfcd3751a8ec7c6785b3eee823d53b545d52a20b6e8d0f237f9615",
+        "/Users/rexxa/work/arttrial2-data/plants/reeds_try1_raw.png": "18997778bade3735c5aedbd754e9cd0e5cabe6110a33b9f6f18f2343defe7430"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 03:06:23 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 03:10:03 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-716ff11d-dfc5-4abb-a10c-ca835d0748a8.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-reeds-scorecard.png",
+      "scorecard_sha256": "194aae7434171263f7b3c40a15e469a1dc1622135786355fa694d7574cfadd97",
+      "ocr": "MEDIUM\n4\nLINE\n4\nLIGHT\n4\nPALETTE\n4\nThe candidate (cattail grass) matches the reference's fine ink and watercolor-like\nrendering with similar line weight, textured brushy fills, and layered greens and warm\nearth tones, with only minor differences in subject matter.\n",
+      "scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4
+      },
+      "reason": "The candidate (cattail grass) matches the reference's fine ink and watercolor-like rendering with similar line weight, textured brushy fills, and layered greens and warm earth tones, with only minor differences in subject matter.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    "identity_note": "Actual image-generation model scorecard; underlying model version not exposed; call context is in full_record"
+  },
+  "acceptance_evidence": "docs/v8/arttrial2/ENV_ACCEPTANCE_V2.json",
+  "acceptance_evidence_sha256": "144ebcb5da913e6b2752cb8189779a879171cbb6534f1798743b9a1346c1ce6b",
+  "generation_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/plants/reeds_try1.json",
+    "sha256": "6f021e4909df7650c975bf26f5f61d2cd6d6d4ec89fd54f387e35c10415d3dcb",
+    "full_record": {
+      "name": "reeds",
+      "try": 1,
+      "prompt": "Use case: stylized-concept. Create ONE isolated clump of wetland reeds, for a stone-age top-down settlement game. Both attached images are locked style references: props anchors fine ink edges, restrained wash and natural materials; scene anchors overhead camera, muted olive earth palette and upper-left light. Match them precisely. View vertically from above: a small tuft of slender green-ochre blades splaying radially from a compact base, with a few slender brown seed heads, only a tiny south-facing stem/trunk front-face cheat where relevant. Fine controlled dark ink linework, restrained olive and warm sage wash, two-tone upper-left lighting, crisp natural foliage groupings. Center one complete plant with 10% margin on uniform solid #FF00FF magenta. No ground, cast shadow, scenery, frame, labels or text. No isometric camera, photo, 3D render, pixel art or gradient blur. Output square 1024px image.",
+      "anchors": [
+        "art/style05/anchors/props.png",
+        "art/style05/anchors/scene.png"
+      ],
+      "source_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160dd-7897-7b42-a158-dd223d05581d/exec-aafcf312-ca4f-45c9-a279-277b5ed58e02.png",
+      "start": "2026-10-21T23:53:15.104Z",
+      "end": "2026-10-21T23:53:36.851Z",
+      "status": "PENDING",
+      "raw_path": "/Users/rexxa/work/arttrial2-data/plants/reeds_try1_raw.png",
+      "source_sha256": "18997778bade3735c5aedbd754e9cd0e5cabe6110a33b9f6f18f2343defe7430",
+      "generation_id": "exec-aafcf312-ca4f-45c9-a279-277b5ed58e02",
+      "generation_id_note": "tool output filename identifier; no separate generation id returned",
+      "duration_seconds": 21.747,
+      "anchor_sha256": {
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      },
+      "working_path": "/Users/rexxa/work/arttrial2-data/plants/reeds_try1.png",
+      "working_size": [
+        96,
+        96
+      ],
+      "working_sha256": "668fdecce7ea230daa037f988b7d6b9aa1fc0b78f725986b9ea6c173420fd0b1",
+      "anchor_point": [
+        48.0,
+        69.12
+      ],
+      "anchor_point_note": "normalized canopy placement registration, not inferred exact trunk root",
+      "shadow_path": "/Users/rexxa/work/arttrial2-data/plants/reeds_shadow.png",
+      "operations": [
+        {
+          "operation": "chroma_key_and_residual_chroma_alpha_cleanup",
+          "predicate": "R-G>20 and B-G>20 on 8-bit channels",
+          "transparent_rgb": "zeroed",
+          "reason": "remove mixed magenta edge pixels without palette edits"
+        },
+        {
+          "operation": "crop",
+          "box": [
+            102,
+            75,
+            1151,
+            1156
+          ]
+        },
+        {
+          "operation": "Lanczos_downscale",
+          "fitted_size": [
+            93,
+            96
+          ]
+        },
+        {
+          "operation": "transparent_canvas_composition",
+          "size": [
+            96,
+            96
+          ],
+          "offset": [
+            1,
+            0
+          ]
+        },
+        {
+          "operation": "derived_shadow_separate_file",
+          "ellipse": [
+            7,
+            26,
+            88,
+            82
+          ],
+          "rgba": [
+            28,
+            25,
+            20,
+            90
+          ]
+        }
+      ],
+      "model_judge_status": "PENDING",
+      "numeric_judge_path": "/Users/rexxa/work/arttrial2-data/plants/reeds_numeric.json",
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": true,
+        "local_saturation": false
+      }
+    }
+  },
+  "processing_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/plants/reeds_try1.json",
+    "sha256": "6f021e4909df7650c975bf26f5f61d2cd6d6d4ec89fd54f387e35c10415d3dcb",
+    "full_record": {
+      "name": "reeds",
+      "try": 1,
+      "prompt": "Use case: stylized-concept. Create ONE isolated clump of wetland reeds, for a stone-age top-down settlement game. Both attached images are locked style references: props anchors fine ink edges, restrained wash and natural materials; scene anchors overhead camera, muted olive earth palette and upper-left light. Match them precisely. View vertically from above: a small tuft of slender green-ochre blades splaying radially from a compact base, with a few slender brown seed heads, only a tiny south-facing stem/trunk front-face cheat where relevant. Fine controlled dark ink linework, restrained olive and warm sage wash, two-tone upper-left lighting, crisp natural foliage groupings. Center one complete plant with 10% margin on uniform solid #FF00FF magenta. No ground, cast shadow, scenery, frame, labels or text. No isometric camera, photo, 3D render, pixel art or gradient blur. Output square 1024px image.",
+      "anchors": [
+        "art/style05/anchors/props.png",
+        "art/style05/anchors/scene.png"
+      ],
+      "source_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160dd-7897-7b42-a158-dd223d05581d/exec-aafcf312-ca4f-45c9-a279-277b5ed58e02.png",
+      "start": "2026-10-21T23:53:15.104Z",
+      "end": "2026-10-21T23:53:36.851Z",
+      "status": "PENDING",
+      "raw_path": "/Users/rexxa/work/arttrial2-data/plants/reeds_try1_raw.png",
+      "source_sha256": "18997778bade3735c5aedbd754e9cd0e5cabe6110a33b9f6f18f2343defe7430",
+      "generation_id": "exec-aafcf312-ca4f-45c9-a279-277b5ed58e02",
+      "generation_id_note": "tool output filename identifier; no separate generation id returned",
+      "duration_seconds": 21.747,
+      "anchor_sha256": {
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      },
+      "working_path": "/Users/rexxa/work/arttrial2-data/plants/reeds_try1.png",
+      "working_size": [
+        96,
+        96
+      ],
+      "working_sha256": "668fdecce7ea230daa037f988b7d6b9aa1fc0b78f725986b9ea6c173420fd0b1",
+      "anchor_point": [
+        48.0,
+        69.12
+      ],
+      "anchor_point_note": "normalized canopy placement registration, not inferred exact trunk root",
+      "shadow_path": "/Users/rexxa/work/arttrial2-data/plants/reeds_shadow.png",
+      "operations": [
+        {
+          "operation": "chroma_key_and_residual_chroma_alpha_cleanup",
+          "predicate": "R-G>20 and B-G>20 on 8-bit channels",
+          "transparent_rgb": "zeroed",
+          "reason": "remove mixed magenta edge pixels without palette edits"
+        },
+        {
+          "operation": "crop",
+          "box": [
+            102,
+            75,
+            1151,
+            1156
+          ]
+        },
+        {
+          "operation": "Lanczos_downscale",
+          "fitted_size": [
+            93,
+            96
+          ]
+        },
+        {
+          "operation": "transparent_canvas_composition",
+          "size": [
+            96,
+            96
+          ],
+          "offset": [
+            1,
+            0
+          ]
+        },
+        {
+          "operation": "derived_shadow_separate_file",
+          "ellipse": [
+            7,
+            26,
+            88,
+            82
+          ],
+          "rgba": [
+            28,
+            25,
+            20,
+            90
+          ]
+        }
+      ],
+      "model_judge_status": "PENDING",
+      "numeric_judge_path": "/Users/rexxa/work/arttrial2-data/plants/reeds_numeric.json",
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": true,
+        "local_saturation": false
+      }
+    }
+  },
+  "historical_record_note": "Nested historical numeric/status fields are preserved as history; top-level status and numeric/model are TRIAL2b decisions."
+}

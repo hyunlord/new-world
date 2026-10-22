@@ -1,0 +1,1422 @@
+{
+  "version": 2,
+  "tool": "builtin image_gen.imagegen",
+  "method": "D8 exact prompt; candidate image 3 and two frozen same-family anchors; independent raster scorecards; visually transcribed scores with OCR retained",
+  "pass_rule": "all four integer scores >=4",
+  "scope": "38 original first-attempt raw candidates; no pilot or replacement scores",
+  "limitations": [
+    "Style-only model review; numeric and semantic eligibility are separate.",
+    "Model illustrated/repainted comparisons despite plain scorecard instruction; raw output preserved.",
+    "Model-provided reasons may contain spelling errors or background comparisons."
+  ],
+  "counts": {
+    "reviewed": 38,
+    "model_rule_pass": 38,
+    "superseded_pilot_calls": 12
+  },
+  "records": [
+    {
+      "family": "buildings",
+      "name": "drying_rack",
+      "candidate": "/Users/rexxa/work/arttrial2-data/buildings/drying_rack_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_hut.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_roof.png",
+        "/Users/rexxa/work/arttrial2-data/buildings/drying_rack_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_hut.png": "e98dac4d6e5c3c1010595fbcd9915beb6f1967b153ae666399e81806c28e743e",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_roof.png": "abcc7e568094356e5a7fd89478ca87e8ddc932a0b55e19ccbca6675104148c1c",
+        "/Users/rexxa/work/arttrial2-data/buildings/drying_rack_try1_raw.png": "9260e2ecddf023899e47a7d6372f3b415b58e2dfd75efe80120df6dc8796ad04"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 02:36:17 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:39:04 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-5e040e1c-0bda-4c4a-a603-c16aaba02d2f.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-drying_rack-scorecard.png",
+      "scorecard_sha256": "5344b1b1d8550af2f34ce74b88bddca7acfb05b5e10f9a15bb10b2a12057c9e0",
+      "ocr": "MEDIUM\n4\nREASON\nLINE\nLIGHT\nPALETTE\n4\n4\n4\nThe candidate uses the same hand-drawn ink and watercolor look with textured\nwood, hides, and rope, matching the references' linework, brushy shading, and\nearthy palette, with only slightly cleaner, more isolated lighting and contrast.\n",
+      "scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4
+      },
+      "reason": "The candidate uses the same hand-drawn ink and watercolor look with textured wood, hides, and rope, matching the references\u2019 linework, brushy shading, and earthy palette, with only slightly cleaner, more isolated lighting and contrast.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "buildings",
+      "name": "hut",
+      "candidate": "/Users/rexxa/work/arttrial2-data/buildings/hut_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_hut.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_roof.png",
+        "/Users/rexxa/work/arttrial2-data/buildings/hut_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_hut.png": "e98dac4d6e5c3c1010595fbcd9915beb6f1967b153ae666399e81806c28e743e",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_roof.png": "abcc7e568094356e5a7fd89478ca87e8ddc932a0b55e19ccbca6675104148c1c",
+        "/Users/rexxa/work/arttrial2-data/buildings/hut_try1_raw.png": "7c9245285c94b2197a37c7197d3a2c6362832281274699f12dab1edc478e349c"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 02:36:17 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:39:04 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-8a08a759-bacf-4047-96e0-98dced23f30f.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-hut-scorecard.png",
+      "scorecard_sha256": "8910f3e5d32e0c3b0b7868d7a245f4987bcc253c6b56dcb4957bd043fa7bb2db",
+      "ocr": "MEDIUM\n5\nLINE\n5\nLIGHT\n4\nPALETTE\n5\nREASON\nContent differs (full hut with interior and campfire vs. close-up fragments), but the\ncandidate uses the same hand-drawn ink-and-watercolor medium, linework, lighting\ntreatment, and earthy natural palette as the references.\n",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "reason": "Content differs (full hut with interior and campfire vs. close-up fragments), but the candidate uses the same hand-drawn ink-and-watercolor medium, linework, lighting treatment, and earthy natural palette as the references.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "buildings",
+      "name": "knapping_spot",
+      "candidate": "/Users/rexxa/work/arttrial2-data/buildings/knapping_spot_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_hut.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_roof.png",
+        "/Users/rexxa/work/arttrial2-data/buildings/knapping_spot_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_hut.png": "e98dac4d6e5c3c1010595fbcd9915beb6f1967b153ae666399e81806c28e743e",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_roof.png": "abcc7e568094356e5a7fd89478ca87e8ddc932a0b55e19ccbca6675104148c1c",
+        "/Users/rexxa/work/arttrial2-data/buildings/knapping_spot_try1_raw.png": "5366e8a986fef2c7be0265dda2173aa59813c94625f83de53892a7d7353668b6"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 02:36:17 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:39:06 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-05c492fd-493c-43b9-a196-290f3e786afe.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-knapping_spot-scorecard.png",
+      "scorecard_sha256": "83c549822e6393688c62b9f857cf8ccfd86de23c4dc72852b0c5fe9ddde38e1e",
+      "ocr": "MEDIUM\n5\nLINE\n4\nLIGHT\n4\nPALETTE\n4\ninked linework, textured watercolor wash, and earthy tones as the references, though the\nREFERENCE 1\nREFERENCE 2\nCANDIDATE\n",
+      "scores": {
+        "medium": 5,
+        "line": 4,
+        "light": 4,
+        "palette": 4
+      },
+      "reason": "The rock, flint shards, and antler are rendered with the same hand-drawn inked linework, textured watercolor wash, and earthy tones as the references, though the candidate uses slightly cleaner, higher-contrast shading and marginally crisper outlines.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "buildings",
+      "name": "lean_to",
+      "candidate": "/Users/rexxa/work/arttrial2-data/buildings/lean_to_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_hut.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_roof.png",
+        "/Users/rexxa/work/arttrial2-data/buildings/lean_to_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_hut.png": "e98dac4d6e5c3c1010595fbcd9915beb6f1967b153ae666399e81806c28e743e",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_roof.png": "abcc7e568094356e5a7fd89478ca87e8ddc932a0b55e19ccbca6675104148c1c",
+        "/Users/rexxa/work/arttrial2-data/buildings/lean_to_try1_raw.png": "da16377401004d8bbe94e214269779424be80812f4e98c1ca46b747a1f76a860"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 02:36:17 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:39:04 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-d431c9aa-43de-4992-9aed-0a5f81ea24a1.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-lean_to-scorecard.png",
+      "scorecard_sha256": "922c46a96307333707fd49a0d294212a589ec17ddd8b51ad9f2cd0595dfb9633",
+      "ocr": "Reference 1\nMEDIUM\n5\nReference 2\nCandidate (Image 3)\nLINE\nLIGHT\nPALETTE\n4\n4\n5\nReason: The candidate depicts a wooden shelter roof, and its inked outlines, hand-drawn textures,\nwatercolor-like washes, and earthy brown/gray/tan palette closely match the references, with a slightly\ncleaner, more isolated lighting and less ambient ground atmosphere than the scene views.\n",
+      "scores": {
+        "medium": 5,
+        "line": 4,
+        "light": 4,
+        "palette": 5
+      },
+      "reason": "The candidate depicts a wooden shelter roof, and its inked outlines, hand-drawn textures, watercolor-like washes, and earthy brown/gray/tan palette closely match the references, with a slightly cleaner, more isolated lighting and less ambient ground atmosphere than the scene views.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "buildings",
+      "name": "storage_pit",
+      "candidate": "/Users/rexxa/work/arttrial2-data/buildings/storage_pit_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_hut.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_roof.png",
+        "/Users/rexxa/work/arttrial2-data/buildings/storage_pit_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_hut.png": "e98dac4d6e5c3c1010595fbcd9915beb6f1967b153ae666399e81806c28e743e",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_roof.png": "abcc7e568094356e5a7fd89478ca87e8ddc932a0b55e19ccbca6675104148c1c",
+        "/Users/rexxa/work/arttrial2-data/buildings/storage_pit_try1_raw.png": "7329f70b059fa51357a73879719b037304eebf6dd1f6d32002efd159346c6846"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 02:36:17 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:39:04 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-fe3b223d-5b8b-4676-9a7a-005fc5cdf88c.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-storage_pit-scorecard.png",
+      "scorecard_sha256": "5fa1304c1fc0cb9a9a4990bed09e88d070fc6fa4f3ff14eda9f6dc504e88ce5b",
+      "ocr": "MEDIUM\n5\nLINE\nLIGHT\nPALETTE\n5\n5\nCandidate's well with wicker lid matches the references' hand-inked linework, textured\nwatercolor-like medium, and warm earthy palette very closely, with only a slight lighting difference\nas it appears more isolated and evenly lit than the reference scene.\n",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "reason": "Candidate\u2019s well with wicker lid matches the references\u2019 hand-inked linework, textured watercolor-like medium, and warm earthy palette very closely, with only a slight lighting difference as it appears more isolated and evenly lit than the reference scene.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "buildings",
+      "name": "woodworking_bench",
+      "candidate": "/Users/rexxa/work/arttrial2-data/buildings/woodworking_bench_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_hut.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_roof.png",
+        "/Users/rexxa/work/arttrial2-data/buildings/woodworking_bench_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_hut.png": "e98dac4d6e5c3c1010595fbcd9915beb6f1967b153ae666399e81806c28e743e",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_roof.png": "abcc7e568094356e5a7fd89478ca87e8ddc932a0b55e19ccbca6675104148c1c",
+        "/Users/rexxa/work/arttrial2-data/buildings/woodworking_bench_try1_raw.png": "ef89981eecd35eedb7f7346aa0ef74806810837bb4048af7dc12693bc8045c95"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 02:36:17 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:38:37 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-70ac4747-68c5-4268-94e3-0585a8fc8e81.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-woodworking_bench-scorecard.png",
+      "scorecard_sha256": "fd2b67cd4e02fea85620cd0b2543f996e61b5811d859727ae15fac8ddf9c0cd5",
+      "ocr": "MEDIUM\n5\nLINE\n5\nLIGHT\n5\nPALETTE\n5\nReason: Same hand-drawn ink and watercolor wash style with detailed wood grain, bark texture, ink\noutlines, and earthy brown-gray palette with consistent shading and tonal transitions.\n",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason": "Same hand-drawn ink and watercolor wash style with detailed wood grain, bark texture, ink outlines, and earthy brown-gray palette with consistent shading and tonal transitions.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "ground",
+      "name": "dark_grass",
+      "candidate": "/Users/rexxa/work/arttrial2-data/ground/dark_grass_try1.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png",
+        "/Users/rexxa/work/arttrial2-data/ground/dark_grass_try1.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9",
+        "/Users/rexxa/work/arttrial2-data/ground/dark_grass_try1.png": "d75ccdcf7daeb3fa3e7a5ef7c266b5555677fdd342c4c14c08f1474eb3bd5877"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 02:40:27 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:43:17 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-72554624-2804-4709-89db-cf4371a893c6.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-dark_grass-scorecard.png",
+      "scorecard_sha256": "aaadfc85931f87bbc3c7f31857fb08057ca4129541771bfc8cf1c1859190cd9a",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason": "The candidate shows the same fine ink-and-wash/tonal illustration style with crisp ink outlines, detailed textured rendering of grass, leaves, rocks and soil, and matching natural earthy green-brosn palette and lighting, with no noticeable stylistic drift from the references.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible."
+    },
+    {
+      "family": "ground",
+      "name": "forest_floor",
+      "candidate": "/Users/rexxa/work/arttrial2-data/ground/forest_floor_try1.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png",
+        "/Users/rexxa/work/arttrial2-data/ground/forest_floor_try1.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9",
+        "/Users/rexxa/work/arttrial2-data/ground/forest_floor_try1.png": "2c9b89f62288521acca421e6cdcda9e507bc28f9ac63cc5631c353b9d5d3bdf3"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 02:40:27 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:43:17 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-36096052-a00b-4586-825c-c4cefeb2f683.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-forest_floor-scorecard.png",
+      "scorecard_sha256": "6f1ea64b87cf7aba74d1619f4fea6910c539f1fa2569baf9cf8397811a4d881a",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason": "Candidate depicts a leaf-littered dirt ground with rocks and sticks, and its rendering closely matches the references in fine inked linework, textured tonal shading, natural diffuse lighting, and the same earthy green-brown palette.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible."
+    },
+    {
+      "family": "ground",
+      "name": "hill_rock",
+      "candidate": "/Users/rexxa/work/arttrial2-data/ground/hill_rock_try1.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png",
+        "/Users/rexxa/work/arttrial2-data/ground/hill_rock_try1.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9",
+        "/Users/rexxa/work/arttrial2-data/ground/hill_rock_try1.png": "b5adda31a55d978afa0ae7dd1964dd721416733aa253f3a586fc582427aa9387"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 02:40:27 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:42:50 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-bb844f03-480d-4150-96f9-b63712a59e68.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-hill_rock-scorecard.png",
+      "scorecard_sha256": "e0624594f1e60130471fb1acd2b65c4f7c145277c1785b9e503cb4f9933d58e7",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "reason": "The rocky ground subject matches the references\u2019 fine inked linework, textured brushy painting, and earthy green-brown palette, with only a slightly brighter, more direct sunlight contrast than the more shaded reference scenes.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible."
+    },
+    {
+      "family": "ground",
+      "name": "meadow",
+      "candidate": "/Users/rexxa/work/arttrial2-data/ground/meadow_try1.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png",
+        "/Users/rexxa/work/arttrial2-data/ground/meadow_try1.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9",
+        "/Users/rexxa/work/arttrial2-data/ground/meadow_try1.png": "b3210a96d3fa952fce70812bc4bae6cd57167b354d152cb0c13080f06f6e4e69"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 02:40:27 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:43:17 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-38957810-3139-4a4b-af2f-a6aefa9fc404.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-meadow-scorecard.png",
+      "scorecard_sha256": "64f004dd557ba572cdd0e2153e4ab3efe082c3bfff71acfc143ed96b8236aa22",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason": "Same fine ink-and-watercolor style with identical linework, textured brush marks, and earthy, muted green\u2013yellow\u2013brown palette and lighting; the candidate depicts a more open dirt-and-grass ground patch than the closer, denser views in the references, but the rendering style is consistent.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible."
+    },
+    {
+      "family": "ground",
+      "name": "packed_earth",
+      "candidate": "/Users/rexxa/work/arttrial2-data/ground/packed_earth_try1.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png",
+        "/Users/rexxa/work/arttrial2-data/ground/packed_earth_try1.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9",
+        "/Users/rexxa/work/arttrial2-data/ground/packed_earth_try1.png": "a113faed21b7d7c2119becce8bed398e270ba54814fcf4c0679bacf3238d3a07"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 02:40:27 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:43:17 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-7a775e8d-1f4f-47a2-b00b-b1e4e7981e22.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-packed_earth-scorecard.png",
+      "scorecard_sha256": "861310faf10d6609e0f5ca970a23fbb87775065e9828e78a3d1614c69b4ea142",
+      "scores": {
+        "medium": 5,
+        "line": 4,
+        "light": 4,
+        "palette": 4
+      },
+      "reason": "Candidate depicts a rocky dirt ground rather than meadow or forest floor, but it uses the same hand-drawn ink linework, textured brushwork, and muted earthy palette with identical tonal treatment and lighting language as the references.",
+      "model_rule_pass": true,
+      "printed_verdict": "PASS",
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible."
+    },
+    {
+      "family": "ground",
+      "name": "river_bank",
+      "candidate": "/Users/rexxa/work/arttrial2-data/ground/river_bank_try1.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png",
+        "/Users/rexxa/work/arttrial2-data/ground/river_bank_try1.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9",
+        "/Users/rexxa/work/arttrial2-data/ground/river_bank_try1.png": "dee0e187becb221cda21be6dd5bca108a8d22657d6ab5d1d6e23e262eff6ccfa"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 02:40:27 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:43:17 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-40594a65-53a2-48b4-bcd1-7ec28083094c.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-river_bank-scorecard.png",
+      "scorecard_sha256": "69e7911ff28d5ba5e9b6e2043a29313be94044c0ed816b8557568e9198b65e93",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason": "Candidate depicts a different subject (shallow water with stones) but uses the same fine ink and textured watercolor-like rendering with crisp linework, detailed organic marks, soft tonal transitions, and a matching earthy, natural palette with similar lighting treatment.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible."
+    },
+    {
+      "family": "items",
+      "name": "berry_basket",
+      "candidate": "/Users/rexxa/work/arttrial2-data/items/berry_basket_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/items/berry_basket_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+        "/Users/rexxa/work/arttrial2-data/items/berry_basket_try1_raw.png": "c2c9c4295bc441e13b2eb44e37eaa27e6f674482316aa211e66ffd0e74227d7e"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 02:49:06 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:51:37 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-3b46498c-1422-46a0-b8c3-3267b42a3027.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-berry_basket-scorecard.png",
+      "scorecard_sha256": "221a7ba0dde1f0fece2361237f13af36680c8136f9979fcacc51a41689522e07",
+      "ocr": "Reference 1 (Logs)\nCandidate (Berries)\nReference 2 (Fire)\nCandidate (Berries)\nMEDIUM\nLINE\nLIGHT\nPALETTE\n4\n4\n4\n4\nReason: Basket of berries is a different subject but uses the same hand-inked, textured, painterly\ntone with strong outlines, mottled shading, and earthy natural colors as the references, with only minor\ndifferences in light intensity and color saturation.\n",
+      "scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4
+      },
+      "reason": "Basket of berries is a different subject but uses the same hand-inked, textured, painterly tone with strong outlines, mottled shading, and earthy natural colors as the references, with only minor differences in light intensity and color saturation.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "items",
+      "name": "firewood_bundle",
+      "candidate": "/Users/rexxa/work/arttrial2-data/items/firewood_bundle_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/items/firewood_bundle_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+        "/Users/rexxa/work/arttrial2-data/items/firewood_bundle_try1_raw.png": "b79067ceb3f1bf3ea5614abde41a8268148b875141cf2a2c9d9aa9ccc5dbbb24"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 02:49:06 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:51:37 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-bb4f3091-546b-45cc-ba2f-0ae621012ccc.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-firewood_bundle-scorecard.png",
+      "scorecard_sha256": "c7c49d52311f6184b4ba62a6b6c45c79d5c3ecdd24c09eb7fd036624bc161c8b",
+      "ocr": "Candidate (Image 3)\nReference 1\nMEDIUM\nLINE\nLIGHT\n5\n5\n4\nReference 2\nPALETTE\n5\nReason: The candidate shows the same hand-inked, textured illustration style with detailed bark marks,\nbold outlines, and similar earthy brown/ochr/rar palette and shading as the references, with only a\nslighty simpler lighting treatment and clean balkgiod instead of a environmental ground.\n",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "reason": "The candidate shows the same hand-inked, textured illustration style with detailed bark marks, bold outlines, and similar earthy brown/ochr/rar palette and shading as the references, with only a slighty simpler lighting treatment and clean balkgiod instead of a environmental ground.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "items",
+      "name": "flint_blade",
+      "candidate": "/Users/rexxa/work/arttrial2-data/items/flint_blade_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/items/flint_blade_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+        "/Users/rexxa/work/arttrial2-data/items/flint_blade_try1_raw.png": "72327fc0c0977e3fe82e289dd512282f203102f1c90ca2c295fa8e498ef6c902"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 02:49:06 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:51:37 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-fb988730-4429-4eea-bf3e-ba32d13da0ec.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-flint_blade-scorecard.png",
+      "scorecard_sha256": "db28195ff65fa794b3a6282b606a49660facf900cea990e8ec704cf028d4a866",
+      "ocr": "MEDIUM\nLINE\n4\n4\nLIGHT\n4\nPALETTE\n4\nSame hand-inked, watercolor-like illustration style with textured brushwork, ink outlines, and\nearthy tones; the only notable difference is the flat, bright magenta background instead of the\nnatural ground setting.\n",
+      "scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4
+      },
+      "reason": "Same hand-inked, watercolor-like illustration style with textured brushwork, ink outlines, and earthy tones; the only notable difference is the flat, bright magenta background instead of the natural ground setting.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "items",
+      "name": "flint_pile",
+      "candidate": "/Users/rexxa/work/arttrial2-data/items/flint_pile_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/items/flint_pile_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+        "/Users/rexxa/work/arttrial2-data/items/flint_pile_try1_raw.png": "9282863c3d914dfc90f53be509dd524ce94cdf2b7947318e4669bad9cd6b930f"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 02:49:06 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:51:37 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-e599383a-b5a4-4f07-8a59-ea49ab422091.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-flint_pile-scorecard.png",
+      "scorecard_sha256": "b33292a206c6de20a4f1d09d10e6e8dd3ed6f6e3cd50282727611d3f092a17e3",
+      "ocr": "MEDIUM\nLINE\nLIGHT\nPALETTE\n5\n5\n4\n5\nReason: The candidate depicts a cluster of rocks and matches the references' hand-inked, textured\nillustration style with the same ink line quality, painterly tonal shading, and earthy palette, with only minor\nsimplification due to the plain background and isolated object.\n",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "reason": "The candidate depicts a cluster of rocks and matches the references' hand-inked, textured illustration style with the same ink line quality, painterly tonal shading, and earthy palette, with only minor simplification due to the plain background and isolated object.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "items",
+      "name": "hide",
+      "candidate": "/Users/rexxa/work/arttrial2-data/items/hide_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/items/hide_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+        "/Users/rexxa/work/arttrial2-data/items/hide_try1_raw.png": "caa87d1d2a2341b252848aa857b46c74c84cc9df190f114c526a5700f83d1c09"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 02:49:06 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:51:13 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-4fbde53c-5110-460c-9dae-cd9827eb8a1a.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-hide-scorecard.png",
+      "scorecard_sha256": "a73d33c1817059a59c6543aaae097149ba8225bf05cacb15f2417150e00ed4ea",
+      "ocr": "References (Images 1 & 2)\nCandidate (Image 3)\nCategory\nMEDIUM\nLINE\nLIGHT\nPALETTE\nReason\nScore\n(1-5)\n4\n5\n4\n4\nAssessment\nSame hand-drawn ink and watercolor/marker-like texture and grain.\nConsistent dark ink outlines and sketchy, varied linework.\nSimilar matte, directional shading and tonal modeling.\nSame earthy browns, tans, and muted tones with subtle color variation.\nThe candidate is an animal hide, which is a different subject, but its inked outlines, textured\nbrushwork, and earthy color and shading treatment closely match the references.\n",
+      "scores": {
+        "medium": 4,
+        "line": 5,
+        "light": 4,
+        "palette": 4
+      },
+      "reason": "The candidate is an animal hide, which is a different subject, but its inked outlines, textured brushwork, and earthy color and shading treatment closely match the references.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "items",
+      "name": "log_pile_large",
+      "candidate": "/Users/rexxa/work/arttrial2-data/items/log_pile_large_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/items/log_pile_large_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+        "/Users/rexxa/work/arttrial2-data/items/log_pile_large_try1_raw.png": "86b7eb2f5a13f7bfa062e1f7b1d1dc19554e519b0cc4867741199efff3084de3"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 02:49:06 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:51:37 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-1e6e558c-c90a-4626-9f79-e1f98cf22348.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-log_pile_large-scorecard.png",
+      "scorecard_sha256": "1a669465c0a630c79150d4cadd024f75d61bdfd15eadaf3c96209eaad8dc1c1a",
+      "ocr": "MEDIUM\nLINE\nLIGHT\nPALETTE\n4\n4\n4\n4\nReason: The log pile subject matches the references' inked, hand-painted texture with similar bark\ndetail, linework, and earthy tones, but the flat, saturated magenta background deviates from the\nreferences' natural ground setting and lighting.\n",
+      "scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4
+      },
+      "reason": "The log pile subject matches the references' inked, hand-painted texture with similar bark detail, linework, and earthy tones, but the flat, saturated magenta background deviates from the references' natural ground setting and lighting.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "items",
+      "name": "log_pile_medium",
+      "candidate": "/Users/rexxa/work/arttrial2-data/items/log_pile_medium_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/items/log_pile_medium_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+        "/Users/rexxa/work/arttrial2-data/items/log_pile_medium_try1_raw.png": "4eac3a54f3c36c345a4354b9595664ca2a4879560ecdb108ad8b90d728bd21da"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 03:00:49 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 03:06:21 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-3cc85af7-f6d0-4841-b74b-63b8ee766e71.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-log_pile_medium-scorecard.png",
+      "scorecard_sha256": "c332d6611b44fe105c26964f0892dfd06f174294d24a1ac785b71355df3cf7cd",
+      "ocr": "MEDIUM\nLINE\nLIGHT\nPALETTE\n5\n5\n4\n5\nSame fine ink and watercolor-like painted texture, hatching and bark detail as the references;\nlighting is slightly flatter without cast shadows and ground context, but still very close in overall style.\n",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "reason": "Same fine ink and watercolor-like painted texture, hatching and bark detail as the references; lighting is slightly flatter without cast shadows and ground context, but still very close in overall style.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "items",
+      "name": "log_pile_small",
+      "candidate": "/Users/rexxa/work/arttrial2-data/items/log_pile_small_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/items/log_pile_small_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+        "/Users/rexxa/work/arttrial2-data/items/log_pile_small_try1_raw.png": "171f434320e7882c8d10e8747609bc57f5c2cb63154c164285cb42355f7ce03e"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 03:00:49 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 03:03:19 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-1b30550b-d269-4769-b4c1-87ccb1d23422.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-log_pile_small-scorecard.png",
+      "scorecard_sha256": "44b6b659398eab060331273df95b2301be5df8a7d8731fc5867d07ca400acc1f",
+      "ocr": "MEDIUM\nLINE\nLIGHT\nPALETTE\n5\n5\n4\n5\nLogs match the references' hand-inked, watercolor-toned style closely,\nwith only slightly stronger edge contrast from the flat magenta background.\n",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "reason": "Logs match the references' hand-inked, watercolor-toned style closely, with only slightly stronger edge contrast from the flat magenta background.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "items",
+      "name": "stone_axe",
+      "candidate": "/Users/rexxa/work/arttrial2-data/items/stone_axe_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/items/stone_axe_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+        "/Users/rexxa/work/arttrial2-data/items/stone_axe_try1_raw.png": "4b3036e4b09a885faf52a4a2652720a9d84f137db2714496e75446ed58a0a949"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 03:00:49 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 03:06:21 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-0aeae983-3f6c-4208-abac-fb8ee34114a7.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-stone_axe-scorecard.png",
+      "scorecard_sha256": "99979bacc150f38116187a5d6c715861375ef296a3bae20c8ff71e83dc0ba85b",
+      "ocr": "MEDIUM\nLINE\nLIGHT\nPALETTE\n5\n5\n5\n5\nReason: The axe uses the same hand-inked, textured illustration style with darkoutlines, motled tone\nwashes and hatching, and the same earthy, desaurated brown/cray/ochre palete and light/shadow\ntreatment as the references; only the subject and background differ.\n",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason": "The axe uses the same hand-inked, textured illustration style with darkoutlines, motled tone washes and hatching, and the same earthy, desaurated brown/cray/ochre palete and light/shadow treatment as the references; only the subject and background differ.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted.",
+      "reason_transcription_note": "Generated reason contains malformed words; OCR retained and scorecard is authoritative for exact glyphs."
+    },
+    {
+      "family": "items",
+      "name": "stone_pile",
+      "candidate": "/Users/rexxa/work/arttrial2-data/items/stone_pile_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/items/stone_pile_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+        "/Users/rexxa/work/arttrial2-data/items/stone_pile_try1_raw.png": "9312d5d8c0968bf43b79777a45653015e678a4851cce4d47edd567afc98f3f57"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 03:00:49 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 03:05:53 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-48c6be4d-d805-4e2e-9582-2e8d68b6a070.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-stone_pile-scorecard.png",
+      "scorecard_sha256": "cfe18ae4d53ad9e6c4ef05065876aed24bd7834b243b37f88e3a12abb9f90920",
+      "ocr": "Reference 1\nCandidate (Image 3)\nMEDIUM\n5\nReference 2\nLINE\n5\nLIGHT\nPALETTE\n4\n4\nSame hand-drawn ink-and-paint look with sturdy outlines, textured brushwork, and mottled earthy\ncolors; lighting differs slightly due to neutral studio-like lighting and no scene context/background.\n",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 4
+      },
+      "reason": "Same hand-drawn ink-and-paint look with sturdy outlines, textured brushwork, and mottled earthy colors; lighting differs slightly due to neutral studio-like lighting and no scene context/background.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "misc",
+      "name": "boulder_large",
+      "candidate": "/Users/rexxa/work/arttrial2-data/misc/boulder_large_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/misc/boulder_large_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+        "/Users/rexxa/work/arttrial2-data/misc/boulder_large_try1_raw.png": "3f8fa6707dc3b0520cbee786be7404b82463e7aefd10dbac5f5f5eef932cb3e4"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 03:00:49 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 03:06:21 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-f4f03fd5-8f93-4c9e-90a8-67f0b9122735.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-boulder_large-scorecard.png",
+      "scorecard_sha256": "ef50c087531ebf82d557c54fc6477e2577fd0c06c6d89c5784f795d1d45c0f7a",
+      "ocr": "Candidate (Image 3)\nReference 1\nReference 2\nAspect\nMEDIUM\nLINE\nLIGHT\nPALETTE\nScore (1-5)\nAssessment\n5\n5\n4\n5\nSame hand-drawn ink and watercolor-like tone with textured brush marks.\nConsistent bold ink outlines and detailed contour/crack lines.\nSame directional lighting and shaded forms; very close though slightly\nless ambient ground shadows due to isolated subject.\nMatching earthy, desaturated browns, grays, and ochres with subtle greens\nand warm highlights.\nReason\nThe candidate depicts a rock in the same fine ink and watercolor-like style as the references,\nwith matching outlines, textured marks, tonal transitions, and earthy palette, differing only in\nsubject and isolated background.\n",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "reason": "The candidate depicts a rock in the same fine ink and watercolor-like style as the references, with matching outlines, textured marks, tonal transitions, and earthy palette, differing only in subject and isolated background.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "misc",
+      "name": "boulder_small",
+      "candidate": "/Users/rexxa/work/arttrial2-data/misc/boulder_small_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/misc/boulder_small_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+        "/Users/rexxa/work/arttrial2-data/misc/boulder_small_try1_raw.png": "a21c391bb48be9e4d444b44c5a79c60ca72aa20994b21f012f2c70e0dc973b66"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 03:00:49 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 03:03:43 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-9f599762-dc27-44b8-96a5-72a0243c143d.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-boulder_small-scorecard.png",
+      "scorecard_sha256": "f5b4bd5134ee291991a6807a4f8c016ff87e2c22fdaf7a9c32de38a8ea8d3723",
+      "ocr": "MEDIUM\n5\nSame hand-painted\ndigital ink-and-wash\nmedium with textured\nflat tones and visible\nbrush-like patches.\nLINE\n5\nMatching fine, slightly\nsketchy ink outlines and\ninternal cracks with\nvariable line weight\nlike the references.\nLIGHT\n5\nConsistent top-left\nlighting with comparable\nflat, graphic shadow\nshapes and tonal\ntransitions to references.\nPALETTE\n5\nSame earthy, muted\nnatural palette of browns,\ngreys, tans, and olive-yellows\nwith minimal saturation,\nidentical to the references.\nReason: The candidate is a rock, which is a different subject from the log pile and campfire,\nbut it uses the same fine ink/tone style with matching medium, linework, lighting, and earthy palette.\n",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason": "The candidate is a rock, which is a different subject from the log pile and campfire, but it uses the same fine ink/tone style with matching medium, linework, lighting, and earthy palette.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "misc",
+      "name": "deadwood",
+      "candidate": "/Users/rexxa/work/arttrial2-data/misc/deadwood_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/misc/deadwood_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+        "/Users/rexxa/work/arttrial2-data/misc/deadwood_try1_raw.png": "f70402a6330d49f80c02734fcca0aea868717cc5f2eed685b1bf7ece90df61da"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 03:00:49 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 03:06:21 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-ef9d2e69-47cb-4a3e-b4ca-65773df0bc36.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-deadwood-scorecard.png",
+      "scorecard_sha256": "e41dc4baacb5560854d20ab64703ea7b004fc51676eaed68b12e6b7dc830afa4",
+      "ocr": "CANDIDATE (Image 3)\nMEDIUM\n(MATERIAL & RENDERING)\n5\nLINE\n(CONTOUR & DETAIL)\n5\nREFERENCE 1 (Image 1)\nLIGHT\n(SHADING & TONE)\n5\nREFERENCE 2 (Image 2)\nPALETTE\n(COLOR & HARMONY)\n5\nREASON\nThe candidate shows the same hand-drawn ink lines, textured brushwork, and earthy, desaturated\nbrown/gray/tan palette with similar highlights and shadows as the references, only the subject is a single\nbranch on a flat maged barigd rather than a scene with ground and additional elements.\n",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason": "The candidate shows the same hand-drawn ink lines, textured brushwork, and earthy, desaturated brown/gray/tan palette with similar highlights and shadows as the references, only the subject is a single branch on a flat maged barigd rather than a scene with ground and additional elements.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted.",
+      "reason_transcription_note": "Generated reason contains malformed words; OCR retained and scorecard is authoritative for exact glyphs."
+    },
+    {
+      "family": "misc",
+      "name": "hearth_0",
+      "candidate": "/Users/rexxa/work/arttrial2-data/misc/hearth_0_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/misc/hearth_0_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+        "/Users/rexxa/work/arttrial2-data/misc/hearth_0_try1_raw.png": "6464701d4ee34ffe19b9490357a5a58170c9c4decdaf060d34d255b35c2ff1ea"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 03:00:49 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 03:04:47 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-85e6d59a-449c-4981-a013-86b677f0b9af.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-hearth_0-scorecard.png",
+      "scorecard_sha256": "331dd68777f50bba6b6e05321eb0c12a2e25348eb80bcfd02eda4097ec6dd0ac",
+      "ocr": "MEDIUM\nLINE\nLIGHT\nPALETTE\n5\n5\n5\n5\nSame hand-drawn ink-and-paint look with textured brushwork, speckled tones, crisp\noutlines, and warm firelight; only noticeable difference is the flat magenta background\ninstead of the natural dirt setting.\n",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason": "Same hand-drawn ink-and-paint look with textured brushwork, speckled tones, crisp outlines, and warm firelight; only noticeable difference is the flat magenta background instead of the natural dirt setting.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "misc",
+      "name": "hearth_1",
+      "candidate": "/Users/rexxa/work/arttrial2-data/misc/hearth_1_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/misc/hearth_1_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+        "/Users/rexxa/work/arttrial2-data/misc/hearth_1_try1_raw.png": "ac22e3c934dc94b34e54e24ebec34bda137914ee8ab9bf18addf5c18b35068ee"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 03:00:49 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 03:06:21 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-b624a16b-d8ef-49b8-a7f5-5f965e7ff24e.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-hearth_1-scorecard.png",
+      "scorecard_sha256": "da8afa1893a8fd25bce16b98674c811f3aa20cee7818d808084ec07f4cadec82",
+      "ocr": "MEDIUM\nLINE\nLIGHT\nPALETTE\n5\n5\n5\n5\nReason: Despite the isolated magenta background and tighter, centered framing, the candidate\nuses the same fine ink linework, textured painted tones, rock and wood detailing, and\nwarm fire lighting as the references, showing an instinguislable rendering style.\n",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason": "Despite the isolated magenta background and tighter, centered framing, the candidate uses the same fine ink linework, textured painted tones, rock and wood detailing, and warm fire lighting as the references, showing an instinguislable rendering style.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted.",
+      "reason_transcription_note": "Generated reason contains malformed words; OCR retained and scorecard is authoritative for exact glyphs."
+    },
+    {
+      "family": "misc",
+      "name": "smoke_puff",
+      "candidate": "/Users/rexxa/work/arttrial2-data/misc/smoke_puff_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/misc/smoke_puff_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+        "/Users/rexxa/work/arttrial2-data/misc/smoke_puff_try1_raw.png": "1767524682b0e5e8feb98000336dc7b7096ce0de70e59c8894519b07bf3fed67"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 03:00:49 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 03:04:06 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-06d3b31a-900b-489f-a5b0-e8e555d9f2cf.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-smoke_puff-scorecard.png",
+      "scorecard_sha256": "da607d9ff5f0465d9d4b2782f874692a4332f258cd1506c7089e4389ec730064",
+      "ocr": "MEDIUM\n4\nLINE\n4\nLIGHT\n4\nPALETTE\n4\nReason: Same hand-drawn ink and textured, painterly brushwork with mottled tones and dark outlines, but the smoke has\nsmoother, softer gradtents and less surface detail than the more rugged, detailed textures in the references.\n",
+      "scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4
+      },
+      "reason": "Same hand-drawn ink and textured, painterly brushwork with mottled tones and dark outlines, but the smoke has smoother, softer gradtents and less surface detail than the more rugged, detailed textures in the references.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "misc",
+      "name": "stump",
+      "candidate": "/Users/rexxa/work/arttrial2-data/misc/stump_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/misc/stump_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+        "/Users/rexxa/work/arttrial2-data/misc/stump_try1_raw.png": "b228b0c685b03f7c395579ab4e094703a56ae3f68523033e0310341594f8e0ba"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 03:00:49 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 03:05:12 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-9c3da1ca-37a5-4e61-89b2-a88c58170e2f.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-stump-scorecard.png",
+      "scorecard_sha256": "4ff95f3a5d495f32cbed72acb22f85e50a3e457812fe1fa8fea1ec96c0796970",
+      "ocr": "MEDIUM\n5\nREASON\nLINE\nLIGHT\nPALETTE\n5\n4\n4\nThe tree stump matches the references' fine ink and watercolor-toned\nillustration style with the same textured ink lines, stippled surface detail,\nand earthy browns, but the solid bright magenta background differs from\nthe natural ground palettes used in the references.\n",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 4
+      },
+      "reason": "The tree stump matches the references' fine ink and watercolor-toned illustration style with the same textured ink lines, stippled surface detail, and earthy browns, but the solid bright magenta background differs from the natural ground palettes used in the references.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "plants",
+      "name": "berry_bare",
+      "candidate": "/Users/rexxa/work/arttrial2-data/plants/berry_bare_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_oak.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_birch.png",
+        "/Users/rexxa/work/arttrial2-data/plants/berry_bare_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_oak.png": "a627b9d3b335cb3d2e09804df8d49cabe21572736b88a27e4b7ecc4330d69dc3",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_birch.png": "49becd9296dfcd3751a8ec7c6785b3eee823d53b545d52a20b6e8d0f237f9615",
+        "/Users/rexxa/work/arttrial2-data/plants/berry_bare_try1_raw.png": "2b97bfe15775d055c744c5085a1a32d342663355a97c5083379caf3757faf7fd"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 03:00:49 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 03:02:53 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-6a330c01-d245-4d2d-9a49-9c7204bf7f4b.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-berry_bare-scorecard.png",
+      "scorecard_sha256": "747db5ca3e2fb46df76fba9a27ecf4012cbdae6bec99cb895e0e83e1ac9ba71b",
+      "ocr": "Reference 1\nMEDIUM\n5\nReference 2\nCandidate (Image 3)\nLINE\nLIGHT\nPALETTE\n5\n5\n5\nReason: Same hand-drawn ink-and-wash/painted digital medium with matching line quality,\nleaf rendering, tonal shading, and color palette as the references, differing only in subject and composition.\n",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason": "Same hand-drawn ink-and-wash/painted digital medium with matching line quality, leaf rendering, tonal shading, and color palette as the references, differing only in subject and composition.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "plants",
+      "name": "berry_full",
+      "candidate": "/Users/rexxa/work/arttrial2-data/plants/berry_full_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_oak.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_birch.png",
+        "/Users/rexxa/work/arttrial2-data/plants/berry_full_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_oak.png": "a627b9d3b335cb3d2e09804df8d49cabe21572736b88a27e4b7ecc4330d69dc3",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_birch.png": "49becd9296dfcd3751a8ec7c6785b3eee823d53b545d52a20b6e8d0f237f9615",
+        "/Users/rexxa/work/arttrial2-data/plants/berry_full_try1_raw.png": "733ea5343add84d78bf95fd06e8ef57e77391524b65295b4d56cf4dca128ecbe"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 03:06:23 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 03:10:33 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-8f227862-50a3-4595-9242-8ce496ade69c.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-berry_full-scorecard.png",
+      "scorecard_sha256": "2a375315cb908d9fbcd4881713c3c83818554a673dfc16b97924f86464a9afbc",
+      "ocr": "MEDIUM\n4\nLINE\n4\nLIGHT\n4\nPALETTE\n4\nRef 1\nRef 2\nRef 1\nRef 2\nRef 1\nRef 2\nRef 1\nRef 2\nCandidate (Image 3)\nCandidate (Image 3)\nCandidate (Image 3)\nCandidate (Image 3)\nReason: The berry bush in the candidate uses the same fine ink-and-wash medium with crisp,\nvaried ink outlines, layered watercolor-like leaf and branch shading, and a natural green/yellow/earthy\npalette as the references, with only a slightly denser, more saturated berry color accent.\n",
+      "scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4
+      },
+      "reason": "The berry bush in the candidate uses the same fine ink-and-wash medium with crisp, varied ink outlines, layered watercolor-like leaf and branch shading, and a natural green/yellow/earthy palette as the references, with only a slightly denser, more saturated berry color accent.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "plants",
+      "name": "birch_large",
+      "candidate": "/Users/rexxa/work/arttrial2-data/plants/birch_large_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_oak.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_birch.png",
+        "/Users/rexxa/work/arttrial2-data/plants/birch_large_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_oak.png": "a627b9d3b335cb3d2e09804df8d49cabe21572736b88a27e4b7ecc4330d69dc3",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_birch.png": "49becd9296dfcd3751a8ec7c6785b3eee823d53b545d52a20b6e8d0f237f9615",
+        "/Users/rexxa/work/arttrial2-data/plants/birch_large_try1_raw.png": "127de65cf9c87bc6955d6065c274a4e9cc00c91ff2bc40dabbe629459bef7099"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 03:06:23 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 03:09:13 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-ca5225f3-7313-41e2-8906-6de6b0e8022e.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-birch_large-scorecard.png",
+      "scorecard_sha256": "32ad63feec323c916d59e5f097eaee015b4bcfbffca15ff04dcba2756a4699de",
+      "ocr": "Reference 1\nReference 2\nCandidate (Image 3)\nMEDIUM\nLINE\nLIGHT\nPALETTE\n5\n5\n5\n5\nReason: The candidate shows the same fine inked outlines, detailed leaf rendering, tonal shading,\nand yellow-green foliage palette on a magenta background as the references, differing only in a wider,\nfull-tree composition rather than the close-up crops.\n",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason": "The candidate shows the same fine inked outlines, detailed leaf rendering, tonal shading, and yellow-green foliage palette on a magenta background as the references, differing only in a wider, full-tree composition rather than the close-up crops.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "plants",
+      "name": "birch_small",
+      "candidate": "/Users/rexxa/work/arttrial2-data/plants/birch_small_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_oak.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_birch.png",
+        "/Users/rexxa/work/arttrial2-data/plants/birch_small_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_oak.png": "a627b9d3b335cb3d2e09804df8d49cabe21572736b88a27e4b7ecc4330d69dc3",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_birch.png": "49becd9296dfcd3751a8ec7c6785b3eee823d53b545d52a20b6e8d0f237f9615",
+        "/Users/rexxa/work/arttrial2-data/plants/birch_small_try1_raw.png": "f74c0f2b80f8eb51f8cc8c7fd6756c9ff9b2441a1d311112d24f7214ec32d7af"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 03:06:23 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 03:10:33 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-6525c733-ccb6-425c-8c80-5aa2fda692f2.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-birch_small-scorecard.png",
+      "scorecard_sha256": "13339273db08701339d01b4c5235d044855a49a66571ea13fd2e7150370fb073",
+      "ocr": "REASON\nReference 1\nReference 2\nCandidate (Image 3)\nMEDIUM\nLINE\nLIGHT\nPALETTE\n5\n5\n4\n5\nSame hand-drawn inked leaf shapes, textured brushwork, and yellow-green palette;\nlighting is very similar though the candidate looks slightly brighter overall.\n",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "reason": "Same hand-drawn inked leaf shapes, textured brushwork, and yellow-green palette; lighting is very similar though the candidate looks slightly brighter overall.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "plants",
+      "name": "oak_large",
+      "candidate": "/Users/rexxa/work/arttrial2-data/plants/oak_large_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_oak.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_birch.png",
+        "/Users/rexxa/work/arttrial2-data/plants/oak_large_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_oak.png": "a627b9d3b335cb3d2e09804df8d49cabe21572736b88a27e4b7ecc4330d69dc3",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_birch.png": "49becd9296dfcd3751a8ec7c6785b3eee823d53b545d52a20b6e8d0f237f9615",
+        "/Users/rexxa/work/arttrial2-data/plants/oak_large_try1_raw.png": "84d9d90936d06762f40f64bb349d0b45475bc069c3dbb901939cb4a6c3965d7b"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 03:06:23 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 03:08:46 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-191cf5b3-c933-4c7a-b578-6e3eed0fe766.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-oak_large-scorecard.png",
+      "scorecard_sha256": "707fabaffd8fff98a89d87e0d3618a8ed5ea51d5ed3e540bddc378c11b8b4b8a",
+      "ocr": "Reference 1\nMEDIUM\n5\nReference 2\nCandidate (Image 3)\nPALETTE\nReason\nLINE\nLIGHT\n5\n5\nThe candidate depicts a full tree canopy, but it uses the same hand-inked\nlinework, detailed leaf shapes, tonal rendering, lighting, and yellow-green\npalette on the same magenta background as the references.\n",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason": "The candidate depicts a full tree canopy, but it uses the same hand-inked linework, detailed leaf shapes, tonal rendering, lighting, and yellow-green palette on the same magenta background as the references.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "plants",
+      "name": "oak_small",
+      "candidate": "/Users/rexxa/work/arttrial2-data/plants/oak_small_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_oak.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_birch.png",
+        "/Users/rexxa/work/arttrial2-data/plants/oak_small_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_oak.png": "a627b9d3b335cb3d2e09804df8d49cabe21572736b88a27e4b7ecc4330d69dc3",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_birch.png": "49becd9296dfcd3751a8ec7c6785b3eee823d53b545d52a20b6e8d0f237f9615",
+        "/Users/rexxa/work/arttrial2-data/plants/oak_small_try1_raw.png": "a96bf42e2b5c30b35db8d9744ef4158e698406fbb677cfa4cea53e3d66c236a5"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 03:06:23 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 03:10:33 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-81d7bfb2-ed99-466b-83c2-e4cbdbf3d4b3.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-oak_small-scorecard.png",
+      "scorecard_sha256": "3d59a5018715dd696cc9bcf6fa1fd5f596be82a226c9b201224d5101104bb508",
+      "ocr": "MEDIUM\n5\nLINE\n5\nLIGHT\n4\nPALETTE\n5\nReason: The candidate shows the same hand-drawn ink and painterly flat-tonal rendering with similar line quality,\nleaf treatment, lighting, and green-yellow palette as the references, only differing in subject/composition.\n",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "reason": "The candidate shows the same hand-drawn ink and painterly flat-tonal rendering with similar line quality, leaf treatment, lighting, and green-yellow palette as the references, only differing in subject/composition.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "plants",
+      "name": "pine_large",
+      "candidate": "/Users/rexxa/work/arttrial2-data/plants/pine_large_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_oak.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_birch.png",
+        "/Users/rexxa/work/arttrial2-data/plants/pine_large_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_oak.png": "a627b9d3b335cb3d2e09804df8d49cabe21572736b88a27e4b7ecc4330d69dc3",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_birch.png": "49becd9296dfcd3751a8ec7c6785b3eee823d53b545d52a20b6e8d0f237f9615",
+        "/Users/rexxa/work/arttrial2-data/plants/pine_large_try1_raw.png": "0c1171b148c8f9d1235173bff8821de1167150b4f32687789b5c46c1b52d2e2c"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 03:06:23 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 03:10:33 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-a5777811-30ce-46ec-8bda-601d16b13459.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-pine_large-scorecard.png",
+      "scorecard_sha256": "3c8001e500fadd570cb3a41daf32c8694538d4563812ff3f6c95f1ac1fa62336",
+      "ocr": "MEDIUM\nLINE\nLIGHT\nPALETTE\n5\n5\n4\n5\nContent differs (conifer tree vs. broadleaf deciduous), but the candidate\nuses the same fine ink linework, flat-yet-layered tonal rendering, and matching\nlight and color treatment with the bright magenta background as the references.\n",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "reason": "Content differs (conifer tree vs. broadleaf deciduous), but the candidate uses the same fine ink linework, flat-yet-layered tonal rendering, and matching light and color treatment with the bright magenta background as the references.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "plants",
+      "name": "pine_small",
+      "candidate": "/Users/rexxa/work/arttrial2-data/plants/pine_small_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_oak.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_birch.png",
+        "/Users/rexxa/work/arttrial2-data/plants/pine_small_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_oak.png": "a627b9d3b335cb3d2e09804df8d49cabe21572736b88a27e4b7ecc4330d69dc3",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_birch.png": "49becd9296dfcd3751a8ec7c6785b3eee823d53b545d52a20b6e8d0f237f9615",
+        "/Users/rexxa/work/arttrial2-data/plants/pine_small_try1_raw.png": "d4574cbfc5d71735022cf05448a1ced6ec1006752d03f3c72e2c3923c0e91194"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 03:06:23 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 03:09:37 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-e924bd78-549e-4941-8822-844203e16014.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-pine_small-scorecard.png",
+      "scorecard_sha256": "cdfb209b1c7e6e83b092af180bfa37814f9315c4c44c0d56eb359fd6f9484585",
+      "ocr": "Reference 1\nMEDIUM\n5\nReference 2\nLINE\nLIGHT\n5\n5\nCandidate\nPALETTE\n5\nReason: Conifer branch subject is different, but the candidate uses the same fine ink linework, layered cel-like tonal\nshading, lighting approach, and yellow-green palette with brown branches as the references.\n",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason": "Conifer branch subject is different, but the candidate uses the same fine ink linework, layered cel-like tonal shading, lighting approach, and yellow-green palette with brown branches as the references.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    {
+      "family": "plants",
+      "name": "reeds",
+      "candidate": "/Users/rexxa/work/arttrial2-data/plants/reeds_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_oak.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_birch.png",
+        "/Users/rexxa/work/arttrial2-data/plants/reeds_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_oak.png": "a627b9d3b335cb3d2e09804df8d49cabe21572736b88a27e4b7ecc4330d69dc3",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_birch.png": "49becd9296dfcd3751a8ec7c6785b3eee823d53b545d52a20b6e8d0f237f9615",
+        "/Users/rexxa/work/arttrial2-data/plants/reeds_try1_raw.png": "18997778bade3735c5aedbd754e9cd0e5cabe6110a33b9f6f18f2343defe7430"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 03:06:23 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 03:10:03 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-716ff11d-dfc5-4abb-a10c-ca835d0748a8.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-reeds-scorecard.png",
+      "scorecard_sha256": "194aae7434171263f7b3c40a15e469a1dc1622135786355fa694d7574cfadd97",
+      "ocr": "MEDIUM\n4\nLINE\n4\nLIGHT\n4\nPALETTE\n4\nThe candidate (cattail grass) matches the reference's fine ink and watercolor-like\nrendering with similar line weight, textured brushy fills, and layered greens and warm\nearth tones, with only minor differences in subject matter.\n",
+      "scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4
+      },
+      "reason": "The candidate (cattail grass) matches the reference's fine ink and watercolor-like rendering with similar line weight, textured brushy fills, and layered greens and warm earth tones, with only minor differences in subject matter.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    }
+  ]
+}

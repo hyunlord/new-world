@@ -1,0 +1,426 @@
+{
+  "scope": "Eight first-attempt numeric failures; existing generations only",
+  "rule": "First attempt counts as1; generation cap3 across TRIAL2 and TRIAL2b",
+  "records": [
+    {
+      "name": "drying_rack",
+      "family": "buildings",
+      "attempts_consumed": 2,
+      "generation_ledger": "/Users/rexxa/work/arttrial2-data/buildings/LEDGER.json",
+      "existing_numeric_pass_tries": [],
+      "next_permitted_try": 3,
+      "remaining_generation_attempts": 1,
+      "action": "Await fresh model scores; do not generate automatically",
+      "attempts": [
+        {
+          "try": 1,
+          "sidecar": "/Users/rexxa/work/arttrial2-data/buildings/drying_rack_try1.json",
+          "sidecar_sha256": "1bdcc7a7bafdc1f197d4292a4621241c5cf5c203b37b46434674b2a859e4ba8f",
+          "expected_raw_sha256": "9260e2ecddf023899e47a7d6372f3b415b58e2dfd75efe80120df6dc8796ad04",
+          "verdict": {
+            "candidate": "/Users/rexxa/work/arttrial2-data/buildings/drying_rack_try1_raw.png",
+            "sha256": "9260e2ecddf023899e47a7d6372f3b415b58e2dfd75efe80120df6dc8796ad04",
+            "family": "buildings",
+            "metrics": {
+              "edge_density": 0.21537721092527976,
+              "saturation_q25": 0.46728278063323186,
+              "saturation_q75": 0.5681064693444409,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 2.0,
+              "stroke_q90": 2.8284271247461903,
+              "wash_flatness": 0.0417491206955875,
+              "foreground_pixels": 12794
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": false
+            },
+            "numeric_pass": false,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        },
+        {
+          "try": 2,
+          "sidecar": "/Users/rexxa/work/arttrial2-data/buildings/drying_rack_try2.json",
+          "sidecar_sha256": "57afcf18114a005a49bcb86dbbba5a44890b659bb8c628d88d666e1a39e02998",
+          "expected_raw_sha256": "1a82ece01205d11292bf27b85f6e4722c8238395b7aa0a308b9174e8812a05fa",
+          "verdict": {
+            "candidate": "/Users/rexxa/work/arttrial2-data/buildings/drying_rack_try2_raw.png",
+            "sha256": "1a82ece01205d11292bf27b85f6e4722c8238395b7aa0a308b9174e8812a05fa",
+            "family": "buildings",
+            "metrics": {
+              "edge_density": 0.2185293286884474,
+              "saturation_q25": 0.4578983638876145,
+              "saturation_q75": 0.556194403919468,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 2.0,
+              "stroke_q90": 2.8284271247461903,
+              "wash_flatness": 0.04261602035213654,
+              "foreground_pixels": 14464
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": false
+            },
+            "numeric_pass": false,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "firewood_bundle",
+      "family": "items",
+      "attempts_consumed": 1,
+      "generation_ledger": "/Users/rexxa/work/arttrial2-data/items/LEDGER.json",
+      "existing_numeric_pass_tries": [],
+      "next_permitted_try": 2,
+      "remaining_generation_attempts": 2,
+      "action": "Await fresh model scores; do not generate automatically",
+      "attempts": [
+        {
+          "try": 1,
+          "sidecar": "/Users/rexxa/work/arttrial2-data/items/firewood_bundle_try1.json",
+          "sidecar_sha256": "71f7a7df325a4245807694ad8f404a419c5e7820aeb47c1728a7764412dc45be",
+          "expected_raw_sha256": "b79067ceb3f1bf3ea5614abde41a8268148b875141cf2a2c9d9aa9ccc5dbbb24",
+          "verdict": {
+            "candidate": "/Users/rexxa/work/arttrial2-data/items/firewood_bundle_try1_raw.png",
+            "sha256": "b79067ceb3f1bf3ea5614abde41a8268148b875141cf2a2c9d9aa9ccc5dbbb24",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.28075159287366586,
+              "saturation_q25": 0.5166429227798204,
+              "saturation_q75": 0.6433447380914709,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 4.0,
+              "stroke_q90": 4.0,
+              "wash_flatness": 0.029047201306313993,
+              "foreground_pixels": 26093
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": false
+            },
+            "numeric_pass": false,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "flint_pile",
+      "family": "items",
+      "attempts_consumed": 1,
+      "generation_ledger": "/Users/rexxa/work/arttrial2-data/items/LEDGER.json",
+      "existing_numeric_pass_tries": [],
+      "next_permitted_try": 2,
+      "remaining_generation_attempts": 2,
+      "action": "Await fresh model scores; do not generate automatically",
+      "attempts": [
+        {
+          "try": 1,
+          "sidecar": "/Users/rexxa/work/arttrial2-data/items/flint_pile_try1.json",
+          "sidecar_sha256": "7f57e56cd46bf0f6bc03b53cd2636089bcbafbe109637c8db979e55beefec547",
+          "expected_raw_sha256": "9282863c3d914dfc90f53be509dd524ce94cdf2b7947318e4669bad9cd6b930f",
+          "verdict": {
+            "candidate": "/Users/rexxa/work/arttrial2-data/items/flint_pile_try1_raw.png",
+            "sha256": "9282863c3d914dfc90f53be509dd524ce94cdf2b7947318e4669bad9cd6b930f",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.23839634421743405,
+              "saturation_q25": 0.3157189278716088,
+              "saturation_q75": 0.5285475707924444,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 2.8284271247461903,
+              "stroke_q90": 4.0,
+              "wash_flatness": 0.02455166989510091,
+              "foreground_pixels": 39490
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": false
+            },
+            "numeric_pass": false,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "hide",
+      "family": "items",
+      "attempts_consumed": 1,
+      "generation_ledger": "/Users/rexxa/work/arttrial2-data/items/LEDGER.json",
+      "existing_numeric_pass_tries": [],
+      "next_permitted_try": 2,
+      "remaining_generation_attempts": 2,
+      "action": "Await fresh model scores; do not generate automatically",
+      "attempts": [
+        {
+          "try": 1,
+          "sidecar": "/Users/rexxa/work/arttrial2-data/items/hide_try1.json",
+          "sidecar_sha256": "c330f989ee3abed16c6d7e8a5b8c3a5941e977c26fbb593ef9e92f97ddddca66",
+          "expected_raw_sha256": "caa87d1d2a2341b252848aa857b46c74c84cc9df190f114c526a5700f83d1c09",
+          "verdict": {
+            "candidate": "/Users/rexxa/work/arttrial2-data/items/hide_try1_raw.png",
+            "sha256": "caa87d1d2a2341b252848aa857b46c74c84cc9df190f114c526a5700f83d1c09",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.23856824798766912,
+              "saturation_q25": 0.5037706498303616,
+              "saturation_q75": 0.63340702904502,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 2.0,
+              "stroke_q90": 4.0,
+              "wash_flatness": 0.022604115477997146,
+              "foreground_pixels": 37223
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": false
+            },
+            "numeric_pass": false,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "log_pile_large",
+      "family": "items",
+      "attempts_consumed": 1,
+      "generation_ledger": "/Users/rexxa/work/arttrial2-data/items/LEDGER.json",
+      "existing_numeric_pass_tries": [],
+      "next_permitted_try": 2,
+      "remaining_generation_attempts": 2,
+      "action": "Await fresh model scores; do not generate automatically",
+      "attempts": [
+        {
+          "try": 1,
+          "sidecar": "/Users/rexxa/work/arttrial2-data/items/log_pile_large_try1.json",
+          "sidecar_sha256": "02f320022f8089c3207c20da482d437efeb8c1d51511c9f4086918cf9acbd08c",
+          "expected_raw_sha256": "86b7eb2f5a13f7bfa062e1f7b1d1dc19554e519b0cc4867741199efff3084de3",
+          "verdict": {
+            "candidate": "/Users/rexxa/work/arttrial2-data/items/log_pile_large_try1_raw.png",
+            "sha256": "86b7eb2f5a13f7bfa062e1f7b1d1dc19554e519b0cc4867741199efff3084de3",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.2831800262812089,
+              "saturation_q25": 0.5035713702807527,
+              "saturation_q75": 0.660429755461671,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 2.8284271247461903,
+              "stroke_q90": 4.0,
+              "wash_flatness": 0.03177330694845908,
+              "foreground_pixels": 61282
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": false
+            },
+            "numeric_pass": false,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "log_pile_small",
+      "family": "items",
+      "attempts_consumed": 1,
+      "generation_ledger": "/Users/rexxa/work/arttrial2-data/items/LEDGER.json",
+      "existing_numeric_pass_tries": [],
+      "next_permitted_try": 2,
+      "remaining_generation_attempts": 2,
+      "action": "Await fresh model scores; do not generate automatically",
+      "attempts": [
+        {
+          "try": 1,
+          "sidecar": "/Users/rexxa/work/arttrial2-data/items/log_pile_small_try1.json",
+          "sidecar_sha256": "65858b222f970875f69b7565d18c16bec9faccb1720aa2eb7a314cb382856384",
+          "expected_raw_sha256": "171f434320e7882c8d10e8747609bc57f5c2cb63154c164285cb42355f7ce03e",
+          "verdict": {
+            "candidate": "/Users/rexxa/work/arttrial2-data/items/log_pile_small_try1_raw.png",
+            "sha256": "171f434320e7882c8d10e8747609bc57f5c2cb63154c164285cb42355f7ce03e",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.29454109178164367,
+              "saturation_q25": 0.47049165404379406,
+              "saturation_q75": 0.6339067982532698,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.8284271247461903,
+              "stroke_q75": 4.0,
+              "stroke_q90": 4.47213595499958,
+              "wash_flatness": 0.029027690395596564,
+              "foreground_pixels": 34857
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": false
+            },
+            "numeric_pass": false,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "stone_axe",
+      "family": "items",
+      "attempts_consumed": 1,
+      "generation_ledger": "/Users/rexxa/work/arttrial2-data/items/LEDGER.json",
+      "existing_numeric_pass_tries": [],
+      "next_permitted_try": 2,
+      "remaining_generation_attempts": 2,
+      "action": "Await fresh model scores; do not generate automatically",
+      "attempts": [
+        {
+          "try": 1,
+          "sidecar": "/Users/rexxa/work/arttrial2-data/items/stone_axe_try1.json",
+          "sidecar_sha256": "88b8ec32e7c07cf5bdcf8cb85926531a582724abbe7281810af767080d10bc3d",
+          "expected_raw_sha256": "4b3036e4b09a885faf52a4a2652720a9d84f137db2714496e75446ed58a0a949",
+          "verdict": {
+            "candidate": "/Users/rexxa/work/arttrial2-data/items/stone_axe_try1_raw.png",
+            "sha256": "4b3036e4b09a885faf52a4a2652720a9d84f137db2714496e75446ed58a0a949",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.2798175957229342,
+              "saturation_q25": 0.4428376708445058,
+              "saturation_q75": 0.5919559881947329,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 2.8284271247461903,
+              "stroke_q90": 4.0,
+              "wash_flatness": 0.021374905531511435,
+              "foreground_pixels": 14024
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": false
+            },
+            "numeric_pass": false,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "deadwood",
+      "family": "misc",
+      "attempts_consumed": 1,
+      "generation_ledger": "/Users/rexxa/work/arttrial2-data/misc/LEDGER.json",
+      "existing_numeric_pass_tries": [],
+      "next_permitted_try": 2,
+      "remaining_generation_attempts": 2,
+      "action": "Await fresh model scores; do not generate automatically",
+      "attempts": [
+        {
+          "try": 1,
+          "sidecar": "/Users/rexxa/work/arttrial2-data/misc/deadwood_try1.json",
+          "sidecar_sha256": "388d862181ce0adc82d50bd12395bf1d5be06931392c21395f2ca2d816cdf815",
+          "expected_raw_sha256": "f70402a6330d49f80c02734fcca0aea868717cc5f2eed685b1bf7ece90df61da",
+          "verdict": {
+            "candidate": "/Users/rexxa/work/arttrial2-data/misc/deadwood_try1_raw.png",
+            "sha256": "f70402a6330d49f80c02734fcca0aea868717cc5f2eed685b1bf7ece90df61da",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.2565550119182035,
+              "saturation_q25": 0.44598878301421185,
+              "saturation_q75": 0.5792527351319501,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 2.0,
+              "stroke_q90": 4.0,
+              "wash_flatness": 0.04118722833762723,
+              "foreground_pixels": 9657
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": false
+            },
+            "numeric_pass": false,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        }
+      ]
+    }
+  ]
+}

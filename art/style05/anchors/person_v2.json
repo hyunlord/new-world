@@ -1,0 +1,17 @@
+{
+  "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/person_anchor_try2_raw.png",
+  "source_sha256": "325664c4a12af09ce5324876008a24547664662596c97d5ecc1cb90d6a32b62c",
+  "crop_box": [
+    0,
+    0,
+    1254,
+    1254
+  ],
+  "output_sha256": "5818c46b0e7bcb23ec6e627d85682ad535a2dad79610e646f3eec8146a8e5f4a",
+  "tool": "builtin image_gen",
+  "tool_call_id": "exec-b127eb7f-4fb3-41d6-8826-aea1d1b4a01c",
+  "tries": 2,
+  "prompt": "Edit this person reference into the frozen front-three-quarter colony-game person anchor. Keep the warm sepia ink and restrained watercolor wash medium. Crucial change: extremely simplified stout cartoon proportions, head including hair 32 percent of standing figure height; only 3 heads tall. Broad simple tunic silhouette, no muscular anatomy, no individual fingers, mitten hands, broad wedge feet, hair as ONE clear shape. Thick black outer ink silhouette designed to remain 2 pixels thick when entire figure is reduced to 56px height. Front three-quarter view viewed slightly down 20 degrees, both eyes and whole face visible. Neutral friendly woodcutter, simple hide tunic, large stone axe with blade the size of his head carried at side, clear gap around axe. Whole body isolated centered on perfectly flat #ff00ff magenta. No ground, tiny soft contact shadow only. Simple flat low-detail washes, no scratchy hatching or anatomy lines. This is a game sprite, not a portrait illustration. Preserve body entirely inside frame with generous margin. One figure only.\n",
+  "processing": "magenta key; alpha crop; Lanczos maximum 256; no quantization or outline forcing",
+  "status": "generated candidate; model and readability review separate"
+}

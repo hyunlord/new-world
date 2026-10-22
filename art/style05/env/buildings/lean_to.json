@@ -1,0 +1,353 @@
+{
+  "status": "accepted under judge v2, TRIAL2b",
+  "asset": "lean_to",
+  "family": "buildings",
+  "try_count": 1,
+  "prompt": "Use case: stylized-concept. Produce one isolated Stone Age game building sprite. Attached image 1 (hut) and image 2 (camp scene) are locked style anchors: closely match their fine controlled dark ink contours, sparse interior linework, restrained natural earth-tone wash, two-tone upper-left illumination. Orthographic vertically overhead camera with only a slight front-face cheat, no isometric perspective. Uniform solid pure #FF00FF magenta backdrop everywhere outside the object, including holes. No extraneous surrounding ground apron, cast shadow, text, labels, people, photo, 3D rendering, pixel art, gradients, modern objects, or metal. Center with margin, crisp edges. South is bottom of image. A 2x2-tile lean-to shelter made of timber poles and bark, one SINGLE continuous sloping rectangular shed roof, high at north and low at south, open work side facing south. Clearly a shed/lean-to with one roof plane, NEVER a tent or A-frame. No detached props or floor slab.",
+  "anchors": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+      "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+      "hash_basis": "recomputed preserved source bytes",
+      "unavailable_reason": null
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+      "hash_basis": "recomputed preserved source bytes",
+      "unavailable_reason": null
+    }
+  ],
+  "generation_id": "exec-7404a8e5-6eb1-4265-82de-bec587890e22",
+  "generation_id_note": "tool output artifact identifier; no separate generation ID returned",
+  "original": "/Users/rexxa/work/arttrial2-data/buildings/lean_to_try1_raw.png",
+  "original_sha256": "da16377401004d8bbe94e214269779424be80812f4e98c1ca46b747a1f76a860",
+  "working_source": "/Users/rexxa/work/arttrial2-data/buildings/lean_to_try1.png",
+  "working_sha256": "e430f1d83d0fd754e02252aaa628247749c22f12b2b669a29b19e62deb8e1696",
+  "working_size": [
+    128,
+    128
+  ],
+  "operations": [
+    {
+      "operation": "chroma_key",
+      "rule": "R>.65 and B>.65 and G<.4 and abs(R-B)<.3; keyed RGBA zeroed"
+    },
+    {
+      "operation": "crop",
+      "bbox": [
+        96,
+        87,
+        1163,
+        1138
+      ]
+    },
+    {
+      "operation": "Lanczos_contain",
+      "resized_size": [
+        124,
+        122
+      ],
+      "target_canvas": [
+        128,
+        128
+      ],
+      "offset": [
+        2,
+        3
+      ],
+      "margin_px": 2
+    }
+  ],
+  "anchor_point": [
+    64.0,
+    64.0
+  ],
+  "anchor_point_note": "origin top-left; x right, y down",
+  "generation_started_at": "2026-10-21T23:49:57.944Z",
+  "generation_completed_at": "2026-10-21T23:50:43.703Z",
+  "generation_timestamp_note": "Retained recorded values; missing values were not captured",
+  "wall_seconds": 45.759,
+  "wall_seconds_note": null,
+  "numeric": {
+    "candidate": "/Users/rexxa/work/arttrial2-data/buildings/lean_to_try1_raw.png",
+    "sha256": "da16377401004d8bbe94e214269779424be80812f4e98c1ca46b747a1f76a860",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.2752896466179304,
+      "saturation_q25": 0.42654524354498136,
+      "saturation_q75": 0.5683411661411417,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.016460854960285265,
+      "foreground_pixels": 40365
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 5,
+      "line": 4,
+      "light": 4,
+      "palette": 5,
+      "sentence": "The candidate depicts a wooden shelter roof, and its inked outlines, hand-drawn textures, watercolor-like washes, and earthy brown/gray/tan palette closely match the references, with a slightly cleaner, more isolated lighting and less ambient ground atmosphere than the scene views."
+    },
+    "model_status": "SAME_FAMILY_VERIFIED",
+    "passed": true
+  },
+  "numeric_thresholds": {
+    "features": [
+      "edge_density",
+      "saturation_q25",
+      "saturation_q75",
+      "stroke_q25",
+      "stroke_q50",
+      "stroke_q75",
+      "stroke_q90",
+      "wash_flatness"
+    ],
+    "family": "buildings",
+    "lower": [
+      0.12422246676448356,
+      0.12617702596737473,
+      0.2544745181379646,
+      1.0,
+      0.0,
+      0.8284271247461903,
+      2.25,
+      0.0040104335591106205
+    ],
+    "upper": [
+      0.4417498480873831,
+      0.6771399455560541,
+      0.8765250322440128,
+      3.0,
+      6.0,
+      6.0,
+      7.406854249492381,
+      0.023011283254146208
+    ],
+    "comparison_size": 256,
+    "stroke_comparison_size": 1024
+  },
+  "calibration_path": "/Users/rexxa/work/new-world-art-prod/docs/v8/arttrial2/JUDGE_V2_CALIBRATION.json",
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "model": {
+    "scores": {
+      "medium": 5,
+      "line": 4,
+      "light": 4,
+      "palette": 5,
+      "sentence": "The candidate depicts a wooden shelter roof, and its inked outlines, hand-drawn textures, watercolor-like washes, and earthy brown/gray/tan palette closely match the references, with a slightly cleaner, more isolated lighting and less ambient ground atmosphere than the scene views."
+    },
+    "references": [
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_hut.png",
+        "sha256": "e98dac4d6e5c3c1010595fbcd9915beb6f1967b153ae666399e81806c28e743e"
+      },
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_roof.png",
+        "sha256": "abcc7e568094356e5a7fd89478ca87e8ddc932a0b55e19ccbca6675104148c1c"
+      }
+    ],
+    "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-lean_to-scorecard.png",
+    "scorecard_sha256": "922c46a96307333707fd49a0d294212a589ec17ddd8b51ad9f2cd0595dfb9633",
+    "review_manifest": "/Users/rexxa/work/arttrial2-data/trial2b/environment-all-model-reviews.json",
+    "review_manifest_sha256": "cee5e92c6a1e54e0b73c7434029e6e118fac3076bbf89fff465582ad0e2264c8",
+    "full_record": {
+      "family": "buildings",
+      "name": "lean_to",
+      "candidate": "/Users/rexxa/work/arttrial2-data/buildings/lean_to_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_hut.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_roof.png",
+        "/Users/rexxa/work/arttrial2-data/buildings/lean_to_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_hut.png": "e98dac4d6e5c3c1010595fbcd9915beb6f1967b153ae666399e81806c28e743e",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/building_roof.png": "abcc7e568094356e5a7fd89478ca87e8ddc932a0b55e19ccbca6675104148c1c",
+        "/Users/rexxa/work/arttrial2-data/buildings/lean_to_try1_raw.png": "da16377401004d8bbe94e214269779424be80812f4e98c1ca46b747a1f76a860"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 02:36:17 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:39:04 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-d431c9aa-43de-4992-9aed-0a5f81ea24a1.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-lean_to-scorecard.png",
+      "scorecard_sha256": "922c46a96307333707fd49a0d294212a589ec17ddd8b51ad9f2cd0595dfb9633",
+      "ocr": "Reference 1\nMEDIUM\n5\nReference 2\nCandidate (Image 3)\nLINE\nLIGHT\nPALETTE\n4\n4\n5\nReason: The candidate depicts a wooden shelter roof, and its inked outlines, hand-drawn textures,\nwatercolor-like washes, and earthy brown/gray/tan palette closely match the references, with a slightly\ncleaner, more isolated lighting and less ambient ground atmosphere than the scene views.\n",
+      "scores": {
+        "medium": 5,
+        "line": 4,
+        "light": 4,
+        "palette": 5
+      },
+      "reason": "The candidate depicts a wooden shelter roof, and its inked outlines, hand-drawn textures, watercolor-like washes, and earthy brown/gray/tan palette closely match the references, with a slightly cleaner, more isolated lighting and less ambient ground atmosphere than the scene views.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    "identity_note": "Actual image-generation model scorecard; underlying model version not exposed; call context is in full_record"
+  },
+  "acceptance_evidence": "docs/v8/arttrial2/ENV_ACCEPTANCE_V2.json",
+  "acceptance_evidence_sha256": "144ebcb5da913e6b2752cb8189779a879171cbb6534f1798743b9a1346c1ce6b",
+  "generation_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/buildings/lean_to_try1.json",
+    "sha256": "81dc1abd93362122949d14c3eed975d5b4a2a26d22926f436f80377616c3df60",
+    "full_record": {
+      "name": "lean_to",
+      "prompt": "Use case: stylized-concept. Produce one isolated Stone Age game building sprite. Attached image 1 (hut) and image 2 (camp scene) are locked style anchors: closely match their fine controlled dark ink contours, sparse interior linework, restrained natural earth-tone wash, two-tone upper-left illumination. Orthographic vertically overhead camera with only a slight front-face cheat, no isometric perspective. Uniform solid pure #FF00FF magenta backdrop everywhere outside the object, including holes. No extraneous surrounding ground apron, cast shadow, text, labels, people, photo, 3D rendering, pixel art, gradients, modern objects, or metal. Center with margin, crisp edges. South is bottom of image. A 2x2-tile lean-to shelter made of timber poles and bark, one SINGLE continuous sloping rectangular shed roof, high at north and low at south, open work side facing south. Clearly a shed/lean-to with one roof plane, NEVER a tent or A-frame. No detached props or floor slab.",
+      "anchors": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+      ],
+      "try_count": 1,
+      "started_at": "2026-10-21T23:49:57.944Z",
+      "ended_at": "2026-10-21T23:50:43.703Z",
+      "duration_seconds": 45.759,
+      "tool": "image_gen.imagegen",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160dd-c0f9-7482-9a36-6e5a865ba39b as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160dd-c0f9-7482-9a36-6e5a865ba39b/exec-7404a8e5-6eb1-4265-82de-bec587890e22.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "judge_status": "PENDING",
+      "raw_path": "/Users/rexxa/work/arttrial2-data/buildings/lean_to_try1_raw.png",
+      "raw_sha256": "da16377401004d8bbe94e214269779424be80812f4e98c1ca46b747a1f76a860",
+      "working_path": "/Users/rexxa/work/arttrial2-data/buildings/lean_to_try1.png",
+      "working_sha256": "e430f1d83d0fd754e02252aaa628247749c22f12b2b669a29b19e62deb8e1696",
+      "working_size": [
+        128,
+        128
+      ],
+      "anchor_point": [
+        64.0,
+        64.0
+      ],
+      "generation_id": "exec-7404a8e5-6eb1-4265-82de-bec587890e22",
+      "generation_id_note": "tool output artifact identifier; no separate generation ID returned",
+      "operations": [
+        {
+          "operation": "chroma_key",
+          "rule": "R>.65 and B>.65 and G<.4 and abs(R-B)<.3; keyed RGBA zeroed"
+        },
+        {
+          "operation": "crop",
+          "bbox": [
+            96,
+            87,
+            1163,
+            1138
+          ]
+        },
+        {
+          "operation": "Lanczos_contain",
+          "resized_size": [
+            124,
+            122
+          ],
+          "target_canvas": [
+            128,
+            128
+          ],
+          "offset": [
+            2,
+            3
+          ],
+          "margin_px": 2
+        }
+      ],
+      "judge_scores": null,
+      "numeric_judge_path": "/Users/rexxa/work/arttrial2-data/buildings/lean_to_try1_numeric.json",
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": true,
+        "local_saturation": true
+      }
+    }
+  },
+  "processing_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/buildings/lean_to_try1.json",
+    "sha256": "81dc1abd93362122949d14c3eed975d5b4a2a26d22926f436f80377616c3df60",
+    "full_record": {
+      "name": "lean_to",
+      "prompt": "Use case: stylized-concept. Produce one isolated Stone Age game building sprite. Attached image 1 (hut) and image 2 (camp scene) are locked style anchors: closely match their fine controlled dark ink contours, sparse interior linework, restrained natural earth-tone wash, two-tone upper-left illumination. Orthographic vertically overhead camera with only a slight front-face cheat, no isometric perspective. Uniform solid pure #FF00FF magenta backdrop everywhere outside the object, including holes. No extraneous surrounding ground apron, cast shadow, text, labels, people, photo, 3D rendering, pixel art, gradients, modern objects, or metal. Center with margin, crisp edges. South is bottom of image. A 2x2-tile lean-to shelter made of timber poles and bark, one SINGLE continuous sloping rectangular shed roof, high at north and low at south, open work side facing south. Clearly a shed/lean-to with one roof plane, NEVER a tent or A-frame. No detached props or floor slab.",
+      "anchors": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+      ],
+      "try_count": 1,
+      "started_at": "2026-10-21T23:49:57.944Z",
+      "ended_at": "2026-10-21T23:50:43.703Z",
+      "duration_seconds": 45.759,
+      "tool": "image_gen.imagegen",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160dd-c0f9-7482-9a36-6e5a865ba39b as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160dd-c0f9-7482-9a36-6e5a865ba39b/exec-7404a8e5-6eb1-4265-82de-bec587890e22.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "judge_status": "PENDING",
+      "raw_path": "/Users/rexxa/work/arttrial2-data/buildings/lean_to_try1_raw.png",
+      "raw_sha256": "da16377401004d8bbe94e214269779424be80812f4e98c1ca46b747a1f76a860",
+      "working_path": "/Users/rexxa/work/arttrial2-data/buildings/lean_to_try1.png",
+      "working_sha256": "e430f1d83d0fd754e02252aaa628247749c22f12b2b669a29b19e62deb8e1696",
+      "working_size": [
+        128,
+        128
+      ],
+      "anchor_point": [
+        64.0,
+        64.0
+      ],
+      "generation_id": "exec-7404a8e5-6eb1-4265-82de-bec587890e22",
+      "generation_id_note": "tool output artifact identifier; no separate generation ID returned",
+      "operations": [
+        {
+          "operation": "chroma_key",
+          "rule": "R>.65 and B>.65 and G<.4 and abs(R-B)<.3; keyed RGBA zeroed"
+        },
+        {
+          "operation": "crop",
+          "bbox": [
+            96,
+            87,
+            1163,
+            1138
+          ]
+        },
+        {
+          "operation": "Lanczos_contain",
+          "resized_size": [
+            124,
+            122
+          ],
+          "target_canvas": [
+            128,
+            128
+          ],
+          "offset": [
+            2,
+            3
+          ],
+          "margin_px": 2
+        }
+      ],
+      "judge_scores": null,
+      "numeric_judge_path": "/Users/rexxa/work/arttrial2-data/buildings/lean_to_try1_numeric.json",
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": true,
+        "local_saturation": true
+      }
+    }
+  },
+  "historical_record_note": "Nested historical numeric/status fields are preserved as history; top-level status and numeric/model are TRIAL2b decisions."
+}

@@ -1,0 +1,185 @@
+{
+  "assets": [
+    {
+      "path": "art/style05/env/buildings/hut.png",
+      "sha256": "8b0f0f2571d73af0581de5574b8ac496538ec03142b100881901c8d30a5abb54",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/buildings/knapping_spot.png",
+      "sha256": "4f80d25470aa948a19167c18324f63c0ca70a5405d523be3ea661df2516ebc05",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/buildings/lean_to.png",
+      "sha256": "e430f1d83d0fd754e02252aaa628247749c22f12b2b669a29b19e62deb8e1696",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/buildings/storage_pit.png",
+      "sha256": "9e47f02230ff6edb311a34c1632c5b52a844fe0f0382233aee87af6c1a8bef80",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/buildings/woodworking_bench.png",
+      "sha256": "9368eb1ecbdc8b2a65bf61a61b7163ab9a9e3aa8204131d725fb7f5a3427283b",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/ground/dark_grass.png",
+      "sha256": "ea8f844c7cded47183b38d2763041ac4aabd7a47db2e40b68081cdd83efd66a1",
+      "display_scale": 0.25
+    },
+    {
+      "path": "art/style05/env/ground/forest_floor.png",
+      "sha256": "d0c2fc846442b5b0a2c0edd8711a360ed3d1e1904724a72827cace91fa97daf2",
+      "display_scale": 0.25
+    },
+    {
+      "path": "art/style05/env/ground/hill_rock.png",
+      "sha256": "bc56d04b30b3b338cdb219a90e6c65d7e6b1e5cf5aac060b416f7283bce93233",
+      "display_scale": 0.25
+    },
+    {
+      "path": "art/style05/env/ground/meadow.png",
+      "sha256": "294cba46ffa927d5cb737a3f77d9ff931c52fa7b80a6e1d5b69cbd082ec4ec23",
+      "display_scale": 0.25
+    },
+    {
+      "path": "art/style05/env/ground/packed_earth.png",
+      "sha256": "d726d1ee0bb5c3a74df45bc47016129e5a0ee8146cdbd61341a2ec42eab6b8ff",
+      "display_scale": 0.25
+    },
+    {
+      "path": "art/style05/env/ground/river_bank.png",
+      "sha256": "5315fbbb5e4eac329fd6f18d51920e46d161325596f34427bedb956ee2f065ce",
+      "display_scale": 0.25
+    },
+    {
+      "path": "art/style05/env/items/berry_basket.png",
+      "sha256": "98de3c5733f34b0aa058aac8fd1f0e3de085b43f4eba3b6479bb0826ba04760c",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/items/flint_blade.png",
+      "sha256": "f152aa1c52f98b5a73259e484ccdcaaa53539f824176da8c62a6795bc8d3ed4d",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/items/log_pile_medium.png",
+      "sha256": "7e13ab188c634172e59b189ed2a2e0063bf0a3dba5df1fbe3d5792fbbd91df9a",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/items/stone_pile.png",
+      "sha256": "0021fc6202894a18168d406d8865c43f4d91d50de939b66cf790a6cccecda1a7",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/misc/boulder_large.png",
+      "sha256": "ef8cc6fbd33e932c6a293d18224b31f1f834860406df6ac55d85ac04735957f3",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/misc/boulder_small.png",
+      "sha256": "e00188ea5147543addd704e66471ffb91f8137fa2b5b0edb463e3796384f437b",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/misc/hearth_0.png",
+      "sha256": "99d4c1c3a12c9159b160c2482010e776c10f8b2f05a4ee01381fe4a99b1c5f4c",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/misc/hearth_1.png",
+      "sha256": "284715b4475e1e4124c547ab0fa7f65d70bdad3d510c3ef38d35e99c6bf3e936",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/misc/smoke_puff.png",
+      "sha256": "b0778c8071942a371ec1e10b57524a49e5dcd520f70cf9df509646590c30812c",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/misc/stump.png",
+      "sha256": "fd73d14e1d5616e488aab9069e7c05c478074387f679ec82c02dae56505a9776",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/plants/berry_bare.png",
+      "sha256": "78f86ef2770f0d3f23ffc920c195c5a6b0df5075b1e1c58f555979eac324947b",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/plants/berry_full.png",
+      "sha256": "207e19060c9714802937ebba638ebf74b1dafdab673e1e472fd8440dff86ac5a",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/plants/birch_large.png",
+      "sha256": "f01cf36193f9b4c15c926256676df44b4a074e24e396fb91ff535675a80e46c4",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/plants/birch_small.png",
+      "sha256": "974f2b1b1678efdc91c4d4996cd0ed58283cd296a8819c800c9d54bbd71284df",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/plants/oak_large.png",
+      "sha256": "879ffc811385276e560a17b56e5b25b61ffb63988d8acbcb706fda7d92120900",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/plants/oak_small.png",
+      "sha256": "60fdad1dd222f9eb8a76710866502c9cc87d06f7485987b42e1d7f30d8e5fb2c",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/plants/pine_large.png",
+      "sha256": "5012b23fb5bcb085dea7f1b2e20f69444e9e7418d94a90b282fe377d7dc0da5f",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/plants/pine_small.png",
+      "sha256": "9c303ad6fb6bb544698897de1bd3c40bdcffb8bd24bb7066cda0f344a0d765e8",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/plants/reeds.png",
+      "sha256": "668fdecce7ea230daa037f988b7d6b9aa1fc0b78f725986b9ea6c173420fd0b1",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/items/flint_pile.png",
+      "sha256": "c43e24ebfc3f97035bf3b1201ba778188349bc49bdc6201aa42568d817569d2c",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/items/log_pile_large.png",
+      "sha256": "09144dfdcd810b4a952bf892271697dba19b6b02a0d2727fecafe9d99018a02d",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/items/log_pile_small.png",
+      "sha256": "30ac46278f8abb12040bc8ff40986e5d939ff010a530cd54e37ed620ba685f45",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/items/stone_axe.png",
+      "sha256": "31b0d4138f790e8e1379ca23930198809e925452fc50ee3148a5d95592df8dab",
+      "display_scale": 1
+    },
+    {
+      "path": "art/style05/env/items/hide.png",
+      "sha256": "86ad39457f8f516e88bbd10b7c8aa6c1e1afeecb3a206b33cdb19e67cbddbf6e",
+      "display_scale": 1
+    }
+  ],
+  "operations": [
+    "native object composition",
+    "ground thumbnail Lanczos4x reduction",
+    "captions outside art"
+  ],
+  "acceptance_report_sha256": "144ebcb5da913e6b2752cb8189779a879171cbb6534f1798743b9a1346c1ce6b"
+}

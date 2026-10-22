@@ -1,0 +1,355 @@
+{
+  "status": "accepted under judge v2, TRIAL2b",
+  "asset": "log_pile_medium",
+  "family": "items",
+  "try_count": 1,
+  "prompt": "Use case: stylized-concept. One isolated Stone Age game item sprite. Attached props and camp scene are locked style anchors: closely match their fine selective dark ink contours, sparse interior linework, two-tone upper-left illumination and restrained natural wash. Use muted neutral earth browns, grays and quiet accents, avoid intense yellow-orange saturation. Camera strictly vertically overhead orthographic, only slight front-face cheat. Uniform solid pure #FF00FF magenta backdrop everywhere outside object including gaps. Center single compact object with margin, readily readable at 48-64px. No ground apron, decorative scatter, cast shadow, text, labels, people, photo, 3D, isometric perspective, pixel art, gradient blur, modern objects or metal. Subject: medium orderly pile of seven short rough bark logs.",
+  "anchors": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+      "hash_basis": "recomputed preserved source bytes",
+      "unavailable_reason": null
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+      "hash_basis": "recomputed preserved source bytes",
+      "unavailable_reason": null
+    }
+  ],
+  "generation_id": "exec-f12adf1d-2c2e-464f-a40c-ede53d97e4f7",
+  "generation_id_note": "tool output artifact identifier; no separate generation ID returned",
+  "original": "/Users/rexxa/work/arttrial2-data/items/log_pile_medium_try1_raw.png",
+  "original_sha256": "4eac3a54f3c36c345a4354b9595664ca2a4879560ecdb108ad8b90d728bd21da",
+  "working_source": "/Users/rexxa/work/arttrial2-data/items/log_pile_medium_try1.png",
+  "working_sha256": "7e13ab188c634172e59b189ed2a2e0063bf0a3dba5df1fbe3d5792fbbd91df9a",
+  "working_size": [
+    64,
+    64
+  ],
+  "operations": [
+    {
+      "operation": "chroma_key",
+      "rule": "R>.65 and B>.65 and G<.4 and abs(R-B)<.3; keyed RGBA zeroed"
+    },
+    {
+      "operation": "crop",
+      "bbox": [
+        135,
+        303,
+        1120,
+        951
+      ]
+    },
+    {
+      "operation": "Lanczos_contain",
+      "resized_size": [
+        60,
+        39
+      ],
+      "target_canvas": [
+        64,
+        64
+      ],
+      "offset": [
+        2,
+        12
+      ],
+      "margin_px": 2
+    }
+  ],
+  "anchor_point": [
+    32.0,
+    32.0
+  ],
+  "anchor_point_note": "origin top-left; x right, y down",
+  "generation_started_at": "2026-10-21T23:55:04.133Z",
+  "generation_completed_at": "2026-10-21T23:55:56.707Z",
+  "generation_timestamp_note": "Retained recorded values; missing values were not captured",
+  "wall_seconds": 52.574,
+  "wall_seconds_note": null,
+  "numeric": {
+    "candidate": "/Users/rexxa/work/arttrial2-data/items/log_pile_medium_try1_raw.png",
+    "sha256": "4eac3a54f3c36c345a4354b9595664ca2a4879560ecdb108ad8b90d728bd21da",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.28983538695385014,
+      "saturation_q25": 0.5118084042449773,
+      "saturation_q75": 0.6214735210966336,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.01631870275192084,
+      "foreground_pixels": 32393
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 4,
+      "palette": 5,
+      "sentence": "Same fine ink and watercolor-like painted texture, hatching and bark detail as the references; lighting is slightly flatter without cast shadows and ground context, but still very close in overall style."
+    },
+    "model_status": "SAME_FAMILY_VERIFIED",
+    "passed": true
+  },
+  "numeric_thresholds": {
+    "features": [
+      "edge_density",
+      "saturation_q25",
+      "saturation_q75",
+      "stroke_q25",
+      "stroke_q50",
+      "stroke_q75",
+      "stroke_q90",
+      "wash_flatness"
+    ],
+    "family": "items",
+    "lower": [
+      0.14375745143418192,
+      0.16932656739677926,
+      0.25762963464540434,
+      1.0,
+      0.8284271247461903,
+      2.0,
+      2.7221359549995796,
+      0.002562857136716717
+    ],
+    "upper": [
+      0.4313261215138976,
+      0.6661527448313658,
+      0.8126448169938499,
+      3.0,
+      6.0,
+      6.0,
+      6.22213595499958,
+      0.020179014811321002
+    ],
+    "comparison_size": 256,
+    "stroke_comparison_size": 1024
+  },
+  "calibration_path": "/Users/rexxa/work/new-world-art-prod/docs/v8/arttrial2/JUDGE_V2_CALIBRATION.json",
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "model": {
+    "scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 4,
+      "palette": 5,
+      "sentence": "Same fine ink and watercolor-like painted texture, hatching and bark detail as the references; lighting is slightly flatter without cast shadows and ground context, but still very close in overall style."
+    },
+    "references": [
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "sha256": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458"
+      },
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "sha256": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832"
+      }
+    ],
+    "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-log_pile_medium-scorecard.png",
+    "scorecard_sha256": "c332d6611b44fe105c26964f0892dfd06f174294d24a1ac785b71355df3cf7cd",
+    "review_manifest": "/Users/rexxa/work/arttrial2-data/trial2b/environment-all-model-reviews.json",
+    "review_manifest_sha256": "cee5e92c6a1e54e0b73c7434029e6e118fac3076bbf89fff465582ad0e2264c8",
+    "full_record": {
+      "family": "items",
+      "name": "log_pile_medium",
+      "candidate": "/Users/rexxa/work/arttrial2-data/items/log_pile_medium_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/items/log_pile_medium_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+        "/Users/rexxa/work/arttrial2-data/items/log_pile_medium_try1_raw.png": "4eac3a54f3c36c345a4354b9595664ca2a4879560ecdb108ad8b90d728bd21da"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 03:00:49 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 03:06:21 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-3cc85af7-f6d0-4841-b74b-63b8ee766e71.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-log_pile_medium-scorecard.png",
+      "scorecard_sha256": "c332d6611b44fe105c26964f0892dfd06f174294d24a1ac785b71355df3cf7cd",
+      "ocr": "MEDIUM\nLINE\nLIGHT\nPALETTE\n5\n5\n4\n5\nSame fine ink and watercolor-like painted texture, hatching and bark detail as the references;\nlighting is slightly flatter without cast shadows and ground context, but still very close in overall style.\n",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "reason": "Same fine ink and watercolor-like painted texture, hatching and bark detail as the references; lighting is slightly flatter without cast shadows and ground context, but still very close in overall style.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    "identity_note": "Actual image-generation model scorecard; underlying model version not exposed; call context is in full_record"
+  },
+  "acceptance_evidence": "docs/v8/arttrial2/ENV_ACCEPTANCE_V2.json",
+  "acceptance_evidence_sha256": "144ebcb5da913e6b2752cb8189779a879171cbb6534f1798743b9a1346c1ce6b",
+  "generation_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/items/log_pile_medium_try1.json",
+    "sha256": "447aa7baf1a65203864dacf95c37845f5fbdf8c12c67399abd366bc92ffbf8f4",
+    "full_record": {
+      "name": "log_pile_medium",
+      "family": "items",
+      "prompt": "Use case: stylized-concept. One isolated Stone Age game item sprite. Attached props and camp scene are locked style anchors: closely match their fine selective dark ink contours, sparse interior linework, two-tone upper-left illumination and restrained natural wash. Use muted neutral earth browns, grays and quiet accents, avoid intense yellow-orange saturation. Camera strictly vertically overhead orthographic, only slight front-face cheat. Uniform solid pure #FF00FF magenta backdrop everywhere outside object including gaps. Center single compact object with margin, readily readable at 48-64px. No ground apron, decorative scatter, cast shadow, text, labels, people, photo, 3D, isometric perspective, pixel art, gradient blur, modern objects or metal. Subject: medium orderly pile of seven short rough bark logs.",
+      "anchors": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+      ],
+      "try_count": 1,
+      "started_at": "2026-10-21T23:55:04.133Z",
+      "ended_at": "2026-10-21T23:55:56.707Z",
+      "duration_seconds": 52.574,
+      "tool": "image_gen.imagegen",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160dd-c0f9-7482-9a36-6e5a865ba39b as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160dd-c0f9-7482-9a36-6e5a865ba39b/exec-f12adf1d-2c2e-464f-a40c-ede53d97e4f7.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "judge_status": "PENDING",
+      "working_size": [
+        64,
+        64
+      ],
+      "raw_path": "/Users/rexxa/work/arttrial2-data/items/log_pile_medium_try1_raw.png",
+      "raw_sha256": "4eac3a54f3c36c345a4354b9595664ca2a4879560ecdb108ad8b90d728bd21da",
+      "working_path": "/Users/rexxa/work/arttrial2-data/items/log_pile_medium_try1.png",
+      "working_sha256": "7e13ab188c634172e59b189ed2a2e0063bf0a3dba5df1fbe3d5792fbbd91df9a",
+      "anchor_point": [
+        32.0,
+        32.0
+      ],
+      "generation_id": "exec-f12adf1d-2c2e-464f-a40c-ede53d97e4f7",
+      "generation_id_note": "tool output artifact identifier; no separate generation ID returned",
+      "operations": [
+        {
+          "operation": "chroma_key",
+          "rule": "R>.65 and B>.65 and G<.4 and abs(R-B)<.3; keyed RGBA zeroed"
+        },
+        {
+          "operation": "crop",
+          "bbox": [
+            135,
+            303,
+            1120,
+            951
+          ]
+        },
+        {
+          "operation": "Lanczos_contain",
+          "resized_size": [
+            60,
+            39
+          ],
+          "target_canvas": [
+            64,
+            64
+          ],
+          "offset": [
+            2,
+            12
+          ],
+          "margin_px": 2
+        }
+      ],
+      "numeric_judge_path": "/Users/rexxa/work/arttrial2-data/items/log_pile_medium_try1_numeric.json",
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": false,
+        "local_saturation": false
+      },
+      "judge_scores": null
+    }
+  },
+  "processing_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/items/log_pile_medium_try1.json",
+    "sha256": "447aa7baf1a65203864dacf95c37845f5fbdf8c12c67399abd366bc92ffbf8f4",
+    "full_record": {
+      "name": "log_pile_medium",
+      "family": "items",
+      "prompt": "Use case: stylized-concept. One isolated Stone Age game item sprite. Attached props and camp scene are locked style anchors: closely match their fine selective dark ink contours, sparse interior linework, two-tone upper-left illumination and restrained natural wash. Use muted neutral earth browns, grays and quiet accents, avoid intense yellow-orange saturation. Camera strictly vertically overhead orthographic, only slight front-face cheat. Uniform solid pure #FF00FF magenta backdrop everywhere outside object including gaps. Center single compact object with margin, readily readable at 48-64px. No ground apron, decorative scatter, cast shadow, text, labels, people, photo, 3D, isometric perspective, pixel art, gradient blur, modern objects or metal. Subject: medium orderly pile of seven short rough bark logs.",
+      "anchors": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+      ],
+      "try_count": 1,
+      "started_at": "2026-10-21T23:55:04.133Z",
+      "ended_at": "2026-10-21T23:55:56.707Z",
+      "duration_seconds": 52.574,
+      "tool": "image_gen.imagegen",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160dd-c0f9-7482-9a36-6e5a865ba39b as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160dd-c0f9-7482-9a36-6e5a865ba39b/exec-f12adf1d-2c2e-464f-a40c-ede53d97e4f7.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "judge_status": "PENDING",
+      "working_size": [
+        64,
+        64
+      ],
+      "raw_path": "/Users/rexxa/work/arttrial2-data/items/log_pile_medium_try1_raw.png",
+      "raw_sha256": "4eac3a54f3c36c345a4354b9595664ca2a4879560ecdb108ad8b90d728bd21da",
+      "working_path": "/Users/rexxa/work/arttrial2-data/items/log_pile_medium_try1.png",
+      "working_sha256": "7e13ab188c634172e59b189ed2a2e0063bf0a3dba5df1fbe3d5792fbbd91df9a",
+      "anchor_point": [
+        32.0,
+        32.0
+      ],
+      "generation_id": "exec-f12adf1d-2c2e-464f-a40c-ede53d97e4f7",
+      "generation_id_note": "tool output artifact identifier; no separate generation ID returned",
+      "operations": [
+        {
+          "operation": "chroma_key",
+          "rule": "R>.65 and B>.65 and G<.4 and abs(R-B)<.3; keyed RGBA zeroed"
+        },
+        {
+          "operation": "crop",
+          "bbox": [
+            135,
+            303,
+            1120,
+            951
+          ]
+        },
+        {
+          "operation": "Lanczos_contain",
+          "resized_size": [
+            60,
+            39
+          ],
+          "target_canvas": [
+            64,
+            64
+          ],
+          "offset": [
+            2,
+            12
+          ],
+          "margin_px": 2
+        }
+      ],
+      "numeric_judge_path": "/Users/rexxa/work/arttrial2-data/items/log_pile_medium_try1_numeric.json",
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": false,
+        "local_saturation": false
+      },
+      "judge_scores": null
+    }
+  },
+  "historical_record_note": "Nested historical numeric/status fields are preserved as history; top-level status and numeric/model are TRIAL2b decisions."
+}

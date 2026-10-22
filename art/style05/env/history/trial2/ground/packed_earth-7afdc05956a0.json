@@ -1,0 +1,145 @@
+{
+  "asset": "packed_earth",
+  "family": "ground",
+  "try": 2,
+  "prompt": "Generate ONE square seamless tileable texture. Attached locked ground and camp scene anchors define exact fine dark ink, restrained natural colour wash, two-tone shade, upper-left light. Topdown orthographic90degrees, uniform low-detail density, tiny game ground. Important colour target: muted earth colours, mean saturation around0.48, restrained neutral warm tones. Exact periodic left-right and top-bottom edge continuity, no cut features at edge, NO border, panels, objects, people, trees, isometric, photo, 3D render, pixels, gradients, blur. PACKED EARTH warm grey-brown camp soil with small grey pebbles and subtle muted olive grass flecks; less orange/golden, reference camp earth exact palette. No paths.",
+  "anchors": [
+    "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
+    "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+  ],
+  "start_utc": "2026-10-22T00:32:31.333Z",
+  "end_utc": "2026-10-22T00:33:45.094Z",
+  "wall_seconds": 73.761,
+  "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160dd-2a23-7160-9b72-72cc095697ef/exec-48e47dff-d039-42d3-9b73-65f09ca166b0.png",
+  "status": "ACCEPTED_BY_TRIAL_V2_COMBINED_RULE",
+  "original": "/Users/rexxa/work/arttrial2-data/ground/packed_earth_try2.png",
+  "anchor_sha256": {
+    "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+    "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+  },
+  "candidate": "/Users/rexxa/work/arttrial2-data/ground/packed_earth_try2_mirror/candidate.png",
+  "working_size": [
+    512,
+    512
+  ],
+  "operations": [
+    "RGB conversion",
+    "Lanczos downscale512",
+    {
+      "mirror_blend": {
+        "strip_width_px": 32,
+        "weight": "0.25*(1+cos(pi*min(distance_to_edge,32)/32))",
+        "axes": [
+          "horizontal",
+          "vertical"
+        ],
+        "interior_unchanged": [
+          448,
+          448
+        ],
+        "prerequisite": "two generated seam failures preserved in try1 and try2 seam.json"
+      }
+    }
+  ],
+  "judge_scores": {
+    "candidate": "/Users/rexxa/work/arttrial2-data/ground/packed_earth_try2_mirror/candidate.png",
+    "sha256": "7afdc05956a0ecfcdf15caa66c672e4346e056d13f6e0bf4764f47aba4f8443b",
+    "metrics": {
+      "histogram": [
+        0.215301513671875,
+        0.191131591796875,
+        0.02294921875,
+        0.0145416259765625,
+        0.085418701171875,
+        0.0298919677734375,
+        0.0899658203125,
+        0.0044097900390625,
+        0.0455322265625,
+        0.0323028564453125,
+        0.0411376953125,
+        0.02490234375,
+        0.0467529296875,
+        0.0350189208984375,
+        0.0049896240234375,
+        0.02410888671875,
+        0.021514892578125,
+        0.053070068359375,
+        0.01153564453125,
+        0.002105712890625,
+        0.0005340576171875,
+        0.001068115234375,
+        0.001495361328125,
+        0.0003204345703125
+      ],
+      "edge_density": 0.3316641471403376,
+      "wash": 0.5115569540996653,
+      "stroke_width_at_1024": 2.4433795279077044,
+      "foreground_pixels": 65536
+    },
+    "histogram_distance": 0.12048467005747987,
+    "numeric_checks": {
+      "lab_histogram": true,
+      "line_density": true,
+      "local_saturation": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "sentence": "Same hand-drawn inked style with textured paint, outlined forms, and matching earthy palette and lighting as the references."
+    },
+    "model_status": "SUPPLIED",
+    "passed": true
+  },
+  "seam": {
+    "horizontal_mae": 0.0,
+    "vertical_mae": 0.0,
+    "horizontal_ratio": 0.0,
+    "vertical_ratio": 0.0,
+    "passed": true
+  },
+  "try_count": 2,
+  "anchor_point": [
+    0,
+    0
+  ],
+  "anchor_point_note": "Ground tile origin; not a tall-object pivot",
+  "working_path": "art/style05/env/ground/packed_earth.png",
+  "working_sha256": "7afdc05956a0ecfcdf15caa66c672e4346e056d13f6e0bf4764f47aba4f8443b",
+  "raw_sha256": "f59bbbb500ce8a3f414085d11918a4cf50276a7e79708885418cb0cce0e5b04c",
+  "generation_id": "exec-48e47dff-d039-42d3-9b73-65f09ca166b0",
+  "generation_id_note": "Tool output artifact identifier; separate generation ID not exposed",
+  "model_review": {
+    "name": "packed_earth_try2_mirror",
+    "candidate": "/Users/rexxa/work/arttrial2-data/ground/packed_earth_try2_mirror/candidate.png",
+    "refs": [
+      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
+      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+      "/Users/rexxa/work/arttrial2-data/ground/packed_earth_try2_mirror/candidate.png"
+    ],
+    "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+    "protocol": "V2",
+    "started_at": {
+      "current_time": "2026-10-22 01:12:47 UTC"
+    },
+    "completed_at": {
+      "current_time": "2026-10-22 01:13:51 UTC"
+    },
+    "source_card": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160da-7c83-72a2-92d7-3018c7309f01/exec-f2dd4682-6d6f-4753-ae54-cb51f2b91618.png",
+    "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160da-7c83-72a2-92d7-3018c7309f01 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160da-7c83-72a2-92d7-3018c7309f01/exec-f2dd4682-6d6f-4753-ae54-cb51f2b91618.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "scorecard_sha256": "2526e1f9c85ce114f18d6e6cb5c280520a21eab760567ecdd87d4125b1f3c007",
+    "scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "sentence": "Same hand-drawn inked style with textured paint, outlined forms, and matching earthy palette and lighting as the references."
+    }
+  },
+  "limitations": [
+    "V2 model alone failed to reject all three calibration negatives",
+    "Repeated motifs and softened mirrored strips remain; accepted by specified metrics, not a universal visual endorsement"
+  ]
+}

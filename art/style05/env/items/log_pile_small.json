@@ -1,0 +1,280 @@
+{
+  "status": "accepted under judge v2, TRIAL2b",
+  "asset": "log_pile_small",
+  "family": "items",
+  "try_count": 2,
+  "prompt": "Use case: stylized-concept. Generate ONE isolated WorldSim stone-age environment sprite: a small stack of exactly three bark-covered logs. Input 1 and input 2 are authoritative same-family style references: delicate dark hand-ink contours, restrained translucent earthy pigment washes, hand-painted natural material shapes. Input 3 is subject and layout reference only. Re-render the subject with finer lines and quieter softer wash, lower internal contrast, no broad black shadow masses or bright ivory highlights. Preserve enough fine interior ink marks to read material. Camera overhead map view with slight visible side faces, light upper-left. Muted taupe, grey-brown and buff palette. One centered object with generous 12 percent margin on perfectly flat solid magenta #ff00ff, visible through gaps. No ground, scene, extra object, frame, label, watermark. Not vector, not photorealistic, not 3D.",
+  "anchors": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+      "sha256": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+      "hash_basis": "recomputed preserved source bytes",
+      "unavailable_reason": null
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png",
+      "sha256": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+      "hash_basis": "recomputed preserved source bytes",
+      "unavailable_reason": null
+    },
+    {
+      "path": "/Users/rexxa/work/arttrial2-data/items/log_pile_small_try1_raw.png",
+      "sha256": "171f434320e7882c8d10e8747609bc57f5c2cb63154c164285cb42355f7ce03e",
+      "hash_basis": "recomputed preserved source bytes",
+      "unavailable_reason": null
+    }
+  ],
+  "generation_id": "exec-d14d4b53-3eb1-4b04-9bd4-e1a57b23676e",
+  "generation_id_note": "Tool output artifact identifier; no separate generation ID returned",
+  "original": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/log_pile_small_try2_raw.png",
+  "original_sha256": "3145246c15daaf9eb2081390d751a16dd627abbb172db5969975019e47f5c788",
+  "working_source": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/log_pile_small_try2_working.png",
+  "working_sha256": "30ac46278f8abb12040bc8ff40986e5d939ff010a530cd54e37ed620ba685f45",
+  "working_size": [
+    64,
+    64
+  ],
+  "operations": [
+    "art.pipeline2.autotile.extract: magenta and mixed fringe key, alpha-bounds crop",
+    "Lanczos thumbnail into original canvas dimensions minus four pixels",
+    "center on transparent original-size canvas; no RGB adjustment, quantization or outline forcing"
+  ],
+  "anchor_point": [
+    32.0,
+    32.0
+  ],
+  "anchor_point_note": "origin top-left; x right, y down",
+  "generation_started_at": null,
+  "generation_completed_at": null,
+  "generation_timestamp_note": "Generation UTC start/end were not recorded; recorded wall_seconds retained without inventing timestamps",
+  "wall_seconds": 26.548,
+  "wall_seconds_note": null,
+  "numeric": {
+    "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/log_pile_small_try2_raw.png",
+    "sha256": "3145246c15daaf9eb2081390d751a16dd627abbb172db5969975019e47f5c788",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.2901460371473132,
+      "saturation_q25": 0.43486891590170407,
+      "saturation_q75": 0.5669246295725211,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.017116542801760993,
+      "foreground_pixels": 36803
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 4,
+      "line": 4,
+      "light": 4,
+      "palette": 4,
+      "sentence": "The candidate shows the same hand-inked, watercolor-style rendering with textured brush marks, layered bark detail, and earthy tonal palette as the references, differing only by the bright magenta background and a slightly cleaner, more isolated presentation."
+    },
+    "model_status": "SAME_FAMILY_VERIFIED",
+    "passed": true
+  },
+  "numeric_thresholds": {
+    "features": [
+      "edge_density",
+      "saturation_q25",
+      "saturation_q75",
+      "stroke_q25",
+      "stroke_q50",
+      "stroke_q75",
+      "stroke_q90",
+      "wash_flatness"
+    ],
+    "family": "items",
+    "lower": [
+      0.14375745143418192,
+      0.16932656739677926,
+      0.25762963464540434,
+      1.0,
+      0.8284271247461903,
+      2.0,
+      2.7221359549995796,
+      0.002562857136716717
+    ],
+    "upper": [
+      0.4313261215138976,
+      0.6661527448313658,
+      0.8126448169938499,
+      3.0,
+      6.0,
+      6.0,
+      6.22213595499958,
+      0.020179014811321002
+    ],
+    "comparison_size": 256,
+    "stroke_comparison_size": 1024
+  },
+  "calibration_path": "/Users/rexxa/work/new-world-art-prod/docs/v8/arttrial2/JUDGE_V2_CALIBRATION.json",
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "model": {
+    "scores": {
+      "medium": 4,
+      "line": 4,
+      "light": 4,
+      "palette": 4,
+      "sentence": "The candidate shows the same hand-inked, watercolor-style rendering with textured brush marks, layered bark detail, and earthy tonal palette as the references, differing only by the bright magenta background and a slightly cleaner, more isolated presentation."
+    },
+    "references": [
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "sha256": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458"
+      },
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "sha256": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832"
+      }
+    ],
+    "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/log_pile_small_try2_scorecard.png",
+    "scorecard_sha256": "fe408194040ef973c82ddf15ff5157fe449fdbd6bb583c9d17ca59a8c4d4cc45",
+    "review_manifest": "/Users/rexxa/work/arttrial2-data/trial2b/environment-all-model-reviews.json",
+    "review_manifest_sha256": "cee5e92c6a1e54e0b73c7434029e6e118fac3076bbf89fff465582ad0e2264c8",
+    "full_record": {
+      "name": "log_pile_small_try2",
+      "family": "items",
+      "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/log_pile_small_try2_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/log_pile_small_try2_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "tool": "image_gen__imagegen",
+      "started_at": {
+        "current_time": "2026-10-22 02:56:25 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:58:38 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1617c-d43e-7193-bcc9-faeebf54a95a/exec-ccbd9a15-405f-4a0e-a298-fc66c822795b.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/log_pile_small_try2_scorecard.png",
+      "scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4
+      },
+      "reason": "The candidate shows the same hand-inked, watercolor-style rendering with textured brush marks, layered bark detail, and earthy tonal palette as the references, differing only by the bright magenta background and a slightly cleaner, more isolated presentation.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+        "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/log_pile_small_try2_raw.png": "3145246c15daaf9eb2081390d751a16dd627abbb172db5969975019e47f5c788"
+      },
+      "scorecard_sha256": "fe408194040ef973c82ddf15ff5157fe449fdbd6bb583c9d17ca59a8c4d4cc45",
+      "source_sha256": "fe408194040ef973c82ddf15ff5157fe449fdbd6bb583c9d17ca59a8c4d4cc45",
+      "model_rule_pass": true,
+      "usable_transcription": true,
+      "printed_verdict": null,
+      "format_deviation": "Illustrated scorecard despite plain-scorecard request; four scores and reason legible; printed verdict omitted.",
+      "transcription_method": "Manual verbatim reading of actual scorecard via view_image"
+    },
+    "identity_note": "Actual image-generation model scorecard; underlying model version not exposed; call context is in full_record"
+  },
+  "acceptance_evidence": "docs/v8/arttrial2/ENV_ACCEPTANCE_V2.json",
+  "acceptance_evidence_sha256": "144ebcb5da913e6b2752cb8189779a879171cbb6534f1798743b9a1346c1ce6b",
+  "generation_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/log_pile_small_try2_generation.json",
+    "sha256": "4ddebddeb5b795a00bb6fbd01cdee96b64ecc9f918d249e77653bd5fe7cbfa89",
+    "full_record": {
+      "name": "log_pile_small",
+      "production_family": "items",
+      "family": "items",
+      "try": 2,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1617c-d43e-7193-bcc9-faeebf54a95a/exec-d14d4b53-3eb1-4b04-9bd4-e1a57b23676e.png",
+      "raw": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/log_pile_small_try2_raw.png",
+      "prompt": "Use case: stylized-concept. Generate ONE isolated WorldSim stone-age environment sprite: a small stack of exactly three bark-covered logs. Input 1 and input 2 are authoritative same-family style references: delicate dark hand-ink contours, restrained translucent earthy pigment washes, hand-painted natural material shapes. Input 3 is subject and layout reference only. Re-render the subject with finer lines and quieter softer wash, lower internal contrast, no broad black shadow masses or bright ivory highlights. Preserve enough fine interior ink marks to read material. Camera overhead map view with slight visible side faces, light upper-left. Muted taupe, grey-brown and buff palette. One centered object with generous 12 percent margin on perfectly flat solid magenta #ff00ff, visible through gaps. No ground, scene, extra object, frame, label, watermark. Not vector, not photorealistic, not 3D.",
+      "reference_images": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/items/log_pile_small_try1_raw.png"
+      ],
+      "tool": "image_gen__imagegen",
+      "wall_seconds": 26.548,
+      "model_status": "MISSING",
+      "accepted": false
+    }
+  },
+  "processing_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/log_pile_small_try2_working.json",
+    "sha256": "630faf01c5d6e1141ca846cec7f89d284b60b5c76c549f33e06fa6932b2e8361",
+    "full_record": {
+      "name": "log_pile_small",
+      "production_family": "items",
+      "family": "items",
+      "try": 2,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1617c-d43e-7193-bcc9-faeebf54a95a/exec-d14d4b53-3eb1-4b04-9bd4-e1a57b23676e.png",
+      "raw": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/log_pile_small_try2_raw.png",
+      "prompt": "Use case: stylized-concept. Generate ONE isolated WorldSim stone-age environment sprite: a small stack of exactly three bark-covered logs. Input 1 and input 2 are authoritative same-family style references: delicate dark hand-ink contours, restrained translucent earthy pigment washes, hand-painted natural material shapes. Input 3 is subject and layout reference only. Re-render the subject with finer lines and quieter softer wash, lower internal contrast, no broad black shadow masses or bright ivory highlights. Preserve enough fine interior ink marks to read material. Camera overhead map view with slight visible side faces, light upper-left. Muted taupe, grey-brown and buff palette. One centered object with generous 12 percent margin on perfectly flat solid magenta #ff00ff, visible through gaps. No ground, scene, extra object, frame, label, watermark. Not vector, not photorealistic, not 3D.",
+      "reference_images": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/items/log_pile_small_try1_raw.png"
+      ],
+      "tool": "image_gen__imagegen",
+      "wall_seconds": 26.548,
+      "model_status": "MISSING",
+      "accepted": false,
+      "generation_id": "exec-d14d4b53-3eb1-4b04-9bd4-e1a57b23676e",
+      "generation_id_note": "Tool output artifact identifier; no separate generation ID returned",
+      "started_at": null,
+      "completed_at": null,
+      "timestamp_note": "Generation UTC start/end were not recorded; recorded wall_seconds retained without inventing timestamps",
+      "reference_sha256": [
+        "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+        "171f434320e7882c8d10e8747609bc57f5c2cb63154c164285cb42355f7ce03e"
+      ],
+      "raw_sha256": "3145246c15daaf9eb2081390d751a16dd627abbb172db5969975019e47f5c788",
+      "working_path": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/log_pile_small_try2_working.png",
+      "working_sha256": "30ac46278f8abb12040bc8ff40986e5d939ff010a530cd54e37ed620ba685f45",
+      "working_size": [
+        64,
+        64
+      ],
+      "anchor_point": [
+        32.0,
+        32.0
+      ],
+      "anchor_point_source": "/Users/rexxa/work/arttrial2-data/items/log_pile_small_try1.json",
+      "anchor_point_source_sha256": "65858b222f970875f69b7565d18c16bec9faccb1720aa2eb7a314cb382856384",
+      "operations": [
+        "art.pipeline2.autotile.extract: magenta and mixed fringe key, alpha-bounds crop",
+        "Lanczos thumbnail into original canvas dimensions minus four pixels",
+        "center on transparent original-size canvas; no RGB adjustment, quantization or outline forcing"
+      ],
+      "keyed_crop_size": [
+        879,
+        777
+      ],
+      "sprite_size": [
+        60,
+        53
+      ],
+      "placement": [
+        2,
+        5
+      ],
+      "processing_implementation": "art/pipeline2/autotile.py",
+      "processing_implementation_sha256": "12b3e8297f2987186c398fc0ef2eec5d7440e7651113141e1771cd93314f10a1",
+      "working_visual_evidence": "/Users/rexxa/work/arttrial2-data/trial2b/env-retries/working_visual_notes.md",
+      "working_visual_evidence_sha256": "069575a24d0d54a28d79a9e85e5731733a8cb55c255ead4db111f35b476f80dd",
+      "status": "candidate only; awaiting acceptance join"
+    }
+  },
+  "historical_record_note": "Nested historical numeric/status fields are preserved as history; top-level status and numeric/model are TRIAL2b decisions."
+}

@@ -1,98 +1,314 @@
-[
-  {
-    "concept": "05_ink_and_tone",
-    "file": "S1_2.png",
-    "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S1_2.png",
-    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-865946d0-dd0d-4d6e-8f39-067a7c1ed54b.png",
-    "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
-    "dimensions": [
-      1254,
-      1254
-    ],
-    "wall_seconds": 32.224,
-    "generator_kept": true,
-    "reason": "Crown-dominant vertical overhead view with feet; precise ink silhouettes, restrained washes and two-tone arms match concept.",
-    "name": "person",
-    "destination": "art/style05/anchors/person.png"
-  },
-  {
-    "concept": "05_ink_and_tone",
-    "file": "S4_1.png",
-    "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S4_1.png",
-    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-547ca291-c1d0-4f78-9db0-792f5075bd1d.png",
-    "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
-    "dimensions": [
-      1254,
-      1254
-    ],
-    "wall_seconds": 36.33,
-    "generator_kept": true,
-    "reason": "Roofless overhead four-bed hut with warm central hearth and south door; fine outlines consistent, walls use permissible face cheat.",
-    "name": "hut",
-    "destination": "art/style05/anchors/hut.png"
-  },
-  {
-    "concept": "05_ink_and_tone",
-    "file": "S5_2.png",
-    "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S5_2.png",
-    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-3c4391ef-81f3-4270-aeae-ecd5ff230140.png",
-    "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
-    "dimensions": [
-      1254,
-      1254
-    ],
-    "wall_seconds": 38.28,
-    "generator_kept": true,
-    "reason": "Roof now occludes interior, four props viewed from above; peripheral angled support poles remain a mild front-face cheat. Ink medium and upper-left shadows match.",
-    "name": "props",
-    "destination": "art/style05/anchors/props.png"
-  },
-  {
-    "concept": "05_ink_and_tone",
-    "file": "S6_1.png",
-    "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S6_1.png",
-    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-8483166d-468f-4245-b1db-d85eafd0da14.png",
-    "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
-    "dimensions": [
-      1254,
-      1254
-    ],
-    "wall_seconds": 51.664,
-    "generator_kept": true,
-    "reason": "Four overhead ground quadrants with fine ink botanical detail; forest/meadow available, seamlessness unverified and texture dense.",
-    "name": "ground",
-    "destination": "art/style05/anchors/ground.png"
-  },
-  {
-    "concept": "05_ink_and_tone",
-    "file": "S7_3.png",
-    "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S7_3.png",
-    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-256113b0-ca7c-4671-b14b-78b5b02e91fc.png",
-    "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
-    "dimensions": [
-      1536,
-      1024
-    ],
-    "wall_seconds": 81.747,
-    "generator_kept": true,
-    "reason": "Eight people and three single-panel roofs, overhead plan restored with roofless four-bed hut; best camera/scale compromise. Visible body extents roughly70-90px, still larger than64px target; limitation remains.",
-    "name": "scene",
-    "destination": "art/style05/anchors/scene.png"
-  },
-  {
-    "concept": "05_ink_and_tone",
-    "file": "S8_1.png",
-    "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S8_1.png",
-    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-89e60a81-53f9-4b0a-a20c-8c39b79af127.png",
-    "sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c",
-    "dimensions": [
-      1254,
-      1254
-    ],
-    "wall_seconds": 34.323,
-    "generator_kept": true,
-    "reason": "Three-quarter front male portrait with face and shoulders; same ink, hides and restrained wash. Portrait requested512 but actual output recorded separately.",
-    "name": "portrait",
-    "destination": "art/style05/anchors/portrait.png"
-  }
-]
+{
+  "version": 2,
+  "originals": [
+    {
+      "concept": "05_ink_and_tone",
+      "file": "S1_2.png",
+      "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S1_2.png",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-865946d0-dd0d-4d6e-8f39-067a7c1ed54b.png",
+      "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "wall_seconds": 32.224,
+      "generator_kept": true,
+      "reason": "Crown-dominant vertical overhead view with feet; precise ink silhouettes, restrained washes and two-tone arms match concept.",
+      "name": "person",
+      "destination": "art/style05/anchors/person.png",
+      "status": "withdrawn_camera_history"
+    },
+    {
+      "concept": "05_ink_and_tone",
+      "file": "S4_1.png",
+      "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S4_1.png",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-547ca291-c1d0-4f78-9db0-792f5075bd1d.png",
+      "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "wall_seconds": 36.33,
+      "generator_kept": true,
+      "reason": "Roofless overhead four-bed hut with warm central hearth and south door; fine outlines consistent, walls use permissible face cheat.",
+      "name": "hut",
+      "destination": "art/style05/anchors/hut.png",
+      "status": "historical_original"
+    },
+    {
+      "concept": "05_ink_and_tone",
+      "file": "S5_2.png",
+      "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S5_2.png",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-3c4391ef-81f3-4270-aeae-ecd5ff230140.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "wall_seconds": 38.28,
+      "generator_kept": true,
+      "reason": "Roof now occludes interior, four props viewed from above; peripheral angled support poles remain a mild front-face cheat. Ink medium and upper-left shadows match.",
+      "name": "props",
+      "destination": "art/style05/anchors/props.png",
+      "status": "historical_original"
+    },
+    {
+      "concept": "05_ink_and_tone",
+      "file": "S6_1.png",
+      "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S6_1.png",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-8483166d-468f-4245-b1db-d85eafd0da14.png",
+      "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "wall_seconds": 51.664,
+      "generator_kept": true,
+      "reason": "Four overhead ground quadrants with fine ink botanical detail; forest/meadow available, seamlessness unverified and texture dense.",
+      "name": "ground",
+      "destination": "art/style05/anchors/ground.png",
+      "status": "historical_original"
+    },
+    {
+      "concept": "05_ink_and_tone",
+      "file": "S7_3.png",
+      "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S7_3.png",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-256113b0-ca7c-4671-b14b-78b5b02e91fc.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "wall_seconds": 81.747,
+      "generator_kept": true,
+      "reason": "Eight people and three single-panel roofs, overhead plan restored with roofless four-bed hut; best camera/scale compromise. Visible body extents roughly70-90px, still larger than64px target; limitation remains.",
+      "name": "scene",
+      "destination": "art/style05/anchors/scene.png",
+      "status": "historical_original"
+    },
+    {
+      "concept": "05_ink_and_tone",
+      "file": "S8_1.png",
+      "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S8_1.png",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-89e60a81-53f9-4b0a-a20c-8c39b79af127.png",
+      "sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "wall_seconds": 34.323,
+      "generator_kept": true,
+      "reason": "Three-quarter front male portrait with face and shoulders; same ink, hides and restrained wash. Portrait requested512 but actual output recorded separately.",
+      "name": "portrait",
+      "destination": "art/style05/anchors/portrait.png",
+      "status": "historical_original"
+    }
+  ],
+  "crops": [
+    {
+      "name": "ground_river",
+      "family": "ground",
+      "file": "crops/ground_river.png",
+      "source": "art/style05/anchors/ground.png",
+      "source_sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+      "crop_box": [
+        0,
+        0,
+        627,
+        627
+      ],
+      "sha256": "34b954655539274b5bfcb5413fd742c65cf0fbf2693c000cc9580f0de1fbcd2b",
+      "status": "active",
+      "selection": "frozen concept anchor crop",
+      "normalization": "native crop bytes; foreground normalized only inside numeric measurement; no pre-resize"
+    },
+    {
+      "name": "ground_forest",
+      "family": "ground",
+      "file": "crops/ground_forest.png",
+      "source": "art/style05/anchors/ground.png",
+      "source_sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+      "crop_box": [
+        627,
+        0,
+        1254,
+        627
+      ],
+      "sha256": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9",
+      "status": "active",
+      "selection": "frozen concept anchor crop",
+      "normalization": "native crop bytes; foreground normalized only inside numeric measurement; no pre-resize"
+    },
+    {
+      "name": "ground_meadow",
+      "family": "ground",
+      "file": "crops/ground_meadow.png",
+      "source": "art/style05/anchors/ground.png",
+      "source_sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+      "crop_box": [
+        0,
+        627,
+        627,
+        1254
+      ],
+      "sha256": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d",
+      "status": "active",
+      "selection": "frozen concept anchor crop",
+      "normalization": "native crop bytes; foreground normalized only inside numeric measurement; no pre-resize"
+    },
+    {
+      "name": "ground_stone",
+      "family": "ground",
+      "file": "crops/ground_stone.png",
+      "source": "art/style05/anchors/ground.png",
+      "source_sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+      "crop_box": [
+        627,
+        627,
+        1254,
+        1254
+      ],
+      "sha256": "a6a501b0c4ff9b80f434f9d2e409bb31652510a218bd2a1f06522bf745e4a45c",
+      "status": "active",
+      "selection": "frozen concept anchor crop",
+      "normalization": "native crop bytes; foreground normalized only inside numeric measurement; no pre-resize"
+    },
+    {
+      "name": "building_hut",
+      "family": "buildings",
+      "file": "crops/building_hut.png",
+      "source": "art/style05/anchors/hut.png",
+      "source_sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+      "crop_box": [
+        150,
+        100,
+        775,
+        725
+      ],
+      "sha256": "e98dac4d6e5c3c1010595fbcd9915beb6f1967b153ae666399e81806c28e743e",
+      "status": "active",
+      "selection": "frozen concept anchor crop; native detail crop to respect1.5MB cap",
+      "normalization": "native crop bytes; foreground normalized only inside numeric measurement; no pre-resize"
+    },
+    {
+      "name": "building_roof",
+      "family": "buildings",
+      "file": "crops/building_roof.png",
+      "source": "art/style05/anchors/scene.png",
+      "source_sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+      "crop_box": [
+        720,
+        140,
+        1000,
+        330
+      ],
+      "sha256": "abcc7e568094356e5a7fd89478ca87e8ddc932a0b55e19ccbca6675104148c1c",
+      "status": "active",
+      "selection": "frozen concept anchor crop",
+      "normalization": "native crop bytes; foreground normalized only inside numeric measurement; no pre-resize"
+    },
+    {
+      "name": "props_logs",
+      "family": "items",
+      "file": "crops/props_logs.png",
+      "source": "art/style05/anchors/props.png",
+      "source_sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+      "crop_box": [
+        85,
+        590,
+        390,
+        985
+      ],
+      "sha256": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+      "status": "active",
+      "selection": "frozen concept anchor crop",
+      "normalization": "native crop bytes; foreground normalized only inside numeric measurement; no pre-resize"
+    },
+    {
+      "name": "props_hearth",
+      "family": "items",
+      "file": "crops/props_hearth.png",
+      "source": "art/style05/anchors/props.png",
+      "source_sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+      "crop_box": [
+        475,
+        675,
+        855,
+        1065
+      ],
+      "sha256": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+      "status": "active",
+      "selection": "frozen concept anchor crop",
+      "normalization": "native crop bytes; foreground normalized only inside numeric measurement; no pre-resize"
+    },
+    {
+      "name": "plant_oak",
+      "family": "plants",
+      "file": "crops/plant_oak.png",
+      "source": "/Users/rexxa/work/arttrial2-data/plants/oak_large_try1_raw.png",
+      "source_sha256": "84d9d90936d06762f40f64bb349d0b45475bc069c3dbb901939cb4a6c3965d7b",
+      "crop_box": [
+        300,
+        200,
+        950,
+        850
+      ],
+      "sha256": "a627b9d3b335cb3d2e09804df8d49cabe21572736b88a27e4b7ecc4330d69dc3",
+      "status": "active",
+      "selection": "TRIAL2b goal planner visual acceptance; native detail crop to respect1.5MB cap",
+      "normalization": "native crop bytes; foreground normalized only inside numeric measurement; no pre-resize"
+    },
+    {
+      "name": "plant_birch",
+      "family": "plants",
+      "file": "crops/plant_birch.png",
+      "source": "/Users/rexxa/work/arttrial2-data/plants/birch_large_try1_raw.png",
+      "source_sha256": "127de65cf9c87bc6955d6065c274a4e9cc00c91ff2bc40dabbe629459bef7099",
+      "crop_box": [
+        300,
+        200,
+        950,
+        850
+      ],
+      "sha256": "49becd9296dfcd3751a8ec7c6785b3eee823d53b545d52a20b6e8d0f237f9615",
+      "status": "active",
+      "selection": "TRIAL2b goal planner visual acceptance; native detail crop to respect1.5MB cap",
+      "normalization": "native crop bytes; foreground normalized only inside numeric measurement; no pre-resize"
+    },
+    {
+      "name": "person_full",
+      "family": "person",
+      "file": "crops/person_full.png",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/person_anchor_try2_raw.png",
+      "source_sha256": "325664c4a12af09ce5324876008a24547664662596c97d5ecc1cb90d6a32b62c",
+      "crop_box": [
+        0,
+        0,
+        1254,
+        1254
+      ],
+      "sha256": "8379eaa4f2fdb396f8b01ba6fb2b7ab76203ce103a619e6f06f84ca24ffd4fbf",
+      "status": "active",
+      "selection": "New person_v2, full + overlapping upper-body crop; same-source correlated references",
+      "normalization": "native crop bytes; foreground normalized only inside numeric measurement; no pre-resize"
+    },
+    {
+      "name": "person_upper",
+      "family": "person",
+      "file": "crops/person_upper.png",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/person_anchor_try2_raw.png",
+      "source_sha256": "325664c4a12af09ce5324876008a24547664662596c97d5ecc1cb90d6a32b62c",
+      "crop_box": [
+        0,
+        0,
+        1254,
+        903
+      ],
+      "sha256": "6722a3f22b742b0f9fda8b5bf54d6b5f1e9278254c02f3cb426c65a1707bc3f4",
+      "status": "active",
+      "selection": "New person_v2, full + overlapping upper-body crop; same-source correlated references",
+      "normalization": "native crop bytes; foreground normalized only inside numeric measurement; no pre-resize"
+    }
+  ],
+  "person_status": "person_v2 active; original person remains withdrawn camera history"
+}

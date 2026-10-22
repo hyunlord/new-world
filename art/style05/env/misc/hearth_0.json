@@ -1,0 +1,358 @@
+{
+  "status": "accepted under judge v2, TRIAL2b",
+  "asset": "hearth_0",
+  "family": "misc",
+  "try_count": 1,
+  "prompt": "Use case: stylized-concept. Asset: WorldSim 64px game sprite. One stone-age hearth: circular ring of twelve rough warm-grey stones around three crossed charred logs and a compact bright ochre-orange flame, top-down with slight front-face cheat. No smoke, no ground patch. Attach and match BOTH locked references: image1 props anchors precise fine dark ink and two-tone restrained earth wash; image2 scene anchors camera and upper-left light. Render only this single object centered large, entirely surrounded by pure solid #FF00FF magenta background, clean gap on every edge. Match hand-inked concept05 visual language, fine contour and internal ink, two-tone shading, restrained warm-earth colour wash. No photographic texture, no 3D render, no isometric, no pixel art, no gradients, no text or labels, no border.",
+  "anchors": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+      "hash_basis": "recorded generation hash",
+      "unavailable_reason": null
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+      "hash_basis": "recorded generation hash",
+      "unavailable_reason": null
+    }
+  ],
+  "generation_id": "exec-da2e952f-d48a-4a2e-9bf7-c3c604c4c4f3",
+  "generation_id_note": null,
+  "original": "/Users/rexxa/work/arttrial2-data/misc/hearth_0_try1_raw.png",
+  "original_sha256": "6464701d4ee34ffe19b9490357a5a58170c9c4decdaf060d34d255b35c2ff1ea",
+  "working_source": "/Users/rexxa/work/arttrial2-data/misc/hearth_0_try1.png",
+  "working_sha256": "99d4c1c3a12c9159b160c2482010e776c10f8b2f05a4ee01381fe4a99b1c5f4c",
+  "working_size": [
+    64,
+    64
+  ],
+  "operations": [
+    {
+      "operation": "chroma_key",
+      "condition": "R>165 B>165 G<105 abs(R-B)<80",
+      "alpha": 0
+    },
+    {
+      "operation": "crop",
+      "bbox": [
+        196,
+        178,
+        1058,
+        1054
+      ]
+    },
+    {
+      "operation": "Lanczos_downscale",
+      "size": [
+        59,
+        60
+      ]
+    },
+    {
+      "operation": "transparent_canvas_composition",
+      "size": [
+        64,
+        64
+      ]
+    }
+  ],
+  "anchor_point": [
+    32,
+    32
+  ],
+  "anchor_point_note": "origin top-left; x right, y down",
+  "generation_started_at": 1792627058722,
+  "generation_completed_at": 1792627094550,
+  "generation_timestamp_note": "Retained source values; started_ms/ended_ms are epoch milliseconds",
+  "wall_seconds": 35.828,
+  "wall_seconds_note": null,
+  "numeric": {
+    "candidate": "/Users/rexxa/work/arttrial2-data/misc/hearth_0_try1_raw.png",
+    "sha256": "6464701d4ee34ffe19b9490357a5a58170c9c4decdaf060d34d255b35c2ff1ea",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.28224517132610294,
+      "saturation_q25": 0.4417443471485727,
+      "saturation_q75": 0.6846310426743332,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.018259325062893662,
+      "foreground_pixels": 47856
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "sentence": "Same hand-drawn ink-and-paint look with textured brushwork, speckled tones, crisp outlines, and warm firelight; only noticeable difference is the flat magenta background instead of the natural dirt setting."
+    },
+    "model_status": "SAME_FAMILY_VERIFIED",
+    "passed": true
+  },
+  "numeric_thresholds": {
+    "features": [
+      "edge_density",
+      "saturation_q25",
+      "saturation_q75",
+      "stroke_q25",
+      "stroke_q50",
+      "stroke_q75",
+      "stroke_q90",
+      "wash_flatness"
+    ],
+    "family": "items",
+    "lower": [
+      0.14375745143418192,
+      0.16932656739677926,
+      0.25762963464540434,
+      1.0,
+      0.8284271247461903,
+      2.0,
+      2.7221359549995796,
+      0.002562857136716717
+    ],
+    "upper": [
+      0.4313261215138976,
+      0.6661527448313658,
+      0.8126448169938499,
+      3.0,
+      6.0,
+      6.0,
+      6.22213595499958,
+      0.020179014811321002
+    ],
+    "comparison_size": 256,
+    "stroke_comparison_size": 1024
+  },
+  "calibration_path": "/Users/rexxa/work/new-world-art-prod/docs/v8/arttrial2/JUDGE_V2_CALIBRATION.json",
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "model": {
+    "scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "sentence": "Same hand-drawn ink-and-paint look with textured brushwork, speckled tones, crisp outlines, and warm firelight; only noticeable difference is the flat magenta background instead of the natural dirt setting."
+    },
+    "references": [
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "sha256": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458"
+      },
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "sha256": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832"
+      }
+    ],
+    "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-hearth_0-scorecard.png",
+    "scorecard_sha256": "331dd68777f50bba6b6e05321eb0c12a2e25348eb80bcfd02eda4097ec6dd0ac",
+    "review_manifest": "/Users/rexxa/work/arttrial2-data/trial2b/environment-all-model-reviews.json",
+    "review_manifest_sha256": "cee5e92c6a1e54e0b73c7434029e6e118fac3076bbf89fff465582ad0e2264c8",
+    "full_record": {
+      "family": "misc",
+      "name": "hearth_0",
+      "candidate": "/Users/rexxa/work/arttrial2-data/misc/hearth_0_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png",
+        "/Users/rexxa/work/arttrial2-data/misc/hearth_0_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+        "/Users/rexxa/work/arttrial2-data/misc/hearth_0_try1_raw.png": "6464701d4ee34ffe19b9490357a5a58170c9c4decdaf060d34d255b35c2ff1ea"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 03:00:49 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 03:04:47 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-85e6d59a-449c-4981-a013-86b677f0b9af.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-hearth_0-scorecard.png",
+      "scorecard_sha256": "331dd68777f50bba6b6e05321eb0c12a2e25348eb80bcfd02eda4097ec6dd0ac",
+      "ocr": "MEDIUM\nLINE\nLIGHT\nPALETTE\n5\n5\n5\n5\nSame hand-drawn ink-and-paint look with textured brushwork, speckled tones, crisp\noutlines, and warm firelight; only noticeable difference is the flat magenta background\ninstead of the natural dirt setting.\n",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason": "Same hand-drawn ink-and-paint look with textured brushwork, speckled tones, crisp outlines, and warm firelight; only noticeable difference is the flat magenta background instead of the natural dirt setting.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    "identity_note": "Actual image-generation model scorecard; underlying model version not exposed; call context is in full_record"
+  },
+  "acceptance_evidence": "docs/v8/arttrial2/ENV_ACCEPTANCE_V2.json",
+  "acceptance_evidence_sha256": "144ebcb5da913e6b2752cb8189779a879171cbb6534f1798743b9a1346c1ce6b",
+  "generation_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/misc/hearth_0_try1.json",
+    "sha256": "adbe652596f880e49f40e97dff0123c81879331eb4e114ef47152d1323f53166",
+    "full_record": {
+      "asset": "hearth_0",
+      "prompt": "Use case: stylized-concept. Asset: WorldSim 64px game sprite. One stone-age hearth: circular ring of twelve rough warm-grey stones around three crossed charred logs and a compact bright ochre-orange flame, top-down with slight front-face cheat. No smoke, no ground patch. Attach and match BOTH locked references: image1 props anchors precise fine dark ink and two-tone restrained earth wash; image2 scene anchors camera and upper-left light. Render only this single object centered large, entirely surrounded by pure solid #FF00FF magenta background, clean gap on every edge. Match hand-inked concept05 visual language, fine contour and internal ink, two-tone shading, restrained warm-earth colour wash. No photographic texture, no 3D render, no isometric, no pixel art, no gradients, no text or labels, no border.",
+      "started_ms": 1792627058722,
+      "ended_ms": 1792627094550,
+      "source_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-da2e952f-d48a-4a2e-9bf7-c3c604c4c4f3.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "status": "PENDING_NOT_ACCEPTED",
+      "try_count": 1,
+      "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-da2e952f-d48a-4a2e-9bf7-c3c604c4c4f3.png",
+      "raw": "/Users/rexxa/work/arttrial2-data/misc/hearth_0_try1_raw.png",
+      "working": "/Users/rexxa/work/arttrial2-data/misc/hearth_0_try1.png",
+      "working_size": [
+        64,
+        64
+      ],
+      "generation_id": "exec-da2e952f-d48a-4a2e-9bf7-c3c604c4c4f3",
+      "generation_seconds": 35.828,
+      "billed_cost_usd": null,
+      "cost_status": "TOOL_NOT_EXPOSED",
+      "raw_sha256": "6464701d4ee34ffe19b9490357a5a58170c9c4decdaf060d34d255b35c2ff1ea",
+      "working_sha256": "99d4c1c3a12c9159b160c2482010e776c10f8b2f05a4ee01381fe4a99b1c5f4c",
+      "anchor_point": [
+        32,
+        32
+      ],
+      "anchors": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+          "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "operations": [
+        {
+          "operation": "chroma_key",
+          "condition": "R>165 B>165 G<105 abs(R-B)<80",
+          "alpha": 0
+        },
+        {
+          "operation": "crop",
+          "bbox": [
+            196,
+            178,
+            1058,
+            1054
+          ]
+        },
+        {
+          "operation": "Lanczos_downscale",
+          "size": [
+            59,
+            60
+          ]
+        },
+        {
+          "operation": "transparent_canvas_composition",
+          "size": [
+            64,
+            64
+          ]
+        }
+      ],
+      "calibration_sha256": "705de9462b6354c2ca15bda164f0e01791bbf7c1022fcfd3c4ee1d3ad66eef34",
+      "original_numeric_path": "/Users/rexxa/work/arttrial2-data/misc/hearth_0_try1_original_numeric.json",
+      "original_numeric_pass": false,
+      "working_numeric_path": "/Users/rexxa/work/arttrial2-data/misc/hearth_0_try1_working_numeric.json",
+      "working_numeric_pass": false
+    }
+  },
+  "processing_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/misc/hearth_0_try1.json",
+    "sha256": "adbe652596f880e49f40e97dff0123c81879331eb4e114ef47152d1323f53166",
+    "full_record": {
+      "asset": "hearth_0",
+      "prompt": "Use case: stylized-concept. Asset: WorldSim 64px game sprite. One stone-age hearth: circular ring of twelve rough warm-grey stones around three crossed charred logs and a compact bright ochre-orange flame, top-down with slight front-face cheat. No smoke, no ground patch. Attach and match BOTH locked references: image1 props anchors precise fine dark ink and two-tone restrained earth wash; image2 scene anchors camera and upper-left light. Render only this single object centered large, entirely surrounded by pure solid #FF00FF magenta background, clean gap on every edge. Match hand-inked concept05 visual language, fine contour and internal ink, two-tone shading, restrained warm-earth colour wash. No photographic texture, no 3D render, no isometric, no pixel art, no gradients, no text or labels, no border.",
+      "started_ms": 1792627058722,
+      "ended_ms": 1792627094550,
+      "source_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-da2e952f-d48a-4a2e-9bf7-c3c604c4c4f3.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "status": "PENDING_NOT_ACCEPTED",
+      "try_count": 1,
+      "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-da2e952f-d48a-4a2e-9bf7-c3c604c4c4f3.png",
+      "raw": "/Users/rexxa/work/arttrial2-data/misc/hearth_0_try1_raw.png",
+      "working": "/Users/rexxa/work/arttrial2-data/misc/hearth_0_try1.png",
+      "working_size": [
+        64,
+        64
+      ],
+      "generation_id": "exec-da2e952f-d48a-4a2e-9bf7-c3c604c4c4f3",
+      "generation_seconds": 35.828,
+      "billed_cost_usd": null,
+      "cost_status": "TOOL_NOT_EXPOSED",
+      "raw_sha256": "6464701d4ee34ffe19b9490357a5a58170c9c4decdaf060d34d255b35c2ff1ea",
+      "working_sha256": "99d4c1c3a12c9159b160c2482010e776c10f8b2f05a4ee01381fe4a99b1c5f4c",
+      "anchor_point": [
+        32,
+        32
+      ],
+      "anchors": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+          "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "operations": [
+        {
+          "operation": "chroma_key",
+          "condition": "R>165 B>165 G<105 abs(R-B)<80",
+          "alpha": 0
+        },
+        {
+          "operation": "crop",
+          "bbox": [
+            196,
+            178,
+            1058,
+            1054
+          ]
+        },
+        {
+          "operation": "Lanczos_downscale",
+          "size": [
+            59,
+            60
+          ]
+        },
+        {
+          "operation": "transparent_canvas_composition",
+          "size": [
+            64,
+            64
+          ]
+        }
+      ],
+      "calibration_sha256": "705de9462b6354c2ca15bda164f0e01791bbf7c1022fcfd3c4ee1d3ad66eef34",
+      "original_numeric_path": "/Users/rexxa/work/arttrial2-data/misc/hearth_0_try1_original_numeric.json",
+      "original_numeric_pass": false,
+      "working_numeric_path": "/Users/rexxa/work/arttrial2-data/misc/hearth_0_try1_working_numeric.json",
+      "working_numeric_pass": false
+    }
+  },
+  "historical_record_note": "Nested historical numeric/status fields are preserved as history; top-level status and numeric/model are TRIAL2b decisions."
+}

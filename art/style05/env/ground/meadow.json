@@ -1,0 +1,289 @@
+{
+  "status": "accepted under judge v2, TRIAL2b",
+  "asset": "meadow",
+  "family": "ground",
+  "try_count": 1,
+  "prompt": "Create one square seamless tileable MEADOW GROUND TEXTURE, filling the entire canvas. Attached image 1 is the locked ground style anchor, image 2 is the locked camp scene anchor. Match their exact fine ink outlines, restrained natural colour wash, two-tone shading and upper-left light. Straight 90-degree top-down ground only; low short sage/olive grass with occasional exposed warm earth, small selective botanical marks, calm enough for people to read over it. No people, trees, large rocks, objects, text, borders, horizon, panels or vignettes. No isometric, photograph, 3D render, pixel art or gradient blur. Uniform density across all four edges, seamless tileable in both directions. This is ONE meadow texture, not the reference four-panel swatch.",
+  "anchors": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
+      "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+      "hash_basis": "recorded generation hash",
+      "unavailable_reason": null
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+      "hash_basis": "recorded generation hash",
+      "unavailable_reason": null
+    }
+  ],
+  "generation_id": null,
+  "generation_id_note": "No explicit generation ID in retained metadata; source path preserved without inventing an ID",
+  "original": "/Users/rexxa/work/arttrial2-data/ground/meadow_try1.png",
+  "original_sha256": "b3210a96d3fa952fce70812bc4bae6cd57167b354d152cb0c13080f06f6e4e69",
+  "working_source": "/Users/rexxa/work/arttrial2-data/ground/meadow_try1/candidate.png",
+  "working_sha256": "294cba46ffa927d5cb737a3f77d9ff931c52fa7b80a6e1d5b69cbd082ec4ec23",
+  "working_size": [
+    512,
+    512
+  ],
+  "operations": [
+    "RGB conversion",
+    "Lanczos downscale to 512x512"
+  ],
+  "anchor_point": null,
+  "anchor_point_note": "Not recorded or not applicable; no placement coordinate invented",
+  "generation_started_at": "2026-10-21T23:46:08.583Z",
+  "generation_completed_at": "2026-10-21T23:46:38.095Z",
+  "generation_timestamp_note": "Retained recorded values; missing values were not captured",
+  "wall_seconds": 29.512,
+  "wall_seconds_note": null,
+  "numeric": {
+    "candidate": "/Users/rexxa/work/arttrial2-data/ground/meadow_try1.png",
+    "sha256": "b3210a96d3fa952fce70812bc4bae6cd57167b354d152cb0c13080f06f6e4e69",
+    "family": "ground",
+    "metrics": {
+      "edge_density": 0.3484347442680776,
+      "saturation_q25": 0.6392182116497316,
+      "saturation_q75": 0.697294572949656,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.007828380798559728,
+      "foreground_pixels": 65536
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "sentence": "Same fine ink-and-watercolor style with identical linework, textured brush marks, and earthy, muted green\u2013yellow\u2013brown palette and lighting; the candidate depicts a more open dirt-and-grass ground patch than the closer, denser views in the references, but the rendering style is consistent."
+    },
+    "model_status": "SAME_FAMILY_VERIFIED",
+    "passed": true
+  },
+  "numeric_thresholds": {
+    "features": [
+      "edge_density",
+      "saturation_q25",
+      "saturation_q75",
+      "stroke_q25",
+      "stroke_q50",
+      "stroke_q75",
+      "stroke_q90",
+      "wash_flatness"
+    ],
+    "family": "ground",
+    "lower": [
+      0.14186507936507936,
+      0.059843547343970405,
+      0.20462696348322162,
+      1.0,
+      0.0,
+      0.8284271247461903,
+      2.25,
+      0.0038233960726937514
+    ],
+    "upper": [
+      0.49595301083396326,
+      0.7750679734042174,
+      0.9095358055238305,
+      3.0,
+      4.0,
+      6.0,
+      5.75,
+      0.027749767647260854
+    ],
+    "comparison_size": 256,
+    "stroke_comparison_size": 1024
+  },
+  "calibration_path": "/Users/rexxa/work/new-world-art-prod/docs/v8/arttrial2/JUDGE_V2_CALIBRATION.json",
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "model": {
+    "scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "sentence": "Same fine ink-and-watercolor style with identical linework, textured brush marks, and earthy, muted green\u2013yellow\u2013brown palette and lighting; the candidate depicts a more open dirt-and-grass ground patch than the closer, denser views in the references, but the rendering style is consistent."
+    },
+    "references": [
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png",
+        "sha256": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d"
+      },
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png",
+        "sha256": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9"
+      }
+    ],
+    "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-meadow-scorecard.png",
+    "scorecard_sha256": "64f004dd557ba572cdd0e2153e4ab3efe082c3bfff71acfc143ed96b8236aa22",
+    "review_manifest": "/Users/rexxa/work/arttrial2-data/trial2b/environment-all-model-reviews.json",
+    "review_manifest_sha256": "cee5e92c6a1e54e0b73c7434029e6e118fac3076bbf89fff465582ad0e2264c8",
+    "full_record": {
+      "family": "ground",
+      "name": "meadow",
+      "candidate": "/Users/rexxa/work/arttrial2-data/ground/meadow_try1.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png",
+        "/Users/rexxa/work/arttrial2-data/ground/meadow_try1.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9",
+        "/Users/rexxa/work/arttrial2-data/ground/meadow_try1.png": "b3210a96d3fa952fce70812bc4bae6cd57167b354d152cb0c13080f06f6e4e69"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 02:40:27 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 02:43:17 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-38957810-3139-4a4b-af2f-a6aefa9fc404.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-meadow-scorecard.png",
+      "scorecard_sha256": "64f004dd557ba572cdd0e2153e4ab3efe082c3bfff71acfc143ed96b8236aa22",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason": "Same fine ink-and-watercolor style with identical linework, textured brush marks, and earthy, muted green\u2013yellow\u2013brown palette and lighting; the candidate depicts a more open dirt-and-grass ground patch than the closer, denser views in the references, but the rendering style is consistent.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible."
+    },
+    "identity_note": "Actual image-generation model scorecard; underlying model version not exposed; call context is in full_record"
+  },
+  "acceptance_evidence": "docs/v8/arttrial2/ENV_ACCEPTANCE_V2.json",
+  "acceptance_evidence_sha256": "144ebcb5da913e6b2752cb8189779a879171cbb6534f1798743b9a1346c1ce6b",
+  "generation_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/ground/meadow_try1.json",
+    "sha256": "cdd73e9bb3ad6c68d5c9fe3f3caa95044f1bbecd723c8c400c835fc22bbe1033",
+    "full_record": {
+      "asset": "meadow",
+      "family": "ground",
+      "try": 1,
+      "prompt": "Create one square seamless tileable MEADOW GROUND TEXTURE, filling the entire canvas. Attached image 1 is the locked ground style anchor, image 2 is the locked camp scene anchor. Match their exact fine ink outlines, restrained natural colour wash, two-tone shading and upper-left light. Straight 90-degree top-down ground only; low short sage/olive grass with occasional exposed warm earth, small selective botanical marks, calm enough for people to read over it. No people, trees, large rocks, objects, text, borders, horizon, panels or vignettes. No isometric, photograph, 3D render, pixel art or gradient blur. Uniform density across all four edges, seamless tileable in both directions. This is ONE meadow texture, not the reference four-panel swatch.",
+      "anchors": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+      ],
+      "start_utc": "2026-10-21T23:46:08.583Z",
+      "end_utc": "2026-10-21T23:46:38.095Z",
+      "wall_seconds": 29.512,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d8-0970-7090-82bf-0d6f2747a615/exec-62fa3af7-208c-479b-800d-f295088936c5.png",
+      "status": "PENDING_MODEL_REVIEW",
+      "original": "/Users/rexxa/work/arttrial2-data/ground/meadow_try1.png",
+      "sha256": "b3210a96d3fa952fce70812bc4bae6cd57167b354d152cb0c13080f06f6e4e69",
+      "anchor_sha256": {
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      }
+    }
+  },
+  "processing_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/ground/meadow_try1/candidate.json",
+    "sha256": "d8b33c3072a1e04119e05b3b8590bc620d330854aea1e60c55d2dbae5b2b000a",
+    "full_record": {
+      "asset": "meadow",
+      "family": "ground",
+      "try": 1,
+      "prompt": "Create one square seamless tileable MEADOW GROUND TEXTURE, filling the entire canvas. Attached image 1 is the locked ground style anchor, image 2 is the locked camp scene anchor. Match their exact fine ink outlines, restrained natural colour wash, two-tone shading and upper-left light. Straight 90-degree top-down ground only; low short sage/olive grass with occasional exposed warm earth, small selective botanical marks, calm enough for people to read over it. No people, trees, large rocks, objects, text, borders, horizon, panels or vignettes. No isometric, photograph, 3D render, pixel art or gradient blur. Uniform density across all four edges, seamless tileable in both directions. This is ONE meadow texture, not the reference four-panel swatch.",
+      "anchors": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+      ],
+      "start_utc": "2026-10-21T23:46:08.583Z",
+      "end_utc": "2026-10-21T23:46:38.095Z",
+      "wall_seconds": 29.512,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d8-0970-7090-82bf-0d6f2747a615/exec-62fa3af7-208c-479b-800d-f295088936c5.png",
+      "status": "PENDING_MODEL_REVIEW",
+      "original": "/Users/rexxa/work/arttrial2-data/ground/meadow_try1.png",
+      "sha256": "b3210a96d3fa952fce70812bc4bae6cd57167b354d152cb0c13080f06f6e4e69",
+      "working_size": [
+        512,
+        512
+      ],
+      "operations": [
+        "RGB conversion",
+        "Lanczos downscale to 512x512"
+      ],
+      "judge_scores": {
+        "numeric": {
+          "candidate": "/Users/rexxa/work/arttrial2-data/ground/meadow_try1/candidate.png",
+          "sha256": "294cba46ffa927d5cb737a3f77d9ff931c52fa7b80a6e1d5b69cbd082ec4ec23",
+          "metrics": {
+            "histogram": [
+              0.0509185791015625,
+              0.0594329833984375,
+              0.0054168701171875,
+              0.0072021484375,
+              0.0319366455078125,
+              0.0043487548828125,
+              0.0423583984375,
+              0.006927490234375,
+              0.0045623779296875,
+              0.14453125,
+              0.004486083984375,
+              0.00335693359375,
+              0.178314208984375,
+              0.031951904296875,
+              0.01336669921875,
+              0.1243743896484375,
+              0.0040740966796875,
+              0.2263336181640625,
+              0.042999267578125,
+              0.001800537109375,
+              0.0024566650390625,
+              0.007781982421875,
+              0.00054931640625,
+              0.000518798828125
+            ],
+            "edge_density": 0.3483717561098513,
+            "wash": 0.6659613877445468,
+            "stroke_width_at_1024": 2.4699689731110324,
+            "foreground_pixels": 65536
+          },
+          "histogram_distance": 0.3816737113423284,
+          "numeric_checks": {
+            "lab_histogram": false,
+            "line_density": true,
+            "local_saturation": false
+          },
+          "numeric_pass": false,
+          "model_scores": null,
+          "model_status": "MISSING",
+          "passed": false
+        },
+        "model": "PENDING"
+      },
+      "seam": {
+        "horizontal_mae": 26.192708333333332,
+        "vertical_mae": 29.086588541666668,
+        "horizontal_ratio": 0.8237932082121299,
+        "vertical_ratio": 0.969536769714268,
+        "passed": false
+      },
+      "candidate": "/Users/rexxa/work/arttrial2-data/ground/meadow_try1/candidate.png"
+    }
+  },
+  "historical_record_note": "Nested historical numeric/status fields are preserved as history; top-level status and numeric/model are TRIAL2b decisions."
+}

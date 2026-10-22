@@ -1,0 +1,420 @@
+{
+  "status": "accepted under judge v2, TRIAL2b",
+  "asset": "berry_bare",
+  "family": "plants",
+  "try_count": 1,
+  "prompt": "Use case: stylized-concept. Create ONE isolated berry bush without any berries, for a stone-age top-down settlement game. Both attached images are locked style references: props anchors fine ink edges, restrained wash and natural materials; scene anchors overhead camera, muted olive earth palette and upper-left light. Match them precisely. View vertically from above: a compact low rounded bush with serrated olive-green leaves and fine visible branching stems; no berries or fruit, only a tiny south-facing stem/trunk front-face cheat where relevant. Fine controlled dark ink linework, restrained olive and warm sage wash, two-tone upper-left lighting, crisp natural foliage groupings. Center one complete plant with 10% margin on uniform solid #FF00FF magenta. No ground, cast shadow, scenery, frame, labels or text. No isometric camera, photo, 3D render, pixel art or gradient blur. Output square 1024px image.",
+  "anchors": [
+    {
+      "path": "art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+      "hash_basis": "recorded generation hash",
+      "unavailable_reason": null
+    },
+    {
+      "path": "art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+      "hash_basis": "recorded generation hash",
+      "unavailable_reason": null
+    }
+  ],
+  "generation_id": "exec-5ed84824-b2eb-461a-a54d-7d1ecda4a301",
+  "generation_id_note": "tool output filename identifier; no separate generation id returned",
+  "original": "/Users/rexxa/work/arttrial2-data/plants/berry_bare_try1_raw.png",
+  "original_sha256": "2b97bfe15775d055c744c5085a1a32d342663355a97c5083379caf3757faf7fd",
+  "working_source": "/Users/rexxa/work/arttrial2-data/plants/berry_bare_try1.png",
+  "working_sha256": "78f86ef2770f0d3f23ffc920c195c5a6b0df5075b1e1c58f555979eac324947b",
+  "working_size": [
+    96,
+    96
+  ],
+  "operations": [
+    {
+      "operation": "chroma_key_and_residual_chroma_alpha_cleanup",
+      "predicate": "R-G>20 and B-G>20 on 8-bit channels",
+      "transparent_rgb": "zeroed",
+      "reason": "remove mixed magenta edge pixels without palette edits"
+    },
+    {
+      "operation": "crop",
+      "box": [
+        72,
+        102,
+        1161,
+        1126
+      ]
+    },
+    {
+      "operation": "Lanczos_downscale",
+      "fitted_size": [
+        96,
+        90
+      ]
+    },
+    {
+      "operation": "transparent_canvas_composition",
+      "size": [
+        96,
+        96
+      ],
+      "offset": [
+        0,
+        3
+      ]
+    },
+    {
+      "operation": "derived_shadow_separate_file",
+      "ellipse": [
+        7,
+        26,
+        88,
+        82
+      ],
+      "rgba": [
+        28,
+        25,
+        20,
+        90
+      ]
+    }
+  ],
+  "anchor_point": [
+    48.0,
+    69.12
+  ],
+  "anchor_point_note": "normalized canopy placement registration, not inferred exact trunk root",
+  "generation_started_at": "2026-10-21T23:52:48.753Z",
+  "generation_completed_at": "2026-10-21T23:53:12.757Z",
+  "generation_timestamp_note": "Retained recorded values; missing values were not captured",
+  "wall_seconds": 24.004,
+  "wall_seconds_note": null,
+  "numeric": {
+    "candidate": "/Users/rexxa/work/arttrial2-data/plants/berry_bare_try1_raw.png",
+    "sha256": "2b97bfe15775d055c744c5085a1a32d342663355a97c5083379caf3757faf7fd",
+    "family": "plants",
+    "metrics": {
+      "edge_density": 0.2436502428868841,
+      "saturation_q25": 0.5554165710649437,
+      "saturation_q75": 0.6343375803671045,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.027028211131253463,
+      "foreground_pixels": 34686
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "sentence": "Same hand-drawn ink-and-wash/painted digital medium with matching line quality, leaf rendering, tonal shading, and color palette as the references, differing only in subject and composition."
+    },
+    "model_status": "SAME_FAMILY_VERIFIED",
+    "passed": true
+  },
+  "numeric_thresholds": {
+    "features": [
+      "edge_density",
+      "saturation_q25",
+      "saturation_q75",
+      "stroke_q25",
+      "stroke_q50",
+      "stroke_q75",
+      "stroke_q90",
+      "wash_flatness"
+    ],
+    "family": "plants",
+    "lower": [
+      0.13896196397954375,
+      0.26651110967306624,
+      0.29225613136829465,
+      1.0,
+      0.0,
+      0.8284271247461903,
+      2.25,
+      0.006730936996842502
+    ],
+    "upper": [
+      0.43714016680087125,
+      0.8379357170538613,
+      0.9483177825286166,
+      3.0,
+      4.82842712474619,
+      6.0,
+      6.22213595499958,
+      0.037443292536065015
+    ],
+    "comparison_size": 256,
+    "stroke_comparison_size": 1024
+  },
+  "calibration_path": "/Users/rexxa/work/new-world-art-prod/docs/v8/arttrial2/JUDGE_V2_CALIBRATION.json",
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "model": {
+    "scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "sentence": "Same hand-drawn ink-and-wash/painted digital medium with matching line quality, leaf rendering, tonal shading, and color palette as the references, differing only in subject and composition."
+    },
+    "references": [
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_oak.png",
+        "sha256": "a627b9d3b335cb3d2e09804df8d49cabe21572736b88a27e4b7ecc4330d69dc3"
+      },
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_birch.png",
+        "sha256": "49becd9296dfcd3751a8ec7c6785b3eee823d53b545d52a20b6e8d0f237f9615"
+      }
+    ],
+    "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-berry_bare-scorecard.png",
+    "scorecard_sha256": "747db5ca3e2fb46df76fba9a27ecf4012cbdae6bec99cb895e0e83e1ac9ba71b",
+    "review_manifest": "/Users/rexxa/work/arttrial2-data/trial2b/environment-all-model-reviews.json",
+    "review_manifest_sha256": "cee5e92c6a1e54e0b73c7434029e6e118fac3076bbf89fff465582ad0e2264c8",
+    "full_record": {
+      "family": "plants",
+      "name": "berry_bare",
+      "candidate": "/Users/rexxa/work/arttrial2-data/plants/berry_bare_try1_raw.png",
+      "refs": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_oak.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_birch.png",
+        "/Users/rexxa/work/arttrial2-data/plants/berry_bare_try1_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "input_sha256": {
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_oak.png": "a627b9d3b335cb3d2e09804df8d49cabe21572736b88a27e4b7ecc4330d69dc3",
+        "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/plant_birch.png": "49becd9296dfcd3751a8ec7c6785b3eee823d53b545d52a20b6e8d0f237f9615",
+        "/Users/rexxa/work/arttrial2-data/plants/berry_bare_try1_raw.png": "2b97bfe15775d055c744c5085a1a32d342663355a97c5083379caf3757faf7fd"
+      },
+      "started_at": {
+        "current_time": "2026-10-22 03:00:49 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 03:02:53 UTC"
+      },
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-6a330c01-d245-4d2d-9a49-9c7204bf7f4b.png",
+      "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/raw-berry_bare-scorecard.png",
+      "scorecard_sha256": "747db5ca3e2fb46df76fba9a27ecf4012cbdae6bec99cb895e0e83e1ac9ba71b",
+      "ocr": "Reference 1\nMEDIUM\n5\nReference 2\nCandidate (Image 3)\nLINE\nLIGHT\nPALETTE\n5\n5\n5\nReason: Same hand-drawn ink-and-wash/painted digital medium with matching line quality,\nleaf rendering, tonal shading, and color palette as the references, differing only in subject and composition.\n",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason": "Same hand-drawn ink-and-wash/painted digital medium with matching line quality, leaf rendering, tonal shading, and color palette as the references, differing only in subject and composition.",
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "usable_transcription": true,
+      "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+    },
+    "identity_note": "Actual image-generation model scorecard; underlying model version not exposed; call context is in full_record"
+  },
+  "acceptance_evidence": "docs/v8/arttrial2/ENV_ACCEPTANCE_V2.json",
+  "acceptance_evidence_sha256": "144ebcb5da913e6b2752cb8189779a879171cbb6534f1798743b9a1346c1ce6b",
+  "generation_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/plants/berry_bare_try1.json",
+    "sha256": "da518762f519a01055354f49fc3115929a3270649c66349c753c7980cad1f5de",
+    "full_record": {
+      "name": "berry_bare",
+      "try": 1,
+      "prompt": "Use case: stylized-concept. Create ONE isolated berry bush without any berries, for a stone-age top-down settlement game. Both attached images are locked style references: props anchors fine ink edges, restrained wash and natural materials; scene anchors overhead camera, muted olive earth palette and upper-left light. Match them precisely. View vertically from above: a compact low rounded bush with serrated olive-green leaves and fine visible branching stems; no berries or fruit, only a tiny south-facing stem/trunk front-face cheat where relevant. Fine controlled dark ink linework, restrained olive and warm sage wash, two-tone upper-left lighting, crisp natural foliage groupings. Center one complete plant with 10% margin on uniform solid #FF00FF magenta. No ground, cast shadow, scenery, frame, labels or text. No isometric camera, photo, 3D render, pixel art or gradient blur. Output square 1024px image.",
+      "anchors": [
+        "art/style05/anchors/props.png",
+        "art/style05/anchors/scene.png"
+      ],
+      "source_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160dd-7897-7b42-a158-dd223d05581d/exec-5ed84824-b2eb-461a-a54d-7d1ecda4a301.png",
+      "start": "2026-10-21T23:52:48.753Z",
+      "end": "2026-10-21T23:53:12.757Z",
+      "status": "PENDING",
+      "raw_path": "/Users/rexxa/work/arttrial2-data/plants/berry_bare_try1_raw.png",
+      "source_sha256": "2b97bfe15775d055c744c5085a1a32d342663355a97c5083379caf3757faf7fd",
+      "generation_id": "exec-5ed84824-b2eb-461a-a54d-7d1ecda4a301",
+      "generation_id_note": "tool output filename identifier; no separate generation id returned",
+      "duration_seconds": 24.004,
+      "anchor_sha256": {
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      },
+      "working_path": "/Users/rexxa/work/arttrial2-data/plants/berry_bare_try1.png",
+      "working_size": [
+        96,
+        96
+      ],
+      "working_sha256": "78f86ef2770f0d3f23ffc920c195c5a6b0df5075b1e1c58f555979eac324947b",
+      "anchor_point": [
+        48.0,
+        69.12
+      ],
+      "anchor_point_note": "normalized canopy placement registration, not inferred exact trunk root",
+      "shadow_path": "/Users/rexxa/work/arttrial2-data/plants/berry_bare_shadow.png",
+      "operations": [
+        {
+          "operation": "chroma_key_and_residual_chroma_alpha_cleanup",
+          "predicate": "R-G>20 and B-G>20 on 8-bit channels",
+          "transparent_rgb": "zeroed",
+          "reason": "remove mixed magenta edge pixels without palette edits"
+        },
+        {
+          "operation": "crop",
+          "box": [
+            72,
+            102,
+            1161,
+            1126
+          ]
+        },
+        {
+          "operation": "Lanczos_downscale",
+          "fitted_size": [
+            96,
+            90
+          ]
+        },
+        {
+          "operation": "transparent_canvas_composition",
+          "size": [
+            96,
+            96
+          ],
+          "offset": [
+            0,
+            3
+          ]
+        },
+        {
+          "operation": "derived_shadow_separate_file",
+          "ellipse": [
+            7,
+            26,
+            88,
+            82
+          ],
+          "rgba": [
+            28,
+            25,
+            20,
+            90
+          ]
+        }
+      ],
+      "model_judge_status": "PENDING",
+      "numeric_judge_path": "/Users/rexxa/work/arttrial2-data/plants/berry_bare_numeric.json",
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": true,
+        "local_saturation": false
+      }
+    }
+  },
+  "processing_record": {
+    "path": "/Users/rexxa/work/arttrial2-data/plants/berry_bare_try1.json",
+    "sha256": "da518762f519a01055354f49fc3115929a3270649c66349c753c7980cad1f5de",
+    "full_record": {
+      "name": "berry_bare",
+      "try": 1,
+      "prompt": "Use case: stylized-concept. Create ONE isolated berry bush without any berries, for a stone-age top-down settlement game. Both attached images are locked style references: props anchors fine ink edges, restrained wash and natural materials; scene anchors overhead camera, muted olive earth palette and upper-left light. Match them precisely. View vertically from above: a compact low rounded bush with serrated olive-green leaves and fine visible branching stems; no berries or fruit, only a tiny south-facing stem/trunk front-face cheat where relevant. Fine controlled dark ink linework, restrained olive and warm sage wash, two-tone upper-left lighting, crisp natural foliage groupings. Center one complete plant with 10% margin on uniform solid #FF00FF magenta. No ground, cast shadow, scenery, frame, labels or text. No isometric camera, photo, 3D render, pixel art or gradient blur. Output square 1024px image.",
+      "anchors": [
+        "art/style05/anchors/props.png",
+        "art/style05/anchors/scene.png"
+      ],
+      "source_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160dd-7897-7b42-a158-dd223d05581d/exec-5ed84824-b2eb-461a-a54d-7d1ecda4a301.png",
+      "start": "2026-10-21T23:52:48.753Z",
+      "end": "2026-10-21T23:53:12.757Z",
+      "status": "PENDING",
+      "raw_path": "/Users/rexxa/work/arttrial2-data/plants/berry_bare_try1_raw.png",
+      "source_sha256": "2b97bfe15775d055c744c5085a1a32d342663355a97c5083379caf3757faf7fd",
+      "generation_id": "exec-5ed84824-b2eb-461a-a54d-7d1ecda4a301",
+      "generation_id_note": "tool output filename identifier; no separate generation id returned",
+      "duration_seconds": 24.004,
+      "anchor_sha256": {
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      },
+      "working_path": "/Users/rexxa/work/arttrial2-data/plants/berry_bare_try1.png",
+      "working_size": [
+        96,
+        96
+      ],
+      "working_sha256": "78f86ef2770f0d3f23ffc920c195c5a6b0df5075b1e1c58f555979eac324947b",
+      "anchor_point": [
+        48.0,
+        69.12
+      ],
+      "anchor_point_note": "normalized canopy placement registration, not inferred exact trunk root",
+      "shadow_path": "/Users/rexxa/work/arttrial2-data/plants/berry_bare_shadow.png",
+      "operations": [
+        {
+          "operation": "chroma_key_and_residual_chroma_alpha_cleanup",
+          "predicate": "R-G>20 and B-G>20 on 8-bit channels",
+          "transparent_rgb": "zeroed",
+          "reason": "remove mixed magenta edge pixels without palette edits"
+        },
+        {
+          "operation": "crop",
+          "box": [
+            72,
+            102,
+            1161,
+            1126
+          ]
+        },
+        {
+          "operation": "Lanczos_downscale",
+          "fitted_size": [
+            96,
+            90
+          ]
+        },
+        {
+          "operation": "transparent_canvas_composition",
+          "size": [
+            96,
+            96
+          ],
+          "offset": [
+            0,
+            3
+          ]
+        },
+        {
+          "operation": "derived_shadow_separate_file",
+          "ellipse": [
+            7,
+            26,
+            88,
+            82
+          ],
+          "rgba": [
+            28,
+            25,
+            20,
+            90
+          ]
+        }
+      ],
+      "model_judge_status": "PENDING",
+      "numeric_judge_path": "/Users/rexxa/work/arttrial2-data/plants/berry_bare_numeric.json",
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": true,
+        "local_saturation": false
+      }
+    }
+  },
+  "historical_record_note": "Nested historical numeric/status fields are preserved as history; top-level status and numeric/model are TRIAL2b decisions."
+}
