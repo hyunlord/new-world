@@ -105,7 +105,7 @@ def run(manifest: Path, output: Path) -> bool:
     for combo in combos:
         if not combo.passed:
             lines.append('- COMBINATION '+','.join(combo.ids)+': '+ '; '.join(f'{f.rule}: {f.detail}' for f in combo.findings))
-    (output/'CHECKS.md').write_text('\n'.join(lines)+'\n')
+    (output/'CHECKS.md').write_text('\n'.join(line.rstrip() for line in lines)+'\n')
     failure_board(layers,results,output/'failures.png')
     return passed
 
