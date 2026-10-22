@@ -323,7 +323,23 @@ fn step(
                     quarry_batch(res, rule, node, pos);
                     craft::train(world, entity, SkillKind::Quarry, u32::from(job.amount));
                 }
-                JobKind::Craft { .. } => craft::finish_craft(world, res, id, entity, &job),
+                JobKind::Craft { workshop, bill, at } => {
+                    craft::finish_craft(world, res, id, entity, &job);
+                    // M3 (DECISIONS D13): the crafter stays at the bench for the
+                    // bill's next craft when its inputs are already on the shelf.
+                    if rule.space.is_some() && craft::next_ready(world, res, workshop, bill) {
+                        res.colony.tallies.jobs_done += 1;
+                        job.kind = JobKind::Craft { workshop, bill, at };
+                        job.stage = JobStage::ToSource;
+                        job.material = None;
+                        job.taken_at = tick;
+                        job.progress_tick = tick;
+                        job.best_distance = 0;
+                        put_job(world, entity, job);
+                        set_state(world, entity, SEEK_JOB);
+                        return;
+                    }
+                }
                 JobKind::Gather { .. } => {
                     if gather_batch(world, res, rule, entity, &mut job, pos) {
                         put_job(world, entity, job);

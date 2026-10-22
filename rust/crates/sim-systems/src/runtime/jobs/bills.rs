@@ -83,6 +83,25 @@ pub fn maintain_count(world: &World, res: &SimResources, kind: ItemKind) -> u32 
     ground + carried + making
 }
 
+/// The count a `Maintain` bill compares with its target (M3, ADR 0023): as
+/// [`maintain_count`], except that while the colony has a roofed storehouse
+/// only the items on the ground under its roof count (in hands and in the
+/// making still do), so the colony keeps making until the stock is indoors.
+pub fn bill_count(world: &World, res: &SimResources, kind: ItemKind) -> u32 {
+    let all = maintain_count(world, res, kind);
+    if !crate::runtime::rooms::storehouse_exists(res) {
+        return all;
+    }
+    let outside: u32 = res
+        .colony
+        .ground_items
+        .iter()
+        .filter(|(t, s)| s.kind == kind && !crate::runtime::rooms::covered(res, **t))
+        .map(|(_, s)| u32::from(s.count))
+        .sum();
+    all.saturating_sub(outside)
+}
+
 /// Unreserved items of `kind` lying anywhere.
 pub fn available(res: &SimResources, kind: ItemKind) -> u32 {
     let c = &res.colony;
@@ -108,7 +127,7 @@ pub fn runnable(world: &World, res: &SimResources, shop: &Workshop, index: usize
     }
     let more = match bill.mode {
         BillMode::Make(n) => bill.done < u32::from(n),
-        BillMode::Maintain(n) => maintain_count(world, res, recipe.output.0) < u32::from(n),
+        BillMode::Maintain(n) => bill_count(world, res, recipe.output.0) < u32::from(n),
     };
     more && recipe
         .inputs

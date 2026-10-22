@@ -37,6 +37,9 @@ pub fn train(world: &mut World, entity: Entity, skill: SkillKind, ticks: u32) {
     let _ = world.insert_one(entity, skills);
 }
 
+/// Craft ticks in a roofed workshop room, permille (M3 goal 3.3).
+pub const WORKSHOP_ROOM_PERMILLE: u32 = 900;
+
 /// Start a craft at the work tile: take one craft's inputs off the shelf,
 /// record them consumed and return the work ticks; `None` when the bill is
 /// gone or done or the shelf lacks an input (nothing is taken then).
@@ -48,6 +51,15 @@ pub fn start(
     workshop: WorkshopId,
     bill: BillId,
 ) -> Option<u32> {
+    // M3 (goal 3.3, 8.5): a workshop in a roofed workshop room works at 900 ‰ ticks.
+    let in_room = res.rules.colony.is_some_and(|r| r.space.is_some())
+        && res.colony.workshops.get(&workshop).is_some_and(|shop| {
+            crate::runtime::rooms::roofed_as(
+                res,
+                shop.top_left,
+                sim_core::rooms::RoomRole::Workshop,
+            )
+        });
     let shop = res.colony.workshops.get_mut(&workshop)?;
     let found = *shop.bill(bill)?;
     let recipe = found.recipe.recipe()?;
@@ -82,12 +94,45 @@ pub fn start(
     job.material = material;
     let level = level_of(world, entity, recipe.skill);
     let temperament = world.get::<&Temperament>(entity).ok().map(|t| *t);
-    let ticks = scaled_ticks(recipe.work_ticks, level);
+    let mut ticks = scaled_ticks(recipe.work_ticks, level);
+    if in_room {
+        ticks = (ticks * WORKSHOP_ROOM_PERMILLE + 500) / 1000;
+    }
     Some(
         ticks
             .saturating_sub(temperament_ticks(temperament.as_ref()))
             .max(1),
     )
+}
+
+/// Whether `bill` at `workshop` wants another craft now (M3, DECISIONS D13): it
+/// is the workshop's active bill, not done, not suspended, its `Maintain`
+/// count below target, and every input of one craft is on the shelf.
+pub fn next_ready(world: &World, res: &SimResources, workshop: WorkshopId, bill: BillId) -> bool {
+    let Some(shop) = res.colony.workshops.get(&workshop) else {
+        return false;
+    };
+    let Some(found) = shop
+        .bill(bill)
+        .filter(|b| shop.active == Some(b.id) && !b.suspended)
+    else {
+        return false;
+    };
+    let Some(recipe) = found.recipe.recipe() else {
+        return false;
+    };
+    if found.remaining() == Some(0) {
+        return false;
+    }
+    if let sim_core::colony::BillMode::Maintain(n) = found.mode {
+        if super::bills::bill_count(world, res, recipe.output.0) >= u32::from(n) {
+            return false;
+        }
+    }
+    recipe
+        .inputs
+        .iter()
+        .all(|&(kind, n)| shop.shelved(kind) >= n)
 }
 
 /// Finish the craft `job` (a `JobKind::Craft`): draw its quality, create the

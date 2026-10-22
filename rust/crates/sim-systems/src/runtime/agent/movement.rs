@@ -15,6 +15,8 @@
 //! the tether pull) is refused when it would enter an impassable tile or cut a
 //! corner. Paths of agents that no longer walk are dropped. The baseline
 //! (`rules.colony = None`) keeps the sign step and never reads `nav`.
+//! M3 (ADR 0023): inside the evening-gather window an idle step does not
+//! leave the hall (the room the hearth stands in).
 //!
 //! V7 Phase 4-β / Section 16-β — `AgentMovementSystem` (priority 120, every tick).
 //!
@@ -361,8 +363,21 @@ impl RuntimeSystem for AgentMovementSystem {
             water_tiles,
             sleep_tiles,
             bed_of,
+            colony: colony_state,
             ..
         } = resources;
+        // M3 (ADR 0023): inside the evening window the hall (the hearth's room)
+        // keeps the gathering; its tiles by room id.
+        let hall_room = |tile: (u32, u32)| {
+            evening_radius
+                .and(colony_state.room_of_tile.get(&tile))
+                .filter(|id| {
+                    colony_state
+                        .rooms
+                        .get(id)
+                        .is_some_and(|r| r.role == sim_core::rooms::RoomRole::Hall)
+                })
+        };
         let mut walking: BTreeSet<AgentId> = BTreeSet::new();
         for (
             _,
@@ -657,6 +672,11 @@ impl RuntimeSystem for AgentMovementSystem {
             let to = (nx as u32, ny as u32);
             if colony && to != (pos.x, pos.y) && !nav.can_step((pos.x, pos.y), to) {
                 continue;
+            }
+            if let Some(hall) = hall_room((pos.x, pos.y)) {
+                if colony_state.room_of_tile.get(&to) != Some(hall) {
+                    continue;
+                }
             }
             pos.x = to.0;
             pos.y = to.1;

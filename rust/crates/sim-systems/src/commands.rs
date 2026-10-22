@@ -771,7 +771,12 @@ pub fn check_space(
         .values()
         .any(|shop| shop.work_tile() == tile)
         || res.colony.site_work_tiles.values().any(|t| *t == tile);
-    let reserved = res.colony.reservations.keys().any(|k| k.tile() == tile);
+    // A tile being dug or taken apart is busy; a reserved stack or cell is not
+    // (a site does not stop a haul in flight: the stack is cleared, the drop spills).
+    let reserved = res
+        .colony
+        .reservations
+        .contains_key(&sim_core::colony::ReserveKey::Work(tile));
     if res.colony.trees.contains_key(&tile)
         || res.colony.nodes.contains_key(&tile)
         || under_building(res, tile)

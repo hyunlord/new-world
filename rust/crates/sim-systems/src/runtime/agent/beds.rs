@@ -5,6 +5,13 @@
 //! Writes: `SimResources.bed_of`
 //! Events: none
 //!
+//! M3 (ADR 0023, colony with built space): every finished bedroll
+//! (`colony.beds`) is a one-person bed owned by the settlement whose formation
+//! tile is nearest (Chebyshev, ties by id). Beds are offered in rank order —
+//! bedrolls in a roofed bedroom first, then huts, then other bedrolls — and a
+//! bed the settlement cannot walk to from its formation tile (a room without a
+//! door) is never assigned.
+//!
 //! Stable assignments of live settlement members to owned shelter beds.
 use hecs::World;
 use sim_core::components::{Agent, BuildingKind, SettlementId};
@@ -14,7 +21,8 @@ use std::collections::{BTreeMap, BTreeSet};
 /// Reassigns beds at 20:00 or when the set of owned shelters changes.
 #[derive(Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct BedAssignmentSystem {
-    last_shelters: Vec<(SettlementId, u32, u32)>,
+    /// The offered beds at the last assignment: `(owner, rank, y, x)`.
+    last_shelters: Vec<(SettlementId, u32, u32, u32)>,
 }
 impl RuntimeSystem for BedAssignmentSystem {
     fn name(&self) -> &str {
@@ -48,9 +56,24 @@ impl RuntimeSystem for BedAssignmentSystem {
                 planning.map_or(0, |rule| rule.residents_per_shelter) as usize
             }
             Some(BuildingKind::Hut) => hut_beds.unwrap_or(0) as usize,
+            // M3: a bedroll sleeps one.
+            _ if resources.colony.beds.contains_key(tile) => 1,
             _ => 0,
         };
-        let mut shelters: Vec<_> = resources
+        let space = resources
+            .rules
+            .colony
+            .is_some_and(|rule| rule.space.is_some());
+        // M3: a bed the owner cannot walk to from its formation tile is not offered.
+        let reachable = |sid: SettlementId, bed: (u32, u32)| {
+            !space
+                || resources
+                    .settlements
+                    .get(&sid)
+                    .is_some_and(|s| resources.nav.reachable(s.formation_tile, bed))
+        };
+        let hut_rank = u32::from(space);
+        let mut shelters: Vec<(SettlementId, u32, u32, u32)> = resources
             .building_owner
             .iter()
             .filter(|(p, _)| {
@@ -59,8 +82,30 @@ impl RuntimeSystem for BedAssignmentSystem {
                     Some(BuildingKind::Shelter | BuildingKind::Hut)
                 )
             })
-            .map(|(&(x, y), &sid)| (sid, y, x))
+            .filter(|(p, sid)| reachable(**sid, **p))
+            .map(|(&(x, y), &sid)| (sid, hut_rank, y, x))
             .collect();
+        if space {
+            let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
+            ids.sort_unstable();
+            for &bed in resources.colony.beds.keys() {
+                let owner = ids.iter().copied().min_by_key(|sid| {
+                    resources.settlements.get(sid).map_or(u32::MAX, |s| {
+                        let f = s.formation_tile;
+                        f.0.abs_diff(bed.0).max(f.1.abs_diff(bed.1))
+                    })
+                });
+                let Some(sid) = owner.filter(|sid| reachable(*sid, bed)) else {
+                    continue;
+                };
+                let bedroom = crate::runtime::rooms::roofed_as(
+                    resources,
+                    bed,
+                    sim_core::rooms::RoomRole::Bedroom,
+                );
+                shelters.push((sid, if bedroom { 0 } else { 2 }, bed.1, bed.0));
+            }
+        }
         shelters.sort();
         let minute = resources
             .current_tick
@@ -81,8 +126,8 @@ impl RuntimeSystem for BedAssignmentSystem {
         for (&sid, settlement) in settlements {
             let beds: Vec<_> = shelters
                 .iter()
-                .filter(|&&(owner, _, _)| owner == sid)
-                .map(|&(_, y, x)| (x, y))
+                .filter(|&&(owner, _, _, _)| owner == sid)
+                .map(|&(_, _, y, x)| (x, y))
                 .collect();
             let mut members: Vec<_> = settlement
                 .member_agents

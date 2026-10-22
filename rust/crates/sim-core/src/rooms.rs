@@ -8,8 +8,9 @@
 //! Detection: a 4-connected flood fill over the tiles that do not bound a
 //! room (a wall, a door, undug hill, water, mountain bound it; a diagonal gap
 //! between two walls does not leak, matching the move rule's no corner
-//! cutting). A region is a room when it does not touch the map edge and has
-//! `min..=max` tiles. Regions are visited from their lowest `(y, x)` tile, so
+//! cutting). A region is a candidate when it does not touch the map edge and
+//! has `min..=max` tiles; [`Found::built`] says whether a built wall or door is
+//! on its border (the caller keeps only rooms the colony made). Regions are visited from their lowest `(y, x)` tile, so
 //! the result is a pure function of the grid. Doors belong to no room; a room
 //! lists the doors on its border (4-neighbours of its tiles).
 //!
@@ -109,11 +110,14 @@ pub struct Found {
     pub tiles: BTreeSet<Tile>,
     /// Door tiles on its border.
     pub doors: BTreeSet<Tile>,
+    /// Whether any tile on its border was built (a wall or a door).
+    pub built: bool,
 }
 
 /// Find every room of a `width × height` grid: `bounds(t)` says whether `t`
-/// bounds rooms, `door(t)` whether a bounding tile is a door. Rooms in the
-/// `(y, x)` order of their key tile.
+/// bounds rooms, `door(t)` whether a bounding tile is a door, `built(t)`
+/// whether it is a built wall or door. Rooms in the `(y, x)` order of their
+/// key tile.
 pub fn detect(
     width: u32,
     height: u32,
@@ -121,6 +125,7 @@ pub fn detect(
     max: u32,
     bounds: impl Fn(Tile) -> bool,
     door: impl Fn(Tile) -> bool,
+    built: impl Fn(Tile) -> bool,
 ) -> Vec<Found> {
     let n = (width as usize) * (height as usize);
     let mut seen = vec![false; n];
@@ -138,6 +143,7 @@ pub fn detect(
             let mut tiles = BTreeSet::new();
             let mut doors = BTreeSet::new();
             let mut edge = false;
+            let mut made = false;
             while let Some(t) = queue.pop_front() {
                 tiles.insert(t);
                 if t.0 == 0 || t.1 == 0 || t.0 + 1 == width || t.1 + 1 == height {
@@ -157,6 +163,7 @@ pub fn detect(
                         if door(nb) {
                             doors.insert(nb);
                         }
+                        made |= built(nb);
                         continue;
                     }
                     let j = idx(nb);
@@ -168,7 +175,11 @@ pub fn detect(
             }
             let size = tiles.len() as u32;
             if !edge && (min..=max).contains(&size) {
-                out.push(Found { tiles, doors });
+                out.push(Found {
+                    tiles,
+                    doors,
+                    built: made,
+                });
             }
         }
     }
@@ -241,7 +252,15 @@ mod tests {
 
     fn rooms_of(rows: &[&str]) -> Vec<Found> {
         let (w, h, walls, doors) = grid(rows);
-        detect(w, h, 2, 120, |t| walls.contains(&t), |t| doors.contains(&t))
+        detect(
+            w,
+            h,
+            2,
+            120,
+            |t| walls.contains(&t),
+            |t| doors.contains(&t),
+            |t| walls.contains(&t),
+        )
     }
 
     #[test]

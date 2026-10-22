@@ -32,7 +32,7 @@ use sim_core::spatial::ChunkIndex;
 use sim_engine::{RuntimeSystem, SimResources};
 use std::collections::BTreeMap;
 
-use super::bills::maintain_count;
+use super::bills::{bill_count, maintain_count};
 use super::cancel::reserve;
 use super::items::{chebyshev, colony_sites, room_on, SiteView};
 
@@ -114,6 +114,9 @@ pub fn shelf_transit(world: &World) -> (BTreeMap<(u32, ItemKind), u16>, BTreeMap
     (supply, crafting)
 }
 
+/// Most crafts' inputs one supply trip brings (M3, DECISIONS D13).
+pub const SUPPLY_CRAFTS: u32 = 5;
+
 /// Which search a memo belongs to (see [`Memo`]).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 enum Search {
@@ -129,6 +132,7 @@ enum Search {
     ClearStack,
     DigMark,
     DeconMark,
+    Restock,
 }
 
 /// Searches that found no candidate anywhere on the map this tick. Within one
@@ -147,6 +151,7 @@ struct Exhausted {
     clear: Memo,
     dig: Memo,
     decon: Memo,
+    restock: Memo,
     stocked: [Memo; 7],
     any_stack: [Memo; 7],
     open_cell: BTreeMap<ItemSpec, Memo>,
@@ -164,6 +169,7 @@ impl Exhausted {
             Search::ClearStack => &mut self.clear,
             Search::DigMark => &mut self.dig,
             Search::DeconMark => &mut self.decon,
+            Search::Restock => &mut self.restock,
             Search::Stocked(kind) => &mut self.stocked[kind.code() as usize],
             Search::AnyStack(kind) => &mut self.any_stack[kind.code() as usize],
             Search::OpenCell(spec) => self.open_cell.entry(spec).or_default(),
@@ -308,12 +314,29 @@ fn pick_work(
                 }
                 let to = shop.work_tile();
                 // Supply: the first input short of one craft, from the nearest stack.
+                // M3 (DECISIONS D13): a trip brings inputs for up to `SUPPLY_CRAFTS`
+                // of the bill's remaining crafts (one craft's under M2 rules).
+                let crafts = if rule.space.is_some() {
+                    let left = match bill.mode {
+                        BillMode::Make(_) => bill.remaining().unwrap_or(1),
+                        BillMode::Maintain(n) => {
+                            let made = ctx.made.get(&recipe.output.0).copied().unwrap_or(0);
+                            u32::from(n)
+                                .saturating_sub(made)
+                                .div_ceil(u32::from(recipe.output.1.max(1)))
+                        }
+                    };
+                    left.saturating_sub(in_progress).clamp(1, SUPPLY_CRAFTS) as u16
+                } else {
+                    1
+                };
                 for &(kind, n) in &recipe.inputs {
                     let coming = ctx.supply.get(&(id, kind)).copied().unwrap_or(0);
                     let have = shop.shelved(kind) + coming;
                     if have >= n {
                         continue;
                     }
+                    let n = n.saturating_mul(crafts);
                     let stocked = search(
                         &index.ground,
                         pos,
@@ -542,7 +565,9 @@ fn pick_work(
                                 .is_some_and(|stack| !blocked.contains(&stack.spec()))
                     },
                 );
-                let (from, ()) = loose?;
+                let Some((from, ())) = loose else {
+                    return restock(res, ctx, pos, ex);
+                };
                 let spec = colony.ground_items.get(&from)?.spec();
                 let open = |cell: (u32, u32)| {
                     room_on(res, cell, spec) > 0
@@ -555,8 +580,9 @@ fn pick_work(
                     u32::MAX,
                     ex.memo(Search::OpenCell(spec)),
                     |c, _| open(c),
-                );
-                if let Some((to, ())) = cell {
+                )
+                .map(|(to, ())| prefer_covered(res, ctx, from, to, &open));
+                if let Some(to) = cell {
                     let amount = rule
                         .carry(spec.kind)
                         .min(count(from))
@@ -666,10 +692,13 @@ fn best_axe(res: &SimResources, pos: (u32, u32), reach: u32) -> Option<(u32, u32
 }
 
 /// A person's skill level for work type `work` (M3 goal 3.4 tie-break):
-/// crafting counts the better of knapping and woodworking, splitting
-/// woodworking, hauling none.
-pub fn skill_for(skills: &Skills, work: WorkType) -> u8 {
+/// crafting counts the best of `crafts` (the skills of the crafts on offer;
+/// knapping and woodworking when none is), splitting woodworking, hauling none.
+pub fn skill_for(skills: &Skills, work: WorkType, crafts: &[SkillKind]) -> u8 {
     match work {
+        WorkType::Craft if !crafts.is_empty() => {
+            crafts.iter().map(|k| skills.level(*k)).max().unwrap_or(0)
+        }
         WorkType::Craft => skills
             .level(SkillKind::Knap)
             .max(skills.level(SkillKind::Woodwork)),
@@ -680,6 +709,77 @@ pub fn skill_for(skills: &Skills, work: WorkType) -> u8 {
         WorkType::Haul => 0,
         WorkType::Mine => skills.level(SkillKind::Mining),
     }
+}
+
+/// M3 (ADR 0023): with no loose stack left, carry stock lying on an open-air
+/// stockpile cell into a roofed storehouse cell that takes it (the nearest
+/// such stack, then the covered cell nearest it).
+fn restock(res: &SimResources, ctx: &Ctx, pos: (u32, u32), ex: &mut Exhausted) -> Option<Pick> {
+    if ctx.rule.space.is_none() || !crate::runtime::rooms::storehouse_exists(res) {
+        return None;
+    }
+    let colony = &res.colony;
+    let outdoor = |t: (u32, u32)| {
+        colony.zone_of_tile.contains_key(&t)
+            && !crate::runtime::rooms::covered(res, t)
+            && colony.ground_items.get(&t).is_some_and(|s| s.count > 0)
+            && !colony.reservations.contains_key(&ReserveKey::Stack(t))
+            && res.nav.reaches(ctx.region, t)
+    };
+    let (from, ()) = search(
+        &res.spatial.colony.ground,
+        pos,
+        ctx.rule.job_scan_radius,
+        ex.memo(Search::Restock),
+        |t, _| outdoor(t),
+    )?;
+    let stack = colony.ground_items.get(&from)?;
+    let spec = stack.spec();
+    let (to, ()) = res
+        .spatial
+        .colony
+        .cells
+        .nearest_where(from, u32::MAX, |c, _| {
+            crate::runtime::rooms::covered(res, c)
+                && room_on(res, c, spec) > 0
+                && !colony.reservations.contains_key(&ReserveKey::Cell(c))
+                && res.nav.reaches(ctx.region, c)
+        })?;
+    let amount = ctx
+        .rule
+        .carry(spec.kind)
+        .min(stack.count)
+        .min(room_on(res, to, spec));
+    (amount > 0).then_some((JobKind::Haul { from, to }, amount, spec.kind))
+}
+
+/// M3 (ADR 0023): with a roofed storehouse, a hauled stack goes to the nearest
+/// open cell under its roof unless that is more than
+/// `SpaceRule::storehouse_bonus_tiles` farther than the nearest open cell
+/// `nearest` (the bonus is worth that many tiles of distance).
+fn prefer_covered(
+    res: &SimResources,
+    ctx: &Ctx,
+    from: (u32, u32),
+    nearest: (u32, u32),
+    open: &dyn Fn((u32, u32)) -> bool,
+) -> (u32, u32) {
+    let Some(bonus) = ctx.rule.space.map(|s| s.storehouse_bonus_tiles) else {
+        return nearest;
+    };
+    if crate::runtime::rooms::covered(res, nearest)
+        || !crate::runtime::rooms::storehouse_exists(res)
+    {
+        return nearest;
+    }
+    let reach = chebyshev(from, nearest).saturating_add(bonus);
+    res.spatial
+        .colony
+        .cells
+        .nearest_where(from, reach, |c, _| {
+            crate::runtime::rooms::covered(res, c) && open(c)
+        })
+        .map_or(nearest, |(c, ())| c)
 }
 
 /// Where the items cleared off a space site go (M3): the nearest open
@@ -825,7 +925,7 @@ impl RuntimeSystem for JobAssignSystem {
             for bill in &shop.bills {
                 if let (BillMode::Maintain(_), Some(r)) = (bill.mode, bill.recipe.recipe()) {
                     made.entry(r.output.0)
-                        .or_insert_with(|| maintain_count(world, resources, r.output.0));
+                        .or_insert_with(|| bill_count(world, resources, r.output.0));
                 }
             }
         }
@@ -851,6 +951,17 @@ impl RuntimeSystem for JobAssignSystem {
             vec![(0, None)]
         };
         let mut assigned: std::collections::BTreeSet<AgentId> = std::collections::BTreeSet::new();
+        // The skills of the crafts on offer (active bills of work type Craft), for the craft round's order.
+        let mut craft_skills: Vec<SkillKind> = resources
+            .colony
+            .workshops
+            .values()
+            .filter_map(|shop| shop.bill(shop.active?)?.recipe.recipe())
+            .filter(|r| r.work == WorkType::Craft)
+            .map(|r| r.skill)
+            .collect();
+        craft_skills.sort_unstable();
+        craft_skills.dedup();
         for (pass, work) in rounds {
             let mut order: Vec<&Row> = available
                 .iter()
@@ -859,7 +970,12 @@ impl RuntimeSystem for JobAssignSystem {
                 })
                 .collect();
             if let Some(w) = work {
-                order.sort_by_key(|row| (std::cmp::Reverse(skill_for(&row.5, w)), row.0));
+                order.sort_by_key(|row| {
+                    (
+                        std::cmp::Reverse(skill_for(&row.5, w, &craft_skills)),
+                        row.0,
+                    )
+                });
             }
             for &&(id, entity, pos, priorities, has_tool, _) in &order {
                 let ctx = Ctx {

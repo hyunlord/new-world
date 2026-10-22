@@ -328,6 +328,248 @@ fn blueprint_tiles(engine: &SimEngine, kind: BlueprintKind, x: u32, y: u32) -> V
     out
 }
 
+/// Every tile of the `w × h` box with its top-left at `at`.
+fn box_tiles(at: (u32, u32), w: u32, h: u32) -> Vec<(u32, u32)> {
+    (at.1..at.1 + h)
+        .flat_map(|y| (at.0..at.0 + w).map(move |x| (x, y)))
+        .collect()
+}
+
+/// The top-left of a `w × h` box for a walled building (M3 scripts): every
+/// tile takes a log wall (`check_space`), the tile below the middle of its
+/// south wall is passable (the way out of the door), all reachable from the
+/// hearth, none in `avoid`. Searched south of the hearth (`south`, centre y
+/// below the hearth's) or on any side clear of the camp, nearest by the
+/// centre's Chebyshev distance, ties `(y, x)`.
+pub fn walled_spot(
+    engine: &SimEngine,
+    w: u32,
+    h: u32,
+    south: bool,
+    avoid: &[(u32, u32)],
+) -> Option<(u32, u32)> {
+    let hc = hearth(&engine.resources)?;
+    let r = &engine.resources;
+    let people = std::collections::BTreeSet::new();
+    let fits = |t: (u32, u32)| {
+        sim_systems::commands::check_space(r, &people, BlueprintKind::LogWall, t).is_ok()
+            && !avoid.contains(&t)
+            && reachable_from(engine, hc, t)
+    };
+    let mut candidates: Vec<(SpotKey, Tile)> = Vec::new();
+    for y in hc.1.saturating_sub(40)..(hc.1 + 40).min(r.tile_grid.height.saturating_sub(h + 1)) {
+        for x in hc.0.saturating_sub(40)..(hc.0 + 40).min(r.tile_grid.width.saturating_sub(w)) {
+            let centre = (x + w / 2, y + h / 2);
+            // South: below the hearth; otherwise any side, clear of the camp (3 tiles).
+            let side = if south {
+                centre.1 > hc.1 + 1
+            } else {
+                chebyshev(centre, hc) > 3 + w.max(h) / 2
+            };
+            if !side {
+                continue;
+            }
+            let door_out = (x + w / 2, y + h);
+            if box_tiles((x, y), w, h).into_iter().all(fits)
+                && sim_systems::runtime::nav::passable(r, door_out)
+                && !avoid.contains(&door_out)
+            {
+                candidates.push(((chebyshev(centre, hc), y, x), (x, y)));
+            }
+        }
+    }
+    candidates.sort_unstable();
+    // The nearest box whose walls (impassable from placement) cut nothing off:
+    // with them in place every wall tile is still reachable from the hearth and
+    // the hearth's region loses no more than the box itself (DECISIONS D14).
+    candidates
+        .into_iter()
+        .map(|(_, at)| at)
+        .find(|at| !cuts_off(engine, hc, *at, w, h))
+}
+
+/// Whether walls round the `w × h` box at `at` (a door in the middle of the
+/// south wall) would cut part of the hearth's region off.
+fn cuts_off(engine: &SimEngine, hc: (u32, u32), at: (u32, u32), w: u32, h: u32) -> bool {
+    let nav = &engine.resources.nav;
+    if !nav.is_built() {
+        return false;
+    }
+    let region_size = |n: &sim_core::nav::NavState| {
+        let home = n.region_of(hc);
+        let map = n.map();
+        (0..map.height())
+            .flat_map(|y| (0..map.width()).map(move |x| (x, y)))
+            .filter(|t| n.region_of(*t) == home)
+            .count()
+    };
+    let before = region_size(nav);
+    let mut map = nav.map().clone();
+    let (x1, y1) = (at.0 + w - 1, at.1 + h - 1);
+    let door = (at.0 + w / 2, y1);
+    let walls: Vec<(u32, u32)> = box_tiles(at, w, h)
+        .into_iter()
+        .filter(|t| t.0 == at.0 || t.0 == x1 || t.1 == at.1 || t.1 == y1)
+        .collect();
+    for t in &walls {
+        let cost = if *t == door {
+            sim_core::nav::COST_DOOR
+        } else {
+            sim_core::nav::IMPASSABLE
+        };
+        map.set(*t, cost);
+    }
+    let mut after = sim_core::nav::NavState::default();
+    after.install(map);
+    let lost = before.saturating_sub(region_size(&after));
+    lost > (w * h) as usize || walls.iter().any(|t| !after.reachable(hc, *t))
+}
+
+/// The house of the M3-U script: a door in the middle of the south wall,
+/// log walls round the `w × h` box, `beds` bedrolls on the interior's first
+/// tiles (row by row), a packed floor on the rest.
+pub fn house_commands(at: (u32, u32), w: u32, h: u32, beds: usize) -> Vec<Command> {
+    let (x0, y0) = at;
+    let (x1, y1) = (x0 + w - 1, y0 + h - 1);
+    let mut out = vec![
+        Command::PlaceBlueprint {
+            kind: BlueprintKind::Door,
+            x: x0 + w / 2,
+            y: y1,
+        },
+        Command::PlaceRect {
+            kind: BlueprintKind::LogWall,
+            x0,
+            y0,
+            x1,
+            y1,
+            hollow: true,
+        },
+    ];
+    let inside: Vec<(u32, u32)> = (y0 + 1..y1)
+        .flat_map(|y| (x0 + 1..x1).map(move |x| (x, y)))
+        .collect();
+    for t in inside.iter().take(beds) {
+        out.push(Command::PlaceBlueprint {
+            kind: BlueprintKind::Bedroll,
+            x: t.0,
+            y: t.1,
+        });
+    }
+    out.push(Command::PlaceRect {
+        kind: BlueprintKind::PackedFloor,
+        x0: x0 + 1,
+        y0: y0 + 1,
+        x1: x1 - 1,
+        y1: y1 - 1,
+        hollow: false,
+    });
+    out
+}
+
+/// A walled storehouse: a `size × size` stockpile zone inside log walls (the
+/// box with its top-left at `at` is `size + 2` square) with a south door.
+pub fn storehouse_commands(at: (u32, u32), size: u32) -> Vec<Command> {
+    let (x0, y0) = at;
+    let (x1, y1) = (x0 + size + 1, y0 + size + 1);
+    vec![
+        Command::AddStockpile {
+            x0: x0 + 1,
+            y0: y0 + 1,
+            x1: x1 - 1,
+            y1: y1 - 1,
+        },
+        Command::PlaceBlueprint {
+            kind: BlueprintKind::Door,
+            x: x0 + (size + 2) / 2,
+            y: y1,
+        },
+        Command::PlaceRect {
+            kind: BlueprintKind::LogWall,
+            x0,
+            y0,
+            x1,
+            y1,
+            hollow: true,
+        },
+    ]
+}
+
+/// A dug pocket for the M3-U script: the top-left of a `size × size` block of
+/// undug hill (off the map edge) ringed by undug hill on its four sides except
+/// one "mouth" tile in the middle of a side, which is undug hill itself with
+/// passable ground beyond it reachable from the hearth; within `within` of the
+/// hearth, the nearest by the block centre's Chebyshev distance, ties `(y, x)`.
+/// Dug out, the block and its mouth are a room once a door closes the mouth.
+pub fn hill_pocket(engine: &SimEngine, size: u32, within: u32) -> Option<((u32, u32), (u32, u32))> {
+    let hc = hearth(&engine.resources)?;
+    let r = &engine.resources;
+    let hill = |t: (u32, u32)| sim_systems::runtime::jobs::space::diggable(r, t);
+    let open =
+        |t: (u32, u32)| sim_systems::runtime::nav::passable(r, t) && reachable_from(engine, hc, t);
+    let (w, h) = (r.tile_grid.width, r.tile_grid.height);
+    let mut best: Option<(SpotKey, (Tile, Tile))> = None;
+    for y in hc.1.saturating_sub(within).max(2)..(hc.1 + within).min(h.saturating_sub(size + 2)) {
+        for x in hc.0.saturating_sub(within).max(2)..(hc.0 + within).min(w.saturating_sub(size + 2))
+        {
+            let centre = (x + size / 2, y + size / 2);
+            let key = (chebyshev(centre, hc), y, x);
+            if chebyshev(centre, hc) > within || best.is_some_and(|(b, _)| key >= b) {
+                continue;
+            }
+            if !box_tiles((x, y), size, size).into_iter().all(hill) {
+                continue;
+            }
+            // The ring around the block, and the candidate mouths with their outside tile.
+            let mid = size / 2;
+            let sides = [
+                ((x + mid, y - 1), (x + mid, y - 2)),
+                ((x + mid, y + size), (x + mid, y + size + 1)),
+                ((x - 1, y + mid), (x - 2, y + mid)),
+                ((x + size, y + mid), (x + size + 1, y + mid)),
+            ];
+            let ring: Vec<(u32, u32)> = box_tiles((x - 1, y - 1), size + 2, size + 2)
+                .into_iter()
+                .filter(|t| t.0 == x - 1 || t.0 == x + size || t.1 == y - 1 || t.1 == y + size)
+                .collect();
+            for (mouth, beyond) in sides {
+                let sealed = ring
+                    .iter()
+                    .all(|t| *t == mouth || !sim_systems::runtime::nav::passable(r, *t));
+                if sealed && hill(mouth) && open(beyond) {
+                    best = Some((key, ((x, y), mouth)));
+                    break;
+                }
+            }
+        }
+    }
+    best.map(|(_, found)| found)
+}
+
+/// The mouth of the dug pocket: the tile of the run's one-tile dig order,
+/// once every dug order is dug out.
+pub fn pocket_mouth(engine: &SimEngine) -> Option<(u32, u32)> {
+    let g = &engine.resources.tile_grid;
+    let mut mouth = None;
+    for r in &engine.resources.colony.command_log {
+        if let (Command::DesignateDig { x0, y0, x1, y1 }, true) = (&r.command, r.result.accepted) {
+            for y in *y0.min(y1)..=*y0.max(y1) {
+                for x in *x0.min(x1)..=*x0.max(x1) {
+                    if g.terrain_type[g.idx(x, y)] == sim_core::TerrainType::Hill
+                        && !g.is_dug(g.idx(x, y))
+                    {
+                        return None;
+                    }
+                }
+            }
+            if x0 == x1 && y0 == y1 {
+                mouth = Some((*x0, *y0));
+            }
+        }
+    }
+    mouth
+}
+
 /// The workshop of `kind` with the lowest id.
 pub fn workshop_of(engine: &SimEngine, kind: BlueprintKind) -> Option<u32> {
     engine
@@ -353,10 +595,12 @@ pub fn adult_of_rank(engine: &SimEngine, rank: usize) -> Option<u64> {
 }
 
 /// Whether a script entry's `"after"` condition holds (`"workshop:<kind>"`:
-/// a finished workshop of that kind exists); entries without one are ready.
+/// a finished workshop of that kind exists; M3 `"pocket_dug"`: the dug pocket's
+/// orders are all dug); entries without one are ready.
 pub fn entry_ready(engine: &SimEngine, spec: &Value) -> bool {
     match spec["after"].as_str() {
         None => true,
+        Some("pocket_dug") => pocket_mouth(engine).is_some(),
         Some(cond) => match cond.strip_prefix("workshop:") {
             Some(kind) => BlueprintKind::from_name(kind)
                 .and_then(|k| workshop_of(engine, k))
@@ -463,6 +707,71 @@ pub fn resolve(
                     workshop,
                     recipe,
                     mode: bill_mode(spec)?,
+                }],
+                None => Vec::new(),
+            }
+        }
+        ("place_house", Some("south_of_hearth")) => {
+            let w = spec["w"].as_u64().unwrap_or(7) as u32;
+            let h = spec["h"].as_u64().unwrap_or(5) as u32;
+            let beds = spec["beds"].as_u64().unwrap_or(4) as usize;
+            match walled_spot(engine, w, h, true, pending_avoid) {
+                Some(at) => {
+                    pending_avoid.extend(box_tiles(at, w, h));
+                    house_commands(at, w, h, beds)
+                }
+                None => Vec::new(),
+            }
+        }
+        ("place_storehouse", Some(spot)) => {
+            // A `size × size` stockpile inside log walls with a south door;
+            // "east_of_hearth" searches from the hearth eastwards, "south_of_hearth"
+            // (the second storehouse) southwards.
+            let size = spec["size"].as_u64().unwrap_or(6) as u32;
+            let south = spot == "south_of_hearth";
+            match walled_spot(engine, size + 2, size + 2, south, pending_avoid) {
+                Some(at) => {
+                    pending_avoid.extend(box_tiles(at, size + 2, size + 2));
+                    storehouse_commands(at, size)
+                }
+                None => Vec::new(),
+            }
+        }
+        ("designate_dig", Some("hill_pocket")) => {
+            let size = spec["size"].as_u64().unwrap_or(4) as u32;
+            let within = spec["within"].as_u64().unwrap_or(40) as u32;
+            match hill_pocket(engine, size, within) {
+                Some(((x0, y0), mouth)) => vec![
+                    Command::DesignateDig {
+                        x0: mouth.0,
+                        y0: mouth.1,
+                        x1: mouth.0,
+                        y1: mouth.1,
+                    },
+                    Command::DesignateDig {
+                        x0,
+                        y0,
+                        x1: x0 + size - 1,
+                        y1: y0 + size - 1,
+                    },
+                ],
+                // No hill: a second walled storehouse (goal §10).
+                None => match walled_spot(engine, size + 4, size + 4, true, pending_avoid) {
+                    Some(at) => {
+                        pending_avoid.extend(box_tiles(at, size + 4, size + 4));
+                        storehouse_commands(at, size + 2)
+                    }
+                    None => Vec::new(),
+                },
+            }
+        }
+        ("place_blueprint", Some("pocket_mouth")) => {
+            // The door of the dug pocket: on its one-tile dig order (the mouth).
+            match pocket_mouth(engine) {
+                Some((x, y)) => vec![Command::PlaceBlueprint {
+                    kind: BlueprintKind::Door,
+                    x,
+                    y,
                 }],
                 None => Vec::new(),
             }
@@ -809,6 +1118,7 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
     let mut tick_ns: Vec<u64> = Vec::with_capacity(total as usize);
     let mut demography = super::demography::Demography::new(&engine);
     let mut economy = super::economy::Economy::new();
+    let mut space = super::space::SpaceWatch::new();
     let mut waiting: Vec<usize> = Vec::new();
     // `"every_days"` entries: (tick of the next application, entry), M3.
     let mut repeats: Vec<(u64, usize)> = Vec::new();
@@ -874,6 +1184,7 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
         tick_ns.push(started.elapsed().as_nanos() as u64);
         demography.after_tick(&engine);
         economy.after_tick(&engine);
+        space.after_tick(&engine);
         if let Some(t) = twin.as_mut() {
             t.tick();
         }
@@ -982,6 +1293,7 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
         "demography": demography.report(&engine),
         "fingerprints": fingerprints,
         "m2": economy.report(&engine),
+        "m3": space.report(&engine),
     });
     let mut sorted = tick_ns.clone();
     sorted.sort_unstable();

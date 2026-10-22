@@ -1,9 +1,13 @@
 //! SleepDecaySystem: advances every agent's sleep need.
 //!
 //! Priority: 132 · Interval: 1 tick · Gate: none
-//! Reads: `Sleep`
+//! Reads: `Sleep`, `AgentState`, `Position`; `SimResources.colony.rooms` (M3)
 //! Writes: `Sleep`
 //! Events: none
+//!
+//! M3 (ADR 0023, colony with built space): while asleep (`Consuming { Sleep }`)
+//! in a roofed bedroom, fatigue grows at `SpaceRule::bedroom_sleep_permille`
+//! (800 ‰) of its rate, so the night's rest goes about 20 % further.
 //!
 //! V7 Phase 5-γ — `SleepDecaySystem` (priority 132, every tick).
 //!
@@ -32,7 +36,7 @@
 //! decay state.
 
 use hecs::World;
-use sim_core::components::Sleep;
+use sim_core::components::{AgentState, Position, Sleep, TargetKind};
 use sim_engine::{RuntimeSystem, SimResources};
 
 /// Phase 5-γ need-decay system. Stateless — all per-agent state lives
@@ -60,9 +64,44 @@ impl RuntimeSystem for SleepDecaySystem {
         1
     }
 
-    fn tick(&mut self, world: &mut World, _resources: &mut SimResources) {
-        for (_entity, sleep) in world.query::<&mut Sleep>().iter() {
-            sleep.tick();
+    fn tick(&mut self, world: &mut World, resources: &mut SimResources) {
+        let bedroom = resources
+            .rules
+            .colony
+            .and_then(|rule| rule.space)
+            .map(|space| space.bedroom_sleep_permille)
+            .filter(|_| !resources.colony.rooms.is_empty());
+        let Some(permille) = bedroom else {
+            for (_entity, sleep) in world.query::<&mut Sleep>().iter() {
+                sleep.tick();
+            }
+            return;
+        };
+        let factor = f64::from(permille) / 1000.0;
+        for (_entity, (sleep, state, pos)) in world
+            .query::<(&mut Sleep, Option<&AgentState>, Option<&Position>)>()
+            .iter()
+        {
+            let asleep = matches!(
+                state,
+                Some(AgentState::Consuming {
+                    target: TargetKind::Sleep
+                })
+            );
+            let in_bedroom = asleep
+                && pos.is_some_and(|p| {
+                    crate::runtime::rooms::roofed_as(
+                        resources,
+                        (p.x, p.y),
+                        sim_core::rooms::RoomRole::Bedroom,
+                    )
+                });
+            if in_bedroom {
+                sleep.fatigue =
+                    (sleep.fatigue + sleep.growth_rate * factor).clamp(0.0, Sleep::SATURATION);
+            } else {
+                sleep.tick();
+            }
         }
     }
 }

@@ -28,6 +28,8 @@ mod routine_observer;
 mod routine_trace;
 mod runner;
 mod seasons_forage;
+/// M3 built space and rooms in a colony run (`m3` summary block).
+pub mod space;
 mod summary;
 mod winter_severity;
 mod wood_work;

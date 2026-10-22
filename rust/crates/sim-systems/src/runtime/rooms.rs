@@ -8,7 +8,9 @@
 //! Detection is `sim_core::rooms::detect` over the tile grid: walls, doors,
 //! undug hill, water and mountain bound a room (a wall's construction site
 //! does not: only built walls enclose). A region is a room with
-//! `room_min_tiles..=room_max_tiles` tiles that does not touch the map edge;
+//! `room_min_tiles..=room_max_tiles` tiles that does not touch the map edge
+//! and that the colony made — a built wall or door on its border, or a dug
+//! tile inside (natural pockets ringed by hills are not rooms);
 //! every such room is roofed (the enclosure is the roof; M3 has no roof item),
 //! and a room with a dug tile is `dug`. Ids survive re-detection
 //! (`sim_core::rooms::assign_ids`); an override follows its id and is dropped
@@ -140,7 +142,18 @@ pub fn detect_rooms(world: &World, res: &mut SimResources) {
             space.room_max_tiles,
             |t| bounds(r, t),
             |t| r.tile_grid.is_door(r.tile_grid.idx(t.0, t.1)),
+            |t| r.tile_grid.wall_material[r.tile_grid.idx(t.0, t.1)].is_some(),
         )
+        .into_iter()
+        // Only rooms the colony made: a built wall or door on the border, or
+        // a dug tile inside (a meadow ringed by hills is not a room).
+        .filter(|f| {
+            f.built
+                || f.tiles
+                    .iter()
+                    .any(|t| r.tile_grid.is_dug(r.tile_grid.idx(t.0, t.1)))
+        })
+        .collect::<Vec<_>>()
     };
     let mut next = res.colony.next_room_id.max(1);
     let ids = assign_ids(&res.colony.rooms, found, &mut next);
@@ -240,4 +253,33 @@ impl RuntimeSystem for RoomSystem {
             assign_roles(world, resources);
         }
     }
+}
+
+/// The room `tile` lies in, if any.
+pub fn room_at(res: &SimResources, tile: (u32, u32)) -> Option<&Room> {
+    let id = res.colony.room_of_tile.get(&tile)?;
+    res.colony.rooms.get(id)
+}
+
+/// Whether `tile` lies in a roofed room.
+pub fn roofed(res: &SimResources, tile: (u32, u32)) -> bool {
+    room_at(res, tile).is_some_and(|room| room.roofed)
+}
+
+/// Whether `tile` lies in a roofed room of `role`.
+pub fn roofed_as(res: &SimResources, tile: (u32, u32), role: RoomRole) -> bool {
+    room_at(res, tile).is_some_and(|room| room.roofed && room.role == role)
+}
+
+/// Whether items on `tile` are under a roof in a storehouse (ADR 0023: "covered").
+pub fn covered(res: &SimResources, tile: (u32, u32)) -> bool {
+    roofed_as(res, tile, RoomRole::Storehouse)
+}
+
+/// Whether the colony has a roofed storehouse.
+pub fn storehouse_exists(res: &SimResources) -> bool {
+    res.colony
+        .rooms
+        .values()
+        .any(|room| room.roofed && room.role == RoomRole::Storehouse)
 }

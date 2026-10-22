@@ -1,7 +1,7 @@
 //! FireSystem: burns stockpile wood in each hearth at night and marks members `Cold` (with exposure damage) when the fire is out on a winter night.
 //!
 //! Priority: 147 · Interval: 60 ticks · Gate: `WorldRules.society.firewood`
-//! Reads: `Agent`, `Founding`, `PorterTrip`, `Child`, `Elder`, `Hardiness`, `Hunger`, `Position`; `SimResources.settlements`, `rules`
+//! Reads: `Agent`, `Founding`, `PorterTrip`, `Child`, `Elder`, `Hardiness`, `Hunger`, `Position`, `AgentState`; `SimResources.settlements`, `rules`, `colony.rooms` (M3)
 //! Writes: `Cold`, `ExposureClock`, `BodyHealth`; `SimResources.fires`, `settlements` (stockpile wood), `tallies`; deaths via `despawn_agent`
 //! Events: tally `cold_member_hours`; on death `CausalEvent::AgentDied`, chronicle `Died`/`Widowed`, tally `deaths_exposure`
 //!
@@ -43,6 +43,9 @@
 //!
 //! Pass 11 (exposure v2, `game_v17`): the hourly damage is scaled by the
 //! resident's `Hardiness` and by its hunger (`exposure_damage`).
+//!
+//! M3 (ADR 0023, colony with built space): a sleeper (`Consuming { Sleep }`)
+//! on a tile of a roofed room is sheltered and is not marked `Cold`.
 //!
 //! (The rain rule acted only on intervention rain, removed in V8-0 with its
 //! `rain_wet_burn` field; `rain_soak_permille` remains in the rules data.)
@@ -136,6 +139,28 @@ impl RuntimeSystem for FireSystem {
             // Pass 20: nor is a porter on its trip (no `PorterTrip` outside `game_v25`).
             if resources.rules.society.relations.is_some() {
                 for (_, (agent, _)) in world.query::<(&Agent, &PorterTrip)>().iter() {
+                    cold.remove(&agent.id);
+                }
+            }
+        }
+        // M3: sleepers under a roof (a roofed room) keep warm.
+        if cold_night
+            && resources
+                .rules
+                .colony
+                .is_some_and(|rule| rule.space.is_some())
+        {
+            for (_, (agent, pos, state)) in world
+                .query::<(&Agent, &Position, &sim_core::components::AgentState)>()
+                .iter()
+            {
+                let asleep = matches!(
+                    state,
+                    sim_core::components::AgentState::Consuming {
+                        target: sim_core::components::TargetKind::Sleep
+                    }
+                );
+                if asleep && crate::runtime::rooms::roofed(resources, (pos.x, pos.y)) {
                     cold.remove(&agent.id);
                 }
             }

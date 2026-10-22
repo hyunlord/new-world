@@ -157,7 +157,8 @@ pub fn rock_of(_res: &SimResources, _tile: (u32, u32)) -> MaterialId {
 }
 
 /// Dig `tile` out: it stays a hill but becomes passable with a rock floor and
-/// yields `SpaceRule::dig_stone` stone of its rock (ledger: created).
+/// yields `SpaceRule::dig_stone` stone of its rock (ledger: created); a boulder
+/// on it goes too, its remaining stone added to the yield.
 pub fn dig(res: &mut SimResources, tile: (u32, u32)) -> bool {
     let grid = &res.tile_grid;
     if tile.0 >= grid.width || tile.1 >= grid.height {
@@ -178,6 +179,17 @@ pub fn dig(res: &mut SimResources, tile: (u32, u32)) -> bool {
     grid.floor_material[i] = Some(rock);
     res.colony.designations.remove(&tile);
     res.colony.tallies.tiles_dug += 1;
+    // A boulder on the tile is dug out with it: what it still held comes out too.
+    if let Some(node) = res.colony.nodes.remove(&tile) {
+        res.colony.tallies.nodes_exhausted += 1;
+        if node.left > 0 {
+            let spec = ItemSpec::raw(node.kind.yields(), Some(node.material));
+            res.colony
+                .item_ledger
+                .create(spec.kind, u64::from(node.left));
+            put_items(res, tile, spec, u16::from(node.left));
+        }
+    }
     changed(res, tile);
     if stone > 0 {
         res.colony
