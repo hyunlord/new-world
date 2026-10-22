@@ -1,6 +1,6 @@
 # Snapshot schema — the bridge's read surface
 
-Schema version: 1 (M1.5).
+Schema version: 2 (M2: the economy reads and the overlay's node, mark and quality columns).
 
 Every `#[func] fn get_*` that `WorldSimNode` (`rust/crates/sim-bridge/src/ffi/node.rs`) exposes to GDScript, with the
 keys it returns, their types, id spaces, units and row order, and the pure collector that backs it. A `#[func]` body
@@ -157,8 +157,8 @@ between two reads of an unchanged world, **not** sorted by id and not stable acr
 | `infants` | PackedByteArray | M1.5: 1 for an infant (`Child::is_infant` under `infant_ticks`), else 0 |
 | `pregnant_days` | PackedInt32Array | M1.5: whole days left of a pregnancy (`Pregnant::days_left`); -1 when not pregnant |
 | `colds` | PackedByteArray | 1 with the `Cold` marker |
-| `jobs` | PackedByteArray | M1: 0 none, 1 chop, 2 haul, 3 deliver, 4 build (`JobKind::code`) |
-| `carry_kinds` | PackedInt32Array | M1: carried item kind, -1 none, 0 log (`ItemKind::code`) |
+| `jobs` | PackedByteArray | `JobKind::code`: 0 none, 1 chop, 2 haul, 3 deliver, 4 build, 5 quarry, 6 supply, 7 craft, 8 gather (M2) |
+| `carry_kinds` | PackedInt32Array | carried item kind, -1 none, else `ItemKind::code`: 0 log, 1 firewood, 2 stone, 3 flint, 4 flint blade, 5 stone axe, 6 hide (M2) |
 | `carry_counts` | PackedInt32Array | M1: carried item count |
 
 A person sleeps when `states` is 3 and `target_kinds` is 3 (the agent layer's sleep frame; the text renderer's `z`).
@@ -533,34 +533,115 @@ from successive reads.
 ### `get_colony_overlay`
 `collect_colony_overlay(&World, &SimResources) -> ColonyOverlay` → `overlay_to_dict` (`ffi/colony.rs`). Four row
 groups, each in its map's key order: designations by tile, zone cells by tile, ground stacks by tile, sites by centre
-tile.
+tile; M2 adds resource nodes by tile.
 
 | key | type | meaning |
 |---|---|---|
 | `version` | int | `overlay_version` of this read |
-| `designation_xs` | PackedInt32Array | chop-marked tree tile x |
-| `designation_ys` | PackedInt32Array | chop-marked tree tile y |
+| `designation_xs` | PackedInt32Array | marked tile x (a tree to chop or a node to quarry) |
+| `designation_ys` | PackedInt32Array | marked tile y |
+| `designation_kinds` | PackedInt32Array | M2: the mark, 0 chop, 1 quarry |
+| `node_xs` | PackedInt32Array | M2: resource node tile x |
+| `node_ys` | PackedInt32Array | M2: resource node tile y |
+| `node_kinds` | PackedInt32Array | M2: `NodeKind::code`, 0 boulder, 1 flint outcrop |
+| `node_left` | PackedInt32Array | M2: items still in the node |
+| `item_qualities` | PackedInt32Array | M2: quality 0–100 of the ground stack (same rows as `item_xs`) |
 | `zone_ids` | PackedInt32Array | zone id of the cell |
 | `zone_xs` | PackedInt32Array | zone cell tile x |
 | `zone_ys` | PackedInt32Array | zone cell tile y |
 | `item_xs` | PackedInt32Array | ground stack tile x |
 | `item_ys` | PackedInt32Array | ground stack tile y |
-| `item_kinds` | PackedInt32Array | `ItemKind::code` (0 log) |
+| `item_kinds` | PackedInt32Array | `ItemKind::code` (0 log … 6 hide, as `carry_kinds`) |
 | `item_counts` | PackedInt32Array | items in the stack |
 | `site_xs` | PackedInt32Array | blueprint site footprint top-left x |
 | `site_ys` | PackedInt32Array | footprint top-left y |
 | `site_ws` | PackedInt32Array | footprint width |
 | `site_hs` | PackedInt32Array | footprint height |
-| `site_kinds` | PackedInt32Array | `BlueprintKind::code` (0 hut) |
-| `site_needed` | PackedInt32Array | logs needed |
-| `site_delivered` | PackedInt32Array | logs delivered |
+| `site_kinds` | PackedInt32Array | `BlueprintKind::code`: 0 hut, 1 knapping spot, 2 wood bench, 3 drying rack |
+| `site_needed` | PackedInt32Array | materials needed (all lines summed; M2: a wood bench needs logs and stone) |
+| `site_delivered` | PackedInt32Array | materials delivered (all lines summed) |
 | `site_progress` | PackedInt32Array | work done |
 | `site_required` | PackedInt32Array | work needed |
+
+## Economy (M2)
+
+### `get_workshops`
+`collect_workshops(&SimResources) -> Vec<WorkshopRow>` → `workshops_to_dict` (`ffi/economy.rs`). Workshops in id
+order; their bills (work order) and shelf stacks flattened, each with the row index of its workshop.
+
+| key | type | meaning |
+|---|---|---|
+| `ids` | PackedInt32Array | workshop id |
+| `kinds` | PackedInt32Array | `BlueprintKind::code` (1 knapping spot, 2 wood bench, 3 drying rack) |
+| `xs` | PackedInt32Array | footprint top-left x |
+| `ys` | PackedInt32Array | footprint top-left y |
+| `ws` | PackedInt32Array | footprint width |
+| `hs` | PackedInt32Array | footprint height |
+| `work_xs` | PackedInt32Array | work tile x (south of the footprint's centre column) |
+| `work_ys` | PackedInt32Array | work tile y |
+| `bill_shops` | PackedInt32Array | row index (in `ids`) of the bill's workshop |
+| `bill_ids` | PackedInt32Array | bill id |
+| `bill_recipes` | PackedInt32Array | `RecipeKind::code`: 0 knap blade, 1 haft axe, 2 split firewood |
+| `bill_modes` | PackedInt32Array | 0 make n, 1 maintain n |
+| `bill_counts` | PackedInt32Array | n |
+| `bill_done` | PackedInt32Array | crafts done under the bill |
+| `bill_suspended` | PackedInt32Array | 1 = suspended |
+| `bill_auto` | PackedInt32Array | 1 = the hearth's auto-bill |
+| `bill_active` | PackedInt32Array | 1 = the bill the workshop works now |
+| `shelf_shops` | PackedInt32Array | row index of the shelf stack's workshop |
+| `shelf_kinds` | PackedInt32Array | `ItemKind::code` |
+| `shelf_counts` | PackedInt32Array | items on the shelf |
+
+### `get_work_priorities`
+`collect_work_priorities(&World) -> Vec<PriorityRow>` → `priorities_to_dict` (`ffi/economy.rs`). Adults (no
+`Child`) in `AgentId` order; levels are the person's `WorkPriorities` or the defaults (3; elders' quarrying 0).
+
+| key | type | meaning |
+|---|---|---|
+| `agent_ids` | PackedInt64Array | `AgentId` |
+| `elders` | PackedInt32Array | 1 = an elder |
+| `levels` | PackedByteArray | 6 per row in `work_types` order: 0 never, 1 highest … 4 lowest |
+| `work_types` | PackedStringArray | `craft, build, quarry, chop, split, haul` (`WorkType::name`, tie-break order) |
+
+### `get_recipes`
+`collect_recipes()` → `recipes_to_dict` (`ffi/economy.rs`). The recipe table (`data/colony/recipes.ron`) in code order.
+
+| key | type | meaning |
+|---|---|---|
+| `codes` | PackedInt32Array | `RecipeKind::code` |
+| `names` | PackedStringArray | `knap_blade`, `haft_axe`, `split_firewood` |
+| `workshop_kinds` | PackedInt32Array | `BlueprintKind::code` of the workshop that makes it |
+| `output_kinds` | PackedInt32Array | `ItemKind::code` of the output |
+| `output_counts` | PackedInt32Array | items per craft |
+| `work_ticks` | PackedInt32Array | work ticks at skill level 5 |
+| `skills` | PackedInt32Array | `SkillKind::code` (0 knap, 1 woodwork, 2 chop, 3 quarry, 4 build) |
+
+### `get_agent_economy`
+`collect_agent_economy(&World, &SimResources, AgentId) -> Option<AgentEconomyRow>` → `agent_economy_to_dict`
+(`ffi/economy.rs`). Argument: the person's `AgentId`. Skill arrays are indexed by `SkillKind::code`.
+
+| key | type | meaning |
+|---|---|---|
+| `found` | bool | false when no person has that id |
+| `skill_levels` | PackedInt32Array | level 0–20 per skill |
+| `skill_xp` | PackedInt32Array | XP (work ticks) per skill |
+| `skill_tiers` | PackedInt32Array | 0 novice (0–4), 1 apprentice (5–9), 2 skilled (10–14), 3 master (15–20) |
+| `skill_names` | PackedStringArray | `knap, woodwork, chop, quarry, build` |
+| `tool_kind` | int | held tool's `ItemKind::code`, -1 none |
+| `tool_quality` | int | tool quality 0–100 |
+| `tool_material` | String | tool material name (`flint`, …; `""` unknown) |
+| `carry_kind` | int | carried item kind, -1 none |
+| `carry_count` | int | items carried |
+| `carry_quality` | int | carried items' quality |
+| `carry_material` | String | carried items' material name |
 
 ## Commands and lifecycle (not snapshot reads)
 
 The mutators GDScript may call (`SimReads.MUTATORS`): the M1 orders `cmd_designate_chop`, `cmd_designate_chop_tiles`,
-`cmd_cancel_area`, `cmd_add_stockpile`, `cmd_remove_zone_area`, `cmd_place_blueprint`, each returning
+`cmd_cancel_area`, `cmd_add_stockpile`, `cmd_remove_zone_area`, `cmd_place_blueprint` (kinds `hut`, `knapping_spot`,
+`wood_bench`, `drying_rack`) and the M2 orders `cmd_designate_quarry`, `cmd_add_bill`, `cmd_remove_bill`,
+`cmd_set_bill_mode`, `cmd_move_bill`, `cmd_set_bill_suspended`, `cmd_set_work_priority` (`ffi/economy.rs`; names
+parsed at the boundary, an unknown name is `unknown` without a log entry), each returning
 `{accepted: bool, count: int, reason: String}` (`result_to_dict` in `ffi/colony.rs`; `reason` is `""` or a
 `RejectReason` name) and logged with the next tick (ADR 0012); `can_place_blueprint(kind, x, y) -> bool`;
 `advance_ticks(n) -> int` (the final absolute tick, at most 200,000 per call); `reset_world(seed)`,

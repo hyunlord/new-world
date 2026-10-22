@@ -123,15 +123,34 @@ enum Search {
 /// Searches that found no candidate anywhere on the map this tick. Within one
 /// `JobAssignSystem` tick the candidates only shrink (each assignment adds
 /// reservations and items in transit), so an empty search stays empty for
-/// every later agent of the tick and is skipped (M1.5 DECISIONS D15).
+/// every later agent of the tick and is skipped (M1.5 DECISIONS D15). Fixed
+/// fields and per-kind arrays: the memo is looked up for every agent.
 #[derive(Debug, Default, Clone)]
 struct Exhausted {
-    memos: BTreeMap<Search, Memo>,
+    short_site: Memo,
+    ready_site: Memo,
+    marked_tree: Memo,
+    quarry_node: Memo,
+    deadwood: Memo,
+    loose: Memo,
+    stocked: [Memo; 7],
+    any_stack: [Memo; 7],
+    open_cell: BTreeMap<ItemSpec, Memo>,
 }
 
 impl Exhausted {
     fn memo(&mut self, search: Search) -> &mut Memo {
-        self.memos.entry(search).or_default()
+        match search {
+            Search::ShortSite => &mut self.short_site,
+            Search::ReadySite => &mut self.ready_site,
+            Search::MarkedTree => &mut self.marked_tree,
+            Search::QuarryNode => &mut self.quarry_node,
+            Search::Deadwood => &mut self.deadwood,
+            Search::Loose => &mut self.loose,
+            Search::Stocked(kind) => &mut self.stocked[kind.code() as usize],
+            Search::AnyStack(kind) => &mut self.any_stack[kind.code() as usize],
+            Search::OpenCell(spec) => self.open_cell.entry(spec).or_default(),
+        }
     }
 }
 
@@ -182,10 +201,15 @@ struct Ctx<'a> {
     /// Deadwood spots with wood (M2), built on first use in a tick: most ticks
     /// need none (the colony is rarely short of firewood).
     deadwood: &'a std::cell::OnceCell<ChunkIndex<()>>,
-    /// Firewood units still to gather this tick (M2 goal 3.8; 0 = none).
-    gather_short: u32,
-    /// The colony's hearth (the gather fallback's drop when no cell has room).
-    hearth: Option<(u32, u32)>,
+    /// The world (for the lazily computed firewood shortfall).
+    world: &'a World,
+    /// Whether firewood goes through jobs (M2 goal 3.8).
+    by_jobs: bool,
+    /// Firewood units still to gather this tick: computed on first use, then
+    /// lowered by a carry per gather job taken (`None` = not computed yet).
+    gather_short: &'a std::cell::Cell<Option<u32>>,
+    /// The colony's hearth (the gather fallback's drop when no cell has room), on first use.
+    hearth: &'a std::cell::OnceCell<Option<(u32, u32)>>,
 }
 
 /// A picked job: kind, amount, item.
@@ -419,12 +443,10 @@ fn pick_work(
             // within the tick, so the `Loose` memo stays valid.
             loop {
                 let blocked: Vec<ItemSpec> = ex
-                    .memos
+                    .open_cell
                     .iter()
-                    .filter_map(|(key, memo)| match key {
-                        Search::OpenCell(spec) if memo.empty => Some(*spec),
-                        _ => None,
-                    })
+                    .filter(|(_, memo)| memo.empty)
+                    .map(|(spec, _)| *spec)
                     .collect();
                 let loose = search(
                     &index.ground,
@@ -473,7 +495,15 @@ fn pick_work(
 /// taken, for the stockpile cell nearest it that takes firewood, or the hearth
 /// pile when none has room.
 fn gather_pick(res: &SimResources, ctx: &Ctx, pos: (u32, u32), ex: &mut Exhausted) -> Option<Pick> {
-    if ctx.gather_short == 0 {
+    if !ctx.by_jobs {
+        return None;
+    }
+    let short = ctx.gather_short.get().unwrap_or_else(|| {
+        let v = gather_shortfall(ctx.world, res);
+        ctx.gather_short.set(Some(v));
+        v
+    });
+    if short == 0 {
         return None;
     }
     let colony = &res.colony;
@@ -507,7 +537,10 @@ fn gather_pick(res: &SimResources, ctx: &Ctx, pos: (u32, u32), ex: &mut Exhauste
         .cells
         .nearest_where(spot, u32::MAX, |c, _| open(c))
         .map(|(c, ())| c);
-    let to = cell.or(ctx.hearth)?;
+    let hearth = *ctx
+        .hearth
+        .get_or_init(|| crate::worldgen::colony::hearth(res));
+    let to = cell.or(hearth)?;
     Some((JobKind::Gather { spot, to }, 0, ItemKind::Firewood))
 }
 
@@ -544,13 +577,15 @@ fn best_axe(res: &SimResources, pos: (u32, u32), reach: u32) -> Option<(u32, u32
 fn pick(
     res: &SimResources,
     ctx: &Ctx,
-    order: &[WorkType],
+    priorities: &WorkPriorities,
+    pass: u8,
     pos: (u32, u32),
     ex: &mut Exhausted,
 ) -> Option<Pick> {
-    order
-        .iter()
-        .find_map(|work| pick_work(res, ctx, *work, pos, ex))
+    WorkType::ALL
+        .into_iter()
+        .filter(|w| pass == 0 || priorities.level(*w) == pass)
+        .find_map(|work| pick_work(res, ctx, work, pos, ex))
 }
 
 impl RuntimeSystem for JobAssignSystem {
@@ -637,12 +672,8 @@ impl RuntimeSystem for JobAssignSystem {
         // M2 goal 3.8: the gather fallback's inputs.
         let by_jobs = super::hearth::firewood_by_jobs(resources);
         let deadwood = std::cell::OnceCell::new();
-        let mut gather_short = if by_jobs {
-            gather_shortfall(world, resources)
-        } else {
-            0
-        };
-        let hearth = crate::worldgen::colony::hearth(resources);
+        let gather_short = std::cell::Cell::new(None);
+        let hearth = std::cell::OnceCell::new();
         let mut taken: Vec<(Entity, Job)> = Vec::new();
         let mut exhausted = Exhausted::default();
         // M2 (goal 3.6, DECISIONS D14): passes by priority level — every
@@ -661,13 +692,6 @@ impl RuntimeSystem for JobAssignSystem {
                 if assigned.contains(&id) || (pass != 0 && !priorities.levels.contains(&pass)) {
                     continue;
                 }
-                let order: Vec<WorkType> = WorkType::ALL
-                    .into_iter()
-                    .filter(|w| pass == 0 || priorities.level(*w) == pass)
-                    .collect();
-                if order.is_empty() {
-                    continue;
-                }
                 let ctx = Ctx {
                     rule: &rule,
                     sites: &sites,
@@ -677,10 +701,13 @@ impl RuntimeSystem for JobAssignSystem {
                     crafting: &crafting,
                     made: &made,
                     deadwood: &deadwood,
-                    gather_short,
-                    hearth,
+                    world,
+                    by_jobs,
+                    gather_short: &gather_short,
+                    hearth: &hearth,
                 };
-                let Some((kind, amount, item)) = pick(resources, &ctx, &order, pos, &mut exhausted)
+                let Some((kind, amount, item)) =
+                    pick(resources, &ctx, &priorities, pass, pos, &mut exhausted)
                 else {
                     continue;
                 };
@@ -713,8 +740,8 @@ impl RuntimeSystem for JobAssignSystem {
                         *supply.entry((workshop, item)).or_insert(0) += amount;
                     }
                     JobKind::Gather { .. } => {
-                        gather_short =
-                            gather_short.saturating_sub(u32::from(rule.carry(ItemKind::Firewood)));
+                        let carry = u32::from(rule.carry(ItemKind::Firewood));
+                        gather_short.set(gather_short.get().map(|v| v.saturating_sub(carry)));
                     }
                     JobKind::Craft { bill, workshop, .. } => {
                         *crafting.entry(bill).or_insert(0) += 1;

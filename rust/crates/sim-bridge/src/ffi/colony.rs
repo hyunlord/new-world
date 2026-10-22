@@ -24,6 +24,8 @@ pub enum RectCommand {
     AddStockpile,
     /// `RemoveZoneArea`.
     RemoveZoneArea,
+    /// `DesignateQuarry` (M2).
+    DesignateQuarry,
 }
 
 /// Clip a rectangle given in signed tile coordinates: a corner below 0 is
@@ -53,6 +55,7 @@ pub fn submit_rect(
         RectCommand::CancelArea => Command::CancelArea { x0, y0, x1, y1 },
         RectCommand::AddStockpile => Command::AddStockpile { x0, y0, x1, y1 },
         RectCommand::RemoveZoneArea => Command::RemoveZoneArea { x0, y0, x1, y1 },
+        RectCommand::DesignateQuarry => Command::DesignateQuarry { x0, y0, x1, y1 },
     };
     submit(engine, cmd)
 }
@@ -178,8 +181,14 @@ pub struct OverlaySite {
 pub struct ColonyOverlay {
     /// `colony.overlay_version`.
     pub version: u64,
-    /// Chop-marked tiles.
+    /// Marked tiles (chop and quarry marks).
     pub designations: Vec<(u32, u32)>,
+    /// The mark of each `designations` entry (0 chop, 1 quarry; M2).
+    pub designation_kinds: Vec<u8>,
+    /// Resource nodes: tile, `NodeKind::code`, items left (M2).
+    pub nodes: Vec<((u32, u32), u8, u8)>,
+    /// Quality of each ground stack (same order as `items`; M2).
+    pub item_qualities: Vec<u8>,
     /// Zoned tiles with their zone id.
     pub zones: Vec<(u32, (u32, u32))>,
     /// Ground stacks: tile, `ItemKind::code`, count.
@@ -208,6 +217,20 @@ pub fn collect_colony_overlay(world: &hecs::World, resources: &SimResources) -> 
     ColonyOverlay {
         version: colony.overlay_version,
         designations: colony.designations.keys().copied().collect(),
+        designation_kinds: colony
+            .designations
+            .values()
+            .map(|d| match d {
+                sim_core::colony::Designation::Chop => 0,
+                sim_core::colony::Designation::Quarry => 1,
+            })
+            .collect(),
+        nodes: colony
+            .nodes
+            .iter()
+            .map(|(tile, node)| (*tile, node.kind.code(), node.left))
+            .collect(),
+        item_qualities: colony.ground_items.values().map(|s| s.quality).collect(),
         zones: colony
             .zone_of_tile
             .iter()
@@ -232,6 +255,12 @@ pub(super) fn overlay_to_dict(o: &ColonyOverlay) -> VarDictionary {
     dict.set("version", o.version as i64);
     dict.set("designation_xs", ints(&o.designations, |t| i64::from(t.0)));
     dict.set("designation_ys", ints(&o.designations, |t| i64::from(t.1)));
+    dict.set("designation_kinds", ints(&o.designation_kinds, i64::from));
+    dict.set("node_xs", ints(&o.nodes, |n| i64::from(n.0 .0)));
+    dict.set("node_ys", ints(&o.nodes, |n| i64::from(n.0 .1)));
+    dict.set("node_kinds", ints(&o.nodes, |n| i64::from(n.1)));
+    dict.set("node_left", ints(&o.nodes, |n| i64::from(n.2)));
+    dict.set("item_qualities", ints(&o.item_qualities, i64::from));
     dict.set("zone_ids", ints(&o.zones, |z| i64::from(z.0)));
     dict.set("zone_xs", ints(&o.zones, |z| i64::from(z.1 .0)));
     dict.set("zone_ys", ints(&o.zones, |z| i64::from(z.1 .1)));

@@ -18,6 +18,7 @@ pub mod activity;
 pub mod causal;
 pub mod chronicle;
 pub mod colony;
+pub mod economy;
 pub mod engine_build;
 pub mod family;
 pub mod node;
@@ -32,6 +33,11 @@ pub use colony::{
     can_place, clip_rect, collect_agent_jobs, collect_colony_overlay, collect_colony_versions,
     collect_trees, submit_blueprint, submit_rect, submit_tiles, ColonyOverlay, ColonyVersions,
     OverlaySite, RectCommand,
+};
+pub use economy::{
+    collect_agent_economy, collect_recipes, collect_work_priorities, collect_workshops,
+    parse_economy, submit_economy, AgentEconomyRow, BillRow, EconomyCommand, PriorityRow,
+    WorkshopRow,
 };
 pub use family::{collect_agent_family, AgentFamilyRow};
 

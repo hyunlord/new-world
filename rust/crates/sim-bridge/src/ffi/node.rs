@@ -47,6 +47,11 @@ use super::colony::{
     overlay_to_dict, result_to_dict, submit_blueprint, submit_rect, submit_tiles, trees_to_dict,
     versions_to_dict, RectCommand,
 };
+use super::economy::{
+    agent_economy_to_dict, collect_agent_economy, collect_recipes, collect_work_priorities,
+    collect_workshops, priorities_to_dict, recipes_to_dict, submit_economy, workshops_to_dict,
+    EconomyCommand,
+};
 use super::engine_build::{advance_engine_ticks, build_game_engine, build_stress_engine};
 use super::family::{agent_family_to_dict, collect_agent_family};
 use super::reads_agent::{
@@ -519,6 +524,124 @@ impl WorldSimNode {
     #[func]
     fn cmd_place_blueprint(&mut self, kind: GString, x: i32, y: i32) -> VarDictionary {
         result_to_dict(submit_blueprint(&mut self.engine, &kind.to_string(), x, y))
+    }
+
+    /// M2 order: mark every boulder and flint outcrop in the rectangle for quarrying.
+    #[func]
+    fn cmd_designate_quarry(&mut self, x0: i32, y0: i32, x1: i32, y1: i32) -> VarDictionary {
+        result_to_dict(submit_rect(
+            &mut self.engine,
+            RectCommand::DesignateQuarry,
+            x0,
+            y0,
+            x1,
+            y1,
+        ))
+    }
+
+    /// M2 order: add a bill (`recipe` by name, `mode` `"make"`/`"maintain"`) to a workshop.
+    #[func]
+    fn cmd_add_bill(
+        &mut self,
+        workshop: i64,
+        recipe: GString,
+        mode: GString,
+        count: i64,
+    ) -> VarDictionary {
+        let cmd = EconomyCommand::AddBill {
+            workshop,
+            recipe: recipe.to_string(),
+            mode: mode.to_string(),
+            count,
+        };
+        result_to_dict(submit_economy(&mut self.engine, &cmd))
+    }
+
+    /// M2 order: remove a bill.
+    #[func]
+    fn cmd_remove_bill(&mut self, workshop: i64, bill: i64) -> VarDictionary {
+        let cmd = EconomyCommand::RemoveBill { workshop, bill };
+        result_to_dict(submit_economy(&mut self.engine, &cmd))
+    }
+
+    /// M2 order: change a bill's mode (`"make"`/`"maintain"`) and count.
+    #[func]
+    fn cmd_set_bill_mode(
+        &mut self,
+        workshop: i64,
+        bill: i64,
+        mode: GString,
+        count: i64,
+    ) -> VarDictionary {
+        let cmd = EconomyCommand::SetBillMode {
+            workshop,
+            bill,
+            mode: mode.to_string(),
+            count,
+        };
+        result_to_dict(submit_economy(&mut self.engine, &cmd))
+    }
+
+    /// M2 order: move a bill up (`up`) or down its workshop's list.
+    #[func]
+    fn cmd_move_bill(&mut self, workshop: i64, bill: i64, up: bool) -> VarDictionary {
+        let cmd = EconomyCommand::MoveBill { workshop, bill, up };
+        result_to_dict(submit_economy(&mut self.engine, &cmd))
+    }
+
+    /// M2 order: suspend or resume a bill.
+    #[func]
+    fn cmd_set_bill_suspended(
+        &mut self,
+        workshop: i64,
+        bill: i64,
+        suspended: bool,
+    ) -> VarDictionary {
+        let cmd = EconomyCommand::SetBillSuspended {
+            workshop,
+            bill,
+            suspended,
+        };
+        result_to_dict(submit_economy(&mut self.engine, &cmd))
+    }
+
+    /// M2 order: set one person's (`AgentId`) priority (0–4) for a work type by name.
+    #[func]
+    fn cmd_set_work_priority(&mut self, agent: i64, work: GString, level: i64) -> VarDictionary {
+        let cmd = EconomyCommand::SetWorkPriority {
+            agent,
+            work: work.to_string(),
+            level,
+        };
+        result_to_dict(submit_economy(&mut self.engine, &cmd))
+    }
+
+    /// M2: every workshop with its bills and shelf (columns; bills and shelf
+    /// flattened with the index of their workshop's row).
+    #[func]
+    fn get_workshops(&self) -> VarDictionary {
+        workshops_to_dict(&collect_workshops(&self.engine.resources))
+    }
+
+    /// M2: the adults' work priorities (`agent_ids`, `levels` 6 per row, `work_types`).
+    #[func]
+    fn get_work_priorities(&self) -> VarDictionary {
+        priorities_to_dict(&collect_work_priorities(&self.engine.world))
+    }
+
+    /// M2: the recipe table (code order).
+    #[func]
+    fn get_recipes(&self) -> VarDictionary {
+        recipes_to_dict(&collect_recipes())
+    }
+
+    /// M2: one person's skills, tool and load, by `AgentId`.
+    #[func]
+    fn get_agent_economy(&self, agent_id: i64) -> VarDictionary {
+        let row = u64::try_from(agent_id)
+            .ok()
+            .and_then(|id| collect_agent_economy(&self.engine.world, &self.engine.resources, id));
+        agent_economy_to_dict(row)
     }
 
     /// M1: whether a blueprint (`"hut"`) fits with its top-left at `(x, y)`.
