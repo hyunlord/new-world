@@ -39,6 +39,10 @@ pub struct TileGrid {
     /// Empty in older saves and the baseline; read through [`TileGrid::is_dug`].
     #[serde(default)]
     pub dug: Vec<bool>,
+    /// M4 (goal 3.6): this river tile is a ford (shallow, passable at cost 30).
+    /// Empty until worldgen places one; read through [`TileGrid::is_ford`].
+    #[serde(default)]
+    pub ford: Vec<bool>,
 }
 
 impl TileGrid {
@@ -57,6 +61,7 @@ impl TileGrid {
             outdoor: vec![true; total],
             door: vec![false; total],
             dug: vec![false; total],
+            ford: Vec::new(),
         }
     }
 
@@ -70,6 +75,22 @@ impl TileGrid {
     #[inline]
     pub fn is_dug(&self, idx: usize) -> bool {
         self.dug.get(idx).copied().unwrap_or(false)
+    }
+
+    /// Whether the tile at `idx` is a ford (M4; `false` when the column is absent).
+    #[inline]
+    pub fn is_ford(&self, idx: usize) -> bool {
+        self.ford.get(idx).copied().unwrap_or(false)
+    }
+
+    /// Set the ford flag of `idx`, growing an absent column first (M4).
+    pub fn set_ford(&mut self, idx: usize, ford: bool) {
+        if self.ford.len() != self.len() {
+            self.ford = vec![false; self.len()];
+        }
+        if let Some(cell) = self.ford.get_mut(idx) {
+            *cell = ford;
+        }
     }
 
     /// Set the door flag of `idx`, growing an absent column first (M3).

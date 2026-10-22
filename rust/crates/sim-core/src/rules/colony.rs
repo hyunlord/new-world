@@ -113,6 +113,10 @@ pub struct EconomyRule {
     pub axe_reach: u32,
     /// Chops an axe lasts before it breaks into one stone (goal 3.7 / 7.4: 200; 0 = never).
     pub axe_uses: u32,
+    /// M4 (goal 3.5, tool wear): a worn-out tool is used up (ledger consumed,
+    /// chronicle `ToolBroke`) instead of turning into one stone (M2).
+    #[serde(default)]
+    pub tools_break: bool,
 }
 
 impl EconomyRule {
@@ -128,6 +132,15 @@ impl EconomyRule {
         bank_reach: 2,
         axe_reach: 24,
         axe_uses: 200,
+        tools_break: false,
+    };
+
+    /// The M4 values (goal 3.5, tool wear): a stone axe lasts 40 chops and is
+    /// then used up, so blades are made all along.
+    pub const M4: Self = Self {
+        axe_uses: 40,
+        tools_break: true,
+        ..Self::M2
     };
 }
 
@@ -169,6 +182,12 @@ impl ColonyRule {
     pub const M3: Self = Self {
         space: Some(SpaceRule::M3),
         ..Self::M2
+    };
+
+    /// The M4 colony values: [`Self::M3`] with tool wear (goal 3.5).
+    pub const M4: Self = Self {
+        economy: Some(EconomyRule::M4),
+        ..Self::M3
     };
 
     /// Items of `kind` one tile holds (logs: `stack_max_logs`; goal 3.1 for the rest).
@@ -246,7 +265,7 @@ impl super::WorldRules {
                 firewood,
                 ..base.society
             },
-            colony: Some(ColonyRule::M3),
+            colony: Some(ColonyRule::M4),
             seasons,
             calendar: COLONY_CALENDAR,
             ..base

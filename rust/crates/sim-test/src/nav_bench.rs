@@ -5,7 +5,7 @@
 //! seed 15100, 192 × 192, N = 1,000 founders by default) fed as the standing
 //! benchmark feeds it (`bench::run_one`), with a command script applied as the
 //! colony probe applies it (resolved per entry, `"after"` and `"every_days"`
-//! honoured; default `tools/v8/m3_soak_script.json`). After a 1,440-tick
+//! honoured; default `tools/v8/soak_script.json`). After a 1,440-tick
 //! warm-up it profiles `--ticks` ticks (default 2,880) and reports
 //! `AgentMovementSystem`'s mean µs per tick (path walking, planning and A*
 //! run inside it), `JobAssignSystem` and `JobExecuteSystem` beside it, the
@@ -133,7 +133,7 @@ impl Script {
     }
 
     fn path_hint(&self) -> &str {
-        "m3_soak_script.json"
+        "soak_script.json"
     }
 
     fn apply(&mut self, engine: &mut SimEngine) -> Result<(), String> {
@@ -176,7 +176,7 @@ impl Script {
 pub fn main(args: &[String]) -> Result<(), String> {
     let mut out: Option<PathBuf> = None;
     let mut commands =
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../../tools/v8/m3_soak_script.json");
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../../tools/v8/soak_script.json");
     let mut agents = 1_000u32;
     let mut ticks = 2_880u64;
     let mut i = 1;

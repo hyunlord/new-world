@@ -585,6 +585,8 @@ layer when `version` moves.
 | `bed_ys` | PackedInt32Array | bedroll tile y |
 | `dug_xs` | PackedInt32Array | dug hill tile x |
 | `dug_ys` | PackedInt32Array | dug hill tile y |
+| `ford_xs` | PackedInt32Array | ford tile x (M4: a shallow river tile people wade, cost 30) |
+| `ford_ys` | PackedInt32Array | ford tile y |
 
 ### `get_rooms`
 `collect_rooms(&SimResources) -> RoomsView` → `rooms_to_dict` (`ffi/space.rs`). Rooms in id order; every room tile in

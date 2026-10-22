@@ -316,7 +316,7 @@ fn step(
                     fell(res, tree);
                     if rule.economy.is_some() {
                         craft::train(world, entity, SkillKind::Chop, u32::from(job.amount));
-                        use_axe(world, res, rule, entity, pos);
+                        use_axe(world, res, rule, id, entity, pos);
                     }
                 }
                 JobKind::Quarry { node } => {
@@ -444,11 +444,14 @@ fn pick_up_axe(
 }
 
 /// A chop done with an axe: count it, wear the axe; a worn-out axe becomes
-/// one stone at the worker's tile (ledger: an axe consumed, a stone created).
+/// one stone at the worker's tile (ledger: an axe consumed, a stone created),
+/// or under M4's tool wear (`EconomyRule::tools_break`) is used up (ledger:
+/// consumed; chronicle `ToolBroke`).
 fn use_axe(
     world: &mut World,
     res: &mut SimResources,
     rule: &ColonyRule,
+    id: AgentId,
     entity: Entity,
     pos: (u32, u32),
 ) {
@@ -461,7 +464,20 @@ fn use_axe(
     tool.uses += 1;
     res.colony.tallies.chops_with_axe += 1;
     let limit = rule.economy.map_or(0, |e| e.axe_uses);
-    if limit > 0 && tool.uses >= limit {
+    if limit > 0 && tool.uses >= limit && rule.economy.is_some_and(|e| e.tools_break) {
+        let _ = world.remove_one::<Tool>(entity);
+        res.colony.item_ledger.consume(tool.item.kind, 1);
+        res.colony.tallies.tools_broken += 1;
+        res.chronicle.push(
+            sim_core::chronicle::ChronicleEntry::new(
+                res.current_tick,
+                sim_core::chronicle::ChronicleKind::ToolBroke,
+            )
+            .subject(id)
+            .cause(tool.item.kind.code())
+            .value(i64::from(tool.uses)),
+        );
+    } else if limit > 0 && tool.uses >= limit {
         let _ = world.remove_one::<Tool>(entity);
         res.colony.item_ledger.consume(ItemKind::StoneAxe, 1);
         res.colony.item_ledger.create(ItemKind::Stone, 1);

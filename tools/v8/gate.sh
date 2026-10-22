@@ -38,7 +38,7 @@
 #   25 bench             tools/v8/bench.sh: the standing colony benchmark against docs/perf/PERF_LEDGER.md
 #                        (> +10 % on tick mean, p99 or RSS/agent fails; since M2 a C3 ceiling miss fails)
 #   26 soak              tools/v8/soak.sh: the economy soak fixture (M3 goal 3.4), seeds 0..4, 20 days,
-#                        tools/v8/m3_soak_script.json: ledger and reservations exact, 0 deaths, determinism
+#                        tools/v8/soak_script.json: ledger and reservations exact, 0 deaths, determinism
 #   27 nav_bench         worldsim_perf nav-bench: N = 1,000 with the soak script, movement + nav µs per tick
 #                        against the 600 µs budget, path requests, memo hits, nodes expanded (report only; M3 §4)
 set -uo pipefail

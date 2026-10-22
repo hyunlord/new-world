@@ -253,6 +253,9 @@ pub enum RejectReason {
     Edge,
     /// Something is already built there (M3).
     Built,
+    /// No one from the camp can walk there (M4 goal 3.6: across the river
+    /// without a ford); the bridge shows "닿을 수 없음: 강 건너".
+    Unreachable,
 }
 
 impl RejectReason {
@@ -271,6 +274,7 @@ impl RejectReason {
             Self::Hill => "hill",
             Self::Edge => "edge",
             Self::Built => "built",
+            Self::Unreachable => "unreachable",
         }
     }
 }

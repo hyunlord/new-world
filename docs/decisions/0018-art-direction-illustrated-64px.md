@@ -95,6 +95,10 @@
     ART-TRIAL4 `route_p` pawns are the placeholder until a new approach appears. The look decided here (05) stands
     for the environment, buildings and portraits; M-ART2's scope is the environment, buildings, portraits and the
     64-px camera only.
+  - ART-TRIAL5 (`v8/art-trial5`, at `12ad2c8b` on 2026-10-23, `docs/v8/arttrial5/TRIAL5_PART0_REPORT.md`) is running:
+    whole-figure sheets generated for the owner to pick a look before any production; Part 0 delivered five
+    candidates on equal-scale boards and stopped for the owner's pick. Its final state is recorded at the end of
+    M4 (Part 6).
 
 ## Date
 2026-10-22

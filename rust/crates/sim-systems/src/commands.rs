@@ -46,6 +46,30 @@ fn rect_tiles(res: &SimResources, x0: u32, y0: u32, x1: u32, y1: u32) -> Option<
     )
 }
 
+/// The result of a mark command that marked `count` targets and skipped
+/// `unreachable` ones no one from the camp can walk to (M4 goal 3.6).
+fn marked((count, unreachable): (usize, usize)) -> CommandResult {
+    if count == 0 && unreachable > 0 {
+        CommandResult::rejected(RejectReason::Unreachable)
+    } else {
+        counted(count)
+    }
+}
+
+/// Whether someone at the camp can walk to `tile` (M4 goal 3.6): the hearth's
+/// nav region reaches it (an impassable tile from a passable neighbour).
+/// `true` without a built nav map or a hearth (M1/M2 rules keep their marks).
+pub fn camp_reaches(res: &SimResources, tile: Tile) -> bool {
+    if res.rules.colony.and_then(|r| r.space).is_none() || !res.nav.is_built() {
+        return true;
+    }
+    let Some(hearth) = crate::worldgen::colony::hearth(res) else {
+        return true;
+    };
+    let region = res.nav.region_of(hearth);
+    region == 0 || res.nav.reaches(region, tile)
+}
+
 fn counted(count: usize) -> CommandResult {
     if count == 0 {
         CommandResult::rejected(RejectReason::Nothing)
@@ -71,7 +95,7 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
     match cmd {
         Command::DesignateChop { x0, y0, x1, y1 } => match rect_tiles(res, x0, y0, x1, y1) {
             None => CommandResult::rejected(RejectReason::OutOfMap),
-            Some(tiles) => counted(designate(res, &tiles)),
+            Some(tiles) => marked(designate(res, &tiles)),
         },
         Command::DesignateChopTiles { tiles } => {
             let (w, h) = (res.tile_grid.width, res.tile_grid.height);
@@ -79,7 +103,7 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
             if inside.is_empty() {
                 return CommandResult::rejected(RejectReason::OutOfMap);
             }
-            counted(designate(res, &inside))
+            marked(designate(res, &inside))
         }
         Command::CancelArea { x0, y0, x1, y1 } => match rect_tiles(res, x0, y0, x1, y1) {
             None => CommandResult::rejected(RejectReason::OutOfMap),
@@ -175,7 +199,7 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
         },
         Command::DesignateQuarry { x0, y0, x1, y1 } => match rect_tiles(res, x0, y0, x1, y1) {
             None => CommandResult::rejected(RejectReason::OutOfMap),
-            Some(tiles) => counted(designate_quarry(res, &tiles)),
+            Some(tiles) => marked(designate_quarry(res, &tiles)),
         },
         Command::AddBill {
             workshop,
@@ -390,10 +414,14 @@ pub fn submit(engine: &mut SimEngine, cmd: Command) -> CommandResult {
     result
 }
 
-fn designate(res: &mut SimResources, tiles: &[Tile]) -> usize {
-    let mut count = 0;
+fn designate(res: &mut SimResources, tiles: &[Tile]) -> (usize, usize) {
+    let (mut count, mut far) = (0, 0);
     for tile in tiles {
         if res.colony.trees.contains_key(tile) && !res.colony.designations.contains_key(tile) {
+            if !camp_reaches(res, *tile) {
+                far += 1;
+                continue;
+            }
             res.colony.designations.insert(*tile, Designation::Chop);
             count += 1;
         }
@@ -401,14 +429,18 @@ fn designate(res: &mut SimResources, tiles: &[Tile]) -> usize {
     if count > 0 {
         res.colony.touch(false);
     }
-    count
+    (count, far)
 }
 
 /// Mark every unmarked resource node among `tiles` for quarrying (M2).
-fn designate_quarry(res: &mut SimResources, tiles: &[Tile]) -> usize {
-    let mut count = 0;
+fn designate_quarry(res: &mut SimResources, tiles: &[Tile]) -> (usize, usize) {
+    let (mut count, mut far) = (0, 0);
     for tile in tiles {
         if res.colony.nodes.contains_key(tile) && !res.colony.designations.contains_key(tile) {
+            if !camp_reaches(res, *tile) {
+                far += 1;
+                continue;
+            }
             res.colony.designations.insert(*tile, Designation::Quarry);
             count += 1;
         }
@@ -416,7 +448,7 @@ fn designate_quarry(res: &mut SimResources, tiles: &[Tile]) -> usize {
     if count > 0 {
         res.colony.touch(false);
     }
-    count
+    (count, far)
 }
 
 /// Cancel, in `AgentId` order, the jobs of every agent whose job satisfies `hit`.
@@ -863,6 +895,7 @@ fn place_space(
 fn designate_space(res: &mut SimResources, tiles: &[Tile], mark: Designation) -> CommandResult {
     let mut count = 0usize;
     let mut first: Option<RejectReason> = None;
+    let mut far = 0usize;
     for tile in tiles {
         if res.colony.designations.contains_key(tile) {
             continue;
@@ -880,10 +913,17 @@ fn designate_space(res: &mut SimResources, tiles: &[Tile], mark: Designation) ->
             }
             _ => crate::runtime::jobs::space::built_at(res, *tile).is_some(),
         };
+        if ok && mark == Designation::Dig && !camp_reaches(res, *tile) {
+            far += 1;
+            continue;
+        }
         if ok {
             res.colony.designations.insert(*tile, mark);
             count += 1;
         }
+    }
+    if count == 0 && far > 0 {
+        return CommandResult::rejected(RejectReason::Unreachable);
     }
     if count == 0 {
         return CommandResult::rejected(first.unwrap_or(RejectReason::Nothing));

@@ -153,6 +153,44 @@ fn a_worn_out_axe_becomes_a_stone() {
     assert_eq!((stone.created, stone.ground), (1, 1));
 }
 
+/// M4 goal 3.5 (tool wear): under `EconomyRule::M4` a stone axe lasts 40
+/// chops and is then used up — no stone comes back — with a `ToolBroke` entry.
+#[test]
+fn under_m4_a_worn_out_axe_breaks_after_40_chops_and_is_used_up() {
+    let (_, mut engine, w) = timed_chop(Some(55));
+    if let Some(rule) = engine.resources.rules.colony.as_mut() {
+        rule.economy = Some(sim_core::rules::EconomyRule::M4);
+    }
+    if let Ok(mut tool) = engine.world.get::<&mut Tool>(w) {
+        tool.uses = 39;
+    }
+    run_until(&mut engine, 500, |e| {
+        e.resources.colony.tallies.trees_felled == 1
+    });
+    let c = &engine.resources.colony;
+    assert_eq!((c.tallies.chops_with_axe, c.tallies.tools_broken), (1, 1));
+    assert_eq!(c.tallies.axes_worn_out, 0, "no stone under M4");
+    assert!(engine.world.get::<&Tool>(w).is_err());
+    let axe = ledger_of(&engine.world, &engine.resources, ItemKind::StoneAxe);
+    let stone = ledger_of(&engine.world, &engine.resources, ItemKind::Stone);
+    assert_eq!((axe.created, axe.consumed, axe.held), (1, 1, 0));
+    assert_eq!(stone.created, 0);
+    let id = engine
+        .world
+        .get::<&sim_core::components::Agent>(w)
+        .map(|a| a.id)
+        .ok();
+    let broke: Vec<_> = engine
+        .resources
+        .chronicle
+        .entries()
+        .iter()
+        .filter(|e| e.kind == sim_core::chronicle::ChronicleKind::ToolBroke)
+        .map(|e| (e.subject, e.cause, e.value))
+        .collect();
+    assert_eq!(broke, vec![(id, ItemKind::StoneAxe.code(), 40)]);
+}
+
 /// Goal §7: a person whose Chop priority is 0 never chops in 10 days with 30 trees marked.
 #[test]
 fn a_person_with_chop_0_never_chops() {

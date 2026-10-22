@@ -337,7 +337,7 @@
 	"UI_REJECT_EDGE": "지도 가장자리",
 	"UI_REJECT_BUILT": "이미 지어져 있음",
 	"UI_REJECT_NOT_HILL": "언덕이 아님",
-	"UI_REJECT_UNREACHABLE": "닿을 수 없음",
+	"UI_REJECT_UNREACHABLE": "닿을 수 없음: 강 건너",
 	"UI_JOB_DIG": "파는 중",
 	"UI_JOB_DECONSTRUCT": "철거하는 중",
 	"UI_JOB_CLEAR": "치우는 중",

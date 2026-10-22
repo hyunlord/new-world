@@ -337,7 +337,7 @@
 	"UI_REJECT_EDGE": "At the map edge",
 	"UI_REJECT_BUILT": "Already built",
 	"UI_REJECT_NOT_HILL": "Not a hill",
-	"UI_REJECT_UNREACHABLE": "Out of reach",
+	"UI_REJECT_UNREACHABLE": "Out of reach: across the river",
 	"UI_JOB_DIG": "Digging",
 	"UI_JOB_DECONSTRUCT": "Deconstructing",
 	"UI_JOB_CLEAR": "Clearing a site",

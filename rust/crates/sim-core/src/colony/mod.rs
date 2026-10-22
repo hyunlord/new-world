@@ -91,6 +91,13 @@ pub struct ColonyTallies {
     /// (M3, DECISIONS D17; 0 when none was needed).
     #[serde(default)]
     pub camp_pass_tiles: u32,
+    /// River tiles the colony worldgen made fords (M4 goal 3.6; 0 when the
+    /// camp already reaches the largest forest).
+    #[serde(default)]
+    pub ford_tiles: u32,
+    /// Tools broken by wear (M4 goal 3.5: used up, not turned into stone).
+    #[serde(default)]
+    pub tools_broken: u64,
 }
 
 impl ColonyTallies {

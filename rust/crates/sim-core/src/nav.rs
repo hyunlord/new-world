@@ -38,7 +38,7 @@ pub const IMPASSABLE: u8 = 0;
 pub const COST_PLAIN: u8 = 10;
 /// Cost byte of a door tile.
 pub const COST_DOOR: u8 = 12;
-/// Cost byte of a shallow water bank (reserved; no colony tile has it yet).
+/// Cost byte of a ford: a shallow river tile (M4, placed by the colony worldgen).
 pub const COST_BANK: u8 = 30;
 /// Most paths the memo keeps.
 pub const MEMO_CAPACITY: usize = 4_096;

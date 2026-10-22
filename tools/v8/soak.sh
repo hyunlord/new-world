@@ -2,7 +2,7 @@
 # usage: soak.sh <out_dir> [<probe>]
 #
 # The economy soak fixture (M3 goal 3.4; gate step `soak`): the colony probe on seeds 0..4 for 20 days with
-# tools/v8/m3_soak_script.json and --check-determinism, then checks every seed's summary: 0 ledger and 0
+# tools/v8/soak_script.json and --check-determinism, then checks every seed's summary: 0 ledger and 0
 # reservation violation ticks, 0 deaths of any cause, every scripted workshop built and crafts made (so the
 # check cannot pass on an idle colony). Prints SOAK PASS or SOAK FAIL lines.
 set -uo pipefail
@@ -13,7 +13,7 @@ if [[ $# -lt 2 ]]; then
     (cd "$ROOT/rust" && cargo build --release -p sim-test --bin worldsim_probe) || exit 1
 fi
 mkdir -p "$OUT"
-"$PROBE" --scene colony --seeds 0..4 --days 20 --workers 4 --commands "$ROOT/tools/v8/m3_soak_script.json" \
+"$PROBE" --scene colony --seeds 0..4 --days 20 --workers 4 --commands "$ROOT/tools/v8/soak_script.json" \
     --check-determinism --out "$OUT" || { echo "SOAK FAIL probe exit"; exit 1; }
 python3 - "$OUT/summary.json" <<'PY'
 import json, sys

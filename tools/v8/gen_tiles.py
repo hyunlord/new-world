@@ -89,6 +89,10 @@ Sprites (names; see the painters for the exact pixels)
         mark_dig (yellow corner brackets around the tile plus a 7x7 diagonal pick glyph at the top-right) and
         mark_deconstruct (a 7x7 yellow X at the top-right), outlined like mark_chop; icon_dig and
         icon_deconstruct 12x12 (order bar).
+    M4 temporaries (section "m4"; M-ART2 replaces them), 16x16:
+        ford (a river tile people wade: lighter shallow water with a band of pale gravel and three flat stepping
+        stones across it, rows 5..10, lit top-left with a 1-px wet shadow down-right; opaque, ground-like, no
+        outline; drawn over the terrain's water tile).
 
 Determinism
     Each sprite draws with its own random.Random(SEED * 1000 + k), k a fixed constant per sprite (no hash(), no
@@ -1131,6 +1135,38 @@ def bedroll(rr):
     return im
 
 
+FORD_WATER = (66, 94, 106)
+GRAVEL, GRAVEL_L, GRAVEL_D = (112, 104, 86), (132, 124, 104), (84, 80, 68)
+FORD_STONE, FORD_STONE_L = (120, 114, 100), (138, 132, 116)
+
+
+def ford(rr):
+    """A ford: lighter shallow water (a little paler than shallow_*), a band of pale gravel across the tile (rows
+    5..10, ragged edges) and three flat stepping stones on it, lit top-left with a 1-px wet shadow down-right. Opaque
+    and ground-like (no outline); the band runs east-west and reaches both tile edges so neighbouring fords join."""
+    im = water(FORD_WATER, rr, 1)
+    px = im.load()
+    for x in range(T):
+        top = 5 + (1 if rr.random() < 0.3 else 0)
+        bottom = 10 - (1 if rr.random() < 0.3 else 0)
+        for y in range(top, bottom + 1):
+            px[x, y] = rgba(GRAVEL)
+        px[x, top - 1] = rgba(shade(FORD_WATER, 1.12))  # the wet rim where the gravel meets the water
+        px[x, bottom + 1] = rgba(shade(FORD_WATER, 0.88))
+    for _ in range(10):  # gravel grain: a light pebble with its shadow, a few dark ones
+        x, y = rr.randrange(0, T - 1), rr.randrange(6, 10)
+        px[x, y] = rgba(GRAVEL_L)
+        px[x + 1, y + 1] = rgba(GRAVEL_D)
+    d = ImageDraw.Draw(im)
+    for x0 in (1, 6, 11):  # stepping stones, 4x3 each
+        y0 = 6 + rr.randrange(0, 2)
+        d.rectangle([x0 + 1, y0 + 1, x0 + 4, y0 + 3], fill=rgba(GRAVEL_D))  # shadow down-right
+        d.rectangle([x0, y0, x0 + 3, y0 + 2], fill=rgba(FORD_STONE))
+        d.line([(x0, y0), (x0 + 2, y0)], fill=rgba(FORD_STONE_L))
+        d.point((x0, y0 + 1), fill=rgba(FORD_STONE_L))
+    return im
+
+
 def _ghost_border(px, line):
     """The hut ghost's dash (3 on, 2 off) around the tile edge."""
     ring = [(x, 0) for x in range(T)] + [(T - 1, y) for y in range(1, T)] + \
@@ -1389,6 +1425,8 @@ def build_sprites():
     add("m3", "mark_deconstruct", mark_deconstruct())
     for kind in ("dig", "deconstruct"):
         add("m3", f"icon_{kind}", icon(kind))
+    # M4 temporaries (the river ford).
+    add("m4", "ford", ford(rr(150)))
     return out
 
 

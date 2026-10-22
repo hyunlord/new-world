@@ -8,6 +8,7 @@
   {"tick": 360, "cmd": "add_bill", "resolve": "workshop_of_kind", "kind": "knapping_spot", "recipe": "knap_blade", "mode": "make", "count": 20, "after": "workshop:knapping_spot"},
   {"tick": 360, "cmd": "add_bill", "resolve": "workshop_of_kind", "kind": "knapping_spot", "recipe": "knap_blade", "mode": "maintain", "count": 10, "after": "workshop:knapping_spot"},
   {"tick": 360, "cmd": "add_bill", "resolve": "workshop_of_kind", "kind": "wood_bench", "recipe": "haft_axe", "mode": "make", "count": 4, "after": "workshop:wood_bench"},
+  {"tick": 360, "cmd": "add_bill", "resolve": "workshop_of_kind", "kind": "wood_bench", "recipe": "haft_axe", "mode": "maintain", "count": 2, "after": "workshop:wood_bench"},
   {"tick": 360, "cmd": "add_bill", "resolve": "workshop_of_kind", "kind": "wood_bench", "recipe": "split_firewood", "mode": "maintain", "count": 40, "after": "workshop:wood_bench"},
   {"tick": 360, "cmd": "place_house", "resolve": "south_of_hearth", "w": 7, "h": 5, "beds": 4},
   {"tick": 1800, "cmd": "place_storehouse", "resolve": "near_hearth", "size": 6},

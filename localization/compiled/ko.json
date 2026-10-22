@@ -334,7 +334,7 @@
     "UI_REJECT_OUT_OF_MAP": "지도 밖",
     "UI_REJECT_PERSON": "사람이 서 있음",
     "UI_REJECT_UNKNOWN": "알 수 없는 명령",
-    "UI_REJECT_UNREACHABLE": "닿을 수 없음",
+    "UI_REJECT_UNREACHABLE": "닿을 수 없음: 강 건너",
     "UI_REJECT_WATER": "물 위에는 지을 수 없음",
     "UI_REJECT_WRONG_WORKSHOP": "이 작업장에서는 만들 수 없음",
     "UI_ROOMS_TOGGLE": "방 보기 R",

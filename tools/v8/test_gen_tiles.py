@@ -1,7 +1,8 @@
 """Unit tests for tools/v8/gen_tiles.py: sheet size and name contract, every sprite inside its rect, the outline
 rule, greyscale person layers, value hierarchy (ground calm, people brightest, tunics lighter than the forest
 floor), the M3 sprites (wall autotiles follow their neighbour mask, doors join their wall, floors calm, ghosts
-translucent), the committed sheet equal to a fresh run, and byte-identical determinism."""
+translucent), the M4 ford (opaque, calm, paler than water, a gravel band reaching both side edges), the committed
+sheet equal to a fresh run, and byte-identical determinism."""
 import json
 import sys
 import tempfile
@@ -48,9 +49,11 @@ M3_GHOSTS = ["ghost_wall", "ghost_door", "ghost_floor", "ghost_bedroll", "ghost_
 M3_MARKS = ["mark_dig", "mark_deconstruct"]
 M3_ICONS = ["icon_dig", "icon_deconstruct"]
 M3_16 = M3_WALLS + M3_DOORS + M3_FLOORS + ["bedroll"] + M3_GHOSTS + M3_MARKS
+# M4 temporaries: the river ford (drawn over the terrain's water tile).
+M4_16 = ["ford"]
 
 SIZE = {n: (16, 16) for n in GROUND + ZONE + NATURE + ITEMS + CARRY + MARKS + ["hearth_0", "hearth_1"]
-        + M2_OBJECTS + ["mark_quarry"] + M3_16}
+        + M2_OBJECTS + ["mark_quarry"] + M3_16 + M4_16}
 SIZE.update({n: (32, 16) for n in M2_WIDE})
 SIZE.update({n: (12, 12) for n in M3_ICONS})
 SIZE.update({n: (12, 12) for n in M2_ICONS})
@@ -333,6 +336,24 @@ class GenTilesTest(unittest.TestCase):
         dirt = sum(luminance(p) for p in visible(self.tile("dirt_0"))) / 256
         packed = sum(luminance(p) for p in visible(self.tile("floor_packed"))) / 256
         self.assertLess(packed, dirt, "packed earth is a little darker than worn earth")
+
+    def test_m4_ford_opaque_calm_paler_than_water_and_joins_sideways(self):
+        img = self.tile("ford")
+        px = img.get_flattened_data()
+        self.assertEqual(min(p[3] for p in px), 255)
+        self.assertNotIn(OUTLINE, {p[:3] for p in px})
+        self.assertLess(max(luminance(p) for p in px), 140, "ground-level: people stay the brightest")
+
+        def mean(n):
+            v = [luminance(p) for p in visible(self.tile(n))]
+            return sum(v) / len(v)
+        self.assertGreater(mean("ford"), max(mean("shallow_%d" % i) for i in range(4)) + 10,
+                           "the ford reads paler than plain water")
+        water = {p[:3] for n in GROUND if n.startswith(("water_", "shallow_")) for p in visible(self.tile(n))}
+        # the gravel band (rows 6..9) is not water-coloured and reaches the west and east edges
+        for x in (0, 15):
+            with self.subTest(edge=x):
+                self.assertTrue(all(img.getpixel((x, y))[:3] not in water for y in range(6, 10)))
 
     def test_m3_ghosts_translucent_and_refused_is_red(self):
         for name in M3_GHOSTS:

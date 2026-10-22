@@ -7,12 +7,18 @@ usage: bench_ledger.py rows   BENCH_JSON --pass NAME [--note TEXT] [--date YYYY-
 
 `worldsim_perf bench` writes BENCH_JSON. `rows` prints the ledger rows of a
 run, `append` adds them to LEDGER. `check` compares the run with the ledger's
-latest pass (the rows that share the last row's `pass` value): any scene whose
+latest quiet pass (the rows that share the `pass` value of the last row that is
+not marked contended): any scene whose
 tick mean or p99, or the run's RSS per agent, is more than 10 % above that
 pass fails, unless `--justified TEXT` is given and TEXT appears verbatim in
 the CHANGELOG (the pass's justification, quoted). Since M2 the C3 ceilings are
 hard: a MISS (or a run without ceilings) fails, and no justification excuses
 it. Exit 0 = pass, 1 = regression or ceiling miss, 2 = usage.
+
+M4 (goal 3.6, the ledger rule): a run with any repeat started at a 1-minute
+load of 8 or more is contended. `append` refuses it unless `--note` explains
+it, and then marks every row's note "contended, not a base: …"; such rows stay
+in the ledger as a record and are never a comparison base for `check`.
 """
 import json
 import sys
@@ -21,6 +27,10 @@ from pathlib import Path
 COLUMNS = ["date", "commit", "pass", "N", "scene", "tick mean (µs)", "p99 (µs)", "max (µs)",
            "RSS/agent (B)", "RSS/tile (B)", "load (1/5/15 min)", "note"]
 LIMIT = 1.10
+# M4 ledger rule: rows whose note starts with this are never a comparison base.
+CONTENDED_MARK = "contended, not a base"
+# A repeat that started at this 1-minute load or above makes the run contended (M2 D23).
+MAX_QUIET_LOAD = 8.0
 
 
 def run_rows(bench, pass_name, note, date):
@@ -105,7 +115,25 @@ def compare(bench, previous):
     return failures, lines
 
 
+def is_base(row):
+    """Whether a ledger row may be a comparison base (not marked contended)."""
+    return not row.get("note", "").lower().startswith(CONTENDED_MARK)
+
+
+def contended_loads(bench):
+    """The 1-minute loads at or above MAX_QUIET_LOAD that any repeat of the run started at."""
+    high = []
+    for scene in bench.get("scenes", []):
+        for repeat in scene.get("per_repeat", []):
+            first = str(repeat.get("load_before", "")).split()
+            if first and number(first[0]) is not None and number(first[0]) >= MAX_QUIET_LOAD:
+                high.append(number(first[0]))
+    return high
+
+
 def latest_pass(rows):
+    """The rows of the latest pass that is not marked contended."""
+    rows = [r for r in rows if is_base(r)]
     if not rows:
         return []
     name = rows[-1]["pass"]
@@ -136,7 +164,16 @@ def main(argv):
         if not opts["--pass"]:
             print("--pass is required", file=sys.stderr)
             return 2
-        rows = [format_row(r) for r in run_rows(bench, opts["--pass"], opts["--note"], opts["--date"])]
+        note = opts["--note"]
+        high = contended_loads(bench)
+        if high:
+            if not note:
+                print(f"contended run (1-min load up to {max(high):.2f} >= {MAX_QUIET_LOAD:g}): "
+                      "--note must say why it is recorded; its rows are never a base", file=sys.stderr)
+                return 2
+            if not note.lower().startswith(CONTENDED_MARK):
+                note = f"{CONTENDED_MARK}: {note}"
+        rows = [format_row(r) for r in run_rows(bench, opts["--pass"], note, opts["--date"])]
         if mode == "rows":
             print("\n".join(rows))
         else:

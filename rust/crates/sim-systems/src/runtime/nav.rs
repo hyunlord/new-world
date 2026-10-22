@@ -4,14 +4,15 @@
 //!
 //! [`tile_cost`] is the one definition of passability: river, mountain, undug
 //! hill, a wall without a door and a wall's construction site are impassable;
-//! a door (built or a site) costs 12; anything else 10. [`ensure`] builds the
+//! a door (built or a site) costs 12; a ford (M4: a shallow river tile placed
+//! by the colony worldgen) 30; anything else 10. [`ensure`] builds the
 //! map when it is missing (a new colony world, or after a load: the map is not
 //! saved) and [`refresh`] re-reads one tile after the code that changed it —
 //! the only writers are the commands and the job layer, never a renderer.
 //! Every function returns at once without `rules.colony`, so the baseline
 //! world never has a map.
 use sim_core::colony::BlueprintKind;
-use sim_core::nav::{CostMap, Tile, COST_DOOR, COST_PLAIN, IMPASSABLE};
+use sim_core::nav::{CostMap, Tile, COST_BANK, COST_DOOR, COST_PLAIN, IMPASSABLE};
 use sim_core::TerrainType;
 use sim_engine::SimResources;
 
@@ -23,6 +24,7 @@ pub fn tile_cost(res: &SimResources, tile: Tile) -> u8 {
     }
     let i = grid.idx(tile.0, tile.1);
     match grid.terrain_type[i] {
+        TerrainType::River if grid.is_ford(i) => return COST_BANK,
         TerrainType::River | TerrainType::Mountain => return IMPASSABLE,
         TerrainType::Hill if !grid.is_dug(i) => return IMPASSABLE,
         _ => {}
@@ -138,6 +140,12 @@ mod tests {
         .map(|t| tile_cost(&res, *t))
         .collect();
         assert_eq!(got, vec![0, 0, 10, 0, 12, 10, 0, 12, 10]);
+        // M4: a ford is a river tile people wade through at cost 30.
+        let ford = res.tile_grid.idx(0, 2);
+        res.tile_grid.terrain_type[ford] = TerrainType::River;
+        assert_eq!(tile_cost(&res, (0, 2)), 0);
+        res.tile_grid.set_ford(ford, true);
+        assert_eq!(tile_cost(&res, (0, 2)), 30);
         assert_eq!(tile_cost(&res, (6, 0)), 0, "off the map");
     }
 

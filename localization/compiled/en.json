@@ -334,7 +334,7 @@
     "UI_REJECT_OUT_OF_MAP": "Outside the map",
     "UI_REJECT_PERSON": "Someone is standing there",
     "UI_REJECT_UNKNOWN": "Unknown order",
-    "UI_REJECT_UNREACHABLE": "Out of reach",
+    "UI_REJECT_UNREACHABLE": "Out of reach: across the river",
     "UI_REJECT_WATER": "Can't build on water",
     "UI_REJECT_WRONG_WORKSHOP": "Not made at this workshop",
     "UI_ROOMS_TOGGLE": "Rooms R",

@@ -9,8 +9,9 @@
 # M3 built space (get_space, rebuilt when its `version` moves): walls on this node (z 3, with the buildings, so
 #   people at z 5 are seen passing through doors), each log/stone wall picking `<log|stone>_wall_<mask>` from its
 #   wall-or-door neighbours (N=1, E=2, S=4, W=8), a door `door_h` in an east–west wall else `door_v`; the child
-#   node "Floors" (z 1, with the ground overlay; drawn before OverlayLayer's ground so stacks lie on top) draws dug
-#   hill tiles and dug-rock floors as `floor_rock`, packed floors as `floor_packed` and bedrolls.
+#   node "Floors" (z 1, with the ground overlay; drawn before OverlayLayer's ground so stacks lie on top) draws
+#   (M4) river fords as `ford` first (over the terrain's water tile; `get_space` ford_xs/ford_ys), then dug hill
+#   tiles and dug-rock floors as `floor_rock`, packed floors as `floor_packed` and bedrolls.
 # Redrawn when the building snapshot or the workshop list changes, the space version moves, or the fire frame flips.
 # Bridge methods: via SimReads get_building_snapshot, get_workshops, get_space; signal world_reset.
 extends Node2D
@@ -38,7 +39,7 @@ var _has_hearth: bool = false
 var _space_version: int = -1
 ## Tile -> wall kind (0 log, 1 stone, 2 door) of the built space.
 var _walls: Dictionary = {}
-## [sprite name, tile] per floor-level piece (dug rock, floors, bedrolls), in draw order.
+## [sprite name, tile] per floor-level piece (fords, dug rock, floors, bedrolls), in draw order.
 var _floor_pieces: Array[Array] = []
 var _floors: Node2D = null
 
@@ -108,7 +109,7 @@ func _process(delta: float) -> void:
 	queue_redraw()
 
 
-## M3: re-read get_space when its version moved; index walls and the floor-level pieces.
+## M3: re-read get_space when its version moved; index walls and the floor-level pieces (M4: fords first).
 func _refresh_space() -> void:
 	var space: Dictionary = SimReads.read(_world_sim, "get_space")
 	var version: int = int(space.get("version", 0))
@@ -122,6 +123,11 @@ func _refresh_space() -> void:
 	for i: int in mini(wxs.size(), mini(wys.size(), wkinds.size())):
 		_walls[Vector2i(wxs[i], wys[i])] = clampi(wkinds[i], 0, DOOR_KIND)
 	_floor_pieces.clear()
+	# M4 fords first: they lie on the river's water, under anything else at floor level.
+	var oxs: PackedInt32Array = space.get("ford_xs", PackedInt32Array())
+	var oys: PackedInt32Array = space.get("ford_ys", PackedInt32Array())
+	for i: int in mini(oxs.size(), oys.size()):
+		_floor_pieces.append(["ford", Vector2i(oxs[i], oys[i])])
 	var dxs: PackedInt32Array = space.get("dug_xs", PackedInt32Array())
 	var dys: PackedInt32Array = space.get("dug_ys", PackedInt32Array())
 	for i: int in mini(dxs.size(), dys.size()):
@@ -163,7 +169,7 @@ func wall_count() -> int:
 	return _walls.size()
 
 
-## Number of floor-level pieces drawn (dug rock, floors, bedrolls; for tests and tools).
+## Number of floor-level pieces drawn (fords, dug rock, floors, bedrolls; for tests and tools).
 func floor_piece_count() -> int:
 	return _floor_pieces.size()
 

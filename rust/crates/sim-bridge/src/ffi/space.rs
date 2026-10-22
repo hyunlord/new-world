@@ -206,9 +206,11 @@ pub struct SpaceView {
     pub beds: Vec<(u32, u32)>,
     /// Dug hill tiles.
     pub dug: Vec<(u32, u32)>,
+    /// Ford tiles: shallow river tiles people wade (M4).
+    pub fords: Vec<(u32, u32)>,
 }
 
-/// Every wall, door, floor, bedroll and dug tile, `(y, x)` order (empty in the baseline).
+/// Every wall, door, floor, bedroll, dug tile and ford, `(y, x)` order (empty in the baseline).
 pub fn collect_space(res: &SimResources) -> SpaceView {
     let mut view = SpaceView {
         version: res.colony.overlay_version,
@@ -229,6 +231,9 @@ pub fn collect_space(res: &SimResources) -> SpaceView {
                     _ => 0,
                 };
                 view.walls.push((t, code));
+            }
+            if g.is_ford(i) {
+                view.fords.push(t);
             }
             if g.is_dug(i) {
                 view.dug.push(t);
@@ -267,6 +272,8 @@ pub(super) fn space_to_dict(v: &SpaceView) -> VarDictionary {
     dict.set("bed_ys", int_col(v.beds.iter().map(|b| b.1)));
     dict.set("dug_xs", int_col(v.dug.iter().map(|d| d.0)));
     dict.set("dug_ys", int_col(v.dug.iter().map(|d| d.1)));
+    dict.set("ford_xs", int_col(v.fords.iter().map(|d| d.0)));
+    dict.set("ford_ys", int_col(v.fords.iter().map(|d| d.1)));
     dict
 }
 

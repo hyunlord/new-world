@@ -66,7 +66,136 @@ pub(super) fn generate(cfg: &WorldGenConfig, gen: &ColonyGen, engine: &mut SimEn
     nodes(cfg, gen, &mut engine.resources, camp);
     let opened = open_the_camp(&mut engine.resources, camp);
     engine.resources.colony.tallies.camp_pass_tiles = opened;
+    let fords = fords(&mut engine.resources, camp);
+    engine.resources.colony.tallies.ford_tiles = fords;
     founders_on_open_ground(engine, camp);
+}
+
+/// Chebyshev distance from the camp within which fords are placed (M4 goal 3.6).
+pub const FORD_REACH: u32 = 40;
+/// Crossings the worldgen tries to place (M4 goal 3.6: at least two ford tiles).
+pub const FORD_CROSSINGS: usize = 2;
+/// A second crossing keeps more than this Chebyshev distance from the first.
+pub const FORD_SPACING: u32 = 8;
+
+/// Fewest forest tiles within [`FORD_REACH`] a cut-off region needs to get fords.
+pub const FORD_MIN_FOREST: u32 = 100;
+
+/// M4 (goal 3.6; the M3 owner decision "rivers get fords"; DECISIONS D5): the
+/// largest forest region the river separates from the camp — among the nav
+/// regions other than the camp's, the one with the most forest tiles within
+/// [`FORD_REACH`] of the camp (ties to the lower label; at least
+/// [`FORD_MIN_FOREST`]) — gets up to [`FORD_CROSSINGS`] crossings of ford tiles,
+/// river tiles passable at cost 30. Each crossing is the 4-connected way with
+/// the fewest river tiles from the camp region to that region inside the box
+/// of [`FORD_REACH`] around the camp: a 0-1 breadth-first search (land 0, river
+/// 1; mountain, undug hill and river tiles within [`FORD_SPACING`] of an earlier
+/// ford never crossed) from the camp region's tiles in `(y, x)` order, ended at
+/// the first tile of the target region. Regions are read once, before any ford
+/// is placed. Returns the number of ford tiles (0 when nothing is cut off).
+fn fords(r: &mut SimResources, camp: Tile) -> u32 {
+    if r.rules.colony.is_none() {
+        return 0;
+    }
+    crate::runtime::nav::ensure(r);
+    let all = tiles(r);
+    let labels: Vec<u32> = all.iter().map(|&t| r.nav.region_of(t)).collect();
+    let (w, h) = (r.tile_grid.width, r.tile_grid.height);
+    let idx = |t: Tile| (t.1 * w + t.0) as usize;
+    let home = labels[idx(camp)];
+    if home == 0 {
+        return 0;
+    }
+    let inside = |t: Tile| distance(t, camp) <= FORD_REACH;
+    let mut forest: std::collections::BTreeMap<u32, u32> = std::collections::BTreeMap::new();
+    for (&t, &l) in all.iter().zip(&labels) {
+        if l != 0 && l != home && inside(t) && terrain(r, t) == TerrainType::Forest {
+            *forest.entry(l).or_default() += 1;
+        }
+    }
+    let Some(target) = forest
+        .iter()
+        .filter(|(_, n)| **n >= FORD_MIN_FOREST)
+        .max_by_key(|(l, n)| (**n, std::cmp::Reverse(**l)))
+        .map(|(l, _)| *l)
+    else {
+        return 0;
+    };
+    let mut placed: Vec<Tile> = Vec::new();
+    for _ in 0..FORD_CROSSINGS {
+        let mut dist = vec![u32::MAX; all.len()];
+        let mut parent: Vec<Option<Tile>> = vec![None; all.len()];
+        let mut queue = std::collections::VecDeque::new();
+        for (&t, _) in all
+            .iter()
+            .zip(&labels)
+            .filter(|(t, l)| **l == home && inside(**t))
+        {
+            dist[idx(t)] = 0;
+            queue.push_back(t);
+        }
+        let mut end = None;
+        while let Some(t) = queue.pop_front() {
+            if labels[idx(t)] == target {
+                end = Some(t);
+                break;
+            }
+            let d = dist[idx(t)];
+            let next = [
+                (t.0, t.1.wrapping_sub(1)),
+                (t.0.wrapping_sub(1), t.1),
+                (t.0 + 1, t.1),
+                (t.0, t.1 + 1),
+            ];
+            for n in next {
+                if n.0 >= w || n.1 >= h || !inside(n) {
+                    continue;
+                }
+                let step = if labels[idx(n)] != 0 {
+                    0
+                } else if terrain(r, n) == TerrainType::River
+                    && !placed.iter().any(|p| distance(*p, n) <= FORD_SPACING)
+                {
+                    1
+                } else {
+                    continue;
+                };
+                if d + step < dist[idx(n)] {
+                    dist[idx(n)] = d + step;
+                    parent[idx(n)] = Some(t);
+                    if step == 0 {
+                        queue.push_front(n);
+                    } else {
+                        queue.push_back(n);
+                    }
+                }
+            }
+        }
+        let Some(mut at) = end else {
+            break;
+        };
+        let mut crossing = Vec::new();
+        loop {
+            if terrain(r, at) == TerrainType::River {
+                crossing.push(at);
+            }
+            match parent[idx(at)] {
+                Some(p) => at = p,
+                None => break,
+            }
+        }
+        if crossing.is_empty() {
+            break;
+        }
+        crossing.sort_by_key(|&(x, y)| (y, x));
+        for t in crossing {
+            let i = r.tile_grid.idx(t.0, t.1);
+            r.tile_grid.set_ford(i, true);
+            crate::runtime::nav::refresh(r, t);
+            placed.push(t);
+        }
+    }
+    placed.len() as u32
 }
 
 /// M3 (DECISIONS D17): the camp must lie on open ground. When the hearth's nav

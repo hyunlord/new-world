@@ -83,6 +83,26 @@ class LedgerTest(unittest.TestCase):
                                        "the index costs 12 % at N = 200 on purpose",
                                        "--changelog", str(self.changelog)), 0)
 
+    def test_a_contended_run_needs_a_note_and_is_never_a_base(self):
+        self.run_main("append", self.write(bench(mean=1000.0)), str(self.ledger), "--pass", "quiet")
+        busy = bench(mean=2000.0)
+        busy["scenes"][0]["per_repeat"] = [{"load_before": "19.50 22.00 21.00"}]
+        self.assertEqual(self.run_main("append", self.write(busy), str(self.ledger), "--pass", "busy"), 2)
+        self.assertEqual(self.run_main("append", self.write(busy), str(self.ledger), "--pass", "busy",
+                                       "--note", "host busy"), 0)
+        rows = bench_ledger.parse_ledger(self.ledger.read_text())
+        self.assertEqual([r["note"] for r in rows if r["pass"] == "busy"],
+                         ["contended, not a base: host busy"] * 2)
+        # 1,050 passes against the quiet 1,000 rows; the contended 2,000 rows are skipped.
+        self.assertEqual(self.run_main("check", self.write(bench(mean=1050.0)), str(self.ledger)), 0)
+        self.assertEqual(self.run_main("check", self.write(bench(mean=1150.0)), str(self.ledger)), 1)
+
+    def test_a_ledger_of_contended_rows_only_has_no_base(self):
+        busy = bench()
+        busy["scenes"][0]["per_repeat"] = [{"load_before": "8.00 7.00 6.00"}]
+        self.run_main("append", self.write(busy), str(self.ledger), "--pass", "busy", "--note", "x")
+        self.assertEqual(self.run_main("check", self.write(bench()), str(self.ledger)), 1)
+
     def test_an_empty_ledger_fails(self):
         self.assertEqual(self.run_main("check", self.write(bench()), str(self.ledger)), 1)
 

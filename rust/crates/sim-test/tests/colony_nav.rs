@@ -177,3 +177,100 @@ fn idle_wanderers_never_leave_a_walled_box() {
     }
     assert!(moved >= 3, "only {moved} of 6 wandered at all");
 }
+
+/// M4 goal 3.6 (DECISIONS D5): fords. On calibration seeds 0–7 and the default
+/// game seed, no nav region other than the camp's keeps 100 or more forest
+/// tiles within 40 tiles of the camp (the largest cut-off forest got its
+/// crossings), every ford is a river tile within 40 tiles of the camp that
+/// people wade at cost 30, and a forded world has at least two ford tiles.
+#[test]
+fn fords_join_the_camp_to_the_largest_cut_off_forest_within_40_tiles() {
+    use sim_core::TerrainType;
+    use std::collections::BTreeMap;
+    let mut forded = Vec::new();
+    for seed in (0..8u64).chain([sim_systems::worldgen::DEFAULT_GAME_SEED]) {
+        let engine = sim_test::colony_engine(seed);
+        let r = &engine.resources;
+        let camp = sim_systems::worldgen::colony::hearth(r).expect("hearth");
+        let home = r.nav.region_of(camp);
+        let g = &r.tile_grid;
+        let mut cut_off: BTreeMap<u32, u32> = BTreeMap::new();
+        let mut fords = 0u32;
+        for y in 0..g.height {
+            for x in 0..g.width {
+                let i = g.idx(x, y);
+                let d = x.abs_diff(camp.0).max(y.abs_diff(camp.1));
+                let region = r.nav.region_of((x, y));
+                if g.terrain_type[i] == TerrainType::Forest && d <= 40 && region != home {
+                    *cut_off.entry(region).or_default() += 1;
+                }
+                if g.is_ford(i) {
+                    fords += 1;
+                    assert_eq!(g.terrain_type[i], TerrainType::River, "seed {seed}");
+                    assert!(
+                        d <= 40,
+                        "seed {seed}: ford ({x}, {y}) {d} tiles from the camp"
+                    );
+                    assert_eq!(nav::tile_cost(r, (x, y)), 30);
+                }
+            }
+        }
+        assert_eq!(fords, r.colony.tallies.ford_tiles, "seed {seed}");
+        if fords > 0 {
+            assert!(fords >= 2, "seed {seed}: {fords} ford tiles");
+        }
+        forded.push((seed, fords, cut_off.values().max().copied().unwrap_or(0)));
+    }
+    eprintln!("(seed, ford tiles, largest cut-off forest within 40): {forded:?}");
+    let default = forded.last().copied().unwrap_or_default();
+    assert!(
+        default.1 >= 2,
+        "the default seed's near forest gets fords: {default:?}"
+    );
+    assert!(forded.iter().filter(|f| f.1 > 0).count() >= 4, "{forded:?}");
+}
+
+/// M4 goal 3.6 (DECISIONS D5): a chop mark on a tree no one from the camp can
+/// walk to is refused as `Unreachable`; one on a reachable tree is accepted.
+#[test]
+fn a_mark_across_the_river_is_refused_as_unreachable() {
+    let mut checked = 0;
+    for seed in 0..8u64 {
+        let mut engine = sim_test::colony_engine(seed);
+        let camp = sim_systems::worldgen::colony::hearth(&engine.resources).expect("hearth");
+        let home = engine.resources.nav.region_of(camp);
+        let near = |t: &(u32, u32)| t.0.abs_diff(camp.0).max(t.1.abs_diff(camp.1));
+        let mut far: Vec<(u32, u32)> = engine
+            .resources
+            .colony
+            .trees
+            .keys()
+            .copied()
+            .filter(|t| !engine.resources.nav.reaches(home, *t))
+            .collect();
+        far.sort_by_key(|t| (near(t), t.1, t.0));
+        let Some(&cut_off) = far.first() else {
+            continue;
+        };
+        let r = submit(
+            &mut engine,
+            Command::DesignateChopTiles {
+                tiles: vec![cut_off],
+            },
+        );
+        assert_eq!(
+            r.reason,
+            Some(sim_core::colony::RejectReason::Unreachable),
+            "seed {seed}: {r:?}"
+        );
+        assert!(!engine.resources.colony.designations.contains_key(&cut_off));
+        let reachable = sim_test::probe::colony::nearest_trees(&engine, 1);
+        let r = submit(
+            &mut engine,
+            Command::DesignateChopTiles { tiles: reachable },
+        );
+        assert!(r.accepted, "seed {seed}: {r:?}");
+        checked += 1;
+    }
+    assert!(checked >= 4, "only {checked} seeds had a cut-off tree");
+}
