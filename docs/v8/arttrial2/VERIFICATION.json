@@ -1,0 +1,19 @@
+{
+  "art_growth_bytes": 36552216,
+  "limit_bytes": 40000000,
+  "oversized_new_nonanchor_png": [],
+  "unit_tests": {
+    "passed": 10
+  },
+  "ruff": "PASS",
+  "basedpyright": {
+    "filesAnalyzed": 6,
+    "errorCount": 0,
+    "warningCount": 150,
+    "informationCount": 0,
+    "timeInSec": 1.453
+  },
+  "draw_provenance": "two60s source/capture/all asset hashes independently rechecked",
+  "scope": "art/** and docs/v8/arttrial2/** only; preexisting ignore changes excluded",
+  "basedpyright_status": "NOT_GREEN: warnings retained"
+}

@@ -1,0 +1,151 @@
+{
+  "protocol": "V2 with neutral target-scope clarification appended; exact prompts retained",
+  "provenance": "Actual image_gen raster outputs; Codex visually transcribed explicit scores only; underlying image model version not exposed",
+  "round": "exact three scoped follow-up invocations, no retries",
+  "original_seven_review": "/Users/rexxa/work/arttrial2-data/image-judge-followup-v2/review.json",
+  "counts": {
+    "calls": 3,
+    "usable_numeric_scorecards": 2,
+    "model_rule_pass": 2,
+    "unusable_scorecards": 1
+  },
+  "limitation": "Winter output visibly recolors the crop; code output contains no evaluation. Numeric scores do not establish left-right equivalence. Previous seven cards retained unchanged.",
+  "records": [
+    {
+      "name": "winter_shader",
+      "candidate": "/Users/rexxa/work/arttrial2-data/image-judge-targeted-v2/winter_shader.png",
+      "refs": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/image-judge-targeted-v2/winter_shader.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome. The candidate is the shader-tinted ground crop alone. Evaluate this crop.",
+      "started_at": {
+        "current_time": "2026-10-22 01:24:02 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 01:25:24 UTC"
+      },
+      "source_card": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160da-7c83-72a2-92d7-3018c7309f01/exec-8f64b442-828b-40dd-bde6-1043621083c2.png",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "reason": "Forest/grass ground crop matches the references’ hand-painted ink-and-wash style with the same crisp outlines, textured brush detail, and muted earthy palette, with only minor simplification due to the closer, uniform ground view.",
+      "scope_note": "Generated panel repaints desaturated shader crop as saturated green; reason does not address tint. Numeric result retained; applicability to actual shader tint uncertain.",
+      "source": "/Users/rexxa/work/arttrial2-data/proto-season-compare-winter/capture.png",
+      "crop_box": [
+        64,
+        104,
+        576,
+        616
+      ],
+      "operation": "Pillow crop only; no resize, recoloring, or redraw",
+      "source_sha256": "5ee7ddcd759821785bbf8e69b690ccdd5e75867227d378b17fb0712784993063",
+      "candidate_sha256": "99b68b3e90211c50c0d7fd132f23ca0d7524008a1518727b0a3a3f0c571c4bb6",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-targeted-v2/winter_shader-scorecard.png",
+      "usable_scorecard": true,
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "time_basis": "per-call UTC observations around await within concurrent execution; not isolated latency",
+      "sha256": {
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "/Users/rexxa/work/arttrial2-data/image-judge-targeted-v2/winter_shader.png": "99b68b3e90211c50c0d7fd132f23ca0d7524008a1518727b0a3a3f0c571c4bb6",
+        "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160da-7c83-72a2-92d7-3018c7309f01/exec-8f64b442-828b-40dd-bde6-1043621083c2.png": "bddc10db122b53900d902ca0ee3d072713a35854a1f57eaf4c3d3513af07c1de",
+        "/Users/rexxa/work/arttrial2-data/image-judge-targeted-v2/winter_shader-scorecard.png": "bddc10db122b53900d902ca0ee3d072713a35854a1f57eaf4c3d3513af07c1de"
+      }
+    },
+    {
+      "name": "autumn_shader",
+      "candidate": "/Users/rexxa/work/arttrial2-data/image-judge-targeted-v2/autumn_shader.png",
+      "refs": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/image-judge-targeted-v2/autumn_shader.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome. The candidate is the shader-tinted ground crop alone. Evaluate this crop.",
+      "started_at": {
+        "current_time": "2026-10-22 01:24:02 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 01:25:24 UTC"
+      },
+      "source_card": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160da-7c83-72a2-92d7-3018c7309f01/exec-84a94e30-ccb4-4a2a-81e4-08af3f08dc07.png",
+      "scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4
+      },
+      "reason": "Leaf-litter ground matches the references’ hand-painted ink and tone style with similar linework, textures, lighting and earthy palette, with only minor variation in leaf density and slightly warmer, more brown leaf tones.",
+      "scope_note": "Reason identifies leaf-litter ground candidate; output includes repainted panel despite plain-scorecard request.",
+      "source": "/Users/rexxa/work/arttrial2-data/proto-season-compare-autumn/capture.png",
+      "crop_box": [
+        64,
+        104,
+        576,
+        616
+      ],
+      "operation": "Pillow crop only; no resize, recoloring, or redraw",
+      "source_sha256": "02dd6fb2006bb423e85532acd41e31350d45b2e2f25f4914086957aefa0b3a9a",
+      "candidate_sha256": "6d2f308822cba5208658dca2ea46ceb88297565c2914f103a74822a194605f1b",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-targeted-v2/autumn_shader-scorecard.png",
+      "usable_scorecard": true,
+      "model_rule_pass": true,
+      "printed_verdict": null,
+      "time_basis": "per-call UTC observations around await within concurrent execution; not isolated latency",
+      "sha256": {
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "/Users/rexxa/work/arttrial2-data/image-judge-targeted-v2/autumn_shader.png": "6d2f308822cba5208658dca2ea46ceb88297565c2914f103a74822a194605f1b",
+        "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160da-7c83-72a2-92d7-3018c7309f01/exec-84a94e30-ccb4-4a2a-81e4-08af3f08dc07.png": "6c8a91f81571b9a66453cb272b237cfb8106be082dde3ba4e8f4b01e2427e57f",
+        "/Users/rexxa/work/arttrial2-data/image-judge-targeted-v2/autumn_shader-scorecard.png": "6c8a91f81571b9a66453cb272b237cfb8106be082dde3ba4e8f4b01e2427e57f"
+      }
+    },
+    {
+      "name": "code_outlines",
+      "candidate": "/Users/rexxa/work/arttrial2-data/image-judge-targeted-v2/code_outlines.png",
+      "refs": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/image-judge-targeted-v2/code_outlines.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome. The candidate crop contains four code-drawn outlines (stockpile, blueprint, selection, bar) over ground. Evaluate those line geometries against the reference rendering language; in the reason identify their visible shapes and line treatment.",
+      "started_at": {
+        "current_time": "2026-10-22 01:24:02 UTC"
+      },
+      "completed_at": {
+        "current_time": "2026-10-22 01:25:24 UTC"
+      },
+      "source_card": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160da-7c83-72a2-92d7-3018c7309f01/exec-69deaa19-8057-4466-8e2e-71d8b3bb1b2e.png",
+      "scores": null,
+      "reason": null,
+      "scope_note": "Illustration only, no scores or reason. Unusable scorecard. No retry per fixed three-call cap.",
+      "source": "/Users/rexxa/work/arttrial2-data/proto-code-companion-crop.png",
+      "crop_box": [
+        180,
+        185,
+        500,
+        285
+      ],
+      "operation": "Pillow crop only; no resize, recoloring, or redraw",
+      "source_sha256": "3b8489d25109e9d9132d4ef6d84f5be5498cd7654758f3ab026f570896a94740",
+      "candidate_sha256": "c8dc1899a5a444cdffe9c7ecf75cde18f1d02aa7ef2cce6246d41049c5ac2c41",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-targeted-v2/code_outlines-scorecard.png",
+      "usable_scorecard": false,
+      "model_rule_pass": null,
+      "printed_verdict": null,
+      "time_basis": "per-call UTC observations around await within concurrent execution; not isolated latency",
+      "sha256": {
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "/Users/rexxa/work/arttrial2-data/image-judge-targeted-v2/code_outlines.png": "c8dc1899a5a444cdffe9c7ecf75cde18f1d02aa7ef2cce6246d41049c5ac2c41",
+        "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160da-7c83-72a2-92d7-3018c7309f01/exec-69deaa19-8057-4466-8e2e-71d8b3bb1b2e.png": "d8180b3999e55f8d00d0ab3590322c7315cd06edc165a6633054544faa45ca2d",
+        "/Users/rexxa/work/arttrial2-data/image-judge-targeted-v2/code_outlines-scorecard.png": "d8180b3999e55f8d00d0ab3590322c7315cd06edc165a6633054544faa45ca2d"
+      }
+    }
+  ]
+}

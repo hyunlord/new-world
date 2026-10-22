@@ -1,0 +1,1269 @@
+{
+  "protocol": "V2 unchanged; nearest locked hut or ground plus locked scene then candidate",
+  "rule": "numeric AND model; all four model scores >=4",
+  "calibration": "/Users/rexxa/work/arttrial2-data/calibration.json",
+  "calibration_sha256": "705de9462b6354c2ca15bda164f0e01791bbf7c1022fcfd3c4ee1d3ad66eef34",
+  "summary": {
+    "calls": 25,
+    "retries": 0,
+    "max_concurrency": 3,
+    "model_pass": 25,
+    "numeric_rejected": 23,
+    "numeric_ineligible": 2,
+    "combined_accepted": 0,
+    "sum_per_call_await_seconds": 1095.084
+  },
+  "limitations": [
+    "Model is weak/nonselective on V2 negatives; material passes do not erase numeric failures.",
+    "wall_00 was depicted and named as a shield.",
+    "Ghost cards discuss meadow only and omit blue ghosts; no ghost fidelity established.",
+    "Fresh invocation per candidate; backend context isolation not independently observable.",
+    "Monetary billing unavailable; actual call count and per-await timings recorded."
+  ],
+  "records": [
+    {
+      "name": "straight_try2_raw",
+      "path": "/Users/rexxa/work/arttrial2-data/autotile/straight_try2_raw.png",
+      "anchor": "hut",
+      "kind": "raw_wall",
+      "id": 1,
+      "sha256": "0deb86f257903c861ff1b7888c4063e66e7554b901100d42b730fe12f922f6b1",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/autotile/straight_try2_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "started_utc": "2026-10-22T01:21:08.378Z",
+      "ended_utc": "2026-10-22T01:21:33.603Z",
+      "await_seconds": 25.225,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-ab978b25-7427-4070-bc7e-10cbc64e6138.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-ab978b25-7427-4070-bc7e-10cbc64e6138.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_01.png",
+      "retries": 0,
+      "card_sha256": "2b168617367f6342ad1478369df82878881f130c4fa84d7cda7c94168d7f48ef",
+      "references_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "0deb86f257903c861ff1b7888c4063e66e7554b901100d42b730fe12f922f6b1"
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason_verbatim": "The candidate is a hand-painted, ink-outlined wooden log structure that matches the references\u2019 medium, line quality, lighting treatment, and earthy color palette, with only normal subject isolation and no noticeable style drift.",
+      "model_pass": true,
+      "transcription_method": "manual reading of actual generated scorecard; four scores and reason retained verbatim with line wraps normalized",
+      "transcript_path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_01.transcript.txt",
+      "transcript_sha256": "8a12ed56e699a3616596d05b67663211687f386f11282ee82ba9c216b4132c00",
+      "numeric_eligible": true,
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": true,
+        "local_saturation": true
+      },
+      "numeric_evidence": "/Users/rexxa/work/arttrial2-data/image-judge-materials/straight_try2_raw.numeric.json",
+      "numeric_sha256": "0c2af3bd8ed33ab363116f5e903f1939ae2ec8c4a394ec1ceb31827a9301287d",
+      "combined_pass": false,
+      "status": "REJECTED_NUMERIC"
+    },
+    {
+      "name": "corner_try2_raw",
+      "path": "/Users/rexxa/work/arttrial2-data/autotile/corner_try2_raw.png",
+      "anchor": "hut",
+      "kind": "raw_wall",
+      "id": 2,
+      "sha256": "3fcf44c456b3f5e2ef5f58c56df73a4adf6e577f91f405d49205619cf81e1a31",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/autotile/corner_try2_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "started_utc": "2026-10-22T01:21:08.378Z",
+      "ended_utc": "2026-10-22T01:22:04.679Z",
+      "await_seconds": 56.301,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-d54cf926-e7d3-43bc-a179-cae8f9f1354d.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-d54cf926-e7d3-43bc-a179-cae8f9f1354d.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_02.png",
+      "retries": 0,
+      "card_sha256": "7b0a043434af8de24d205badeaf3927ac9475063b02052e9a16973b32474ab30",
+      "references_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "3fcf44c456b3f5e2ef5f58c56df73a4adf6e577f91f405d49205619cf81e1a31"
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "reason_verbatim": "The candidate uses the same hand-drawn ink-and-watercolor look with detailed bark texture, rope lashings, and tone treatment as the references, with a very small lighting simplification from isolated presentation.",
+      "model_pass": true,
+      "transcription_method": "manual reading of actual generated scorecard; four scores and reason retained verbatim with line wraps normalized",
+      "transcript_path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_02.transcript.txt",
+      "transcript_sha256": "2650181734ab921140611dca81a017e16cbd60f090eef2eb0eb567d94cbfc06b",
+      "numeric_eligible": true,
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": true,
+        "local_saturation": false
+      },
+      "numeric_evidence": "/Users/rexxa/work/arttrial2-data/image-judge-materials/corner_try2_raw.numeric.json",
+      "numeric_sha256": "77f4ddffa1e57843e95f0d0900e4dbc9a7ebaee605039cd92753edd08cb73b04",
+      "combined_pass": false,
+      "status": "REJECTED_NUMERIC"
+    },
+    {
+      "name": "end_try2_raw",
+      "path": "/Users/rexxa/work/arttrial2-data/autotile/end_try2_raw.png",
+      "anchor": "hut",
+      "kind": "raw_wall",
+      "id": 3,
+      "sha256": "b5c9ca0bb1974450bcbf5de3c37dbe9817585085546af81624ec2a5dd372b228",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/autotile/end_try2_raw.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "started_utc": "2026-10-22T01:21:08.378Z",
+      "ended_utc": "2026-10-22T01:22:34.119Z",
+      "await_seconds": 85.741,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-3ce094c6-e33a-44dc-a28b-32c9894a9d1d.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-3ce094c6-e33a-44dc-a28b-32c9894a9d1d.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_03.png",
+      "retries": 0,
+      "card_sha256": "14940f74b4a9d4977a2b0a247f0ad0e51e468508a15424853c2507f0cedddf22",
+      "references_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "b5c9ca0bb1974450bcbf5de3c37dbe9817585085546af81624ec2a5dd372b228"
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason_verbatim": "Different subject and isolated on a magenta background, but the log is rendered with the same hand-drawn ink lines, textured watercolor-like tones, bark detail, rope bindings, and earthy palette as the references.",
+      "model_pass": true,
+      "transcription_method": "manual reading of actual generated scorecard; four scores and reason retained verbatim with line wraps normalized",
+      "transcript_path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_03.transcript.txt",
+      "transcript_sha256": "ed3fb641498c0f2fd4a837e8399b64820f63d66c151ce98ae699f696acd1b9a0",
+      "numeric_eligible": true,
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": true,
+        "local_saturation": true
+      },
+      "numeric_evidence": "/Users/rexxa/work/arttrial2-data/image-judge-materials/end_try2_raw.numeric.json",
+      "numeric_sha256": "a770492e63e552d7c1c2f3642e3044a431eed535485da4e492e31391ebcabcc0",
+      "combined_pass": false,
+      "status": "REJECTED_NUMERIC"
+    },
+    {
+      "name": "wall_00",
+      "path": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_00.png",
+      "anchor": "hut",
+      "kind": "derived_wall",
+      "id": 4,
+      "sha256": "31fe6a66968efc3165b70609ff216bc17106f9c69ba1ef724856e53eca69b35b",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_00.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "started_utc": "2026-10-22T01:22:34.374Z",
+      "ended_utc": "2026-10-22T01:23:29.513Z",
+      "await_seconds": 55.139,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-20ec5c1c-c19c-4a9d-92f8-f8811f6c2729.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-20ec5c1c-c19c-4a9d-92f8-f8811f6c2729.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_04.png",
+      "retries": 0,
+      "card_sha256": "b3d6db6ec5a1968d2e660d7085071cad20039fe9df0b1cac751d01a49c4a4ee1",
+      "references_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "31fe6a66968efc3165b70609ff216bc17106f9c69ba1ef724856e53eca69b35b"
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason_verbatim": "A small shield icon, but it uses the same hand-drawn ink outlines, textured watercolor/ink wash shading, and warm earthy palette as the references, with highly consistent linework, lighting, and color treatment.",
+      "model_pass": true,
+      "transcription_method": "manual reading of actual generated scorecard; four scores and reason retained verbatim with line wraps normalized",
+      "reviewer_limitation": "Card depicts and names a shield although submitted candidate is wall_00; subject identification unreliable.",
+      "transcript_path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_04.transcript.txt",
+      "transcript_sha256": "86211e59134e19b25c4ae3626a3ff78f53690f2239157a8e8067b40aaef5d8d7",
+      "numeric_eligible": true,
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": false,
+        "local_saturation": true
+      },
+      "numeric_evidence": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_00.numeric.json",
+      "numeric_sha256": "73d10cf1d54b661839ae8ca60d2273028db493d3825be1eceee95ab4b2b130f6",
+      "combined_pass": false,
+      "status": "REJECTED_NUMERIC"
+    },
+    {
+      "name": "wall_01",
+      "path": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_01.png",
+      "anchor": "hut",
+      "kind": "derived_wall",
+      "id": 5,
+      "sha256": "0620beeca76424e8ab39b5c0211bde31920b9f6d3f8974a7aa37c53af1d8c7b1",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_01.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "started_utc": "2026-10-22T01:22:34.374Z",
+      "ended_utc": "2026-10-22T01:23:02.600Z",
+      "await_seconds": 28.226,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-163eeb38-4ef7-4d1f-840a-12d34ff248f2.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-163eeb38-4ef7-4d1f-840a-12d34ff248f2.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_05.png",
+      "retries": 0,
+      "card_sha256": "513a7b4b2e9e44ed8cd004d58bf4465a96f5627edc441d175600aaf3502559fa",
+      "references_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "0620beeca76424e8ab39b5c0211bde31920b9f6d3f8974a7aa37c53af1d8c7b1"
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason_verbatim": "Same hand-drawn ink-and-wash look with identical linework, textured wood grain, earthy palette, and lighting treatment as the references.",
+      "model_pass": true,
+      "transcription_method": "manual reading of actual generated scorecard; four scores and reason retained verbatim with line wraps normalized",
+      "transcript_path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_05.transcript.txt",
+      "transcript_sha256": "27206808dfd2b2c7d84a889b1dc3489519b7f53b5e361698c678962778ec5556",
+      "numeric_eligible": true,
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": false,
+        "local_saturation": true
+      },
+      "numeric_evidence": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_01.numeric.json",
+      "numeric_sha256": "642eee95bca1f5db85d9d142e2ec8b987f47921d1fcb761cebbc484e94f76c46",
+      "combined_pass": false,
+      "status": "REJECTED_NUMERIC"
+    },
+    {
+      "name": "wall_02",
+      "path": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_02.png",
+      "anchor": "hut",
+      "kind": "derived_wall",
+      "id": 6,
+      "sha256": "dcd04335ebf46bc5c41553b7b84cbd033cf90048aac50511b4401f49ac8ef2a2",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_02.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "started_utc": "2026-10-22T01:22:34.400Z",
+      "ended_utc": "2026-10-22T01:23:57.262Z",
+      "await_seconds": 82.862,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-ac615b05-8166-48db-bb62-f66a09dfa7dd.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-ac615b05-8166-48db-bb62-f66a09dfa7dd.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_06.png",
+      "retries": 0,
+      "card_sha256": "f830f02fee44286e1d1eaee0806be05070f78696df886dfce7748e6de64d9285",
+      "references_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "dcd04335ebf46bc5c41553b7b84cbd033cf90048aac50511b4401f49ac8ef2a2"
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason_verbatim": "The candidate shows the same hand-inked linework, textured watercolor-like coloring, and earthy tones with consistent lighting and shading as the references, depicting a matching log-cabin corner element.",
+      "model_pass": true,
+      "transcription_method": "manual reading of actual generated scorecard; four scores and reason retained verbatim with line wraps normalized",
+      "transcript_path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_06.transcript.txt",
+      "transcript_sha256": "702c2e73de3220c946f0d2d27c897569322a2277af5a55f62f068c3f8e876550",
+      "numeric_eligible": true,
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": false,
+        "local_saturation": true
+      },
+      "numeric_evidence": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_02.numeric.json",
+      "numeric_sha256": "b8991af9c95fb91d2b4379ac30edac34c4bdd86ffdb162b1729e4f5a834c4f73",
+      "combined_pass": false,
+      "status": "REJECTED_NUMERIC"
+    },
+    {
+      "name": "wall_03",
+      "path": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_03.png",
+      "anchor": "hut",
+      "kind": "derived_wall",
+      "id": 7,
+      "sha256": "7cda1805fbd5dc320ee77b54370531d0ed1ec4ab116cc3884599365c0d66498d",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_03.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "started_utc": "2026-10-22T01:23:29.776Z",
+      "ended_utc": "2026-10-22T01:23:50.652Z",
+      "await_seconds": 20.876,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-daaaf8c5-73ca-4f21-a61b-58432a47d654.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-daaaf8c5-73ca-4f21-a61b-58432a47d654.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_07.png",
+      "retries": 0,
+      "card_sha256": "1bdaca1346742e911db641fb8b325e5a766e3c05ec428568e847180165d29585",
+      "references_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "7cda1805fbd5dc320ee77b54370531d0ed1ec4ab116cc3884599365c0d66498d"
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason_verbatim": "An L-shaped log corner consistent with the references, matching the hand-inked outlines, textured wood/bark marks, soft directional lighting, and earthy brown-green palette.",
+      "model_pass": true,
+      "transcription_method": "manual reading of actual generated scorecard; four scores and reason retained verbatim with line wraps normalized",
+      "transcript_path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_07.transcript.txt",
+      "transcript_sha256": "3bada47ce2ce2f175054cc64429ff54b94f4b322fe94e777535791f8de9ccee4",
+      "numeric_eligible": true,
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": false,
+        "local_saturation": true
+      },
+      "numeric_evidence": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_03.numeric.json",
+      "numeric_sha256": "8df2dea69cbfc31108941a3811b15849466ba723d9b37ac9cf9de729d8cbdded",
+      "combined_pass": false,
+      "status": "REJECTED_NUMERIC"
+    },
+    {
+      "name": "wall_04",
+      "path": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_04.png",
+      "anchor": "hut",
+      "kind": "derived_wall",
+      "id": 8,
+      "sha256": "9d9a19aa95200a67825896c61c605cf051f31da71c247157f41065e1d97a9aee",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_04.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "started_utc": "2026-10-22T01:23:50.915Z",
+      "ended_utc": "2026-10-22T01:24:19.614Z",
+      "await_seconds": 28.699,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-53b847ee-4dcb-4eed-8fb4-48109cf4f8ae.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-53b847ee-4dcb-4eed-8fb4-48109cf4f8ae.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_08.png",
+      "retries": 0,
+      "card_sha256": "6bf1b5f3fa11ad1ee471bcc3cb44c4913934cf41d9c4e955fa65e0df5898ec70",
+      "references_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "9d9a19aa95200a67825896c61c605cf051f31da71c247157f41065e1d97a9aee"
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason_verbatim": "The candidate is a wooden log post with lashings, rendered with the same fine ink outlines, textured brushwork, earthy palette, and top-down lighting and shadow treatment as the references.",
+      "model_pass": true,
+      "transcription_method": "manual reading of actual generated scorecard; four scores and reason retained verbatim with line wraps normalized",
+      "transcript_path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_08.transcript.txt",
+      "transcript_sha256": "524eff089491db7fc34844bc9eb9a442aae9443aa0402ed22d66444e03fc1446",
+      "numeric_eligible": true,
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": false,
+        "local_saturation": true
+      },
+      "numeric_evidence": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_04.numeric.json",
+      "numeric_sha256": "4da0061ac5ce5ff1ae6e69b75ff33592a6585d4d94b0829a7d11923d07cd82f2",
+      "combined_pass": false,
+      "status": "REJECTED_NUMERIC"
+    },
+    {
+      "name": "wall_05",
+      "path": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_05.png",
+      "anchor": "hut",
+      "kind": "derived_wall",
+      "id": 9,
+      "sha256": "0aff350a52b350020181bf5f371c99266d0b198ba1a2f0c69e1a02eb2fe4ee46",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_05.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "started_utc": "2026-10-22T01:23:57.521Z",
+      "ended_utc": "2026-10-22T01:24:45.054Z",
+      "await_seconds": 47.533,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-81605091-6954-4ba7-a66b-8a0286ae1f22.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-81605091-6954-4ba7-a66b-8a0286ae1f22.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_09.png",
+      "retries": 0,
+      "card_sha256": "7ce7cb2f3b17cafe5fbbf91953600298e6bac66d0ae2159a40da0dd860c06371",
+      "references_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "0aff350a52b350020181bf5f371c99266d0b198ba1a2f0c69e1a02eb2fe4ee46"
+      ],
+      "scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4
+      },
+      "reason_verbatim": "The candidate depicts a wooden pole segment, and its texture and binding are rendered with the same inked linework, textured brushwork, lighting, and earthy color palette as the references, with only minor simplification due to the narrow crop and absence of surrounding ground elements.",
+      "model_pass": true,
+      "transcription_method": "manual reading of actual generated scorecard; four scores and reason retained verbatim with line wraps normalized",
+      "transcript_path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_09.transcript.txt",
+      "transcript_sha256": "bc81c7141c6ef29e61c92835a230c693af09c64c03d0822edbe73d7a7371f63b",
+      "numeric_eligible": true,
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": true,
+        "local_saturation": true
+      },
+      "numeric_evidence": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_05.numeric.json",
+      "numeric_sha256": "e15e3a1d080b2e8680f7e411658de711d1070529eff1e192012a6166480af774",
+      "combined_pass": false,
+      "status": "REJECTED_NUMERIC"
+    },
+    {
+      "name": "wall_06",
+      "path": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_06.png",
+      "anchor": "hut",
+      "kind": "derived_wall",
+      "id": 10,
+      "sha256": "279c8fe44b366ba3b166d621d06516aa421d1797d5b78176b92dd23b124028be",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_06.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "started_utc": "2026-10-22T01:24:19.875Z",
+      "ended_utc": "2026-10-22T01:24:50.364Z",
+      "await_seconds": 30.489,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-cae8557b-908f-4bb1-ba3c-5b04a8a31090.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-cae8557b-908f-4bb1-ba3c-5b04a8a31090.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_10.png",
+      "retries": 0,
+      "card_sha256": "dd27eeab18f9d8e7da46738d71134af9bb319d835c517c0eee347d39a3670a3c",
+      "references_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "279c8fe44b366ba3b166d621d06516aa421d1797d5b78176b92dd23b124028be"
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "reason_verbatim": "The candidate is a wooden corner piece that matches the references\u2019 hand-drawn, fine ink and watercolor-like rendering, with consistent linework, textured brushwork, and earthy lighting and palette, differing only in being an isolated asset rather than a full scene.",
+      "model_pass": true,
+      "transcription_method": "manual reading of actual generated scorecard; four scores and reason retained verbatim with line wraps normalized",
+      "transcript_path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_10.transcript.txt",
+      "transcript_sha256": "a6009d853f79761bd8352d1261e916f0970113567125339aeea07a94aa9f4a1f",
+      "numeric_eligible": true,
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": false,
+        "local_saturation": true
+      },
+      "numeric_evidence": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_06.numeric.json",
+      "numeric_sha256": "f8b87631f311abbe3f2a52ba3c9647b9f3f3986d8749d6b3cbf0991cc066b3a1",
+      "combined_pass": false,
+      "status": "REJECTED_NUMERIC"
+    },
+    {
+      "name": "wall_07",
+      "path": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_07.png",
+      "anchor": "hut",
+      "kind": "derived_wall",
+      "id": 11,
+      "sha256": "d943e20297bfa19f13365357ce4259f1bbd13382f5bb116b7220624cca6dec01",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_07.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "started_utc": "2026-10-22T01:24:19.875Z",
+      "ended_utc": "2026-10-22T01:25:17.292Z",
+      "await_seconds": 57.417,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-9030c0fb-4e0b-47c5-b998-5ce02c40ffd4.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-9030c0fb-4e0b-47c5-b998-5ce02c40ffd4.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_11.png",
+      "retries": 0,
+      "card_sha256": "8027f7f020656cb757c10f4d0dc3f74f17d96d88b0d58251c888d931a3ba8f1d",
+      "references_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "d943e20297bfa19f13365357ce4259f1bbd13382f5bb116b7220624cca6dec01"
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason_verbatim": "The candidate is a close crop of the same log-and-rope construction, showing identical inked linework, textured brushwork, lighting and earthy color palette as the references.",
+      "model_pass": true,
+      "transcription_method": "manual reading of actual generated scorecard; four scores and reason retained verbatim with line wraps normalized",
+      "transcript_path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_11.transcript.txt",
+      "transcript_sha256": "2a6e7e3d9e518b83ea803f6c6a52449fec0d41eed322f46da5343c80e7f254ca",
+      "numeric_eligible": true,
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": false,
+        "local_saturation": true
+      },
+      "numeric_evidence": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_07.numeric.json",
+      "numeric_sha256": "2434bc4047e317ad59b7899de3de3944e04287fc302127ca2933e39abcdd1087",
+      "combined_pass": false,
+      "status": "REJECTED_NUMERIC"
+    },
+    {
+      "name": "wall_08",
+      "path": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_08.png",
+      "anchor": "hut",
+      "kind": "derived_wall",
+      "id": 12,
+      "sha256": "14c3c0793e5e2f575741e3e553dc480fb0eeae22ba034dbc56b813235b02cda1",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_08.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "started_utc": "2026-10-22T01:25:17.594Z",
+      "ended_utc": "2026-10-22T01:25:39.785Z",
+      "await_seconds": 22.191,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-a7b1b0fb-e1d1-4976-9ed2-2e5ce81a2a83.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-a7b1b0fb-e1d1-4976-9ed2-2e5ce81a2a83.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_12.png",
+      "retries": 0,
+      "card_sha256": "e7b32ff1e6462b2f486ac664fe2fd351fcea605553b6522aabcdc2a037131a63",
+      "references_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "14c3c0793e5e2f575741e3e553dc480fb0eeae22ba034dbc56b813235b02cda1"
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason_verbatim": "The candidate is a wooden log corner segment, matching the references\u2019 fine ink linework, textured watercolor-like rendering, earthy lighting, and muted brown/gray/ochre palette.",
+      "model_pass": true,
+      "transcription_method": "manual reading of actual generated scorecard; four scores and reason retained verbatim with line wraps normalized",
+      "transcript_path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_12.transcript.txt",
+      "transcript_sha256": "e8c7f1be1abab0e3507eed4c3e291c1c00476a4780c217cba5759f91f47d0314",
+      "numeric_eligible": true,
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": false,
+        "local_saturation": true
+      },
+      "numeric_evidence": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_08.numeric.json",
+      "numeric_sha256": "f887a1b1b1b3701d7d755185bb370998b81e871dd57e76e37a429a06ea7b72d7",
+      "combined_pass": false,
+      "status": "REJECTED_NUMERIC"
+    },
+    {
+      "name": "wall_09",
+      "path": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_09.png",
+      "anchor": "hut",
+      "kind": "derived_wall",
+      "id": 13,
+      "sha256": "f782d8b1b6ecf2917e8cf7f14bf2544b534a44d84e8b6cedf512e5d325b5035a",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_09.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "started_utc": "2026-10-22T01:25:17.594Z",
+      "ended_utc": "2026-10-22T01:26:07.600Z",
+      "await_seconds": 50.006,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-df6d76f6-11fc-4fdc-8765-3b37153e9ff9.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-df6d76f6-11fc-4fdc-8765-3b37153e9ff9.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_13.png",
+      "retries": 0,
+      "card_sha256": "6ee3095e0ce0a46b3eed721e4ecc64c12ec9e6a0aca5d95a4b588f46ea66cee9",
+      "references_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "f782d8b1b6ecf2917e8cf7f14bf2544b534a44d84e8b6cedf512e5d325b5035a"
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason_verbatim": "The candidate shows the same hand-drawn inked linework, textured watercolor-like tones, and earthy muted palette with consistent lighting and shading as the references, just a smaller log-corner segment.",
+      "model_pass": true,
+      "transcription_method": "manual reading of actual generated scorecard; four scores and reason retained verbatim with line wraps normalized",
+      "transcript_path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_13.transcript.txt",
+      "transcript_sha256": "6334565be10a35a43e59d169ab499ff9d3cd7bfd12ab7d9a73c93932b3d6c9a1",
+      "numeric_eligible": true,
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": false,
+        "local_saturation": true
+      },
+      "numeric_evidence": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_09.numeric.json",
+      "numeric_sha256": "2e72f814878904a3dab32cf0027aa6128b96ae4e1715953bfd651df712e0a59f",
+      "combined_pass": false,
+      "status": "REJECTED_NUMERIC"
+    },
+    {
+      "name": "wall_10",
+      "path": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_10.png",
+      "anchor": "hut",
+      "kind": "derived_wall",
+      "id": 14,
+      "sha256": "899bd5302fe43c24c2df22306f958186a94b441903b4e60952955867f3be90d1",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_10.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "started_utc": "2026-10-22T01:25:17.615Z",
+      "ended_utc": "2026-10-22T01:26:35.850Z",
+      "await_seconds": 78.235,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-78a48bc7-23df-4735-a91a-8424fed08766.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-78a48bc7-23df-4735-a91a-8424fed08766.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_14.png",
+      "retries": 0,
+      "card_sha256": "cb5bcb4bcd73ee0c104ffa93413197259912f9d5b100caacd72c5ca9d1a300ca",
+      "references_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "899bd5302fe43c24c2df22306f958186a94b441903b4e60952955867f3be90d1"
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason_verbatim": "Same hand-drawn inked linework, textured watercolor-like tones, lighting and earthy color palette as the references; only the subject and isolated white background differ.",
+      "model_pass": true,
+      "transcription_method": "manual reading of actual generated scorecard; four scores and reason retained verbatim with line wraps normalized",
+      "transcript_path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_14.transcript.txt",
+      "transcript_sha256": "141283d3097c7ca0f98972137cb14ccbd59becd07ffb2f941f44453918645a3d",
+      "numeric_eligible": true,
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": true,
+        "local_saturation": true
+      },
+      "numeric_evidence": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_10.numeric.json",
+      "numeric_sha256": "474facd6a602db5730f8032276df937912a94fe48affcc79bc3022747290e441",
+      "combined_pass": false,
+      "status": "REJECTED_NUMERIC"
+    },
+    {
+      "name": "wall_11",
+      "path": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_11.png",
+      "anchor": "hut",
+      "kind": "derived_wall",
+      "id": 15,
+      "sha256": "a9ac201596bea66083c8252cd96083cbf3e5295d08f23a469bd9506a078c7105",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_11.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "started_utc": "2026-10-22T01:25:40.034Z",
+      "ended_utc": "2026-10-22T01:26:13.182Z",
+      "await_seconds": 33.148,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-961a356e-5e61-49a5-a93c-6daaa12b7735.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-961a356e-5e61-49a5-a93c-6daaa12b7735.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_15.png",
+      "retries": 0,
+      "card_sha256": "707c1f58aa7ae165c63c3b70642c837d309a4be43734ba765dd4fd1cd6f63fc0",
+      "references_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "a9ac201596bea66083c8252cd96083cbf3e5295d08f23a469bd9506a078c7105"
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "reason_verbatim": "A wooden log corner piece rendered in the same hand-drawn ink and watercolor style with matching texture, linework, and earthy palette as the references, with only slightly simpler shading due to the small, isolated element.",
+      "model_pass": true,
+      "transcription_method": "manual reading of actual generated scorecard; four scores and reason retained verbatim with line wraps normalized",
+      "transcript_path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_15.transcript.txt",
+      "transcript_sha256": "43bf334bb3d9765937d43064045ca2da25f2d9d914435cfc6c72e486fcc61276",
+      "numeric_eligible": true,
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": false,
+        "local_saturation": true
+      },
+      "numeric_evidence": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_11.numeric.json",
+      "numeric_sha256": "66fef94cf8f10806c56d44cb47b44d1bfbf7bce3c90d39cf83d80f382329474d",
+      "combined_pass": false,
+      "status": "REJECTED_NUMERIC"
+    },
+    {
+      "name": "wall_12",
+      "path": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_12.png",
+      "anchor": "hut",
+      "kind": "derived_wall",
+      "id": 16,
+      "sha256": "aea45eb0f96e9b0bc775c47d42e3052515637d4213a6cf9005c123402861d32f",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_12.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "started_utc": "2026-10-22T01:26:07.837Z",
+      "ended_utc": "2026-10-22T01:26:34.437Z",
+      "await_seconds": 26.6,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-ee3a8393-5e3d-4c5a-bb6f-cb62771dd6dc.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-ee3a8393-5e3d-4c5a-bb6f-cb62771dd6dc.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_16.png",
+      "retries": 0,
+      "card_sha256": "7f45c2be1d019b101e917884e974a9b025b1a8544b9fa203a1599a6ae3156fb9",
+      "references_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "aea45eb0f96e9b0bc775c47d42e3052515637d4213a6cf9005c123402861d32f"
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason_verbatim": "The image shows a wooden log corner segment rendered with the same hand-drawn ink lines, textured wood grain, subtle watercolor-like tones, lighting, and earthy color palette as the references; only the subject and close cropped view differ.",
+      "model_pass": true,
+      "transcription_method": "manual reading of actual generated scorecard; four scores and reason retained verbatim with line wraps normalized",
+      "transcript_path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_16.transcript.txt",
+      "transcript_sha256": "89775f20164dc8630e1d896fa79f5827ad15faf1a40a100904dfcb130af03685",
+      "numeric_eligible": true,
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": false,
+        "local_saturation": true
+      },
+      "numeric_evidence": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_12.numeric.json",
+      "numeric_sha256": "97e484df6b1e659d4ee23da5b1e4fc27e60192eaae6cbd33950cef959c061880",
+      "combined_pass": false,
+      "status": "REJECTED_NUMERIC"
+    },
+    {
+      "name": "wall_13",
+      "path": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_13.png",
+      "anchor": "hut",
+      "kind": "derived_wall",
+      "id": 17,
+      "sha256": "4d3b2c926bda795dcc8d154d272b9ff8c42820422322363e1af714cfdc5fb5e1",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_13.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "started_utc": "2026-10-22T01:26:34.695Z",
+      "ended_utc": "2026-10-22T01:27:14.885Z",
+      "await_seconds": 40.19,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-7435d322-f7b5-42e2-b11f-2b206878fcf9.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-7435d322-f7b5-42e2-b11f-2b206878fcf9.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_17.png",
+      "retries": 0,
+      "card_sha256": "be008ecd908cc0d2cb8bd7feb155a36362644e1b1bb7874bdc2b900c6c616bfc",
+      "references_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "4d3b2c926bda795dcc8d154d272b9ff8c42820422322363e1af714cfdc5fb5e1"
+      ],
+      "scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4
+      },
+      "reason_verbatim": "The candidate depicts a wooden log joint, which is a different subject than the reference scenes, but its medium, line work, lighting, and earthy palette closely match the references\u2019 ink-and-wash map style.",
+      "model_pass": true,
+      "transcription_method": "manual reading of actual generated scorecard; four scores and reason retained verbatim with line wraps normalized",
+      "transcript_path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_17.transcript.txt",
+      "transcript_sha256": "b36fe30ba09e685d3082fe4ffa180441d0391c8ac1e8b1b2a51bfe6b620fc52d",
+      "numeric_eligible": true,
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": false,
+        "local_saturation": true
+      },
+      "numeric_evidence": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_13.numeric.json",
+      "numeric_sha256": "347695eac2197185ef80959c2a1c26c0ccc343fb034aa1caa6fb4ecaabf0c555",
+      "combined_pass": false,
+      "status": "REJECTED_NUMERIC"
+    },
+    {
+      "name": "wall_14",
+      "path": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_14.png",
+      "anchor": "hut",
+      "kind": "derived_wall",
+      "id": 18,
+      "sha256": "e9f72e084802bb4834f6e6f0b7735d5b92a340b93fea6e738021d96e4c17bd1e",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_14.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "started_utc": "2026-10-22T01:26:34.701Z",
+      "ended_utc": "2026-10-22T01:27:44.896Z",
+      "await_seconds": 70.195,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-8b9cd84b-4984-4a08-bec5-6ec1d999def0.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-8b9cd84b-4984-4a08-bec5-6ec1d999def0.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_18.png",
+      "retries": 0,
+      "card_sha256": "910d3a50626b0751c47cfa974b51ebd1c6c2fdcd3ea21b1fdb680ee2415acc04",
+      "references_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "e9f72e084802bb4834f6e6f0b7735d5b92a340b93fea6e738021d96e4c17bd1e"
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason_verbatim": "The candidate is a simple T-joint log asset, and its hand-drawn ink lines, watercolor-like tonal shading, texture detail, and earthy color palette match the references.",
+      "model_pass": true,
+      "transcription_method": "manual reading of actual generated scorecard; four scores and reason retained verbatim with line wraps normalized",
+      "transcript_path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_18.transcript.txt",
+      "transcript_sha256": "158989693d7706304b739761601972c5fb8956756f5d89d52ec575ff2de84bf6",
+      "numeric_eligible": true,
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": false,
+        "local_saturation": true
+      },
+      "numeric_evidence": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_14.numeric.json",
+      "numeric_sha256": "e0c55f050a1eb65006d47eb9b2891c407c21d424836e2a9297c88ebe342fb41d",
+      "combined_pass": false,
+      "status": "REJECTED_NUMERIC"
+    },
+    {
+      "name": "wall_15",
+      "path": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_15.png",
+      "anchor": "hut",
+      "kind": "derived_wall",
+      "id": 19,
+      "sha256": "c26f438a8d5665c75bdc4dce278bd9169c2d18eb275e27759229618f0cae3fae",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_15.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "started_utc": "2026-10-22T01:27:15.163Z",
+      "ended_utc": "2026-10-22T01:27:39.167Z",
+      "await_seconds": 24.004,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-ed5a2d4b-82b6-4fe0-8102-ae289e7cf26b.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-ed5a2d4b-82b6-4fe0-8102-ae289e7cf26b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_19.png",
+      "retries": 0,
+      "card_sha256": "9dfb3a85b70d54fbfd03acb2dff7d21bbc2997bd5f9c5af2faccdc940cf72649",
+      "references_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "c26f438a8d5665c75bdc4dce278bd9169c2d18eb275e27759229618f0cae3fae"
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "reason_verbatim": "The candidate is a top-down wooden log junction with rope bindings, rendered in the same hand-inked, textured watercolor illustration style as the references, with highly consistent medium, line work, palette, and lighting, with only minimal tonal simplification due to the isolated asset on a white background.",
+      "model_pass": true,
+      "transcription_method": "manual reading of actual generated scorecard; four scores and reason retained verbatim with line wraps normalized",
+      "transcript_path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_19.transcript.txt",
+      "transcript_sha256": "f4c0cd6ab8cb149c2c0bf7042725c9f4eb9e1a11a139b9b40e811ac54f1d5bbd",
+      "numeric_eligible": true,
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": false,
+        "local_saturation": true
+      },
+      "numeric_evidence": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/wall_15.numeric.json",
+      "numeric_sha256": "3f5cd0d4dee7afc56b5ac47be91d761ea8b767e2a80415082c46369295e6c9dd",
+      "combined_pass": false,
+      "status": "REJECTED_NUMERIC"
+    },
+    {
+      "name": "floor_00",
+      "path": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/floor_00.png",
+      "anchor": "ground",
+      "kind": "floor",
+      "id": 20,
+      "sha256": "bb7aaf6ccb3527b062f2523132e1a2cfc6319652d260e87a8ef3f9adec3efbc0",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/floor_00.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "started_utc": "2026-10-22T01:27:39.426Z",
+      "ended_utc": "2026-10-22T01:28:05.595Z",
+      "await_seconds": 26.169,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-95ccc190-d9c5-4651-ac37-8d1aa3429a2e.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-95ccc190-d9c5-4651-ac37-8d1aa3429a2e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_20.png",
+      "retries": 0,
+      "card_sha256": "e5ce0d21aea2c5545c7b379708a033fa151d9661c0e79beefc893fccc6bdf506",
+      "references_sha256": [
+        "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "bb7aaf6ccb3527b062f2523132e1a2cfc6319652d260e87a8ef3f9adec3efbc0"
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason_verbatim": "The image depicts a dirt and sparse grass ground texture, and its fine inked outlines, textured brushwork, tonal transitions, and earthy green-brown palette closely match the references.",
+      "model_pass": true,
+      "transcription_method": "manual reading of actual generated scorecard; four scores and reason retained verbatim with line wraps normalized",
+      "transcript_path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_20.transcript.txt",
+      "transcript_sha256": "94d86f87b833c41f34cbd0b6eed850e1671a93e04c4d2a90df8822e3e21c2ce8",
+      "numeric_eligible": true,
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": true,
+        "local_saturation": true
+      },
+      "numeric_evidence": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/floor_00.numeric.json",
+      "numeric_sha256": "afcfde1895ec12a711d462b70278b71e15a1c31adc3f44d514f27aeae501ef10",
+      "combined_pass": false,
+      "status": "REJECTED_NUMERIC"
+    },
+    {
+      "name": "floor_01",
+      "path": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/floor_01.png",
+      "anchor": "ground",
+      "kind": "floor",
+      "id": 21,
+      "sha256": "8d78cd68b7016d818d33c90d412e46ce8e67ef1821cd587a86687571f658caba",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/floor_01.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "started_utc": "2026-10-22T01:27:45.147Z",
+      "ended_utc": "2026-10-22T01:28:31.299Z",
+      "await_seconds": 46.152,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-7977a233-726a-4e9a-a4ca-e229a90ce895.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-7977a233-726a-4e9a-a4ca-e229a90ce895.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_21.png",
+      "retries": 0,
+      "card_sha256": "416b70a71d87e5d5017d35c7ad6aa8af7d76580c817fd2d6fd438b3fae5d1052",
+      "references_sha256": [
+        "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "8d78cd68b7016d818d33c90d412e46ce8e67ef1821cd587a86687571f658caba"
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason_verbatim": "A ground/grass terrain patch that uses the same hand-drawn inked detail, textured brushwork, and earthy green-brown palette as the references, matching their medium, line, light and color language.",
+      "model_pass": true,
+      "transcription_method": "manual reading of actual generated scorecard; four scores and reason retained verbatim with line wraps normalized",
+      "transcript_path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_21.transcript.txt",
+      "transcript_sha256": "9afbc7b408afd4760db3ff02deb6e1dca5610c9cb182961b60e5a2c813d32036",
+      "numeric_eligible": true,
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": true,
+        "local_saturation": true
+      },
+      "numeric_evidence": "/Users/rexxa/work/arttrial2-data/autotile/try2-derived/floor_01.numeric.json",
+      "numeric_sha256": "ee7bf16424224275e1dcc6da4e08e98a67fa1064a12d10b5f9591c2dd8ba9557",
+      "combined_pass": false,
+      "status": "REJECTED_NUMERIC"
+    },
+    {
+      "name": "winter_meadow",
+      "path": "/Users/rexxa/work/arttrial2-data/seasons/winter_meadow_try1.png",
+      "anchor": "ground",
+      "kind": "season",
+      "id": 22,
+      "sha256": "b7e36443be5f445ac794cd90cae86affc3015bd3a67196093618fff81af936f2",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/seasons/winter_meadow_try1.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "started_utc": "2026-10-22T01:28:05.864Z",
+      "ended_utc": "2026-10-22T01:28:36.829Z",
+      "await_seconds": 30.965,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-2f04216a-addc-427d-9d17-d8721a62af35.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-2f04216a-addc-427d-9d17-d8721a62af35.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_22.png",
+      "retries": 0,
+      "card_sha256": "b0d3a799962fcfe460de4f496e2ee986dc6567f8f64f7d3b0bc139cdc12e512a",
+      "references_sha256": [
+        "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "b7e36443be5f445ac794cd90cae86affc3015bd3a67196093618fff81af936f2"
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "reason_verbatim": "Snowy ground subject, but the same hand-inked, textured painterly medium with crisp outlines, detailed surface marks and matching earthy color palette; lighting and contrast are very close with only minor differences from the references.",
+      "model_pass": true,
+      "transcription_method": "manual reading of actual generated scorecard; four scores and reason retained verbatim with line wraps normalized",
+      "transcript_path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_22.transcript.txt",
+      "transcript_sha256": "41b7ac3ba634d19ac0d27c7093d5013684130ca374ca58056c33fb82a647af61",
+      "numeric_eligible": true,
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": true,
+        "local_saturation": false
+      },
+      "numeric_evidence": "/Users/rexxa/work/arttrial2-data/seasons/winter_meadow_try1_working_numeric.json",
+      "numeric_sha256": "b5083ded140a328a6fd8a4cdac433c0ac611cae3a99954a0e6718d0e1aa2a20d",
+      "combined_pass": false,
+      "status": "REJECTED_NUMERIC"
+    },
+    {
+      "name": "autumn_forest_floor",
+      "path": "/Users/rexxa/work/arttrial2-data/seasons/autumn_forest_floor_try1.png",
+      "anchor": "ground",
+      "kind": "season",
+      "id": 23,
+      "sha256": "24b4ea3ead9b53360a16ae6b57b8303558ca209eebf2456a2c570f2579922e26",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/seasons/autumn_forest_floor_try1.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "started_utc": "2026-10-22T01:28:05.880Z",
+      "ended_utc": "2026-10-22T01:29:12.400Z",
+      "await_seconds": 66.52,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-224a7abf-134b-42ad-a3c5-56fe4be1db41.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-224a7abf-134b-42ad-a3c5-56fe4be1db41.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_23.png",
+      "retries": 0,
+      "card_sha256": "9961b404fe4071afc40c7a83e88f1caeca3843782a9667f5dfa83d6e7ec78200",
+      "references_sha256": [
+        "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "24b4ea3ead9b53360a16ae6b57b8303558ca209eebf2456a2c570f2579922e26"
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "reason_verbatim": "Fallen leaves and ground debris match the references\u2019 hand-inked, textured medium, linework, light, and earthy palette closely with no noticeable stylistic drift.",
+      "model_pass": true,
+      "transcription_method": "manual reading of actual generated scorecard; four scores and reason retained verbatim with line wraps normalized",
+      "transcript_path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_23.transcript.txt",
+      "transcript_sha256": "a7f78b80ac3ab06386f50e980cf990ae61528c4c0ea9b50286e9b165e493051b",
+      "numeric_eligible": true,
+      "numeric_pass": false,
+      "numeric_checks": {
+        "lab_histogram": false,
+        "line_density": true,
+        "local_saturation": false
+      },
+      "numeric_evidence": "/Users/rexxa/work/arttrial2-data/seasons/autumn_forest_floor_try1_working_numeric.json",
+      "numeric_sha256": "dc31a05f9112d8ca6a99f0d3ca30d5120e5204544db48da07e948d44f1b73d51",
+      "combined_pass": false,
+      "status": "REJECTED_NUMERIC"
+    },
+    {
+      "name": "hut_ghost",
+      "path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/hut_ghost_composite.png",
+      "anchor": "hut",
+      "kind": "ghost_composite",
+      "numeric_eligible": false,
+      "numeric_reason": "alpha80 source input rejected; composite includes ground and is not isolated ghost acceptance",
+      "operations": [
+        {
+          "operation": "alpha_composite",
+          "foreground": "/Users/rexxa/work/arttrial2-data/misc/hut_ghost_derived.png",
+          "foreground_sha256": "4bb2f557ea5a135f90e90363e56bd4cd38fe88fdb48f71171ec463c1c839cdee",
+          "background": "/Users/rexxa/work/arttrial2-data/ground/meadow_try2/candidate.png",
+          "background_sha256": "c06fff2c6965a3731db787d8aa6ffa1c68d230faa98a6e7facbfd664c7490afe",
+          "position": [
+            160,
+            160
+          ],
+          "resize": false
+        }
+      ],
+      "id": 24,
+      "sha256": "23bac4742486f6f7285f5f8e36d24e6af0f4ab511d200cedb80f6652b52dea0f",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/image-judge-materials/hut_ghost_composite.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "started_utc": "2026-10-22T01:28:31.569Z",
+      "ended_utc": "2026-10-22T01:29:05.539Z",
+      "await_seconds": 33.97,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-e1734282-ff26-4eb5-9031-0f040f8a5808.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-e1734282-ff26-4eb5-9031-0f040f8a5808.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_24.png",
+      "retries": 0,
+      "card_sha256": "8f832cc8b3a9b88c3d0157dfb40e4fdf3a34ce5227652a36ba4e577bd8ab0b4f",
+      "references_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "23bac4742486f6f7285f5f8e36d24e6af0f4ab511d200cedb80f6652b52dea0f"
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason_verbatim": "The grassy ground content matches the references\u2019 hand-drawn ink and watercolor treatment with the same line quality, textured brushwork, soft top-down lighting, and earthy green-brown palette with muted natural colors and consistent tonal transitions.",
+      "model_pass": true,
+      "transcription_method": "manual reading of actual generated scorecard; four scores and reason retained verbatim with line wraps normalized",
+      "reviewer_limitation": "Card depicts and discusses grassy ground only; the alpha80 blue ghost is omitted. Does not establish ghost fidelity.",
+      "transcript_path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_24.transcript.txt",
+      "transcript_sha256": "0d43dd65067a40241824a01d61f87073446ab277d605f8fd6470d7e7244b1094",
+      "numeric_pass": null,
+      "combined_pass": false,
+      "status": "NOT_ELIGIBLE"
+    },
+    {
+      "name": "workshop_ghost",
+      "path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/workshop_ghost_composite.png",
+      "anchor": "hut",
+      "kind": "ghost_composite",
+      "numeric_eligible": false,
+      "numeric_reason": "alpha80 source input rejected; composite includes ground and is not isolated ghost acceptance",
+      "operations": [
+        {
+          "operation": "alpha_composite",
+          "foreground": "/Users/rexxa/work/arttrial2-data/misc/workshop_ghost_derived.png",
+          "foreground_sha256": "f5158515e2ff13eb1dc62fbfced318ffe44b4aac081d67b0fec4f1ad7a56a3e5",
+          "background": "/Users/rexxa/work/arttrial2-data/ground/meadow_try2/candidate.png",
+          "background_sha256": "c06fff2c6965a3731db787d8aa6ffa1c68d230faa98a6e7facbfd664c7490afe",
+          "position": [
+            192,
+            224
+          ],
+          "resize": false
+        }
+      ],
+      "id": 25,
+      "sha256": "ca4de00fef96a11aba898aaa99eb8dfed88ada3a7753783e5629b4b6826da6c8",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/image-judge-materials/workshop_ghost_composite.png"
+      ],
+      "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+      "started_utc": "2026-10-22T01:28:37.093Z",
+      "ended_utc": "2026-10-22T01:29:05.324Z",
+      "await_seconds": 28.231,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-4cfef8b5-39d0-4fca-90dc-272498161331.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d9-911d-7c72-902c-960f8e29ad55/exec-4cfef8b5-39d0-4fca-90dc-272498161331.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "card": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_25.png",
+      "retries": 0,
+      "card_sha256": "b5f899f270dc155b2901bf5a69dddb2ec9299fabddf120ef8a2955bc9028eb99",
+      "references_sha256": [
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "ca4de00fef96a11aba898aaa99eb8dfed88ada3a7753783e5629b4b6826da6c8"
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "reason_verbatim": "Same hand-drawn ink and watercolor medium, linework, lighting and earthy natural palette as the references; only the subject matter (grassy ground vs. structures/shore) differs.",
+      "model_pass": true,
+      "transcription_method": "manual reading of actual generated scorecard; four scores and reason retained verbatim with line wraps normalized",
+      "reviewer_limitation": "Card depicts and discusses grassy ground only; the alpha80 blue ghost is omitted. Does not establish ghost fidelity.",
+      "transcript_path": "/Users/rexxa/work/arttrial2-data/image-judge-materials/card_25.transcript.txt",
+      "transcript_sha256": "728028f5f04dcaf13ceef7429d7a191fbc31dbab35d2058cdba7d509fb2bb23c",
+      "numeric_pass": null,
+      "combined_pass": false,
+      "status": "NOT_ELIGIBLE"
+    }
+  ]
+}

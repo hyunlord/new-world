@@ -19,3 +19,7 @@ For derived assets include parent paths/hashes and mapping/composition recipe. D
 ## Accounting and handoff
 
 For each family record total tool calls, per-asset tries, accepted count, first-try and after-retry judge pass rates with explicit denominators, failures/stops, and measured wall time. Keep generation latency, processing/review time and total elapsed time distinct. Include rejected attempts in cost and sustainability projections. Retain review images at 1×/2× and the real Godot captures separately from static contact sheets. A technical test or contact sheet never substitutes for runtime, animation, readability or FPS evidence.
+
+## Rehearsal result
+
+ART-TRIAL2 concluded with C1/C2 failures and the preregistered map02 fallback recommendation. Do not treat this guide as production approval. Use docs/v8/arttrial2/JUDGE_PROTOCOL_V2.md for the recorded model protocol: combined calibration passes, but the model alone rejected zero of three negative controls. Preserve numeric failures and semantic misidentifications. Only packed_earth and hill_rock were accepted.

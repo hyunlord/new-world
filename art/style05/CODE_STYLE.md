@@ -8,4 +8,4 @@ The stockpile has a light wash and dashed perimeter; the blueprint adds a sparse
 
 Inspect at actual 0.5×, 1× and 2× beside ground, objects and people. A shader or `_draw()` implementation is not evidence of visual consistency: retain the image-model capture scores and a direct visual verdict in the trial report. Numeric asset thresholds were calibrated on standalone anchor images; do not silently treat composite UI captures as accepted environment assets.
 
-Current acceptance: PENDING capture review. No game consumer has been changed.
+Current acceptance: NOT_VERIFIED by the image model. The full-capture card scored5/5/5/5 but described grass/fire/logs and omitted the outline geometry; a scoped outline-only call returned an illustration without scores. Preserve these as target/format failures. Listed fix: reduce background competition or provide a quiet local backing within the15% wash constraint, then recheck1× contrast. No game consumer has been changed.
