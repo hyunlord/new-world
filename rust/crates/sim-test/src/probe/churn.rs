@@ -19,7 +19,19 @@ pub const NEEDS: [&str; 7] = [
     "hunger", "thirst", "sleep", "social", "forage", "firewood", "other",
 ];
 /// Job kind names by code.
-pub const KINDS: [&str; 4] = ["chop", "haul", "deliver", "build"];
+pub const KINDS: [&str; 11] = [
+    "chop",
+    "haul",
+    "deliver",
+    "build",
+    "quarry",
+    "supply",
+    "craft",
+    "gather",
+    "dig",
+    "deconstruct",
+    "clear",
+];
 /// Job stage names by code.
 pub const STAGES: [&str; 3] = ["to_source", "working", "to_dest"];
 

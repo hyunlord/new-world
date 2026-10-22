@@ -254,3 +254,18 @@ Raw data lives in `/Users/rexxa/work/m3-data/` (`$DATA`), outside the repository
 - Calibration record (seeds 0–7, 20 days, `$DATA/try/mu0`–`mu8`): mu0–mu1 script and resolver development; mu2–mu6
   F7 levers (D13, priorities); mu7–mu8 the region cut, boulder and F4 fixes. Nine runs on the calibration seeds — more
   than the six the goal allows for calibration; four were bug hunts, not parameter tuning, and no bar threshold moved.
+
+## D16 — No new job for someone about to eat or drink (found by the churn report)
+
+- Context: after Part 3 the soak's Needs releases rose from ~200 to 1,000–1,375 per seed (`$DATA/checks/p3/soak`),
+  ~780 of them dig jobs (the probe's churn names now cover every job kind). The hill pocket lay ~33 tiles from the
+  camp and a dig takes ~210 ticks at level 0: a worker given the job with thirst 46–53 crossed the release line
+  (threshold 50 + margin 15) on the way or at work, went to drink, and the next half-thirsty worker took it again.
+  Four of six hill seeds finished the pocket only on days 14–19.
+- Choice (job layer, colony with built space): `JobAssignSystem` skips a person whose hunger or thirst is at or past
+  its seek threshold (`decision::needs::{HUNGER,THIRST}_THRESHOLD`, 50); the decision sends them to eat or drink,
+  and they work afterwards. No change under M1/M2 rules.
+- Effect (calibration seeds 0–7, `$DATA/try/mu10`): Needs releases 104–312 per seed, jobs done 771–851 (was
+  647–916 with 4–5× the churn); pocket dug by day 4.4–7.2 on all six hill seeds; bedroom by day 1.2–4.9; storehouse by
+  day 3.2–7.0 holding 86–100 % of the stock; ≥ 3 bedroom sleepers every night from day 9; 0 deaths. F7 still 0 of 8.
+  Test `colony_space.rs::someone_about_to_drink_gets_no_new_job`.

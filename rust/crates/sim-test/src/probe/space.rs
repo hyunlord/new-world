@@ -14,7 +14,8 @@
 //! - `unreachable` / `unreachable_room_door`: Unreachable cancels in total and
 //!   those whose target lay in a room with a door (F5), `door_steps`: agent-ticks
 //!   spent on a door tile (≥ 1 = a route passed a door);
-//! - `knap_top_level`, `blade_quality_early` (days 1–5) / `late` (days 15–20) (F7);
+//! - `knap_top_level` (and `knap_top_level_by_day`, the top knapper's level at the end
+//!   of each day), `blade_quality_early` (days 1–5) / `late` (days 15–20) (F7);
 //! - `axe_chops_after_day3` (F8);
 //! - `rooms_end`: every room at the end (id, role, tiles, beds, dug, doors).
 use serde_json::{json, Value};
@@ -41,6 +42,7 @@ pub struct SpaceWatch {
     unreachable_seen: BTreeSet<CooldownEntry>,
     unreachable_room_door: u64,
     door_steps: u64,
+    knap_by_day: Vec<u8>,
     quality_day5: (u64, u64),
     quality_day14: (u64, u64),
     axe_chops_day3: u64,
@@ -156,6 +158,17 @@ impl SpaceWatch {
                 self.night.clear();
             }
         }
+        if after.is_multiple_of(DAY) {
+            // F7: the top knapper's level at the end of each day.
+            let top = engine
+                .world
+                .query::<&Skills>()
+                .iter()
+                .map(|(_, s)| s.level(SkillKind::Knap))
+                .max()
+                .unwrap_or(0);
+            self.knap_by_day.push(top);
+        }
         if after == 5 * DAY {
             self.quality_day5 = blade_quality(engine);
         }
@@ -235,6 +248,7 @@ impl SpaceWatch {
             "unreachable_room_door": self.unreachable_room_door,
             "door_steps": self.door_steps,
             "knap_top_level": knap_top,
+            "knap_top_level_by_day": self.knap_by_day,
             "blade_quality_early": mean(self.quality_day5),
             "blade_quality_late": mean(late),
             "blades_early": self.quality_day5.0,

@@ -865,6 +865,18 @@ impl RuntimeSystem for JobAssignSystem {
         };
         // (id, entity, tile, work priorities, holds a tool, skills)
         type Row = (AgentId, Entity, (u32, u32), WorkPriorities, bool, Skills);
+        // M3 (DECISIONS D16): a person whose hunger or thirst is at its seek
+        // threshold is about to leave for food or water; no new job then.
+        let needy = |e: Entity| {
+            use crate::runtime::decision::needs as n;
+            rule.space.is_some()
+                && (world
+                    .get::<&sim_core::components::Hunger>(e)
+                    .is_ok_and(|h| h.value >= n::HUNGER_THRESHOLD)
+                    || world
+                        .get::<&sim_core::components::Thirst>(e)
+                        .is_ok_and(|t| t.value >= n::THIRST_THRESHOLD))
+        };
         let mut available: Vec<Row> = world
             .query::<(
                 &Agent,
@@ -879,6 +891,7 @@ impl RuntimeSystem for JobAssignSystem {
             .without::<&Child>()
             .without::<&PorterTrip>()
             .iter()
+            .filter(|(entity, _)| !needy(*entity))
             .filter(|(_, (agent, _, state, _, _, _, _))| {
                 matches!(
                     state,

@@ -328,3 +328,37 @@ fn digging_a_pocket_into_a_hill_yields_stone_and_opens_it() {
         .unwrap_or(0);
     assert!(mined > 0, "mining XP");
 }
+
+#[test]
+fn someone_about_to_drink_gets_no_new_job() {
+    let mut engine = world(30, 30);
+    let calm = worker(&mut engine, 5, 5);
+    let thirsty = worker(&mut engine, 6, 5);
+    for (e, value) in [(calm, 10.0), (thirsty, 55.0)] {
+        let _ = engine
+            .world
+            .insert_one(e, sim_core::components::Thirst::new(value, 0.0));
+    }
+    colony_support::plant(&mut engine, (20, 5), 4);
+    colony_support::plant(&mut engine, (20, 8), 4);
+    assert!(
+        submit(
+            &mut engine,
+            Command::DesignateChopTiles {
+                tiles: vec![(20, 5), (20, 8)]
+            }
+        )
+        .accepted
+    );
+    tick_checked(&mut engine);
+    let has_job = |engine: &SimEngine, e| colony_support::job_of(engine, e).is_some();
+    assert!(has_job(&engine, calm), "the calm worker takes a tree");
+    assert!(
+        !has_job(&engine, thirsty),
+        "the thirsty one (55 >= 50) is left to drink"
+    );
+    // Under M2 rules the old behaviour stands: both take one.
+    engine.resources.rules.colony = Some(ColonyRule::M2);
+    tick_checked(&mut engine);
+    assert!(has_job(&engine, thirsty));
+}
