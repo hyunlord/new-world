@@ -57,6 +57,38 @@ pub fn in_transit(world: &World) -> BTreeMap<((u32, u32), ItemKind), u16> {
     out
 }
 
+/// Firewood units the colony still lacks (M2 goal 3.8): the larger of the
+/// hearth's need (`hearth::hearth_need`) and every firewood `Maintain` target,
+/// minus the settlements' wood, the firewood in stock (`maintain_count`) and a
+/// carry per gather job under way.
+pub fn gather_shortfall(world: &World, res: &SimResources) -> u32 {
+    let mut want = super::hearth::hearth_need(res);
+    for shop in res.colony.workshops.values() {
+        for bill in &shop.bills {
+            let firewood = bill
+                .recipe
+                .recipe()
+                .is_some_and(|r| r.output.0 == ItemKind::Firewood);
+            if let (BillMode::Maintain(n), true, false) = (bill.mode, firewood, bill.suspended) {
+                want = want.max(u32::from(n));
+            }
+        }
+    }
+    let carry = res
+        .rules
+        .colony
+        .map_or(10, |r| u32::from(r.carry(ItemKind::Firewood)));
+    let gathering = world
+        .query::<&Job>()
+        .iter()
+        .filter(|(_, j)| matches!(j.kind, JobKind::Gather { .. }))
+        .count() as u32;
+    let held = super::hearth::settlement_wood(res)
+        + maintain_count(world, res, ItemKind::Firewood)
+        + gathering * carry;
+    want.saturating_sub(held)
+}
+
 /// Items on their way to each workshop shelf, by `(workshop, kind)` (`Supply` jobs),
 /// and the crafts in progress per bill (`Craft` jobs).
 pub fn shelf_transit(world: &World) -> (BTreeMap<(u32, ItemKind), u16>, BTreeMap<u32, u32>) {
@@ -83,6 +115,7 @@ enum Search {
     ReadySite,
     MarkedTree,
     QuarryNode,
+    Deadwood,
     Loose,
     OpenCell(ItemSpec),
 }
@@ -146,6 +179,13 @@ struct Ctx<'a> {
     supply: &'a BTreeMap<(u32, ItemKind), u16>,
     crafting: &'a BTreeMap<u32, u32>,
     made: &'a BTreeMap<ItemKind, u32>,
+    /// Deadwood spots with wood (M2), built on first use in a tick: most ticks
+    /// need none (the colony is rarely short of firewood).
+    deadwood: &'a std::cell::OnceCell<ChunkIndex<()>>,
+    /// Firewood units still to gather this tick (M2 goal 3.8; 0 = none).
+    gather_short: u32,
+    /// The colony's hearth (the gather fallback's drop when no cell has room).
+    hearth: Option<(u32, u32)>,
 }
 
 /// A picked job: kind, amount, item.
@@ -270,6 +310,9 @@ fn pick_work(
                         recipe.output.0,
                     ));
                 }
+            }
+            if work == WorkType::Split {
+                return gather_pick(res, ctx, pos, ex);
             }
             None
         }
@@ -425,6 +468,49 @@ fn pick_work(
     }
 }
 
+/// The Split fallback (M2 goal 3.8): while the colony is short of firewood
+/// and no firewood bill can run, gather the nearest deadwood spot no one has
+/// taken, for the stockpile cell nearest it that takes firewood, or the hearth
+/// pile when none has room.
+fn gather_pick(res: &SimResources, ctx: &Ctx, pos: (u32, u32), ex: &mut Exhausted) -> Option<Pick> {
+    if ctx.gather_short == 0 {
+        return None;
+    }
+    let colony = &res.colony;
+    let free = |tile: (u32, u32)| {
+        res.wood_tiles.get(&tile).is_some_and(|units| *units > 0)
+            && !colony.reservations.contains_key(&ReserveKey::Wood(tile))
+    };
+    let deadwood = ctx.deadwood.get_or_init(|| {
+        let mut index = ChunkIndex::new();
+        for (tile, units) in &res.wood_tiles {
+            if *units > 0 {
+                index.insert(*tile, ());
+            }
+        }
+        index
+    });
+    let (spot, ()) = search(
+        deadwood,
+        pos,
+        ctx.rule.job_scan_radius,
+        ex.memo(Search::Deadwood),
+        |t, _| free(t),
+    )?;
+    let spec = ItemSpec::raw(ItemKind::Firewood, Some(sim_core::colony::materials::OAK));
+    let open = |cell: (u32, u32)| {
+        room_on(res, cell, spec) > 0 && !colony.reservations.contains_key(&ReserveKey::Cell(cell))
+    };
+    let cell = res
+        .spatial
+        .colony
+        .cells
+        .nearest_where(spot, u32::MAX, |c, _| open(c))
+        .map(|(c, ())| c);
+    let to = cell.or(ctx.hearth)?;
+    Some((JobKind::Gather { spot, to }, 0, ItemKind::Firewood))
+}
+
 /// The best unreserved axe stack on a stockpile cell within `reach` of `pos`:
 /// the highest quality, then the nearest `(distance, y, x)` (M2 goal 3.7).
 fn best_axe(res: &SimResources, pos: (u32, u32), reach: u32) -> Option<(u32, u32)> {
@@ -548,6 +634,15 @@ impl RuntimeSystem for JobAssignSystem {
                 }
             }
         }
+        // M2 goal 3.8: the gather fallback's inputs.
+        let by_jobs = super::hearth::firewood_by_jobs(resources);
+        let deadwood = std::cell::OnceCell::new();
+        let mut gather_short = if by_jobs {
+            gather_shortfall(world, resources)
+        } else {
+            0
+        };
+        let hearth = crate::worldgen::colony::hearth(resources);
         let mut taken: Vec<(Entity, Job)> = Vec::new();
         let mut exhausted = Exhausted::default();
         // M2 (goal 3.6, DECISIONS D14): passes by priority level — every
@@ -563,7 +658,7 @@ impl RuntimeSystem for JobAssignSystem {
         let mut assigned: std::collections::BTreeSet<AgentId> = std::collections::BTreeSet::new();
         for pass in passes {
             for &(id, entity, pos, priorities, has_tool) in &available {
-                if assigned.contains(&id) {
+                if assigned.contains(&id) || (pass != 0 && !priorities.levels.contains(&pass)) {
                     continue;
                 }
                 let order: Vec<WorkType> = WorkType::ALL
@@ -581,6 +676,9 @@ impl RuntimeSystem for JobAssignSystem {
                     supply: &supply,
                     crafting: &crafting,
                     made: &made,
+                    deadwood: &deadwood,
+                    gather_short,
+                    hearth,
                 };
                 let Some((kind, amount, item)) = pick(resources, &ctx, &order, pos, &mut exhausted)
                 else {
@@ -613,6 +711,10 @@ impl RuntimeSystem for JobAssignSystem {
                     }
                     JobKind::Supply { workshop, .. } => {
                         *supply.entry((workshop, item)).or_insert(0) += amount;
+                    }
+                    JobKind::Gather { .. } => {
+                        gather_short =
+                            gather_short.saturating_sub(u32::from(rule.carry(ItemKind::Firewood)));
                     }
                     JobKind::Craft { bill, workshop, .. } => {
                         *crafting.entry(bill).or_insert(0) += 1;

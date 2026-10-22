@@ -15,8 +15,8 @@ use sim_core::colony::skills::LOWEST_PRIORITY;
 use sim_core::colony::workshop::work_tile_of;
 use sim_core::colony::{
     Bill, BillId, BlueprintKind, CancelReason, ColonySite, Command, CommandRecord, CommandResult,
-    Designation, ItemSpec, Job, JobKind, MaterialNeeds, Occupant, RejectReason, WorkPriorities,
-    WorkType, Workshop, WorkshopId, Zone, ZoneKind,
+    Designation, ItemSpec, Job, JobKind, MaterialNeeds, Occupant, RecipeKind, RejectReason,
+    WorkPriorities, WorkType, Workshop, WorkshopId, Zone, ZoneKind,
 };
 use sim_core::components::{
     Agent, AgentId, BuildingBlueprint, Child, ConstructionSite, Elder, Position, HUT_BLUEPRINT_ID,
@@ -113,13 +113,27 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
             if !fits {
                 return Err(RejectReason::WrongWorkshop);
             }
-            shop.bills.push(Bill {
-                id: next,
-                recipe,
-                mode,
-                done: 0,
-                suspended: false,
-            });
+            // A player's firewood bill replaces the hearth's auto-bill; player
+            // bills go before any auto-bill (M2 goal 3.8, DECISIONS D16).
+            if recipe == RecipeKind::SplitFirewood {
+                shop.bills.retain(|b| !b.auto);
+            }
+            let at = shop
+                .bills
+                .iter()
+                .position(|b| b.auto)
+                .unwrap_or(shop.bills.len());
+            shop.bills.insert(
+                at,
+                Bill {
+                    id: next,
+                    recipe,
+                    mode,
+                    done: 0,
+                    suspended: false,
+                    auto: false,
+                },
+            );
             Ok(true)
         }),
         Command::RemoveBill { workshop, bill } => {

@@ -4,7 +4,7 @@
 //! report is the `m2` block of the colony summary.
 use serde_json::{json, Value};
 use sim_core::colony::{Command, ItemKind, JobKind, RecipeKind, SkillKind, Skills, WorkType};
-use sim_core::components::{Agent, ResourceKind};
+use sim_core::components::{Agent, AgentState, ResourceKind, TargetKind};
 use sim_engine::SimEngine;
 
 const DAY: u64 = 1_440;
@@ -18,6 +18,7 @@ pub struct Economy {
     firewood_ground: Vec<u64>,
     settlement_wood: Vec<u64>,
     snapshots: Vec<Value>,
+    gather_wood_agent_ticks: u64,
 }
 
 /// `(chop = 0 agent, craft = 1 agent)` from the command log (the M2-U priorities).
@@ -75,6 +76,13 @@ impl Economy {
     pub fn after_tick(&mut self, engine: &SimEngine) {
         let c = &engine.resources.colony;
         let tick = engine.current_tick();
+        // E8: agents whose state targets the decision system's GatherWood (must stay 0 in the colony).
+        self.gather_wood_agent_ticks += engine
+            .world
+            .query::<&AgentState>()
+            .iter()
+            .filter(|(_, s)| s.target() == Some(TargetKind::GatherWood))
+            .count() as u64;
         if self.blades6_tick.is_none() && c.item_ledger.crafted_of(ItemKind::FlintBlade) >= 6 {
             self.blades6_tick = Some(tick);
         }
@@ -148,6 +156,7 @@ impl Economy {
             .sum();
         json!({
             "blades6_tick": self.blades6_tick,
+            "gather_wood_agent_ticks": self.gather_wood_agent_ticks,
             "axes2_tick": self.axes2_tick,
             "chops_with_axe": c.tallies.chops_with_axe,
             "firewood_stock_by_day": self.firewood_stock,

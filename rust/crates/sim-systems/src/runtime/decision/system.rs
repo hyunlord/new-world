@@ -278,7 +278,8 @@ impl RuntimeSystem for AgentDecisionSystem {
             .agent
             .forage
             .filter(|_| resources.rules.society.stock_target.is_some());
-        let firewood_rule = resources.rules.society.firewood;
+        // M2: the colony's firewood goes through jobs (`jobs::hearth`); its arms here are off.
+        let firewood_rule = crate::runtime::jobs::hearth::decision_firewood(resources);
         if social_rule.is_some() {
             resources
                 .social_retry_after

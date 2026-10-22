@@ -228,6 +228,10 @@ pub struct Bill {
     pub done: u32,
     /// A suspended bill is skipped.
     pub suspended: bool,
+    /// The hearth's standing firewood bill, added by the colony when a wood
+    /// bench is finished (M2 goal 3.8); a player's firewood bill replaces it.
+    #[serde(default)]
+    pub auto: bool,
 }
 
 impl Bill {
@@ -341,6 +345,7 @@ mod tests {
             mode: BillMode::Make(5),
             done: 2,
             suspended: false,
+            auto: false,
         };
         assert_eq!(bill.remaining(), Some(3));
         let shop = Workshop {

@@ -156,3 +156,49 @@ Raw data lives in `/Users/rexxa/work/m2-data/` (`$DATA`), outside the repository
   Craft = 1 adult made 0–3 of the 8 knap/haft crafts. Every craft of the M2-U script happens within hours on day 1,
   and the priority-1 adult is often busy or tending a need at that moment; precedence only helps when the person is
   free. Kept: it is the rule the goal states; E4 is reported as measured.
+
+## D15 — Firewood through jobs: what replaced the decision arm
+
+- Context: goal 3.8 / §8. The colony's firewood reached the hearth through the decision system's `GatherWood` arm
+  (wood plans, claims, trips, inventory wood, the deposit system).
+- Choice: one line in `decision/system.rs` — the decision's local firewood rule is
+  `jobs::hearth::decision_firewood(resources)`, `None` when the economy and the firewood rule are both on (the M2
+  colony). Every firewood branch of the decision tick reads that local: the wood plans, the urgent window, the
+  claims, the `GatherWood` arm, the firewood exit of leisure, the loaded-haul check and the re-targeting of an emptied
+  spot; the pickup arm is reached only by a `GatherWood` target, which no colony agent can get. The baseline keeps
+  `rules.society.firewood` (identity PASS). `git diff --numstat` on `decision/system.rs`: +2 −1.
+- In the colony, firewood is items: the wood bench's firewood bill (1 log → 4 firewood) and, when the colony is
+  short and no firewood bill can run (no bench, or no logs), `JobKind::Gather` (`WorkType::Split`): walk to the
+  nearest untaken deadwood spot, 30 ticks per batch of 2 firewood from the spot's wood units, until the hands hold a
+  carry (10) or the spot is empty, then to the nearest stockpile cell with room, or to the hearth pile. "Short" =
+  `max(hearth need, every firewood Maintain target) − (settlement wood + firewood items + a carry per gather job)`,
+  the hearth need being the decision's former target (`wood_target`, rounded up; it includes the autumn's winter
+  store). The goal says the fallback runs "before a bench exists"; it also runs when a bench has no logs, so a
+  colony that stops chopping does not freeze.
+- `HearthFeedSystem` (146, hourly, before `FireSystem` 147): each settlement below tonight's burn takes firewood
+  stacks on stockpile cells or within 2 of its hearth, nearest first, one wood unit per item, logged `burned`.
+  Tonight's burn (not the whole store) moves into the abstract stock; the rest stays visible as items.
+- Evidence: `colony_firewood.rs` (no `GatherWood` target in 3 colony days; feed conservation; the baseline still
+  gathers); calibration `$DATA/calib/r3` (M2-U 20 days, 8 seeds: 0 deaths, firewood in stock ≥ 28 every day from day 2)
+  and `$DATA/calib/e6_r3` (3 years without orders, 8 seeds: 0 deaths of any cause).
+
+## D16 — The hearth's auto-bill
+
+- Choice: a finished wood bench starts with one bill flagged `auto`: split firewood, `Maintain(firewood_days ×
+  burn_per_day)` = `winter_base_days` (4) × winter burn (3/h) × 13 burn hours = 156. A player's firewood bill at that
+  bench replaces it (owner check 4 expects "장작 유지 40" to hold near 40, which a standing 156 would not), and player
+  bills are inserted before auto bills, so the auto-bill never starves a player's bill of its turn.
+
+## D17 — E8: the decision system's share did not fall by 10 points
+
+- Context: E8 wants the decision system's share of the N = 1,000 tick to fall by ≥ 10 points against the M1.5 ledger
+  (82.7 %).
+- Measured (interleaved `bench-one n1000`, base `e5594e3f` vs candidate, same session, 1-min load ~12):
+  decision 1,475 → 1,489 µs per tick; share 82.8 % → 78.9 %; tick mean 1,782 → 1,886 µs (+5.8 %). The share fell 3.9
+  points, mostly because `JobAssignSystem` grew (16 → 82 µs: the priority passes and the firewood shortfall count),
+  not because the decision tick got cheaper: in the fed benchmark world the wood arm was never its cost.
+- A first candidate built the deadwood index every tick (1,600 spots at N = 1,000): `JobAssignSystem` 280 µs, tick
+  +9 %, decision share 71.4 % — a "pass" that came from a slower system. The index is now built at most once per
+  tick and only when the colony is short of firewood.
+- Not done: 8.3 (foraging as a job) is allowed only if every bar is green by hour 14; E2, E4 and E7 are not (D18), so
+  it was not attempted. E8 is reported as a fail.

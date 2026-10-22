@@ -76,7 +76,9 @@ use std::collections::HashMap;
 use hecs::{Entity, World};
 use sim_core::causal::CausalEvent;
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
-use sim_core::colony::{ColonySite, MaterialNeeds, Occupant, Workshop};
+use sim_core::colony::{
+    Bill, BillMode, BlueprintKind, ColonySite, MaterialNeeds, Occupant, RecipeKind, Workshop,
+};
 use sim_core::components::{
     Agent, AgentId, AgentState, BuildingBlueprint, BuildingKind, ConstructionSite, Position,
     SettlementId, TargetKind,
@@ -401,6 +403,20 @@ fn complete_workshop(resources: &mut SimResources, site: ColonySite, needs: Mate
             .item_ledger
             .consume(line.kind, u64::from(line.delivered));
     }
+    // M2 goal 3.8: a wood bench starts with the hearth's standing firewood bill.
+    let mut bills = Vec::new();
+    if site.kind == BlueprintKind::WoodBench && resources.rules.society.firewood.is_some() {
+        let bill = resources.colony.next_bill_id.max(1);
+        resources.colony.next_bill_id = bill + 1;
+        bills.push(Bill {
+            id: bill,
+            recipe: RecipeKind::SplitFirewood,
+            mode: BillMode::Maintain(crate::runtime::jobs::hearth::auto_bill_count(resources)),
+            done: 0,
+            suspended: false,
+            auto: true,
+        });
+    }
     resources.colony.workshops.insert(
         id,
         Workshop {
@@ -408,7 +424,7 @@ fn complete_workshop(resources: &mut SimResources, site: ColonySite, needs: Mate
             kind: site.kind,
             top_left: site.top_left,
             size: site.size,
-            bills: Vec::new(),
+            bills,
             shelf: Vec::new(),
             active: None,
         },

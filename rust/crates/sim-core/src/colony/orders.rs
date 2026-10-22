@@ -319,6 +319,8 @@ pub enum ReserveKey {
     Node((u32, u32)),
     /// A workshop's work tile (its crafter's slot), by the work tile (M2).
     Bench((u32, u32)),
+    /// A deadwood spot being gathered, by tile (M2).
+    Wood((u32, u32)),
 }
 
 impl ReserveKey {
@@ -330,7 +332,8 @@ impl ReserveKey {
             | Self::Cell(t)
             | Self::Site(t)
             | Self::Node(t)
-            | Self::Bench(t) => t,
+            | Self::Bench(t)
+            | Self::Wood(t) => t,
         }
     }
 }

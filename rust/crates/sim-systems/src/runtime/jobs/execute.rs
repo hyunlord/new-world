@@ -120,6 +120,12 @@ fn target_exists(world: &World, res: &SimResources, job: &Job) -> bool {
             stack(from) && colony.workshops.contains_key(&workshop)
         }
         (JobKind::Supply { workshop, .. }, _) => colony.workshops.contains_key(&workshop),
+        // Gathering: the spot holds wood (or the gatherer already carries some);
+        // the drop always exists (items spill around a full or lost cell).
+        (JobKind::Gather { spot, .. }, JobStage::ToSource) => {
+            res.wood_tiles.get(&spot).is_some_and(|u| *u > 0)
+        }
+        (JobKind::Gather { .. }, _) => true,
         (JobKind::Craft { workshop, bill, .. }, _) => colony
             .workshops
             .get(&workshop)
@@ -169,9 +175,9 @@ fn step(
             }
             let source = job.kind.source();
             let reached = match job.kind {
-                JobKind::Chop { tree: near } | JobKind::Quarry { node: near } => {
-                    chebyshev(pos, near) <= 1
-                }
+                JobKind::Chop { tree: near }
+                | JobKind::Quarry { node: near }
+                | JobKind::Gather { spot: near, .. } => chebyshev(pos, near) <= 1,
                 _ => pos == source,
             };
             if !reached {
@@ -195,6 +201,12 @@ fn step(
                 JobKind::Build { .. } => {
                     job.stage = JobStage::Working { ticks_left: 0 };
                     set_state(world, entity, BUILD);
+                }
+                JobKind::Gather { .. } => {
+                    job.stage = JobStage::Working {
+                        ticks_left: GATHER_BATCH_TICKS,
+                    };
+                    set_state(world, entity, WORK_JOB);
                 }
                 JobKind::Craft { workshop, bill, .. } => {
                     let Some(ticks) = craft::start(world, res, entity, &mut job, workshop, bill)
@@ -256,6 +268,12 @@ fn step(
                     craft::train(world, entity, SkillKind::Quarry, u32::from(job.amount));
                 }
                 JobKind::Craft { .. } => craft::finish_craft(world, res, id, entity, &job),
+                JobKind::Gather { .. } => {
+                    if gather_batch(world, res, rule, entity, &mut job, pos) {
+                        put_job(world, entity, job);
+                        return;
+                    }
+                }
                 _ => {}
             }
             finish(world, res, entity);
@@ -405,6 +423,65 @@ fn fell(res: &mut SimResources, tree: (u32, u32)) {
         .item_ledger
         .create(ItemKind::Log, u64::from(logs));
     put_items(res, tree, ItemSpec::raw(ItemKind::Log, Some(OAK)), logs);
+}
+
+/// Work ticks of one deadwood batch (M2 goal 3.8).
+pub const GATHER_BATCH_TICKS: u32 = 30;
+/// Firewood per deadwood batch (goal 3.8: 2 per tile batch).
+pub const GATHER_BATCH: u8 = 2;
+
+/// One deadwood batch: up to 2 wood units of the spot become firewood items in
+/// the gatherer's hands (ledger: created). The job goes on with another batch
+/// while the spot holds wood and the hands have room, else it walks the load
+/// to `to` (`true` = the job continues; `false` = it ended with nothing carried).
+fn gather_batch(
+    world: &mut World,
+    res: &mut SimResources,
+    rule: &ColonyRule,
+    entity: Entity,
+    job: &mut Job,
+    pos: (u32, u32),
+) -> bool {
+    let JobKind::Gather { spot, to } = job.kind else {
+        return false;
+    };
+    let units = res.wood_tiles.get(&spot).copied().unwrap_or(0);
+    let take = units.min(GATHER_BATCH);
+    if take > 0 {
+        let left = units - take;
+        if left == 0 {
+            res.wood_tiles.remove(&spot);
+        } else {
+            res.wood_tiles.insert(spot, left);
+        }
+    }
+    let spec = ItemSpec::raw(ItemKind::Firewood, Some(OAK));
+    let held = world.get::<&Carry>(entity).map_or(0, |c| c.count);
+    let total = held + u16::from(take);
+    if take > 0 {
+        res.colony
+            .item_ledger
+            .create(ItemKind::Firewood, u64::from(take));
+        let _ = world.insert_one(entity, Carry::of(spec, total));
+    }
+    if total == 0 {
+        return false;
+    }
+    let more = res.wood_tiles.get(&spot).is_some_and(|u| *u > 0);
+    if more && total < rule.carry(ItemKind::Firewood) {
+        job.stage = JobStage::Working {
+            ticks_left: GATHER_BATCH_TICKS,
+        };
+        return true;
+    }
+    res.colony.reservations.remove(&ReserveKey::Wood(spot));
+    job.stage = JobStage::ToDest;
+    job.amount = total;
+    job.best_distance = chebyshev(pos, to);
+    job.progress_tick = res.current_tick;
+    set_state(world, entity, SEEK_JOB);
+    let _ = world.insert_one(entity, SeekTarget::new(to));
+    true
 }
 
 /// One quarry batch (M2 goal 3.2): up to `quarry_batch` items of the node's

@@ -112,6 +112,15 @@ pub enum JobKind {
         /// Its work tile.
         to: (u32, u32),
     },
+    /// Gather deadwood at the spot `spot` into firewood items and carry them to
+    /// `to`: a stockpile cell, or the hearth pile when no cell has room (M2
+    /// goal 3.8, `WorkType::Split`'s fallback).
+    Gather {
+        /// The deadwood spot (`SimResources.wood_tiles`).
+        spot: (u32, u32),
+        /// Where the firewood goes.
+        to: (u32, u32),
+    },
     /// Make one item of `bill` at `workshop`, working at its work tile `at` (M2).
     Craft {
         /// The workshop.
@@ -134,6 +143,7 @@ impl JobKind {
             Self::Quarry { .. } => 5,
             Self::Supply { .. } => 6,
             Self::Craft { .. } => 7,
+            Self::Gather { .. } => 8,
         }
     }
 
@@ -147,6 +157,7 @@ impl JobKind {
             Self::Quarry { .. } => "quarry",
             Self::Supply { .. } => "supply",
             Self::Craft { .. } => "craft",
+            Self::Gather { .. } => "gather",
         }
     }
 
@@ -158,6 +169,7 @@ impl JobKind {
             Self::Deliver { .. } | Self::Build { .. } => WorkType::Build,
             Self::Quarry { .. } => WorkType::Quarry,
             Self::Supply { .. } | Self::Craft { .. } => WorkType::Craft,
+            Self::Gather { .. } => WorkType::Split,
         }
     }
 
@@ -170,13 +182,14 @@ impl JobKind {
             Self::Quarry { node } => node,
             Self::Supply { from, .. } => from,
             Self::Craft { at, .. } => at,
+            Self::Gather { spot, .. } => spot,
         }
     }
 
     /// The tile the load goes to (Haul and Deliver).
     pub const fn dest(self) -> Option<(u32, u32)> {
         match self {
-            Self::Haul { to, .. } | Self::Supply { to, .. } => Some(to),
+            Self::Haul { to, .. } | Self::Supply { to, .. } | Self::Gather { to, .. } => Some(to),
             Self::Deliver { site, .. } => Some(site),
             Self::Chop { .. } | Self::Build { .. } | Self::Quarry { .. } | Self::Craft { .. } => {
                 None
@@ -245,6 +258,10 @@ impl Job {
             (JobKind::Supply { from, .. }, JobStage::ToSource) => vec![ReserveKey::Stack(from)],
             (JobKind::Supply { .. }, _) => Vec::new(),
             (JobKind::Craft { at, .. }, _) => vec![ReserveKey::Bench(at)],
+            (JobKind::Gather { spot, .. }, JobStage::ToSource | JobStage::Working { .. }) => {
+                vec![ReserveKey::Wood(spot)]
+            }
+            (JobKind::Gather { .. }, JobStage::ToDest) => Vec::new(),
         }
     }
 }
