@@ -41,3 +41,15 @@ Context: the six anchors all pass the initial LOO-calibrated thresholds; initial
 Choice: retain the thresholds, all failed candidate records and original try caps. Do not recolour/quantize candidates or retune thresholds to improve acceptance rates.
 Reason: this rehearsal measures sustainability under a fixed style test; a green rewritten test would invalidate C2.
 Evidence: calibration.json; external ground/plants/buildings numeric verdicts.
+
+## D8 — One bounded relative-reference calibration revision
+Context: V1 image model rejects one locked anchor and accepts the woodcut control; numeric tests still reject all controls. A textual ideal may diverge from the actual anchors.
+Choice: retain V1 results and conduct one V2 round comparing the candidate only to the actual attached anchors using a fixed relative-match rubric. Supply no expected outcomes, previous scores or candidate classification. Keep numeric thresholds unchanged.
+Reason: test prompt ambiguity transparently without tuning scores to obtain acceptance.
+Evidence: external image-judge-calibration-v2/PROTOCOL.md and raw scorecards. No production certification before calibration passes.
+
+## D9 — Freeze failed first-try rate and retain bounded retries
+Context: only 1/38 first environment candidates passes the numeric test, so the preregistered 60% first-try C2 bar cannot be recovered by later retries.
+Choice: retain the first-try denominator and proceed with limited second attempts for ground, plants and buildings to measure recoverability. Never relabel a retry as a first attempt. Ground receives the specified mirror-blend only after two seam failures.
+Reason: the trial must distinguish an unsuccessful production method from an incomplete test. A later useful candidate does not erase C2 failure.
+Evidence: first-generation ledgers and frozen calibration; second-attempt ledgers remain separate.

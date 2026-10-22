@@ -1,0 +1,210 @@
+{
+  "status": "REVIEW_ONLY",
+  "operations": [
+    "Lanczos thumbnail preserving aspect",
+    "RGBA composition on neutral background",
+    "labels"
+  ],
+  "sources": [
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/ground/dark_grass_try1/candidate.png",
+      "sha256": "ea8f844c7cded47183b38d2763041ac4aabd7a47db2e40b68081cdd83efd66a1",
+      "name": "dark_grass_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/ground/forest_floor_try1/candidate.png",
+      "sha256": "d0c2fc846442b5b0a2c0edd8711a360ed3d1e1904724a72827cace91fa97daf2",
+      "name": "forest_floor_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/ground/hill_rock_try1/candidate.png",
+      "sha256": "bc56d04b30b3b338cdb219a90e6c65d7e6b1e5cf5aac060b416f7283bce93233",
+      "name": "hill_rock_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/ground/meadow_try1/candidate.png",
+      "sha256": "294cba46ffa927d5cb737a3f77d9ff931c52fa7b80a6e1d5b69cbd082ec4ec23",
+      "name": "meadow_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/ground/packed_earth_try1/candidate.png",
+      "sha256": "d726d1ee0bb5c3a74df45bc47016129e5a0ee8146cdbd61341a2ec42eab6b8ff",
+      "name": "packed_earth_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/ground/river_bank_try1/candidate.png",
+      "sha256": "5315fbbb5e4eac329fd6f18d51920e46d161325596f34427bedb956ee2f065ce",
+      "name": "river_bank_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/plants/berry_bare_try1.png",
+      "sha256": "78f86ef2770f0d3f23ffc920c195c5a6b0df5075b1e1c58f555979eac324947b",
+      "name": "berry_bare_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/plants/berry_full_try1.png",
+      "sha256": "207e19060c9714802937ebba638ebf74b1dafdab673e1e472fd8440dff86ac5a",
+      "name": "berry_full_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/plants/birch_large_try1.png",
+      "sha256": "f01cf36193f9b4c15c926256676df44b4a074e24e396fb91ff535675a80e46c4",
+      "name": "birch_large_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/plants/birch_small_try1.png",
+      "sha256": "974f2b1b1678efdc91c4d4996cd0ed58283cd296a8819c800c9d54bbd71284df",
+      "name": "birch_small_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/plants/oak_large_try1.png",
+      "sha256": "879ffc811385276e560a17b56e5b25b61ffb63988d8acbcb706fda7d92120900",
+      "name": "oak_large_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/plants/oak_small_try1.png",
+      "sha256": "60fdad1dd222f9eb8a76710866502c9cc87d06f7485987b42e1d7f30d8e5fb2c",
+      "name": "oak_small_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/plants/pine_large_try1.png",
+      "sha256": "5012b23fb5bcb085dea7f1b2e20f69444e9e7418d94a90b282fe377d7dc0da5f",
+      "name": "pine_large_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/plants/pine_small_try1.png",
+      "sha256": "9c303ad6fb6bb544698897de1bd3c40bdcffb8bd24bb7066cda0f344a0d765e8",
+      "name": "pine_small_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/plants/reeds_try1.png",
+      "sha256": "668fdecce7ea230daa037f988b7d6b9aa1fc0b78f725986b9ea6c173420fd0b1",
+      "name": "reeds_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/buildings/drying_rack_try1.png",
+      "sha256": "40f6e5647cafc5f6cc08b1cb3a698ac320017fd4b7b0ca8049e2d1f04a7eefef",
+      "name": "drying_rack_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/buildings/hut_try1.png",
+      "sha256": "8b0f0f2571d73af0581de5574b8ac496538ec03142b100881901c8d30a5abb54",
+      "name": "hut_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/buildings/knapping_spot_try1.png",
+      "sha256": "4f80d25470aa948a19167c18324f63c0ca70a5405d523be3ea661df2516ebc05",
+      "name": "knapping_spot_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/buildings/lean_to_try1.png",
+      "sha256": "e430f1d83d0fd754e02252aaa628247749c22f12b2b669a29b19e62deb8e1696",
+      "name": "lean_to_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/buildings/storage_pit_try1.png",
+      "sha256": "9e47f02230ff6edb311a34c1632c5b52a844fe0f0382233aee87af6c1a8bef80",
+      "name": "storage_pit_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/buildings/woodworking_bench_try1.png",
+      "sha256": "9368eb1ecbdc8b2a65bf61a61b7163ab9a9e3aa8204131d725fb7f5a3427283b",
+      "name": "woodworking_bench_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/items/berry_basket_try1.png",
+      "sha256": "98de3c5733f34b0aa058aac8fd1f0e3de085b43f4eba3b6479bb0826ba04760c",
+      "name": "berry_basket_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/items/firewood_bundle_try1.png",
+      "sha256": "31bf633609fc7b5dcb1c24160cdac49fa34494012afa44c71aeb6b1da27c0b54",
+      "name": "firewood_bundle_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/items/flint_blade_try1.png",
+      "sha256": "f152aa1c52f98b5a73259e484ccdcaaa53539f824176da8c62a6795bc8d3ed4d",
+      "name": "flint_blade_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/items/flint_pile_try1.png",
+      "sha256": "7edb5d697cf19d6a8291094598cdb8a905bc332c9253d5fb4a03930c7c8a4234",
+      "name": "flint_pile_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/items/hide_try1.png",
+      "sha256": "8d15847c7889f2f6e0f061fc7c0d81a47c582cfb9b830b383d0e73cc03c00093",
+      "name": "hide_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/items/log_pile_large_try1.png",
+      "sha256": "342159ceb7e090785639b4b4ef58ce7ab59d765e1f0e9356f5419e98cebb30b0",
+      "name": "log_pile_large_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/items/log_pile_medium_try1.png",
+      "sha256": "7e13ab188c634172e59b189ed2a2e0063bf0a3dba5df1fbe3d5792fbbd91df9a",
+      "name": "log_pile_medium_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/items/log_pile_small_try1.png",
+      "sha256": "a653a2a3a0bb1551c78ea6d2d02f998ffb07c4438be2472e3ae7f3b1b3fc9626",
+      "name": "log_pile_small_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/items/stone_axe_try1.png",
+      "sha256": "07e47b61b4c852a6bbf29b4d5fe45b6b72e812c401398bad6eb191a568a99014",
+      "name": "stone_axe_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/items/stone_pile_try1.png",
+      "sha256": "0021fc6202894a18168d406d8865c43f4d91d50de939b66cf790a6cccecda1a7",
+      "name": "stone_pile_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/misc/boulder_large_try1.png",
+      "sha256": "ef8cc6fbd33e932c6a293d18224b31f1f834860406df6ac55d85ac04735957f3",
+      "name": "boulder_large_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/misc/boulder_small_try1.png",
+      "sha256": "e00188ea5147543addd704e66471ffb91f8137fa2b5b0edb463e3796384f437b",
+      "name": "boulder_small_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/misc/deadwood_try1.png",
+      "sha256": "b693e7b660881af5385e23aa207ec05f796a89a9b7a0af701e73af5ea41bc0e8",
+      "name": "deadwood_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/misc/hearth_0_try1.png",
+      "sha256": "99d4c1c3a12c9159b160c2482010e776c10f8b2f05a4ee01381fe4a99b1c5f4c",
+      "name": "hearth_0_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/misc/hearth_1_try1.png",
+      "sha256": "284715b4475e1e4124c547ab0fa7f65d70bdad3d510c3ef38d35e99c6bf3e936",
+      "name": "hearth_1_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/misc/smoke_puff_try1.png",
+      "sha256": "b0778c8071942a371ec1e10b57524a49e5dcd520f70cf9df509646590c30812c",
+      "name": "smoke_puff_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/misc/stump_try1.png",
+      "sha256": "fd73d14e1d5616e488aab9069e7c05c478074387f679ec82c02dae56505a9776",
+      "name": "stump_try1"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/misc/hut_ghost_derived.png",
+      "sha256": "4bb2f557ea5a135f90e90363e56bd4cd38fe88fdb48f71171ec463c1c839cdee",
+      "name": "hut_ghost_derived"
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/misc/workshop_ghost_derived.png",
+      "sha256": "f5158515e2ff13eb1dc62fbfced318ffe44b4aac081d67b0fec4f1ad7a56a3e5",
+      "name": "workshop_ghost_derived"
+    }
+  ]
+}
