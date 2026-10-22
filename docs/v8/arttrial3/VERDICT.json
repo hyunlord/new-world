@@ -1,0 +1,45 @@
+{
+  "route_a": {
+    "inventory": "NOT_COMPLETE",
+    "S1": {
+      "accepted_pass": 87,
+      "accepted_total": 87,
+      "adult_required": 30,
+      "adult_accepted": 29
+    },
+    "S2": {
+      "attempts": 52,
+      "accepted_originals": 29,
+      "ratio": 1.793103448275862,
+      "bar": 2.0,
+      "passed": true
+    },
+    "R1": "NOT_VERIFIED_TIMED_PLAYBACK",
+    "T1": {
+      "mean_four_scores": 2.5416666667,
+      "numeric_judge_pass": 0,
+      "stills": 6
+    },
+    "P1": {
+      "rendered_fps": 78.8873937944716,
+      "seconds": 60.009588,
+      "population": 200,
+      "numeric_bar_met": true,
+      "route_eligible": false,
+      "status": "INELIGIBLE_INCOMPLETE_SET"
+    },
+    "K1": [
+      1.104898275862069,
+      1.2944919540229884
+    ],
+    "viable": false
+  },
+  "route_b": {
+    "status": "STOPPED_TOOL_UNAVAILABLE",
+    "submitted_jobs": 0,
+    "viable": false
+  },
+  "recommendation": "Commission base figures from a 2D artist against template and layer contract; generation remains for environment",
+  "owner_selects": true,
+  "acceptance_thresholds_changed": false
+}

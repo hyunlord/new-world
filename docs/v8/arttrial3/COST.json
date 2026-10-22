@@ -1,0 +1,570 @@
+{
+  "snapshot_utc": "2026-10-22T06:15:32.452878+00:00",
+  "inventory_frozen": true,
+  "generation_calls": 52,
+  "accepted_generated_layers": 29,
+  "accepted_derived_layers": 58,
+  "attempts_per_accepted_generated_layer": 1.793103448275862,
+  "recorded_tool_wall_seconds": 1922.523,
+  "all_recorded_elapsed_seconds": 2252.416,
+  "calls_missing_time": 0,
+  "recorded_elapsed_minutes_per_accepted_layer_bounds": [
+    1.104898275862069,
+    1.2944919540229884
+  ],
+  "credits": "UNKNOWN_NOT_EXPOSED",
+  "labor_minutes": "NOT_MEASURED",
+  "route_b_submitted_jobs": 0,
+  "route_b_credits": 0,
+  "projection": {
+    "literal_compositions": 10368,
+    "unique_layers_range": [
+      136,
+      196
+    ],
+    "recorded_elapsed_minutes_range": [
+      150.26616551724138,
+      253.72042298850573
+    ],
+    "not_a_delivery_forecast": true
+  },
+  "attempts_by_layer": {
+    "body_E_idle": 3,
+    "body_E_walk_a": 1,
+    "body_E_walk_b": 1,
+    "body_E_work_a": 3,
+    "body_E_work_b": 1,
+    "body_N_idle": 2,
+    "body_N_walk_a": 1,
+    "body_N_walk_b": 2,
+    "body_N_work_a": 3,
+    "body_N_work_b": 1,
+    "body_S_idle": 1,
+    "body_S_walk_a": 1,
+    "body_S_walk_b": 1,
+    "body_S_work_a": 2,
+    "body_S_work_b": 1,
+    "body_sleep": 2,
+    "carry_log_bundle": 1,
+    "hair_long_tied_E": 1,
+    "hair_long_tied_N": 1,
+    "hair_long_tied_S": 1,
+    "hair_short_E": 1,
+    "hair_short_N": 1,
+    "hair_short_S": 1,
+    "item_stone_axe": 2,
+    "top_fur_cloak_E": 3,
+    "top_fur_cloak_N": 2,
+    "top_fur_cloak_S": 3,
+    "top_hide_wrap_E": 3,
+    "top_hide_wrap_N": 3,
+    "top_hide_wrap_S": 3
+  },
+  "calls": [
+    {
+      "layer": "body_E_idle",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_E_idle/try1/raw.png",
+      "raw_sha256": "58b0d8562cadc6f8aeb94319b979012442daf4af4e574c9b8b605aff894fb98e",
+      "seconds": 18.3,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "body_E_idle",
+      "try": "try2",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_E_idle/try2/raw.png",
+      "raw_sha256": "a885a8cdcf6b8b1afb1a5238c37fd8c4bbd6f04c455da316f1e22fbf50c4f3ba",
+      "seconds": 39.8,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "body_E_idle",
+      "try": "try3",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_E_idle/try3/raw.png",
+      "raw_sha256": "4cdb3467c8352b2a8202dc7850db666d62871a5419d146a64a769ab41d3eea1c",
+      "seconds": 21.5,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "body_E_walk_a",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_E_walk_a/try1/raw.png",
+      "raw_sha256": "cdee381a4b94ed5a2100c779c339658437b21d24623935e212769bf9000179ca",
+      "seconds": 24.629,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "body_E_walk_b",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_E_walk_b/try1/raw.png",
+      "raw_sha256": "2319c88f2d1a8d90649c5bd04a036689fcbea7dbe4cf97ad507636274fe7f789",
+      "seconds": 24.295,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "body_E_work_a",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_E_work_a/try1/raw.png",
+      "raw_sha256": "94ef26bb5e934ab847db71ceec660e57d5d528e41f8915181627812d792ec181",
+      "seconds": 26.693,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "body_E_work_a",
+      "try": "try2",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_E_work_a/try2/raw.png",
+      "raw_sha256": "814f9c7f74b2431622bb1fffd5f59697e2a61bd5827d93fdb01bce4a041e02c7",
+      "seconds": 23.166,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "body_E_work_a",
+      "try": "try3",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_E_work_a/try3/raw.png",
+      "raw_sha256": "54a2fb3b9fa5cff855620b9b1b9de415b1cee4b7ae351484310629414666ab19",
+      "seconds": 25.914,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "body_E_work_b",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_E_work_b/try1/raw.png",
+      "raw_sha256": "38e0ae40e9bf3b025d52141421adc73c4a39b4068193428ed34280a241359046",
+      "seconds": 21.685,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "body_N_idle",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_N_idle/try1/raw.png",
+      "raw_sha256": "6263786c519f404ef3783bc36b0dad3f22c1428577278a1e788c1bc04b1994e0",
+      "seconds": 20,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "body_N_idle",
+      "try": "try2",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_N_idle/try2/raw.png",
+      "raw_sha256": "1eeed693822bb2f1783d72af5087780ba79fe558f62add2871b03f0099bc6ab2",
+      "seconds": 31.7,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "body_N_walk_a",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_N_walk_a/try1/raw.png",
+      "raw_sha256": "7862eef3b68c9604d85338242249a24749d0d102bbff748bd6fd32ede677e869",
+      "seconds": 30.93,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "body_N_walk_b",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_N_walk_b/try1/raw.png",
+      "raw_sha256": "d56a2c538dfd1b34dd726b6a5afaeae5bed840ab16c34b379c8878ddfe9cc86b",
+      "seconds": 55.701,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "body_N_walk_b",
+      "try": "try2",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_N_walk_b/try2/raw.png",
+      "raw_sha256": "16db486915bf317438f051606a8969968475241824d28eb621845e36528db869",
+      "seconds": 47.686,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "body_N_work_a",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_N_work_a/try1/raw.png",
+      "raw_sha256": "2efd3a66c82696b143e2db0b698b62b7e0278bc50c71bb047269eda01a646321",
+      "seconds": 80.314,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "body_N_work_a",
+      "try": "try2",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_N_work_a/try2/raw.png",
+      "raw_sha256": "c8f4e97e033dfb78137976f0821832ec8b8350124076b7e93b478bf910446e7c",
+      "seconds": 25.724,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "body_N_work_a",
+      "try": "try3",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_N_work_a/try3/raw.png",
+      "raw_sha256": "bf80918fc7105758fe03c102f4c5c7e6d2470c56e6a4a9c1c0e944e224e8d836",
+      "seconds": 22.663,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "body_N_work_b",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_N_work_b/try1/raw.png",
+      "raw_sha256": "4381db78aa3f6f02a9360d97aff4c1fbe8eb6c4614e1151bcd719eb208e4bec8",
+      "seconds": 113.312,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "body_S_idle",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_S_idle/try1/raw.png",
+      "raw_sha256": "336d743894ca9f83e85477435075755ddba5f581e864ceb1b286dbbaae5e6109",
+      "seconds": 19.3,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "body_S_walk_a",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_S_walk_a/try1/raw.png",
+      "raw_sha256": "b5a66170433c3876aa7d8707ef7b54e183a9f052e794ae9fa681a906cb0a9259",
+      "seconds": 28.2,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "body_S_walk_b",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_S_walk_b/try1/raw.png",
+      "raw_sha256": "c7fe59fc617a4b940e62276590004f3a5d6a5aaaf3d6f2b486227a6314d46cd5",
+      "seconds": 25.023,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "body_S_work_a",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_S_work_a/try1/raw.png",
+      "raw_sha256": "9f2a12efe259bccc2515665bf264d9b827c4ee7606830b26cfc70b16fe67c059",
+      "seconds": 24.976,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "body_S_work_a",
+      "try": "try2",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_S_work_a/try2/raw.png",
+      "raw_sha256": "0954f2fb70d2d905671b22a61c9dd4869c0b8ac8fd22cb3fe7963d9885905786",
+      "seconds": 45.015,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "body_S_work_b",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_S_work_b/try1/raw.png",
+      "raw_sha256": "33a2e2444b74b66a2a0da46af448fe5b8fe7c71a08d68dcf1970009e2923030b",
+      "seconds": 24.207,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "body_sleep",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_sleep/try1/raw.png",
+      "raw_sha256": "5c6cc45548e3014056012612ea482ff986ebd35dfd7ee0b557e7cdaddd6734ef",
+      "seconds": 64.49300000000001,
+      "timing_semantics": "includes_orchestration_upper_bound"
+    },
+    {
+      "layer": "body_sleep",
+      "try": "try2",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_sleep/try2/raw.png",
+      "raw_sha256": "2c1f95dd002e333803393ec16c1fc3626b1c7d6b11615cd30fe7219cc7b39b94",
+      "seconds": 35.465999999999994,
+      "timing_semantics": "includes_orchestration_upper_bound"
+    },
+    {
+      "layer": "carry_log_bundle",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/carry_log_bundle/try1/raw.png",
+      "raw_sha256": "64e7922b005c4c699d7043eac965cf7dfb4b6f23d41f2bbbef513ee6d1da86cf",
+      "seconds": 77.749,
+      "timing_semantics": "includes_orchestration_upper_bound"
+    },
+    {
+      "layer": "hair_long_tied_E",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/hair_long_tied_E/try1/raw.png",
+      "raw_sha256": "e804bed71b5a0881cacb9ae7f48a594b98f393b915e2e9f1cf2572b86283118f",
+      "seconds": 83.41,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "hair_long_tied_N",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/hair_long_tied_N/try1/raw.png",
+      "raw_sha256": "a7f0ff5b2fd3f8389aa7d9f9f0ef48935951190352aaa256ef7131fe63f87587",
+      "seconds": 106.425,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "hair_long_tied_S",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/hair_long_tied_S/try1/raw.png",
+      "raw_sha256": "74c5396d3c9fc0a01f5cb3258548cc974a928f81ed6e2e1a1652141644b90153",
+      "seconds": 60.91,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "hair_short_E",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/hair_short_E/try1/raw.png",
+      "raw_sha256": "7aaa6df7999f0ee2b8195e95a451be76d479ed17d3a1d983e6cb34d0d3cffbab",
+      "seconds": 22.985,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "hair_short_N",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/hair_short_N/try1/raw.png",
+      "raw_sha256": "d2505c2c884336a1d7ca6a54d42c45c476003cd27d3df8ac742877809d0e5950",
+      "seconds": 41.76,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "hair_short_S",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/hair_short_S/try1/raw.png",
+      "raw_sha256": "2ce51975bb872992a63558dd457681f3600447b6858190331d86aa1eac22232c",
+      "seconds": 21.2,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "item_stone_axe",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/item_stone_axe/try1/raw.png",
+      "raw_sha256": "a557b554690ee2e4d5a84913520dd9d369c9c74e393207304e5a7b6b336153ce",
+      "seconds": 38.516,
+      "timing_semantics": "includes_orchestration_upper_bound"
+    },
+    {
+      "layer": "item_stone_axe",
+      "try": "try2",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/item_stone_axe/try2/raw.png",
+      "raw_sha256": "9e0fe965ee9faf1174e1da10ff14472eb0e600ea58654f8f7e8a56a4c5b8af7c",
+      "seconds": 113.669,
+      "timing_semantics": "includes_orchestration_upper_bound"
+    },
+    {
+      "layer": "top_fur_cloak_E",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/top_fur_cloak_E/try1/raw.png",
+      "raw_sha256": "6b48ce8565d7437a2472060cb7ff142b4c0dff92f832c94c66a8a5c91372c92b",
+      "seconds": 18.584,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "top_fur_cloak_E",
+      "try": "try2",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/top_fur_cloak_E/try2/raw.png",
+      "raw_sha256": "d458dfcabb123fe332f8cdbb6bc7c21b9bcf4d7e3d5c34c80b55c2073189a722",
+      "seconds": 37.964,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "top_fur_cloak_E",
+      "try": "try3",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/top_fur_cloak_E/try3/raw.png",
+      "raw_sha256": "fb82d5b09d97044ea914d5f34b8d1c957ee9a625d427ed4b735982fbd8aa1662",
+      "seconds": 40.585,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "top_fur_cloak_N",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/top_fur_cloak_N/try1/raw.png",
+      "raw_sha256": "ace2f072e7db13ad476a6873e08a65c5a7cb17cdc1626d06aeccae48ffe5df41",
+      "seconds": 73.711,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "top_fur_cloak_N",
+      "try": "try2",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/top_fur_cloak_N/try2/raw.png",
+      "raw_sha256": "6a0b8a1c60cd34998dbde92a086469cba243b67b1696a93a6cc61be82d73ec78",
+      "seconds": 93.507,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "top_fur_cloak_S",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/top_fur_cloak_S/try1/raw.png",
+      "raw_sha256": "9df716326b8dfcae65ec32c8fc11114774088537d04dfacc773d89580cd4d309",
+      "seconds": 21.4,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "top_fur_cloak_S",
+      "try": "try2",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/top_fur_cloak_S/try2/raw.png",
+      "raw_sha256": "2b6615af089ca2d38f6496b81cb82fbab5102191cf5ef856c0fc6bd00c7d528d",
+      "seconds": 24.3,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "top_fur_cloak_S",
+      "try": "try3",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/top_fur_cloak_S/try3/raw.png",
+      "raw_sha256": "71abcef785671cc8d703b2c961ad15992fced4666a2b660fd848e96cac9da158",
+      "seconds": 55.921,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "top_hide_wrap_E",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/top_hide_wrap_E/try1/raw.png",
+      "raw_sha256": "ae6207f266f03e5fb06bfe89ad2be4b891c775d7108d93a4f1ac681b97cbbbc9",
+      "seconds": 45.403,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "top_hide_wrap_E",
+      "try": "try2",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/top_hide_wrap_E/try2/raw.png",
+      "raw_sha256": "0a447e09199c05a4fb74da7bc3d4c5a360337c9c03af7a04302ada1e31825929",
+      "seconds": 21,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "top_hide_wrap_E",
+      "try": "try3",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/top_hide_wrap_E/try3/raw.png",
+      "raw_sha256": "8b8445e6d59cdb419cbdeea0669fb2521656724eca344f46afbe91b57111fe7d",
+      "seconds": 53.845,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "top_hide_wrap_N",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/top_hide_wrap_N/try1/raw.png",
+      "raw_sha256": "583aa3191621307c1393d73f029751edd415d7737a89ff36234668c3c144108a",
+      "seconds": 53.95,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "top_hide_wrap_N",
+      "try": "try2",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/top_hide_wrap_N/try2/raw.png",
+      "raw_sha256": "bf0ab93c8c99d9d583b96de9b05dc82842b0535eb9ee5e575d3bbf9ec3ba38c3",
+      "seconds": 72.179,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "top_hide_wrap_N",
+      "try": "try3",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/top_hide_wrap_N/try3/raw.png",
+      "raw_sha256": "e78e4ca72bd6b17ff28d5e37b139185d4493714e05fb8fd288e903e52c5d1bc6",
+      "seconds": 81.651,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "top_hide_wrap_S",
+      "try": "try1",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/top_hide_wrap_S/try1/raw.png",
+      "raw_sha256": "33181eef67fa1e02de3ca759e7b7c4214b91c091a59adeb30f1df246d3d2e08b",
+      "seconds": 25.7,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "top_hide_wrap_S",
+      "try": "try2",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/top_hide_wrap_S/try2/raw.png",
+      "raw_sha256": "bad9a75efcda2593c7cdf29414e5fc44de4d0a4f4f9f9ab7b18081e33db93609",
+      "seconds": 23.4,
+      "timing_semantics": "tool_call_wall_seconds"
+    },
+    {
+      "layer": "top_hide_wrap_S",
+      "try": "try3",
+      "raw": "/Users/rexxa/work/arttrial3-data/route_a/top_hide_wrap_S/try3/raw.png",
+      "raw_sha256": "c51b7059a48ee1fc1005d08a42ae7f4c2af590983c7bdf3237f88d87dd1bf23a",
+      "seconds": 22,
+      "timing_semantics": "tool_call_wall_seconds"
+    }
+  ],
+  "accepted_provenance_issues": {
+    "body_E_idle": [],
+    "body_E_walk_a": [],
+    "body_E_walk_b": [],
+    "body_E_work_a": [],
+    "body_E_work_b": [],
+    "body_N_idle": [],
+    "body_N_walk_a": [],
+    "body_N_walk_b": [],
+    "body_N_work_a": [],
+    "body_N_work_b": [],
+    "body_S_idle": [],
+    "body_S_walk_a": [],
+    "body_S_walk_b": [],
+    "body_S_work_a": [],
+    "body_S_work_b": [],
+    "body_sleep": [],
+    "carry_log_bundle": [],
+    "child_body_E_idle": [],
+    "child_body_E_walk_a": [],
+    "child_body_E_walk_b": [],
+    "child_body_E_work_a": [],
+    "child_body_E_work_b": [],
+    "child_body_N_idle": [],
+    "child_body_N_walk_a": [],
+    "child_body_N_walk_b": [],
+    "child_body_N_work_a": [],
+    "child_body_N_work_b": [],
+    "child_body_S_idle": [],
+    "child_body_S_walk_a": [],
+    "child_body_S_walk_b": [],
+    "child_body_S_work_a": [],
+    "child_body_S_work_b": [],
+    "child_body_sleep": [],
+    "child_carry_log_bundle": [],
+    "child_hair_long_tied_E": [],
+    "child_hair_long_tied_N": [],
+    "child_hair_long_tied_S": [],
+    "child_hair_short_E": [],
+    "child_hair_short_N": [],
+    "child_hair_short_S": [],
+    "child_item_stone_axe": [],
+    "child_top_fur_cloak_E": [],
+    "child_top_fur_cloak_N": [],
+    "child_top_hide_wrap_E": [],
+    "child_top_hide_wrap_N": [],
+    "child_top_hide_wrap_S": [],
+    "elder_body_E_idle": [],
+    "elder_body_E_walk_a": [],
+    "elder_body_E_walk_b": [],
+    "elder_body_E_work_a": [],
+    "elder_body_E_work_b": [],
+    "elder_body_N_idle": [],
+    "elder_body_N_walk_a": [],
+    "elder_body_N_walk_b": [],
+    "elder_body_N_work_a": [],
+    "elder_body_N_work_b": [],
+    "elder_body_S_idle": [],
+    "elder_body_S_walk_a": [],
+    "elder_body_S_walk_b": [],
+    "elder_body_S_work_a": [],
+    "elder_body_S_work_b": [],
+    "elder_body_sleep": [],
+    "elder_carry_log_bundle": [],
+    "elder_hair_long_tied_E": [],
+    "elder_hair_long_tied_N": [],
+    "elder_hair_long_tied_S": [],
+    "elder_hair_short_E": [],
+    "elder_hair_short_N": [],
+    "elder_hair_short_S": [],
+    "elder_item_stone_axe": [],
+    "elder_top_fur_cloak_E": [],
+    "elder_top_fur_cloak_N": [],
+    "elder_top_hide_wrap_E": [],
+    "elder_top_hide_wrap_N": [],
+    "elder_top_hide_wrap_S": [],
+    "hair_long_tied_E": [],
+    "hair_long_tied_N": [],
+    "hair_long_tied_S": [],
+    "hair_short_E": [],
+    "hair_short_N": [],
+    "hair_short_S": [],
+    "item_stone_axe": [],
+    "top_fur_cloak_E": [],
+    "top_fur_cloak_N": [],
+    "top_hide_wrap_E": [],
+    "top_hide_wrap_N": [],
+    "top_hide_wrap_S": []
+  }
+}

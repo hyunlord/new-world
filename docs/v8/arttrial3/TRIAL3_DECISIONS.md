@@ -23,9 +23,9 @@ isolated experiment. STYLE v2 is a style reference; Trial3 structure gates first
 | 0 | Template, guides, contract, checker; 22 synthetic tests after independent audit | IMPLEMENTED; semantic limits recorded |
 | 1 | 29/30 originals,58 derived;87/87 layers and603/603 combinations pass; furS missing | PARTIAL_AT_RETRY_CAP |
 | 2 | Official CLI installed; authenticated workspace unavailable, no Meshy key | STOPPED_TOOL_UNAVAILABLE |
-| 3 | Lab implementation parses; missing assets rejected; actual GIF/runtime pending | IN_PROGRESS |
-| 4 | Registered S1/S2/R1/T1/P1/K1 and verdict | PENDING |
-| 5 | Korean goal §8 report, production guide, verified push | PENDING |
+| 3 | 78pages and24GIFs; crowd78.8874FPS; timed playback unavailable | EVIDENCE_COMPLETE_R1_NOT_VERIFIED |
+| 4 | S1 accepted87/87; S2 1.793; T1 2.542; numeric FPS78.8874; neither viable | REPORTED_PARTIAL |
+| 5 | Korean goal §8 report, production guide, publication verification | IN_PROGRESS |
 
 No structural failure may enter a normal board. No missing review or runtime
 measurement may be reported as passing. Every attempted generation is retained.
@@ -73,3 +73,15 @@ S fur cloak exhausted three attempts. Do not relabel 87/87 accepted layers as a 
 ## D8 — Source metadata audit
 
 Added missing mask_sha256 to five adult top sidecars. Their ten derived top sidecars retain the original derivation-sidecar hash and bind the new metadata hash separately; source image and mask bytes remain unchanged.
+
+## D9 — Real-window capture corrections
+
+The first oversized grid was clamped by macOS at1884px high; its partial images are retained externally and rejected as exhaustive grid evidence. Page captures retain exact1x/2x and validate actual viewport and global indices. All full pages stay external if the40MB repository budget would be exceeded; representative pages and complete index are published. A90-second crowd timeout is retained; monotonic wall time replaces accumulated frame delta for the60-second stop. These are harness corrections, not extra asset attempts.
+
+## D10 — Explicit review limit and final verdict
+
+Two fresh blind reviewers inspected all GIF decoded frames and durations, without route or key. They could not observe actual timed playback; therefore R1 stays NOT_VERIFIED, even where proxy accuracy exceeds a threshold. Final-source recapture reproduced all24GIFs byte-identically. No artifact or performance result cancels this missing gate or the capped missing cloak. Recommend commissioned2D base figures under the registered neither-viable rule.
+
+## D11 — Visible rendering measurement
+
+Godot on macOS skips rendering occluded windows while process ticks continue. The87-render/60s run is retained as invalid visibility evidence. A real always-on-top window, no force_draw, recorded4734draws/60.009588s=78.8874FPS,61/61drawable samples,0hidden frames. This is the standalone camp-prop crowd grid, not full camp.tscn or game simulation. Incomplete inventory keeps p1_eligible=false.
