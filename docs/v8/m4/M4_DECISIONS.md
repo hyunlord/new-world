@@ -317,13 +317,21 @@ Raw data lives in `/Users/rexxa/work/m4-data/` (`$DATA`), outside the repository
   interleaved, 3 rounds). Knowledge systems together 0.7 µs/tick at N = 200, 3.3 at N = 1,000, 7.5 at N = 2,000
   (budget 150 at N = 1,000); `JobAssignSystem` 121.7 → 122.5 µs at N = 1,000 (+0.9; budget +40). C3 ceilings 4/4
   PASS. Tick mean against the same-session M3: n1000 ×1.030, n2000 ×1.038, n200_side64 ×1.036, but n200 ×1.235 and
-  n200_script ×1.171; RSS per agent 2,048 → 2,412 B (×1.18).
+  n200_script ×1.171; RSS per agent 2,048 → 2,412 B (×1.18). The final numbers are in the third ledger session
+  (CHANGELOG, `docs/perf/PERF_LEDGER.md`).
 - **Memory, fixed.** Without seeding (a diagnostic build) RSS per agent matched M3 (2,094 vs 2,112 B, medians of 3),
-  so the +330 B was not the knowledge data (≈ 150 B) but where it was put: `seed_founders` inserted `Knowledge` into
-  every founder after all were spawned, moving all of them to a new archetype; hecs keeps the old archetype's columns
-  allocated. Founders now get an empty `Knowledge` in the per-founder spawn sequence (`worldgen/camp.rs`, colony
-  knowledge rule only) and seeding replaces it in place: 2,166 vs M3 2,121 B (+2 %). The colony is byte-identical (the
-  calibration run, seeds 0–7 × 36 days, has the same `summary.json`); the baseline does not take the branch (identity).
+  so the +330 B was not the knowledge data (≈ 75 B: a 16-B box and ~8 entries of 6 B) but how it was made. Two causes,
+  two fixes, both byte-identical for the colony (the calibration run, seeds 0–7 × 36 days, has the same
+  `summary.json`) and outside the baseline (identity PASS):
+  1. `seed_founders` inserted `Knowledge` into every founder after all were spawned, moving all of them to a new
+     archetype; hecs keeps the old archetype's columns allocated. Founders now get an empty `Knowledge` in their
+     per-founder spawn sequence (`worldgen/camp.rs`, colony knowledge rule only); seeding replaces it in place.
+     Measured alone: 2,412 → 2,339 B (second ledger session, `c68cc94c`; an earlier single test that read 2,166 was a
+     low outlier).
+  2. Seeding called `Knowledge::set` per node, which re-boxed each founder's slice for every entry (2,000 founders ×
+     ~8 reallocations left the small-allocation zones fragmented). Seeding now fills one flat founder × node table and
+     boxes each founder's entries once (`Knowledge::from_entries`): 2,130 B against M3's 2,057 in the same run
+     (+73 B, ×1.035; medians of 3, steady: n2000 12,096–12,112 KiB).
 - **Tick at N = 200, justified.** Building `worldsim_perf` at every Part's commit and timing n200 interleaved:
   M3 313 µs, Part 0 (`06c965aa`, fords and tool wear) 392, Parts 1–2 (`276923de`, knowledge) 398, Part 3 386, the
   candidate 386 — the whole step is Part 0. A diagnostic build of the candidate without fords runs n200 at ×0.981 and

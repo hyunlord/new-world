@@ -9,7 +9,7 @@
 //! a door-maker builds log walls; M4 DECISIONS D9), and the first `n` get it
 //! at 500 + a keyed draw below 201 ‰ (slot 0x100 + node id). Nodes are seeded
 //! in id order, so a prerequisite listed earlier is already placed.
-use sim_core::colony::knowledge::{defs, Knowledge, Seeding, Source};
+use sim_core::colony::knowledge::{defs, Knowledge, KnowledgeEntry, Seeding, Source};
 use sim_core::rng::{keyed_below, keyed_u64, STREAM_KNOWLEDGE};
 use sim_engine::SimEngine;
 
@@ -37,13 +37,20 @@ pub fn seed_founders(engine: &mut SimEngine) {
     }
     let seed = engine.resources.world_seed;
     let founders = people(&engine.world, &engine.resources);
-    let mut know: Vec<Knowledge> = vec![Knowledge::default(); founders.len()];
-    for node in &defs().nodes {
+    let d = defs();
+    let nodes = d.nodes.len();
+    // One flat founder × node table of proficiency ‰ (0 = not known), one
+    // allocation; each founder's entries are boxed once at the end (D23).
+    let mut prof: Vec<u16> = vec![0; founders.len() * nodes];
+    let practises =
+        |prof: &[u16], i: usize, id: u8| prof[i * nodes + usize::from(id)] >= d.threshold(id);
+    for node in &d.nodes {
+        let col = usize::from(node.id);
         match node.seed {
             Seeding::Nobody => {}
             Seeding::All => {
-                for k in &mut know {
-                    k.set(node.id, SEED_ALL, Source::Seeded, 0);
+                for i in 0..founders.len() {
+                    prof[i * nodes + col] = SEED_ALL;
                 }
             }
             Seeding::Count(n) => {
@@ -52,7 +59,7 @@ pub fn seed_founders(engine: &mut SimEngine) {
                     .enumerate()
                     .filter(|(_, p)| p.adult)
                     .map(|(i, p)| {
-                        let has_prereqs = node.prereqs.iter().all(|r| know[i].practises(*r));
+                        let has_prereqs = node.prereqs.iter().all(|r| practises(&prof, i, *r));
                         let draw =
                             keyed_u64(seed, STREAM_KNOWLEDGE, p.key, 0, u32::from(node.id), 0);
                         (!has_prereqs, draw, i)
@@ -69,13 +76,25 @@ pub fn seed_founders(engine: &mut SimEngine) {
                         0,
                         201,
                     );
-                    know[i].set(node.id, SEED_MIN + extra as u16, Source::Seeded, 0);
+                    prof[i * nodes + col] = SEED_MIN + extra as u16;
                 }
             }
         }
     }
-    for (p, k) in founders.iter().zip(know) {
-        let _ = engine.world.insert_one(p.entity, k);
+    for (i, p) in founders.iter().enumerate() {
+        let row = &prof[i * nodes..(i + 1) * nodes];
+        let mut entries = Vec::with_capacity(row.iter().filter(|v| **v > 0).count());
+        for (id, v) in row.iter().enumerate() {
+            if *v > 0 {
+                let id = u8::try_from(id).unwrap_or(u8::MAX);
+                entries.push(KnowledgeEntry::new(id, Source::Seeded, *v, 0));
+            }
+        }
+        // The founder spawned with an empty `Knowledge` (worldgen/camp.rs):
+        // this replaces it in place, with no archetype move.
+        let _ = engine
+            .world
+            .insert_one(p.entity, Knowledge::from_entries(entries));
     }
 }
 

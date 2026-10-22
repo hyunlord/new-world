@@ -668,6 +668,23 @@ impl Knowledge {
             .fold(0, |m, e| m | bit(e.id()));
     }
 
+    /// Knowledge holding exactly `entries` (sorted here by id; a node listed
+    /// twice keeps its last entry), boxed once at its final size — the bulk
+    /// constructor for worldgen, where entry-by-entry `set` re-boxed the slice
+    /// for every node (M4 DECISIONS D23).
+    pub fn from_entries(mut entries: Vec<KnowledgeEntry>) -> Self {
+        entries.reverse();
+        entries.sort_by_key(KnowledgeEntry::id);
+        entries.dedup_by_key(|e| e.id());
+        entries.shrink_to_fit();
+        let mut k = Self {
+            entries: entries.into_boxed_slice(),
+            practice: 0,
+        };
+        k.refresh();
+        k
+    }
+
     /// Set node `id` to `proficiency` from `source` at `tick` (inserted in id
     /// order when new). The cached bitset is refreshed.
     pub fn set(&mut self, id: KnowledgeId, proficiency: u16, source: Source, tick: u64) {
@@ -1033,6 +1050,37 @@ mod tests {
             k.get(knap).map(|e| (e.source(), e.observed())),
             Some((Source::Observed, 250))
         );
+    }
+
+    #[test]
+    fn from_entries_sorts_keeps_the_last_of_a_node_and_sets_the_bitset() {
+        let knap = id("flint_knapping").expect("knapping");
+        let fire = id("fire_keeping").expect("fire");
+        let door = id("doorway").expect("doorway");
+        let k = Knowledge::from_entries(vec![
+            KnowledgeEntry::new(door, Source::Seeded, 150, 0),
+            KnowledgeEntry::new(knap, Source::Seeded, 100, 0),
+            KnowledgeEntry::new(fire, Source::Seeded, 600, 0),
+            KnowledgeEntry::new(knap, Source::Oral, 350, 2),
+        ]);
+        let ids: Vec<KnowledgeId> = k.entries().iter().map(KnowledgeEntry::id).collect();
+        let mut sorted = ids.clone();
+        sorted.sort_unstable();
+        assert_eq!(ids, sorted, "sorted by id");
+        assert_eq!(ids.len(), 3, "one entry per node");
+        // The later knapping entry wins: 350 ‰ (threshold 300), heard.
+        assert_eq!(
+            k.get(knap).map(|e| (e.proficiency, e.source())),
+            Some((350, Source::Oral))
+        );
+        // Practises knapping (350 ≥ 300) and fire keeping (600 ≥ 300), not the doorway (150 < 200).
+        assert_eq!(k.practice(), bit(knap) | bit(fire));
+        // The same as entry-by-entry `set`.
+        let mut by_set = Knowledge::default();
+        by_set.set(door, 150, Source::Seeded, 0);
+        by_set.set(fire, 600, Source::Seeded, 0);
+        by_set.set(knap, 350, Source::Oral, 2 * DAY_TICKS);
+        assert_eq!(k, by_set);
     }
 
     #[test]
