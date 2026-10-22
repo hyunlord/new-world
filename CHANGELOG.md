@@ -5,9 +5,9 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
-## Unreleased — M2
+## M2 — 2026-10-22
 
-Things and making (`docs/v8/m2/M2_GOAL.md`): stone and flint as items, workshops, bills, work priorities, skills and quality, stone axes as tools, and firewood through the job layer — the first piece taken out of the decision tick. **The colony's behaviour changes**; the `baseline` world is bit-identical (identity PASS at every Part). Evaluation `docs/v8/m2/M2_EVALUATION.md` (PENDING), report `docs/v8/m2/M2_REPORT.md` (PENDING).
+Things and making (`docs/v8/m2/M2_GOAL.md`): stone and flint as items, workshops, bills, work priorities, skills and quality, stone axes as tools, and firewood through the job layer — the first piece taken out of the decision tick. **The colony's behaviour changes**; the `baseline` world is bit-identical (identity PASS at every Part). Evaluation `docs/v8/m2/M2_EVALUATION.md` (seeds 300–331: E1, E3, E5, E6, E9, E10 PASS; E2, E4, E7, E8 FAIL), report `docs/v8/m2/M2_REPORT.md`. Benchmark ledger `docs/perf/PERF_LEDGER.md` blocks "base M1.5" and "M2" (N = 1,000: 1.71 ms; ceilings 4/4 PASS; the decision system 82.7 % → 80.0 % of the tick).
 
 ### Added
 - ADR 0018 (art direction: illustrated 2D top-down at 64-px tiles, concept 05 ink-and-tone, cut-out people, generated environment); VISION §6 rewritten for it; ROADMAP rows ART-TRIAL, ART-CONCEPT, ART-TRIAL2, M-ART2, M-PERF; HISTORY and `docs/archive/INDEX.md` list the art branches.
@@ -32,6 +32,10 @@ Things and making (`docs/v8/m2/M2_GOAL.md`): stone and flint as items, workshops
 - Gate step `bench`: a C3 ceiling miss now fails (`tools/v8/bench_ledger.py check`), no justification excuses it.
 - Gate step 13 and `tools/v8/test_bridge_api.py` read `docs/v8/bridge_api_m2.txt`.
 - The colony rule is `ColonyRule::M2` (`ColonyRule::economy`).
+- Pause moved from P to Space (P opens the priority table); F3 opens a build menu; README updated.
+- Code-review fixes (DECISIONS D21): a player's firewood bill takes over the auto-bill's craft; cancelled sites return their materials with their material (`NeedLine::material`); the decision's food "loaded" check reads the firewood rule itself again; workshops and priorities are refused without the economy (`NotYet`); unfinished workshops' work tiles are protected (`ColonyState::site_work_tiles`); resource nodes block blueprints.
+- A finished workshop is not a V7 building: no `building_registry` entry and no `BuildingPlaced` (it read as a hearth; D22).
+- The firewood shortfall counts only firewood a hearth can use (D19: stray loads had stopped gathering and three evaluation colonies froze in year 3).
 
 ## M1.5 — 2026-10-22
 

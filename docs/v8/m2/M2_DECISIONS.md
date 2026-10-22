@@ -202,6 +202,12 @@ Raw data lives in `/Users/rexxa/work/m2-data/` (`$DATA`), outside the repository
   tick and only when the colony is short of firewood.
 - Not done: 8.3 (foraging as a job) is allowed only if every bar is green by hour 14; E2, E4 and E7 are not (D18), so
   it was not attempted. E8 is reported as a fail.
+- Official measurement (the ledger session, `$DATA/bench/`, base `e5594e3f` and M2 `f6a89e72` interleaved, 3 rounds,
+  load 2.9–3.9): decision 82.7 % → 80.0 % of the N = 1,000 tick (1,430 → 1,371 µs, −4 %); `JobAssignSystem`
+  15 → 62 µs; tick mean 1,726 → 1,712 µs. E8 FAIL (−2.7 points). The development figures above (decision 1,475 →
+  1,489 µs, tick +5.8 %) came from a loaded session (1-min load ~12) at an earlier commit and are superseded. The M1.5
+  ledger's 82.7 % is the share of its median-tick round (median of its three shares: 82.9 %). The numbers review
+  recommends barring the decision tick's own µs in a later pass: a share also falls when another system grows.
 
 ## D18 — How the evaluation bars are measured (registered before the official run)
 
