@@ -1,6 +1,6 @@
-# Style-judge calibration — FAIL
+# Style-judge calibration — V2 combined PASS; model selectivity weak
 
-Numeric calibration: six anchors pass; all three deliberately wrong controls fail numerically. Actual image-model calibration: five of six anchors pass, two of three wrong controls are rejected. Combined rule: **5/6 anchors pass, 3/3 wrong controls rejected**. The required 6/6 anchor gate is unmet. Do not certify production acceptance from this calibration.
+Historical V1: numeric calibration six anchors pass; all three deliberately wrong controls fail numerically. Actual image-model calibration: five of six anchors pass, two of three wrong controls are rejected. Combined rule: **5/6 anchors pass, 3/3 wrong controls rejected**. The required 6/6 anchor gate is unmet. Do not certify production acceptance from this calibration.
 
 ## Methods and frozen thresholds
 
@@ -35,3 +35,23 @@ A separate fresh-context multimodal Codex reviewer gave six anchor passes and th
 ## Verification scope
 
 Eight behavioral tests pass, including absent-score fail-closed behavior, invalid JSON CLI scores, numeric boundaries, calibration and empty/chroma-only images. Ruff passes. Type-check errors were fixed without changing calibration values;130 upstream/dynamic typing warnings remain, so strict typecheck is NOT_GREEN. Game gate/identity is not an art-only gate and was not run; no game integration or behavior-preservation claim is made.
+
+## V2 bounded relative-reference calibration
+
+One neutral relative-reference round, nine calls, no retries. Exact prompt: JUDGE_PROTOCOL_V2.md. Numeric calibration and original images remain unchanged. Combined rule is numeric PASS AND all four model scores >=4, as preregistered. Result: **anchors6/6 PASS, negatives3/3 rejected**. Model alone rejects **0/3** negatives; every negative rejection relies on the numeric signal. This satisfies the combined calibration but does not establish an independently discriminating model judge. Preserve both facts.
+
+| Candidate | Model M/line/light/palette | Numeric | Combined |
+|---|---|---|---|
+| person | 5/5/5/5 | PASS | PASS |
+| hut | 5/5/4/5 | PASS | PASS |
+| props | 5/4/5/4 | PASS | PASS |
+| ground | 5/5/4/5 | PASS | PASS |
+| scene | 5/5/4/5 | PASS | PASS |
+| portrait | 5/5/5/5 | PASS | PASS |
+| negative_painterly | 5/4/5/5 | FAIL | FAIL |
+| negative_woodcut | 4/4/4/4 | FAIL | FAIL |
+| negative_photo_try1 | 4/4/4/4 | FAIL | FAIL |
+
+Verbatim sentences, candidate/reference/card hashes and numeric recomputation: IMAGE_MODEL_CALIBRATION_V2.json. Raw cards remain external under image-judge-calibration-v2. Some cards repaint reference/candidate panels despite the requested plain format; only their explicit score text is transcribed, never the repainted panel as a source asset. The photo reason admits photographic rendering while assigning four4s. V1 is preserved above and in its original JSON.
+
+Full six-file pipeline typecheck after fixes:0 errors,150 warnings (exit1); Ruff passes and ten tests pass. The earlier130-warning count applied only to the judge subset. Strict typecheck remains NOT_GREEN.

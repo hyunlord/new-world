@@ -1,6 +1,6 @@
 # Style 05 bible v2: ink and tone
 
-Status: visual rules grounded in the six locked originals; numeric measurements are recorded below; image-model calibration is in progress. This document does not certify any candidate as accepted.
+Status: visual rules grounded in the six locked originals; numeric measurements are recorded below; combined V2 calibration passes, while model-only negative discrimination fails (0/3 rejected). This document does not certify any candidate as accepted.
 
 ## Authority and medium
 

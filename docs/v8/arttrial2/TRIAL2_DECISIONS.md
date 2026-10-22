@@ -53,3 +53,9 @@ Context: only 1/38 first environment candidates passes the numeric test, so the 
 Choice: retain the first-try denominator and proceed with limited second attempts for ground, plants and buildings to measure recoverability. Never relabel a retry as a first attempt. Ground receives the specified mirror-blend only after two seam failures.
 Reason: the trial must distinguish an unsuccessful production method from an incomplete test. A later useful candidate does not erase C2 failure.
 Evidence: first-generation ledgers and frozen calibration; second-attempt ledgers remain separate.
+
+## D10 — Apply the combined calibration literally, retain weak model discrimination
+Context: V2 model scores pass all nine calibration inputs, including all three negatives; frozen numeric tests reject those negatives.
+Choice: record combined calibration PASS6/6 anchors and3/3 negative rejections, alongside model-only rejection0/3. The preregistered rule is numeric AND model, not independent perfection of each signal. Accept only candidates with both signals and their content-specific checks passing. Two mirrored ground candidates meet that rule with four5s.
+Reason: neither invent an extra gate nor hide weak model selectivity. Ground12/2=6.0 attempts per accepted candidate exceeds the family stop bar, so stop production. All remaining zero-yield families are stopped; no retries beyond two were used.
+Evidence: IMAGE_MODEL_CALIBRATION_V2.json; art/style05/env/ground sidecars; no altered numeric thresholds.

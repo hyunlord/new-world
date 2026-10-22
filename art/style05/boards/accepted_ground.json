@@ -1,0 +1,17 @@
+{
+  "status": "2 accepted by combined V2 rule; model selectivity weak; not sustainability acceptance",
+  "operations": [
+    "native512x512 texture composition",
+    "labels"
+  ],
+  "sources": [
+    {
+      "source": "art/style05/env/ground/packed_earth.png",
+      "sha256": "7afdc05956a0ecfcdf15caa66c672e4346e056d13f6e0bf4764f47aba4f8443b"
+    },
+    {
+      "source": "art/style05/env/ground/hill_rock.png",
+      "sha256": "2df231d62d20d2e6a3c7f9064697fc8a3cd4c8f7107fbf7cde0db722b7b17f79"
+    }
+  ]
+}

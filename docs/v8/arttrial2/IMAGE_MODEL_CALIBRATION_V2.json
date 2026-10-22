@@ -1,0 +1,695 @@
+[
+  {
+    "candidate": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/candidate_01.png",
+    "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+    "metrics": {
+      "histogram": [
+        0.182830810546875,
+        0.0748748779296875,
+        0.105072021484375,
+        0.057586669921875,
+        0.102691650390625,
+        0.0784759521484375,
+        0.028594970703125,
+        0.0393524169921875,
+        0.0456390380859375,
+        0.0165557861328125,
+        0.0382537841796875,
+        0.02960205078125,
+        0.016265869140625,
+        0.0198822021484375,
+        0.022491455078125,
+        0.0150604248046875,
+        0.025848388671875,
+        0.0253448486328125,
+        0.0145263671875,
+        0.012420654296875,
+        0.0206451416015625,
+        0.009185791015625,
+        0.01446533203125,
+        0.00433349609375
+      ],
+      "edge_density": 0.24607898715041573,
+      "wash": 0.44342267682692804,
+      "stroke_width_at_1024": 2.184064237931165,
+      "foreground_pixels": 65536
+    },
+    "histogram_distance": 0.03265294829043803,
+    "numeric_checks": {
+      "lab_histogram": true,
+      "line_density": true,
+      "local_saturation": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "sentence": "Same hand-drawn ink and watercolor-like tone with identical line quality, textured earth and rock rendering, and natural warm palette; only the subject/camera (single figure with berry basket) differs, not the style."
+    },
+    "model_status": "SUPPLIED",
+    "passed": true,
+    "id": 1,
+    "name": "person",
+    "model_pass": true,
+    "scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/card_01.png",
+    "scorecard_sha256": "b4eea864496690231a7cf1f2a890d8d2f7ec543ceb36602f45e1fbe00b563f64",
+    "model_tool": "image_gen.imagegen",
+    "model_evidence": "verbatim score/reason manually transcribed from saved image-model output card; no reinterpretation",
+    "source_original": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png",
+    "candidate_sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+    "calibration_sha256": "705de9462b6354c2ca15bda164f0e01791bbf7c1022fcfd3c4ee1d3ad66eef34",
+    "tool_interval_seconds": 138.178,
+    "input_refs": [
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png",
+        "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+      },
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      },
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/candidate_01.png",
+        "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+      }
+    ]
+  },
+  {
+    "candidate": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/candidate_02.png",
+    "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+    "metrics": {
+      "histogram": [
+        0.1319580078125,
+        0.1031036376953125,
+        0.11126708984375,
+        0.096923828125,
+        0.0617828369140625,
+        0.06927490234375,
+        0.0806121826171875,
+        0.0467071533203125,
+        0.0341796875,
+        0.015167236328125,
+        0.0301055908203125,
+        0.025482177734375,
+        0.01708984375,
+        0.0592498779296875,
+        0.0191192626953125,
+        0.014892578125,
+        0.013519287109375,
+        0.01495361328125,
+        0.013458251953125,
+        0.0080718994140625,
+        0.0096893310546875,
+        0.016204833984375,
+        0.0060882568359375,
+        0.0010986328125
+      ],
+      "edge_density": 0.261432350718065,
+      "wash": 0.49978002662985577,
+      "stroke_width_at_1024": 2.1809581100012916,
+      "foreground_pixels": 65536
+    },
+    "histogram_distance": 0.041654093015104365,
+    "numeric_checks": {
+      "lab_histogram": true,
+      "line_density": true,
+      "local_saturation": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 4,
+      "palette": 5,
+      "sentence": "Different subject (hut interior vs forager/camp scenes), but the artwork uses the same fine ink outlines, textured tonal washes, natural top-down lighting and earthy muted palette as the references, with only minor interior glow contrast from the fire."
+    },
+    "model_status": "SUPPLIED",
+    "passed": true,
+    "id": 2,
+    "name": "hut",
+    "model_pass": true,
+    "scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/card_02.png",
+    "scorecard_sha256": "6c221d5ef474b9888216e6771b6edc2196a6ac459d77c071bba5e242f8fa70ef",
+    "model_tool": "image_gen.imagegen",
+    "model_evidence": "verbatim score/reason manually transcribed from saved image-model output card; no reinterpretation",
+    "source_original": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+    "candidate_sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+    "calibration_sha256": "705de9462b6354c2ca15bda164f0e01791bbf7c1022fcfd3c4ee1d3ad66eef34",
+    "tool_interval_seconds": 103.537,
+    "input_refs": [
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png",
+        "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+      },
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      },
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/candidate_02.png",
+        "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e"
+      }
+    ]
+  },
+  {
+    "candidate": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/candidate_03.png",
+    "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+    "metrics": {
+      "histogram": [
+        0.149505615234375,
+        0.117950439453125,
+        0.0904693603515625,
+        0.066162109375,
+        0.051177978515625,
+        0.062652587890625,
+        0.054840087890625,
+        0.0345611572265625,
+        0.0406036376953125,
+        0.0215301513671875,
+        0.0432586669921875,
+        0.0400390625,
+        0.0250244140625,
+        0.024261474609375,
+        0.01513671875,
+        0.02545166015625,
+        0.0328826904296875,
+        0.0295257568359375,
+        0.024566650390625,
+        0.013275146484375,
+        0.0078887939453125,
+        0.01519775390625,
+        0.0115203857421875,
+        0.0025177001953125
+      ],
+      "edge_density": 0.2757464096749811,
+      "wash": 0.4721696252680528,
+      "stroke_width_at_1024": 2.203604415633792,
+      "foreground_pixels": 65536
+    },
+    "histogram_distance": 0.01577254407522224,
+    "numeric_checks": {
+      "lab_histogram": true,
+      "line_density": true,
+      "local_saturation": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 5,
+      "line": 4,
+      "light": 5,
+      "palette": 4,
+      "sentence": "Different subject (empty campsite with shelter and fire), but the same hand-drawn ink and watercolor-like rendering with matching linework, textures, lighting and earthy palette as the references, with only minimal simplification of fine detail."
+    },
+    "model_status": "SUPPLIED",
+    "passed": true,
+    "id": 3,
+    "name": "props",
+    "model_pass": true,
+    "scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/card_03.png",
+    "scorecard_sha256": "1a745274ca3ed493b5af913ddc943002aeed67ccc431a6bc740160d4cb39f2a1",
+    "model_tool": "image_gen.imagegen",
+    "model_evidence": "verbatim score/reason manually transcribed from saved image-model output card; no reinterpretation",
+    "source_original": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+    "candidate_sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+    "calibration_sha256": "705de9462b6354c2ca15bda164f0e01791bbf7c1022fcfd3c4ee1d3ad66eef34",
+    "tool_interval_seconds": 187.554,
+    "input_refs": [
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png",
+        "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+      },
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      },
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/candidate_03.png",
+        "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      }
+    ]
+  },
+  {
+    "candidate": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/candidate_04.png",
+    "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+    "metrics": {
+      "histogram": [
+        0.03857421875,
+        0.045135498046875,
+        0.0402374267578125,
+        0.05816650390625,
+        0.0289154052734375,
+        0.0353851318359375,
+        0.042022705078125,
+        0.036712646484375,
+        0.045379638671875,
+        0.0695648193359375,
+        0.05010986328125,
+        0.04718017578125,
+        0.072418212890625,
+        0.035888671875,
+        0.016204833984375,
+        0.0621490478515625,
+        0.046783447265625,
+        0.0914306640625,
+        0.033447265625,
+        0.0167236328125,
+        0.008880615234375,
+        0.0176544189453125,
+        0.0412139892578125,
+        0.0198211669921875
+      ],
+      "edge_density": 0.3160588309397833,
+      "wash": 0.48567452582672815,
+      "stroke_width_at_1024": 2.2252000046482627,
+      "foreground_pixels": 65536
+    },
+    "histogram_distance": 0.09865888596121189,
+    "numeric_checks": {
+      "lab_histogram": true,
+      "line_density": true,
+      "local_saturation": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 4,
+      "palette": 5,
+      "sentence": "Candidate shows matching hand-inked, textured painterly style and earthy color palette, with only slightly cleaner and brighter lighting in the water and grass areas compared to the references."
+    },
+    "model_status": "SUPPLIED",
+    "passed": true,
+    "id": 4,
+    "name": "ground",
+    "model_pass": true,
+    "scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/card_04.png",
+    "scorecard_sha256": "64294d71a532fd17171bbe2f3838aa28d90d1ab005c19db5f07d765fc6b48145",
+    "model_tool": "image_gen.imagegen",
+    "model_evidence": "verbatim score/reason manually transcribed from saved image-model output card; no reinterpretation",
+    "source_original": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
+    "candidate_sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+    "calibration_sha256": "705de9462b6354c2ca15bda164f0e01791bbf7c1022fcfd3c4ee1d3ad66eef34",
+    "tool_interval_seconds": 43.343,
+    "input_refs": [
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png",
+        "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+      },
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      },
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/candidate_04.png",
+        "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+      }
+    ]
+  },
+  {
+    "candidate": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/candidate_05.png",
+    "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+    "metrics": {
+      "histogram": [
+        0.1238578216374269,
+        0.09918676900584796,
+        0.04998172514619883,
+        0.0356359649122807,
+        0.051146747076023395,
+        0.05052997076023392,
+        0.04593841374269006,
+        0.020262244152046784,
+        0.04570997807017544,
+        0.04694353070175439,
+        0.05039290935672515,
+        0.043014437134502925,
+        0.04210069444444445,
+        0.019439875730994153,
+        0.011970029239766082,
+        0.04159813596491228,
+        0.03024488304093567,
+        0.026909722222222224,
+        0.0325749269005848,
+        0.023643092105263157,
+        0.003289473684210526,
+        0.005962171052631579,
+        0.03275767543859649,
+        0.06690880847953216
+      ],
+      "edge_density": 0.2898013496815892,
+      "wash": 0.4352504445329481,
+      "stroke_width_at_1024": 2.140100068982182,
+      "foreground_pixels": 43776
+    },
+    "histogram_distance": 0.047637809159262384,
+    "numeric_checks": {
+      "lab_histogram": true,
+      "line_density": true,
+      "local_saturation": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 4,
+      "palette": 5,
+      "sentence": "Different subject and wider scene, but the same fine ink linework, textured watercolor-like tones, natural overhead lighting, and earthy muted palette as the references, with only minimal variation in shadow contrast."
+    },
+    "model_status": "SUPPLIED",
+    "passed": true,
+    "id": 5,
+    "name": "scene",
+    "model_pass": true,
+    "scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/card_05.png",
+    "scorecard_sha256": "7452667e5dcf72f3673f2bb09a15c2be5b34219f360e9cc7a40a2588454f4497",
+    "model_tool": "image_gen.imagegen",
+    "model_evidence": "verbatim score/reason manually transcribed from saved image-model output card; no reinterpretation",
+    "source_original": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+    "candidate_sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+    "calibration_sha256": "705de9462b6354c2ca15bda164f0e01791bbf7c1022fcfd3c4ee1d3ad66eef34",
+    "tool_interval_seconds": 120.484,
+    "input_refs": [
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png",
+        "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+      },
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      },
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/candidate_05.png",
+        "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      }
+    ]
+  },
+  {
+    "candidate": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/candidate_06.png",
+    "sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c",
+    "metrics": {
+      "histogram": [
+        0.1800384521484375,
+        0.123748779296875,
+        0.0326690673828125,
+        0.060821533203125,
+        0.139007568359375,
+        0.025634765625,
+        0.0654296875,
+        0.053619384765625,
+        0.0169219970703125,
+        0.011016845703125,
+        0.0124664306640625,
+        0.015472412109375,
+        0.0130615234375,
+        0.0525970458984375,
+        0.0531158447265625,
+        0.0124053955078125,
+        0.017974853515625,
+        0.0185089111328125,
+        0.009124755859375,
+        0.00567626953125,
+        0.0313720703125,
+        0.0433502197265625,
+        0.0051422119140625,
+        0.000823974609375
+      ],
+      "edge_density": 0.25612559838750315,
+      "wash": 0.5352829956344147,
+      "stroke_width_at_1024": 2.242864385076777,
+      "foreground_pixels": 65536
+    },
+    "histogram_distance": 0.08931309777691063,
+    "numeric_checks": {
+      "lab_histogram": true,
+      "line_density": true,
+      "local_saturation": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "sentence": "Different subject and close-up view, but the portrait uses the same fine ink linework, textured hand-drawn rendering, earthy color palette, and lighting style as the references."
+    },
+    "model_status": "SUPPLIED",
+    "passed": true,
+    "id": 6,
+    "name": "portrait",
+    "model_pass": true,
+    "scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/card_06.png",
+    "scorecard_sha256": "d05b9e8b5dbf02d72dd2f96e3fb474d7c1f4a13a61f752783a6a559d29a4b66f",
+    "model_tool": "image_gen.imagegen",
+    "model_evidence": "verbatim score/reason manually transcribed from saved image-model output card; no reinterpretation",
+    "source_original": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/portrait.png",
+    "candidate_sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c",
+    "calibration_sha256": "705de9462b6354c2ca15bda164f0e01791bbf7c1022fcfd3c4ee1d3ad66eef34",
+    "tool_interval_seconds": 170.887,
+    "input_refs": [
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png",
+        "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+      },
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      },
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/candidate_06.png",
+        "sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c"
+      }
+    ]
+  },
+  {
+    "candidate": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/candidate_07.png",
+    "sha256": "83785dc9e933598a4c3e4fd7e5dd8e8305d9eae96ad246d41063c647b3eed76d",
+    "metrics": {
+      "histogram": [
+        0.0737152099609375,
+        0.0902099609375,
+        0.15008544921875,
+        0.1148223876953125,
+        0.0341339111328125,
+        0.1521148681640625,
+        0.0711517333984375,
+        0.055572509765625,
+        0.121063232421875,
+        3.0517578125e-05,
+        0.0366668701171875,
+        0.0066986083984375,
+        0.0,
+        0.05059814453125,
+        0.0098724365234375,
+        6.103515625e-05,
+        0.0016326904296875,
+        0.0,
+        0.0003509521484375,
+        0.0036468505859375,
+        0.01971435546875,
+        0.0013885498046875,
+        0.00616455078125,
+        0.00030517578125
+      ],
+      "edge_density": 0.246897833207357,
+      "wash": 0.4513580920014264,
+      "stroke_width_at_1024": 2.2172755300035343,
+      "foreground_pixels": 65536
+    },
+    "histogram_distance": 0.20311545433899783,
+    "numeric_checks": {
+      "lab_histogram": false,
+      "line_density": true,
+      "local_saturation": true
+    },
+    "numeric_pass": false,
+    "model_scores": {
+      "medium": 5,
+      "line": 4,
+      "light": 5,
+      "palette": 5,
+      "sentence": "Different subject and closer, lower overhead framing, but the candidate uses the same fine ink/tone approach with visible brush strokes, naturalistic linework, lighting, and earthy, subdued palette as the references, with only slightly stronger painterly texture on skin and ground."
+    },
+    "model_status": "SUPPLIED",
+    "passed": false,
+    "id": 7,
+    "name": "negative_painterly",
+    "model_pass": true,
+    "scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/card_07.png",
+    "scorecard_sha256": "7bbad7e3e8e6d19cb4f7d45d87d26e71ba7adaad07fa8a4bd67ecd41de9dbac2",
+    "model_tool": "image_gen.imagegen",
+    "model_evidence": "verbatim score/reason manually transcribed from saved image-model output card; no reinterpretation",
+    "source_original": "/Users/rexxa/work/arttrial2-data/negative_painterly.png",
+    "candidate_sha256": "83785dc9e933598a4c3e4fd7e5dd8e8305d9eae96ad246d41063c647b3eed76d",
+    "calibration_sha256": "705de9462b6354c2ca15bda164f0e01791bbf7c1022fcfd3c4ee1d3ad66eef34",
+    "tool_interval_seconds": 155.25,
+    "input_refs": [
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png",
+        "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+      },
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      },
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/candidate_07.png",
+        "sha256": "83785dc9e933598a4c3e4fd7e5dd8e8305d9eae96ad246d41063c647b3eed76d"
+      }
+    ]
+  },
+  {
+    "candidate": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/candidate_08.png",
+    "sha256": "555adc7e283d9c1ed02efa2793718d3cdd8ef190c9150462f7526473b78e548e",
+    "metrics": {
+      "histogram": [
+        0.3885650634765625,
+        0.1999359130859375,
+        0.009552001953125,
+        0.0575103759765625,
+        0.0820770263671875,
+        0.001007080078125,
+        0.0939178466796875,
+        0.04620361328125,
+        3.0517578125e-05,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.083160400390625,
+        0.0074615478515625,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0305328369140625,
+        4.57763671875e-05,
+        0.0,
+        0.0
+      ],
+      "edge_density": 0.2401581002771479,
+      "wash": 0.6404039299510964,
+      "stroke_width_at_1024": 2.589229789366587,
+      "foreground_pixels": 65536
+    },
+    "histogram_distance": 0.3271574313654372,
+    "numeric_checks": {
+      "lab_histogram": false,
+      "line_density": true,
+      "local_saturation": false
+    },
+    "numeric_pass": false,
+    "model_scores": {
+      "medium": 4,
+      "line": 4,
+      "light": 4,
+      "palette": 4,
+      "sentence": "Same hand-drawn ink-and-wash medium with textured watercolor paper, consistent line quality and tonal treatment, with only a slightly warmer, more orange-brown palette in the candidate."
+    },
+    "model_status": "SUPPLIED",
+    "passed": false,
+    "id": 8,
+    "name": "negative_woodcut",
+    "model_pass": true,
+    "scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/card_08.png",
+    "scorecard_sha256": "71e18b2da766ffbfbc3bb5c5a259c8186a5e4876845c29b14d2b08ce3027beef",
+    "model_tool": "image_gen.imagegen",
+    "model_evidence": "verbatim score/reason manually transcribed from saved image-model output card; no reinterpretation",
+    "source_original": "/Users/rexxa/work/arttrial2-data/negative_woodcut.png",
+    "candidate_sha256": "555adc7e283d9c1ed02efa2793718d3cdd8ef190c9150462f7526473b78e548e",
+    "calibration_sha256": "705de9462b6354c2ca15bda164f0e01791bbf7c1022fcfd3c4ee1d3ad66eef34",
+    "tool_interval_seconds": 63.442,
+    "input_refs": [
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png",
+        "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+      },
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      },
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/candidate_08.png",
+        "sha256": "555adc7e283d9c1ed02efa2793718d3cdd8ef190c9150462f7526473b78e548e"
+      }
+    ]
+  },
+  {
+    "candidate": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/candidate_09.png",
+    "sha256": "0f3ac1e665c19e4dab1c011067e1ccc9e29d2424f3797a651a50d15015d36a08",
+    "metrics": {
+      "histogram": [
+        0.051483154296875,
+        0.0370025634765625,
+        0.061553955078125,
+        0.09429931640625,
+        0.06005859375,
+        0.044830322265625,
+        0.0308685302734375,
+        0.092315673828125,
+        0.0417327880859375,
+        0.018890380859375,
+        0.0321197509765625,
+        0.02691650390625,
+        0.0174560546875,
+        0.0229949951171875,
+        0.0416412353515625,
+        0.0242462158203125,
+        0.0597076416015625,
+        0.0486602783203125,
+        0.0354766845703125,
+        0.014404296875,
+        0.06158447265625,
+        0.0533905029296875,
+        0.019287109375,
+        0.0090789794921875
+      ],
+      "edge_density": 0.2901864449483497,
+      "wash": 0.4297064530522882,
+      "stroke_width_at_1024": 2.581689817044161,
+      "foreground_pixels": 65536
+    },
+    "histogram_distance": 0.0912500759991306,
+    "numeric_checks": {
+      "lab_histogram": true,
+      "line_density": true,
+      "local_saturation": false
+    },
+    "numeric_pass": false,
+    "model_scores": {
+      "medium": 4,
+      "line": 4,
+      "light": 4,
+      "palette": 4,
+      "sentence": "The candidate shows the same top-down, natural setting and earthy color palette with similar warm sunlight and shadows, but uses a more photographic, less inked/illustrative rendering with softer, realistic textures and less pronounced linework than the reference\u2019s fine ink-and-tone style."
+    },
+    "model_status": "SUPPLIED",
+    "passed": false,
+    "id": 9,
+    "name": "negative_photo_try1",
+    "model_pass": true,
+    "scorecard": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/card_09.png",
+    "scorecard_sha256": "53662592bed1dffe84c907fe3d29e9b6f2161d3c9dd2dac251bf08c435572acb",
+    "model_tool": "image_gen.imagegen",
+    "model_evidence": "verbatim score/reason manually transcribed from saved image-model output card; no reinterpretation",
+    "source_original": "/Users/rexxa/work/arttrial2-data/negative_photo_try1.png",
+    "candidate_sha256": "0f3ac1e665c19e4dab1c011067e1ccc9e29d2424f3797a651a50d15015d36a08",
+    "calibration_sha256": "705de9462b6354c2ca15bda164f0e01791bbf7c1022fcfd3c4ee1d3ad66eef34",
+    "tool_interval_seconds": 188.4,
+    "input_refs": [
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png",
+        "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+      },
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      },
+      {
+        "path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration-v2/candidate_09.png",
+        "sha256": "0f3ac1e665c19e4dab1c011067e1ccc9e29d2424f3797a651a50d15015d36a08"
+      }
+    ]
+  }
+]
