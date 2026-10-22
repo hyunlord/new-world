@@ -141,6 +141,20 @@ pub(super) fn populate(cfg: &WorldGenConfig, engine: &mut SimEngine) {
                 ),
             )
             .expect("newly spawned worldgen resident must exist");
+        // M4: a colony founder carries its (empty) knowledge from its spawn, so
+        // `knowledge::seed::seed_founders` fills it in place; inserting it into
+        // every founder afterwards moved them all to a new archetype and left
+        // the old one's columns allocated (+330 B a person, M4 DECISIONS D23).
+        if engine
+            .resources
+            .rules
+            .colony
+            .is_some_and(|c| c.knowledge.is_some())
+        {
+            let _ = engine
+                .world
+                .insert_one(entity, sim_core::colony::knowledge::Knowledge::default());
+        }
         // Pass 9: under keyed draws a founder's lineage key is its spawn index,
         // and its age and lifespan are keyed on it (born before tick 0: the
         // replicate in force at tick 0).

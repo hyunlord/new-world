@@ -141,6 +141,10 @@ Raw data lives in `/Users/rexxa/work/m4-data/` (`$DATA`), outside the repository
   `u8`) and the cached `u32` practitioner bitset, instead of the goal's `SmallVec<[_; 12]>`: no new dependency
   (`arrayvec` is fixed-capacity, and a person may come to hold all 24). A founder holds ≈ 8–12 entries: 32 B inline +
   96–144 B on the heap. Measured in Part 5 (bytes per person).
+- Addendum (calibration rounds 5–6, D18): measured 161–212 B a person with 12-byte entries in a `Vec`, over the
+  160 B plan. Now a boxed slice (`Box<[KnowledgeEntry]>`, 16 B header, rebuilt on the rare insert or removal) of
+  6-byte entries: last use as a day `u16`, proficiency `u16`, one byte with the id (low 5 bits) and the source (high 3),
+  one byte with the watched part (‰ / 5). Measured 121–159 B (calibration) and 136–159 B (held-out seeds 700–731).
 
 ## D11 — What is gated (gating completeness)
 
@@ -306,3 +310,27 @@ Raw data lives in `/Users/rexxa/work/m4-data/` (`$DATA`), outside the repository
   is built) fails without the fix (progress moves) and passes with it.
 - The held-out result of record is the pre-fix run (`84f336a5`); the fixed build is measured again on the same
   held-out seeds and both are reported (M4_EVALUATION.md). The fix was not tuned on those seeds.
+
+## D23 — F12: what the benchmark found (memory fixed; the fords' cost at N = 200 justified)
+
+- Ledger session 03:51–03:54 KST (quiet, 1-min load 3.5–4.4; M3 `bf16de16` and the candidate `e7deb890`
+  interleaved, 3 rounds). Knowledge systems together 0.7 µs/tick at N = 200, 3.3 at N = 1,000, 7.5 at N = 2,000
+  (budget 150 at N = 1,000); `JobAssignSystem` 121.7 → 122.5 µs at N = 1,000 (+0.9; budget +40). C3 ceilings 4/4
+  PASS. Tick mean against the same-session M3: n1000 ×1.030, n2000 ×1.038, n200_side64 ×1.036, but n200 ×1.235 and
+  n200_script ×1.171; RSS per agent 2,048 → 2,412 B (×1.18).
+- **Memory, fixed.** Without seeding (a diagnostic build) RSS per agent matched M3 (2,094 vs 2,112 B, medians of 3),
+  so the +330 B was not the knowledge data (≈ 150 B) but where it was put: `seed_founders` inserted `Knowledge` into
+  every founder after all were spawned, moving all of them to a new archetype; hecs keeps the old archetype's columns
+  allocated. Founders now get an empty `Knowledge` in the per-founder spawn sequence (`worldgen/camp.rs`, colony
+  knowledge rule only) and seeding replaces it in place: 2,166 vs M3 2,121 B (+2 %). The colony is byte-identical (the
+  calibration run, seeds 0–7 × 36 days, has the same `summary.json`); the baseline does not take the branch (identity).
+- **Tick at N = 200, justified.** Building `worldsim_perf` at every Part's commit and timing n200 interleaved:
+  M3 313 µs, Part 0 (`06c965aa`, fords and tool wear) 392, Parts 1–2 (`276923de`, knowledge) 398, Part 3 386, the
+  candidate 386 — the whole step is Part 0. A diagnostic build of the candidate without fords runs n200 at ×0.981 and
+  n200_script at ×0.995 of M3. With the fords the bench world's forest across the river is reachable (4 ford tiles), so
+  people forage there: the V7 decision system's gather selectors (`gather_tile_exists`, `nearest_gather_tile`, a scan
+  of all ≈ 2,050 food tiles per call) and bush choice run more often (samples: gather 154 → 257, `choose_bush`
+  0 → 20). The cost is the world's new reach, not knowledge code, and shrinks with N (×1.03 at 1,000, ×1.04 at 2,000).
+  A radius-box scan was tried and was slower (hash lookups over a 17 × 17 box cost more than iterating 2,050 entries;
+  decision 276 → 320 µs), so it was reverted. An index over food tiles is M-PERF work (the V7 selectors are not
+  touched by M4). The CHANGELOG states the justification the gate's `bench` step quotes.
