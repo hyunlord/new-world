@@ -1,0 +1,541 @@
+{
+  "look": "adult_F_loincloth_short",
+  "age": "adult",
+  "sex": "F",
+  "top": "loincloth",
+  "hair": "short",
+  "raw": "/Users/rexxa/work/artprod1-data/production/adult_F_loincloth_short/try2/raw.png",
+  "diagnostics": "/Users/rexxa/work/artprod1-data/production/adult_F_loincloth_short/try2",
+  "sheet_try": 2,
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "attempt": 2,
+  "scale": 0.13053613053613053,
+  "raw_sha256": "af4a0ed98625e54b52e22b382128a262b47983f03da6e448b024bfd9c7eacc1c",
+  "prompt_sha256": "162c802af48bceaee5aec9e5d1e9d25371ede194c8783d65ac66513bc9d125ef",
+  "rotations": {
+    "S/idle": 0,
+    "S/walk_a": 0,
+    "S/work_a": 0,
+    "S/carry": 0,
+    "S/sleep": 0,
+    "E/idle": 0,
+    "E/walk_a": 0,
+    "E/work_a": 0,
+    "E/carry": 0,
+    "E/sleep": 0
+  },
+  "files": {
+    "S/idle.png": "aecef38f6bf27d40d03d0718d67176fcdeb53999cc6a460b37401d96c32d86b9",
+    "S/idle.json": "9e4accd368b32fb805f70031e533d193e2f49e2987d937b1311bb4f9da048b08",
+    "S/walk_a.png": "d28072cd6f576001c7520d162da1bac03b13aee36085e43a89504f983681aabe",
+    "S/walk_a.json": "8c3c4ba77106ac23478d953cee03295bab0ecb7dc68ae1ce1c88c53efcc27f10",
+    "S/work_a.png": "1cdc73c3dc0310736d8524bde098d70dec316cc76a569f2fb18084f736724f80",
+    "S/work_a.json": "7da1660dcf85c25d53e80f47095c0903072aaa9abefef47ac92a8f50cc8799d7",
+    "S/carry.png": "be7cf4b6d930651cafbf57da0e861540fd643f0f04424be19d696a92c34e0065",
+    "S/carry.json": "2d3e80ffcb4ec3cfc50680152561f246ee3a146197db33521effb3bedc9e2526",
+    "S/sleep.png": "556cd3ab7cb690c4f0c409bdce77f3d6149157ff6b142b1d42d8cf6f21877bcf",
+    "S/sleep.json": "42b35c498a136598492a454bda63bcb95d84f1f1f039e503d0581bb6dc1298a4",
+    "E/idle.png": "55424092480c3742a92963cbf9d40ff421ab83d0e2a57abcfcd40ff95feb1c62",
+    "E/idle.json": "bb102d41ec84f38aafd84b1433dbdcb771acc0514b07eccd5bb9784235dc42eb",
+    "E/walk_a.png": "4a2c83c552f5ce4689277d08139fdfeecaccc0d10b80b11cd538081cc6d9dbe0",
+    "E/walk_a.json": "d4468414f929fb72e4421a214841d2d9f2e05ae62de3d3cfbfed4e75247a12e7",
+    "E/work_a.png": "4e88eaf6cec532a81dcbbec27624c636c52572ce91ef380a249b35966253ec9f",
+    "E/work_a.json": "3a075158e761cfdec05a0673375fdfc5b4043a0b409d54b43713e77eb45296f0",
+    "E/carry.png": "3028422ed8e8fa8ef37042ecce9823b529e0f3ea05f29227e3b9e57f4887c7f2",
+    "E/carry.json": "7bb5699a211b0d9f59fbbe34ca386ca3b0b6df7f2382babfb17259ef8b9bcc9f",
+    "E/sleep.png": "855c7892379d3984ff2a7e097c8931d1417a62aa5b30326f749c9c2172163d67",
+    "E/sleep.json": "978bb2a7d877873c725854b69263f8cab2db8e436bef5b8d7d45579332c244a1"
+  },
+  "frames": [
+    {
+      "facing": "S",
+      "frame": "idle",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.0890625,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 55,
+        "opaque_width": 25,
+        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_F_loincloth_short/try2/judge/panel_00.png",
+        "sha256": "48683d673857707bab93a226b24e9599c2ab40c080dc9500cd77c7e0f71fc58e",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.17999199145755473,
+          "saturation_q25": 0.6139924238106326,
+          "saturation_q75": 0.6918705896106365,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.47213595499958,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.02043990621553682,
+          "foreground_pixels": 16876
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "S",
+      "frame": "walk_a",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.08203125,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 54,
+        "opaque_width": 28,
+        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_F_loincloth_short/try2/judge/panel_01.png",
+        "sha256": "89f69ce26baa2ec874f6e1d8d8e906313e9c323ffe8b67bafd234b772d6d157c",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.17393374600367323,
+          "saturation_q25": 0.6148418859933673,
+          "saturation_q75": 0.696626201863907,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.47213595499958,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.020278910985633305,
+          "foreground_pixels": 16612
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "S",
+      "frame": "work_a",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.09854910714285714,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 67,
+        "opaque_width": 31,
+        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_F_loincloth_short/try2/judge/panel_02.png",
+        "sha256": "492f43b5a282dcdaf950336c955eb5ba6b94f652e3adbc72690511f714b45e62",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.2017178783317099,
+          "saturation_q25": 0.6096392223156755,
+          "saturation_q75": 0.7042324334816902,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.027408503846795048,
+          "foreground_pixels": 12996
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "S",
+      "frame": "carry",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.10982142857142857,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 54,
+        "opaque_width": 42,
+        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_F_loincloth_short/try2/judge/panel_03.png",
+        "sha256": "6f28846d408bfccfcb2ee3f1e093b85c644b6d08c1ca8d5e2a6bea26115b08f6",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.2131861748475167,
+          "saturation_q25": 0.635300112604283,
+          "saturation_q75": 0.7231426436732291,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.030023136210657983,
+          "foreground_pixels": 22698
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "S",
+      "frame": "sleep",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.05770089285714286,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 15,
+        "opaque_width": 53,
+        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_F_loincloth_short/try2/judge/panel_04.png",
+        "sha256": "0723b134150d3312e4494022de690ff8f3c1da90fac3fe91e7d6646f0c7f4d65",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.20152852333727594,
+          "saturation_q25": 0.6115788728797626,
+          "saturation_q75": 0.7026636543045723,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.47213595499958,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.021688254481895597,
+          "foreground_pixels": 12139
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "E",
+      "frame": "idle",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.07198660714285714,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 56,
+        "opaque_width": 17,
+        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_F_loincloth_short/try2/judge/panel_05.png",
+        "sha256": "60a66607b0823dbf7320a34eadaac91db6d05ffb47f2b321e15b961207fc3d1d",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.17056035212459794,
+          "saturation_q25": 0.6216154808244128,
+          "saturation_q75": 0.6894230598043021,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.024240299364557513,
+          "foreground_pixels": 13266
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "E",
+      "frame": "walk_a",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.08080357142857143,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 55,
+        "opaque_width": 30,
+        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_F_loincloth_short/try2/judge/panel_06.png",
+        "sha256": "105460728549e9ffa37fe50b52ab655741a3f3852c300debdea7a35ecd405914",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.15713460427498555,
+          "saturation_q25": 0.6217179940146251,
+          "saturation_q75": 0.6876896971036103,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.47213595499958,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.020327632319203773,
+          "foreground_pixels": 15807
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "E",
+      "frame": "work_a",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.09285714285714286,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 67,
+        "opaque_width": 34,
+        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_F_loincloth_short/try2/judge/panel_07.png",
+        "sha256": "9b35323c3ae67b168646754145747f0b2ad4ebebf284dfee2b3ce2dfd7a28d8d",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.1981614859742229,
+          "saturation_q25": 0.6038207503494516,
+          "saturation_q75": 0.6842908257816425,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.029351884290527038,
+          "foreground_pixels": 12201
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "E",
+      "frame": "carry",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.10725446428571428,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 54,
+        "opaque_width": 38,
+        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_F_loincloth_short/try2/judge/panel_08.png",
+        "sha256": "770343465f888099030826f01037f806dbb910021434ffdbc8c10d711312e318",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.19864629268792944,
+          "saturation_q25": 0.6349340816001428,
+          "saturation_q75": 0.7185468548384655,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.47213595499958,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.02665842232156936,
+          "foreground_pixels": 21578
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "E",
+      "frame": "sleep",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.05714285714285714,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 15,
+        "opaque_width": 51,
+        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_F_loincloth_short/try2/judge/panel_09.png",
+        "sha256": "3b2c92cf5ac08a783a486c7828d96962ff9a69283894d7b38e35cbac1a2ad997",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.19448538975114887,
+          "saturation_q25": 0.6137329235851868,
+          "saturation_q75": 0.6974251139277704,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.47213595499958,
+          "stroke_q90": 6.0,
+          "wash_flatness": 0.020742409291271562,
+          "foreground_pixels": 12695
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    }
+  ]
+}

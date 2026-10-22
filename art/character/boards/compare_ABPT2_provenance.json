@@ -1,0 +1,45 @@
+{
+  "historical_board_sha256": "666ac82adecc47d0a885c18c54c3d4914e57738b44e9de1cc510fb0a8ff8fb8a",
+  "historical_records_sha256": "674babba4877aadcc8b9977922e8f0fa455df422177cbb35d7ed3f977abe9f5e",
+  "limitation": "PROD1 adult male; historical cases not sex/age matched",
+  "rows": [
+    {
+      "case": 1,
+      "status": "MISSING",
+      "look": "adult_M_fur_cloak_long_tied"
+    },
+    {
+      "case": 2,
+      "status": "MISSING",
+      "look": "adult_M_fur_cloak_short"
+    },
+    {
+      "case": 3,
+      "status": "ACCEPTED",
+      "source": "art/character/route_i/adult_M_hide_wrap_long_tied/E/work_a.png",
+      "sha256": "4b6f224e603db88849440453213a5dfc0589db5f0282a97762acab3223c394f9",
+      "note": "Same facing/top/hair"
+    },
+    {
+      "case": 4,
+      "status": "ACCEPTED",
+      "source": "art/character/route_i/adult_M_hide_wrap_short/E/carry.png",
+      "sha256": "48a414ba88cf29a44cf9d64702e095d2c47edf16815de42582bec03ff431e559",
+      "note": "Same facing/top/hair"
+    },
+    {
+      "case": 5,
+      "status": "ACCEPTED",
+      "source": "art/character/route_i/adult_M_loincloth_short/S/sleep.png",
+      "sha256": "0dc66ce092c559a0e9be84d6c3d7af01846fcd49036135d987a0fb791bb3761b",
+      "note": "Same facing/top/hair"
+    },
+    {
+      "case": 6,
+      "status": "ACCEPTED",
+      "source": "art/character/route_i/adult_M_hide_wrap_long_tied/S/walk_a.png",
+      "sha256": "8fa90a9617fe94bd763c3cb4ac7fb3085a1200fb8db6ef3ed1d28697e8131460",
+      "note": "N absent: S proxy"
+    }
+  ]
+}

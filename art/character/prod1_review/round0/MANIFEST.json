@@ -1,0 +1,137 @@
+{
+  "dataset_status": "DIAGNOSTIC_REJECTED_SET_NOT_CERTIFIED",
+  "formal_R1_eligible": false,
+  "source_provenance": "/Users/rexxa/work/artprod1-data/round0/lab/provenance.json",
+  "files": [
+    {
+      "source": "/Users/rexxa/work/artprod1-data/round0/lab/gifs/p1_02_1x.gif",
+      "file": "p1_02_1x.gif",
+      "sha256": "10c531cd150fdafbd66d13ebb3a9f7ab42d46f7f2becc48679961776d971ae53"
+    },
+    {
+      "source": "/Users/rexxa/work/artprod1-data/round0/lab/gifs/p1_07_2x.gif",
+      "file": "p1_07_2x.gif",
+      "sha256": "8c421c6d27b23af2a981e9c931b9e72e2369f48195656ca9c7efee7194bba0c3"
+    },
+    {
+      "source": "/Users/rexxa/work/artprod1-data/round0/lab/gifs/p1_10_1x.gif",
+      "file": "p1_10_1x.gif",
+      "sha256": "6a0ff337ac8e61d1183b2a3c94e33e412681b72298e0b53dddf15b24467ace79"
+    },
+    {
+      "source": "/Users/rexxa/work/artprod1-data/round0/lab/gifs/p1_12_1x.gif",
+      "file": "p1_12_1x.gif",
+      "sha256": "65858e9dce69aa170942902d814915042092912bc622a287d87ad080df60f0b8"
+    },
+    {
+      "source": "/Users/rexxa/work/artprod1-data/round0/lab/gifs/p1_05_2x.gif",
+      "file": "p1_05_2x.gif",
+      "sha256": "c45cdd749c4dce990c231bff4e67b6b4713876137f71cbd3911c0501fe7ce6d9"
+    },
+    {
+      "source": "/Users/rexxa/work/artprod1-data/round0/lab/gifs/p1_09_2x.gif",
+      "file": "p1_09_2x.gif",
+      "sha256": "7188be8c26ad8163d3dd2fead9940de9b149a19a3c91477fcbeaae6b2d05aa6a"
+    },
+    {
+      "source": "/Users/rexxa/work/artprod1-data/round0/lab/gifs/p1_04_1x.gif",
+      "file": "p1_04_1x.gif",
+      "sha256": "05bcbbffa9c7e9c0165533afa2e38d5beb625fcdab16971b6a63fd5800fa2785"
+    },
+    {
+      "source": "/Users/rexxa/work/artprod1-data/round0/lab/gifs/p1_08_1x.gif",
+      "file": "p1_08_1x.gif",
+      "sha256": "762446182f2bb41582b3f1b51cc5bcd2083084fde158a24417a700b2859d6845"
+    },
+    {
+      "source": "/Users/rexxa/work/artprod1-data/round0/lab/gifs/p1_01_2x.gif",
+      "file": "p1_01_2x.gif",
+      "sha256": "38f953e85746ec94d2487763e6758e55bb4d2f8e63d957c18fd1f9566499cd9f"
+    },
+    {
+      "source": "/Users/rexxa/work/artprod1-data/round0/lab/gifs/p1_03_2x.gif",
+      "file": "p1_03_2x.gif",
+      "sha256": "9e1c9a4a896e2bb835fbab2f70d70b9c9a5b2d4a1868cfb263c40b832b415b26"
+    },
+    {
+      "source": "/Users/rexxa/work/artprod1-data/round0/lab/gifs/p1_11_2x.gif",
+      "file": "p1_11_2x.gif",
+      "sha256": "d56e4725473472b47f5f11f485d61d21a4d0ee1fdf853e33eb1f58d5752041e3"
+    },
+    {
+      "source": "/Users/rexxa/work/artprod1-data/round0/lab/gifs/p1_06_1x.gif",
+      "file": "p1_06_1x.gif",
+      "sha256": "a51c7c4987cb010b6eb80bfcb5cadc027f64c1c4535940eba8c76601a469cbff"
+    },
+    {
+      "source": "/Users/rexxa/work/artprod1-data/round0/lab/gifs/p1_03_1x.gif",
+      "file": "p1_03_1x.gif",
+      "sha256": "8b688d79df09782d03ef340e7bc4e2bf71b1dd253070bcde762c553cdad12cf3"
+    },
+    {
+      "source": "/Users/rexxa/work/artprod1-data/round0/lab/gifs/p1_11_1x.gif",
+      "file": "p1_11_1x.gif",
+      "sha256": "0f9cf93946a17849b68f0b2356b481bebf3de15f2add5106777eac1885ff8715"
+    },
+    {
+      "source": "/Users/rexxa/work/artprod1-data/round0/lab/gifs/p1_06_2x.gif",
+      "file": "p1_06_2x.gif",
+      "sha256": "3dc2ad836cb6d5e4aed7d6c821c0c369232ce1d856841088bfb74e080d11ee27"
+    },
+    {
+      "source": "/Users/rexxa/work/artprod1-data/round0/lab/gifs/p1_04_2x.gif",
+      "file": "p1_04_2x.gif",
+      "sha256": "116936cd8612f07a5d6b63ee7eb6dd0cca5c896d69231029689263c77fc93221"
+    },
+    {
+      "source": "/Users/rexxa/work/artprod1-data/round0/lab/gifs/p1_01_1x.gif",
+      "file": "p1_01_1x.gif",
+      "sha256": "eaf0eacc52d25c82dafe8656090df174295e12444d005390e820b021223490cb"
+    },
+    {
+      "source": "/Users/rexxa/work/artprod1-data/round0/lab/gifs/p1_08_2x.gif",
+      "file": "p1_08_2x.gif",
+      "sha256": "04d1d907b8c54c622ab0ec8661a6ae2c3e39eb4eb3231ce4c600d32001310ba4"
+    },
+    {
+      "source": "/Users/rexxa/work/artprod1-data/round0/lab/gifs/p1_12_2x.gif",
+      "file": "p1_12_2x.gif",
+      "sha256": "044f1150c623a83f7c31ff9104857a7f31bd07af98198f5694401f382eb89cfc"
+    },
+    {
+      "source": "/Users/rexxa/work/artprod1-data/round0/lab/gifs/p1_05_1x.gif",
+      "file": "p1_05_1x.gif",
+      "sha256": "1c0bda56c2de7a2458b8c3b127a1b5c30d0d4347c58365504f4488d562b0fb89"
+    },
+    {
+      "source": "/Users/rexxa/work/artprod1-data/round0/lab/gifs/p1_09_1x.gif",
+      "file": "p1_09_1x.gif",
+      "sha256": "c41393285980b00e34b5761d6fec7014170eebdd026ba34d7be852811b66d475"
+    },
+    {
+      "source": "/Users/rexxa/work/artprod1-data/round0/lab/gifs/p1_02_2x.gif",
+      "file": "p1_02_2x.gif",
+      "sha256": "4ef80282a388e445ed0d4c71f9555d14cc22dab95744e75dca75cd28468ccbc1"
+    },
+    {
+      "source": "/Users/rexxa/work/artprod1-data/round0/lab/gifs/p1_07_1x.gif",
+      "file": "p1_07_1x.gif",
+      "sha256": "5f28cbd1a5950fdcb7a0cb12fdc497dbf147db3d4468ceb8e7d73f8220f940fd"
+    },
+    {
+      "source": "/Users/rexxa/work/artprod1-data/round0/lab/gifs/p1_10_2x.gif",
+      "file": "p1_10_2x.gif",
+      "sha256": "6f4f161e19a818730a3128be57819c87cd3c1383cdba0e3611d8134103d59975"
+    },
+    {
+      "source": "/Users/rexxa/work/artprod1-data/round0/lab/boards/lab_p1_diagnostic_1x.png",
+      "file": "lab_p1_diagnostic_1x.png",
+      "sha256": "675ce01edddb1c87f0f3bbd7fa7e092e6d605751590d39e6cc84b9b177e9fc50"
+    },
+    {
+      "source": "/Users/rexxa/work/artprod1-data/round0/lab/boards/lab_p1_diagnostic_2x.png",
+      "file": "lab_p1_diagnostic_2x.png",
+      "sha256": "3e9006680469e108cff6fab14e99b05e0b8dfdd56b9f74a7b7a4777c2414bf10"
+    }
+  ]
+}

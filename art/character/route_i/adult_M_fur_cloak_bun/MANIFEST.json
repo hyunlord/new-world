@@ -1,0 +1,541 @@
+{
+  "look": "adult_M_fur_cloak_bun",
+  "age": "adult",
+  "sex": "M",
+  "top": "fur_cloak",
+  "hair": "bun",
+  "raw": "/Users/rexxa/work/artprod1-data/production/adult_M_fur_cloak_bun/try2/raw.png",
+  "diagnostics": "/Users/rexxa/work/artprod1-data/production/adult_M_fur_cloak_bun/try2",
+  "sheet_try": 2,
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "attempt": 2,
+  "scale": 0.13365155131264916,
+  "raw_sha256": "f7dc5e22ab6e1e47c09f537e7fbe8ca692b7f9b9715821c052189fab77c69441",
+  "prompt_sha256": "650068cbfcd19026c0f1f630886be9d988c8f3064bec54705a67b142b759adef",
+  "rotations": {
+    "S/idle": 0,
+    "S/walk_a": 0,
+    "S/work_a": 0,
+    "S/carry": 0,
+    "S/sleep": 0,
+    "E/idle": 0,
+    "E/walk_a": 0,
+    "E/work_a": 0,
+    "E/carry": 0,
+    "E/sleep": 0
+  },
+  "files": {
+    "S/idle.png": "a98c1b8271c9373c1ad7ad2a9f1d3f48fb4f37f2fd27a32c4d6c535ffda90208",
+    "S/idle.json": "70db3c901b00867dd64f4a2d59e330fff7a82b47e9430f3d7a5ca45728d251a2",
+    "S/walk_a.png": "aa2ce98d0985ad8339186cb86f4bb18c6779885f1f1a3003eea9543a1036234e",
+    "S/walk_a.json": "0f06de252cda9705c311bfd50f1c8b7ccdc3e63e52730be650a96ae8561527e0",
+    "S/work_a.png": "68d73ce7a0aa1be4ae40899c185fa7453b3694a7375d396fefbac46892252c5e",
+    "S/work_a.json": "3ad4c06f5966cf067dc0143f69b6740b7c7dbe75ea2ce9cfeb75334c51581326",
+    "S/carry.png": "eb5f6202102baa612b49296a6e10a1dfa042092c6f236f5d444e50318ab5db75",
+    "S/carry.json": "b8301bd4ff5f8ef6e94d7c7aebb7a0c589f4fd8c1607be2a7ebc09da6d7a4d2d",
+    "S/sleep.png": "e2f926e11bee9b72a7f56ae91638695f12ca0119497424f8e8831c6b1f2fbd3d",
+    "S/sleep.json": "aa50263ca4d385352fa714b44debd1a93ffdfabb2f251e8b2176703429a2ded6",
+    "E/idle.png": "621a14aa90190c91408bfbdf692a0f2178c12c0a11cbae2ccbb4a92d6b861dcf",
+    "E/idle.json": "47be59af8b448755cd8d3f42b2b4b0486130769f81a13ac6636934eb55a814ac",
+    "E/walk_a.png": "a276da3d697cf986d898ceeec62bbe07275029cdd0ad1183d02b80d2fec99789",
+    "E/walk_a.json": "7fc2c9d460f230f5a61c702ccb0b516f9b85472468aa7a005fbaa013b1d3027c",
+    "E/work_a.png": "6b3da774b8fe08385c979092907a047304caf7f073eae7b43d06dc4791d56df4",
+    "E/work_a.json": "72662752cbd8b1cf0adb79dea36206ab686e02a430664c38fe2449024a2b8aa1",
+    "E/carry.png": "ba50278f3211a7de0228931aae3724bfe44f1a02e613ca0a412c7ade7deab3b2",
+    "E/carry.json": "b5abf1785565274bc0ced456bda9947f6a0fa0cefdf9e4676114a5eb6bb854eb",
+    "E/sleep.png": "7d648fecbabc975ddd025e58b21d4a70634afc5c4c42dec0e1ea65473a794c52",
+    "E/sleep.json": "1ab62f70851413cd65b3ff15c01c85ad5d82f4a081a1a1ff6d61ee8542f1642d"
+  },
+  "frames": [
+    {
+      "facing": "S",
+      "frame": "idle",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.11595982142857143,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 56,
+        "opaque_width": 29,
+        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_M_fur_cloak_bun/try2/judge/panel_00.png",
+        "sha256": "51097c981d87d0fff32ecb2f253a73a93a1120c6e4024a66fab318c1c9201ed9",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.19565327013262065,
+          "saturation_q25": 0.5603771496510825,
+          "saturation_q75": 0.6798981313592998,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.0506027899258511,
+          "foreground_pixels": 21388
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "S",
+      "frame": "walk_a",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.11517857142857142,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 57,
+        "opaque_width": 34,
+        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_M_fur_cloak_bun/try2/judge/panel_01.png",
+        "sha256": "b10f46cc7ce24d08934bc4477536252ba422134da151d9a2f381138897182265",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.20015877741391286,
+          "saturation_q25": 0.5589318136763848,
+          "saturation_q75": 0.6765038943914121,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.04520748437857817,
+          "foreground_pixels": 21714
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "S",
+      "frame": "work_a",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.14654017857142856,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 68,
+        "opaque_width": 35,
+        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_M_fur_cloak_bun/try2/judge/panel_02.png",
+        "sha256": "3fcf271b6be2a37a4f13a1a8d10c07a37e8381f0eb96701c9b0ed0e2f2e9fcce",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.1865043309709855,
+          "saturation_q25": 0.5431107604560882,
+          "saturation_q75": 0.676966751103678,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.04148736378809702,
+          "foreground_pixels": 18279
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "S",
+      "frame": "carry",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.1392857142857143,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 52,
+        "opaque_width": 45,
+        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_M_fur_cloak_bun/try2/judge/panel_03.png",
+        "sha256": "387d4316fe41e6f881c25a97005f8a7f45b438a9fd49b07ba4913977078c815e",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.2161643240110129,
+          "saturation_q25": 0.5667727777611978,
+          "saturation_q75": 0.723263191394218,
+          "stroke_q25": 2.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.03688559484793299,
+          "foreground_pixels": 29449
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "S",
+      "frame": "sleep",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.07433035714285714,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 17,
+        "opaque_width": 53,
+        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_M_fur_cloak_bun/try2/judge/panel_04.png",
+        "sha256": "b44affc08e86bf9e056ba7e6163ce4fe79b5fafd1856baa0784965afbcbd56b9",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.19250601581299415,
+          "saturation_q25": 0.5797210589896431,
+          "saturation_q75": 0.6763525664653519,
+          "stroke_q25": 2.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.042552518288024886,
+          "foreground_pixels": 15733
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "E",
+      "frame": "idle",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.09185267857142858,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 57,
+        "opaque_width": 22,
+        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_M_fur_cloak_bun/try2/judge/panel_05.png",
+        "sha256": "e52a804dd912fe95969f30be82c84dcad101c703f6309978b68bbff9af48b8b7",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.17701804368471036,
+          "saturation_q25": 0.5579575592334162,
+          "saturation_q75": 0.6658415869006189,
+          "stroke_q25": 2.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.03585565749229892,
+          "foreground_pixels": 17213
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "E",
+      "frame": "walk_a",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.10301339285714285,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 55,
+        "opaque_width": 33,
+        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_M_fur_cloak_bun/try2/judge/panel_06.png",
+        "sha256": "4a9d332f8c19cb441656a166927ba3a6dd0af9522066122dff83e6526543b33b",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.18591960233412577,
+          "saturation_q25": 0.5529031323811187,
+          "saturation_q75": 0.6718069132049772,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.04066188440983085,
+          "foreground_pixels": 20206
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "E",
+      "frame": "work_a",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.12589285714285714,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 61,
+        "opaque_width": 35,
+        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_M_fur_cloak_bun/try2/judge/panel_07.png",
+        "sha256": "ca4f28ae9e3b2d91c9ad7468c46987b475f6c70f54eee23141059a6b46b2499b",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.1838308183720674,
+          "saturation_q25": 0.5434892269550151,
+          "saturation_q75": 0.6731566964475226,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.04411846151189588,
+          "foreground_pixels": 20118
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "E",
+      "frame": "carry",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.12444196428571429,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 52,
+        "opaque_width": 39,
+        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_M_fur_cloak_bun/try2/judge/panel_08.png",
+        "sha256": "753160b067cafe1d35827db3757737cb2501e7c35a0e7e99099f15d1aba76ef6",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.20237415354491312,
+          "saturation_q25": 0.5686590807831184,
+          "saturation_q75": 0.71629754698072,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.03695152346645318,
+          "foreground_pixels": 26480
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "E",
+      "frame": "sleep",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.06796875,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 16,
+        "opaque_width": 53,
+        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_M_fur_cloak_bun/try2/judge/panel_09.png",
+        "sha256": "583a13904cff1f22fea2251af7da8ac0cceb39894f3b69474111220a5bee5b40",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.19189292543021033,
+          "saturation_q25": 0.5795289756387423,
+          "saturation_q75": 0.6773572369134527,
+          "stroke_q25": 2.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.028261150198127808,
+          "foreground_pixels": 14224
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    }
+  ]
+}
