@@ -87,6 +87,10 @@ pub struct ColonyTallies {
     /// Hill tiles dug out (M3).
     #[serde(default)]
     pub tiles_dug: u64,
+    /// Hill tiles the colony worldgen opened so the camp lies on open ground
+    /// (M3, DECISIONS D17; 0 when none was needed).
+    #[serde(default)]
+    pub camp_pass_tiles: u32,
 }
 
 impl ColonyTallies {

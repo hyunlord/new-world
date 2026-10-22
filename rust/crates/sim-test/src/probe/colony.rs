@@ -336,7 +336,8 @@ fn box_tiles(at: (u32, u32), w: u32, h: u32) -> Vec<(u32, u32)> {
 }
 
 /// The top-left of a `w × h` box for a walled building (M3 scripts): every
-/// tile takes a log wall (`check_space`), the tile below the middle of its
+/// tile takes a log wall (`check_space`, with the people where they stand now:
+/// a wall on a person is refused), the tile below the middle of its
 /// south wall is passable (the way out of the door), all reachable from the
 /// hearth, none in `avoid`. Searched south of the hearth (`south`, centre y
 /// below the hearth's) or on any side clear of the camp, nearest by the
@@ -350,7 +351,12 @@ pub fn walled_spot(
 ) -> Option<(u32, u32)> {
     let hc = hearth(&engine.resources)?;
     let r = &engine.resources;
-    let people = std::collections::BTreeSet::new();
+    let people: std::collections::BTreeSet<(u32, u32)> = engine
+        .world
+        .query::<&sim_core::components::Position>()
+        .iter()
+        .map(|(_, p)| (p.x, p.y))
+        .collect();
     let fits = |t: (u32, u32)| {
         sim_systems::commands::check_space(r, &people, BlueprintKind::LogWall, t).is_ok()
             && !avoid.contains(&t)
@@ -389,7 +395,10 @@ pub fn walled_spot(
 }
 
 /// Whether walls round the `w × h` box at `at` (a door in the middle of the
-/// south wall) would cut part of the hearth's region off.
+/// south wall) would cut part of the hearth's region off, or leave a door, a
+/// door site or a bed (built or a site) that the hearth reaches now out of its
+/// reach — a box set against another building's door seals that building
+/// (M3 evaluation seeds 407 and 410, DECISIONS D17).
 fn cuts_off(engine: &SimEngine, hc: (u32, u32), at: (u32, u32), w: u32, h: u32) -> bool {
     let nav = &engine.resources.nav;
     if !nav.is_built() {
@@ -422,7 +431,25 @@ fn cuts_off(engine: &SimEngine, hc: (u32, u32), at: (u32, u32), w: u32, h: u32) 
     let mut after = sim_core::nav::NavState::default();
     after.install(map);
     let lost = before.saturating_sub(region_size(&after));
-    lost > (w * h) as usize || walls.iter().any(|t| !after.reachable(hc, *t))
+    let r = &engine.resources;
+    let grid = &r.tile_grid;
+    let doors = (0..grid.height)
+        .flat_map(|y| (0..grid.width).map(move |x| (x, y)))
+        .filter(|t| grid.is_door(grid.idx(t.0, t.1)));
+    let sites = r
+        .colony
+        .space_sites
+        .iter()
+        .filter(|(_, k)| matches!(k, BlueprintKind::Door | BlueprintKind::Bedroll))
+        .map(|(t, _)| *t);
+    let kept: Vec<(u32, u32)> = doors
+        .chain(sites)
+        .chain(r.colony.beds.keys().copied())
+        .filter(|t| !walls.contains(t) && nav.reachable(hc, *t))
+        .collect();
+    lost > (w * h) as usize
+        || walls.iter().any(|t| !after.reachable(hc, *t))
+        || kept.iter().any(|t| !after.reachable(hc, *t))
 }
 
 /// The house of the M3-U script: a door in the middle of the south wall,
@@ -1277,6 +1304,7 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
         "trees_felled": c.tallies.trees_felled,
         "huts_built": c.tallies.huts_built,
         "founder_fixes": c.tallies.founder_fixes,
+        "camp_pass_tiles": c.tallies.camp_pass_tiles,
         "logs": {"created": created, "ground": ground, "carried": carried, "delivered": delivered, "consumed": consumed},
         "items": items_json(&engine),
         "quarry_batches": c.tallies.quarry_batches,

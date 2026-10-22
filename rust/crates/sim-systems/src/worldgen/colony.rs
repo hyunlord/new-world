@@ -64,7 +64,99 @@ pub(super) fn generate(cfg: &WorldGenConfig, gen: &ColonyGen, engine: &mut SimEn
     engine.resources.colony.tallies.founder_fixes = fixed;
     trees(cfg, gen, &mut engine.resources, camp);
     nodes(cfg, gen, &mut engine.resources, camp);
+    let opened = open_the_camp(&mut engine.resources, camp);
+    engine.resources.colony.tallies.camp_pass_tiles = opened;
     founders_on_open_ground(engine, camp);
+}
+
+/// M3 (DECISIONS D17): the camp must lie on open ground. When the hearth's nav
+/// region holds no more than `SpaceRule::open_region_tiles` tiles (a basin the
+/// hills and the river close off — undug hill is impassable since M3), the
+/// fewest hill tiles that join it to an open region become plain: a 0-1
+/// breadth-first search over 4-neighbours from the region's tiles in `(y, x)`
+/// order (a passable tile costs 0, a hill tile 1; river, mountain and the map
+/// edge are never crossed), ended at the first tile of an open region. Returns
+/// the number of tiles opened (0 for every camp already on open ground).
+fn open_the_camp(r: &mut SimResources, camp: Tile) -> u32 {
+    if r.rules.colony.is_none() {
+        return 0;
+    }
+    crate::runtime::nav::ensure(r);
+    let open_tiles = r
+        .rules
+        .colony
+        .as_ref()
+        .and_then(|c| c.space)
+        .map_or(sim_core::rules::SpaceRule::M3.open_region_tiles, |s| {
+            s.open_region_tiles
+        });
+    let (w, h) = (r.tile_grid.width, r.tile_grid.height);
+    let all = tiles(r);
+    let labels: Vec<u32> = all.iter().map(|&t| r.nav.region_of(t)).collect();
+    let mut size: std::collections::BTreeMap<u32, u32> = std::collections::BTreeMap::new();
+    for &l in labels.iter().filter(|&&l| l != 0) {
+        *size.entry(l).or_default() += 1;
+    }
+    let open = |l: u32| l != 0 && size.get(&l).copied().unwrap_or(0) > open_tiles;
+    let home = r.nav.region_of(camp);
+    if home == 0 || open(home) {
+        return 0;
+    }
+    let idx = |t: Tile| (t.1 * w + t.0) as usize;
+    let mut dist = vec![u32::MAX; all.len()];
+    let mut parent: Vec<Option<Tile>> = vec![None; all.len()];
+    let mut queue = std::collections::VecDeque::new();
+    for (&t, _) in all.iter().zip(&labels).filter(|(_, &l)| l == home) {
+        dist[idx(t)] = 0;
+        queue.push_back(t);
+    }
+    let mut end = None;
+    while let Some(t) = queue.pop_front() {
+        if open(labels[idx(t)]) {
+            end = Some(t);
+            break;
+        }
+        let d = dist[idx(t)];
+        let next = [
+            (t.0, t.1.wrapping_sub(1)),
+            (t.0.wrapping_sub(1), t.1),
+            (t.0 + 1, t.1),
+            (t.0, t.1 + 1),
+        ];
+        for n in next {
+            if n.0 >= w || n.1 >= h {
+                continue;
+            }
+            let step = if r.nav.passable(n) {
+                0
+            } else if terrain(r, n) == TerrainType::Hill {
+                1
+            } else {
+                continue;
+            };
+            if d + step < dist[idx(n)] {
+                dist[idx(n)] = d + step;
+                parent[idx(n)] = Some(t);
+                if step == 0 {
+                    queue.push_front(n);
+                } else {
+                    queue.push_back(n);
+                }
+            }
+        }
+    }
+    let mut opened = 0;
+    let mut at = end;
+    while let Some(t) = at {
+        if !r.nav.passable(t) {
+            let i = r.tile_grid.idx(t.0, t.1);
+            r.tile_grid.terrain_type[i] = TerrainType::Plain;
+            crate::runtime::nav::refresh(r, t);
+            opened += 1;
+        }
+        at = parent[idx(t)];
+    }
+    opened
 }
 
 /// M3 (ADR 0021, DECISIONS D9): the camp's resident tiles allow hill tiles,

@@ -269,3 +269,31 @@ Raw data lives in `/Users/rexxa/work/m3-data/` (`$DATA`), outside the repository
   647–916 with 4–5× the churn); pocket dug by day 4.4–7.2 on all six hill seeds; bedroom by day 1.2–4.9; storehouse by
   day 3.2–7.0 holding 86–100 % of the stock; ≥ 3 bedroom sleepers every night from day 9; 0 deaths. F7 still 0 of 8.
   Test `colony_space.rs::someone_about_to_drink_gets_no_new_job`.
+
+## D17 — The registered evaluation's failures, their causes, and a second held-out set
+
+- Registered result (seeds 400–431 at `71c896b6`, `$DATA/eval/score.txt`; this is the M3 evaluation of record): F2,
+  F3, F8 and F9's no-orders run PASS; F1 26/32, F4 23/32, F5 31/32, F9 31/32 and F7 1/32 FAIL.
+- Causes, found by reading the failing seeds (`$DATA/eval/appendix.json`; a debug test outside the commit):
+  1. **Seed 403** (F1, F2, F4, F5, F8, F9): every founder died of thirst, with orders and without. Its camp lay in a
+     6-tile basin closed by hills and the river; undug hill has been impassable since Part 1, and the basin held one
+     standable drinking tile for ten people. A world defect of M3's passability, not of the orders.
+  2. **Seeds 407, 410** (F4): the day-2 storehouse box was placed with its top wall on the tile outside the house's
+     door, which sealed the bedroom: its beds were unreachable from the formation tile, so by ADR 0023's rule no one
+     was given them (0 sleepers every night). The resolver's `cuts_off` check looked at the hearth region's size only.
+  3. **Seeds 404, 417, 420, 419** (F1, F4): the house got 18 of its 19 wall tiles. `walled_spot` tested the tiles
+     with an empty set of people, while `PlaceRect` refuses a wall where someone stands (goal 3.2); a gap in the wall
+     leaves no room.
+- Fixes (one commit, `v8-m3(p5)` follow-up):
+  1. Colony worldgen `open_the_camp` (`worldgen/colony.rs`): when the hearth's nav region holds no more than
+     `SpaceRule::open_region_tiles` (400 — the field was defined in Part 3 and unused until now), the fewest hill tiles
+     that join it to an open region become plain (0-1 BFS over 4-neighbours, river and mountain never crossed); counted
+     in `colony.tallies.camp_pass_tiles` and the probe summary. Of seeds 0–7 and 400–431 only 403 needed it (4 tiles).
+     Test `colony_world.rs::colony_camp_lies_on_open_ground` (every camp region of those 40 seeds > 400 tiles).
+  2. `cuts_off` also refuses a box after which a door, a door site or a bed the hearth reaches now would be out of its
+     reach; `walled_spot` checks the tiles against the people where they stand.
+  No rule value, threshold or bar moved; the sim's behaviour changes only through worldgen on a closed camp.
+- Diagnostic rerun of 400–431 with the fixes (`$DATA/fix1`, no longer held out): F1 31, F2 32, F3 18/20, F4 31, F5 32,
+  F8 31, F9 32 + 32; F7 1. Because these seeds found the bugs, the fixed build is also measured on a **second held-out
+  set, seeds 600–631** (grepped: never used before), same script, days, bars and scorer, run once on the fix commit;
+  both results are reported, the 400–431 one as the result of record.

@@ -180,3 +180,38 @@ fn colony_determinism_with_the_u_script() {
         assert_eq!(a, run(seed), "seed {seed}");
     }
 }
+
+#[test]
+fn colony_camp_lies_on_open_ground() {
+    // M3 (DECISIONS D17): undug hill is impassable, so worldgen opens the
+    // fewest hill tiles that join a closed camp basin to open ground. Seed 403
+    // (M3 evaluation) put its camp in a 6-tile basin between hills and the river
+    // with one standable drinking tile; all ten founders died of thirst.
+    let mut opened = Vec::new();
+    for seed in (0..8).chain(400..432) {
+        let engine = sim_test::colony_engine(seed);
+        let r = &engine.resources;
+        let hearth = sim_systems::worldgen::colony::hearth(r).expect("a hearth");
+        let home = r.nav.region_of(hearth);
+        let size = (0..r.tile_grid.height)
+            .flat_map(|y| (0..r.tile_grid.width).map(move |x| (x, y)))
+            .filter(|&t| r.nav.region_of(t) == home)
+            .count() as u32;
+        let open = r
+            .rules
+            .colony
+            .and_then(|c| c.space)
+            .map_or(0, |s| s.open_region_tiles);
+        assert!(
+            home != 0 && size > open,
+            "seed {seed}: camp region {size} tiles"
+        );
+        if r.colony.tallies.camp_pass_tiles > 0 {
+            opened.push((seed, r.colony.tallies.camp_pass_tiles));
+        }
+    }
+    assert!(
+        opened.iter().any(|&(s, n)| s == 403 && n >= 1),
+        "{opened:?}"
+    );
+}
