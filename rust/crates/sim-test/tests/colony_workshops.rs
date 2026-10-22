@@ -351,3 +351,185 @@ fn bill_commands_check_their_workshop_and_bill_and_are_logged() {
     );
     assert_eq!(log.last().map(|r| r.command.name()), Some("set_bill_mode"));
 }
+
+/// Review m1: a player's firewood bill takes over the auto-bill's craft in progress (no input lost).
+#[test]
+fn a_players_firewood_bill_takes_over_the_auto_bills_craft() {
+    let mut engine = job_world_m2(40, 40);
+    engine.resources.rules.society.firewood =
+        sim_core::rules::WorldRules::baseline(0).society.firewood;
+    for x in [3, 5] {
+        worker(&mut engine, x, 3);
+    }
+    let shop = build_workshop(&mut engine, BlueprintKind::WoodBench, (12, 12), (4, 4));
+    let auto = engine.resources.colony.workshops[&shop].bills[0];
+    assert!(auto.auto, "a new bench starts with the auto-bill");
+    drop_items(
+        &mut engine,
+        (30, 30),
+        ItemSpec::raw(ItemKind::Log, None),
+        10,
+    );
+    let crafting = |e: &SimEngine| {
+        e.world.query::<&Job>().iter().any(|(_, j)| {
+            matches!(j.kind, JobKind::Craft { .. }) && matches!(j.stage, JobStage::Working { .. })
+        })
+    };
+    assert!(
+        run_until(&mut engine, 3_000, crafting) < 3_000,
+        "the auto-bill's craft started"
+    );
+    let next = engine.resources.colony.next_bill_id;
+    let add = Command::AddBill {
+        workshop: shop,
+        recipe: RecipeKind::SplitFirewood,
+        mode: BillMode::Maintain(40),
+    };
+    assert!(submit(&mut engine, add).accepted);
+    let bills: Vec<(u32, bool)> = engine.resources.colony.workshops[&shop]
+        .bills
+        .iter()
+        .map(|b| (b.id, b.auto))
+        .collect();
+    assert_eq!(bills, vec![(next, false)], "the auto-bill is replaced");
+    let on_new = engine
+        .world
+        .query::<&Job>()
+        .iter()
+        .any(|(_, j)| matches!(j.kind, JobKind::Craft { bill, .. } if bill == next));
+    assert!(on_new, "the craft in progress now works the player's bill");
+    run_until(&mut engine, 600, |e| {
+        e.resources.colony.tallies.crafts_done >= 1
+    });
+    assert_eq!(engine.resources.colony.tallies.crafts_lost, 0);
+    assert!(engine.resources.colony.tallies.crafts_done >= 1);
+}
+
+/// Review m2: a cancelled site gives its materials back with the material they were delivered with.
+#[test]
+fn a_cancelled_site_returns_materials_with_their_material() {
+    let mut engine = job_world_m2(40, 40);
+    worker(&mut engine, 3, 3);
+    let oak = ItemSpec::raw(ItemKind::Log, Some(sim_core::colony::materials::OAK));
+    let placed = submit(
+        &mut engine,
+        Command::PlaceBlueprint {
+            kind: BlueprintKind::Hut,
+            x: 20,
+            y: 20,
+        },
+    );
+    assert!(placed.accepted);
+    drop_items(&mut engine, (4, 4), oak, 5);
+    let delivered = |e: &SimEngine| {
+        e.world
+            .query::<&sim_core::colony::MaterialNeeds>()
+            .iter()
+            .any(|(_, n)| n.delivered_total() >= 5)
+    };
+    assert!(
+        run_until(&mut engine, 2_000, delivered) < 2_000,
+        "five logs delivered"
+    );
+    let cancel = Command::CancelArea {
+        x0: 20,
+        y0: 20,
+        x1: 22,
+        y1: 22,
+    };
+    assert!(submit(&mut engine, cancel).accepted);
+    let back: Vec<_> = engine
+        .resources
+        .colony
+        .ground_items
+        .values()
+        .filter(|s| s.kind == ItemKind::Log)
+        .map(|s| (s.count, s.material))
+        .collect();
+    assert_eq!(back, vec![(5, Some(sim_core::colony::materials::OAK))]);
+}
+
+/// Review m4, m6: without the economy (M1 rules) workshops and priorities are refused.
+#[test]
+fn without_the_economy_workshops_and_priorities_are_refused() {
+    let mut engine = colony_support::job_world(32, 32);
+    let w = worker(&mut engine, 3, 3);
+    let bench = submit(
+        &mut engine,
+        Command::PlaceBlueprint {
+            kind: BlueprintKind::DryingRack,
+            x: 10,
+            y: 10,
+        },
+    );
+    assert_eq!(bench.reason, Some(RejectReason::NotYet));
+    let id = engine
+        .world
+        .get::<&sim_core::components::Agent>(w)
+        .map(|a| a.id)
+        .unwrap_or(0);
+    let prio = submit(
+        &mut engine,
+        Command::SetWorkPriority {
+            agent: id,
+            work: sim_core::colony::WorkType::Chop,
+            level: 0,
+        },
+    );
+    assert_eq!(prio.reason, Some(RejectReason::NotYet));
+    let hut = submit(
+        &mut engine,
+        Command::PlaceBlueprint {
+            kind: BlueprintKind::Hut,
+            x: 10,
+            y: 10,
+        },
+    );
+    assert!(hut.accepted, "the hut stays an M1 order");
+}
+
+/// Review m5: a blueprint may not cover the work tile of a workshop that is still a blueprint.
+#[test]
+fn a_blueprint_may_not_cover_a_pending_workshops_work_tile() {
+    let mut engine = job_world_m2(32, 32);
+    let spot = Command::PlaceBlueprint {
+        kind: BlueprintKind::KnappingSpot,
+        x: 5,
+        y: 5,
+    };
+    assert!(submit(&mut engine, spot).accepted);
+    let hut = submit(
+        &mut engine,
+        Command::PlaceBlueprint {
+            kind: BlueprintKind::Hut,
+            x: 4,
+            y: 6,
+        },
+    );
+    assert_eq!(
+        hut.reason,
+        Some(RejectReason::Blocked),
+        "(5, 6) is the spot's future work tile"
+    );
+    assert!(
+        submit(
+            &mut engine,
+            Command::CancelArea {
+                x0: 5,
+                y0: 5,
+                x1: 5,
+                y1: 5
+            }
+        )
+        .accepted
+    );
+    let again = submit(
+        &mut engine,
+        Command::PlaceBlueprint {
+            kind: BlueprintKind::Hut,
+            x: 4,
+            y: 6,
+        },
+    );
+    assert!(again.accepted, "a cancelled site frees its work tile");
+}

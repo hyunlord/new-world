@@ -391,6 +391,7 @@ fn nearest_settlement(resources: &SimResources, tile: (u32, u32)) -> Option<Sett
 fn complete_workshop(resources: &mut SimResources, site: ColonySite, needs: MaterialNeeds) {
     let id = resources.colony.next_workshop_id.max(1);
     resources.colony.next_workshop_id = id + 1;
+    resources.colony.site_work_tiles.remove(&site.centre());
     for tile in site.tiles() {
         resources
             .colony

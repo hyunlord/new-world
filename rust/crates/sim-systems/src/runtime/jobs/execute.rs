@@ -540,7 +540,7 @@ fn arrive(
                 let mut rest = carry.count;
                 if let Some((site_entity, _)) = site_needs(world, site) {
                     if let Ok(mut needs) = world.get::<&mut MaterialNeeds>(site_entity) {
-                        rest -= needs.deliver(carry.kind, rest);
+                        rest -= needs.deliver_spec(carry.spec(), rest);
                     }
                     res.colony.touch(false);
                 }

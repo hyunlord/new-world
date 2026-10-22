@@ -107,6 +107,10 @@ pub struct ColonyState {
     /// Next bill id (from 1).
     #[serde(default)]
     pub next_bill_id: BillId,
+    /// The future work tile of each workshop blueprint site, by site centre
+    /// (M2 review m5: later blueprints may not cover it).
+    #[serde(default)]
+    pub site_work_tiles: BTreeMap<(u32, u32), (u32, u32)>,
     /// Bumped whenever a tree is added or removed (renderers rebuild on change).
     pub trees_version: u64,
     /// Ground stacks, one per tile.

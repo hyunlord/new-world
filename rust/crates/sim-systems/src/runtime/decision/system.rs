@@ -909,7 +909,7 @@ impl RuntimeSystem for AgentDecisionSystem {
                         || !resources.social_retry_after.contains_key(&agent.id));
                 // Pass 5 — under the firewood rule a member carrying a full food
                 // or wood load hauls it home before any work arm fires again.
-                let loaded = firewood_rule.is_some_and(|rule| {
+                let loaded = resources.rules.society.firewood.is_some_and(|rule| {
                     inventory_opt.as_ref().is_some_and(|inv| {
                         inv.get(ResourceKind::Wood) >= wood_haul(rule.haul_threshold)
                             || forage_rule.is_some_and(|forage| {

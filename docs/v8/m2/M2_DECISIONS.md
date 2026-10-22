@@ -234,3 +234,40 @@ Raw data lives in `/Users/rexxa/work/m2-data/` (`$DATA`), outside the repository
   hearth pile in M2; a limitation).
 - The evaluation was then rerun in full from the fixed commit; seeds 300, 320, 324 are no longer blind for E6b, and
   the report says so.
+
+## D20 — UI: keys and panels (Part 5, by a subagent; report `$DATA/ui/UI_REPORT.md`)
+
+- **P = the priority table, Space = pause.** The goal puts the table on P, which paused the game since V7; pause
+  moved to Space (and the Pause key). README updated.
+- F3 opens a build menu (1 hut, 2 knapping spot, 3 wood bench, 4 drying rack; the order tool's mode is now `BUILD`
+  with a kind, code 3 as the old hut mode); F7 is the quarry rectangle. A finished workshop opens its bill panel on
+  click: a new bill is "만들기 5"; −/+ step 1 for make, 5 for maintain; auto-bills show "(자동)".
+- Item names carry their material through a per-kind format key ("부싯돌 날"); ground stacks show kind, count and
+  quality on hover only (the overlay has no item material column), keeping the 16-px ground calm.
+- 14 temporary sprites in a new shelf of the code-drawn sheet (`tools/v8/gen_tiles.py`); M-ART2 replaces them.
+- 90 new localization keys and 5 changed values (`docs/v8/m2/M2_LOCALE.md`).
+
+## D21 — Code review dispositions (`$DATA/review/CODE_REVIEW.md`, round 1 on `d05391cc`)
+
+No MAJOR finding. MINOR findings and what was done:
+- m1 (a player's firewood bill dropped the auto-bill's working craft and its log): fixed — the replaced auto-bill's
+  craft jobs are re-pointed to the new bill (same recipe). Test `a_players_firewood_bill_takes_over_the_auto_bills_craft`.
+- m2 (a cancelled site returned its materials without their material): fixed — a need line remembers its first
+  delivery's material (`NeedLine::material`, `deliver_spec`). Test `a_cancelled_site_returns_materials_with_their_material`.
+- m3 (the decision's food "loaded" check went off in the colony with the firewood rule): fixed — that check reads
+  the rule itself again (`decision/system.rs` one line changed; the pass's diff of that file is +3 −2, net +1); M1.5's food
+  behaviour is back in the colony.
+- m4, m6 (workshops and priorities accepted under M1 rules): fixed — `NotYet` without the economy. Test
+  `without_the_economy_workshops_and_priorities_are_refused`.
+- m5 (a blueprint could cover an unfinished workshop's work tile): fixed — `ColonyState::site_work_tiles`, kept
+  by place, cancel and completion. Test `a_blueprint_may_not_cover_a_pending_workshops_work_tile`.
+- m7 (craft protection depended on the margin field): fixed — checked before the margin rule's early return.
+- NIT 10 (blueprints over resource nodes): fixed (a node blocks a footprint). The reviewer's remark on the
+  uncommitted D19 edit: the hearth tile list is now cached once per tick.
+- Kept, recorded: NIT 1 (quality keyed by `AgentId`, as the goal states; deterministic and saved), NIT 2 (`JobKind::
+  work` is display-only), NIT 3 (`Job::amount` holds a chop's or quarry's work ticks), NIT 4 (gather may be sent
+  while a runnable bench is busy; at most one carry over per tick), NIT 5 (one craft's inputs per supply trip), NIT 6
+  (workshops are V7 `building_registry` entries), NIT 7 (`MoveBill` can move a player bill below an auto-bill),
+  NIT 8 (a priority set to 0 does not cancel a current job; an adult's component keeps quarry 3 as an elder), NIT 9
+  (axes are kept until death or wear), NIT 11 (`f64` on grandfathered `wood_target` inputs), NIT 12–14 (derived
+  `Skill.level` saved, registry order, unpruned measurement tallies).

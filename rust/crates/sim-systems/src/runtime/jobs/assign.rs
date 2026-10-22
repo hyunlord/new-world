@@ -212,8 +212,8 @@ struct Ctx<'a> {
     /// Firewood units still to gather this tick: computed on first use, then
     /// lowered by a carry per gather job taken (`None` = not computed yet).
     gather_short: &'a std::cell::Cell<Option<u32>>,
-    /// The colony's hearth (the gather fallback's drop when no cell has room), on first use.
-    hearth: &'a std::cell::OnceCell<Option<(u32, u32)>>,
+    /// The hearths (the gather fallback's drop when no cell has room), on first use.
+    hearth: &'a std::cell::OnceCell<Vec<(u32, u32)>>,
 }
 
 /// A picked job: kind, amount, item.
@@ -541,14 +541,13 @@ fn gather_pick(res: &SimResources, ctx: &Ctx, pos: (u32, u32), ex: &mut Exhauste
         .cells
         .nearest_where(spot, u32::MAX, |c, _| open(c))
         .map(|(c, ())| c);
-    let hearth = ctx
-        .hearth
-        .get_or_init(|| super::hearth::hearth_tiles(res).first().copied());
     // The settlement's hearth (the feed reads its pile), nearest the spot when several.
-    let near = super::hearth::hearth_tiles(res)
-        .into_iter()
-        .min_by_key(|t| (chebyshev(spot, *t), t.1, t.0))
-        .or(*hearth);
+    let near = ctx
+        .hearth
+        .get_or_init(|| super::hearth::hearth_tiles(res))
+        .iter()
+        .copied()
+        .min_by_key(|t| (chebyshev(spot, *t), t.1, t.0));
     let to = cell.or(near)?;
     Some((JobKind::Gather { spot, to }, 0, ItemKind::Firewood))
 }

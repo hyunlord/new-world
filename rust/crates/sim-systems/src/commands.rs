@@ -108,34 +108,62 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
             workshop,
             recipe,
             mode,
-        } => bill_command(world, res, workshop, |shop, next| {
-            let fits = recipe.recipe().is_some_and(|r| r.workshop == shop.kind);
-            if !fits {
-                return Err(RejectReason::WrongWorkshop);
+        } => {
+            // The auto-bills a player's firewood bill replaces (M2 review m1).
+            let replaced: Vec<BillId> = res
+                .colony
+                .workshops
+                .get(&workshop)
+                .filter(|_| recipe == RecipeKind::SplitFirewood)
+                .map_or(Vec::new(), |shop| {
+                    shop.bills.iter().filter(|b| b.auto).map(|b| b.id).collect()
+                });
+            let result = bill_command(world, res, workshop, |shop, next| {
+                let fits = recipe.recipe().is_some_and(|r| r.workshop == shop.kind);
+                if !fits {
+                    return Err(RejectReason::WrongWorkshop);
+                }
+                // A player's firewood bill replaces the hearth's auto-bill; player
+                // bills go before any auto-bill (M2 goal 3.8, DECISIONS D16).
+                if recipe == RecipeKind::SplitFirewood {
+                    shop.bills.retain(|b| !b.auto);
+                }
+                let at = shop
+                    .bills
+                    .iter()
+                    .position(|b| b.auto)
+                    .unwrap_or(shop.bills.len());
+                shop.bills.insert(
+                    at,
+                    Bill {
+                        id: next,
+                        recipe,
+                        mode,
+                        done: 0,
+                        suspended: false,
+                        auto: false,
+                    },
+                );
+                Ok(true)
+            });
+            if result.accepted && !replaced.is_empty() {
+                // Crafts and supplies of the replaced auto-bill go on under the
+                // new bill (same recipe), so no started craft loses its log.
+                let new_bill = res.colony.next_bill_id.saturating_sub(1);
+                let mut q = world.query::<&mut Job>();
+                for (_, job) in q.iter() {
+                    if let JobKind::Craft {
+                        workshop: w, bill, ..
+                    } = &mut job.kind
+                    {
+                        if *w == workshop && replaced.contains(bill) {
+                            *bill = new_bill;
+                        }
+                    }
+                }
             }
-            // A player's firewood bill replaces the hearth's auto-bill; player
-            // bills go before any auto-bill (M2 goal 3.8, DECISIONS D16).
-            if recipe == RecipeKind::SplitFirewood {
-                shop.bills.retain(|b| !b.auto);
-            }
-            let at = shop
-                .bills
-                .iter()
-                .position(|b| b.auto)
-                .unwrap_or(shop.bills.len());
-            shop.bills.insert(
-                at,
-                Bill {
-                    id: next,
-                    recipe,
-                    mode,
-                    done: 0,
-                    suspended: false,
-                    auto: false,
-                },
-            );
-            Ok(true)
-        }),
+            result
+        }
         Command::RemoveBill { workshop, bill } => {
             let result = bill_command(world, res, workshop, |shop, _| {
                 let before = shop.bills.len();
@@ -207,6 +235,10 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
             found.suspended = suspended;
             Ok(false)
         }),
+        // Priorities exist only with the economy (M2 review m6).
+        Command::SetWorkPriority { .. } if rule.economy.is_none() => {
+            CommandResult::rejected(RejectReason::NotYet)
+        }
         Command::SetWorkPriority { agent, work, level } => {
             set_work_priority(world, agent, work, level)
         }
@@ -364,10 +396,11 @@ fn cancel_area(world: &mut World, res: &mut SimResources, tiles: &[Tile]) -> usi
         for tile in site.tiles() {
             res.colony.occupied.remove(&tile);
         }
+        res.colony.site_work_tiles.remove(centre);
         let _ = world.despawn(*entity);
         for line in needs.used() {
             if line.delivered > 0 {
-                let spec = ItemSpec::raw(line.kind, None);
+                let spec = ItemSpec::raw(line.kind, line.material);
                 put_items(res, *centre, spec, line.delivered);
             }
         }
@@ -493,8 +526,12 @@ pub fn check_blueprint(
     x: u32,
     y: u32,
 ) -> Result<(), RejectReason> {
-    if res.rules.colony.is_none() {
+    let Some(rule) = res.rules.colony else {
         return Err(RejectReason::NoColony);
+    };
+    // Workshops exist only with the economy (M2 review m4).
+    if kind.is_workshop() && rule.economy.is_none() {
+        return Err(RejectReason::NotYet);
     }
     let site = footprint(res, kind, x, y)?;
     let tiles = site.tiles();
@@ -508,6 +545,7 @@ pub fn check_blueprint(
     let blocked = tiles.iter().any(|t| {
         terrain(res, *t) == Some(TerrainType::Mountain)
             || res.colony.trees.contains_key(t)
+            || res.colony.nodes.contains_key(t)
             || under_building(res, *t)
             || res.colony.zone_of_tile.contains_key(t)
             || reserved.contains(t)
@@ -519,6 +557,7 @@ pub fn check_blueprint(
         .workshops
         .values()
         .map(|shop| shop.work_tile())
+        .chain(res.colony.site_work_tiles.values().copied())
         .collect();
     if blocked || tiles.iter().any(|t| work_tiles.contains(t)) {
         return Err(RejectReason::Blocked);
@@ -555,6 +594,11 @@ fn place_blueprint(
     let (_, needs, progress) = kind.plan(rule);
     for tile in site.tiles() {
         res.colony.occupied.insert(tile, Occupant::Site(centre));
+    }
+    if kind.is_workshop() {
+        res.colony
+            .site_work_tiles
+            .insert(centre, work_tile_of(site.top_left, site.size));
     }
     // Loose logs under the new footprint move out (merge and spill, 7.4); none
     // of them is reserved (a reserved tile blocks the placement).

@@ -164,6 +164,10 @@ pub struct NeedLine {
     pub needed: u16,
     /// How many have been brought.
     pub delivered: u16,
+    /// The material of the first delivery (returned with the items when the
+    /// site is cancelled; M2 review m2).
+    #[serde(default)]
+    pub material: Option<MaterialId>,
 }
 
 /// Materials a colony construction site still needs (an ECS component next
@@ -184,11 +188,13 @@ impl MaterialNeeds {
                     kind,
                     needed,
                     delivered: 0,
+                    material: None,
                 },
                 NeedLine {
                     kind,
                     needed: 0,
                     delivered: 0,
+                    material: None,
                 },
             ],
         }
@@ -202,11 +208,13 @@ impl MaterialNeeds {
                     kind: a.0,
                     needed: a.1,
                     delivered: 0,
+                    material: None,
                 },
                 NeedLine {
                     kind: b.0,
                     needed: b.1,
                     delivered: 0,
+                    material: None,
                 },
             ],
         }
@@ -250,12 +258,21 @@ impl MaterialNeeds {
 
     /// Add up to `n` items of `kind`; returns how many were taken.
     pub fn deliver(&mut self, kind: ItemKind, n: u16) -> u16 {
+        self.deliver_spec(super::ItemSpec::raw(kind, None), n)
+    }
+
+    /// Add up to `n` items of `spec`; a line remembers its first delivery's
+    /// material. Returns how many were taken.
+    pub fn deliver_spec(&mut self, spec: super::ItemSpec, n: u16) -> u16 {
         let mut left = n;
         for line in self.lines.iter_mut() {
-            if line.kind == kind && line.needed > line.delivered {
+            if line.kind == spec.kind && line.needed > line.delivered {
                 let add = left.min(line.needed - line.delivered);
                 line.delivered += add;
                 left -= add;
+                if add > 0 && line.material.is_none() {
+                    line.material = spec.material;
+                }
             }
         }
         n - left

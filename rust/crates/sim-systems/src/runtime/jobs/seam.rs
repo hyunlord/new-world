@@ -91,7 +91,15 @@ fn may_yield(world: &World, res: &SimResources, entity: Entity) -> bool {
     let Some(rule) = res.rules.colony else {
         return true;
     };
-    let Some(margin) = rule.yield_margin_permille else {
+    // M2 (DECISIONS D13): a craft at work finishes before yielding to an
+    // urgent need (its inputs were consumed when it started); only a critical
+    // hunger or thirst takes the crafter away, whatever the margin rule.
+    let crafting = rule.economy.is_some()
+        && world.get::<&Job>(entity).is_ok_and(|j| {
+            matches!(j.kind, sim_core::colony::JobKind::Craft { .. })
+                && matches!(j.stage, JobStage::Working { .. })
+        });
+    let Some(margin) = rule.yield_margin_permille.or(crafting.then_some(0)) else {
         return true;
     };
     use crate::runtime::decision::needs as n;
@@ -109,18 +117,10 @@ fn may_yield(world: &World, res: &SimResources, entity: Entity) -> bool {
     if hunger >= critical || thirst >= critical {
         return true;
     }
-    let job = world.get::<&Job>(entity).ok().map(|job| *job);
-    // M2 (DECISIONS D13): a craft at work finishes before yielding to an
-    // urgent need (its inputs were consumed when it started); only a
-    // critical hunger or thirst (above) takes the crafter away.
-    if rule.economy.is_some()
-        && job.is_some_and(|j| {
-            matches!(j.kind, sim_core::colony::JobKind::Craft { .. })
-                && matches!(j.stage, JobStage::Working { .. })
-        })
-    {
+    if crafting {
         return false;
     }
+    let job = world.get::<&Job>(entity).ok().map(|job| *job);
     if let (Some(limit), Some(job), Ok(pos)) =
         (rule.finish_leg_tiles, job, world.get::<&Position>(entity))
     {
