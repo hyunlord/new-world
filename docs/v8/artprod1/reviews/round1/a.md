@@ -14,4 +14,3 @@ Visual problems:
 - Side-lying sleep silhouettes make sex presentation unclear even where activity is clear.
 
 Confidence is an overall qualitative reading, not a probability or accuracy score. Unknowns are intentional and remain in the JSON; notes preserve uncertain observations. Dataset eligibility was not used to infer character attributes.
-
