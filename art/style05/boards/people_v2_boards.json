@@ -1,0 +1,117 @@
+{
+  "operations": [
+    "crop",
+    "composition",
+    "caption outside art"
+  ],
+  "sources": [
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/captures-round2/people-meadow-1/capture.png",
+      "sha256": "454cd7e8b424950a99c1820edd5f849a3d85d424840e26bf08123b50f0e4a872",
+      "crop": [
+        320,
+        170,
+        960,
+        550
+      ],
+      "scale": 1,
+      "row_crops_2x": null
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/captures-round2/people-forest_floor-1/capture.png",
+      "sha256": "1fabf2d50bfdd66b360cef3a441204ab45441112dc7f7a6934da59690b4b15e1",
+      "crop": [
+        320,
+        170,
+        960,
+        550
+      ],
+      "scale": 1,
+      "row_crops_2x": null
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/captures-round2/people-meadow-2/capture.png",
+      "sha256": "f4f0737a128f3452960130cea751f1649e1a1b1610688beeded4863cf9eb8411",
+      "crop": [
+        0,
+        0,
+        1280,
+        720
+      ],
+      "scale": 1,
+      "row_crops_2x": [
+        [
+          0,
+          0,
+          1280,
+          160
+        ],
+        [
+          0,
+          300,
+          1280,
+          440
+        ],
+        [
+          0,
+          570,
+          1280,
+          720
+        ]
+      ]
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/captures-round2/people-forest_floor-2/capture.png",
+      "sha256": "0b80bb4d3161dd9e6549a5fa97f3f49aeebb3819cddeb084bbc92f17c2c53f72",
+      "crop": [
+        0,
+        0,
+        1280,
+        720
+      ],
+      "scale": 1,
+      "row_crops_2x": [
+        [
+          0,
+          0,
+          1280,
+          160
+        ],
+        [
+          0,
+          300,
+          1280,
+          440
+        ],
+        [
+          0,
+          570,
+          1280,
+          720
+        ]
+      ]
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/captures-round2/people-old-meadow-1/capture.png",
+      "sha256": "8b52e9e5875c65a707764d5480a61cb75ceaf6c9babdfab556d33a8fb57151d0",
+      "crop": [
+        320,
+        170,
+        960,
+        550
+      ],
+      "scale": 1
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/captures-round2/people-meadow-1/capture.png",
+      "sha256": "454cd7e8b424950a99c1820edd5f849a3d85d424840e26bf08123b50f0e4a872",
+      "crop": [
+        320,
+        170,
+        960,
+        550
+      ],
+      "scale": 1
+    }
+  ]
+}

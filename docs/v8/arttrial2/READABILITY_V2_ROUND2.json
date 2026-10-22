@@ -1,0 +1,3294 @@
+{
+  "round": 2,
+  "status": "FAIL",
+  "C5": "FAIL",
+  "G1": "FAIL",
+  "protocol": "READABILITY_V2_PROTOCOL.md",
+  "policy_source": "READABILITY.json",
+  "reviews": [
+    {
+      "reviewer": "blind_c",
+      "condition": "people-meadow-1",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/blind_c.json",
+      "source_sha256": "1d0f3050061fdbc176619e5162c3cbaf39eb2ef1e461d3917eff6482815c7989",
+      "capture": "/Users/rexxa/work/arttrial2-data/trial2b/captures-round2/people-meadow-1/capture.png",
+      "capture_sha256": "454cd7e8b424950a99c1820edd5f849a3d85d424840e26bf08123b50f0e4a872",
+      "answer_key": "/Users/rexxa/work/arttrial2-data/trial2b/captures-round2/people-meadow-1/answer_key.json",
+      "answer_key_sha256": "54878763e231e177d8d335d99ccece4d4db370fdd9bc96ffc6c65b5aa9a16ed4",
+      "runtime_sha256": "79783e104783ac9a6b85f3f0b1048a2b50dc66e3b1471c84fdf0468bbdd141f2",
+      "frozen_source_checks": {
+        "PersonComposer.gd": true,
+        "Camp.gd": true,
+        "wash_tint.gdshader": true
+      },
+      "frozen_person_hashes_match": true,
+      "capture_runtime_hash_match": true,
+      "source_hashes": {
+        "Camp.gd": "ff356170b42be05bc08131f31f475e01de46b510fe20857b5642aaa775d8b858",
+        "Companion.gd": "4381fd75fc2ed80f2d28069d0f57f1988f2924e58390752d98f3cbc6debe752c",
+        "PersonComposer.gd": "221e7cd554b2515773e2f7ded0d50da73d8cf876d4f86def0a54cd2e917e36a3",
+        "project.godot": "00fa4435fa564047a8d3afa5ba8f5fab5bfe5cc76d3910228c025454f7dcb1d3",
+        "scenes/camp.tscn": "a008c5486817b3a866ae159199a42cdc5d66ac00ce2aa01c5513e887c0b9610b",
+        "season.gdshader": "99db3e70da741485cb80a53ae3379018aae7a16acc6088f174249f83d6ee46e4",
+        "tint_mask.gdshader": "c32f8af1fd3d5f6ad803e0211c9a6fd331b95e62af9c9a4e4008272f5c74fb74",
+        "wash_tint.gdshader": "fa33d08a6d6c481e6792da905b992875afee121d0b4374a090bc1db399770fdd"
+      },
+      "activity_carry": 6,
+      "activity_threshold": 8,
+      "attributes": 18,
+      "attribute_subscores": {
+        "sex": 3,
+        "age": 8,
+        "item": 7
+      },
+      "passed": false,
+      "rows": [
+        {
+          "index": 1,
+          "verbatim": {
+            "figure": 1,
+            "activity": "Standing with arms close to the body.",
+            "carrying": "no",
+            "presentation": "male",
+            "age": "adult",
+            "held_item": "none",
+            "evidence": "Upright tan-clothed figure with a yellow cap; no separate object is apparent."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "south",
+            "hair": "short",
+            "hat": true,
+            "held": "none",
+            "phase": 0.0,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "idle",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "idle",
+          "activity_and_carry_correct": true,
+          "normalized_item": "none",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 2,
+          "verbatim": {
+            "figure": 2,
+            "activity": "Walking or running away from the viewer.",
+            "carrying": "no",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "none",
+            "evidence": "Dark tied-back hair, green clothing, spread legs and outstretched empty-looking arms."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": false,
+            "held": "none",
+            "phase": 0.125,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "walk",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false,
+          "normalized_item": "none",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 3,
+          "verbatim": {
+            "figure": 3,
+            "activity": "Holding a tool overhead; possibly preparing a swing.",
+            "carrying": "yes",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "axe",
+            "evidence": "Long hair and skirt-like clothing; a pale wedge on a brown handle extends above raised arms."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "west",
+            "hair": "braided",
+            "hat": false,
+            "held": "stone_axe",
+            "phase": 0.25,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "chop",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false,
+          "normalized_item": "stone_axe",
+          "sex_correct": true,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 4,
+          "verbatim": {
+            "figure": 4,
+            "activity": "Standing while holding a bundle across the chest.",
+            "carrying": "yes",
+            "presentation": "male",
+            "age": "adult",
+            "held_item": "logs",
+            "evidence": "Short dark hair and two arms around a wide brown horizontal object with round ends."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "south",
+            "hair": "short",
+            "hat": false,
+            "held": "log_bundle",
+            "phase": 0.375,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "carry",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "carry",
+          "activity_and_carry_correct": true,
+          "normalized_item": "log_bundle",
+          "sex_correct": true,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 5,
+          "verbatim": {
+            "figure": 5,
+            "activity": "Lying horizontally on the ground.",
+            "carrying": "no",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "none",
+            "evidence": "Green-clothed body is sideways, feet left and dark-haired head right; no object is visible."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": false,
+            "held": "none",
+            "phase": 0.5,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "sleep",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "sleep",
+          "activity_and_carry_correct": true,
+          "normalized_item": "none",
+          "sex_correct": true,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 6,
+          "verbatim": {
+            "figure": 6,
+            "activity": "Standing with hands near the waist.",
+            "carrying": "unclear",
+            "presentation": "unclear",
+            "age": "adult",
+            "held_item": "unclear",
+            "evidence": "Yellow head covering, long side strands and pink skirt-like garment; a pale patch at the waist is too small to identify."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "west",
+            "hair": "braided",
+            "hat": true,
+            "held": "knapping_stones",
+            "phase": 0.625,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "knap",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "idle",
+          "activity_and_carry_correct": false,
+          "normalized_item": "unknown",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": false
+        },
+        {
+          "index": 7,
+          "verbatim": {
+            "figure": 7,
+            "activity": "Walking or running.",
+            "carrying": "no",
+            "presentation": "male",
+            "age": "child",
+            "held_item": "none",
+            "evidence": "Noticeably smaller short-haired figure with legs apart and arms angled outward."
+          },
+          "expected": {
+            "age": "child",
+            "facing": "south",
+            "hair": "short",
+            "hat": false,
+            "held": "none",
+            "phase": 0.75,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "walk",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false,
+          "normalized_item": "none",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 8,
+          "verbatim": {
+            "figure": 8,
+            "activity": "Walking or running while holding something at one side.",
+            "carrying": "yes",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "basket",
+            "evidence": "Back-facing green-clothed figure has spread legs and a round orange woven-looking object beside one hand."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": false,
+            "held": "berry_basket",
+            "phase": 0.875,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "carry",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "carry",
+          "activity_and_carry_correct": true,
+          "normalized_item": "berry_basket",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 9,
+          "verbatim": {
+            "figure": 9,
+            "activity": "Lying horizontally on the ground.",
+            "carrying": "no",
+            "evidence": "Pink-clothed figure has its head left and feet right, with no visible separate object."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "west",
+            "hair": "braided",
+            "hat": false,
+            "held": "none",
+            "phase": 0.0,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "sleep",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "sleep",
+          "activity_and_carry_correct": true
+        },
+        {
+          "index": 10,
+          "verbatim": {
+            "figure": 10,
+            "activity": "Standing.",
+            "carrying": "no",
+            "evidence": "Small upright figure with hands near the body and no discernible held object."
+          },
+          "expected": {
+            "age": "child",
+            "facing": "south",
+            "hair": "short",
+            "hat": false,
+            "held": "none",
+            "phase": 0.125,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "idle",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "idle",
+          "activity_and_carry_correct": true
+        },
+        {
+          "index": 11,
+          "verbatim": {
+            "figure": 11,
+            "activity": "Raising a tool overhead, possibly preparing a swing.",
+            "carrying": "yes",
+            "evidence": "Back-facing green-clothed figure has arms raised around a brown handle and pale angled head."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": true,
+            "held": "stone_axe",
+            "phase": 0.25,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "chop",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false
+        },
+        {
+          "index": 12,
+          "verbatim": {
+            "figure": 12,
+            "activity": "Standing or stepping with a walking stick.",
+            "carrying": "yes",
+            "evidence": "White-haired figure in pink holds a thin brown stick angled down to the ground."
+          },
+          "expected": {
+            "age": "elder",
+            "facing": "west",
+            "hair": "braided",
+            "hat": false,
+            "held": "none",
+            "phase": 0.375,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "walk",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false
+        }
+      ],
+      "G1_deltas_against_historical_6_and_4": [
+        0,
+        2
+      ],
+      "G1_passed": false
+    },
+    {
+      "reviewer": "blind_c",
+      "condition": "people-meadow-2",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/blind_c.json",
+      "source_sha256": "1d0f3050061fdbc176619e5162c3cbaf39eb2ef1e461d3917eff6482815c7989",
+      "capture": "/Users/rexxa/work/arttrial2-data/trial2b/captures-round2/people-meadow-2/capture.png",
+      "capture_sha256": "f4f0737a128f3452960130cea751f1649e1a1b1610688beeded4863cf9eb8411",
+      "answer_key": "/Users/rexxa/work/arttrial2-data/trial2b/captures-round2/people-meadow-2/answer_key.json",
+      "answer_key_sha256": "54878763e231e177d8d335d99ccece4d4db370fdd9bc96ffc6c65b5aa9a16ed4",
+      "runtime_sha256": "cd669e8b02c6dd0c55fac2dde8b169c8f5810e40d3839daeef6ce859f5b009e8",
+      "frozen_source_checks": {
+        "PersonComposer.gd": true,
+        "Camp.gd": true,
+        "wash_tint.gdshader": true
+      },
+      "frozen_person_hashes_match": true,
+      "capture_runtime_hash_match": true,
+      "source_hashes": {
+        "Camp.gd": "ff356170b42be05bc08131f31f475e01de46b510fe20857b5642aaa775d8b858",
+        "Companion.gd": "4381fd75fc2ed80f2d28069d0f57f1988f2924e58390752d98f3cbc6debe752c",
+        "PersonComposer.gd": "221e7cd554b2515773e2f7ded0d50da73d8cf876d4f86def0a54cd2e917e36a3",
+        "project.godot": "00fa4435fa564047a8d3afa5ba8f5fab5bfe5cc76d3910228c025454f7dcb1d3",
+        "scenes/camp.tscn": "a008c5486817b3a866ae159199a42cdc5d66ac00ce2aa01c5513e887c0b9610b",
+        "season.gdshader": "99db3e70da741485cb80a53ae3379018aae7a16acc6088f174249f83d6ee46e4",
+        "tint_mask.gdshader": "c32f8af1fd3d5f6ad803e0211c9a6fd331b95e62af9c9a4e4008272f5c74fb74",
+        "wash_tint.gdshader": "fa33d08a6d6c481e6792da905b992875afee121d0b4374a090bc1db399770fdd"
+      },
+      "activity_carry": 6,
+      "activity_threshold": 10,
+      "attributes": 18,
+      "attribute_subscores": {
+        "sex": 3,
+        "age": 8,
+        "item": 7
+      },
+      "passed": false,
+      "rows": [
+        {
+          "index": 1,
+          "verbatim": {
+            "figure": 1,
+            "activity": "Standing with arms resting near the sides.",
+            "carrying": "no",
+            "presentation": "male",
+            "age": "adult",
+            "held_item": "none",
+            "evidence": "Yellow cap, short hair, tan tunic and trousers; hands do not contain a distinct object."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "south",
+            "hair": "short",
+            "hat": true,
+            "held": "none",
+            "phase": 0.0,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "idle",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "idle",
+          "activity_and_carry_correct": true,
+          "normalized_item": "none",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 2,
+          "verbatim": {
+            "figure": 2,
+            "activity": "Running or taking a wide stride away from the viewer.",
+            "carrying": "no",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "none",
+            "evidence": "Ponytail and ragged green garment; one foot extends left, the other right, and both hands appear empty."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": false,
+            "held": "none",
+            "phase": 0.125,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "walk",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false,
+          "normalized_item": "none",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 3,
+          "verbatim": {
+            "figure": 3,
+            "activity": "Holding an axe overhead in a raised working pose.",
+            "carrying": "yes",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "axe",
+            "evidence": "Orange braids and pink skirt; both hands grip a long shaft with a broad gray stone head above the face."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "west",
+            "hair": "braided",
+            "hat": false,
+            "held": "stone_axe",
+            "phase": 0.25,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "chop",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false,
+          "normalized_item": "stone_axe",
+          "sex_correct": true,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 4,
+          "verbatim": {
+            "figure": 4,
+            "activity": "Standing and holding logs across the torso.",
+            "carrying": "yes",
+            "presentation": "male",
+            "age": "adult",
+            "held_item": "bundle of logs",
+            "evidence": "Short brown hair, tan clothing and hands bracing several horizontal cylinders with visible round cut ends."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "south",
+            "hair": "short",
+            "hat": false,
+            "held": "log_bundle",
+            "phase": 0.375,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "carry",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "carry",
+          "activity_and_carry_correct": true,
+          "normalized_item": "log_bundle",
+          "sex_correct": true,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 5,
+          "verbatim": {
+            "figure": 5,
+            "activity": "Lying on the ground with eyes apparently closed.",
+            "carrying": "no",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "none",
+            "evidence": "Ponytailed green-clothed figure lies horizontally with hands near its torso and no separate held item."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": false,
+            "held": "none",
+            "phase": 0.5,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "sleep",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "sleep",
+          "activity_and_carry_correct": true,
+          "normalized_item": "none",
+          "sex_correct": true,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 6,
+          "verbatim": {
+            "figure": 6,
+            "activity": "Standing with hands together at the waist.",
+            "carrying": "unclear",
+            "presentation": "unclear",
+            "age": "adult",
+            "held_item": "unclear",
+            "evidence": "Yellow cap, orange side braids and pink skirt; dark lower face and a pale rounded shape between the hands make presentation and the waist object ambiguous."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "west",
+            "hair": "braided",
+            "hat": true,
+            "held": "knapping_stones",
+            "phase": 0.625,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "knap",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "idle",
+          "activity_and_carry_correct": false,
+          "normalized_item": "unknown",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": false
+        },
+        {
+          "index": 7,
+          "verbatim": {
+            "figure": 7,
+            "activity": "Running or taking a wide step.",
+            "carrying": "no",
+            "presentation": "male",
+            "age": "child",
+            "held_item": "none",
+            "evidence": "Short brown hair, smaller body, bare-looking lower legs and spread arms; hands are visibly empty."
+          },
+          "expected": {
+            "age": "child",
+            "facing": "south",
+            "hair": "short",
+            "hat": false,
+            "held": "none",
+            "phase": 0.75,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "walk",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false,
+          "normalized_item": "none",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 8,
+          "verbatim": {
+            "figure": 8,
+            "activity": "Running away while carrying a basket.",
+            "carrying": "yes",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "basket containing red objects",
+            "evidence": "Ponytail and green clothing, wide stride and an orange woven basket with red contents hanging beside the left side of the image."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": false,
+            "held": "berry_basket",
+            "phase": 0.875,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "carry",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "carry",
+          "activity_and_carry_correct": true,
+          "normalized_item": "berry_basket",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 9,
+          "verbatim": {
+            "figure": 9,
+            "activity": "Lying on the ground with eyes closed.",
+            "carrying": "no",
+            "evidence": "Orange-haired pink-clothed body lies sideways with head left, feet right, and hands against the torso."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "west",
+            "hair": "braided",
+            "hat": false,
+            "held": "none",
+            "phase": 0.0,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "sleep",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "sleep",
+          "activity_and_carry_correct": true
+        },
+        {
+          "index": 10,
+          "verbatim": {
+            "figure": 10,
+            "activity": "Standing with arms close to the body.",
+            "carrying": "no",
+            "evidence": "Small short-haired figure stands with feet slightly separated and no distinct object in its hands."
+          },
+          "expected": {
+            "age": "child",
+            "facing": "south",
+            "hair": "short",
+            "hat": false,
+            "held": "none",
+            "phase": 0.125,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "idle",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "idle",
+          "activity_and_carry_correct": true
+        },
+        {
+          "index": 11,
+          "verbatim": {
+            "figure": 11,
+            "activity": "Raising an axe overhead.",
+            "carrying": "yes",
+            "evidence": "Green-clothed back-facing figure grips a shaft above the head; a broad gray blade projects to the upper left."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": true,
+            "held": "stone_axe",
+            "phase": 0.25,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "chop",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false
+        },
+        {
+          "index": 12,
+          "verbatim": {
+            "figure": 12,
+            "activity": "Standing or stepping while using a cane.",
+            "carrying": "yes",
+            "evidence": "White-haired pink-clothed figure holds a hooked brown cane that reaches the ground on the right."
+          },
+          "expected": {
+            "age": "elder",
+            "facing": "west",
+            "hair": "braided",
+            "hat": false,
+            "held": "none",
+            "phase": 0.375,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "walk",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false
+        }
+      ]
+    },
+    {
+      "reviewer": "blind_c",
+      "condition": "people-forest_floor-1",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/blind_c.json",
+      "source_sha256": "1d0f3050061fdbc176619e5162c3cbaf39eb2ef1e461d3917eff6482815c7989",
+      "capture": "/Users/rexxa/work/arttrial2-data/trial2b/captures-round2/people-forest_floor-1/capture.png",
+      "capture_sha256": "1fabf2d50bfdd66b360cef3a441204ab45441112dc7f7a6934da59690b4b15e1",
+      "answer_key": "/Users/rexxa/work/arttrial2-data/trial2b/captures-round2/people-forest_floor-1/answer_key.json",
+      "answer_key_sha256": "54878763e231e177d8d335d99ccece4d4db370fdd9bc96ffc6c65b5aa9a16ed4",
+      "runtime_sha256": "5844722ceeadcf1f92e6b937f494101cbdf51fb1ffa8f683e4b4bb85cf934e1c",
+      "frozen_source_checks": {
+        "PersonComposer.gd": true,
+        "Camp.gd": true,
+        "wash_tint.gdshader": true
+      },
+      "frozen_person_hashes_match": true,
+      "capture_runtime_hash_match": true,
+      "source_hashes": {
+        "Camp.gd": "ff356170b42be05bc08131f31f475e01de46b510fe20857b5642aaa775d8b858",
+        "Companion.gd": "4381fd75fc2ed80f2d28069d0f57f1988f2924e58390752d98f3cbc6debe752c",
+        "PersonComposer.gd": "221e7cd554b2515773e2f7ded0d50da73d8cf876d4f86def0a54cd2e917e36a3",
+        "project.godot": "00fa4435fa564047a8d3afa5ba8f5fab5bfe5cc76d3910228c025454f7dcb1d3",
+        "scenes/camp.tscn": "a008c5486817b3a866ae159199a42cdc5d66ac00ce2aa01c5513e887c0b9610b",
+        "season.gdshader": "99db3e70da741485cb80a53ae3379018aae7a16acc6088f174249f83d6ee46e4",
+        "tint_mask.gdshader": "c32f8af1fd3d5f6ad803e0211c9a6fd331b95e62af9c9a4e4008272f5c74fb74",
+        "wash_tint.gdshader": "fa33d08a6d6c481e6792da905b992875afee121d0b4374a090bc1db399770fdd"
+      },
+      "activity_carry": 6,
+      "activity_threshold": 8,
+      "attributes": 18,
+      "attribute_subscores": {
+        "sex": 3,
+        "age": 8,
+        "item": 7
+      },
+      "passed": false,
+      "rows": [
+        {
+          "index": 1,
+          "verbatim": {
+            "figure": 1,
+            "activity": "Standing with arms close to the body.",
+            "carrying": "no",
+            "presentation": "male",
+            "age": "adult",
+            "held_item": "none",
+            "evidence": "Upright tan-clothed figure with a yellow cap; no separate object is apparent."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "south",
+            "hair": "short",
+            "hat": true,
+            "held": "none",
+            "phase": 0.0,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "idle",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "idle",
+          "activity_and_carry_correct": true,
+          "normalized_item": "none",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 2,
+          "verbatim": {
+            "figure": 2,
+            "activity": "Walking or running away from the viewer.",
+            "carrying": "no",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "none",
+            "evidence": "Dark tied-back hair, green clothing, spread legs and outstretched empty-looking arms."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": false,
+            "held": "none",
+            "phase": 0.125,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "walk",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false,
+          "normalized_item": "none",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 3,
+          "verbatim": {
+            "figure": 3,
+            "activity": "Holding a tool overhead; possibly preparing a swing.",
+            "carrying": "yes",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "axe",
+            "evidence": "Long hair and skirt-like clothing; a pale wedge on a brown handle extends above raised arms."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "west",
+            "hair": "braided",
+            "hat": false,
+            "held": "stone_axe",
+            "phase": 0.25,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "chop",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false,
+          "normalized_item": "stone_axe",
+          "sex_correct": true,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 4,
+          "verbatim": {
+            "figure": 4,
+            "activity": "Standing while holding a bundle across the chest.",
+            "carrying": "yes",
+            "presentation": "male",
+            "age": "adult",
+            "held_item": "logs",
+            "evidence": "Short dark hair and two arms around a wide brown horizontal object with round ends."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "south",
+            "hair": "short",
+            "hat": false,
+            "held": "log_bundle",
+            "phase": 0.375,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "carry",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "carry",
+          "activity_and_carry_correct": true,
+          "normalized_item": "log_bundle",
+          "sex_correct": true,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 5,
+          "verbatim": {
+            "figure": 5,
+            "activity": "Lying horizontally on the ground.",
+            "carrying": "no",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "none",
+            "evidence": "Green-clothed body is sideways, feet left and dark-haired head right; no object is visible."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": false,
+            "held": "none",
+            "phase": 0.5,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "sleep",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "sleep",
+          "activity_and_carry_correct": true,
+          "normalized_item": "none",
+          "sex_correct": true,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 6,
+          "verbatim": {
+            "figure": 6,
+            "activity": "Standing with hands near the waist.",
+            "carrying": "unclear",
+            "presentation": "unclear",
+            "age": "adult",
+            "held_item": "unclear",
+            "evidence": "Yellow head covering, long side strands and pink skirt-like garment; a pale patch at the waist is too small to identify."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "west",
+            "hair": "braided",
+            "hat": true,
+            "held": "knapping_stones",
+            "phase": 0.625,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "knap",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "idle",
+          "activity_and_carry_correct": false,
+          "normalized_item": "unknown",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": false
+        },
+        {
+          "index": 7,
+          "verbatim": {
+            "figure": 7,
+            "activity": "Walking or running.",
+            "carrying": "no",
+            "presentation": "male",
+            "age": "child",
+            "held_item": "none",
+            "evidence": "Noticeably smaller short-haired figure with legs apart and arms angled outward."
+          },
+          "expected": {
+            "age": "child",
+            "facing": "south",
+            "hair": "short",
+            "hat": false,
+            "held": "none",
+            "phase": 0.75,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "walk",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false,
+          "normalized_item": "none",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 8,
+          "verbatim": {
+            "figure": 8,
+            "activity": "Walking or running while holding something at one side.",
+            "carrying": "yes",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "basket",
+            "evidence": "Back-facing green-clothed figure has spread legs and a round orange woven-looking object beside one hand."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": false,
+            "held": "berry_basket",
+            "phase": 0.875,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "carry",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "carry",
+          "activity_and_carry_correct": true,
+          "normalized_item": "berry_basket",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 9,
+          "verbatim": {
+            "figure": 9,
+            "activity": "Lying horizontally on the ground.",
+            "carrying": "no",
+            "evidence": "Pink-clothed figure has its head left and feet right, with no visible separate object."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "west",
+            "hair": "braided",
+            "hat": false,
+            "held": "none",
+            "phase": 0.0,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "sleep",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "sleep",
+          "activity_and_carry_correct": true
+        },
+        {
+          "index": 10,
+          "verbatim": {
+            "figure": 10,
+            "activity": "Standing.",
+            "carrying": "no",
+            "evidence": "Small upright figure with hands near the body and no discernible held object."
+          },
+          "expected": {
+            "age": "child",
+            "facing": "south",
+            "hair": "short",
+            "hat": false,
+            "held": "none",
+            "phase": 0.125,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "idle",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "idle",
+          "activity_and_carry_correct": true
+        },
+        {
+          "index": 11,
+          "verbatim": {
+            "figure": 11,
+            "activity": "Raising a tool overhead, possibly preparing a swing.",
+            "carrying": "yes",
+            "evidence": "Back-facing green-clothed figure has arms raised around a brown handle and pale angled head."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": true,
+            "held": "stone_axe",
+            "phase": 0.25,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "chop",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false
+        },
+        {
+          "index": 12,
+          "verbatim": {
+            "figure": 12,
+            "activity": "Standing or stepping with a walking stick.",
+            "carrying": "yes",
+            "evidence": "White-haired figure in pink holds a thin brown stick angled down to the ground."
+          },
+          "expected": {
+            "age": "elder",
+            "facing": "west",
+            "hair": "braided",
+            "hat": false,
+            "held": "none",
+            "phase": 0.375,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "walk",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false
+        }
+      ],
+      "G1_deltas_against_historical_6_and_4": [
+        0,
+        2
+      ],
+      "G1_passed": false
+    },
+    {
+      "reviewer": "blind_c",
+      "condition": "people-forest_floor-2",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/blind_c.json",
+      "source_sha256": "1d0f3050061fdbc176619e5162c3cbaf39eb2ef1e461d3917eff6482815c7989",
+      "capture": "/Users/rexxa/work/arttrial2-data/trial2b/captures-round2/people-forest_floor-2/capture.png",
+      "capture_sha256": "0b80bb4d3161dd9e6549a5fa97f3f49aeebb3819cddeb084bbc92f17c2c53f72",
+      "answer_key": "/Users/rexxa/work/arttrial2-data/trial2b/captures-round2/people-forest_floor-2/answer_key.json",
+      "answer_key_sha256": "54878763e231e177d8d335d99ccece4d4db370fdd9bc96ffc6c65b5aa9a16ed4",
+      "runtime_sha256": "3f94b7f02c63f593f5660690e9813ea2c71ac17c2f7369ab70dc666f71ffa7c0",
+      "frozen_source_checks": {
+        "PersonComposer.gd": true,
+        "Camp.gd": true,
+        "wash_tint.gdshader": true
+      },
+      "frozen_person_hashes_match": true,
+      "capture_runtime_hash_match": true,
+      "source_hashes": {
+        "Camp.gd": "ff356170b42be05bc08131f31f475e01de46b510fe20857b5642aaa775d8b858",
+        "Companion.gd": "4381fd75fc2ed80f2d28069d0f57f1988f2924e58390752d98f3cbc6debe752c",
+        "PersonComposer.gd": "221e7cd554b2515773e2f7ded0d50da73d8cf876d4f86def0a54cd2e917e36a3",
+        "project.godot": "00fa4435fa564047a8d3afa5ba8f5fab5bfe5cc76d3910228c025454f7dcb1d3",
+        "scenes/camp.tscn": "a008c5486817b3a866ae159199a42cdc5d66ac00ce2aa01c5513e887c0b9610b",
+        "season.gdshader": "99db3e70da741485cb80a53ae3379018aae7a16acc6088f174249f83d6ee46e4",
+        "tint_mask.gdshader": "c32f8af1fd3d5f6ad803e0211c9a6fd331b95e62af9c9a4e4008272f5c74fb74",
+        "wash_tint.gdshader": "fa33d08a6d6c481e6792da905b992875afee121d0b4374a090bc1db399770fdd"
+      },
+      "activity_carry": 6,
+      "activity_threshold": 10,
+      "attributes": 18,
+      "attribute_subscores": {
+        "sex": 3,
+        "age": 8,
+        "item": 7
+      },
+      "passed": false,
+      "rows": [
+        {
+          "index": 1,
+          "verbatim": {
+            "figure": 1,
+            "activity": "Standing with arms resting near the sides.",
+            "carrying": "no",
+            "presentation": "male",
+            "age": "adult",
+            "held_item": "none",
+            "evidence": "Yellow cap, short hair, tan tunic and trousers; hands do not contain a distinct object."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "south",
+            "hair": "short",
+            "hat": true,
+            "held": "none",
+            "phase": 0.0,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "idle",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "idle",
+          "activity_and_carry_correct": true,
+          "normalized_item": "none",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 2,
+          "verbatim": {
+            "figure": 2,
+            "activity": "Running or taking a wide stride away from the viewer.",
+            "carrying": "no",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "none",
+            "evidence": "Ponytail and ragged green garment; one foot extends left, the other right, and both hands appear empty."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": false,
+            "held": "none",
+            "phase": 0.125,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "walk",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false,
+          "normalized_item": "none",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 3,
+          "verbatim": {
+            "figure": 3,
+            "activity": "Holding an axe overhead in a raised working pose.",
+            "carrying": "yes",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "axe",
+            "evidence": "Orange braids and pink skirt; both hands grip a long shaft with a broad gray stone head above the face."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "west",
+            "hair": "braided",
+            "hat": false,
+            "held": "stone_axe",
+            "phase": 0.25,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "chop",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false,
+          "normalized_item": "stone_axe",
+          "sex_correct": true,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 4,
+          "verbatim": {
+            "figure": 4,
+            "activity": "Standing and holding logs across the torso.",
+            "carrying": "yes",
+            "presentation": "male",
+            "age": "adult",
+            "held_item": "bundle of logs",
+            "evidence": "Short brown hair, tan clothing and hands bracing several horizontal cylinders with visible round cut ends."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "south",
+            "hair": "short",
+            "hat": false,
+            "held": "log_bundle",
+            "phase": 0.375,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "carry",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "carry",
+          "activity_and_carry_correct": true,
+          "normalized_item": "log_bundle",
+          "sex_correct": true,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 5,
+          "verbatim": {
+            "figure": 5,
+            "activity": "Lying on the ground with eyes apparently closed.",
+            "carrying": "no",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "none",
+            "evidence": "Ponytailed green-clothed figure lies horizontally with hands near its torso and no separate held item."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": false,
+            "held": "none",
+            "phase": 0.5,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "sleep",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "sleep",
+          "activity_and_carry_correct": true,
+          "normalized_item": "none",
+          "sex_correct": true,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 6,
+          "verbatim": {
+            "figure": 6,
+            "activity": "Standing with hands together at the waist.",
+            "carrying": "unclear",
+            "presentation": "unclear",
+            "age": "adult",
+            "held_item": "unclear",
+            "evidence": "Yellow cap, orange side braids and pink skirt; dark lower face and a pale rounded shape between the hands make presentation and the waist object ambiguous."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "west",
+            "hair": "braided",
+            "hat": true,
+            "held": "knapping_stones",
+            "phase": 0.625,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "knap",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "idle",
+          "activity_and_carry_correct": false,
+          "normalized_item": "unknown",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": false
+        },
+        {
+          "index": 7,
+          "verbatim": {
+            "figure": 7,
+            "activity": "Running or taking a wide step.",
+            "carrying": "no",
+            "presentation": "male",
+            "age": "child",
+            "held_item": "none",
+            "evidence": "Short brown hair, smaller body, bare-looking lower legs and spread arms; hands are visibly empty."
+          },
+          "expected": {
+            "age": "child",
+            "facing": "south",
+            "hair": "short",
+            "hat": false,
+            "held": "none",
+            "phase": 0.75,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "walk",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false,
+          "normalized_item": "none",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 8,
+          "verbatim": {
+            "figure": 8,
+            "activity": "Running away while carrying a basket.",
+            "carrying": "yes",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "basket containing red objects",
+            "evidence": "Ponytail and green clothing, wide stride and an orange woven basket with red contents hanging beside the left side of the image."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": false,
+            "held": "berry_basket",
+            "phase": 0.875,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "carry",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "carry",
+          "activity_and_carry_correct": true,
+          "normalized_item": "berry_basket",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 9,
+          "verbatim": {
+            "figure": 9,
+            "activity": "Lying on the ground with eyes closed.",
+            "carrying": "no",
+            "evidence": "Orange-haired pink-clothed body lies sideways with head left, feet right, and hands against the torso."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "west",
+            "hair": "braided",
+            "hat": false,
+            "held": "none",
+            "phase": 0.0,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "sleep",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "sleep",
+          "activity_and_carry_correct": true
+        },
+        {
+          "index": 10,
+          "verbatim": {
+            "figure": 10,
+            "activity": "Standing with arms close to the body.",
+            "carrying": "no",
+            "evidence": "Small short-haired figure stands with feet slightly separated and no distinct object in its hands."
+          },
+          "expected": {
+            "age": "child",
+            "facing": "south",
+            "hair": "short",
+            "hat": false,
+            "held": "none",
+            "phase": 0.125,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "idle",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "idle",
+          "activity_and_carry_correct": true
+        },
+        {
+          "index": 11,
+          "verbatim": {
+            "figure": 11,
+            "activity": "Raising an axe overhead.",
+            "carrying": "yes",
+            "evidence": "Green-clothed back-facing figure grips a shaft above the head; a broad gray blade projects to the upper left."
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": true,
+            "held": "stone_axe",
+            "phase": 0.25,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "chop",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false
+        },
+        {
+          "index": 12,
+          "verbatim": {
+            "figure": 12,
+            "activity": "Standing or stepping while using a cane.",
+            "carrying": "yes",
+            "evidence": "White-haired pink-clothed figure holds a hooked brown cane that reaches the ground on the right."
+          },
+          "expected": {
+            "age": "elder",
+            "facing": "west",
+            "hair": "braided",
+            "hat": false,
+            "held": "none",
+            "phase": 0.375,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "walk",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false
+        }
+      ]
+    },
+    {
+      "reviewer": "blind_d",
+      "condition": "people-meadow-1",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/blind_d.json",
+      "source_sha256": "837104635ea237f448cec0f80a0605bf88a7eccb5d4b1b4a46530d50f20be287",
+      "capture": "/Users/rexxa/work/arttrial2-data/trial2b/captures-round2/people-meadow-1/capture.png",
+      "capture_sha256": "454cd7e8b424950a99c1820edd5f849a3d85d424840e26bf08123b50f0e4a872",
+      "answer_key": "/Users/rexxa/work/arttrial2-data/trial2b/captures-round2/people-meadow-1/answer_key.json",
+      "answer_key_sha256": "54878763e231e177d8d335d99ccece4d4db370fdd9bc96ffc6c65b5aa9a16ed4",
+      "runtime_sha256": "79783e104783ac9a6b85f3f0b1048a2b50dc66e3b1471c84fdf0468bbdd141f2",
+      "frozen_source_checks": {
+        "PersonComposer.gd": true,
+        "Camp.gd": true,
+        "wash_tint.gdshader": true
+      },
+      "frozen_person_hashes_match": true,
+      "capture_runtime_hash_match": true,
+      "source_hashes": {
+        "Camp.gd": "ff356170b42be05bc08131f31f475e01de46b510fe20857b5642aaa775d8b858",
+        "Companion.gd": "4381fd75fc2ed80f2d28069d0f57f1988f2924e58390752d98f3cbc6debe752c",
+        "PersonComposer.gd": "221e7cd554b2515773e2f7ded0d50da73d8cf876d4f86def0a54cd2e917e36a3",
+        "project.godot": "00fa4435fa564047a8d3afa5ba8f5fab5bfe5cc76d3910228c025454f7dcb1d3",
+        "scenes/camp.tscn": "a008c5486817b3a866ae159199a42cdc5d66ac00ce2aa01c5513e887c0b9610b",
+        "season.gdshader": "99db3e70da741485cb80a53ae3379018aae7a16acc6088f174249f83d6ee46e4",
+        "tint_mask.gdshader": "c32f8af1fd3d5f6ad803e0211c9a6fd331b95e62af9c9a4e4008272f5c74fb74",
+        "wash_tint.gdshader": "fa33d08a6d6c481e6792da905b992875afee121d0b4374a090bc1db399770fdd"
+      },
+      "activity_carry": 8,
+      "activity_threshold": 8,
+      "attributes": 17,
+      "attribute_subscores": {
+        "sex": 2,
+        "age": 8,
+        "item": 7
+      },
+      "passed": false,
+      "rows": [
+        {
+          "index": 1,
+          "verbatim": {
+            "image": "people-meadow-1",
+            "figure": 1,
+            "activity": "Standing with arms down.",
+            "carrying": "no",
+            "presentation": "male",
+            "age": "adult",
+            "held_item": "none"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "south",
+            "hair": "short",
+            "hat": true,
+            "held": "none",
+            "phase": 0.0,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "idle",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "idle",
+          "activity_and_carry_correct": true,
+          "normalized_item": "none",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 2,
+          "verbatim": {
+            "image": "people-meadow-1",
+            "figure": 2,
+            "activity": "Striding away with arms spread.",
+            "carrying": "no",
+            "presentation": "unclear",
+            "age": "adult",
+            "held_item": "none"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": false,
+            "held": "none",
+            "phase": 0.125,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "walk",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "walk",
+          "activity_and_carry_correct": true,
+          "normalized_item": "none",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 3,
+          "verbatim": {
+            "image": "people-meadow-1",
+            "figure": 3,
+            "activity": "Holding a long object above the head, possibly preparing a swing.",
+            "carrying": "yes",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "axe"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "west",
+            "hair": "braided",
+            "hat": false,
+            "held": "stone_axe",
+            "phase": 0.25,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "chop",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false,
+          "normalized_item": "stone_axe",
+          "sex_correct": true,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 4,
+          "verbatim": {
+            "image": "people-meadow-1",
+            "figure": 4,
+            "activity": "Standing with a bulky brown bundle across the chest.",
+            "carrying": "yes",
+            "presentation": "male",
+            "age": "adult",
+            "held_item": "bundle of wood"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "south",
+            "hair": "short",
+            "hat": false,
+            "held": "log_bundle",
+            "phase": 0.375,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "carry",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "carry",
+          "activity_and_carry_correct": true,
+          "normalized_item": "log_bundle",
+          "sex_correct": true,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 5,
+          "verbatim": {
+            "image": "people-meadow-1",
+            "figure": 5,
+            "activity": "Lying horizontally on the ground.",
+            "carrying": "no",
+            "presentation": "unclear",
+            "age": "adult",
+            "held_item": "none"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": false,
+            "held": "none",
+            "phase": 0.5,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "sleep",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "sleep",
+          "activity_and_carry_correct": true,
+          "normalized_item": "none",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 6,
+          "verbatim": {
+            "image": "people-meadow-1",
+            "figure": 6,
+            "activity": "Standing facing forward.",
+            "carrying": "unclear",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "unclear"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "west",
+            "hair": "braided",
+            "hat": true,
+            "held": "knapping_stones",
+            "phase": 0.625,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "knap",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "idle",
+          "activity_and_carry_correct": false,
+          "normalized_item": "unknown",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": false
+        },
+        {
+          "index": 7,
+          "verbatim": {
+            "image": "people-meadow-1",
+            "figure": 7,
+            "activity": "Walking with legs spread and arms out.",
+            "carrying": "no",
+            "presentation": "male",
+            "age": "child",
+            "held_item": "none"
+          },
+          "expected": {
+            "age": "child",
+            "facing": "south",
+            "hair": "short",
+            "hat": false,
+            "held": "none",
+            "phase": 0.75,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "walk",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "walk",
+          "activity_and_carry_correct": true,
+          "normalized_item": "none",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 8,
+          "verbatim": {
+            "image": "people-meadow-1",
+            "figure": 8,
+            "activity": "Walking away while holding a round orange object at one side.",
+            "carrying": "yes",
+            "presentation": "unclear",
+            "age": "adult",
+            "held_item": "basket"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": false,
+            "held": "berry_basket",
+            "phase": 0.875,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "carry",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "carry",
+          "activity_and_carry_correct": true,
+          "normalized_item": "berry_basket",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 9,
+          "verbatim": {
+            "image": "people-meadow-1",
+            "figure": 9,
+            "activity": "Lying flat on the ground.",
+            "carrying": "no"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "west",
+            "hair": "braided",
+            "hat": false,
+            "held": "none",
+            "phase": 0.0,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "sleep",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "sleep",
+          "activity_and_carry_correct": true
+        },
+        {
+          "index": 10,
+          "verbatim": {
+            "image": "people-meadow-1",
+            "figure": 10,
+            "activity": "Standing still.",
+            "carrying": "no"
+          },
+          "expected": {
+            "age": "child",
+            "facing": "south",
+            "hair": "short",
+            "hat": false,
+            "held": "none",
+            "phase": 0.125,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "idle",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "idle",
+          "activity_and_carry_correct": true
+        },
+        {
+          "index": 11,
+          "verbatim": {
+            "image": "people-meadow-1",
+            "figure": 11,
+            "activity": "Raising an axe above the head.",
+            "carrying": "yes"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": true,
+            "held": "stone_axe",
+            "phase": 0.25,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "chop",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false
+        },
+        {
+          "index": 12,
+          "verbatim": {
+            "image": "people-meadow-1",
+            "figure": 12,
+            "activity": "Standing or taking a step with a walking stick.",
+            "carrying": "yes"
+          },
+          "expected": {
+            "age": "elder",
+            "facing": "west",
+            "hair": "braided",
+            "hat": false,
+            "held": "none",
+            "phase": 0.375,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "walk",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false
+        }
+      ],
+      "G1_deltas_against_historical_6_and_4": [
+        2,
+        4
+      ],
+      "G1_passed": false
+    },
+    {
+      "reviewer": "blind_d",
+      "condition": "people-meadow-2",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/blind_d.json",
+      "source_sha256": "837104635ea237f448cec0f80a0605bf88a7eccb5d4b1b4a46530d50f20be287",
+      "capture": "/Users/rexxa/work/arttrial2-data/trial2b/captures-round2/people-meadow-2/capture.png",
+      "capture_sha256": "f4f0737a128f3452960130cea751f1649e1a1b1610688beeded4863cf9eb8411",
+      "answer_key": "/Users/rexxa/work/arttrial2-data/trial2b/captures-round2/people-meadow-2/answer_key.json",
+      "answer_key_sha256": "54878763e231e177d8d335d99ccece4d4db370fdd9bc96ffc6c65b5aa9a16ed4",
+      "runtime_sha256": "cd669e8b02c6dd0c55fac2dde8b169c8f5810e40d3839daeef6ce859f5b009e8",
+      "frozen_source_checks": {
+        "PersonComposer.gd": true,
+        "Camp.gd": true,
+        "wash_tint.gdshader": true
+      },
+      "frozen_person_hashes_match": true,
+      "capture_runtime_hash_match": true,
+      "source_hashes": {
+        "Camp.gd": "ff356170b42be05bc08131f31f475e01de46b510fe20857b5642aaa775d8b858",
+        "Companion.gd": "4381fd75fc2ed80f2d28069d0f57f1988f2924e58390752d98f3cbc6debe752c",
+        "PersonComposer.gd": "221e7cd554b2515773e2f7ded0d50da73d8cf876d4f86def0a54cd2e917e36a3",
+        "project.godot": "00fa4435fa564047a8d3afa5ba8f5fab5bfe5cc76d3910228c025454f7dcb1d3",
+        "scenes/camp.tscn": "a008c5486817b3a866ae159199a42cdc5d66ac00ce2aa01c5513e887c0b9610b",
+        "season.gdshader": "99db3e70da741485cb80a53ae3379018aae7a16acc6088f174249f83d6ee46e4",
+        "tint_mask.gdshader": "c32f8af1fd3d5f6ad803e0211c9a6fd331b95e62af9c9a4e4008272f5c74fb74",
+        "wash_tint.gdshader": "fa33d08a6d6c481e6792da905b992875afee121d0b4374a090bc1db399770fdd"
+      },
+      "activity_carry": 7,
+      "activity_threshold": 10,
+      "attributes": 18,
+      "attribute_subscores": {
+        "sex": 3,
+        "age": 8,
+        "item": 7
+      },
+      "passed": false,
+      "rows": [
+        {
+          "index": 1,
+          "verbatim": {
+            "image": "people-meadow-2",
+            "figure": 1,
+            "activity": "Standing with hands at the sides.",
+            "carrying": "no",
+            "presentation": "male",
+            "age": "adult",
+            "held_item": "none"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "south",
+            "hair": "short",
+            "hat": true,
+            "held": "none",
+            "phase": 0.0,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "idle",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "idle",
+          "activity_and_carry_correct": true,
+          "normalized_item": "none",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 2,
+          "verbatim": {
+            "image": "people-meadow-2",
+            "figure": 2,
+            "activity": "Walking away, one leg extended and arms swinging.",
+            "carrying": "no",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "none"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": false,
+            "held": "none",
+            "phase": 0.125,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "walk",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "walk",
+          "activity_and_carry_correct": true,
+          "normalized_item": "none",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 3,
+          "verbatim": {
+            "image": "people-meadow-2",
+            "figure": 3,
+            "activity": "Raising a stone axe overhead with both hands.",
+            "carrying": "yes",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "stone axe"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "west",
+            "hair": "braided",
+            "hat": false,
+            "held": "stone_axe",
+            "phase": 0.25,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "chop",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false,
+          "normalized_item": "stone_axe",
+          "sex_correct": true,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 4,
+          "verbatim": {
+            "image": "people-meadow-2",
+            "figure": 4,
+            "activity": "Holding a tied bundle of logs against the torso.",
+            "carrying": "yes",
+            "presentation": "male",
+            "age": "adult",
+            "held_item": "tied logs"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "south",
+            "hair": "short",
+            "hat": false,
+            "held": "log_bundle",
+            "phase": 0.375,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "carry",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "carry",
+          "activity_and_carry_correct": true,
+          "normalized_item": "log_bundle",
+          "sex_correct": true,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 5,
+          "verbatim": {
+            "image": "people-meadow-2",
+            "figure": 5,
+            "activity": "Lying on the ground with eyes appearing shut.",
+            "carrying": "no",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "none"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": false,
+            "held": "none",
+            "phase": 0.5,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "sleep",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "sleep",
+          "activity_and_carry_correct": true,
+          "normalized_item": "none",
+          "sex_correct": true,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 6,
+          "verbatim": {
+            "image": "people-meadow-2",
+            "figure": 6,
+            "activity": "Standing with hands gathered around the waist.",
+            "carrying": "unclear",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "unclear"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "west",
+            "hair": "braided",
+            "hat": true,
+            "held": "knapping_stones",
+            "phase": 0.625,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "knap",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "idle",
+          "activity_and_carry_correct": false,
+          "normalized_item": "unknown",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": false
+        },
+        {
+          "index": 7,
+          "verbatim": {
+            "image": "people-meadow-2",
+            "figure": 7,
+            "activity": "Walking or running with a wide stride.",
+            "carrying": "no",
+            "presentation": "male",
+            "age": "child",
+            "held_item": "none"
+          },
+          "expected": {
+            "age": "child",
+            "facing": "south",
+            "hair": "short",
+            "hat": false,
+            "held": "none",
+            "phase": 0.75,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "walk",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false,
+          "normalized_item": "none",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 8,
+          "verbatim": {
+            "image": "people-meadow-2",
+            "figure": 8,
+            "activity": "Walking away while holding a woven basket low at one side.",
+            "carrying": "yes",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "basket"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": false,
+            "held": "berry_basket",
+            "phase": 0.875,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "carry",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "carry",
+          "activity_and_carry_correct": true,
+          "normalized_item": "berry_basket",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 9,
+          "verbatim": {
+            "image": "people-meadow-2",
+            "figure": 9,
+            "activity": "Lying on the ground with eyes shut.",
+            "carrying": "no"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "west",
+            "hair": "braided",
+            "hat": false,
+            "held": "none",
+            "phase": 0.0,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "sleep",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "sleep",
+          "activity_and_carry_correct": true
+        },
+        {
+          "index": 10,
+          "verbatim": {
+            "image": "people-meadow-2",
+            "figure": 10,
+            "activity": "Standing still with arms lowered.",
+            "carrying": "no"
+          },
+          "expected": {
+            "age": "child",
+            "facing": "south",
+            "hair": "short",
+            "hat": false,
+            "held": "none",
+            "phase": 0.125,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "idle",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "idle",
+          "activity_and_carry_correct": true
+        },
+        {
+          "index": 11,
+          "verbatim": {
+            "image": "people-meadow-2",
+            "figure": 11,
+            "activity": "Holding a stone axe overhead, facing away.",
+            "carrying": "yes"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": true,
+            "held": "stone_axe",
+            "phase": 0.25,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "chop",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false
+        },
+        {
+          "index": 12,
+          "verbatim": {
+            "image": "people-meadow-2",
+            "figure": 12,
+            "activity": "Standing with a hooked walking stick planted beside the feet.",
+            "carrying": "yes"
+          },
+          "expected": {
+            "age": "elder",
+            "facing": "west",
+            "hair": "braided",
+            "hat": false,
+            "held": "none",
+            "phase": 0.375,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "walk",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "idle",
+          "activity_and_carry_correct": false
+        }
+      ]
+    },
+    {
+      "reviewer": "blind_d",
+      "condition": "people-forest_floor-1",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/blind_d.json",
+      "source_sha256": "837104635ea237f448cec0f80a0605bf88a7eccb5d4b1b4a46530d50f20be287",
+      "capture": "/Users/rexxa/work/arttrial2-data/trial2b/captures-round2/people-forest_floor-1/capture.png",
+      "capture_sha256": "1fabf2d50bfdd66b360cef3a441204ab45441112dc7f7a6934da59690b4b15e1",
+      "answer_key": "/Users/rexxa/work/arttrial2-data/trial2b/captures-round2/people-forest_floor-1/answer_key.json",
+      "answer_key_sha256": "54878763e231e177d8d335d99ccece4d4db370fdd9bc96ffc6c65b5aa9a16ed4",
+      "runtime_sha256": "5844722ceeadcf1f92e6b937f494101cbdf51fb1ffa8f683e4b4bb85cf934e1c",
+      "frozen_source_checks": {
+        "PersonComposer.gd": true,
+        "Camp.gd": true,
+        "wash_tint.gdshader": true
+      },
+      "frozen_person_hashes_match": true,
+      "capture_runtime_hash_match": true,
+      "source_hashes": {
+        "Camp.gd": "ff356170b42be05bc08131f31f475e01de46b510fe20857b5642aaa775d8b858",
+        "Companion.gd": "4381fd75fc2ed80f2d28069d0f57f1988f2924e58390752d98f3cbc6debe752c",
+        "PersonComposer.gd": "221e7cd554b2515773e2f7ded0d50da73d8cf876d4f86def0a54cd2e917e36a3",
+        "project.godot": "00fa4435fa564047a8d3afa5ba8f5fab5bfe5cc76d3910228c025454f7dcb1d3",
+        "scenes/camp.tscn": "a008c5486817b3a866ae159199a42cdc5d66ac00ce2aa01c5513e887c0b9610b",
+        "season.gdshader": "99db3e70da741485cb80a53ae3379018aae7a16acc6088f174249f83d6ee46e4",
+        "tint_mask.gdshader": "c32f8af1fd3d5f6ad803e0211c9a6fd331b95e62af9c9a4e4008272f5c74fb74",
+        "wash_tint.gdshader": "fa33d08a6d6c481e6792da905b992875afee121d0b4374a090bc1db399770fdd"
+      },
+      "activity_carry": 8,
+      "activity_threshold": 8,
+      "attributes": 17,
+      "attribute_subscores": {
+        "sex": 2,
+        "age": 8,
+        "item": 7
+      },
+      "passed": false,
+      "rows": [
+        {
+          "index": 1,
+          "verbatim": {
+            "image": "people-forest_floor-1",
+            "figure": 1,
+            "activity": "Standing upright with arms lowered.",
+            "carrying": "no",
+            "presentation": "male",
+            "age": "adult",
+            "held_item": "none"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "south",
+            "hair": "short",
+            "hat": true,
+            "held": "none",
+            "phase": 0.0,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "idle",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "idle",
+          "activity_and_carry_correct": true,
+          "normalized_item": "none",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 2,
+          "verbatim": {
+            "image": "people-forest_floor-1",
+            "figure": 2,
+            "activity": "Walking away in a wide stride.",
+            "carrying": "no",
+            "presentation": "unclear",
+            "age": "adult",
+            "held_item": "none"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": false,
+            "held": "none",
+            "phase": 0.125,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "walk",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "walk",
+          "activity_and_carry_correct": true,
+          "normalized_item": "none",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 3,
+          "verbatim": {
+            "image": "people-forest_floor-1",
+            "figure": 3,
+            "activity": "Lifting an axe overhead.",
+            "carrying": "yes",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "axe"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "west",
+            "hair": "braided",
+            "hat": false,
+            "held": "stone_axe",
+            "phase": 0.25,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "chop",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false,
+          "normalized_item": "stone_axe",
+          "sex_correct": true,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 4,
+          "verbatim": {
+            "image": "people-forest_floor-1",
+            "figure": 4,
+            "activity": "Holding a bulky brown bundle in front of the chest.",
+            "carrying": "yes",
+            "presentation": "male",
+            "age": "adult",
+            "held_item": "bundle of wood"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "south",
+            "hair": "short",
+            "hat": false,
+            "held": "log_bundle",
+            "phase": 0.375,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "carry",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "carry",
+          "activity_and_carry_correct": true,
+          "normalized_item": "log_bundle",
+          "sex_correct": true,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 5,
+          "verbatim": {
+            "image": "people-forest_floor-1",
+            "figure": 5,
+            "activity": "Lying on the ground.",
+            "carrying": "no",
+            "presentation": "unclear",
+            "age": "adult",
+            "held_item": "none"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": false,
+            "held": "none",
+            "phase": 0.5,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "sleep",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "sleep",
+          "activity_and_carry_correct": true,
+          "normalized_item": "none",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 6,
+          "verbatim": {
+            "image": "people-forest_floor-1",
+            "figure": 6,
+            "activity": "Standing facing forward with hands near the waist.",
+            "carrying": "unclear",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "unclear"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "west",
+            "hair": "braided",
+            "hat": true,
+            "held": "knapping_stones",
+            "phase": 0.625,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "knap",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "idle",
+          "activity_and_carry_correct": false,
+          "normalized_item": "unknown",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": false
+        },
+        {
+          "index": 7,
+          "verbatim": {
+            "image": "people-forest_floor-1",
+            "figure": 7,
+            "activity": "Walking with arms extended slightly.",
+            "carrying": "no",
+            "presentation": "male",
+            "age": "child",
+            "held_item": "none"
+          },
+          "expected": {
+            "age": "child",
+            "facing": "south",
+            "hair": "short",
+            "hat": false,
+            "held": "none",
+            "phase": 0.75,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "walk",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "walk",
+          "activity_and_carry_correct": true,
+          "normalized_item": "none",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 8,
+          "verbatim": {
+            "image": "people-forest_floor-1",
+            "figure": 8,
+            "activity": "Walking away with a round orange object at one side.",
+            "carrying": "yes",
+            "presentation": "unclear",
+            "age": "adult",
+            "held_item": "basket"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": false,
+            "held": "berry_basket",
+            "phase": 0.875,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "carry",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "carry",
+          "activity_and_carry_correct": true,
+          "normalized_item": "berry_basket",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 9,
+          "verbatim": {
+            "image": "people-forest_floor-1",
+            "figure": 9,
+            "activity": "Lying horizontally on the ground.",
+            "carrying": "no"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "west",
+            "hair": "braided",
+            "hat": false,
+            "held": "none",
+            "phase": 0.0,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "sleep",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "sleep",
+          "activity_and_carry_correct": true
+        },
+        {
+          "index": 10,
+          "verbatim": {
+            "image": "people-forest_floor-1",
+            "figure": 10,
+            "activity": "Standing still.",
+            "carrying": "no"
+          },
+          "expected": {
+            "age": "child",
+            "facing": "south",
+            "hair": "short",
+            "hat": false,
+            "held": "none",
+            "phase": 0.125,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "idle",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "idle",
+          "activity_and_carry_correct": true
+        },
+        {
+          "index": 11,
+          "verbatim": {
+            "image": "people-forest_floor-1",
+            "figure": 11,
+            "activity": "Holding an axe over the head.",
+            "carrying": "yes"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": true,
+            "held": "stone_axe",
+            "phase": 0.25,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "chop",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false
+        },
+        {
+          "index": 12,
+          "verbatim": {
+            "image": "people-forest_floor-1",
+            "figure": 12,
+            "activity": "Standing or stepping with a walking stick.",
+            "carrying": "yes"
+          },
+          "expected": {
+            "age": "elder",
+            "facing": "west",
+            "hair": "braided",
+            "hat": false,
+            "held": "none",
+            "phase": 0.375,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "walk",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false
+        }
+      ],
+      "G1_deltas_against_historical_6_and_4": [
+        2,
+        4
+      ],
+      "G1_passed": false
+    },
+    {
+      "reviewer": "blind_d",
+      "condition": "people-forest_floor-2",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/blind_d.json",
+      "source_sha256": "837104635ea237f448cec0f80a0605bf88a7eccb5d4b1b4a46530d50f20be287",
+      "capture": "/Users/rexxa/work/arttrial2-data/trial2b/captures-round2/people-forest_floor-2/capture.png",
+      "capture_sha256": "0b80bb4d3161dd9e6549a5fa97f3f49aeebb3819cddeb084bbc92f17c2c53f72",
+      "answer_key": "/Users/rexxa/work/arttrial2-data/trial2b/captures-round2/people-forest_floor-2/answer_key.json",
+      "answer_key_sha256": "54878763e231e177d8d335d99ccece4d4db370fdd9bc96ffc6c65b5aa9a16ed4",
+      "runtime_sha256": "3f94b7f02c63f593f5660690e9813ea2c71ac17c2f7369ab70dc666f71ffa7c0",
+      "frozen_source_checks": {
+        "PersonComposer.gd": true,
+        "Camp.gd": true,
+        "wash_tint.gdshader": true
+      },
+      "frozen_person_hashes_match": true,
+      "capture_runtime_hash_match": true,
+      "source_hashes": {
+        "Camp.gd": "ff356170b42be05bc08131f31f475e01de46b510fe20857b5642aaa775d8b858",
+        "Companion.gd": "4381fd75fc2ed80f2d28069d0f57f1988f2924e58390752d98f3cbc6debe752c",
+        "PersonComposer.gd": "221e7cd554b2515773e2f7ded0d50da73d8cf876d4f86def0a54cd2e917e36a3",
+        "project.godot": "00fa4435fa564047a8d3afa5ba8f5fab5bfe5cc76d3910228c025454f7dcb1d3",
+        "scenes/camp.tscn": "a008c5486817b3a866ae159199a42cdc5d66ac00ce2aa01c5513e887c0b9610b",
+        "season.gdshader": "99db3e70da741485cb80a53ae3379018aae7a16acc6088f174249f83d6ee46e4",
+        "tint_mask.gdshader": "c32f8af1fd3d5f6ad803e0211c9a6fd331b95e62af9c9a4e4008272f5c74fb74",
+        "wash_tint.gdshader": "fa33d08a6d6c481e6792da905b992875afee121d0b4374a090bc1db399770fdd"
+      },
+      "activity_carry": 7,
+      "activity_threshold": 10,
+      "attributes": 18,
+      "attribute_subscores": {
+        "sex": 3,
+        "age": 8,
+        "item": 7
+      },
+      "passed": false,
+      "rows": [
+        {
+          "index": 1,
+          "verbatim": {
+            "image": "people-forest_floor-2",
+            "figure": 1,
+            "activity": "Standing with hands hanging at the sides.",
+            "carrying": "no",
+            "presentation": "male",
+            "age": "adult",
+            "held_item": "none"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "south",
+            "hair": "short",
+            "hat": true,
+            "held": "none",
+            "phase": 0.0,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "idle",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "idle",
+          "activity_and_carry_correct": true,
+          "normalized_item": "none",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 2,
+          "verbatim": {
+            "image": "people-forest_floor-2",
+            "figure": 2,
+            "activity": "Walking away with arms swinging and one leg extended.",
+            "carrying": "no",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "none"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": false,
+            "held": "none",
+            "phase": 0.125,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "walk",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "walk",
+          "activity_and_carry_correct": true,
+          "normalized_item": "none",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 3,
+          "verbatim": {
+            "image": "people-forest_floor-2",
+            "figure": 3,
+            "activity": "Holding a stone axe raised overhead in both hands.",
+            "carrying": "yes",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "stone axe"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "west",
+            "hair": "braided",
+            "hat": false,
+            "held": "stone_axe",
+            "phase": 0.25,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "chop",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false,
+          "normalized_item": "stone_axe",
+          "sex_correct": true,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 4,
+          "verbatim": {
+            "image": "people-forest_floor-2",
+            "figure": 4,
+            "activity": "Holding tied logs horizontally against the chest.",
+            "carrying": "yes",
+            "presentation": "male",
+            "age": "adult",
+            "held_item": "tied logs"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "south",
+            "hair": "short",
+            "hat": false,
+            "held": "log_bundle",
+            "phase": 0.375,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "carry",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "carry",
+          "activity_and_carry_correct": true,
+          "normalized_item": "log_bundle",
+          "sex_correct": true,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 5,
+          "verbatim": {
+            "image": "people-forest_floor-2",
+            "figure": 5,
+            "activity": "Lying on the ground with eyes appearing closed.",
+            "carrying": "no",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "none"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": false,
+            "held": "none",
+            "phase": 0.5,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "sleep",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "sleep",
+          "activity_and_carry_correct": true,
+          "normalized_item": "none",
+          "sex_correct": true,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 6,
+          "verbatim": {
+            "image": "people-forest_floor-2",
+            "figure": 6,
+            "activity": "Standing with hands together near the waist.",
+            "carrying": "unclear",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "unclear"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "west",
+            "hair": "braided",
+            "hat": true,
+            "held": "knapping_stones",
+            "phase": 0.625,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "knap",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "idle",
+          "activity_and_carry_correct": false,
+          "normalized_item": "unknown",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": false
+        },
+        {
+          "index": 7,
+          "verbatim": {
+            "image": "people-forest_floor-2",
+            "figure": 7,
+            "activity": "Walking or running with legs spread in a stride.",
+            "carrying": "no",
+            "presentation": "male",
+            "age": "child",
+            "held_item": "none"
+          },
+          "expected": {
+            "age": "child",
+            "facing": "south",
+            "hair": "short",
+            "hat": false,
+            "held": "none",
+            "phase": 0.75,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "walk",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false,
+          "normalized_item": "none",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 8,
+          "verbatim": {
+            "image": "people-forest_floor-2",
+            "figure": 8,
+            "activity": "Walking away carrying a round woven basket at one side.",
+            "carrying": "yes",
+            "presentation": "female",
+            "age": "adult",
+            "held_item": "basket"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": false,
+            "held": "berry_basket",
+            "phase": 0.875,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "carry",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "carry",
+          "activity_and_carry_correct": true,
+          "normalized_item": "berry_basket",
+          "sex_correct": false,
+          "age_correct": true,
+          "item_correct": true
+        },
+        {
+          "index": 9,
+          "verbatim": {
+            "image": "people-forest_floor-2",
+            "figure": 9,
+            "activity": "Lying on the ground with eyes shut.",
+            "carrying": "no"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "west",
+            "hair": "braided",
+            "hat": false,
+            "held": "none",
+            "phase": 0.0,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "sleep",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "sleep",
+          "activity_and_carry_correct": true
+        },
+        {
+          "index": 10,
+          "verbatim": {
+            "image": "people-forest_floor-2",
+            "figure": 10,
+            "activity": "Standing upright with arms down.",
+            "carrying": "no"
+          },
+          "expected": {
+            "age": "child",
+            "facing": "south",
+            "hair": "short",
+            "hat": false,
+            "held": "none",
+            "phase": 0.125,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#bc916a",
+            "state": "idle",
+            "top": "hide_wrap",
+            "top_tint": "#9f8461"
+          },
+          "expected_carrying": "no",
+          "normalized_activity": "idle",
+          "activity_and_carry_correct": true
+        },
+        {
+          "index": 11,
+          "verbatim": {
+            "image": "people-forest_floor-2",
+            "figure": 11,
+            "activity": "Facing away while raising a stone axe overhead.",
+            "carrying": "yes"
+          },
+          "expected": {
+            "age": "adult",
+            "facing": "east",
+            "hair": "long_tied",
+            "hat": true,
+            "held": "stone_axe",
+            "phase": 0.25,
+            "sex": "female",
+            "sex_rendered": true,
+            "skin": "#8b6045",
+            "state": "chop",
+            "top": "fur_cloak",
+            "top_tint": "#798065"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "unknown",
+          "activity_and_carry_correct": false
+        },
+        {
+          "index": 12,
+          "verbatim": {
+            "image": "people-forest_floor-2",
+            "figure": 12,
+            "activity": "Standing with a hooked walking stick touching the ground.",
+            "carrying": "yes"
+          },
+          "expected": {
+            "age": "elder",
+            "facing": "west",
+            "hair": "braided",
+            "hat": false,
+            "held": "none",
+            "phase": 0.375,
+            "sex": "male",
+            "sex_rendered": true,
+            "skin": "#d6af88",
+            "state": "walk",
+            "top": "woven_tunic",
+            "top_tint": "#9a7054"
+          },
+          "expected_carrying": "yes",
+          "normalized_activity": "idle",
+          "activity_and_carry_correct": false
+        }
+      ]
+    }
+  ],
+  "normalization_notes": [
+    "Uncertain alternatives containing or remain unknown, including walking or running. No supporting evidence text overrides an ambiguous activity answer.",
+    "Raising/lifting/holding an axe overhead is not an explicit chopping/swinging action and earns no chop credit.",
+    "Explicit held bundles/logs/baskets map to carry as in round 1; item answers are used only to identify an explicitly mentioned load, never to invent an action.",
+    "Knapping stones remain the frozen expected held item; both reviewers call them unclear, earning zero item and activity/carry points.",
+    "Every attribute denominator stays 24; sex presentation is scored against the unchanged key.",
+    "Final allowed revision is exhausted; no further code or image edits."
+  ]
+}

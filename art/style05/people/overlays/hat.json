@@ -1,0 +1,17 @@
+{
+  "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/overlays_try1_raw.png",
+  "source_sha256": "b3fa6546f9251b079d4fd33d943ff0d22fbd3511f8f4e124b290a8678ae6ae53",
+  "crop_box": [
+    1570,
+    408,
+    1983,
+    793
+  ],
+  "output_sha256": "8dc7cea01b6ea61f1dd3f36f9858d55e7d0e34a9f6f9bdb7445f212305e86c96",
+  "tool": "builtin image_gen",
+  "tool_call_id": "exec-c4c6484b-dcdf-4377-b150-13e4a4f67cb5",
+  "tries": 1,
+  "prompt": "Create a colony game CUTOUT CLOTHING AND EQUIPMENT SHEET matching the supplied stout front-three-quarter person anchor, same thick black ink and restrained sepia wash. Flat pure #ff00ff magenta background. EXACT 5 columns x 2 rows, ten isolated objects, each entirely inside its equal cell, generous separation, no text/no people/no faces/no mannequins. Row1 left to right: short brown hair cap with fringe; long dark hair tied back with side ponytail; two long auburn braids attached to hair cap; simple broad sleeveless hide wrap tunic with a diagonal shoulder strap; broad fur cloak with empty neck opening. Row2 left to right: cream woven sleeveless tunic with belt; large stone axe with broad gray head and long brown shaft; horizontal rope-tied bundle of THREE logs viewed from front slightly above, wider than person's body; round wicker berry basket with handle and visible red berries; simple rounded ochre fur hat. Hair is just hair, no face or head. Clothing is just empty garment, no arms/legs/body. Clothes fit the reference's wide short torso, hair fits its large round head. Axe blade should read at the size of a head; logs horizontal. Bold simple shapes, thick contour, sparse interior lines, no hyperdetail, game sprites designed for 56px person height.\n",
+  "processing": "magenta key; alpha crop; Lanczos maximum 256; no quantization or outline forcing",
+  "status": "generated candidate; model and readability review separate"
+}

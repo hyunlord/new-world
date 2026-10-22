@@ -1,0 +1,17 @@
+{
+  "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_front_try1_raw.png",
+  "source_sha256": "c11569323d3e4bf7abd3fd88ad2d510b95bcb327ff929503dec67534b49d87ac",
+  "crop_box": [
+    350,
+    450,
+    680,
+    815
+  ],
+  "output_sha256": "caa0c37be7806a1690bf477f9325d13033ee4941d76f93699d481f230aed5aa0",
+  "tool": "builtin image_gen",
+  "tool_call_id": "exec-97d02b8b-3d65-48a3-ad43-b9c5dc7bac36",
+  "tries": 1,
+  "prompt": "Reference is the chosen colony person anchor: keep its bold black ink and sepia watercolor wash, stout 3-heads-tall cartoon anatomy. Create a production CUTOUT PUPPET BODY PARTS SHEET on perfectly flat magenta #ff00ff. No assembled people, no labels, no shadows. EXACT 4 columns x 3 rows with even cell sizes and generous gaps, one isolated part per cell. All pieces viewed FRONT THREE QUARTER slightly above 20 degrees; limbs point straight down, attachment ends rounded. Row1 left to right: bald round clean-shaven adult head with both eyes and large nose visible facing slightly right; broad simple chest/torso in plain beige underwear; left upper arm; right upper arm. Row2: left forearm WITH mitten hand attached as one piece; right forearm WITH mitten hand; left upper thigh; right upper thigh. Row3: left lower leg; right lower leg; left broad wedge leather shoe; right broad wedge leather shoe. Head is large and round and should work with separate hair overlays. Limbs simplified stubby, absolutely NO muscles or realistic anatomical detail. Thick dark contour proportional to a 2-pixel outline at 56-pixel complete-person display. Skin light warm ochre wash, clothes cream neutral wash, leather brown. Flat shapes with restrained watercolor texture and very few interior lines. No extra objects or decorations. Square sheet, every object wholly inside its own cell and separated by magenta.\n",
+  "processing": "magenta key; alpha crop; Lanczos maximum 256; no quantization or outline forcing",
+  "status": "generated candidate; model and readability review separate"
+}

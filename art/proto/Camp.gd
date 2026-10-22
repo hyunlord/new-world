@@ -32,7 +32,7 @@ var chop_grips: Array[Dictionary] = []
 var source_hashes: Dictionary = {}
 
 func _ready() -> void:
-    for source: String in ["Camp.gd", "PersonComposer.gd", "Companion.gd", "season.gdshader", "tint_mask.gdshader", "project.godot", "scenes/camp.tscn"]:
+    for source: String in ["Camp.gd", "PersonComposer.gd", "Companion.gd", "season.gdshader", "tint_mask.gdshader", "wash_tint.gdshader", "project.godot", "scenes/camp.tscn"]:
         source_hashes[source] = FileAccess.get_sha256("res://" + source)
     var arguments: PackedStringArray = OS.get_cmdline_user_args()
     var index: int = 0
@@ -185,10 +185,12 @@ func _attributes(index: int) -> Dictionary:
         held = "log_bundle" if index % 12 == 3 else "berry_basket"
     elif state == "chop":
         held = "stone_axe"
+    elif state == "knap":
+        held = "knapping_stones"
     if all_walk:
         state = "walk"
     var age: String = "child" if index % 12 in [6, 9] else ("elder" if index % 12 == 11 else "adult")
-    return {"age": age, "sex": "female" if index % 2 == 0 else "male", "sex_rendered": false, "hair": ["short", "long_tied", "braided"][index % 3], "top": ["hide_wrap", "fur_cloak", "woven_tunic"][index % 3], "skin": ["#bc916a", "#8b6045", "#d6af88"][index % 3], "top_tint": ["#9f8461", "#798065", "#9a7054"][index % 3], "held": held, "state": state, "hat": index % 5 == 0, "phase": float(index % 8) / 8.0}
+    return {"facing": ["south", "east", "west"][index % 3], "age": age, "sex": "female" if index % 2 == 0 else "male", "sex_rendered": true, "hair": ["short", "long_tied", "braided"][index % 3], "top": ["hide_wrap", "fur_cloak", "woven_tunic"][index % 3], "skin": ["#bc916a", "#8b6045", "#d6af88"][index % 3], "top_tint": ["#9f8461", "#798065", "#9a7054"][index % 3], "held": held, "state": state, "hat": index % 5 == 0, "phase": float(index % 8) / 8.0}
 
 func _people() -> void:
     for index: int in range(count):
@@ -260,6 +262,12 @@ func _finish() -> void:
         part_hashes[path] = FileAccess.get_sha256(path)
     result["person_hashes"] = part_hashes
     result["all_walk"] = all_walk
+    if mode == "people" and options.has("capture-time"):
+        var capture_time: float = float(options["capture-time"])
+        for person: Node2D in people:
+            person.player.pause()
+            person.player.seek(fmod(capture_time + float(person.attributes.get("phase", 0.0)), person.player.current_animation_length), true)
+        result["capture_animation_time"] = capture_time
     result["process_frames"] = frame_us.size()
     result["process_fps"] = float(frame_us.size()) / wall_seconds
     result["rendered_frames"] = rendered_frames

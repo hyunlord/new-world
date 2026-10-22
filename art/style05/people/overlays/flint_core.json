@@ -1,0 +1,17 @@
+{
+  "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/knapping_tools_try1_raw.png",
+  "source_sha256": "cc7cf255eace38b261646b27becd6c54e0ea4db6ac67b0d480bc378f1c1016ed",
+  "crop_box": [
+    887,
+    0,
+    1774,
+    887
+  ],
+  "output_sha256": "bee5984b2dddfaeabc97f23f8ebbab6080276531b089b7fd3a1861abcdbdfed4",
+  "tool": "builtin image_gen",
+  "tool_call_id": "exec-c4730203-0b44-4b5b-94f9-bb94d789cb66",
+  "tries": 1,
+  "prompt": "Create exactly TWO isolated small stone-tool cutout sprites in the same fine dark ink plus earth watercolor style as the supplied person and scene references. Flat #FF00FF magenta, two equal cells side by side with wide gaps, no text/hands/people/shadows. Left cell: one simple rounded gray hammerstone, irregular fist-sized oval with a few dark facets. Right cell: one broad dark slate-gray flint core being worked, palm-sized, pointed leaf-shaped stone with THREE large pale fresh flake scars, clearly flint not wood. Front three-quarter view slightly above matching person reference. Thick legible ink outer contour, restrained simple stone wash, no dense details. Designed to be held one in each mitten of a seated knapping person, visible at a 56px complete-figure size. Keep both entire items uncropped.\n",
+  "processing": "magenta key; alpha crop; Lanczos maximum 256; no quantization or outline forcing",
+  "status": "generated candidate; model and readability review separate"
+}

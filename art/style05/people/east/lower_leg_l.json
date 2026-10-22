@@ -1,0 +1,17 @@
+{
+  "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_east_try1_raw.png",
+  "source_sha256": "38f36a71f14d8aaf29b70e9fe1ef8478f4f0929f05e0d4ffc9de8e9bd3d879f6",
+  "crop_box": [
+    0,
+    815,
+    350,
+    1254
+  ],
+  "output_sha256": "bd18dd162fe2017c77a80895d4a8184e2becc986ccd8148cf70a0c2730b0cd81",
+  "tool": "builtin image_gen",
+  "tool_call_id": "exec-0b51710b-ce21-4217-be57-81ab90cac394",
+  "tries": 1,
+  "prompt": "Reference is a cutout puppet parts sheet. Produce SAME EXACT 4x3 arrangement, colors, bold black ink and watercolor style, except EVERY part is now viewed facing EAST, a RIGHT-FACING SIDE THREE-QUARTER view from 20 degrees above, not front. Head has strong nose silhouette pointing right, one dominant visible eye and distant eye barely visible, ear on left. Torso shows right-facing chest and narrow far shoulder. Both shoes point RIGHT. No assembled figures, no labels. Flat magenta #ff00ff background. Row1: bald head, torso wearing plain underwear, upper arm left, upper arm right. Row2: forearm with attached mitten left, forearm with attached mitten right, upper thigh left, upper thigh right. Row3: lower leg left (ends at ankle, no shoe), lower leg right (ends at ankle, no shoe), wedge leather shoe left pointing right, wedge leather shoe right pointing right. Every piece wholly within one cell with large magenta gaps. Stubby simple cartoon anatomy, no realistic muscle detail. Keep head large. This must be a newly drawn side view, not horizontally compressed front view.\n",
+  "processing": "magenta key; alpha crop; Lanczos maximum 256; no quantization or outline forcing",
+  "status": "generated candidate; model and readability review separate"
+}

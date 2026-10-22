@@ -1,0 +1,2955 @@
+{
+  "schema_version": 2,
+  "review": "Fresh actual image-model review of active round2 person parts",
+  "reviewed_at_utc": "2026-10-22T02:59:42.049937+00:00",
+  "criteria": "Each of medium,line,light,palette is an integer 1-5; pass requires all >=4",
+  "anchors": [
+    {
+      "file": "art/style05/anchors/crops/person_full.png",
+      "sha256": "8379eaa4f2fdb396f8b01ba6fb2b7ab76203ce103a619e6f06f84ca24ffd4fbf"
+    },
+    {
+      "file": "art/style05/anchors/crops/person_upper.png",
+      "sha256": "6722a3f22b742b0f9fda8b5bf54d6b5f1e9278254c02f3cb426c65a1707bc3f4"
+    }
+  ],
+  "limitations": [
+    "Both anchors are overlapping crops of the same person_v2 source, not independent images.",
+    "Style scores do not establish readability, animation quality, numeric pass or final production acceptance.",
+    "Three independently identified candidates per call due runtime maximum5 reference paths; last call has one candidate.",
+    "Native raw crops retain magenta background and occasional neighbor fragments; prompt excludes background and unrelated edge fragments.",
+    "Numeric scores transcribed by reviewer from actual generated scorecards; reason_summary paraphrases the raw card.",
+    "Numeric whole-person references may penalize small isolated parts through foreground-normalized line density or wash variance; failures are retained without retuning."
+  ],
+  "successful_model_calls": 14,
+  "rejected_pre_generation_calls": 1,
+  "rejected_reason": "referenced_image_paths must contain at most5 paths; first attempted batch8 exceeded runtime limit",
+  "candidate_count": 40,
+  "model_pass_count": 40,
+  "production_acceptance": "Model AND frozen numeric judge v2, same-family verified, all calibration folds pass",
+  "raw_inputs": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/inputs.json",
+  "raw_calls": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/calls.json",
+  "calls": [
+    {
+      "batch": 1,
+      "candidate_ids": [
+        "P01",
+        "P02",
+        "P03"
+      ],
+      "prompt": "Create a plain legible review scorecard independently judging the supplied candidates against reference style. Images1 and2 are person-style reference crops of the same source; images3-5 are individual candidate parts in order: P01 art/style05/people/east/foot_l.png; P02 art/style05/people/east/foot_r.png; P03 art/style05/people/east/forearm_l.png. Score each candidate individually 1-5 on MEDIUM (ink and wash), LINE (contours), LIGHT (lighting), PALETTE (foreground colors). Ignore magenta key background and unrelated fragments on crop edges; judge the central part. Different body part is not itself style mismatch. 1 strongly different,3 mixed,5 strongly consistent. No desired outcome; judge visible evidence. Output a white table of three IDs, four numeric scores and a brief specific reason each. No aggregate score or additional illustrations.",
+      "requested_at_utc": null,
+      "output_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-9a87e6d6-1465-4e56-98fd-a638f42e7e08.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-9a87e6d6-1465-4e56-98fd-a638f42e7e08.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "raw_card": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_01.png",
+      "raw_card_sha256": "0f8792d6b740dadacccfc97f37a094de74dadfc0b5a2771d8e206f46cf291c6c",
+      "tool_call_id": "exec-9a87e6d6-1465-4e56-98fd-a638f42e7e08",
+      "output_file_mtime_utc": "2026-10-22T02:52:45.799158+00:00"
+    },
+    {
+      "batch": 2,
+      "candidate_ids": [
+        "P04",
+        "P05",
+        "P06"
+      ],
+      "prompt": "Create a plain legible review scorecard independently judging the supplied candidates against reference style. Images1 and2 are person-style reference crops of the same source; images3-5 are individual candidate parts in order: P04 art/style05/people/east/forearm_r.png; P05 art/style05/people/east/lower_leg_l.png; P06 art/style05/people/east/lower_leg_r.png. Score each candidate individually 1-5 on MEDIUM (ink and wash), LINE (contours), LIGHT (lighting), PALETTE (foreground colors). Ignore magenta key background and unrelated fragments on crop edges; judge the central part. Different body part is not itself style mismatch. 1 strongly different,3 mixed,5 strongly consistent. No desired outcome; judge visible evidence. Output a white table of three IDs, four numeric scores and a brief specific reason each. No aggregate score or additional illustrations.",
+      "requested_at_utc": "2026-10-22T02:53:07.451Z",
+      "output_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-05d4c735-2ad0-4348-a286-3c7fab142f7f.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-05d4c735-2ad0-4348-a286-3c7fab142f7f.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "raw_card": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_02.png",
+      "raw_card_sha256": "f94b93ee01c111d3fd20821e3d3620b17da97689f162b9e282ae3ba955046890",
+      "tool_call_id": "exec-05d4c735-2ad0-4348-a286-3c7fab142f7f",
+      "output_file_mtime_utc": "2026-10-22T02:53:29.497174+00:00"
+    },
+    {
+      "batch": 3,
+      "candidate_ids": [
+        "P07",
+        "P08",
+        "P09"
+      ],
+      "prompt": "Create a plain legible review scorecard independently judging the supplied candidates against reference style. Images1 and2 are person-style reference crops of the same source; images3-5 are individual candidate parts in order: P07 art/style05/people/east/torso.png; P08 art/style05/people/east/upper_arm_l.png; P09 art/style05/people/east/upper_arm_r.png. Score each candidate individually 1-5 on MEDIUM (ink and wash), LINE (contours), LIGHT (lighting), PALETTE (foreground colors). Ignore magenta key background and unrelated fragments on crop edges; judge the central part. Different body part is not itself style mismatch. 1 strongly different,3 mixed,5 strongly consistent. No desired outcome; judge visible evidence. Output a white table of three IDs, four numeric scores and a brief specific reason each. No aggregate score or additional illustrations.",
+      "requested_at_utc": "2026-10-22T02:53:07.458Z",
+      "output_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-6543808b-9af7-4399-904b-f926da246dca.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-6543808b-9af7-4399-904b-f926da246dca.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "raw_card": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_03.png",
+      "raw_card_sha256": "b46ccf34d64bdc50983ab2e5d3f19a3f5f0bb69bf7ebc9a5a746cded1c0b12e5",
+      "tool_call_id": "exec-6543808b-9af7-4399-904b-f926da246dca",
+      "output_file_mtime_utc": "2026-10-22T02:53:53.805833+00:00"
+    },
+    {
+      "batch": 4,
+      "candidate_ids": [
+        "P10",
+        "P11",
+        "P12"
+      ],
+      "prompt": "Create a plain legible review scorecard independently judging the supplied candidates against reference style. Images1 and2 are person-style reference crops of the same source; images3-5 are individual candidate parts in order: P10 art/style05/people/east/upper_leg_l.png; P11 art/style05/people/east/upper_leg_r.png; P12 art/style05/people/overlays/flint_core.png. Score each candidate individually 1-5 on MEDIUM (ink and wash), LINE (contours), LIGHT (lighting), PALETTE (foreground colors). Ignore magenta key background and unrelated fragments on crop edges; judge the central part. Different body part is not itself style mismatch. 1 strongly different,3 mixed,5 strongly consistent. No desired outcome; judge visible evidence. Output a white table of three IDs, four numeric scores and a brief specific reason each. No aggregate score or additional illustrations.",
+      "requested_at_utc": "2026-10-22T02:53:07.458Z",
+      "output_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-3dcc3aff-6d8d-4081-9253-955f23bece22.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-3dcc3aff-6d8d-4081-9253-955f23bece22.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "raw_card": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_04.png",
+      "raw_card_sha256": "b4c5604b85b0f18aff6df54148cd42aed8172bfb3a2f2756c3eb2d340ea9c456",
+      "tool_call_id": "exec-3dcc3aff-6d8d-4081-9253-955f23bece22",
+      "output_file_mtime_utc": "2026-10-22T02:54:15.265012+00:00"
+    },
+    {
+      "batch": 5,
+      "candidate_ids": [
+        "P13",
+        "P14",
+        "P15"
+      ],
+      "prompt": "Create a plain legible review scorecard independently judging the supplied candidates against reference style. Images1 and2 are person-style reference crops of the same source; images3-5 are individual candidate parts in order: P13 art/style05/people/overlays/hair_braided.png; P14 art/style05/people/overlays/hair_long_tied.png; P15 art/style05/people/overlays/hair_short.png. Score each candidate individually 1-5 on MEDIUM (ink and wash), LINE (contours), LIGHT (lighting), PALETTE (foreground colors). Ignore magenta key background and unrelated fragments on crop edges; judge the central part. Different body part is not itself style mismatch. 1 strongly different,3 mixed,5 strongly consistent. No desired outcome; judge visible evidence. Output a white table of three IDs, four numeric scores and a brief specific reason each. No aggregate score or additional illustrations.",
+      "requested_at_utc": "2026-10-22T02:53:07.458Z",
+      "output_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-2581d809-2e47-4843-97bf-4ebe994b1e72.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-2581d809-2e47-4843-97bf-4ebe994b1e72.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "raw_card": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_05.png",
+      "raw_card_sha256": "ab3ff9354c4b1f472b50b706501b5079a19bd914016901b2d8d409b51b189999",
+      "tool_call_id": "exec-2581d809-2e47-4843-97bf-4ebe994b1e72",
+      "output_file_mtime_utc": "2026-10-22T02:54:39.345184+00:00"
+    },
+    {
+      "batch": 6,
+      "candidate_ids": [
+        "P16",
+        "P17",
+        "P18"
+      ],
+      "prompt": "Create a plain legible review scorecard independently judging the supplied candidates against reference style. Images1 and2 are person-style reference crops of the same source; images3-5 are individual candidate parts in order: P16 art/style05/people/overlays/hammerstone.png; P17 art/style05/people/overlays/hat.png; P18 art/style05/people/overlays/head_female_east.png. Score each candidate individually 1-5 on MEDIUM (ink and wash), LINE (contours), LIGHT (lighting), PALETTE (foreground colors). Ignore magenta key background and unrelated fragments on crop edges; judge the central part. Different body part is not itself style mismatch. 1 strongly different,3 mixed,5 strongly consistent. No desired outcome; judge visible evidence. Output a white table of three IDs, four numeric scores and a brief specific reason each. No aggregate score or additional illustrations.",
+      "requested_at_utc": "2026-10-22T02:54:49.100Z",
+      "output_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-e5abd127-5271-4c0b-8e2e-5d4e6c4191fb.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-e5abd127-5271-4c0b-8e2e-5d4e6c4191fb.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "raw_card": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_06.png",
+      "raw_card_sha256": "c407a80fe5b53e8f41bc99559503bb911a5306b7b74c38205a1370dc8c6add1d",
+      "tool_call_id": "exec-e5abd127-5271-4c0b-8e2e-5d4e6c4191fb",
+      "output_file_mtime_utc": "2026-10-22T02:55:13.309566+00:00"
+    },
+    {
+      "batch": 7,
+      "candidate_ids": [
+        "P19",
+        "P20",
+        "P21"
+      ],
+      "prompt": "Create a plain legible review scorecard independently judging the supplied candidates against reference style. Images1 and2 are person-style reference crops of the same source; images3-5 are individual candidate parts in order: P19 art/style05/people/overlays/head_female_front.png; P20 art/style05/people/overlays/head_male_east.png; P21 art/style05/people/overlays/head_male_front.png. Score each candidate individually 1-5 on MEDIUM (ink and wash), LINE (contours), LIGHT (lighting), PALETTE (foreground colors). Ignore magenta key background and unrelated fragments on crop edges; judge the central part. Different body part is not itself style mismatch. 1 strongly different,3 mixed,5 strongly consistent. No desired outcome; judge visible evidence. Output a white table of three IDs, four numeric scores and a brief specific reason each. No aggregate score or additional illustrations.",
+      "requested_at_utc": "2026-10-22T02:54:49.100Z",
+      "output_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-52b22cb8-5138-46ff-962b-81dea25878cc.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-52b22cb8-5138-46ff-962b-81dea25878cc.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "raw_card": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_07.png",
+      "raw_card_sha256": "0c1560113fd7a1b6146f469c82f7bc278880d3d15ddf2a719e0cc0b4d9fe92de",
+      "tool_call_id": "exec-52b22cb8-5138-46ff-962b-81dea25878cc",
+      "output_file_mtime_utc": "2026-10-22T02:55:38.334995+00:00"
+    },
+    {
+      "batch": 8,
+      "candidate_ids": [
+        "P22",
+        "P23",
+        "P24"
+      ],
+      "prompt": "Create a plain legible review scorecard independently judging the supplied candidates against reference style. Images1 and2 are person-style reference crops of the same source; images3-5 are individual candidate parts in order: P22 art/style05/people/overlays/held_berry_basket.png; P23 art/style05/people/overlays/held_log_bundle.png; P24 art/style05/people/overlays/held_stone_axe.png. Score each candidate individually 1-5 on MEDIUM (ink and wash), LINE (contours), LIGHT (lighting), PALETTE (foreground colors). Ignore magenta key background and unrelated fragments on crop edges; judge the central part. Different body part is not itself style mismatch. 1 strongly different,3 mixed,5 strongly consistent. No desired outcome; judge visible evidence. Output a white table of three IDs, four numeric scores and a brief specific reason each. No aggregate score or additional illustrations.",
+      "requested_at_utc": "2026-10-22T02:54:49.100Z",
+      "output_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-d1d3ae9a-8d20-4c9a-ac04-002362e9b146.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-d1d3ae9a-8d20-4c9a-ac04-002362e9b146.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "raw_card": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_08.png",
+      "raw_card_sha256": "4774cebb724c47fb86c428ad5f98b346b49d04fd3b9bf0b15cfbcd9ea0e7eb43",
+      "tool_call_id": "exec-d1d3ae9a-8d20-4c9a-ac04-002362e9b146",
+      "output_file_mtime_utc": "2026-10-22T02:56:01.334029+00:00"
+    },
+    {
+      "batch": 9,
+      "candidate_ids": [
+        "P25",
+        "P26",
+        "P27"
+      ],
+      "prompt": "Create a plain legible review scorecard independently judging the supplied candidates against reference style. Images1 and2 are person-style reference crops of the same source; images3-5 are individual candidate parts in order: P25 art/style05/people/overlays/stick.png; P26 art/style05/people/overlays/top_fur_cloak.png; P27 art/style05/people/overlays/top_hide_wrap.png. Score each candidate individually 1-5 on MEDIUM (ink and wash), LINE (contours), LIGHT (lighting), PALETTE (foreground colors). Ignore magenta key background and unrelated fragments on crop edges; judge the central part. Different body part is not itself style mismatch. 1 strongly different,3 mixed,5 strongly consistent. No desired outcome; judge visible evidence. Output a white table of three IDs, four numeric scores and a brief specific reason each. No aggregate score or additional illustrations.",
+      "requested_at_utc": "2026-10-22T02:54:49.100Z",
+      "output_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-5b6d3c2a-a404-44de-9e4e-3315d6f1743b.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-5b6d3c2a-a404-44de-9e4e-3315d6f1743b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "raw_card": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_09.png",
+      "raw_card_sha256": "7dcb5bf2b78a9dacd8ec778844ff6106df6dceed3d518a5af2aceb971f660fcb",
+      "tool_call_id": "exec-5b6d3c2a-a404-44de-9e4e-3315d6f1743b",
+      "output_file_mtime_utc": "2026-10-22T02:56:29.056806+00:00"
+    },
+    {
+      "batch": 10,
+      "candidate_ids": [
+        "P28",
+        "P29",
+        "P30"
+      ],
+      "prompt": "Create a plain legible review scorecard independently judging the supplied candidates against reference style. Images1 and2 are person-style reference crops of the same source; images3-5 are individual candidate parts in order: P28 art/style05/people/overlays/top_woven_tunic.png; P29 art/style05/people/parts/foot_l.png; P30 art/style05/people/parts/foot_r.png. Score each candidate individually 1-5 on MEDIUM (ink and wash), LINE (contours), LIGHT (lighting), PALETTE (foreground colors). Ignore magenta key background and unrelated fragments on crop edges; judge the central part. Different body part is not itself style mismatch. 1 strongly different,3 mixed,5 strongly consistent. No desired outcome; judge visible evidence. Output a white table of three IDs, four numeric scores and a brief specific reason each. No aggregate score or additional illustrations.",
+      "requested_at_utc": "2026-10-22T02:54:49.100Z",
+      "output_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-bab78005-664b-4c74-bf9b-44f2fba8eb43.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-bab78005-664b-4c74-bf9b-44f2fba8eb43.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "raw_card": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_10.png",
+      "raw_card_sha256": "9cddedd870dbe48abd87db4c3b4a7d3a310099d80f53ca565cc5b4f8e3661106",
+      "tool_call_id": "exec-bab78005-664b-4c74-bf9b-44f2fba8eb43",
+      "output_file_mtime_utc": "2026-10-22T02:56:51.464972+00:00"
+    },
+    {
+      "batch": 11,
+      "candidate_ids": [
+        "P31",
+        "P32",
+        "P33"
+      ],
+      "prompt": "Create a plain legible review scorecard independently judging the supplied candidates against reference style. Images1 and2 are person-style reference crops of the same source; remaining images are individual candidate parts in order: P31 art/style05/people/parts/forearm_l.png; P32 art/style05/people/parts/forearm_r.png; P33 art/style05/people/parts/head.png. Score each candidate individually 1-5 on MEDIUM (ink and wash), LINE (contours), LIGHT (lighting), PALETTE (foreground colors). Ignore magenta key background and unrelated fragments on crop edges; judge the central part. Different body part is not itself style mismatch. 1 strongly different,3 mixed,5 strongly consistent. No desired outcome; judge visible evidence. Output a white table of 3 IDs, four numeric scores and a brief specific reason each. No aggregate score or additional illustrations.",
+      "requested_at_utc": "2026-10-22T02:57:05.755Z",
+      "output_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-313bf4da-e9f3-4a7f-aede-ce62f8b01335.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-313bf4da-e9f3-4a7f-aede-ce62f8b01335.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "raw_card": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_11.png",
+      "raw_card_sha256": "9b2f1481235d760824840b060a0affc5d2d855a3e18d76dfb97b407f93820e51",
+      "tool_call_id": "exec-313bf4da-e9f3-4a7f-aede-ce62f8b01335",
+      "output_file_mtime_utc": "2026-10-22T02:57:24.063093+00:00"
+    },
+    {
+      "batch": 12,
+      "candidate_ids": [
+        "P34",
+        "P35",
+        "P36"
+      ],
+      "prompt": "Create a plain legible review scorecard independently judging the supplied candidates against reference style. Images1 and2 are person-style reference crops of the same source; remaining images are individual candidate parts in order: P34 art/style05/people/parts/lower_leg_l.png; P35 art/style05/people/parts/lower_leg_r.png; P36 art/style05/people/parts/torso.png. Score each candidate individually 1-5 on MEDIUM (ink and wash), LINE (contours), LIGHT (lighting), PALETTE (foreground colors). Ignore magenta key background and unrelated fragments on crop edges; judge the central part. Different body part is not itself style mismatch. 1 strongly different,3 mixed,5 strongly consistent. No desired outcome; judge visible evidence. Output a white table of 3 IDs, four numeric scores and a brief specific reason each. No aggregate score or additional illustrations.",
+      "requested_at_utc": "2026-10-22T02:57:05.755Z",
+      "output_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-0fcd7d6e-071a-4d2f-af2c-a58b3d20c71a.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-0fcd7d6e-071a-4d2f-af2c-a58b3d20c71a.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "raw_card": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_12.png",
+      "raw_card_sha256": "9bc1d368f05a980e2996ccbd10f97dcfd4a0706643b72b7a893a4a6657449bde",
+      "tool_call_id": "exec-0fcd7d6e-071a-4d2f-af2c-a58b3d20c71a",
+      "output_file_mtime_utc": "2026-10-22T02:57:48.520023+00:00"
+    },
+    {
+      "batch": 13,
+      "candidate_ids": [
+        "P37",
+        "P38",
+        "P39"
+      ],
+      "prompt": "Create a plain legible review scorecard independently judging the supplied candidates against reference style. Images1 and2 are person-style reference crops of the same source; remaining images are individual candidate parts in order: P37 art/style05/people/parts/upper_arm_l.png; P38 art/style05/people/parts/upper_arm_r.png; P39 art/style05/people/parts/upper_leg_l.png. Score each candidate individually 1-5 on MEDIUM (ink and wash), LINE (contours), LIGHT (lighting), PALETTE (foreground colors). Ignore magenta key background and unrelated fragments on crop edges; judge the central part. Different body part is not itself style mismatch. 1 strongly different,3 mixed,5 strongly consistent. No desired outcome; judge visible evidence. Output a white table of 3 IDs, four numeric scores and a brief specific reason each. No aggregate score or additional illustrations.",
+      "requested_at_utc": "2026-10-22T02:57:05.755Z",
+      "output_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-51c7f357-304b-4a0f-9972-95f32b4d8b2a.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-51c7f357-304b-4a0f-9972-95f32b4d8b2a.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "raw_card": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_13.png",
+      "raw_card_sha256": "1c43b0cfc5e1fbe4b6895a27c4c23355b22c5ebd877fa90cd048774a6c51719d",
+      "tool_call_id": "exec-51c7f357-304b-4a0f-9972-95f32b4d8b2a",
+      "output_file_mtime_utc": "2026-10-22T02:58:08.779373+00:00"
+    },
+    {
+      "batch": 14,
+      "candidate_ids": [
+        "P40"
+      ],
+      "prompt": "Create a plain legible review scorecard independently judging the supplied candidates against reference style. Images1 and2 are person-style reference crops of the same source; remaining images are individual candidate parts in order: P40 art/style05/people/parts/upper_leg_r.png. Score each candidate individually 1-5 on MEDIUM (ink and wash), LINE (contours), LIGHT (lighting), PALETTE (foreground colors). Ignore magenta key background and unrelated fragments on crop edges; judge the central part. Different body part is not itself style mismatch. 1 strongly different,3 mixed,5 strongly consistent. No desired outcome; judge visible evidence. Output a white table of 1 IDs, four numeric scores and a brief specific reason each. No aggregate score or additional illustrations.",
+      "requested_at_utc": "2026-10-22T02:57:05.755Z",
+      "output_path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-543ea4a8-bc33-458a-a9e7-f000919de4f4.png",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16185-2936-75c2-ab83-edaa638a370a/exec-543ea4a8-bc33-458a-a9e7-f000919de4f4.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "raw_card": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_14.png",
+      "raw_card_sha256": "7d245e533062b5a50b0d457da0f2f2b888aeac7f80bfc16a4fcba3f0dbfbeb01",
+      "tool_call_id": "exec-543ea4a8-bc33-458a-a9e7-f000919de4f4",
+      "output_file_mtime_utc": "2026-10-22T02:58:30.460114+00:00"
+    }
+  ],
+  "parts": [
+    {
+      "id": "P01",
+      "candidate": "art/style05/people/east/foot_l.png",
+      "candidate_sha256": "2e03a8fb1091021c50ba2969ca955329fb72e9aabfc5a448174fea9417c6270c",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P01_east_foot_l_rawcrop.png",
+      "input_sha256": "24151d4cea311a6627e41ccd9bfdffe53802138e81bf8f83f7d073c82471e2f0",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_east_try1_raw.png",
+      "source_sha256": "38f36a71f14d8aaf29b70e9fe1ef8478f4f0929f05e0d4ffc9de8e9bd3d879f6",
+      "crop_box": [
+        680,
+        815,
+        970,
+        1254
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Matching watercolor wash, thick clean outlines, upper-left light and brown/tan/cream palette.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-9a87e6d6-1465-4e56-98fd-a638f42e7e08",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_01.png",
+      "raw_scorecard_sha256": "0f8792d6b740dadacccfc97f37a094de74dadfc0b5a2771d8e206f46cf291c6c",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 1,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P01_east_foot_l_rawcrop.png",
+        "sha256": "24151d4cea311a6627e41ccd9bfdffe53802138e81bf8f83f7d073c82471e2f0",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.13350425444952255,
+          "saturation_q25": 0.724327617675504,
+          "saturation_q75": 0.8746578505268383,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.08112664834753318,
+          "foreground_pixels": 28212
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": true
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Matching watercolor wash, thick clean outlines, upper-left light and brown/tan/cream palette."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P02",
+      "candidate": "art/style05/people/east/foot_r.png",
+      "candidate_sha256": "1e635718c789ef13748ed76336ee08c8a861b806952d933ffc339132f2815ff9",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P02_east_foot_r_rawcrop.png",
+      "input_sha256": "5f14615c0c230d065d32259c95a8a4ef3857103c244aefff53c6136f3a377d31",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_east_try1_raw.png",
+      "source_sha256": "38f36a71f14d8aaf29b70e9fe1ef8478f4f0929f05e0d4ffc9de8e9bd3d879f6",
+      "crop_box": [
+        970,
+        815,
+        1254,
+        1254
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Same painterly ink-and-wash texture, bold contour, lighting direction and earthy browns/tans.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-9a87e6d6-1465-4e56-98fd-a638f42e7e08",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_01.png",
+      "raw_scorecard_sha256": "0f8792d6b740dadacccfc97f37a094de74dadfc0b5a2771d8e206f46cf291c6c",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 1,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P02_east_foot_r_rawcrop.png",
+        "sha256": "5f14615c0c230d065d32259c95a8a4ef3857103c244aefff53c6136f3a377d31",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.1349537681293874,
+          "saturation_q25": 0.7947283552064711,
+          "saturation_q75": 0.8848243333421271,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.027836805347506405,
+          "foreground_pixels": 33686
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": true
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Same painterly ink-and-wash texture, bold contour, lighting direction and earthy browns/tans."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P03",
+      "candidate": "art/style05/people/east/forearm_l.png",
+      "candidate_sha256": "ebf202b3058a451ef2261517c2c704e2ec0a5b76714c1f3e759a379e7186f1fd",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P03_east_forearm_l_rawcrop.png",
+      "input_sha256": "9177b03ce38c04be4257aed1c3a6e2235787d7c571f0ffcf4ef474593d1a37dc",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_east_try1_raw.png",
+      "source_sha256": "38f36a71f14d8aaf29b70e9fe1ef8478f4f0929f05e0d4ffc9de8e9bd3d879f6",
+      "crop_box": [
+        0,
+        450,
+        350,
+        815
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Same wash texture and shading, bold outline, upper-left light and skin palette.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-9a87e6d6-1465-4e56-98fd-a638f42e7e08",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_01.png",
+      "raw_scorecard_sha256": "0f8792d6b740dadacccfc97f37a094de74dadfc0b5a2771d8e206f46cf291c6c",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 1,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P03_east_forearm_l_rawcrop.png",
+        "sha256": "9177b03ce38c04be4257aed1c3a6e2235787d7c571f0ffcf4ef474593d1a37dc",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.05283196608705892,
+          "saturation_q25": 0.7137097984378848,
+          "saturation_q75": 0.821278193647314,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.0026378725354762097,
+          "foreground_pixels": 26721
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Same wash texture and shading, bold outline, upper-left light and skin palette."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P04",
+      "candidate": "art/style05/people/east/forearm_r.png",
+      "candidate_sha256": "2e00ac379b76e4309eba71c5b6034c58002bdee9e805b654f8b92d648a2a2f3c",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P04_east_forearm_r_rawcrop.png",
+      "input_sha256": "94faab014414371e5b56c9e539636eeafa8b3a43516612c4891ca5c215a77afd",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_east_try1_raw.png",
+      "source_sha256": "38f36a71f14d8aaf29b70e9fe1ef8478f4f0929f05e0d4ffc9de8e9bd3d879f6",
+      "crop_box": [
+        350,
+        450,
+        680,
+        815
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Textured wash and black outline match; slightly simpler lighting forms; matching skin tone.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-05d4c735-2ad0-4348-a286-3c7fab142f7f",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_02.png",
+      "raw_scorecard_sha256": "f94b93ee01c111d3fd20821e3d3620b17da97689f162b9e282ae3ba955046890",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 2,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P04_east_forearm_r_rawcrop.png",
+        "sha256": "94faab014414371e5b56c9e539636eeafa8b3a43516612c4891ca5c215a77afd",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.056277761929989,
+          "saturation_q25": 0.7330155920128618,
+          "saturation_q75": 0.8262205602023932,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.0027466055283417003,
+          "foreground_pixels": 25777
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 4,
+          "palette": 5,
+          "sentence": "Textured wash and black outline match; slightly simpler lighting forms; matching skin tone."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P05",
+      "candidate": "art/style05/people/east/lower_leg_l.png",
+      "candidate_sha256": "bd18dd162fe2017c77a80895d4a8184e2becc986ccd8148cf70a0c2730b0cd81",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P05_east_lower_leg_l_rawcrop.png",
+      "input_sha256": "3e4a9e20227d9fd9534cb66b05731cceb885ff940ed94bd8b6a885ab675b3685",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_east_try1_raw.png",
+      "source_sha256": "38f36a71f14d8aaf29b70e9fe1ef8478f4f0929f05e0d4ffc9de8e9bd3d879f6",
+      "crop_box": [
+        0,
+        815,
+        350,
+        1254
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Same brushy wash and bold smooth outline; similar highlight/shadow placement and skin colors.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-05d4c735-2ad0-4348-a286-3c7fab142f7f",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_02.png",
+      "raw_scorecard_sha256": "f94b93ee01c111d3fd20821e3d3620b17da97689f162b9e282ae3ba955046890",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 2,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P05_east_lower_leg_l_rawcrop.png",
+        "sha256": "3e4a9e20227d9fd9534cb66b05731cceb885ff940ed94bd8b6a885ab675b3685",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.03747104510151247,
+          "saturation_q25": 0.7373246961553042,
+          "saturation_q75": 0.8293479720888698,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.002727047819459805,
+          "foreground_pixels": 30668
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 4,
+          "palette": 5,
+          "sentence": "Same brushy wash and bold smooth outline; similar highlight/shadow placement and skin colors."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P06",
+      "candidate": "art/style05/people/east/lower_leg_r.png",
+      "candidate_sha256": "7ef272874480c11bd42af8562062126a9cbf949c8b674941b69acf6e6494a6ab",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P06_east_lower_leg_r_rawcrop.png",
+      "input_sha256": "558d967116dfcd7ecd95c18c7660975599e8e8de0b366ddd32e7bac29e740891",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_east_try1_raw.png",
+      "source_sha256": "38f36a71f14d8aaf29b70e9fe1ef8478f4f0929f05e0d4ffc9de8e9bd3d879f6",
+      "crop_box": [
+        350,
+        815,
+        680,
+        1254
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Watercolor-like wash and outline match; consistent highlights/shadows and skin palette.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-05d4c735-2ad0-4348-a286-3c7fab142f7f",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_02.png",
+      "raw_scorecard_sha256": "f94b93ee01c111d3fd20821e3d3620b17da97689f162b9e282ae3ba955046890",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 2,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P06_east_lower_leg_r_rawcrop.png",
+        "sha256": "558d967116dfcd7ecd95c18c7660975599e8e8de0b366ddd32e7bac29e740891",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.044503001024740155,
+          "saturation_q25": 0.7321527921420494,
+          "saturation_q75": 0.8216098417052984,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.009723118539558203,
+          "foreground_pixels": 29176
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 4,
+          "palette": 5,
+          "sentence": "Watercolor-like wash and outline match; consistent highlights/shadows and skin palette."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P07",
+      "candidate": "art/style05/people/east/torso.png",
+      "candidate_sha256": "6a13113254ade860913657a3f772ca3ff37856c24fc40bdd1183d2772c66c36d",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P07_east_torso_rawcrop.png",
+      "input_sha256": "10177061e9322a63ab3c68b68ea967d111f2d46e94ee5dbfe1dd5611b0f3fabe",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_east_try1_raw.png",
+      "source_sha256": "38f36a71f14d8aaf29b70e9fe1ef8478f4f0929f05e0d4ffc9de8e9bd3d879f6",
+      "crop_box": [
+        350,
+        0,
+        680,
+        450
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Matching watercolor/ink texture, thick clean black outline, soft painterly light and warm skin tones.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-6543808b-9af7-4399-904b-f926da246dca",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_03.png",
+      "raw_scorecard_sha256": "b46ccf34d64bdc50983ab2e5d3f19a3f5f0bb69bf7ebc9a5a746cded1c0b12e5",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 3,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P07_east_torso_rawcrop.png",
+        "sha256": "10177061e9322a63ab3c68b68ea967d111f2d46e94ee5dbfe1dd5611b0f3fabe",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.07936110554776687,
+          "saturation_q25": 0.6528462090142337,
+          "saturation_q75": 0.7865540738469307,
+          "stroke_q25": 4.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.002058356985573468,
+          "foreground_pixels": 41338
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": false,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Matching watercolor/ink texture, thick clean black outline, soft painterly light and warm skin tones."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P08",
+      "candidate": "art/style05/people/east/upper_arm_l.png",
+      "candidate_sha256": "d997cddd4d411b08f83ef822761d5c3fc0b7e9665f64fe635e509e8487ba3995",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P08_east_upper_arm_l_rawcrop.png",
+      "input_sha256": "c1fd649eb75b98fe0e30248001a14bd5ac26504a81bb0ae9ffaa99fbd52a6559",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_east_try1_raw.png",
+      "source_sha256": "38f36a71f14d8aaf29b70e9fe1ef8478f4f0929f05e0d4ffc9de8e9bd3d879f6",
+      "crop_box": [
+        680,
+        0,
+        970,
+        450
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Same watercolor brush texture, bold contour, soft light/dark shading and skin palette.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-6543808b-9af7-4399-904b-f926da246dca",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_03.png",
+      "raw_scorecard_sha256": "b46ccf34d64bdc50983ab2e5d3f19a3f5f0bb69bf7ebc9a5a746cded1c0b12e5",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 3,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P08_east_upper_arm_l_rawcrop.png",
+        "sha256": "c1fd649eb75b98fe0e30248001a14bd5ac26504a81bb0ae9ffaa99fbd52a6559",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.04954022988505747,
+          "saturation_q25": 0.7309064062177552,
+          "saturation_q75": 0.8253477084809933,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.0018999895482742584,
+          "foreground_pixels": 27324
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Same watercolor brush texture, bold contour, soft light/dark shading and skin palette."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P09",
+      "candidate": "art/style05/people/east/upper_arm_r.png",
+      "candidate_sha256": "c351724df3ad008a859702b03682d3340162bab01112a438cddfcadf01952103",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P09_east_upper_arm_r_rawcrop.png",
+      "input_sha256": "dea01ff17d788d0874f7645ad14bae180d614a58fa0a3b79ad649d73e81cee70",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_east_try1_raw.png",
+      "source_sha256": "38f36a71f14d8aaf29b70e9fe1ef8478f4f0929f05e0d4ffc9de8e9bd3d879f6",
+      "crop_box": [
+        970,
+        0,
+        1254,
+        450
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Similar brush texture, thick outline, lighting/shading and reference skin tones.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-6543808b-9af7-4399-904b-f926da246dca",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_03.png",
+      "raw_scorecard_sha256": "b46ccf34d64bdc50983ab2e5d3f19a3f5f0bb69bf7ebc9a5a746cded1c0b12e5",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 3,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P09_east_upper_arm_r_rawcrop.png",
+        "sha256": "dea01ff17d788d0874f7645ad14bae180d614a58fa0a3b79ad649d73e81cee70",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.04285159285159285,
+          "saturation_q25": 0.734364110193885,
+          "saturation_q75": 0.8228102220898024,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.0015844360674558806,
+          "foreground_pixels": 26964
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Similar brush texture, thick outline, lighting/shading and reference skin tones."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P10",
+      "candidate": "art/style05/people/east/upper_leg_l.png",
+      "candidate_sha256": "806b02ed63daac100cf060f523d7f44ec4529e84d9c76eef0ecdeb72c7c21cc8",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P10_east_upper_leg_l_rawcrop.png",
+      "input_sha256": "20e1f37675958ec267c0989394e0b68a956c50aa789fbd1de919af127b28a25a",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_east_try1_raw.png",
+      "source_sha256": "38f36a71f14d8aaf29b70e9fe1ef8478f4f0929f05e0d4ffc9de8e9bd3d879f6",
+      "crop_box": [
+        680,
+        450,
+        970,
+        815
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Brushy wash and paper-like variation, clean dark outline, top-left lighting and warm ochre/tan palette.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-3dcc3aff-6d8d-4081-9253-955f23bece22",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_04.png",
+      "raw_scorecard_sha256": "b4c5604b85b0f18aff6df54148cd42aed8172bfb3a2f2756c3eb2d340ea9c456",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 4,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P10_east_upper_leg_l_rawcrop.png",
+        "sha256": "20e1f37675958ec267c0989394e0b68a956c50aa789fbd1de919af127b28a25a",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.05357800622844323,
+          "saturation_q25": 0.6517517350377497,
+          "saturation_q75": 0.7892415104752062,
+          "stroke_q25": 4.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.002723323463307021,
+          "foreground_pixels": 31168
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": false,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Brushy wash and paper-like variation, clean dark outline, top-left lighting and warm ochre/tan palette."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P11",
+      "candidate": "art/style05/people/east/upper_leg_r.png",
+      "candidate_sha256": "14aa55be8a3348ee191fce44b54a08b748150ba3b99158fe80155b46aec39b98",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P11_east_upper_leg_r_rawcrop.png",
+      "input_sha256": "1d77063307527620fe4752c9deed9b6289b2ab971951523f94bbfc1f7514936d",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_east_try1_raw.png",
+      "source_sha256": "38f36a71f14d8aaf29b70e9fe1ef8478f4f0929f05e0d4ffc9de8e9bd3d879f6",
+      "crop_box": [
+        970,
+        450,
+        1254,
+        815
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Identical ink-and-wash brush texture, dark contours, top-left lighting and skin/clay palette.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-3dcc3aff-6d8d-4081-9253-955f23bece22",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_04.png",
+      "raw_scorecard_sha256": "b4c5604b85b0f18aff6df54148cd42aed8172bfb3a2f2756c3eb2d340ea9c456",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 4,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P11_east_upper_leg_r_rawcrop.png",
+        "sha256": "1d77063307527620fe4752c9deed9b6289b2ab971951523f94bbfc1f7514936d",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.05840639504899433,
+          "saturation_q25": 0.561045559022574,
+          "saturation_q75": 0.7888083288657367,
+          "stroke_q25": 4.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.00232099607910682,
+          "foreground_pixels": 32353
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": false,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Identical ink-and-wash brush texture, dark contours, top-left lighting and skin/clay palette."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P12",
+      "candidate": "art/style05/people/overlays/flint_core.png",
+      "candidate_sha256": "bee5984b2dddfaeabc97f23f8ebbab6080276531b089b7fd3a1861abcdbdfed4",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P12_overlays_flint_core_rawcrop.png",
+      "input_sha256": "3e2d68b1530160f8846bbf670cd70fb123337ac77ef951480a10383118bee097",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/knapping_tools_try1_raw.png",
+      "source_sha256": "cc7cf255eace38b261646b27becd6c54e0ea4db6ac67b0d480bc378f1c1016ed",
+      "crop_box": [
+        887,
+        0,
+        1774,
+        887
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Flint painterly washes and hard facets, thick dark outline, top-left light and desaturated earth tones match.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-3dcc3aff-6d8d-4081-9253-955f23bece22",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_04.png",
+      "raw_scorecard_sha256": "b4c5604b85b0f18aff6df54148cd42aed8172bfb3a2f2756c3eb2d340ea9c456",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 4,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P12_overlays_flint_core_rawcrop.png",
+        "sha256": "3e2d68b1530160f8846bbf670cd70fb123337ac77ef951480a10383118bee097",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.20778712580708275,
+          "saturation_q25": 0.24556218036678745,
+          "saturation_q75": 0.38009360831818706,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.007457421770945228,
+          "foreground_pixels": 37159
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": false,
+          "saturation_q75": false,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Flint painterly washes and hard facets, thick dark outline, top-left light and desaturated earth tones match."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P13",
+      "candidate": "art/style05/people/overlays/hair_braided.png",
+      "candidate_sha256": "25ccfd1776840cd7b8032c014bb3a7c95c7bc014e28f457fc44d97855f47f207",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P13_overlays_hair_braided_rawcrop.png",
+      "input_sha256": "6003a375db14252bc19e8fd411073ac32ac4e2e1ca5ceab0ca3107d4a3a296ff",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/overlays_try1_raw.png",
+      "source_sha256": "b3fa6546f9251b079d4fd33d943ff0d22fbd3511f8f4e124b290a8678ae6ae53",
+      "crop_box": [
+        790,
+        0,
+        1220,
+        408
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Same ink/watercolor texture, bold dark outline, highlights/shadows and warm brown palette.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-2581d809-2e47-4843-97bf-4ebe994b1e72",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_05.png",
+      "raw_scorecard_sha256": "ab3ff9354c4b1f472b50b706501b5079a19bd914016901b2d8d409b51b189999",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 5,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P13_overlays_hair_braided_rawcrop.png",
+        "sha256": "6003a375db14252bc19e8fd411073ac32ac4e2e1ca5ceab0ca3107d4a3a296ff",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.17993329850926187,
+          "saturation_q25": 0.8408480552952141,
+          "saturation_q75": 0.919061363859728,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.0030888615177099665,
+          "foreground_pixels": 27126
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Same ink/watercolor texture, bold dark outline, highlights/shadows and warm brown palette."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P14",
+      "candidate": "art/style05/people/overlays/hair_long_tied.png",
+      "candidate_sha256": "f11d5fac32273fe03a693e4ae1b77d2402919f99eca85345957aba9fb4700e5b",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P14_overlays_hair_long_tied_rawcrop.png",
+      "input_sha256": "7f945303fe10a0995ef1f88c17bd4fd04325d669600548768d0755dad1051334",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/overlays_try1_raw.png",
+      "source_sha256": "b3fa6546f9251b079d4fd33d943ff0d22fbd3511f8f4e124b290a8678ae6ae53",
+      "crop_box": [
+        390,
+        0,
+        790,
+        408
+      ],
+      "scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4
+      },
+      "pass_model": true,
+      "reason_summary": "Slightly smoother/sharper brush texture and darker, less warm brown palette, still consistent overall.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-2581d809-2e47-4843-97bf-4ebe994b1e72",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_05.png",
+      "raw_scorecard_sha256": "ab3ff9354c4b1f472b50b706501b5079a19bd914016901b2d8d409b51b189999",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 5,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P14_overlays_hair_long_tied_rawcrop.png",
+        "sha256": "7f945303fe10a0995ef1f88c17bd4fd04325d669600548768d0755dad1051334",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.18244204238372919,
+          "saturation_q25": 0.6267282989955498,
+          "saturation_q75": 0.7173711682405461,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.007035435001285437,
+          "foreground_pixels": 30275
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Slightly smoother/sharper brush texture and darker, less warm brown palette, still consistent overall."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P15",
+      "candidate": "art/style05/people/overlays/hair_short.png",
+      "candidate_sha256": "7066e092a70a662503b68afa71deb4e97535aef06de662703688a120f8ddd64a",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P15_overlays_hair_short_rawcrop.png",
+      "input_sha256": "f3ac68845cfc3ba64da887806d58f35b61b11372c84ef3b1c3879acc7c6f35a7",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/overlays_try1_raw.png",
+      "source_sha256": "b3fa6546f9251b079d4fd33d943ff0d22fbd3511f8f4e124b290a8678ae6ae53",
+      "crop_box": [
+        0,
+        0,
+        390,
+        408
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Same ink-and-wash texture, bold contours, clear highlights/shadows and warm brown range.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-2581d809-2e47-4843-97bf-4ebe994b1e72",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_05.png",
+      "raw_scorecard_sha256": "ab3ff9354c4b1f472b50b706501b5079a19bd914016901b2d8d409b51b189999",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 5,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P15_overlays_hair_short_rawcrop.png",
+        "sha256": "f3ac68845cfc3ba64da887806d58f35b61b11372c84ef3b1c3879acc7c6f35a7",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.1290096341958584,
+          "saturation_q25": 0.778876437099078,
+          "saturation_q75": 0.8493143913348205,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.015452497518481049,
+          "foreground_pixels": 28975
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": true
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Same ink-and-wash texture, bold contours, clear highlights/shadows and warm brown range."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P16",
+      "candidate": "art/style05/people/overlays/hammerstone.png",
+      "candidate_sha256": "c8964872488459d2e46d8de955a9e9bbaed40c169a7de936b59195cc50ba46e6",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P16_overlays_hammerstone_rawcrop.png",
+      "input_sha256": "05d9a5ffe34bba4da57720a52f5c15acbc0b6274a976548e9cf5e11d84480410",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/knapping_tools_try1_raw.png",
+      "source_sha256": "cc7cf255eace38b261646b27becd6c54e0ea4db6ac67b0d480bc378f1c1016ed",
+      "crop_box": [
+        0,
+        0,
+        887,
+        887
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Watercolor/ink texture and clean outlines match; top-left warm highlights, cooler shadows and earthy grays.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-e5abd127-5271-4c0b-8e2e-5d4e6c4191fb",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_06.png",
+      "raw_scorecard_sha256": "c407a80fe5b53e8f41bc99559503bb911a5306b7b74c38205a1370dc8c6add1d",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 6,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P16_overlays_hammerstone_rawcrop.png",
+        "sha256": "05d9a5ffe34bba4da57720a52f5c15acbc0b6274a976548e9cf5e11d84480410",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.19268885564697083,
+          "saturation_q25": 0.3564948484930448,
+          "saturation_q75": 0.44921660140663866,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.014459789861457673,
+          "foreground_pixels": 44117
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": true
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Watercolor/ink texture and clean outlines match; top-left warm highlights, cooler shadows and earthy grays."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P17",
+      "candidate": "art/style05/people/overlays/hat.png",
+      "candidate_sha256": "8dc7cea01b6ea61f1dd3f36f9858d55e7d0e34a9f6f9bdb7445f212305e86c96",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P17_overlays_hat_rawcrop.png",
+      "input_sha256": "64bb3dde09b5618db0f19fa8760fa4f873708e86fd56784a7153f78cc8b38fe3",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/overlays_try1_raw.png",
+      "source_sha256": "b3fa6546f9251b079d4fd33d943ff0d22fbd3511f8f4e124b290a8678ae6ae53",
+      "crop_box": [
+        1570,
+        408,
+        1983,
+        793
+      ],
+      "scores": {
+        "medium": 4,
+        "line": 5,
+        "light": 4,
+        "palette": 4
+      },
+      "pass_model": true,
+      "reason_summary": "Consistent texture and bold outline; top-left highlights; slightly warmer/more yellow colors.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-e5abd127-5271-4c0b-8e2e-5d4e6c4191fb",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_06.png",
+      "raw_scorecard_sha256": "c407a80fe5b53e8f41bc99559503bb911a5306b7b74c38205a1370dc8c6add1d",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 6,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P17_overlays_hat_rawcrop.png",
+        "sha256": "64bb3dde09b5618db0f19fa8760fa4f873708e86fd56784a7153f78cc8b38fe3",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.1475136053442368,
+          "saturation_q25": 0.6322632117954022,
+          "saturation_q75": 0.8752290980878362,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.014307361726633827,
+          "foreground_pixels": 36092
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": {
+          "medium": 4,
+          "line": 5,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Consistent texture and bold outline; top-left highlights; slightly warmer/more yellow colors."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": true
+      },
+      "accepted_under_v2": true
+    },
+    {
+      "id": "P18",
+      "candidate": "art/style05/people/overlays/head_female_east.png",
+      "candidate_sha256": "d907e68262312a5ccf3482b6095505bd05ab7fd91928089578bbaa13d4c4cc41",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P18_overlays_head_female_east_rawcrop.png",
+      "input_sha256": "6074d188e2ccec20ce675ad06ee6f380f4924206180839a79037a0121896cca0",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/heads_revision_try2_raw.png",
+      "source_sha256": "b14e1fabe105a061ad57be2366abd390d605b34de5b31ab5d956b9a806a6e40f",
+      "crop_box": [
+        634,
+        0,
+        1268,
+        580
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Same ink-and-wash texture, contour weight, top-left light and warm earthy palette.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-e5abd127-5271-4c0b-8e2e-5d4e6c4191fb",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_06.png",
+      "raw_scorecard_sha256": "c407a80fe5b53e8f41bc99559503bb911a5306b7b74c38205a1370dc8c6add1d",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 6,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P18_overlays_head_female_east_rawcrop.png",
+        "sha256": "6074d188e2ccec20ce675ad06ee6f380f4924206180839a79037a0121896cca0",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.06461906661348225,
+          "saturation_q25": 0.7353242970355784,
+          "saturation_q75": 0.8232799803970959,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.036951096627343326,
+          "foreground_pixels": 49148
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": true
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Same ink-and-wash texture, contour weight, top-left light and warm earthy palette."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P19",
+      "candidate": "art/style05/people/overlays/head_female_front.png",
+      "candidate_sha256": "fc797765164884af8563b051b456731e2538475358fd7e5d3c382ed5eea645e2",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P19_overlays_head_female_front_rawcrop.png",
+      "input_sha256": "b8fb458b620bc6fb2806b5b9dba73999817a54b8713ec745efec544c29575946",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/heads_revision_try2_raw.png",
+      "source_sha256": "b14e1fabe105a061ad57be2366abd390d605b34de5b31ab5d956b9a806a6e40f",
+      "crop_box": [
+        0,
+        0,
+        634,
+        580
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Matching wash and bold contour, graphic shading and warm beige; simpler lighting with fewer shadows.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-52b22cb8-5138-46ff-962b-81dea25878cc",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_07.png",
+      "raw_scorecard_sha256": "0c1560113fd7a1b6146f469c82f7bc278880d3d15ddf2a719e0cc0b4d9fe92de",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 7,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P19_overlays_head_female_front_rawcrop.png",
+        "sha256": "b8fb458b620bc6fb2806b5b9dba73999817a54b8713ec745efec544c29575946",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.07447263702879638,
+          "saturation_q25": 0.734104883699935,
+          "saturation_q75": 0.847023815649683,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.00190004695483048,
+          "foreground_pixels": 48194
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 4,
+          "palette": 5,
+          "sentence": "Matching wash and bold contour, graphic shading and warm beige; simpler lighting with fewer shadows."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P20",
+      "candidate": "art/style05/people/overlays/head_male_east.png",
+      "candidate_sha256": "ad56eafdb79337511d55d6f54dccc01fa9dae6890cae18a038cb434e383fde4b",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P20_overlays_head_male_east_rawcrop.png",
+      "input_sha256": "044d1d4946b749102e38ec56fa3134fa91b7c445f81ef7ae47037d766ee25ee8",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/heads_revision_try2_raw.png",
+      "source_sha256": "b14e1fabe105a061ad57be2366abd390d605b34de5b31ab5d956b9a806a6e40f",
+      "crop_box": [
+        634,
+        580,
+        1268,
+        1241
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Same brush texture and thick outlines, upper-left light and warm skin browns; simpler shadow shapes.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-52b22cb8-5138-46ff-962b-81dea25878cc",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_07.png",
+      "raw_scorecard_sha256": "0c1560113fd7a1b6146f469c82f7bc278880d3d15ddf2a719e0cc0b4d9fe92de",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 7,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P20_overlays_head_male_east_rawcrop.png",
+        "sha256": "044d1d4946b749102e38ec56fa3134fa91b7c445f81ef7ae47037d766ee25ee8",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.10301413577322929,
+          "saturation_q25": 0.7496155931900854,
+          "saturation_q75": 0.8908709185469221,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.06132573002208614,
+          "foreground_pixels": 41528
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": true
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 4,
+          "palette": 5,
+          "sentence": "Same brush texture and thick outlines, upper-left light and warm skin browns; simpler shadow shapes."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P21",
+      "candidate": "art/style05/people/overlays/head_male_front.png",
+      "candidate_sha256": "334152e0fdc2b2ff7c6f87d2ec6332170bdf7229cf80210d19cf5c446ea0fae2",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P21_overlays_head_male_front_rawcrop.png",
+      "input_sha256": "657cddabfcd6200677735f0fb5498295e003ac30a8f456e1477ec630e3eade99",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/heads_revision_try2_raw.png",
+      "source_sha256": "b14e1fabe105a061ad57be2366abd390d605b34de5b31ab5d956b9a806a6e40f",
+      "crop_box": [
+        0,
+        580,
+        634,
+        1241
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Consistent medium, clean contours, cartoon shading, lighting direction and palette; subtle shadow-detail differences.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-52b22cb8-5138-46ff-962b-81dea25878cc",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_07.png",
+      "raw_scorecard_sha256": "0c1560113fd7a1b6146f469c82f7bc278880d3d15ddf2a719e0cc0b4d9fe92de",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 7,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P21_overlays_head_male_front_rawcrop.png",
+        "sha256": "657cddabfcd6200677735f0fb5498295e003ac30a8f456e1477ec630e3eade99",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.11282710280373832,
+          "saturation_q25": 0.749040456890514,
+          "saturation_q75": 0.903436490933343,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.01164588086843919,
+          "foreground_pixels": 44238
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": true
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 4,
+          "palette": 5,
+          "sentence": "Consistent medium, clean contours, cartoon shading, lighting direction and palette; subtle shadow-detail differences."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P22",
+      "candidate": "art/style05/people/overlays/held_berry_basket.png",
+      "candidate_sha256": "a01252ac865a405524655e967d7a36235b3581bc9d18d6875d27ea8455ce1606",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P22_overlays_held_berry_basket_rawcrop.png",
+      "input_sha256": "ecd934a7f417433b60ce6763dcc2abe10b490c7aa3ad9b457afc32a0c6e597b1",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/overlays_try1_raw.png",
+      "source_sha256": "b3fa6546f9251b079d4fd33d943ff0d22fbd3511f8f4e124b290a8678ae6ae53",
+      "crop_box": [
+        1220,
+        408,
+        1570,
+        793
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Same watercolor/ink texture, clean contours and top-left highlights; warm palette with red berries fitting style.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-d1d3ae9a-8d20-4c9a-ac04-002362e9b146",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_08.png",
+      "raw_scorecard_sha256": "4774cebb724c47fb86c428ad5f98b346b49d04fd3b9bf0b15cfbcd9ea0e7eb43",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 8,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P22_overlays_held_berry_basket_rawcrop.png",
+        "sha256": "ecd934a7f417433b60ce6763dcc2abe10b490c7aa3ad9b457afc32a0c6e597b1",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.2173713000357855,
+          "saturation_q25": 0.7433255301077568,
+          "saturation_q75": 0.8302511548652418,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.011558546333733146,
+          "foreground_pixels": 41064
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": true
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Same watercolor/ink texture, clean contours and top-left highlights; warm palette with red berries fitting style."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P23",
+      "candidate": "art/style05/people/overlays/held_log_bundle.png",
+      "candidate_sha256": "6d7073c8bd9ad34938363c048e6df068c8550e7221ca7c15664c6f4c343bb104",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P23_overlays_held_log_bundle_rawcrop.png",
+      "input_sha256": "600a1a5299d5273f149faf1832c3087c2727f952d0e21db156b392572821c1cd",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/overlays_try1_raw.png",
+      "source_sha256": "b3fa6546f9251b079d4fd33d943ff0d22fbd3511f8f4e124b290a8678ae6ae53",
+      "crop_box": [
+        750,
+        408,
+        1220,
+        793
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Matching brushy texture and bold outlines; top-left highlights on log ends and cohesive wood browns.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-d1d3ae9a-8d20-4c9a-ac04-002362e9b146",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_08.png",
+      "raw_scorecard_sha256": "4774cebb724c47fb86c428ad5f98b346b49d04fd3b9bf0b15cfbcd9ea0e7eb43",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 8,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P23_overlays_held_log_bundle_rawcrop.png",
+        "sha256": "600a1a5299d5273f149faf1832c3087c2727f952d0e21db156b392572821c1cd",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.23711639882064697,
+          "saturation_q25": 0.7301220633235254,
+          "saturation_q75": 0.8279850062747959,
+          "stroke_q25": 2.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.008593519575230432,
+          "foreground_pixels": 25355
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Matching brushy texture and bold outlines; top-left highlights on log ends and cohesive wood browns."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P24",
+      "candidate": "art/style05/people/overlays/held_stone_axe.png",
+      "candidate_sha256": "625dbe513e4fc183160a054145f5f050650a8161be516ae3b0e1690d2f1f50e7",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P24_overlays_held_stone_axe_rawcrop.png",
+      "input_sha256": "e731509ae3703bb1e525f293a52464092ddc97438cdf72206c182085483dbd5f",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/overlays_try1_raw.png",
+      "source_sha256": "b3fa6546f9251b079d4fd33d943ff0d22fbd3511f8f4e124b290a8678ae6ae53",
+      "crop_box": [
+        390,
+        408,
+        750,
+        793
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Identical ink-and-wash, thick outline, top-left stone/wood highlights and earthy grays/browns.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-d1d3ae9a-8d20-4c9a-ac04-002362e9b146",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_08.png",
+      "raw_scorecard_sha256": "4774cebb724c47fb86c428ad5f98b346b49d04fd3b9bf0b15cfbcd9ea0e7eb43",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 8,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P24_overlays_held_stone_axe_rawcrop.png",
+        "sha256": "e731509ae3703bb1e525f293a52464092ddc97438cdf72206c182085483dbd5f",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.1818046456223943,
+          "saturation_q25": 0.35280214701801377,
+          "saturation_q75": 0.7797722360330357,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.004455207583227797,
+          "foreground_pixels": 21588
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Identical ink-and-wash, thick outline, top-left stone/wood highlights and earthy grays/browns."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P25",
+      "candidate": "art/style05/people/overlays/stick.png",
+      "candidate_sha256": "5a79d88a5a63f13f270c9f867f5a37497aa5e1f973e49f3f9dd8ea243965a65f",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P25_overlays_stick_rawcrop.png",
+      "input_sha256": "f3ad53304af5eac5c3751510fd60b014be8a087bd2cdadba635b6bfd43345897",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/identity_try1_raw.png",
+      "source_sha256": "2bcd3f6acf52cd625036294bd9c8fe2a928a6571d020c4a68f957036fb16df13",
+      "crop_box": [
+        887,
+        0,
+        1774,
+        887
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Same wash variation, clean dark outline, top-left light and brown/tan colors.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-5b6d3c2a-a404-44de-9e4e-3315d6f1743b",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_09.png",
+      "raw_scorecard_sha256": "7dcb5bf2b78a9dacd8ec778844ff6106df6dceed3d518a5af2aceb971f660fcb",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 9,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P25_overlays_stick_rawcrop.png",
+        "sha256": "f3ad53304af5eac5c3751510fd60b014be8a087bd2cdadba635b6bfd43345897",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.24679029957203993,
+          "saturation_q25": 0.7711667106028846,
+          "saturation_q75": 0.9154185707424279,
+          "stroke_q25": 2.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 6.0,
+          "wash_flatness": 0.007258198606345286,
+          "foreground_pixels": 8260
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Same wash variation, clean dark outline, top-left light and brown/tan colors."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P26",
+      "candidate": "art/style05/people/overlays/top_fur_cloak.png",
+      "candidate_sha256": "6d85fbb635d3a9115f2a058da7dd0a1e847ce82e5144eab0687f7670159f1da0",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P26_overlays_top_fur_cloak_rawcrop.png",
+      "input_sha256": "e4f4abbc7c6371965fbd0ace4b6d135c016e7bb3a40f2b89c00871edcbe618ab",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/overlays_try1_raw.png",
+      "source_sha256": "b3fa6546f9251b079d4fd33d943ff0d22fbd3511f8f4e124b290a8678ae6ae53",
+      "crop_box": [
+        1570,
+        0,
+        1983,
+        408
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Identical painterly wash and edges, matching outlines/light and warm browns/creams.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-5b6d3c2a-a404-44de-9e4e-3315d6f1743b",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_09.png",
+      "raw_scorecard_sha256": "7dcb5bf2b78a9dacd8ec778844ff6106df6dceed3d518a5af2aceb971f660fcb",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 9,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P26_overlays_top_fur_cloak_rawcrop.png",
+        "sha256": "e4f4abbc7c6371965fbd0ace4b6d135c016e7bb3a40f2b89c00871edcbe618ab",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.1562209454788185,
+          "saturation_q25": 0.5299373044618394,
+          "saturation_q75": 0.7582159223130412,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.05125636416684481,
+          "foreground_pixels": 43594
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Identical painterly wash and edges, matching outlines/light and warm browns/creams."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": true
+      },
+      "accepted_under_v2": true
+    },
+    {
+      "id": "P27",
+      "candidate": "art/style05/people/overlays/top_hide_wrap.png",
+      "candidate_sha256": "ee9c250fbc1e36bab6728417a08397da1db0a9c9b3c2e07c9ba3315de5068173",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P27_overlays_top_hide_wrap_rawcrop.png",
+      "input_sha256": "ae42a438d29ce9cf54087e7bb3f15b37869b74eb614fc67f9f2d698253f0f8a3",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/overlays_try1_raw.png",
+      "source_sha256": "b3fa6546f9251b079d4fd33d943ff0d22fbd3511f8f4e124b290a8678ae6ae53",
+      "crop_box": [
+        1220,
+        0,
+        1570,
+        408
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Same blotchy wash, bold contours, top-left shadow/highlight balance and earthy browns/tans.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-5b6d3c2a-a404-44de-9e4e-3315d6f1743b",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_09.png",
+      "raw_scorecard_sha256": "7dcb5bf2b78a9dacd8ec778844ff6106df6dceed3d518a5af2aceb971f660fcb",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 9,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P27_overlays_top_hide_wrap_rawcrop.png",
+        "sha256": "ae42a438d29ce9cf54087e7bb3f15b37869b74eb614fc67f9f2d698253f0f8a3",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.17619084145125413,
+          "saturation_q25": 0.6168094398458628,
+          "saturation_q75": 0.8271907193361101,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.09100784367609374,
+          "foreground_pixels": 40803
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": true
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Same blotchy wash, bold contours, top-left shadow/highlight balance and earthy browns/tans."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P28",
+      "candidate": "art/style05/people/overlays/top_woven_tunic.png",
+      "candidate_sha256": "9d3ba64704e282a991251e987930ecfed38d6cf4e037af6f420de77fc05db30f",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P28_overlays_top_woven_tunic_rawcrop.png",
+      "input_sha256": "eee1c127b6a4bd0c7322811a7647c1e49918ab928375d368386bfae98ef32f5a",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/overlays_try1_raw.png",
+      "source_sha256": "b3fa6546f9251b079d4fd33d943ff0d22fbd3511f8f4e124b290a8678ae6ae53",
+      "crop_box": [
+        0,
+        408,
+        390,
+        793
+      ],
+      "scores": {
+        "medium": 4,
+        "line": 5,
+        "light": 4,
+        "palette": 4
+      },
+      "pass_model": true,
+      "reason_summary": "Mottled watercolor/ink strokes and thick contours match; similar light and warm beige/brown palette.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-bab78005-664b-4c74-bf9b-44f2fba8eb43",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_10.png",
+      "raw_scorecard_sha256": "9cddedd870dbe48abd87db4c3b4a7d3a310099d80f53ca565cc5b4f8e3661106",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 10,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P28_overlays_top_woven_tunic_rawcrop.png",
+        "sha256": "eee1c127b6a4bd0c7322811a7647c1e49918ab928375d368386bfae98ef32f5a",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.2219517313746065,
+          "saturation_q25": 0.3575042925364792,
+          "saturation_q75": 0.6023888695004882,
+          "stroke_q25": 2.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.01849319474045214,
+          "foreground_pixels": 49407
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": true
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 4,
+          "line": 5,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Mottled watercolor/ink strokes and thick contours match; similar light and warm beige/brown palette."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P29",
+      "candidate": "art/style05/people/parts/foot_l.png",
+      "candidate_sha256": "4ab29ded35e3d7c8fde2929c55cc746262255cd454cc33473740e26d8da8923c",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P29_parts_foot_l_rawcrop.png",
+      "input_sha256": "e1035be2f543489af6eef0a1554b86ff48c93022be927e1e18ed9cf982512540",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_front_try1_raw.png",
+      "source_sha256": "c11569323d3e4bf7abd3fd88ad2d510b95bcb327ff929503dec67534b49d87ac",
+      "crop_box": [
+        680,
+        815,
+        970,
+        1254
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Same wash and speckled shading, bold clean outlines, consistent lighting and warm earth tones.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-bab78005-664b-4c74-bf9b-44f2fba8eb43",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_10.png",
+      "raw_scorecard_sha256": "9cddedd870dbe48abd87db4c3b4a7d3a310099d80f53ca565cc5b4f8e3661106",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 10,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P29_parts_foot_l_rawcrop.png",
+        "sha256": "e1035be2f543489af6eef0a1554b86ff48c93022be927e1e18ed9cf982512540",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.11300452468315962,
+          "saturation_q25": 0.7602284866629696,
+          "saturation_q75": 0.858991755168035,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.038881847927828915,
+          "foreground_pixels": 45976
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": true
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Same wash and speckled shading, bold clean outlines, consistent lighting and warm earth tones."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P30",
+      "candidate": "art/style05/people/parts/foot_r.png",
+      "candidate_sha256": "5736b46268495dd8cccf00f2db204c85761a83f4df6702c97a04fc6899e518e8",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P30_parts_foot_r_rawcrop.png",
+      "input_sha256": "5fb9becbd3ba0308a45ba0bd9d0f74191d6dd3f1d736a2d0f7162bdf267b4aad",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_front_try1_raw.png",
+      "source_sha256": "c11569323d3e4bf7abd3fd88ad2d510b95bcb327ff929503dec67534b49d87ac",
+      "crop_box": [
+        970,
+        815,
+        1254,
+        1254
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Consistent brush texture and dark contours; top-left light and deeper shadows with warm browns/tans.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-bab78005-664b-4c74-bf9b-44f2fba8eb43",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_10.png",
+      "raw_scorecard_sha256": "9cddedd870dbe48abd87db4c3b4a7d3a310099d80f53ca565cc5b4f8e3661106",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 10,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P30_parts_foot_r_rawcrop.png",
+        "sha256": "5fb9becbd3ba0308a45ba0bd9d0f74191d6dd3f1d736a2d0f7162bdf267b4aad",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.12233144122940606,
+          "saturation_q25": 0.7562452239399357,
+          "saturation_q75": 0.8557249056457934,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.003908723376404392,
+          "foreground_pixels": 37497
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Consistent brush texture and dark contours; top-left light and deeper shadows with warm browns/tans."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P31",
+      "candidate": "art/style05/people/parts/forearm_l.png",
+      "candidate_sha256": "f1dde2e5aabce6700b1a15cac0f038e4183e06fe60392da62ff6aa9b131c1974",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P31_parts_forearm_l_rawcrop.png",
+      "input_sha256": "a50c1e4b3b38c2297cded15f770d615d5ea507efafaf59504452447d7e854427",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_front_try1_raw.png",
+      "source_sha256": "c11569323d3e4bf7abd3fd88ad2d510b95bcb327ff929503dec67534b49d87ac",
+      "crop_box": [
+        0,
+        450,
+        350,
+        815
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Mottled wash and visible brushstrokes, thick black outline, top-left highlights and tan/ochre/brown palette.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-313bf4da-e9f3-4a7f-aede-ce62f8b01335",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_11.png",
+      "raw_scorecard_sha256": "9b2f1481235d760824840b060a0affc5d2d855a3e18d76dfb97b407f93820e51",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 11,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P31_parts_forearm_l_rawcrop.png",
+        "sha256": "a50c1e4b3b38c2297cded15f770d615d5ea507efafaf59504452447d7e854427",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.054074854180168504,
+          "saturation_q25": 0.6914435712561644,
+          "saturation_q75": 0.7903245688811382,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.002845099879948143,
+          "foreground_pixels": 25930
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Mottled wash and visible brushstrokes, thick black outline, top-left highlights and tan/ochre/brown palette."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P32",
+      "candidate": "art/style05/people/parts/forearm_r.png",
+      "candidate_sha256": "caa0c37be7806a1690bf477f9325d13033ee4941d76f93699d481f230aed5aa0",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P32_parts_forearm_r_rawcrop.png",
+      "input_sha256": "3a836eb3f24d80507820d7977bdef4b6397e9fdbc7888692cb80fdc832a80ee8",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_front_try1_raw.png",
+      "source_sha256": "c11569323d3e4bf7abd3fd88ad2d510b95bcb327ff929503dec67534b49d87ac",
+      "crop_box": [
+        350,
+        450,
+        680,
+        815
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Same wash texture and brush application, matching bold contour, top-left light and warm skin colors.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-313bf4da-e9f3-4a7f-aede-ce62f8b01335",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_11.png",
+      "raw_scorecard_sha256": "9b2f1481235d760824840b060a0affc5d2d855a3e18d76dfb97b407f93820e51",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 11,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P32_parts_forearm_r_rawcrop.png",
+        "sha256": "3a836eb3f24d80507820d7977bdef4b6397e9fdbc7888692cb80fdc832a80ee8",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.059347782053878875,
+          "saturation_q25": 0.7014779594947453,
+          "saturation_q75": 0.8039503120096297,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.003561449810420632,
+          "foreground_pixels": 25933
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Same wash texture and brush application, matching bold contour, top-left light and warm skin colors."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P33",
+      "candidate": "art/style05/people/parts/head.png",
+      "candidate_sha256": "55b951680ace00ce066f1d11cba5b84bb419689ae1bc07d350b8eb099595839e",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P33_parts_head_rawcrop.png",
+      "input_sha256": "75663280fc0f31b444fce559544e6ebf4dd2c8f0240565e62627cc5350383431",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_front_try1_raw.png",
+      "source_sha256": "c11569323d3e4bf7abd3fd88ad2d510b95bcb327ff929503dec67534b49d87ac",
+      "crop_box": [
+        0,
+        0,
+        350,
+        450
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Soft mottled watercolor/ink, clean thick outline, upper-left highlights and warm ochre/tan palette.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-313bf4da-e9f3-4a7f-aede-ce62f8b01335",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_11.png",
+      "raw_scorecard_sha256": "9b2f1481235d760824840b060a0affc5d2d855a3e18d76dfb97b407f93820e51",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 11,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P33_parts_head_rawcrop.png",
+        "sha256": "75663280fc0f31b444fce559544e6ebf4dd2c8f0240565e62627cc5350383431",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.07072061182779157,
+          "saturation_q25": 0.6710687706615931,
+          "saturation_q75": 0.7772246105976747,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.004590340609346242,
+          "foreground_pixels": 46933
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Soft mottled watercolor/ink, clean thick outline, upper-left highlights and warm ochre/tan palette."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P34",
+      "candidate": "art/style05/people/parts/lower_leg_l.png",
+      "candidate_sha256": "a93806565ce1739939a3ae17c3938bf93afb94f77bb11e466ded44cde62ba959",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P34_parts_lower_leg_l_rawcrop.png",
+      "input_sha256": "d6a346822485924ff7a685db1f7e521b021fa0a37a074f11f297efced90e10d2",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_front_try1_raw.png",
+      "source_sha256": "c11569323d3e4bf7abd3fd88ad2d510b95bcb327ff929503dec67534b49d87ac",
+      "crop_box": [
+        0,
+        815,
+        350,
+        960
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Watercolor/ink texture, thick clean black contour, reference lighting and warm brown/beige tones match.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-0fcd7d6e-071a-4d2f-af2c-a58b3d20c71a",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_12.png",
+      "raw_scorecard_sha256": "9bc1d368f05a980e2996ccbd10f97dcfd4a0706643b72b7a893a4a6657449bde",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 12,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P34_parts_lower_leg_l_rawcrop.png",
+        "sha256": "d6a346822485924ff7a685db1f7e521b021fa0a37a074f11f297efced90e10d2",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.03958254660304164,
+          "saturation_q25": 0.6963942778757592,
+          "saturation_q75": 0.8087377684290241,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.08922773566915908,
+          "foreground_pixels": 30512
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": true
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Watercolor/ink texture, thick clean black contour, reference lighting and warm brown/beige tones match."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P35",
+      "candidate": "art/style05/people/parts/lower_leg_r.png",
+      "candidate_sha256": "83df52c81784f7f3ad94e9a36a972c8441789d07a72b04d9f3d7bcbb71bf224b",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P35_parts_lower_leg_r_rawcrop.png",
+      "input_sha256": "65c24e81aaf0dcfcff076c048a6e5abcb3dbea8a4fd0463d5f3c6b914d692648",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_front_try1_raw.png",
+      "source_sha256": "c11569323d3e4bf7abd3fd88ad2d510b95bcb327ff929503dec67534b49d87ac",
+      "crop_box": [
+        350,
+        815,
+        680,
+        960
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Consistent watercolor texture, thick smooth outline, soft lighting and warm beige/earthy browns.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-0fcd7d6e-071a-4d2f-af2c-a58b3d20c71a",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_12.png",
+      "raw_scorecard_sha256": "9bc1d368f05a980e2996ccbd10f97dcfd4a0706643b72b7a893a4a6657449bde",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 12,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P35_parts_lower_leg_r_rawcrop.png",
+        "sha256": "65c24e81aaf0dcfcff076c048a6e5abcb3dbea8a4fd0463d5f3c6b914d692648",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.045635601950415494,
+          "saturation_q25": 0.6848826248614769,
+          "saturation_q75": 0.7995688749917265,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.0891638016927655,
+          "foreground_pixels": 30505
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": true
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Consistent watercolor texture, thick smooth outline, soft lighting and warm beige/earthy browns."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P36",
+      "candidate": "art/style05/people/parts/torso.png",
+      "candidate_sha256": "e93b64613011d926dbcf050c5adf87f3459c0b423cbf4db2bc206bb31ad0972d",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P36_parts_torso_rawcrop.png",
+      "input_sha256": "c40e80e546997a3ff859d6d302621dffe309f41f4570cb161046c3e53cd4d39b",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_front_try1_raw.png",
+      "source_sha256": "c11569323d3e4bf7abd3fd88ad2d510b95bcb327ff929503dec67534b49d87ac",
+      "crop_box": [
+        350,
+        0,
+        680,
+        450
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Ink/watercolor wash, bold black contours, reference lighting and warm skin/beige cloth colors match.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-0fcd7d6e-071a-4d2f-af2c-a58b3d20c71a",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_12.png",
+      "raw_scorecard_sha256": "9bc1d368f05a980e2996ccbd10f97dcfd4a0706643b72b7a893a4a6657449bde",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 12,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P36_parts_torso_rawcrop.png",
+        "sha256": "c40e80e546997a3ff859d6d302621dffe309f41f4570cb161046c3e53cd4d39b",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.07470711662878125,
+          "saturation_q25": 0.5870928747786329,
+          "saturation_q75": 0.7444139186055686,
+          "stroke_q25": 4.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.0031074683285773627,
+          "foreground_pixels": 47250
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": false,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Ink/watercolor wash, bold black contours, reference lighting and warm skin/beige cloth colors match."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P37",
+      "candidate": "art/style05/people/parts/upper_arm_l.png",
+      "candidate_sha256": "014261079ef36bbd874954e8746e257b284f2757469f69a233920b900bec9d81",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P37_parts_upper_arm_l_rawcrop.png",
+      "input_sha256": "bc761c7c9d16faeb05a39467e97119246ba896ca7aebc79adf1916b0c0c5d7c4",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_front_try1_raw.png",
+      "source_sha256": "c11569323d3e4bf7abd3fd88ad2d510b95bcb327ff929503dec67534b49d87ac",
+      "crop_box": [
+        680,
+        0,
+        970,
+        450
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Mottled watercolor/ink brush texture, thick black outline, upper-left highlights and warm earthy palette.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-51c7f357-304b-4a0f-9972-95f32b4d8b2a",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_13.png",
+      "raw_scorecard_sha256": "1c43b0cfc5e1fbe4b6895a27c4c23355b22c5ebd877fa90cd048774a6c51719d",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 13,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P37_parts_upper_arm_l_rawcrop.png",
+        "sha256": "bc761c7c9d16faeb05a39467e97119246ba896ca7aebc79adf1916b0c0c5d7c4",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.05281299069357742,
+          "saturation_q25": 0.7085452669765502,
+          "saturation_q75": 0.7986553161118672,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.002675022992284524,
+          "foreground_pixels": 27331
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Mottled watercolor/ink brush texture, thick black outline, upper-left highlights and warm earthy palette."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P38",
+      "candidate": "art/style05/people/parts/upper_arm_r.png",
+      "candidate_sha256": "15863e461c874c101c9390f9af312c299da0494336be4fbe168fa37ccf8fb6a2",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P38_parts_upper_arm_r_rawcrop.png",
+      "input_sha256": "0d2f0912f4d2a4c9d727142b46fd7d2f8adc4ac672654d018f69390c6fbed60f",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_front_try1_raw.png",
+      "source_sha256": "c11569323d3e4bf7abd3fd88ad2d510b95bcb327ff929503dec67534b49d87ac",
+      "crop_box": [
+        970,
+        0,
+        1254,
+        450
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Same wash and brushstrokes, clean thick outline, upper-left light and matching skin colors.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-51c7f357-304b-4a0f-9972-95f32b4d8b2a",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_13.png",
+      "raw_scorecard_sha256": "1c43b0cfc5e1fbe4b6895a27c4c23355b22c5ebd877fa90cd048774a6c51719d",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 13,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P38_parts_upper_arm_r_rawcrop.png",
+        "sha256": "0d2f0912f4d2a4c9d727142b46fd7d2f8adc4ac672654d018f69390c6fbed60f",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.050230924844459714,
+          "saturation_q25": 0.6797495316506863,
+          "saturation_q75": 0.7916378365386674,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.0028819136390105006,
+          "foreground_pixels": 27419
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Same wash and brushstrokes, clean thick outline, upper-left light and matching skin colors."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P39",
+      "candidate": "art/style05/people/parts/upper_leg_l.png",
+      "candidate_sha256": "83026f2d1468ac1e5f70dfe1dc0a28f3332548074b48dd6318c4ef57014aead5",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P39_parts_upper_leg_l_rawcrop.png",
+      "input_sha256": "2159e91c6948a43da87e291a9e0ef3202547d9a2264a7c536b2d185fc1b6bc58",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_front_try1_raw.png",
+      "source_sha256": "c11569323d3e4bf7abd3fd88ad2d510b95bcb327ff929503dec67534b49d87ac",
+      "crop_box": [
+        680,
+        450,
+        970,
+        815
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Textured watercolor/ink wash, bold outline, lighter upper-left and darker lower-right, matching palette.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-51c7f357-304b-4a0f-9972-95f32b4d8b2a",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_13.png",
+      "raw_scorecard_sha256": "1c43b0cfc5e1fbe4b6895a27c4c23355b22c5ebd877fa90cd048774a6c51719d",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 13,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P39_parts_upper_leg_l_rawcrop.png",
+        "sha256": "2159e91c6948a43da87e291a9e0ef3202547d9a2264a7c536b2d185fc1b6bc58",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.059481852470166324,
+          "saturation_q25": 0.5758647892428457,
+          "saturation_q75": 0.7621741779869518,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.0038447068401894348,
+          "foreground_pixels": 33684
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Textured watercolor/ink wash, bold outline, lighter upper-left and darker lower-right, matching palette."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    },
+    {
+      "id": "P40",
+      "candidate": "art/style05/people/parts/upper_leg_r.png",
+      "candidate_sha256": "b5aca34eed8d8d1cc54d5384c60f4ad6ac892b94a93bec01dc6c27c1d9e89d6e",
+      "input": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P40_parts_upper_leg_r_rawcrop.png",
+      "input_sha256": "1c12adf597d09309c33d918c5560b189a8c057ce9f39a827e0efea6ce4227720",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_front_try1_raw.png",
+      "source_sha256": "c11569323d3e4bf7abd3fd88ad2d510b95bcb327ff929503dec67534b49d87ac",
+      "crop_box": [
+        970,
+        450,
+        1254,
+        815
+      ],
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5
+      },
+      "pass_model": true,
+      "reason_summary": "Mottled wash, slightly varying thick hand-drawn contour, upper-left light and warm yellows/browns/beige.",
+      "reason_source": "Faithful summary of visible image-model scorecard; raw card is verbatim authority",
+      "model_tool": "builtin image_gen",
+      "model_call_id": "exec-543ea4a8-bc33-458a-a9e7-f000919de4f4",
+      "raw_scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/scorecard_14.png",
+      "raw_scorecard_sha256": "7d245e533062b5a50b0d457da0f2f2b888aeac7f80bfc16a4fcba3f0dbfbeb01",
+      "reviewed_source": "native unmodified generation crop; final candidate hash bound separately",
+      "batch": 14,
+      "numeric_verdict": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/trial2b/people-model/P40_parts_upper_leg_r_rawcrop.png",
+        "sha256": "1c12adf597d09309c33d918c5560b189a8c057ce9f39a827e0efea6ce4227720",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.05788802091438175,
+          "saturation_q25": 0.5740865904884715,
+          "saturation_q75": 0.762778555630742,
+          "stroke_q25": 4.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.0033026331638498965,
+          "foreground_pixels": 33461
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": false,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Mottled wash, slightly varying thick hand-drawn contour, upper-left light and warm yellows/browns/beige."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "accepted_under_v2": false
+    }
+  ],
+  "numeric_calibration": {
+    "file": "docs/v8/arttrial2/JUDGE_V2_CALIBRATION.json",
+    "sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+    "judge_sha256": "168892b193aed145b6817f7a6cde36aea5f11ae93e018353542135332a44fa95",
+    "same_family_reference_hashes_verified": true,
+    "leave_one_out_all_pass": true
+  },
+  "numeric_pass_count": 2,
+  "accepted_count": 2,
+  "C7": {
+    "attempt_numerator": 46,
+    "accepted_denominator": 2,
+    "tries_per_accepted": 23.0,
+    "bar": 3.0,
+    "passed": false,
+    "numerator_source": "PEOPLE_V2_INVENTORY.json conservative_per_part_attempt_numerator_including_superseded"
+  }
+}

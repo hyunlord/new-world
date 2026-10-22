@@ -1,0 +1,17 @@
+{
+  "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/heads_revision_try2_raw.png",
+  "source_sha256": "b14e1fabe105a061ad57be2366abd390d605b34de5b31ab5d956b9a806a6e40f",
+  "crop_box": [
+    0,
+    0,
+    634,
+    580
+  ],
+  "output_sha256": "fc797765164884af8563b051b456731e2538475358fd7e5d3c382ed5eea645e2",
+  "tool": "builtin image_gen",
+  "tool_call_id": "exec-5b5a1bb0-2ddd-484b-a8b9-ca96f83c3c32",
+  "tries": 2,
+  "prompt": "Production cutout replacement HEAD PARTS for the attached large-head cartoon Stone Age colony person, same dark controlled ink and restrained sepia watercolor, scene reference only for medium. Exactly FOUR isolated BALD HEADS, arranged 2 columns x 2 rows on flat #FF00FF magenta; no hair cap, no neck/body, no labels. Top-left: young adult woman's bald head FRONT three-quarter slightly facing right, soft rounded cheek silhouette, clear arched eyebrows, gentle nose, large readable eyes; no makeup or jewelry. Top-right: SAME woman bald head facing EAST, true side-three-quarter with nose silhouette pointing RIGHT and one dominant eye. Bottom-left: adult man's bald head FRONT three-quarter slightly right, broad angular jaw, strong straight eyebrows, very clear FULL DARK BEARD AND MOUSTACHE integrated with the face, dark beard forms bottom third of head. Bottom-right: SAME man bald head EAST side-three-quarter nose pointing RIGHT, prominent dark beard clearly projecting from chin. Adult man's beard should be unmistakable when full head is only 18px high; woman's face clearly clean shaven. No eyelashes decoration, no glamour, no sexuality. Stylized three-heads-tall character proportions, simple flat shapes, very sparse interior lines, bold outer ink. All four heads exactly same scale, whole ears/chin in each cell, wide magenta gutters. Each head must work beneath existing separate hair or hat.\n",
+  "processing": "magenta key; alpha crop; Lanczos maximum 256; no quantization or outline forcing",
+  "status": "generated candidate; model and readability review separate"
+}

@@ -1,3 +1,7 @@
+# TRIAL2b current implementation
+
+The current front/east cutout rig and provenance are specified in [PEOPLE_V2.md](../../../docs/v8/arttrial2/PEOPLE_V2.md). The following TRIAL2 contract is preserved as historical evidence; its old top-down part count, tint masks and old failed review do not describe the replacement art.
+
 # Standalone person composition contract
 
 `art/proto/PersonComposer.gd` implements a Sprite2D cut-out rig under a real Skeleton2D/Bone2D hierarchy. It reads generated PNGs only; missing parts are explicit errors, never replaced by procedural body shapes. This rehearsal contains no simulation or game bridge.

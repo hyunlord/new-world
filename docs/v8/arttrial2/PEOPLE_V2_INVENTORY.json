@@ -1,0 +1,389 @@
+{
+  "round": 2,
+  "frozen_for_blind_review": true,
+  "produced_files": 42,
+  "active_files": 40,
+  "conservative_per_part_attempt_numerator_including_superseded": 46,
+  "accepted_denominator": "PENDING independent model/numeric judgement",
+  "note": "4 new sex/direction heads conservatively charged try2 each; original neutral heads retained and charged as produced. This may double-charge shared initial head design but never hides rejected/superseded work. Six sheet generations physically contain42 part instances. Anchor2 attempts separate.",
+  "parts": [
+    {
+      "file": "art/style05/people/east/foot_l.png",
+      "sha256": "2e03a8fb1091021c50ba2969ca955329fb72e9aabfc5a448174fea9417c6270c",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_east_try1_raw.png",
+      "tool_call_id": "exec-0b51710b-ce21-4217-be57-81ab90cac394",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/east/foot_r.png",
+      "sha256": "1e635718c789ef13748ed76336ee08c8a861b806952d933ffc339132f2815ff9",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_east_try1_raw.png",
+      "tool_call_id": "exec-0b51710b-ce21-4217-be57-81ab90cac394",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/east/forearm_l.png",
+      "sha256": "ebf202b3058a451ef2261517c2c704e2ec0a5b76714c1f3e759a379e7186f1fd",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_east_try1_raw.png",
+      "tool_call_id": "exec-0b51710b-ce21-4217-be57-81ab90cac394",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/east/forearm_r.png",
+      "sha256": "2e00ac379b76e4309eba71c5b6034c58002bdee9e805b654f8b92d648a2a2f3c",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_east_try1_raw.png",
+      "tool_call_id": "exec-0b51710b-ce21-4217-be57-81ab90cac394",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/east/head.png",
+      "sha256": "cc18e1c15d4509703e445c101d3131c381bcd51dda82f665187ed48394d2c9ca",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_east_try1_raw.png",
+      "tool_call_id": "exec-0b51710b-ce21-4217-be57-81ab90cac394",
+      "recorded_try": 1,
+      "active_for_round2": false,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/east/lower_leg_l.png",
+      "sha256": "bd18dd162fe2017c77a80895d4a8184e2becc986ccd8148cf70a0c2730b0cd81",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_east_try1_raw.png",
+      "tool_call_id": "exec-0b51710b-ce21-4217-be57-81ab90cac394",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/east/lower_leg_r.png",
+      "sha256": "7ef272874480c11bd42af8562062126a9cbf949c8b674941b69acf6e6494a6ab",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_east_try1_raw.png",
+      "tool_call_id": "exec-0b51710b-ce21-4217-be57-81ab90cac394",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/east/torso.png",
+      "sha256": "6a13113254ade860913657a3f772ca3ff37856c24fc40bdd1183d2772c66c36d",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_east_try1_raw.png",
+      "tool_call_id": "exec-0b51710b-ce21-4217-be57-81ab90cac394",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/east/upper_arm_l.png",
+      "sha256": "d997cddd4d411b08f83ef822761d5c3fc0b7e9665f64fe635e509e8487ba3995",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_east_try1_raw.png",
+      "tool_call_id": "exec-0b51710b-ce21-4217-be57-81ab90cac394",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/east/upper_arm_r.png",
+      "sha256": "c351724df3ad008a859702b03682d3340162bab01112a438cddfcadf01952103",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_east_try1_raw.png",
+      "tool_call_id": "exec-0b51710b-ce21-4217-be57-81ab90cac394",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/east/upper_leg_l.png",
+      "sha256": "806b02ed63daac100cf060f523d7f44ec4529e84d9c76eef0ecdeb72c7c21cc8",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_east_try1_raw.png",
+      "tool_call_id": "exec-0b51710b-ce21-4217-be57-81ab90cac394",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/east/upper_leg_r.png",
+      "sha256": "14aa55be8a3348ee191fce44b54a08b748150ba3b99158fe80155b46aec39b98",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_east_try1_raw.png",
+      "tool_call_id": "exec-0b51710b-ce21-4217-be57-81ab90cac394",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/overlays/beard.png",
+      "sha256": "619bc2bf313ead87678f53ade9d3768918f829fdd5b0e82006a5cbbbd634bdc6",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/identity_try1_raw.png",
+      "tool_call_id": "exec-2eb3a441-acf8-4c55-a0aa-a96e8dc3416b",
+      "recorded_try": 1,
+      "active_for_round2": false,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/overlays/flint_core.png",
+      "sha256": "bee5984b2dddfaeabc97f23f8ebbab6080276531b089b7fd3a1861abcdbdfed4",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/knapping_tools_try1_raw.png",
+      "tool_call_id": "exec-c4730203-0b44-4b5b-94f9-bb94d789cb66",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/overlays/hair_braided.png",
+      "sha256": "25ccfd1776840cd7b8032c014bb3a7c95c7bc014e28f457fc44d97855f47f207",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/overlays_try1_raw.png",
+      "tool_call_id": "exec-c4c6484b-dcdf-4377-b150-13e4a4f67cb5",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/overlays/hair_long_tied.png",
+      "sha256": "f11d5fac32273fe03a693e4ae1b77d2402919f99eca85345957aba9fb4700e5b",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/overlays_try1_raw.png",
+      "tool_call_id": "exec-c4c6484b-dcdf-4377-b150-13e4a4f67cb5",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/overlays/hair_short.png",
+      "sha256": "7066e092a70a662503b68afa71deb4e97535aef06de662703688a120f8ddd64a",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/overlays_try1_raw.png",
+      "tool_call_id": "exec-c4c6484b-dcdf-4377-b150-13e4a4f67cb5",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/overlays/hammerstone.png",
+      "sha256": "c8964872488459d2e46d8de955a9e9bbaed40c169a7de936b59195cc50ba46e6",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/knapping_tools_try1_raw.png",
+      "tool_call_id": "exec-c4730203-0b44-4b5b-94f9-bb94d789cb66",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/overlays/hat.png",
+      "sha256": "8dc7cea01b6ea61f1dd3f36f9858d55e7d0e34a9f6f9bdb7445f212305e86c96",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/overlays_try1_raw.png",
+      "tool_call_id": "exec-c4c6484b-dcdf-4377-b150-13e4a4f67cb5",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/overlays/head_female_east.png",
+      "sha256": "d907e68262312a5ccf3482b6095505bd05ab7fd91928089578bbaa13d4c4cc41",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/heads_revision_try2_raw.png",
+      "tool_call_id": "exec-5b5a1bb0-2ddd-484b-a8b9-ca96f83c3c32",
+      "recorded_try": 2,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/overlays/head_female_front.png",
+      "sha256": "fc797765164884af8563b051b456731e2538475358fd7e5d3c382ed5eea645e2",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/heads_revision_try2_raw.png",
+      "tool_call_id": "exec-5b5a1bb0-2ddd-484b-a8b9-ca96f83c3c32",
+      "recorded_try": 2,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/overlays/head_male_east.png",
+      "sha256": "ad56eafdb79337511d55d6f54dccc01fa9dae6890cae18a038cb434e383fde4b",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/heads_revision_try2_raw.png",
+      "tool_call_id": "exec-5b5a1bb0-2ddd-484b-a8b9-ca96f83c3c32",
+      "recorded_try": 2,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/overlays/head_male_front.png",
+      "sha256": "334152e0fdc2b2ff7c6f87d2ec6332170bdf7229cf80210d19cf5c446ea0fae2",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/heads_revision_try2_raw.png",
+      "tool_call_id": "exec-5b5a1bb0-2ddd-484b-a8b9-ca96f83c3c32",
+      "recorded_try": 2,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/overlays/held_berry_basket.png",
+      "sha256": "a01252ac865a405524655e967d7a36235b3581bc9d18d6875d27ea8455ce1606",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/overlays_try1_raw.png",
+      "tool_call_id": "exec-c4c6484b-dcdf-4377-b150-13e4a4f67cb5",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/overlays/held_log_bundle.png",
+      "sha256": "6d7073c8bd9ad34938363c048e6df068c8550e7221ca7c15664c6f4c343bb104",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/overlays_try1_raw.png",
+      "tool_call_id": "exec-c4c6484b-dcdf-4377-b150-13e4a4f67cb5",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/overlays/held_stone_axe.png",
+      "sha256": "625dbe513e4fc183160a054145f5f050650a8161be516ae3b0e1690d2f1f50e7",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/overlays_try1_raw.png",
+      "tool_call_id": "exec-c4c6484b-dcdf-4377-b150-13e4a4f67cb5",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/overlays/stick.png",
+      "sha256": "5a79d88a5a63f13f270c9f867f5a37497aa5e1f973e49f3f9dd8ea243965a65f",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/identity_try1_raw.png",
+      "tool_call_id": "exec-2eb3a441-acf8-4c55-a0aa-a96e8dc3416b",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/overlays/top_fur_cloak.png",
+      "sha256": "6d85fbb635d3a9115f2a058da7dd0a1e847ce82e5144eab0687f7670159f1da0",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/overlays_try1_raw.png",
+      "tool_call_id": "exec-c4c6484b-dcdf-4377-b150-13e4a4f67cb5",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/overlays/top_hide_wrap.png",
+      "sha256": "ee9c250fbc1e36bab6728417a08397da1db0a9c9b3c2e07c9ba3315de5068173",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/overlays_try1_raw.png",
+      "tool_call_id": "exec-c4c6484b-dcdf-4377-b150-13e4a4f67cb5",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/overlays/top_woven_tunic.png",
+      "sha256": "9d3ba64704e282a991251e987930ecfed38d6cf4e037af6f420de77fc05db30f",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/overlays_try1_raw.png",
+      "tool_call_id": "exec-c4c6484b-dcdf-4377-b150-13e4a4f67cb5",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/parts/foot_l.png",
+      "sha256": "4ab29ded35e3d7c8fde2929c55cc746262255cd454cc33473740e26d8da8923c",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_front_try1_raw.png",
+      "tool_call_id": "exec-97d02b8b-3d65-48a3-ad43-b9c5dc7bac36",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/parts/foot_r.png",
+      "sha256": "5736b46268495dd8cccf00f2db204c85761a83f4df6702c97a04fc6899e518e8",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_front_try1_raw.png",
+      "tool_call_id": "exec-97d02b8b-3d65-48a3-ad43-b9c5dc7bac36",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/parts/forearm_l.png",
+      "sha256": "f1dde2e5aabce6700b1a15cac0f038e4183e06fe60392da62ff6aa9b131c1974",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_front_try1_raw.png",
+      "tool_call_id": "exec-97d02b8b-3d65-48a3-ad43-b9c5dc7bac36",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/parts/forearm_r.png",
+      "sha256": "caa0c37be7806a1690bf477f9325d13033ee4941d76f93699d481f230aed5aa0",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_front_try1_raw.png",
+      "tool_call_id": "exec-97d02b8b-3d65-48a3-ad43-b9c5dc7bac36",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/parts/head.png",
+      "sha256": "55b951680ace00ce066f1d11cba5b84bb419689ae1bc07d350b8eb099595839e",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_front_try1_raw.png",
+      "tool_call_id": "exec-97d02b8b-3d65-48a3-ad43-b9c5dc7bac36",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/parts/lower_leg_l.png",
+      "sha256": "a93806565ce1739939a3ae17c3938bf93afb94f77bb11e466ded44cde62ba959",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_front_try1_raw.png",
+      "tool_call_id": "exec-97d02b8b-3d65-48a3-ad43-b9c5dc7bac36",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/parts/lower_leg_r.png",
+      "sha256": "83df52c81784f7f3ad94e9a36a972c8441789d07a72b04d9f3d7bcbb71bf224b",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_front_try1_raw.png",
+      "tool_call_id": "exec-97d02b8b-3d65-48a3-ad43-b9c5dc7bac36",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/parts/torso.png",
+      "sha256": "e93b64613011d926dbcf050c5adf87f3459c0b423cbf4db2bc206bb31ad0972d",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_front_try1_raw.png",
+      "tool_call_id": "exec-97d02b8b-3d65-48a3-ad43-b9c5dc7bac36",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/parts/upper_arm_l.png",
+      "sha256": "014261079ef36bbd874954e8746e257b284f2757469f69a233920b900bec9d81",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_front_try1_raw.png",
+      "tool_call_id": "exec-97d02b8b-3d65-48a3-ad43-b9c5dc7bac36",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/parts/upper_arm_r.png",
+      "sha256": "15863e461c874c101c9390f9af312c299da0494336be4fbe168fa37ccf8fb6a2",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_front_try1_raw.png",
+      "tool_call_id": "exec-97d02b8b-3d65-48a3-ad43-b9c5dc7bac36",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/parts/upper_leg_l.png",
+      "sha256": "83026f2d1468ac1e5f70dfe1dc0a28f3332548074b48dd6318c4ef57014aead5",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_front_try1_raw.png",
+      "tool_call_id": "exec-97d02b8b-3d65-48a3-ad43-b9c5dc7bac36",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    },
+    {
+      "file": "art/style05/people/parts/upper_leg_r.png",
+      "sha256": "b5aca34eed8d8d1cc54d5384c60f4ad6ac892b94a93bec01dc6c27c1d9e89d6e",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/parts_front_try1_raw.png",
+      "tool_call_id": "exec-97d02b8b-3d65-48a3-ad43-b9c5dc7bac36",
+      "recorded_try": 1,
+      "active_for_round2": true,
+      "status": "awaiting independent style acceptance"
+    }
+  ]
+}

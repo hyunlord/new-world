@@ -1,0 +1,17 @@
+{
+  "source": "/Users/rexxa/work/arttrial2-data/trial2b/people/identity_try1_raw.png",
+  "source_sha256": "2bcd3f6acf52cd625036294bd9c8fe2a928a6571d020c4a68f957036fb16df13",
+  "crop_box": [
+    0,
+    0,
+    887,
+    887
+  ],
+  "output_sha256": "619bc2bf313ead87678f53ade9d3768918f829fdd5b0e82006a5cbbbd634bdc6",
+  "tool": "builtin image_gen",
+  "tool_call_id": "exec-2eb3a441-acf8-4c55-a0aa-a96e8dc3416b",
+  "tries": 1,
+  "prompt": "Create TWO separate generated cutout accessories for the supplied FRONT THREE-QUARTER cartoon colony person, matching its bold ink and warm watercolor look, with scene reference for ink medium and earth palette only. Wide sheet with two equal cells on perfectly flat #FF00FF magenta. LEFT CELL: a short full dark-brown beard and moustache overlay ONLY, U-shaped jaw beard with open mouth hole, no face, no skin, no eyes, no head. Rounded chunky triangular beard silhouette with very few broad tufts, not realistic individual hairs, facing slightly right like person reference. RIGHT CELL: one long slender slightly bent wooden elder walking stick, upright, broad rounded crook at top, dark brown ink outline with simple tan wash. No other objects, no labels, no assembled figures. Entire objects inside margins; no overlap; separated by wide magenta. The beard should make an adult male face unmistakable at 56px complete figure height; elder stick should remain obvious next to a 56px person. No photorealism, no pixels, no gradients, no shadow.\n",
+  "processing": "magenta key; alpha crop; Lanczos maximum 256; no quantization or outline forcing",
+  "status": "generated candidate; model and readability review separate"
+}
