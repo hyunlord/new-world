@@ -31,7 +31,10 @@ fn knowledge_reads_are_empty_in_the_baseline_world() {
         .min()
         .expect("an agent");
     let view = collect_agent_knowledge(&engine.world, &engine.resources, someone as i64);
-    assert!(view.rows.is_empty(), "nobody knows anything in the baseline");
+    assert!(
+        view.rows.is_empty(),
+        "nobody knows anything in the baseline"
+    );
 }
 
 #[test]
@@ -47,7 +50,10 @@ fn the_tech_view_lists_every_node_in_id_order_with_the_aggregate() {
         assert_eq!(usize::from(row.id), i, "id order");
         let state = &res.colony.tech.states[i];
         assert_eq!(row.status, state.status.code());
-        assert_eq!((row.practitioners, row.holders), (state.practitioners, state.holders));
+        assert_eq!(
+            (row.practitioners, row.holders),
+            (state.practitioners, state.holders)
+        );
         assert_eq!(row.threshold, defs().threshold(row.id));
     }
     let at_risk = tech
@@ -55,8 +61,14 @@ fn the_tech_view_lists_every_node_in_id_order_with_the_aggregate() {
         .iter()
         .filter(|r| r.status == TechStatus::AtRisk.code())
         .count();
-    assert!(at_risk >= 2, "the doorway and hide scraping start with one holder: {at_risk}");
-    assert_eq!(tech.at_risk as usize, at_risk, "the badge counts the at-risk rows");
+    assert!(
+        at_risk >= 2,
+        "the doorway and hide scraping start with one holder: {at_risk}"
+    );
+    assert_eq!(
+        tech.at_risk as usize, at_risk,
+        "the badge counts the at-risk rows"
+    );
     // Two of ten founders know timber walls (weight 2 of 14): 2/10 × 2/14 = 28 ‰.
     assert_eq!(tech.progress, 28);
     let door = &tech.nodes[usize::from(id("doorway"))];
@@ -78,7 +90,10 @@ fn node_and_person_views_agree_with_the_component() {
     let named: Vec<u64> = node.practitioners.iter().map(|p| p.id).collect();
     assert_eq!(named, vec![holder]);
     assert!(node.practitioners[0].proficiency >= defs().threshold(door));
-    assert!(!node.gates.is_empty(), "the doorway gates the door blueprint");
+    assert!(
+        !node.gates.is_empty(),
+        "the doorway gates the door blueprint"
+    );
     assert!(!collect_tech_node(&engine.world, &engine.resources, 99).found);
 
     let view = collect_agent_knowledge(&engine.world, &engine.resources, holder as i64);
@@ -102,7 +117,11 @@ fn node_and_person_views_agree_with_the_component() {
         .collect();
     assert_eq!(rows, want, "one row per entry, in id order");
     assert!(rows.windows(2).all(|w| w[0].0 < w[1].0));
-    let door_row = view.rows.iter().find(|r| r.id == door).expect("doorway row");
+    let door_row = view
+        .rows
+        .iter()
+        .find(|r| r.id == door)
+        .expect("doorway row");
     assert_eq!(door_row.state, 0, "a fresh seeded entry is practised");
     assert!(!collect_agent_knowledge(&engine.world, &engine.resources, -1).found);
 }
@@ -137,7 +156,10 @@ fn teach_orders_are_listed_until_cancelled() {
     let orders = collect_teach_orders(&engine.world, &engine.resources);
     assert_eq!(orders.len(), 1);
     let o = &orders[0];
-    assert_eq!((o.teacher, o.learner, o.knowledge), (teacher, learner, door));
+    assert_eq!(
+        (o.teacher, o.learner, o.knowledge),
+        (teacher, learner, door)
+    );
     assert_eq!(o.threshold, defs().threshold(door));
     let r = submit(&mut engine, Command::CancelTeach { order: o.id });
     assert!(r.accepted, "{r:?}");
