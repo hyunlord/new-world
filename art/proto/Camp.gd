@@ -18,9 +18,11 @@ var running: bool = false
 var elapsed: float = 0.0
 var measurement_start: int = 0
 var frame_us: Array[int] = []
+var rendered_frames: int = 0
 var previous_frame: int = 0
 var mode: String = "camp"
 var count: int = 24
+var all_walk: bool = false
 var zoom_level: float = 1.0
 var textures: Dictionary = {}
 var asset_hashes: Dictionary = {}
@@ -45,6 +47,7 @@ func _ready() -> void:
     people_root = str(options.get("people-root", ProjectSettings.globalize_path("res://../style05/people")))
     autotile_root = str(options.get("autotile-root", ProjectSettings.globalize_path("res://../style05/autotile")))
     mode = str(options.get("mode", "camp"))
+    all_walk = mode == "camp" and str(options.get("all-walk", "false")) == "true"
     count = int(options.get("count", "24"))
     zoom_level = float(options.get("zoom", "1"))
     if mode == "camp" and zoom_level == 2.0:
@@ -80,6 +83,7 @@ func _ready() -> void:
     if mode == "people":
         _json("answer_key.json", answer_key)
     print("PROTO_READY people=%d mode=%s renderer=Sprite2D bones=Bone2D zoom=%s" % [count, mode, zoom_level])
+    RenderingServer.frame_post_draw.connect(_frame_drawn)
     _begin.call_deferred()
 
 func _find_file(root: String, filename: String) -> String:
@@ -181,6 +185,8 @@ func _attributes(index: int) -> Dictionary:
         held = "log_bundle" if index % 12 == 3 else "berry_basket"
     elif state == "chop":
         held = "stone_axe"
+    if all_walk:
+        state = "walk"
     var age: String = "child" if index % 12 in [6, 9] else ("elder" if index % 12 == 11 else "adult")
     return {"age": age, "sex": "female" if index % 2 == 0 else "male", "sex_rendered": false, "hair": ["short", "long_tied", "braided"][index % 3], "top": ["hide_wrap", "fur_cloak", "woven_tunic"][index % 3], "skin": ["#bc916a", "#8b6045", "#d6af88"][index % 3], "top_tint": ["#9f8461", "#798065", "#9a7054"][index % 3], "held": held, "state": state, "hat": index % 5 == 0, "phase": float(index % 8) / 8.0}
 
@@ -208,9 +214,15 @@ func _people() -> void:
 func _begin() -> void:
     await get_tree().process_frame
     await get_tree().process_frame
+    if DisplayServer.get_name() != "headless":
+        await RenderingServer.frame_post_draw
     running = true
     measurement_start = Time.get_ticks_usec()
     previous_frame = measurement_start
+
+func _frame_drawn() -> void:
+    if running:
+        rendered_frames += 1
 
 func _process(delta: float) -> void:
     if not running:
@@ -247,6 +259,12 @@ func _finish() -> void:
     for path: String in COMPOSER.texture_cache:
         part_hashes[path] = FileAccess.get_sha256(path)
     result["person_hashes"] = part_hashes
+    result["all_walk"] = all_walk
+    result["process_frames"] = frame_us.size()
+    result["process_fps"] = float(frame_us.size()) / wall_seconds
+    result["rendered_frames"] = rendered_frames
+    result["rendered_fps"] = float(rendered_frames) / wall_seconds
+    result["measurement_start_event"] = "first_frame_post_draw" if DisplayServer.get_name() != "headless" else "headless_process_only"
     var playing: Array[String] = []
     for person: Node2D in people:
         var animation_name: String = str(person.player.current_animation)

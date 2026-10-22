@@ -30,7 +30,9 @@
         "fully_visible_people": 24,
         "max_people_per_tile": 1,
         "unique_tiles": 24
-      }
+      },
+      "fps_kind": "process_loop_callbacks_per_wall_second",
+      "rendered_fps_status": "NOT_VERIFIED_WITH_THIS_INSTRUMENTATION"
     },
     {
       "source": "/Users/rexxa/work/arttrial2-data/proto-perf-200-v2/runtime.json",
@@ -62,7 +64,9 @@
         "fully_visible_people": 200,
         "max_people_per_tile": 1,
         "unique_tiles": 200
-      }
+      },
+      "fps_kind": "process_loop_callbacks_per_wall_second",
+      "rendered_fps_status": "NOT_VERIFIED_WITH_THIS_INSTRUMENTATION"
     }
   ],
   "crowd_crop": {
@@ -81,5 +85,80 @@
     },
     "source": "/Users/rexxa/work/arttrial2-data/crowd_crop_640x360.png",
     "sha256": "320c2e288025c17950d69710fa4b7ffa4fa56b3832856847dbf61fb7f238aec6"
-  }
+  },
+  "source_commit": "12df4dfe44d3037e55dc2b72898527e5baca7287",
+  "measurement_limit": "Historical fps counts _process callbacks. Frame-post-draw counter was absent; do not treat as proven presented/rendered FPS during inactive-window intervals.",
+  "rendered_all_walk_runs": [
+    {
+      "people": 24,
+      "all_walk": true,
+      "animations": [
+        "walk"
+      ],
+      "wall_seconds": 60.000379,
+      "rendered_frames": 14318,
+      "rendered_fps": 238.631825975633,
+      "process_frames": 16660,
+      "process_fps": 277.664912749968,
+      "frame_p95_ms": 6.912,
+      "measurement_start_event": "first_frame_post_draw",
+      "headless": false,
+      "driver": "opengl3",
+      "renderer": "Sprite2D cutouts under Bone2D/Skeleton2D",
+      "viewport_size": [
+        1408.0,
+        832.0
+      ],
+      "zoom": 1.0,
+      "vsync": 0,
+      "capture_sha256": "b0bf3c78ae9d5655fbbd4fcaabbc49c1bc5bb2eef6962a7525dd1a4357fe0c07",
+      "source_hashes_at_start": {
+        "Camp.gd": "41e0b2ec633c0029f30097adf8317e7ad4726879f5dd08d8f2409a043eea373a",
+        "Companion.gd": "98292c1bc07535e40864d5aee395c6cc0440e023592720520ef1158f5fa5ef26",
+        "PersonComposer.gd": "09fe2d067c715d95e3211763eed2a3fa0e2b4aec7b04c9c25960141c2d98dc36",
+        "project.godot": "00fa4435fa564047a8d3afa5ba8f5fab5bfe5cc76d3910228c025454f7dcb1d3",
+        "scenes/camp.tscn": "a008c5486817b3a866ae159199a42cdc5d66ac00ce2aa01c5513e887c0b9610b",
+        "season.gdshader": "99db3e70da741485cb80a53ae3379018aae7a16acc6088f174249f83d6ee46e4",
+        "tint_mask.gdshader": "c32f8af1fd3d5f6ad803e0211c9a6fd331b95e62af9c9a4e4008272f5c74fb74"
+      },
+      "source": "/Users/rexxa/work/arttrial2-data/proto-all-walk-draw-24-1/runtime.json",
+      "source_sha256": "bb6651c7234f8c947c8078ebca7e8aa0c313375fb8810f79d5471ec7b747cded"
+    },
+    {
+      "people": 200,
+      "all_walk": true,
+      "animations": [
+        "walk"
+      ],
+      "wall_seconds": 60.012859,
+      "rendered_frames": 4874,
+      "rendered_fps": 81.2159274064913,
+      "process_frames": 4875,
+      "process_fps": 81.2325905019789,
+      "frame_p95_ms": 13.965,
+      "measurement_start_event": "first_frame_post_draw",
+      "headless": false,
+      "driver": "opengl3",
+      "renderer": "Sprite2D cutouts under Bone2D/Skeleton2D",
+      "viewport_size": [
+        1408.0,
+        832.0
+      ],
+      "zoom": 1.0,
+      "vsync": 0,
+      "capture_sha256": "7bf24ae895bd02e00291b81ebcd6cd3118f06e42dd23a4ad5236b3836e60bf25",
+      "source_hashes_at_start": {
+        "Camp.gd": "41e0b2ec633c0029f30097adf8317e7ad4726879f5dd08d8f2409a043eea373a",
+        "Companion.gd": "98292c1bc07535e40864d5aee395c6cc0440e023592720520ef1158f5fa5ef26",
+        "PersonComposer.gd": "09fe2d067c715d95e3211763eed2a3fa0e2b4aec7b04c9c25960141c2d98dc36",
+        "project.godot": "00fa4435fa564047a8d3afa5ba8f5fab5bfe5cc76d3910228c025454f7dcb1d3",
+        "scenes/camp.tscn": "a008c5486817b3a866ae159199a42cdc5d66ac00ce2aa01c5513e887c0b9610b",
+        "season.gdshader": "99db3e70da741485cb80a53ae3379018aae7a16acc6088f174249f83d6ee46e4",
+        "tint_mask.gdshader": "c32f8af1fd3d5f6ad803e0211c9a6fd331b95e62af9c9a4e4008272f5c74fb74"
+      },
+      "source": "/Users/rexxa/work/arttrial2-data/proto-all-walk-draw-200-1/runtime.json",
+      "source_sha256": "b17c6a1e3b52a9a86b8a2daa77ade2dad4b83a4ea4006f4c1ead69a12f0ae059"
+    }
+  ],
+  "rendered_measurement_limit": "RenderingServer.frame_post_draw per wall second, not display presentation Hz. Godot focus restoration requested every approximately 3.2s; continuous foreground state was not independently sampled. Standalone candidate scene, not full game."
 }

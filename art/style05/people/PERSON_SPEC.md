@@ -33,6 +33,6 @@ AnimationPlayer owns all six loops. Walk/carry use 8 sampled intervals; chop use
 
 The `people` harness selects12 figures with exactly2 sleepers,2 children and1 elder on meadow or forest_floor. It writes the attribute answer key outside the repo; blind reviewers receive captures alone, ordered left-to-right then top-to-bottom. Do not send reviewers this spec or answer_key.json. Runtime animation samples log actual Bone2D rotations/scales and current player positions at four times. Those observations and visible captures, not the animation-name list, establish playback.
 
-Readability remains unverified until two fresh reviewers supply verbatim activity/carry answers for12 and sex/age/item answers for8. Preserve the original thresholds: ≥10/12 at2×, ≥8/12 at1× and ≥20/24 attributes. No programmatic identity or answer key can substitute for recognition.
+Two fresh reviewers completed all four image conditions; every readability bar failed. Verbatim answers and scores are in docs/v8/arttrial2/READABILITY.md and READABILITY.json. Preserve the original thresholds: ≥10/12 at2×, ≥8/12 at1× and ≥20/24 attributes. No programmatic identity or answer key can substitute for recognition.
 
 Post-review correction: forearm sprites render above torso overlays so shared-grip motion is not occluded by clothing. `chop_grips.json` records both actual global hand positions at13sampled keys including the closing pose. Final matrices use separate `-v2` evidence paths; initial captures and answer keys remain preserved.
