@@ -1,14 +1,14 @@
 //! BillSystem: picks each workshop's active bill (the first runnable one) and clears shelf items no bill needs.
 //!
 //! Priority: 123 (`BILL_PRIORITY`). Interval: 60 ticks. Gate: `WorldRules.colony` with `economy`.
-//! Reads: `SimResources.colony` (workshops and bills, ground items, zones, reservations), `rules.colony`
+//! Reads: `Job`, `Carry`; `SimResources.colony` (workshops and bills, ground items, zones, reservations), `rules.colony`
 //! Writes: `SimResources.colony.workshops` (active bill, shelf), ground items (spilled shelf items)
 //! Events: none
 //!
 //! M2 goal 3.5. Workshops are visited in id order and their bills in list
 //! order. A bill is **runnable** when it is not suspended, still has work
-//! (`Make(n)`: fewer than `n` done; `Maintain(n)`: fewer than `n` unreserved
-//! items of its output kind on stockpile cells) and its inputs for one craft
+//! (`Make(n)`: fewer than `n` done; `Maintain(n)`: fewer than `n` items of its
+//! output kind in the colony's stock, [`maintain_count`]) and its inputs for one craft
 //! are on the shelf or available (unreserved stacks anywhere on the map, in
 //! or out of stockpiles). The first runnable bill becomes `active`; the job
 //! layer then supplies its inputs (`JobKind::Supply`) and crafts it
@@ -16,7 +16,7 @@
 //! bill removed, suspended or done) are put down at the work tile (merge and
 //! spill), so nothing stays stranded on a shelf.
 use hecs::World;
-use sim_core::colony::{BillMode, ItemKind, ItemSpec, ReserveKey, Workshop};
+use sim_core::colony::{BillMode, Carry, ItemKind, ItemSpec, Job, JobKind, ReserveKey, Workshop};
 use sim_engine::{RuntimeSystem, SimResources};
 
 use super::items::put_items;
@@ -51,6 +51,38 @@ pub fn stockpiled(res: &SimResources, kind: ItemKind) -> u32 {
         .sum()
 }
 
+/// The count a `Maintain` bill compares with its target (DECISIONS D12): every
+/// item of `kind` on the ground (stocked or waiting for a hauler), in a
+/// hauler's hands, and the outputs of crafts in progress that make it.
+pub fn maintain_count(world: &World, res: &SimResources, kind: ItemKind) -> u32 {
+    let ground = res.colony.ground_total(kind) as u32;
+    let mut carried = 0u32;
+    let mut making = 0u32;
+    for (_, (job, carry)) in world.query::<(&Job, Option<&Carry>)>().iter() {
+        match job.kind {
+            JobKind::Haul { .. } => {
+                carried += carry
+                    .filter(|c| c.kind == kind)
+                    .map_or(0, |c| u32::from(c.count));
+            }
+            JobKind::Craft { workshop, bill, .. } => {
+                let output = res
+                    .colony
+                    .workshops
+                    .get(&workshop)
+                    .and_then(|shop| shop.bill(bill))
+                    .and_then(|b| b.recipe.recipe())
+                    .map(|r| r.output);
+                if let Some((_, n)) = output.filter(|o| o.0 == kind) {
+                    making += u32::from(n);
+                }
+            }
+            _ => {}
+        }
+    }
+    ground + carried + making
+}
+
 /// Unreserved items of `kind` lying anywhere.
 pub fn available(res: &SimResources, kind: ItemKind) -> u32 {
     let c = &res.colony;
@@ -64,7 +96,7 @@ pub fn available(res: &SimResources, kind: ItemKind) -> u32 {
 }
 
 /// Whether the bill at `index` of `shop` is runnable now (see the module header).
-pub fn runnable(res: &SimResources, shop: &Workshop, index: usize) -> bool {
+pub fn runnable(world: &World, res: &SimResources, shop: &Workshop, index: usize) -> bool {
     let Some(bill) = shop.bills.get(index) else {
         return false;
     };
@@ -76,7 +108,7 @@ pub fn runnable(res: &SimResources, shop: &Workshop, index: usize) -> bool {
     }
     let more = match bill.mode {
         BillMode::Make(n) => bill.done < u32::from(n),
-        BillMode::Maintain(n) => stockpiled(res, recipe.output.0) < u32::from(n),
+        BillMode::Maintain(n) => maintain_count(world, res, recipe.output.0) < u32::from(n),
     };
     more && recipe
         .inputs
@@ -85,14 +117,14 @@ pub fn runnable(res: &SimResources, shop: &Workshop, index: usize) -> bool {
 }
 
 /// Recompute every workshop's active bill and clear unused shelf items.
-pub fn schedule(res: &mut SimResources) {
+pub fn schedule(world: &World, res: &mut SimResources) {
     let ids: Vec<u32> = res.colony.workshops.keys().copied().collect();
     for id in ids {
         let Some(shop) = res.colony.workshops.get(&id) else {
             continue;
         };
         let active = (0..shop.bills.len())
-            .find(|&i| runnable(res, shop, i))
+            .find(|&i| runnable(world, res, shop, i))
             .map(|i| shop.bills[i].id);
         // Shelf items stay while any live bill (not suspended, work left) uses them.
         let used: Vec<ItemKind> = shop
@@ -133,10 +165,10 @@ impl RuntimeSystem for BillSystem {
         BILL_INTERVAL
     }
 
-    fn tick(&mut self, _world: &mut World, resources: &mut SimResources) {
+    fn tick(&mut self, world: &mut World, resources: &mut SimResources) {
         if resources.rules.colony.and_then(|r| r.economy).is_none() {
             return;
         }
-        schedule(resources);
+        schedule(world, resources);
     }
 }

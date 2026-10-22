@@ -66,6 +66,10 @@ pub struct EconomyRule {
     pub bank_tiles_per_outcrop: u32,
     /// A bank tile lies within this Chebyshev distance of water (goal 3.2: 2).
     pub bank_reach: u32,
+    /// A chopper looks for an axe in a stockpile within this Chebyshev distance (goal 3.7: 24).
+    pub axe_reach: u32,
+    /// Chops an axe lasts before it breaks into one stone (goal 3.7 / 7.4: 200; 0 = never).
+    pub axe_uses: u32,
 }
 
 impl EconomyRule {
@@ -79,6 +83,8 @@ impl EconomyRule {
         grass_boulder_permille: 20,
         bank_tiles_per_outcrop: 40,
         bank_reach: 2,
+        axe_reach: 24,
+        axe_uses: 200,
     };
 }
 

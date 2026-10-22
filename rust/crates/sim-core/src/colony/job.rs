@@ -214,6 +214,9 @@ pub struct Job {
     pub item: ItemKind,
     /// A craft's main input material, set when the craft starts (M2; carried to the output).
     pub material: Option<MaterialId>,
+    /// A chop job's tool stop: the stockpile stack where the worker picks up
+    /// an axe on the way to the tree (M2 goal 3.7); `None` once picked up.
+    pub fetch: Option<(u32, u32)>,
     /// Smallest Chebyshev distance to the current walking goal so far.
     pub best_distance: u32,
     /// Tick `best_distance` last shrank (the stuck rule, 7.5).
@@ -226,6 +229,10 @@ impl Job {
     /// pickup; Haul holds its cell until the drop.
     pub fn keys(&self) -> Vec<ReserveKey> {
         match (self.kind, self.stage) {
+            (JobKind::Chop { tree }, JobStage::ToSource) => match self.fetch {
+                Some(axe) => vec![ReserveKey::Tree(tree), ReserveKey::Stack(axe)],
+                None => vec![ReserveKey::Tree(tree)],
+            },
             (JobKind::Chop { tree }, _) => vec![ReserveKey::Tree(tree)],
             (JobKind::Haul { from, to }, JobStage::ToSource) => {
                 vec![ReserveKey::Stack(from), ReserveKey::Cell(to)]
@@ -276,6 +283,7 @@ mod tests {
             amount: 5,
             item: ItemKind::Log,
             material: None,
+            fetch: None,
             best_distance: 4,
             progress_tick: 0,
         };

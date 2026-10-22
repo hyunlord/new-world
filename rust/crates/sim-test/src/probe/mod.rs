@@ -10,6 +10,7 @@ pub mod colony;
 mod deaths;
 mod deaths_observer;
 pub mod demography;
+pub mod economy;
 pub(crate) mod exposure_health;
 mod family_events;
 mod family_samples;

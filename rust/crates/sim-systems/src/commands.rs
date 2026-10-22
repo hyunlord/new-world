@@ -108,7 +108,7 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
             workshop,
             recipe,
             mode,
-        } => bill_command(res, workshop, |shop, next| {
+        } => bill_command(world, res, workshop, |shop, next| {
             let fits = recipe.recipe().is_some_and(|r| r.workshop == shop.kind);
             if !fits {
                 return Err(RejectReason::WrongWorkshop);
@@ -123,7 +123,7 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
             Ok(true)
         }),
         Command::RemoveBill { workshop, bill } => {
-            let result = bill_command(res, workshop, |shop, _| {
+            let result = bill_command(world, res, workshop, |shop, _| {
                 let before = shop.bills.len();
                 shop.bills.retain(|b| b.id != bill);
                 if shop.active == Some(bill) {
@@ -142,7 +142,7 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
                     JobKind::Supply { workshop: w, .. } => w == workshop,
                     _ => false,
                 });
-                crate::runtime::jobs::bills::schedule(res);
+                crate::runtime::jobs::bills::schedule(world, res);
             }
             result
         }
@@ -150,7 +150,7 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
             workshop,
             bill,
             mode,
-        } => bill_command(res, workshop, |shop, _| {
+        } => bill_command(world, res, workshop, |shop, _| {
             let found = shop
                 .bills
                 .iter_mut()
@@ -160,26 +160,28 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
             found.done = 0;
             Ok(false)
         }),
-        Command::MoveBill { workshop, bill, up } => bill_command(res, workshop, |shop, _| {
-            let i = shop
-                .bills
-                .iter()
-                .position(|b| b.id == bill)
-                .ok_or(RejectReason::Unknown)?;
-            let j = if up { i.checked_sub(1) } else { Some(i + 1) };
-            match j.filter(|j| *j < shop.bills.len()) {
-                Some(j) => {
-                    shop.bills.swap(i, j);
-                    Ok(false)
+        Command::MoveBill { workshop, bill, up } => {
+            bill_command(world, res, workshop, |shop, _| {
+                let i = shop
+                    .bills
+                    .iter()
+                    .position(|b| b.id == bill)
+                    .ok_or(RejectReason::Unknown)?;
+                let j = if up { i.checked_sub(1) } else { Some(i + 1) };
+                match j.filter(|j| *j < shop.bills.len()) {
+                    Some(j) => {
+                        shop.bills.swap(i, j);
+                        Ok(false)
+                    }
+                    None => Err(RejectReason::Nothing),
                 }
-                None => Err(RejectReason::Nothing),
-            }
-        }),
+            })
+        }
         Command::SetBillSuspended {
             workshop,
             bill,
             suspended,
-        } => bill_command(res, workshop, |shop, _| {
+        } => bill_command(world, res, workshop, |shop, _| {
             let found = shop
                 .bills
                 .iter_mut()
@@ -201,6 +203,7 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
 /// Apply `edit` to `workshop` (`Unknown` when there is none) and reschedule
 /// its bills. `edit` gets the next bill id and returns whether it used it.
 fn bill_command(
+    world: &World,
     res: &mut SimResources,
     workshop: WorkshopId,
     edit: impl FnOnce(&mut Workshop, BillId) -> Result<bool, RejectReason>,
@@ -215,7 +218,7 @@ fn bill_command(
             if used {
                 res.colony.next_bill_id = next + 1;
             }
-            crate::runtime::jobs::bills::schedule(res);
+            crate::runtime::jobs::bills::schedule(world, res);
             res.colony.touch(false);
             CommandResult::ok(1)
         }

@@ -34,6 +34,8 @@ use sim_engine::{RuntimeSystem, SimResources};
 use super::cancel::{cancel, finish, finish_in_place, release_job};
 use super::craft;
 use super::items::{chebyshev, colony_sites, put_items, take_items};
+use sim_core::colony::skills::{scaled_ticks, AXE_PERMILLE};
+use sim_core::colony::{quality_bucket, SkillKind, Tool};
 
 /// Priority of [`JobExecuteSystem`].
 pub const JOB_EXECUTE_PRIORITY: u32 = 127;
@@ -155,6 +157,16 @@ fn step(
     };
     match job.stage {
         JobStage::ToSource => {
+            // M2: a chopper first stops at its axe (goal 3.7).
+            if let Some(axe) = job.fetch {
+                if pos != axe {
+                    walk(world, res, rule, entity, &mut job, pos, axe);
+                    return;
+                }
+                pick_up_axe(world, res, entity, &mut job, axe, pos);
+                put_job(world, entity, job);
+                return;
+            }
             let source = job.kind.source();
             let reached = match job.kind {
                 JobKind::Chop { tree: near } | JobKind::Quarry { node: near } => {
@@ -168,16 +180,16 @@ fn step(
             }
             match job.kind {
                 JobKind::Chop { .. } => {
-                    job.stage = JobStage::Working {
-                        ticks_left: rule.chop_ticks.max(1),
-                    };
+                    let ticks = work_ticks(world, rule, entity, rule.chop_ticks, SkillKind::Chop);
+                    job.amount = ticks.min(u32::from(u16::MAX)) as u16;
+                    job.stage = JobStage::Working { ticks_left: ticks };
                     set_state(world, entity, WORK_JOB);
                 }
                 JobKind::Quarry { .. } => {
-                    let ticks = rule.economy.map_or(120, |e| e.quarry_ticks);
-                    job.stage = JobStage::Working {
-                        ticks_left: ticks.max(1),
-                    };
+                    let base = rule.economy.map_or(120, |e| e.quarry_ticks);
+                    let ticks = work_ticks(world, rule, entity, base, SkillKind::Quarry);
+                    job.amount = ticks.min(u32::from(u16::MAX)) as u16;
+                    job.stage = JobStage::Working { ticks_left: ticks };
                     set_state(world, entity, WORK_JOB);
                 }
                 JobKind::Build { .. } => {
@@ -218,7 +230,11 @@ fn step(
         }
         JobStage::Working { ticks_left } => {
             if matches!(job.kind, JobKind::Build { .. }) {
-                return; // a builder: ConstructionSystem does the work
+                // A builder: ConstructionSystem does the work; it trains Build (M2).
+                if rule.economy.is_some() {
+                    craft::train(world, entity, SkillKind::Build, 1);
+                }
+                return;
             }
             if ticks_left > 1 {
                 job.stage = JobStage::Working {
@@ -228,8 +244,17 @@ fn step(
                 return;
             }
             match job.kind {
-                JobKind::Chop { tree } => fell(res, tree),
-                JobKind::Quarry { node } => quarry_batch(res, rule, node),
+                JobKind::Chop { tree } => {
+                    fell(res, tree);
+                    if rule.economy.is_some() {
+                        craft::train(world, entity, SkillKind::Chop, u32::from(job.amount));
+                        use_axe(world, res, rule, entity, pos);
+                    }
+                }
+                JobKind::Quarry { node } => {
+                    quarry_batch(res, rule, node);
+                    craft::train(world, entity, SkillKind::Quarry, u32::from(job.amount));
+                }
                 JobKind::Craft { .. } => craft::finish_craft(world, res, id, entity, &job),
                 _ => {}
             }
@@ -243,6 +268,99 @@ fn step(
                 walk(world, res, rule, entity, &mut job, pos, dest);
             }
         }
+    }
+}
+
+/// Work ticks of a job of `base` ticks for `entity` (M2): scaled by its level
+/// of `skill`, and for chopping by its axe (`AXE_PERMILLE` of the axe's quality
+/// bucket). Without the economy (M1 rules) the base ticks.
+fn work_ticks(
+    world: &World,
+    rule: &ColonyRule,
+    entity: Entity,
+    base: u32,
+    skill: SkillKind,
+) -> u32 {
+    if rule.economy.is_none() {
+        return base.max(1);
+    }
+    let ticks = scaled_ticks(base, craft::level_of(world, entity, skill));
+    let axe = (skill == SkillKind::Chop)
+        .then(|| world.get::<&Tool>(entity).ok().map(|t| t.item))
+        .flatten()
+        .filter(|item| item.kind == ItemKind::StoneAxe);
+    match axe {
+        Some(item) => {
+            let factor = AXE_PERMILLE[usize::from(quality_bucket(item.quality).min(10))];
+            ((u64::from(ticks) * u64::from(factor) + 500) / 1000).max(1) as u32
+        }
+        None => ticks.max(1),
+    }
+}
+
+/// At the axe stack: take one axe as the worker's `Tool` (if the stack is
+/// still there), release the stack and walk on to the tree.
+fn pick_up_axe(
+    world: &mut World,
+    res: &mut SimResources,
+    entity: Entity,
+    job: &mut Job,
+    axe: (u32, u32),
+    pos: (u32, u32),
+) {
+    let (taken, spec) = take_items(res, axe, ItemKind::StoneAxe, 1);
+    res.colony.reservations.remove(&ReserveKey::Stack(axe));
+    if taken == 1 && world.get::<&Tool>(entity).is_err() {
+        let _ = world.insert_one(
+            entity,
+            Tool {
+                item: spec,
+                uses: 0,
+            },
+        );
+    } else if taken == 1 {
+        put_items(res, pos, spec, 1);
+    }
+    job.fetch = None;
+    let tree = job.kind.source();
+    job.best_distance = chebyshev(pos, tree);
+    job.progress_tick = res.current_tick;
+    if let Ok(mut seek) = world.get::<&mut SeekTarget>(entity) {
+        *seek = SeekTarget::new(tree);
+    }
+}
+
+/// A chop done with an axe: count it, wear the axe; a worn-out axe becomes
+/// one stone at the worker's tile (ledger: an axe consumed, a stone created).
+fn use_axe(
+    world: &mut World,
+    res: &mut SimResources,
+    rule: &ColonyRule,
+    entity: Entity,
+    pos: (u32, u32),
+) {
+    let Ok(mut tool) = world.get::<&mut Tool>(entity).map(|t| *t) else {
+        return;
+    };
+    if tool.item.kind != ItemKind::StoneAxe {
+        return;
+    }
+    tool.uses += 1;
+    res.colony.tallies.chops_with_axe += 1;
+    let limit = rule.economy.map_or(0, |e| e.axe_uses);
+    if limit > 0 && tool.uses >= limit {
+        let _ = world.remove_one::<Tool>(entity);
+        res.colony.item_ledger.consume(ItemKind::StoneAxe, 1);
+        res.colony.item_ledger.create(ItemKind::Stone, 1);
+        put_items(
+            res,
+            pos,
+            ItemSpec::raw(ItemKind::Stone, tool.item.material),
+            1,
+        );
+        res.colony.tallies.axes_worn_out += 1;
+    } else if let Ok(mut held) = world.get::<&mut Tool>(entity) {
+        *held = tool;
     }
 }
 

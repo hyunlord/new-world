@@ -94,3 +94,65 @@ Raw data lives in `/Users/rexxa/work/m2-data/` (`$DATA`), outside the repository
   `place_blueprint`/`south_of_hearth` for any blueprint kind (the hut rule; a workshop's work tile is kept clear of
   later placements of the same tick), `add_bill`/`workshop_of_kind`, `set_work_priority`/`adult_rank`. The
   recorded command log carries the actual ticks, so the replay needs no conditions.
+
+## D9 — Skills are per craft skill, not per work type
+
+- Context: goal 3.7 writes `Skills: BTreeMap<WorkType, Skill>`, while the recipe table (3.4) names the skills
+  `Knap` and `Woodwork` and the inspector line (9.4) reads "돌 다듬기 7".
+- Choice: `SkillKind { Knap, Woodwork, Chop, Quarry, Build }` — the recipe's skill for crafts, one skill each for
+  chopping, quarrying and building. `Skills { entries: [Skill; 5] }` (a fixed array indexed by `SkillKind::code`, so
+  the component stays `Copy`; the goal's map in another shape). Added to a person at the first work that trains a
+  skill; the baseline never has it. XP += the work ticks of a finished job (craft, chop, quarry; a builder gains
+  1 XP per tick at a site); a job cancelled before it finishes trains nothing.
+- Speed applies to crafts, chopping and quarrying. Building speed stays `ConstructionSystem`'s (V7 code, one progress
+  per builder per tick); only its XP is counted. Gathering deadwood (Part 4) trains nothing.
+
+## D10 — The tables (ADR 0020)
+
+- `XP_TABLE[L] = 15·L² + 15·L` (level 1 at 30 XP, 5 at 450, 10 at 1,650, 20 at 6,300): a level-0 knapper's blade
+  takes 63 ticks, so the first blades lift a novice by a level or two and mastery takes about 6,300 work ticks
+  (4.4 days of nonstop work at one skill).
+- `SPEED_PERMILLE`: 1400 − 80·L to level 5, then 1000 − 20·(L − 5) (goal: 1400 at 0, 1000 at 5, 700 at 20).
+- Quality: `clamp(30 + 3·level + bonus + material + temperament, 0, 100)`; `bonus` from `QUALITY_BONUS_TABLE`, the
+  values −10 … +15 with triangular weights `27 − |2v − 5|` (mean +2.5), one keyed draw on
+  `(seed, STREAM_QUALITY, agent, tick, bill)`; material: `(hardness − 50) / 5` for blades, hardness on the 0–100
+  Mohs × 10 scale (flint +4). A level-0 blade averages about 36, a level-10 blade about 66.
+- `AXE_PERMILLE[bucket] = 600 − 15·bucket` (600 at bucket 0, 450 at 10): a novice's axe (quality 30–39) cuts chop
+  time to 55.5 %.
+
+## D11 — Temperament: two effects
+
+- Persistence (p) ≥ 600 ‰ adds 2 to a craft's quality; novelty seeking (ns) ≥ 600 ‰ takes 2 ticks off a craft. Both
+  are small on purpose (one bonus step, one tick in thirty); no other temperament effect in M2.
+
+## D12 — `Maintain(n)` counts what is on its way to the stock
+
+- Context: goal 3.5 counts "the stockpiled count of the output kind (across stockpile zones, unreserved)". With that
+  count a `Maintain(10)` firewood bill overshot to 24 in `colony_workshops.rs`: firewood made at the bench waits at
+  the work tile for a hauler, and each tick before the hauler stocks it another craft starts.
+- Choice: the count is every item of the kind on the ground (stocked or waiting), in a hauler's hands, and the
+  outputs of crafts in progress (`bills::maintain_count`); `BillSystem` and `JobAssignSystem` (before handing out a
+  craft, updated as crafts are taken in the tick) use the same count. With it the test stays within 10 ± a carry
+  (low 6 after a burn of 4, high ≤ 20).
+
+## D13 — A craft at work finishes before yielding (calibration round 1)
+
+- Context: inputs are consumed when a craft starts (goal §6, ADR 0019). Round 0 (M2-U, seeds 0–7, 20 days,
+  `$DATA/try/p3a`): 1–3 crafts per seed were cancelled by an urgent need after they started, so their flint was
+  lost; seeds 5 and 7 made only 4 and 5 of 6 blades because their outcrop held 6 and 7 flint.
+- Choice: under the economy a crafter in the working stage yields only to a critical hunger or thirst (75, M1.5's
+  `critical_preemption`), as M1.5 lets a near load finish its leg (`jobs::seam`). Round 1 (`$DATA/calib/r1`): 0
+  crafts lost, 6 blades and 2 axes on all 8 seeds.
+
+## D14 — Priorities: passes by level across the colony
+
+- Context: goal 3.6 — "`JobAssignSystem` picks the lowest priority number first, then this order, then nearest".
+  Applied per person only, a priority-1 crafter has no precedence over a priority-3 crafter who happens to be
+  served first (`AgentId` order).
+- Choice: the assignment runs in passes by level: every available person (AgentId order) tries their level-1 work
+  types, then everyone their level-2 types, … level 4; within a pass, the person's types in `WorkType` order, then
+  the nearest target. Level 0 = never. Without the economy (M1 rules) one pass over every type (M1's order).
+- Measured (round 2, `$DATA/calib/r2`, `$DATA/try/e4b`): the Chop = 0 adult took 0 chop jobs on 8/8 seeds; the
+  Craft = 1 adult made 0–3 of the 8 knap/haft crafts. Every craft of the M2-U script happens within hours on day 1,
+  and the priority-1 adult is often busy or tending a need at that moment; precedence only helps when the person is
+  free. Kept: it is the rule the goal states; E4 is reported as measured.

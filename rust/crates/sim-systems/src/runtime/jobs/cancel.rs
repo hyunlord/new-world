@@ -6,7 +6,7 @@
 //! `SeekTarget`. The decision seam uses `release_job`, which leaves the state
 //! and `SeekTarget` to the decision system.
 use hecs::{Entity, World};
-use sim_core::colony::{CancelReason, Carry, Job, JobKind, JobStage, ReserveKey};
+use sim_core::colony::{CancelReason, Carry, Job, JobKind, JobStage, ReserveKey, Tool};
 use sim_core::components::{Agent, AgentId, AgentState, Position, SeekTarget};
 use sim_engine::SimResources;
 
@@ -99,13 +99,23 @@ pub fn finish_in_place(world: &mut World, res: &mut SimResources, entity: Entity
     }
 }
 
-/// The despawn path (7.5, "the agent died"): drop the load where the worker
-/// fell and release its reservations. Call before the entity is despawned.
+/// The despawn path (7.5, "the agent died"): drop the load and the tool
+/// where the worker fell and release its reservations. Call before the
+/// entity is despawned.
 pub fn on_death(world: &mut World, res: &mut SimResources, entity: Entity) {
     if res.rules.colony.is_none() {
         return;
     }
     drop_carry(world, res, entity);
+    let tool = world
+        .get::<&Tool>(entity)
+        .ok()
+        .map(|t| t.item)
+        .zip(world.get::<&Position>(entity).ok().map(|p| (p.x, p.y)));
+    if let Some((item, tile)) = tool {
+        put_items(res, tile, item, 1);
+        let _ = world.remove_one::<Tool>(entity);
+    }
     if let Some(id) = agent_id(world, entity) {
         release_all(res, id);
     }

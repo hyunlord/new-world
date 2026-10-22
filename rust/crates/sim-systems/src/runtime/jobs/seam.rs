@@ -26,6 +26,7 @@
 //! (`skips_decision`): it keeps its job and its state, and no arm runs, so no
 //! causal event, memory, trip tally or claim is left behind by a choice that
 //! would be undone. M1's `ColonyRule::M1` (`None`) keeps M1: every holder runs it.
+//! M2: a craft at work yields only to a critical need (DECISIONS D13).
 
 use hecs::{Entity, World};
 use sim_core::colony::{CancelReason, Job, JobReleaseKey, JobStage};
@@ -109,6 +110,17 @@ fn may_yield(world: &World, res: &SimResources, entity: Entity) -> bool {
         return true;
     }
     let job = world.get::<&Job>(entity).ok().map(|job| *job);
+    // M2 (DECISIONS D13): a craft at work finishes before yielding to an
+    // urgent need (its inputs were consumed when it started); only a
+    // critical hunger or thirst (above) takes the crafter away.
+    if rule.economy.is_some()
+        && job.is_some_and(|j| {
+            matches!(j.kind, sim_core::colony::JobKind::Craft { .. })
+                && matches!(j.stage, JobStage::Working { .. })
+        })
+    {
+        return false;
+    }
     if let (Some(limit), Some(job), Ok(pos)) =
         (rule.finish_leg_tiles, job, world.get::<&Position>(entity))
     {
@@ -243,6 +255,7 @@ mod tests {
             amount: 5,
             item: sim_core::colony::ItemKind::Log,
             material: None,
+            fetch: None,
             best_distance: 0,
             progress_tick: 0,
         };

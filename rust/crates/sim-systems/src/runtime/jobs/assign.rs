@@ -16,15 +16,19 @@
 //! A worker leaving leisure keeps its `Activity` component for one tick:
 //! the routine's own cleanup at 125 records it as interrupted.
 use hecs::{Entity, World};
-use sim_core::colony::{ItemKind, ItemSpec, Job, JobKind, JobStage, ReserveKey, WorkType};
+use sim_core::colony::{
+    BillMode, ItemKind, ItemSpec, Job, JobKind, JobStage, ReserveKey, Tool, WorkPriorities,
+    WorkType,
+};
 use sim_core::components::{
-    Agent, AgentId, AgentState, Child, PorterTrip, Position, SeekTarget, TargetKind,
+    Agent, AgentId, AgentState, Child, Elder, PorterTrip, Position, SeekTarget, TargetKind,
 };
 use sim_core::rules::ColonyRule;
 use sim_core::spatial::ChunkIndex;
 use sim_engine::{RuntimeSystem, SimResources};
 use std::collections::BTreeMap;
 
+use super::bills::maintain_count;
 use super::cancel::reserve;
 use super::items::{chebyshev, colony_sites, room_on, SiteView};
 
@@ -141,6 +145,7 @@ struct Ctx<'a> {
     transit: &'a BTreeMap<((u32, u32), ItemKind), u16>,
     supply: &'a BTreeMap<(u32, ItemKind), u16>,
     crafting: &'a BTreeMap<u32, u32>,
+    made: &'a BTreeMap<ItemKind, u32>,
 }
 
 /// A picked job: kind, amount, item.
@@ -205,6 +210,12 @@ fn pick_work(
                 let in_progress = ctx.crafting.get(&bill.id).copied().unwrap_or(0);
                 if bill.remaining().is_some_and(|left| left <= in_progress) {
                     continue; // every remaining craft is already being made
+                }
+                if let BillMode::Maintain(n) = bill.mode {
+                    let made = ctx.made.get(&recipe.output.0).copied().unwrap_or(0);
+                    if made >= u32::from(n) {
+                        continue; // the stock (with crafts under way) is full
+                    }
                 }
                 let to = shop.work_tile();
                 // Supply: the first input short of one craft, from the nearest stack.
@@ -414,6 +425,35 @@ fn pick_work(
     }
 }
 
+/// The best unreserved axe stack on a stockpile cell within `reach` of `pos`:
+/// the highest quality, then the nearest `(distance, y, x)` (M2 goal 3.7).
+fn best_axe(res: &SimResources, pos: (u32, u32), reach: u32) -> Option<(u32, u32)> {
+    let colony = &res.colony;
+    let index = &res.spatial.colony.ground;
+    let chunks = reach / sim_core::spatial::CHUNK + 1;
+    let mut best: Option<(std::cmp::Reverse<u8>, u32, u32, u32)> = None;
+    for r in 0..=chunks {
+        for &(tile, ()) in index.ring(pos, r) {
+            let d = chebyshev(pos, tile);
+            let Some(stack) = colony.ground_items.get(&tile) else {
+                continue;
+            };
+            if d > reach
+                || stack.kind != ItemKind::StoneAxe
+                || !colony.zone_of_tile.contains_key(&tile)
+                || colony.reservations.contains_key(&ReserveKey::Stack(tile))
+            {
+                continue;
+            }
+            let key = (std::cmp::Reverse(stack.quality), d, tile.1, tile.0);
+            if best.is_none_or(|b| key < b) {
+                best = Some(key);
+            }
+        }
+    }
+    best.map(|(_, _, y, x)| (x, y))
+}
+
 /// The first job for an agent at `pos` in work-type order, or `None`.
 fn pick(
     res: &SimResources,
@@ -451,13 +491,22 @@ impl RuntimeSystem for JobAssignSystem {
                 .iter()
                 .any(|&(a, b)| a == id || b == id)
         };
-        let mut available: Vec<(AgentId, Entity, (u32, u32))> = world
-            .query::<(&Agent, &Position, &AgentState)>()
+        // (id, entity, tile, work priorities, holds a tool)
+        type Row = (AgentId, Entity, (u32, u32), WorkPriorities, bool);
+        let mut available: Vec<Row> = world
+            .query::<(
+                &Agent,
+                &Position,
+                &AgentState,
+                Option<&WorkPriorities>,
+                Option<&Elder>,
+                Option<&Tool>,
+            )>()
             .without::<&Job>()
             .without::<&Child>()
             .without::<&PorterTrip>()
             .iter()
-            .filter(|(_, (agent, _, state))| {
+            .filter(|(_, (agent, _, state, _, _, _))| {
                 matches!(
                     state,
                     AgentState::Idle
@@ -469,7 +518,12 @@ impl RuntimeSystem for JobAssignSystem {
                         }
                 ) && !in_combat(agent.id)
             })
-            .map(|(entity, (agent, pos, _))| (agent.id, entity, (pos.x, pos.y)))
+            .map(|(entity, (agent, pos, _, priorities, elder, tool))| {
+                let p = priorities
+                    .copied()
+                    .unwrap_or(WorkPriorities::defaults(elder.is_some()));
+                (agent.id, entity, (pos.x, pos.y), p, tool.is_some())
+            })
             .collect();
         if available.is_empty() {
             return;
@@ -483,56 +537,114 @@ impl RuntimeSystem for JobAssignSystem {
         }
         let mut transit = in_transit(world);
         let (mut supply, mut crafting) = shelf_transit(world);
+        // `Maintain` counts of every output kind (BillSystem's count), updated
+        // as crafts are taken this tick.
+        let mut made: BTreeMap<ItemKind, u32> = BTreeMap::new();
+        for shop in resources.colony.workshops.values() {
+            for bill in &shop.bills {
+                if let (BillMode::Maintain(_), Some(r)) = (bill.mode, bill.recipe.recipe()) {
+                    made.entry(r.output.0)
+                        .or_insert_with(|| maintain_count(world, resources, r.output.0));
+                }
+            }
+        }
         let mut taken: Vec<(Entity, Job)> = Vec::new();
         let mut exhausted = Exhausted::default();
-        let order = WorkType::ALL;
-        for (id, entity, pos) in available {
-            let ctx = Ctx {
-                rule: &rule,
-                sites: &sites,
-                site_index: &site_index,
-                transit: &transit,
-                supply: &supply,
-                crafting: &crafting,
-            };
-            let Some((kind, amount, item)) = pick(resources, &ctx, &order, pos, &mut exhausted)
-            else {
-                continue;
-            };
-            let job = Job {
-                kind,
-                stage: JobStage::ToSource,
-                taken_at: tick,
-                amount,
-                item,
-                material: None,
-                best_distance: chebyshev(pos, kind.source()),
-                progress_tick: tick,
-            };
-            for key in job.keys() {
-                reserve(resources, key, id);
-            }
-            match kind {
-                JobKind::Deliver { site, .. } => {
-                    *transit.entry((site, item)).or_insert(0) += amount;
+        // M2 (goal 3.6, DECISIONS D14): passes by priority level — every
+        // available person (AgentId order) first tries their level-1 work
+        // types, then everyone their level-2 types, … 4, so a person with
+        // priority 1 gets first pick of that work. Without the economy one
+        // pass over every work type (M1).
+        let passes: Vec<u8> = if rule.economy.is_some() {
+            (1..=sim_core::colony::skills::LOWEST_PRIORITY).collect()
+        } else {
+            vec![0]
+        };
+        let mut assigned: std::collections::BTreeSet<AgentId> = std::collections::BTreeSet::new();
+        for pass in passes {
+            for &(id, entity, pos, priorities, has_tool) in &available {
+                if assigned.contains(&id) {
+                    continue;
                 }
-                JobKind::Supply { workshop, .. } => {
-                    *supply.entry((workshop, item)).or_insert(0) += amount;
+                let order: Vec<WorkType> = WorkType::ALL
+                    .into_iter()
+                    .filter(|w| pass == 0 || priorities.level(*w) == pass)
+                    .collect();
+                if order.is_empty() {
+                    continue;
                 }
-                JobKind::Craft { bill, .. } => *crafting.entry(bill).or_insert(0) += 1,
-                _ => {}
+                let ctx = Ctx {
+                    rule: &rule,
+                    sites: &sites,
+                    site_index: &site_index,
+                    transit: &transit,
+                    supply: &supply,
+                    crafting: &crafting,
+                    made: &made,
+                };
+                let Some((kind, amount, item)) = pick(resources, &ctx, &order, pos, &mut exhausted)
+                else {
+                    continue;
+                };
+                // A chopper without a tool stops for the best axe in a stockpile on the way.
+                let fetch = match (kind, rule.economy) {
+                    (JobKind::Chop { .. }, Some(e)) if !has_tool => {
+                        best_axe(resources, pos, e.axe_reach)
+                    }
+                    _ => None,
+                };
+                let job = Job {
+                    kind,
+                    stage: JobStage::ToSource,
+                    taken_at: tick,
+                    amount,
+                    item,
+                    material: None,
+                    fetch,
+                    best_distance: chebyshev(pos, fetch.unwrap_or(kind.source())),
+                    progress_tick: tick,
+                };
+                for key in job.keys() {
+                    reserve(resources, key, id);
+                }
+                match kind {
+                    JobKind::Deliver { site, .. } => {
+                        *transit.entry((site, item)).or_insert(0) += amount;
+                    }
+                    JobKind::Supply { workshop, .. } => {
+                        *supply.entry((workshop, item)).or_insert(0) += amount;
+                    }
+                    JobKind::Craft { bill, workshop, .. } => {
+                        *crafting.entry(bill).or_insert(0) += 1;
+                        let output = resources
+                            .colony
+                            .workshops
+                            .get(&workshop)
+                            .and_then(|shop| shop.bill(bill))
+                            .and_then(|b| b.recipe.recipe())
+                            .map(|r| r.output);
+                        if let Some((kind, n)) = output {
+                            if let Some(count) = made.get_mut(&kind) {
+                                *count += u32::from(n);
+                            }
+                        }
+                    }
+                    _ => {}
+                }
+                resources.colony.tallies.jobs_taken += 1;
+                *resources
+                    .colony
+                    .tallies
+                    .taken_by
+                    .entry((id, kind.code()))
+                    .or_insert(0) += 1;
+                taken.push((entity, job));
+                assigned.insert(id);
             }
-            resources.colony.tallies.jobs_taken += 1;
-            *resources
-                .colony
-                .tallies
-                .taken_by
-                .entry((id, kind.code()))
-                .or_insert(0) += 1;
-            taken.push((entity, job));
         }
         for (entity, job) in taken {
-            let _ = world.insert(entity, (job, SeekTarget::new(job.kind.source())));
+            let goal = job.fetch.unwrap_or(job.kind.source());
+            let _ = world.insert(entity, (job, SeekTarget::new(goal)));
             if let Ok(mut state) = world.get::<&mut AgentState>(entity) {
                 *state = AgentState::Seeking {
                     target: TargetKind::Job,

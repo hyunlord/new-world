@@ -696,6 +696,7 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
     let mut fingerprints = BTreeMap::new();
     let mut tick_ns: Vec<u64> = Vec::with_capacity(total as usize);
     let mut demography = super::demography::Demography::new(&engine);
+    let mut economy = super::economy::Economy::new();
     let mut waiting: Vec<usize> = Vec::new();
     for tick in 0..total {
         let mut avoid = Vec::new();
@@ -747,6 +748,7 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
         engine.tick();
         tick_ns.push(started.elapsed().as_nanos() as u64);
         demography.after_tick(&engine);
+        economy.after_tick(&engine);
         if let Some(t) = twin.as_mut() {
             t.tick();
         }
@@ -842,6 +844,11 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
         "logs": {"created": created, "ground": ground, "carried": carried, "delivered": delivered, "consumed": consumed},
         "items": items_json(&engine),
         "quarry_batches": c.tallies.quarry_batches,
+        "workshops_built": c.tallies.workshops_built,
+        "crafts_done": c.tallies.crafts_done,
+        "crafts_lost": c.tallies.crafts_lost,
+        "chops_with_axe": c.tallies.chops_with_axe,
+        "axes_worn_out": c.tallies.axes_worn_out,
         "nodes_exhausted": c.tallies.nodes_exhausted,
         "nodes_left": c.nodes.len(),
         "deaths": deaths(&engine),
@@ -849,6 +856,7 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
         "alive_end": alive,
         "demography": demography.report(&engine),
         "fingerprints": fingerprints,
+        "m2": economy.report(&engine),
     });
     let mut sorted = tick_ns.clone();
     sorted.sort_unstable();
@@ -1002,6 +1010,53 @@ mod tests {
         assert_eq!(
             std::fs::read(base.join("log/colony_s5_commands.json")).expect("log"),
             std::fs::read(base.join("log2/colony_s5_commands.json")).expect("log2"),
+        );
+        let _ = std::fs::remove_dir_all(&base);
+    }
+
+    #[test]
+    fn an_m2_command_log_with_bills_and_priorities_replays_identically() {
+        let base = std::env::temp_dir().join(format!("m2_colony_replay_{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&base);
+        let script =
+            PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../../tools/v8/m2_u_script.json");
+        let first = ColonyArgs {
+            seeds: 2..3,
+            days: 3,
+            workers: 1,
+            out: base.join("first"),
+            commands: Some(script),
+            commands_out: Some(base.join("log")),
+            check_determinism: false,
+            chronicle_out: None,
+        };
+        run(&first).expect("scripted run");
+        let replay = ColonyArgs {
+            out: base.join("replay"),
+            commands: Some(base.join("log").join("colony_s2_commands.json")),
+            commands_out: Some(base.join("log2")),
+            ..first.clone()
+        };
+        run(&replay).expect("replay");
+        let a = std::fs::read(base.join("first/summary.json")).expect("a");
+        let b = std::fs::read(base.join("replay/summary.json")).expect("b");
+        assert_eq!(a, b, "summaries differ");
+        let log: Value = serde_json::from_slice(
+            &std::fs::read(base.join("log/colony_s2_commands.json")).expect("log"),
+        )
+        .expect("json");
+        let names: Vec<&str> = log
+            .as_array()
+            .map(|l| l.iter().filter_map(|e| e["cmd"].as_str()).collect())
+            .unwrap_or_default();
+        // Both priorities, the quarry marks and all three bills (applied once the workshops stood).
+        for name in ["set_work_priority", "designate_quarry", "place_blueprint"] {
+            assert!(names.contains(&name), "{name} missing from {names:?}");
+        }
+        assert_eq!(
+            names.iter().filter(|n| **n == "add_bill").count(),
+            3,
+            "{names:?}"
         );
         let _ = std::fs::remove_dir_all(&base);
     }

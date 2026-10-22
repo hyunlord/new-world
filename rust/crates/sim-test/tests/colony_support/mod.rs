@@ -122,3 +122,66 @@ pub fn state_of(engine: &SimEngine, entity: Entity) -> AgentState {
         .map(|s| *s)
         .unwrap_or_default()
 }
+
+/// The M2 colony rule (the economy on).
+pub const RULE_M2: ColonyRule = ColonyRule::M2;
+
+/// [`job_world`] under the M2 rule, with `BillSystem` registered too.
+pub fn job_world_m2(w: u32, h: u32) -> SimEngine {
+    let mut engine = job_world(w, h);
+    engine.resources.rules.colony = Some(RULE_M2);
+    engine.resources.colony.materials = sim_core::colony::ColonyMaterials::load();
+    engine.register_system(Box::new(sim_systems::runtime::jobs::BillSystem::new()));
+    engine
+}
+
+/// Put `count` items of `spec` at `tile` as if they had been made (ledger created).
+pub fn drop_items(
+    engine: &mut SimEngine,
+    tile: (u32, u32),
+    spec: sim_core::colony::ItemSpec,
+    count: u16,
+) {
+    engine
+        .resources
+        .colony
+        .item_ledger
+        .create(spec.kind, u64::from(count));
+    sim_systems::runtime::jobs::items::put_items(&mut engine.resources, tile, spec, count);
+}
+
+/// Place a blueprint of `kind` at `top_left`, drop its materials at `pile`
+/// and run until it is a finished workshop; returns its id.
+pub fn build_workshop(
+    engine: &mut SimEngine,
+    kind: sim_core::colony::BlueprintKind,
+    top_left: (u32, u32),
+    pile: (u32, u32),
+) -> u32 {
+    let placed = sim_systems::commands::submit(
+        engine,
+        sim_core::colony::Command::PlaceBlueprint {
+            kind,
+            x: top_left.0,
+            y: top_left.1,
+        },
+    );
+    assert!(placed.accepted, "{placed:?}");
+    let (_, needs, _) = kind.plan(&RULE_M2);
+    for line in needs.used() {
+        let spec = sim_core::colony::ItemSpec::raw(line.kind, None);
+        drop_items(engine, pile, spec, line.needed);
+    }
+    let before = engine.resources.colony.workshops.len();
+    run_until(engine, 3_000, |e| {
+        e.resources.colony.workshops.len() > before
+    });
+    let shop = engine
+        .resources
+        .colony
+        .workshops
+        .values()
+        .find(|s| s.top_left == top_left)
+        .map(|s| s.id);
+    shop.expect("the workshop was built within 3,000 ticks")
+}

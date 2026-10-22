@@ -69,6 +69,12 @@ pub struct ColonyTallies {
     /// Jobs taken, by `(agent, JobKind::code)` (M2; measurement and UI only).
     #[serde(default)]
     pub taken_by: BTreeMap<(AgentId, u8), u64>,
+    /// Chop jobs finished with an axe in hand (M2).
+    #[serde(default)]
+    pub chops_with_axe: u64,
+    /// Axes worn out (each became one stone; M2).
+    #[serde(default)]
+    pub axes_worn_out: u64,
     /// Crafted items' `(count, quality sum)` by `(agent, RecipeKind::code)` (M2; measurement only).
     #[serde(default)]
     pub craft_quality: BTreeMap<(AgentId, u8), (u64, u64)>,

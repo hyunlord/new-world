@@ -277,6 +277,24 @@ mod tests {
     }
 
     #[test]
+    fn level_10_crafts_are_at_least_25_better_than_level_0_over_200_draws() {
+        // Goal §7: the same 200 keyed bonuses, flint's material term (+4).
+        let mean = |level: u8| {
+            let sum: i64 = (0..200u64)
+                .map(|t| i64::from(craft_quality(level, quality_bonus(11, 5, 2, t), 4, 0)))
+                .sum();
+            sum as f64 / 200.0
+        };
+        let (low, high) = (mean(0), mean(10));
+        assert!(
+            high - low >= 25.0,
+            "level 0 mean {low}, level 10 mean {high}"
+        );
+        // Level 0: 30 + 4 + bonus mean ≈ 2.5 → about 36.5 (clamping only at 0).
+        assert!((33.0..40.0).contains(&low), "{low}");
+    }
+
+    #[test]
     fn priorities_order_by_level_then_work_type() {
         let mut p = WorkPriorities::defaults(false);
         assert_eq!(p.order(), WorkType::ALL.to_vec());
