@@ -23,7 +23,7 @@ def fixture_sheet() -> Image.Image:
     for index in range(4):
         x = 100+index*300
         draw.rectangle((x, 300-index*20, x+119, 799), fill=(100, 70, 40, 255))
-    draw.rectangle((1250, 700, 1489, 799), fill=(100, 70, 40, 255))
+    draw.rectangle((1030, 900, 1529, 999), fill=(100, 70, 40, 255))
     return image
 
 
@@ -37,7 +37,10 @@ def test_five_components_preserve_every_visible_pixel() -> None:
 
 def test_touching_panels_are_split_with_logged_cut_and_no_pixel_loss() -> None:
     source = fixture_sheet()
-    ImageDraw.Draw(source).line((219, 600, 400, 600), fill=(100, 70, 40, 255))
+    draw = ImageDraw.Draw(source)
+    draw.rectangle((1030, 900, 1529, 999), fill=(0, 0, 0, 0))
+    draw.rectangle((1250, 700, 1489, 799), fill=(100, 70, 40, 255))
+    draw.line((219, 600, 400, 600), fill=(100, 70, 40, 255))
     panels = split_panels(source)
     assert panels.original_components == 4
     assert len(panels.split_columns) == 1
@@ -63,20 +66,20 @@ def test_uniform_scale_preserves_pose_size_difference_and_contact() -> None:
     assert all(check_whole(image, 'adult', frame).contact_ok for image, frame in zip(images, ('idle','walk_a','work_a','carry','sleep'), strict=True))
 
 
-def test_hole_is_rejected_but_open_gap_is_not_hole() -> None:
-    image = Image.new('RGBA', (64, 96))
+def test_enclosed_negative_space_is_allowed() -> None:
+    image = Image.new('RGBA', (80, 112))
     draw = ImageDraw.Draw(image)
-    draw.rectangle((20, 33, 43, 88), fill=(100, 70, 40, 255))
+    draw.rectangle((28, 49, 51, 104), fill=(100, 70, 40, 255))
     assert check_whole(image, 'adult', 'idle').passed
-    draw.rectangle((28, 50, 31, 53), fill=(0, 0, 0, 0))
-    assert check_whole(image, 'adult', 'idle').largest_hole == 16
-    draw.rectangle((28, 50, 31, 88), fill=(0, 0, 0, 0))
+    draw.rectangle((34, 60, 37, 63), fill=(0, 0, 0, 0))
+    assert check_whole(image, 'adult', 'idle').passed
+    draw.rectangle((34, 60, 37, 104), fill=(0, 0, 0, 0))
     assert check_whole(image, 'adult', 'idle').largest_hole == 0
 
 
 def test_translucent_border_and_detached_opaque_island_fail() -> None:
-    image = Image.new('RGBA', (64, 96))
-    ImageDraw.Draw(image).rectangle((20, 33, 43, 88), fill=(100, 70, 40, 255))
+    image = Image.new('RGBA', (80, 112))
+    ImageDraw.Draw(image).rectangle((28, 49, 51, 104), fill=(100, 70, 40, 255))
     image.putpixel((0, 40), (0, 0, 0, 1))
     assert any('alpha_edge' in rule for rule in check_whole(image, 'adult', 'idle').findings)
     image.putpixel((4, 40), (0, 0, 0, 128))
@@ -239,3 +242,91 @@ def test_visible_low_alpha_tail_is_never_trimmed_to_fit() -> None:
 def fixture_binding(path: Path, raw: Path) -> JudgeBinding:
     """Synthetic geometry tests substitute only the independent numeric boundary."""
     return JudgeBinding(digest(raw), digest(path), 'synthetic-calibration', json.loads(path.read_text())['numeric_pass'])
+
+
+def test_prod1_contact_tolerance_and_idle_height() -> None:
+    for bottom, height, passed in ((102, 52, True), (106, 58, True), (101, 56, False), (104, 59, False)):
+        image = Image.new('RGBA', (80, 112))
+        ImageDraw.Draw(image).rectangle((30, bottom-height+1, 49, bottom), fill=(1, 2, 3, 255))
+        assert check_whole(image, 'adult', 'idle').passed == passed
+
+
+def test_prod1_child_height_and_sleep_width() -> None:
+    for height, passed in ((37, True), (43, True), (44, False)):
+        image = Image.new('RGBA', (80, 112))
+        ImageDraw.Draw(image).rectangle((30, 105-height, 49, 104), fill=(1, 2, 3, 255))
+        assert check_whole(image, 'child', 'idle').passed == passed
+    for width, passed in ((48, True), (60, True), (61, False)):
+        image = Image.new('RGBA', (112, 80))
+        ImageDraw.Draw(image).rectangle((20, 55, 19+width, 72), fill=(1, 2, 3, 255))
+        assert check_whole(image, 'adult', 'sleep').passed == passed
+
+
+def test_prod1_sleep_rotates_head_mass_to_left_without_pixel_loss() -> None:
+    from art.pipeline5.sheet_geometry import normalize_panel
+    source = Image.new('RGBA', (30, 56))
+    draw = ImageDraw.Draw(source)
+    draw.rectangle((10, 0, 19, 55), fill=(10, 20, 30, 255))
+    draw.rectangle((0, 0, 29, 15), fill=(10, 20, 30, 255))
+    result = normalize_panel(source, 1, True)
+    assert result.transform.rotation_degrees == 90
+    alpha = np.asarray(result.image)[:, :, 3]
+    assert alpha.sum() == np.asarray(source)[:, :, 3].sum()
+    box = result.image.getbbox()
+    assert box is not None
+    crop = alpha[box[1]:box[3], box[0]:box[2]]
+    assert crop[:, :17].sum() > crop[:, -17:].sum()
+    assert check_whole(result.image, 'adult', 'sleep').passed
+
+
+def test_prod1_two_row_grid_ownership_and_order() -> None:
+    source = Image.new('RGBA', (1536, 1024))
+    draw = ImageDraw.Draw(source)
+    for row in range(2):
+        for column in range(5):
+            draw.rectangle((column*300+80, row*500+100, column*300+180, row*500+400), fill=(row+1,column+1,30,255))
+    panels = split_panels(source, rows=2)
+    assert len(panels.images) == 10
+    assert panels.idle_height == 301
+    assert panels.ownership.reconstructed_exactly
+    assert [panel.getpixel((0, 0))[:2] for panel in panels.images] == [(row+1,col+1) for row in range(2) for col in range(5)]
+    draw.rectangle((80, 600, 180, 900), fill=(0,0,0,0))
+    with pytest.raises(ValueError, match='panel_count|grid'):
+        split_panels(source, rows=2)
+
+
+def test_prod1_empty_wrong_canvas_and_vertical_sleep_fail() -> None:
+    assert not check_whole(Image.new('RGBA', (64, 96)), 'adult', 'idle').passed
+    assert not check_whole(Image.new('RGBA', (80, 112)), 'adult', 'idle').passed
+    image = Image.new('RGBA', (112, 80))
+    ImageDraw.Draw(image).rectangle((40, 17, 59, 72), fill=(1,2,3,255))
+    assert not check_whole(image, 'adult', 'sleep').sleep_axis_ok
+
+
+def test_prod1_head_at_bottom_rotates_clockwise() -> None:
+    from art.pipeline5.sheet_geometry import normalize_panel
+    source = Image.new('RGBA', (30, 56))
+    draw = ImageDraw.Draw(source)
+    draw.rectangle((10, 0, 19, 55), fill=(10,20,30,255))
+    draw.rectangle((0, 40, 29, 55), fill=(10,20,30,255))
+    result = normalize_panel(source, 1, True)
+    assert result.transform.rotation_degrees == 270
+    assert check_whole(result.image, 'adult', 'sleep').passed
+
+
+def test_prod1_raised_prop_height_preserves_idle_calibration() -> None:
+    image = Image.new('RGBA', (80, 112))
+    ImageDraw.Draw(image).rectangle((30, 20, 49, 104), fill=(1,2,3,255))
+    assert check_whole(image, 'adult', 'work_a').passed
+    assert not check_whole(image, 'adult', 'idle').passed
+
+
+def test_prod1_faint_tail_does_not_rotate_horizontal_opaque_sleep() -> None:
+    from art.pipeline5.sheet_geometry import normalize_panel
+    source = Image.new('RGBA', (60, 78))
+    ImageDraw.Draw(source).rectangle((2, 50, 57, 67), fill=(1, 2, 3, 255))
+    source.putpixel((30, 0), (1, 2, 3, 1))
+    result = normalize_panel(source, 1, True)
+    assert result.transform.rotation_degrees == 0
+    assert np.asarray(result.image)[:, :, 3].sum() == np.asarray(source)[:, :, 3].sum()
+    assert check_whole(result.image, 'adult', 'sleep').passed

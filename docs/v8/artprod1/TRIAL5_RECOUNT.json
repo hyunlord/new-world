@@ -1,0 +1,727 @@
+{
+  "purpose": "INFORMATION_ONLY; no TRIAL5 promotion; not PROD1 S1 acceptance",
+  "source_directory": "/Users/rexxa/work/arttrial5-data/production/sheets",
+  "run_directory": "/Users/rexxa/work/artprod1-data/trial5-recount/run-20261023-02",
+  "denominator_look_facings": 72,
+  "denominator_frames": 360,
+  "sliced_sheets": 72,
+  "structural_all5_sheets": 2,
+  "structural_all5_adult": 2,
+  "structural_all5_child": 0,
+  "structural_frames_pass": 263,
+  "panel_all5_sheets": 55,
+  "panel_frames_pass": 342,
+  "combined_all5_sheets": 2,
+  "rotations": {
+    "0": 301,
+    "180": 18,
+    "90": 5,
+    "270": 1
+  },
+  "failure_rule_counts": {
+    "coverage": 62,
+    "normalization": 35,
+    "sleep_axis_ok": 4
+  },
+  "failure_rule_counts_by_age": {
+    "adult": {
+      "normalization": 29,
+      "coverage": 29,
+      "sleep_axis_ok": 2
+    },
+    "child": {
+      "coverage": 33,
+      "normalization": 6,
+      "sleep_axis_ok": 2
+    }
+  },
+  "instrument_files_changed_during_run": [],
+  "instrument_hashes": [
+    {
+      "path": "art/pipeline2/judge.py",
+      "sha256": "168892b193aed145b6817f7a6cde36aea5f11ae93e018353542135332a44fa95"
+    },
+    {
+      "path": "art/pipeline3/structure.py",
+      "sha256": "1dcc1b974d8f6a2c3e70fd9ed4594dadb81025029af96b2af72a5d5ed913487f"
+    },
+    {
+      "path": "art/pipeline5/judge_panels.py",
+      "sha256": "af1a76db599c50c3dbe227260d44a882805d532327741e21d5517d6ef9deb637"
+    },
+    {
+      "path": "art/pipeline5/panel_ownership.py",
+      "sha256": "8136a245b317f3c09b8508fcf676a3baa6779fa0c693ee35f0448897a35bdef8"
+    },
+    {
+      "path": "art/pipeline5/prod1_recount.py",
+      "sha256": "ac63d8eceb7fe39c10f276367bdb48f7e0a753a133d12377a328f654cffa9fbb"
+    },
+    {
+      "path": "art/pipeline5/sheet_geometry.py",
+      "sha256": "7b5c1090e2ecc1b6933ccaeba9e7b07d543bd54a6eae572d9ff67bfc3b44da92"
+    },
+    {
+      "path": "art/pipeline5/whole_checks.py",
+      "sha256": "e713e4dce6503929ebf7a87f15b1cdb9bc53bf49461381e7d1c337d6bf1831a0"
+    },
+    {
+      "path": "docs/v8/arttrial2/JUDGE_V2_CALIBRATION.json",
+      "sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd"
+    }
+  ],
+  "records": [
+    {
+      "identity": "adult_F_fur_cloak_bun_E",
+      "source_sha256": "6bc579e91abbbff6db28f5cb6d4f6fcf320c7aebb9dc929f74d6df68b6e18275",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "adult_F_fur_cloak_bun_S",
+      "source_sha256": "e4f3c6611f54b4e5841ec2186820cf5d28b1d6c49552c8fa6c0f51d044f7aa3e",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": false,
+      "passing_panels": 4,
+      "error": null
+    },
+    {
+      "identity": "adult_F_fur_cloak_long_tied_E",
+      "source_sha256": "ead98365999a912f5e3cfbd7d0188e3b3b01f3cc5142b5de233ed436ca646e30",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": false,
+      "passing_panels": 4,
+      "error": null
+    },
+    {
+      "identity": "adult_F_fur_cloak_long_tied_S",
+      "source_sha256": "ef03e43905a2a56cd547bb992f2c4c06342fd98b9469953ddecbf73560e5c53b",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": false,
+      "passing_panels": 3,
+      "error": null
+    },
+    {
+      "identity": "adult_F_fur_cloak_short_E",
+      "source_sha256": "cece989cc7adfbd159df358d28f8c2c692c91f9e82346b8e1895a1b7de6ff071",
+      "sliced": true,
+      "structural_pass": true,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "adult_F_fur_cloak_short_S",
+      "source_sha256": "2cce3800c0637c1004b71454f958a21324fcb72cfb0c520c465b9caff9710b4d",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": false,
+      "passing_panels": 4,
+      "error": null
+    },
+    {
+      "identity": "adult_F_hide_wrap_bun_E",
+      "source_sha256": "3b12ac12769cb06a67d0dd31d872bfb0601921d741b500af51a385028769e3f8",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "adult_F_hide_wrap_bun_S",
+      "source_sha256": "cc3085094c40624d794ea6c4f6745220e5b7cbd7f13a8186604bda96515179c6",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "adult_F_hide_wrap_long_tied_E",
+      "source_sha256": "2e072de487344dc9ba7bad97aee663471b7799117aadac8bc41610a176fa4571",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": false,
+      "passing_panels": 4,
+      "error": null
+    },
+    {
+      "identity": "adult_F_hide_wrap_long_tied_S",
+      "source_sha256": "e9316cac46fc4f9cdb8c7a2ad531791fceee498c86e4b70336f0a8d869f4be27",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": false,
+      "passing_panels": 4,
+      "error": null
+    },
+    {
+      "identity": "adult_F_hide_wrap_short_E",
+      "source_sha256": "2837cf370e15f1a09dab3722d0092a94c67463409bb676b06377b7d69938595d",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "adult_F_hide_wrap_short_S",
+      "source_sha256": "8828cb19a069e8aecb86e14255f625cf1c410956becc414b4ddd95e1221eb3b3",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "adult_F_loincloth_bun_E",
+      "source_sha256": "c8c7cc335e1a81151ab29d85dbfc897e4a34f5a74df05b06e56208ffbf6c385b",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": false,
+      "passing_panels": 4,
+      "error": null
+    },
+    {
+      "identity": "adult_F_loincloth_bun_S",
+      "source_sha256": "72fb4358a42b509d6013dd4f3ad0fffe0eb0b1cb43c0d51d9181c3921a976c72",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": false,
+      "passing_panels": 4,
+      "error": null
+    },
+    {
+      "identity": "adult_F_loincloth_long_tied_E",
+      "source_sha256": "f436d7fda4e7e3c7efbbc8dd41befd125a8440cbf4b702efe6592bc5ebefffe1",
+      "sliced": true,
+      "structural_pass": true,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "adult_F_loincloth_long_tied_S",
+      "source_sha256": "502a68435828af7ae3fd9f44cc821033c7bfda80ea05d0676c75f9de2cfa21a3",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": false,
+      "passing_panels": 4,
+      "error": null
+    },
+    {
+      "identity": "adult_F_loincloth_short_E",
+      "source_sha256": "0c38a6fd524c2bffe7ddb1e587e93f1526f33a44abc496d475e722ab0c84f975",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": false,
+      "passing_panels": 4,
+      "error": null
+    },
+    {
+      "identity": "adult_F_loincloth_short_S",
+      "source_sha256": "5a9a622564d8c3bee26787c3a882d82d71ec9f0bcedf51db35bfabb628de7fe4",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": false,
+      "passing_panels": 4,
+      "error": null
+    },
+    {
+      "identity": "adult_M_fur_cloak_bun_E",
+      "source_sha256": "5fec2351f3690b825d7f0aae5c1204ab262c47759c165c7b715e4d0f15474685",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "adult_M_fur_cloak_bun_S",
+      "source_sha256": "f99217032ee70ee10ef23ce19ad412ff4db11471ca2926d0cb519c5dc21946ee",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "adult_M_fur_cloak_long_tied_E",
+      "source_sha256": "02bcdbaff5d8b0037caefabf099b98e3b06c29921c96e8b2cc6fd8747eb1c60e",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "adult_M_fur_cloak_long_tied_S",
+      "source_sha256": "86e8b620f1acf09c2eb17fc9076a45c52b7aea252272c68761e1ce13c2321030",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": false,
+      "passing_panels": 4,
+      "error": null
+    },
+    {
+      "identity": "adult_M_fur_cloak_short_E",
+      "source_sha256": "452a3a8927f3ae76bf62a85990677e3216b84f11de4e51069ee89575277b12b1",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "adult_M_fur_cloak_short_S",
+      "source_sha256": "ae4ec45f37ae04d74d97d181bc22bc41632a404669f1c11a723586550a49fe43",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "adult_M_hide_wrap_bun_E",
+      "source_sha256": "5dfac741cafc51078abe1799fc3245ef948277cc81660b05295ae61d013432e8",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "adult_M_hide_wrap_bun_S",
+      "source_sha256": "1383c56a2c70e279885024229034b1b2f92a4e5d2e15e22d4f6f28eec876fa33",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "adult_M_hide_wrap_long_tied_E",
+      "source_sha256": "07594a04cbcb6acaaf7c818042ea7fdb624a4f2eaf76c70ff054660a870d3a49",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": false,
+      "passing_panels": 4,
+      "error": null
+    },
+    {
+      "identity": "adult_M_hide_wrap_long_tied_S",
+      "source_sha256": "ada097c9a2eb00a152c2d6c7ce9df4b72556be3b9e7b02a40db58656e4c0c69a",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": false,
+      "passing_panels": 4,
+      "error": null
+    },
+    {
+      "identity": "adult_M_hide_wrap_short_E",
+      "source_sha256": "e2bb13aa04a5f2de2c46562bb26e20c51c121edcc779ed20a103663f7e63197a",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "adult_M_hide_wrap_short_S",
+      "source_sha256": "c36455d704fcc41ccddb2eeece7965f15b4a96f8af34c606e15fc27fb66dc1c8",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "adult_M_loincloth_bun_E",
+      "source_sha256": "32399cc169486c2d3644ea6dcc4b142b58310ddcfacf361a00802dc2c5fc84a1",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "adult_M_loincloth_bun_S",
+      "source_sha256": "df9dde3917663dfc4e58ba483bf7fb79115d9533d171887ef29db9403ce779a9",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "adult_M_loincloth_long_tied_E",
+      "source_sha256": "968933618e08555b1d4d0966b89b07bf2652013f45fc5b4fb5ed58c02115ff79",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "adult_M_loincloth_long_tied_S",
+      "source_sha256": "7f78644fa0b98b3fd9cf826daea654dc40a254464e10246272c179488a8ed01a",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": false,
+      "passing_panels": 4,
+      "error": null
+    },
+    {
+      "identity": "adult_M_loincloth_short_E",
+      "source_sha256": "29851e9225b7d4af5d159a22e4bb471d2a9a128c08a8053443113af5fdbf84f2",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "adult_M_loincloth_short_S",
+      "source_sha256": "b38572eb4b92309a0817e048c662e0c8cc5d37e62698965584782d70b181a9a8",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_F_fur_cloak_bun_E",
+      "source_sha256": "93b8a4a84483d92e1a2616794f2128d2ba19c354fe2fce04af4901d8e81223b6",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_F_fur_cloak_bun_S",
+      "source_sha256": "6c6cfbd77ee574a4f5af9931805d30abd8dbfdc5c2a7a448212fa329d544989e",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_F_fur_cloak_long_tied_E",
+      "source_sha256": "3ad61b7f9d6829953c292a6b68587ac40cd3259cea6461444a84eae6337bca68",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_F_fur_cloak_long_tied_S",
+      "source_sha256": "d0b5eceff0d386456f4100e47b23f8a215f1fabf1b94d9ff4dd69a8e9466dea4",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_F_fur_cloak_short_E",
+      "source_sha256": "6154d140f52b0c69109f69f73147dfe52ef19eef23e801ced4535f0a2d6118ae",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_F_fur_cloak_short_S",
+      "source_sha256": "885340219a38b5941fb9dcbe4074321575ac749ba92f8810bfb0113573fee1e4",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_F_hide_wrap_bun_E",
+      "source_sha256": "6b21da04a89b4dd9f541d5ae2d4fa37545b30ab005bdf7e764caf24159623f20",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_F_hide_wrap_bun_S",
+      "source_sha256": "19f4130d5a12881573c4a0f344f937ec372fac78eb301842e3fe4c30f14dfcf7",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_F_hide_wrap_long_tied_E",
+      "source_sha256": "b5ef18af360789dc59a49eda75e8a063deeeaa895412a1adb1f015b498d0fcea",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_F_hide_wrap_long_tied_S",
+      "source_sha256": "862a356065f8989b48739b6cbef1810b20ccd905762ef37d11a42e8d73714f01",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_F_hide_wrap_short_E",
+      "source_sha256": "65a13331f3564386da364b3ffe167c4e6b415d7fe93e38e3b009040781c2b817",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_F_hide_wrap_short_S",
+      "source_sha256": "3672f2393b9b8ef8ed9623aa01996d969f0dce739333bb7f9f4573d985dc5b09",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_F_loincloth_bun_E",
+      "source_sha256": "17f79f876665ba49d73d0c7430fc20208e35e3a1a71300fbccb79735d5ee75bd",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_F_loincloth_bun_S",
+      "source_sha256": "97ff85d5b25e1ca5acccc58449de89787626a53e06154e63a2ac487d9ad08b9b",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_F_loincloth_long_tied_E",
+      "source_sha256": "cdeb06705d9b6a509165dc356c35549eb25c02710177104c9d0ba436813644be",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_F_loincloth_long_tied_S",
+      "source_sha256": "7ef14bd09098c766ad76e3a1779fae3a851b29278171e50f2bf2e533ca999ad0",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_F_loincloth_short_E",
+      "source_sha256": "2de146236ad02666e269d2d7685b0feb496c4545a2e1c8f8893cb7b279f65050",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_F_loincloth_short_S",
+      "source_sha256": "e5c531ce26d063a83a3d6a05b95918293797a1d4d8354871c4317d0a9b766ea0",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_M_fur_cloak_bun_E",
+      "source_sha256": "410f5acdb076554d9c3558d0be7bfcc0bd284dced7945a5b67b2b45d79596ebe",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_M_fur_cloak_bun_S",
+      "source_sha256": "163c2a057259ea45260d41b90477e530af71fb7fd33c398cd8819db6cc2fa1c7",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_M_fur_cloak_long_tied_E",
+      "source_sha256": "03973b9e75b27fa3962c2850c86e6f547305d2c6168b97d9929e111624f95d6b",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_M_fur_cloak_long_tied_S",
+      "source_sha256": "c5f9418fdf1c037a5b60d3a907ba5519c56bc6c653fbad00d2a9d5d993ee26cd",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_M_fur_cloak_short_E",
+      "source_sha256": "b11730496381d3d679dd514afb4755a9968026566d05559cbd92b038d00d6528",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_M_fur_cloak_short_S",
+      "source_sha256": "020b9a9f1eb6a37abeebe06247c157aa85aa05d74648e1040b214988c6815d38",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_M_hide_wrap_bun_E",
+      "source_sha256": "4871f312cd971eea5831aaf0ab519bb19806128c57cbcef7469c15612d5cbf73",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_M_hide_wrap_bun_S",
+      "source_sha256": "54fc6a3baf07577c603da1425a1dbc75ecb0972f1e8405463d903dd8b67fe17a",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_M_hide_wrap_long_tied_E",
+      "source_sha256": "514860b57eac8e4bedbd06644bc1d017edffc5617e542b8fd20a1a61e0fb3de0",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_M_hide_wrap_long_tied_S",
+      "source_sha256": "9073a425b2350722f758f2d2d1d74e8440ea9746393ee9fbdee44ac587594af2",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_M_hide_wrap_short_E",
+      "source_sha256": "801fdfd51c714fc44c505c6d160de5cb36ad6469ab1971015106fe1eda06b22d",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_M_hide_wrap_short_S",
+      "source_sha256": "b4cba428e11ccd8c115ac39b5da1de94ddce39b13392db5fd46e31863f117c92",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_M_loincloth_bun_E",
+      "source_sha256": "3994b679c7a231e0773ac51d733467b56b9d156deb4d9d559bd459d4c6eb7500",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_M_loincloth_bun_S",
+      "source_sha256": "8989cd7444f75aaadb78343ddfbb00cbc8ef2bcd30e278174ddef583a922804f",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": false,
+      "passing_panels": 4,
+      "error": null
+    },
+    {
+      "identity": "child_M_loincloth_long_tied_E",
+      "source_sha256": "3be00d3a0a04be59cc9dd4d531130c65d509daf2bbe91c960edf772c77efaf43",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_M_loincloth_long_tied_S",
+      "source_sha256": "0edc6decdfec9b763c8e1e86c30c1c51bbc47b24ff5e9935062fd0865341b099",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": false,
+      "passing_panels": 4,
+      "error": null
+    },
+    {
+      "identity": "child_M_loincloth_short_E",
+      "source_sha256": "020c12615e5cc834cf4b273ce4d6c19b26c7df0b6f2f40acfc94c2503d01039a",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    },
+    {
+      "identity": "child_M_loincloth_short_S",
+      "source_sha256": "06d5714ac0276f8354d61c5b1b0bc796b0ddc9834679d19b601fa1832432e5ad",
+      "sliced": true,
+      "structural_pass": false,
+      "panel_pass": true,
+      "passing_panels": 5,
+      "error": null
+    }
+  ],
+  "cohort": "TRIAL5 full production attempt2 cohort; not actual reviewer round1 selection",
+  "raw_summary_sha256": "cc83be1e92ebfc7baef8a0df535d0ea331eb4b995453c4b3563e56263a92d3bb",
+  "metadata_correction": "Raw round label incorrectly equated all try2 to reviewer round1; actual reviewer selection contains28 identities (21 try2 and7 frozen S try1). Counts and source bindings unchanged.",
+  "cohort_id": "full_production_attempt2_cohort"
+}

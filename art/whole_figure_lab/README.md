@@ -100,3 +100,28 @@ not a repair of rejected standard canvases. This mode does not produce crowd FPS
 Round 0 and Round 1 actual playback QA also compare the first screenshot crop of every GIF
 against its decoded native frames; all24 must match exactRGB before reviewer handoff.
 Earlier clipped-view QA captures are retained separately, never used in blind packets.
+
+## PROD1
+
+The historical TRIAL5 entrypoints remain unchanged. Production entrypoints:
+
+```sh
+python3 -m art.whole_figure_lab.prod1 ROUTE OUTPUT
+CHROMIUM_EXECUTABLE='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' python3 -m art.whole_figure_lab.prod1_browser OUTPUT capture
+CHROMIUM_EXECUTABLE='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' python3 -m art.whole_figure_lab.prod1_browser OUTPUT crowd
+```
+
+OUTPUT is outside the repository. Builder preflights all ten frames per look,
+requires exact sidecar image hashes plus structural and numeric panel passes,
+and selects twelve distinct looks with the specified demographic/hair/top
+coverage. Insufficient accepted input fails before output creation. Names are
+`p1_01..12_{1x,2x}.gif`. Review answers remain in `answer_key.private.json`,
+never in the published blind viewer. `prod1_boards.boards` generates the full
+36-look sheet (missing looks marked) and ten-state boards; `comparison(route,
+output, records_path)` generates `compare_ABPT2_2x.png` from the frozen TRIAL4
+six-case mapping and discloses N-to-S proxies and missing accepted cases.
+
+Playback capture targets 8 Hz and records actual timestamps, not a claim that
+each requested sample arrived on time. Crowd uses 200 fully visible sprites,
+60 seconds and native 1× pixels. Its Canvas2D rAF measurement is isolated browser
+rendering, not Godot, simulation, or display-scanout performance.

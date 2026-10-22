@@ -1,0 +1,9 @@
+{
+  "schema": "artprod1-generation-log-v1",
+  "per_look_limit": 3,
+  "total_limit": 108,
+  "calls": [],
+  "status": "PRODUCTION_IN_PROGRESS",
+  "live_call_records": "/Users/rexxa/work/artprod1-data/generation/",
+  "calls_note": "Final merged call ledger pending; live per-look records are authoritative during execution."
+}

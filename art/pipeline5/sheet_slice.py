@@ -3,7 +3,7 @@
 # dependencies = ["pillow", "numpy", "scipy", "scikit-image"]
 # ///
 # How to run: python -m art.pipeline5.sheet_slice --raw SHEET --look LOOK --age adult --facing S --attempt 1 --prompt PROMPT --judge JSON --output-root OUTPUT --diagnostics-root EXTERNAL
-"""Keep every attempt diagnostic; deliver only complete passing five-pose sheets."""
+"""Legacy five-pose sheet entrypoint; PROD1 uses split_panels(rows=2)."""
 from __future__ import annotations
 
 import getopt

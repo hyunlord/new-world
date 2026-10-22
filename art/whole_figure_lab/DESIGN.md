@@ -27,3 +27,13 @@ Hover, keyboard-focus, loading-failure and error-state interaction tests were no
 
 Native-size figures use an outline rather than a box-model border: an image exactly
 as wide as the available viewport must not lose two pixels to border subtraction.
+
+## PROD1 conforming surface
+`prod1.py` uses 80×112 standing frames with foot line y104, or 112×80
+sleep frames with foot line y72. A 112×112 stage preserves the full sleep
+canvas; stage placement aligns both kinds at ground y104. Each stage draws
+a 28×8 translucent ink contact shadow centred at (56,104), equivalent to
+(40,104) in the standing sprite's coordinates. Review panels are 224×224,
+with S/E columns and unchanged meadow/forest source-pixel rows. No diagnostic
+input fallback exists. `prod1_crowd.js` uses a 2240×1120 canvas for 20×10
+complete 112×112 cells. PROD1 browser evidence is pending accepted inputs.
