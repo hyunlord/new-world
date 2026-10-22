@@ -269,7 +269,10 @@ func _align_readable_edges() -> void:
 	_edge_padding.custom_minimum_size.y = ceilf(padding)
 	# Wait for the resized scroll container to update its scrollbar page.
 	# A plain deferred restore still clamps against the previous page size.
-	_scroll.resized.connect(_restore_scroll_edge.bind(at_top), CONNECT_ONE_SHOT | CONNECT_DEFERRED)
+	# A second align before that resize (wrapped labels settle a pass later) must not connect it twice.
+	var restore: Callable = _restore_scroll_edge.bind(at_top)
+	if not _scroll.resized.is_connected(restore):
+		_scroll.resized.connect(restore, CONNECT_ONE_SHOT | CONNECT_DEFERRED)
 
 
 func _restore_scroll_edge(at_top: bool) -> void:
@@ -509,9 +512,16 @@ func _refresh_knowledge() -> void:
 		var note: Label = Label.new()
 		@warning_ignore("integer_division")
 		var percent: int = int(levels[i]) / 10
-		note.text = KnowledgeText.trf(_locale, "M4_INSPECT_USE_FMT", {"percent": percent,
-			"when": KnowledgeText.days_ago(_locale, int(days[i]) if i < days.size() else 0)})
+		var words: PackedStringArray = KnowledgeText.trf(_locale, "M4_INSPECT_USE_FMT", {"percent": percent,
+			"when": KnowledgeText.days_ago(_locale, int(days[i]) if i < days.size() else 0)}).split(" ")
+		# Wrap beside the bar, between words only: unwrapped, "60 % · 마지막으로 씀: 1일 전" is wider than the panel
+		# and was clipped; Hangul would otherwise break inside a word ("마지막 / 으로").
+		for w: int in words.size():
+			words[w] = Names.unbroken(words[w])
+		note.text = " ".join(words)
 		note.add_theme_color_override("font_color", Color("c8b89a"))
+		note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		note.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(note)
 		_knowledge_box.add_child(row)
 

@@ -1,0 +1,12 @@
+[
+  {"file": "m4_01_hud_era_2x.png", "caption": "씨앗 7, 28일째 11:00 2배: 구석기 22 % · ⚠ 기술 위험 1"},
+  {"file": "m4_02_tech_map.png", "caption": "T 기술 지도: 미지 1(회색) · 위험 1(빨강) · 안정 22(초록)"},
+  {"file": "m4_03_tech_node.png", "caption": "토기 굽기 클릭: 아는 사람 데호나 51 % · 배울 사람 9명 · 가르치기"},
+  {"file": "m4_04_teach_dialog.png", "caption": "가르치기 → K 대화창: 데호나 → 니티소 · 토기 굽기 명령, 진행 1 / 40 %"},
+  {"file": "m4_05_inspector_knowledge.png", "caption": "사람 클릭 → 지식 탭: 불 다루기 · 숙련 (전승), 돌 깨기 (구전), 숙련도 막대"},
+  {"file": "m4_05b_inspector_knowledge_more.png", "caption": "같은 지식 탭 아래: 토기 빚기 (발견) · 토기 굽기 배우는 중 (관찰)"},
+  {"file": "m4_06_pots_store_3x.png", "caption": "창고 안 토기 더미에 마우스 3배: 토기 ×3 · 보통 (34) · 방: 창고 2 · 지붕 아래"},
+  {"file": "m4_07_ford_3x.png", "caption": "캠프 옆 강의 여울 두 곳 3배 (아래 여울을 사람이 건너는 중)"},
+  {"file": "m4_08_far_1x.png", "caption": "같은 시각 1배 원경: 캠프 · 창고 · 강과 여울, 아래 강가에 점토 둑"},
+  {"file": "m4_09_chronicle.png", "caption": "C 연대기: 미유나가 간석기를, 데호나가 토기 굽기를 발견했다!"}
+]

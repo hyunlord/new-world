@@ -5,10 +5,10 @@
 //! when the teacher practises the node, the learner is an adult or a child of
 //! at least `learner_min_years` and is below the node's threshold. Each day up
 //! to `sessions_per_day` sessions are held: [`assign`] (called by
-//! `JobAssignSystem` before its rounds) gives both a job when both are free
-//! (the teacher's Craft priority is not 0) and both can walk to the meeting
-//! tile — the work tile of the nearest workshop of a kind the node gates, else
-//! the hearth. Either partner who is free takes its job and walks there; the
+//! `JobAssignSystem` before its rounds) sends partners only when a session
+//! can happen: both have a Craft priority above 0 and both can walk to the
+//! meeting tile — the work tile of the nearest workshop of a kind the node
+//! gates, else the hearth. Either partner who is free takes its job and walks there; the
 //! learner waits (`Working`); the teacher, once both have arrived, works
 //! `session_ticks`, and at the end the learner gains
 //! `session_gain × fidelity` ‰ (`Source::Apprenticed`) and the teacher uses the
@@ -262,16 +262,36 @@ pub fn assign(
         let pos = |e: Entity| world.get::<&Position>(e).map(|p| (p.x, p.y)).ok();
         let reach =
             |p: (u32, u32)| !res.nav.is_built() || res.nav.reaches(res.nav.region_of(p), at);
+        // A session needs both: each with Craft priority and able to walk to
+        // the meeting tile. Otherwise nobody is sent (one partner alone would
+        // wait, time out and be sent again forever; code review F1); the
+        // order stays open, listed in the K dialog.
+        let can_meet = |e: Entity| crafts(world, e) && pos(e).is_some_and(&reach);
+        if !can_meet(t) || !can_meet(l) {
+            continue;
+        }
         // Either partner who is free goes to the meeting tile and waits there (up
-        // to `WAIT_TICKS`) for the other (DECISIONS D18).
+        // to `WAIT_TICKS`) for the other (DECISIONS D18) — not one about to leave
+        // for food or water, in a fight, or kept off this tile by the
+        // unreachable cooldown (the main assignment's guards; code review F3).
         for (e, id, kind) in [
             (t, o.teacher, JobKind::Teach { order: o.id, at }),
             (l, o.learner, JobKind::Learn { order: o.id, at }),
         ] {
-            if assigned.contains(&id) || lesson(e, o.id) || !free(world, e) || !crafts(world, e) {
+            if assigned.contains(&id)
+                || lesson(e, o.id)
+                || !free(world, e)
+                || super::assign::needy(world, res, e)
+                || super::assign::in_combat(res, id)
+                || res
+                    .colony
+                    .unreachable
+                    .get(&(id, at))
+                    .is_some_and(|until| *until > tick)
+            {
                 continue;
             }
-            let Some(p) = pos(e).filter(|p| reach(*p)) else {
+            let Some(p) = pos(e) else {
                 continue;
             };
             taken.push((
@@ -391,8 +411,10 @@ pub fn step(
         cancel(world, res, entity, CancelReason::TargetGone);
         return None;
     };
-    // The partner may come later (DECISIONS D18); a lesson job waits at most
-    // `WAIT_TICKS` after it was taken unless a session is under way.
+    // The partner may come later (DECISIONS D18); a lesson job waits at the
+    // meeting tile at most `WAIT_TICKS` unless a session is under way. The wait
+    // counts from its arrival (`progress_tick`: the walk's last step, renewed
+    // when a session starts or stops), not from taking the job (code review F10).
     let in_session = |e: Entity| {
         world.get::<&Job>(e).is_ok_and(|j| {
             matches!(j.kind, JobKind::Teach { order, .. } if order == id)
@@ -404,7 +426,7 @@ pub fn step(
     } else {
         in_session(partner)
     };
-    if !session && tick.saturating_sub(job.taken_at) > WAIT_TICKS {
+    if !session && tick.saturating_sub(job.progress_tick) > WAIT_TICKS {
         cancel(world, res, entity, CancelReason::TargetGone);
         return None;
     }
@@ -423,6 +445,7 @@ pub fn step(
                 job.stage = JobStage::Working {
                     ticks_left: rule.session_ticks.max(1),
                 };
+                job.progress_tick = tick;
                 set_state(world, entity, WORKING);
             }
             Some(job)
@@ -431,6 +454,7 @@ pub fn step(
         // The learner left (a need, a cancel): the session stops; wait again.
         JobStage::Working { .. } if !partner_waiting(world, partner, id) => {
             job.stage = JobStage::ToSource;
+            job.progress_tick = tick;
             set_state(world, entity, SEEKING);
             Some(job)
         }

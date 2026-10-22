@@ -37,9 +37,24 @@
 #   records the rooms, the ticks and the dumps.
 #   Extra bridge methods: get_rooms, get_space, get_agent_economy, get_place_preview, get_room_detail (via the room
 #   panel); via SimReads.mutate_raw load_world; the room panel sends cmd_set_room_role.
+# --m4-set --load <abs save file> takes the M4 set (docs/v8/m4) on a saved colony world (the colony probe's
+#   `--save-at TICK --save-out FILE` with tools/v8/m4_u_script.json, a tick after the first clay pots were fired): the
+#   world is loaded as for --m3-set (clock stopped, the OS cursor parked in a corner) and, as a player would: m4_01
+#   the camp at 2× with the HUD's era line ("구석기 n %" / "신석기 전환기 n %") and the "⚠ 기술 위험 N" badge; m4_02 T
+#   opens the tech map (미지 / 위험 / 안정 cards); m4_03 a mouse click on the first at-risk card (else the first known
+#   one) shows its detail (holders, learners, conditions, gates, 가르치기); m4_04 a click on 가르치기 opens the
+#   teach dialog (K) on that node, the first listed teacher and learner are chosen and a click on 명령 sends the
+#   order, so the open order shows in the list (this changes the world: one cmd_order_teach); K and T close both;
+#   m4_05 a click on the person with the most kinds of knowledge source (전승/구전/관찰/발견/도제; one with a 도제
+#   entry among equals), then on the inspector's 지식 tab (m4_05b the list scrolled to its first 관찰 or 도제 entry); m4_06 the mouse over a fired clay pot stack (item kind 9) in the storehouse at 3× (the
+#   hover line "토기 ×n · 방: 창고 n"; Input.warp_mouse moves the OS cursor there, see --m3-set); m4_07 a river ford
+#   at 3×; m4_08 far (1×) over the camp and its clay banks and pits; m4_09 C shows the chronicle at the camp (2×).
+#   m4_set.json records the tick, the tech read, what each shot shows and the dumps.
+#   Extra bridge methods: get_tech, get_agent_knowledge (direct); via the panels get_tech_node, get_teach_orders,
+#   get_knowledge_waits, get_chronicle_since; the teach dialog sends cmd_order_teach.
 # usage: Godot --path . --rendering-driver opengl3 --resolution 1920x1080 \
 #          --script res://tools/v8/capture.gd -- --out <abs dir> [--tick 1440] [--panels] [--zoom 2] [--m1-set]
-#          [--m3-set --load <abs save file>]
+#          [--m3-set --load <abs save file>] [--m4-set --load <abs save file>]
 extends SceneTree
 
 const TILE: float = 16.0
@@ -51,6 +66,7 @@ var _panels: bool = false
 var _zoom: float = 2.0
 var _m1_set: bool = false
 var _m3_set: bool = false
+var _m4_set: bool = false
 var _load: String = ""
 var _record: Dictionary = {}
 
@@ -70,6 +86,8 @@ func _init() -> void:
 			_m1_set = true
 		elif args[i] == "--m3-set":
 			_m3_set = true
+		elif args[i] == "--m4-set":
+			_m4_set = true
 		elif args[i] == "--load" and i + 1 < args.size():
 			_load = args[i + 1]
 	call_deferred("_run")
@@ -97,6 +115,9 @@ func _run() -> void:
 		return
 	if _m3_set:
 		await _m3_shots(main, world, camera)
+		return
+	if _m4_set:
+		await _m4_shots(main, world, camera)
 		return
 	var now: int = int((world.call("get_time_snapshot") as Dictionary).get("tick", 0))
 	if _tick > now:
@@ -894,4 +915,285 @@ func _m3_shots(main: Node, world: Node, camera: Camera2D) -> void:
 		file.close()
 	print("CAPTURE_M3_SET_DONE ", JSON.stringify({"picked": _record.get("picked"), "drag": _record.get("drag"), "night": _record.get("night"),
 		"inspected": _record.get("inspected"), "hover": _record.get("hover"), "room_panel": _record.get("room_panel"), "role_set": _record.get("role_set")}))
+	quit(0)
+
+
+# --- --m4-set (M4) -------------------------------------------------------------------------------------------
+
+## A left click at `at` (screen point) as a player gives it: motion, press, release.
+func _click(at: Vector2) -> void:
+	await _motion(at)
+	await _button(at, MOUSE_BUTTON_LEFT, true)
+	await _button(at, MOUSE_BUTTON_LEFT, false)
+
+
+func _wait(frames: int) -> void:
+	for _i: int in frames:
+		await process_frame
+
+
+## Node ids by status (0 미지, 1 위험, 2 알려짐, 3 안정, 4 소실) of a get_tech read.
+func _by_status(tech: Dictionary) -> Dictionary:
+	var out: Dictionary = {0: [], 1: [], 2: [], 3: [], 4: []}
+	var ids: PackedInt64Array = tech.get("ids", PackedInt64Array())
+	var statuses: PackedInt64Array = tech.get("statuses", PackedInt64Array())
+	for i: int in mini(ids.size(), statuses.size()):
+		if out.has(int(statuses[i])):
+			(out[int(statuses[i])] as Array).append(int(ids[i]))
+	return out
+
+
+## The visible label texts under `node`.
+func _labels_under(node: Node) -> Array[String]:
+	var out: Array[String] = []
+	if node == null:
+		return out
+	for label: Node in node.find_children("*", "Label", true, false):
+		if (label as Label).is_visible_in_tree() and (label as Label).text != "":
+			out.append((label as Label).text)
+	return out
+
+
+func _m4_shots(main: Node, world: Node, camera: Camera2D) -> void:
+	var reads: Node = main.get_node_or_null("SimReads")
+	var tool: Node = main.get_node_or_null("ColonyView/OrderTool")
+	var hud: Node = main.get_node_or_null("UI/HudTopbar")
+	var tech_panel: Node = main.get_node_or_null("UI/TechPanel")
+	var teach_panel: Node = main.get_node_or_null("UI/TeachPanel")
+	var inspector: Node = main.get_node_or_null("UI/AgentInspectorPanel")
+	var room_layer: Node = main.get_node_or_null("ColonyView/OverlayLayer/Rooms")
+	var chronicle: Node = main.get_node_or_null("UI/ChroniclePanel")
+	var bar: Node = main.get_node_or_null("UI/OrderBar")
+	if reads == null or tool == null or hud == null or tech_panel == null or teach_panel == null or inspector == null \
+			or room_layer == null or chronicle == null or bar == null or _load.is_empty():
+		push_error("capture: --m4-set needs --load <file>, Main/SimReads, OrderTool, the HUD, the M4 panels")
+		quit(1)
+		return
+	camera.set_process(false)
+	if not bool(reads.call("mutate_raw", "load_world", [_load])):
+		push_error("capture: load_world failed for " + _load)
+		quit(1)
+		return
+	await _wait(20)
+	_record["loaded"] = _load
+	_record["loaded_tick"] = _now(world)
+	_record["clock_minute"] = _minute_of_day(world)
+	_record["seed"] = int((world.call("get_world_info") as Dictionary).get("seed", -1))
+	var hearth: Vector2i = _hearth(world)
+	_record["hearth"] = [hearth.x, hearth.y]
+	var tech: Dictionary = world.call("get_tech")
+	var by_status: Dictionary = _by_status(tech)
+	_record["tech"] = {"era": int(tech.get("era", -1)), "progress": int(tech.get("progress", -1)), "at_risk": int(tech.get("at_risk", -1)),
+		"by_status": by_status}
+	var notes: Dictionary = {}
+	# The overlay's hover follows the OS cursor (see --m3-set): parked in a corner except for m4_06.
+	Input.warp_mouse(Vector2(1919, 1079))
+	# m4_01: the camp at 2×, the HUD's era line and badge.
+	await _near(camera, hearth)
+	notes["m4_01_hud_era_2x.png"] = {"era": str(hud.call("era_text")), "badge": str(hud.call("risk_text")), "warning": str(hud.call("warning_text"))}
+	await _save_m1("m4_01_hud_era_2x.png", world)
+	# m4_02: T, the tech map.
+	await _key(KEY_T)
+	await _wait(10)
+	var shown: Dictionary = {}
+	for id: int in 24:
+		var c: Button = tech_panel.call("card", id)
+		if c != null and c.is_visible_in_tree():
+			var s: String = str(int(c.get_meta("status", -1)))
+			shown[s] = int(shown.get(s, 0)) + 1
+	notes["m4_02_tech_map.png"] = {"visible": (tech_panel as Control).visible, "cards_by_status": shown}
+	await _save_m1("m4_02_tech_map.png", world)
+	# m4_03: a mouse click on the first at-risk card (else the first known or stable one): the detail.
+	var pick_node: int = -1
+	for s: int in [1, 2, 3]:
+		if pick_node < 0 and not (by_status[s] as Array).is_empty():
+			pick_node = int((by_status[s] as Array)[0])
+	var card: Button = tech_panel.call("card", pick_node) if pick_node >= 0 else null
+	if card != null:
+		await _click(card.get_global_rect().get_center())
+		await _wait(10)
+		if int(tech_panel.call("selected_node")) != pick_node:
+			push_error("capture: the card click did not select node %d" % pick_node)
+	var detail: Dictionary = tech_panel.call("detail")
+	var detail_box: Node = (tech_panel as Control).find_child("Detail", true, false)
+	notes["m4_03_tech_node.png"] = {"node": int(tech_panel.call("selected_node")), "holders": Array(detail.get("holder_ids", PackedInt64Array())),
+		"learners": (detail.get("learner_ids", PackedInt64Array()) as PackedInt64Array).size(), "lines": _labels_under(detail_box)}
+	await _save_m1("m4_03_tech_node.png", world)
+	# m4_04: 가르치기 opens the teach dialog on the node; the first teacher and learner, then a click on 명령.
+	var teach_button: Button = detail_box.find_child("Teach", true, false) as Button if detail_box != null else null
+	if teach_button != null and teach_button.is_visible_in_tree():
+		await _click(teach_button.get_global_rect().get_center())
+		await _wait(10)
+	var listed: Dictionary = teach_panel.call("listed")
+	var order: Dictionary = {}
+	if (listed["teachers"] as Array).size() > 0 and (listed["learners"] as Array).size() > 0:
+		order = {"teacher": int((listed["teachers"] as Array)[0]), "learner": int((listed["learners"] as Array)[0])}
+		teach_panel.call("choose_people", int(order["teacher"]), int(order["learner"]))
+		var order_button: Button = (teach_panel as Control).find_child("Order", true, false) as Button
+		if order_button != null:
+			await _click(order_button.get_global_rect().get_center())
+			await _wait(10)
+	var toast: Label = bar.get("_toast") as Label
+	notes["m4_04_teach_dialog.png"] = {"visible": (teach_panel as Control).visible, "node": int(teach_panel.call("current_node")), "listed": listed,
+		"order": order, "order_rows": int(teach_panel.call("order_rows")), "toast": toast.text if toast != null else ""}
+	await _save_m1("m4_04_teach_dialog.png", world)
+	await _key(KEY_K)
+	await _key(KEY_T)
+	await _wait(5)
+	# m4_05: a click on the person with the most kinds of knowledge source (fewest entries among equals, so the list
+	# fits the panel), then on the inspector's 지식 tab.
+	var snap: Dictionary = world.call("get_agent_snapshot")
+	var bits: PackedInt64Array = snap.get("ids", PackedInt64Array())
+	var agent_ids: PackedInt64Array = snap.get("agent_ids", PackedInt64Array())
+	var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
+	var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
+	var best: int = -1
+	var best_kinds: int = -1
+	var best_entries: int = 0
+	var source_kinds: Dictionary = {}
+	for i: int in mini(agent_ids.size(), mini(bits.size(), mini(xs.size(), ys.size()))):
+		var read: Dictionary = world.call("get_agent_knowledge", agent_ids[i])
+		var kinds: Dictionary = {}
+		var sources: PackedInt64Array = read.get("sources", PackedInt64Array())
+		for src: int in sources:
+			kinds[src] = true
+		source_kinds[str(agent_ids[i])] = kinds.keys()
+		# Most kinds of source first; among equals one with a 도제 (apprenticed, 4) entry, then fewer entries.
+		var score: int = kinds.size() * 2 + (1 if kinds.has(4) else 0)
+		if score > best_kinds or (score == best_kinds and sources.size() < best_entries):
+			best = i
+			best_kinds = score
+			best_entries = sources.size()
+	_record["source_kinds_by_agent"] = source_kinds
+	if best >= 0:
+		var tile: Vector2i = Vector2i(xs[best], ys[best])
+		await _near(camera, tile)
+		var agents: Node = main.get_node_or_null("ColonyView/AgentLayer")
+		var drawn: Vector2 = Vector2(tile) * TILE
+		if agents != null:
+			var d: Vector2 = agents.call("drawn_position", bits[best])
+			if d.x >= 0.0:
+				drawn = d
+		tool.call("click_world", drawn + Vector2(8, 8), tile)
+		await _wait(20)
+		var tab: Button = (inspector as Control).find_child("Tab_1", true, false) as Button
+		if tab != null:
+			await _click(tab.get_global_rect().get_center())
+		await _wait(20)
+		var read_best: Dictionary = world.call("get_agent_knowledge", agent_ids[best])
+		notes["m4_05_inspector_knowledge.png"] = {"agent": agent_ids[best], "tile": [tile.x, tile.y], "score": best_kinds,
+			"sources": Array(read_best.get("sources", PackedInt64Array())), "tab": int(inspector.call("current_tab")),
+			"lines": inspector.call("knowledge_texts")}
+		await _save_m1("m4_05_inspector_knowledge.png", world)
+		# m4_05b: the same list scrolled down to the first 관찰 (3) or 도제 (4) entry, placed about 240 px below the top
+		# so the entries above it show too (else to the end).
+		var scroll: ScrollContainer = inspector.get("_scroll") as ScrollContainer
+		var box: Control = inspector.get("_knowledge_box") as Control
+		if scroll != null and box != null:
+			var entry: int = -1
+			var src_list: PackedInt64Array = read_best.get("sources", PackedInt64Array())
+			for k: int in src_list.size():
+				if entry < 0 and src_list[k] >= 3:
+					entry = k
+			var target: int = int(scroll.get_v_scroll_bar().max_value)
+			var seen: int = 0
+			for child: Node in box.get_children():
+				if child is Label and child.name != "Lesson":
+					if seen == entry:
+						target = maxi(0, int(box.position.y + (child as Label).position.y) - 240)
+					seen += 1
+			scroll.scroll_vertical = target
+			await _wait(10)
+			notes["m4_05b_inspector_knowledge_more.png"] = {"entry": entry, "scroll": scroll.scroll_vertical, "max": int(scroll.get_v_scroll_bar().max_value)}
+			await _save_m1("m4_05b_inspector_knowledge_more.png", world)
+		inspector.call("select_tab", 0)
+		inspector.call("close")
+		await _wait(5)
+	# m4_06: the mouse over a fired clay pot stack (item kind 9), in the storehouse when one lies there.
+	var store: int = _room_of_role(_rooms_of(world), 2, false)
+	var overlay: Dictionary = world.call("get_colony_overlay")
+	var ixs: PackedInt32Array = overlay.get("item_xs", PackedInt32Array())
+	var iys: PackedInt32Array = overlay.get("item_ys", PackedInt32Array())
+	var iks: PackedInt32Array = overlay.get("item_kinds", PackedInt32Array())
+	var ics: PackedInt32Array = overlay.get("item_counts", PackedInt32Array())
+	var pot: Vector2i = Vector2i(-1, -1)
+	var pot_in_store: bool = false
+	var pots: Array = []
+	for i: int in mini(ixs.size(), mini(iys.size(), iks.size())):
+		if iks[i] != 9:
+			continue
+		var t: Vector2i = Vector2i(ixs[i], iys[i])
+		var room: int = int(room_layer.call("room_at", t))
+		pots.append({"tile": [t.x, t.y], "count": ics[i] if i < ics.size() else -1, "room": room})
+		if pot.x < 0 or (not pot_in_store and store >= 0 and room == store):
+			pot = t
+			pot_in_store = store >= 0 and room == store
+	if pot.x >= 0:
+		await _near(camera, pot, 3.0)
+		var at: Vector2 = _screen_of(pot)
+		await _motion(at + Vector2(TILE, 0.0))
+		Input.warp_mouse(at)
+		await _motion(at)
+		await _wait(10)
+		notes["m4_06_pots_store_3x.png"] = {"tile": [pot.x, pot.y], "in_storehouse": pot_in_store, "storehouse": store, "pots": pots,
+			"screen": [roundi(at.x), roundi(at.y)], "suffix": OverlaySuffix.room_suffix(room_layer, pot, true, root.get_node_or_null("Locale"))}
+		await _save_m1("m4_06_pots_store_3x.png", world)
+		Input.warp_mouse(Vector2(1919, 1079))
+		await _motion(Vector2(1919, 1079))
+	else:
+		push_error("capture: no clay pot stack in this world")
+	# m4_07: the river's fords at 3× (get_space ford_xs/ford_ys, framed on their centre).
+	var space: Dictionary = world.call("get_space")
+	var fxs: PackedInt32Array = space.get("ford_xs", PackedInt32Array())
+	var fys: PackedInt32Array = space.get("ford_ys", PackedInt32Array())
+	var fords: Array[Vector2i] = []
+	var ford_rows: Array = []
+	for i: int in mini(fxs.size(), fys.size()):
+		fords.append(Vector2i(fxs[i], fys[i]))
+		ford_rows.append([fxs[i], fys[i]])
+	if not fords.is_empty():
+		await _near(camera, _centre_of(fords), 3.0)
+		notes["m4_07_ford_3x.png"] = {"fords": ford_rows}
+		await _save_m1("m4_07_ford_3x.png", world)
+	else:
+		push_error("capture: no ford in this world")
+	# m4_08: far, 1×, over the camp and the clay banks (node kind 2) within 40 tiles and the clay-pit marks.
+	var points: Array[Vector2i] = [hearth]
+	var nxs: PackedInt32Array = overlay.get("node_xs", PackedInt32Array())
+	var nys: PackedInt32Array = overlay.get("node_ys", PackedInt32Array())
+	var nks: PackedInt32Array = overlay.get("node_kinds", PackedInt32Array())
+	var banks: Array = []
+	for i: int in mini(nxs.size(), mini(nys.size(), nks.size())):
+		if nks[i] == 2 and _cheb(Vector2i(nxs[i], nys[i]), hearth) <= 40:
+			points.append(Vector2i(nxs[i], nys[i]))
+			banks.append([nxs[i], nys[i]])
+	var dks: PackedInt32Array = overlay.get("designation_kinds", PackedInt32Array())
+	var pits: int = 0
+	for k: int in dks:
+		if k == 4:
+			pits += 1
+	var far: Vector2i = _centre_of(points)
+	await _near(camera, far, 1.0)
+	notes["m4_08_far_1x.png"] = {"centre": [far.x, far.y], "clay_banks_near": banks, "clay_pit_marks": pits}
+	await _save_m1("m4_08_far_1x.png", world)
+	# m4_09: C, the chronicle at the camp (2×).
+	await _near(camera, hearth)
+	await _key(KEY_C)
+	await _wait(20)
+	var page: Dictionary = world.call("get_chronicle_since", 0, 4096)
+	var m4_kinds: Dictionary = {}
+	for k: int in page.get("kind", PackedInt32Array()):
+		if k >= 24:
+			m4_kinds[str(k)] = int(m4_kinds.get(str(k), 0)) + 1
+	var body: RichTextLabel = chronicle.get("_body") as RichTextLabel
+	notes["m4_09_chronicle.png"] = {"visible": (chronicle as Control).visible, "m4_kinds": m4_kinds,
+		"text_tail": body.get_parsed_text().right(800) if body != null else ""}
+	await _save_m1("m4_09_chronicle.png", world)
+	await _key(KEY_C)
+	_record["notes"] = notes
+	var file: FileAccess = FileAccess.open(_out.path_join("m4_set.json"), FileAccess.WRITE)
+	if file != null:
+		file.store_string(JSON.stringify(_record, "  ", true))
+		file.close()
+	print("CAPTURE_M4_SET_DONE ", JSON.stringify({"tick": _record.get("loaded_tick"), "tech": _record.get("tech"), "notes": notes}))
 	quit(0)

@@ -1,6 +1,6 @@
 //! KnowledgeDecaySystem: what goes unused for six days fades a little every hour; everyday lore is used by living.
 //!
-//! Priority: 162 (`KNOWLEDGE_DECAY_PRIORITY`). Interval: the rule's `decay_interval` (60 ticks). Gate: `ColonyRule::knowledge`.
+//! Priority: 162 (`KNOWLEDGE_DECAY_PRIORITY`). Interval: 60 ticks (fixed; `KnowledgeRule::decay_interval` must match — a test checks). Gate: `ColonyRule::knowledge`.
 //! Reads: `Agent`, `AgentState`, `Knowledge`; `rules` (knowledge, calendar), `current_tick`
 //! Writes: `Knowledge` (proficiency, entries at 0 removed, lore stamped used); `SimResources.colony.tallies` (forgotten)
 //! Events: none

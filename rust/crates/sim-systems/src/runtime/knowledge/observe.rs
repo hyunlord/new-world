@@ -1,6 +1,6 @@
 //! ObservationSystem: a person working near a practitioner at gated work picks a little of it up by watching.
 //!
-//! Priority: 161 (`OBSERVATION_PRIORITY`). Interval: 30 ticks (`KnowledgeRule::observation_interval`). Gate: `ColonyRule::knowledge`.
+//! Priority: 161 (`OBSERVATION_PRIORITY`). Interval: 30 ticks (fixed; `KnowledgeRule::observation_interval` must match — a test checks). Gate: `ColonyRule::knowledge`.
 //! Reads: `Agent`, `Position`, `AgentState`, `Job`, `Knowledge`; `SimResources.colony` (workshops and bills, sites), `rules`
 //! Writes: `Knowledge` (`observed`, `Source::Observed` entries); `SimResources.colony.tallies` (observed)
 //! Events: none

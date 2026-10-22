@@ -924,12 +924,7 @@ impl RuntimeSystem for JobAssignSystem {
         if rule.knowledge.is_some() && !resources.colony.teach_orders.is_empty() {
             super::teach::tidy(world, resources);
         }
-        let in_combat = |id: AgentId| {
-            resources
-                .combat_pairs
-                .iter()
-                .any(|&(a, b)| a == id || b == id)
-        };
+        let in_combat = |id: AgentId| in_combat(resources, id);
         // (id, entity, tile, work priorities, holds a tool, skills, practitioner bits)
         type Row = (
             AgentId,
@@ -944,16 +939,7 @@ impl RuntimeSystem for JobAssignSystem {
         let gating = knowledge_rule.is_some();
         // M3 (DECISIONS D16): a person whose hunger or thirst is at its seek
         // threshold is about to leave for food or water; no new job then.
-        let needy = |e: Entity| {
-            use crate::runtime::decision::needs as n;
-            rule.space.is_some()
-                && (world
-                    .get::<&sim_core::components::Hunger>(e)
-                    .is_ok_and(|h| h.value >= n::HUNGER_THRESHOLD)
-                    || world
-                        .get::<&sim_core::components::Thirst>(e)
-                        .is_ok_and(|t| t.value >= n::THIRST_THRESHOLD))
-        };
+        let needy = |e: Entity| needy(world, resources, e);
         let mut available: Vec<Row> = world
             .query::<(
                 &Agent,
@@ -1189,4 +1175,22 @@ impl RuntimeSystem for JobAssignSystem {
             }
         }
     }
+}
+
+/// Whether `id` is in a fight (`SimResources.combat_pairs`): no new job then.
+pub(super) fn in_combat(res: &SimResources, id: AgentId) -> bool {
+    res.combat_pairs.iter().any(|&(a, b)| a == id || b == id)
+}
+
+/// M3 (DECISIONS D16): whether `e`'s hunger or thirst is at its seek threshold
+/// (with built space only) — about to leave for food or water: no new job then.
+pub(super) fn needy(world: &World, res: &SimResources, e: Entity) -> bool {
+    use crate::runtime::decision::needs as n;
+    res.rules.colony.is_some_and(|c| c.space.is_some())
+        && (world
+            .get::<&sim_core::components::Hunger>(e)
+            .is_ok_and(|h| h.value >= n::HUNGER_THRESHOLD)
+            || world
+                .get::<&sim_core::components::Thirst>(e)
+                .is_ok_and(|t| t.value >= n::THIRST_THRESHOLD))
 }

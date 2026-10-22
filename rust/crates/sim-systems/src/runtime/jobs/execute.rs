@@ -538,7 +538,7 @@ fn use_axe(
         );
     } else if limit > 0 && tool.uses >= limit {
         let _ = world.remove_one::<Tool>(entity);
-        res.colony.item_ledger.consume(ItemKind::StoneAxe, 1);
+        res.colony.item_ledger.consume(tool.item.kind, 1);
         res.colony.item_ledger.create(ItemKind::Stone, 1);
         put_items(
             res,

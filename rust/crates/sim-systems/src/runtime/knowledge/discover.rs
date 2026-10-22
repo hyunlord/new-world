@@ -1,6 +1,6 @@
 //! DiscoverySystem: curious adults who hold every prerequisite may discover a node whose settlement conditions hold.
 //!
-//! Priority: 163 (`DISCOVERY_PRIORITY`). Interval: 240 ticks (`KnowledgeRule::discovery_interval`). Gate: `ColonyRule::knowledge`.
+//! Priority: 163 (`DISCOVERY_PRIORITY`). Interval: 240 ticks (fixed; `KnowledgeRule::discovery_interval` must match — a test checks). Gate: `ColonyRule::knowledge`.
 //! Reads: `Agent`, `Child`, `Lineage`, `Temperament`, `Knowledge`, `Skills`; `SimResources.colony` (ground items, zones, resource nodes), `settlements` (hearths), `world_seed`
 //! Writes: `Knowledge` (a discovered node at `discovery_gain` ‰, `Source::Discovered`); `SimResources.colony.tallies` (discoveries), `chronicle`
 //! Events: chronicle `KnowledgeDiscovered` (subject the discoverer, value the node id)

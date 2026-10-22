@@ -11,7 +11,7 @@
 
 > 지금(M1.5)의 게임은 192×192 세계에 창설자 10명으로 시작하는 첫 정착지다. 위 막대에 `1년 차 · 봄 1일째`처럼 해와 계절이 보이고(계절 6일, 1년 24일, 1배속에서 1년 약 48분), 나이는 '세'로 센다. 아이는 1년에 한두 명 태어나고(임신 18일), 15세에 어른이 된다. F1–F4·F6–F8·F10으로 지시 모드를 고른다: F1 나무 베기(끌어서 범위), F2 비축 구역, F3 짓기 메뉴(1 오두막 3×3 통나무 12개 · 2 돌깎이 자리 돌 4개 · 3 목공대 통나무 6개와 돌 2개 · 4 건조대 통나무 4개 · 5 통나무 벽 · 6 문 · 7 바닥 · 8 침상 · 9 돌담; 벽과 바닥은 끌면 줄, Shift+끌기면 네모), F4 구역 지우기, F6 취소, F7 채석(바위·부싯돌 노두), F8 언덕 파기, F10 철거. R 키는 방 보기(역할별 색과 이름; 방을 클릭하면 방 패널). 다 지은 작업장을 클릭하면 주문 목록(만들기 n / 유지 n)이 열리고, P 키는 사람별 작업 우선순위 표다. F5 저장, F9 불러오기. Home/H 키는 캠프로 화면을 옮긴다. 사람들이 나무를 베어 통나무를 나르고 비축 구역에 쌓고 오두막을 짓는다. 사람을 클릭하면 상세 정보와 지금 하는 일, 들고 있는 것이 보인다. 화면의 타일셋은 임시(코드로 그림)다.
 
-**지금 화면:** [docs/images/m3_contact_sheet.png](docs/images/m3_contact_sheet.png) (M3: 방 보기 R의 침실·창고·판 굴, 통나무 벽 끌기의 빨간 칸, 잠자리 줄, 방 패널, 밤의 침실; 창으로 찍은 10장, `docs/v8/m3/contact_sheet_m3.json`) · M1 화면 평가는 [docs/v8/play/SCREEN_REPORT.md](docs/v8/play/SCREEN_REPORT.md), 그림 기준은 [docs/v8/m1art/ART_REPORT.md](docs/v8/m1art/ART_REPORT.md), 이번 패스 보고는 [docs/v8/m3/M3_REPORT.md](docs/v8/m3/M3_REPORT.md).
+**지금 화면:** [docs/images/m4_contact_sheet.png](docs/images/m4_contact_sheet.png) (M4: 상단 시대 줄 "구석기 22 %"와 ⚠ 기술 위험 배지, T 기술 지도(미지·위험·안정), 토기 굽기 노드 상세, K 가르치기 창, 사람의 지식 탭, 창고 안 구운 토기, 강의 여울, 연대기의 발견 줄; 창으로 찍은 10장, `docs/v8/m4/contact_sheet_m4.json`) · M1 화면 평가는 [docs/v8/play/SCREEN_REPORT.md](docs/v8/play/SCREEN_REPORT.md), 그림 기준은 [docs/v8/m1art/ART_REPORT.md](docs/v8/m1art/ART_REPORT.md), 이번 패스 보고는 [docs/v8/m4/M4_REPORT.md](docs/v8/m4/M4_REPORT.md).
 
 ## 빌드와 실행
 

@@ -159,3 +159,21 @@ pub fn anyone_practises(world: &World, mask: u32) -> bool {
 pub const fn channel_code(source: Source) -> u8 {
     source.code()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use sim_engine::RuntimeSystem;
+
+    /// Code review F5: the systems' intervals are fixed in `tick_interval`;
+    /// the rule's interval fields document them and must not drift (changing
+    /// only the rule would silently change nothing).
+    #[test]
+    fn system_intervals_match_the_rule() {
+        let r = KnowledgeRule::M4;
+        assert_eq!(KnowledgeDecaySystem.tick_interval(), r.decay_interval);
+        assert_eq!(DiscoverySystem.tick_interval(), r.discovery_interval);
+        assert_eq!(ObservationSystem.tick_interval(), r.observation_interval);
+        assert_eq!(TechAggregateSystem.tick_interval(), r.aggregate_interval);
+    }
+}

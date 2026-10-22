@@ -1098,3 +1098,106 @@ fn a_ground_axe_breaks_after_120_chops() {
         .map(|e| (e.cause, e.value));
     assert_eq!(broke, Some((ItemKind::GroundAxe.code(), 120)));
 }
+
+/// The job world under M4 with a camp hearth at (10, 10) and the given seed;
+/// the evening telling registered when `oral`.
+fn hearth_world_m4(seed: u64, oral: bool) -> SimEngine {
+    let mut engine = job_world_m4(32, 32);
+    engine.resources.world_seed = seed;
+    engine
+        .resources
+        .building_kinds
+        .insert((10, 10), sim_core::components::BuildingKind::Hearth);
+    if oral {
+        engine.register_system(Box::new(
+            sim_systems::runtime::knowledge::OralTransmissionSystem,
+        ));
+    }
+    engine
+}
+
+/// Code review F1: an order whose partners cannot meet (the learner's Craft
+/// priority is 0) sends nobody — before the fix the teacher held a Teach job
+/// in 4,303 of 4,320 ticks, timing out and being sent again — and the order
+/// stays open; once the learner may craft, sessions are held.
+#[test]
+fn an_apprenticeship_whose_partners_cannot_meet_sends_nobody() {
+    let mut engine = hearth_world_m4(4, false);
+    let teacher = worker(&mut engine, 12, 12);
+    let learner = worker(&mut engine, 6, 6);
+    know(&mut engine, teacher, &["doorway"], 650);
+    let (t, l) = (agent_id(&engine, teacher), agent_id(&engine, learner));
+    let craft = |level| Command::SetWorkPriority {
+        agent: l,
+        work: sim_core::colony::WorkType::Craft,
+        level,
+    };
+    assert!(submit(&mut engine, craft(0)).accepted);
+    let r = submit(
+        &mut engine,
+        Command::OrderTeach {
+            teacher: t,
+            learner: l,
+            knowledge: id("doorway"),
+        },
+    );
+    assert!(r.accepted, "{r:?}");
+    for _ in 0..3 * 1440 {
+        tick_checked(&mut engine);
+        assert!(
+            engine.world.get::<&Job>(teacher).is_err(),
+            "nobody is sent to a lesson that cannot happen"
+        );
+    }
+    assert_eq!(
+        engine.resources.colony.teach_orders.len(),
+        1,
+        "the order waits"
+    );
+    assert!(submit(&mut engine, craft(3)).accepted);
+    let used = run_until(&mut engine, 2 * 1440, |e| {
+        e.resources.colony.tallies.teach_sessions > 0
+    });
+    assert!(used < 2 * 1440, "sessions once both may craft");
+}
+
+/// Code review F2: a listener holding a node at or above the telling's gain
+/// (350 ‰) but below its threshold is not told it; the evening's one lesson
+/// goes to a node it can learn. Seeds 0–15, up to 8 evenings: before the fix
+/// 18 evenings counted a lesson that changed nothing.
+#[test]
+fn the_evening_telling_never_spends_its_lesson_on_a_node_that_cannot_rise() {
+    let (mut wasted, mut door_learned) = (0, 0);
+    for seed in 0..16u64 {
+        let mut engine = hearth_world_m4(seed, true);
+        let teller = worker(&mut engine, 11, 10);
+        let listener = worker(&mut engine, 12, 10);
+        know(&mut engine, teller, &["stone_grinding", "doorway"], 600);
+        know(&mut engine, listener, &["stone_grinding"], 380);
+        let mut before = 0;
+        for _ in 0..8 {
+            for _ in 0..1440 {
+                tick_checked(&mut engine);
+            }
+            let k = engine
+                .world
+                .get::<&Knowledge>(listener)
+                .map(|k| (*k).clone())
+                .expect("knowledge");
+            let learned = engine.resources.colony.tallies.oral_learned;
+            if learned > before && k.proficiency(id("doorway")) == 0 {
+                wasted += 1;
+            }
+            before = learned;
+            if k.proficiency(id("doorway")) > 0 {
+                door_learned += 1;
+                break;
+            }
+        }
+    }
+    assert_eq!(wasted, 0, "no lesson counted without a gain");
+    assert!(
+        door_learned >= 8,
+        "the doorway is told instead: {door_learned} of 16 seeds"
+    );
+}

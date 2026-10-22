@@ -130,7 +130,11 @@ impl RuntimeSystem for OralTransmissionSystem {
                 after[ti].touch(node, tick);
                 rehearsed += 1;
             }
-            let candidates: Vec<u8> = ids_of(teller.practice() & !before[li].practice()).collect();
+            // A node the listener already holds at the telling's gain or above
+            // cannot rise by it, so it is not a candidate (code review F2).
+            let candidates: Vec<u8> = ids_of(teller.practice() & !before[li].practice())
+                .filter(|c| after[li].proficiency(*c) < rule.oral_gain)
+                .collect();
             if candidates.is_empty() {
                 continue;
             }

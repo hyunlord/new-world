@@ -319,7 +319,7 @@ Raw data lives in `/Users/rexxa/work/m4-data/` (`$DATA`), outside the repository
   PASS. Tick mean against the same-session M3: n1000 ×1.030, n2000 ×1.038, n200_side64 ×1.036, but n200 ×1.235 and
   n200_script ×1.171; RSS per agent 2,048 → 2,412 B (×1.18). The final numbers are in the third ledger session
   (CHANGELOG, `docs/perf/PERF_LEDGER.md`).
-- **Memory, fixed.** Without seeding (a diagnostic build) RSS per agent matched M3 (2,094 vs 2,112 B, medians of 3),
+- **Memory, fixed.** Without seeding (a diagnostic build) RSS per agent matched M3 (2,094 vs 2,121 B, difference of medians of 3),
   so the +330 B was not the knowledge data (≈ 75 B: a 16-B box and ~8 entries of 6 B) but how it was made. Two causes,
   two fixes, both byte-identical for the colony (the calibration run, seeds 0–7 × 36 days, has the same
   `summary.json`) and outside the baseline (identity PASS):
@@ -333,17 +333,65 @@ Raw data lives in `/Users/rexxa/work/m4-data/` (`$DATA`), outside the repository
      boxes each founder's entries once (`Knowledge::from_entries`).
   How much each saved is within the metric's noise: RSS per agent is (n2000 − n200 RSS after build) / 1,800, and the
   same binary's n2000 RSS varies by up to 1 MB between runs (bimodal 12.06 / 12.45 MB for the final build; macOS
-  allocator placement). Five interleaved rounds, medians of the per-run values: M3 2,021 B, the candidate without any
-  seeding 2,075, the final build 2,157 (+136 B, ×1.067; single runs 1,593–2,658 across the three). The final ledger
-  session's median of three read 2,321 against 2,030 (×1.14). Recorded as measured; the ceiling (4,096) passes in every
-  run.
+  allocator placement). Five interleaved rounds under the ledger's metric (difference of medians): M3 1,966 B, the
+  candidate without any seeding 2,084, the final build 2,148 (+182 B, ×1.093; single runs 1,593–2,658). The final
+  ledger session read 2,321 against 2,030 (×1.14). So the pass is **over the memory plan** (≤ 160 B added) by this
+  metric, although the knowledge data is ≈ 75 B; the rest is allocator placement we did not pin down. The ceiling
+  (4,096) passes in every run. (Numbers review: an earlier version quoted ×1.067 from the median of per-run values.)
 - **Tick at N = 200, justified.** Building `worldsim_perf` at every Part's commit and timing n200 interleaved:
   M3 313 µs, Part 0 (`06c965aa`, fords and tool wear) 392, Parts 1–2 (`276923de`, knowledge) 398, Part 3 386, the
   candidate 386 — the whole step is Part 0. A diagnostic build of the candidate without fords runs n200 at ×0.981 and
   n200_script at ×0.995 of M3. With the fords the bench world's forest across the river is reachable (4 ford tiles), so
   people forage there: the V7 decision system's gather selectors (`gather_tile_exists`, `nearest_gather_tile`, a scan
   of all ≈ 2,050 food tiles per call) and bush choice run more often (samples: gather 154 → 257, `choose_bush`
-  0 → 20). The cost is the world's new reach, not knowledge code, and shrinks with N (×1.03 at 1,000, ×1.04 at 2,000).
+  0 → 20; profiles in `$DATA/profile/`). The no-ford build's n200 fingerprint equals M3's (byte-identical behaviour)
+  and its decision system is back at M3's µs. The cost is the world's new reach, not knowledge code; the final session
+  reads ×1.061 at N = 1,000 and ×1.059 at N = 2,000 (the first session ×1.03 / ×1.04). Not explained by it: n1000 p99
+  ×1.106 in the final session, and `JobAssignSystem` +24 µs at N = 2,000 (gated searches fall back to unmemoised
+  searches more often in a crowd — a hypothesis, not measured). Both recorded, not fixed.
   A radius-box scan was tried and was slower (hash lookups over a 17 × 17 box cost more than iterating 2,050 entries;
   decision 276 → 320 µs), so it was reverted. An index over food tiles is M-PERF work (the V7 selectors are not
   touched by M4). The CHANGELOG states the justification the gate's `bench` step quotes.
+
+## D24 — The two Part 6 reviews and what was done
+
+Reports outside the repository: `/Users/rexxa/work/m4-data/review_code.md`, `/Users/rexxa/work/m4-data/review_numbers.md`.
+
+**Code review** (fresh reviewer, the diff `5da079d3..7eb387ba`): gating completeness, determinism, bitset refresh, the
+ledger and the seam clean; teach cancellation paths clean but one major gap.
+- F1 (major) — an apprenticeship whose partners can never meet (the learner's Craft priority 0, the meeting tile out of
+  one partner's reach, no meeting tile) sent the free partner again and again (the teacher held a Teach job 4,303 of
+  4,320 ticks, 0 sessions). **Fixed**: `teach::assign` sends partners only when both have Craft priority and both reach
+  the meeting tile; the order waits open, listed in the K dialog. Test
+  `an_apprenticeship_whose_partners_cannot_meet_sends_nobody` (fails without the fix).
+- F2 (minor) — the evening telling spent the listener's one lesson (and counted it) on a node held at 350 ‰ or more but
+  below its threshold. **Fixed**: such nodes are not candidates. Test
+  `the_evening_telling_never_spends_its_lesson_on_a_node_that_cannot_rise` (18 wasted evenings before, 0 after).
+- F3 (minor) — `teach::assign` skipped the main assignment's guards. **Fixed**: a partner at its hunger or thirst seek
+  threshold, in a fight, or under the unreachable cooldown for the meeting tile is not sent (`assign::needy`,
+  `assign::in_combat`, shared now).
+- F4 (minor) — re-learning a faded entry relabels its source (and so its forgetting floor). **Kept as designed**: the
+  source is the latest channel that raised the entry (a seeded skill re-heard at the fire is now held as heard); the
+  floor follows it. Recorded here; the owner may want seeded knowledge to keep its floor (report, owner decisions).
+- F5 (nit) — the rule's interval fields were never read. **Fixed** by a test that the systems' fixed intervals equal
+  the rule's fields (`system_intervals_match_the_rule`) and headers that say so.
+- F6, F9 (nits) — stale slot and order comments. **Fixed.**
+- F7 (nit) — the M2 wear branch consumed a stone axe whatever the tool. **Fixed** (`tool.item.kind`; no shipped rule
+  reaches the branch with another tool).
+- F8 (nit) — a load trusted the saved bitset. **Fixed**: `Knowledge` deserializes through `from_entries` and rebuilds
+  it (`a_load_rebuilds_the_bitset_from_the_entries`); the save format is unchanged.
+- F10 (nit) — a lesson's wait counted from taking the job, so a long walk timed out on arrival. **Fixed**: the wait
+  counts from arrival (`progress_tick`, renewed when a session starts or stops).
+
+F1, F2, F3 and F10 change the colony's behaviour, so the held-out seeds were measured once more after them
+(`$DATA` = `/Users/rexxa/work/m4-data/p6/`, M4_EVALUATION "after the reviews"); the result of record stays the
+`84f336a5` run.
+
+**Numbers review** (fresh reviewer, its own scripts from the raw data): every bar count, all 64 per-seed appendix
+rows, F10, determinism, replay, byte-identity, the F12 table, the ledger rows and the D23 bisect confirmed. Corrected
+in M4_EVALUATION, D23, the report and the CHANGELOG: n1000 p99 ×1.106 is over the +10 % rule and is now reported as a
+failure; RSS per agent is given in the ledger's own metric (×1.09–×1.14, over the memory plan), not the ×1.067 of a
+different statistic; D23's N = 1,000 / 2,000 ratios are the final session's; `JobAssignSystem` +24 µs at N = 2,000 is
+reported; the knowledge code at N = 200 is ≈ 1.4 µs with gating; the no-ford ratio is ×0.98–×1.02 with the
+fingerprint identity cited; the bisect series is labelled contended; F7 changed on two seeds after D22; one axe broke
+in the run of record (three after the fix); calibration bytes 122–159; F9 noted as testing little as written.

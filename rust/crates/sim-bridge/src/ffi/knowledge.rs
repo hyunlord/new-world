@@ -7,7 +7,7 @@
 //! `AgentId`), [`collect_agent_knowledge`] (entries by node id),
 //! [`collect_teach_orders`] (order id order), [`collect_knowledge_waits`]
 //! (workshops by id and bills in list order, then sites by centre `(x, y)`, then
-//! marks by kind). Ids: people are `AgentId`, nodes `KnowledgeId` (index in
+//! marks by tile `(x, y)`). Ids: people are `AgentId`, nodes `KnowledgeId` (index in
 //! `knowledge.ron`), workshops and bills their colony ids. Every read returns
 //! its empty form in the baseline world and under rules without knowledge.
 use godot::prelude::*;

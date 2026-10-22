@@ -1,6 +1,6 @@
 //! TechAggregateSystem: counts each node's practitioners and holders, sets its state, warns of risk and loss, and computes the era progress.
 //!
-//! Priority: 164 (`TECH_AGGREGATE_PRIORITY`). Interval: 240 ticks (`KnowledgeRule::aggregate_interval`). Gate: `ColonyRule::knowledge`.
+//! Priority: 164 (`TECH_AGGREGATE_PRIORITY`). Interval: 240 ticks (fixed; `KnowledgeRule::aggregate_interval` must match — a test checks). Gate: `ColonyRule::knowledge`.
 //! Reads: `Agent`, `Child`, `Knowledge`; `rules` (knowledge, calendar), `current_tick`
 //! Writes: `SimResources.colony.tech` (states, era progress, version), `chronicle`
 //! Events: chronicle `KnowledgeAtRisk` (subject the one holder, value the node id), `KnowledgeLost` (subject the last holder, value the node id)

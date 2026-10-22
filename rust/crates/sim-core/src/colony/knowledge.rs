@@ -619,10 +619,29 @@ impl KnowledgeEntry {
 /// What a person knows (an ECS component, M4 ADR 0024): entries sorted by id
 /// and the cached practitioner bitset. Colony founders get it at worldgen;
 /// anyone else gets it with their first entry (a missing component = knows nothing).
+///
+/// A load rebuilds the bitset from the entries (`serde(from)`), so a save made
+/// before a threshold changed in `knowledge.ron` gates by the new thresholds
+/// (code review F8); the saved `practice` is kept in the format but not trusted.
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(from = "SavedKnowledge")]
 pub struct Knowledge {
     entries: Box<[KnowledgeEntry]>,
     practice: u32,
+}
+
+/// The saved form of [`Knowledge`] (the same fields).
+#[derive(Deserialize)]
+struct SavedKnowledge {
+    entries: Vec<KnowledgeEntry>,
+    #[serde(rename = "practice")]
+    _practice: u32,
+}
+
+impl From<SavedKnowledge> for Knowledge {
+    fn from(saved: SavedKnowledge) -> Self {
+        Self::from_entries(saved.entries)
+    }
 }
 
 impl Knowledge {
@@ -1050,6 +1069,20 @@ mod tests {
             k.get(knap).map(|e| (e.source(), e.observed())),
             Some((Source::Observed, 250))
         );
+    }
+
+    #[test]
+    fn a_load_rebuilds_the_bitset_from_the_entries() {
+        let knap = id("flint_knapping").expect("knapping");
+        let mut k = Knowledge::default();
+        k.set(knap, 600, Source::Seeded, 0);
+        let text = ron::to_string(&k).expect("save");
+        // A save whose bitset disagrees with its entries (a threshold changed since).
+        let tampered = text.replace(&format!("practice:{}", k.practice()), "practice:0");
+        assert_ne!(tampered, text, "the bitset is in the saved form");
+        let loaded: Knowledge = ron::from_str(&tampered).expect("load");
+        assert_eq!(loaded.practice(), bit(knap));
+        assert_eq!(loaded, k);
     }
 
     #[test]
