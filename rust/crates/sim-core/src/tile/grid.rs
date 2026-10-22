@@ -31,6 +31,14 @@ pub struct TileGrid {
     /// Outdoor flag — `true` means the tile is exposed to sky (sun base for
     /// the Light channel, weather exposure base for Warmth, etc.).
     pub outdoor: Vec<bool>,
+    /// M3 (ADR 0022): the wall on this tile is a door (passable, bounds rooms).
+    /// Empty in older saves and the baseline; read through [`TileGrid::is_door`].
+    #[serde(default)]
+    pub door: Vec<bool>,
+    /// M3 (ADR 0022): this hill tile has been dug out (passable, rock floor).
+    /// Empty in older saves and the baseline; read through [`TileGrid::is_dug`].
+    #[serde(default)]
+    pub dug: Vec<bool>,
 }
 
 impl TileGrid {
@@ -47,6 +55,40 @@ impl TileGrid {
             terrain_type: vec![TerrainType::Plain; total],
             elevation: vec![128; total],
             outdoor: vec![true; total],
+            door: vec![false; total],
+            dug: vec![false; total],
+        }
+    }
+
+    /// Whether the tile at `idx` is a door (M3; `false` when the column is absent).
+    #[inline]
+    pub fn is_door(&self, idx: usize) -> bool {
+        self.door.get(idx).copied().unwrap_or(false)
+    }
+
+    /// Whether the tile at `idx` has been dug out (M3; `false` when the column is absent).
+    #[inline]
+    pub fn is_dug(&self, idx: usize) -> bool {
+        self.dug.get(idx).copied().unwrap_or(false)
+    }
+
+    /// Set the door flag of `idx`, growing an absent column first (M3).
+    pub fn set_door(&mut self, idx: usize, door: bool) {
+        if self.door.len() != self.len() {
+            self.door = vec![false; self.len()];
+        }
+        if let Some(cell) = self.door.get_mut(idx) {
+            *cell = door;
+        }
+    }
+
+    /// Set the dug flag of `idx`, growing an absent column first (M3).
+    pub fn set_dug(&mut self, idx: usize, dug: bool) {
+        if self.dug.len() != self.len() {
+            self.dug = vec![false; self.len()];
+        }
+        if let Some(cell) = self.dug.get_mut(idx) {
+            *cell = dug;
         }
     }
 

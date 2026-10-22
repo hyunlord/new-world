@@ -7,6 +7,8 @@
 
 /// M1.5: the standing colony benchmark (`worldsim_perf bench`, ADR 0016 C3).
 pub mod bench;
+/// M3 pathfinding benchmark (`worldsim_perf nav-bench`).
+pub mod nav_bench;
 /// Revitalize Pass 15: tick timings, the stress world and snapshot costs (`worldsim_perf`).
 pub mod perf;
 /// Headless measurements and trajectory fingerprints.

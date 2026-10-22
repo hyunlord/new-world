@@ -45,6 +45,49 @@ pub struct ColonyRule {
     /// work priorities, skills and tools. `None` = M1.5 (no nodes, logs only).
     #[serde(default)]
     pub economy: Option<EconomyRule>,
+    /// M3 (ADR 0022, 0023): built space — walls, doors, floors, bedrolls,
+    /// digging, rooms and their roles. `None` = M2 (pathfinding still runs in
+    /// every colony world, ADR 0021).
+    #[serde(default)]
+    pub space: Option<SpaceRule>,
+}
+
+/// M3's tunables (goal 3.2–3.3; `ColonyRule::space`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub struct SpaceRule {
+    /// Work ticks to dig one hill tile at skill level 5 (goal 3.2: 150).
+    pub dig_ticks: u32,
+    /// Stone one dug hill tile yields (goal 3.2: 3).
+    pub dig_stone: u8,
+    /// Fewest tiles of a room (goal 3.3: 2).
+    pub room_min_tiles: u32,
+    /// Most tiles of a room; also the roof rule (goal 3.3: 120).
+    pub room_max_tiles: u32,
+    /// A region of more tiles is open ground (goal 3.3: 400).
+    pub open_region_tiles: u32,
+    /// Ticks between room detections when nothing changed (goal 3.3: 60).
+    pub room_interval_ticks: u64,
+    /// Sleep decay permille while asleep in a roofed bedroom (goal 3.3: 800 = 20 % faster recovery).
+    pub bedroom_sleep_permille: u32,
+    /// A roofed storehouse cell counts this many tiles nearer for hauling (goal 3.3: 16).
+    pub storehouse_bonus_tiles: u32,
+    /// Days a person avoids a target that turned out unreachable (goal 3.1: 1).
+    pub unreachable_cooldown_days: u64,
+}
+
+impl SpaceRule {
+    /// The M3 values (goal 3).
+    pub const M3: Self = Self {
+        dig_ticks: 150,
+        dig_stone: 3,
+        room_min_tiles: 2,
+        room_max_tiles: 120,
+        open_region_tiles: 400,
+        room_interval_ticks: 60,
+        bedroom_sleep_permille: 800,
+        storehouse_bonus_tiles: 16,
+        unreachable_cooldown_days: 1,
+    };
 }
 
 /// The M2 economy's tunables (goal 3; `ColonyRule::economy`).
@@ -105,6 +148,7 @@ impl ColonyRule {
         yield_margin_permille: None,
         finish_leg_tiles: None,
         economy: None,
+        space: None,
     };
 
     /// The M1.5 colony values: [`Self::M1`] with the job-churn remedies
@@ -119,6 +163,12 @@ impl ColonyRule {
     pub const M2: Self = Self {
         economy: Some(EconomyRule::M2),
         ..Self::M1_5
+    };
+
+    /// The M3 colony values: [`Self::M2`] with built space (goal 3).
+    pub const M3: Self = Self {
+        space: Some(SpaceRule::M3),
+        ..Self::M2
     };
 
     /// Items of `kind` one tile holds (logs: `stack_max_logs`; goal 3.1 for the rest).
@@ -196,7 +246,7 @@ impl super::WorldRules {
                 firewood,
                 ..base.society
             },
-            colony: Some(ColonyRule::M2),
+            colony: Some(ColonyRule::M3),
             seasons,
             calendar: COLONY_CALENDAR,
             ..base

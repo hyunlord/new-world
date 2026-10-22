@@ -111,6 +111,14 @@ pub struct ColonyState {
     /// (M2 review m5: later blueprints may not cover it).
     #[serde(default)]
     pub site_work_tiles: BTreeMap<(u32, u32), (u32, u32)>,
+    /// M3 (ADR 0022): the kind of every 1×1 space site (wall, door, floor,
+    /// bedroll) by tile, while it is a blueprint; read by the nav map.
+    #[serde(default)]
+    pub space_sites: BTreeMap<(u32, u32), BlueprintKind>,
+    /// M3 (ADR 0021): targets a person found unreachable, by `(person, tile)`,
+    /// with the tick until which the job assignment skips them for that person.
+    #[serde(default)]
+    pub unreachable: BTreeMap<(AgentId, (u32, u32)), u64>,
     /// Bumped whenever a tree is added or removed (renderers rebuild on change).
     pub trees_version: u64,
     /// Ground stacks, one per tile.

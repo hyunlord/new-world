@@ -34,12 +34,23 @@ pub fn under_building(res: &SimResources, tile: (u32, u32)) -> bool {
 }
 
 /// Whether items may lie on `tile` (7.4): in bounds, not water or mountain,
-/// not under a building or site.
+/// not under a building or site; in the colony (M3) also passable and not a
+/// wall or door, so a spill never lands where no one can walk.
 pub fn can_hold_items(res: &SimResources, tile: (u32, u32)) -> bool {
     matches!(
         terrain(res, tile),
         Some(t) if t != TerrainType::River && t != TerrainType::Mountain
     ) && !under_building(res, tile)
+        && (res.rules.colony.is_none()
+            || (crate::runtime::nav::passable(res, tile) && !has_wall(res, tile)))
+}
+
+/// Whether `tile` carries a wall or a door (M3).
+pub fn has_wall(res: &SimResources, tile: (u32, u32)) -> bool {
+    let grid = &res.tile_grid;
+    tile.0 < grid.width
+        && tile.1 < grid.height
+        && grid.wall_material[grid.idx(tile.0, tile.1)].is_some()
 }
 
 /// The stack maximum of `kind` under the colony rule (25 without one).
@@ -68,13 +79,44 @@ pub fn room_on(res: &SimResources, tile: (u32, u32), spec: ItemSpec) -> u16 {
 /// maximum, then the nearest tiles in Chebyshev ring order (within a ring
 /// `(y, x)` ascending) that can hold items and are empty or hold a stack it
 /// merges with below the maximum. Returns the tiles filled, in order.
-/// Never destroys an item while any tile of the map has room.
+/// Never destroys an item while any tile of the map has room. M3: in the
+/// colony a spill stays in the nav region of `tile` (when `tile` is passable),
+/// so items never land where the one who dropped them cannot walk; only when
+/// that region has no room does it spread further.
 pub fn put_items(
     res: &mut SimResources,
     tile: (u32, u32),
     spec: ItemSpec,
     n: u16,
 ) -> Vec<(u32, u32)> {
+    let region = (res.rules.colony.is_some() && res.nav.is_built() && res.nav.passable(tile))
+        .then(|| res.nav.region_of(tile))
+        .filter(|r| *r != 0);
+    let (mut filled, mut left) = put_items_in(res, tile, spec, n, region);
+    if region.is_some() && left > 0 {
+        let (more, rest) = put_items_in(res, tile, spec, left, None);
+        filled.extend(more);
+        left = rest;
+    }
+    debug_assert_eq!(
+        left, 0,
+        "put_items: no room left on the map for {left} items"
+    );
+    if !filled.is_empty() {
+        res.colony.touch(false);
+    }
+    filled
+}
+
+/// One pass of [`put_items`], only onto tiles of `region` when given; returns
+/// the tiles filled and the items still left.
+fn put_items_in(
+    res: &mut SimResources,
+    tile: (u32, u32),
+    spec: ItemSpec,
+    n: u16,
+    region: Option<u32>,
+) -> (Vec<(u32, u32)>, u16) {
     let (w, h) = (res.tile_grid.width, res.tile_grid.height);
     let mut left = n;
     let mut filled = Vec::new();
@@ -96,7 +138,7 @@ pub fn put_items(
                     continue;
                 }
                 let room = room_on(res, t, spec);
-                if room == 0 {
+                if room == 0 || region.is_some_and(|r| res.nav.region_of(t) != r) {
                     continue;
                 }
                 let add = room.min(left);
@@ -112,14 +154,7 @@ pub fn put_items(
         }
         ring += 1;
     }
-    debug_assert_eq!(
-        left, 0,
-        "put_items: no room left on the map for {left} items"
-    );
-    if !filled.is_empty() {
-        res.colony.touch(false);
-    }
-    filled
+    (filled, left)
 }
 
 /// Take up to `n` items of `kind` from the stack at `tile`; removes the

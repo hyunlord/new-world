@@ -6,7 +6,7 @@ mod calendar;
 mod colony;
 mod routine;
 pub use calendar::CalendarRule;
-pub use colony::{ColonyRule, EconomyRule};
+pub use colony::{ColonyRule, EconomyRule, SpaceRule};
 pub use routine::{EndStagger, FamilyRule, RelationsRule, RoutineRule};
 
 /// Rules selected once when a world is constructed.

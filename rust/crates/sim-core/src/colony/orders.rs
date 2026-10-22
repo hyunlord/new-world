@@ -91,24 +91,45 @@ pub enum BlueprintKind {
     WoodBench,
     /// A 2×1 drying rack (M2): placed and built, accepts no bill yet.
     DryingRack,
+    /// A 1×1 log wall (M3, ADR 0022).
+    LogWall,
+    /// A 1×1 stone wall (M3).
+    StoneWall,
+    /// A 1×1 door: a wall tile people walk through (M3).
+    Door,
+    /// A 1×1 packed-earth floor (M3).
+    PackedFloor,
+    /// A 1×1 bedroll: one bed (M3, ADR 0023).
+    Bedroll,
 }
 
 impl BlueprintKind {
     /// Every kind, in code order.
-    pub const ALL: [Self; 4] = [
+    pub const ALL: [Self; 9] = [
         Self::Hut,
         Self::KnappingSpot,
         Self::WoodBench,
         Self::DryingRack,
+        Self::LogWall,
+        Self::StoneWall,
+        Self::Door,
+        Self::PackedFloor,
+        Self::Bedroll,
     ];
 
-    /// Stable code for the bridge (0 = hut, 1 knapping spot, 2 wood bench, 3 drying rack).
+    /// Stable code for the bridge (0 = hut, 1 knapping spot, 2 wood bench, 3 drying
+    /// rack, 4 log wall, 5 stone wall, 6 door, 7 packed floor, 8 bedroll).
     pub const fn code(self) -> u8 {
         match self {
             Self::Hut => 0,
             Self::KnappingSpot => 1,
             Self::WoodBench => 2,
             Self::DryingRack => 3,
+            Self::LogWall => 4,
+            Self::StoneWall => 5,
+            Self::Door => 6,
+            Self::PackedFloor => 7,
+            Self::Bedroll => 8,
         }
     }
 
@@ -127,12 +148,34 @@ impl BlueprintKind {
             Self::KnappingSpot => "knapping_spot",
             Self::WoodBench => "wood_bench",
             Self::DryingRack => "drying_rack",
+            Self::LogWall => "log_wall",
+            Self::StoneWall => "stone_wall",
+            Self::Door => "door",
+            Self::PackedFloor => "packed_floor",
+            Self::Bedroll => "bedroll",
         }
     }
 
-    /// Whether the finished building is a workshop (everything but the hut).
+    /// Whether the finished building is a workshop (knapping spot, wood bench, drying rack).
     pub const fn is_workshop(self) -> bool {
-        !matches!(self, Self::Hut)
+        matches!(
+            self,
+            Self::KnappingSpot | Self::WoodBench | Self::DryingRack
+        )
+    }
+
+    /// Whether it is a 1×1 piece of built space (M3: wall, door, floor,
+    /// bedroll), built by the job layer from any 8-neighbour.
+    pub const fn is_space(self) -> bool {
+        matches!(
+            self,
+            Self::LogWall | Self::StoneWall | Self::Door | Self::PackedFloor | Self::Bedroll
+        )
+    }
+
+    /// Whether it is a wall without a door (impassable once placed).
+    pub const fn is_wall(self) -> bool {
+        matches!(self, Self::LogWall | Self::StoneWall)
     }
 
     /// Footprint `(w, h)`, materials and work progress (M2 goal 3.3; the
@@ -151,6 +194,11 @@ impl BlueprintKind {
                 120,
             ),
             Self::DryingRack => ((2, 1), MaterialNeeds::single(ItemKind::Log, 4), 80),
+            Self::LogWall => ((1, 1), MaterialNeeds::single(ItemKind::Log, 2), 40),
+            Self::StoneWall => ((1, 1), MaterialNeeds::single(ItemKind::Stone, 3), 60),
+            Self::Door => ((1, 1), MaterialNeeds::single(ItemKind::Log, 1), 30),
+            Self::PackedFloor => ((1, 1), MaterialNeeds::none(), 15),
+            Self::Bedroll => ((1, 1), MaterialNeeds::single(ItemKind::Log, 1), 10),
         }
     }
 }
@@ -180,6 +228,11 @@ pub struct MaterialNeeds {
 }
 
 impl MaterialNeeds {
+    /// No material at all (M3: a packed floor is work only).
+    pub const fn none() -> Self {
+        Self::single(ItemKind::Log, 0)
+    }
+
     /// One material line.
     pub const fn single(kind: ItemKind, needed: u16) -> Self {
         Self {
@@ -378,7 +431,14 @@ mod tests {
             assert_eq!(BlueprintKind::from_name(kind.name()), Some(kind));
         }
         let codes: Vec<u8> = BlueprintKind::ALL.iter().map(|k| k.code()).collect();
-        assert_eq!(codes, vec![0, 1, 2, 3]);
+        assert_eq!(codes, vec![0, 1, 2, 3, 4, 5, 6, 7, 8]);
+        let space: Vec<bool> = BlueprintKind::ALL.iter().map(|k| k.is_space()).collect();
+        assert_eq!(
+            space,
+            vec![false, false, false, false, true, true, true, true, true]
+        );
+        assert!(MaterialNeeds::none().complete());
+        assert_eq!(MaterialNeeds::none().needed_total(), 0);
         let mut needs = MaterialNeeds::pair((ItemKind::Log, 6), (ItemKind::Stone, 2));
         assert_eq!(
             (needs.needed_total(), needs.missing(ItemKind::Stone)),

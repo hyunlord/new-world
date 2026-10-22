@@ -2,9 +2,9 @@
 # usage: gate.sh <log_dir> [--base-data DIR]
 #
 # V8 gate (V8-0 goal 11.1; M1 11.3 added steps 17-20; V8-PLAY 2.3 added step 21; M1.5 10.4 added steps
-# 22-25; M3 added step 26). Twenty-six steps, each logged to <log_dir>/<step>.log
+# 22-25; M3 added steps 26-27). Twenty-seven steps, each logged to <log_dir>/<step>.log
 # with its start time, duration and exit code in <log_dir>/gate.txt. The
-# gate passes only when every step except `perf` (report only) exits 0.
+# gate passes only when every step except `perf` and `nav_bench` (report only) exits 0.
 #    1 fmt               cargo fmt --all -- --check
 #    2 bridge_build      cargo build -p sim-bridge (the library Godot loads)
 #    3 godot_import      bounded headless --import --editor --quit (twice: a fresh
@@ -39,6 +39,8 @@
 #                        (> +10 % on tick mean, p99 or RSS/agent fails; since M2 a C3 ceiling miss fails)
 #   26 soak              tools/v8/soak.sh: the economy soak fixture (M3 goal 3.4), seeds 0..4, 20 days,
 #                        tools/v8/m3_soak_script.json: ledger and reservations exact, 0 deaths, determinism
+#   27 nav_bench         worldsim_perf nav-bench: N = 1,000 with the soak script, movement + nav µs per tick
+#                        against the 600 µs budget, path requests, memo hits, nodes expanded (report only; M3 §4)
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
@@ -61,7 +63,7 @@ step() {
     code=$?
     end=$(date +%s)
     printf '%2s %-18s exit %3s  %5ss  started %s\n' "$n" "$name" "$code" "$((end - start))" "$(date -r "$start" '+%H:%M:%S')" >> "$SUMMARY"
-    if [[ "$name" != perf ]] && (( code != 0 )); then status=1; fi
+    if [[ "$name" != perf && "$name" != nav_bench ]] && (( code != 0 )); then status=1; fi
     return "$code"
 }
 step 1 fmt bash -c 'cd rust && cargo fmt --all -- --check'
@@ -105,6 +107,8 @@ grep -E 'admission|ceiling|bench: |x[0-9]' "$LOG/bench.log" | sed 's/^/   /' >> 
 # M3 (goal 3.4): the economy soak fixture, every pass from now on.
 step 26 soak bash tools/v8/soak.sh "$LOG/soak" rust/target/release/worldsim_probe
 grep -E '^SOAK' "$LOG/soak.log" | sed 's/^/   /' >> "$SUMMARY"
+step 27 nav_bench rust/target/release/worldsim_perf nav-bench --out "$LOG/nav_bench/nav_bench.json"
+grep -E '^nav_bench' "$LOG/nav_bench.log" | sed 's/^/   /' >> "$SUMMARY"
 echo "finished $(date '+%Y-%m-%d %H:%M:%S %Z') status $status" >> "$SUMMARY"
 cat "$SUMMARY"
 exit "$status"

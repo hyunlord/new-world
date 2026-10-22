@@ -477,12 +477,18 @@ fn a_cancelled_site_frees_its_v7_seeker() {
         .collect();
     adults.sort();
     let adult = adults[0].1;
-    // Hold the adult on the centre until the cascade sends it to the site.
+    // Hold the adult on the centre, idle, until the cascade sends it to the
+    // site (M3: paths moved its day, so it may be on its way to forage).
     let mut entered = false;
     for _ in 0..200 {
         if let Ok(mut p) = engine.world.get::<&mut Position>(adult) {
             p.x = centre.0;
             p.y = centre.1;
+        }
+        if state_of(&engine, adult) != seeking {
+            if let Ok(mut s) = engine.world.get::<&mut AgentState>(adult) {
+                *s = AgentState::Idle;
+            }
         }
         engine.tick();
         if state_of(&engine, adult) == seeking && tile_of(&engine, adult) == centre {

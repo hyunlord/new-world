@@ -218,6 +218,8 @@ struct Ctx<'a> {
     gather_short: &'a std::cell::Cell<Option<u32>>,
     /// The hearths (the gather fallback's drop when no cell has room), on first use.
     hearth: &'a std::cell::OnceCell<Vec<(u32, u32)>>,
+    /// The agent's nav region (M3, ADR 0021): only targets reachable from it are offered.
+    region: u32,
 }
 
 /// A picked job: kind, amount, item.
@@ -252,6 +254,11 @@ fn pick_work(
         })
     };
     let count = |tile: (u32, u32)| colony.ground_items.get(&tile).map_or(0, |s| s.count);
+    // M3: a target the agent cannot walk to is not a candidate.
+    let reach = |tile: (u32, u32)| res.nav.reaches(ctx.region, tile);
+    let stack_of = |tile: (u32, u32), kind: Option<ItemKind>, zoned: Option<bool>| {
+        stack_of(tile, kind, zoned) && reach(tile)
+    };
     match work {
         WorkType::Craft | WorkType::Split => {
             // Workshops whose active bill is of this work type, nearest work tile
@@ -265,7 +272,8 @@ fn pick_work(
                     let recipe = bill.recipe.recipe()?;
                     let tile = shop.work_tile();
                     let d = chebyshev(pos, tile);
-                    (recipe.work == work && d <= radius).then_some((d, tile.1, tile.0, shop.id))
+                    (recipe.work == work && d <= radius && reach(tile))
+                        .then_some((d, tile.1, tile.0, shop.id))
                 })
                 .collect();
             shops.sort_unstable();
@@ -371,7 +379,7 @@ fn pick_work(
                 pos,
                 radius,
                 ex.memo(Search::ShortSite),
-                |c, _| !short_kinds(&c).is_empty(),
+                |c, _| reach(c) && !short_kinds(&c).is_empty(),
             );
             if let Some((site, ())) = short {
                 for kind in short_kinds(&site) {
@@ -411,7 +419,7 @@ fn pick_work(
                 pos,
                 radius,
                 ex.memo(Search::ReadySite),
-                |c, _| ready(c),
+                |c, _| reach(c) && ready(c),
             )
             .map(|(site, ())| (JobKind::Build { site }, 0, ItemKind::Log))
         }
@@ -419,6 +427,7 @@ fn pick_work(
             let quarriable = |tile: (u32, u32)| {
                 colony.nodes.contains_key(&tile)
                     && !colony.reservations.contains_key(&ReserveKey::Node(tile))
+                    && reach(tile)
             };
             search(
                 &index.quarry,
@@ -434,6 +443,7 @@ fn pick_work(
             let choppable = |tile: (u32, u32)| {
                 colony.trees.contains_key(&tile)
                     && !colony.reservations.contains_key(&ReserveKey::Tree(tile))
+                    && reach(tile)
             };
             search(
                 &index.marked,
@@ -474,6 +484,7 @@ fn pick_work(
                 let open = |cell: (u32, u32)| {
                     room_on(res, cell, spec) > 0
                         && !colony.reservations.contains_key(&ReserveKey::Cell(cell))
+                        && reach(cell)
                 };
                 let cell = search(
                     &index.cells,
@@ -518,6 +529,7 @@ fn gather_pick(res: &SimResources, ctx: &Ctx, pos: (u32, u32), ex: &mut Exhauste
     let free = |tile: (u32, u32)| {
         res.wood_tiles.get(&tile).is_some_and(|units| *units > 0)
             && !colony.reservations.contains_key(&ReserveKey::Wood(tile))
+            && res.nav.reaches(ctx.region, tile)
     };
     let deadwood = ctx.deadwood.get_or_init(|| {
         let mut index = ChunkIndex::new();
@@ -537,7 +549,9 @@ fn gather_pick(res: &SimResources, ctx: &Ctx, pos: (u32, u32), ex: &mut Exhauste
     )?;
     let spec = ItemSpec::raw(ItemKind::Firewood, Some(sim_core::colony::materials::OAK));
     let open = |cell: (u32, u32)| {
-        room_on(res, cell, spec) > 0 && !colony.reservations.contains_key(&ReserveKey::Cell(cell))
+        room_on(res, cell, spec) > 0
+            && !colony.reservations.contains_key(&ReserveKey::Cell(cell))
+            && res.nav.reaches(ctx.region, cell)
     };
     let cell = res
         .spatial
@@ -556,9 +570,11 @@ fn gather_pick(res: &SimResources, ctx: &Ctx, pos: (u32, u32), ex: &mut Exhauste
     Some((JobKind::Gather { spot, to }, 0, ItemKind::Firewood))
 }
 
-/// The best unreserved axe stack on a stockpile cell within `reach` of `pos`:
-/// the highest quality, then the nearest `(distance, y, x)` (M2 goal 3.7).
+/// The best unreserved axe stack on a stockpile cell within `reach` of `pos`
+/// that the agent can walk to: the highest quality, then the nearest
+/// `(distance, y, x)` (M2 goal 3.7).
 fn best_axe(res: &SimResources, pos: (u32, u32), reach: u32) -> Option<(u32, u32)> {
+    let region = res.nav.region_of(pos);
     let colony = &res.colony;
     let index = &res.spatial.colony.ground;
     let chunks = reach / sim_core::spatial::CHUNK + 1;
@@ -573,6 +589,7 @@ fn best_axe(res: &SimResources, pos: (u32, u32), reach: u32) -> Option<(u32, u32
                 || stack.kind != ItemKind::StoneAxe
                 || !colony.zone_of_tile.contains_key(&tile)
                 || colony.reservations.contains_key(&ReserveKey::Stack(tile))
+                || !res.nav.reaches(region, tile)
             {
                 continue;
             }
@@ -683,6 +700,11 @@ impl RuntimeSystem for JobAssignSystem {
         }
         available.sort_by_key(|row| row.0);
         resources.spatial.colony.refresh(&resources.colony);
+        crate::runtime::nav::ensure(resources);
+        resources
+            .colony
+            .unreachable
+            .retain(|_, until| *until > tick);
         let sites = colony_sites(world);
         let mut site_index = ChunkIndex::new();
         for centre in sites.keys() {
@@ -707,7 +729,8 @@ impl RuntimeSystem for JobAssignSystem {
         let gather_short = std::cell::Cell::new(None);
         let hearth = std::cell::OnceCell::new();
         let mut taken: Vec<(Entity, Job)> = Vec::new();
-        let mut exhausted = Exhausted::default();
+        // M3: the "found nothing" memos hold per nav region (the searches filter by it).
+        let mut exhausted: BTreeMap<u32, Exhausted> = BTreeMap::new();
         // M2 (goal 3.6, DECISIONS D14): passes by priority level — level 1
         // first, then 2, … 4, so a person with priority 1 gets first pick of
         // that work. M3 (goal 3.4, M3 DECISIONS D3): within a level, one round
@@ -746,14 +769,25 @@ impl RuntimeSystem for JobAssignSystem {
                     by_jobs,
                     gather_short: &gather_short,
                     hearth: &hearth,
+                    region: resources.nav.region_of(pos),
                 };
+                let ex = exhausted.entry(ctx.region).or_default();
                 let found = match work {
-                    Some(w) => pick_work(resources, &ctx, w, pos, &mut exhausted),
-                    None => pick(resources, &ctx, &priorities, pass, pos, &mut exhausted),
+                    Some(w) => pick_work(resources, &ctx, w, pos, ex),
+                    None => pick(resources, &ctx, &priorities, pass, pos, ex),
                 };
                 let Some((kind, amount, item)) = found else {
                     continue;
                 };
+                // M3: a target this person found unreachable lately is skipped.
+                if resources
+                    .colony
+                    .unreachable
+                    .get(&(id, kind.source()))
+                    .is_some_and(|until| *until > tick)
+                {
+                    continue;
+                }
                 // A chopper without a tool stops for the best axe in a stockpile on the way.
                 let fetch = match (kind, rule.economy) {
                     (JobKind::Chop { .. }, Some(e)) if !has_tool => {

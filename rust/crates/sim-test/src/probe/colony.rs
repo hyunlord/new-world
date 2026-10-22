@@ -154,12 +154,27 @@ fn field(spec: &Value, name: &str) -> Result<u32, String> {
         .ok_or_else(|| format!("{}: missing {name}", spec["cmd"]))
 }
 
-/// The 15 (or `count`) trees nearest the hearth, by Chebyshev distance, ties `(y, x)`.
+/// Whether `t` can be walked to from the hearth `h` (M3: the far side of the
+/// river or a hill pocket is not; every tile counts before the nav map exists).
+pub fn reachable_from(engine: &SimEngine, h: (u32, u32), t: (u32, u32)) -> bool {
+    let nav = &engine.resources.nav;
+    !nav.is_built() || nav.reachable(h, t)
+}
+
+/// The 15 (or `count`) trees nearest the hearth that can be walked to, by
+/// Chebyshev distance, ties `(y, x)`.
 pub fn nearest_trees(engine: &SimEngine, count: usize) -> Vec<(u32, u32)> {
     let Some(h) = hearth(&engine.resources) else {
         return Vec::new();
     };
-    let mut trees: Vec<(u32, u32)> = engine.resources.colony.trees.keys().copied().collect();
+    let mut trees: Vec<(u32, u32)> = engine
+        .resources
+        .colony
+        .trees
+        .keys()
+        .copied()
+        .filter(|t| reachable_from(engine, h, *t))
+        .collect();
     trees.sort_by_key(|t| (chebyshev(*t, h), t.1, t.0));
     trees.truncate(count);
     trees
@@ -176,15 +191,15 @@ pub fn nearest_unmarked_trees(engine: &SimEngine, count: usize) -> Vec<(u32, u32
         .trees
         .keys()
         .copied()
-        .filter(|t| !c.designations.contains_key(t))
+        .filter(|t| !c.designations.contains_key(t) && reachable_from(engine, h, *t))
         .collect();
     trees.sort_by_key(|t| (chebyshev(*t, h), t.1, t.0));
     trees.truncate(count);
     trees
 }
 
-/// The `count` resource nodes of `kind` nearest the hearth, by Chebyshev
-/// distance, ties `(y, x)` (M2-U: "the 2 nearest boulders and 1 outcrop").
+/// The `count` resource nodes of `kind` nearest the hearth that can be walked
+/// to, by Chebyshev distance, ties `(y, x)` (M2-U: "the 2 nearest boulders and 1 outcrop").
 pub fn nearest_nodes(engine: &SimEngine, kind: NodeKind, count: usize) -> Vec<(u32, u32)> {
     let Some(h) = hearth(&engine.resources) else {
         return Vec::new();
@@ -194,7 +209,7 @@ pub fn nearest_nodes(engine: &SimEngine, kind: NodeKind, count: usize) -> Vec<(u
         .colony
         .nodes
         .iter()
-        .filter(|(_, node)| node.kind == kind)
+        .filter(|(tile, node)| node.kind == kind && reachable_from(engine, h, **tile))
         .map(|(tile, _)| *tile)
         .collect();
     nodes.sort_by_key(|t| (chebyshev(*t, h), t.1, t.0));
@@ -213,6 +228,7 @@ fn zoneable(engine: &SimEngine, t: (u32, u32)) -> bool {
         )
         && !under_building(r, t)
         && !r.colony.zone_of_tile.contains_key(&t)
+        && hearth(r).is_none_or(|h| reachable_from(engine, h, t))
 }
 
 /// Chebyshev rings around `origin`, `(y, x)` ascending within a ring (7.4 order).
@@ -231,8 +247,9 @@ fn ring_order(origin: (u32, u32), max: u32) -> impl Iterator<Item = (u32, u32)> 
 
 /// The stockpile block (goal 10.1): `size × size`, its corner nearest the
 /// hearth `offset` tiles east of it, extending east and south; if any tile is
-/// not zoneable, the corner moves through the 7.4 ring order around that
-/// point until every tile is. Returns `(x0, y0, x1, y1)`.
+/// not zoneable (M3: or not reachable from the hearth), the corner moves
+/// through the 7.4 ring order around that point until every tile is. Returns
+/// `(x0, y0, x1, y1)`.
 pub fn stockpile_block(engine: &SimEngine, size: u32, offset: u32) -> Option<(u32, u32, u32, u32)> {
     let h = hearth(&engine.resources)?;
     let start = (h.0 + offset, h.1);
@@ -272,7 +289,9 @@ pub fn blueprint_spot(
             if centre.1 <= h.1 {
                 continue;
             }
-            if check_blueprint(&engine.resources, kind, x, y).is_err() {
+            if check_blueprint(&engine.resources, kind, x, y).is_err()
+                || !reachable_from(engine, h, centre)
+            {
                 continue;
             }
             let work = work_tile_of((x, y), (w, hgt));

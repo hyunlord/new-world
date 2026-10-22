@@ -6,6 +6,16 @@ fn main() -> std::process::ExitCode {
         println!("{}", sim_test::perf::USAGE);
         return std::process::ExitCode::SUCCESS;
     }
+    // M3: the pathfinding benchmark (`sim_test::nav_bench`).
+    if args[0] == "nav-bench" {
+        return match sim_test::nav_bench::main(&args) {
+            Ok(()) => std::process::ExitCode::SUCCESS,
+            Err(error) => {
+                eprintln!("{error}");
+                std::process::ExitCode::FAILURE
+            }
+        };
+    }
     // M1.5: the standing benchmark has its own parser (`sim_test::bench`).
     if matches!(args[0].as_str(), "bench" | "bench-one" | "bench-summarise") {
         return match sim_test::bench::main(&args) {

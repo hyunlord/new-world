@@ -1,9 +1,20 @@
 //! AgentMovementSystem: moves agents one tile per move interval (seek step, haul home, play, tethered idle walk).
 //!
 //! Priority: 120 · Interval: 1 tick (acts every `rules.agent.move_interval_ticks`) · Gate: none
-//! Reads: `AgentState`, `SeekTarget`, `Agent`, `Child`, `Elder`, `Inventory`, `Lineage`, `Founding`, `Temperament`, `PorterTrip`, `Activity`; `SimResources.settlements`, `tile_grid`, `rules`
-//! Writes: `Position`, `MovementRng`; `SimResources.haulers`
+//! Reads: `AgentState`, `SeekTarget`, `Agent`, `Child`, `Elder`, `Inventory`, `Lineage`, `Founding`, `Temperament`, `PorterTrip`, `Activity`; `SimResources.settlements`, `tile_grid`, `rules`, `nav` (colony), `food_tiles`, `water_tiles`, `sleep_tiles`, `bed_of`
+//! Writes: `Position`, `MovementRng`, `SeekTarget` (colony: an unreachable need target moves to the nearest reachable one); `SimResources.haulers`, `nav` (paths, blocked goals, the map when missing)
 //! Events: none
+//!
+//! M3 (ADR 0021, colony only): a seeking agent and a hauler walking home
+//! follow a stored A* path (`SimResources.nav`) one step per move interval;
+//! when the nav version moved the remaining steps are re-checked and kept if
+//! still walkable, else re-planned. A goal that cannot be reached is recorded
+//! in `nav.blocked` (the job layer cancels the job) and the agent stays; a
+//! food, water or sleep target out of reach is replaced by the nearest
+//! reachable one of the same kind. Every other colony step (idle wander, play,
+//! the tether pull) is refused when it would enter an impassable tile or cut a
+//! corner. Paths of agents that no longer walk are dropped. The baseline
+//! (`rules.colony = None`) keeps the sign step and never reads `nav`.
 //!
 //! V7 Phase 4-β / Section 16-β — `AgentMovementSystem` (priority 120, every tick).
 //!
@@ -62,8 +73,10 @@ use sim_core::components::{
     PorterTrip, Position, ResourceKind, SeekTarget, TargetKind, Temperament,
     SETTLEMENT_PROXIMITY_RADIUS,
 };
+use sim_core::nav::{AgentPath, NavState, Tile};
 use sim_core::rules::{FirewoodRule, ForageRule};
 use sim_engine::{RuntimeSystem, SimResources};
+use std::collections::{BTreeSet, HashMap};
 
 /// Per-agent PRNG state used by [`AgentMovementSystem`] to compute the
 /// next Brownian step. Each agent owns its own `MovementRng`, so trajectories
@@ -154,6 +167,79 @@ pub fn hauls_home(
     }
 }
 
+/// M3 (colony): one step of `id` at `pos` toward `goal` along its stored
+/// path, planning or re-checking it as needed (see the module header).
+/// Returns the new tile; an unreachable goal is recorded in `nav.blocked`.
+fn path_step(nav: &mut NavState, id: AgentId, pos: Tile, goal: Tile, tick: u64) -> Tile {
+    if nav.arrived(pos, goal) {
+        nav.paths.remove(&id);
+        return pos;
+    }
+    let version = nav.version;
+    let mut plan = true;
+    if let Some(path) = nav.paths.get(&id) {
+        // The path is ours if it was planned for this goal and we stand where
+        // it left us (another system may have moved the agent).
+        let at = match path.next {
+            0 => path.planned_from(),
+            n => path.steps.get(n as usize - 1).copied(),
+        };
+        if path.goal == goal && at == Some(pos) {
+            plan = path.version != version
+                && !nav.still_walkable(pos, &path.steps[path.next as usize..]);
+            if !plan && path.version != version {
+                nav.stats.borrow_mut().kept += 1;
+            }
+        }
+    }
+    if plan {
+        if nav.paths.contains_key(&id) {
+            nav.stats.borrow_mut().replans += 1;
+        }
+        match nav.path(pos, goal) {
+            Some(steps) => {
+                nav.paths
+                    .insert(id, AgentPath::new(goal, version, pos, steps.to_vec(), tick));
+            }
+            None => {
+                nav.paths.remove(&id);
+                nav.blocked.insert(id, goal);
+                return pos;
+            }
+        }
+    }
+    let next = nav.paths.get(&id).and_then(|path| path.peek());
+    let ok = next.is_some_and(|n| nav.can_step(pos, n));
+    let Some(path) = nav.paths.get_mut(&id) else {
+        return pos;
+    };
+    path.version = version;
+    match next {
+        Some(n) if ok => {
+            path.next += 1;
+            n
+        }
+        _ => pos,
+    }
+}
+
+/// The nearest tile of `tiles` with something left that `pos` can walk onto
+/// (passable, same region), by the decision's own `(Manhattan distance, x, y)`
+/// order. A decision consumes standing on the tile, so a tile one can only stand
+/// next to (a shore tile on undug hill) does not count.
+fn nearest_reachable(nav: &NavState, pos: Tile, tiles: &HashMap<(u32, u32), u8>) -> Option<Tile> {
+    let region = nav.region_of(pos);
+    if region == 0 {
+        return None;
+    }
+    tiles
+        .iter()
+        .filter(|(t, amount)| **amount > 0 && nav.passable(**t) && nav.reaches(region, **t))
+        .map(|(t, _)| (t.0.abs_diff(pos.0) + t.1.abs_diff(pos.1), t.0, t.1))
+        .min()
+        .map(|(_, x, y)| (x, y))
+}
+
 /// Phase 4-β movement system.
 ///
 /// On every tick, queries `(&mut Position, &mut MovementRng)` and mutates each
@@ -190,6 +276,12 @@ impl RuntimeSystem for AgentMovementSystem {
 
     fn tick(&mut self, world: &mut World, resources: &mut SimResources) {
         let rules = resources.rules.agent;
+        // M3: the colony walks on the nav map; this tick's unreachable goals start empty.
+        let colony = resources.rules.colony.is_some();
+        if colony {
+            crate::runtime::nav::ensure(resources);
+            resources.nav.blocked.clear();
+        }
         if !resources
             .current_tick
             .is_multiple_of(rules.move_interval_ticks.max(1))
@@ -262,13 +354,23 @@ impl RuntimeSystem for AgentMovementSystem {
         // Pass 16 (`game_v20`): a resident's temperament leans its idle tether
         // (NS) and, for workers, its haul loads (P). None before v20.
         let temperament_rule = rules.temperament;
+        // M3: split borrows for the colony's path walking.
+        let SimResources {
+            nav,
+            food_tiles,
+            water_tiles,
+            sleep_tiles,
+            bed_of,
+            ..
+        } = resources;
+        let mut walking: BTreeSet<AgentId> = BTreeSet::new();
         for (
             _,
             (
                 pos,
                 rng,
                 state,
-                seek,
+                mut seek,
                 agent,
                 child,
                 inventory,
@@ -282,8 +384,8 @@ impl RuntimeSystem for AgentMovementSystem {
             .query::<(
                 &mut Position,
                 &mut MovementRng,
-                Option<&AgentState>,
-                Option<&SeekTarget>,
+                Option<&mut AgentState>,
+                Option<&mut SeekTarget>,
                 Option<&Agent>,
                 Option<&Child>,
                 Option<&Inventory>,
@@ -358,8 +460,11 @@ impl RuntimeSystem for AgentMovementSystem {
                             i64::from(place.1.saturating_sub(1)),
                             i64::from(place.1.saturating_add(1)).min(max_y),
                         );
-                        pos.x = nx as u32;
-                        pos.y = ny as u32;
+                        let to = (nx as u32, ny as u32);
+                        if !colony || to == (pos.x, pos.y) || nav.can_step((pos.x, pos.y), to) {
+                            pos.x = to.0;
+                            pos.y = to.1;
+                        }
                     }
                     continue;
                 }
@@ -367,16 +472,70 @@ impl RuntimeSystem for AgentMovementSystem {
                     continue;
                 }
                 if matches!(s, AgentState::Seeking { .. }) {
-                    if let Some(target) = seek {
+                    // M3: a decision walk with nothing of its kind in reach ends
+                    // here, and the agent takes its idle step this tick.
+                    let mut abandoned = false;
+                    if let (Some(target), Some(agent), true) = (seek.as_deref_mut(), agent, colony)
+                    {
+                        // M3: follow the path; a need target out of reach moves
+                        // to the nearest reachable tile of its kind.
+                        let here = (pos.x, pos.y);
+                        let goal = target.tile;
+                        // A job may be worked from beside an impassable goal; a
+                        // decision consumes on its tile, so it must stand there.
+                        let job = s.target() == Some(TargetKind::Job);
+                        let to = if job || nav.passable(goal) {
+                            path_step(nav, agent.id, here, goal, tick)
+                        } else {
+                            nav.blocked.insert(agent.id, goal);
+                            here
+                        };
+                        walking.insert(agent.id);
+                        if !job && nav.blocked.get(&agent.id) == Some(&goal) {
+                            let kind = s.target();
+                            let tiles = match kind {
+                                Some(TargetKind::Food | TargetKind::GatherFood) => {
+                                    Some(&*food_tiles)
+                                }
+                                Some(TargetKind::Water) => Some(&*water_tiles),
+                                Some(TargetKind::Sleep) if !bed_of.contains_key(&agent.id) => {
+                                    Some(&*sleep_tiles)
+                                }
+                                _ => None,
+                            };
+                            match tiles.and_then(|t| nearest_reachable(nav, here, t)) {
+                                Some(other) => {
+                                    target.tile = other;
+                                    nav.blocked.remove(&agent.id);
+                                }
+                                // Nothing of its kind in reach: the decision's walk
+                                // ends (the next decision chooses again).
+                                None => {
+                                    *s = AgentState::Idle;
+                                    abandoned = true;
+                                }
+                            }
+                        }
+                        pos.x = to.0;
+                        pos.y = to.1;
+                    } else if let Some(target) = seek {
                         // Directed signum step (no RNG — determinism preserved).
                         let dx = (target.tile.0 as i64 - pos.x as i64).signum();
                         let dy = (target.tile.1 as i64 - pos.y as i64).signum();
-                        pos.x = (pos.x as i64 + dx).clamp(0, max_x) as u32;
-                        pos.y = (pos.y as i64 + dy).clamp(0, max_y) as u32;
+                        let to = (
+                            (pos.x as i64 + dx).clamp(0, max_x) as u32,
+                            (pos.y as i64 + dy).clamp(0, max_y) as u32,
+                        );
+                        if !colony || to == (pos.x, pos.y) || nav.can_step((pos.x, pos.y), to) {
+                            pos.x = to.0;
+                            pos.y = to.1;
+                        }
                     }
                     // No Brownian for Seeking either way (target → directed
                     // above; no target → freeze).
-                    continue;
+                    if !abandoned {
+                        continue;
+                    }
                 }
             }
             // Pass 4 haul home: a loaded idle member walks straight to its
@@ -417,10 +576,17 @@ impl RuntimeSystem for AgentMovementSystem {
                         wood_window,
                         distance,
                     ) {
-                        pos.x = (pos.x as i64 + (anchor.0 as i64 - pos.x as i64).signum())
-                            .clamp(0, max_x) as u32;
-                        pos.y = (pos.y as i64 + (anchor.1 as i64 - pos.y as i64).signum())
-                            .clamp(0, max_y) as u32;
+                        if colony {
+                            let to = path_step(nav, agent.id, (pos.x, pos.y), anchor, tick);
+                            walking.insert(agent.id);
+                            pos.x = to.0;
+                            pos.y = to.1;
+                        } else {
+                            pos.x = (pos.x as i64 + (anchor.0 as i64 - pos.x as i64).signum())
+                                .clamp(0, max_x) as u32;
+                            pos.y = (pos.y as i64 + (anchor.1 as i64 - pos.y as i64).signum())
+                                .clamp(0, max_y) as u32;
+                        }
                         haul_steps.push(agent.id);
                         continue;
                     }
@@ -488,8 +654,15 @@ impl RuntimeSystem for AgentMovementSystem {
                     ny = (pos.y as i64 + (anchor.1 as i64 - pos.y as i64).signum()).clamp(0, max_y);
                 }
             }
-            pos.x = nx as u32;
-            pos.y = ny as u32;
+            let to = (nx as u32, ny as u32);
+            if colony && to != (pos.x, pos.y) && !nav.can_step((pos.x, pos.y), to) {
+                continue;
+            }
+            pos.x = to.0;
+            pos.y = to.1;
+        }
+        if colony {
+            nav.paths.retain(|id, _| walking.contains(id));
         }
         for id in not_hauling {
             resources.haulers.remove(&id);

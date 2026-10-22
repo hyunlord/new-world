@@ -282,6 +282,9 @@ pub enum CancelReason {
     Interrupted,
     /// The worker died.
     Died,
+    /// The goal can no longer be reached (M3, ADR 0021: a wall or a site cut
+    /// the way); the worker avoids the target for a day.
+    Unreachable,
 }
 
 #[cfg(test)]

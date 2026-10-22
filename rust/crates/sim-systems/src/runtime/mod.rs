@@ -18,6 +18,7 @@ pub mod decision;
 pub mod influence;
 pub mod jobs;
 pub mod memory;
+pub mod nav;
 pub mod needs;
 pub mod resource_regen;
 pub mod settlement;

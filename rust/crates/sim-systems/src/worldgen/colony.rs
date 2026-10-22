@@ -64,6 +64,65 @@ pub(super) fn generate(cfg: &WorldGenConfig, gen: &ColonyGen, engine: &mut SimEn
     engine.resources.colony.tallies.founder_fixes = fixed;
     trees(cfg, gen, &mut engine.resources, camp);
     nodes(cfg, gen, &mut engine.resources, camp);
+    founders_on_open_ground(engine, camp);
+}
+
+/// M3 (ADR 0021, DECISIONS D9): the camp's resident tiles allow hill tiles,
+/// which the colony cannot walk on; every founder standing on a tile it could
+/// not leave (or outside the hearth's region) moves to the nearest tile of the
+/// hearth's region, by `(Chebyshev distance, y, x)`, founders in `AgentId` order.
+fn founders_on_open_ground(engine: &mut SimEngine, camp: Tile) {
+    if engine.resources.rules.colony.is_none() {
+        return;
+    }
+    // The colony's nav map exists from tick 0 (the probe's resolvers read it).
+    crate::runtime::nav::ensure(&mut engine.resources);
+    let nav = &engine.resources.nav;
+    let home = nav.region_of(camp);
+    if home == 0 {
+        return;
+    }
+    let mut people: Vec<(u64, hecs::Entity, Tile)> = engine
+        .world
+        .query::<(
+            &sim_core::components::Agent,
+            &sim_core::components::Position,
+        )>()
+        .iter()
+        .map(|(e, (a, p))| (a.id, e, (p.x, p.y)))
+        .filter(|(_, _, t)| nav.region_of(*t) != home)
+        .collect();
+    people.sort_by_key(|row| row.0);
+    let (w, h) = (
+        engine.resources.tile_grid.width,
+        engine.resources.tile_grid.height,
+    );
+    let mut moves = Vec::new();
+    for (_, entity, at) in people {
+        let mut best: Option<(u32, u32, u32)> = None;
+        for y in at.1.saturating_sub(12)..(at.1 + 13).min(h) {
+            for x in at.0.saturating_sub(12)..(at.0 + 13).min(w) {
+                if nav.region_of((x, y)) == home {
+                    let key = (distance((x, y), at), y, x);
+                    if best.is_none_or(|b| key < b) {
+                        best = Some(key);
+                    }
+                }
+            }
+        }
+        moves.push((entity, best));
+    }
+    for (entity, best) in moves {
+        if let (Some((_, y, x)), Ok(mut pos)) = (
+            best,
+            engine
+                .world
+                .get::<&mut sim_core::components::Position>(entity),
+        ) {
+            pos.x = x;
+            pos.y = y;
+        }
+    }
 }
 
 /// M2 (goal 3.2): the material table, boulders and flint outcrops.

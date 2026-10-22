@@ -26,6 +26,7 @@ pub mod components;
 pub mod fission_threshold;
 pub mod influence;
 pub mod material;
+pub mod nav;
 pub mod rng;
 pub mod rules;
 pub mod save_serde;

@@ -205,25 +205,47 @@ fn jobs_cancel_on_hunger() {
     let hearth = sim_systems::worldgen::colony::hearth(&engine.resources).expect("hearth");
     // Logs 14 tiles east, a zone 14 tiles south-east: hauls far from the camp
     // (its meal radius is 8).
+    // M3: tiles the camp can walk to (the river or a hill may lie east).
+    sim_systems::runtime::nav::ensure(&mut engine.resources);
+    let open = |engine: &sim_engine::SimEngine, t: (u32, u32)| {
+        sim_systems::runtime::jobs::items::can_hold_items(&engine.resources, t)
+            && engine.resources.nav.reachable(hearth, t)
+    };
     let source = (0..30)
-        .map(|d| (hearth.0 + 14 + d, hearth.1))
-        .find(|t| sim_systems::runtime::jobs::items::can_hold_items(&engine.resources, *t))
-        .expect("a free tile east of the camp");
+        .flat_map(|d| {
+            [
+                (hearth.0 + 14 + d, hearth.1),
+                (hearth.0.saturating_sub(14 + d), hearth.1),
+            ]
+        })
+        .find(|t| open(&engine, *t))
+        .expect("a free tile east or west of the camp");
+    let east = source.0 > hearth.0;
     drop_logs(&mut engine, source, 20);
     let cell = (0..30)
-        .flat_map(|d| (0..6).map(move |e| (hearth.0 + 14 + d, hearth.1 + 14 + e)))
-        .find(|t| sim_systems::runtime::jobs::items::can_hold_items(&engine.resources, *t))
+        .flat_map(|d| {
+            (0..6).map(move |e| {
+                let x = if east {
+                    hearth.0 + 14 + d
+                } else {
+                    hearth.0.saturating_sub(14 + d)
+                };
+                (x, hearth.1 + 14 + e)
+            })
+        })
+        .find(|t| open(&engine, *t))
         .expect("a free tile for the zone");
     order(&mut engine, zone(cell.0, cell.1, cell.0, cell.1));
     let mut carrier = None;
     for _ in 0..4_000 {
         tick_checked(&mut engine);
+        // M3: a carrier of logs (a firewood gatherer also carries).
         let found = engine
             .world
             .query::<(&sim_core::colony::Carry, &sim_core::colony::Job)>()
             .iter()
-            .map(|(e, _)| e)
-            .next();
+            .find(|(_, (c, _))| c.kind == sim_core::colony::ItemKind::Log)
+            .map(|(e, _)| e);
         if let Some(e) = found {
             let pos = tile_of(&engine, e);
             if pos.0.abs_diff(hearth.0).max(pos.1.abs_diff(hearth.1)) > 10 {

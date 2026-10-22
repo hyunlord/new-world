@@ -593,6 +593,13 @@ pub struct SimResources {
     /// is `None`, the agents' tick is `None`).
     #[serde(skip)]
     pub spatial: sim_core::spatial::SpatialIndex,
+
+    /// M3 navigation (ADR 0021; `sim_core::nav`): the colony's version
+    /// counter, every walking agent's path and this tick's unreachable goals
+    /// (saved); the cost map, regions and memo are derived and rebuilt on
+    /// first use. Never built in the baseline world.
+    #[serde(default)]
+    pub nav: sim_core::nav::NavState,
 }
 
 /// One daily fission check that reached the hazard draw (Pass 12);
@@ -788,6 +795,7 @@ impl SimResources {
             },
             due_births: Vec::new(),
             spatial: sim_core::spatial::SpatialIndex::default(),
+            nav: sim_core::nav::NavState::default(),
         }
     }
 

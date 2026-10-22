@@ -26,7 +26,7 @@ use sim_engine::{SimEngine, SimResources};
 use std::collections::{BTreeMap, BTreeSet};
 
 use crate::runtime::jobs::cancel;
-use crate::runtime::jobs::items::{put_items, terrain, under_building};
+use crate::runtime::jobs::items::{can_hold_items, has_wall, put_items, terrain, under_building};
 
 type Tile = (u32, u32);
 
@@ -411,11 +411,10 @@ fn cancel_area(world: &mut World, res: &mut SimResources, tiles: &[Tile]) -> usi
     marks.len() + sites.len()
 }
 
-/// Whether `tile` may become a stockpile cell.
+/// Whether `tile` may become a stockpile cell (M3: only where items may lie,
+/// so never on undug hill, a wall or a door).
 fn zoneable(res: &SimResources, tile: Tile) -> bool {
-    matches!(terrain(res, tile), Some(t) if t != TerrainType::River && t != TerrainType::Mountain)
-        && !under_building(res, tile)
-        && !res.colony.zone_of_tile.contains_key(&tile)
+    can_hold_items(res, tile) && !res.colony.zone_of_tile.contains_key(&tile)
 }
 
 fn add_stockpile(res: &mut SimResources, tiles: &[Tile]) -> usize {
@@ -544,6 +543,8 @@ pub fn check_blueprint(
     let reserved: BTreeSet<Tile> = res.colony.reservations.keys().map(|k| k.tile()).collect();
     let blocked = tiles.iter().any(|t| {
         terrain(res, *t) == Some(TerrainType::Mountain)
+            || !crate::runtime::nav::passable(res, *t)
+            || has_wall(res, *t)
             || res.colony.trees.contains_key(t)
             || res.colony.nodes.contains_key(t)
             || under_building(res, *t)
@@ -572,7 +573,10 @@ pub fn check_blueprint(
             Some(TerrainType::Mountain) | None => return Err(RejectReason::Blocked),
             _ => {}
         }
-        if under_building(res, work) {
+        if under_building(res, work)
+            || !crate::runtime::nav::passable(res, work)
+            || has_wall(res, work)
+        {
             return Err(RejectReason::Blocked);
         }
     }

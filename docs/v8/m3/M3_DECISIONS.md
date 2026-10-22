@@ -85,3 +85,75 @@ Raw data lives in `/Users/rexxa/work/m3-data/` (`$DATA`), outside the repository
   (17:05–17:18); `m2u/` the base colony with the M2-U script, seeds 0–7, 20 days; `soak_first_run/` the soak
   fixture's first run on the Part 0 tree (the base probe cannot read `every_days`). The benchmark ledger base line is
   measured with the candidate in one interleaved quiet session (M2 D17/D23), so it is taken when Part 3 is done.
+
+## D7 — The pathfinder (Part 1; ADR 0021)
+
+- Cost map `sim_core::nav::CostMap` (one byte per tile) in `SimResources.nav`, built from the tile grid and the
+  colony's space sites by `runtime::nav::{tile_cost, build, ensure, refresh}`; `refresh(tile)` after every change of
+  a tile bumps `nav.version` when the cost moved. `tile_cost` is the single definition of passability; a test
+  checks `refresh` against a full `build`.
+- Heuristic: octile at the plain cost (`10·max + 4·min`) instead of the goal's Chebyshev `10·max`. Both are admissible
+  and consistent for costs 10/14 (no passable tile is cheaper than plain), so both return an optimal path; octile ties
+  far fewer nodes on open ground. Ties break by `(f, h, y, x)` as the goal says. A random-map test compares every A*
+  cost with an independent Dijkstra (200 maps, 30 % walls, doors).
+- Regions: connected components under the same move rule, recomputed lazily once per version; every request first
+  compares regions, so an unreachable goal costs no search. The job assignment filters every candidate by the
+  agent's region (`NavState::reaches`, no allocation) and keeps its "found nothing" memos per region (M1.5 D15's
+  argument holds per region). A goal on an impassable tile (a wall site, a boulder on a hill) is reached from any
+  8-neighbour, and arrival is `NavState::arrived` (on it, or adjacent to an impassable goal).
+- Paths: `nav.paths[AgentId] = AgentPath { goal, version, steps, next, planned, from }` (saved). On a version change
+  the remaining steps are re-checked (`still_walkable`) and kept when they still work; only a broken path is
+  re-planned (re-planning every walker on every finished wall would be up to N searches in one tick). A path stays an
+  agent's only while it stands where the path left it; a teleported agent re-plans. Paths of agents that stopped
+  walking are dropped on each move tick.
+- The memo (`(from, to)`, 4,096 entries, insertion-order eviction, dropped on a version change) returns the same `Arc`
+  a fresh search would compute; it changes no behaviour, so it is not saved.
+- Movement: the colony's directed walks (seeking, haul home) follow the path; idle wander, play and the tether pull
+  are refused when the step enters an impassable tile or cuts a corner (no extra draw: the keyed draws are already
+  taken). The baseline's branches are unchanged.
+- Unreachable job goals: the move records `nav.blocked[id] = goal`; `JobExecuteSystem` cancels the job
+  (`CancelReason::Unreachable`) and the job assignment skips that `(person, target)` for
+  `SpaceRule::unreachable_cooldown_days` (1). `walk`'s stuck rule counts progress in path steps left, and a
+  re-planned path restarts it (a detour around a wall is not "stuck").
+
+## D8 — Decision targets out of reach (found by `colony_commands` in Part 1)
+
+- Context: with the river, mountains and undug hills impassable, the decision system's own selectors (nearest food,
+  water, sleep, gather tile; untouched by M3, ADR 0013) can choose a tile in another region. A debug run of colony
+  seed 3 showed an adult `Seeking { GatherFood }` toward (61, 80) for 500+ ticks without moving.
+- Choice (movement only, colony only; `decision/system.rs` unchanged): when a seek's goal is unreachable, a food,
+  forage or water target — and a sleep target of a person without an assigned bed — moves to the nearest reachable
+  tile of the same map (the decision's `(Manhattan, x, y)` order); any other non-job seek with nothing in reach ends
+  (`Idle`, the next decision chooses again). A job's is the job layer's (D7).
+- Hill tiles, walls and doors no longer hold items or stockpile cells, and blueprints refuse them (`can_hold_items`,
+  `check_blueprint`); the probe's resolvers (`nearest_trees`, `nearest_unmarked_trees`, `nearest_nodes`) pick only
+  targets reachable from the hearth.
+
+## D9 — People who stand where no one can (found by `colony_world` in Part 1)
+
+- Context: colony seed 5 lost two founders to thirst in 10 days. The camp's resident tiles (V7 worldgen, shared with
+  the baseline) allow hill tiles; five founders spawned on hill next to the camp, and with corner cutting forbidden
+  they could never step off (debug run: all five in region 0 at tick 1).
+- Choice: (1) colony worldgen ends with `founders_on_open_ground`: every founder outside the hearth's nav region
+  moves to the nearest tile of it (`(Chebyshev, y, x)`, founders in `AgentId` order); the colony's nav map is built
+  there, so it exists from tick 0 (the probe's resolvers read it). The baseline's worldgen is unchanged.
+  (2) Safety net in `CostMap::can_step`: from an impassable tile any step onto a passable neighbour is allowed (no
+  corner rule), and `NavState::path` from an impassable tile starts by stepping off onto the neighbour nearest the
+  goal. Test `nav::someone_on_an_impassable_tile_steps_off`.
+- Evidence: `colony_world.rs` (viability and invariants, 8 seeds × 10 days) green again.
+
+## D10 — Where a decision may stand, and where items may land (found by `colony_world`, `colony_items`)
+
+- A decision consumes standing on its tile; a water source on a shore tile of undug hill can only be stood next to.
+  Colony seed 1 lost two people seeking such a tile diagonally beside them (the path rule called "adjacent"
+  arrived). A decision seek whose goal is impassable is treated as unreachable (D8's retarget), and the retarget
+  only picks passable tiles. Jobs keep the "work from beside an impassable goal" rule.
+- An abandoned decision walk (nothing of its kind in reach) takes the idle step in the same tick instead of
+  standing. Limitation: the gather selector (decision code, untouched) can choose the same far-side bush again on the
+  next tick, so a forager near the river may loop between choosing it and wandering; in the N = 1,000 stress world,
+  where every reachable bush is eaten, this is most of the unreachable requests (`nav_bench`).
+- Quarried stone fell on the boulder's hill tile and spilled by ring order into another region, where no hauler could
+  reach it. `put_items` in the colony keeps a spill in the drop tile's region (falling back to anywhere only when that
+  region is full), and a quarry batch drops at the quarrier's tile when the node's tile cannot hold items.
+- Probe resolvers: `stockpile_block` and `blueprint_spot` take only tiles reachable from the hearth (the M2-U
+  stockpile of seed 1 lay across the river).

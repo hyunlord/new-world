@@ -16,9 +16,14 @@
 //! - a vanished target (tree felled, stack taken, cell unzoned, site
 //!   cancelled) cancels the job (`TargetGone`);
 //! - arrival: a tree counts as reached on it or 8-adjacent; a stack, cell or
-//!   site only on the tile itself;
-//! - a walking job without Chebyshev progress for `stuck_ticks` is cancelled
-//!   (`Stuck`).
+//!   site only on the tile itself, or from any 8-neighbour when the tile is
+//!   impassable (M3: a wall site);
+//! - a walking job without progress for `stuck_ticks` is cancelled (`Stuck`);
+//!   progress is a shorter Chebyshev distance or, on a stored path (M3), fewer
+//!   steps left, and a re-planned path restarts the count;
+//! - M3: a walking job whose goal the move found unreachable (`nav.blocked`)
+//!   is cancelled (`Unreachable`) and the target is avoided by that worker for
+//!   `SpaceRule::unreachable_cooldown_days` (1 day without the rule).
 //!
 //! Under debug assertions the 7.6 invariants are checked after every tick.
 use hecs::{Entity, World};
@@ -161,12 +166,27 @@ fn step(
     let Some(pos) = world.get::<&Position>(entity).ok().map(|p| (p.x, p.y)) else {
         return;
     };
+    // M3: the move could not find a way to this stage's goal.
+    let goal = match job.stage {
+        JobStage::ToSource => Some(job.fetch.unwrap_or(job.kind.source())),
+        JobStage::ToDest => job.kind.dest(),
+        JobStage::Working { .. } => None,
+    };
+    if let Some(goal) = goal.filter(|g| res.nav.blocked.get(&id) == Some(g)) {
+        let days = rule
+            .space
+            .map_or(1, |space| space.unreachable_cooldown_days);
+        let until = tick + res.rules.calendar.days_to_ticks(days);
+        res.colony.unreachable.insert((id, goal), until);
+        cancel(world, res, entity, CancelReason::Unreachable);
+        return;
+    }
     match job.stage {
         JobStage::ToSource => {
             // M2: a chopper first stops at its axe (goal 3.7).
             if let Some(axe) = job.fetch {
-                if pos != axe {
-                    walk(world, res, rule, entity, &mut job, pos, axe);
+                if !res.nav.arrived(pos, axe) {
+                    walk(world, res, id, entity, &mut job, pos, axe);
                     return;
                 }
                 pick_up_axe(world, res, entity, &mut job, axe, pos);
@@ -178,10 +198,10 @@ fn step(
                 JobKind::Chop { tree: near }
                 | JobKind::Quarry { node: near }
                 | JobKind::Gather { spot: near, .. } => chebyshev(pos, near) <= 1,
-                _ => pos == source,
+                _ => res.nav.arrived(pos, source),
             };
             if !reached {
-                walk(world, res, rule, entity, &mut job, pos, source);
+                walk(world, res, id, entity, &mut job, pos, source);
                 return;
             }
             match job.kind {
@@ -236,7 +256,9 @@ fn step(
             }
             put_job(world, entity, job);
             // A worker already standing at the destination drops at once.
-            if job.stage == JobStage::ToDest && job.kind.dest() == Some(pos) {
+            if job.stage == JobStage::ToDest
+                && job.kind.dest().is_some_and(|d| res.nav.arrived(pos, d))
+            {
                 arrive(world, res, id, entity, &job, pos);
             }
         }
@@ -264,7 +286,7 @@ fn step(
                     }
                 }
                 JobKind::Quarry { node } => {
-                    quarry_batch(res, rule, node);
+                    quarry_batch(res, rule, node, pos);
                     craft::train(world, entity, SkillKind::Quarry, u32::from(job.amount));
                 }
                 JobKind::Craft { .. } => craft::finish_craft(world, res, id, entity, &job),
@@ -280,10 +302,10 @@ fn step(
         }
         JobStage::ToDest => {
             let dest = job.kind.dest().unwrap_or(pos);
-            if pos == dest {
+            if res.nav.arrived(pos, dest) {
                 arrive(world, res, id, entity, &job, pos);
             } else {
-                walk(world, res, rule, entity, &mut job, pos, dest);
+                walk(world, res, id, entity, &mut job, pos, dest);
             }
         }
     }
@@ -388,22 +410,28 @@ fn put_job(world: &mut World, entity: Entity, job: Job) {
     }
 }
 
-/// Track walking progress; cancel a job stuck for `stuck_ticks`.
+/// Track walking progress; cancel a job stuck for `stuck_ticks`. On a stored
+/// path (M3) progress is fewer steps left, and a path (re)planned after the
+/// last progress restarts the count from its length.
 fn walk(
     world: &mut World,
     res: &mut SimResources,
-    rule: &ColonyRule,
+    id: AgentId,
     entity: Entity,
     job: &mut Job,
     pos: (u32, u32),
     goal: (u32, u32),
 ) {
     let tick = res.current_tick;
-    let distance = chebyshev(pos, goal);
-    if distance < job.best_distance {
+    let path = res.nav.paths.get(&id).filter(|p| p.goal == goal);
+    let distance = path.map_or(chebyshev(pos, goal), |p| p.remaining());
+    // A (re)planned path restarts the count; else progress is a shorter way left.
+    if path.is_some_and(|p| p.planned > job.progress_tick) || distance < job.best_distance {
         job.best_distance = distance;
         job.progress_tick = tick;
-    } else if tick.saturating_sub(job.progress_tick) >= rule.stuck_ticks {
+    } else if tick.saturating_sub(job.progress_tick)
+        >= res.rules.colony.map_or(u64::MAX, |r| r.stuck_ticks)
+    {
         cancel(world, res, entity, CancelReason::Stuck);
         return;
     }
@@ -485,8 +513,10 @@ fn gather_batch(
 }
 
 /// One quarry batch (M2 goal 3.2): up to `quarry_batch` items of the node's
-/// yield and material land on its tile; an exhausted node is removed with its mark.
-fn quarry_batch(res: &mut SimResources, rule: &ColonyRule, node: (u32, u32)) {
+/// yield and material land on its tile (M3: at the quarrier's tile when the
+/// node's tile cannot hold items, e.g. a boulder on undug hill); an exhausted
+/// node is removed with its mark.
+fn quarry_batch(res: &mut SimResources, rule: &ColonyRule, node: (u32, u32), at: (u32, u32)) {
     let batch = rule.economy.map_or(4, |e| e.quarry_batch).max(1);
     let Some(found) = res.colony.nodes.get_mut(&node) else {
         return;
@@ -506,7 +536,12 @@ fn quarry_batch(res: &mut SimResources, rule: &ColonyRule, node: (u32, u32)) {
     res.colony.touch(false);
     if n > 0 {
         res.colony.item_ledger.create(spec.kind, u64::from(n));
-        put_items(res, node, spec, u16::from(n));
+        let drop = if super::items::can_hold_items(res, node) {
+            node
+        } else {
+            at
+        };
+        put_items(res, drop, spec, u16::from(n));
     }
 }
 
