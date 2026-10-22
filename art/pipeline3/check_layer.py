@@ -8,11 +8,14 @@ import json
 import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
+
 import numpy as np
 from PIL import Image
-from .layer_schema import Layer, load_layer
+
 from .anatomy import anatomy_findings
+from .layer_schema import Layer, load_layer
 from .structure import GEOMETRY, Pixels, box_region, components, holes
+
 
 @dataclass(frozen=True, slots=True)
 class Finding:
@@ -141,6 +144,11 @@ def check_layer(layer: Layer) -> Result:
 
 def main() -> int:
     """Exit nonzero on rejection; output machine-readable findings."""
+    if len(sys.argv) == 5 and sys.argv[1] == '--whole-figure':
+        from art.pipeline5.whole_checks import check_whole_path
+        result = check_whole_path(Path(sys.argv[2]), sys.argv[3], sys.argv[4])
+        print(json.dumps(asdict(result), indent=2))
+        return 0 if result.passed else 1
     if len(sys.argv) != 2:
         print('usage: python -m art.pipeline3.check_layer SIDECAR',file=sys.stderr)
         return 2

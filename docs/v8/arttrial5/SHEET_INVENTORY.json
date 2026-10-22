@@ -1,0 +1,618 @@
+{
+  "looks": [
+    {
+      "age": "adult",
+      "sex": "M",
+      "top": "loincloth",
+      "hair": "short",
+      "look": "adult_M_loincloth_short"
+    },
+    {
+      "age": "adult",
+      "sex": "M",
+      "top": "loincloth",
+      "hair": "long_tied",
+      "look": "adult_M_loincloth_long_tied"
+    },
+    {
+      "age": "adult",
+      "sex": "M",
+      "top": "loincloth",
+      "hair": "bun",
+      "look": "adult_M_loincloth_bun"
+    },
+    {
+      "age": "adult",
+      "sex": "M",
+      "top": "hide_wrap",
+      "hair": "short",
+      "look": "adult_M_hide_wrap_short"
+    },
+    {
+      "age": "adult",
+      "sex": "M",
+      "top": "hide_wrap",
+      "hair": "long_tied",
+      "look": "adult_M_hide_wrap_long_tied"
+    },
+    {
+      "age": "adult",
+      "sex": "M",
+      "top": "hide_wrap",
+      "hair": "bun",
+      "look": "adult_M_hide_wrap_bun"
+    },
+    {
+      "age": "adult",
+      "sex": "M",
+      "top": "fur_cloak",
+      "hair": "short",
+      "look": "adult_M_fur_cloak_short"
+    },
+    {
+      "age": "adult",
+      "sex": "M",
+      "top": "fur_cloak",
+      "hair": "long_tied",
+      "look": "adult_M_fur_cloak_long_tied"
+    },
+    {
+      "age": "adult",
+      "sex": "M",
+      "top": "fur_cloak",
+      "hair": "bun",
+      "look": "adult_M_fur_cloak_bun"
+    },
+    {
+      "age": "adult",
+      "sex": "F",
+      "top": "loincloth",
+      "hair": "short",
+      "look": "adult_F_loincloth_short"
+    },
+    {
+      "age": "adult",
+      "sex": "F",
+      "top": "loincloth",
+      "hair": "long_tied",
+      "look": "adult_F_loincloth_long_tied"
+    },
+    {
+      "age": "adult",
+      "sex": "F",
+      "top": "loincloth",
+      "hair": "bun",
+      "look": "adult_F_loincloth_bun"
+    },
+    {
+      "age": "adult",
+      "sex": "F",
+      "top": "hide_wrap",
+      "hair": "short",
+      "look": "adult_F_hide_wrap_short"
+    },
+    {
+      "age": "adult",
+      "sex": "F",
+      "top": "hide_wrap",
+      "hair": "long_tied",
+      "look": "adult_F_hide_wrap_long_tied"
+    },
+    {
+      "age": "adult",
+      "sex": "F",
+      "top": "hide_wrap",
+      "hair": "bun",
+      "look": "adult_F_hide_wrap_bun"
+    },
+    {
+      "age": "adult",
+      "sex": "F",
+      "top": "fur_cloak",
+      "hair": "short",
+      "look": "adult_F_fur_cloak_short"
+    },
+    {
+      "age": "adult",
+      "sex": "F",
+      "top": "fur_cloak",
+      "hair": "long_tied",
+      "look": "adult_F_fur_cloak_long_tied"
+    },
+    {
+      "age": "adult",
+      "sex": "F",
+      "top": "fur_cloak",
+      "hair": "bun",
+      "look": "adult_F_fur_cloak_bun"
+    },
+    {
+      "age": "child",
+      "sex": "M",
+      "top": "loincloth",
+      "hair": "short",
+      "look": "child_M_loincloth_short"
+    },
+    {
+      "age": "child",
+      "sex": "M",
+      "top": "loincloth",
+      "hair": "long_tied",
+      "look": "child_M_loincloth_long_tied"
+    },
+    {
+      "age": "child",
+      "sex": "M",
+      "top": "loincloth",
+      "hair": "bun",
+      "look": "child_M_loincloth_bun"
+    },
+    {
+      "age": "child",
+      "sex": "M",
+      "top": "hide_wrap",
+      "hair": "short",
+      "look": "child_M_hide_wrap_short"
+    },
+    {
+      "age": "child",
+      "sex": "M",
+      "top": "hide_wrap",
+      "hair": "long_tied",
+      "look": "child_M_hide_wrap_long_tied"
+    },
+    {
+      "age": "child",
+      "sex": "M",
+      "top": "hide_wrap",
+      "hair": "bun",
+      "look": "child_M_hide_wrap_bun"
+    },
+    {
+      "age": "child",
+      "sex": "M",
+      "top": "fur_cloak",
+      "hair": "short",
+      "look": "child_M_fur_cloak_short"
+    },
+    {
+      "age": "child",
+      "sex": "M",
+      "top": "fur_cloak",
+      "hair": "long_tied",
+      "look": "child_M_fur_cloak_long_tied"
+    },
+    {
+      "age": "child",
+      "sex": "M",
+      "top": "fur_cloak",
+      "hair": "bun",
+      "look": "child_M_fur_cloak_bun"
+    },
+    {
+      "age": "child",
+      "sex": "F",
+      "top": "loincloth",
+      "hair": "short",
+      "look": "child_F_loincloth_short"
+    },
+    {
+      "age": "child",
+      "sex": "F",
+      "top": "loincloth",
+      "hair": "long_tied",
+      "look": "child_F_loincloth_long_tied"
+    },
+    {
+      "age": "child",
+      "sex": "F",
+      "top": "loincloth",
+      "hair": "bun",
+      "look": "child_F_loincloth_bun"
+    },
+    {
+      "age": "child",
+      "sex": "F",
+      "top": "hide_wrap",
+      "hair": "short",
+      "look": "child_F_hide_wrap_short"
+    },
+    {
+      "age": "child",
+      "sex": "F",
+      "top": "hide_wrap",
+      "hair": "long_tied",
+      "look": "child_F_hide_wrap_long_tied"
+    },
+    {
+      "age": "child",
+      "sex": "F",
+      "top": "hide_wrap",
+      "hair": "bun",
+      "look": "child_F_hide_wrap_bun"
+    },
+    {
+      "age": "child",
+      "sex": "F",
+      "top": "fur_cloak",
+      "hair": "short",
+      "look": "child_F_fur_cloak_short"
+    },
+    {
+      "age": "child",
+      "sex": "F",
+      "top": "fur_cloak",
+      "hair": "long_tied",
+      "look": "child_F_fur_cloak_long_tied"
+    },
+    {
+      "age": "child",
+      "sex": "F",
+      "top": "fur_cloak",
+      "hair": "bun",
+      "look": "child_F_fur_cloak_bun"
+    }
+  ],
+  "sheets": [
+    {
+      "look": "adult_M_loincloth_short",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_M_loincloth_short",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_M_loincloth_long_tied",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_M_loincloth_long_tied",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_M_loincloth_bun",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_M_loincloth_bun",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_M_hide_wrap_short",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_M_hide_wrap_short",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_M_hide_wrap_long_tied",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_M_hide_wrap_long_tied",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_M_hide_wrap_bun",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_M_hide_wrap_bun",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_M_fur_cloak_short",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_M_fur_cloak_short",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_M_fur_cloak_long_tied",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_M_fur_cloak_long_tied",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_F_loincloth_short",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_F_loincloth_short",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_F_loincloth_long_tied",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_F_loincloth_long_tied",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_F_loincloth_bun",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_F_loincloth_bun",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_F_hide_wrap_short",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_F_hide_wrap_short",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_F_hide_wrap_long_tied",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_F_hide_wrap_long_tied",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_F_hide_wrap_bun",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_F_hide_wrap_bun",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_F_fur_cloak_short",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_F_fur_cloak_short",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_F_fur_cloak_long_tied",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_F_fur_cloak_long_tied",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_M_loincloth_short",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_M_loincloth_short",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_M_loincloth_long_tied",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_M_loincloth_long_tied",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_M_loincloth_bun",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_M_loincloth_bun",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_M_hide_wrap_short",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_M_hide_wrap_short",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_M_hide_wrap_long_tied",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_M_hide_wrap_long_tied",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_M_hide_wrap_bun",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_M_hide_wrap_bun",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_M_fur_cloak_short",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_M_fur_cloak_short",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_M_fur_cloak_long_tied",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_M_fur_cloak_long_tied",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_F_loincloth_short",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_F_loincloth_short",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_F_loincloth_long_tied",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_F_loincloth_long_tied",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_F_loincloth_bun",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_F_loincloth_bun",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_F_hide_wrap_short",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_F_hide_wrap_short",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_F_hide_wrap_long_tied",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_F_hide_wrap_long_tied",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_F_hide_wrap_bun",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_F_hide_wrap_bun",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_F_fur_cloak_short",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_F_fur_cloak_short",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "facing": "E",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "facing": "S",
+      "max_attempts": 2
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "facing": "E",
+      "max_attempts": 2
+    }
+  ]
+}
