@@ -79,3 +79,13 @@ subset passes; both body frames produce combinations; incomplete B inventory
 still rejects full acceptance. Evidence: `head-connected-red.txt`,
 `b-contract-red.txt`, `b-contract-green.txt`. `followup-a/CHECKS.json` confirms
 A remains39/87PASS and265 original file hashes remain unchanged.
+
+## Final provenance audit
+
+Sleep head size now always uses the fixed template head area (rotation preserves
+area); caller-declared head boxes locate the head but cannot shrink the threshold.
+All anatomical masks are included in CHECKS input hashes. B directional props
+are tested only against matching directions; the A default is unchanged.
+Final A rerun:39/87PASS,48FAIL; all265 original hashes still match. Raw final
+report: `part0-amendment/final-a/CHECKS.json`. Full pipeline at this checkpoint:
+45 tests pass, including the tiny-sleep-head, input-hash and directional regressions.

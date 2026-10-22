@@ -75,9 +75,9 @@ def anatomy_findings(layer: Layer, alpha: Pixels) -> tuple[tuple[str, str], ...]
                 return tuple(findings + [('limb_ok','sleep head measurement missing')])
             region = (alpha >= 128) & box_region(alpha.shape,layer.head_box,s)
             width,height = extent(region)
-            x0,y0,x1,y1 = layer.head_box
+            x0,y0,x1,y1 = GEOMETRY[layer.body_type].head
             if width*height < .7*(x1-x0)*(y1-y0)*s*s:
-                findings.append(('limb_ok','sleep head alpha bbox <70% declared head box'))
+                findings.append(('limb_ok','sleep head alpha bbox <70% fixed template head area'))
             # Upright anchor ROIs cannot establish lying or hidden limb sizes.
             findings.append(('limb_ok', 'sleep limbs NOT_VERIFIED: anatomical mask required'))
             return tuple(findings)
@@ -98,7 +98,7 @@ def anatomy_findings(layer: Layer, alpha: Pixels) -> tuple[tuple[str, str], ...]
     if layer.anatomical_mask is not None and len(components(head)) != 1:
         findings.append(('limb_ok', 'anatomical head must be one connected visible shape'))
     g = GEOMETRY[layer.body_type]
-    x0,y0,x1,y1 = layer.head_box if layer.frame == 'sleep' and layer.head_box else g.head
+    x0,y0,x1,y1 = g.head
     hw,hh = extent(head)
     if hw*hh < .7*(x1-x0)*(y1-y0)*s*s:
         findings.append(('limb_ok',f'head alpha bbox area={hw*hh/s**2:g}; required70% of {(x1-x0)*(y1-y0)}'))

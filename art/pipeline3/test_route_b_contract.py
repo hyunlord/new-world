@@ -88,3 +88,35 @@ def test_manifest_routes_body_lock_without_generic_bypass(tmp_path: Path) -> Non
     assert observed['B']['passed'] is False
     assert observed['A']['subset_passed'] is False
     assert observed['skip']['subset_passed'] is False
+
+
+def test_b_props_match_direction_while_a_keeps_historical_scope(tmp_path: Path) -> None:
+    layers = [body(tmp_path),overlay(tmp_path,'top','top'),overlay(tmp_path,'hair','hair'),
+              overlay(tmp_path,'axe_s','item'),replace(overlay(tmp_path,'axe_e','item'),direction='E')]
+    result = combinations(layers,route='B')
+    assert any('axe_s' in row.ids for row in result)
+    assert not any('axe_e' in row.ids for row in result)
+    assert any('axe_e' in row.ids for row in combinations(layers))
+
+
+def test_report_hash_tracks_anatomical_input_bytes(tmp_path: Path) -> None:
+    import json
+    import hashlib
+    from PIL import Image
+    from art.pipeline3.check_set import run
+    layer = body(tmp_path)
+    anatomy = tmp_path/'anatomy.png'
+    Image.new('L',(64,96),0).save(anatomy)
+    (tmp_path/'body.json').write_text(json.dumps({'schema_version':1,'id':'body','kind':'body',
+        'body_type':'adult','direction':'S','frame':'idle','scale':1,'mask':layer.mask.name,
+        'operations':['synthetic only'],'anatomical_mask':anatomy.name}))
+    manifest = tmp_path/'manifest.json'
+    manifest.write_text(json.dumps({'route':'B','directions':['S','E'],'layers':['body.json']}))
+    run(manifest,tmp_path/'before')
+    before = json.loads((tmp_path/'before/CHECKS.json').read_text())
+    Image.new('L',(64,96),1).save(anatomy)
+    run(manifest,tmp_path/'after')
+    after = json.loads((tmp_path/'after/CHECKS.json').read_text())
+    key = str(anatomy.resolve())
+    assert before['input_hashes'][key] != after['input_hashes'][key]
+    assert after['input_hashes'][key] == hashlib.sha256(anatomy.read_bytes()).hexdigest()

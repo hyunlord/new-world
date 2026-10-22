@@ -99,3 +99,15 @@ def test_disconnected_anatomical_head_fails(tmp_path: Path) -> None:
     Image.fromarray(labels).save(layer.anatomical_mask)
     result = anatomy_findings(layer, alpha)
     assert any(rule == 'limb_ok' and 'head' in detail for rule, detail in result)
+
+
+def test_sleep_tiny_declared_head_cannot_reduce_template_area(tmp_path: Path) -> None:
+    layer, alpha = fixture(tmp_path)
+    assert layer.anatomical_mask is not None
+    with Image.open(layer.anatomical_mask) as source:
+        labels = np.array(source)
+    labels[labels == 1] = 10
+    labels[32:34, 20:22] = 1
+    Image.fromarray(labels).save(layer.anatomical_mask)
+    result = anatomy_findings(replace(layer,frame='sleep',head_box=(20,32,22,34)),alpha)
+    assert any(rule == 'limb_ok' and 'head' in detail for rule, detail in result)

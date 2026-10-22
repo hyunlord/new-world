@@ -86,7 +86,7 @@ def placed(layer: Layer, body: Layer) -> tuple[Pixels,bool]:
     out[ny[inside],nx[inside]] = pixels[ys[inside],xs[inside]]
     return out,bool(np.all(inside))
 
-def combinations(layers: list[Layer]) -> list[Combination]:
+def combinations(layers: list[Layer], route: str = 'A') -> list[Combination]:
     """Enumerate full Cartesian products; rejected inputs remain diagnostic only."""
     results: list[Combination] = []
     for body in [l for l in layers if l.kind == 'body']:
@@ -97,8 +97,9 @@ def combinations(layers: list[Layer]) -> list[Combination]:
         compatible = [l for l in layers if l.body_type == body.body_type and l.direction == body.direction]
         tops = [l for l in compatible if l.kind == 'top']
         hairs = [l for l in compatible if l.kind == 'hair']
-        items: list[Layer | None] = [None]+[l for l in layers if l.body_type == body.body_type and l.kind == 'item']
-        carries: list[Layer | None] = [None]+[l for l in layers if l.body_type == body.body_type and l.kind == 'carry']
+        props = compatible if route == 'B' else [l for l in layers if l.body_type == body.body_type]
+        items: list[Layer | None] = [None]+[l for l in props if l.kind == 'item']
+        carries: list[Layer | None] = [None]+[l for l in props if l.kind == 'carry']
         for top,hair,item,carry in product(tops,hairs,items,carries):
             chosen = [body,top,hair]+([item] if item is not None else [])+([carry] if carry is not None else [])
             findings: list[Finding] = []

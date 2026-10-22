@@ -61,7 +61,10 @@ to (anchor.x+7,anchor.y+5); feet=[8,32) and [32,56) x [82,89); arms use each
 hand's x window from torso.top+2 to hand.y-4; legs use the foot x windows from
 hip to y83. These projected-window checks cannot prove anatomical semantics
 of self-occluded side-view parts. They report geometry, never visual approval.
-Sleep uses its declared head box and head bbox test; upright hand/foot/limb
+Sleep uses its declared head box only to locate the head. The >=70% area
+threshold always uses the fixed body-type template head area (adult432px²,
+child252px², elder432px²); rotation preserves area. A small declared box cannot
+reduce this threshold. Upright hand/foot/limb
 windows are inapplicable for sleep. Without an anatomical map sleep limbs are
 NOT_VERIFIED and `limb_ok` fails closed. Hidden limbs are not asserted as measured.
 

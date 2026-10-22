@@ -87,7 +87,7 @@ def run(manifest: Path, output: Path) -> bool:
     minimum = inventory(layers,raw['directions'],route=route)
     if not layers:
         results.append(Result('nonempty',False,(Finding('inventory','no layers supplied'),)))
-    combos = combinations(valid)
+    combos = combinations(valid,route=route)
     if not combos:
         results.append(Result('combinations',False,(Finding('inventory','no combinations rendered'),)))
     subset_passed = all(r.passed for r in results) and all(c.passed for c in combos)
@@ -101,7 +101,7 @@ def run(manifest: Path, output: Path) -> bool:
               'sleep_coverage':'bare_sleep_only; top/hair/item/carry attributes not covered during sleep',
               'combination_count':len(combos),'results':[asdict(r) for r in results],
               'combinations':[asdict(c) for c in combos],
-              'hashes':{str(p.resolve()):hashlib.sha256(p.read_bytes()).hexdigest() for p in [manifest]+[manifest.parent / p for p in raw['layers']]+[p for l in layers for p in (l.image,l.mask)] if p.exists()}}
+              'hashes':{str(p.resolve()):hashlib.sha256(p.read_bytes()).hexdigest() for p in [manifest]+[manifest.parent / p for p in raw['layers']]+[p for l in layers for p in (l.image,l.mask)]+[l.anatomical_mask for l in layers if l.anatomical_mask is not None] if p.exists()}}
     report['input_hashes'] = report['hashes']
     (output/'CHECKS.json').write_text(json.dumps(report,indent=2)+'\n')
     lines = [f"# CHECKS {raw['route']}",f"\nRoute acceptance: {status}. Supplied subset structural pass: {subset_passed}.",
