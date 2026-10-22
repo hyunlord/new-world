@@ -7,10 +7,31 @@ tags `v7-final-sim` and `v7-final-art`.
 
 ## Unreleased — M2
 
-Things and making (`docs/v8/m2/M2_GOAL.md`). Filled in by Part 7.
+Things and making (`docs/v8/m2/M2_GOAL.md`): stone and flint as items, workshops, bills, work priorities, skills and quality, stone axes as tools, and firewood through the job layer — the first piece taken out of the decision tick. **The colony's behaviour changes**; the `baseline` world is bit-identical (identity PASS at every Part). Evaluation `docs/v8/m2/M2_EVALUATION.md` (PENDING), report `docs/v8/m2/M2_REPORT.md` (PENDING).
 
 ### Added
 - ADR 0018 (art direction: illustrated 2D top-down at 64-px tiles, concept 05 ink-and-tone, cut-out people, generated environment); VISION §6 rewritten for it; ROADMAP rows ART-TRIAL, ART-CONCEPT, ART-TRIAL2, M-ART2, M-PERF; HISTORY and `docs/archive/INDEX.md` list the art branches.
+- ADR 0019 (items, bills and the economic loop), ADR 0020 (skills and quality tables).
+- Items with material and quality: `ItemKind` Log, Firewood, Stone, Flint, FlintBlade, StoneAxe, Hide; `ItemSpec { kind, material, quality }`; stacks merge per (kind, material, quality / 10); per-kind stack maxima and carry loads.
+- The colony's material table (`sim_core::colony::materials`): granite, limestone, flint, chert and oak embedded from `data/material/**` and integerized once into `MaterialStats` (‰); `material::parse_ron_str`.
+- Resource nodes (`ResourceNode`, `NodeKind`): boulders on 25 % of hills and 2 % of plains, flint outcrops 1 per 40 river-bank tiles (`STREAM_BOULDER`, `STREAM_OUTCROP`); `Designation::Quarry`, `Command::DesignateQuarry`, `JobKind::Quarry` (batches of 4).
+- Per-kind item ledger (`jobs::invariants::ledger_of`: created = ground + carried + held + delivered + shelved + consumed) with craft transforms (`craft_start`/`craft_end`, `crafted`, `craft_inputs`) and `burned`.
+- Workshops (`BlueprintKind` KnappingSpot 1×1 Stone 4, WoodBench 2×1 Log 6 + Stone 2, DryingRack 2×1 Log 4; `MaterialNeeds` with two lines; `Workshop` with work tile, shelf and bills), recipes (`data/colony/recipes.ron`: knap blade, haft axe, split firewood), bills (`Make(n)`/`Maintain(n)`, suspend, order), `BillSystem` (123, hourly), `JobKind::Supply` and `JobKind::Craft`; commands `AddBill`, `RemoveBill`, `SetBillMode`, `MoveBill`, `SetBillSuspended` (logged and replayed).
+- Work priorities (`WorkPriorities`, `Command::SetWorkPriority`; 0 never … 4; default 3, elders' quarrying 0); `WorkType` Craft > Build > Quarry > Chop > Split > Haul; assignment in passes by priority level.
+- Skills (`Skills`, `SkillKind` knap, woodwork, chop, quarry, build), `XP_TABLE`, `SPEED_PERMILLE`, `QUALITY_BONUS_TABLE` (`STREAM_QUALITY`), material and temperament terms; stone axes as `Tool` (picked up within 24 tiles, `AXE_PERMILLE`, worn out after 200 chops into a stone).
+- Firewood through jobs: `JobKind::Gather` (deadwood → firewood items, `WorkType::Split`), `HearthFeedSystem` (146, hourly: tonight's burn from firewood items into the settlement's wood), the wood bench's auto firewood bill.
+- Bridge (`ffi/economy.rs`): `cmd_designate_quarry`, `cmd_add_bill`, `cmd_remove_bill`, `cmd_set_bill_mode`, `cmd_move_bill`, `cmd_set_bill_suspended`, `cmd_set_work_priority`, `get_workshops`, `get_work_priorities`, `get_recipes`, `get_agent_economy`; `get_colony_overlay` gains `designation_kinds`, `node_xs/ys/kinds/left`, `item_qualities` (`docs/v8/bridge_api_m2.txt`, 58 items; snapshot schema version 2).
+- Tests: `colony_items.rs`, `colony_workshops.rs`, `colony_skills.rs`, `colony_firewood.rs`, `engine_economy_ffi.rs`; the M2 command log replays byte-identically (`probe::colony` test).
+- Probe: the `m2` block (timeline, firewood by day, priority agents, skills), `nearest_nodes`, `blueprint_spot`, script entries that wait for a workshop (`"after"`); `tools/v8/m2_u_script.json`; `docs/v8/m2/m2_score.py`.
+- ARCHITECTURE §9 "Items and jobs"; skills: architecture procedures G–I (item kind, recipe, work type), the per-kind ledger pattern, lessons.
+
+### Changed
+- The decision system's firewood arms are off in the M2 colony (`jobs::hearth::decision_firewood`; `decision/system.rs` +2 −1); the baseline keeps them.
+- A job holder at work on a craft yields only to a critical need (calibration, DECISIONS D13).
+- Save `FORMAT_VERSION` 2.
+- Gate step `bench`: a C3 ceiling miss now fails (`tools/v8/bench_ledger.py check`), no justification excuses it.
+- Gate step 13 and `tools/v8/test_bridge_api.py` read `docs/v8/bridge_api_m2.txt`.
+- The colony rule is `ColonyRule::M2` (`ColonyRule::economy`).
 
 ## M1.5 — 2026-10-22
 

@@ -138,6 +138,24 @@ Full step lists with code skeletons: `references/procedures.md`.
 5. Ledger: if the job produces or consumes items, update `item_ledger` in the same function and extend `jobs::invariants::check`.
 6. Tests in `rust/crates/sim-test/tests/colony_jobs.rs`: the job completes, the ledger holds every tick, reservations are empty after a cancel by each `CancelReason`, a twin run stays identical.
 
+### G. Add an item kind (M2)
+1. Add the variant to `ItemKind` (`rust/crates/sim-core/src/colony/items.rs`) with its `code`, `name`, `ALL` entry, `default_stack_max` and `default_carry`; pin the codes in the unit test. The per-kind ledger (`jobs::invariants::check`) covers it automatically (it loops `ItemKind::ALL`).
+2. Every item that enters the world is `item_ledger.create`d where it appears, and every item that leaves is `consume`d (or `craft_start`/`craft_end`/`burn`); move items only with `put_items`/`take_items` (a stack holds one `ItemSpec` bucket: kind, material, quality / 10).
+3. Bridge: `ItemKind::code` is in `carry_kinds`, `item_kinds`, `shelf_kinds`; update `docs/v8/snapshot_schema.md`, the GDScript icon/name maps and the locale keys.
+4. A new kind that is stored needs no Haul change (Haul moves any loose stack to a cell that takes its spec).
+
+### H. Add a recipe (M2)
+1. Add an entry to `rust/crates/sim-core/data/colony/recipes.ron` (names are parsed at load; an unknown name makes the whole file fail its unit test) and a `RecipeKind` variant with `code`/`name`/`ALL`.
+2. Its workshop must accept it (`recipe.workshop == shop.kind`, checked by `AddBill`); its `work` (Craft or Split) decides which priority column it uses; its `skill` decides speed, quality and XP. The output's material is the first input's.
+3. Tests in `colony_workshops.rs`: a `Make(n)` bill makes exactly n from known inputs (ledger transforms = n), and a cancelled craft loses its inputs (`crafts_lost`).
+
+### I. Add a work type (M2)
+1. Add the `WorkType` variant at its place in the tie-break order (`ALL`, `code`, `name`); `WorkPriorities.levels` is indexed by `code` (a fixed array: bump its length, the save format and every literal).
+2. Add its arm to `pick_work` (`runtime/jobs/assign.rs`) with a memo field in `Exhausted` for each map-wide search; the priority passes call it only for people whose level for it matches the pass.
+3. Bridge `get_work_priorities` lists `work_types`; the GDScript priority table reads that list.
+
+- **Do** keep run-time rates in integer tables (`XP_TABLE`, `SPEED_PERMILLE`, `QUALITY_BONUS_TABLE`, `AXE_PERMILLE` in `sim_core::colony::skills`) and convert data files' floats once at load (`MaterialStats`). *Reason:* C4; a table is reproducible and readable in a test.
+
 ## Lessons
 
 | date | symptom | root cause | fix | source |
@@ -177,3 +195,6 @@ Full step lists with code skeletons: `references/procedures.md`.
 | 2026-10-21 | M1.5 round 0: births per (fed) woman-year read 0.24–0.84, above the rule's maximum | the fertility gate ran at 06:00, when the members' mean thirst is at its overnight peak (56–67 against the limit 60), so the settlement was "fed" on about half the mornings and the exposure count was halved | measure a gate's input at the hour the system will run before choosing the hour; `FertilitySystem` runs at 12:00 (means 25–40) | `docs/v8/m1_5/M1_5_DECISIONS.md` D7 |
 | 2026-10-21 | the goal's 12 ‰ daily conception chance was meant to give 0.25 births per woman-year but gives 0.16 | 12 ‰ × 24 days counts only eligible days; gestation and the postpartum days (66) are not | compute a rate's long-run value with its dead time (1 / (gestation + postpartum + (1 − p)/p)) and test the system against an independent recursion | `docs/v8/m1_5/M1_5_DECISIONS.md` D6; `rust/crates/sim-test/tests/colony_demography.rs` |
 | 2026-10-20 | a new chronicle kind (`HutBuilt` 22) failed identity on the chronicle files although no baseline event changed | each chronicle file carries the full kinds vocabulary, which grew | compare chronicles by content with the base kinds list as a prefix (`tools/v8/compare_chronicles.py`) | `docs/v8/m1/M1_DECISIONS.md` D21; `tools/v8/compare_chronicles.py` |
+| 2026-10-22 | the first M2 candidate's `JobAssignSystem` cost 280 µs per tick at N = 1,000 (was 17) and the decision system's share fell 11 points only because another system grew | the gather fallback rebuilt a 1,600-entry deadwood index every tick although the colony was rarely short; memos moved into a `BTreeMap` looked up per agent | build an index lazily (`OnceCell`, at most once per tick, only when a search needs it); keep per-agent memos as fixed fields or arrays; read a share change next to the absolute µs of every system | `rust/crates/sim-systems/src/runtime/jobs/assign.rs`; `docs/v8/m2/M2_DECISIONS.md` D17 |
+| 2026-10-22 | three of 32 evaluation colonies lost people to cold in their third year although firewood lay on the ground all along | the gather shortfall counted every firewood item as held, but the hearth only feeds from stockpiles and its own pile; loads dropped by released gatherers sat far away and blocked gathering forever | count only what the consumer can actually reach (`hearth::feedable_firewood`); when a stock decides whether to make more, its count and the consumer's reach must be the same set | `rust/crates/sim-systems/src/runtime/jobs/hearth.rs`; `docs/v8/m2/M2_DECISIONS.md` D19 |
+

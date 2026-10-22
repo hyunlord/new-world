@@ -6,8 +6,8 @@
 # scene in its own process) into <log_dir>/bench, then compares the run with
 # the latest pass in docs/perf/PERF_LEDGER.md (`tools/v8/bench_ledger.py
 # check`): more than +10 % on any scene's tick mean or p99, or on RSS per
-# agent, fails unless --justified quotes the CHANGELOG. The C3 ceilings are
-# printed as PASS/MISS (report only in M1.5). The host load is recorded in
+# agent, fails unless --justified quotes the CHANGELOG. Since M2 a C3 ceiling
+# MISS fails too (no justification). The host load is recorded in
 # every run file. This step never writes the ledger; a pass appends its line
 # with `bench_ledger.py append` from an admitted session.
 set -uo pipefail

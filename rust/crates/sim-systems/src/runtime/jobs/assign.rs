@@ -59,8 +59,9 @@ pub fn in_transit(world: &World) -> BTreeMap<((u32, u32), ItemKind), u16> {
 
 /// Firewood units the colony still lacks (M2 goal 3.8): the larger of the
 /// hearth's need (`hearth::hearth_need`) and every firewood `Maintain` target,
-/// minus the settlements' wood, the firewood in stock (`maintain_count`) and a
-/// carry per gather job under way.
+/// minus the settlements' wood, the firewood a hearth can use (stockpiles and
+/// hearth piles, loads in haulers' hands, crafts under way) and a carry per
+/// gather job under way.
 pub fn gather_shortfall(world: &World, res: &SimResources) -> u32 {
     let mut want = super::hearth::hearth_need(res);
     for shop in res.colony.workshops.values() {
@@ -83,9 +84,12 @@ pub fn gather_shortfall(world: &World, res: &SimResources) -> u32 {
         .iter()
         .filter(|(_, j)| matches!(j.kind, JobKind::Gather { .. }))
         .count() as u32;
-    let held = super::hearth::settlement_wood(res)
-        + maintain_count(world, res, ItemKind::Firewood)
-        + gathering * carry;
+    // Only firewood a hearth can use counts (DECISIONS D19): stacks lying
+    // elsewhere (a released gatherer's load) are not fed and must not stop gathering.
+    let ground = res.colony.ground_total(ItemKind::Firewood) as u32;
+    let usable = maintain_count(world, res, ItemKind::Firewood)
+        .saturating_sub(ground.saturating_sub(super::hearth::feedable_firewood(res)));
+    let held = super::hearth::settlement_wood(res) + usable + gathering * carry;
     want.saturating_sub(held)
 }
 
@@ -537,10 +541,15 @@ fn gather_pick(res: &SimResources, ctx: &Ctx, pos: (u32, u32), ex: &mut Exhauste
         .cells
         .nearest_where(spot, u32::MAX, |c, _| open(c))
         .map(|(c, ())| c);
-    let hearth = *ctx
+    let hearth = ctx
         .hearth
-        .get_or_init(|| crate::worldgen::colony::hearth(res));
-    let to = cell.or(hearth)?;
+        .get_or_init(|| super::hearth::hearth_tiles(res).first().copied());
+    // The settlement's hearth (the feed reads its pile), nearest the spot when several.
+    let near = super::hearth::hearth_tiles(res)
+        .into_iter()
+        .min_by_key(|t| (chebyshev(spot, *t), t.1, t.0))
+        .or(*hearth);
+    let to = cell.or(near)?;
     Some((JobKind::Gather { spot, to }, 0, ItemKind::Firewood))
 }
 

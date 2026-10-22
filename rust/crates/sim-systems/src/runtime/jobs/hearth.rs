@@ -72,6 +72,42 @@ pub fn settlement_wood(res: &SimResources) -> u32 {
         .sum()
 }
 
+/// The hearths firewood is brought to: every settlement's formation tile in
+/// settlement id order (the tile `feed` measures its pile from); without a
+/// settlement, the colony's hearth building.
+pub fn hearth_tiles(res: &SimResources) -> Vec<(u32, u32)> {
+    let mut ids: Vec<_> = res.settlements.keys().copied().collect();
+    ids.sort_unstable();
+    let tiles: Vec<(u32, u32)> = ids
+        .iter()
+        .filter_map(|id| res.settlements.get(id).map(|s| s.formation_tile))
+        .collect();
+    if tiles.is_empty() {
+        crate::worldgen::colony::hearth(res).into_iter().collect()
+    } else {
+        tiles
+    }
+}
+
+/// Firewood items a hearth can use: on stockpile cells or within
+/// [`HEARTH_PILE_REACH`] of a hearth (reserved stacks included: they are on
+/// their way to a use).
+pub fn feedable_firewood(res: &SimResources) -> u32 {
+    let hearths = hearth_tiles(res);
+    let c = &res.colony;
+    c.ground_items
+        .iter()
+        .filter(|(tile, stack)| {
+            stack.kind == ItemKind::Firewood
+                && (c.zone_of_tile.contains_key(tile)
+                    || hearths
+                        .iter()
+                        .any(|h| chebyshev(**tile, *h) <= HEARTH_PILE_REACH))
+        })
+        .map(|(_, stack)| u32::from(stack.count))
+        .sum()
+}
+
 /// Feed every hearth (see the module header).
 pub fn feed(res: &mut SimResources) {
     let Some(rule) = res.rules.society.firewood else {

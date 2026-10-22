@@ -202,3 +202,35 @@ Raw data lives in `/Users/rexxa/work/m2-data/` (`$DATA`), outside the repository
   tick and only when the colony is short of firewood.
 - Not done: 8.3 (foraging as a job) is allowed only if every bar is green by hour 14; E2, E4 and E7 are not (D18), so
   it was not attempted. E8 is reported as a fail.
+
+## D18 — How the evaluation bars are measured (registered before the official run)
+
+- Seeds 300–331 (not used by any earlier pass: `git grep` finds them only in the goal), the M2-U script
+  `tools/v8/m2_u_script.json` (goal §10; bills are applied once their workshop stands, D8), 20 days,
+  `--check-determinism`; and 72 days (3 colony years) without orders. Scorer: `docs/v8/m2/m2_score.py`.
+- E1: the 6th blade crafted by day 10 (tick ≤ 14,400). E2: 2 axes crafted by day 15, and `chops_with_axe ≥ 1`
+  by day 20. E3: firewood on stockpile cells at the start of each day 8–20 ≥ 20. E4: the Chop = 0 adult took 0
+  chop jobs, and the Craft = 1 adult finished ≥ 50 % of the crafts of work type Craft (knap blade, haft axe; split
+  firewood is work type Split). E5: 0 ticks with a ledger or reservation violation. E6: 0 starvation, dehydration
+  or exposure deaths in the 20-day run; 0 exposure deaths in the 3-year run (≥ 30/32; with no orders there is no
+  bench, so the firewood comes from the gather fallback, not an auto-bill). E7: the Craft = 1 adult's blade quality
+  at day 20 minus at day 3, as the mean of 200 keyed draws of the quality formula at the adult's Knap level on each
+  day (the same draws on both days, so the difference is 3 × the level difference); the mean quality of the blades
+  the adult actually made before and after day 3 is reported beside it.
+
+## D19 — Firewood lying away from a hearth stopped the gathering (found by the evaluation)
+
+- Context: the first official run (`$DATA/eval`, commit `d05391cc`) had E6b at 29/32: seeds 300, 320 and 324 lost
+  1–2 people to cold in their third year. Their settlement wood was 0 at ~26 dawns in 3 years while 43–137 firewood
+  items lay on the ground and never moved (a temporary probe showed them scattered 10–30 tiles from the hearth:
+  loads dropped where a gatherer was released by a need).
+- Cause: the gather shortfall counted every firewood item on the ground as held, but the hearth feeds only from
+  stockpile cells and its own pile (within 2 tiles), and without a stockpile no hauler moves loose firewood. The
+  stray items blocked gathering for good.
+- Fix: the shortfall counts only firewood a hearth can use (stockpile cells, hearth piles, loads in haulers' hands,
+  crafts under way; `hearth::feedable_firewood`), and a gatherer with no stockpile cell drops at the settlement's
+  formation tile (the tile the feed measures from; `hearth::hearth_tiles`). Calibration seeds 0–7, 3 years: dawns
+  with an empty hearth 0 (was ~26 per seed); seed 300: 0 deaths. The stray items stay on the ground (no hauling to a
+  hearth pile in M2; a limitation).
+- The evaluation was then rerun in full from the fixed commit; seeds 300, 320, 324 are no longer blind for E6b, and
+  the report says so.

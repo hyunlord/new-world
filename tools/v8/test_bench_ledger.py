@@ -56,6 +56,18 @@ class LedgerTest(unittest.TestCase):
         self.assertEqual(self.run_main("check", self.write(bench(p99=2300.0)), str(self.ledger)), 1)
         self.assertEqual(self.run_main("check", self.write(bench(per_agent=3400.0)), str(self.ledger)), 1)
 
+    def test_a_ceiling_miss_fails_even_when_justified(self):
+        self.run_main("append", self.write(bench()), str(self.ledger), "--pass", "base")
+        missed = bench()
+        missed["ceilings"] = {"n1000_mean_le_5ms": "MISS"}
+        self.assertEqual(self.run_main("check", self.write(missed), str(self.ledger),
+                                       "--justified", "the index costs 12 % at N = 200 on purpose",
+                                       "--changelog", str(self.changelog)), 1)
+        none = bench()
+        none["ceilings"] = {}
+        self.assertEqual(self.run_main("check", self.write(none), str(self.ledger)), 1)
+        self.assertEqual(self.run_main("check", self.write(bench()), str(self.ledger)), 0)
+
     def test_check_uses_only_the_latest_pass(self):
         self.run_main("append", self.write(bench(mean=500.0)), str(self.ledger), "--pass", "old")
         self.run_main("append", self.write(bench(mean=1000.0)), str(self.ledger), "--pass", "new")

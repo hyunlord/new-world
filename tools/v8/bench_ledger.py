@@ -10,8 +10,9 @@ run, `append` adds them to LEDGER. `check` compares the run with the ledger's
 latest pass (the rows that share the last row's `pass` value): any scene whose
 tick mean or p99, or the run's RSS per agent, is more than 10 % above that
 pass fails, unless `--justified TEXT` is given and TEXT appears verbatim in
-the CHANGELOG (the pass's justification, quoted). The C3 ceilings are printed
-as PASS/MISS and never fail (M1.5). Exit 0 = pass, 1 = regression, 2 = usage.
+the CHANGELOG (the pass's justification, quoted). Since M2 the C3 ceilings are
+hard: a MISS (or a run without ceilings) fails, and no justification excuses
+it. Exit 0 = pass, 1 = regression or ceiling miss, 2 = usage.
 """
 import json
 import sys
@@ -152,8 +153,16 @@ def main(argv):
     failures, lines = compare(bench, previous)
     print(f"compared with pass {previous[0]['pass']} ({previous[0]['commit']})")
     print("\n".join(lines))
-    for name, verdict in sorted(bench.get("ceilings", {}).items()):
-        print(f"ceiling {name}: {verdict} (report only)")
+    ceilings = sorted(bench.get("ceilings", {}).items())
+    missed = [name for name, verdict in ceilings if verdict != "PASS"]
+    for name, verdict in ceilings:
+        print(f"ceiling {name}: {verdict}")
+    if not ceilings:
+        print("bench: FAIL (the run reports no C3 ceilings; absence is a failure)")
+        return 1
+    if missed:
+        print(f"bench: FAIL (C3 ceiling missed: {', '.join(missed)})")
+        return 1
     if failures:
         quote = opts["--justified"]
         if quote and quote in Path(opts["--changelog"]).read_text():

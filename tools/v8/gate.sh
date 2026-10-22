@@ -36,7 +36,7 @@
 #                        seed 100, U-script, tick 900 (C2)
 #   24 save_roundtrip    tools/v8/save_roundtrip.sh: save -> load -> tick equals tick, colony seeds 0-7 (C1)
 #   25 bench             tools/v8/bench.sh: the standing colony benchmark against docs/perf/PERF_LEDGER.md
-#                        (> +10 % on tick mean, p99 or RSS/agent fails; C3 ceilings report only)
+#                        (> +10 % on tick mean, p99 or RSS/agent fails; since M2 a C3 ceiling miss fails)
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
