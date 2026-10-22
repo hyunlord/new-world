@@ -311,6 +311,13 @@ Raw data lives in `/Users/rexxa/work/m4-data/` (`$DATA`), outside the repository
 - The held-out result of record is the pre-fix run (`84f336a5`); the fixed build is measured again on the same
   held-out seeds and both are reported (M4_EVALUATION.md). The fix was not tuned on those seeds.
 
+- Addendum (first Part 6 gate, `4cbcddc0`): the fix made two M1 tests fail (`colony_commands.rs`
+  `a_cancelled_site_frees_its_v7_seeker`, `a_completed_site_frees_its_v7_seeker`). They hold an idle adult on a hut
+  site until the V7 arm sends it there, then check that `ConstructionSystem` frees the seeker when the site goes; under
+  M4 the arm no longer sees gated colony sites, so the seeker never arises. The behaviour they protect still exists
+  under the M1–M3 colony rules, so they now run their colony world under `ColonyRule::M3`
+  (`colony_engine_without_knowledge`); no assertion changed. Only the targeted test files had been run after the fix.
+
 ## D23 — F12: what the benchmark found (memory fixed; the fords' cost at N = 200 justified)
 
 - Ledger session 03:51–03:54 KST (quiet, 1-min load 3.5–4.4; M3 `bf16de16` and the candidate `e7deb890`

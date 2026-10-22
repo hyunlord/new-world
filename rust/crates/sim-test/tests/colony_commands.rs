@@ -443,6 +443,16 @@ fn replay_of_the_command_log_reproduces_the_run() {
     assert_ne!(digest(&idle), digest(&original));
 }
 
+/// The colony world under the M3 colony rule (no knowledge). Since M4 the V7
+/// construction arm never sends anyone to a knowledge-gated colony site (M4
+/// DECISIONS D22) and every placeable blueprint is gated, so the V7 seeker the
+/// two tests below free can only arise without the knowledge rule.
+fn colony_engine_without_knowledge(seed: u64) -> sim_engine::SimEngine {
+    let mut engine = sim_test::colony_engine(seed);
+    engine.resources.rules.colony = Some(sim_core::rules::ColonyRule::M3);
+    engine
+}
+
 /// Review H1 (M1 Part 6): an idle adult on a waiting hut's centre enters the
 /// V7 `Seeking { ConstructionSite }`; cancelling the site in that window used
 /// to leave it frozen there until it died of thirst (about 27 game hours). The
@@ -453,7 +463,7 @@ fn a_cancelled_site_frees_its_v7_seeker() {
     let seeking = AgentState::Seeking {
         target: TargetKind::ConstructionSite,
     };
-    let mut engine = sim_test::colony_engine(3);
+    let mut engine = colony_engine_without_knowledge(3);
     let hearth = sim_systems::worldgen::colony::hearth(&engine.resources).expect("hearth");
     let spot = (3..24)
         .flat_map(|dy| (0..10).map(move |dx| (hearth.0 + dx, hearth.1 + dy)))
@@ -559,7 +569,7 @@ fn a_completed_site_frees_its_v7_seeker() {
         }
     };
     for seed in [3u64, 0] {
-        let mut engine = sim_test::colony_engine(seed);
+        let mut engine = colony_engine_without_knowledge(seed);
         let hearth = sim_systems::worldgen::colony::hearth(&engine.resources).expect("hearth");
         let spot = (3..24)
             .flat_map(|dy| (0..10).map(move |dx| (hearth.0 + dx, hearth.1 + dy)))
