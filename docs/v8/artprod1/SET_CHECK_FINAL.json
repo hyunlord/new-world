@@ -1,0 +1,38 @@
+{
+  "passed": false,
+  "accepted_looks": 13,
+  "audited_frames": 130,
+  "sampled": [
+    "adult_F_loincloth_short/S",
+    "adult_M_loincloth_short/E",
+    "adult_F_loincloth_short/E",
+    "adult_M_hide_wrap_bun/E",
+    "adult_F_hide_wrap_long_tied/S",
+    "adult_M_hide_wrap_long_tied/E",
+    "adult_F_fur_cloak_long_tied/S",
+    "adult_M_hide_wrap_long_tied/S",
+    "adult_F_hide_wrap_short/E",
+    "adult_M_hide_wrap_bun/S",
+    "adult_F_hide_wrap_long_tied/E",
+    "adult_M_hide_wrap_short/E",
+    "adult_F_loincloth_bun/S",
+    "adult_M_loincloth_long_tied/S",
+    "adult_F_fur_cloak_short/S",
+    "adult_M_loincloth_long_tied/E",
+    "adult_F_hide_wrap_short/S",
+    "adult_M_loincloth_short/S",
+    "adult_F_loincloth_bun/E",
+    "adult_M_fur_cloak_bun/E",
+    "adult_F_fur_cloak_long_tied/E",
+    "adult_M_fur_cloak_bun/S",
+    "adult_F_fur_cloak_short/E",
+    "adult_M_hide_wrap_short/S",
+    "adult_F_loincloth_long_tied/S",
+    "adult_F_loincloth_long_tied/E"
+  ],
+  "findings": [
+    "need 48 distinct look/facing identities; found 26"
+  ],
+  "seed": "ART-PROD1-check-set-48-v1",
+  "sampling": "SHA256(seed:identity) order, round-robin age/sex strata, without replacement"
+}

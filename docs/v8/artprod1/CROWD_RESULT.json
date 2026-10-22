@@ -1,0 +1,28 @@
+{
+  "browser": "155.0.8059.85",
+  "device_scale_factor": 1,
+  "page_errors": [],
+  "measurement": {
+    "dataset_status": "ACCEPTED_SUBSET_CROWD_ONLY",
+    "count": 200,
+    "visible_count": 200,
+    "canvas": [
+      2240,
+      1120
+    ],
+    "elapsed_ms": 60014.200000000004,
+    "rendered_frames": 3558,
+    "draw_calls": 711600,
+    "fps": 59.26930626418414,
+    "surface": "Chromium Canvas2D whole-sprite rendering; no simulation",
+    "formal_R1_eligible": false
+  },
+  "error": null,
+  "dataset_status": "ACCEPTED_SUBSET_CROWD_ONLY",
+  "formal_R1_eligible": false,
+  "limitations": "Isolated Chromium Canvas2D renderer, not Godot, not simulation. rAF completion measures submitted canvas frames, not display scanout.",
+  "raw_runtime_path": "/Users/rexxa/work/artprod1-data/round0/crowd-lab/crowd/runtime.json",
+  "raw_runtime_sha256": "fbd77541fd57a77bb779f7da52d37e2ac54325e64ec6c97ff3894691f4a16ed5",
+  "bar_fps": 60,
+  "passed": false
+}

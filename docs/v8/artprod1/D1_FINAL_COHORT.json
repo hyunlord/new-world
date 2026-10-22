@@ -1,0 +1,55 @@
+{
+  "status": "FINAL_FULL_COHORT_VERIFIED",
+  "scope": "All96 terminal generation records across36looks, including targeted review retry; full accepted130-frame set independently audited",
+  "generation_calls": 96,
+  "unique_terminal_attempts": 96,
+  "looks": 36,
+  "max_calls_per_look": 3,
+  "cohort_matches_call_logs": true,
+  "terminal_cohort_unchanged_after_run": true,
+  "implementation_sha256": {
+    "art/pipeline3/structure.py": "1dcc1b974d8f6a2c3e70fd9ed4594dadb81025029af96b2af72a5d5ed913487f",
+    "art/pipeline5/panel_ownership.py": "8136a245b317f3c09b8508fcf676a3baa6779fa0c693ee35f0448897a35bdef8",
+    "art/pipeline5/sheet_geometry.py": "7b5c1090e2ecc1b6933ccaeba9e7b07d543bd54a6eae572d9ff67bfc3b44da92",
+    "art/pipeline5/whole_checks.py": "e713e4dce6503929ebf7a87f15b1cdb9bc53bf49461381e7d1c337d6bf1831a0"
+  },
+  "implementation_hashes_unchanged_after_run": true,
+  "accepted_looks": 13,
+  "accepted_frames": 130,
+  "accepted_original_files": 273,
+  "accepted_original_bytes_unchanged_round0": true,
+  "accepted_file_map_sha256": "5ca1549c2b1ad447f4eb44eae362501a43c29eed94cee603e00751e7baeccc5b",
+  "accepted_extra_metadata": [
+    "art/character/route_i/STATUS.md"
+  ],
+  "targeted_look_retained_attempt": 2,
+  "D1": {
+    "sliced_byte_identical_pairs": 910,
+    "normalized_byte_identical_pairs": 860,
+    "accepted_normalized_pairs": 130,
+    "rejected_normalized_pairs": 730,
+    "source_failure_attempts": 5,
+    "normalization_failures_after_slicing": 50,
+    "absent_outputs": 100,
+    "mismatches": 0
+  },
+  "set_check": {
+    "passed": false,
+    "audited_frames": 130,
+    "identities_available": 26,
+    "identities_required": 48,
+    "findings": [
+      "need48 distinct look/facing identities; found26"
+    ]
+  },
+  "sleep_sensitivity": "Original95 only; additional1 targeted attempt NOT_PROBED; accepted assets unchanged",
+  "evidence_sha256": {
+    "/Users/rexxa/work/artprod1-data/d1-final/snapshot.json": "1fde7a30cc615712d0cb336518d716ec107af7048c17a8e25085636a1674c2e8",
+    "/Users/rexxa/work/artprod1-data/d1-final/comparison.json": "0b24c750601e042a25d14753b5a138990aeb629060463207420edc1d33f8d6f6",
+    "/Users/rexxa/work/artprod1-data/d1-final/generation_cohort_final.json": "6cebdef91fcafa9534fd782e4374a79b1a3c64a7617102a47668499c27ced81e",
+    "/Users/rexxa/work/artprod1-data/d1-final/code_identity_after.json": "656c29d2157e092e6ef8a43848479b8e62409cfad7b43c3284d2aa930e6821ad",
+    "/Users/rexxa/work/artprod1-data/round1/set_check.json": "ad8f66b54958471514729278c6e595d839c7077dbcabe6ad6b4e8689444e3875",
+    "/Users/rexxa/work/artprod1-data/round1/set_check_provenance.json": "da820368cbad14abc68a9dcd816335910be53a396fe69ee3bfee8152048060b3"
+  },
+  "raw_marker_note": "Raw verifier INTERIM marker intentionally unmodified; this wrapper independently establishes full final cohort coverage."
+}

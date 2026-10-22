@@ -1,0 +1,102 @@
+{
+  "observer": "Parent assistant visual model; directly opened all six stills and both same-family anchors",
+  "round": 0,
+  "dataset_status": "DIAGNOSTIC_REJECTED_SET_NOT_CERTIFIED",
+  "formal_R1_eligible": false,
+  "method": "Native 1x staged stills; visual scores only, no external vision service or human review claimed",
+  "anchors": [
+    {
+      "path": "art/style05/anchors/crops/person_full.png",
+      "sha256": "8379eaa4f2fdb396f8b01ba6fb2b7ab76203ce103a619e6f06f84ca24ffd4fbf"
+    },
+    {
+      "path": "art/style05/anchors/crops/person_upper.png",
+      "sha256": "6722a3f22b742b0f9fda8b5bf54d6b5f1e9278254c02f3cb426c65a1707bc3f4"
+    }
+  ],
+  "rows": [
+    {
+      "id": "p1_01",
+      "file": "/Users/rexxa/work/artprod1-data/round0/lab/stills/p1_01.png",
+      "sha256": "e0531ec87767afa5b730ed629539f7ef038a252c3338786ac46b11adc4227948",
+      "medium": 4,
+      "line": 4,
+      "light": 3,
+      "palette": 4,
+      "sentence": "Warm earth washes and clear outer contour remain readable; light direction is weak at native scale.",
+      "final_round_same_sha256": true,
+      "final_file": "/Users/rexxa/work/artprod1-data/round1/lab/stills/p1_01.png"
+    },
+    {
+      "id": "p1_02",
+      "file": "/Users/rexxa/work/artprod1-data/round0/lab/stills/p1_02.png",
+      "sha256": "d5f0978fc2a617ec6593da8c2edcb6a7ec53a773916b0ef983b55874efbc0300",
+      "medium": 4,
+      "line": 4,
+      "light": 3,
+      "palette": 4,
+      "sentence": "Ink silhouette and warm brown palette are coherent; the cloak reads mostly as a flat dark plane rather than directional watercolor shading.",
+      "final_round_same_sha256": true,
+      "final_file": "/Users/rexxa/work/artprod1-data/round1/lab/stills/p1_02.png"
+    },
+    {
+      "id": "p1_03",
+      "file": "/Users/rexxa/work/artprod1-data/round0/lab/stills/p1_03.png",
+      "sha256": "815791e0af54980ca07722ce6761ab2b6de3d88c48c715d19d4c85f0af016154",
+      "medium": 4,
+      "line": 4,
+      "light": 4,
+      "palette": 4,
+      "sentence": "Raised axe retains a clear outline and a lighter upper-facing tool edge; the same warm skin and hide palette survives both grounds.",
+      "final_round_same_sha256": true,
+      "final_file": "/Users/rexxa/work/artprod1-data/round1/lab/stills/p1_03.png"
+    },
+    {
+      "id": "p1_06",
+      "file": "/Users/rexxa/work/artprod1-data/round0/lab/stills/p1_06.png",
+      "sha256": "f5a900e1dce32c2026aa8fe88fd1f3f68e1a1b07ecafe20b86864269eff07d73",
+      "medium": 3,
+      "line": 4,
+      "light": 3,
+      "palette": 4,
+      "sentence": "At child scale the wash texture largely collapses to flat color; clean contour survives but light direction is not reliably legible.",
+      "final_round_same_sha256": true,
+      "final_file": "/Users/rexxa/work/artprod1-data/round1/lab/stills/p1_06.png"
+    },
+    {
+      "id": "p1_07",
+      "file": "/Users/rexxa/work/artprod1-data/round0/lab/stills/p1_07.png",
+      "sha256": "1a49fa8700111be67ffc087ddb9fc6227f4a2d8f0c6f7068f1ee0b9ef1f5ed71",
+      "medium": 3,
+      "line": 4,
+      "light": 3,
+      "palette": 4,
+      "sentence": "The carried bundle remains outlined, but child-sized fills have little visible wash variation and the bundle obscures upper-body lighting.",
+      "final_round_same_sha256": true,
+      "final_file": "/Users/rexxa/work/artprod1-data/round1/lab/stills/p1_07.png"
+    },
+    {
+      "id": "p1_09",
+      "file": "/Users/rexxa/work/artprod1-data/round0/lab/stills/p1_09.png",
+      "sha256": "a38ef17db136c190fbeb7370ecc3c6e730b91c72cb0db6fd5b0c27ee6297fd37",
+      "medium": 4,
+      "line": 4,
+      "light": 3,
+      "palette": 4,
+      "sentence": "The sleeping silhouette has controlled dark edging and restrained earth colors; shading does not establish a strong upper-left light at native scale.",
+      "final_round_same_sha256": true,
+      "final_file": "/Users/rexxa/work/artprod1-data/round1/lab/stills/p1_09.png"
+    }
+  ],
+  "means": {
+    "medium": 3.6666666666666665,
+    "line": 4.0,
+    "light": 3.1666666666666665,
+    "palette": 4.0
+  },
+  "overall_mean": 3.7083333333333335,
+  "preferred_bar": 4.0,
+  "limitations": "Style scores do not certify structural validity, attribute readability, or unseen poses.",
+  "final_round": 1,
+  "final_round_stills_byte_identical": true
+}

@@ -1,0 +1,140 @@
+{
+  "round": 1,
+  "total_authorized_calls": 1,
+  "scores_sha256": "53417f74de5fb8ae09514bc65e54cb923a8f6874a9956d370e05303885a65dae",
+  "targets": [
+    {
+      "look": "adult_F_hide_wrap_bun",
+      "facings": [
+        "S",
+        "E"
+      ],
+      "fields": [
+        "hair",
+        "sex"
+      ],
+      "calls_used": 3,
+      "remaining": 0,
+      "authorized_calls": 0
+    },
+    {
+      "look": "adult_F_loincloth_short",
+      "facings": [
+        "S",
+        "E"
+      ],
+      "fields": [
+        "sex",
+        "top"
+      ],
+      "calls_used": 2,
+      "remaining": 1,
+      "authorized_calls": 1
+    },
+    {
+      "look": "adult_M_loincloth_bun",
+      "facings": [
+        "S",
+        "E"
+      ],
+      "fields": [
+        "top"
+      ],
+      "calls_used": 3,
+      "remaining": 0,
+      "authorized_calls": 0
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "facings": [
+        "S",
+        "E"
+      ],
+      "fields": [
+        "activity",
+        "age",
+        "hair",
+        "item",
+        "sex",
+        "top"
+      ],
+      "calls_used": 3,
+      "remaining": 0,
+      "authorized_calls": 0
+    },
+    {
+      "look": "child_F_hide_wrap_short",
+      "facings": [
+        "S",
+        "E"
+      ],
+      "fields": [
+        "sex",
+        "top"
+      ],
+      "calls_used": 3,
+      "remaining": 0,
+      "authorized_calls": 0
+    },
+    {
+      "look": "child_F_loincloth_long_tied",
+      "facings": [
+        "S",
+        "E"
+      ],
+      "fields": [
+        "sex",
+        "top"
+      ],
+      "calls_used": 3,
+      "remaining": 0,
+      "authorized_calls": 0
+    },
+    {
+      "look": "child_M_fur_cloak_short",
+      "facings": [
+        "S",
+        "E"
+      ],
+      "fields": [
+        "age",
+        "hair",
+        "sex",
+        "top"
+      ],
+      "calls_used": 3,
+      "remaining": 0,
+      "authorized_calls": 0
+    },
+    {
+      "look": "child_M_hide_wrap_long_tied",
+      "facings": [
+        "S",
+        "E"
+      ],
+      "fields": [
+        "hair",
+        "sex",
+        "top"
+      ],
+      "calls_used": 3,
+      "remaining": 0,
+      "authorized_calls": 0
+    },
+    {
+      "look": "child_M_loincloth_bun",
+      "facings": [
+        "S",
+        "E"
+      ],
+      "fields": [
+        "sex",
+        "top"
+      ],
+      "calls_used": 3,
+      "remaining": 0,
+      "authorized_calls": 0
+    }
+  ],
+  "third_round_forbidden": true
+}

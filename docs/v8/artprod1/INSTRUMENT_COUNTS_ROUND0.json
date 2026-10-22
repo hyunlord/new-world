@@ -1,0 +1,30 @@
+{
+  "attempts": 95,
+  "grid_rejected_attempts": 5,
+  "intended_frames": 950,
+  "panel_judged_frames": 900,
+  "panel_numeric_pass": 882,
+  "structure_pass": 775,
+  "combined_frame_pass": 759,
+  "normalization_absent_frames": 49,
+  "accepted_scale_min": 0.12698412698412698,
+  "accepted_scale_max": 0.1414141414141414,
+  "accepted_scales": {
+    "adult_M_hide_wrap_short": 0.1414141414141414,
+    "adult_M_loincloth_short": 0.1407035175879397,
+    "adult_F_loincloth_long_tied": 0.12698412698412698,
+    "adult_M_hide_wrap_long_tied": 0.13365155131264916,
+    "adult_M_loincloth_long_tied": 0.13176470588235295,
+    "adult_F_fur_cloak_short": 0.1330166270783848,
+    "adult_F_fur_cloak_long_tied": 0.1346153846153846,
+    "adult_F_hide_wrap_long_tied": 0.1278538812785388,
+    "adult_F_hide_wrap_short": 0.13176470588235295,
+    "adult_F_loincloth_short": 0.13053613053613053,
+    "adult_F_loincloth_bun": 0.13023255813953488,
+    "adult_M_fur_cloak_bun": 0.13365155131264916,
+    "adult_M_hide_wrap_bun": 0.12933025404157045
+  },
+  "accepted_rotation_counts": {
+    "0": 130
+  }
+}

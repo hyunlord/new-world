@@ -1,0 +1,6 @@
+{
+  "final_input_count": 260,
+  "byte_hashes_unchanged": true,
+  "reused_measurement": "/Users/rexxa/work/artprod1-data/round0/crowd-lab/crowd/runtime.json",
+  "reason": "Only review retry failed; every accepted source PNG and sidecar remains identical. No rerun to seek a passing FPS."
+}

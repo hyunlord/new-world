@@ -1,0 +1,228 @@
+{
+  "gif_count": 24,
+  "all_gifs_identical": true,
+  "gifs": [
+    {
+      "file": "p1_01_1x.gif",
+      "round0": "eaf0eacc52d25c82dafe8656090df174295e12444d005390e820b021223490cb",
+      "round1": "eaf0eacc52d25c82dafe8656090df174295e12444d005390e820b021223490cb"
+    },
+    {
+      "file": "p1_01_2x.gif",
+      "round0": "38f953e85746ec94d2487763e6758e55bb4d2f8e63d957c18fd1f9566499cd9f",
+      "round1": "38f953e85746ec94d2487763e6758e55bb4d2f8e63d957c18fd1f9566499cd9f"
+    },
+    {
+      "file": "p1_02_1x.gif",
+      "round0": "10c531cd150fdafbd66d13ebb3a9f7ab42d46f7f2becc48679961776d971ae53",
+      "round1": "10c531cd150fdafbd66d13ebb3a9f7ab42d46f7f2becc48679961776d971ae53"
+    },
+    {
+      "file": "p1_02_2x.gif",
+      "round0": "4ef80282a388e445ed0d4c71f9555d14cc22dab95744e75dca75cd28468ccbc1",
+      "round1": "4ef80282a388e445ed0d4c71f9555d14cc22dab95744e75dca75cd28468ccbc1"
+    },
+    {
+      "file": "p1_03_1x.gif",
+      "round0": "8b688d79df09782d03ef340e7bc4e2bf71b1dd253070bcde762c553cdad12cf3",
+      "round1": "8b688d79df09782d03ef340e7bc4e2bf71b1dd253070bcde762c553cdad12cf3"
+    },
+    {
+      "file": "p1_03_2x.gif",
+      "round0": "9e1c9a4a896e2bb835fbab2f70d70b9c9a5b2d4a1868cfb263c40b832b415b26",
+      "round1": "9e1c9a4a896e2bb835fbab2f70d70b9c9a5b2d4a1868cfb263c40b832b415b26"
+    },
+    {
+      "file": "p1_04_1x.gif",
+      "round0": "05bcbbffa9c7e9c0165533afa2e38d5beb625fcdab16971b6a63fd5800fa2785",
+      "round1": "05bcbbffa9c7e9c0165533afa2e38d5beb625fcdab16971b6a63fd5800fa2785"
+    },
+    {
+      "file": "p1_04_2x.gif",
+      "round0": "116936cd8612f07a5d6b63ee7eb6dd0cca5c896d69231029689263c77fc93221",
+      "round1": "116936cd8612f07a5d6b63ee7eb6dd0cca5c896d69231029689263c77fc93221"
+    },
+    {
+      "file": "p1_05_1x.gif",
+      "round0": "1c0bda56c2de7a2458b8c3b127a1b5c30d0d4347c58365504f4488d562b0fb89",
+      "round1": "1c0bda56c2de7a2458b8c3b127a1b5c30d0d4347c58365504f4488d562b0fb89"
+    },
+    {
+      "file": "p1_05_2x.gif",
+      "round0": "c45cdd749c4dce990c231bff4e67b6b4713876137f71cbd3911c0501fe7ce6d9",
+      "round1": "c45cdd749c4dce990c231bff4e67b6b4713876137f71cbd3911c0501fe7ce6d9"
+    },
+    {
+      "file": "p1_06_1x.gif",
+      "round0": "a51c7c4987cb010b6eb80bfcb5cadc027f64c1c4535940eba8c76601a469cbff",
+      "round1": "a51c7c4987cb010b6eb80bfcb5cadc027f64c1c4535940eba8c76601a469cbff"
+    },
+    {
+      "file": "p1_06_2x.gif",
+      "round0": "3dc2ad836cb6d5e4aed7d6c821c0c369232ce1d856841088bfb74e080d11ee27",
+      "round1": "3dc2ad836cb6d5e4aed7d6c821c0c369232ce1d856841088bfb74e080d11ee27"
+    },
+    {
+      "file": "p1_07_1x.gif",
+      "round0": "5f28cbd1a5950fdcb7a0cb12fdc497dbf147db3d4468ceb8e7d73f8220f940fd",
+      "round1": "5f28cbd1a5950fdcb7a0cb12fdc497dbf147db3d4468ceb8e7d73f8220f940fd"
+    },
+    {
+      "file": "p1_07_2x.gif",
+      "round0": "8c421c6d27b23af2a981e9c931b9e72e2369f48195656ca9c7efee7194bba0c3",
+      "round1": "8c421c6d27b23af2a981e9c931b9e72e2369f48195656ca9c7efee7194bba0c3"
+    },
+    {
+      "file": "p1_08_1x.gif",
+      "round0": "762446182f2bb41582b3f1b51cc5bcd2083084fde158a24417a700b2859d6845",
+      "round1": "762446182f2bb41582b3f1b51cc5bcd2083084fde158a24417a700b2859d6845"
+    },
+    {
+      "file": "p1_08_2x.gif",
+      "round0": "04d1d907b8c54c622ab0ec8661a6ae2c3e39eb4eb3231ce4c600d32001310ba4",
+      "round1": "04d1d907b8c54c622ab0ec8661a6ae2c3e39eb4eb3231ce4c600d32001310ba4"
+    },
+    {
+      "file": "p1_09_1x.gif",
+      "round0": "c41393285980b00e34b5761d6fec7014170eebdd026ba34d7be852811b66d475",
+      "round1": "c41393285980b00e34b5761d6fec7014170eebdd026ba34d7be852811b66d475"
+    },
+    {
+      "file": "p1_09_2x.gif",
+      "round0": "7188be8c26ad8163d3dd2fead9940de9b149a19a3c91477fcbeaae6b2d05aa6a",
+      "round1": "7188be8c26ad8163d3dd2fead9940de9b149a19a3c91477fcbeaae6b2d05aa6a"
+    },
+    {
+      "file": "p1_10_1x.gif",
+      "round0": "6a0ff337ac8e61d1183b2a3c94e33e412681b72298e0b53dddf15b24467ace79",
+      "round1": "6a0ff337ac8e61d1183b2a3c94e33e412681b72298e0b53dddf15b24467ace79"
+    },
+    {
+      "file": "p1_10_2x.gif",
+      "round0": "6f4f161e19a818730a3128be57819c87cd3c1383cdba0e3611d8134103d59975",
+      "round1": "6f4f161e19a818730a3128be57819c87cd3c1383cdba0e3611d8134103d59975"
+    },
+    {
+      "file": "p1_11_1x.gif",
+      "round0": "0f9cf93946a17849b68f0b2356b481bebf3de15f2add5106777eac1885ff8715",
+      "round1": "0f9cf93946a17849b68f0b2356b481bebf3de15f2add5106777eac1885ff8715"
+    },
+    {
+      "file": "p1_11_2x.gif",
+      "round0": "d56e4725473472b47f5f11f485d61d21a4d0ee1fdf853e33eb1f58d5752041e3",
+      "round1": "d56e4725473472b47f5f11f485d61d21a4d0ee1fdf853e33eb1f58d5752041e3"
+    },
+    {
+      "file": "p1_12_1x.gif",
+      "round0": "65858e9dce69aa170942902d814915042092912bc622a287d87ad080df60f0b8",
+      "round1": "65858e9dce69aa170942902d814915042092912bc622a287d87ad080df60f0b8"
+    },
+    {
+      "file": "p1_12_2x.gif",
+      "round0": "044f1150c623a83f7c31ff9104857a7f31bd07af98198f5694401f382eb89cfc",
+      "round1": "044f1150c623a83f7c31ff9104857a7f31bd07af98198f5694401f382eb89cfc"
+    }
+  ],
+  "selected_attempts_round0": [
+    [
+      "adult_M_hide_wrap_short",
+      2
+    ],
+    [
+      "adult_F_fur_cloak_long_tied",
+      2
+    ],
+    [
+      "adult_M_loincloth_bun",
+      1
+    ],
+    [
+      "adult_F_hide_wrap_bun",
+      1
+    ],
+    [
+      "child_M_fur_cloak_short",
+      1
+    ],
+    [
+      "child_F_loincloth_long_tied",
+      1
+    ],
+    [
+      "child_M_hide_wrap_long_tied",
+      1
+    ],
+    [
+      "child_F_fur_cloak_bun",
+      1
+    ],
+    [
+      "adult_F_loincloth_short",
+      2
+    ],
+    [
+      "adult_M_fur_cloak_long_tied",
+      1
+    ],
+    [
+      "child_F_hide_wrap_short",
+      1
+    ],
+    [
+      "child_M_loincloth_bun",
+      1
+    ]
+  ],
+  "selected_attempts_round1": [
+    [
+      "adult_M_hide_wrap_short",
+      2
+    ],
+    [
+      "adult_F_fur_cloak_long_tied",
+      2
+    ],
+    [
+      "adult_M_loincloth_bun",
+      1
+    ],
+    [
+      "adult_F_hide_wrap_bun",
+      1
+    ],
+    [
+      "child_M_fur_cloak_short",
+      1
+    ],
+    [
+      "child_F_loincloth_long_tied",
+      1
+    ],
+    [
+      "child_M_hide_wrap_long_tied",
+      1
+    ],
+    [
+      "child_F_fur_cloak_bun",
+      1
+    ],
+    [
+      "adult_F_loincloth_short",
+      2
+    ],
+    [
+      "adult_M_fur_cloak_long_tied",
+      1
+    ],
+    [
+      "child_F_hide_wrap_short",
+      1
+    ],
+    [
+      "child_M_loincloth_bun",
+      1
+    ]
+  ],
+  "formal_R1_eligible": false,
+  "all_selected_attempts_identical": true
+}

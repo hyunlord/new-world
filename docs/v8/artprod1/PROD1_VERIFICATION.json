@@ -1,0 +1,128 @@
+{
+  "status": "BOUNDED_EXECUTION_COMPLETE_GATE_FAIL",
+  "route_adopted": false,
+  "generation_closed": true,
+  "actual_calls": 96,
+  "per_look_max": 3,
+  "accepted_looks": 13,
+  "accepted_frames": 130,
+  "tests": {
+    "passed": 64,
+    "failed": 0
+  },
+  "lab_pyright": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "lint": "PASS",
+  "game_gate": "NOT_RUN_ART_ONLY",
+  "formal_R1_eligible": false,
+  "fresh_reviewers": [
+    "/root/review0_a",
+    "/root/review0_b",
+    "/root/review1_a",
+    "/root/review1_b"
+  ],
+  "captures": {
+    "rounds": 2,
+    "per_round_gifs": 24,
+    "per_round_actual_screenshots": 576,
+    "target_hz": 8,
+    "seconds_per_gif": 3,
+    "page_errors": 0
+  },
+  "known_unfulfilled_acceptance_conditions": [
+    "S1:13/36;adult13/18",
+    "R1:certified demographic lab unavailable; diagnostic scores also fail",
+    "P1:59.269306FPS<60",
+    "48 distinct look/facing sample unavailable:26",
+    "specified Part0 five-panel I1 source does not exist",
+    "canonical head-left normalization has no opposite-orientation fit fallback",
+    "72-case TRIAL5 try2 recount differs from mixed actual review selection"
+  ],
+  "evidence": [
+    {
+      "path": "/Users/rexxa/work/artprod1-data/final-tests.txt",
+      "sha256": "c80e5180f79a134af996ef357d1ad02a4ac0b25ec6d77adf661e97ae446e15ca",
+      "bytes": 100
+    },
+    {
+      "path": "/Users/rexxa/work/artprod1-data/final-typecheck.txt",
+      "sha256": "6d88a1b220adb7a3d62092b6e38431f0b3fe8babe9864fab90e5849766260332",
+      "bytes": 37
+    },
+    {
+      "path": "/Users/rexxa/work/artprod1-data/final-lint.txt",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    {
+      "path": "/Users/rexxa/work/artprod1-data/d1-final/FINAL_COHORT.json",
+      "sha256": "43b54a63bc97bd66f58d5c0b291bc0a6e672af11287e3e85e6e26e42f50dd0c5",
+      "bytes": 2846
+    },
+    {
+      "path": "/Users/rexxa/work/artprod1-data/d1-final/comparison.json",
+      "sha256": "0b24c750601e042a25d14753b5a138990aeb629060463207420edc1d33f8d6f6",
+      "bytes": 31871
+    },
+    {
+      "path": "/Users/rexxa/work/artprod1-data/round1/set_check.json",
+      "sha256": "ad8f66b54958471514729278c6e595d839c7077dbcabe6ad6b4e8689444e3875",
+      "bytes": 1186
+    },
+    {
+      "path": "/Users/rexxa/work/artprod1-data/final_crowd_identity.json",
+      "sha256": "c051865141f0fe118b16890e042149086cfdc048b51c5cf6f0961ae8632a6b1c",
+      "bytes": 289
+    },
+    {
+      "path": "/Users/rexxa/work/artprod1-data/round0/crowd-lab/crowd/runtime.json",
+      "sha256": "fbd77541fd57a77bb779f7da52d37e2ac54325e64ec6c97ff3894691f4a16ed5",
+      "bytes": 105178
+    },
+    {
+      "path": "/Users/rexxa/work/artprod1-data/round0/lab/browser/playback.json",
+      "sha256": "7016cd601ca130528dd08e26d05248f89b38a60ba5ff638f207f3d31d613d612",
+      "bytes": 131557
+    },
+    {
+      "path": "/Users/rexxa/work/artprod1-data/round1/lab/browser/playback.json",
+      "sha256": "806abcb71fb7b55ad3a460a375b72c764acf881c014075fbc2b12a106fe0fc08",
+      "bytes": 131563
+    },
+    {
+      "path": "/Users/rexxa/work/artprod1-data/round0/reviews/scored/scores.json",
+      "sha256": "53417f74de5fb8ae09514bc65e54cb923a8f6874a9956d370e05303885a65dae",
+      "bytes": 88357
+    },
+    {
+      "path": "/Users/rexxa/work/artprod1-data/round1/reviews/scored/scores.json",
+      "sha256": "09694d2fa6f1a7e7f90f2a3ed6f926a7372c2db09ce8d5e818fed0aa7d28da93",
+      "bytes": 88076
+    },
+    {
+      "path": "/Users/rexxa/work/artprod1-data/final-docs-check.txt",
+      "sha256": "8960240de2f1bb8a8c9e98bd204f424fb29620ce42d1254af59a32b4250b4fe7",
+      "bytes": 595
+    }
+  ],
+  "docs_check": "PASS",
+  "diff_check": "PASS",
+  "scope_check": "Only art/** and docs/v8/artprod1/** in task commits",
+  "file_size_cap_bytes": 1500000,
+  "frozen_goal_unchanged": true,
+  "independent_closure_audit": {
+    "agent": "/root/instrument_audit",
+    "result": "NO_CONCRETE_REPORT_ERRORS",
+    "verified": [
+      "96-attempt instrument counts",
+      "all36 look rows",
+      "both review score tables",
+      "diagnostic limitations and non-adoption",
+      "compact evidence byte identity",
+      "permitted paths and file cap"
+    ],
+    "publication": "Verified separately after commit in final response"
+  }
+}

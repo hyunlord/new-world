@@ -1,6 +1,6 @@
 # /// script
 # requires-python = ">=3.11"
-# dependencies = ["pillow", "playwright"]
+# dependencies = ["pillow", "numpy", "playwright"]
 # ///
 # How to run: python3 -m art.whole_figure_lab.prod1_browser LAB [capture|crowd|publish]
 """Reuse native browser playback capture and measure a fully visible sprite crowd."""

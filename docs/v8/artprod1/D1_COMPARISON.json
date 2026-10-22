@@ -1,0 +1,732 @@
+{
+  "absent_normalized_outputs": 100,
+  "accepted_attempts": 13,
+  "attempts": 96,
+  "failures": [
+    {
+      "identity": "adult_F_fur_cloak_bun/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (56, 43) offset (28, 55) would clip canvas (112, 80); scaled_size=(57, 69), trim_box=(1, 24, 57, 67)",
+          "normalized_sha256": null,
+          "source_png_sha256": "d0f9f36894b27b4fc01d0961c84f196cd22fbe11416e6826257f734bee9c0469",
+          "source_rgba_sha256": "020b85211ea2bffedf5563aaba56615eed7aaa81976c60f68651551a63a2a69e",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "adult_F_fur_cloak_bun/try2",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (51, 41) offset (30, 56) would clip canvas (112, 80); scaled_size=(51, 65), trim_box=(0, 23, 51, 64)",
+          "normalized_sha256": null,
+          "source_png_sha256": "f560ad7b36851b7e3f797f5e9ec321f2c9850425b87afa3be816874fcfd117eb",
+          "source_rgba_sha256": "65909d8cb2274e08a4eb9e4752ce91386e50e8815f1346d910b6b8ba460fb5a3",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "adult_F_fur_cloak_long_tied/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (56, 63) offset (28, 33) would clip canvas (112, 80); scaled_size=(58, 84), trim_box=(2, 16, 58, 79)",
+          "normalized_sha256": null,
+          "source_png_sha256": "d73ca5e35a071d794087b0dac8d1440b140b86f6afc2879026bb117aafc1a9c6",
+          "source_rgba_sha256": "d44871f13b3c04bb3f0c6919ce512c923a52b306fe7ef6f69b0e16338a333a93",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "adult_F_fur_cloak_short/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (58, 62) offset (27, 34) would clip canvas (112, 80); scaled_size=(59, 73), trim_box=(1, 6, 59, 68)",
+          "normalized_sha256": null,
+          "source_png_sha256": "0a40bc9be655c7de8cdeb94ef5d3ee1effb303a7e0337dd219d77517d5fc37f6",
+          "source_rgba_sha256": "771a0516496e5b6bccd1cfdb11e6b74b624af7a82452b848025a794a1d449c7e",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "adult_F_fur_cloak_short/try2",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (55, 47) offset (28, 54) would clip canvas (112, 80); scaled_size=(55, 64), trim_box=(0, 17, 55, 64)",
+          "normalized_sha256": null,
+          "source_png_sha256": "17abff975de3dfb7247b2381ecb10166d8711cff3d679f563f2f8a320bc6ca1c",
+          "source_rgba_sha256": "23074b29a4bcbc394e3d0979c1c2126bad7aacbe4cc9e587f1b082afa44f842c",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "adult_F_hide_wrap_bun/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (55, 61) offset (28, 38) would clip canvas (112, 80); scaled_size=(58, 63), trim_box=(3, 0, 58, 61)",
+          "normalized_sha256": null,
+          "source_png_sha256": "abb5aad36ad734ec1f4533f84bd17d09111d0f8fecbb586ecbf2c8604eddec49",
+          "source_rgba_sha256": "6087803fb2b4a1552dd1183abd6826224e407f02766827d47529fc0118f94333",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "adult_F_hide_wrap_bun/try3",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (56, 41) offset (28, 57) would clip canvas (112, 80); scaled_size=(56, 58), trim_box=(0, 17, 56, 58)",
+          "normalized_sha256": null,
+          "source_png_sha256": "8516e8202cc5b491a6f6fd6b0b7a5f7a78d1d9cdb1133e05833c8f94d5d403e4",
+          "source_rgba_sha256": "f71ffb1d121bf9bf54db10a2815b7e8d6cd0b0121a6822d7b487a812307dd55a",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "adult_F_hide_wrap_long_tied/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (58, 56) offset (27, 44) would clip canvas (112, 80); scaled_size=(58, 75), trim_box=(0, 19, 58, 75)",
+          "normalized_sha256": null,
+          "source_png_sha256": "67c3e84345139670f90b2ab90c1fecaab494ad8eaba513cb024614c28a691b3a",
+          "source_rgba_sha256": "6478efe1f6e9ce6ff3c7e4a69c1cffe659124fe624b5bc863f1c9ebbd8a58dc6",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "adult_F_hide_wrap_short/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (58, 44) offset (27, 56) would clip canvas (112, 80); scaled_size=(60, 66), trim_box=(2, 22, 60, 66)",
+          "normalized_sha256": null,
+          "source_png_sha256": "b3e8365df52d13247e55a9850e0c2dbc68dba7f744a2503438ed5a4ea420c968",
+          "source_rgba_sha256": "ba2ec5ce4658dd6905292055745380f1cb99b4e757f64af20b4f5db150ef657c",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "adult_F_loincloth_bun/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (56, 43) offset (28, 56) would clip canvas (112, 80); scaled_size=(56, 65), trim_box=(0, 20, 56, 63)",
+          "normalized_sha256": null,
+          "source_png_sha256": "656590709edf7ee47de9489aee57a27bbe5c534bf53686fb6bb2e5314700f759",
+          "source_rgba_sha256": "8dcba4714faa662a7f63d7960634dbb3020e81a12267f440d8e43b0ba146d6c9",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "adult_F_loincloth_bun/try2",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (55, 41) offset (28, 56) would clip canvas (112, 80); scaled_size=(55, 58), trim_box=(0, 14, 55, 55)",
+          "normalized_sha256": null,
+          "source_png_sha256": "db72f31c7d44f1dd45be28e9839b7fa209f1593e2952b791b54e2b4a8ecc2bfb",
+          "source_rgba_sha256": "566bb4540e89049ac4f7689eba6a814e83f1d1b39f16d6c5b9dc548e37aa8de6",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "adult_F_loincloth_long_tied/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (53, 54) offset (29, 43) would clip canvas (112, 80); scaled_size=(56, 74), trim_box=(3, 18, 56, 72)",
+          "normalized_sha256": null,
+          "source_png_sha256": "9f5659b25c242883f717da8ae24af1bc8d2541d75a6f1ce6b67066246467b042",
+          "source_rgba_sha256": "286556832811df6a1904a1ebf2817a1800051d4271c05e3454801281342e8784",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "adult_F_loincloth_short/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (55, 43) offset (28, 56) would clip canvas (112, 80); scaled_size=(57, 64), trim_box=(2, 21, 57, 64)",
+          "normalized_sha256": null,
+          "source_png_sha256": "94222e3baa8047a9248301cea8cdb09105f03cfd55b35a7ca9e382d72ba7f2fa",
+          "source_rgba_sha256": "6bd809f32a871351425d5372c1975ea1b06cb143699eeb1d5a92f09c5f12399d",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "adult_F_loincloth_short/try3",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (56, 41) offset (28, 56) would clip canvas (112, 80); scaled_size=(58, 77), trim_box=(2, 32, 58, 73)",
+          "normalized_sha256": null,
+          "source_png_sha256": "0f90eebd47112ccc23f05feba8c6f77f31b52beb4facc70db0cb7cc0299e0285",
+          "source_rgba_sha256": "21b9386a4ee7eefe7854bec9ca675956409b7e55223699964046de4e11284017",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "adult_M_fur_cloak_bun/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (56, 58) offset (28, 37) would clip canvas (112, 80); scaled_size=(58, 71), trim_box=(2, 10, 58, 68)",
+          "normalized_sha256": null,
+          "source_png_sha256": "8fe08328531342c9494c7d039f09e3eb8023b5856bbf3ae6eb7456069432e16e",
+          "source_rgba_sha256": "3dcc772c6fa07022eb3f416437498a181791cb1e420075f2e464473874ffef34",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "adult_M_fur_cloak_long_tied/try2",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (60, 50) offset (26, 44) would clip canvas (112, 80); scaled_size=(60, 67), trim_box=(0, 12, 60, 62)",
+          "normalized_sha256": null,
+          "source_png_sha256": "657ce37c1ab8a26facb0fd1f4e9adc799bbfe8cc4b2a837e9be374df5d1b08e7",
+          "source_rgba_sha256": "87665ea2f087c03b25689002223455c050bbef9de29fdc4e2b5c6766d241a008",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "adult_M_fur_cloak_long_tied/try3",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (58, 32) offset (27, 52) would clip canvas (112, 80); scaled_size=(58, 59), trim_box=(0, 12, 58, 44)",
+          "normalized_sha256": null,
+          "source_png_sha256": "6fe5899e260668b1e1f3630879b6e7f455af092fc2b701728ef2772004512922",
+          "source_rgba_sha256": "0bf9fe9a1a1582b85a8816a040def722be5360763b24d99dd84f7edacaf1813c",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "adult_M_fur_cloak_short/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (62, 74) offset (25, 27) would clip canvas (112, 80); scaled_size=(67, 92), trim_box=(5, 18, 67, 92)",
+          "normalized_sha256": null,
+          "source_png_sha256": "6cb9f3d1804f8673e9b6bb01e9bfc2ee232af673320130092045735380946932",
+          "source_rgba_sha256": "414070780a1e7ef09951a338c8e30efdb674767656a535a27cd2f397e43250bc",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "adult_M_fur_cloak_short/try2",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (61, 66) offset (25, 33) would clip canvas (112, 80); scaled_size=(61, 89), trim_box=(0, 22, 61, 88)",
+          "normalized_sha256": null,
+          "source_png_sha256": "02af5ec83600f51b27232f79704ccf07c085cebf2d1da351cb8bb5ceec25b767",
+          "source_rgba_sha256": "a47cf3ed6467a91ded441dd56e4428a8d739a2753e52c569458f149256612dee",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "adult_M_fur_cloak_short/try3",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (65, 47) offset (23, 52) would clip canvas (112, 80); scaled_size=(68, 77), trim_box=(3, 30, 68, 77)",
+          "normalized_sha256": null,
+          "source_png_sha256": "88e56990d7a899a533dae8fc466154cf786ce330b735bafa0e7a802dfc85c3f7",
+          "source_rgba_sha256": "b93a3cfb0ecdabde1dc229fe4df81a3abde45666e5bdfa1bccc50f8df0a75425",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "adult_M_hide_wrap_short/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (56, 56) offset (28, 42) would clip canvas (112, 80); scaled_size=(56, 76), trim_box=(0, 18, 56, 74)",
+          "normalized_sha256": null,
+          "source_png_sha256": "4a8371816411ff864b23b02cb358124285b476d4249213ca25d648c396cd48b1",
+          "source_rgba_sha256": "b6542ab520e79a4d53a9ce570ddd7ce77561a97244d20143cf433684c6c8100d",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "adult_M_loincloth_bun/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (60, 68) offset (26, 34) would clip canvas (112, 80); scaled_size=(65, 74), trim_box=(5, 6, 65, 74)",
+          "normalized_sha256": null,
+          "source_png_sha256": "d3d7cdd998d594e01193700dcf8bc2fa7b97bb12faab07f8ed940a5711d4f2fb",
+          "source_rgba_sha256": "f5b138abd8666b2ace19bf552eef60b881feb58c449b7b2e9a45155279fb136c",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "adult_M_loincloth_bun/try2",
+      "normalization_failures": [
+        {
+          "frame": "S/work_a",
+          "normalization_error": "normalization: visible extent (45, 71) offset (17, 41) would clip canvas (80, 112); scaled_size=(49, 72), trim_box=(1, 0, 46, 71)",
+          "normalized_sha256": null,
+          "source_png_sha256": "b0a527c221baa55c49ba3ec37a38bbb926d658fec81d661a04037ec531302ef8",
+          "source_rgba_sha256": "29f53385e8166dd4b2fd408e69c7b348734d12108eddcce8fcd7e0fed4689cda",
+          "transform": null
+        },
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (55, 45) offset (28, 55) would clip canvas (112, 80); scaled_size=(55, 77), trim_box=(0, 32, 55, 77)",
+          "normalized_sha256": null,
+          "source_png_sha256": "6d0ca92dd44228fea3997897ad3ead8624a51c49903cd1cbb64c60290944312f",
+          "source_rgba_sha256": "40db54b8186830b63e05f0bcd43145c93263b90dd739132b66369f5264c5aa34",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "adult_M_loincloth_bun/try3",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (58, 42) offset (27, 55) would clip canvas (112, 80); scaled_size=(58, 60), trim_box=(0, 14, 58, 56)",
+          "normalized_sha256": null,
+          "source_png_sha256": "7294bdd3b9fe348d4b4b7f92d28a90c690a79b1587238f04dc57ddf81b09bb5e",
+          "source_rgba_sha256": "2eb18fa0d12e38aee63580ff4ae4a23d852430b26e9f21483d0250a2a2036f21",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "adult_M_loincloth_short/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (52, 66) offset (30, 35) would clip canvas (112, 80); scaled_size=(56, 71), trim_box=(4, 4, 56, 70)",
+          "normalized_sha256": null,
+          "source_png_sha256": "6a468ae7b83fb9dc1e076eaaee9a4ab7d5fc060eb24659ef00aebf203403a6b7",
+          "source_rgba_sha256": "f6a0ebe1063165c50a590ac56f7b64cafc726663dcd3270fbe1a68194b0410c7",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "adult_M_loincloth_short/try2",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (55, 45) offset (28, 55) would clip canvas (112, 80); scaled_size=(58, 73), trim_box=(3, 28, 58, 73)",
+          "normalized_sha256": null,
+          "source_png_sha256": "40f49d5fe2ef57a3c8cc6769a0113b1e82d2e3600a7f2dae7f5b7adee56cd75d",
+          "source_rgba_sha256": "fc706e9548ae186ef0a808c8353ec921260bdd45f5b45e27e64be77edefc90ba",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "child_F_fur_cloak_bun/try1",
+      "normalization_failures": [],
+      "source_error": "grid: multiple major figures in cell (0, 2)"
+    },
+    {
+      "identity": "child_F_fur_cloak_bun/try2",
+      "normalization_failures": [],
+      "source_error": "grid: multiple major figures in cell (1, 2)"
+    },
+    {
+      "identity": "child_F_fur_cloak_bun/try3",
+      "normalization_failures": [],
+      "source_error": "grid: multiple major figures in cell (0, 2)"
+    },
+    {
+      "identity": "child_F_fur_cloak_long_tied/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (44, 41) offset (34, 50) would clip canvas (112, 80); scaled_size=(47, 61), trim_box=(3, 18, 47, 59)",
+          "normalized_sha256": null,
+          "source_png_sha256": "4df59313ca7c676dd4e3578071bd45a6a14b93f98cca1d08b236e8f397ddeeae",
+          "source_rgba_sha256": "34b88e9a1ed600256d5ede0745a0d31f416ab1b43c5935291a9d3fa82ad10ab4",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "child_F_fur_cloak_long_tied/try2",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (45, 35) offset (33, 57) would clip canvas (112, 80); scaled_size=(45, 65), trim_box=(0, 29, 45, 64)",
+          "normalized_sha256": null,
+          "source_png_sha256": "caedd0c0ec1f00f79449c0253173350d875e5ce727622bd4294433c4a4756987",
+          "source_rgba_sha256": "b6678bb270489d8876da619f8962f68a40ab10a93b61e8b1c574fd825d7a2da2",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "child_F_fur_cloak_long_tied/try3",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (45, 35) offset (33, 57) would clip canvas (112, 80); scaled_size=(45, 49), trim_box=(0, 13, 45, 48)",
+          "normalized_sha256": null,
+          "source_png_sha256": "2afb6bbe136f03eb2a184d7cad321f4c89074fde4723134346f679348f22b7fc",
+          "source_rgba_sha256": "9ce13f135cae2499044939265c75926d46a5e1666bfa8d8a582b8deebefba698",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "child_F_fur_cloak_short/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (49, 37) offset (31, 57) would clip canvas (112, 80); scaled_size=(49, 55), trim_box=(0, 18, 49, 55)",
+          "normalized_sha256": null,
+          "source_png_sha256": "832403e1d41af9677a0625eddd546623330bda8b0821f84de0bbe62cb74478ed",
+          "source_rgba_sha256": "fa8182f2a12fc9ae37cea6676806d65cb3529b9e61704222dae9dc8a109c5de1",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "child_F_fur_cloak_short/try2",
+      "normalization_failures": [],
+      "source_error": "grid: multiple major figures in cell (0, 2)"
+    },
+    {
+      "identity": "child_F_fur_cloak_short/try3",
+      "normalization_failures": [],
+      "source_error": "grid: multiple major figures in cell (0, 2)"
+    },
+    {
+      "identity": "child_F_hide_wrap_bun/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (41, 36) offset (35, 54) would clip canvas (112, 80); scaled_size=(43, 60), trim_box=(2, 23, 43, 59)",
+          "normalized_sha256": null,
+          "source_png_sha256": "a6f990d78865bc54eb82ed3c7e2b9626a00b50ce9ddef59e091198ea2b1ffa47",
+          "source_rgba_sha256": "5916c346784f7b840f6e803d8a1534f7a3b7cabab9929f4112f4a503b5ce706e",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "child_F_hide_wrap_long_tied/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (43, 32) offset (34, 58) would clip canvas (112, 80); scaled_size=(45, 62), trim_box=(2, 29, 45, 61)",
+          "normalized_sha256": null,
+          "source_png_sha256": "2fd9d8436cd829a288657462033b55bbd02c0f49378d3a8f997132ed5af0edda",
+          "source_rgba_sha256": "5b1bbedd3f86ec359bcddfef8067af3d4d1c879b9ff1ded464427e8932bcfb6e",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "child_F_hide_wrap_long_tied/try3",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (46, 33) offset (33, 57) would clip canvas (112, 80); scaled_size=(46, 47), trim_box=(0, 13, 46, 46)",
+          "normalized_sha256": null,
+          "source_png_sha256": "d01cbe7e949c604ac353e497aaf0f1cb2ee8fdb77de57819cf8bda37be903649",
+          "source_rgba_sha256": "6fcda67d59587635be8ca7fa4c2f03c5c8cfe965bfa6e7e859debd77794e7b49",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "child_F_hide_wrap_short/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (42, 35) offset (35, 57) would clip canvas (112, 80); scaled_size=(44, 64), trim_box=(2, 29, 44, 64)",
+          "normalized_sha256": null,
+          "source_png_sha256": "37a0fd647b34477e2859c2ac30f39b9e582bcbd793d50630b2c89e26fa8b0ae2",
+          "source_rgba_sha256": "f0fd2fe7093dbcfe3bc626f4d9b2dbc92c368910d4c60161d5bac25637c202ad",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "child_F_hide_wrap_short/try2",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (44, 46) offset (34, 47) would clip canvas (112, 80); scaled_size=(44, 57), trim_box=(0, 11, 44, 57)",
+          "normalized_sha256": null,
+          "source_png_sha256": "d882cb8e8263393533da9b06706f25119e9a8c06ee7ea27b19006e35af0fbf01",
+          "source_rgba_sha256": "3fe6071cec956ab39d0ca5574801b44c2571bddc4fe4096345f52655ed17ffc8",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "child_F_loincloth_bun/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (44, 36) offset (34, 58) would clip canvas (112, 80); scaled_size=(44, 67), trim_box=(0, 31, 44, 67)",
+          "normalized_sha256": null,
+          "source_png_sha256": "f620150ab53a43e0e4cb5d31745bef1075f7de797d91e06a2b39b2ccc328d618",
+          "source_rgba_sha256": "403d03773e78729181f12fafcfebe201dbb95c5a530c7947f7195f716d087066",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "child_F_loincloth_bun/try2",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (45, 32) offset (33, 58) would clip canvas (112, 80); scaled_size=(45, 42), trim_box=(0, 10, 45, 42)",
+          "normalized_sha256": null,
+          "source_png_sha256": "74a32457ab5d183c1d620784d7a881f09dccc18182f3981457b56a73446edd11",
+          "source_rgba_sha256": "d0a52e6cd8ffe5215dec59308ce92afbe8e2388a75086e2a814ddb351bdef229",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "child_F_loincloth_bun/try3",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (44, 38) offset (34, 52) would clip canvas (112, 80); scaled_size=(44, 53), trim_box=(0, 13, 44, 51)",
+          "normalized_sha256": null,
+          "source_png_sha256": "10af4e76cfa350448e0b79759b0832eec1753c76fe8666bb408ef942905cf5f0",
+          "source_rgba_sha256": "bcceb2303019c934425ce0b34c50bac80f38ba423bc6fe10ec5d7077314897c8",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "child_F_loincloth_long_tied/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (42, 33) offset (35, 58) would clip canvas (112, 80); scaled_size=(42, 54), trim_box=(0, 21, 42, 54)",
+          "normalized_sha256": null,
+          "source_png_sha256": "633b5004a116cb6ce20e28f536d28e51ae4bc60e371f540ec9f38a31d4bde453",
+          "source_rgba_sha256": "a241ccc4e1f67b18436ddfe01db284d9d3473bcf64e63aba07d897357469f942",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "child_F_loincloth_short/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (47, 35) offset (32, 58) would clip canvas (112, 80); scaled_size=(49, 58), trim_box=(2, 21, 49, 56)",
+          "normalized_sha256": null,
+          "source_png_sha256": "7bbecf66f56e4aafcad2cbf635975b32029a4b4131159962177b6f8fcd352b2e",
+          "source_rgba_sha256": "8b71d2e7da64fb149538031570eda5dbc6d8d508acb59989ac90a715b22c53af",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "child_M_fur_cloak_bun/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (37, 44) offset (37, 47) would clip canvas (112, 80); scaled_size=(37, 58), trim_box=(0, 13, 37, 57)",
+          "normalized_sha256": null,
+          "source_png_sha256": "ded813abff755e1dbf8bd55ce8575fd96fd4a05f49e174b72abc0220a3b5fab4",
+          "source_rgba_sha256": "2c5a4f3816ea2d0aafc7a057083cd0deb6993b8e43b7e2edc1545de0efb66889",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "child_M_fur_cloak_bun/try3",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (39, 35) offset (36, 56) would clip canvas (112, 80); scaled_size=(39, 44), trim_box=(0, 9, 39, 44)",
+          "normalized_sha256": null,
+          "source_png_sha256": "4c2051f35dde4ead6b365f210de871a5f176b7538a735a887ae8b446d0a487f8",
+          "source_rgba_sha256": "99d9bb121ee9c288b1d1f2ebe4f9a3e639969602ac7d8fa4e809bf8c002babd1",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "child_M_fur_cloak_short/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (38, 34) offset (37, 57) would clip canvas (112, 80); scaled_size=(38, 54), trim_box=(0, 18, 38, 52)",
+          "normalized_sha256": null,
+          "source_png_sha256": "f543b05a10af77b0bbbc29d17a4b184cc9e640b152c2a21ff5339d3a105516f6",
+          "source_rgba_sha256": "f7feb8b079ec841d43dceab909a2cd054bc53b848d313e7aa65a271bac771b6c",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "child_M_fur_cloak_short/try2",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (43, 38) offset (34, 56) would clip canvas (112, 80); scaled_size=(43, 52), trim_box=(0, 14, 43, 52)",
+          "normalized_sha256": null,
+          "source_png_sha256": "b6d522b8872d4228e00396c010159bb212410d07cbc0747882162bab9fb82a34",
+          "source_rgba_sha256": "5472cf11d2df9fcf7691e5a84ecdcd8f9b159397fd14e3ddc154ae8e651ee41c",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "child_M_hide_wrap_bun/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (34, 32) offset (39, 58) would clip canvas (112, 80); scaled_size=(34, 44), trim_box=(0, 11, 34, 43)",
+          "normalized_sha256": null,
+          "source_png_sha256": "c1ae05f2eb7017d6de95647ac96bec6b68f0610d296eef5d173cdfa340f7cd9f",
+          "source_rgba_sha256": "87583efb55e3c7a4f9be84f24b9fe240435cf80f2d90112b4ffe2507f18db1ad",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "child_M_hide_wrap_long_tied/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (41, 42) offset (35, 49) would clip canvas (112, 80); scaled_size=(42, 47), trim_box=(1, 4, 42, 46)",
+          "normalized_sha256": null,
+          "source_png_sha256": "0cbede3ca8ea866c4c3e2099c6fae45d228e652fd3430ed68d178721a660d101",
+          "source_rgba_sha256": "a348b5d735391bb65a6b83ee2f0bfebad53e1b667e0d8cc71edb9c946d601c9d",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "child_M_hide_wrap_short/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (43, 34) offset (34, 57) would clip canvas (112, 80); scaled_size=(47, 61), trim_box=(4, 26, 47, 60)",
+          "normalized_sha256": null,
+          "source_png_sha256": "26586268640894c05281bcda7b82e3a60cd3160bc5201e23b9ac33f661dcceae",
+          "source_rgba_sha256": "a5e0c40a2b37f36c4dcc59d6b05ead44790e9933af2e8e077fcbe6febe16cf0d",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "child_M_loincloth_bun/try2",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (35, 30) offset (38, 59) would clip canvas (112, 80); scaled_size=(35, 37), trim_box=(0, 6, 35, 36)",
+          "normalized_sha256": null,
+          "source_png_sha256": "7e897e80e3385583963b2d7e14df864b4563afa304a3009d44d2156a7d00793f",
+          "source_rgba_sha256": "61580f582427c2884a7ecf26e5f293e94116b14bc45541ab158d70df41ec5e73",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    },
+    {
+      "identity": "child_M_loincloth_short/try1",
+      "normalization_failures": [
+        {
+          "frame": "S/sleep",
+          "normalization_error": "normalization: visible extent (42, 34) offset (35, 58) would clip canvas (112, 80); scaled_size=(42, 46), trim_box=(0, 12, 42, 46)",
+          "normalized_sha256": null,
+          "source_png_sha256": "d8c3d229ea57744a5a692ecac46f02226c51286e845c9f76748a72299d40fb73",
+          "source_rgba_sha256": "872591d66d85cc7cd3204a1347333337ba127a33114c334fb51609f0ef38effa",
+          "transform": null
+        }
+      ],
+      "source_error": null
+    }
+  ],
+  "mismatches": [],
+  "normalized_pairs_compared": 860,
+  "scope": "Exact two-run slicing PNG bytes, normalized PNG bytes, full transform/ownership records. Identical failures are retained, not counted as valid normalized output. No structural/judge/readability acceptance asserted.",
+  "sliced_panels": 910,
+  "status": "INTERIM",
+  "two_run_byte_identity": true
+}

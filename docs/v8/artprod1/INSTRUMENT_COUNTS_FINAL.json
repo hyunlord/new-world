@@ -1,0 +1,10 @@
+{
+  "calls": 96,
+  "intended_frames": 960,
+  "grid_rejected_attempts": 5,
+  "numeric_measured": 910,
+  "numeric_pass": 891,
+  "structure_pass": 784,
+  "combined_pass": 767,
+  "normalization_absent": 50
+}
