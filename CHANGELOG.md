@@ -5,6 +5,36 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## M4 — 2026-10-23
+
+Knowledge and technology (`docs/v8/m4/M4_GOAL.md`): skills are owned by people and die with them; knowledge spreads by talk at the evening fire, by watching and by teaching, fades when unused and is sometimes discovered; a 24-node stone-age map; the settlement's era is observed from what its people practise; ground stone and pottery can be discovered and made. Plus the M3 follow-ups: the benchmark ledger rule, river fords, tool wear. **The colony's behaviour changes**; the `baseline` world is bit-identical (identity PASS at every Part). Evaluation `docs/v8/m4/M4_EVALUATION.md` — held-out seeds 700–731: F1–F7, F9, F11 PASS, F8 (skill growth) FAIL (the economy saturates, D20), F10 8/8 after the gating fix (D22; 7/8 before), F12 partial (knowledge systems 3.3 µs per tick at N = 1,000, C3 ceilings, identity and replay PASS; the N = 200 scenes over +10 %, justified below). Report `docs/v8/m4/M4_REPORT.md`.
+
+### Added
+- ADR 0024 (knowledge data, component and gating), ADR 0025 (channels, forgetting, discovery), ADR 0026 (the technology aggregate and the era).
+- Knowledge data `rust/crates/sim-core/data/colony/knowledge.ron` (24 nodes: lane, era, threshold, prerequisites, difficulty, discovery conditions, gates, marker weight, seeding) and `sim_core::colony::knowledge` (`defs()`, `gates()`, `Knowledge` with 6-byte entries and the cached practitioner bitset, `TechAggregate`, `TeachOrder`, `QUAL_CAP`, `era_label`); `KnowledgeRule` (`rules/knowledge.rs`), `ColonyRule::M4`, `EconomyRule::M4`; `STREAM_KNOWLEDGE`, `STREAM_CLAY`.
+- Founders seeded by the table at worldgen (prereq-aware); gating of every recipe, blueprint and designation (bills, sites and marks without a practitioner wait; the universal work list is DECISIONS D11); the quality cap from proficiency; use stamps and +2 ‰ per gated job; `SkillKind::Pottery`.
+- Systems: `OralTransmissionSystem` (160, daily at 20:30), `ObservationSystem` (161), `KnowledgeDecaySystem` (162), `DiscoverySystem` (163), `TechAggregateSystem` (164); apprenticeship as paired `Teach`/`Learn` jobs (`runtime/jobs/teach.rs`); chronicle kinds `ToolBroke` 24, `KnowledgeLearned` 25, `KnowledgeDiscovered` 26, `KnowledgeAtRisk` 27, `KnowledgeLost` 28.
+- Chains: clay banks (`NodeKind::ClayBank`), `Designation::ClayPit`, `JobKind::DigClay`; items Clay, RawPot, ClayPot, GroundAxe; recipes `knap_fine_blade`, `grind_axe`, `form_pot`, `fire_pot`; blueprints `grinding_stone`, `pottery_bench` and the hearth's `hearth_fire` workshop; ground axes (120 chops, faster).
+- Commands `DesignateClay`, `OrderTeach`, `CancelTeach`, `DebugKill` (probe and tests); reject reasons `Unreachable`, `NoPractitioner`, `TooYoung`.
+- Bridge (`ffi/knowledge.rs`): `cmd_order_teach`, `cmd_cancel_teach`, `cmd_designate_clay`, `get_tech`, `get_tech_node`, `get_agent_knowledge`, `get_teach_orders`, `get_knowledge_waits`; `get_space`'s `ford_xs`, `ford_ys` (`docs/v8/bridge_api_m4.txt`, 75 items; snapshot schema version 4).
+- UI: the HUD era line and the ⚠ 기술 위험 badge with the at-risk line and the loss toast; the T tech map; the K teach dialog; the inspector's 지식 tab; the pottery column; the build menu's pottery bench and grinding stone; F7 then 2 clay pits; clay banks and fords drawn; chronicle and "기다리는 중" lines; 147 locale keys (`docs/v8/m4/M4_LOCALE.md`); `tools/v8/m4_ui_test.gd`.
+- M3 follow-ups (Part 0): fords (the tile grid's `ford` column, cost 30, on the hearth's shortest way to the largest cut-off forest within 40 tiles; D5) and the "닿을 수 없음: 강 건너" refusal; tool wear (stone axes 40 chops, then a stone; `EconomyRule::tools_break`); the ledger rule in `tools/v8/bench_ledger.py` (contended rows are never a base) and the quiet M2/M3 re-measure.
+- Measurement: the probe's `m4` block (`probe/knowledge.rs`), resolvers `knows:`, `single_holder`, `clay_banks_near`, `holders_of`; `tools/v8/m4_u_script.json`, `tools/v8/m4_f10_script.json`; `docs/v8/m4/m4_score.py` (with `--f10`); the bench's `knowledge_us_per_tick` and `job_assign_us_per_tick`.
+- Tests: `colony_knowledge.rs` (15), knowledge unit tests in sim-core and sim-systems, `engine_*` collector tests for the knowledge reads.
+- Gate step 28 `knowledge` (the knowledge tests and the F10 loss fixture, 8/8); the soak asserts 0 `KnowledgeLost` in 20 days.
+- ARCHITECTURE §11 "Knowledge and technology"; skills: architecture rules and procedures L (knowledge node) and M (gate), testing procedure H (knowledge fixtures, `debug_kill`) and the 28-step table, lessons in architecture and pitfalls.
+
+### Changed
+- `WorldRules::colony` uses `ColonyRule::M4`. Save `FORMAT_VERSION` 4 (`Knowledge` registered). Gate: 28 steps; step 13 checks `docs/v8/bridge_api_m4.txt`.
+- The V7 decision system's site snapshot leaves out knowledge-gated colony sites, so passers-by no longer build them (D22; `decision/system.rs` +4 −1 in M4).
+- Colony founders spawn with an empty `Knowledge` and seeding fills a flat table and boxes once (RSS per agent; D23).
+- The soak script is `tools/v8/soak_script.json` (was `m3_soak_script.json`), with `Maintain 2` stone axes after the firewood bill (D6).
+- Benchmark (`docs/perf/PERF_LEDGER.md` blocks "base M3" and "M4", one quiet interleaved session, load 4.3–7.1): knowledge systems 0.7 / 3.3 / 7.4 µs per tick at N = 200 / 1,000 / 2,000; `JobAssignSystem` +4.2 µs at N = 1,000; tick mean ×1.246 (n200), ×1.061 (n1000), ×1.059 (n2000), ×1.196 (n200_script), ×1.071 (n200_side64); C3 ceilings 4/4 PASS. Justification (bench): the N = 200 scenes cost +20–25 % because Part 0's fords make the bench world's forest across the river reachable and the V7 forage selectors run more; a no-ford build reads ×0.981 of M3, and knowledge adds under 1 µs at N = 200 (M4 DECISIONS D23). RSS per agent is noisy at this scale (five-round medians 2,021 → 2,157 B).
+- M3's ledger rows from the contended session are relabelled "contended, not a base"; the quiet re-measure is the M3 pass row (M2 → M3 tick mean ×0.873 / ×1.053 / ×1.024 / ×0.889 / ×1.156).
+
+### Removed
+- `docs/images/m3_contact_sheet.png` — replaced by `docs/images/m4_contact_sheet.png`.
+
 ## M3 — 2026-10-22
 
 Space (`docs/v8/m3/M3_GOAL.md`): pathfinding, walls, doors, floors, bedrolls, digging into hills, and rooms whose role changes how people sleep, store and work. **The colony's behaviour changes** (people walk paths round walls and hills; undug hill is impassable); the `baseline` world is bit-identical (identity PASS at every Part). Evaluation `docs/v8/m3/M3_EVALUATION.md` — of record (seeds 400–431 at `71c896b6`): F2, F3, F8 PASS; F1, F4, F5, F7, F9 FAIL; after the D17 fixes, a second held-out set (seeds 600–631 at `3d73712d`): every bar PASS except F7 (skill growth; the script's knapping work ends in the first days). Report `docs/v8/m3/M3_REPORT.md`.

@@ -2,7 +2,7 @@
 # usage: gate.sh <log_dir> [--base-data DIR]
 #
 # V8 gate (V8-0 goal 11.1; M1 11.3 added steps 17-20; V8-PLAY 2.3 added step 21; M1.5 10.4 added steps
-# 22-25; M3 added steps 26-27). Twenty-seven steps, each logged to <log_dir>/<step>.log
+# 22-25; M3 added steps 26-27; M4 added step 28). Twenty-eight steps, each logged to <log_dir>/<step>.log
 # with its start time, duration and exit code in <log_dir>/gate.txt. The
 # gate passes only when every step except `perf` and `nav_bench` (report only) exits 0.
 #    1 fmt               cargo fmt --all -- --check
@@ -41,6 +41,8 @@
 #                        tools/v8/soak_script.json: ledger and reservations exact, 0 deaths, determinism
 #   27 nav_bench         worldsim_perf nav-bench: N = 1,000 with the soak script, movement + nav µs per tick
 #                        against the 600 µs budget, path requests, memo hits, nodes expanded (report only; M3 §4)
+#   28 knowledge         colony_knowledge tests + the loss fixture tools/v8/m4_f10_script.json on seeds 0..8,
+#                        scored by docs/v8/m4/m4_score.py --f10 (8/8: KnowledgeLost, Lost, door orders waiting)
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
@@ -109,6 +111,10 @@ step 26 soak bash tools/v8/soak.sh "$LOG/soak" rust/target/release/worldsim_prob
 grep -E '^SOAK' "$LOG/soak.log" | sed 's/^/   /' >> "$SUMMARY"
 step 27 nav_bench rust/target/release/worldsim_perf nav-bench --out "$LOG/nav_bench/nav_bench.json"
 grep -E '^nav_bench' "$LOG/nav_bench.log" | sed 's/^/   /' >> "$SUMMARY"
+# M4 (goal §11): the knowledge tests and the loss fixture (F10: the doorway's only holder killed at tick 1800 on
+# seeds 0..8 -> KnowledgeLost within 240 ticks, the doorway Lost, door orders waiting on it).
+step 28 knowledge bash -c 'cd rust && cargo test --release -p sim-test --test colony_knowledge -- --test-threads=8 && cd .. && rust/target/release/worldsim_probe --scene colony --seeds 0..8 --days 4 --workers 4 --commands tools/v8/m4_f10_script.json --out "$0/knowledge_f10" > /dev/null && python3 docs/v8/m4/m4_score.py --f10 "$0/knowledge_f10/summary.json" | tee /dev/stderr | grep -q "^F10: 8/8 PASS"' "$LOG"
+grep -E '^F10|test result' "$LOG/knowledge.log" | sed 's/^/   /' >> "$SUMMARY"
 echo "finished $(date '+%Y-%m-%d %H:%M:%S %Z') status $status" >> "$SUMMARY"
 cat "$SUMMARY"
 exit "$status"

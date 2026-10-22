@@ -73,6 +73,12 @@ registration order), then advances the clock. 1,440 ticks = 1 game day
 - **Do** make a decision's goal a tile the agent can stand on (a decision consumes on its tile): out of reach, move it to the nearest reachable tile of its kind or end the walk. *Reason:* a water tile on undug hill killed its drinkers in Part 1 (M3 D10).
 - **Do** check every world for closed basins when passability changes: the colony camp must lie in an open region (`worldgen/colony.rs::open_the_camp`). *Reason:* seed 403 sealed ten founders between hills and the river (M3 D17).
 
+### Knowledge (M4; ADR 0024–0026)
+- **Do** read gating only through the cached practitioner bitset (`Knowledge::practice`, a `u32`) against `knowledge::gates()` masks; never scan entries in a hot path. *Reason:* the bitset is what keeps `JobAssignSystem` within its +40 µs budget at N = 1,000; it is rewritten by every write to the component, so it cannot go stale if all writes go through `Knowledge`'s methods.
+- **Do** ask the gate in every path that advances gated work, not only the job layer: the job assignment, the bill runner and the V7 decision system's construction arm (whose site snapshot leaves gated colony sites out, M4 D22). *Reason:* F10 found doors finished by passers-by after the only door maker died; the job layer's gate was correct, the second builder never asked.
+- **Do** key every knowledge draw on `STREAM_KNOWLEDGE` with the lineage key as subject and the node id or a pair index in `slot`, and run the channels as daily or interval systems (oral at 20:30, observation every 30 ticks, decay every 60, discovery and the aggregate every 240). *Reason:* C4; a keyed draw per node lets one roll be skipped without moving another, and per-tick diffusion would cost every tick.
+- **Don't** let a channel make anything but a fresh entry, a gain or a decay through `Knowledge`'s methods; the aggregate reads, never writes, people. *Reason:* the at-risk and lost states are computed from holders; a side write would desync the bitset and the HUD.
+
 ### The simulation contract (ADR 0016; M1.5)
 - **Do** keep the world state a pure function of `(rules, seed, command log)` (C1): no wall clock, no hash order, no state outside `World`, `SimResources` and the systems' own fields; a saved game must restore every one of them. *Reason:* replay, colony determinism, identity and the save round trip are the gate steps that prove it.
 - **Don't** let the sim crates know pixels, tile sizes, sprites, cameras or Godot (C2); every value a renderer needs is a documented snapshot read (`docs/v8/snapshot_schema.md`, checked by `check_docs_helpers.py schema`). *Reason:* the text renderer (`worldsim_probe --ascii`) is the standing second renderer and must agree with the Godot view (`renderer_agreement`).
@@ -173,12 +179,26 @@ Full step lists with code skeletons: `references/procedures.md`.
 2. Its effect goes in the system that owns the behaviour, reading `rooms::roofed_as(res, tile, role)`; never in `RoomSystem` itself.
 3. Bridge: the role name in `get_rooms`/`get_room_detail`, the override dropdown and its tint in `scripts/world/colony/room_layer.gd`, locale keys; a test in `colony_rooms.rs` for detection, override and the effect.
 
+### L. Add a knowledge node (M4)
+1. Append it to `rust/crates/sim-core/data/colony/knowledge.ron` (file order is the id; never reorder — saves and chronicle values carry ids; at most 32 nodes, the bitset and the 5-bit id): lane, era, threshold, prerequisites, difficulty, discovery conditions, gates, marker weight, seed, name key.
+2. A new condition or gate kind needs its parser arm in `sim_core::colony::knowledge` and its evaluation in `runtime/knowledge/discover.rs` (conditions) or `knowledge::gates()` (gates); a marker weight changes the era denominator (ADR 0026: update the ceiling in tests and docs).
+3. Locale keys (name, description) in `localization/{ko,en}/ui.json` and the tech map's lane/era cell (`scripts/ui/panels/tech_panel.gd`).
+4. Tests in `colony_knowledge.rs`: seeding counts, gating of what it gates, its discovery when its conditions hold.
+
+### M. Add a gate (M4)
+1. A recipe, blueprint or designation that only some may do: add `Recipe(..)`, `Blueprint(..)`, `Workshop(..)` or `Designation(..)` to its node's `gates` (or list it as universal in the pass's DECISIONS).
+2. Check every path that can advance that work (`git grep` the kind): the job assignment's arm, bills, and any V7 arm that works sites or tiles in place; each must test `gates().<kind>(..) & !practice == 0`.
+3. Waiting orders show their reason: `collect_knowledge_waits` (`ffi/knowledge.rs`) covers bills, sites and marks; a new kind of order needs its rows there.
+4. Test: a non-practitioner never takes it (and never advances it in place); a practitioner does; the order waits with the node.
+
 - **Do** keep run-time rates in integer tables (`XP_TABLE`, `SPEED_PERMILLE`, `QUALITY_BONUS_TABLE`, `AXE_PERMILLE` in `sim_core::colony::skills`) and convert data files' floats once at load (`MaterialStats`). *Reason:* C4; a table is reproducible and readable in a test.
 
 ## Lessons
 
 | date | symptom | root cause | fix | source |
 |---|---|---|---|---|
+| 2026-10-23 | the F10 loss fixture's seed 5 finished two door sites after the colony lost the doorway, with no living door maker | an idle adult standing on a delivered site took the V7 decision system's construction arm and `ConstructionSystem` advanced the site; the job layer's gate was correct but this second builder never asked | put the gate in every path that can advance gated work; the decision system's site snapshot leaves out knowledge-gated colony sites (`knowledge::open_to_any_builder`); test with a person kept on the site | `rust/crates/sim-systems/src/runtime/knowledge/mod.rs`; `docs/v8/m4/M4_DECISIONS.md` D22 |
+| 2026-10-23 | knowledge cost 161–212 B a person with 12-byte entries in a `Vec`, over the plan's 160 B | a `Vec`'s 24-B header and spare capacity plus a `u32` tick per entry, for a list that changes only on a rare insert | store a boxed slice of packed 6-byte entries (use day, ‰, an id+source byte, the watched part) and rebuild the slice on insert; measure bytes per person in the probe | `rust/crates/sim-core/src/colony/knowledge.rs`; `docs/v8/m4/M4_DECISIONS.md` D10 |
 | 2026-10-22 | the colony's founders were stuck on hill tiles (seed 5) and a whole colony died of thirst in a hill basin (seed 403) | M3 made undug hill impassable, but V7 worldgen placed founders and camps assuming every hill tile could be walked | when a rule changes passability, re-check worldgen's assumptions: founders on open ground (D9), the camp's region open (D17); test every calibration and evaluation seed's camp region | `rust/crates/sim-systems/src/worldgen/colony.rs`; `docs/v8/m3/M3_DECISIONS.md` D9, D17 |
 | 2026-10-22 | dig jobs churned (1,000+ releases a seed): half-thirsty workers took a 200-tick dig, crossed the thirst line on the way and dropped it | the job layer offered work to people about to need a drink; the decision then released the job | do not offer new work to someone at or past a hunger or thirst seek threshold (`jobs::assign`, D16); read the probe's churn report by job kind after adding a long job | `rust/crates/sim-systems/src/runtime/jobs/assign.rs`; `docs/v8/m3/M3_DECISIONS.md` D16 |
 | 2026-06-22 | two engines differing only in HashMap seeds diverged (query order at tick 9, an inventory at 489, the run at 2251) | `AgentDecisionSystem` iterated a `HashSet` and did a structural `insert_one` per entity; archetype dense order is insertion order, so hash order permuted every later query | collect `(AgentId, Entity)`, sort by `AgentId`, then insert; new collections are `BTreeMap`/`BTreeSet` | `c03ae2bc`; `v7-final-art:docs/revitalize/RNG_INVENTORY.md` §2; `v7-final-art:docs/revitalize/DECISIONS.md` L365 |

@@ -1,6 +1,6 @@
 ---
 name: worldsim-testing
-description: Use when testing or verifying any WorldSim change, before claiming "no behaviour change", "deterministic", "faster" or "done" — identity (tools/v8/identity.sh), determinism, the 27-step gate (tools/v8/gate.sh), the economy soak, perf comparison (tools/v8/perf.sh), test layout by domain on sim_test::baseline_engine, and how to write an assertion that can fail.
+description: Use when testing or verifying any WorldSim change, before claiming "no behaviour change", "deterministic", "faster" or "done" — identity (tools/v8/identity.sh), determinism, the 28-step gate (tools/v8/gate.sh), the economy soak, perf comparison (tools/v8/perf.sh), test layout by domain on sim_test::baseline_engine, and how to write an assertion that can fail.
 ---
 
 # WorldSim testing
@@ -71,7 +71,7 @@ Longer versions (assertion recipes, perf and contention protocol):
 3. For an order-sensitive fix, run the twin over many fresh engines (32) so hash-order luck cannot pass it.
 
 ### C. The gate (`tools/v8/gate.sh <log_dir> [--base-data DIR]`)
-Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration and exit code is `<log_dir>/gate.txt`. The gate passes only when every step except `perf` exits 0 (20 steps since M1, 21 since V8-PLAY, 25 since M1.5, 27 since M3; `nav_bench` is report only too).
+Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration and exit code is `<log_dir>/gate.txt`. The gate passes only when every step except `perf` exits 0 (20 steps since M1, 21 since V8-PLAY, 25 since M1.5, 27 since M3, 28 since M4; `nav_bench` is report only too).
 
 | # | step | checks |
 |---|---|---|
@@ -100,8 +100,9 @@ Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration 
 | 23 | `renderer_agreement` | `tools/v8/renderer_agreement.sh`: the text renderer's people = the Godot agent layer's (seed 100, U-script, tick 900; C2) |
 | 24 | `save_roundtrip` | `tools/v8/save_roundtrip.sh`: `save_load.rs` (colony seeds 0–7 save → load → tick = tick; C1) |
 | 25 | `bench` | `tools/v8/bench.sh`: the standing benchmark against `docs/perf/PERF_LEDGER.md` (> +10 % fails; ceilings report only; C3) |
-| 26 | `soak` | `tools/v8/soak.sh`: the economy soak fixture, colony seeds 0..4 × 20 days with `tools/v8/soak_script.json` (stone, flint, workshops, bills, axes, a house, a storehouse, a dug pocket): ledger and reservations exact every tick, 0 deaths, determinism (M3 goal 3.4) |
+| 26 | `soak` | `tools/v8/soak.sh`: the economy soak fixture, colony seeds 0..4 × 20 days with `tools/v8/soak_script.json` (stone, flint, workshops, bills, axes, a house, a storehouse, a dug pocket; since M4 also 0 `KnowledgeLost`): ledger and reservations exact every tick, 0 deaths, determinism (M3 goal 3.4) |
 | 27 | `nav_bench` | `worldsim_perf nav-bench`: N = 1,000 with the soak script; movement + pathfinding µs per tick against the 600 µs budget, requests, memo hits, nodes expanded (report only) |
+| 28 | `knowledge` | `cargo test --release -p sim-test --test colony_knowledge` + the loss fixture `tools/v8/m4_f10_script.json` (seeds 0..8, 4 days) scored by `docs/v8/m4/m4_score.py --f10`: 8/8 lose the doorway within 240 ticks of the kill, end Lost, and leave door orders waiting on it |
 
 1. Commit first; run the gate on that head; do not touch the tree until it finishes (it records `head` and `dirty` in `gate.txt`).
 2. Read `gate.txt`, not only the exit code: test counts, perf WARN lines, determinism line.
@@ -135,6 +136,12 @@ Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration 
 2. Run it on every pass's candidate (the gate does), not only on M3 code: a change anywhere in the job layer shows up first as a ledger hole or a death in a long scripted run.
 3. A script entry may wait (`"after": "workshop"`, `"after": "pocket_dug"`) and renew (`"every_days"`); its resolver picks tiles from the live world (`rust/crates/sim-test/src/probe/colony.rs`). Check a resolver's spot with the same predicates the command applies (people, reservations, other buildings' doors and beds — DECISIONS M3 D17); a resolver that picks a spot the command refuses in part measures the script, not the sim.
 4. Read the failing seeds before believing a bar: `docs/v8/m3/m3_score.py --out appendix.json` lists per-seed values; a bar that fails on a few seeds usually has one cause per seed, found by rendering that seed (`worldsim_probe --ascii --rect`).
+
+### H. Knowledge fixtures (M4)
+1. Unit-level knowledge tests start from `job_world_m4` (the M2 job world under `ColonyRule::M4`, knowledge systems not registered, so nothing spreads or fades by itself) and give people nodes with `know(engine, e, names, ‰)`; channel tests register only the systems they test (`knowledge_world(seed, systems)`) and pin the agents in place.
+2. Loss: `Command::DebugKill { agent }` (a probe and test order, logged and replayed like every command) kills one person through the normal death path; the script resolver `holders_of` kills every holder of a node. Assert the chronicle `KnowledgeLost` within one aggregate interval (240 ticks), the node's state Lost, and a waiting order in `collect_knowledge_waits`.
+3. A gate test must keep a non-practitioner on the work in every way the world can advance it — a job and the V7 arms in place (stand the person on the site) — and assert progress 0; then make them a practitioner and assert the work completes (D22).
+4. Score scripted runs with `docs/v8/m4/m4_score.py` (`--out` for the per-seed appendix; `--f10` for the loss fixture); the bars are registered in its docstring before the first run.
 
 ## Lessons
 

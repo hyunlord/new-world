@@ -3,7 +3,7 @@
 #
 # The economy soak fixture (M3 goal 3.4; gate step `soak`): the colony probe on seeds 0..4 for 20 days with
 # tools/v8/soak_script.json and --check-determinism, then checks every seed's summary: 0 ledger and 0
-# reservation violation ticks, 0 deaths of any cause, every scripted workshop built and crafts made (so the
+# reservation violation ticks, 0 deaths of any cause, 0 KnowledgeLost (M4), every scripted workshop built and crafts made (so the
 # check cannot pass on an idle colony). Prints SOAK PASS or SOAK FAIL lines.
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
@@ -30,10 +30,16 @@ for s in seeds:
         bad.append(f"seed {sid}: {deaths} deaths {s['deaths']}")
     if s["workshops_built"] < 2 or s["crafts_done"] == 0 or s["trees_felled"] == 0:
         bad.append(f"seed {sid}: idle colony (workshops {s['workshops_built']}, crafts {s['crafts_done']}, felled {s['trees_felled']})")
-    print(f"seed {sid}: crafts {s['crafts_done']} felled {s['trees_felled']} workshops {s['workshops_built']} deaths {deaths} alive {s['alive_end']}")
+    # M4 (goal §11): with every scripted order kept running, nothing is lost in 20 days.
+    lost = s.get("m4", {}).get("lost")
+    if lost is None:
+        bad.append(f"seed {sid}: no m4 block")
+    elif lost:
+        bad.append(f"seed {sid}: KnowledgeLost {lost}")
+    print(f"seed {sid}: crafts {s['crafts_done']} felled {s['trees_felled']} workshops {s['workshops_built']} deaths {deaths} alive {s['alive_end']} lost {len(lost or [])}")
 for b in bad:
     print("SOAK FAIL", b)
 if bad:
     sys.exit(1)
-print("SOAK PASS (4 seeds x 20 days: ledger exact, reservations exact, 0 deaths, determinism)")
+print("SOAK PASS (4 seeds x 20 days: ledger exact, reservations exact, 0 deaths, 0 KnowledgeLost, determinism)")
 PY

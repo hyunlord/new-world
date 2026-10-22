@@ -19,10 +19,10 @@ sim-core  ←  sim-engine  ←  sim-systems  ←  sim-bridge  (GDExtension cdyli
 
 | crate | path | role |
 |---|---|---|
-| sim-core | `rust/crates/sim-core/src/` | data only: ECS components (`components/`), rules (`rules/`: `WorldRules`, one file per sub-rule group, `baseline.rs`), keyed RNG (`rng.rs`), per-world hidden parameters (`variety.rs`), causal log (`causal/`), chronicle (`chronicle.rs`), influence grid (`influence/`), tile grid (`tile/`), material model (`material/`, data for M2), the M1 colony model (`colony/`: items and the log ledger, trees, designations, zones, blueprints, reservations, commands, jobs), the spatial index (`spatial.rs`), the M3 cost map, regions and A* (`nav.rs`) and room detection (`rooms.rs`) |
+| sim-core | `rust/crates/sim-core/src/` | data only: ECS components (`components/`), rules (`rules/`: `WorldRules`, one file per sub-rule group, `baseline.rs`), keyed RNG (`rng.rs`), per-world hidden parameters (`variety.rs`), causal log (`causal/`), chronicle (`chronicle.rs`), influence grid (`influence/`), tile grid (`tile/`), material model (`material/`, data for M2), the M1 colony model (`colony/`: items and the log ledger, trees, designations, zones, blueprints, reservations, commands, jobs), the spatial index (`spatial.rs`), the M3 cost map, regions and A* (`nav.rs`) and room detection (`rooms.rs`), the M4 knowledge model (`colony/knowledge.rs`; data `data/colony/knowledge.ron`, `KnowledgeRule` in `rules/knowledge.rs`) |
 | sim-engine | `rust/crates/sim-engine/src/lib.rs` | `SimEngine` (hecs `World` + `SimResources` + the priority-sorted system list), the `RuntimeSystem` trait, `Tallies`, the tick loop and its profiler |
-| sim-systems | `rust/crates/sim-systems/src/` | every system (`runtime/<domain>/`), their registration (`lib.rs` `register_default_runtime_systems`), the command entry point (`commands.rs`: `apply_command`, `submit`), the job layer (`runtime/jobs/`) and world generation (`worldgen/`: `WorldGenConfig::baseline`, `WorldGenConfig::colony` with `worldgen/colony.rs`, `build_world_with`) |
-| sim-bridge | `rust/crates/sim-bridge/src/ffi/` | the Godot class `WorldSimNode` (`#[func]` methods), pure `collect_*` readers behind them, the live engine builder (`build_game_engine`, the colony world), M1 orders and colony reads (`colony.rs`) |
+| sim-systems | `rust/crates/sim-systems/src/` | every system (`runtime/<domain>/`), their registration (`lib.rs` `register_default_runtime_systems`), the command entry point (`commands.rs`: `apply_command`, `submit`), the job layer (`runtime/jobs/`; apprenticeship in `jobs/teach.rs`), the M4 knowledge systems (`runtime/knowledge/`) and world generation (`worldgen/`: `WorldGenConfig::baseline`, `WorldGenConfig::colony` with `worldgen/colony.rs`, `build_world_with`) |
+| sim-bridge | `rust/crates/sim-bridge/src/ffi/` | the Godot class `WorldSimNode` (`#[func]` methods), pure `collect_*` readers behind them, the live engine builder (`build_game_engine`, the colony world), M1 orders and colony reads (`colony.rs`), economy (`economy.rs`), space (`space.rs`), knowledge (`knowledge.rs`) |
 | sim-test | `rust/crates/sim-test/` | `worldsim_probe` (headless measurement, identity; `--scene colony` with `--commands` for scripted orders and replay), `worldsim_perf` (tick timing), `worldsim_systems` (the live system list), integration tests in `tests/` |
 
 Other folders: `scenes/main.tscn` (the only scene), `scripts/` (GDScript,
@@ -213,7 +213,7 @@ Reads/writes come from each file's `//!` header.
 
 All methods live on the one Godot class `WorldSimNode` (signal `world_reset`
 after a reset or a load). The exact exported list is checked by gate step 13, currently
-`python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_m3.txt` (M3; M2 checked `docs/v8/bridge_api_m2.txt`, M1.5 `docs/v8/bridge_api_m1_5.txt`, M1 `docs/v8/bridge_api_m1.txt`, V8-0 `docs/v8/bridge_api_v7_final.txt` minus `docs/v8/bridge_api_removed.txt`)
+`python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_m4.txt` (M4, 75 items; M3 checked `docs/v8/bridge_api_m3.txt`, M2 `docs/v8/bridge_api_m2.txt`, M1.5 `docs/v8/bridge_api_m1_5.txt`, M1 `docs/v8/bridge_api_m1.txt`, V8-0 `docs/v8/bridge_api_v7_final.txt` minus `docs/v8/bridge_api_removed.txt`)
 (a pass that changes the API updates this command; section 6).
 
 | concern | methods |
@@ -229,10 +229,11 @@ after a reset or a load). The exact exported list is checked by gate step 13, cu
 | colony reads (M1) | `can_place_blueprint`, `get_colony_versions` (poll), `get_trees`, `get_colony_overlay`; the agent snapshot's `jobs`, `carry_kinds`, `carry_counts` columns |
 | economy (M2) | orders `cmd_designate_quarry`, `cmd_add_bill`, `cmd_remove_bill`, `cmd_set_bill_mode`, `cmd_move_bill`, `cmd_set_bill_suspended`, `cmd_set_work_priority` (names parsed in `ffi/economy.rs`; logged like every order); reads `get_workshops`, `get_work_priorities`, `get_recipes`, `get_agent_economy(agent_id)`; `get_colony_overlay`'s `designation_kinds`, `node_*`, `item_qualities`; `cmd_place_blueprint` kinds `knapping_spot`, `wood_bench`, `drying_rack` |
 | built space and rooms (M3) | orders `cmd_place_line`, `cmd_place_rect`, `cmd_designate_dig`, `cmd_designate_deconstruct`, `cmd_set_room_role` (`ffi/space.rs`; `cmd_place_blueprint` kinds `log_wall`, `stone_wall`, `door`, `packed_floor`, `bedroll`); reads `get_place_preview` (drag ghost with per-tile reasons), `get_space` (walls, doors, floors, dug tiles), `get_rooms`, `get_room_detail(room_id)`; `get_colony_versions`' `rooms_version`; `get_colony_overlay`'s `item_covered`; `get_agent_economy`'s `bed`, `bed_room` |
+| knowledge (M4) | orders `cmd_order_teach(teacher, learner, node)`, `cmd_cancel_teach(order)`, `cmd_designate_clay` (`ffi/knowledge.rs`; `cmd_place_blueprint` kinds `grinding_stone`, `pottery_bench`; recipes `knap_fine_blade`, `grind_axe`, `form_pot`, `fire_pot`); reads `get_tech` (per node state, holders, practitioners, names; era progress ‰ and label; at-risk count), `get_tech_node(node)` (holders with proficiency, learners, discovery conditions, gates), `get_agent_knowledge(agent_id)` (entries with proficiency, source, last use, practitioner flag), `get_teach_orders`, `get_knowledge_waits` (bills, sites and marks waiting for a practitioner, with the missing node); `get_space`'s `ford_xs`, `ford_ys` |
 | calendar and ages (M1.5) | `get_time_snapshot`'s `year_index`, `season_index`, `day_of_year`, `days_per_year`; `get_world_info`'s `ticks_per_year`; the agent snapshot's `ages_years`, `infants`, `pregnant_days` columns |
 
 Every getter, key, type, id space and row order is documented in
-`docs/v8/snapshot_schema.md` (schema version 3, M3); the gate step
+`docs/v8/snapshot_schema.md` (schema version 4, M4); the gate step
 `schema_docs` (`python3 tools/v8/check_docs_helpers.py schema .`) fails on any
 getter or key missing there (ADR 0016 C2).
 
@@ -403,3 +404,46 @@ effects: beds (agent/beds.rs: roofed bedroom first, reachable only) · no night 
 - **Measurement**: `worldsim_perf nav-bench` (gate step 27, report only; budget 600 µs of movement per tick at
   N = 1,000), the soak (`tools/v8/soak.sh`, gate step 26: 4 seeds × 20 days, ledger, reservations, deaths,
   determinism), the probe's `m3` block (`rust/crates/sim-test/src/probe/space.rs`).
+
+## 11. Knowledge and technology (M4, ADR 0024–0026)
+
+What people know, how it moves, and what the settlement is observed to know, under `ColonyRule::knowledge`
+(`KnowledgeRule::M4`; `None` in the baseline and in the M1–M3 rules, where every system below returns at once):
+
+```
+data: sim-core/data/colony/knowledge.ron (24 nodes) ──► knowledge::defs() ──► knowledge::gates()
+   │  (recipe / blueprint / designation / channel / lore masks, built once)
+   ▼
+worldgen/colony.rs seed_founders (STREAM_KNOWLEDGE; prereq-aware) ──► Knowledge component per person
+   │  (6-byte entries + cached practitioner bitset `practice`; saved, format v4)
+   ▼
+gate: JobAssignSystem 124 (ctx.practice covers the job's mask, else an unmemoised gated search; bills, sites and
+   │  marks wait) · BillSystem (runnable only with a practitioner) · AgentDecisionSystem's site snapshot leaves out
+   │  gated colony sites (D22) · craft quality capped by QUAL_CAP[proficiency / 100]; a gated job done = use (+2 ‰)
+   ▼
+channels: OralTransmissionSystem 160 (20:30 daily: gathering within 16 tiles; rehearsal; one keyed lesson a listener)
+   │  · ObservationSystem 161 (every 30: +5 ‰ near gated work, below threshold) · apprenticeship (OrderTeach →
+   │  jobs/teach.rs Teach/Learn pair, 60-tick sessions) · KnowledgeDecaySystem 162 (every 60: after 6 unused days,
+   │  ‰ per hour by source to a floor) · DiscoverySystem 163 (every 240: curious holders of the prerequisites, the
+   │  node's settlement conditions, keyed 1 in 40 / 90 / 200)
+   ▼
+TechAggregateSystem 164 (every 240) ──► ColonyState.tech (per node: holders, practitioners, state, names; era ‰)
+   │  ──► chronicle KnowledgeAtRisk / KnowledgeLost / KnowledgeLearned / KnowledgeDiscovered
+   ▼
+bridge ffi/knowledge.rs (get_tech, get_tech_node, get_agent_knowledge, get_teach_orders, get_knowledge_waits)
+   ──► HUD era line and ⚠ badge, T tech map, K teach dialog, the inspector's 지식 tab, waiting lines
+```
+
+- **The practitioner bitset** (`Knowledge::practice`, `u32`, bit i = proficiency ≥ node i's threshold) is rewritten by
+  every write to the component (`set`, `gain`, `use_mask`, decay); gating, the aggregate and the waits read only it.
+  A new node must keep the map at ≤ 32 nodes (ids in 5 bits).
+- **Chains**: clay banks (`NodeKind::ClayBank`, worldgen near rivers, `STREAM_CLAY`) → `Designation::ClayPit` →
+  `JobKind::DigClay` (Clay) → `pottery_bench` `form_pot` (RawPot) → the hearth's `HearthFire` workshop `fire_pot`
+  (ClayPot); ground stone: `grinding_stone` `grind_axe` (GroundAxe, 120 chops, faster); stone axes break after 40
+  chops (`EconomyRule::tools_break`, chronicle `ToolBroke`).
+- **Fords**: the tile grid's `ford` column (cost 30), placed at worldgen on the hearth's shortest way to the largest
+  forest cut off by a river within 40 tiles (M4 DECISIONS D5).
+- **Decision seam**: `decision/system.rs` +4 −1 in M4 (the site snapshot's gate; the budget was +20).
+- **Measurement**: the probe's `m4` block (`rust/crates/sim-test/src/probe/knowledge.rs`), `docs/v8/m4/m4_score.py`
+  (F1–F9, F11; `--f10` for the loss fixture `tools/v8/m4_f10_script.json`), the bench's `knowledge_us_per_tick` and
+  `job_assign_us_per_tick`, `tools/v8/m4_u_script.json`; tests `rust/crates/sim-test/tests/colony_knowledge.rs`.

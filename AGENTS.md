@@ -48,7 +48,7 @@ Codex reads the same skills through `.agents/skills/<name>` (symlinks).
 ## The gate
 
 ```bash
-bash tools/v8/gate.sh <log_dir>        # 27 steps; every step except perf and nav_bench must pass
+bash tools/v8/gate.sh <log_dir>        # 28 steps; every step except perf and nav_bench must pass
 ```
 
 Steps: fmt, bridge build, Godot import, tests (debug, release), clippy
@@ -56,7 +56,7 @@ Steps: fmt, bridge build, Godot import, tests (debug, release), clippy
 identity, determinism, perf (report only), bridge API, docs check,
 inventory closure, Python unit tests, M1 tests, colony determinism,
 command replay, `.uid` check, play check (`tools/v8/test_play.sh`), and since M1.5 (ADR 0016) snapshot schema
-docs, renderer agreement, save round trip and the standing benchmark against `docs/perf/PERF_LEDGER.md`, and since M3 the economy soak (`tools/v8/soak.sh`) and the nav benchmark (report only). Rebuild the bridge (`cargo build -p
+docs, renderer agreement, save round trip and the standing benchmark against `docs/perf/PERF_LEDGER.md`, since M3 the economy soak (`tools/v8/soak.sh`, since M4 also 0 `KnowledgeLost`) and the nav benchmark (report only), and since M4 the knowledge step (the knowledge tests and the F10 loss fixture). Rebuild the bridge (`cargo build -p
 sim-bridge`) before any Godot run — `cargo test` does not refresh the library
 Godot loads.
 
