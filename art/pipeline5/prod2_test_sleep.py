@@ -4,18 +4,18 @@
 # ///
 # How to run: python -m pytest art/pipeline5/prod2_test_sleep.py
 """PROD2 body-length normalization and age-specific acceptance regressions."""
-from dataclasses import replace
 import json
+from dataclasses import replace
 from pathlib import Path
 
 import numpy as np
 import pytest
 from PIL import Image, ImageDraw
 
-from art.pipeline5.sheet_geometry import normalize_panel
-from art.pipeline5.whole_checks import check_whole
 from art.pipeline5.prod1_process import process
 from art.pipeline5.prod1_test_process import fixture_request, passing_judge
+from art.pipeline5.sheet_geometry import normalize_panel
+from art.pipeline5.whole_checks import check_whole
 
 
 @pytest.mark.parametrize(('age', 'target'), [('adult', 56), ('child', 40)])

@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://bmqg2ep0twr6a"]
+
 [ext_resource type="Script" path="res://crowd.gd" id="1"]
+
 [node name="Prod2Crowd" type="Node2D"]
 script = ExtResource("1")
