@@ -252,6 +252,94 @@ fn a_non_practitioner_is_never_given_a_gated_job() {
     assert_eq!(k, Some(606));
 }
 
+/// Goal 3.2 and F10 (M4 DECISIONS D22): a gated site is built by its
+/// practitioners only. In the colony, after the only door maker dies, an adult
+/// standing idle on a delivered door site (the V7 construction arm used to work
+/// any co-located site) leaves it at progress 0; once that adult practises the
+/// doorway, the door gets built.
+#[test]
+fn a_door_site_is_never_built_by_a_passer_by_without_the_doorway() {
+    let mut engine = sim_test::colony_engine(5);
+    tick_checked(&mut engine);
+    let holder = engine.resources.colony.tech.states[usize::from(id("doorway"))].names[0];
+    assert!(submit(&mut engine, Command::DebugKill { agent: holder }).accepted);
+    let camp = sim_systems::worldgen::colony::hearth(&engine.resources).expect("hearth");
+    let door = (0..8u32)
+        .flat_map(|d| {
+            [
+                (camp.0 + 2 + d, camp.1 + 3),
+                (camp.0.saturating_sub(2 + d), camp.1 + 3),
+            ]
+        })
+        .find(|t| {
+            sim_systems::commands::check_space(
+                &engine.resources,
+                &Default::default(),
+                BlueprintKind::Door,
+                *t,
+            )
+            .is_ok()
+        })
+        .expect("a door spot near the camp");
+    let r = submit(
+        &mut engine,
+        Command::PlaceBlueprint {
+            kind: BlueprintKind::Door,
+            x: door.0,
+            y: door.1,
+        },
+    );
+    assert!(r.accepted, "{r:?}");
+    let site = |engine: &SimEngine| {
+        sim_systems::runtime::jobs::items::colony_sites(&engine.world)
+            .get(&door)
+            .map(|v| (v.needs.complete(), v.progress))
+    };
+    let (x0, y0, x1, y1) =
+        sim_test::probe::colony::stockpile_block(&engine, 4, 3).expect("a stockpile spot");
+    assert!(submit(&mut engine, Command::AddStockpile { x0, y0, x1, y1 }).accepted);
+    drop_items(
+        &mut engine,
+        (x0, y0),
+        ItemSpec::raw(ItemKind::Log, None),
+        10,
+    );
+    // Hauling is not gated: the logs arrive.
+    let used = run_until(&mut engine, 4_000, |e| site(e).is_some_and(|s| s.0));
+    assert!(used < 4_000, "the door's logs were delivered");
+    // The lowest-id living adult stands on it whenever it holds no job.
+    let a = engine
+        .world
+        .query::<&Agent>()
+        .without::<&Child>()
+        .iter()
+        .min_by_key(|(_, ag)| ag.id)
+        .map(|(e, _)| e)
+        .expect("an adult");
+    let mut stood = 0;
+    for _ in 0..720 {
+        if engine.world.get::<&Job>(a).is_err() {
+            if let Ok(mut p) = engine.world.get::<&mut sim_core::components::Position>(a) {
+                (p.x, p.y) = door;
+                stood += 1;
+            }
+        }
+        tick_checked(&mut engine);
+        assert_eq!(
+            site(&engine),
+            Some((true, 0)),
+            "nobody but a door maker works it"
+        );
+    }
+    // Observed 720 of 720 ticks without a job on seed 5; the arm had its chance.
+    assert!(stood > 100, "stood {stood}");
+    know(&mut engine, a, &["doorway"], 600);
+    let used = run_until(&mut engine, 4_000, |e| site(e).is_none());
+    assert!(used < 4_000, "the door maker built it");
+    let grid = &engine.resources.tile_grid;
+    assert!(grid.is_door(grid.idx(door.0, door.1)));
+}
+
 /// Goal 3.2: craft quality = min(30 + 3·level + bonus, QUAL_CAP[p / 100]).
 /// A level-20 knapper at 350 ‰ never makes a blade above 45; at 1,000 ‰ the
 /// same knapper makes blades above it.

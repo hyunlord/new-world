@@ -305,7 +305,10 @@ impl RuntimeSystem for AgentDecisionSystem {
             let mut sites = HashMap::new();
             let mut q = world.query::<&ConstructionSite>();
             for (e, site) in q.iter() {
-                if site.is_complete() {
+                // M4: a knowledge-gated colony site is left to its practitioners' jobs.
+                if site.is_complete()
+                    || !crate::runtime::knowledge::open_to_any_builder(world, resources, e)
+                {
                     continue;
                 }
                 sites.insert((site.position.x, site.position.y), (e, site.blueprint));

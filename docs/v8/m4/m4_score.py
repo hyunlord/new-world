@@ -2,6 +2,7 @@
 """Score an M4-U probe run (docs/v8/m4/M4_GOAL.md §10, bars F1–F9 and F11).
 
 usage: m4_score.py SUMMARY_JSON [--out APPENDIX_JSON]
+       m4_score.py --f10 SUMMARY_JSON   (the loss fixture, tools/v8/m4_f10_script.json, seeds 0..8, 4 days)
 
 Reads the colony probe's summary.json (`worldsim_probe --scene colony --commands tools/v8/m4_u_script.json
 --days 36`), whose per-seed `m4` block is written by rust/crates/sim-test/src/probe/knowledge.rs. A day d means the
@@ -21,6 +22,9 @@ before the first evaluation run (M4 DECISIONS D18):
   is at least 8.
 - F9: era progress > 0 at day 36 when F6 or F7 passed, and never above 643 ‰.
 - F11: 0 ledger and reservation violation ticks, 0 deaths.
+- F10 (`--f10`): the script kills the doorway's holders at tick 1800; `KnowledgeLost` doorway at a tick in
+  [1800, 2040], doorway Lost (status 4) at the end, and at least one door site waiting on the doorway (`waits_end`
+  kind 1). The HUD and chronicle lines for it are checked by tools/v8/m4_ui_test.gd.
 """
 import json
 import sys
@@ -95,7 +99,28 @@ def score_seed(s):
     return out
 
 
+KILL_TICK = 1800
+
+
+def score_f10(s):
+    m = s["m4"]
+    lost = [t for t, n, _ in m["lost"] if n == "doorway" and KILL_TICK <= t <= KILL_TICK + 240]
+    status = m["status_end"][m["node_names"].index("doorway")]
+    doors = [w for w in m["waits_end"] if w[0] == 1 and w[3] == "doorway"]
+    ok = bool(lost) and status == 4 and bool(doors)
+    return ok, {"lost_tick": lost[0] if lost else None, "status_end": status, "door_waits": len(doors)}
+
+
 def main(argv):
+    if argv and argv[0] == "--f10":
+        seeds = json.load(open(argv[1]))["seeds"]
+        got = 0
+        for s in seeds:
+            ok, detail = score_f10(s)
+            got += ok
+            print(f"seed {s['seed']}: {'PASS' if ok else 'FAIL'} {detail}")
+        print(f"F10: {got}/{len(seeds)} {'PASS' if got == len(seeds) and seeds else 'FAIL'}")
+        return 0
     if not argv:
         print(__doc__, file=sys.stderr)
         return 2

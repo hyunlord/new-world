@@ -287,3 +287,22 @@ Raw data lives in `/Users/rexxa/work/m4-data/` (`$DATA`), outside the repository
 - `tools/v8/m3_ui_test.gd` (M3's record, not a gate step) now fails one check, `house_room`: its house is built of
   stone walls, which M4 gates behind stone walling (a Neolithic node nobody knows at the start), so the 20 wall sites
   wait. Kept as M3's record; `m4_ui_test.gd` covers the build menu with gating.
+
+## D22 — F10 found a gating hole: the V7 construction arm built doors nobody knew
+
+- The first F10 fixture run (`tools/v8/m4_f10_script.json`, seeds 0–7, build `84f336a5`) lost the doorway on
+  8/8 seeds 120 ticks after the kill (the aggregate's next interval), but seed 5 ended with no door order waiting:
+  both of its door sites (the house's, placed at tick 360, and the storehouse's, placed at the kill) were finished
+  at ticks ~2,200–2,880 with no living practitioner.
+- Cause, traced tick by tick: an adult with no job standing on a delivered site took the V7 decision system's
+  fourth cascade step ("a co-located active ConstructionSite exists"), entered `Consuming{ConstructionSite}`, and
+  `ConstructionSystem` advanced the site. A door site is the walkway through its wall ring, so people stand on it.
+  The job layer's gate (`assign.rs`, Build) was right; this second builder never asked.
+- Fix: `knowledge::open_to_any_builder` — the decision system's site snapshot leaves out every colony site whose
+  blueprint knowledge gates (M4 rule only), so such a site is built only by a practitioner's `Build` job.
+  `decision/system.rs` +4 −1 (the M4 seam budget is +20). Baseline has no colony sites (identity unaffected, checked).
+  Test `a_door_site_is_never_built_by_a_passer_by_without_the_doorway` (colony seed 5: kill the door maker, deliver
+  a door site, keep an adult idle on it for 720 ticks → progress 0; then that adult practises the doorway → the door
+  is built) fails without the fix (progress moves) and passes with it.
+- The held-out result of record is the pre-fix run (`84f336a5`); the fixed build is measured again on the same
+  held-out seeds and both are reported (M4_EVALUATION.md). The fix was not tuned on those seeds.

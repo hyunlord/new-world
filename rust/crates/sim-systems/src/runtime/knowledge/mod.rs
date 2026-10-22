@@ -131,6 +131,18 @@ pub fn proficiency_of(world: &World, entity: Entity, mask: u32) -> u16 {
         .unwrap_or(1000)
 }
 
+/// Whether the V7 co-located builder (the decision system's construction arm,
+/// worked by `ConstructionSystem`) may work the site `entity`. Not when
+/// knowledge gates its blueprint: such a site is built only through a
+/// practitioner's `Build` job (M4 DECISIONS D22 — the F10 fixture found doors
+/// finished by people walking through the doorway after the doorway was lost).
+pub fn open_to_any_builder(world: &World, res: &SimResources, entity: Entity) -> bool {
+    rule(res).is_none()
+        || !world
+            .get::<&sim_core::colony::ColonySite>(entity)
+            .is_ok_and(|s| sim_core::colony::knowledge::gates().build(s.kind) != 0)
+}
+
 /// Whether some living adult practises every node of `mask` (a gated order can run).
 pub fn anyone_practises(world: &World, mask: u32) -> bool {
     if mask == 0 {
