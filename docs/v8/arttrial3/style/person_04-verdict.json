@@ -1,0 +1,36 @@
+{
+  "candidate": "art/character/stills/person_04.png",
+  "sha256": "1321a442eb5d86cae70c69496870f09437f3df328a1981ff3d68a67f9fe99106",
+  "family": "person",
+  "metrics": {
+    "edge_density": 0.1496438055895123,
+    "saturation_q25": 0.17050299425826057,
+    "saturation_q75": 0.24779282432796934,
+    "stroke_q25": 0.0,
+    "stroke_q50": 0.0,
+    "stroke_q75": 0.0,
+    "stroke_q90": 0.0,
+    "wash_flatness": 0.020185330823113783,
+    "foreground_pixels": 25567
+  },
+  "numeric_checks": {
+    "edge_density": true,
+    "saturation_q25": false,
+    "saturation_q75": false,
+    "stroke_q25": false,
+    "stroke_q50": false,
+    "stroke_q75": false,
+    "stroke_q90": false,
+    "wash_flatness": true
+  },
+  "numeric_pass": false,
+  "model_scores": {
+    "medium": 3,
+    "line": 2,
+    "light": 3,
+    "palette": 2,
+    "sentence": "The rear figure reads as lightly washed hide with a crown highlight, yet blurred contour hierarchy and gray-beige values diverge from the bold warm person v2 reference pair."
+  },
+  "model_status": "SAME_FAMILY_VERIFIED",
+  "passed": false
+}

@@ -7,7 +7,6 @@ Layers: 87. Exhaustive valid-input combinations: 603.
 Sleep coverage: bare body only on96x64; top/hair/item/carry attributes are not covered in sleep.
 
 Synthetic checks do not establish art, readability, provenance, or FPS acceptance.
-
 - body_E_idle: PASS
 - body_E_walk_a: PASS
 - body_E_walk_b: PASS

@@ -1,0 +1,1062 @@
+{
+  "status": "NOT_VERIFIED_MOVING_PLAYBACK",
+  "method": "Two independent blind decoded-sequence proxies; no route or answer key shown before response",
+  "results": [
+    {
+      "reviewer": 1,
+      "zoom": 1,
+      "activity_correct": 9,
+      "activity_total": 12,
+      "attributes_correct": 32,
+      "attributes_total": 36,
+      "proxy_threshold_met": true,
+      "actual_timed_playback_observed": false,
+      "details": [
+        {
+          "file": "01_1x.gif",
+          "expected": {
+            "activity": "idle",
+            "carried_object": "none",
+            "top": "furcloak",
+            "hair": "longtied"
+          },
+          "observed": {
+            "activity": "idle",
+            "carried_object": "none",
+            "top": "furcloak",
+            "hair": "longtied"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "02_1x.gif",
+          "expected": {
+            "activity": "walking",
+            "carried_object": "none",
+            "top": "furcloak",
+            "hair": "short"
+          },
+          "observed": {
+            "activity": "walking",
+            "carried_object": "none",
+            "top": "furcloak",
+            "hair": "short"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "03_1x.gif",
+          "expected": {
+            "activity": "chopping",
+            "carried_object": "axe",
+            "top": "hidewrap",
+            "hair": "longtied"
+          },
+          "observed": {
+            "activity": "idle",
+            "carried_object": "none",
+            "top": "hidewrap",
+            "hair": "longtied"
+          },
+          "correct": {
+            "activity": false,
+            "carried_object": false,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "04_1x.gif",
+          "expected": {
+            "activity": "carrying",
+            "carried_object": "log",
+            "top": "hidewrap",
+            "hair": "short"
+          },
+          "observed": {
+            "activity": "carrying",
+            "carried_object": "log",
+            "top": "hidewrap",
+            "hair": "short"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "05_1x.gif",
+          "expected": {
+            "activity": "sleeping",
+            "carried_object": "none",
+            "top": "none",
+            "hair": "bald"
+          },
+          "observed": {
+            "activity": "sleeping",
+            "carried_object": "none",
+            "top": "none",
+            "hair": "bald"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "06_1x.gif",
+          "expected": {
+            "activity": "walking",
+            "carried_object": "none",
+            "top": "hidewrap",
+            "hair": "longtied"
+          },
+          "observed": {
+            "activity": "idle",
+            "carried_object": "none",
+            "top": "hidewrap",
+            "hair": "longtied"
+          },
+          "correct": {
+            "activity": false,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "07_1x.gif",
+          "expected": {
+            "activity": "carrying",
+            "carried_object": "log",
+            "top": "hidewrap",
+            "hair": "short"
+          },
+          "observed": {
+            "activity": "carrying",
+            "carried_object": "log",
+            "top": "hidewrap",
+            "hair": "unknown"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": false
+          }
+        },
+        {
+          "file": "08_1x.gif",
+          "expected": {
+            "activity": "chopping",
+            "carried_object": "axe",
+            "top": "hidewrap",
+            "hair": "longtied"
+          },
+          "observed": {
+            "activity": "idle",
+            "carried_object": "none",
+            "top": "hidewrap",
+            "hair": "longtied"
+          },
+          "correct": {
+            "activity": false,
+            "carried_object": false,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "09_1x.gif",
+          "expected": {
+            "activity": "sleeping",
+            "carried_object": "none",
+            "top": "none",
+            "hair": "bald"
+          },
+          "observed": {
+            "activity": "sleeping",
+            "carried_object": "none",
+            "top": "none",
+            "hair": "bald"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "10_1x.gif",
+          "expected": {
+            "activity": "idle",
+            "carried_object": "none",
+            "top": "furcloak",
+            "hair": "short"
+          },
+          "observed": {
+            "activity": "idle",
+            "carried_object": "none",
+            "top": "furcloak",
+            "hair": "short"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "11_1x.gif",
+          "expected": {
+            "activity": "walking",
+            "carried_object": "none",
+            "top": "hidewrap",
+            "hair": "short"
+          },
+          "observed": {
+            "activity": "walking",
+            "carried_object": "none",
+            "top": "hidewrap",
+            "hair": "short"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "12_1x.gif",
+          "expected": {
+            "activity": "carrying",
+            "carried_object": "log",
+            "top": "furcloak",
+            "hair": "longtied"
+          },
+          "observed": {
+            "activity": "carrying",
+            "carried_object": "log",
+            "top": "furcloak",
+            "hair": "unknown"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": false
+          }
+        }
+      ]
+    },
+    {
+      "reviewer": 1,
+      "zoom": 2,
+      "activity_correct": 9,
+      "activity_total": 12,
+      "attributes_correct": 32,
+      "attributes_total": 36,
+      "proxy_threshold_met": false,
+      "actual_timed_playback_observed": false,
+      "details": [
+        {
+          "file": "01_2x.gif",
+          "expected": {
+            "activity": "idle",
+            "carried_object": "none",
+            "top": "furcloak",
+            "hair": "longtied"
+          },
+          "observed": {
+            "activity": "idle",
+            "carried_object": "none",
+            "top": "furcloak",
+            "hair": "longtied"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "02_2x.gif",
+          "expected": {
+            "activity": "walking",
+            "carried_object": "none",
+            "top": "furcloak",
+            "hair": "short"
+          },
+          "observed": {
+            "activity": "walking",
+            "carried_object": "none",
+            "top": "furcloak",
+            "hair": "short"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "03_2x.gif",
+          "expected": {
+            "activity": "chopping",
+            "carried_object": "axe",
+            "top": "hidewrap",
+            "hair": "longtied"
+          },
+          "observed": {
+            "activity": "idle",
+            "carried_object": "none",
+            "top": "hidewrap",
+            "hair": "longtied"
+          },
+          "correct": {
+            "activity": false,
+            "carried_object": false,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "04_2x.gif",
+          "expected": {
+            "activity": "carrying",
+            "carried_object": "log",
+            "top": "hidewrap",
+            "hair": "short"
+          },
+          "observed": {
+            "activity": "carrying",
+            "carried_object": "log",
+            "top": "hidewrap",
+            "hair": "short"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "05_2x.gif",
+          "expected": {
+            "activity": "sleeping",
+            "carried_object": "none",
+            "top": "none",
+            "hair": "bald"
+          },
+          "observed": {
+            "activity": "sleeping",
+            "carried_object": "none",
+            "top": "none",
+            "hair": "bald"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "06_2x.gif",
+          "expected": {
+            "activity": "walking",
+            "carried_object": "none",
+            "top": "hidewrap",
+            "hair": "longtied"
+          },
+          "observed": {
+            "activity": "idle",
+            "carried_object": "none",
+            "top": "hidewrap",
+            "hair": "longtied"
+          },
+          "correct": {
+            "activity": false,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "07_2x.gif",
+          "expected": {
+            "activity": "carrying",
+            "carried_object": "log",
+            "top": "hidewrap",
+            "hair": "short"
+          },
+          "observed": {
+            "activity": "carrying",
+            "carried_object": "log",
+            "top": "hidewrap",
+            "hair": "unknown"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": false
+          }
+        },
+        {
+          "file": "08_2x.gif",
+          "expected": {
+            "activity": "chopping",
+            "carried_object": "axe",
+            "top": "hidewrap",
+            "hair": "longtied"
+          },
+          "observed": {
+            "activity": "idle",
+            "carried_object": "none",
+            "top": "hidewrap",
+            "hair": "longtied"
+          },
+          "correct": {
+            "activity": false,
+            "carried_object": false,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "09_2x.gif",
+          "expected": {
+            "activity": "sleeping",
+            "carried_object": "none",
+            "top": "none",
+            "hair": "bald"
+          },
+          "observed": {
+            "activity": "sleeping",
+            "carried_object": "none",
+            "top": "none",
+            "hair": "bald"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "10_2x.gif",
+          "expected": {
+            "activity": "idle",
+            "carried_object": "none",
+            "top": "furcloak",
+            "hair": "short"
+          },
+          "observed": {
+            "activity": "idle",
+            "carried_object": "none",
+            "top": "furcloak",
+            "hair": "short"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "11_2x.gif",
+          "expected": {
+            "activity": "walking",
+            "carried_object": "none",
+            "top": "hidewrap",
+            "hair": "short"
+          },
+          "observed": {
+            "activity": "walking",
+            "carried_object": "none",
+            "top": "hidewrap",
+            "hair": "short"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "12_2x.gif",
+          "expected": {
+            "activity": "carrying",
+            "carried_object": "log",
+            "top": "furcloak",
+            "hair": "longtied"
+          },
+          "observed": {
+            "activity": "carrying",
+            "carried_object": "log",
+            "top": "furcloak",
+            "hair": "unknown"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": false
+          }
+        }
+      ]
+    },
+    {
+      "reviewer": 2,
+      "zoom": 1,
+      "activity_correct": 10,
+      "activity_total": 12,
+      "attributes_correct": 34,
+      "attributes_total": 36,
+      "proxy_threshold_met": true,
+      "actual_timed_playback_observed": false,
+      "details": [
+        {
+          "file": "01_1x.gif",
+          "expected": {
+            "activity": "idle",
+            "carried_object": "none",
+            "top": "furcloak",
+            "hair": "longtied"
+          },
+          "observed": {
+            "activity": "idle",
+            "carried_object": "none",
+            "top": "furcloak",
+            "hair": "longtied"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "02_1x.gif",
+          "expected": {
+            "activity": "walking",
+            "carried_object": "none",
+            "top": "furcloak",
+            "hair": "short"
+          },
+          "observed": {
+            "activity": "walking",
+            "carried_object": "none",
+            "top": "furcloak",
+            "hair": "short"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "03_1x.gif",
+          "expected": {
+            "activity": "chopping",
+            "carried_object": "axe",
+            "top": "hidewrap",
+            "hair": "longtied"
+          },
+          "observed": {
+            "activity": "idle",
+            "carried_object": "axe",
+            "top": "hidewrap",
+            "hair": "longtied"
+          },
+          "correct": {
+            "activity": false,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "04_1x.gif",
+          "expected": {
+            "activity": "carrying",
+            "carried_object": "log",
+            "top": "hidewrap",
+            "hair": "short"
+          },
+          "observed": {
+            "activity": "carrying",
+            "carried_object": "log",
+            "top": "hidewrap",
+            "hair": "short"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "05_1x.gif",
+          "expected": {
+            "activity": "sleeping",
+            "carried_object": "none",
+            "top": "none",
+            "hair": "bald"
+          },
+          "observed": {
+            "activity": "sleeping",
+            "carried_object": "none",
+            "top": "none",
+            "hair": "bald"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "06_1x.gif",
+          "expected": {
+            "activity": "walking",
+            "carried_object": "none",
+            "top": "hidewrap",
+            "hair": "longtied"
+          },
+          "observed": {
+            "activity": "idle",
+            "carried_object": "none",
+            "top": "hidewrap",
+            "hair": "longtied"
+          },
+          "correct": {
+            "activity": false,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "07_1x.gif",
+          "expected": {
+            "activity": "carrying",
+            "carried_object": "log",
+            "top": "hidewrap",
+            "hair": "short"
+          },
+          "observed": {
+            "activity": "carrying",
+            "carried_object": "log",
+            "top": "hidewrap",
+            "hair": "unknown"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": false
+          }
+        },
+        {
+          "file": "08_1x.gif",
+          "expected": {
+            "activity": "chopping",
+            "carried_object": "axe",
+            "top": "hidewrap",
+            "hair": "longtied"
+          },
+          "observed": {
+            "activity": "chopping",
+            "carried_object": "axe",
+            "top": "hidewrap",
+            "hair": "longtied"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "09_1x.gif",
+          "expected": {
+            "activity": "sleeping",
+            "carried_object": "none",
+            "top": "none",
+            "hair": "bald"
+          },
+          "observed": {
+            "activity": "sleeping",
+            "carried_object": "none",
+            "top": "none",
+            "hair": "bald"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "10_1x.gif",
+          "expected": {
+            "activity": "idle",
+            "carried_object": "none",
+            "top": "furcloak",
+            "hair": "short"
+          },
+          "observed": {
+            "activity": "idle",
+            "carried_object": "none",
+            "top": "furcloak",
+            "hair": "short"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "11_1x.gif",
+          "expected": {
+            "activity": "walking",
+            "carried_object": "none",
+            "top": "hidewrap",
+            "hair": "short"
+          },
+          "observed": {
+            "activity": "walking",
+            "carried_object": "none",
+            "top": "hidewrap",
+            "hair": "short"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "12_1x.gif",
+          "expected": {
+            "activity": "carrying",
+            "carried_object": "log",
+            "top": "furcloak",
+            "hair": "longtied"
+          },
+          "observed": {
+            "activity": "carrying",
+            "carried_object": "log",
+            "top": "furcloak",
+            "hair": "unknown"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": false
+          }
+        }
+      ]
+    },
+    {
+      "reviewer": 2,
+      "zoom": 2,
+      "activity_correct": 10,
+      "activity_total": 12,
+      "attributes_correct": 34,
+      "attributes_total": 36,
+      "proxy_threshold_met": true,
+      "actual_timed_playback_observed": false,
+      "details": [
+        {
+          "file": "01_2x.gif",
+          "expected": {
+            "activity": "idle",
+            "carried_object": "none",
+            "top": "furcloak",
+            "hair": "longtied"
+          },
+          "observed": {
+            "activity": "idle",
+            "carried_object": "none",
+            "top": "furcloak",
+            "hair": "longtied"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "02_2x.gif",
+          "expected": {
+            "activity": "walking",
+            "carried_object": "none",
+            "top": "furcloak",
+            "hair": "short"
+          },
+          "observed": {
+            "activity": "walking",
+            "carried_object": "none",
+            "top": "furcloak",
+            "hair": "short"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "03_2x.gif",
+          "expected": {
+            "activity": "chopping",
+            "carried_object": "axe",
+            "top": "hidewrap",
+            "hair": "longtied"
+          },
+          "observed": {
+            "activity": "idle",
+            "carried_object": "axe",
+            "top": "hidewrap",
+            "hair": "longtied"
+          },
+          "correct": {
+            "activity": false,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "04_2x.gif",
+          "expected": {
+            "activity": "carrying",
+            "carried_object": "log",
+            "top": "hidewrap",
+            "hair": "short"
+          },
+          "observed": {
+            "activity": "carrying",
+            "carried_object": "log",
+            "top": "hidewrap",
+            "hair": "short"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "05_2x.gif",
+          "expected": {
+            "activity": "sleeping",
+            "carried_object": "none",
+            "top": "none",
+            "hair": "bald"
+          },
+          "observed": {
+            "activity": "sleeping",
+            "carried_object": "none",
+            "top": "none",
+            "hair": "bald"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "06_2x.gif",
+          "expected": {
+            "activity": "walking",
+            "carried_object": "none",
+            "top": "hidewrap",
+            "hair": "longtied"
+          },
+          "observed": {
+            "activity": "idle",
+            "carried_object": "none",
+            "top": "hidewrap",
+            "hair": "longtied"
+          },
+          "correct": {
+            "activity": false,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "07_2x.gif",
+          "expected": {
+            "activity": "carrying",
+            "carried_object": "log",
+            "top": "hidewrap",
+            "hair": "short"
+          },
+          "observed": {
+            "activity": "carrying",
+            "carried_object": "log",
+            "top": "hidewrap",
+            "hair": "unknown"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": false
+          }
+        },
+        {
+          "file": "08_2x.gif",
+          "expected": {
+            "activity": "chopping",
+            "carried_object": "axe",
+            "top": "hidewrap",
+            "hair": "longtied"
+          },
+          "observed": {
+            "activity": "chopping",
+            "carried_object": "axe",
+            "top": "hidewrap",
+            "hair": "longtied"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "09_2x.gif",
+          "expected": {
+            "activity": "sleeping",
+            "carried_object": "none",
+            "top": "none",
+            "hair": "bald"
+          },
+          "observed": {
+            "activity": "sleeping",
+            "carried_object": "none",
+            "top": "none",
+            "hair": "bald"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "10_2x.gif",
+          "expected": {
+            "activity": "idle",
+            "carried_object": "none",
+            "top": "furcloak",
+            "hair": "short"
+          },
+          "observed": {
+            "activity": "idle",
+            "carried_object": "none",
+            "top": "furcloak",
+            "hair": "short"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "11_2x.gif",
+          "expected": {
+            "activity": "walking",
+            "carried_object": "none",
+            "top": "hidewrap",
+            "hair": "short"
+          },
+          "observed": {
+            "activity": "walking",
+            "carried_object": "none",
+            "top": "hidewrap",
+            "hair": "short"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": true
+          }
+        },
+        {
+          "file": "12_2x.gif",
+          "expected": {
+            "activity": "carrying",
+            "carried_object": "log",
+            "top": "furcloak",
+            "hair": "longtied"
+          },
+          "observed": {
+            "activity": "carrying",
+            "carried_object": "log",
+            "top": "furcloak",
+            "hair": "unknown"
+          },
+          "correct": {
+            "activity": true,
+            "carried_object": true,
+            "top": true,
+            "hair": false
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,725 @@
+{
+  "reviewer": "blind_review_2",
+  "input_scope": "Only 24 numbered GIFs in /Users/rexxa/work/arttrial3-data/blind; no answer key, route identities, source assets, or other review read.",
+  "actual_timed_playback_observed": false,
+  "method": "Pillow decoded every frame, preserving temporal order and native 1x/2x dimensions; original-detail contact strips inspected. Durations read from GIF metadata. No Godot launched.",
+  "confidence_scale": "0 to 1, subjective per field; not accuracy or scored results.",
+  "answers": [
+    {
+      "file": "01_1x.gif",
+      "activity": "idle",
+      "carried_object": "none",
+      "top": "furcloak",
+      "hair": "longtied",
+      "confidence": {
+        "activity": 0.87,
+        "carried_object": 0.87,
+        "top": 0.8,
+        "hair": 0.78
+      },
+      "observations": "Feet retain their pose; slight body bob. Shaggy layered top and side ponytail visible.",
+      "method": "All decoded composited frames inspected in temporal order at original GIF pixel dimensions, with duration labels.",
+      "limitation": "Static decoded sequence only; actual timed playback not observed. Small features and occlusions limit interpretation.",
+      "size": [
+        104,
+        112
+      ],
+      "frames": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ]
+    },
+    {
+      "file": "01_2x.gif",
+      "activity": "idle",
+      "carried_object": "none",
+      "top": "furcloak",
+      "hair": "longtied",
+      "confidence": {
+        "activity": 0.94,
+        "carried_object": 0.94,
+        "top": 0.87,
+        "hair": 0.85
+      },
+      "observations": "Feet retain their pose; slight body bob. Shaggy layered top and side ponytail visible.",
+      "method": "All decoded composited frames inspected in temporal order at original GIF pixel dimensions, with duration labels.",
+      "limitation": "Static decoded sequence only; actual timed playback not observed. Small features and occlusions limit interpretation.",
+      "size": [
+        208,
+        224
+      ],
+      "frames": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ]
+    },
+    {
+      "file": "02_1x.gif",
+      "activity": "walking",
+      "carried_object": "none",
+      "top": "furcloak",
+      "hair": "short",
+      "confidence": {
+        "activity": 0.86,
+        "carried_object": 0.9,
+        "top": 0.83,
+        "hair": 0.85
+      },
+      "observations": "Legs alternate extended positions; shaggy top and compact hair silhouette.",
+      "method": "All decoded composited frames inspected in temporal order at original GIF pixel dimensions, with duration labels.",
+      "limitation": "Static decoded sequence only; actual timed playback not observed. Small features and occlusions limit interpretation.",
+      "size": [
+        104,
+        112
+      ],
+      "frames": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ]
+    },
+    {
+      "file": "02_2x.gif",
+      "activity": "walking",
+      "carried_object": "none",
+      "top": "furcloak",
+      "hair": "short",
+      "confidence": {
+        "activity": 0.93,
+        "carried_object": 0.97,
+        "top": 0.9,
+        "hair": 0.92
+      },
+      "observations": "Legs alternate extended positions; shaggy top and compact hair silhouette.",
+      "method": "All decoded composited frames inspected in temporal order at original GIF pixel dimensions, with duration labels.",
+      "limitation": "Static decoded sequence only; actual timed playback not observed. Small features and occlusions limit interpretation.",
+      "size": [
+        208,
+        224
+      ],
+      "frames": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ]
+    },
+    {
+      "file": "03_1x.gif",
+      "activity": "idle",
+      "carried_object": "axe",
+      "top": "hidewrap",
+      "hair": "longtied",
+      "confidence": {
+        "activity": 0.46,
+        "carried_object": 0.72,
+        "top": 0.78,
+        "hair": 0.82
+      },
+      "observations": "Upright tool remains near shoulder with small changes; no clear chopping arc or follow-through. Primary activity read is standing idle holding an axe.",
+      "method": "All decoded composited frames inspected in temporal order at original GIF pixel dimensions, with duration labels.",
+      "limitation": "Static decoded sequence only; actual timed playback not observed. Small features and occlusions limit interpretation.",
+      "size": [
+        104,
+        112
+      ],
+      "frames": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ]
+    },
+    {
+      "file": "03_2x.gif",
+      "activity": "idle",
+      "carried_object": "axe",
+      "top": "hidewrap",
+      "hair": "longtied",
+      "confidence": {
+        "activity": 0.53,
+        "carried_object": 0.79,
+        "top": 0.85,
+        "hair": 0.89
+      },
+      "observations": "Upright tool remains near shoulder with small changes; no clear chopping arc or follow-through. Primary activity read is standing idle holding an axe.",
+      "method": "All decoded composited frames inspected in temporal order at original GIF pixel dimensions, with duration labels.",
+      "limitation": "Static decoded sequence only; actual timed playback not observed. Small features and occlusions limit interpretation.",
+      "size": [
+        208,
+        224
+      ],
+      "frames": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ]
+    },
+    {
+      "file": "04_1x.gif",
+      "activity": "carrying",
+      "carried_object": "log",
+      "top": "hidewrap",
+      "hair": "short",
+      "confidence": {
+        "activity": 0.91,
+        "carried_object": 0.92,
+        "top": 0.67,
+        "hair": 0.78
+      },
+      "observations": "Large bound horizontal logs obscure chest; alternating legs and pointed hide hem remain visible.",
+      "method": "All decoded composited frames inspected in temporal order at original GIF pixel dimensions, with duration labels.",
+      "limitation": "Static decoded sequence only; actual timed playback not observed. Small features and occlusions limit interpretation.",
+      "size": [
+        104,
+        112
+      ],
+      "frames": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ]
+    },
+    {
+      "file": "04_2x.gif",
+      "activity": "carrying",
+      "carried_object": "log",
+      "top": "hidewrap",
+      "hair": "short",
+      "confidence": {
+        "activity": 0.98,
+        "carried_object": 0.99,
+        "top": 0.74,
+        "hair": 0.85
+      },
+      "observations": "Large bound horizontal logs obscure chest; alternating legs and pointed hide hem remain visible.",
+      "method": "All decoded composited frames inspected in temporal order at original GIF pixel dimensions, with duration labels.",
+      "limitation": "Static decoded sequence only; actual timed playback not observed. Small features and occlusions limit interpretation.",
+      "size": [
+        208,
+        224
+      ],
+      "frames": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ]
+    },
+    {
+      "file": "05_1x.gif",
+      "activity": "sleeping",
+      "carried_object": "none",
+      "top": "none",
+      "hair": "bald",
+      "confidence": {
+        "activity": 0.92,
+        "carried_object": 0.91,
+        "top": 0.59,
+        "hair": 0.83
+      },
+      "observations": "Single curled reclining pose with head on hands; torso looks bare, though monochrome outlines make clothing uncertain.",
+      "method": "All decoded composited frames inspected in temporal order at original GIF pixel dimensions, with duration labels.",
+      "limitation": "Static decoded sequence only; actual timed playback not observed. Small features and occlusions limit interpretation.",
+      "size": [
+        104,
+        112
+      ],
+      "frames": 1,
+      "durations_ms": [
+        1000
+      ]
+    },
+    {
+      "file": "05_2x.gif",
+      "activity": "sleeping",
+      "carried_object": "none",
+      "top": "none",
+      "hair": "bald",
+      "confidence": {
+        "activity": 0.99,
+        "carried_object": 0.98,
+        "top": 0.66,
+        "hair": 0.9
+      },
+      "observations": "Single curled reclining pose with head on hands; torso looks bare, though monochrome outlines make clothing uncertain.",
+      "method": "All decoded composited frames inspected in temporal order at original GIF pixel dimensions, with duration labels.",
+      "limitation": "Static decoded sequence only; actual timed playback not observed. Small features and occlusions limit interpretation.",
+      "size": [
+        208,
+        224
+      ],
+      "frames": 1,
+      "durations_ms": [
+        1000
+      ]
+    },
+    {
+      "file": "06_1x.gif",
+      "activity": "idle",
+      "carried_object": "none",
+      "top": "hidewrap",
+      "hair": "longtied",
+      "confidence": {
+        "activity": 0.87,
+        "carried_object": 0.88,
+        "top": 0.85,
+        "hair": 0.72
+      },
+      "observations": "Rear-facing stationary stance, smooth draped top; rounded tied hair shape projects to the side.",
+      "method": "All decoded composited frames inspected in temporal order at original GIF pixel dimensions, with duration labels.",
+      "limitation": "Static decoded sequence only; actual timed playback not observed. Small features and occlusions limit interpretation.",
+      "size": [
+        104,
+        112
+      ],
+      "frames": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ]
+    },
+    {
+      "file": "06_2x.gif",
+      "activity": "idle",
+      "carried_object": "none",
+      "top": "hidewrap",
+      "hair": "longtied",
+      "confidence": {
+        "activity": 0.94,
+        "carried_object": 0.95,
+        "top": 0.92,
+        "hair": 0.79
+      },
+      "observations": "Rear-facing stationary stance, smooth draped top; rounded tied hair shape projects to the side.",
+      "method": "All decoded composited frames inspected in temporal order at original GIF pixel dimensions, with duration labels.",
+      "limitation": "Static decoded sequence only; actual timed playback not observed. Small features and occlusions limit interpretation.",
+      "size": [
+        208,
+        224
+      ],
+      "frames": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ]
+    },
+    {
+      "file": "07_1x.gif",
+      "activity": "carrying",
+      "carried_object": "log",
+      "top": "hidewrap",
+      "hair": "unknown",
+      "confidence": {
+        "activity": 0.91,
+        "carried_object": 0.92,
+        "top": 0.68,
+        "hair": 0.28
+      },
+      "observations": "Logs dominate silhouette. Smooth lower top visible; most hair and any tie are occluded.",
+      "method": "All decoded composited frames inspected in temporal order at original GIF pixel dimensions, with duration labels.",
+      "limitation": "Static decoded sequence only; actual timed playback not observed. Small features and occlusions limit interpretation.",
+      "size": [
+        104,
+        112
+      ],
+      "frames": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ]
+    },
+    {
+      "file": "07_2x.gif",
+      "activity": "carrying",
+      "carried_object": "log",
+      "top": "hidewrap",
+      "hair": "unknown",
+      "confidence": {
+        "activity": 0.98,
+        "carried_object": 0.99,
+        "top": 0.75,
+        "hair": 0.35
+      },
+      "observations": "Logs dominate silhouette. Smooth lower top visible; most hair and any tie are occluded.",
+      "method": "All decoded composited frames inspected in temporal order at original GIF pixel dimensions, with duration labels.",
+      "limitation": "Static decoded sequence only; actual timed playback not observed. Small features and occlusions limit interpretation.",
+      "size": [
+        208,
+        224
+      ],
+      "frames": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ]
+    },
+    {
+      "file": "08_1x.gif",
+      "activity": "chopping",
+      "carried_object": "axe",
+      "top": "hidewrap",
+      "hair": "longtied",
+      "confidence": {
+        "activity": 0.48,
+        "carried_object": 0.76,
+        "top": 0.8,
+        "hair": 0.78
+      },
+      "observations": "Repeated small tool and hand angle changes suggest chopping, but no large swing or contact cue; idle with axe remains plausible.",
+      "method": "All decoded composited frames inspected in temporal order at original GIF pixel dimensions, with duration labels.",
+      "limitation": "Static decoded sequence only; actual timed playback not observed. Small features and occlusions limit interpretation.",
+      "size": [
+        104,
+        112
+      ],
+      "frames": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ]
+    },
+    {
+      "file": "08_2x.gif",
+      "activity": "chopping",
+      "carried_object": "axe",
+      "top": "hidewrap",
+      "hair": "longtied",
+      "confidence": {
+        "activity": 0.55,
+        "carried_object": 0.83,
+        "top": 0.87,
+        "hair": 0.85
+      },
+      "observations": "Repeated small tool and hand angle changes suggest chopping, but no large swing or contact cue; idle with axe remains plausible.",
+      "method": "All decoded composited frames inspected in temporal order at original GIF pixel dimensions, with duration labels.",
+      "limitation": "Static decoded sequence only; actual timed playback not observed. Small features and occlusions limit interpretation.",
+      "size": [
+        208,
+        224
+      ],
+      "frames": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ]
+    },
+    {
+      "file": "09_1x.gif",
+      "activity": "sleeping",
+      "carried_object": "none",
+      "top": "none",
+      "hair": "bald",
+      "confidence": {
+        "activity": 0.92,
+        "carried_object": 0.91,
+        "top": 0.59,
+        "hair": 0.83
+      },
+      "observations": "Single curled reclining pose with head on hands; torso looks bare, though monochrome outlines make clothing uncertain.",
+      "method": "All decoded composited frames inspected in temporal order at original GIF pixel dimensions, with duration labels.",
+      "limitation": "Static decoded sequence only; actual timed playback not observed. Small features and occlusions limit interpretation.",
+      "size": [
+        104,
+        112
+      ],
+      "frames": 1,
+      "durations_ms": [
+        1000
+      ]
+    },
+    {
+      "file": "09_2x.gif",
+      "activity": "sleeping",
+      "carried_object": "none",
+      "top": "none",
+      "hair": "bald",
+      "confidence": {
+        "activity": 0.99,
+        "carried_object": 0.98,
+        "top": 0.66,
+        "hair": 0.9
+      },
+      "observations": "Single curled reclining pose with head on hands; torso looks bare, though monochrome outlines make clothing uncertain.",
+      "method": "All decoded composited frames inspected in temporal order at original GIF pixel dimensions, with duration labels.",
+      "limitation": "Static decoded sequence only; actual timed playback not observed. Small features and occlusions limit interpretation.",
+      "size": [
+        208,
+        224
+      ],
+      "frames": 1,
+      "durations_ms": [
+        1000
+      ]
+    },
+    {
+      "file": "10_1x.gif",
+      "activity": "idle",
+      "carried_object": "none",
+      "top": "furcloak",
+      "hair": "short",
+      "confidence": {
+        "activity": 0.89,
+        "carried_object": 0.9,
+        "top": 0.83,
+        "hair": 0.86
+      },
+      "observations": "Fixed feet with small bob; shaggy top and short tousled hair visible.",
+      "method": "All decoded composited frames inspected in temporal order at original GIF pixel dimensions, with duration labels.",
+      "limitation": "Static decoded sequence only; actual timed playback not observed. Small features and occlusions limit interpretation.",
+      "size": [
+        104,
+        112
+      ],
+      "frames": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ]
+    },
+    {
+      "file": "10_2x.gif",
+      "activity": "idle",
+      "carried_object": "none",
+      "top": "furcloak",
+      "hair": "short",
+      "confidence": {
+        "activity": 0.96,
+        "carried_object": 0.97,
+        "top": 0.9,
+        "hair": 0.93
+      },
+      "observations": "Fixed feet with small bob; shaggy top and short tousled hair visible.",
+      "method": "All decoded composited frames inspected in temporal order at original GIF pixel dimensions, with duration labels.",
+      "limitation": "Static decoded sequence only; actual timed playback not observed. Small features and occlusions limit interpretation.",
+      "size": [
+        208,
+        224
+      ],
+      "frames": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ]
+    },
+    {
+      "file": "11_1x.gif",
+      "activity": "walking",
+      "carried_object": "none",
+      "top": "hidewrap",
+      "hair": "short",
+      "confidence": {
+        "activity": 0.88,
+        "carried_object": 0.9,
+        "top": 0.84,
+        "hair": 0.86
+      },
+      "observations": "Alternating strides, plain diagonal hide folds and compact tousled hair.",
+      "method": "All decoded composited frames inspected in temporal order at original GIF pixel dimensions, with duration labels.",
+      "limitation": "Static decoded sequence only; actual timed playback not observed. Small features and occlusions limit interpretation.",
+      "size": [
+        104,
+        112
+      ],
+      "frames": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ]
+    },
+    {
+      "file": "11_2x.gif",
+      "activity": "walking",
+      "carried_object": "none",
+      "top": "hidewrap",
+      "hair": "short",
+      "confidence": {
+        "activity": 0.95,
+        "carried_object": 0.97,
+        "top": 0.91,
+        "hair": 0.93
+      },
+      "observations": "Alternating strides, plain diagonal hide folds and compact tousled hair.",
+      "method": "All decoded composited frames inspected in temporal order at original GIF pixel dimensions, with duration labels.",
+      "limitation": "Static decoded sequence only; actual timed playback not observed. Small features and occlusions limit interpretation.",
+      "size": [
+        208,
+        224
+      ],
+      "frames": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ]
+    },
+    {
+      "file": "12_1x.gif",
+      "activity": "carrying",
+      "carried_object": "log",
+      "top": "furcloak",
+      "hair": "unknown",
+      "confidence": {
+        "activity": 0.91,
+        "carried_object": 0.92,
+        "top": 0.72,
+        "hair": 0.28
+      },
+      "observations": "Logs obscure upper body and hair detail; shaggy pointed lower garment remains visible.",
+      "method": "All decoded composited frames inspected in temporal order at original GIF pixel dimensions, with duration labels.",
+      "limitation": "Static decoded sequence only; actual timed playback not observed. Small features and occlusions limit interpretation.",
+      "size": [
+        104,
+        112
+      ],
+      "frames": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ]
+    },
+    {
+      "file": "12_2x.gif",
+      "activity": "carrying",
+      "carried_object": "log",
+      "top": "furcloak",
+      "hair": "unknown",
+      "confidence": {
+        "activity": 0.98,
+        "carried_object": 0.99,
+        "top": 0.79,
+        "hair": 0.35
+      },
+      "observations": "Logs obscure upper body and hair detail; shaggy pointed lower garment remains visible.",
+      "method": "All decoded composited frames inspected in temporal order at original GIF pixel dimensions, with duration labels.",
+      "limitation": "Static decoded sequence only; actual timed playback not observed. Small features and occlusions limit interpretation.",
+      "size": [
+        208,
+        224
+      ],
+      "frames": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ]
+    }
+  ]
+}

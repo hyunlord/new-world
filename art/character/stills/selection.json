@@ -1,0 +1,32 @@
+[
+  [
+    "body_E_idle",
+    "top_fur_cloak_E",
+    "hair_long_tied_E"
+  ],
+  [
+    "body_E_idle",
+    "top_fur_cloak_E",
+    "hair_short_E"
+  ],
+  [
+    "body_N_idle",
+    "top_fur_cloak_N",
+    "hair_long_tied_N"
+  ],
+  [
+    "body_N_idle",
+    "top_fur_cloak_N",
+    "hair_short_N"
+  ],
+  [
+    "body_S_idle",
+    "top_hide_wrap_S",
+    "hair_long_tied_S"
+  ],
+  [
+    "body_S_idle",
+    "top_hide_wrap_S",
+    "hair_short_S"
+  ]
+]

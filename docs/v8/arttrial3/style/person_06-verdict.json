@@ -1,0 +1,36 @@
+{
+  "candidate": "art/character/stills/person_06.png",
+  "sha256": "3d57f285d46fe8a69088095a92113093a09c95c5f0cfff81f0b5cb9c2ba6095d",
+  "family": "person",
+  "metrics": {
+    "edge_density": 0.15221572398634062,
+    "saturation_q25": 0.1704959828482894,
+    "saturation_q75": 0.2887814818594446,
+    "stroke_q25": 0.0,
+    "stroke_q50": 0.0,
+    "stroke_q75": 0.0,
+    "stroke_q90": 0.0,
+    "wash_flatness": 0.036093847956632376,
+    "foreground_pixels": 27222
+  },
+  "numeric_checks": {
+    "edge_density": true,
+    "saturation_q25": false,
+    "saturation_q75": false,
+    "stroke_q25": false,
+    "stroke_q50": false,
+    "stroke_q75": false,
+    "stroke_q90": false,
+    "wash_flatness": true
+  },
+  "numeric_pass": false,
+  "model_scores": {
+    "medium": 3,
+    "line": 2,
+    "light": 3,
+    "palette": 3,
+    "sentence": "The ochre hair approaches the reference warmth, while the cloak remains pale gray-beige and the softened contours and weak plane shading only partially match the person v2 reference pair."
+  },
+  "model_status": "SAME_FAMILY_VERIFIED",
+  "passed": false
+}

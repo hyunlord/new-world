@@ -1,0 +1,799 @@
+{
+  "reviewer": "blind_review_1",
+  "method": "All frames decoded from each supplied GIF; inspected left-to-right then next row, in frame index order, with per-frame duration labels. Every individual frame remained at its input GIF pixel dimensions.",
+  "inputs_scope": "/Users/rexxa/work/arttrial3-data/blind/{01..12}_{1x,2x}.gif only",
+  "answer_key_or_routes_read": false,
+  "actual_timed_playback_observed": false,
+  "method_limitation": "Only decoded temporal sequence and GIF duration metadata observed; actual timed moving playback was unavailable. Native pixel dimensions preserved in panels. This is a proxy readability answer, not a playback-validated animation judgement.",
+  "temporary_panels": "/Users/rexxa/work/arttrial3-data/reviewer1-panels/",
+  "answers": [
+    {
+      "file": "01_1x.gif",
+      "scale": "1x",
+      "activity": "idle",
+      "carried_object": "none",
+      "top": "furcloak",
+      "hair": "longtied",
+      "confidence": {
+        "activity": 0.76,
+        "carried_object": 0.77,
+        "top": 0.84,
+        "hair": 0.8
+      },
+      "confidence_overall": 0.79,
+      "visual_evidence": "Fixed leg pose with small body bob; shaggy layered torso and visible tied hair at the side.",
+      "method_limitation": "Only decoded temporal sequence and GIF duration metadata observed; actual timed moving playback was unavailable. Native pixel dimensions preserved in panels. This is a proxy readability answer, not a playback-validated animation judgement.",
+      "frame_count": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ],
+      "native_dimensions_px": [
+        104,
+        112
+      ],
+      "all_decoded_frames_inspected": true,
+      "actual_timed_playback_observed": false
+    },
+    {
+      "file": "01_2x.gif",
+      "scale": "2x",
+      "activity": "idle",
+      "carried_object": "none",
+      "top": "furcloak",
+      "hair": "longtied",
+      "confidence": {
+        "activity": 0.82,
+        "carried_object": 0.83,
+        "top": 0.9,
+        "hair": 0.86
+      },
+      "confidence_overall": 0.85,
+      "visual_evidence": "Fixed leg pose with small body bob; shaggy layered torso and visible tied hair at the side.",
+      "method_limitation": "Only decoded temporal sequence and GIF duration metadata observed; actual timed moving playback was unavailable. Native pixel dimensions preserved in panels. This is a proxy readability answer, not a playback-validated animation judgement.",
+      "frame_count": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ],
+      "native_dimensions_px": [
+        208,
+        224
+      ],
+      "all_decoded_frames_inspected": true,
+      "actual_timed_playback_observed": false
+    },
+    {
+      "file": "02_1x.gif",
+      "scale": "1x",
+      "activity": "walking",
+      "carried_object": "none",
+      "top": "furcloak",
+      "hair": "short",
+      "confidence": {
+        "activity": 0.88,
+        "carried_object": 0.88,
+        "top": 0.85,
+        "hair": 0.85
+      },
+      "confidence_overall": 0.86,
+      "visual_evidence": "Alternating foot placement reads as stepping; shaggy torso and short tousled hair.",
+      "method_limitation": "Only decoded temporal sequence and GIF duration metadata observed; actual timed moving playback was unavailable. Native pixel dimensions preserved in panels. This is a proxy readability answer, not a playback-validated animation judgement.",
+      "frame_count": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ],
+      "native_dimensions_px": [
+        104,
+        112
+      ],
+      "all_decoded_frames_inspected": true,
+      "actual_timed_playback_observed": false
+    },
+    {
+      "file": "02_2x.gif",
+      "scale": "2x",
+      "activity": "walking",
+      "carried_object": "none",
+      "top": "furcloak",
+      "hair": "short",
+      "confidence": {
+        "activity": 0.94,
+        "carried_object": 0.94,
+        "top": 0.91,
+        "hair": 0.91
+      },
+      "confidence_overall": 0.93,
+      "visual_evidence": "Alternating foot placement reads as stepping; shaggy torso and short tousled hair.",
+      "method_limitation": "Only decoded temporal sequence and GIF duration metadata observed; actual timed moving playback was unavailable. Native pixel dimensions preserved in panels. This is a proxy readability answer, not a playback-validated animation judgement.",
+      "frame_count": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ],
+      "native_dimensions_px": [
+        208,
+        224
+      ],
+      "all_decoded_frames_inspected": true,
+      "actual_timed_playback_observed": false
+    },
+    {
+      "file": "03_1x.gif",
+      "scale": "1x",
+      "activity": "idle",
+      "carried_object": "none",
+      "top": "hidewrap",
+      "hair": "longtied",
+      "confidence": {
+        "activity": 0.69,
+        "carried_object": 0.51,
+        "top": 0.82,
+        "hair": 0.8
+      },
+      "confidence_overall": 0.7,
+      "visual_evidence": "Small bob without clear swing or step. Smooth patchy drape and side ponytail. Brown shoulder-side form is ambiguous but no clear axe blade is readable.",
+      "method_limitation": "Only decoded temporal sequence and GIF duration metadata observed; actual timed moving playback was unavailable. Native pixel dimensions preserved in panels. This is a proxy readability answer, not a playback-validated animation judgement.",
+      "frame_count": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ],
+      "native_dimensions_px": [
+        104,
+        112
+      ],
+      "all_decoded_frames_inspected": true,
+      "actual_timed_playback_observed": false
+    },
+    {
+      "file": "03_2x.gif",
+      "scale": "2x",
+      "activity": "idle",
+      "carried_object": "none",
+      "top": "hidewrap",
+      "hair": "longtied",
+      "confidence": {
+        "activity": 0.75,
+        "carried_object": 0.57,
+        "top": 0.88,
+        "hair": 0.86
+      },
+      "confidence_overall": 0.77,
+      "visual_evidence": "Small bob without clear swing or step. Smooth patchy drape and side ponytail. Brown shoulder-side form is ambiguous but no clear axe blade is readable.",
+      "method_limitation": "Only decoded temporal sequence and GIF duration metadata observed; actual timed moving playback was unavailable. Native pixel dimensions preserved in panels. This is a proxy readability answer, not a playback-validated animation judgement.",
+      "frame_count": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ],
+      "native_dimensions_px": [
+        208,
+        224
+      ],
+      "all_decoded_frames_inspected": true,
+      "actual_timed_playback_observed": false
+    },
+    {
+      "file": "04_1x.gif",
+      "scale": "1x",
+      "activity": "carrying",
+      "carried_object": "log",
+      "top": "hidewrap",
+      "hair": "short",
+      "confidence": {
+        "activity": 0.93,
+        "carried_object": 0.93,
+        "top": 0.72,
+        "hair": 0.81
+      },
+      "confidence_overall": 0.85,
+      "visual_evidence": "Large tied horizontal logs dominate the silhouette; feet step; smooth irregular clothing visible below load.",
+      "method_limitation": "Only decoded temporal sequence and GIF duration metadata observed; actual timed moving playback was unavailable. Native pixel dimensions preserved in panels. This is a proxy readability answer, not a playback-validated animation judgement.",
+      "frame_count": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ],
+      "native_dimensions_px": [
+        104,
+        112
+      ],
+      "all_decoded_frames_inspected": true,
+      "actual_timed_playback_observed": false
+    },
+    {
+      "file": "04_2x.gif",
+      "scale": "2x",
+      "activity": "carrying",
+      "carried_object": "log",
+      "top": "hidewrap",
+      "hair": "short",
+      "confidence": {
+        "activity": 0.99,
+        "carried_object": 0.99,
+        "top": 0.78,
+        "hair": 0.87
+      },
+      "confidence_overall": 0.91,
+      "visual_evidence": "Large tied horizontal logs dominate the silhouette; feet step; smooth irregular clothing visible below load.",
+      "method_limitation": "Only decoded temporal sequence and GIF duration metadata observed; actual timed moving playback was unavailable. Native pixel dimensions preserved in panels. This is a proxy readability answer, not a playback-validated animation judgement.",
+      "frame_count": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ],
+      "native_dimensions_px": [
+        208,
+        224
+      ],
+      "all_decoded_frames_inspected": true,
+      "actual_timed_playback_observed": false
+    },
+    {
+      "file": "05_1x.gif",
+      "scale": "1x",
+      "activity": "sleeping",
+      "carried_object": "none",
+      "top": "none",
+      "hair": "bald",
+      "confidence": {
+        "activity": 0.93,
+        "carried_object": 0.92,
+        "top": 0.75,
+        "hair": 0.84
+      },
+      "confidence_overall": 0.86,
+      "visual_evidence": "Side-lying curled body with head resting on bent arms; exposed upper torso and round bare-looking scalp.",
+      "method_limitation": "Only decoded temporal sequence and GIF duration metadata observed; actual timed moving playback was unavailable. Native pixel dimensions preserved in panels. This is a proxy readability answer, not a playback-validated animation judgement.",
+      "frame_count": 1,
+      "durations_ms": [
+        1000
+      ],
+      "native_dimensions_px": [
+        104,
+        112
+      ],
+      "all_decoded_frames_inspected": true,
+      "actual_timed_playback_observed": false
+    },
+    {
+      "file": "05_2x.gif",
+      "scale": "2x",
+      "activity": "sleeping",
+      "carried_object": "none",
+      "top": "none",
+      "hair": "bald",
+      "confidence": {
+        "activity": 0.99,
+        "carried_object": 0.98,
+        "top": 0.81,
+        "hair": 0.9
+      },
+      "confidence_overall": 0.92,
+      "visual_evidence": "Side-lying curled body with head resting on bent arms; exposed upper torso and round bare-looking scalp.",
+      "method_limitation": "Only decoded temporal sequence and GIF duration metadata observed; actual timed moving playback was unavailable. Native pixel dimensions preserved in panels. This is a proxy readability answer, not a playback-validated animation judgement.",
+      "frame_count": 1,
+      "durations_ms": [
+        1000
+      ],
+      "native_dimensions_px": [
+        208,
+        224
+      ],
+      "all_decoded_frames_inspected": true,
+      "actual_timed_playback_observed": false
+    },
+    {
+      "file": "06_1x.gif",
+      "scale": "1x",
+      "activity": "idle",
+      "carried_object": "none",
+      "top": "hidewrap",
+      "hair": "longtied",
+      "confidence": {
+        "activity": 0.83,
+        "carried_object": 0.86,
+        "top": 0.84,
+        "hair": 0.78
+      },
+      "confidence_overall": 0.83,
+      "visual_evidence": "Rear-facing fixed stance with bob; smooth broad drape and low side hair tie.",
+      "method_limitation": "Only decoded temporal sequence and GIF duration metadata observed; actual timed moving playback was unavailable. Native pixel dimensions preserved in panels. This is a proxy readability answer, not a playback-validated animation judgement.",
+      "frame_count": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ],
+      "native_dimensions_px": [
+        104,
+        112
+      ],
+      "all_decoded_frames_inspected": true,
+      "actual_timed_playback_observed": false
+    },
+    {
+      "file": "06_2x.gif",
+      "scale": "2x",
+      "activity": "idle",
+      "carried_object": "none",
+      "top": "hidewrap",
+      "hair": "longtied",
+      "confidence": {
+        "activity": 0.89,
+        "carried_object": 0.92,
+        "top": 0.9,
+        "hair": 0.84
+      },
+      "confidence_overall": 0.89,
+      "visual_evidence": "Rear-facing fixed stance with bob; smooth broad drape and low side hair tie.",
+      "method_limitation": "Only decoded temporal sequence and GIF duration metadata observed; actual timed moving playback was unavailable. Native pixel dimensions preserved in panels. This is a proxy readability answer, not a playback-validated animation judgement.",
+      "frame_count": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ],
+      "native_dimensions_px": [
+        208,
+        224
+      ],
+      "all_decoded_frames_inspected": true,
+      "actual_timed_playback_observed": false
+    },
+    {
+      "file": "07_1x.gif",
+      "scale": "1x",
+      "activity": "carrying",
+      "carried_object": "log",
+      "top": "hidewrap",
+      "hair": "unknown",
+      "confidence": {
+        "activity": 0.93,
+        "carried_object": 0.93,
+        "top": 0.78,
+        "hair": 0.42
+      },
+      "confidence_overall": 0.77,
+      "visual_evidence": "Horizontal bound logs; smooth cloth visible below. Load hides most head/hair contour, so hairstyle is uncertain.",
+      "method_limitation": "Only decoded temporal sequence and GIF duration metadata observed; actual timed moving playback was unavailable. Native pixel dimensions preserved in panels. This is a proxy readability answer, not a playback-validated animation judgement.",
+      "frame_count": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ],
+      "native_dimensions_px": [
+        104,
+        112
+      ],
+      "all_decoded_frames_inspected": true,
+      "actual_timed_playback_observed": false
+    },
+    {
+      "file": "07_2x.gif",
+      "scale": "2x",
+      "activity": "carrying",
+      "carried_object": "log",
+      "top": "hidewrap",
+      "hair": "unknown",
+      "confidence": {
+        "activity": 0.99,
+        "carried_object": 0.99,
+        "top": 0.84,
+        "hair": 0.48
+      },
+      "confidence_overall": 0.82,
+      "visual_evidence": "Horizontal bound logs; smooth cloth visible below. Load hides most head/hair contour, so hairstyle is uncertain.",
+      "method_limitation": "Only decoded temporal sequence and GIF duration metadata observed; actual timed moving playback was unavailable. Native pixel dimensions preserved in panels. This is a proxy readability answer, not a playback-validated animation judgement.",
+      "frame_count": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ],
+      "native_dimensions_px": [
+        208,
+        224
+      ],
+      "all_decoded_frames_inspected": true,
+      "actual_timed_playback_observed": false
+    },
+    {
+      "file": "08_1x.gif",
+      "scale": "1x",
+      "activity": "idle",
+      "carried_object": "none",
+      "top": "hidewrap",
+      "hair": "longtied",
+      "confidence": {
+        "activity": 0.64,
+        "carried_object": 0.51,
+        "top": 0.8,
+        "hair": 0.82
+      },
+      "confidence_overall": 0.69,
+      "visual_evidence": "Spread feet maintain their pose while the figure bobs. Smooth drape and tied side hair. Shoulder-side brown shape lacks a readable axe blade or swing.",
+      "method_limitation": "Only decoded temporal sequence and GIF duration metadata observed; actual timed moving playback was unavailable. Native pixel dimensions preserved in panels. This is a proxy readability answer, not a playback-validated animation judgement.",
+      "frame_count": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ],
+      "native_dimensions_px": [
+        104,
+        112
+      ],
+      "all_decoded_frames_inspected": true,
+      "actual_timed_playback_observed": false
+    },
+    {
+      "file": "08_2x.gif",
+      "scale": "2x",
+      "activity": "idle",
+      "carried_object": "none",
+      "top": "hidewrap",
+      "hair": "longtied",
+      "confidence": {
+        "activity": 0.7,
+        "carried_object": 0.57,
+        "top": 0.86,
+        "hair": 0.88
+      },
+      "confidence_overall": 0.75,
+      "visual_evidence": "Spread feet maintain their pose while the figure bobs. Smooth drape and tied side hair. Shoulder-side brown shape lacks a readable axe blade or swing.",
+      "method_limitation": "Only decoded temporal sequence and GIF duration metadata observed; actual timed moving playback was unavailable. Native pixel dimensions preserved in panels. This is a proxy readability answer, not a playback-validated animation judgement.",
+      "frame_count": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ],
+      "native_dimensions_px": [
+        208,
+        224
+      ],
+      "all_decoded_frames_inspected": true,
+      "actual_timed_playback_observed": false
+    },
+    {
+      "file": "09_1x.gif",
+      "scale": "1x",
+      "activity": "sleeping",
+      "carried_object": "none",
+      "top": "none",
+      "hair": "bald",
+      "confidence": {
+        "activity": 0.93,
+        "carried_object": 0.92,
+        "top": 0.75,
+        "hair": 0.84
+      },
+      "confidence_overall": 0.86,
+      "visual_evidence": "Single curled side-lying pose with arms under head, bare-looking chest and scalp.",
+      "method_limitation": "Only decoded temporal sequence and GIF duration metadata observed; actual timed moving playback was unavailable. Native pixel dimensions preserved in panels. This is a proxy readability answer, not a playback-validated animation judgement.",
+      "frame_count": 1,
+      "durations_ms": [
+        1000
+      ],
+      "native_dimensions_px": [
+        104,
+        112
+      ],
+      "all_decoded_frames_inspected": true,
+      "actual_timed_playback_observed": false
+    },
+    {
+      "file": "09_2x.gif",
+      "scale": "2x",
+      "activity": "sleeping",
+      "carried_object": "none",
+      "top": "none",
+      "hair": "bald",
+      "confidence": {
+        "activity": 0.99,
+        "carried_object": 0.98,
+        "top": 0.81,
+        "hair": 0.9
+      },
+      "confidence_overall": 0.92,
+      "visual_evidence": "Single curled side-lying pose with arms under head, bare-looking chest and scalp.",
+      "method_limitation": "Only decoded temporal sequence and GIF duration metadata observed; actual timed moving playback was unavailable. Native pixel dimensions preserved in panels. This is a proxy readability answer, not a playback-validated animation judgement.",
+      "frame_count": 1,
+      "durations_ms": [
+        1000
+      ],
+      "native_dimensions_px": [
+        208,
+        224
+      ],
+      "all_decoded_frames_inspected": true,
+      "actual_timed_playback_observed": false
+    },
+    {
+      "file": "10_1x.gif",
+      "scale": "1x",
+      "activity": "idle",
+      "carried_object": "none",
+      "top": "furcloak",
+      "hair": "short",
+      "confidence": {
+        "activity": 0.82,
+        "carried_object": 0.87,
+        "top": 0.87,
+        "hair": 0.87
+      },
+      "confidence_overall": 0.86,
+      "visual_evidence": "Same leg arrangement through ordered sequence with small vertical bob; shaggy layered torso and tousled short hair.",
+      "method_limitation": "Only decoded temporal sequence and GIF duration metadata observed; actual timed moving playback was unavailable. Native pixel dimensions preserved in panels. This is a proxy readability answer, not a playback-validated animation judgement.",
+      "frame_count": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ],
+      "native_dimensions_px": [
+        104,
+        112
+      ],
+      "all_decoded_frames_inspected": true,
+      "actual_timed_playback_observed": false
+    },
+    {
+      "file": "10_2x.gif",
+      "scale": "2x",
+      "activity": "idle",
+      "carried_object": "none",
+      "top": "furcloak",
+      "hair": "short",
+      "confidence": {
+        "activity": 0.88,
+        "carried_object": 0.93,
+        "top": 0.93,
+        "hair": 0.93
+      },
+      "confidence_overall": 0.92,
+      "visual_evidence": "Same leg arrangement through ordered sequence with small vertical bob; shaggy layered torso and tousled short hair.",
+      "method_limitation": "Only decoded temporal sequence and GIF duration metadata observed; actual timed moving playback was unavailable. Native pixel dimensions preserved in panels. This is a proxy readability answer, not a playback-validated animation judgement.",
+      "frame_count": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ],
+      "native_dimensions_px": [
+        208,
+        224
+      ],
+      "all_decoded_frames_inspected": true,
+      "actual_timed_playback_observed": false
+    },
+    {
+      "file": "11_1x.gif",
+      "scale": "1x",
+      "activity": "walking",
+      "carried_object": "none",
+      "top": "hidewrap",
+      "hair": "short",
+      "confidence": {
+        "activity": 0.89,
+        "carried_object": 0.88,
+        "top": 0.87,
+        "hair": 0.87
+      },
+      "confidence_overall": 0.88,
+      "visual_evidence": "Feet visibly alternate stride; plain patchy hide drape and short tousled hair.",
+      "method_limitation": "Only decoded temporal sequence and GIF duration metadata observed; actual timed moving playback was unavailable. Native pixel dimensions preserved in panels. This is a proxy readability answer, not a playback-validated animation judgement.",
+      "frame_count": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ],
+      "native_dimensions_px": [
+        104,
+        112
+      ],
+      "all_decoded_frames_inspected": true,
+      "actual_timed_playback_observed": false
+    },
+    {
+      "file": "11_2x.gif",
+      "scale": "2x",
+      "activity": "walking",
+      "carried_object": "none",
+      "top": "hidewrap",
+      "hair": "short",
+      "confidence": {
+        "activity": 0.95,
+        "carried_object": 0.94,
+        "top": 0.93,
+        "hair": 0.93
+      },
+      "confidence_overall": 0.94,
+      "visual_evidence": "Feet visibly alternate stride; plain patchy hide drape and short tousled hair.",
+      "method_limitation": "Only decoded temporal sequence and GIF duration metadata observed; actual timed moving playback was unavailable. Native pixel dimensions preserved in panels. This is a proxy readability answer, not a playback-validated animation judgement.",
+      "frame_count": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ],
+      "native_dimensions_px": [
+        208,
+        224
+      ],
+      "all_decoded_frames_inspected": true,
+      "actual_timed_playback_observed": false
+    },
+    {
+      "file": "12_1x.gif",
+      "scale": "1x",
+      "activity": "carrying",
+      "carried_object": "log",
+      "top": "furcloak",
+      "hair": "unknown",
+      "confidence": {
+        "activity": 0.93,
+        "carried_object": 0.93,
+        "top": 0.8,
+        "hair": 0.42
+      },
+      "confidence_overall": 0.77,
+      "visual_evidence": "Large bound logs across torso; shaggy pointed hem below load. Head partly hidden and hairstyle not readable.",
+      "method_limitation": "Only decoded temporal sequence and GIF duration metadata observed; actual timed moving playback was unavailable. Native pixel dimensions preserved in panels. This is a proxy readability answer, not a playback-validated animation judgement.",
+      "frame_count": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ],
+      "native_dimensions_px": [
+        104,
+        112
+      ],
+      "all_decoded_frames_inspected": true,
+      "actual_timed_playback_observed": false
+    },
+    {
+      "file": "12_2x.gif",
+      "scale": "2x",
+      "activity": "carrying",
+      "carried_object": "log",
+      "top": "furcloak",
+      "hair": "unknown",
+      "confidence": {
+        "activity": 0.99,
+        "carried_object": 0.99,
+        "top": 0.86,
+        "hair": 0.48
+      },
+      "confidence_overall": 0.83,
+      "visual_evidence": "Large bound logs across torso; shaggy pointed hem below load. Head partly hidden and hairstyle not readable.",
+      "method_limitation": "Only decoded temporal sequence and GIF duration metadata observed; actual timed moving playback was unavailable. Native pixel dimensions preserved in panels. This is a proxy readability answer, not a playback-validated animation judgement.",
+      "frame_count": 8,
+      "durations_ms": [
+        120,
+        130,
+        120,
+        130,
+        120,
+        130,
+        120,
+        130
+      ],
+      "native_dimensions_px": [
+        208,
+        224
+      ],
+      "all_decoded_frames_inspected": true,
+      "actual_timed_playback_observed": false
+    }
+  ]
+}

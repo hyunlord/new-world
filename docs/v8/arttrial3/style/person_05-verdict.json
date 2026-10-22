@@ -1,0 +1,36 @@
+{
+  "candidate": "art/character/stills/person_05.png",
+  "sha256": "2cc70965b011ea20f8b28ebd599a1c39a2d01980065762a80fe279b08db3bcdb",
+  "family": "person",
+  "metrics": {
+    "edge_density": 0.15661770079660894,
+    "saturation_q25": 0.17257951518797626,
+    "saturation_q75": 0.28171462364014155,
+    "stroke_q25": 0.0,
+    "stroke_q50": 0.0,
+    "stroke_q75": 0.0,
+    "stroke_q90": 0.0,
+    "wash_flatness": 0.03691251785501833,
+    "foreground_pixels": 29312
+  },
+  "numeric_checks": {
+    "edge_density": true,
+    "saturation_q25": false,
+    "saturation_q75": false,
+    "stroke_q25": false,
+    "stroke_q50": false,
+    "stroke_q75": false,
+    "stroke_q90": false,
+    "wash_flatness": true
+  },
+  "numeric_pass": false,
+  "model_scores": {
+    "medium": 3,
+    "line": 2,
+    "light": 3,
+    "palette": 2,
+    "sentence": "The cloak has selective dark folds and quiet wash, but its pale gray-beige planes and softened outer contour lack the reference pair's clear ink hierarchy and ochre warmth."
+  },
+  "model_status": "SAME_FAMILY_VERIFIED",
+  "passed": false
+}

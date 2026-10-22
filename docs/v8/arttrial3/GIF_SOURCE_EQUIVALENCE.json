@@ -1,0 +1,170 @@
+[
+  {
+    "gif": "a_01_1x.gif",
+    "sha256": "06ffc9c5c363357bc9e75628ed095be5f9cc413582707db4438b73fa784c47fe",
+    "reviewed_bytes_identical": true,
+    "runtime": "/Users/rexxa/work/arttrial3-data/gifs-final-source/combo_01_1x/runtime.json",
+    "script_sha256": "95e5caf6b0aeaf6902cd62d7b9b3bb0f350da69c25827afe527e58aa2557a758"
+  },
+  {
+    "gif": "a_01_2x.gif",
+    "sha256": "05e21178cd035af0db126162d9c45ce4c635171b264d9dc25b128883d5f3da21",
+    "reviewed_bytes_identical": true,
+    "runtime": "/Users/rexxa/work/arttrial3-data/gifs-final-source/combo_01_2x/runtime.json",
+    "script_sha256": "95e5caf6b0aeaf6902cd62d7b9b3bb0f350da69c25827afe527e58aa2557a758"
+  },
+  {
+    "gif": "a_02_1x.gif",
+    "sha256": "ec3a3dafee2a6407217b12624309f92ed9727607ff9b99cf3fb7eb7157b1692e",
+    "reviewed_bytes_identical": true,
+    "runtime": "/Users/rexxa/work/arttrial3-data/gifs-final-source/combo_02_1x/runtime.json",
+    "script_sha256": "95e5caf6b0aeaf6902cd62d7b9b3bb0f350da69c25827afe527e58aa2557a758"
+  },
+  {
+    "gif": "a_02_2x.gif",
+    "sha256": "1eae10f456dff7c136123b634acd8d584a356c683ce455ea484a7db12ba9f445",
+    "reviewed_bytes_identical": true,
+    "runtime": "/Users/rexxa/work/arttrial3-data/gifs-final-source/combo_02_2x/runtime.json",
+    "script_sha256": "95e5caf6b0aeaf6902cd62d7b9b3bb0f350da69c25827afe527e58aa2557a758"
+  },
+  {
+    "gif": "a_03_1x.gif",
+    "sha256": "39efe9fda6aa9aa4e02438cf48777614915e5f96231f83dc046ce3fe24d6fe1e",
+    "reviewed_bytes_identical": true,
+    "runtime": "/Users/rexxa/work/arttrial3-data/gifs-final-source/combo_03_1x/runtime.json",
+    "script_sha256": "95e5caf6b0aeaf6902cd62d7b9b3bb0f350da69c25827afe527e58aa2557a758"
+  },
+  {
+    "gif": "a_03_2x.gif",
+    "sha256": "7f45920e07e4b63cc81bfce3b3bbbae401788d1efff8ce93f750e7df5ff9f9f1",
+    "reviewed_bytes_identical": true,
+    "runtime": "/Users/rexxa/work/arttrial3-data/gifs-final-source/combo_03_2x/runtime.json",
+    "script_sha256": "95e5caf6b0aeaf6902cd62d7b9b3bb0f350da69c25827afe527e58aa2557a758"
+  },
+  {
+    "gif": "a_04_1x.gif",
+    "sha256": "2fb008dc65f1c29eaf41f4ffce6b8b7f49e6937cae39ad637e1f6d742560da2a",
+    "reviewed_bytes_identical": true,
+    "runtime": "/Users/rexxa/work/arttrial3-data/gifs-final-source/combo_04_1x/runtime.json",
+    "script_sha256": "95e5caf6b0aeaf6902cd62d7b9b3bb0f350da69c25827afe527e58aa2557a758"
+  },
+  {
+    "gif": "a_04_2x.gif",
+    "sha256": "f35bf406ec57794724fc0be20d97d9860292c75c27db830fc50618b3748c9802",
+    "reviewed_bytes_identical": true,
+    "runtime": "/Users/rexxa/work/arttrial3-data/gifs-final-source/combo_04_2x/runtime.json",
+    "script_sha256": "95e5caf6b0aeaf6902cd62d7b9b3bb0f350da69c25827afe527e58aa2557a758"
+  },
+  {
+    "gif": "a_05_1x.gif",
+    "sha256": "9db2bb7bf9713dcb604b45213153da08dc778cdbaa02931fa5b95c3f23f9072f",
+    "reviewed_bytes_identical": true,
+    "runtime": "/Users/rexxa/work/arttrial3-data/gifs-final-source/combo_05_1x/runtime.json",
+    "script_sha256": "95e5caf6b0aeaf6902cd62d7b9b3bb0f350da69c25827afe527e58aa2557a758"
+  },
+  {
+    "gif": "a_05_2x.gif",
+    "sha256": "a49c8a346fe36a898b32fe52cdbcbe6037535943a7a1077f964fb9d3259c4cc7",
+    "reviewed_bytes_identical": true,
+    "runtime": "/Users/rexxa/work/arttrial3-data/gifs-final-source/combo_05_2x/runtime.json",
+    "script_sha256": "95e5caf6b0aeaf6902cd62d7b9b3bb0f350da69c25827afe527e58aa2557a758"
+  },
+  {
+    "gif": "a_06_1x.gif",
+    "sha256": "65ec0e8cd90472263fa7cd4f16ddc04b2022331819f3e19828056abf56853584",
+    "reviewed_bytes_identical": true,
+    "runtime": "/Users/rexxa/work/arttrial3-data/gifs-final-source/combo_06_1x/runtime.json",
+    "script_sha256": "95e5caf6b0aeaf6902cd62d7b9b3bb0f350da69c25827afe527e58aa2557a758"
+  },
+  {
+    "gif": "a_06_2x.gif",
+    "sha256": "a335b57b6986e7b9096c7c712b1fd7e38a5d56fb1d0e6ff13f52189123138f6e",
+    "reviewed_bytes_identical": true,
+    "runtime": "/Users/rexxa/work/arttrial3-data/gifs-final-source/combo_06_2x/runtime.json",
+    "script_sha256": "95e5caf6b0aeaf6902cd62d7b9b3bb0f350da69c25827afe527e58aa2557a758"
+  },
+  {
+    "gif": "a_07_1x.gif",
+    "sha256": "2d90e4bd4c3f424b594f6d53ba1af057ab768621ca5b30ff49db12868e7e8ac8",
+    "reviewed_bytes_identical": true,
+    "runtime": "/Users/rexxa/work/arttrial3-data/gifs-final-source/combo_07_1x/runtime.json",
+    "script_sha256": "95e5caf6b0aeaf6902cd62d7b9b3bb0f350da69c25827afe527e58aa2557a758"
+  },
+  {
+    "gif": "a_07_2x.gif",
+    "sha256": "17005486986803a94d1d06f9b66457dee07157858cd83019d51d036424ba35be",
+    "reviewed_bytes_identical": true,
+    "runtime": "/Users/rexxa/work/arttrial3-data/gifs-final-source/combo_07_2x/runtime.json",
+    "script_sha256": "95e5caf6b0aeaf6902cd62d7b9b3bb0f350da69c25827afe527e58aa2557a758"
+  },
+  {
+    "gif": "a_08_1x.gif",
+    "sha256": "f1f5b2529a6a8a85425c18e9db5635fcf3043645746975bf9e4dc834c78e3728",
+    "reviewed_bytes_identical": true,
+    "runtime": "/Users/rexxa/work/arttrial3-data/gifs-final-source/combo_08_1x/runtime.json",
+    "script_sha256": "95e5caf6b0aeaf6902cd62d7b9b3bb0f350da69c25827afe527e58aa2557a758"
+  },
+  {
+    "gif": "a_08_2x.gif",
+    "sha256": "a8b500e01adfd4531b4ca9ba7db1340bb792d216b2ea2cab3ff6a446f52aa04d",
+    "reviewed_bytes_identical": true,
+    "runtime": "/Users/rexxa/work/arttrial3-data/gifs-final-source/combo_08_2x/runtime.json",
+    "script_sha256": "95e5caf6b0aeaf6902cd62d7b9b3bb0f350da69c25827afe527e58aa2557a758"
+  },
+  {
+    "gif": "a_09_1x.gif",
+    "sha256": "9db2bb7bf9713dcb604b45213153da08dc778cdbaa02931fa5b95c3f23f9072f",
+    "reviewed_bytes_identical": true,
+    "runtime": "/Users/rexxa/work/arttrial3-data/gifs-final-source/combo_09_1x/runtime.json",
+    "script_sha256": "95e5caf6b0aeaf6902cd62d7b9b3bb0f350da69c25827afe527e58aa2557a758"
+  },
+  {
+    "gif": "a_09_2x.gif",
+    "sha256": "a49c8a346fe36a898b32fe52cdbcbe6037535943a7a1077f964fb9d3259c4cc7",
+    "reviewed_bytes_identical": true,
+    "runtime": "/Users/rexxa/work/arttrial3-data/gifs-final-source/combo_09_2x/runtime.json",
+    "script_sha256": "95e5caf6b0aeaf6902cd62d7b9b3bb0f350da69c25827afe527e58aa2557a758"
+  },
+  {
+    "gif": "a_10_1x.gif",
+    "sha256": "010a860fe7f533a9e639d0367ed05075646ab637f67bdc269f5c891016a804ca",
+    "reviewed_bytes_identical": true,
+    "runtime": "/Users/rexxa/work/arttrial3-data/gifs-final-source/combo_10_1x/runtime.json",
+    "script_sha256": "95e5caf6b0aeaf6902cd62d7b9b3bb0f350da69c25827afe527e58aa2557a758"
+  },
+  {
+    "gif": "a_10_2x.gif",
+    "sha256": "adbb260246744df99572b014e76f8270aa2634ede9319e45e4f76ff89745b3b2",
+    "reviewed_bytes_identical": true,
+    "runtime": "/Users/rexxa/work/arttrial3-data/gifs-final-source/combo_10_2x/runtime.json",
+    "script_sha256": "95e5caf6b0aeaf6902cd62d7b9b3bb0f350da69c25827afe527e58aa2557a758"
+  },
+  {
+    "gif": "a_11_1x.gif",
+    "sha256": "5f086c661a03156d32c92a7f823272f3b8c6e007f33d5cbd0642830755543fdc",
+    "reviewed_bytes_identical": true,
+    "runtime": "/Users/rexxa/work/arttrial3-data/gifs-final-source/combo_11_1x/runtime.json",
+    "script_sha256": "95e5caf6b0aeaf6902cd62d7b9b3bb0f350da69c25827afe527e58aa2557a758"
+  },
+  {
+    "gif": "a_11_2x.gif",
+    "sha256": "922f451e56f51a3172cb075e4c29ef927f49883c4c73ad87c966fd4f55108918",
+    "reviewed_bytes_identical": true,
+    "runtime": "/Users/rexxa/work/arttrial3-data/gifs-final-source/combo_11_2x/runtime.json",
+    "script_sha256": "95e5caf6b0aeaf6902cd62d7b9b3bb0f350da69c25827afe527e58aa2557a758"
+  },
+  {
+    "gif": "a_12_1x.gif",
+    "sha256": "db46ac504dcf694565debb94608c964bd0658a41fd23f0206299677ca0ababb8",
+    "reviewed_bytes_identical": true,
+    "runtime": "/Users/rexxa/work/arttrial3-data/gifs-final-source/combo_12_1x/runtime.json",
+    "script_sha256": "95e5caf6b0aeaf6902cd62d7b9b3bb0f350da69c25827afe527e58aa2557a758"
+  },
+  {
+    "gif": "a_12_2x.gif",
+    "sha256": "b589c1bfd7a6f73cf1161a86bd52f57db27e2a33a43cee26a16d903081d4d897",
+    "reviewed_bytes_identical": true,
+    "runtime": "/Users/rexxa/work/arttrial3-data/gifs-final-source/combo_12_2x/runtime.json",
+    "script_sha256": "95e5caf6b0aeaf6902cd62d7b9b3bb0f350da69c25827afe527e58aa2557a758"
+  }
+]

@@ -1,0 +1,509 @@
+{
+  "anchors": [
+    {
+      "name": "ground_river",
+      "family": "ground",
+      "file": "crops/ground_river.png",
+      "sha256": "34b954655539274b5bfcb5413fd742c65cf0fbf2693c000cc9580f0de1fbcd2b",
+      "metrics": {
+        "edge_density": 0.30131960191484003,
+        "saturation_q25": 0.26857142753101737,
+        "saturation_q75": 0.5021993377408254,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.008411471359926254,
+        "foreground_pixels": 65536
+      }
+    },
+    {
+      "name": "ground_forest",
+      "family": "ground",
+      "file": "crops/ground_forest.png",
+      "sha256": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9",
+      "metrics": {
+        "edge_density": 0.30478395061728397,
+        "saturation_q25": 0.5424908681798258,
+        "saturation_q75": 0.6093739394005324,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.009051737753592954,
+        "foreground_pixels": 65536
+      }
+    },
+    {
+      "name": "ground_meadow",
+      "family": "ground",
+      "file": "crops/ground_meadow.png",
+      "sha256": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d",
+      "metrics": {
+        "edge_density": 0.3364984882842026,
+        "saturation_q25": 0.5663400932171705,
+        "saturation_q75": 0.6309951132720675,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.009361246964443059,
+        "foreground_pixels": 65536
+      }
+    },
+    {
+      "name": "ground_stone",
+      "family": "ground",
+      "file": "crops/ground_stone.png",
+      "sha256": "a6a501b0c4ff9b80f434f9d2e409bb31652510a218bd2a1f06522bf745e4a45c",
+      "metrics": {
+        "edge_density": 0.3133818342151676,
+        "saturation_q25": 0.31002262626763877,
+        "saturation_q75": 0.48316765573498466,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.012613530748754933,
+        "foreground_pixels": 65536
+      }
+    },
+    {
+      "name": "building_hut",
+      "family": "buildings",
+      "file": "crops/building_hut.png",
+      "sha256": "e98dac4d6e5c3c1010595fbcd9915beb6f1967b153ae666399e81806c28e743e",
+      "metrics": {
+        "edge_density": 0.26571554547745024,
+        "saturation_q25": 0.4763107026751968,
+        "saturation_q75": 0.5937751446485184,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.008822953830043365,
+        "foreground_pixels": 65536
+      }
+    },
+    {
+      "name": "building_roof",
+      "family": "buildings",
+      "file": "crops/building_roof.png",
+      "sha256": "abcc7e568094356e5a7fd89478ca87e8ddc932a0b55e19ccbca6675104148c1c",
+      "metrics": {
+        "edge_density": 0.3002567693744164,
+        "saturation_q25": 0.3270062688482319,
+        "saturation_q75": 0.537224405733459,
+        "stroke_q25": 2.0,
+        "stroke_q50": 4.0,
+        "stroke_q75": 4.0,
+        "stroke_q90": 5.656854249492381,
+        "wash_flatness": 0.010459674206430094,
+        "foreground_pixels": 44544
+      }
+    },
+    {
+      "name": "props_logs",
+      "family": "items",
+      "file": "crops/props_logs.png",
+      "sha256": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+      "metrics": {
+        "edge_density": 0.28755522827687774,
+        "saturation_q25": 0.45728291677432953,
+        "saturation_q75": 0.5450762040840363,
+        "stroke_q25": 2.0,
+        "stroke_q50": 4.0,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.47213595499958,
+        "wash_flatness": 0.009172279459691363,
+        "foreground_pixels": 50688
+      }
+    },
+    {
+      "name": "props_hearth",
+      "family": "items",
+      "file": "crops/props_hearth.png",
+      "sha256": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+      "metrics": {
+        "edge_density": 0.2875283446712018,
+        "saturation_q25": 0.3781963954538155,
+        "saturation_q75": 0.5251982475552179,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.8284271247461903,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.47213595499958,
+        "wash_flatness": 0.005638285700776778,
+        "foreground_pixels": 63744
+      }
+    },
+    {
+      "name": "plant_oak",
+      "family": "plants",
+      "file": "crops/plant_oak.png",
+      "sha256": "a627b9d3b335cb3d2e09804df8d49cabe21572736b88a27e4b7ecc4330d69dc3",
+      "metrics": {
+        "edge_density": 0.2931146341057675,
+        "saturation_q25": 0.5426228163547981,
+        "saturation_q75": 0.6023996098425225,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.8284271247461903,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.47213595499958,
+        "wash_flatness": 0.017019678425484096,
+        "foreground_pixels": 63416
+      }
+    },
+    {
+      "name": "plant_birch",
+      "family": "plants",
+      "file": "crops/plant_birch.png",
+      "sha256": "49becd9296dfcd3751a8ec7c6785b3eee823d53b545d52a20b6e8d0f237f9615",
+      "metrics": {
+        "edge_density": 0.2829874966746475,
+        "saturation_q25": 0.5618240103721294,
+        "saturation_q75": 0.6381743040543888,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.014808061393053506,
+        "foreground_pixels": 64128
+      }
+    },
+    {
+      "name": "person_full",
+      "family": "person",
+      "file": "crops/person_full.png",
+      "sha256": "8379eaa4f2fdb396f8b01ba6fb2b7ab76203ce103a619e6f06f84ca24ffd4fbf",
+      "metrics": {
+        "edge_density": 0.22020968772312202,
+        "saturation_q25": 0.6800508072835385,
+        "saturation_q75": 0.8169541807882845,
+        "stroke_q25": 2.0,
+        "stroke_q50": 4.0,
+        "stroke_q75": 4.47213595499958,
+        "stroke_q90": 6.0,
+        "wash_flatness": 0.05079636683378057,
+        "foreground_pixels": 28882
+      }
+    },
+    {
+      "name": "person_upper",
+      "family": "person",
+      "file": "crops/person_upper.png",
+      "sha256": "6722a3f22b742b0f9fda8b5bf54d6b5f1e9278254c02f3cb426c65a1707bc3f4",
+      "metrics": {
+        "edge_density": 0.20889525736120476,
+        "saturation_q25": 0.6760350326185685,
+        "saturation_q75": 0.8228881610938849,
+        "stroke_q25": 2.0,
+        "stroke_q50": 4.0,
+        "stroke_q75": 4.47213595499958,
+        "stroke_q90": 6.0,
+        "wash_flatness": 0.02359860574033476,
+        "foreground_pixels": 37976
+      }
+    }
+  ],
+  "ranges": [
+    {
+      "family": "buildings",
+      "lower": [
+        0.12422246676448356,
+        0.12617702596737473,
+        0.2544745181379646,
+        1.0,
+        0.0,
+        0.8284271247461903,
+        2.25,
+        0.0040104335591106205
+      ],
+      "upper": [
+        0.4417498480873831,
+        0.6771399455560541,
+        0.8765250322440128,
+        3.0,
+        6.0,
+        6.0,
+        7.406854249492381,
+        0.023011283254146208
+      ]
+    },
+    {
+      "family": "ground",
+      "lower": [
+        0.14186507936507936,
+        0.059843547343970405,
+        0.20462696348322162,
+        1.0,
+        0.0,
+        0.8284271247461903,
+        2.25,
+        0.0038233960726937514
+      ],
+      "upper": [
+        0.49595301083396326,
+        0.7750679734042174,
+        0.9095358055238305,
+        3.0,
+        4.0,
+        6.0,
+        5.75,
+        0.027749767647260854
+      ]
+    },
+    {
+      "family": "items",
+      "lower": [
+        0.14375745143418192,
+        0.16932656739677926,
+        0.25762963464540434,
+        1.0,
+        0.8284271247461903,
+        2.0,
+        2.7221359549995796,
+        0.002562857136716717
+      ],
+      "upper": [
+        0.4313261215138976,
+        0.6661527448313658,
+        0.8126448169938499,
+        3.0,
+        6.0,
+        6.0,
+        6.22213595499958,
+        0.020179014811321002
+      ]
+    },
+    {
+      "family": "person",
+      "lower": [
+        0.10161902109012307,
+        0.3370135726430417,
+        0.40699359531774215,
+        1.0,
+        2.0,
+        2.23606797749979,
+        4.25,
+        0.010726638972879435
+      ],
+      "upper": [
+        0.32748592399420373,
+        1.0190722672590653,
+        1.2328487465644273,
+        3.0,
+        6.0,
+        6.708203932499369,
+        7.75,
+        0.11175200703431726
+      ]
+    },
+    {
+      "family": "plants",
+      "lower": [
+        0.13896196397954375,
+        0.26651110967306624,
+        0.29225613136829465,
+        1.0,
+        0.0,
+        0.8284271247461903,
+        2.25,
+        0.006730936996842502
+      ],
+      "upper": [
+        0.43714016680087125,
+        0.8379357170538613,
+        0.9483177825286166,
+        3.0,
+        4.82842712474619,
+        6.0,
+        6.22213595499958,
+        0.037443292536065015
+      ]
+    }
+  ],
+  "leave_one_out": [
+    {
+      "name": "building_hut",
+      "family": "buildings",
+      "passed": true,
+      "checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      }
+    },
+    {
+      "name": "building_roof",
+      "family": "buildings",
+      "passed": true,
+      "checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      }
+    },
+    {
+      "name": "ground_river",
+      "family": "ground",
+      "passed": true,
+      "checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      }
+    },
+    {
+      "name": "ground_forest",
+      "family": "ground",
+      "passed": true,
+      "checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      }
+    },
+    {
+      "name": "ground_meadow",
+      "family": "ground",
+      "passed": true,
+      "checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      }
+    },
+    {
+      "name": "ground_stone",
+      "family": "ground",
+      "passed": true,
+      "checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      }
+    },
+    {
+      "name": "props_logs",
+      "family": "items",
+      "passed": true,
+      "checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      }
+    },
+    {
+      "name": "props_hearth",
+      "family": "items",
+      "passed": true,
+      "checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      }
+    },
+    {
+      "name": "person_full",
+      "family": "person",
+      "passed": true,
+      "checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      }
+    },
+    {
+      "name": "person_upper",
+      "family": "person",
+      "passed": true,
+      "checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      }
+    },
+    {
+      "name": "plant_oak",
+      "family": "plants",
+      "passed": true,
+      "checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      }
+    },
+    {
+      "name": "plant_birch",
+      "family": "plants",
+      "passed": true,
+      "checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      }
+    }
+  ],
+  "comparison_size": 256,
+  "version": 2
+}

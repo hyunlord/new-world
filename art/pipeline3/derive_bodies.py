@@ -63,6 +63,7 @@ def derive(source_path: Path, age: Age) -> Path:
     target = DATA / age / identifier
     target.mkdir(parents=True, exist_ok=True)
     operations: list[str] = []
+    head_box: list[int] | None = None
     bands = BANDS[age]
     if age == "elder" and layer.direction == "S":
         bands = tuple((*band[:5], -1 if band[0] < 50 else band[5]) for band in bands)
@@ -76,6 +77,7 @@ def derive(source_path: Path, age: Age) -> Path:
             size = (round(96 * factor), round(64 * factor))
             offset = (round(48 - (bbox[0] + bbox[2]) * factor / 2),
                       round(36 - (bbox[1] + bbox[3]) * factor / 2))
+            head_box = [round(original["head_box"][i] * factor + offset[i % 2]) for i in range(4)]
             result = Image.new("RGBA", (96, 64))
             result.paste(source.resize(size, Image.Resampling.LANCZOS), offset)
             regions = Image.new("L", (96, 64))
@@ -100,7 +102,7 @@ def derive(source_path: Path, age: Age) -> Path:
     pixels[pixels[:, :, 3] < 16] = 0
     mask = complete_mask(pixels, mask)
     operations.append("Alpha cleanup<16; missing categorical edge labels take nearest visible nonzero label, transparent labels0; no RGBA repaint or hole fill")
-    meta = {"schema_version": 1, "id": identifier, "kind": layer.kind,
+    meta: dict[str, int | str | list[str] | list[int]] = {"schema_version": 1, "id": identifier, "kind": layer.kind,
             "body_type": age, "direction": layer.direction, "frame": layer.frame,
             "scale": 1, "mask": identifier + "_mask.png", "variant": layer.variant,
             "operations": operations, "source_sidecar": str(source_path),
@@ -108,8 +110,8 @@ def derive(source_path: Path, age: Age) -> Path:
             "source_mask_sha256": hashlib.sha256(layer.mask.read_bytes()).hexdigest(),
             "source_sidecar_sha256": hashlib.sha256(source_path.read_bytes()).hexdigest(),
             "generation_calls": 0, "extras": list(layer.extras)}
-    if layer.frame == "sleep":
-        meta["head_box"] = [round(original["head_box"][i] * factor + offset[i % 2]) for i in range(4)]
+    if head_box is not None:
+        meta["head_box"] = head_box
     for field in ("grip", "shoulder"):
         if field in original:
             x, y = original[field]
@@ -119,7 +121,7 @@ def derive(source_path: Path, age: Age) -> Path:
     Image.fromarray(pixels).save(target / "pre_copyback.png")
     Image.fromarray(mask).save(target / "pre_copyback_mask.png")
     Image.fromarray(pixels).save(target / (identifier + ".png"))
-    Image.fromarray(mask).save(target / meta["mask"])
+    Image.fromarray(mask).save(target / (identifier + "_mask.png"))
     sidecar = target / (identifier + ".json")
     sidecar.write_text(json.dumps(meta, indent=2) + "\n")
     return sidecar
