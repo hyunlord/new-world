@@ -64,7 +64,7 @@
 - The simulation is unaffected: the contract (ADR 0016, C2) already keeps pixels, tile sizes and sprites out of the
   sim crates, so the art change is a renderer change only.
 - VISION §6 is rewritten for this look; the 16/32-px size table and the mock-up references move to a history note.
-- Status (updated 2026-10-22, M3 Part 0; read from the art branches, which are never merged):
+- Status (updated 2026-10-22, M3 Part 0 and Part 6; read from the art branches, which are never merged): **people: parked** (owner decision 2026-10-22, below).
   - ART-TRIAL2 (`v8/art-trial2` `034c38ab`, `docs/v8/arttrial2/TRIAL2_REPORT.md`) reported the sustainability
     condition **failed** (2 of 38 environment candidates adopted, one ground family) and, by its pre-registered rule,
     recommended 02 woodcut for the map and 05 for portraits.
@@ -85,11 +85,19 @@
   - ART-TRIAL3b (`v8/art-trial3` `b2a06115`, `docs/v8/arttrial3/TRIAL3B_REPORT.md`), the route-B retry, stopped at
     its Part 0 tool check: `higgsfield account status` exited 4, "No workspace selected"; no generation was
     submitted. Route B is still unjudged; the artist recommendation stands until B runs.
-  - The look decided here (05) stands, with the environment as its tested part, until the owner decides how people
-    are made; M-ART2 does not start before that decision.
+  - ART-TRIAL4 (`v8/art-trial4` `9f9c6d6b`, `docs/v8/arttrial4/TRIAL4_REPORT.md`) drew the pawns in code (head,
+    capsule body, hair, top, item layers from a data spec, 4× raster with an ink pass): structure S1 PASS (636/636
+    layers, 48/48 combinations), determinism D1 PASS (1,910 files byte-identical across two generations), FPS P1
+    PASS (200 pawns at 280.7 FPS); readability R1 FAIL (clothing, hair, sex, age and 2× activity below the bars for
+    both reviewers) and the spec-revision limit S2 FAIL (at least 3 changes against 2 allowed, a procedure breach).
+    Verdict: not adopted; the owner rejected the look.
+  - **Owner decision (2026-10-22): people art is parked.** No outsourcing and no further generation trials; the
+    ART-TRIAL4 `route_p` pawns are the placeholder until a new approach appears. The look decided here (05) stands
+    for the environment, buildings and portraits; M-ART2's scope is the environment, buildings, portraits and the
+    64-px camera only.
 
 ## Date
 2026-10-22
 
 ## Source
-docs/v8/m2/M2_GOAL.md §2, §4; branch `v8/art-trial` (`c3dafb07`: docs/v8/arttrial/DECISION_BRIEF.md, TRIAL_REPORT.md); branch `v8/art-concept` (`a5406866`: docs/v8/artconcept/CONCEPT_REPORT.md, art/concepts/05_ink_and_tone/CONCEPT.md); branch `v8/art-trial2` (`034c38ab`: docs/v8/arttrial2/TRIAL2_REPORT.md; `2433a612`: TRIAL2B_REPORT.md); branch `v8/art-trial3` (`352f4101`: docs/v8/arttrial3/TRIAL3_REPORT.md, VERDICT.json; `b2a06115`: TRIAL3B_REPORT.md); docs/v8/m1art/ART_REPORT.md 8.2; docs/decisions/0015-colony-art-one-code-drawn-sheet.md; docs/decisions/0002-view-b-top-down.md
+docs/v8/m2/M2_GOAL.md §2, §4; branch `v8/art-trial` (`c3dafb07`: docs/v8/arttrial/DECISION_BRIEF.md, TRIAL_REPORT.md); branch `v8/art-concept` (`a5406866`: docs/v8/artconcept/CONCEPT_REPORT.md, art/concepts/05_ink_and_tone/CONCEPT.md); branch `v8/art-trial2` (`034c38ab`: docs/v8/arttrial2/TRIAL2_REPORT.md; `2433a612`: TRIAL2B_REPORT.md); branch `v8/art-trial3` (`352f4101`: docs/v8/arttrial3/TRIAL3_REPORT.md, VERDICT.json; `b2a06115`: TRIAL3B_REPORT.md); branch `v8/art-trial4` (`9f9c6d6b`: docs/v8/arttrial4/TRIAL4_REPORT.md); the owner's decision of 2026-10-22 (people parked) in docs/v8/m3/M3_DECISIONS.md D21; docs/v8/m1art/ART_REPORT.md 8.2; docs/decisions/0015-colony-art-one-code-drawn-sheet.md; docs/decisions/0002-view-b-top-down.md

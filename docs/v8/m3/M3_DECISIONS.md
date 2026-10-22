@@ -351,3 +351,19 @@ These fixes change colony behaviour only in the cases they name; the soak, ident
   verdicts as `3d73712d` — its `summary.json` is byte-identical to `$DATA/eval600/`'s, so the review fixes changed
   none of these 32 runs. Checks on `23be0178` (`$DATA/checks/p6`): fmt, clippy, 1,888 tests, soak PASS, nav-bench
   movement 92.5 µs per tick (load 13), identity in the gate.
+
+## D21 — Art record addendum: ART-TRIAL4 and people art parked (owner, 2026-10-22)
+
+- Context: during Part 6 the owner reported ART-TRIAL4 (`v8/art-trial4` `9f9c6d6b`): code-drawn pawns passed
+  structure (636/636 layers, 48/48 combinations), determinism (1,910 files byte-identical) and FPS (200 pawns at
+  280.7 FPS), failed readability, breached the spec-revision limit (S2), and the owner rejected the look
+  (`docs/v8/arttrial4/TRIAL4_REPORT.md` on that branch, read with `git show`).
+- Owner decision (2026-10-22): **people art is parked** — no outsourcing, no further generation trials; the
+  `route_p` pawns are the placeholder until a new approach appears. ADR 0018's status reads "people: parked";
+  ROADMAP's M-ART2 scope is the environment, buildings, portraits and the 64-px camera only; ROADMAP row ART-TRIAL4,
+  HISTORY line and `docs/archive/INDEX.md` row added. The art branch is not merged (goal: art branches untouched).
+- Effect on the next-pass rule (goal §11: "M-ART2 if TRIAL3b reported viable, else M4"): TRIAL3b never ran its
+  route; with people parked, M-ART2 is no longer blocked by people. The recommendation stays M4 by the registered
+  rule (the M3 findings — the river cutting off the live world's forest, F7's script — are system work), with the
+  narrowed M-ART2 as the owner's alternative.
+
