@@ -1,0 +1,55 @@
+{
+  "status": "PARTIAL_NOT_ACCEPTED",
+  "tests": {
+    "command": "python3 -m pytest art/pipeline3/test_structure.py -q",
+    "passed": 22
+  },
+  "ruff_fatal": "PASS",
+  "python_compile": "PASS",
+  "basedpyright": {
+    "errors": 0,
+    "warnings": 176,
+    "raw": "/Users/rexxa/work/arttrial3-data/typecheck-final.json"
+  },
+  "structural": {
+    "accepted_layers": 87,
+    "passed_layers": 87,
+    "combinations": 603,
+    "minimum_inventory": "NOT_COMPLETE"
+  },
+  "provenance": {
+    "passed": 87,
+    "total": 87,
+    "original_pixel_replay": 29,
+    "derived_pixel_replay": 58
+  },
+  "grid": {
+    "pages": 78,
+    "combinations_per_ground_zoom": 603,
+    "ground_zoom_groups": 4
+  },
+  "gifs": {
+    "count": 24,
+    "final_source_byte_identical_to_reviewed": 24,
+    "timed_readability": "NOT_VERIFIED"
+  },
+  "crowd": {
+    "rendered_fps": 78.8873938,
+    "seconds": 60.009588,
+    "population": 200,
+    "full_route_eligible": false
+  },
+  "scope": "art/** and docs/v8/arttrial3/**; no game change, merge or unrelated staging",
+  "limits": {
+    "metric": "sum of changed/added deliverable art file sizes; excludes ignored caches and pre-existing unchanged art",
+    "art_added_or_changed_bytes": 8152608,
+    "png_count": 196,
+    "max_png_bytes": 1313374,
+    "gif_count": 24,
+    "max_gif_bytes": 260157
+  },
+  "publication_before_report": {
+    "local": "51dbbe7ae8ea2da826f4288daf021ec2153f6e3c",
+    "remote": "51dbbe7ae8ea2da826f4288daf021ec2153f6e3c\trefs/heads/v8/art-trial3"
+  }
+}

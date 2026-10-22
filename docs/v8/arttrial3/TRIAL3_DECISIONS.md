@@ -25,7 +25,7 @@ isolated experiment. STYLE v2 is a style reference; Trial3 structure gates first
 | 2 | Official CLI installed; authenticated workspace unavailable, no Meshy key | STOPPED_TOOL_UNAVAILABLE |
 | 3 | 78pages and24GIFs; crowd78.8874FPS; timed playback unavailable | EVIDENCE_COMPLETE_R1_NOT_VERIFIED |
 | 4 | S1 accepted87/87; S2 1.793; T1 2.542; numeric FPS78.8874; neither viable | REPORTED_PARTIAL |
-| 5 | Korean goal §8 report, production guide, publication verification | IN_PROGRESS |
+| 5 | Korean goal §8 report, production guide, verified publication | REPORTED_PARTIAL |
 
 No structural failure may enter a normal board. No missing review or runtime
 measurement may be reported as passing. Every attempted generation is retained.
