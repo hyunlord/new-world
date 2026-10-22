@@ -301,7 +301,7 @@ pub fn collect_agent_knowledge(
         .entries()
         .iter()
         .map(|e| {
-            let threshold = defs().threshold(e.id);
+            let threshold = defs().threshold(e.id());
             let days_unused = today.saturating_sub(u64::from(e.last_used));
             let state = if days_unused > fade {
                 2
@@ -311,10 +311,10 @@ pub fn collect_agent_knowledge(
                 1
             };
             KnowledgeRow {
-                id: e.id,
+                id: e.id(),
                 proficiency: e.proficiency,
                 threshold,
-                source: e.source.code(),
+                source: e.source().code(),
                 last_used: u64::from(e.last_used) * knowledge::DAY_TICKS,
                 days_unused,
                 state,

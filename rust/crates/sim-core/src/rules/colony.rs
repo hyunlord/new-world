@@ -122,6 +122,9 @@ pub struct EconomyRule {
     /// chronicle `ToolBroke`) instead of turning into one stone (M2).
     #[serde(default)]
     pub tools_break: bool,
+    /// Chops a ground-stone axe lasts (M4 goal 3.5: 120; 0 = never).
+    #[serde(default)]
+    pub ground_axe_uses: u32,
 }
 
 impl EconomyRule {
@@ -138,6 +141,7 @@ impl EconomyRule {
         axe_reach: 24,
         axe_uses: 200,
         tools_break: false,
+        ground_axe_uses: 0,
     };
 
     /// The M4 values (goal 3.5, tool wear): a stone axe lasts 40 chops and is
@@ -145,6 +149,7 @@ impl EconomyRule {
     pub const M4: Self = Self {
         axe_uses: 40,
         tools_break: true,
+        ground_axe_uses: 120,
         ..Self::M2
     };
 }

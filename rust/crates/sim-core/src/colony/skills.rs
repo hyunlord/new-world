@@ -61,6 +61,21 @@ pub const QUALITY_BONUS_TABLE: [u32; 26] = {
 /// Chop work-tick multiplier (‰) with an axe of quality bucket 0–10: 600 − 15·bucket.
 pub const AXE_PERMILLE: [u32; 11] = [600, 585, 570, 555, 540, 525, 510, 495, 480, 465, 450];
 
+/// Chop work-tick multiplier (‰) with a ground-stone axe of quality bucket 0–10
+/// (M4 goal 3.5): 450 − 10·bucket, at least 350.
+pub const GROUND_AXE_PERMILLE: [u32; 11] = [450, 440, 430, 420, 410, 400, 390, 380, 370, 360, 350];
+
+/// The chop multiplier (‰) of an axe of `kind` and quality bucket `bucket`
+/// (`None` for an item that is not an axe).
+pub fn axe_permille(kind: super::ItemKind, bucket: u8) -> Option<u32> {
+    let b = usize::from(bucket.min(10));
+    match kind {
+        super::ItemKind::StoneAxe => Some(AXE_PERMILLE[b]),
+        super::ItemKind::GroundAxe => Some(GROUND_AXE_PERMILLE[b]),
+        _ => None,
+    }
+}
+
 /// Base craft quality (goal 3.7).
 pub const QUALITY_BASE: i32 = 30;
 /// Quality per skill level.
@@ -233,6 +248,16 @@ mod tests {
         assert!(XP_TABLE.windows(2).all(|w| w[0] < w[1]));
         assert!(SPEED_PERMILLE.windows(2).all(|w| w[0] > w[1]));
         assert!(AXE_PERMILLE.windows(2).all(|w| w[0] > w[1]));
+        assert!(GROUND_AXE_PERMILLE.windows(2).all(|w| w[0] > w[1]));
+        assert_eq!(
+            (
+                axe_permille(super::super::ItemKind::GroundAxe, 0),
+                axe_permille(super::super::ItemKind::GroundAxe, 10),
+                axe_permille(super::super::ItemKind::StoneAxe, 10),
+                axe_permille(super::super::ItemKind::Log, 3)
+            ),
+            (Some(450), Some(350), Some(450), None)
+        );
         assert_eq!(
             (
                 QUALITY_BONUS_TABLE[0],

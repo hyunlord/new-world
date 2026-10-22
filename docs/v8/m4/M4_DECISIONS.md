@@ -51,6 +51,13 @@ Raw data lives in `/Users/rexxa/work/m4-data/` (`$DATA`), outside the repository
   anywhere gave 0 fords on every seed — the main landmass is always the camp's region — while the default seed's near
   forest (a 547-tile patch 8 tiles from the camp) stayed across the river. The target is now the cut-off region (not
   the camp's) with the most forest tiles **within 40 tiles of the camp**, at least 100 of them; both crossings go to it.
+- Revised again after calibration round 1 (seed 6 lost 6 people to the cold on day 18–23 with the soak script, also
+  under M3 rules — so neither knowledge nor tool wear): the 0-1 search from the whole camp region put the crossing
+  wherever the river was narrowest, far from the hearth; the script's stockpile "3 east of the hearth" then lay across
+  the river, reachable only by a long detour, so firewood never reached the stock and the hearth went out. The crossing
+  is now the river part of the shortest way **from the hearth** (Dijkstra, land 1, river 3), so the ford lies on the
+  camp's own way to the forest. Seeds 0–7 × 36 days with the soak script: 0 deaths, 352–752 firewood split
+  (`$DATA/cal/fix2`).
 - Marks no one from the camp can walk to are refused: chop, quarry and dig marks on targets outside the hearth's
   region are skipped, and a command whose every valid target is unreachable is rejected `Unreachable` (bridge reason
   `unreachable`, toast "닿을 수 없음: 강 건너"). Under M1/M2 rules (no space rule) nothing is refused.
@@ -69,7 +76,9 @@ Raw data lives in `/Users/rexxa/work/m4-data/` (`$DATA`), outside the repository
   broken tool up (ledger consumed, `ColonyTallies::tools_broken`, chronicle `ToolBroke` 24: subject the holder, cause
   the item code, value the uses); M2/M3 rules keep the M2 behaviour (a stone back).
 - The soak script (`tools/v8/soak_script.json`, renamed from `m3_soak_script.json`; gate step name kept) adds
-  `Maintain 2` hafted axes after the `Make 4` bill, so blades are consumed all along.
+  `Maintain 2` hafted axes **after** the firewood bill (first placed before it: with a storehouse, a `Maintain` bill
+  counts only the stock under its roof, so the axe bill never filled and the bench never split firewood — seed 6's
+  bench made 23 axes and 0 firewood), so blades are consumed all along.
 - Evidence: `colony_skills.rs::under_m4_a_worn_out_axe_breaks_after_40_chops_and_is_used_up`.
 
 ## D3 — The ledger rule and the quiet M3 re-measure (goal 3.6)
@@ -121,8 +130,8 @@ Raw data lives in `/Users/rexxa/work/m4-data/` (`$DATA`), outside the repository
   builds log walls, the hide scraper knaps. `All` nodes go to every founder at 600 ‰. For N founders a `Count(n)` is
   scaled to round(n · N / 10), at least 1 (the benchmark's 1,000 founders).
 - Difficulty (the goal table gives none for discoverable nodes): timber walls 1, clay digging 1, clay preparation 1,
-  pressure flaking 2, stone grinding 2, stone walling 2, pot forming 2, pot firing 2 — the chain of four pottery
-  discoveries and F6's 20/32 by day 30 need odds of about 1 in 90 per check (6 checks a day per candidate).
+  pressure flaking 2, stone grinding 2, stone walling 2, pot forming 1 (2 until calibration round 4, D18), pot firing 2
+  — odds of 1 in 40 or 1 in 90 per check (6 checks a day per candidate).
 - `knap_fine_blade`: 60 work ticks (the goal gives none), `quality_add` +15 ("quality +15 floor" read as +15 to the
   craft's quality before the knowledge cap).
 
@@ -178,7 +187,7 @@ Raw data lives in `/Users/rexxa/work/m4-data/` (`$DATA`), outside the repository
     3–7 nodes (hut building, hide scraping, instruction, tracking, clay digging);
   - rehearsal by every pair: radius 10 lost instruction, radius 12 hide scraping;
   - plus "telling is use" for the teller: radius 10 and 12 lost nothing.
-- Choice: the gathered are the people within 12 tiles of a hearth (6.9 of 10 a night) or in the hall; every pair
+- Choice: the gathered are the people within 12 tiles (16 since calibration round 5, D18) of a hearth or in the hall; every pair
   rehearses one node both practise (keyed), stamping it used for both; the teller is stamped as using what it tells.
   Shared knowledge lives while people talk; a node held by one person spreads by talk or dies with them or fades if
   they never tell it — the at-risk drama stays.
@@ -209,3 +218,56 @@ Raw data lives in `/Users/rexxa/work/m4-data/` (`$DATA`), outside the repository
   old age, so the death reaches the chronicle, the settlement and the job layer exactly as a death does). The probe
   script parser accepts `debug_kill`; the game bridge has no `cmd_debug_kill` (the bridge API list does not change for
   it), so a player cannot issue it.
+
+## D18 — Calibration (goal §10: seeds 0–7, at most 8 rounds; the M4-U script; `docs/v8/m4/m4_score.py`)
+
+- The scorer's reading of every bar ("by day N" = reached at the end of some day ≤ N; F3 = the order closes done; F5's
+  stall = a once-known gate the colony had an order for with no living adult practitioner; F8's means) is registered in
+  the scorer's docstring before round 1 and was not changed except F3's source of truth (round 2, below).
+- The M4-U script (`tools/v8/m4_u_script.json`) = the soak script + the day-2 teach order (`order_teach`,
+  `single_holder`: the holder, those with instruction first, to the lowest-`AgentId` adult without it) + clay marks on
+  every bank within 24 tiles once someone practises clay digging + a pottery bench, `Make 6 form_pot` and
+  `Make 6 fire_pot` (at the hearth fire) once someone practises pot forming + a grinding stone and `Make 4 grind_axe`
+  once someone practises stone grinding. Quarry marks (1 boulder, 2 outcrops) renew every 3 days from round 2 (the
+  goal's "quarry" in the economy; without it flint ran out by day 10).
+- Rounds (each on `$DATA/cal/rN`, 36 days, seeds 0–7; bars scaled to 8 seeds):
+  1. as committed at `276923de`: F1 F5 F9 pass; F2 5, F3 1, F4 5, F6 1, F7 1, F8 0, F11 7 (seed 6: 6 cold deaths).
+     Causes: F11 the soak's axe bill order and the ford placement (D5, D6); F3 lessons needed both partners free in the
+     same tick, and the probe counted only session completions; F8 flint ran out.
+  2. script quarry renewals; lessons one-sided with a 240-tick wait (D8 addendum below); F3 read from the order's
+     completion tick: F3 8, F4 7, F5 7, F6 5, F11 8 pass; F2 5, F7 1, F8 0.
+  3. the oral rule as the goal states it (each candidate rolled, the first that takes is learned; D14): F2 4, F7 2.
+  4. oral entries fade 1 ‰ an hour (was 2), pot forming difficulty 1, stone axes 20 chops (a sensitivity test): F7 6
+     passes; F2 5; F8 0 — blades still stop around day 21 with 20-chop axes, so durability is not the lever (D20); the
+     goal's 40 is restored.
+  5. gathering radius 16 (was 12), axes 40: F2 7, F4 8 pass; F6 4; memory 161–212 B a person (over the plan).
+  6. 6-byte entries in a boxed slice (D10): memory 121–159 B; F6 4 (conditions held 33–35 days on the failing seeds).
+  7. discoverers include the most curious 20 % (D19): every bar passes except F8 (F1 8, F2 8, F3 8, F4 8, F5 8, F6 6,
+     F7 8, F9 8, F11 8; F8 0).
+- Frozen after round 7 for the held-out evaluation (seeds 700–731).
+
+## D19 — Who discovers: novelty seeking ≥ 600 or the most curious fifth
+
+- Context: goal 3.3: "candidates = adults with `Temperament.ns ≥ 600` (innovation potential; top ≈ 20 %)". On the
+  calibration seeds the founders at ≥ 600 were 5, 4, 1, 2, 4, 1, 0, 6: seed 6 could discover nothing, and seeds 2 and 5
+  depended on one person (round 6: stone grinding's conditions held 33 days on seeds 3, 5, 6 with no discovery).
+- Choice: a candidate has novelty seeking ≥ 600 **or** is among the most curious `discovery_top_permille` (200) of the
+  adults by novelty seeking (ties by `AgentId`, at least one) — 2 of 10 adults at minimum, the goal's "top ≈ 20 %".
+
+## D20 — F8 (skill growth) is not reached: the economy saturates
+
+- Measured on every round: the top knapper reaches level 5–7 by day 36, but no blade is made after about day 21 on
+  most seeds, so "the blade quality mean of days 25–36" does not exist. Causes: (1) every adult ends up holding an axe
+  (10 axes in circulation; 200–270 chops in 36 days is 20–27 per axe), so few axes break (0–7 per world); (2) with a
+  storehouse, `Maintain` bills count only the stock under its roof (M3 ADR 0023), so axes and blades lying outside
+  are made in excess early (12–57 axes) and then nothing more is needed; (3) nothing but hafting consumes blades.
+- Halving the stone axe's durability (round 4: 20 chops, 3–7 breaks a world) did not restore late blades either, so
+  the goal's 40 stays; F8 is reported as failed with this cause. Options for the owner: tools go back to a stockpile
+  between jobs, the `Maintain` count includes held tools, or a second blade consumer (hide scraping, M5).
+
+## D8 addendum — one-sided lessons (calibration round 2)
+
+- A lesson needed teacher and learner free in the same tick; in a busy colony that took up to 32 days. Now either
+  partner who is free takes its lesson job, walks to the meeting tile and waits there up to `WAIT_TICKS` (240) for the
+  other; a session that loses its learner (a need) goes back to waiting. Round 2: the doorway order completed by
+  sessions on days 4.2–6.3 on all 8 seeds (15–19 sessions).

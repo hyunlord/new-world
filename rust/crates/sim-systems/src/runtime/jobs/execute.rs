@@ -39,7 +39,7 @@ use sim_engine::{RuntimeSystem, SimResources};
 use super::cancel::{cancel, finish, finish_in_place, release_job};
 use super::craft;
 use super::items::{chebyshev, colony_sites, put_items, take_items};
-use sim_core::colony::skills::{scaled_ticks, AXE_PERMILLE};
+use sim_core::colony::skills::{axe_permille, scaled_ticks};
 use sim_core::colony::{quality_bucket, SkillKind, Tool};
 
 /// Priority of [`JobExecuteSystem`].
@@ -447,15 +447,13 @@ fn work_ticks(
         return base.max(1);
     }
     let ticks = scaled_ticks(base, craft::level_of(world, entity, skill));
-    let axe = (skill == SkillKind::Chop)
+    // M4: a ground-stone axe chops faster than a stone axe (`axe_permille`).
+    let factor = (skill == SkillKind::Chop)
         .then(|| world.get::<&Tool>(entity).ok().map(|t| t.item))
         .flatten()
-        .filter(|item| item.kind == ItemKind::StoneAxe);
-    match axe {
-        Some(item) => {
-            let factor = AXE_PERMILLE[usize::from(quality_bucket(item.quality).min(10))];
-            ((u64::from(ticks) * u64::from(factor) + 500) / 1000).max(1) as u32
-        }
+        .and_then(|item| axe_permille(item.kind, quality_bucket(item.quality)));
+    match factor {
+        Some(factor) => ((u64::from(ticks) * u64::from(factor) + 500) / 1000).max(1) as u32,
         None => ticks.max(1),
     }
 }
@@ -470,7 +468,13 @@ fn pick_up_axe(
     axe: (u32, u32),
     pos: (u32, u32),
 ) {
-    let (taken, spec) = take_items(res, axe, ItemKind::StoneAxe, 1);
+    // M4: the stack holds a stone or a ground-stone axe.
+    let kind = res
+        .colony
+        .ground_items
+        .get(&axe)
+        .map_or(ItemKind::StoneAxe, |s| s.kind);
+    let (taken, spec) = take_items(res, axe, kind, 1);
     res.colony.reservations.remove(&ReserveKey::Stack(axe));
     if taken == 1 && world.get::<&Tool>(entity).is_err() {
         let _ = world.insert_one(
@@ -507,12 +511,18 @@ fn use_axe(
     let Ok(mut tool) = world.get::<&mut Tool>(entity).map(|t| *t) else {
         return;
     };
-    if tool.item.kind != ItemKind::StoneAxe {
+    if !matches!(tool.item.kind, ItemKind::StoneAxe | ItemKind::GroundAxe) {
         return;
     }
     tool.uses += 1;
     res.colony.tallies.chops_with_axe += 1;
-    let limit = rule.economy.map_or(0, |e| e.axe_uses);
+    let limit = rule.economy.map_or(0, |e| {
+        if tool.item.kind == ItemKind::GroundAxe {
+            e.ground_axe_uses
+        } else {
+            e.axe_uses
+        }
+    });
     if limit > 0 && tool.uses >= limit && rule.economy.is_some_and(|e| e.tools_break) {
         let _ = world.remove_one::<Tool>(entity);
         res.colony.item_ledger.consume(tool.item.kind, 1);

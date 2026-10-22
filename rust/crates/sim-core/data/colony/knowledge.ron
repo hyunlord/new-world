@@ -66,7 +66,7 @@
          seed: None, name_key: "KNOWLEDGE_CLAY_DIGGING"),
         (id: "clay_prep", lane: "pottery", era: "neolithic", threshold: 300, prereqs: ["clay_digging"], difficulty: 1,
          discover: [Stockpile("clay", 4)], gates: [], marker_weight: 0, seed: None, name_key: "KNOWLEDGE_CLAY_PREP"),
-        (id: "pot_forming", lane: "pottery", era: "neolithic", threshold: 400, prereqs: ["clay_prep"], difficulty: 2,
+        (id: "pot_forming", lane: "pottery", era: "neolithic", threshold: 400, prereqs: ["clay_prep"], difficulty: 1,
          discover: [Knows("clay_prep", 500), Knows("fire_keeping", 300)],
          gates: [Recipe("form_pot"), Workshop("pottery_bench")], marker_weight: 0, seed: None,
          name_key: "KNOWLEDGE_POT_FORMING"),

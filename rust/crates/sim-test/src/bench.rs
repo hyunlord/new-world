@@ -198,7 +198,29 @@ pub fn run_one(scene: &Scene, script_path: Option<&Path>) -> Result<Value, Strin
             .total_cmp(&a["share"].as_f64().unwrap_or(0.0))
     });
     let colony = &engine.resources.colony.tallies;
+    // M4 (goal §4, DECISIONS D2): the knowledge systems together, and the job
+    // assignment, in µs per profiled tick.
+    let per_tick = |names: &[&str]| -> f64 {
+        profile
+            .systems
+            .iter()
+            .filter(|s| names.contains(&s.name.as_str()))
+            .map(|s| s.total_ns as f64)
+            .sum::<f64>()
+            / 1000.0
+            / profile.tick_us.len().max(1) as f64
+    };
+    let knowledge_us = per_tick(&[
+        "OralTransmissionSystem",
+        "ObservationSystem",
+        "KnowledgeDecaySystem",
+        "DiscoverySystem",
+        "TechAggregateSystem",
+    ]);
+    let job_assign_us = per_tick(&["JobAssignSystem"]);
     Ok(json!({
+        "knowledge_us_per_tick": knowledge_us,
+        "job_assign_us_per_tick": job_assign_us,
         "label": scene.label, "agents": scene.agents, "side": scene.side, "script": scene.script,
         "seed": BENCH_SEED, "warmup_ticks": WARMUP, "measured_ticks": MEASURED_TICKS,
         "tick_mean_us": mean_us,

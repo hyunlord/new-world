@@ -631,6 +631,50 @@ pub fn workshop_of(engine: &SimEngine, kind: BlueprintKind) -> Option<u32> {
         .map(|shop| shop.id)
 }
 
+/// M4-U: the teacher and the learner of an order for `node` (see `resolve`).
+pub fn teach_pair(engine: &SimEngine, node: u8) -> Option<(u64, u64)> {
+    use sim_core::colony::knowledge::{gates, Knowledge};
+    let mut people: Vec<(u64, bool, Knowledge)> = engine
+        .world
+        .query::<(&Agent, Option<&Child>, Option<&Knowledge>)>()
+        .iter()
+        .map(|(_, (a, c, k))| (a.id, c.is_none(), k.cloned().unwrap_or_default()))
+        .collect();
+    people.sort_by_key(|p| p.0);
+    let teach = gates().apprenticeship();
+    let teacher = people
+        .iter()
+        .filter(|p| p.2.practises(node))
+        .min_by_key(|p| (p.2.practice() & teach == 0, p.0))?
+        .0;
+    let learner = people
+        .iter()
+        .find(|p| p.1 && p.0 != teacher && !p.2.practises(node))?
+        .0;
+    Some((teacher, learner))
+}
+
+/// M4-U: every clay bank within `within` (Chebyshev) of the camp hearth, `(y, x)` order.
+pub fn clay_banks_near(engine: &SimEngine, within: u32) -> Vec<(u32, u32)> {
+    let r = &engine.resources;
+    let Some(camp) = sim_systems::worldgen::colony::hearth(r) else {
+        return Vec::new();
+    };
+    let mut out: Vec<(u32, u32)> = r
+        .colony
+        .nodes
+        .iter()
+        .filter(|(t, n)| {
+            n.kind == sim_core::colony::NodeKind::ClayBank
+                && t.0.abs_diff(camp.0).max(t.1.abs_diff(camp.1)) <= within
+                && !r.colony.designations.contains_key(t)
+        })
+        .map(|(t, _)| *t)
+        .collect();
+    out.sort_by_key(|t| (t.1, t.0));
+    out
+}
+
 /// The adult (no `Child`, no `Elder`) of rank `rank` by `AgentId`.
 pub fn adult_of_rank(engine: &SimEngine, rank: usize) -> Option<u64> {
     let mut ids: Vec<u64> = engine
@@ -651,11 +695,19 @@ pub fn entry_ready(engine: &SimEngine, spec: &Value) -> bool {
     match spec["after"].as_str() {
         None => true,
         Some("pocket_dug") => pocket_mouth(engine).is_some(),
-        Some(cond) => match cond.strip_prefix("workshop:") {
-            Some(kind) => BlueprintKind::from_name(kind)
+        Some(cond) => match (cond.strip_prefix("workshop:"), cond.strip_prefix("knows:")) {
+            (Some(kind), _) => BlueprintKind::from_name(kind)
                 .and_then(|k| workshop_of(engine, k))
                 .is_some(),
-            None => false,
+            // M4: someone living practises the knowledge node.
+            (_, Some(node)) => sim_core::colony::knowledge::id(node).is_some_and(|id| {
+                engine
+                    .world
+                    .query::<&sim_core::colony::knowledge::Knowledge>()
+                    .iter()
+                    .any(|(_, k)| k.practises(id))
+            }),
+            _ => false,
         },
     }
 }
@@ -746,6 +798,49 @@ pub fn resolve(
                 }
                 None => Vec::new(),
             }
+        }
+        ("order_teach", Some("single_holder")) => {
+            // M4-U day 2: the node's teacher is its holder (the one holder while
+            // it is at risk; else the lowest AgentId among holders, those with
+            // instruction first); the learner the lowest-AgentId adult without it.
+            let node = sim_core::colony::knowledge::id(spec["knowledge"].as_str().unwrap_or(""))
+                .ok_or("order_teach needs a knowledge node")?;
+            match teach_pair(engine, node) {
+                Some((teacher, learner)) => vec![Command::OrderTeach {
+                    teacher,
+                    learner,
+                    knowledge: node,
+                }],
+                None => Vec::new(),
+            }
+        }
+        ("debug_kill", Some("holders_of")) => {
+            // M4 F10 fixture: every living holder of the node dies (test only).
+            let node = sim_core::colony::knowledge::id(spec["knowledge"].as_str().unwrap_or(""))
+                .ok_or("debug_kill needs a knowledge node")?;
+            let mut ids: Vec<u64> = engine
+                .world
+                .query::<(&Agent, &sim_core::colony::knowledge::Knowledge)>()
+                .iter()
+                .filter(|(_, (_, k))| k.practises(node))
+                .map(|(_, (a, _))| a.id)
+                .collect();
+            ids.sort_unstable();
+            ids.into_iter()
+                .map(|agent| Command::DebugKill { agent })
+                .collect()
+        }
+        ("designate_clay", Some("clay_banks_near")) => {
+            let within = spec["within"].as_u64().unwrap_or(24) as u32;
+            clay_banks_near(engine, within)
+                .into_iter()
+                .map(|(x, y)| Command::DesignateClay {
+                    x0: x,
+                    y0: y,
+                    x1: x,
+                    y1: y,
+                })
+                .collect()
         }
         ("add_bill", Some("workshop_of_kind")) => {
             let kind = BlueprintKind::from_name(spec["kind"].as_str().unwrap_or(""))

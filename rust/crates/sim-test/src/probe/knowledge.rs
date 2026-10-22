@@ -11,10 +11,14 @@
 //!   without a living adult practitioner while the colony had an order for it
 //!   (F5 "stall"), clay pots made so far (F7);
 //! - `discovered`: the first discovery tick of each node (chronicle);
-//! - `learned`: every apprenticeship completion `[tick, learner, teacher, node]` (F3);
+//! - `learned`: every apprenticeship completion `[tick, learner, teacher, node]`;
+//! - `teach_done_ticks`: the tick each apprenticeship order closed done (F3);
 //! - `lost`: every `KnowledgeLost` `[tick, node, last holder]` (F10);
 //! - `max_stall_days`: the longest run of consecutive stalled days (F5);
-//! - `bytes_per_person`: the mean `Knowledge` size at the end (memory plan).
+//! - `bytes_per_person`: the mean `Knowledge` size at the end (memory plan);
+//! - `waits_end`: the orders waiting for a practitioner at the end
+//!   (`[kind, a, b, node]`, as the bridge's `get_knowledge_waits`; F10), and
+//!   `status_end`: every node's status code at the end.
 use serde_json::{json, Value};
 use sim_core::chronicle::ChronicleKind;
 use sim_core::colony::knowledge::{self, defs, gates, Knowledge, TechStatus};
@@ -31,6 +35,8 @@ pub struct KnowledgeWatch {
     daily: Vec<Value>,
     stall_run: u64,
     max_stall: u64,
+    teach_done: u64,
+    teach_done_ticks: Vec<u64>,
 }
 
 fn blade_quality(engine: &SimEngine) -> (u64, u64) {
@@ -92,6 +98,12 @@ impl KnowledgeWatch {
             return;
         }
         let tech = &res.colony.tech;
+        // F3: an order closes done when its learner practises the node (by
+        // sessions or because the learner heard it at the fire first).
+        if res.colony.tallies.teach_done > self.teach_done {
+            self.teach_done = res.colony.tallies.teach_done;
+            self.teach_done_ticks.push(now);
+        }
         if now == 0 {
             let at_risk: Vec<Value> = tech
                 .states
@@ -151,6 +163,7 @@ impl KnowledgeWatch {
             "raw_pots": res.colony.item_ledger.crafted_of(ItemKind::RawPot),
             "clay": res.colony.item_ledger.created_of(ItemKind::Clay),
             "ground_axes": res.colony.item_ledger.crafted_of(ItemKind::GroundAxe),
+            "conditions": sim_systems::runtime::knowledge::discover::conditions(&engine.world, res),
         }));
     }
 
@@ -193,6 +206,7 @@ impl KnowledgeWatch {
             "lost": lost,
             "at_risk_events": at_risk,
             "max_stall_days": self.max_stall,
+            "teach_done_ticks": self.teach_done_ticks,
             "teach": {"orders_open": res.colony.teach_orders.len(), "done": t.teach_done, "cancelled": t.teach_cancelled, "sessions": t.teach_sessions},
             "oral": {"gathered": t.oral_gathered, "tellings": t.oral_tellings, "learned": t.oral_learned, "rehearsed": t.oral_rehearsed},
             "forgotten": t.forgotten,
@@ -202,6 +216,11 @@ impl KnowledgeWatch {
             "tools_broken": t.tools_broken,
             "ford_tiles": t.ford_tiles,
             "bytes_per_person": if sizes.is_empty() { 0 } else { sizes.iter().sum::<usize>() / sizes.len() },
+            "waits_end": sim_bridge::ffi::collect_knowledge_waits(&engine.world, res)
+                .iter()
+                .map(|w| json!([w.kind, w.a, w.b, defs().get(w.node).map_or("?", |n| n.name.as_str())]))
+                .collect::<Vec<_>>(),
+            "status_end": res.colony.tech.states.iter().map(|s| s.status.code()).collect::<Vec<_>>(),
             "node_names": defs().nodes.iter().map(|n| n.name.clone()).collect::<Vec<_>>(),
         })
     }

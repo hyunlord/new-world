@@ -11,10 +11,11 @@
 //! `learner_min_years`. In `AgentId` order each listener is paired with a
 //! keyed random other gathered teller (`STREAM_KNOWLEDGE`, subject = the
 //! listener's lineage key, slot 0x1_0000); the teller's candidates are the
-//! nodes it practises that the listener does not (below threshold), and one
-//! is chosen by a keyed draw (slot 0x1_0001); the telling takes with
+//! nodes it practises that the listener does not (below threshold); each is
+//! told, in a keyed order (slot 0x1_0200 + id), and takes with
 //! `oral_chance_permille` (+ `storytelling_bonus_permille` when the teller
-//! practises storytelling; slot 0x1_0002). A listener who learns rises to
+//! practises storytelling; slot 0x1_0100 + id); the first that takes is
+//! learned, at most one per pair per evening (goal 3.3). A listener who learns rises to
 //! `oral_gain` ‰ (`Source::Oral`), so a node whose threshold is at most that
 //! makes a practitioner at once, a harder one a learner; the teller is
 //! stamped as using what it told. Everyone reads the
@@ -134,18 +135,9 @@ impl RuntimeSystem for OralTransmissionSystem {
                 continue;
             }
             told += 1;
-            let which = keyed_below(
-                seed,
-                STREAM_KNOWLEDGE,
-                listener.key,
-                tick,
-                0x1_0001,
-                0,
-                candidates.len() as u64,
-            );
-            let node = candidates[which as usize];
-            // Telling it is using it, for the teller (DECISIONS D14).
-            after[ti].touch(node, tick);
+            // Goal 3.3: each candidate is told with its own keyed chance (slot
+            // 0x1_0100 + id), tried in a keyed order (slot 0x1_0200 + id); the
+            // first that takes is learned — at most one per pair per evening.
             let chance = rule.oral_chance_permille
                 + if teller.practice() & story != 0 {
                     rule.storytelling_bonus_permille
@@ -157,18 +149,38 @@ impl RuntimeSystem for OralTransmissionSystem {
                     after[ti].touch(id, tick);
                 }
             }
-            let roll = keyed_below(
-                seed,
-                STREAM_KNOWLEDGE,
-                listener.key,
-                tick,
-                0x1_0002,
-                0,
-                1000,
-            );
-            if roll < u64::from(chance) && d.get(node).is_some() {
-                after[li].raise_to(node, rule.oral_gain, Source::Oral, tick);
-                learned += 1;
+            let mut order: Vec<(u64, u8)> = candidates
+                .iter()
+                .map(|c| {
+                    let rank = sim_core::rng::keyed_u64(
+                        seed,
+                        STREAM_KNOWLEDGE,
+                        listener.key,
+                        tick,
+                        0x1_0200 + u32::from(*c),
+                        0,
+                    );
+                    (rank, *c)
+                })
+                .collect();
+            order.sort_unstable();
+            for (_, node) in order {
+                // Telling it is using it, for the teller (DECISIONS D14).
+                after[ti].touch(node, tick);
+                let roll = keyed_below(
+                    seed,
+                    STREAM_KNOWLEDGE,
+                    listener.key,
+                    tick,
+                    0x1_0100 + u32::from(node),
+                    0,
+                    1000,
+                );
+                if roll < u64::from(chance) && d.get(node).is_some() {
+                    after[li].raise_to(node, rule.oral_gain, Source::Oral, tick);
+                    learned += 1;
+                    break;
+                }
             }
         }
         // The hearth lore: everyone gathered who holds fire keeping uses it tonight.

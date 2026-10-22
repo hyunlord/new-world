@@ -717,35 +717,41 @@ fn gather_pick(res: &SimResources, ctx: &Ctx, pos: (u32, u32), ex: &mut Exhauste
 }
 
 /// The best unreserved axe stack on a stockpile cell within `reach` of `pos`
-/// that the agent can walk to: the highest quality, then the nearest
+/// that the agent can walk to: the fastest (M4: a ground-stone axe before a
+/// stone axe, by `axe_permille`), then the highest quality, then the nearest
 /// `(distance, y, x)` (M2 goal 3.7).
 fn best_axe(res: &SimResources, pos: (u32, u32), reach: u32) -> Option<(u32, u32)> {
     let region = res.nav.region_of(pos);
     let colony = &res.colony;
     let index = &res.spatial.colony.ground;
     let chunks = reach / sim_core::spatial::CHUNK + 1;
-    let mut best: Option<(std::cmp::Reverse<u8>, u32, u32, u32)> = None;
+    let mut best: Option<(u32, std::cmp::Reverse<u8>, u32, u32, u32)> = None;
     for r in 0..=chunks {
         for &(tile, ()) in index.ring(pos, r) {
             let d = chebyshev(pos, tile);
             let Some(stack) = colony.ground_items.get(&tile) else {
                 continue;
             };
+            let Some(speed) = sim_core::colony::skills::axe_permille(
+                stack.kind,
+                sim_core::colony::quality_bucket(stack.quality),
+            ) else {
+                continue;
+            };
             if d > reach
-                || stack.kind != ItemKind::StoneAxe
                 || !colony.zone_of_tile.contains_key(&tile)
                 || colony.reservations.contains_key(&ReserveKey::Stack(tile))
                 || !res.nav.reaches(region, tile)
             {
                 continue;
             }
-            let key = (std::cmp::Reverse(stack.quality), d, tile.1, tile.0);
+            let key = (speed, std::cmp::Reverse(stack.quality), d, tile.1, tile.0);
             if best.is_none_or(|b| key < b) {
                 best = Some(key);
             }
         }
     }
-    best.map(|(_, _, y, x)| (x, y))
+    best.map(|(_, _, _, y, x)| (x, y))
 }
 
 /// A person's skill level for work type `work` (M3 goal 3.4 tie-break):

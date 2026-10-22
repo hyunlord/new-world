@@ -8,16 +8,17 @@
 //! `JobAssignSystem` before its rounds) gives both a job when both are free
 //! (the teacher's Craft priority is not 0) and both can walk to the meeting
 //! tile — the work tile of the nearest workshop of a kind the node gates, else
-//! the hearth. The learner walks there and waits (`Working`); the teacher, once
-//! both have arrived, works `session_ticks`, and at the end the learner gains
+//! the hearth. Either partner who is free takes its job and walks there; the
+//! learner waits (`Working`); the teacher, once both have arrived, works
+//! `session_ticks`, and at the end the learner gains
 //! `session_gain × fidelity` ‰ (`Source::Apprenticed`) and the teacher uses the
 //! node (and instruction). Fidelity is `fidelity` with instruction, else
 //! `fidelity_untrained` (DECISIONS D8), × `master_permille` ‰ when the
 //! teacher's proficiency is at least `master_at`. The order completes when the
 //! learner practises the node (chronicle `KnowledgeLearned`, cause 4
 //! apprenticed); it is cancelled when either dies or the teacher no longer
-//! practises the node. A teacher who waits more than [`WAIT_TICKS`] for the
-//! learner, or a learner whose teacher's job is gone, ends its job.
+//! practises the node. A lesson job that waited more than [`WAIT_TICKS`] for
+//! its partner without a session under way ends (DECISIONS D18).
 use hecs::{Entity, World};
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
 use sim_core::colony::knowledge::{
@@ -242,36 +243,37 @@ pub fn assign(
     let tick = res.current_tick;
     let day = tick / res.ticks_per_day.max(1);
     let orders: Vec<TeachOrder> = res.colony.teach_orders.clone();
+    let lesson = |e: Entity, id: u32| {
+        world.get::<&Job>(e).is_ok_and(|j| {
+            matches!(j.kind, JobKind::Teach { order, .. } | JobKind::Learn { order, .. } if order == id)
+        })
+    };
     for o in orders {
         let today = if o.day == day { o.sessions_today } else { 0 };
-        if today >= rule.sessions_per_day
-            || assigned.contains(&o.teacher)
-            || assigned.contains(&o.learner)
-        {
+        if today >= rule.sessions_per_day {
             continue;
         }
         let (Some(t), Some(l)) = (entity_of(world, o.teacher), entity_of(world, o.learner)) else {
             continue;
         };
-        if !free(world, t) || !free(world, l) || !crafts(world, t) || !crafts(world, l) {
-            continue;
-        }
         let Some(at) = meeting_tile(res, o.knowledge) else {
             continue;
         };
         let pos = |e: Entity| world.get::<&Position>(e).map(|p| (p.x, p.y)).ok();
-        let (Some(tp), Some(lp)) = (pos(t), pos(l)) else {
-            continue;
-        };
         let reach =
             |p: (u32, u32)| !res.nav.is_built() || res.nav.reaches(res.nav.region_of(p), at);
-        if !reach(tp) || !reach(lp) {
-            continue;
-        }
-        for (e, kind, p) in [
-            (t, JobKind::Teach { order: o.id, at }, tp),
-            (l, JobKind::Learn { order: o.id, at }, lp),
+        // Either partner who is free goes to the meeting tile and waits there (up
+        // to `WAIT_TICKS`) for the other (DECISIONS D18).
+        for (e, id, kind) in [
+            (t, o.teacher, JobKind::Teach { order: o.id, at }),
+            (l, o.learner, JobKind::Learn { order: o.id, at }),
         ] {
+            if assigned.contains(&id) || lesson(e, o.id) || !free(world, e) || !crafts(world, e) {
+                continue;
+            }
+            let Some(p) = pos(e).filter(|p| reach(*p)) else {
+                continue;
+            };
             taken.push((
                 e,
                 Job {
@@ -286,10 +288,9 @@ pub fn assign(
                     progress_tick: tick,
                 },
             ));
+            assigned.insert(id);
+            res.colony.tallies.jobs_taken += 1;
         }
-        assigned.insert(o.teacher);
-        assigned.insert(o.learner);
-        res.colony.tallies.jobs_taken += 2;
     }
 }
 
@@ -386,17 +387,27 @@ pub fn step(
         cancel(world, res, entity, CancelReason::TargetGone);
         return None;
     };
-    let partner = entity_of(world, if teaching { o.learner } else { o.teacher });
-    let partner_holds = partner.is_some_and(|p| {
-        world.get::<&Job>(p).is_ok_and(|j| {
-            matches!(j.kind, JobKind::Teach { order, .. } | JobKind::Learn { order, .. } if order == id)
+    let Some(partner) = entity_of(world, if teaching { o.learner } else { o.teacher }) else {
+        cancel(world, res, entity, CancelReason::TargetGone);
+        return None;
+    };
+    // The partner may come later (DECISIONS D18); a lesson job waits at most
+    // `WAIT_TICKS` after it was taken unless a session is under way.
+    let in_session = |e: Entity| {
+        world.get::<&Job>(e).is_ok_and(|j| {
+            matches!(j.kind, JobKind::Teach { order, .. } if order == id)
+                && matches!(j.stage, JobStage::Working { .. })
         })
-    });
-    if !partner_holds {
+    };
+    let session = if teaching {
+        matches!(job.stage, JobStage::Working { .. })
+    } else {
+        in_session(partner)
+    };
+    if !session && tick.saturating_sub(job.taken_at) > WAIT_TICKS {
         cancel(world, res, entity, CancelReason::TargetGone);
         return None;
     }
-    let partner = partner?;
     let here = chebyshev(pos, at) <= 1;
     match job.stage {
         JobStage::ToSource if !here => Some(job),
@@ -413,13 +424,16 @@ pub fn step(
                     ticks_left: rule.session_ticks.max(1),
                 };
                 set_state(world, entity, WORKING);
-            } else if tick.saturating_sub(job.taken_at) > WAIT_TICKS {
-                cancel(world, res, entity, CancelReason::TargetGone);
-                return None;
             }
             Some(job)
         }
         JobStage::Working { .. } if !teaching => Some(job),
+        // The learner left (a need, a cancel): the session stops; wait again.
+        JobStage::Working { .. } if !partner_waiting(world, partner, id) => {
+            job.stage = JobStage::ToSource;
+            set_state(world, entity, SEEKING);
+            Some(job)
+        }
         JobStage::Working { ticks_left } if ticks_left > 1 => {
             job.stage = JobStage::Working {
                 ticks_left: ticks_left - 1,
@@ -435,6 +449,9 @@ pub fn step(
 }
 
 const WORKING: AgentState = AgentState::Consuming {
+    target: TargetKind::Job,
+};
+const SEEKING: AgentState = AgentState::Seeking {
     target: TargetKind::Job,
 };
 

@@ -72,8 +72,8 @@ impl RuntimeSystem for KnowledgeDecaySystem {
             let seeded: u32 = k
                 .entries()
                 .iter()
-                .filter(|e| e.source == Source::Seeded)
-                .fold(0, |m, e| m | bit(e.id));
+                .filter(|e| e.source() == Source::Seeded)
+                .fold(0, |m, e| m | bit(e.id()));
             if k.decay(tick, unused, |s| rule.decay_of(s), |s| rule.floor_of(s)) {
                 let lost = held & !k.practice();
                 forgotten += u64::from(lost.count_ones());

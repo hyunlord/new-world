@@ -10,7 +10,9 @@
 //! the items on stockpile cells, skill and knowledge conditions hold when any
 //! living person meets them, a clay-bank condition when a clay bank lies
 //! within its distance of a hearth. Candidates are adults whose novelty
-//! seeking is at least `discovery_ns`, in `AgentId` order; for each node in id
+//! seeking is at least `discovery_ns` or who are among the most curious
+//! `discovery_top_permille` of adults (at least one; DECISIONS D19), in
+//! `AgentId` order; for each node in id
 //! order that has conditions, all of them true, which the candidate does not
 //! practise, and whose prerequisites the candidate all practises, one keyed
 //! draw (`STREAM_KNOWLEDGE`, subject = the lineage key, slot 0x2_0000 + id)
@@ -97,9 +99,24 @@ impl RuntimeSystem for DiscoverySystem {
         };
         let tick = resources.current_tick;
         let seed = resources.world_seed;
-        let candidates: Vec<_> = people(world, resources)
+        let adults: Vec<_> = people(world, resources)
             .into_iter()
-            .filter(|p| p.adult && p.ns >= rule.discovery_ns)
+            .filter(|p| p.adult)
+            .collect();
+        // The top share by novelty seeking (ties by AgentId), at least one.
+        let mut ranked: Vec<(std::cmp::Reverse<u16>, u64)> = adults
+            .iter()
+            .map(|p| (std::cmp::Reverse(p.ns), p.id))
+            .collect();
+        ranked.sort_unstable();
+        let top = (adults.len() as u64 * u64::from(rule.discovery_top_permille))
+            .div_ceil(1000)
+            .max(1) as usize;
+        let curious: std::collections::BTreeSet<u64> =
+            ranked.iter().take(top).map(|r| r.1).collect();
+        let candidates: Vec<_> = adults
+            .into_iter()
+            .filter(|p| p.ns >= rule.discovery_ns || curious.contains(&p.id))
             .collect();
         if candidates.is_empty() {
             return;

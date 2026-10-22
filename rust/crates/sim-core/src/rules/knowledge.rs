@@ -33,6 +33,9 @@ pub struct KnowledgeRule {
     pub discovery_interval: u64,
     /// Lowest novelty seeking ‰ of a discoverer (goal 3.3: 600).
     pub discovery_ns: u16,
+    /// The most curious adults by novelty seeking are discoverers too, this
+    /// share ‰ of them, at least one (goal 3.3 "top ≈ 20 %"; DECISIONS D19).
+    pub discovery_top_permille: u32,
     /// One in this many checks succeeds, by difficulty 1–3 (goal 3.3: 40, 90, 200).
     pub discovery_odds: [u32; 3],
     /// Proficiency ‰ of a discovery (goal 3.3: 500).
@@ -69,18 +72,19 @@ impl KnowledgeRule {
     /// The M4 values (goal 3.2–3.4; DECISIONS for the ones the goal leaves open).
     pub const M4: Self = Self {
         oral_minute: 1230,
-        gather_radius: 12,
+        gather_radius: 16,
         oral_gain: 350,
         oral_chance_permille: 500,
         storytelling_bonus_permille: 100,
         learner_min_years: 10,
         unused_days: 6,
         decay_interval: 60,
-        decay: [1, 1, 2, 2, 1],
+        decay: [1, 1, 1, 2, 1],
         floor: [100, 100, 0, 0, 0],
         use_gain: 2,
         discovery_interval: 240,
         discovery_ns: 600,
+        discovery_top_permille: 200,
         discovery_odds: [40, 90, 200],
         discovery_gain: 500,
         session_ticks: 60,

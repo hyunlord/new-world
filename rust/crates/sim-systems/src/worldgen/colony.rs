@@ -205,13 +205,13 @@ pub const FORD_MIN_FOREST: u32 = 100;
 /// regions other than the camp's, the one with the most forest tiles within
 /// [`FORD_REACH`] of the camp (ties to the lower label; at least
 /// [`FORD_MIN_FOREST`]) — gets up to [`FORD_CROSSINGS`] crossings of ford tiles,
-/// river tiles passable at cost 30. Each crossing is the 4-connected way with
-/// the fewest river tiles from the camp region to that region inside the box
-/// of [`FORD_REACH`] around the camp: a 0-1 breadth-first search (land 0, river
-/// 1; mountain, undug hill and river tiles within [`FORD_SPACING`] of an earlier
-/// ford never crossed) from the camp region's tiles in `(y, x)` order, ended at
-/// the first tile of the target region. Regions are read once, before any ford
-/// is placed. Returns the number of ford tiles (0 when nothing is cut off).
+/// river tiles passable at cost 30. Each crossing is the river part of the
+/// shortest 4-connected way from the hearth to that region inside the box of
+/// [`FORD_REACH`] around the camp (Dijkstra, land step 1, river step 3, ties
+/// `(cost, y, x)`; mountain, undug hill and river tiles within
+/// [`FORD_SPACING`] of an earlier ford never crossed), so the ford lies near
+/// the camp (DECISIONS D5). Regions are read once, before any ford is placed.
+/// Returns the number of ford tiles (0 when nothing is cut off).
 fn fords(r: &mut SimResources, camp: Tile) -> u32 {
     if r.rules.colony.is_none() {
         return 0;
@@ -242,24 +242,23 @@ fn fords(r: &mut SimResources, camp: Tile) -> u32 {
     };
     let mut placed: Vec<Tile> = Vec::new();
     for _ in 0..FORD_CROSSINGS {
+        // Dijkstra from the hearth: a land step costs 1, a river step 3, so the
+        // crossing lies on the camp's own short way to the forest.
         let mut dist = vec![u32::MAX; all.len()];
         let mut parent: Vec<Option<Tile>> = vec![None; all.len()];
-        let mut queue = std::collections::VecDeque::new();
-        for (&t, _) in all
-            .iter()
-            .zip(&labels)
-            .filter(|(t, l)| **l == home && inside(**t))
-        {
-            dist[idx(t)] = 0;
-            queue.push_back(t);
-        }
+        let mut heap = std::collections::BinaryHeap::new();
+        dist[idx(camp)] = 0;
+        heap.push(std::cmp::Reverse((0u32, camp.1, camp.0)));
         let mut end = None;
-        while let Some(t) = queue.pop_front() {
+        while let Some(std::cmp::Reverse((d, y, x))) = heap.pop() {
+            let t = (x, y);
+            if d > dist[idx(t)] {
+                continue;
+            }
             if labels[idx(t)] == target {
                 end = Some(t);
                 break;
             }
-            let d = dist[idx(t)];
             let next = [
                 (t.0, t.1.wrapping_sub(1)),
                 (t.0.wrapping_sub(1), t.1),
@@ -271,22 +270,18 @@ fn fords(r: &mut SimResources, camp: Tile) -> u32 {
                     continue;
                 }
                 let step = if labels[idx(n)] != 0 {
-                    0
+                    1
                 } else if terrain(r, n) == TerrainType::River
                     && !placed.iter().any(|p| distance(*p, n) <= FORD_SPACING)
                 {
-                    1
+                    3
                 } else {
                     continue;
                 };
                 if d + step < dist[idx(n)] {
                     dist[idx(n)] = d + step;
                     parent[idx(n)] = Some(t);
-                    if step == 0 {
-                        queue.push_front(n);
-                    } else {
-                        queue.push_back(n);
-                    }
+                    heap.push(std::cmp::Reverse((d + step, n.1, n.0)));
                 }
             }
         }

@@ -155,6 +155,17 @@ impl Source {
         }
     }
 
+    /// The source of [`Self::code`] (`Seeded` for an unknown code).
+    pub const fn from_code(code: u8) -> Self {
+        match code {
+            1 => Self::Discovered,
+            2 => Self::Oral,
+            3 => Self::Observed,
+            4 => Self::Apprenticed,
+            _ => Self::Seeded,
+        }
+    }
+
     /// Stable lowercase name.
     pub const fn name(self) -> &'static str {
         match self {
@@ -558,20 +569,51 @@ pub fn day_of(tick: u64) -> u16 {
     u16::try_from(tick / DAY_TICKS).unwrap_or(u16::MAX)
 }
 
-/// One thing a person knows (goal 3.2). 8 bytes (M4 DECISIONS D10: the last
-/// use is kept as a day index, which is all forgetting and the aggregate read).
+/// One thing a person knows (goal 3.2). 6 bytes (M4 DECISIONS D10: the last
+/// use is kept as a day index, which is all forgetting and the aggregate read;
+/// the node id and the source share a byte; the part gained by observation is
+/// kept in 5 ‰ steps, the size of one observation gain).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub struct KnowledgeEntry {
     /// The day index (tick / 1,440) it was last used (or gained).
     pub last_used: u16,
     /// Proficiency ‰ (0..=1000).
     pub proficiency: u16,
-    /// The part gained by observation only (capped below the threshold).
-    pub observed: u16,
+    /// The node id (low 5 bits) and `Source::code` (high 3 bits).
+    tag: u8,
+    /// The part gained by observation only, in 5 ‰ steps.
+    observed5: u8,
+}
+
+impl KnowledgeEntry {
+    /// A new entry.
+    pub const fn new(id: KnowledgeId, source: Source, proficiency: u16, day: u16) -> Self {
+        Self {
+            last_used: day,
+            proficiency,
+            tag: (id & 31) | (source.code() << 5),
+            observed5: 0,
+        }
+    }
+
     /// The node.
-    pub id: KnowledgeId,
+    pub const fn id(&self) -> KnowledgeId {
+        self.tag & 31
+    }
+
     /// How it was gained.
-    pub source: Source,
+    pub const fn source(&self) -> Source {
+        Source::from_code(self.tag >> 5)
+    }
+
+    fn set_source(&mut self, source: Source) {
+        self.tag = (self.tag & 31) | (source.code() << 5);
+    }
+
+    /// The part gained by observation only (‰, a multiple of 5).
+    pub const fn observed(&self) -> u16 {
+        self.observed5 as u16 * 5
+    }
 }
 
 /// What a person knows (an ECS component, M4 ADR 0024): entries sorted by id
@@ -579,7 +621,7 @@ pub struct KnowledgeEntry {
 /// anyone else gets it with their first entry (a missing component = knows nothing).
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Knowledge {
-    entries: Vec<KnowledgeEntry>,
+    entries: Box<[KnowledgeEntry]>,
     practice: u32,
 }
 
@@ -592,7 +634,7 @@ impl Knowledge {
     /// The entry of node `id`.
     pub fn get(&self, id: KnowledgeId) -> Option<&KnowledgeEntry> {
         self.entries
-            .binary_search_by_key(&id, |e| e.id)
+            .binary_search_by_key(&id, |e| e.id())
             .ok()
             .map(|i| &self.entries[i])
     }
@@ -622,33 +664,25 @@ impl Knowledge {
         self.practice = self
             .entries
             .iter()
-            .filter(|e| e.proficiency >= defs.threshold(e.id))
-            .fold(0, |m, e| m | bit(e.id));
+            .filter(|e| e.proficiency >= defs.threshold(e.id()))
+            .fold(0, |m, e| m | bit(e.id()));
     }
 
     /// Set node `id` to `proficiency` from `source` at `tick` (inserted in id
     /// order when new). The cached bitset is refreshed.
     pub fn set(&mut self, id: KnowledgeId, proficiency: u16, source: Source, tick: u64) {
         let p = proficiency.min(1000);
-        match self.entries.binary_search_by_key(&id, |e| e.id) {
+        match self.entries.binary_search_by_key(&id, |e| e.id()) {
             Ok(i) => {
                 let e = &mut self.entries[i];
                 e.proficiency = p;
-                e.source = source;
+                e.set_source(source);
                 e.last_used = day_of(tick);
             }
             Err(i) => {
-                self.entries.insert(
-                    i,
-                    KnowledgeEntry {
-                        last_used: day_of(tick),
-                        proficiency: p,
-                        observed: 0,
-                        id,
-                        source,
-                    },
-                );
-                self.entries.shrink_to_fit();
+                let mut v = std::mem::take(&mut self.entries).into_vec();
+                v.insert(i, KnowledgeEntry::new(id, source, p, day_of(tick)));
+                self.entries = v.into_boxed_slice();
             }
         }
         self.refresh();
@@ -675,14 +709,14 @@ impl Knowledge {
     pub fn add(&mut self, id: KnowledgeId, delta: u16, source: Source, tick: u64) {
         let (p, s) = self
             .get(id)
-            .map_or((0, source), |e| (e.proficiency, e.source));
+            .map_or((0, source), |e| (e.proficiency, e.source()));
         self.set(id, p.saturating_add(delta).min(1000), s, tick);
     }
 
     /// A completed gated job (goal 3.2): every node of `mask` the person holds
     /// gains `gain` ‰ and is stamped used at `tick`.
     pub fn use_mask(&mut self, mask: u32, gain: u16, tick: u64) {
-        for e in self.entries.iter_mut().filter(|e| mask & bit(e.id) != 0) {
+        for e in self.entries.iter_mut().filter(|e| mask & bit(e.id()) != 0) {
             e.proficiency = e.proficiency.saturating_add(gain).min(1000);
             e.last_used = day_of(tick);
         }
@@ -691,7 +725,7 @@ impl Knowledge {
 
     /// Stamp node `id` used at `tick` without a gain.
     pub fn touch(&mut self, id: KnowledgeId, tick: u64) {
-        if let Ok(i) = self.entries.binary_search_by_key(&id, |e| e.id) {
+        if let Ok(i) = self.entries.binary_search_by_key(&id, |e| e.id()) {
             self.entries[i].last_used = day_of(tick);
         }
     }
@@ -704,10 +738,11 @@ impl Knowledge {
             return false;
         }
         let gain = delta.min(cap - before);
-        let source = self.get(id).map_or(Source::Observed, |e| e.source);
+        let source = self.get(id).map_or(Source::Observed, |e| e.source());
         self.set(id, before + gain, source, tick);
-        if let Ok(i) = self.entries.binary_search_by_key(&id, |e| e.id) {
-            self.entries[i].observed = self.entries[i].observed.saturating_add(gain);
+        if let Ok(i) = self.entries.binary_search_by_key(&id, |e| e.id()) {
+            let steps = u8::try_from(gain.div_ceil(5)).unwrap_or(u8::MAX);
+            self.entries[i].observed5 = self.entries[i].observed5.saturating_add(steps);
         }
         true
     }
@@ -728,10 +763,10 @@ impl Knowledge {
             if u64::from(day_of(tick).saturating_sub(e.last_used)) <= unused_days {
                 continue;
             }
-            let low = floor(e.source);
+            let low = floor(e.source());
             let next = e
                 .proficiency
-                .saturating_sub(rate(e.source))
+                .saturating_sub(rate(e.source()))
                 .max(low.min(e.proficiency));
             if next != e.proficiency {
                 e.proficiency = next;
@@ -739,10 +774,10 @@ impl Knowledge {
             }
         }
         if changed {
-            let before = self.entries.len();
-            self.entries.retain(|e| e.proficiency > 0);
-            if self.entries.len() != before {
-                self.entries.shrink_to_fit();
+            if self.entries.iter().any(|e| e.proficiency == 0) {
+                let mut v = std::mem::take(&mut self.entries).into_vec();
+                v.retain(|e| e.proficiency > 0);
+                self.entries = v.into_boxed_slice();
             }
             self.refresh();
         }
@@ -751,8 +786,7 @@ impl Knowledge {
 
     /// Bytes this component holds (inline + entries), for the memory report.
     pub fn bytes(&self) -> usize {
-        std::mem::size_of::<Self>()
-            + self.entries.capacity() * std::mem::size_of::<KnowledgeEntry>()
+        std::mem::size_of::<Self>() + self.entries.len() * std::mem::size_of::<KnowledgeEntry>()
     }
 }
 
@@ -952,7 +986,7 @@ mod tests {
         let mut k = Knowledge::default();
         k.set(knap, 299, Source::Oral, 5);
         k.set(door, 200, Source::Seeded, 6);
-        assert_eq!(k.entries().iter().map(|e| e.id).collect::<Vec<_>>(), {
+        assert_eq!(k.entries().iter().map(|e| e.id()).collect::<Vec<_>>(), {
             let mut v = vec![knap, door];
             v.sort_unstable();
             v
@@ -987,7 +1021,8 @@ mod tests {
             "a seeded entry stops at its floor"
         );
         assert_eq!(k.entries().len(), k.entries().iter().count());
-        assert!(std::mem::size_of::<KnowledgeEntry>() <= 8);
+        assert_eq!(std::mem::size_of::<KnowledgeEntry>(), 6);
+        assert!(std::mem::size_of::<Knowledge>() <= 24);
         // Observation stops at its cap.
         assert!(k.observe(knap, 5, 250, 900));
         for _ in 0..100 {
@@ -995,7 +1030,7 @@ mod tests {
         }
         assert_eq!(k.proficiency(knap), 250);
         assert_eq!(
-            k.get(knap).map(|e| (e.source, e.observed)),
+            k.get(knap).map(|e| (e.source(), e.observed())),
             Some((Source::Observed, 250))
         );
     }
