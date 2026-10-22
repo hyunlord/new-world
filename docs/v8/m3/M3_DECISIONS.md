@@ -343,3 +343,11 @@ a used bed's deconstruction, no unwraps, baseline gated, sorted iteration.
 
 These fixes change colony behaviour only in the cases they name; the soak, identity and a confirmation run of seeds
 600–631 are repeated on the fix commit (below, D20).
+
+## D20 — Confirmation on the review-fix commit
+
+- `23be0178` (D19 fixes) on seeds 600–631, same script and scorer (`$DATA/eval600b/`, not held out any more): F1 32,
+  F2 32, F3 21/21, F4 32, F5 32, F7 0, F8 32, F9 32 + 32; replay 600 and 617 identical; determinism PASS — the same
+  verdicts as `3d73712d` — its `summary.json` is byte-identical to `$DATA/eval600/`'s, so the review fixes changed
+  none of these 32 runs. Checks on `23be0178` (`$DATA/checks/p6`): fmt, clippy, 1,888 tests, soak PASS, nav-bench
+  movement 92.5 µs per tick (load 13), identity in the gate.

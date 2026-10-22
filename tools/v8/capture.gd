@@ -22,17 +22,36 @@
 #   Extra bridge methods: get_world_info, get_chronicle_since, get_trees, get_terrain_snapshot, can_place_blueprint,
 #   get_colony_overlay; via SimReads.mutate_raw reset_world, cmd_designate_chop_tiles, cmd_add_stockpile,
 #   cmd_place_blueprint (orders, as a player would give them).
+# --m3-set --load <abs save file> takes the M3 set (docs/v8/m3, goal 12.3) on a saved colony world (the colony
+#   probe's `--save-at TICK --save-out FILE`, e.g. the M3-U script on a seed with a hill): the world is loaded
+#   through SimReads.mutate_raw load_world, the clock stays stopped (WorldSim's processing is off; only
+#   advance_ticks moves it), and as a player would: R shows the room overlay (m3_01 rooms, after a room's role was
+#   fixed through the room panel), m3_02 the dug pocket close up (overlay off), m3_03 F3 then 5 (log wall) and a
+#   mouse drag held across a built wall (the preview ghost with refused tiles in red; right click leaves the mode,
+#   nothing is placed), m3_04 the inspector on a person whose bed is in the bedroom (OrderTool.click_world, the bed
+#   line in view), m3_05 the mouse over a stack in the storehouse (the hover's "방: 창고 n"; the overlay's hover
+#   follows the OS cursor, so Input.warp_mouse moves it there and parks it in a corner otherwise), m3_06 a click on
+#   the dug pocket with R shown opens the room panel and 작업장 is chosen in its dropdown (m3_06b the dropdown
+#   open), m3_07 far (1×, camp centred), m3_08 the next 23:00 at 3× (the bedroom with its sleepers). m3_01 is
+#   taken at 2× when every room fits the frame, else at 1× plus m3_01b (the camp's rooms at 2×). m3_set.json
+#   records the rooms, the ticks and the dumps.
+#   Extra bridge methods: get_rooms, get_space, get_agent_economy, get_place_preview, get_room_detail (via the room
+#   panel); via SimReads.mutate_raw load_world; the room panel sends cmd_set_room_role.
 # usage: Godot --path . --rendering-driver opengl3 --resolution 1920x1080 \
 #          --script res://tools/v8/capture.gd -- --out <abs dir> [--tick 1440] [--panels] [--zoom 2] [--m1-set]
+#          [--m3-set --load <abs save file>]
 extends SceneTree
 
 const TILE: float = 16.0
+const OverlaySuffix = preload("res://scripts/world/colony/overlay_layer.gd")
 
 var _out: String = ""
 var _tick: int = 1440
 var _panels: bool = false
 var _zoom: float = 2.0
 var _m1_set: bool = false
+var _m3_set: bool = false
+var _load: String = ""
 var _record: Dictionary = {}
 
 
@@ -49,6 +68,10 @@ func _init() -> void:
 			_panels = true
 		elif args[i] == "--m1-set":
 			_m1_set = true
+		elif args[i] == "--m3-set":
+			_m3_set = true
+		elif args[i] == "--load" and i + 1 < args.size():
+			_load = args[i + 1]
 	call_deferred("_run")
 
 
@@ -71,6 +94,9 @@ func _run() -> void:
 	world.set("process_mode", Node.PROCESS_MODE_DISABLED)
 	if _m1_set:
 		await _m1_shots(main, world, camera)
+		return
+	if _m3_set:
+		await _m3_shots(main, world, camera)
 		return
 	var now: int = int((world.call("get_time_snapshot") as Dictionary).get("tick", 0))
 	if _tick > now:
@@ -564,3 +590,308 @@ func _m1_order_bar(main: Node, world: Node, camera: Camera2D, hearth: Vector2i) 
 	esc.pressed = true
 	Input.parse_input_event(esc)
 	await process_frame
+
+
+# --- --m3-set (M3, goal 12.3) -------------------------------------------------------------------------------
+
+func _key(code: Key) -> void:
+	for pressed: bool in [true, false]:
+		var key: InputEventKey = InputEventKey.new()
+		key.keycode = code
+		key.physical_keycode = code
+		key.pressed = pressed
+		Input.parse_input_event(key)
+		await process_frame
+
+
+## The screen point of a tile's centre under the current camera.
+func _screen_of(tile: Vector2i) -> Vector2:
+	return root.get_canvas_transform() * (Vector2(tile) * TILE + Vector2(8, 8))
+
+
+func _motion(at: Vector2) -> void:
+	var motion: InputEventMouseMotion = InputEventMouseMotion.new()
+	motion.position = at
+	motion.global_position = at
+	Input.parse_input_event(motion)
+	await process_frame
+
+
+func _button(at: Vector2, index: MouseButton, pressed: bool) -> void:
+	var click: InputEventMouseButton = InputEventMouseButton.new()
+	click.button_index = index
+	click.pressed = pressed
+	click.position = at
+	click.global_position = at
+	Input.parse_input_event(click)
+	await process_frame
+
+
+## Rooms by id from get_rooms: {id: {role, overridden, tiles, beds, roofed, dug, centre, cells}}.
+func _rooms_of(world: Node) -> Dictionary:
+	var snap: Dictionary = world.call("get_rooms")
+	var ids: PackedInt32Array = snap.get("ids", PackedInt32Array())
+	var roles: PackedInt32Array = snap.get("roles", PackedInt32Array())
+	var over: PackedByteArray = snap.get("overridden", PackedByteArray())
+	var tiles: PackedInt32Array = snap.get("tiles", PackedInt32Array())
+	var beds: PackedInt32Array = snap.get("beds", PackedInt32Array())
+	var roofed: PackedByteArray = snap.get("roofed", PackedByteArray())
+	var dug: PackedByteArray = snap.get("dug", PackedByteArray())
+	var cxs: PackedInt32Array = snap.get("centre_xs", PackedInt32Array())
+	var cys: PackedInt32Array = snap.get("centre_ys", PackedInt32Array())
+	var out: Dictionary = {}
+	for i: int in mini(ids.size(), mini(roles.size(), mini(cxs.size(), cys.size()))):
+		out[ids[i]] = {"id": ids[i], "role": roles[i], "overridden": i < over.size() and over[i] != 0,
+			"tiles": tiles[i] if i < tiles.size() else 0, "beds": beds[i] if i < beds.size() else 0,
+			"roofed": i < roofed.size() and roofed[i] != 0, "dug": i < dug.size() and dug[i] != 0,
+			"centre": Vector2i(cxs[i], cys[i]), "cells": []}
+	var txs: PackedInt32Array = snap.get("tile_xs", PackedInt32Array())
+	var tys: PackedInt32Array = snap.get("tile_ys", PackedInt32Array())
+	var trs: PackedInt32Array = snap.get("tile_rooms", PackedInt32Array())
+	for i: int in mini(txs.size(), mini(tys.size(), trs.size())):
+		if out.has(trs[i]):
+			(out[trs[i]]["cells"] as Array).append(Vector2i(txs[i], tys[i]))
+	return out
+
+
+## The first room with role `role` (the dug pocket when `dug`), largest first; -1 when none.
+func _room_of_role(rooms: Dictionary, role: int, dug: bool) -> int:
+	var best: int = -1
+	for id: int in rooms:
+		var r: Dictionary = rooms[id]
+		if bool(r["dug"]) != dug or (role >= 0 and int(r["role"]) != role):
+			continue
+		if best < 0 or int(r["tiles"]) > int(rooms[best]["tiles"]):
+			best = id
+	return best
+
+
+func _rooms_json(rooms: Dictionary) -> Array:
+	var rows: Array = []
+	for id: int in rooms:
+		var r: Dictionary = rooms[id]
+		rows.append({"id": id, "role": r["role"], "overridden": r["overridden"], "tiles": r["tiles"], "beds": r["beds"],
+			"roofed": r["roofed"], "dug": r["dug"], "centre": [(r["centre"] as Vector2i).x, (r["centre"] as Vector2i).y]})
+	return rows
+
+
+## The tile framing tiles `points` (their bounding-box centre).
+func _centre_of(points: Array[Vector2i]) -> Vector2i:
+	var lo: Vector2i = points[0]
+	var hi: Vector2i = points[0]
+	for p: Vector2i in points:
+		lo = Vector2i(mini(lo.x, p.x), mini(lo.y, p.y))
+		hi = Vector2i(maxi(hi.x, p.x), maxi(hi.y, p.y))
+	return _mid(lo, hi)
+
+
+func _span(points: Array[Vector2i]) -> Vector2i:
+	var lo: Vector2i = points[0]
+	var hi: Vector2i = points[0]
+	for p: Vector2i in points:
+		lo = Vector2i(mini(lo.x, p.x), mini(lo.y, p.y))
+		hi = Vector2i(maxi(hi.x, p.x), maxi(hi.y, p.y))
+	return hi - lo
+
+
+func _m3_shots(main: Node, world: Node, camera: Camera2D) -> void:
+	var reads: Node = main.get_node_or_null("SimReads")
+	var tool: Node = main.get_node_or_null("ColonyView/OrderTool")
+	var room_layer: Node = main.get_node_or_null("ColonyView/OverlayLayer/Rooms")
+	var room_panel: Node = main.get_node_or_null("UI/RoomPanel")
+	var inspector: Node = main.get_node_or_null("UI/AgentInspectorPanel")
+	if reads == null or tool == null or room_layer == null or room_panel == null or inspector == null or _load.is_empty():
+		push_error("capture: --m3-set needs --load <file>, Main/SimReads, OrderTool, the room layer, panels")
+		quit(1)
+		return
+	camera.set_process(false)
+	if not bool(reads.call("mutate_raw", "load_world", [_load])):
+		push_error("capture: load_world failed for " + _load)
+		quit(1)
+		return
+	for _i: int in 20:
+		await process_frame
+	_record["loaded"] = _load
+	_record["loaded_tick"] = _now(world)
+	_record["seed"] = int((world.call("get_world_info") as Dictionary).get("seed", -1))
+	var hearth: Vector2i = _hearth(world)
+	_record["hearth"] = [hearth.x, hearth.y]
+	var rooms: Dictionary = _rooms_of(world)
+	_record["rooms_at_load"] = _rooms_json(rooms)
+	var bedroom: int = _room_of_role(rooms, 1, false)
+	var store: int = _room_of_role(rooms, 2, false)
+	var pocket: int = _room_of_role(rooms, -1, true)
+	_record["picked"] = {"bedroom": bedroom, "storehouse": store, "pocket": pocket}
+	if bedroom < 0 or store < 0:
+		push_error("capture: --m3-set needs a bedroom and a storehouse (rooms %s)" % str(_record["rooms_at_load"]))
+		quit(1)
+		return
+	var camp_points: Array[Vector2i] = [hearth, rooms[bedroom]["centre"], rooms[store]["centre"]]
+	var all_points: Array[Vector2i] = camp_points.duplicate()
+	if pocket >= 0:
+		all_points.append(rooms[pocket]["centre"])
+	# The overlay's hover follows the OS cursor (the root viewport reads it, not the synthetic events): park it in
+	# the bottom-right corner so no stray hover label shows; m3_05 moves it onto a stack.
+	Input.warp_mouse(Vector2(1919, 1079))
+	# m3_06 first (it fixes the pocket's role): R, a click on the pocket (or the storehouse) opens the room panel;
+	# 작업장 is chosen in its dropdown (item_selected, as a click on the entry), then the panel is shot with the role
+	# fixed, and again with the dropdown opened.
+	var panel_room: int = pocket if pocket >= 0 else store
+	var panel_tile: Vector2i = (rooms[panel_room]["cells"] as Array)[0] if not (rooms[panel_room]["cells"] as Array).is_empty() else rooms[panel_room]["centre"]
+	await _near(camera, rooms[panel_room]["centre"])
+	await _key(KEY_R)
+	tool.call("click_world", Vector2(panel_tile) * TILE + Vector2(8, 8), panel_tile)
+	for _i: int in 10:
+		await process_frame
+	var choice: OptionButton = room_panel.get("_role") as OptionButton
+	if choice != null and pocket >= 0:
+		choice.select(3)
+		choice.item_selected.emit(3)
+		_record["role_set"] = "workshop (dropdown entry 3, item_selected)"
+		world.call("advance_ticks", 1)
+	for _i: int in 10:
+		await process_frame
+	_record["room_panel"] = {"room": int(room_panel.call("current_room")), "visible": (room_panel as Control).visible,
+		"detail": room_panel.call("detail")}
+	await _save_m1("m3_06_room_panel.png", world)
+	if choice != null:
+		choice.show_popup()
+		for _i: int in 10:
+			await process_frame
+		await _save_m1("m3_06b_role_dropdown.png", world)
+		choice.get_popup().hide()
+	room_panel.call("close")
+	for _i: int in 10:
+		await process_frame
+	# m3_01: the room overlay over the camp (2× when the rooms fit the frame, else 1×).
+	var span: Vector2i = _span(all_points)
+	var zoom: float = 2.0 if span.x <= 48 and span.y <= 24 else 1.0
+	_record["rooms_after_role"] = _rooms_json(_rooms_of(world))
+	await _near(camera, _centre_of(all_points), zoom)
+	await _save_m1("m3_01_rooms_%dx.png" % int(zoom), world)
+	if zoom < 2.0:
+		await _near(camera, _centre_of(camp_points), 2.0)
+		await _save_m1("m3_01b_rooms_camp_2x.png", world)
+	await _key(KEY_R)
+	# m3_02: the dug pocket close up (dug rock floor), overlay off.
+	if pocket >= 0:
+		await _near(camera, rooms[pocket]["centre"], 3.0)
+		await _save_m1("m3_02_pocket_3x.png", world)
+	else:
+		push_error("capture: no dug pocket in this world")
+	# m3_04: the inspector on a person whose bed is in the bedroom.
+	var snap: Dictionary = world.call("get_agent_snapshot")
+	var bits: PackedInt64Array = snap.get("ids", PackedInt64Array())
+	var agent_ids: PackedInt64Array = snap.get("agent_ids", PackedInt64Array())
+	var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
+	var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
+	var pick: int = -1
+	for i: int in mini(agent_ids.size(), bits.size()):
+		var eco: Dictionary = world.call("get_agent_economy", agent_ids[i])
+		if int(eco.get("bed_room", -1)) == bedroom:
+			pick = i
+			break
+	if pick >= 0:
+		var tile: Vector2i = Vector2i(xs[pick], ys[pick])
+		await _near(camera, tile)
+		var agents: Node = main.get_node_or_null("ColonyView/AgentLayer")
+		var drawn: Vector2 = Vector2(tile) * TILE
+		if agents != null:
+			var d: Vector2 = agents.call("drawn_position", bits[pick])
+			if d.x >= 0.0:
+				drawn = d
+		tool.call("click_world", drawn + Vector2(8, 8), tile)
+		for _i: int in 30:
+			await process_frame
+		var bed_label: Label = inspector.get("_bed_label") as Label
+		var scroll: ScrollContainer = inspector.get("_scroll") as ScrollContainer
+		if scroll != null and bed_label != null:
+			scroll.scroll_vertical = maxi(0, int(bed_label.position.y) - 240)
+			for _i: int in 10:
+				await process_frame
+		_record["inspected"] = {"agent": agent_ids[pick], "tile": [tile.x, tile.y],
+			"bed_line": bed_label.text if bed_label != null else "", "bed_visible": bed_label != null and bed_label.visible}
+		await _save_m1("m3_04_inspector_bed.png", world)
+		inspector.call("close")
+	else:
+		push_error("capture: nobody has a bed in bedroom %d" % bedroom)
+	# m3_05: the mouse over a stack inside the storehouse.
+	var overlay: Dictionary = world.call("get_colony_overlay")
+	var ixs: PackedInt32Array = overlay.get("item_xs", PackedInt32Array())
+	var iys: PackedInt32Array = overlay.get("item_ys", PackedInt32Array())
+	var stack: Vector2i = Vector2i(-1, -1)
+	for i: int in mini(ixs.size(), iys.size()):
+		if int(room_layer.call("room_at", Vector2i(ixs[i], iys[i]))) == store:
+			stack = Vector2i(ixs[i], iys[i])
+			break
+	if stack.x >= 0:
+		await _near(camera, rooms[store]["centre"], 3.0)
+		var at: Vector2 = _screen_of(stack)
+		await _motion(at + Vector2(TILE, 0.0))
+		Input.warp_mouse(at)
+		await _motion(at)
+		for _i: int in 10:
+			await process_frame
+		_record["hover"] = {"tile": [stack.x, stack.y], "screen": [roundi(at.x), roundi(at.y)],
+			"suffix": OverlaySuffix.room_suffix(room_layer, stack, true, root.get_node_or_null("Locale"))}
+		await _save_m1("m3_05_hover_store_3x.png", world)
+	else:
+		push_error("capture: no stack in storehouse %d" % store)
+	# m3_03: F3, 5 (log wall), a drag held from outside the bedroom across its west wall (refused: built).
+	var cells: Array = rooms[bedroom]["cells"]
+	var west: Vector2i = rooms[bedroom]["centre"]
+	for c: Vector2i in cells:
+		if c.y == west.y and c.x < west.x:
+			west = c
+	var from: Vector2i = west + Vector2i(-6, 0)
+	var to: Vector2i = west + Vector2i(1, 0)
+	await _near(camera, _mid(from, to))
+	await _key(KEY_F3)
+	await _key(KEY_5)
+	await _motion(_screen_of(from))
+	await _button(_screen_of(from), MOUSE_BUTTON_LEFT, true)
+	for x: int in range(from.x + 1, to.x + 1):
+		await _motion(_screen_of(Vector2i(x, from.y)))
+	for _i: int in 10:
+		await process_frame
+	var preview: Dictionary = tool.call("preview")
+	var refused: int = int(tool.call("refused_count", preview))
+	_record["drag"] = {"from": [from.x, from.y], "to": [to.x, to.y], "kind": str(tool.get("build_kind")), "mode": int(tool.get("mode")),
+		"tiles": (preview.get("xs", PackedInt32Array()) as PackedInt32Array).size(), "refused": refused,
+		"reasons": Array(preview.get("reasons", PackedStringArray()))}
+	await _save_m1("m3_03_build_drag.png", world)
+	await _button(_screen_of(to), MOUSE_BUTTON_RIGHT, true)
+	await _button(_screen_of(to), MOUSE_BUTTON_RIGHT, false)
+	await _button(_screen_of(to), MOUSE_BUTTON_LEFT, false)
+	Input.warp_mouse(Vector2(1919, 1079))
+	await _motion(Vector2(1919, 1079))
+	_record["drag_after_cancel_mode"] = int(tool.get("mode"))
+	# m3_07: far, 1×, the camp centred.
+	await _near(camera, _centre_of(camp_points), 1.0)
+	await _save_m1("m3_07_far_1x.png", world)
+	# m3_08: the next 23:00, the bedroom at 2×.
+	var guard: int = 0
+	while _minute_of_day(world) != 23 * 60 and guard < 1440:
+		world.call("advance_ticks", 1)
+		guard += 1
+	for _i: int in 5:
+		await process_frame
+	var sleepers: int = 0
+	var after: Dictionary = world.call("get_agent_snapshot")
+	var axs: PackedInt32Array = after.get("xs", PackedInt32Array())
+	var ays: PackedInt32Array = after.get("ys", PackedInt32Array())
+	var states: PackedByteArray = after.get("states", PackedByteArray())
+	var targets: PackedByteArray = after.get("target_kinds", PackedByteArray())
+	for i: int in mini(axs.size(), mini(ays.size(), mini(states.size(), targets.size()))):
+		if states[i] == 3 and targets[i] == 3 and int(room_layer.call("room_at", Vector2i(axs[i], ays[i]))) == bedroom:
+			sleepers += 1
+	_record["night"] = {"tick": _now(world), "asleep_in_bedroom": sleepers}
+	await _near(camera, rooms[bedroom]["centre"], 3.0)
+	await _save_m1("m3_08_night_3x.png", world)
+	var file: FileAccess = FileAccess.open(_out.path_join("m3_set.json"), FileAccess.WRITE)
+	if file != null:
+		file.store_string(JSON.stringify(_record, "  ", true))
+		file.close()
+	print("CAPTURE_M3_SET_DONE ", JSON.stringify({"picked": _record.get("picked"), "drag": _record.get("drag"), "night": _record.get("night"),
+		"inspected": _record.get("inspected"), "hover": _record.get("hover"), "room_panel": _record.get("room_panel"), "role_set": _record.get("role_set")}))
+	quit(0)

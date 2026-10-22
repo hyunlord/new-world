@@ -1,6 +1,6 @@
 ---
 name: worldsim-testing
-description: Use when testing or verifying any WorldSim change, before claiming "no behaviour change", "deterministic", "faster" or "done" — identity (tools/v8/identity.sh), determinism, the 25-step gate (tools/v8/gate.sh), perf comparison (tools/v8/perf.sh), test layout by domain on sim_test::baseline_engine, and how to write an assertion that can fail.
+description: Use when testing or verifying any WorldSim change, before claiming "no behaviour change", "deterministic", "faster" or "done" — identity (tools/v8/identity.sh), determinism, the 27-step gate (tools/v8/gate.sh), the economy soak, perf comparison (tools/v8/perf.sh), test layout by domain on sim_test::baseline_engine, and how to write an assertion that can fail.
 ---
 
 # WorldSim testing
@@ -71,7 +71,7 @@ Longer versions (assertion recipes, perf and contention protocol):
 3. For an order-sensitive fix, run the twin over many fresh engines (32) so hash-order luck cannot pass it.
 
 ### C. The gate (`tools/v8/gate.sh <log_dir> [--base-data DIR]`)
-Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration and exit code is `<log_dir>/gate.txt`. The gate passes only when every step except `perf` exits 0 (20 steps since M1, 21 since V8-PLAY, 25 since M1.5).
+Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration and exit code is `<log_dir>/gate.txt`. The gate passes only when every step except `perf` exits 0 (20 steps since M1, 21 since V8-PLAY, 25 since M1.5, 27 since M3; `nav_bench` is report only too).
 
 | # | step | checks |
 |---|---|---|
@@ -100,6 +100,8 @@ Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration 
 | 23 | `renderer_agreement` | `tools/v8/renderer_agreement.sh`: the text renderer's people = the Godot agent layer's (seed 100, U-script, tick 900; C2) |
 | 24 | `save_roundtrip` | `tools/v8/save_roundtrip.sh`: `save_load.rs` (colony seeds 0–7 save → load → tick = tick; C1) |
 | 25 | `bench` | `tools/v8/bench.sh`: the standing benchmark against `docs/perf/PERF_LEDGER.md` (> +10 % fails; ceilings report only; C3) |
+| 26 | `soak` | `tools/v8/soak.sh`: the economy soak fixture, colony seeds 0..4 × 20 days with `tools/v8/m3_soak_script.json` (stone, flint, workshops, bills, axes, a house, a storehouse, a dug pocket): ledger and reservations exact every tick, 0 deaths, determinism (M3 goal 3.4) |
+| 27 | `nav_bench` | `worldsim_perf nav-bench`: N = 1,000 with the soak script; movement + pathfinding µs per tick against the 600 µs budget, requests, memo hits, nodes expanded (report only) |
 
 1. Commit first; run the gate on that head; do not touch the tree until it finishes (it records `head` and `dirty` in `gate.txt`).
 2. Read `gate.txt`, not only the exit code: test counts, perf WARN lines, determinism line.
@@ -128,10 +130,18 @@ Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration 
 4. **Replay:** run with a command script (`worldsim_probe --scene colony --commands <file> --commands-out <dir>`), then replay the written log with `--commands <dir>/…` and compare `summary.json` byte for byte (timings live in `timing.json`, outside the comparison). The unit test in `rust/crates/sim-test/src/probe/colony.rs` and gate step 19 do this.
 5. **Twins:** two colony engines with the same seed and the same commands, ticked in lockstep, compared with `probe::colony::colony_fingerprint` (it covers the colony state, jobs and carries, not only the V7 fingerprint).
 
+### G. The economy soak fixture (M3; gate step 26)
+1. `bash tools/v8/soak.sh <out_dir> <worldsim_probe>` runs colony seeds 0..4 for 20 days with `tools/v8/m3_soak_script.json` (the M2 economy plus a walled house, a walled storehouse and a dug pocket) and `--check-determinism`; it prints `SOAK PASS` only when every seed has 0 ledger and 0 reservation violation ticks, 0 deaths, and the determinism line, plus one `seed N:` line (crafts, felled, workshops, deaths, alive).
+2. Run it on every pass's candidate (the gate does), not only on M3 code: a change anywhere in the job layer shows up first as a ledger hole or a death in a long scripted run.
+3. A script entry may wait (`"after": "workshop"`, `"after": "pocket_dug"`) and renew (`"every_days"`); its resolver picks tiles from the live world (`rust/crates/sim-test/src/probe/colony.rs`). Check a resolver's spot with the same predicates the command applies (people, reservations, other buildings' doors and beds — DECISIONS M3 D17); a resolver that picks a spot the command refuses in part measures the script, not the sim.
+4. Read the failing seeds before believing a bar: `docs/v8/m3/m3_score.py --out appendix.json` lists per-seed values; a bar that fails on a few seeds usually has one cause per seed, found by rendering that seed (`worldsim_probe --ascii --rect`).
+
 ## Lessons
 
 | date | symptom | root cause | fix | source |
 |---|---|---|---|---|
+| 2026-10-22 | the M3 evaluation on seeds 400–431 failed F1, F4, F5 and F9, while calibration seeds 0–7 passed them all | one world (403) sealed its camp in a hill basin (undug hill impassable since M3), and the script's spot pickers checked fewer conditions than the commands they fed (no people, no other building's door) | keep the failing held-out result as the result of record; fix the causes; measure the fixed build again on a second, never-used seed set (600–631) and report both | `docs/v8/m3/M3_DECISIONS.md` D17; `rust/crates/sim-test/src/probe/colony.rs` |
+| 2026-10-22 | the M3 skill bar F4 (sleepers in a bedroom) read 0 on nights when people slept there | one sample at 02:00 missed workers who walked home late from the forest and fell asleep after it | count distinct sleepers over hourly samples across the night window instead of one instant | `docs/v8/m3/M3_DECISIONS.md` D15; `rust/crates/sim-test/src/probe/space.rs` |
 | 2026-10-22 | the M1.5 gate's identity step failed with "No such file … base/probe/summary.json" and perf with no base summary | `--base-data` was given the data root (`$DATA/base`), while the identity capture lives in `$DATA/base/identity` and the gate also reads `<base>/perf/perf_summary.json` | pass the identity capture directory itself and put the base `perf.sh` output in its `perf/` subfolder before the gate; a gate with a wrong base path is rerun whole | `tools/v8/gate.sh`; `docs/v8/m1_5/M1_5_DECISIONS.md` D19 |
 | 2026-10-21 | a probe exposure counter (fertile, paired, fed woman-days) disagreed with the system it measured, and a probe-side job-release observer attributed only 50 of 131 releases | the observer saw the state after the whole tick, when a released worker had already been set `Idle` by a later system | count an event where the code makes the decision (a measurement-only counter at the seam, read by nothing), and check the count against the system's own tally (`counted == needs_tally`) | `rust/crates/sim-systems/src/runtime/jobs/seam.rs`; `docs/v8/m1_5/M1_5_DECISIONS.md` D3 |
 | 2026-10-21 | a measurement patch applied to the base worktree (benchmark, chronicle-out, churn counter) had to be proved inert | measurement code inside sim crates could change behaviour | run the patched base probe and `cmp` its colony `summary.json` with the unpatched base's (byte-identical on 32 seeds, with and without the U-script) before trusting its numbers | `docs/v8/m1_5/M1_5_DECISIONS.md` D3 |

@@ -19,7 +19,7 @@ sim-core  ←  sim-engine  ←  sim-systems  ←  sim-bridge  (GDExtension cdyli
 
 | crate | path | role |
 |---|---|---|
-| sim-core | `rust/crates/sim-core/src/` | data only: ECS components (`components/`), rules (`rules/`: `WorldRules`, one file per sub-rule group, `baseline.rs`), keyed RNG (`rng.rs`), per-world hidden parameters (`variety.rs`), causal log (`causal/`), chronicle (`chronicle.rs`), influence grid (`influence/`), tile grid (`tile/`), material model (`material/`, data for M2), the M1 colony model (`colony/`: items and the log ledger, trees, designations, zones, blueprints, reservations, commands, jobs) |
+| sim-core | `rust/crates/sim-core/src/` | data only: ECS components (`components/`), rules (`rules/`: `WorldRules`, one file per sub-rule group, `baseline.rs`), keyed RNG (`rng.rs`), per-world hidden parameters (`variety.rs`), causal log (`causal/`), chronicle (`chronicle.rs`), influence grid (`influence/`), tile grid (`tile/`), material model (`material/`, data for M2), the M1 colony model (`colony/`: items and the log ledger, trees, designations, zones, blueprints, reservations, commands, jobs), the spatial index (`spatial.rs`), the M3 cost map, regions and A* (`nav.rs`) and room detection (`rooms.rs`) |
 | sim-engine | `rust/crates/sim-engine/src/lib.rs` | `SimEngine` (hecs `World` + `SimResources` + the priority-sorted system list), the `RuntimeSystem` trait, `Tallies`, the tick loop and its profiler |
 | sim-systems | `rust/crates/sim-systems/src/` | every system (`runtime/<domain>/`), their registration (`lib.rs` `register_default_runtime_systems`), the command entry point (`commands.rs`: `apply_command`, `submit`), the job layer (`runtime/jobs/`) and world generation (`worldgen/`: `WorldGenConfig::baseline`, `WorldGenConfig::colony` with `worldgen/colony.rs`, `build_world_with`) |
 | sim-bridge | `rust/crates/sim-bridge/src/ffi/` | the Godot class `WorldSimNode` (`#[func]` methods), pure `collect_*` readers behind them, the live engine builder (`build_game_engine`, the colony world), M1 orders and colony reads (`colony.rs`) |
@@ -101,6 +101,13 @@ GDScript layers / panels  ──► SimReads.read(world_sim, "get_…")   (scrip
   speed and stays paused.
 - Walking: a person steps one tile every `AgentRules.move_interval_ticks`
   ticks: 3 in the colony (4 tiles per real second at 1×), 8 in baseline.
+  The baseline steps by the sign of the difference toward its target (V7).
+  The colony (M3, ADR 0021) follows a stored A* path (`SimResources.nav.paths`)
+  over the cost map: river, mountain, undug hill and walls are impassable, a
+  door costs 12 against 10, a diagonal 14/10, no corner cutting; idle and play
+  steps are refused into impassable tiles. A decision target out of reach
+  moves to the nearest reachable tile of its kind or the walk ends; a job
+  target out of reach cancels the job `Unreachable` (section 10).
 - Ages (colony): years of the calendar, computed from `Life::born_tick`
   (nothing increments): elders at 50, lifespans 62 ± 8 years (clamped 40–85),
   founders 16–40, children until 15 (`LifeStageRule.child_ticks`), infants
@@ -201,7 +208,7 @@ Reads/writes come from each file's `//!` header.
 
 All methods live on the one Godot class `WorldSimNode` (signal `world_reset`
 after a reset or a load). The exact exported list is checked by gate step 13, currently
-`python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_m2.txt` (M2; M1.5 checked `docs/v8/bridge_api_m1_5.txt`, M1 `docs/v8/bridge_api_m1.txt`, V8-0 `docs/v8/bridge_api_v7_final.txt` minus `docs/v8/bridge_api_removed.txt`)
+`python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_m3.txt` (M3; M2 checked `docs/v8/bridge_api_m2.txt`, M1.5 `docs/v8/bridge_api_m1_5.txt`, M1 `docs/v8/bridge_api_m1.txt`, V8-0 `docs/v8/bridge_api_v7_final.txt` minus `docs/v8/bridge_api_removed.txt`)
 (a pass that changes the API updates this command; section 6).
 
 | concern | methods |
@@ -216,10 +223,11 @@ after a reset or a load). The exact exported list is checked by gate step 13, cu
 | commands | `on_building_placed`; M1 orders `cmd_designate_chop`, `cmd_designate_chop_tiles`, `cmd_cancel_area`, `cmd_add_stockpile`, `cmd_remove_zone_area`, `cmd_place_blueprint` (each returns `{accepted, count, reason}` and is logged with the next tick, ADR 0012) |
 | colony reads (M1) | `can_place_blueprint`, `get_colony_versions` (poll), `get_trees`, `get_colony_overlay`; the agent snapshot's `jobs`, `carry_kinds`, `carry_counts` columns |
 | economy (M2) | orders `cmd_designate_quarry`, `cmd_add_bill`, `cmd_remove_bill`, `cmd_set_bill_mode`, `cmd_move_bill`, `cmd_set_bill_suspended`, `cmd_set_work_priority` (names parsed in `ffi/economy.rs`; logged like every order); reads `get_workshops`, `get_work_priorities`, `get_recipes`, `get_agent_economy(agent_id)`; `get_colony_overlay`'s `designation_kinds`, `node_*`, `item_qualities`; `cmd_place_blueprint` kinds `knapping_spot`, `wood_bench`, `drying_rack` |
+| built space and rooms (M3) | orders `cmd_place_line`, `cmd_place_rect`, `cmd_designate_dig`, `cmd_designate_deconstruct`, `cmd_set_room_role` (`ffi/space.rs`; `cmd_place_blueprint` kinds `log_wall`, `stone_wall`, `door`, `packed_floor`, `bedroll`); reads `get_place_preview` (drag ghost with per-tile reasons), `get_space` (walls, doors, floors, dug tiles), `get_rooms`, `get_room_detail(room_id)`; `get_colony_versions`' `rooms_version`; `get_colony_overlay`'s `item_covered`; `get_agent_economy`'s `bed`, `bed_room` |
 | calendar and ages (M1.5) | `get_time_snapshot`'s `year_index`, `season_index`, `day_of_year`, `days_per_year`; `get_world_info`'s `ticks_per_year`; the agent snapshot's `ages_years`, `infants`, `pregnant_days` columns |
 
 Every getter, key, type, id space and row order is documented in
-`docs/v8/snapshot_schema.md` (schema version 2, M2); the gate step
+`docs/v8/snapshot_schema.md` (schema version 3, M3); the gate step
 `schema_docs` (`python3 tools/v8/check_docs_helpers.py schema .`) fails on any
 getter or key missing there (ADR 0016 C2).
 
@@ -275,10 +283,10 @@ The full procedure with code skeletons is `.claude/skills/worldsim-architecture/
 | folder | contents |
 |---|---|
 | `scripts/core/` | `locale.gd` (autoload `Locale`), `sim_reads.gd` (`SimReads`: every bridge read), `settlement_selection.gd` (selected village) |
-| `scripts/world/colony/` | the M1 view (node `ColonyView` in `scenes/main.tscn`), drawn from one sheet (`assets/v8/tiles.png` + `tiles.json`, painted in code by `tools/v8/gen_tiles.py`, unit-tested by `tools/v8/test_gen_tiles.py`; M1-ART): `view.gd` (sheet rects and palettes, TileSet builder, tile/keyed hashes, the ground's value noise), `terrain_layer.gd` (noise-clustered grass, forest floor, eroded clearing with turned dither edges, water autotile: 4-bit land mask → `bank_<mask>`, diagonal → `bank_in_*`, then shallow, then deep; rock tops and cliffs), `tree_layer.gd` (24×24 crowns drawn by y-ordered 16×16-tile chunks, shadows except at 1×, stumps for a day, bushes), `building_layer.gd` (hut, lean-to, two-frame hearth), `overlay_layer.gd` (z 1 child: stockpile floors, log piles, blueprint ghosts; z 4: chop marks, blueprint label and bar, hover count), `agent_layer.gd` (people as layered sprites: halo, logs behind, skin/hair/tunic, outline, log in front, tool; stand/stride/sleep frames; sleepers on bedrolls; hit test), `order_tool.gd` (F1–F5 modes, drag rectangles, the `cmd_*` calls). Draw order by z: terrain 0, ground overlay and stumps 1, canopy 2, buildings 3, marks 4, people 5 |
+| `scripts/world/colony/` | the M1 view (node `ColonyView` in `scenes/main.tscn`), drawn from one sheet (`assets/v8/tiles.png` + `tiles.json`, painted in code by `tools/v8/gen_tiles.py`, unit-tested by `tools/v8/test_gen_tiles.py`; M1-ART): `view.gd` (sheet rects and palettes, TileSet builder, tile/keyed hashes, the ground's value noise), `terrain_layer.gd` (noise-clustered grass, forest floor, eroded clearing with turned dither edges, water autotile: 4-bit land mask → `bank_<mask>`, diagonal → `bank_in_*`, then shallow, then deep; rock tops and cliffs), `tree_layer.gd` (24×24 crowns drawn by y-ordered 16×16-tile chunks, shadows except at 1×, stumps for a day, bushes), `building_layer.gd` (hut, lean-to, two-frame hearth; M3: walls by neighbour mask and doors at z 3, a z 1 child "Floors" for packed floors, dug rock and bedrolls, rebuilt when `get_space.version` moves), `overlay_layer.gd` (z 1 child: stockpile floors, log piles, blueprint ghosts; z 4: chop, quarry, dig and deconstruct marks, blueprint and space-site label and bar, hover count with "방: 창고 n" and "지붕 아래"), `room_layer.gd` (M3, child "Rooms" of the overlay: R toggles role tints at z 2 and room labels at z 4; keeps the tile → room index for clicks and the inspector), `agent_layer.gd` (people as layered sprites: halo, logs behind, skin/hair/tunic, outline, log in front, tool; stand/stride/sleep frames; sleepers on bedrolls; hit test), `order_tool.gd` (F1–F10 modes: chop, stockpile, build menu 1–9 — space kinds by drag line or Shift-rectangle with the `get_place_preview` ghost —, cancel, quarry, dig F8, deconstruct F10; drag rectangles, the `cmd_*` calls; F5/F9 stay save/load). Draw order by z: terrain 0, ground overlay, floors and stumps 1, canopy and room tints 2, buildings and walls 3, marks and room labels 4, people 5 |
 | `scripts/world/` | `camera_controller.gd` (zoom 1–4, pan, speed keys 1–4, pause), `daylight_controller.gd` (+ `wood_visuals.gd`), helpers the panels still use (`art_hash.gd`, `art_sprite_library.gd`, `porter_presentation.gd`) |
 | `scripts/ui/hud/` | `hud_topbar.gd`, `order_bar.gd` (F1–F5 buttons and the order toast) |
-| `scripts/ui/panels/` | `chronicle_panel.gd`, `agent_inspector_panel.gd`, `causal_panel.gd`, `art_ui.gd` (shared panel style) |
+| `scripts/ui/panels/` | `chronicle_panel.gd`, `agent_inspector_panel.gd`, `causal_panel.gd`, `priority_panel.gd` (M2 work priorities, 7 work types since M3), `workshop_panel.gd` (M2 bills of the selected workshop), `room_panel.gd` (M3: a room's role dropdown → `cmd_set_room_role`, tiles, beds, doors, covered items; made by `order_bar.gd`), `art_ui.gd` (shared panel style) |
 | `scripts/ui/` | text helpers shared by panels (`chronicle_text.gd`, `person_names.gd`, `person_read_cache.gd`) |
 
 Every `.gd` starts with a comment block: purpose and the bridge methods it
@@ -347,3 +355,46 @@ HearthFeedSystem 146 (hourly) — firewood items (stockpiles, hearth pile) → s
 - **Decision seam**: `jobs::hearth::decision_firewood` turns the decision tick's firewood rule off in the colony
   (`decision/system.rs` +2 −1); the seam lets a craft at work yield only to a critical need (`jobs::seam`).
 
+## 10. Space, paths and rooms (M3, ADR 0021–0023)
+
+Built space, digging and rooms, under `ColonyRule::space` (`SpaceRule`; `None` in the baseline and in the M1/M2 rules):
+
+```
+orders (commands.rs): PlaceBlueprint / PlaceLine / PlaceRect (log_wall, stone_wall, door, packed_floor, bedroll)
+                      · DesignateDig · DesignateDeconstruct · SetRoomRole        (check_space: one reason per tile)
+   ▼
+ColonyState.space_sites (1×1 sites, MaterialNeeds)      dig / deconstruct marks (ColonyState.designations)
+   ▼
+JobAssignSystem 124 — WorkType Build: Clear (items off a site), Deliver, Build (from beside a wall site),
+   │                  Deconstruct; WorkType Mine: Dig (frontier tiles only); every target reachable from
+   │                  the worker's region, an Unreachable target skipped for a day
+   ▼
+JobExecuteSystem 127 — jobs::space::{complete_site, deconstruct, dig}: the tile grid's wall / door / floor / dug
+   │  columns, materials consumed or refunded (half), 3 stone per dug tile, ledger
+   │  ──► runtime::nav::refresh (cost map, nav.version; regions and memo rebuilt lazily) ──► movement (paths)
+   │  ──► colony.rooms_dirty
+   ▼
+RoomSystem 152 — sim_core::rooms::detect (4-connected flood fill, bounds = walls, doors, undug hill, water,
+   │  mountain; 2–120 tiles, off the edge, colony-made), assign_ids (≥ 50 % overlap keeps the id), roles
+   │  (Workshop > Hall > Storehouse > Bedroom > Unassigned, or the override), RoomFormed
+   ▼
+effects: beds (agent/beds.rs: roofed bedroom first, reachable only) · no night cold under a roof (settlement/fire.rs)
+   · rest ×800 ‰ in a bedroom (needs/sleep_decay.rs) · hauls to the storehouse and restock (jobs/assign.rs)
+   · Maintain counts covered stock (jobs/bills.rs) · workshop room crafts at 900 ‰ (jobs/craft.rs) · evening hall
+```
+
+- **Cost map and regions** (`rust/crates/sim-core/src/nav.rs`, `rust/crates/sim-systems/src/runtime/nav.rs`): one
+  byte per tile from `runtime::nav::tile_cost`, built at worldgen and refreshed by the code that changes a tile;
+  `nav.version` bumps when a cost moved. Regions (connected components under the move rule) and the path memo
+  (4,096 `(from, to)` entries) belong to one version and are rebuilt lazily; neither is saved. Paths are saved
+  (save `FORMAT_VERSION` 3).
+- **Tile columns**: `TileGrid.door` and `TileGrid.dug` (`#[serde(default)]`) beside V7's `wall_material` and
+  `floor_material`; a dug tile keeps terrain `Hill` (passable because dug).
+- **Rooms** live in `ColonyState.rooms` (id order) with `room_of_tile`, `room_overrides`, `rooms_version`; derived
+  from the tile grid and the sites, so only ids and overrides need the save (they are part of `ColonyState`).
+- **Decision seam**: `decision/system.rs` is unchanged in M3; decision targets are made reachable in movement
+  (`runtime/agent/movement.rs`), and a job holder at its hunger or thirst seek threshold gets no new job
+  (`jobs::assign`, M3 DECISIONS D16).
+- **Measurement**: `worldsim_perf nav-bench` (gate step 27, report only; budget 600 µs of movement per tick at
+  N = 1,000), the soak (`tools/v8/soak.sh`, gate step 26: 4 seeds × 20 days, ledger, reservations, deaths,
+  determinism), the probe's `m3` block (`rust/crates/sim-test/src/probe/space.rs`).

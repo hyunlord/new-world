@@ -1,0 +1,12 @@
+[
+  {"file": "m3_01b_rooms_camp_2x.png", "caption": "씨앗 606, 여름 3일째 12:01, R 방 보기: 창고 36칸 · 침실 침대 4"},
+  {"file": "m3_01_rooms_1x.png", "caption": "1배: 창고 · 침실 · 남쪽 판 굴은 작업장 16칸 (역할 고정)"},
+  {"file": "m3_02_pocket_3x.png", "caption": "언덕에 판 굴 3배: 4×4 판 바닥, 북쪽 입구에 문"},
+  {"file": "m3_03_build_drag.png", "caption": "F3 5 통나무 벽 끌기: 8칸 중 6칸 빨강 (막힘 5 · 벽 있음 1)"},
+  {"file": "m3_04_inspector_bed.png", "caption": "사람 클릭 → 인스펙터: 잠자리: 침실 1 (지붕 있음)"},
+  {"file": "m3_05_hover_store_3x.png", "caption": "창고 안 더미에 마우스: 돌 ×9 · 방: 창고 2 · 지붕 아래"},
+  {"file": "m3_06_room_panel.png", "caption": "굴 클릭 → 방 패널: 작업장 3 (역할 고정) · 판 굴 · 문 1"},
+  {"file": "m3_06b_role_dropdown.png", "caption": "방 패널 역할 목록: 자동 · 침실 · 창고 · 작업장 · 홀 · 미정"},
+  {"file": "m3_07_far_1x.png", "caption": "같은 시각 1배 원경: 캠프 중앙, 창고와 침실"},
+  {"file": "m3_08_night_3x.png", "caption": "같은 날 23:00 3배: 침실 침상에 4명, 화덕 곁에 5명"}
+]

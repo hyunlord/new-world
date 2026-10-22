@@ -1,6 +1,6 @@
 # ADR 0023 — Rooms and roles
 
-Status: draft (M3 Part 0); finalized at the end of M3.
+Status: accepted (M3, 2026-10-22).
 
 ## Context
 V7's signature RimWorld-style space: walls and furniture define a room's role, and the role changes behaviour. M3
@@ -8,32 +8,35 @@ must recognize rooms the colony builds (ADR 0022), give them a role automaticall
 make the role matter for sleep and storage.
 
 ## Decision
-- **Detection** (`sim_core::rooms`, `RoomSystem` priority 152, every 60 ticks and at once when a wall, door or dig
-  changed): flood fill over passable tiles, bounded by walls, doors and undug hill (also water and mountain). A region
-  is a room when it is enclosed — it does not touch the map edge and has at most 120 tiles (a region of more than 400
-  tiles is open ground) — and holds at least 2 tiles. Doors belong to no room; a room lists the doors on its border.
-- **Stable ids**: a new room takes the id of the previous room it overlaps by at least 50 % of its tiles (largest
-  overlap, then lowest id), else a fresh id; the key tile is the room's lowest `(y, x)` tile.
-- **Roofed** = enclosed with at most 120 tiles (the enclosure is the roof; M3 has no roof item). A dug pocket is roofed
-  by the hill (`dug = true` when any of its tiles is dug).
-- **Roles** (recomputed with detection; `SetRoomRole { room, role }` overrides and is recorded): Workshop if it holds a
-  workshop; Hall if it holds the hearth; Storehouse if ≥ 50 % of its tiles are stockpile cells; Bedroom if it holds a
-  bed and no workshop or stockpile cell; else Unassigned.
-- **Effects**: bed assignment prefers beds in a roofed bedroom and never assigns a bed its sleeper cannot reach;
-  sleepers in a roofed room take no night cold; sleep recovers 20 % faster in a roofed bedroom (sleep decay ×800 ‰);
-  hauling prefers stockpile cells inside a roofed storehouse (a bonus worth 16 tiles of distance) and, while a
-  storehouse exists, `Maintain` bills count only the stock under a roof.
+- **Detection** (`sim_core::rooms::detect`; `RoomSystem` priority 152, at once when a wall, door or dig changed —
+  `colony.rooms_dirty` — and roles re-read every 60 ticks): a 4-connected flood fill bounded by walls, doors, undug hill,
+  water and mountain (a wall site does not bound). A room has 2–120 tiles, does not touch the map edge, and was made by
+  the colony: a built wall or door on its border or a dug tile inside (a meadow ringed by hills is not a room). Doors
+  belong to no room; a room lists its border doors.
+- **Stable ids**: a room may keep the id of an old room holding ≥ 50 % of its tiles; such claims are granted largest
+  overlap first (ties: lower old id, then the earlier new room), each id once, so a split leaves the id with the larger
+  part (M3 DECISIONS D19); overrides follow the id. Every room is roofed (the enclosure is the roof); a room with a dug tile is `dug`.
+- **Roles**: Workshop (a workshop in it) > Hall (the hearth) > Storehouse (≥ 50 % stockpile cells) > Bedroom (a bed,
+  no stockpile cell) > Unassigned; `SetRoomRole { room, role }` overrides (`None` = automatic). `RoomFormed` is logged
+  once per room.
+- **Effects**: beds are offered roofed-bedroom bedrolls first, then huts, then other bedrolls, and never a bed the
+  settlement cannot walk to; a sleeper in a roofed room takes no night cold; asleep in a roofed bedroom fatigue grows at
+  800 ‰; hauls go to a roofed storehouse cell unless it is more than 16 tiles farther than the nearest cell, and with no
+  loose stack haulers restock open-air stock into it; with a storehouse, `Maintain` bills count only the stock under its
+  roof; a workshop in a roofed workshop room crafts at 900 ‰ ticks; idle steps in the evening window stay in the hall.
 
 ## Alternatives considered
-- A roof item and a temperature model per room: not in M3 (§12); the enclosure stands in for the roof.
+- A roof item and a per-room temperature model: not in M3 (§12); the enclosure stands in for the roof.
 - Roles only by player choice: the goal wants the colony to recognize rooms itself; the override covers the rest.
+- Natural enclosures as rooms (the goal's literal rule): hill-ringed meadows became roofed "rooms" on most seeds.
 
 ## Consequences
-- Room ids survive small edits (one wall moved), so overrides and the chronicle's `RoomFormed` stay attached.
-- The cost of detection is a flood fill of the colony's built area when it changes, not per tick.
+- Room ids survive small edits (one wall moved), so overrides and the chronicle stay attached.
+- Detection costs one flood fill of the map when built space changes, not per tick.
 
 ## Date
 2026-10-22
 
 ## Source
-docs/v8/m3/M3_GOAL.md §3; docs/v8/m3/M3_DECISIONS.md
+docs/v8/m3/M3_GOAL.md §3.3; docs/v8/m3/M3_DECISIONS.md D12; rust/crates/sim-core/src/rooms.rs;
+rust/crates/sim-systems/src/runtime/rooms.rs; rust/crates/sim-test/tests/colony_rooms.rs

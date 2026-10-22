@@ -5,6 +5,38 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## M3 — 2026-10-22
+
+Space (`docs/v8/m3/M3_GOAL.md`): pathfinding, walls, doors, floors, bedrolls, digging into hills, and rooms whose role changes how people sleep, store and work. **The colony's behaviour changes** (people walk paths round walls and hills; undug hill is impassable); the `baseline` world is bit-identical (identity PASS at every Part). Evaluation `docs/v8/m3/M3_EVALUATION.md` — of record (seeds 400–431 at `71c896b6`): F2, F3, F8 PASS; F1, F4, F5, F7, F9 FAIL; after the D17 fixes, a second held-out set (seeds 600–631 at `3d73712d`): every bar PASS except F7 (skill growth; the script's knapping work ends in the first days). Report `docs/v8/m3/M3_REPORT.md`.
+
+### Added
+- ADR 0021 (pathfinding: cost map, regions, A* with a memo), ADR 0022 (walls, doors, floors, bedrolls, digging), ADR 0023 (rooms and roles).
+- `sim_core::nav`: `CostMap` (0 impassable; 10 plain, 12 door, diagonal 14/10), lazy regions per `nav.version`, integer A* (octile heuristic, ties `(f, h, y, x)`, no corner cutting, goals on impassable tiles reached from a neighbour), a 4,096-entry `(from, to)` memo; `NavState` in `SimResources.nav` (paths and version saved, the rest rebuilt). `runtime::nav::{tile_cost, build, ensure, refresh}`.
+- Colony movement on paths (`runtime/agent/movement.rs`): seeks and haul-home follow stored paths, idle and play steps refuse impassable tiles, decision targets out of reach move to the nearest reachable tile of their kind; `CancelReason::Unreachable` with a one-day cooldown per person and target; the job assignment offers only targets reachable from the worker's region.
+- Built space (`ColonyRule::space`, `SpaceRule`): `BlueprintKind` LogWall (log 2), StoneWall (stone 3), Door (log 1), PackedFloor, Bedroll (log 1) as 1×1 sites; commands `PlaceLine` (Bresenham), `PlaceRect { hollow }`, `DesignateDig`, `DesignateDeconstruct`, `SetRoomRole`; per-tile refusals (`OutOfMap`, `Water`, `Hill`, `Built`, `Blocked`, `Person`, `Edge`); `JobKind` Clear (items off a site), Deconstruct (half the materials back), Dig (`WorkType::Mine`, `SkillKind::Mining`, 150 ticks, 3 stone, boulder removed); `TileGrid.door`, `TileGrid.dug`.
+- Rooms (`sim_core::rooms`, `RoomSystem` 152): 4-connected detection bounded by walls, doors, undug hill, water and mountain; 2–120 tiles, off the edge, made by the colony; stable ids (≥ 50 % overlap); roles Workshop > Hall > Storehouse > Bedroom > Unassigned with overrides; chronicle `RoomFormed`.
+- Room effects: bedrolls are beds (a roofed bedroom first, never an unreachable bed); no night cold under a roof; rest ×800 ‰ in a roofed bedroom; hauls prefer and restock a roofed storehouse; `Maintain` bills count covered stock when a storehouse exists; a roofed workshop room crafts at 900 ‰ ticks; the evening idle stays in the hall.
+- Bridge (`ffi/space.rs`): `cmd_place_line`, `cmd_place_rect`, `cmd_designate_dig`, `cmd_designate_deconstruct`, `cmd_set_room_role`, `get_place_preview`, `get_space`, `get_rooms`, `get_room_detail`; `get_colony_versions` `rooms_version`; `get_colony_overlay` `item_covered`; `get_agent_economy` `bed`, `bed_room` (`docs/v8/bridge_api_m3.txt`, 67 items; snapshot schema version 3).
+- M2 follow-ups (Part 0): skill tie-break by rounds of (priority level, work type) with the most skilled first (D3); quality words by band (`QUALITY_BAND_0..4`, `UI_QUALITY_FMT`); the economy soak fixture `tools/v8/soak.sh` + `tools/v8/m3_soak_script.json` (gate step 26).
+- Measurement: `worldsim_perf nav-bench` (gate step 27, report only), the probe's `m3` block (`probe/space.rs`), script entries with `"every_days"` and `"after": "pocket_dug"`, resolvers for houses, storehouses and hill pockets, `tools/v8/m3_u_script.json`, `docs/v8/m3/m3_score.py`.
+- Tests: `colony_nav.rs`, `colony_space.rs`, `colony_rooms.rs`, `engine_space_ffi.rs`, `colony_world.rs::colony_camp_lies_on_open_ground`, the skill tie-break test in `colony_skills.rs`, nav and rooms unit tests.
+- Tooling: the colony probe's `--save-at TICK --save-out FILE` (one seed; a save the game can load), `tools/v8/capture.gd --m3-set --load FILE` (the M3 screen set), contact sheet `docs/images/m3_contact_sheet.png` (`docs/v8/m3/contact_sheet_m3.json`, 10 shots of seed 606).
+- ARCHITECTURE §10 "Space, paths and rooms"; skills: architecture rules for paths and built space, procedures J (blueprint kind) and K (room role); testing procedure G (the soak) and the 27-step table; lessons in architecture, testing and pitfalls.
+
+### Changed
+- Colony worldgen moves founders off impassable ground (D9) and opens the fewest hill tiles out of a closed camp basin (D17, `colony.tallies.camp_pass_tiles`); the nav map exists from tick 0.
+- The job layer gives no new job to someone at its hunger or thirst seek threshold (D16; with built space only).
+- Stockpiles, items and spills never land on impassable tiles or walls; quarry stone drops at the worker; puts are region-aware (D10).
+- Save `FORMAT_VERSION` 3. Gate: 27 steps (`soak`, `nav_bench`); step 13 checks `docs/v8/bridge_api_m3.txt`.
+- `decision/system.rs` is unchanged in M3 (0 lines).
+- Benchmark (`docs/perf/PERF_LEDGER.md` blocks "base M2" and "M3", one interleaved but CONTENDED session, load 19–25): pathfinding and region checks cost 24 % on the 64² N = 200 scene and 5 % at N = 1,000 and 2,000 on purpose (movement 23 → 96 µs, `JobAssignSystem` 64 → 123 µs per tick at N = 1,000); C3 ceilings 4/4 PASS.
+- Code review fixes (D19): a load rebuilds the nav map before any command; a spent path that has not arrived is planned again; a split room's id stays with the larger part; no building over a finished bedroll; an off-map `PlaceLine` is refused; dig refreshes the map before spilling; room detection stops collecting regions that cannot be rooms.
+- The priority table's levels follow `work_types` order (`ffi::levels_in_work_order`; mining's column showed chop's level).
+- README's "지금 화면" points at the M3 sheet.
+
+### Removed
+- `docs/images/m1art_contact_sheet.png` — replaced by `docs/images/m3_contact_sheet.png` (the M1-ART sheet stays in history at `v8/main` before M3).
+
 ## M2 — 2026-10-22
 
 Things and making (`docs/v8/m2/M2_GOAL.md`): stone and flint as items, workshops, bills, work priorities, skills and quality, stone axes as tools, and firewood through the job layer — the first piece taken out of the decision tick. **The colony's behaviour changes**; the `baseline` world is bit-identical (identity PASS at every Part). Evaluation `docs/v8/m2/M2_EVALUATION.md` (seeds 300–331: E1, E3, E5, E6, E9, E10 PASS; E2, E4, E7, E8 FAIL), report `docs/v8/m2/M2_REPORT.md`. Benchmark ledger `docs/perf/PERF_LEDGER.md` blocks "base M1.5" and "M2" (N = 1,000: 1.71 ms; ceilings 4/4 PASS; the decision system 82.7 % → 80.0 % of the tick). Gate 25/25 green at `c0af2eb7` (`v8/main`).

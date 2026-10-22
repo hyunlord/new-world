@@ -12,6 +12,9 @@
 //! M1.5 (measurement only; `summary.json` unchanged): `--chronicle-out DIR`
 //! writes each seed's `chronicle_<seed>.json` (`chronicle_out::write`), and
 //! `churn.json` holds the job-churn diagnosis per seed (`probe::churn`).
+//! M3 (tooling): `--save-at TICK --save-out FILE` (one seed only) writes the
+//! engine's save bytes (`sim_systems::save::save`) when the run reaches TICK;
+//! the bridge's `load_world(path)` opens the file (`tools/v8/capture.gd --m3-set`).
 //!
 //! Script entries: `{"tick": T, "cmd": NAME, ...}` with the fields of the
 //! command (`designate_chop`/`cancel_area`/`add_stockpile`/`remove_zone_area`:
@@ -66,6 +69,10 @@ pub struct ColonyArgs {
     pub check_determinism: bool,
     /// Where to write each seed's chronicle (`chronicle_<seed>.json`).
     pub chronicle_out: Option<PathBuf>,
+    /// Save the world when the run reaches this tick (with `save_out`, one seed).
+    pub save_at: Option<u64>,
+    /// Where `save_at` writes the save bytes.
+    pub save_out: Option<PathBuf>,
 }
 
 impl ColonyArgs {
@@ -80,6 +87,8 @@ impl ColonyArgs {
             commands_out: None,
             check_determinism: false,
             chronicle_out: None,
+            save_at: None,
+            save_out: None,
         };
         let mut args = args.into_iter();
         while let Some(flag) = args.next() {
@@ -105,6 +114,10 @@ impl ColonyArgs {
                 "--commands" => parsed.commands = Some(value.into()),
                 "--commands-out" => parsed.commands_out = Some(value.into()),
                 "--chronicle-out" => parsed.chronicle_out = Some(value.into()),
+                "--save-at" => {
+                    parsed.save_at = Some(value.parse().map_err(|_| "invalid save tick")?)
+                }
+                "--save-out" => parsed.save_out = Some(value.into()),
                 _ => return Err(format!("unknown colony probe argument {flag} {value}")),
             }
         }
@@ -115,6 +128,16 @@ impl ColonyArgs {
             return Err(format!(
                 "colony probe: nonempty seeds, days 1..={MAX_DAYS}, workers 1..=8"
             ));
+        }
+        match (parsed.save_at, &parsed.save_out) {
+            (None, None) => {}
+            (Some(at), Some(_))
+                if parsed.seeds.end - parsed.seeds.start == 1
+                    && (1..=parsed.days * DAY).contains(&at) => {}
+            _ => return Err(
+                "colony probe: --save-at TICK (1..=days*1440) needs --save-out FILE and one seed"
+                    .into(),
+            ),
         }
         Ok(parsed)
     }
@@ -1237,6 +1260,13 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
             felled_all_tick = Some(tick);
         }
         let after = tick + 1;
+        if let (Some(at), Some(path)) = (args.save_at, &args.save_out) {
+            if after == at {
+                let bytes = sim_systems::save::save(&mut engine)
+                    .map_err(|e| format!("save at tick {at}: {e}"))?;
+                std::fs::write(path, bytes).map_err(|e| format!("{}: {e}", path.display()))?;
+            }
+        }
         if after == 5 * DAY {
             let c = &engine.resources.colony;
             loose_day5 = Some(
@@ -1425,6 +1455,43 @@ mod tests {
         assert_eq!((a.seeds, a.days, a.check_determinism), (2..4, 3, true));
         assert!(ColonyArgs::parse(["--seeds", "4..4"].map(String::from)).is_err());
         assert!(ColonyArgs::parse(["--bogus", "1"].map(String::from)).is_err());
+        let save = ColonyArgs::parse(
+            [
+                "--seeds",
+                "5..6",
+                "--save-at",
+                "100",
+                "--save-out",
+                "w.save",
+            ]
+            .map(String::from),
+        )
+        .expect("valid save");
+        assert_eq!(save.save_at, Some(100));
+        for bad in [
+            &[
+                "--seeds",
+                "5..7",
+                "--save-at",
+                "100",
+                "--save-out",
+                "w.save",
+            ][..],
+            &["--seeds", "5..6", "--save-at", "100"],
+            &["--seeds", "5..6", "--save-out", "w.save"],
+            &[
+                "--seeds",
+                "5..6",
+                "--days",
+                "1",
+                "--save-at",
+                "1441",
+                "--save-out",
+                "w",
+            ],
+        ] {
+            assert!(ColonyArgs::parse(bad.iter().map(|s| (*s).to_string())).is_err());
+        }
     }
 
     #[test]
@@ -1457,6 +1524,8 @@ mod tests {
             commands_out: Some(base.join("log")),
             check_determinism: false,
             chronicle_out: None,
+            save_at: None,
+            save_out: None,
         };
         run(&first).expect("scripted run");
         let replay = ColonyArgs {
@@ -1494,6 +1563,8 @@ mod tests {
             commands_out: Some(base.join("log")),
             check_determinism: false,
             chronicle_out: None,
+            save_at: None,
+            save_out: None,
         };
         run(&first).expect("scripted run");
         let replay = ColonyArgs {

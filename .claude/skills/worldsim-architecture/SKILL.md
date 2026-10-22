@@ -66,6 +66,13 @@ registration order), then advances the clock. 1,440 ticks = 1 game day
 - **Do** release reservations through `jobs::cancel::{cancel, finish, release_job, on_death}`, never by removing a `Job` component directly. *Reason:* a removed job with live `colony.reservations` blocks that tree, stack, cell or site forever (a reservation leak).
 - **Don't** add job logic to `decision/system.rs`. Only the seam calls go there (`jobs::holders` ~L833, `hold_for_decision` ~L1127, `settle_after_decision` ~L2661) plus compile-forced `TargetKind::Job` arms. *Reason:* ADR 0013 caps the decision change (+26 −1 lines in M1); the job layer must stay readable in `runtime/jobs/`.
 
+### Paths and built space (M3; ADR 0021–0023)
+- **Do** decide passability only in `runtime::nav::tile_cost` and call `runtime::nav::refresh(res, tile)` from the code that changes a tile (terrain, wall, door, dug flag, a space site placed, cancelled or finished). *Reason:* the cost map is incremental; a change made without `refresh` leaves a stale map, while a full rebuild hides the miss (the tests compare a rebuilt map with the incremental one).
+- **Do** treat regions and the path memo as belonging to one `nav.version` and never save them; save only the paths. *Reason:* a memo hit must return exactly what a search would, which holds only while the map is the one it was searched on.
+- **Do** offer a job only for a target reachable from the worker's region (`NavState::reaches`), and turn a target that becomes unreachable into `CancelReason::Unreachable` with the one-day cooldown. *Reason:* an unreachable assignment walks into a wall forever and holds its reservation.
+- **Do** make a decision's goal a tile the agent can stand on (a decision consumes on its tile): out of reach, move it to the nearest reachable tile of its kind or end the walk. *Reason:* a water tile on undug hill killed its drinkers in Part 1 (M3 D10).
+- **Do** check every world for closed basins when passability changes: the colony camp must lie in an open region (`worldgen/colony.rs::open_the_camp`). *Reason:* seed 403 sealed ten founders between hills and the river (M3 D17).
+
 ### The simulation contract (ADR 0016; M1.5)
 - **Do** keep the world state a pure function of `(rules, seed, command log)` (C1): no wall clock, no hash order, no state outside `World`, `SimResources` and the systems' own fields; a saved game must restore every one of them. *Reason:* replay, colony determinism, identity and the save round trip are the gate steps that prove it.
 - **Don't** let the sim crates know pixels, tile sizes, sprites, cameras or Godot (C2); every value a renderer needs is a documented snapshot read (`docs/v8/snapshot_schema.md`, checked by `check_docs_helpers.py schema`). *Reason:* the text renderer (`worldsim_probe --ascii`) is the standing second renderer and must agree with the Godot view (`renderer_agreement`).
@@ -154,12 +161,26 @@ Full step lists with code skeletons: `references/procedures.md`.
 2. Add its arm to `pick_work` (`runtime/jobs/assign.rs`) with a memo field in `Exhausted` for each map-wide search; the priority passes call it only for people whose level for it matches the pass.
 3. Bridge `get_work_priorities` lists `work_types`; the GDScript priority table reads that list.
 
+### J. Add a blueprint kind for built space (M3)
+1. Add the `BlueprintKind` variant (`rust/crates/sim-core/src/colony/orders.rs`) with its `code`, `name`, `plan` (`MaterialNeeds` lines and work) and the predicates `is_space`/`is_wall`; pin the code in the unit test.
+2. Placement: `commands::check_space` decides each tile (one `RejectReason` per tile, never a silent drop); the line/rect commands take it automatically. A kind that blocks walking gets its arm in `runtime::nav::tile_cost` (site and built).
+3. Completion: `jobs::space::complete_site` writes the tile grid (and `colony.beds` for a bed), consumes the materials (ledger), calls `nav::refresh` and sets `colony.rooms_dirty`; `jobs::space::deconstruct` gives back half.
+4. Bridge: `BlueprintKind::name` is the order name `ffi/space.rs` parses; `get_space` columns, `docs/v8/snapshot_schema.md`, a sprite in `tools/v8/gen_tiles.py`, the build-menu key and locale keys.
+5. Tests in `colony_space.rs`: built from a stockpile with the ledger exact, refused where it must be, the nav map equal to a rebuild after it.
+
+### K. Add a room role (M3)
+1. Add the `RoomRole` variant (`rust/crates/sim-core/src/rooms.rs`) with `code`/`name`/`ALL`; put it at its place in `runtime::rooms::auto_role`'s precedence (Workshop > Hall > Storehouse > Bedroom > Unassigned today).
+2. Its effect goes in the system that owns the behaviour, reading `rooms::roofed_as(res, tile, role)`; never in `RoomSystem` itself.
+3. Bridge: the role name in `get_rooms`/`get_room_detail`, the override dropdown and its tint in `scripts/world/colony/room_layer.gd`, locale keys; a test in `colony_rooms.rs` for detection, override and the effect.
+
 - **Do** keep run-time rates in integer tables (`XP_TABLE`, `SPEED_PERMILLE`, `QUALITY_BONUS_TABLE`, `AXE_PERMILLE` in `sim_core::colony::skills`) and convert data files' floats once at load (`MaterialStats`). *Reason:* C4; a table is reproducible and readable in a test.
 
 ## Lessons
 
 | date | symptom | root cause | fix | source |
 |---|---|---|---|---|
+| 2026-10-22 | the colony's founders were stuck on hill tiles (seed 5) and a whole colony died of thirst in a hill basin (seed 403) | M3 made undug hill impassable, but V7 worldgen placed founders and camps assuming every hill tile could be walked | when a rule changes passability, re-check worldgen's assumptions: founders on open ground (D9), the camp's region open (D17); test every calibration and evaluation seed's camp region | `rust/crates/sim-systems/src/worldgen/colony.rs`; `docs/v8/m3/M3_DECISIONS.md` D9, D17 |
+| 2026-10-22 | dig jobs churned (1,000+ releases a seed): half-thirsty workers took a 200-tick dig, crossed the thirst line on the way and dropped it | the job layer offered work to people about to need a drink; the decision then released the job | do not offer new work to someone at or past a hunger or thirst seek threshold (`jobs::assign`, D16); read the probe's churn report by job kind after adding a long job | `rust/crates/sim-systems/src/runtime/jobs/assign.rs`; `docs/v8/m3/M3_DECISIONS.md` D16 |
 | 2026-06-22 | two engines differing only in HashMap seeds diverged (query order at tick 9, an inventory at 489, the run at 2251) | `AgentDecisionSystem` iterated a `HashSet` and did a structural `insert_one` per entity; archetype dense order is insertion order, so hash order permuted every later query | collect `(AgentId, Entity)`, sort by `AgentId`, then insert; new collections are `BTreeMap`/`BTreeSet` | `c03ae2bc`; `v7-final-art:docs/revitalize/RNG_INVENTORY.md` §2; `v7-final-art:docs/revitalize/DECISIONS.md` L365 |
 | 2026-10-12 | an order-dependence survey found outcome-changing loops beyond the decision loop (bush claims, deaths feeding event ids, construction completions from a HashMap, memory insertion, routing ties) | std hash order differs between processes; hecs order changes with history (swap-remove, archetype moves) | process in `AgentId` order, sort deaths before despawn, sort completions by position, break ties by `(distance, id)`; record latent cases | `v7-final-art:docs/revitalize/RNG_INVENTORY.md` §2 O1–O9; `v7-final-art:docs/revitalize/DECISIONS.md` L535, L547, L573, L581 |
 | 2026-10-16 | a test of ascending `LeftSettlement` order still passed about 43 % of the time with the sort deleted | `Settlement::member_agents` is a `HashSet` with `RandomState`; small sets iterate ascending by chance | sort before every iteration or use the set for membership only; the test builds 32 fresh engines | `v7-final-art:docs/revitalize/REVIEW_PASS19.md` Round 2 finding 1; `v7-final-art:docs/revitalize/DECISIONS.md` L593 |
