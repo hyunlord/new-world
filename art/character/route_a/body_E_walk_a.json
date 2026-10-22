@@ -1,0 +1,46 @@
+{
+  "prompt": "Use case: precise-object-edit. Edit FIRST IMAGE E-facing bald grey stone-age man to WALK_A animation pose. Preserve full 1024x1536 canvas and entire upper body including head torso and hands at exactly same pixels. Change ONLY exposed legs below loincloth: near leg strides forward toward right, far leg backward left, natural bend, one foot bottom at y1408 (88 of96 units), clear small stride. Same person proportions, skin neutral grey, loincloth unchanged. Input2 cyan E guide gives canvas geometry, inputs3 person_v2 and4 scene locked ink/wash style references. Person stays same location; head in x20..44 y32..50, torso x18..46 y50..70 in64x96 units. Full uniform magenta background no shadow no floor no guide lines. Fine dark ink contour restrained washes as original. No tool item, no text, no resizing or recentering. This is one single body frame.",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/arttrial3-data/route_a/body_E_idle/try3/raw.png",
+      "sha256": "4cdb3467c8352b2a8202dc7850db666d62871a5419d146a64a769ab41d3eea1c"
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/template_guides/adult_E.png",
+      "sha256": "9e6b8da255577a2a448720502a026dd3c0b71fbacb67a80b992add9154be23cb"
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person_v2.png",
+      "sha256": "5818c46b0e7bcb23ec6e627d85682ad535a2dad79610e646f3eec8146a8e5f4a"
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "generation_seconds": 24.629,
+  "schema_version": 1,
+  "id": "body_E_walk_a",
+  "kind": "body",
+  "body_type": "adult",
+  "direction": "E",
+  "frame": "walk_a",
+  "scale": 1,
+  "mask": "body_E_walk_a_mask.png",
+  "operations": [
+    "Preserve entire source canvas; reject aspect mismatch; no alpha-bbox fitting",
+    "Chroma key R-G>60 and B-G>60; zero RGB where alpha=0",
+    "Lanczos downscale entire canvas to 64x96",
+    "Alpha cleanup: alpha<16 to transparent black; no other colour modification",
+    "Code mask: every visible pixel region1; no colour quantization",
+    "Hand-code base loincloth region5 polygon [(24, 56), (29, 59), (35, 59), (39, 58), (41, 65), (39, 68), (36, 67), (31, 71), (27, 68), (23, 66), (22, 63)]; all other visible pixels skin1; image unchanged",
+    "Copy exact E idle RGBA head [20,32,44,50] and torso [18,50,46,70]; no other geometry change"
+  ],
+  "variant": "base",
+  "attempt": 1,
+  "generation_tool": "image_gen.imagegen",
+  "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_E_walk_a/try1/raw.png",
+  "raw_sha256": "cdee381a4b94ed5a2100c779c339658437b21d24623935e212769bf9000179ca",
+  "image_sha256": "4ee5c30d3d44feb6ea679c53aaae747430ae59289c2670951c1b8acda0fb7bbc",
+  "mask_sha256": "fa6faf601a23af73d468b0953ae7e97e75b9748cfe4000d81bb35a5ae9498409"
+}

@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "id": "child_carry_log_bundle",
+  "kind": "carry",
+  "body_type": "child",
+  "direction": "S",
+  "frame": "idle",
+  "scale": 1,
+  "mask": "child_carry_log_bundle_mask.png",
+  "variant": "log_bundle",
+  "operations": [
+    "Piecewise source y0,y1 -> target y0,y1,width,left bands: ((0, 32, 22, 46, 48, 8), (32, 50, 46, 60, 48, 8), (50, 70, 60, 74, 50, 7), (70, 88, 74, 88, 48, 8), (88, 96, 88, 94, 48, 8)); RGBA Lanczos, categorical masks nearest",
+    "Alpha cleanup<16; missing categorical edge labels take nearest visible nonzero label, transparent labels0; no RGBA repaint or hole fill"
+  ],
+  "source_sidecar": "/Users/rexxa/work/new-world-art-prod/art/character/route_a/carry_log_bundle.json",
+  "source_image_sha256": "a89b5ec5f150a42f67b1006babce3d4626a93099c5a82b6deb1b8b940833565c",
+  "source_mask_sha256": "d2b866cda498d4ce9b1cf202b17e3d7a59d0a57f35154c9659feb555bbb1a992",
+  "source_sidecar_sha256": "49466903b9c626d393af299e2dfbcf70fdd84ad4b5c46515490bd400d33bedc6",
+  "generation_calls": 0,
+  "extras": [],
+  "shoulder": [
+    32,
+    61
+  ],
+  "structural_pass": true,
+  "image_sha256": "41ce5cd992eb78700fbbcc304014d29c7e23244fefba0a3f0bff0b0469c6c7c0",
+  "mask_sha256": "c30be7f7dc683d942523a099b31b31fdd9c92f60e39ccf22fae2df31361b3f05"
+}

@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "id": "item_stone_axe",
+  "kind": "item",
+  "body_type": "adult",
+  "direction": "S",
+  "frame": "idle",
+  "scale": 1,
+  "mask": "item_stone_axe_mask.png",
+  "operations": [
+    "Preserve entire source canvas; reject aspect mismatch; no alpha-bbox fitting",
+    "Chroma key R-G>60 and B-G>60; zero RGB where alpha=0",
+    "Lanczos downscale entire canvas to 64x96",
+    "Alpha cleanup: alpha<16 to transparent black; no other colour modification",
+    "Code mask: every visible pixel region5; no colour quantization"
+  ],
+  "variant": "stone_axe",
+  "attempt": 2,
+  "grip": [
+    35,
+    62
+  ],
+  "prompt": "Precise-object-edit: shrink ONLY the axe in first image to HALF its current width and HALF its current height, retaining exact style/detail and magenta background. Output full1024x1536 canvas. Place the handle's lower grip at pixel512,1056 (game32,66). Entire axe should fit x352..672,y688..1120: IMPORTANT huge empty magenta margins, axe only320pixels wide and432pixels tall. No character, no extra object, no label. Attached remaining images are locked ink/earth wash/light style references. Do not recenter or enlarge the axe to fill the picture. Continuous connected stone/wood/lashing, no holes.",
+  "elapsed_minutes": 1.8944833333333333,
+  "tool": "image_gen.imagegen",
+  "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1622a-e29c-7da2-8daf-ff3e795750f3/exec-4692a947-5616-4fd1-b66c-79f807bc7034.png",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/arttrial3-data/route_a/item_stone_axe/try1/raw.png",
+      "sha256": "a557b554690ee2e4d5a84913520dd9d369c9c74e393207304e5a7b6b336153ce"
+    },
+    {
+      "path": "art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "raw": "/Users/rexxa/work/arttrial3-data/route_a/item_stone_axe/try2/raw.png",
+  "raw_sha256": "9e0fe965ee9faf1174e1da10ff14472eb0e600ea58654f8f7e8a56a4c5b8af7c",
+  "image_sha256": "52f3a192c360cd5209ffa4a5a5ead9e8258ab3e8a8ee4059a53190dd0721207f",
+  "alpha_bbox_game_pixels": [
+    23,
+    37,
+    39,
+    66
+  ],
+  "mask_sha256": "bdb7a7ae377ca39297b1dd9710f088c90aa33c7bcda0378fcd40d8c5bbc081b8",
+  "generation_tool": "image_gen.imagegen",
+  "elapsed_minutes_includes_orchestration": true,
+  "structural_pass": true
+}

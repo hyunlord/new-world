@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "id": "elder_top_hide_wrap_E",
+  "kind": "top",
+  "body_type": "elder",
+  "direction": "E",
+  "frame": "idle",
+  "scale": 1,
+  "mask": "elder_top_hide_wrap_E_mask.png",
+  "variant": "hide_wrap",
+  "operations": [
+    "Piecewise source y0,y1 -> target y0,y1,width,left bands: ((0, 32, 4, 36, 64, 1), (32, 50, 36, 54, 64, 1), (50, 70, 54, 72, 64, 0), (70, 88, 72, 88, 64, 0), (88, 96, 88, 96, 64, 0)); RGBA Lanczos, categorical masks nearest",
+    "Top central torso maps exact adult torso to(18, 54, 46, 72); source-pixel Lanczos composition, not filling or repaint",
+    "Allowed top alpha cleanup248..254 to255 on3 pixels; RGB unchanged; zero-alpha pixels untouched",
+    "Alpha cleanup<16; missing categorical edge labels take nearest visible nonzero label, transparent labels0; no RGBA repaint or hole fill",
+    "Metadata-only source rebind after adding missing source mask_sha256; source image and mask hashes unchanged; original sidecar digest retained"
+  ],
+  "source_sidecar": "/Users/rexxa/work/new-world-art-prod/art/character/route_a/top_hide_wrap_E.json",
+  "source_image_sha256": "0a09f9821f0ba7c41b465efa815c68f583a3802816b3a3f6c5c72374e2544958",
+  "source_mask_sha256": "1dcf9b65d065fdd6f23683802bb3833072b676500319496386874aab5c9992a5",
+  "source_sidecar_sha256": "40c8860d4cd4b343f8cf260ce52d62391f900e516188139ce9e859258f7a86df",
+  "generation_calls": 0,
+  "extras": [
+    "collar",
+    "cloak_hem"
+  ],
+  "structural_pass": true,
+  "image_sha256": "cf2eeb188dc29a1054056a97101756417aed7eb0bdf4187ce16e25ecd539af14",
+  "mask_sha256": "622611fe27033847f570695491241265795e1dabd7f5f909652bcb8517b769c9",
+  "source_sidecar_sha256_at_derivation": "b47c9d47b6ae72f0d6a24a319b54a2a1ef3ad85044f5dc660e6cbf2609f95ad0"
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "id": "elder_body_E_work_a",
+  "kind": "body",
+  "body_type": "elder",
+  "direction": "E",
+  "frame": "work_a",
+  "scale": 1,
+  "mask": "elder_body_E_work_a_mask.png",
+  "variant": "base",
+  "operations": [
+    "Piecewise source y0,y1 -> target y0,y1,width,left bands: ((0, 32, 4, 36, 64, 1), (32, 50, 36, 54, 64, 1), (50, 70, 54, 72, 64, 0), (70, 88, 72, 88, 64, 0), (88, 96, 88, 96, 64, 0)); RGBA Lanczos, categorical masks nearest",
+    "Alpha cleanup<16; missing categorical edge labels take nearest visible nonzero label, transparent labels0; no RGBA repaint or hole fill",
+    "Exact derived-idle RGBA and mask copyback head(20, 36, 44, 54), torso(18, 54, 46, 72); no other repaint"
+  ],
+  "source_sidecar": "/Users/rexxa/work/new-world-art-prod/art/character/route_a/body_E_work_a.json",
+  "source_image_sha256": "eda90188cf28a49360e14800039632127cb096ab894e5337bd001c79e1e405a2",
+  "source_mask_sha256": "4e3b502f57dddcbeecc9e1479e8b0911e1dcb5b4ac42ea2b34b58a37ac75baa5",
+  "source_sidecar_sha256": "4ad307ee96b497a92730b18d02cce342b8a64a93ba056d3bcab8220b28e50b06",
+  "generation_calls": 0,
+  "extras": [],
+  "structural_pass": true,
+  "image_sha256": "40ddbcb3c46d4004832dc33a201e2edb9e1d82dc3c8ba3bd1c4bb0242127c05c",
+  "mask_sha256": "5cf11a02443ac4da121e3a8673d57bda64f4a01070ff6762f3e7b951924fafc9"
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "id": "child_body_N_walk_b",
+  "kind": "body",
+  "body_type": "child",
+  "direction": "N",
+  "frame": "walk_b",
+  "scale": 1,
+  "mask": "child_body_N_walk_b_mask.png",
+  "variant": "base",
+  "operations": [
+    "Piecewise source y0,y1 -> target y0,y1,width,left bands: ((0, 32, 22, 46, 48, 8), (32, 50, 46, 60, 48, 8), (50, 70, 60, 74, 50, 7), (70, 88, 74, 88, 48, 8), (88, 96, 88, 94, 48, 8)); RGBA Lanczos, categorical masks nearest",
+    "Alpha cleanup<16; missing categorical edge labels take nearest visible nonzero label, transparent labels0; no RGBA repaint or hole fill",
+    "Exact derived-idle RGBA and mask copyback head(23, 46, 41, 60), torso(21, 60, 43, 74); no other repaint"
+  ],
+  "source_sidecar": "/Users/rexxa/work/new-world-art-prod/art/character/route_a/body_N_walk_b.json",
+  "source_image_sha256": "6e3bb2528ebc9822ad35c3abf84445446ac73ae55ba26c64676be7f7b78fb139",
+  "source_mask_sha256": "f0b3a2e9e3ab24cba02c654336d80e4db5f965329329eaac900d52d3bcf35ff2",
+  "source_sidecar_sha256": "cd3334a05cf2f7be77e9a4aec4eb12ac14cb8fd8083e5984318172526600513d",
+  "generation_calls": 0,
+  "extras": [],
+  "structural_pass": true,
+  "image_sha256": "62eb245c2ce5d82a858549056f3fcaac30147bfaa60ef3169a19226436595c6d",
+  "mask_sha256": "1d567ea4993c1d0e3a25e726f22491a91a4801465fee7406aba5b3135e072df6"
+}

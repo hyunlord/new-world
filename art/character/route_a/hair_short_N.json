@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "id": "hair_short_N",
+  "kind": "hair",
+  "variant": "short",
+  "body_type": "adult",
+  "direction": "N",
+  "frame": "idle",
+  "scale": 1,
+  "mask": "hair_short_N_mask.png",
+  "attempt": 1,
+  "generation_started_utc": "2026-10-22T05:53:38.740Z",
+  "generation_seconds": 41.76,
+  "generation_tool": "image_gen.imagegen",
+  "prompt": "Use case: precise-object-edit. Edit first image on EXACT same full1024x1536 canvas. Output ONLY short closely cropped stone-age hair, no tied tuft fitted to THIS bald man's scalp. Erase entire man leaving only opaque filled HAIR in original position and solid #FF00FF everywhere else. Do not enlarge/center/move the isolated hair. Scalp crown is x400..620 y490..590 on full1024x1536 canvas. Back view: hair covers entire back of scalp x400..620 y490..675, neck stops at675.  Keep total hair inside x320..704,y464..768 (head guide with tolerance). Image2 is placement guide, not drawing content. Images3 person_v2 and4 scene are locked ink style references only. Fine controlled dark brown ink, pale neutral GREY #C0C0C0 hair fill, grey shadow, upper-left light, sparse strands; no brown/gold fill. No head, skin, face, eyes, ears, beard, body, clothes, ground, shadow, labels, cyan guide or text. Hair only, solid interior. Direction N, camera20degrees above.",
+  "references": [
+    "/Users/rexxa/work/arttrial3-data/route_a/body_N_idle/try2/raw.png",
+    "/Users/rexxa/work/new-world-art-prod/art/character/template_guides/adult_N.png",
+    "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person_v2.png",
+    "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+  ],
+  "generator_output": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1622a-53f6-7b10-99a8-087d87ad024d/exec-c39db898-5777-4fc7-9ff7-623b8f69dc35.png",
+  "semantic_note": "Overlay-only hair; no underlying body pixels or subtraction. Hair extends around scalp as generated; no refitting.",
+  "raw": "/Users/rexxa/work/arttrial3-data/route_a/hair_short_N/try1/raw.png",
+  "raw_sha256": "d2505c2c884336a1d7ca6a54d42c45c476003cd27d3df8ac742877809d0e5950",
+  "image_sha256": "36546cf30a52c337064f69d8a9805af4b0873a8422fc05c17daa8d5d9edfec49",
+  "operations": [
+    "Preserve entire source canvas; reject aspect mismatch; no alpha-bbox fitting",
+    "Chroma key R-G>60 and B-G>60; zero RGB where alpha=0",
+    "Lanczos downscale entire canvas to 64x96",
+    "Alpha cleanup: alpha<16 to transparent black; no other colour modification",
+    "Code mask: every visible pixel region2; no colour quantization"
+  ],
+  "reference_sha256": {
+    "/Users/rexxa/work/arttrial3-data/route_a/body_N_idle/try2/raw.png": "1eeed693822bb2f1783d72af5087780ba79fe558f62add2871b03f0099bc6ab2",
+    "/Users/rexxa/work/new-world-art-prod/art/character/template_guides/adult_N.png": "2ccc4c3e66876f657966530f54a3b6a6052fc24d8414955754a44948efe9d769",
+    "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person_v2.png": "5818c46b0e7bcb23ec6e627d85682ad535a2dad79610e646f3eec8146a8e5f4a",
+    "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+  },
+  "checker": {
+    "id": "hair_short_N",
+    "passed": true,
+    "findings": []
+  },
+  "mask_sha256": "6d7ad2096c852529968b5dbf463dd0ec69160839346cc1a6e8520bbd1e85fb68",
+  "generation_minutes": 0.696
+}

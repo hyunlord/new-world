@@ -1,0 +1,46 @@
+{
+  "prompt": "First image edit target. Body animation WORK_B, very small follow-through wrist movement. Screen-right fist remains DOWN at HIP HEIGHT beside loincloth, rotate it outward slightly, move it rightward ONLY32 image pixels and upward ONLY8 image pixels. Keep hand BELOW BELLYBUTTON, no raised arm. Keep left hand, shoulders, head, torso, legs and feet exactly same. Entire1024x1536 canvas unchanged, feet bottom1408, solid magenta background. No axe drawn, no new objects, no text floor shadow. Image2 geometry guide; images3/4 locked person_v2 and scene ink/wash style anchors. Natural hand/forearm bent slightly out while remaining connected. Everything else identical.",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/arttrial3-data/route_a/body_E_idle/try3/raw.png",
+      "sha256": "4cdb3467c8352b2a8202dc7850db666d62871a5419d146a64a769ab41d3eea1c"
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/template_guides/adult_E.png",
+      "sha256": "9e6b8da255577a2a448720502a026dd3c0b71fbacb67a80b992add9154be23cb"
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person_v2.png",
+      "sha256": "5818c46b0e7bcb23ec6e627d85682ad535a2dad79610e646f3eec8146a8e5f4a"
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "generation_seconds": 21.685,
+  "schema_version": 1,
+  "id": "body_E_work_b",
+  "kind": "body",
+  "body_type": "adult",
+  "direction": "E",
+  "frame": "work_b",
+  "scale": 1,
+  "mask": "body_E_work_b_mask.png",
+  "operations": [
+    "Preserve entire source canvas; reject aspect mismatch; no alpha-bbox fitting",
+    "Chroma key R-G>60 and B-G>60; zero RGB where alpha=0",
+    "Lanczos downscale entire canvas to 64x96",
+    "Alpha cleanup: alpha<16 to transparent black; no other colour modification",
+    "Code mask: every visible pixel region1; no colour quantization",
+    "Copy exact E idle RGBA head [20,32,44,50] and torso [18,50,46,70]; no other geometry change",
+    "Hand-code base loincloth region5 polygon [(24, 56), (29, 59), (35, 59), (39, 58), (41, 65), (39, 68), (36, 67), (31, 71), (27, 68), (23, 66), (22, 63)]; all other visible pixels skin1"
+  ],
+  "variant": "base",
+  "attempt": 1,
+  "generation_tool": "image_gen.imagegen",
+  "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_E_work_b/try1/raw.png",
+  "raw_sha256": "38e0ae40e9bf3b025d52141421adc73c4a39b4068193428ed34280a241359046",
+  "image_sha256": "f769f9155ec1c422f40b35423ead70539bf0ac6017db542324e7ecc143beb04c",
+  "mask_sha256": "7637159c3559c65ad3b7cf84789ccd92b40fbaf091a5af769011328cef7077a5"
+}

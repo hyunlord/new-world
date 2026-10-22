@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "top_hide_wrap_N",
+  "kind": "top",
+  "body_type": "adult",
+  "direction": "N",
+  "frame": "idle",
+  "scale": 1,
+  "mask": "top_hide_wrap_N_mask.png",
+  "variant": "hide_wrap",
+  "attempt": 2,
+  "extras": [
+    "collar",
+    "cloak_hem"
+  ],
+  "operations": [
+    "Preserve entire source canvas; reject aspect mismatch; no alpha-bbox fitting",
+    "Chroma key R-G>60 and B-G>60; zero RGB where alpha=0",
+    "Lanczos downscale entire canvas to 64x96",
+    "Alpha cleanup: alpha<16 to transparent black; no other colour modification",
+    "Code mask: every visible pixel region3; no colour quantization",
+    "Goal3.4 fallback after overlay-only failures: exact mask-box extraction of dressed garment, half-open game box[18,50,46,70]; zero outside; visual check confirms only cloth in box; no subtraction, no contour fitting, no holefill needed",
+    "Alpha cleanup: snap existing nearopaque alpha248..254 to255; 10 pixels; RGB unchanged; no filling transparent pixels or contour edits"
+  ],
+  "generation_record": "/Users/rexxa/work/arttrial3-data/route_a/top_hide_wrap_N/try2/generation.json",
+  "raw": "/Users/rexxa/work/arttrial3-data/route_a/top_hide_wrap_N/try2/raw.png",
+  "raw_sha256": "bf0ab93c8c99d9d583b96de9b05dc82842b0535eb9ee5e575d3bbf9ec3ba38c3",
+  "image_sha256": "223a10419596a66b7d01bc3a242024a7b0961a6fc0b48abf446529ff2975ea84",
+  "extraction_box": [
+    18,
+    50,
+    46,
+    70
+  ],
+  "mask_sha256": "d1255e38a638baf3d08d9f9abaa27adbc5960fefd814d199b8a2401806b3becb"
+}

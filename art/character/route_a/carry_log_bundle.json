@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "id": "carry_log_bundle",
+  "kind": "carry",
+  "body_type": "adult",
+  "direction": "S",
+  "frame": "idle",
+  "scale": 1,
+  "mask": "carry_log_bundle_mask.png",
+  "operations": [
+    "Preserve entire source canvas; reject aspect mismatch; no alpha-bbox fitting",
+    "Chroma key R-G>60 and B-G>60; zero RGB where alpha=0",
+    "Lanczos downscale entire canvas to 64x96",
+    "Alpha cleanup: alpha<16 to transparent black; no other colour modification",
+    "Code mask: every visible pixel region5; no colour quantization"
+  ],
+  "variant": "log_bundle",
+  "attempt": 1,
+  "shoulder": [
+    32,
+    52
+  ],
+  "prompt": "Use case stylized-concept. Generate only ONE tightly bound bundle of three touching stone-age logs, no people, on flat magenta #FF00FF. Full canvas1024x1536 mapping64x96 gamepixels, bundle horizontal across shoulder at GAME(32,52) equivalent image(512,832). Extent x160..864,y720..944, about44 gamepixels wide and14 high. Keep huge empty magenta areas above/below, do not fill canvas. Logs bark dark brown broken longitudinal ink marks, circular pale cut ends visible on right, tan plant cord binding them tightly to form single continuous opaque connected shape, no magenta interior holes. Actual center pixel512,832 must be wood/cord, not a gap. Reference1 props log material, reference2 person readable simplified contour, reference3 scene upper-left lighting restrained earth washes. Ink natural-history illustration, not photorealistic or3D, no dense all-over hatching, no ground/shadow/text/guide/frame. Log bundle should exceed adult28px torso width.",
+  "elapsed_minutes": 1.2958166666666666,
+  "tool": "image_gen.imagegen",
+  "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1622a-e29c-7da2-8daf-ff3e795750f3/exec-6d24efc1-365a-4842-bd93-ebf2d242ed21.png",
+  "references": [
+    {
+      "path": "art/style05/anchors/props.png",
+      "sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+    },
+    {
+      "path": "art/style05/anchors/person_v2.png",
+      "sha256": "5818c46b0e7bcb23ec6e627d85682ad535a2dad79610e646f3eec8146a8e5f4a"
+    },
+    {
+      "path": "art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "raw": "/Users/rexxa/work/arttrial3-data/route_a/carry_log_bundle/try1/raw.png",
+  "raw_sha256": "64e7922b005c4c699d7043eac965cf7dfb4b6f23d41f2bbbef513ee6d1da86cf",
+  "image_sha256": "a89b5ec5f150a42f67b1006babce3d4626a93099c5a82b6deb1b8b940833565c",
+  "alpha_bbox_game_pixels": [
+    3,
+    36,
+    62,
+    59
+  ],
+  "mask_sha256": "d2b866cda498d4ce9b1cf202b17e3d7a59d0a57f35154c9659feb555bbb1a992",
+  "generation_tool": "image_gen.imagegen",
+  "elapsed_minutes_includes_orchestration": true,
+  "structural_pass": true
+}

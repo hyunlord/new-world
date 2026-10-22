@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "id": "elder_body_S_walk_a",
+  "kind": "body",
+  "body_type": "elder",
+  "direction": "S",
+  "frame": "walk_a",
+  "scale": 1,
+  "mask": "elder_body_S_walk_a_mask.png",
+  "variant": "base",
+  "operations": [
+    "Piecewise source y0,y1 -> target y0,y1,width,left bands: ((0, 32, 4, 36, 64, -1), (32, 50, 36, 54, 64, -1), (50, 70, 54, 72, 64, 0), (70, 88, 72, 88, 64, 0), (88, 96, 88, 96, 64, 0)); RGBA Lanczos, categorical masks nearest",
+    "Alpha cleanup<16; missing categorical edge labels take nearest visible nonzero label, transparent labels0; no RGBA repaint or hole fill",
+    "Exact derived-idle RGBA and mask copyback head(20, 36, 44, 54), torso(18, 54, 46, 72); no other repaint"
+  ],
+  "source_sidecar": "/Users/rexxa/work/new-world-art-prod/art/character/route_a/body_S_walk_a.json",
+  "source_image_sha256": "2d6b088eff8d54721cff4f688a5352d8df8d2a21425d9b726a3dfab22aad3757",
+  "source_mask_sha256": "34053b3415a835c19d8a81b76f131e9a905a61b33c1b03deb4bd4fd47c9bb76c",
+  "source_sidecar_sha256": "570f46782c6432288021794f94b4fbfb774b8e0c742726f1faf52d77c0552522",
+  "generation_calls": 0,
+  "extras": [],
+  "structural_pass": true,
+  "image_sha256": "8135cfbef2109eb1ca55876a2bd7841f4cbc87688cc607b745c8f4e57889b959",
+  "mask_sha256": "a9fc426147560ad8292573758e6664ec7b261a3adcc82e39b051cac8edcb90c1"
+}

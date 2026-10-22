@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "id": "elder_hair_long_tied_S",
+  "kind": "hair",
+  "body_type": "elder",
+  "direction": "S",
+  "frame": "idle",
+  "scale": 1,
+  "mask": "elder_hair_long_tied_S_mask.png",
+  "variant": "long_tied",
+  "operations": [
+    "Piecewise source y0,y1 -> target y0,y1,width,left bands: ((0, 32, 4, 36, 64, -1), (32, 50, 36, 54, 64, -1), (50, 70, 54, 72, 64, 0), (70, 88, 72, 88, 64, 0), (88, 96, 88, 96, 64, 0)); RGBA Lanczos, categorical masks nearest",
+    "Alpha cleanup<16; missing categorical edge labels take nearest visible nonzero label, transparent labels0; no RGBA repaint or hole fill"
+  ],
+  "source_sidecar": "/Users/rexxa/work/new-world-art-prod/art/character/route_a/hair_long_tied_S.json",
+  "source_image_sha256": "15a5d75cddf28cad85903ee666b28c85548b3c6204ce660022228a4346ce7098",
+  "source_mask_sha256": "a1f6061e955144afbfc1bba4e769b7bfce2b722d931958ba9d22c03fb54adcb2",
+  "source_sidecar_sha256": "4d8562b9e44c67110dab9f19a7d6bf715eb887b6665f7d4ec475a3a12a770d25",
+  "generation_calls": 0,
+  "extras": [],
+  "structural_pass": true,
+  "image_sha256": "c53f24f8ef9bd1a69c7990e61997036fc358060ad4c383ffdcbfb73071949d17",
+  "mask_sha256": "65d78e31e879601589a7a18f918bfccda264b5b82f44d6dd03e5f46924eadcf7"
+}

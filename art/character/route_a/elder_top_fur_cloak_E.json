@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "id": "elder_top_fur_cloak_E",
+  "kind": "top",
+  "body_type": "elder",
+  "direction": "E",
+  "frame": "idle",
+  "scale": 1,
+  "mask": "elder_top_fur_cloak_E_mask.png",
+  "variant": "fur_cloak",
+  "operations": [
+    "Piecewise source y0,y1 -> target y0,y1,width,left bands: ((0, 32, 4, 36, 64, 1), (32, 50, 36, 54, 64, 1), (50, 70, 54, 72, 64, 0), (70, 88, 72, 88, 64, 0), (88, 96, 88, 96, 64, 0)); RGBA Lanczos, categorical masks nearest",
+    "Top central torso maps exact adult torso to(18, 54, 46, 72); source-pixel Lanczos composition, not filling or repaint",
+    "Allowed top alpha cleanup248..254 to255 on0 pixels; RGB unchanged; zero-alpha pixels untouched",
+    "Alpha cleanup<16; missing categorical edge labels take nearest visible nonzero label, transparent labels0; no RGBA repaint or hole fill",
+    "Metadata-only source rebind after adding missing source mask_sha256; source image and mask hashes unchanged; original sidecar digest retained"
+  ],
+  "source_sidecar": "/Users/rexxa/work/new-world-art-prod/art/character/route_a/top_fur_cloak_E.json",
+  "source_image_sha256": "2bae55ddff8f60cb348b463569110b45f58ebab2da376d95107762ab097ad1c7",
+  "source_mask_sha256": "d1255e38a638baf3d08d9f9abaa27adbc5960fefd814d199b8a2401806b3becb",
+  "source_sidecar_sha256": "bf8126bd4b0048ee3cadba228d6fda5b18444ced6b585ff377fe4c8ee25fb523",
+  "generation_calls": 0,
+  "extras": [
+    "collar",
+    "cloak_hem"
+  ],
+  "structural_pass": true,
+  "image_sha256": "8e8d690f4715a50e024cdc4f98651c216865d2b284666eaf27b94aa517a8f48e",
+  "mask_sha256": "60b13db280cb637880bee8777ce3d71c797b32cf0015771ff617acecafcbb24d",
+  "source_sidecar_sha256_at_derivation": "dbeb958104df76d9d589ce1a341235440d31346c04b387d400e74aa1b17aea05"
+}

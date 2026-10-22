@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "id": "child_hair_short_N",
+  "kind": "hair",
+  "body_type": "child",
+  "direction": "N",
+  "frame": "idle",
+  "scale": 1,
+  "mask": "child_hair_short_N_mask.png",
+  "variant": "short",
+  "operations": [
+    "Piecewise source y0,y1 -> target y0,y1,width,left bands: ((0, 32, 22, 46, 48, 8), (32, 50, 46, 60, 48, 8), (50, 70, 60, 74, 50, 7), (70, 88, 74, 88, 48, 8), (88, 96, 88, 94, 48, 8)); RGBA Lanczos, categorical masks nearest",
+    "Alpha cleanup<16; missing categorical edge labels take nearest visible nonzero label, transparent labels0; no RGBA repaint or hole fill"
+  ],
+  "source_sidecar": "/Users/rexxa/work/new-world-art-prod/art/character/route_a/hair_short_N.json",
+  "source_image_sha256": "36546cf30a52c337064f69d8a9805af4b0873a8422fc05c17daa8d5d9edfec49",
+  "source_mask_sha256": "6d7ad2096c852529968b5dbf463dd0ec69160839346cc1a6e8520bbd1e85fb68",
+  "source_sidecar_sha256": "374f8e8d78075d1d94346e3e53bacec5b45527f8a5f675acce1bcce0658acfa2",
+  "generation_calls": 0,
+  "extras": [],
+  "structural_pass": true,
+  "image_sha256": "7e383288f191e72042da75e433d8653385b4886c0e6f352ae171c49301d6558f",
+  "mask_sha256": "cce265ae9e526ccb93441cccc5283559d70ef221d66f182e219482e686538928"
+}

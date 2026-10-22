@@ -21,7 +21,7 @@ isolated experiment. STYLE v2 is a style reference; Trial3 structure gates first
 | Part | Deliverable and evidence | State |
 |---|---|---|
 | 0 | Template, guides, contract, checker; 22 synthetic tests after independent audit | IMPLEMENTED; semantic limits recorded |
-| 1 | S/E/N idle geometry passed in 1/3/2 tries; masks and full set pending | IN_PROGRESS |
+| 1 | 29/30 originals,58 derived;87/87 layers and603/603 combinations pass; furS missing | PARTIAL_AT_RETRY_CAP |
 | 2 | Official CLI installed; authenticated workspace unavailable, no Meshy key | STOPPED_TOOL_UNAVAILABLE |
 | 3 | Lab implementation parses; missing assets rejected; actual GIF/runtime pending | IN_PROGRESS |
 | 4 | Registered S1/S2/R1/T1/P1/K1 and verdict | PENDING |
@@ -61,3 +61,15 @@ No Meshy key is available in inspected locations. B stops under the goal's
 fallback rule, with zero submitted jobs. This does not assert the root cause
 of the network/auth failure. Blender installation is deferred because there
 is no usable 3D generation prerequisite. No B scores are fabricated.
+
+## D6 — Allowed alpha cleanup
+
+After whole-canvas Lanczos, top pixels with alpha248..254 become255, with RGB and zero-alpha silhouette unchanged. This is the explicitly allowed alpha cleanup, logged per asset; it fixes visible-body-through-top checks without masking their failures. No fourth generation or silhouette forcing.
+
+## D7 — Diagnostic incomplete-set captures
+
+S fur cloak exhausted three attempts. Do not relabel 87/87 accepted layers as a complete minimum set: adult,child,elder each miss this variant. Only the 603 structurally valid combinations may be captured using explicit --allow-incomplete, with NOT_COMPLETE and p1_eligible=false embedded. No full viable-route claim.
+
+## D8 — Source metadata audit
+
+Added missing mask_sha256 to five adult top sidecars. Their ten derived top sidecars retain the original derivation-sidecar hash and bind the new metadata hash separately; source image and mask bytes remain unchanged.

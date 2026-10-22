@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "id": "body_sleep",
+  "kind": "body",
+  "body_type": "adult",
+  "direction": "S",
+  "frame": "sleep",
+  "scale": 1,
+  "mask": "body_sleep_mask.png",
+  "operations": [
+    "Preserve entire source canvas; reject aspect mismatch; no alpha-bbox fitting",
+    "Chroma key R-G>60 and B-G>60; zero RGB where alpha=0",
+    "Lanczos downscale entire canvas to 96x64",
+    "Alpha cleanup: alpha<16 to transparent black; no other colour modification",
+    "Code mask: every visible pixel region1; no colour quantization",
+    "Hand-coded loincloth/rope polygon [(50, 31), (54, 32), (57, 33), (55, 34), (56, 36), (57, 40), (58, 44), (57, 45), (58, 48), (55, 48), (53, 49), (50, 48), (48, 47), (49, 43), (50, 39), (51, 35)] assigns visible pixels region5, remaining body skin1; no image edit"
+  ],
+  "variant": "sleep",
+  "attempt": 2,
+  "head_box": [
+    19,
+    25,
+    37,
+    42
+  ],
+  "prompt": "Precise-object-edit. Preserve EXACT sleeping figure from first image, its size, head left, neutral gray skin, loincloth, ink/wash details and pose. Move the ENTIRE figure straight DOWN by64pixels on same1536x1024 flat magenta canvas; do not rescale. Target silhouette vertical bounds400..768, horizontal bounds310..1240. Center should be pixel768,576 (game48,36 on96x64). Keep all empty areas pure#FF00FF. No additions, no cast shadow, no bed, no text. Person and scene references remain ink/wash/light references. This is precise positioning, not a redesign.",
+  "elapsed_minutes": 0.5911,
+  "tool": "image_gen.imagegen",
+  "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1622a-e29c-7da2-8daf-ff3e795750f3/exec-487f323d-46ab-4b02-b8d3-9c7b33083373.png",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/arttrial3-data/route_a/body_sleep/try1/raw.png",
+      "sha256": "5c6cc45548e3014056012612ea482ff986ebd35dfd7ee0b557e7cdaddd6734ef"
+    },
+    {
+      "path": "art/style05/anchors/person_v2.png",
+      "sha256": "5818c46b0e7bcb23ec6e627d85682ad535a2dad79610e646f3eec8146a8e5f4a"
+    },
+    {
+      "path": "art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_sleep/try2/raw.png",
+  "raw_sha256": "2c1f95dd002e333803393ec16c1fc3626b1c7d6b11615cd30fe7219cc7b39b94",
+  "image_sha256": "0e20212d9fb6199632389d82d3ee9dafb7a4dac9d75f0bd09681f048c82dc7ee",
+  "alpha_bbox_game_pixels": [
+    19,
+    26,
+    78,
+    50
+  ],
+  "mask_polygon_game_pixels": [
+    [
+      50,
+      31
+    ],
+    [
+      54,
+      32
+    ],
+    [
+      57,
+      33
+    ],
+    [
+      55,
+      34
+    ],
+    [
+      56,
+      36
+    ],
+    [
+      57,
+      40
+    ],
+    [
+      58,
+      44
+    ],
+    [
+      57,
+      45
+    ],
+    [
+      58,
+      48
+    ],
+    [
+      55,
+      48
+    ],
+    [
+      53,
+      49
+    ],
+    [
+      50,
+      48
+    ],
+    [
+      48,
+      47
+    ],
+    [
+      49,
+      43
+    ],
+    [
+      50,
+      39
+    ],
+    [
+      51,
+      35
+    ]
+  ],
+  "mask_sha256": "52e4c83a7d21124759f01df7f0a58ca0ef47781599d8b8a5c95a705a0d249d8c",
+  "generation_tool": "image_gen.imagegen",
+  "elapsed_minutes_includes_orchestration": true,
+  "structural_pass": true
+}

@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "id": "elder_hair_short_S",
+  "kind": "hair",
+  "body_type": "elder",
+  "direction": "S",
+  "frame": "idle",
+  "scale": 1,
+  "mask": "elder_hair_short_S_mask.png",
+  "variant": "short",
+  "operations": [
+    "Piecewise source y0,y1 -> target y0,y1,width,left bands: ((0, 32, 4, 36, 64, -1), (32, 50, 36, 54, 64, -1), (50, 70, 54, 72, 64, 0), (70, 88, 72, 88, 64, 0), (88, 96, 88, 96, 64, 0)); RGBA Lanczos, categorical masks nearest",
+    "Alpha cleanup<16; missing categorical edge labels take nearest visible nonzero label, transparent labels0; no RGBA repaint or hole fill"
+  ],
+  "source_sidecar": "/Users/rexxa/work/new-world-art-prod/art/character/route_a/hair_short_S.json",
+  "source_image_sha256": "2a55ee163d63f32a2dab81607e2f781cf4008a39b12815084711ba49306762f7",
+  "source_mask_sha256": "55ef3fe1c72dc83159766feafb3660c2a8c4e4fce4e84deebaf671b223a08156",
+  "source_sidecar_sha256": "c6bc9340f48b300afb148e7222c85e004df2e2bfd1db882d7da7caa765547628",
+  "generation_calls": 0,
+  "extras": [],
+  "structural_pass": true,
+  "image_sha256": "17a3a249da9f72a29052a0e0d2bf6074b8ad83b08e9f5ea6ad43798121a8aaeb",
+  "mask_sha256": "9fcac227f9315e96252ed49199634a6434cbe1a65f7a3a1397c1ed9632f68e31"
+}

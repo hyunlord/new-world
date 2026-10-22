@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "id": "child_hair_long_tied_N",
+  "kind": "hair",
+  "body_type": "child",
+  "direction": "N",
+  "frame": "idle",
+  "scale": 1,
+  "mask": "child_hair_long_tied_N_mask.png",
+  "variant": "long_tied",
+  "operations": [
+    "Piecewise source y0,y1 -> target y0,y1,width,left bands: ((0, 32, 22, 46, 48, 8), (32, 50, 46, 60, 48, 8), (50, 70, 60, 74, 50, 7), (70, 88, 74, 88, 48, 8), (88, 96, 88, 94, 48, 8)); RGBA Lanczos, categorical masks nearest",
+    "Alpha cleanup<16; missing categorical edge labels take nearest visible nonzero label, transparent labels0; no RGBA repaint or hole fill"
+  ],
+  "source_sidecar": "/Users/rexxa/work/new-world-art-prod/art/character/route_a/hair_long_tied_N.json",
+  "source_image_sha256": "aae5ca82449de6ea7b251ff298aff4813b48ae550127ccd93c0ec98fb825c075",
+  "source_mask_sha256": "0e27703d9ac88f18153bceff5b7552b614656efc715955bc9635b5aac624a2e3",
+  "source_sidecar_sha256": "79bff4cc462f9b9ef489e4d211243277623e008afd7721a160780f8882a9bc0b",
+  "generation_calls": 0,
+  "extras": [],
+  "structural_pass": true,
+  "image_sha256": "4c7fb9bdc23a4fbee17e32ab4f8a89dabeaee23a790d699a7480ef9f7d6e5029",
+  "mask_sha256": "54e27770f8e44ef49d53e215700e319d574bc1581504ac484798ee237fbcef45"
+}

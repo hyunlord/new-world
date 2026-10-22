@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "id": "hair_short_E",
+  "kind": "hair",
+  "variant": "short",
+  "body_type": "adult",
+  "direction": "E",
+  "frame": "idle",
+  "scale": 1,
+  "mask": "hair_short_E_mask.png",
+  "attempt": 1,
+  "generation_started_utc": "2026-10-22T05:53:38.740Z",
+  "generation_seconds": 22.985,
+  "generation_tool": "image_gen.imagegen",
+  "prompt": "Use case: precise-object-edit. Edit first image on EXACT same full1024x1536 canvas. Output ONLY short closely cropped stone-age hair, no tied tuft fitted to THIS bald man's scalp. Erase entire man leaving only opaque filled HAIR in original position and solid #FF00FF everywhere else. Do not enlarge/center/move the isolated hair. Scalp crown is x400..620 y490..590 on full1024x1536 canvas. Front/side three-quarter: hair cap follows crown x400..620 y490..590; side locks may reach y660, leave all face/forehead/ears absent magenta.  Keep total hair inside x320..704,y464..768 (head guide with tolerance). Image2 is placement guide, not drawing content. Images3 person_v2 and4 scene are locked ink style references only. Fine controlled dark brown ink, pale neutral GREY #C0C0C0 hair fill, grey shadow, upper-left light, sparse strands; no brown/gold fill. No head, skin, face, eyes, ears, beard, body, clothes, ground, shadow, labels, cyan guide or text. Hair only, solid interior. Direction E, camera20degrees above.",
+  "references": [
+    "/Users/rexxa/work/arttrial3-data/route_a/body_E_idle/try3/raw.png",
+    "/Users/rexxa/work/new-world-art-prod/art/character/template_guides/adult_E.png",
+    "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person_v2.png",
+    "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+  ],
+  "generator_output": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1622a-53f6-7b10-99a8-087d87ad024d/exec-c1113cc9-d53d-4326-b5c3-4f43a7e7a29b.png",
+  "semantic_note": "Overlay-only hair; no underlying body pixels or subtraction. Hair extends around scalp as generated; no refitting.",
+  "raw": "/Users/rexxa/work/arttrial3-data/route_a/hair_short_E/try1/raw.png",
+  "raw_sha256": "7aaa6df7999f0ee2b8195e95a451be76d479ed17d3a1d983e6cb34d0d3cffbab",
+  "image_sha256": "089ccb30321bf88c7f7680df0cccb04a7f35f48da7e26c7031af9b02c3a09892",
+  "operations": [
+    "Preserve entire source canvas; reject aspect mismatch; no alpha-bbox fitting",
+    "Chroma key R-G>60 and B-G>60; zero RGB where alpha=0",
+    "Lanczos downscale entire canvas to 64x96",
+    "Alpha cleanup: alpha<16 to transparent black; no other colour modification",
+    "Code mask: every visible pixel region2; no colour quantization"
+  ],
+  "reference_sha256": {
+    "/Users/rexxa/work/arttrial3-data/route_a/body_E_idle/try3/raw.png": "4cdb3467c8352b2a8202dc7850db666d62871a5419d146a64a769ab41d3eea1c",
+    "/Users/rexxa/work/new-world-art-prod/art/character/template_guides/adult_E.png": "9e6b8da255577a2a448720502a026dd3c0b71fbacb67a80b992add9154be23cb",
+    "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person_v2.png": "5818c46b0e7bcb23ec6e627d85682ad535a2dad79610e646f3eec8146a8e5f4a",
+    "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+  },
+  "checker": {
+    "id": "hair_short_E",
+    "passed": true,
+    "findings": []
+  },
+  "mask_sha256": "424512dede62beb0e8bb6d7c3c27abcd7de6d1dd6c73a35f84d9d727fad2e872",
+  "generation_minutes": 0.38308333333333333
+}

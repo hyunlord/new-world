@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "id": "body_N_idle",
+  "kind": "body",
+  "body_type": "adult",
+  "direction": "N",
+  "frame": "idle",
+  "scale": 1,
+  "mask": "body_N_idle_mask.png",
+  "operations": [
+    "Preserve entire source canvas; reject aspect mismatch; no alpha-bbox fitting",
+    "Chroma key R-G>60 and B-G>60; zero RGB where alpha=0",
+    "Lanczos downscale entire canvas to 64x96",
+    "Alpha cleanup: alpha<16 to transparent black; no other colour modification",
+    "Code mask: every visible pixel region1; no colour quantization",
+    "Hand-coded loincloth mask polygon region5, intersect visible alpha: [(24, 57), (39, 57), (42, 65), (40, 65), (38, 69), (36, 68), (32, 72), (28, 69), (25, 69), (24, 66), (21, 66)]"
+  ],
+  "variant": "base",
+  "attempt": 2,
+  "generation_seconds": 31.7,
+  "prompt": "Precisely edit first image. Keep full1024x1536 magenta canvas and EVERY pixel above y1120 exactly the same. ONLY extend shins and feet downward about70 image pixels so bottommost sole reaches y1408 (88/96 canvas height), preserving connected natural legs. The original back-view bald grey body/head/torso/arms must not move or resize. Do NOT recenter figure, do NOT change head, no hair, garments, props or text. Fine brown-black ink over grey wash. Second N guide shows required feet line; third/fourth style anchors. No cyan lines in output.",
+  "generation_tool": "image_gen.imagegen",
+  "raw": "/Users/rexxa/work/arttrial3-data/route_a/body_N_idle/try2/raw.png",
+  "raw_sha256": "1eeed693822bb2f1783d72af5087780ba79fe558f62add2871b03f0099bc6ab2",
+  "image_sha256": "095a9f22935e12aed68b782474aaa8164661d686d1521d244792412ca8b5080c",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/arttrial3-data/route_a/body_N_idle/try1/raw.png",
+      "sha256": "6263786c519f404ef3783bc36b0dad3f22c1428577278a1e788c1bc04b1994e0"
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/template_guides/adult_N.png",
+      "sha256": "2ccc4c3e66876f657966530f54a3b6a6052fc24d8414955754a44948efe9d769"
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person_v2.png",
+      "sha256": "5818c46b0e7bcb23ec6e627d85682ad535a2dad79610e646f3eec8146a8e5f4a"
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    }
+  ],
+  "mask_sha256": "583505eb91dd390b76fb4b99055142e51e5c025bd1b0e62663fc868fe94fa6af",
+  "structural_result": {
+    "id": "body_N_idle",
+    "passed": true,
+    "findings": []
+  }
+}

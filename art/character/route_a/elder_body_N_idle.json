@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "id": "elder_body_N_idle",
+  "kind": "body",
+  "body_type": "elder",
+  "direction": "N",
+  "frame": "idle",
+  "scale": 1,
+  "mask": "elder_body_N_idle_mask.png",
+  "variant": "base",
+  "operations": [
+    "Piecewise source y0,y1 -> target y0,y1,width,left bands: ((0, 32, 4, 36, 64, 1), (32, 50, 36, 54, 64, 1), (50, 70, 54, 72, 64, 0), (70, 88, 72, 88, 64, 0), (88, 96, 88, 96, 64, 0)); RGBA Lanczos, categorical masks nearest",
+    "Alpha cleanup<16; missing categorical edge labels take nearest visible nonzero label, transparent labels0; no RGBA repaint or hole fill"
+  ],
+  "source_sidecar": "/Users/rexxa/work/new-world-art-prod/art/character/route_a/body_N_idle.json",
+  "source_image_sha256": "095a9f22935e12aed68b782474aaa8164661d686d1521d244792412ca8b5080c",
+  "source_mask_sha256": "583505eb91dd390b76fb4b99055142e51e5c025bd1b0e62663fc868fe94fa6af",
+  "source_sidecar_sha256": "2985c6b4389293dc51dcbb71710420d874b4bd5fe82a09e5a1931b001006f033",
+  "generation_calls": 0,
+  "extras": [],
+  "structural_pass": true,
+  "image_sha256": "ec50ea0390cca664d85a9bbcef5f93db3be4e0933962d9d1b859e364ed8132e4",
+  "mask_sha256": "126bba267b58aa53fb13e381d20b95339031d5b791c07e3c672b3ed32069ccfa"
+}

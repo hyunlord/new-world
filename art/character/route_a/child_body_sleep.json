@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "id": "child_body_sleep",
+  "kind": "body",
+  "body_type": "child",
+  "direction": "S",
+  "frame": "sleep",
+  "scale": 1,
+  "mask": "child_body_sleep_mask.png",
+  "variant": "sleep",
+  "operations": [
+    "Sleep whole-canvas scale 0.711864406779661, output size (68, 46), offset (13, 9); actual source alpha length to42; center48,36",
+    "Alpha cleanup<16; missing categorical edge labels take nearest visible nonzero label, transparent labels0; no RGBA repaint or hole fill"
+  ],
+  "source_sidecar": "/Users/rexxa/work/new-world-art-prod/art/character/route_a/body_sleep.json",
+  "source_image_sha256": "0e20212d9fb6199632389d82d3ee9dafb7a4dac9d75f0bd09681f048c82dc7ee",
+  "source_mask_sha256": "52e4c83a7d21124759f01df7f0a58ca0ef47781599d8b8a5c95a705a0d249d8c",
+  "source_sidecar_sha256": "703c343b620a82c2752bd93e1a31bfee6bb8315b509eb678f2c375ec7cde78f6",
+  "generation_calls": 0,
+  "extras": [],
+  "head_box": [
+    27,
+    27,
+    39,
+    39
+  ],
+  "structural_pass": true,
+  "image_sha256": "1d7fe163dadddf7bbb153a8b3193d05f3df784c5e9481890c871d2639adf2073",
+  "mask_sha256": "39af5054c664b7aa64bca3367b35b93e9e1acbf34986df83c49b76bef8a74430"
+}

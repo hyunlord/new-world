@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "id": "child_top_hide_wrap_E",
+  "kind": "top",
+  "body_type": "child",
+  "direction": "E",
+  "frame": "idle",
+  "scale": 1,
+  "mask": "child_top_hide_wrap_E_mask.png",
+  "variant": "hide_wrap",
+  "operations": [
+    "Piecewise source y0,y1 -> target y0,y1,width,left bands: ((0, 32, 22, 46, 48, 8), (32, 50, 46, 60, 48, 8), (50, 70, 60, 74, 50, 7), (70, 88, 74, 88, 48, 8), (88, 96, 88, 94, 48, 8)); RGBA Lanczos, categorical masks nearest",
+    "Top central torso maps exact adult torso to(21, 60, 43, 74); source-pixel Lanczos composition, not filling or repaint",
+    "Allowed top alpha cleanup248..254 to255 on3 pixels; RGB unchanged; zero-alpha pixels untouched",
+    "Alpha cleanup<16; missing categorical edge labels take nearest visible nonzero label, transparent labels0; no RGBA repaint or hole fill",
+    "Metadata-only source rebind after adding missing source mask_sha256; source image and mask hashes unchanged; original sidecar digest retained"
+  ],
+  "source_sidecar": "/Users/rexxa/work/new-world-art-prod/art/character/route_a/top_hide_wrap_E.json",
+  "source_image_sha256": "0a09f9821f0ba7c41b465efa815c68f583a3802816b3a3f6c5c72374e2544958",
+  "source_mask_sha256": "1dcf9b65d065fdd6f23683802bb3833072b676500319496386874aab5c9992a5",
+  "source_sidecar_sha256": "40c8860d4cd4b343f8cf260ce52d62391f900e516188139ce9e859258f7a86df",
+  "generation_calls": 0,
+  "extras": [
+    "collar",
+    "cloak_hem"
+  ],
+  "structural_pass": true,
+  "image_sha256": "afd53facdff3dadd53479d14245a8ff68d20646500a1bc925c4182c51fe6c0fa",
+  "mask_sha256": "9e8cf5609fdf16db079a21077163eb1a7de5d03ebf0b61434b80544bbee62e0c",
+  "source_sidecar_sha256_at_derivation": "b47c9d47b6ae72f0d6a24a319b54a2a1ef3ad85044f5dc660e6cbf2609f95ad0"
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "id": "child_body_S_work_a",
+  "kind": "body",
+  "body_type": "child",
+  "direction": "S",
+  "frame": "work_a",
+  "scale": 1,
+  "mask": "child_body_S_work_a_mask.png",
+  "variant": "base",
+  "operations": [
+    "Piecewise source y0,y1 -> target y0,y1,width,left bands: ((0, 32, 22, 46, 48, 8), (32, 50, 46, 60, 48, 8), (50, 70, 60, 74, 50, 7), (70, 88, 74, 88, 48, 8), (88, 96, 88, 94, 48, 8)); RGBA Lanczos, categorical masks nearest",
+    "Alpha cleanup<16; missing categorical edge labels take nearest visible nonzero label, transparent labels0; no RGBA repaint or hole fill",
+    "Exact derived-idle RGBA and mask copyback head(23, 46, 41, 60), torso(21, 60, 43, 74); no other repaint"
+  ],
+  "source_sidecar": "/Users/rexxa/work/new-world-art-prod/art/character/route_a/body_S_work_a.json",
+  "source_image_sha256": "1e67b872793179e4d0c58ee13fc9dc0992d549e66edb834d961dcf95390af90d",
+  "source_mask_sha256": "a19772fb0dacd4711195417acfd21d7e5fe0f3062d8e2c72875129a5655e7c63",
+  "source_sidecar_sha256": "659c45ce9f6d4f9ec0ba8ab852d359357d38621352551d0f63753b43551bad7e",
+  "generation_calls": 0,
+  "extras": [],
+  "structural_pass": true,
+  "image_sha256": "44a3d106fbc2eab48de0e46e0c7fa9cde25e81f60f916b1fa6c641559310624d",
+  "mask_sha256": "86544b887a719300eaaa0e53cb835c4d035b051158d15ddf3ac39368844ff719"
+}

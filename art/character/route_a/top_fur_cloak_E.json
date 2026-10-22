@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "top_fur_cloak_E",
+  "kind": "top",
+  "body_type": "adult",
+  "direction": "E",
+  "frame": "idle",
+  "scale": 1,
+  "mask": "top_fur_cloak_E_mask.png",
+  "variant": "fur_cloak",
+  "attempt": 3,
+  "extras": [
+    "collar",
+    "cloak_hem"
+  ],
+  "operations": [
+    "Preserve entire source canvas; reject aspect mismatch; no alpha-bbox fitting",
+    "Chroma key R-G>60 and B-G>60; zero RGB where alpha=0",
+    "Lanczos downscale entire canvas to 64x96",
+    "Alpha cleanup: alpha<16 to transparent black; no other colour modification",
+    "Code mask: every visible pixel region3; no colour quantization",
+    "Goal3.4 fallback after overlay-only failures: exact mask-box extraction of dressed garment, half-open game box[18,50,46,70]; zero outside; visual check confirms only cloth in box; no subtraction, no contour fitting, no holefill needed",
+    "Alpha cleanup248..254to255: 1pixels RGBunchanged no contour edit"
+  ],
+  "generation_record": "/Users/rexxa/work/arttrial3-data/route_a/top_fur_cloak_E/try3/generation.json",
+  "raw": "/Users/rexxa/work/arttrial3-data/route_a/top_fur_cloak_E/try3/raw.png",
+  "raw_sha256": "fb82d5b09d97044ea914d5f34b8d1c957ee9a625d427ed4b735982fbd8aa1662",
+  "image_sha256": "2bae55ddff8f60cb348b463569110b45f58ebab2da376d95107762ab097ad1c7",
+  "extraction_box": [
+    18,
+    50,
+    46,
+    70
+  ],
+  "mask_sha256": "d1255e38a638baf3d08d9f9abaa27adbc5960fefd814d199b8a2401806b3becb"
+}

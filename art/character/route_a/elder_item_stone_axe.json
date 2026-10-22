@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "id": "elder_item_stone_axe",
+  "kind": "item",
+  "body_type": "elder",
+  "direction": "S",
+  "frame": "idle",
+  "scale": 1,
+  "mask": "elder_item_stone_axe_mask.png",
+  "variant": "stone_axe",
+  "operations": [
+    "Piecewise source y0,y1 -> target y0,y1,width,left bands: ((0, 32, 4, 36, 64, -1), (32, 50, 36, 54, 64, -1), (50, 70, 54, 72, 64, 0), (70, 88, 72, 88, 64, 0), (88, 96, 88, 96, 64, 0)); RGBA Lanczos, categorical masks nearest",
+    "Alpha cleanup<16; missing categorical edge labels take nearest visible nonzero label, transparent labels0; no RGBA repaint or hole fill"
+  ],
+  "source_sidecar": "/Users/rexxa/work/new-world-art-prod/art/character/route_a/item_stone_axe.json",
+  "source_image_sha256": "52f3a192c360cd5209ffa4a5a5ead9e8258ab3e8a8ee4059a53190dd0721207f",
+  "source_mask_sha256": "bdb7a7ae377ca39297b1dd9710f088c90aa33c7bcda0378fcd40d8c5bbc081b8",
+  "source_sidecar_sha256": "064dc7c520b9f01c178dc11239b8d75ce7e94e85b091960fe77069542fb4f62e",
+  "generation_calls": 0,
+  "extras": [],
+  "grip": [
+    35,
+    65
+  ],
+  "structural_pass": true,
+  "image_sha256": "98758eec7ff72277f49a1b46ae74fcbc9bb0d7338ab9bbb13a19036c74390740",
+  "mask_sha256": "f006b9be4a8c42ea305b6c64457e9e7194eb8b2061a965f36b482e678cd74d5a"
+}
