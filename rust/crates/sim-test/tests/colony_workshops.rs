@@ -533,3 +533,17 @@ fn a_blueprint_may_not_cover_a_pending_workshops_work_tile() {
     );
     assert!(again.accepted, "a cancelled site frees its work tile");
 }
+
+/// UI report (D22): a finished workshop is not a V7 building — the building
+/// snapshot must not show it (it read as a hearth, kind 0).
+#[test]
+fn a_finished_workshop_is_not_in_the_building_registry() {
+    let mut engine = job_world_m2(32, 32);
+    worker(&mut engine, 3, 3);
+    let before = engine.resources.building_registry.len();
+    build_workshop(&mut engine, BlueprintKind::KnappingSpot, (12, 12), (4, 4));
+    assert_eq!(engine.resources.building_registry.len(), before);
+    assert!(!engine.resources.building_kinds.contains_key(&(12, 12)));
+    let rows = sim_bridge::ffi::collect_building_snapshot(&engine.resources);
+    assert!(rows.iter().all(|r| (r.x, r.y) != (12, 12)), "{rows:?}");
+}

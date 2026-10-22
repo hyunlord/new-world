@@ -263,6 +263,9 @@ impl RuntimeSystem for ConstructionSystem {
                 .ok()
                 .map(|s| *s)
                 .zip(world.get::<&MaterialNeeds>(site_entity).ok().map(|n| *n));
+            // M2: a workshop is a colony object, not a V7 building (no registry
+            // entry, no BuildingPlaced; M2 DECISIONS D22).
+            let workshop = colony_site.is_some_and(|(site, _)| site.kind.is_workshop());
             if let Some((site, needs)) = colony_site {
                 let mut builders: Vec<AgentId> = world
                     .query::<(&Agent, &Position, &AgentState)>()
@@ -311,22 +314,24 @@ impl RuntimeSystem for ConstructionSystem {
             // Parent of BuildingPlaced (agent-construction path): the
             // ConstructionCompleted we just emitted. radius = 0 —
             // agent-construction does not stamp influence in Phase 6-β.
-            let placed_id = resources.issue_event_id();
-            // V7 Phase 10-β — register the completed building's position
-            // for `SettlementSystem` proximity scans. Mirrors the
-            // registration in `BuildingStampSystem` for FFI-originated
-            // placements.
-            resources.building_registry.insert(placed_id, position);
-            resources.causal_log.push(
-                tile_idx,
-                CausalEvent::BuildingPlaced {
-                    id: placed_id,
-                    parent: Some(completed_id),
-                    position,
-                    radius: 0,
-                    tick,
-                },
-            );
+            if !workshop {
+                let placed_id = resources.issue_event_id();
+                // V7 Phase 10-β — register the completed building's position
+                // for `SettlementSystem` proximity scans. Mirrors the
+                // registration in `BuildingStampSystem` for FFI-originated
+                // placements.
+                resources.building_registry.insert(placed_id, position);
+                resources.causal_log.push(
+                    tile_idx,
+                    CausalEvent::BuildingPlaced {
+                        id: placed_id,
+                        parent: Some(completed_id),
+                        position,
+                        radius: 0,
+                        tick,
+                    },
+                );
+            }
 
             // Reset every co-located Consuming{ConstructionSite} agent
             // to Idle — owned by ConstructionSystem itself per the

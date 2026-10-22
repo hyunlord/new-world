@@ -166,24 +166,35 @@ fn standing_trees_are_t_and_felled_ones_leave_a_stump_for_a_day() {
 
 #[test]
 fn awake_carriers_have_a_plus_on_their_right() {
-    // Observed: several people carry logs at 14:00–18:00 of day 0 (tick 600).
-    let (engine, _) = at(600);
-    let rows = collect_agent_snapshot(&engine.world);
-    let jobs = collect_agent_jobs(&engine.world);
-    let people: BTreeSet<(u32, u32)> = rows.iter().map(|r| (r.x, r.y)).collect();
-    let width = collect_world_info(&engine.resources).width;
-    let grid = ascii::render(&engine, None);
+    // M1.5 observed carriers at tick 600; M2's work order moves the first loads,
+    // so the check starts at 600 and steps on (U-script orders are all at 360)
+    // to the first tick with an awake carrier whose right-hand tile is free.
+    let (mut engine, _) = at(600);
     let mut checked = 0;
-    for (row, job) in rows.iter().zip(&jobs) {
-        if job.2 > 0 && !ascii::is_asleep(row) {
-            let next = (row.x + 1, row.y);
-            if next.0 < width && !people.contains(&next) {
-                assert_eq!(glyph(&grid, next.0, next.1), '+');
-                checked += 1;
+    for _ in 0..1_440 {
+        let rows = collect_agent_snapshot(&engine.world);
+        let jobs = collect_agent_jobs(&engine.world);
+        let people: BTreeSet<(u32, u32)> = rows.iter().map(|r| (r.x, r.y)).collect();
+        let width = collect_world_info(&engine.resources).width;
+        let grid = ascii::render(&engine, None);
+        for (row, job) in rows.iter().zip(&jobs) {
+            if job.2 > 0 && !ascii::is_asleep(row) {
+                let next = (row.x + 1, row.y);
+                if next.0 < width && !people.contains(&next) {
+                    assert_eq!(glyph(&grid, next.0, next.1), '+');
+                    checked += 1;
+                }
             }
         }
+        if checked > 0 {
+            break;
+        }
+        engine.tick();
     }
-    assert!(checked >= 1, "no carrier to check at tick 600");
+    assert!(
+        checked >= 1,
+        "no carrier to check in day 0–1 after tick 600"
+    );
 }
 
 #[test]

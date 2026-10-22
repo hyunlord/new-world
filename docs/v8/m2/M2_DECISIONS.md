@@ -271,3 +271,14 @@ No MAJOR finding. MINOR findings and what was done:
   NIT 8 (a priority set to 0 does not cancel a current job; an adult's component keeps quarry 3 as an elder), NIT 9
   (axes are kept until death or wear), NIT 11 (`f64` on grandfathered `wood_target` inputs), NIT 12–14 (derived
   `Skill.level` saved, registry order, unpruned measurement tallies).
+
+## D22 — A finished workshop is not a V7 building (found by the UI screen checks)
+
+- Context: the screen-check run drew a hearth on the knapping spot and on the bench (`$DATA/ui/UI_REPORT.md`):
+  `ConstructionSystem` put every finished colony site into `building_registry` with a `BuildingPlaced` event, and a
+  registry entry without a `building_kinds` entry reads as kind 0 (hearth) in `get_building_snapshot`. The registry
+  also feeds `SettlementSystem`'s member buildings and the routine's occupied tiles.
+- Choice: a workshop completion skips the registry entry and the `BuildingPlaced` event (it keeps
+  `ConstructionCompleted`); huts keep M1's path. Test `a_finished_workshop_is_not_in_the_building_registry`. The
+  building layer's GDScript guard (skip rows inside a workshop footprint) stays as a second line of defence.
+- The evaluation was rerun from the fixed commit.
