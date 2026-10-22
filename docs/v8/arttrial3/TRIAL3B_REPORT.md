@@ -1,3 +1,17 @@
+# ART-TRIAL3b 재개 보고 — 2026-10-22
+
+**현재 판정: STOPPED_COST_UNAVAILABLE. 필요 크레딧 UNKNOWN / 보유 10.**
+
+계정 확인은 성공했다: `auth token` exit 0(토큰 비공개), `workspace status` exit 0, free plan, 10크레딧. 64×64 시험 생성은 사용자 변경에 따라 취소했다. 생성 제출 0건, 소비 0, 조회 후 잔액 10이다.
+
+[전체 단가표와 호출 기록](B_MODEL_LOG.md): 참조 이미지 `nano_banana_2_lite`는 1크레딧. `image_to_3d` 및 `3d_rigging`의 다섯 클립 견적은 exit 3, `does not support alpha v2 cost estimation`으로 실패했다. **견적 미지원이며 free plan 생성 금지를 입증한 것은 아니다.** 모델 3회 + 추가 클립 합계를 산출할 수 없어 Part 1은 시작하지 않았다.
+
+접지·비율 개정, 합성 테스트, A 87개 재검사, B 모델·렌더·GIF·품질 및 성능 검증은 여전히 미실행이다. 원본 목표는 보존했고 최신 사용자 변경은 B_MODEL_LOG에 기록했다. 이번 변경은 B_MODEL_LOG 추가 및 이 재개 보고뿐이다. 코드 단순화 없음. 전체 목표 미완료이며 예산 게이트를 통과했다고 주장하지 않는다.
+
+아래는 이전 실행의 역사 기록이다. 이전 workspace 오류는 이번 실행에서 해소되었고, 이전 시험 생성 계획은 현재 적용하지 않는다.
+
+---
+
 # ART-TRIAL3b 실행 보고
 
 **판정: STOPPED_TOOL_UNAVAILABLE. Part 0~4 미완료.** 2026-10-22 07:41 UTC 확인. 기준 커밋 `352f4101351d3d920d958aa9ba019b3e8a5623da`, 브랜치 `v8/art-trial3`. 목표 §1.1의 “Any failure → report and stop”을 적용했다. 계정 재로그인·workspace 선택이 완료되었다는 요청의 전제와 현재 CLI 관측 결과가 다르며, 원인은 확정하지 않았다.
