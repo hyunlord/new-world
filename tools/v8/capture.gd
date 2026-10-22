@@ -12,7 +12,7 @@
 #   then the world is reset to the same seed and shot: m1_01 start (tick 360) → the U-script orders
 #   (tools/v8/u_script.json, resolved here as the colony probe resolves them) → m1_02 orders (361) → at the work
 #   tick m1_03 work, m1_06 far (1×, camp centred), m1_07 inspector on the person carrying most, m1_08 "why?"
-#   on an empty tile, m1_09 order bar in hut mode with a red ghost over a tree (synthetic F3 key and mouse
+#   on an empty tile, m1_09 order bar in hut mode with a red ghost over a tree (synthetic F3 and 1 keys and mouse
 #   motion, as m1_gui_test.gd drives it) → m1_04 hut done + 60 with the chronicle shown → m1_05 the first 23:00
 #   after it → m1_10 the next 10:00 at the same framing (the finished camp by day, M1-ART); m1_03b is the literal
 #   tick 900; m1_07 is the inspector scrolled to its job and carry lines,
@@ -524,7 +524,7 @@ func _empty_tile_near(world: Node, hearth: Vector2i) -> Vector2i:
 	return hearth + Vector2i(2, 2)
 
 
-## P9: F3 (hut) by a synthetic key, then the mouse moved onto the standing tree nearest the hearth.
+## P9: F3 then 1 (the build menu's hut) by synthetic keys, then the mouse moved onto the standing tree nearest the hearth.
 func _m1_order_bar(main: Node, world: Node, camera: Camera2D, hearth: Vector2i) -> void:
 	await _near(camera, hearth)
 	var trees: Dictionary = world.call("get_trees")
@@ -537,13 +537,15 @@ func _m1_order_bar(main: Node, world: Node, camera: Camera2D, hearth: Vector2i) 
 		if _cheb(t, hearth) < best and absi(t.y - hearth.y) <= 10:
 			best = _cheb(t, hearth)
 			target = t
-	for pressed: bool in [true, false]:
-		var key: InputEventKey = InputEventKey.new()
-		key.keycode = KEY_F3
-		key.physical_keycode = KEY_F3
-		key.pressed = pressed
-		Input.parse_input_event(key)
-		await process_frame
+	# M2: F3 opens the build menu; 1 picks the hut.
+	for code: Key in [KEY_F3, KEY_1]:
+		for pressed: bool in [true, false]:
+			var key: InputEventKey = InputEventKey.new()
+			key.keycode = code
+			key.physical_keycode = code
+			key.pressed = pressed
+			Input.parse_input_event(key)
+			await process_frame
 	var screen: Vector2 = root.get_canvas_transform() * (Vector2(target) * TILE + Vector2(8, 8))
 	for at: Vector2 in [screen + Vector2(TILE * 2.0, 0.0), screen]:
 		var motion: InputEventMouseMotion = InputEventMouseMotion.new()
