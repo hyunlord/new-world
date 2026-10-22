@@ -153,7 +153,11 @@ pub fn collect_place_preview(
     let (lx, hx) = (x0.min(x1), x0.max(x1).min(w.saturating_sub(1)));
     let (ly, hy) = (y0.min(y1), y0.max(y1).min(h.saturating_sub(1)));
     let tiles: Vec<(u32, u32)> = match shape {
-        1 => line_tiles((x0, y0), (x1, y1)),
+        // The ghost of a drag past the edge stops at the edge.
+        1 => line_tiles(
+            (x0.min(w.saturating_sub(1)), y0.min(h.saturating_sub(1))),
+            (x1.min(w.saturating_sub(1)), y1.min(h.saturating_sub(1))),
+        ),
         2 | 3 => (ly..=hy)
             .flat_map(|y| (lx..=hx).map(move |x| (x, y)))
             .filter(|t| shape == 3 || t.0 == lx || t.0 == hx || t.1 == ly || t.1 == hy)

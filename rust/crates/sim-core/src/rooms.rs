@@ -14,9 +14,11 @@
 //! the result is a pure function of the grid. Doors belong to no room; a room
 //! lists the doors on its border (4-neighbours of its tiles).
 //!
-//! Stable ids ([`assign_ids`]): a new room takes the id of the previous room
-//! it overlaps most (ties: the lower id) when the overlap is at least half of
-//! the new room's tiles and that id is not taken yet; else a fresh id.
+//! Stable ids ([`assign_ids`]): every pair (new room, previous room) where the
+//! previous room holds at least half of the new room's tiles is a claim; claims
+//! are granted largest overlap first (ties: the lower old id, then the earlier
+//! new room), each id and each new room once; the rest get fresh ids. A wall
+//! that splits a room leaves the id with the larger part.
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
 
@@ -142,12 +144,23 @@ pub fn detect(
             queue.push_back(start);
             let mut tiles = BTreeSet::new();
             let mut doors = BTreeSet::new();
+            let mut size: u32 = 0;
             let mut edge = false;
             let mut made = false;
             while let Some(t) = queue.pop_front() {
-                tiles.insert(t);
+                size = size.saturating_add(1);
                 if t.0 == 0 || t.1 == 0 || t.0 + 1 == width || t.1 + 1 == height {
                     edge = true;
+                }
+                // A region past `max` or on the edge is no room: keep flooding
+                // it (to mark it seen) but stop collecting (code review m-6:
+                // the open map's ~36k tiles were stored on every detection).
+                let candidate = !edge && size <= max;
+                if candidate {
+                    tiles.insert(t);
+                } else if !tiles.is_empty() {
+                    tiles.clear();
+                    doors.clear();
                 }
                 let around = [
                     (t.0.wrapping_sub(1), t.1),
@@ -160,10 +173,12 @@ pub fn detect(
                         continue;
                     }
                     if bounds(nb) {
-                        if door(nb) {
-                            doors.insert(nb);
+                        if candidate {
+                            if door(nb) {
+                                doors.insert(nb);
+                            }
+                            made |= built(nb);
                         }
-                        made |= built(nb);
                         continue;
                     }
                     let j = idx(nb);
@@ -173,7 +188,6 @@ pub fn detect(
                     }
                 }
             }
-            let size = tiles.len() as u32;
             if !edge && (min..=max).contains(&size) {
                 out.push(Found {
                     tiles,
@@ -199,27 +213,40 @@ pub fn assign_ids(
             owner.insert(*t, room.id);
         }
     }
-    let mut taken: BTreeSet<RoomId> = BTreeSet::new();
-    let mut out = Vec::with_capacity(found.len());
-    for f in found {
+    // Every (new room, old id) pair where the old room holds at least half of
+    // the new room's tiles, granted largest overlap first (ties: lower old id,
+    // then the earlier new room), each old id and each new room at most once:
+    // a split's larger part keeps the id (code review m-2).
+    let mut pairs: Vec<(std::cmp::Reverse<usize>, RoomId, usize)> = Vec::new();
+    for (i, f) in found.iter().enumerate() {
         let mut overlap: BTreeMap<RoomId, usize> = BTreeMap::new();
         for t in &f.tiles {
             if let Some(id) = owner.get(t) {
                 *overlap.entry(*id).or_insert(0) += 1;
             }
         }
-        let best = overlap
-            .iter()
-            .filter(|(id, _)| !taken.contains(*id))
-            .max_by_key(|(id, n)| (**n, std::cmp::Reverse(**id)))
-            .filter(|(_, n)| **n * 2 >= f.tiles.len())
-            .map(|(id, _)| *id);
-        let id = best.unwrap_or_else(|| {
+        for (id, n) in overlap {
+            if n * 2 >= f.tiles.len() {
+                pairs.push((std::cmp::Reverse(n), id, i));
+            }
+        }
+    }
+    pairs.sort_unstable();
+    let mut taken: BTreeSet<RoomId> = BTreeSet::new();
+    let mut ids: Vec<Option<RoomId>> = vec![None; found.len()];
+    for (_, id, i) in pairs {
+        if ids[i].is_none() && !taken.contains(&id) {
+            ids[i] = Some(id);
+            taken.insert(id);
+        }
+    }
+    let mut out = Vec::with_capacity(found.len());
+    for (f, id) in found.into_iter().zip(ids) {
+        let id = id.unwrap_or_else(|| {
             let id = (*next).max(1);
             *next = id + 1;
             id
         });
-        taken.insert(id);
         out.push((id, f));
     }
     out
@@ -303,6 +330,44 @@ mod tests {
         // One tile is below the minimum.
         let found = rooms_of(&[".....", ".###.", ".#.#.", ".###.", "....."]);
         assert!(found.is_empty());
+    }
+
+    #[test]
+    fn a_split_room_keeps_its_id_in_the_larger_part() {
+        // 3 x 5 = 15 tiles; a wall across the second row leaves 3 above and 9
+        // below (the reviewer's case had 4 | 14). The earlier, smaller part used
+        // to take id 1.
+        let whole = rooms_of(&[
+            ".......", ".#####.", ".#...#.", ".#...#.", ".#...#.", ".#...#.", ".#...#.", ".#####.",
+            ".......",
+        ]);
+        let mut next = 1;
+        let ids = assign_ids(&BTreeMap::new(), whole, &mut next);
+        let previous: BTreeMap<RoomId, Room> = ids
+            .into_iter()
+            .map(|(id, f)| {
+                (
+                    id,
+                    Room {
+                        id,
+                        tiles: f.tiles,
+                        doors: f.doors,
+                        roofed: true,
+                        role: RoomRole::Unassigned,
+                        dug: false,
+                    },
+                )
+            })
+            .collect();
+        let split = rooms_of(&[
+            ".......", ".#####.", ".#...#.", ".#####.", ".#...#.", ".#...#.", ".#...#.", ".#####.",
+            ".......",
+        ]);
+        let ids: Vec<(RoomId, usize)> = assign_ids(&previous, split, &mut next)
+            .into_iter()
+            .map(|(id, f)| (id, f.tiles.len()))
+            .collect();
+        assert_eq!(ids, vec![(2, 3), (1, 9)]);
     }
 
     #[test]

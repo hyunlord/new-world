@@ -297,3 +297,49 @@ Raw data lives in `/Users/rexxa/work/m3-data/` (`$DATA`), outside the repository
   F8 31, F9 32 + 32; F7 1. Because these seeds found the bugs, the fixed build is also measured on a **second held-out
   set, seeds 600–631** (grepped: never used before), same script, days, bars and scorer, run once on the fix commit;
   both results are reported, the 400–431 one as the result of record.
+
+## D18 — Part 4 UI findings, the numbers review, and the live world's river
+
+- UI (Part 4 subagent, `$DATA/ui/UI_REPORT.md`): (1) `get_work_priorities` flattened `levels` in `WorkType::code`
+  order while `work_types` lists `WorkType::ALL`, where mining (code 6) is fourth — from the 채굴 column on, the table
+  showed the next type's level. Fixed: `ffi::levels_in_work_order` (test in `engine_economy_ffi.rs`). (2) "Nobody
+  chops in the live scene": in the default world (seed 20261010) every tree within 14 tiles of the camp stands across
+  a 2-tile river, which is impassable since Part 1; the reachable forest begins 15 tiles south-west (7,083 trees
+  reachable). Marks across the river are accepted and never worked, and nothing tells the player. Recorded as a
+  limitation (owner decision: a ford or bridge, a refusal reason for unreachable marks, or a different default
+  seed); not changed in M3. `m3_ui_test.gd` builds its test house from stone walls for this reason.
+- Numbers review (fresh subagent, `$DATA/review/numbers_review.md`): F1, F2, F7, F8 recomputed from the raw summaries
+  equal the scorer's and the document's on both seed sets, every stated range included. Corrections taken into
+  `M3_EVALUATION.md`: 419 fails F1 with a closed doorless bedroom of 3 beds (not a wall gap); 415's failure was the
+  storehouse, not the house; 406 passes F2 on 9 stockpiled items (a pass for the wrong reason; F2 would be 29/32
+  without it); F7's one pass (429) comes from a late start (level 0 on days 1–5), which the level proxy rewards; no
+  blade is made after day 14 on any seed (several seeds made blades on days 6–14). Seed 406's F8 failure: no hauling
+  (other work never ran out) and axes are taken only from stockpile cells (M2 goal 3.7).
+
+## D19 — Code review dispositions (fresh reviewer, `$DATA/review/code_review.md`)
+
+Scope `f0ba4347..3d73712d` (Rust). 0 BLOCKER, 1 MAJOR, 6 MINOR, 8 NOTE; `decision/system.rs` 0 lines changed. Clean:
+memo and A* (a hit equals a fresh search; ties `(f, h, y, x)`; no corner cutting), regions per version, every
+passability writer refreshes (load excepted), ledger across build, deconstruct, dig, partial-delivery cancel, clear and
+a used bed's deconstruction, no unwraps, baseline gated, sorted iteration.
+
+| finding | disposition |
+|---|---|
+| M-1 the nav map not rebuilt on load; a command before the first tick spilled across a wall | **fixed**: `save::load_with` calls `nav::ensure`; test `a_command_right_after_a_load_spills_like_an_uninterrupted_run` (fails without the fix: checked) |
+| m-1 a walker whose impassable goal opened stood beside it until a Stuck cancel (240 ticks) | **fixed**: `path_step` plans again when the kept path is spent but has not arrived; test `a_hauler_whose_goal_opens_walks_onto_it` (fails without: checked) |
+| m-2 a split room's id went to the first part found, not the larger | **fixed**: `assign_ids` grants claims largest overlap first; unit test `a_split_room_keeps_its_id_in_the_larger_part`; ADR 0023 and the module header say so |
+| m-3 a hut or workshop could be placed over a finished bedroll | **fixed**: `check_blueprint` refuses bed tiles; test `review_fixes_beds_lines_and_open_goals` |
+| m-4 a dug boulder's leftover stone spilled before the nav refresh | **fixed**: `dig` refreshes before anything is put down |
+| m-5 `PlaceLine` with an off-map end rasterised billions of tiles | **fixed**: refused `OutOfMap`; the bridge preview clamps the drag to the map; same test |
+| m-6 room detection stored the whole open map on every built piece (3.1 ms on 192²) | **fixed in part**: `detect` stops collecting a region once it is past `max` or touches the edge (same results; the flood still visits every tile); detection still runs on floors and bedrolls (not changed: they can change roles) |
+| n-1 the unreachable cooldown key differs between executor and assignment | kept: harmless (assignment filters by region first); noted for M-PERF clean-up |
+| n-2 f64 permille factor in `sleep_decay.rs` | kept: `Sleep` is already f64 (grandfathered, C4); M-PERF converts needs to integers |
+| n-3 a full storehouse makes a Maintain bill unsatisfiable | kept, recorded as a limitation (D12 design) |
+| n-4 `RemoveZoneArea` cancels only Haul jobs | kept: the other jobs spill by the region-checked `put_items` |
+| n-5 pathfinding also runs under M1/M2 colony rules | as ADR 0021 says; the baseline is untouched |
+| n-6 `nearest_reachable` is O(food tiles) per blocked seek | kept: F6 holds with 5× margin |
+| n-7 a person with an unreachable assigned bed could loop | kept: beds are offered only when reachable from the formation tile; not observed |
+| n-8 doc and stat nits | `room_interval_ticks` doc fixed; the rest kept |
+
+These fixes change colony behaviour only in the cases they name; the soak, identity and a confirmation run of seeds
+600–631 are repeated on the fix commit (below, D20).

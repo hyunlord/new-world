@@ -162,6 +162,10 @@ pub fn load_with(
     let body: Body = decode(read_header(bytes)?).map_err(SaveError::Decode)?;
     let mut resources = body.resources;
     resources.material_blocking_cache = MaterialBlockingCache::build(&resources.material_registry);
+    // M3: the colony's cost map is derived (not saved); build it now so a
+    // command applied before the first tick sees the same regions as an
+    // uninterrupted run (code review M-1).
+    crate::runtime::nav::ensure(&mut resources);
     let world = world::build(&body.world).map_err(SaveError::World)?;
     let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
     register(&mut engine);

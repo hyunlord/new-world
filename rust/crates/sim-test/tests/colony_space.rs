@@ -362,3 +362,181 @@ fn someone_about_to_drink_gets_no_new_job() {
     tick_checked(&mut engine);
     assert!(has_job(&engine, thirsty));
 }
+
+#[test]
+fn review_fixes_beds_lines_and_open_goals() {
+    // Code review m-3: a building never goes over a finished bedroll.
+    let mut engine = world(30, 30);
+    worker(&mut engine, 3, 3);
+    logs(&mut engine, (4, 4), 5);
+    let r = submit(
+        &mut engine,
+        Command::PlaceBlueprint {
+            kind: BlueprintKind::Bedroll,
+            x: 10,
+            y: 10,
+        },
+    );
+    assert!(r.accepted, "{r:?}");
+    run_until(&mut engine, 600, |e| {
+        e.resources.colony.beds.contains_key(&(10, 10))
+    });
+    assert!(engine.resources.colony.beds.contains_key(&(10, 10)));
+    let over = submit(
+        &mut engine,
+        Command::PlaceBlueprint {
+            kind: BlueprintKind::KnappingSpot,
+            x: 10,
+            y: 10,
+        },
+    );
+    assert!(!over.accepted, "{over:?}");
+    // Code review m-5: a line with an end off the map is refused whole (it
+    // used to rasterise as many tiles as the coordinates).
+    let off = submit(
+        &mut engine,
+        Command::PlaceLine {
+            kind: BlueprintKind::LogWall,
+            x0: 2,
+            y0: 20,
+            x1: u32::MAX,
+            y1: 20,
+        },
+    );
+    assert_eq!(off.reason, Some(RejectReason::OutOfMap), "{off:?}");
+}
+
+#[test]
+fn a_hauler_whose_goal_opens_walks_onto_it() {
+    // Code review m-1: a Haul from a stack on a wall site (impassable: taken
+    // from beside); the site is cancelled on the way, so the goal opens. The
+    // kept path ended beside the goal and the hauler stood still for 240 ticks
+    // until a Stuck cancel; now it plans again and finishes.
+    use sim_core::colony::WorkType;
+    use sim_core::components::{Agent, Position};
+    let mut e = world(30, 30);
+    let w = worker(&mut e, 2, 15);
+    let id = e.world.get::<&Agent>(w).map(|a| a.id).expect("agent");
+    let r = submit(
+        &mut e,
+        Command::SetWorkPriority {
+            agent: id,
+            work: WorkType::Build,
+            level: 0,
+        },
+    );
+    assert!(r.accepted, "{r:?}");
+    stockpile(&mut e, 2, 2, 3, 3);
+    logs(&mut e, (20, 15), 3);
+    let r = submit(
+        &mut e,
+        Command::PlaceBlueprint {
+            kind: BlueprintKind::LogWall,
+            x: 20,
+            y: 15,
+        },
+    );
+    assert!(r.accepted, "{r:?}");
+    let near = run_until(&mut e, 200, |e| {
+        e.world
+            .get::<&Position>(w)
+            .is_ok_and(|p| p.x.abs_diff(20) <= 4 && p.y.abs_diff(15) <= 4)
+    });
+    assert!(near < 200, "the hauler walks toward the stack");
+    let r = submit(
+        &mut e,
+        Command::CancelArea {
+            x0: 20,
+            y0: 15,
+            x1: 20,
+            y1: 15,
+        },
+    );
+    assert!(r.accepted, "{r:?}");
+    let stocked = |e: &SimEngine| {
+        (2..=3)
+            .flat_map(|y| (2..=3).map(move |x| (x, y)))
+            .filter_map(|t| e.resources.colony.ground_items.get(&t))
+            .map(|s| s.count)
+            .sum::<u16>()
+    };
+    // 3 logs over ~18 tiles at 3 ticks a step: well under 200 ticks; the old
+    // freeze alone lasted 240.
+    run_until(&mut e, 200, |e| stocked(e) == 3);
+    assert_eq!(stocked(&e), 3);
+    let stuck = e
+        .resources
+        .colony
+        .tallies
+        .cancels
+        .get(&sim_core::colony::CancelReason::Stuck)
+        .copied()
+        .unwrap_or(0);
+    assert_eq!(stuck, 0);
+}
+
+#[test]
+fn a_command_right_after_a_load_spills_like_an_uninterrupted_run() {
+    // Code review M-1: the nav map is derived and was rebuilt only at the
+    // first tick after a load, so a command before it spilled items without
+    // the region rule (a 25-log stack landed across a wall).
+    let build = || {
+        let mut e = world(16, 16);
+        let r = submit(
+            &mut e,
+            Command::PlaceLine {
+                kind: BlueprintKind::LogWall,
+                x0: 6,
+                y0: 0,
+                x1: 6,
+                y1: 15,
+            },
+        );
+        assert_eq!(r.count, 16, "{r:?}");
+        let max = sim_systems::runtime::jobs::items::stack_max(&e.resources, ItemKind::Log);
+        for y in 0..=15u32 {
+            for x in 0..=5u32 {
+                if (x, y) != (0, 15) {
+                    logs(&mut e, (x, y), max);
+                }
+            }
+        }
+        e
+    };
+    let mut a = build();
+    let mut b = build();
+    let bytes = sim_systems::save::save(&mut b).expect("save");
+    // The fixture's system list (job_world_m2), as the load must match it.
+    let mut b = sim_systems::save::load_with(&bytes, |e| {
+        use sim_systems::runtime::jobs::{BillSystem, JobAssignSystem, JobExecuteSystem};
+        e.register_system(Box::new(
+            sim_systems::runtime::agent::AgentMovementSystem::new(),
+        ));
+        e.register_system(Box::new(JobAssignSystem::new()));
+        e.register_system(Box::new(JobExecuteSystem::new()));
+        e.register_system(Box::new(
+            sim_systems::runtime::construction::ConstructionSystem::new(),
+        ));
+        e.register_system(Box::new(BillSystem::new()));
+    })
+    .expect("load");
+    assert!(b.resources.nav.is_built(), "the map is rebuilt on load");
+    let place = Command::PlaceBlueprint {
+        kind: BlueprintKind::KnappingSpot,
+        x: 3,
+        y: 8,
+    };
+    assert!(submit(&mut a, place.clone()).accepted);
+    assert!(submit(&mut b, place).accepted);
+    let landed = |e: &SimEngine| -> Vec<((u32, u32), u16)> {
+        e.resources
+            .colony
+            .ground_items
+            .iter()
+            .filter(|(t, _)| t.0 > 6 || **t == (0, 15))
+            .map(|(t, s)| (*t, s.count))
+            .collect()
+    };
+    assert_eq!(landed(&a), vec![((0, 15), 25)]);
+    assert_eq!(landed(&a), landed(&b));
+}

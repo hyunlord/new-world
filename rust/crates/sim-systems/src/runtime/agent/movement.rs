@@ -187,8 +187,12 @@ fn path_step(nav: &mut NavState, id: AgentId, pos: Tile, goal: Tile, tick: u64) 
             n => path.steps.get(n as usize - 1).copied(),
         };
         if path.goal == goal && at == Some(pos) {
-            plan = path.version != version
-                && !nav.still_walkable(pos, &path.steps[path.next as usize..]);
+            // A spent path that has not arrived (its impassable goal opened up,
+            // so arriving now means standing on it) is planned again; it used
+            // to leave the walker standing until a Stuck cancel (code review m-1).
+            plan = (path.version != version
+                && !nav.still_walkable(pos, &path.steps[path.next as usize..]))
+                || path.peek().is_none();
             if !plan && path.version != version {
                 nav.stats.borrow_mut().kept += 1;
             }

@@ -106,6 +106,12 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
             x1,
             y1,
         } => {
+            // Both ends on the map, or nothing: an off-map end would make the
+            // line as long as the coordinates (code review m-5).
+            let (w, h) = (res.tile_grid.width, res.tile_grid.height);
+            if x0.max(x1) >= w || y0.max(y1) >= h {
+                return CommandResult::rejected(RejectReason::OutOfMap);
+            }
             let tiles = line_tiles((x0, y0), (x1, y1));
             place_space(world, res, &rule, kind, tiles)
         }
@@ -620,6 +626,7 @@ pub fn check_blueprint(
             || has_wall(res, *t)
             || res.colony.trees.contains_key(t)
             || res.colony.nodes.contains_key(t)
+            || res.colony.beds.contains_key(t)
             || under_building(res, *t)
             || res.colony.zone_of_tile.contains_key(t)
             || reserved.contains(t)

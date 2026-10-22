@@ -65,7 +65,7 @@ pub struct SpaceRule {
     pub room_max_tiles: u32,
     /// A region of more tiles is open ground (goal 3.3: 400).
     pub open_region_tiles: u32,
-    /// Ticks between room detections when nothing changed (goal 3.3: 60).
+    /// Ticks between re-reads of the room roles; detection itself runs when a wall, door or dig changed (goal 3.3: 60).
     pub room_interval_ticks: u64,
     /// Sleep decay permille while asleep in a roofed bedroom (goal 3.3: 800 = 20 % faster recovery).
     pub bedroom_sleep_permille: u32,

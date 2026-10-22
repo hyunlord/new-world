@@ -179,6 +179,9 @@ pub fn dig(res: &mut SimResources, tile: (u32, u32)) -> bool {
     grid.floor_material[i] = Some(rock);
     res.colony.designations.remove(&tile);
     res.colony.tallies.tiles_dug += 1;
+    // The tile is open from now on: refresh the map before anything is put
+    // down on it, so the spills keep to its region (code review m-4).
+    changed(res, tile);
     // A boulder on the tile is dug out with it: what it still held comes out too.
     if let Some(node) = res.colony.nodes.remove(&tile) {
         res.colony.tallies.nodes_exhausted += 1;
@@ -190,7 +193,6 @@ pub fn dig(res: &mut SimResources, tile: (u32, u32)) -> bool {
             put_items(res, tile, spec, u16::from(node.left));
         }
     }
-    changed(res, tile);
     if stone > 0 {
         res.colony
             .item_ledger
