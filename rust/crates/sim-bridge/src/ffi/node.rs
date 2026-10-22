@@ -76,6 +76,10 @@ use super::snapshot::{
     resource_rows_to_dict, tallies_to_dict, terrain_snapshot_to_dict, time_snapshot_to_dict,
     world_info_to_dict,
 };
+use super::space::{
+    collect_place_preview, collect_room_detail, collect_rooms, collect_space, preview_to_dict,
+    room_detail_to_dict, rooms_to_dict, space_to_dict, submit_space, SpaceCommand,
+};
 use godot::classes::INode;
 use godot::prelude::*;
 use sim_core::influence::InfluenceChannel;
@@ -655,6 +659,123 @@ impl WorldSimNode {
     #[func]
     fn get_colony_versions(&self) -> VarDictionary {
         versions_to_dict(collect_colony_versions(&self.engine.resources))
+    }
+
+    /// M3 order: one space blueprint (`log_wall`, `stone_wall`, `door`,
+    /// `packed_floor`, `bedroll`) on every valid tile of the line. Returns
+    /// `{accepted, count, reason}` (count = sites placed).
+    #[func]
+    fn cmd_place_line(
+        &mut self,
+        kind: GString,
+        x0: i32,
+        y0: i32,
+        x1: i32,
+        y1: i32,
+    ) -> VarDictionary {
+        let cmd = SpaceCommand::Line {
+            kind: kind.to_string(),
+            rect: (x0, y0, x1, y1),
+        };
+        result_to_dict(submit_space(&mut self.engine, cmd))
+    }
+
+    /// M3 order: one space blueprint on every valid tile of the rectangle (its
+    /// border only when `hollow`).
+    #[func]
+    fn cmd_place_rect(
+        &mut self,
+        kind: GString,
+        x0: i32,
+        y0: i32,
+        x1: i32,
+        y1: i32,
+        hollow: bool,
+    ) -> VarDictionary {
+        let cmd = SpaceCommand::Rect {
+            kind: kind.to_string(),
+            rect: (x0, y0, x1, y1),
+            hollow,
+        };
+        result_to_dict(submit_space(&mut self.engine, cmd))
+    }
+
+    /// M3 order: mark the rectangle's undug hill tiles for digging.
+    #[func]
+    fn cmd_designate_dig(&mut self, x0: i32, y0: i32, x1: i32, y1: i32) -> VarDictionary {
+        result_to_dict(submit_space(
+            &mut self.engine,
+            SpaceCommand::Dig((x0, y0, x1, y1)),
+        ))
+    }
+
+    /// M3 order: mark the rectangle's walls, doors, floors and bedrolls for deconstruction.
+    #[func]
+    fn cmd_designate_deconstruct(&mut self, x0: i32, y0: i32, x1: i32, y1: i32) -> VarDictionary {
+        result_to_dict(submit_space(
+            &mut self.engine,
+            SpaceCommand::Deconstruct((x0, y0, x1, y1)),
+        ))
+    }
+
+    /// M3 order: give room `room` a role (`bedroom`, `storehouse`, `workshop`,
+    /// `hall`, `unassigned`) or `auto` (the colony decides).
+    #[func]
+    fn cmd_set_room_role(&mut self, room: i64, role: GString) -> VarDictionary {
+        let cmd = SpaceCommand::RoomRole {
+            room,
+            role: role.to_string(),
+        };
+        result_to_dict(submit_space(&mut self.engine, cmd))
+    }
+
+    /// M3: the drag ghost of placing `kind` from `(x0, y0)` to `(x1, y1)` with
+    /// `shape` (0 one tile, 1 line, 2 hollow rect, 3 filled rect) as `{xs, ys,
+    /// ok (1 fits / 0 refused), reasons (RejectReason names, "" when it fits)}`.
+    /// Read-only.
+    #[func]
+    fn get_place_preview(
+        &self,
+        kind: GString,
+        x0: i32,
+        y0: i32,
+        x1: i32,
+        y1: i32,
+        shape: i64,
+    ) -> VarDictionary {
+        preview_to_dict(&collect_place_preview(
+            &self.engine.world,
+            &self.engine.resources,
+            &kind.to_string(),
+            (x0, y0, x1, y1),
+            shape,
+        ))
+    }
+
+    /// M3: walls, doors, floors, bedrolls and dug tiles as `{version, wall_xs/
+    /// ys/kinds (0 log, 1 stone, 2 door), floor_xs/ys/kinds (0 packed, 1 dug
+    /// rock), bed_xs/ys, dug_xs/ys}`.
+    #[func]
+    fn get_space(&self) -> VarDictionary {
+        space_to_dict(&collect_space(&self.engine.resources))
+    }
+
+    /// M3: the rooms as `{version, ids, roles, role_names, overridden, tiles,
+    /// beds, roofed, dug, doors, centre_xs/ys, tile_xs/ys, tile_rooms}`.
+    #[func]
+    fn get_rooms(&self) -> VarDictionary {
+        rooms_to_dict(&collect_rooms(&self.engine.resources))
+    }
+
+    /// M3: one room's panel as `{found, id, role, role_name, overridden, tiles,
+    /// beds, roofed, dug, doors, items, covered, sleepers}`.
+    #[func]
+    fn get_room_detail(&self, room: i64) -> VarDictionary {
+        room_detail_to_dict(&collect_room_detail(
+            &self.engine.world,
+            &self.engine.resources,
+            room,
+        ))
     }
 
     /// M1: every standing tree as `{version, xs, ys}` in `(x, y)` order.

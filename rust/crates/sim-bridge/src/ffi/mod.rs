@@ -27,6 +27,7 @@ pub mod reads_settlement;
 pub mod relations;
 pub mod save;
 pub mod snapshot;
+pub mod space;
 
 pub use activity::{collect_activity_snapshot, ActivitySnapshotRow};
 pub use colony::{
@@ -40,6 +41,10 @@ pub use economy::{
     WorkshopRow,
 };
 pub use family::{collect_agent_family, AgentFamilyRow};
+pub use space::{
+    collect_place_preview, collect_room_detail, collect_rooms, collect_space, submit_space,
+    PlacePreview, RoomDetail, RoomRow, RoomsView, SpaceCommand, SpaceView,
+};
 
 pub use causal::{
     collect_event_chain, collect_tile_causal_history, event_view_to_owned_dict,

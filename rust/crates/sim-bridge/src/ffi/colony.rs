@@ -117,6 +117,8 @@ pub struct ColonyVersions {
     pub trees: u64,
     /// `colony.overlay_version`.
     pub overlay: u64,
+    /// `colony.rooms_version` (M3).
+    pub rooms: u64,
 }
 
 /// The colony change counters (cheap; poll every frame).
@@ -124,6 +126,7 @@ pub fn collect_colony_versions(resources: &SimResources) -> ColonyVersions {
     ColonyVersions {
         trees: resources.colony.trees_version,
         overlay: resources.colony.overlay_version,
+        rooms: resources.colony.rooms_version,
     }
 }
 
@@ -131,6 +134,7 @@ pub(super) fn versions_to_dict(v: ColonyVersions) -> VarDictionary {
     let mut dict = VarDictionary::new();
     dict.set("trees_version", v.trees as i64);
     dict.set("overlay_version", v.overlay as i64);
+    dict.set("rooms_version", v.rooms as i64);
     dict
 }
 
@@ -195,6 +199,9 @@ pub struct ColonyOverlay {
     pub items: Vec<((u32, u32), u8, u16)>,
     /// Blueprint sites, by centre tile.
     pub sites: Vec<OverlaySite>,
+    /// M3: whether each ground stack (same order as `items`) lies under a
+    /// storehouse roof ("covered").
+    pub item_covered: Vec<bool>,
 }
 
 /// Collect the order overlay (designations, zones, ground items, sites).
@@ -224,6 +231,11 @@ pub fn collect_colony_overlay(world: &hecs::World, resources: &SimResources) -> 
             .map(|(tile, node)| (*tile, node.kind.code(), node.left))
             .collect(),
         item_qualities: colony.ground_items.values().map(|s| s.quality).collect(),
+        item_covered: colony
+            .ground_items
+            .keys()
+            .map(|t| sim_systems::runtime::rooms::covered(resources, *t))
+            .collect(),
         zones: colony
             .zone_of_tile
             .iter()
@@ -270,6 +282,7 @@ pub(super) fn overlay_to_dict(o: &ColonyOverlay) -> VarDictionary {
     dict.set("site_delivered", ints(&o.sites, |s| i64::from(s.delivered)));
     dict.set("site_progress", ints(&o.sites, |s| i64::from(s.progress)));
     dict.set("site_required", ints(&o.sites, |s| i64::from(s.required)));
+    dict.set("item_covered", ints(&o.item_covered, i64::from));
     dict
 }
 

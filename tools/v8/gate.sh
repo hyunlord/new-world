@@ -19,7 +19,7 @@
 #   11 determinism       probe --check-determinism, seeds 0..4
 #   12 perf              tools/v8/perf.sh + perf_summary.py --compare (report only;
 #                        > +10 % mean is a WARN)
-#   13 bridge_api        tools/v8/bridge_api.py --check docs/v8/bridge_api_m2.txt
+#   13 bridge_api        tools/v8/bridge_api.py --check docs/v8/bridge_api_m3.txt
 #   14 docs              tools/v8/check_docs.sh
 #   15 inventory_closure tools/v8/inventory.py check docs/v8/V8_0_INVENTORY.md
 #   16 python_unittest   python3 -m unittest discover -s tools/v8 -p 'test_*.py'
@@ -82,7 +82,7 @@ step 11 determinism bash -c 'cd rust && cargo build --release -p sim-test --bin 
 grep -q 'DETERMINISM PASS' "$LOG/determinism.log" || { echo "   determinism: no DETERMINISM PASS line" >> "$SUMMARY"; status=1; }
 step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && bash tools/v8/perf.sh rust/target/release "$0/perf" candidate > /dev/null && python3 tools/v8/perf_summary.py --compare "$1/perf/perf_summary.json" "$0/perf/perf_summary.json"' "$LOG" "$BASE_DATA"
 grep -E 'WARN|OK \(' "$LOG/perf.log" | sed 's/^/   /' >> "$SUMMARY"
-step 13 bridge_api python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_m2.txt
+step 13 bridge_api python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_m3.txt
 step 14 docs bash tools/v8/check_docs.sh
 step 15 inventory_closure python3 tools/v8/inventory.py check docs/v8/V8_0_INVENTORY.md
 step 16 python_unittest python3 -m unittest discover -s tools/v8 -p 'test_*.py'

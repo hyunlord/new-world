@@ -377,6 +377,10 @@ pub struct AgentEconomyRow {
     pub tool: Option<(u8, u8, String)>,
     /// Carried load: `(ItemKind::code, count, quality, material name)`.
     pub carry: Option<(u8, u16, u8, String)>,
+    /// M3: the assigned bed tile, if any.
+    pub bed: Option<(u32, u32)>,
+    /// M3: the bed's room: `(RoomId, RoomRole::code, roofed)`.
+    pub bed_room: Option<(u32, u8, bool)>,
 }
 
 fn material_name(resources: &SimResources, spec: ItemSpec) -> String {
@@ -415,6 +419,11 @@ pub fn collect_agent_economy(
             material_name(resources, c.spec()),
         )
     });
+    row.bed = resources.bed_of.get(&agent).copied();
+    row.bed_room = row.bed.and_then(|bed| {
+        let room = sim_systems::runtime::rooms::room_at(resources, bed)?;
+        Some((room.id, room.role.code(), room.roofed))
+    });
     Some(row)
 }
 
@@ -446,6 +455,17 @@ pub(super) fn agent_economy_to_dict(row: Option<AgentEconomyRow>) -> VarDictiona
     let (ck, cn, cq, cm) = row.carry.map_or((-1, 0, 0, String::new()), |c| {
         (i64::from(c.0), i64::from(c.1), i64::from(c.2), c.3)
     });
+    let (bx, by) = row
+        .bed
+        .map_or((-1, -1), |b| (i64::from(b.0), i64::from(b.1)));
+    dict.set("bed_x", bx);
+    dict.set("bed_y", by);
+    let (rid, rrole, rroof) = row
+        .bed_room
+        .map_or((-1, -1, false), |r| (i64::from(r.0), i64::from(r.1), r.2));
+    dict.set("bed_room", rid);
+    dict.set("bed_room_role", rrole);
+    dict.set("bed_roofed", rroof);
     dict.set("carry_kind", ck);
     dict.set("carry_count", cn);
     dict.set("carry_quality", cq);

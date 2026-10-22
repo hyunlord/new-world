@@ -518,6 +518,7 @@ frame.
 |---|---|---|
 | `trees_version` | int | `colony.trees_version`, bumped when a tree is felled or added |
 | `overlay_version` | int | `colony.overlay_version`, bumped when marks, zones, stacks or sites change |
+| `rooms_version` | int | M3: `colony.rooms_version`, bumped when the rooms or their roles change |
 
 ### `get_trees`
 `collect_trees(&SimResources)` → `trees_to_dict` (`ffi/colony.rs`). Every standing tree in `(x, y)` order (sorted by
@@ -540,7 +541,7 @@ tile; M2 adds resource nodes by tile.
 | `version` | int | `overlay_version` of this read |
 | `designation_xs` | PackedInt32Array | marked tile x (a tree to chop or a node to quarry) |
 | `designation_ys` | PackedInt32Array | marked tile y |
-| `designation_kinds` | PackedInt32Array | M2: the mark, 0 chop, 1 quarry |
+| `designation_kinds` | PackedInt32Array | M2: the mark, 0 chop, 1 quarry; M3: 2 dig, 3 deconstruct |
 | `node_xs` | PackedInt32Array | M2: resource node tile x |
 | `node_ys` | PackedInt32Array | M2: resource node tile y |
 | `node_kinds` | PackedInt32Array | M2: `NodeKind::code`, 0 boulder, 1 flint outcrop |
@@ -557,11 +558,87 @@ tile; M2 adds resource nodes by tile.
 | `site_ys` | PackedInt32Array | footprint top-left y |
 | `site_ws` | PackedInt32Array | footprint width |
 | `site_hs` | PackedInt32Array | footprint height |
-| `site_kinds` | PackedInt32Array | `BlueprintKind::code`: 0 hut, 1 knapping spot, 2 wood bench, 3 drying rack |
+| `site_kinds` | PackedInt32Array | `BlueprintKind::code`: 0 hut, 1 knapping spot, 2 wood bench, 3 drying rack; M3: 4 log wall, 5 stone wall, 6 door, 7 packed floor, 8 bedroll |
 | `site_needed` | PackedInt32Array | materials needed (all lines summed; M2: a wood bench needs logs and stone) |
 | `site_delivered` | PackedInt32Array | materials delivered (all lines summed) |
 | `site_progress` | PackedInt32Array | work done |
 | `site_required` | PackedInt32Array | work needed |
+| `item_covered` | PackedInt32Array | M3: 1 = the ground stack (same rows as `item_xs`) lies under a storehouse roof |
+
+## Built space and rooms (M3)
+
+### `get_space`
+`collect_space(&SimResources) -> SpaceView` → `space_to_dict` (`ffi/space.rs`). Every wall, door, floor and dug
+tile in `(y, x)` order (a scan of the tile grid), bedrolls in `(y, x)` order; empty in the baseline. Rebuild the
+layer when `version` moves.
+
+| key | type | meaning |
+|---|---|---|
+| `version` | int | `overlay_version` of this read (every built change bumps it) |
+| `wall_xs` | PackedInt32Array | wall or door tile x |
+| `wall_ys` | PackedInt32Array | wall or door tile y |
+| `wall_kinds` | PackedInt32Array | 0 log wall, 1 stone wall, 2 door |
+| `floor_xs` | PackedInt32Array | floor tile x |
+| `floor_ys` | PackedInt32Array | floor tile y |
+| `floor_kinds` | PackedInt32Array | 0 packed earth, 1 dug rock |
+| `bed_xs` | PackedInt32Array | bedroll tile x |
+| `bed_ys` | PackedInt32Array | bedroll tile y |
+| `dug_xs` | PackedInt32Array | dug hill tile x |
+| `dug_ys` | PackedInt32Array | dug hill tile y |
+
+### `get_rooms`
+`collect_rooms(&SimResources) -> RoomsView` → `rooms_to_dict` (`ffi/space.rs`). Rooms in id order; every room tile in
+`(x, y)` order with its room id. Ids are `RoomId` (stable across re-detection, ADR 0023).
+
+| key | type | meaning |
+|---|---|---|
+| `version` | int | `rooms_version` of this read |
+| `ids` | PackedInt32Array | room id |
+| `roles` | PackedInt32Array | `RoomRole::code`: 0 unassigned, 1 bedroom, 2 storehouse, 3 workshop, 4 hall |
+| `role_names` | PackedStringArray | `RoomRole::name` |
+| `overridden` | PackedByteArray | 1 = the player set the role |
+| `tiles` | PackedInt32Array | tiles in the room |
+| `beds` | PackedInt32Array | bedrolls in the room |
+| `roofed` | PackedByteArray | 1 = roofed |
+| `dug` | PackedByteArray | 1 = dug out of a hill |
+| `doors` | PackedInt32Array | doors on its border |
+| `centre_xs` | PackedInt32Array | label tile x (the room tile nearest its mean) |
+| `centre_ys` | PackedInt32Array | label tile y |
+| `tile_xs` | PackedInt32Array | room tile x |
+| `tile_ys` | PackedInt32Array | room tile y |
+| `tile_rooms` | PackedInt32Array | the tile's room id |
+
+### `get_room_detail`
+`collect_room_detail(&World, &SimResources, i64) -> RoomDetail` → `room_detail_to_dict` (`ffi/space.rs`). Argument:
+the room id. Not in `SimReads.GETTERS` (it takes an argument).
+
+| key | type | meaning |
+|---|---|---|
+| `found` | bool | false when there is no such room |
+| `id` | int | room id, -1 when not found |
+| `role` | int | `RoomRole::code`, -1 when not found |
+| `role_name` | String | `RoomRole::name` |
+| `overridden` | bool | the player set the role |
+| `tiles` | int | tiles |
+| `beds` | int | bedrolls |
+| `roofed` | bool | roofed |
+| `dug` | bool | dug out of a hill |
+| `doors` | int | doors on its border |
+| `items` | int | items lying on its tiles |
+| `covered` | int | of them, under a storehouse roof |
+| `sleepers` | int | people asleep in it now |
+
+### `get_place_preview`
+`collect_place_preview(&World, &SimResources, &str, (i32, i32, i32, i32), i64) -> PlacePreview` → `preview_to_dict`
+(`ffi/space.rs`). Arguments: blueprint name, drag `x0, y0, x1, y1`, shape (0 one tile or a building's top-left,
+1 line, 2 hollow rectangle, 3 filled rectangle). Rows in the shape's tile order. Read-only.
+
+| key | type | meaning |
+|---|---|---|
+| `xs` | PackedInt32Array | tile x |
+| `ys` | PackedInt32Array | tile y |
+| `ok` | PackedByteArray | 1 = the blueprint fits there |
+| `reasons` | PackedStringArray | `RejectReason::name` (`person`, `hill`, `built`, `blocked`, `water`, …), `""` when it fits |
 
 ## Economy (M2)
 
@@ -600,8 +677,8 @@ order; their bills (work order) and shelf stacks flattened, each with the row in
 |---|---|---|
 | `agent_ids` | PackedInt64Array | `AgentId` |
 | `elders` | PackedInt32Array | 1 = an elder |
-| `levels` | PackedByteArray | 6 per row in `work_types` order: 0 never, 1 highest … 4 lowest |
-| `work_types` | PackedStringArray | `craft, build, quarry, chop, split, haul` (`WorkType::name`, tie-break order) |
+| `levels` | PackedByteArray | 7 per row in `work_types` order: 0 never, 1 highest … 4 lowest |
+| `work_types` | PackedStringArray | `craft, build, quarry, mine, chop, split, haul` (`WorkType::name`, tie-break order; M3 adds `mine`) |
 
 ### `get_recipes`
 `collect_recipes()` → `recipes_to_dict` (`ffi/economy.rs`). The recipe table (`data/colony/recipes.ron`) in code order.
@@ -614,7 +691,7 @@ order; their bills (work order) and shelf stacks flattened, each with the row in
 | `output_kinds` | PackedInt32Array | `ItemKind::code` of the output |
 | `output_counts` | PackedInt32Array | items per craft |
 | `work_ticks` | PackedInt32Array | work ticks at skill level 5 |
-| `skills` | PackedInt32Array | `SkillKind::code` (0 knap, 1 woodwork, 2 chop, 3 quarry, 4 build) |
+| `skills` | PackedInt32Array | `SkillKind::code` (0 knap, 1 woodwork, 2 chop, 3 quarry, 4 build, 5 mining) |
 
 ### `get_agent_economy`
 `collect_agent_economy(&World, &SimResources, AgentId) -> Option<AgentEconomyRow>` → `agent_economy_to_dict`
@@ -626,7 +703,7 @@ order; their bills (work order) and shelf stacks flattened, each with the row in
 | `skill_levels` | PackedInt32Array | level 0–20 per skill |
 | `skill_xp` | PackedInt32Array | XP (work ticks) per skill |
 | `skill_tiers` | PackedInt32Array | 0 novice (0–4), 1 apprentice (5–9), 2 skilled (10–14), 3 master (15–20) |
-| `skill_names` | PackedStringArray | `knap, woodwork, chop, quarry, build` |
+| `skill_names` | PackedStringArray | `knap, woodwork, chop, quarry, build, mining` |
 | `tool_kind` | int | held tool's `ItemKind::code`, -1 none |
 | `tool_quality` | int | tool quality 0–100 |
 | `tool_material` | String | tool material name (`flint`, …; `""` unknown) |
@@ -634,6 +711,11 @@ order; their bills (work order) and shelf stacks flattened, each with the row in
 | `carry_count` | int | items carried |
 | `carry_quality` | int | carried items' quality |
 | `carry_material` | String | carried items' material name |
+| `bed_x` | int | M3: assigned bed tile x, -1 none |
+| `bed_y` | int | M3: assigned bed tile y, -1 none |
+| `bed_room` | int | M3: the bed's room id, -1 when the bed is not in a room |
+| `bed_room_role` | int | M3: that room's `RoomRole::code`, -1 none |
+| `bed_roofed` | bool | M3: that room is roofed |
 
 ## Commands and lifecycle (not snapshot reads)
 
@@ -641,7 +723,11 @@ The mutators GDScript may call (`SimReads.MUTATORS`): the M1 orders `cmd_designa
 `cmd_cancel_area`, `cmd_add_stockpile`, `cmd_remove_zone_area`, `cmd_place_blueprint` (kinds `hut`, `knapping_spot`,
 `wood_bench`, `drying_rack`) and the M2 orders `cmd_designate_quarry`, `cmd_add_bill`, `cmd_remove_bill`,
 `cmd_set_bill_mode`, `cmd_move_bill`, `cmd_set_bill_suspended`, `cmd_set_work_priority` (`ffi/economy.rs`; names
-parsed at the boundary, an unknown name is `unknown` without a log entry), each returning
+parsed at the boundary, an unknown name is `unknown` without a log entry), the M3 orders `cmd_place_line(kind, x0,
+y0, x1, y1)`, `cmd_place_rect(kind, x0, y0, x1, y1, hollow)` (space kinds `log_wall`, `stone_wall`, `door`,
+`packed_floor`, `bedroll`; `cmd_place_blueprint` takes them too, one tile), `cmd_designate_dig`,
+`cmd_designate_deconstruct` (rectangles) and `cmd_set_room_role(room, role)` (`bedroom`, `storehouse`,
+`workshop`, `hall`, `unassigned` or `auto`; `ffi/space.rs`), each returning
 `{accepted: bool, count: int, reason: String}` (`result_to_dict` in `ffi/colony.rs`; `reason` is `""` or a
 `RejectReason` name) and logged with the next tick (ADR 0012); `can_place_blueprint(kind, x, y) -> bool`;
 `advance_ticks(n) -> int` (the final absolute tick, at most 200,000 per call); `reset_world(seed)`,
