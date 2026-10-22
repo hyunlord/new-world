@@ -13,17 +13,20 @@
 #   (red) where not; on release the toast says how many were placed and, when some or all were refused, how many and
 #   why. F8 파기 and F10 철거 are area modes (`cmd_designate_dig`, `cmd_designate_deconstruct`). With no mode and
 #   the room overlay (R) shown, a click on a room tile opens the room panel (UI/RoomPanel).
+# M4 (goal 9.5): CLAY (9) is an area mode like quarry (`cmd_designate_clay` on the clay banks in the rectangle),
+#   entered from the order bar's F7 submenu (F7 then 2).
 # Bridge methods: can_place_blueprint, get_place_preview, get_agent_detail, get_tile_causal_history (direct); via
 #   SimReads get_workshops; via SimReads.mutate cmd_designate_chop, cmd_cancel_area, cmd_add_stockpile,
 #   cmd_remove_zone_area, cmd_place_blueprint, cmd_designate_quarry, cmd_place_line, cmd_place_rect,
-#   cmd_designate_dig, cmd_designate_deconstruct.
+#   cmd_designate_dig, cmd_designate_deconstruct, cmd_designate_clay.
 extends Node2D
 
 const View = preload("res://scripts/world/colony/view.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
 
-## BUILD places the blueprint kind `build_kind` (M1's HUT mode, same code 3); M3 adds DIG (7) and DECONSTRUCT (8).
-enum Mode { NONE, CHOP, STOCKPILE, BUILD, REMOVE_ZONE, CANCEL, QUARRY, DIG, DECONSTRUCT }
+## BUILD places the blueprint kind `build_kind` (M1's HUT mode, same code 3); M3 adds DIG (7) and DECONSTRUCT (8);
+## M4 adds CLAY (9, clay pits).
+enum Mode { NONE, CHOP, STOCKPILE, BUILD, REMOVE_ZONE, CANCEL, QUARRY, DIG, DECONSTRUCT, CLAY }
 ## `get_place_preview` shapes: one tile, line, hollow rectangle, filled rectangle.
 const SHAPE_TILE: int = 0
 const SHAPE_LINE: int = 1
@@ -38,6 +41,7 @@ const AREA_COMMANDS: Dictionary = {
 	Mode.QUARRY: "cmd_designate_quarry",
 	Mode.DIG: "cmd_designate_dig",
 	Mode.DECONSTRUCT: "cmd_designate_deconstruct",
+	Mode.CLAY: "cmd_designate_clay",
 }
 const RECT_COLORS: Dictionary = {
 	Mode.CHOP: Color(0.98, 0.81, 0.24, 0.9),
@@ -47,6 +51,7 @@ const RECT_COLORS: Dictionary = {
 	Mode.QUARRY: Color(0.75, 0.78, 0.85, 0.9),
 	Mode.DIG: Color(0.80, 0.62, 0.40, 0.9),
 	Mode.DECONSTRUCT: Color(0.95, 0.55, 0.25, 0.9),
+	Mode.CLAY: Color(0.78, 0.52, 0.36, 0.9),
 }
 # The accepted-order toast per command ({count} = trees, tiles, blueprints or cancelled orders).
 const TOAST_KEYS: Dictionary = {
@@ -58,6 +63,7 @@ const TOAST_KEYS: Dictionary = {
 	"cmd_designate_quarry": "UI_ORDER_TOAST_QUARRY",
 	"cmd_designate_dig": "UI_ORDER_TOAST_DIG",
 	"cmd_designate_deconstruct": "UI_ORDER_TOAST_DECONSTRUCT",
+	"cmd_designate_clay": "UI_ORDER_TOAST_CLAY",
 }
 const GHOST_OK: Color = Color(0.45, 0.95, 0.45, 0.85)
 const GHOST_BAD: Color = Color(0.95, 0.35, 0.3, 0.85)

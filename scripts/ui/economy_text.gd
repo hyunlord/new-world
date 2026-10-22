@@ -10,28 +10,38 @@
 #   walls and floors placed by drag), the build menu's order (5 통나무 벽, 6 문, 7 바닥, 8 침상, 9 돌담), work type
 #   `mine`, skill `mining`, reasons person/hill/edge/built, and room roles by code (0 unassigned, 1 bedroom,
 #   2 storehouse, 3 workshop, 4 hall).
+# M4 (goal 9.5): item kinds 7 clay, 8 raw pot, 9 clay pot, 10 ground axe (bridge names in ITEM_NAMES); recipes 3
+#   knap_fine_blade, 4 grind_axe, 5 form_pot, 6 fire_pot; skill `pottery`; material `clay`; blueprint kinds 9
+#   grinding_stone, 10 pottery_bench (build menu 0 and -) and 11 hearth_fire (the camp hearth as the fire_pot workshop:
+#   named, never placed, not in the menu); reasons no_practitioner and too_young.
 # Bridge methods called: none (callers pass the dictionaries they read).
 extends RefCounted
 
 const LocaleScript = preload("res://scripts/core/locale.gd")
 
-const ITEM_KEYS: Array[String] = ["ITEM_LOG", "ITEM_FIREWOOD", "ITEM_STONE", "ITEM_FLINT", "ITEM_FLINT_BLADE", "ITEM_STONE_AXE", "ITEM_HIDE"]
-const ITEM_FMT_KEYS: Array[String] = ["ITEM_LOG_FMT", "ITEM_FIREWOOD_FMT", "ITEM_STONE_FMT", "ITEM_FLINT_FMT", "ITEM_FLINT_BLADE_FMT", "ITEM_STONE_AXE_FMT", "ITEM_HIDE_FMT"]
+const ITEM_KEYS: Array[String] = ["ITEM_LOG", "ITEM_FIREWOOD", "ITEM_STONE", "ITEM_FLINT", "ITEM_FLINT_BLADE", "ITEM_STONE_AXE", "ITEM_HIDE",
+	"ITEM_CLAY", "ITEM_RAW_POT", "ITEM_CLAY_POT", "ITEM_GROUND_AXE"]
+const ITEM_FMT_KEYS: Array[String] = ["ITEM_LOG_FMT", "ITEM_FIREWOOD_FMT", "ITEM_STONE_FMT", "ITEM_FLINT_FMT", "ITEM_FLINT_BLADE_FMT", "ITEM_STONE_AXE_FMT", "ITEM_HIDE_FMT",
+	"ITEM_CLAY_FMT", "ITEM_RAW_POT_FMT", "ITEM_CLAY_POT_FMT", "ITEM_GROUND_AXE_FMT"]
+## Bridge item names by `ItemKind::code` (discovery conditions name items by them).
+const ITEM_NAMES: Array[String] = ["log", "firewood", "stone", "flint", "flint_blade", "stone_axe", "hide", "clay", "raw_pot", "clay_pot", "ground_axe"]
 ## The overlay sprite per item kind (logs use the log piles by count).
-const ITEM_SPRITES: Array[String] = ["logs_s", "item_firewood", "item_stone", "item_flint", "item_blade", "item_axe", "item_hide"]
+const ITEM_SPRITES: Array[String] = ["logs_s", "item_firewood", "item_stone", "item_flint", "item_blade", "item_axe", "item_hide",
+	"item_clay", "item_raw_pot", "item_clay_pot", "item_ground_axe"]
 const MATERIAL_KEYS: Dictionary = {
 	"flint": "MATERIAL_FLINT", "chert": "MATERIAL_CHERT", "granite": "MATERIAL_GRANITE",
-	"limestone": "MATERIAL_LIMESTONE", "oak": "MATERIAL_OAK",
+	"limestone": "MATERIAL_LIMESTONE", "oak": "MATERIAL_OAK", "clay": "MATERIAL_CLAY",
 }
-const RECIPE_NAMES: Array[String] = ["knap_blade", "haft_axe", "split_firewood"]
-const RECIPE_KEYS: Array[String] = ["RECIPE_KNAP_BLADE", "RECIPE_HAFT_AXE", "RECIPE_SPLIT_FIREWOOD"]
+const RECIPE_NAMES: Array[String] = ["knap_blade", "haft_axe", "split_firewood", "knap_fine_blade", "grind_axe", "form_pot", "fire_pot"]
+const RECIPE_KEYS: Array[String] = ["RECIPE_KNAP_BLADE", "RECIPE_HAFT_AXE", "RECIPE_SPLIT_FIREWOOD", "RECIPE_KNAP_FINE_BLADE", "RECIPE_GRIND_AXE",
+	"RECIPE_FORM_POT", "RECIPE_FIRE_POT"]
 const WORK_KEYS: Dictionary = {
 	"craft": "WORK_CRAFT", "build": "WORK_BUILD", "quarry": "WORK_QUARRY",
 	"chop": "WORK_CHOP", "split": "WORK_SPLIT", "haul": "WORK_HAUL", "mine": "WORK_MINE",
 }
 const SKILL_KEYS: Dictionary = {
 	"knap": "SKILL_KNAP", "woodwork": "SKILL_WOODWORK", "chop": "SKILL_CHOP",
-	"quarry": "SKILL_QUARRY", "build": "SKILL_BUILD", "mining": "SKILL_MINING",
+	"quarry": "SKILL_QUARRY", "build": "SKILL_BUILD", "mining": "SKILL_MINING", "pottery": "SKILL_POTTERY",
 }
 const TIER_KEYS: Array[String] = ["SKILL_TIER_0", "SKILL_TIER_1", "SKILL_TIER_2", "SKILL_TIER_3"]
 const QUALITY_KEYS: Array[String] = ["QUALITY_BAND_0", "QUALITY_BAND_1", "QUALITY_BAND_2", "QUALITY_BAND_3", "QUALITY_BAND_4"]
@@ -48,9 +58,14 @@ const BUILD_KINDS: Array[Dictionary] = [
 	{"name": "door", "size": Vector2i(1, 1), "key": "BUILDING_DOOR", "sprite": "door_h", "drag": "", "ghost": "ghost_door"},
 	{"name": "packed_floor", "size": Vector2i(1, 1), "key": "BUILDING_PACKED_FLOOR", "sprite": "floor_packed", "drag": "floor", "ghost": "ghost_floor"},
 	{"name": "bedroll", "size": Vector2i(1, 1), "key": "BUILDING_BEDROLL", "sprite": "bedroll", "drag": "", "ghost": "ghost_bedroll"},
+	{"name": "grinding_stone", "size": Vector2i(1, 1), "key": "BUILDING_GRINDING_STONE", "sprite": "grinding_stone"},
+	{"name": "pottery_bench", "size": Vector2i(1, 1), "key": "BUILDING_POTTERY_BENCH", "sprite": "pottery_bench"},
+	{"name": "hearth_fire", "size": Vector2i(1, 1), "key": "BUILDING_HEARTH_FIRE", "sprite": "hearth_0", "placeable": false},
 ]
-## The F3 build menu: BUILD_KINDS codes in menu order (keys 1–9).
-const MENU_ORDER: Array[int] = [0, 1, 2, 3, 4, 6, 7, 8, 5]
+## The F3 build menu: BUILD_KINDS codes in menu order (keys 1–9, then M4's 0 토기대 and - 갈돌).
+const MENU_ORDER: Array[int] = [0, 1, 2, 3, 4, 6, 7, 8, 5, 10, 9]
+## The blueprint kind of the camp hearth's fire_pot workshop (M4; drawn as the hearth, never placed).
+const HEARTH_FIRE: int = 11
 ## Room roles by `RoomRole::code` (0 unassigned, 1 bedroom, 2 storehouse, 3 workshop, 4 hall): bridge name, key.
 const ROLE_NAMES: Array[String] = ["unassigned", "bedroom", "storehouse", "workshop", "hall"]
 const ROLE_KEYS: Array[String] = ["ROOM_ROLE_UNASSIGNED", "ROOM_ROLE_BEDROOM", "ROOM_ROLE_STOREHOUSE", "ROOM_ROLE_WORKSHOP", "ROOM_ROLE_HALL"]
@@ -69,6 +84,8 @@ const REASON_KEYS: Dictionary = {
 	"built": "UI_REJECT_BUILT",
 	"not_hill": "UI_REJECT_NOT_HILL",
 	"unreachable": "UI_REJECT_UNREACHABLE",
+	"no_practitioner": "UI_REJECT_NO_PRACTITIONER",
+	"too_young": "UI_REJECT_TOO_YOUNG",
 }
 
 

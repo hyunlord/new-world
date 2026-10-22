@@ -7,13 +7,18 @@
 #   the list of this workshop's recipes (get_recipes filtered by workshop kind); a pick adds "만들기 5". Every change
 #   is a command; a rejected one shows its reason as the order bar's toast. The list is rebuilt only when the
 #   workshop's bills or shelf change. Esc, 닫기 or a world reset closes it; a workshop that disappears closes it.
-# Bridge methods: via SimReads get_workshops, get_recipes; via SimReads.mutate cmd_add_bill, cmd_remove_bill,
-#   cmd_set_bill_mode, cmd_move_bill, cmd_set_bill_suspended; signal world_reset.
+# M4 (goal 9.6): a bill that no living adult can work shows "기다리는 중: 토기 굽기를 아는 사람이 없음" under its status
+#   (get_knowledge_waits kind 0: a = workshop id, b = bill id); the hearth's fire_pot workshop (kind 11) is named
+#   "모닥불 (토기 굽기)".
+# Bridge methods: via SimReads get_workshops, get_recipes, get_knowledge_waits; via SimReads.mutate cmd_add_bill,
+#   cmd_remove_bill, cmd_set_bill_mode, cmd_move_bill, cmd_set_bill_suspended; signal world_reset.
 extends Control
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
+const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
+const WAIT: Color = Color("e05a48")
 const PANEL_SIZE: Vector2 = Vector2(640, 700)
 const DEFAULT_COUNT: int = 5
 const MUTED: Color = Color("c8b89a")
@@ -29,6 +34,8 @@ var _bills: VBoxContainer
 var _add: Button
 var _recipes: VBoxContainer
 var _close: Button
+## M4: the last get_knowledge_waits read (bills waiting for a practitioner).
+var _waits: Dictionary = {}
 
 
 func _ready() -> void:
@@ -133,7 +140,8 @@ func _refresh() -> void:
 	var shelf: Array[Vector2i] = _shelf_of(shops, row)
 	var kinds: PackedInt32Array = shops.get("kinds", PackedInt32Array())
 	var kind: int = kinds[row] if row < kinds.size() else -1
-	var key: int = hash([bills, shelf, kind, Chronicle.language(_locale)])
+	_waits = SimReads.read(_world_sim, "get_knowledge_waits")
+	var key: int = hash([bills, shelf, kind, Chronicle.language(_locale), _waits])
 	if key == _key:
 		return
 	_key = key
@@ -228,6 +236,14 @@ func _bill_rows(i: int, bill: Dictionary) -> void:
 	status.text = bill_status(bill)
 	status.add_theme_color_override("font_color", MUTED)
 	box.add_child(status)
+	var waits_for: int = KnowledgeText.bill_wait(_waits, _shop, int(bill["id"]))
+	if waits_for >= 0:
+		var wait: Label = Label.new()
+		wait.name = "Wait"
+		wait.text = KnowledgeText.wait_line(_locale, waits_for)
+		wait.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		wait.add_theme_color_override("font_color", WAIT)
+		box.add_child(wait)
 	var row: HBoxContainer = HBoxContainer.new()
 	row.add_theme_constant_override("separation", 4)
 	box.add_child(row)

@@ -93,6 +93,10 @@ Sprites (names; see the painters for the exact pixels)
         ford (a river tile people wade: lighter shallow water with a band of pale gravel and three flat stepping
         stones across it, rows 5..10, lit top-left with a 1-px wet shadow down-right; opaque, ground-like, no
         outline; drawn over the terrain's water tile).
+        clay_bank (a reddish-brown river-bank mound with a dug face; a resource node like boulder), pottery_bench (a
+        low log bench with clay and a forming pot), grinding_stone (a flat slab with a worn hollow and a hand stone),
+        item_clay / item_raw_pot / item_clay_pot / item_ground_axe (ground stacks of the M4 item kinds); all outlined
+        objects with a transparent background, appended after `ford` so every older region stays where it was.
 
 Determinism
     Each sprite draws with its own random.Random(SEED * 1000 + k), k a fixed constant per sprite (no hash(), no
@@ -1167,6 +1171,93 @@ def ford(rr):
     return im
 
 
+# ------------------------------------------------------------------ M4 temporary sprites (M-ART2 replaces them)
+CLAY_D, CLAY, CLAY_L = (112, 72, 50), (150, 98, 66), (184, 128, 90)
+POT_D, POT, POT_L = (104, 58, 38), (146, 84, 52), (182, 116, 74)
+RAW_D, RAW, RAW_L = (122, 104, 84), (156, 136, 110), (188, 168, 138)
+
+
+def clay_bank(rr):
+    """A river-bank clay bank: a low reddish-brown mound with a darker cut face (where it is dug) and wet streaks,
+    lit top-left, outlined."""
+    im, d = new()
+    d.ellipse([1, 5, 14, 14], fill=rgba(CLAY_D))
+    d.ellipse([1, 4, 14, 12], fill=rgba(CLAY))
+    d.ellipse([3, 5, 8, 8], fill=rgba(CLAY_L))
+    d.rectangle([9, 9, 12, 12], fill=rgba(shade(CLAY_D, 0.85)))  # the cut face
+    d.line([(9, 9), (12, 9)], fill=rgba(CLAY_D))
+    for _ in range(4):
+        d.point((rr.randint(3, 12), rr.randint(6, 11)), fill=rgba(shade(CLAY, 1.12)))
+    return outline_alpha(im)
+
+
+def _pot(d, x0, y0, w, h, dark, base, light):
+    """A round-bellied pot in a w x h box at (x0, y0): body, a narrow neck and a lit rim."""
+    d.ellipse([x0, y0 + 2, x0 + w - 1, y0 + h - 1], fill=rgba(dark))
+    d.ellipse([x0, y0 + 2, x0 + w - 2, y0 + h - 2], fill=rgba(base))
+    d.rectangle([x0 + 2, y0, x0 + w - 3, y0 + 2], fill=rgba(base))
+    d.line([(x0 + 2, y0), (x0 + w - 3, y0)], fill=rgba(light))
+    d.point((x0 + 2, y0 + 4), fill=rgba(light))
+
+
+def pottery_bench():
+    """A low log bench with a lump of clay and a half-formed pot on it."""
+    im, d = new()
+    for x in (2, 11):
+        d.rectangle([x, 11, x + 2, 14], fill=rgba(LOG_DARK))
+    d.rectangle([1, 8, 14, 11], fill=rgba(LOG_DARK))
+    d.rectangle([1, 8, 14, 10], fill=rgba(LOG))
+    d.line([(2, 8), (13, 8)], fill=rgba(LOG_LIGHT))
+    d.ellipse([2, 4, 6, 8], fill=rgba(CLAY))  # a lump of clay
+    d.point((3, 5), fill=rgba(CLAY_L))
+    _pot(d, 8, 1, 6, 8, RAW_D, RAW, RAW_L)
+    return outline_alpha(im)
+
+
+def grinding_stone():
+    """A flat grinding slab with a hollow worn into it and a hand stone resting on it."""
+    im, d = new()
+    d.ellipse([1, 6, 14, 14], fill=rgba(STONE_D))
+    d.ellipse([1, 5, 14, 12], fill=rgba(STONE))
+    d.ellipse([4, 7, 11, 10], fill=rgba(shade(STONE, 0.86)))  # the worn hollow
+    d.line([(3, 6), (8, 6)], fill=rgba(STONE_L))
+    d.ellipse([9, 2, 14, 7], fill=rgba(STONE_D))  # the hand stone
+    d.ellipse([9, 2, 13, 6], fill=rgba(STONE_L))
+    return outline_alpha(im)
+
+
+def item_clay():
+    """Three lumps of wet clay."""
+    return item_pile(CLAY, CLAY_L, CLAY_D, ())
+
+
+def item_raw_pot():
+    """Two unfired pots, pale grey-brown."""
+    im, d = new()
+    _pot(d, 1, 4, 7, 10, RAW_D, RAW, RAW_L)
+    _pot(d, 8, 3, 7, 11, RAW_D, RAW, RAW_L)
+    return outline_alpha(im)
+
+
+def item_clay_pot():
+    """Two fired pots, red-brown with a dark band."""
+    im, d = new()
+    for x0, y0 in ((1, 4), (8, 3)):
+        _pot(d, x0, y0, 7, 11 - (y0 - 3), POT_D, POT, POT_L)
+        d.line([(x0 + 1, y0 + 6), (x0 + 5, y0 + 6)], fill=rgba(POT_D))
+    return outline_alpha(im)
+
+
+def item_ground_axe():
+    """A hafted axe with a smooth polished (ground) grey head, lying diagonally."""
+    im, d = new()
+    d.line([(3, 13), (11, 4)], fill=rgba((176, 128, 80)), width=2)
+    d.polygon([(9, 1), (14, 2), (14, 7), (9, 5)], fill=rgba(STONE))
+    d.line([(10, 2), (13, 2)], fill=rgba(STONE_L))
+    d.line([(14, 3), (14, 6)], fill=rgba((196, 192, 182)))  # the ground edge
+    return outline_alpha(im)
+
+
 def _ghost_border(px, line):
     """The hut ghost's dash (3 on, 2 off) around the tile edge."""
     ring = [(x, 0) for x in range(T)] + [(T - 1, y) for y in range(1, T)] + \
@@ -1427,6 +1518,14 @@ def build_sprites():
         add("m3", f"icon_{kind}", icon(kind))
     # M4 temporaries (the river ford).
     add("m4", "ford", ford(rr(150)))
+    # M4 Part 4: clay banks, the two new workshops and the new item kinds (after the ford: old regions keep their place).
+    add("m4", "clay_bank", clay_bank(rr(151)))
+    add("m4", "pottery_bench", pottery_bench())
+    add("m4", "grinding_stone", grinding_stone())
+    add("m4", "item_clay", item_clay())
+    add("m4", "item_raw_pot", item_raw_pot())
+    add("m4", "item_clay_pot", item_clay_pot())
+    add("m4", "item_ground_axe", item_ground_axe())
     return out
 
 

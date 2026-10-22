@@ -8,5 +8,8 @@
 	"BUILDING_DOOR": "Door",
 	"BUILDING_PACKED_FLOOR": "Packed floor",
 	"BUILDING_BEDROLL": "Bedroll",
-	"BUILDING_STONE_WALL": "Stone wall"
+	"BUILDING_STONE_WALL": "Stone wall",
+	"BUILDING_GRINDING_STONE": "Grinding stone",
+	"BUILDING_POTTERY_BENCH": "Pottery bench",
+	"BUILDING_HEARTH_FIRE": "Hearth (pot firing)"
 }

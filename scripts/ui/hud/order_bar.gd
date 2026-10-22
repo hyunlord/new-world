@@ -17,6 +17,10 @@
 #   R does the same) and stays pressed while it is shown. The bar holds the buttons on one line and the hint on a
 #   second; it sits 12 px above the screen's bottom once laid out, the toast and the build menu above it. This node
 #   also creates the room panel (UI/RoomPanel, room_panel.gd) beside itself.
+# M4 (goal 9.5): the build menu grows to eleven — 0 토기대 and - 갈돌 after 1–9 (EconomyText.MENU_ORDER); F7 enters
+#   채석 as before and opens a small submenu above its button — "1 채석" / "2 점토 캐기" — where 1 keeps quarrying and 2
+#   switches to the clay-pit area mode (OrderTool CLAY; while the submenu is open, 1 and 2 choose, not the speed; Esc,
+#   a pick, an order or another mode closes it); the F7 button stays pressed in either mode.
 # Bridge methods: via SimReads get_world_info, get_time_snapshot; save_world, load_world (SimReads.mutate; the load
 #   emits world_reset, which every layer already rebuilds on). The orders themselves go through OrderTool.
 extends Control
@@ -36,8 +40,16 @@ const MODES: Array[Dictionary] = [
 	{"mode": 7, "key": "UI_ORDER_DIG", "hotkey": KEY_F8, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_dig"},
 	{"mode": 8, "key": "UI_ORDER_DECONSTRUCT", "hotkey": KEY_F10, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_deconstruct"},
 ]
-## The build menu's keys, in EconomyText.MENU_ORDER order.
-const MENU_KEYS: Array[Key] = [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9]
+## The build menu's keys, in EconomyText.MENU_ORDER order (M4: 0 and - after 1–9).
+const MENU_KEYS: Array[Key] = [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0, KEY_MINUS]
+const MENU_LABELS: Array[String] = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-"]
+## M4: the F7 submenu's modes (1 quarry, 2 clay pit) and the order tool's codes for them.
+const QUARRY_MODE: int = 6
+const CLAY_MODE: int = 9
+const DIG_MENU: Array[Dictionary] = [
+	{"mode": QUARRY_MODE, "key": "UI_ORDER_QUARRY", "hotkey": KEY_1, "icon": "icon_quarry"},
+	{"mode": CLAY_MODE, "key": "UI_ORDER_CLAY", "hotkey": KEY_2, "icon": "icon_dig"},
+]
 const BAR_BOTTOM: float = 1080.0 - 12.0
 const ACTIVE: Color = Color("e8c46e")
 const TOAST_SECONDS: float = 2.0
@@ -60,6 +72,9 @@ var _menu_buttons: Array[Button] = []
 var _bar: PanelContainer
 var _rooms_button: Button
 var _rooms: Node = null
+## M4: the F7 submenu.
+var _dig_menu: PanelContainer
+var _dig_buttons: Array[Button] = []
 
 
 func _loc(key: String) -> String:
@@ -75,6 +90,7 @@ func _ready() -> void:
 	panel.name = "Bar"
 	_bar = panel
 	_build_menu()
+	_build_dig_menu()
 	var lines: VBoxContainer = VBoxContainer.new()
 	lines.add_theme_constant_override("separation", 4)
 	panel.add_child(lines)
@@ -118,6 +134,7 @@ func _ready() -> void:
 	_world_sim = get_node_or_null("/root/Main/WorldSim")
 	if _tool != null:
 		_tool.connect("mode_changed", _on_mode_changed)
+		_tool.connect("order_sent", _on_order_sent)
 	_rooms = get_node_or_null("/root/Main/ColonyView/OverlayLayer/Rooms")
 	if _rooms != null:
 		_rooms.connect("toggled", _on_rooms_toggled)
@@ -156,7 +173,7 @@ func rooms_shown() -> bool:
 
 ## The F3 build menu: one button per blueprint kind ("1 오두막" with the building's sprite), above the bar.
 func _build_menu() -> void:
-	_menu = ArtUI.panel(self, Rect2(12, 1080 - 112 - 8 - 9 * 56 - 24, 0, 0))
+	_menu = ArtUI.panel(self, Rect2(12, 1080 - 112 - 8 - EconomyText.MENU_ORDER.size() * 56 - 24, 0, 0))
 	_menu.mouse_filter = Control.MOUSE_FILTER_STOP
 	_menu.name = "BuildMenu"
 	var column: VBoxContainer = VBoxContainer.new()
@@ -168,12 +185,75 @@ func _build_menu() -> void:
 		button.name = "Build_%s" % str(kind["name"])
 		button.focus_mode = Control.FOCUS_NONE
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		button.text = "%d %s" % [i + 1, _loc(str(kind["key"]))]
+		button.text = "%s %s" % [MENU_LABELS[i], _loc(str(kind["key"]))]
 		button.icon = _icon_fit(str(kind["sprite"]), 32)
 		button.pressed.connect(choose_build.bind(i))
 		column.add_child(button)
 		_menu_buttons.append(button)
 	_menu.visible = false
+
+
+## M4: the F7 submenu (1 채석, 2 점토 캐기), above the F7 button.
+func _build_dig_menu() -> void:
+	_dig_menu = ArtUI.panel(self, Rect2(12, 1080 - 112 - 8 - 2 * 56 - 24, 0, 0))
+	_dig_menu.mouse_filter = Control.MOUSE_FILTER_STOP
+	_dig_menu.name = "DigMenu"
+	var column: VBoxContainer = VBoxContainer.new()
+	column.add_theme_constant_override("separation", 6)
+	_dig_menu.add_child(column)
+	for i: int in DIG_MENU.size():
+		var entry: Dictionary = DIG_MENU[i]
+		var button: Button = Button.new()
+		button.name = "Dig_%d" % int(entry["mode"])
+		button.focus_mode = Control.FOCUS_NONE
+		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		button.text = "%d %s" % [i + 1, _loc(str(entry["key"]))]
+		button.icon = _icon(str(entry["icon"]))
+		button.pressed.connect(choose_dig.bind(i))
+		column.add_child(button)
+		_dig_buttons.append(button)
+	_dig_menu.visible = false
+
+
+## M4: whether the F7 submenu is open.
+func dig_menu_open() -> bool:
+	return _dig_menu != null and _dig_menu.visible
+
+
+## M4: F7 — enter 채석 and open the submenu above the F7 button.
+func open_dig_menu() -> void:
+	close_build_menu()
+	select_mode(QUARRY_MODE)
+	_dig_menu.visible = true
+	_dig_menu.size = Vector2.ZERO
+	var minimum: Vector2 = _dig_menu.get_combined_minimum_size()
+	var index: int = -1
+	for i: int in MODES.size():
+		if int(MODES[i]["mode"]) == QUARRY_MODE:
+			index = i
+	var anchor_x: float = _buttons[index].global_position.x if index >= 0 and _buttons[index].is_inside_tree() else 12.0
+	_dig_menu.position = Vector2(maxf(12.0, anchor_x), bar_top() - 8 - minimum.y)
+	_on_mode_changed(current_mode())
+
+
+## M4: close the F7 submenu (the mode stays).
+func close_dig_menu() -> void:
+	if not dig_menu_open():
+		return
+	_dig_menu.visible = false
+	_on_mode_changed(current_mode())
+
+
+## M4: choose submenu entry `index` (0 채석, 1 점토 캐기): close the submenu and enter that area mode.
+func choose_dig(index: int) -> void:
+	if index < 0 or index >= DIG_MENU.size():
+		return
+	_dig_menu.visible = false
+	select_mode(int(DIG_MENU[index]["mode"]))
+
+
+func _on_order_sent(_command: String, _result: Dictionary) -> void:
+	close_dig_menu()
 
 
 ## Whether the F3 build menu is open.
@@ -202,7 +282,7 @@ func close_build_menu() -> void:
 
 
 ## Choose menu entry `index` (EconomyText.MENU_ORDER order: 0–3 as M2, 4 log wall, 5 door, 6 packed floor,
-## 7 bedroll, 8 stone wall): close the menu and enter the build mode.
+## 7 bedroll, 8 stone wall; M4 9 pottery bench, 10 grinding stone): close the menu and enter the build mode.
 func choose_build(index: int) -> void:
 	if index < 0 or index >= EconomyText.MENU_ORDER.size():
 		return
@@ -249,6 +329,13 @@ func _on_button(mode: int) -> void:
 	if mode == BUILD_MODE:
 		_toggle_build_menu()
 		return
+	if mode == QUARRY_MODE and not dig_menu_open() and current_mode() != CLAY_MODE and current_mode() != QUARRY_MODE:
+		open_dig_menu()
+		return
+	close_dig_menu()
+	if mode == QUARRY_MODE and current_mode() == CLAY_MODE:
+		select_mode(0)
+		return
 	close_build_menu()
 	select_mode(mode if _tool == null or int(_tool.get("mode")) != mode else 0)
 
@@ -272,13 +359,20 @@ func current_mode() -> int:
 
 
 func _on_mode_changed(mode: int) -> void:
+	if mode != QUARRY_MODE and mode != CLAY_MODE and dig_menu_open():
+		_dig_menu.visible = false
 	for i: int in _buttons.size():
-		var on: bool = int(MODES[i]["mode"]) == mode or (int(MODES[i]["mode"]) == BUILD_MODE and build_menu_open())
+		var on: bool = int(MODES[i]["mode"]) == mode or (int(MODES[i]["mode"]) == BUILD_MODE and build_menu_open()) \
+			or (int(MODES[i]["mode"]) == QUARRY_MODE and mode == CLAY_MODE)
 		_buttons[i].set_pressed_no_signal(on)
 	_hint.text = _loc(_idle_hint()) if mode == 0 else ""
 	for entry: Dictionary in MODES:
 		if int(entry["mode"]) == mode:
 			_hint.text = _loc(str(entry["hint"]))
+	if mode == CLAY_MODE:
+		_hint.text = _loc("UI_ORDER_HINT_CLAY")
+	elif mode == QUARRY_MODE and dig_menu_open():
+		_hint.text = _loc("UI_ORDER_HINT_DIG_MENU")
 	if mode == BUILD_MODE and _tool != null:
 		var code: int = EconomyText.build_code(str(_tool.get("build_kind")))
 		_hint.text = build_hint(_locale, code)
@@ -364,12 +458,22 @@ func _unhandled_input(event: InputEvent) -> void:
 	var key: InputEventKey = event
 	if build_menu_open():
 		var index: int = MENU_KEYS.find(key.keycode)
-		if index >= 0:
+		if index >= 0 and index < EconomyText.MENU_ORDER.size():
 			choose_build(index)
 			get_viewport().set_input_as_handled()
 			return
 		if key.keycode == KEY_ESCAPE:
 			close_build_menu()
+			get_viewport().set_input_as_handled()
+			return
+	if dig_menu_open():
+		for i: int in DIG_MENU.size():
+			if key.keycode == int(DIG_MENU[i]["hotkey"]):
+				choose_dig(i)
+				get_viewport().set_input_as_handled()
+				return
+		if key.keycode == KEY_ESCAPE:
+			close_dig_menu()
 			get_viewport().set_input_as_handled()
 			return
 	if key.keycode == SAVE_KEY:
@@ -384,6 +488,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		if key.keycode == int(entry["hotkey"]):
 			if int(entry["mode"]) == BUILD_MODE:
 				_toggle_build_menu()
+			elif int(entry["mode"]) == QUARRY_MODE:
+				open_dig_menu()
 			else:
 				close_build_menu()
 				select_mode(int(entry["mode"]))

@@ -11,7 +11,7 @@
 #   overlay (the order bar's toggle follows); a click on an empty room tile opens the room panel, whose dropdown sets
 #   the role to storehouse and back to auto (checked in get_rooms); the inspector's bed line, the hover's room
 #   suffix, F10 deconstruct on one wall, F8 dig on the nearest diggable hill tile, the chronicle's RoomFormed text,
-#   the priority table's seven columns and the order bar's fit on the 1920×1080 screen.
+#   the priority table's seven columns (plus M4's Pottery column) and the order bar's fit on the 1920×1080 screen.
 # Bridge methods called: via SimReads get_building_snapshot, get_colony_overlay, get_rooms, get_space,
 #   get_agent_snapshot, get_terrain_snapshot, get_work_priorities, advance_ticks; get_place_preview, get_room_detail,
 #   get_agent_economy, get_agent_detail (direct); and the UI's own calls.
@@ -201,10 +201,10 @@ func _run() -> void:
 	var filled_p: Dictionary = _world.call("get_place_preview", "packed_floor", a.x, a.y, b.x, b.y, 3)
 	_check("preview_counts", (line_p["xs"] as PackedInt32Array).size() == 7 and (hollow_p["xs"] as PackedInt32Array).size() == 20 and (filled_p["xs"] as PackedInt32Array).size() == 35,
 		"line %d hollow %d filled %d" % [(line_p["xs"] as PackedInt32Array).size(), (hollow_p["xs"] as PackedInt32Array).size(), (filled_p["xs"] as PackedInt32Array).size()])
-	# F3: nine entries; 6 = door, one click.
+	# F3: nine entries (M4 adds 0 and - after them); 6 = door, one click.
 	await _key(KEY_F3)
 	var menu_buttons: Array = bar.get("_menu_buttons")
-	_check("menu_nine", bool(bar.call("build_menu_open")) and menu_buttons.size() == 9, "buttons=%d %s" % [menu_buttons.size(), (menu_buttons[8] as Button).text if menu_buttons.size() == 9 else ""])
+	_check("menu_nine", bool(bar.call("build_menu_open")) and menu_buttons.size() >= 9, "buttons=%d %s" % [menu_buttons.size(), (menu_buttons[8] as Button).text if menu_buttons.size() >= 9 else ""])
 	await _key(KEY_6)
 	_check("menu_6_door", str(tool.get("build_kind")) == "door" and int(tool.get("mode")) == 3, str(tool.get("build_kind")))
 	var placed_door: Dictionary = tool.call("place_at", door)
@@ -389,7 +389,8 @@ func _run() -> void:
 	var grid: GridContainer = null
 	for node: Node in priorities.find_children("*", "GridContainer", true, false):
 		grid = node as GridContainer
-	_check("priority_columns", works.size() == 7 and grid != null and grid.columns == 8, "works %s columns %d grid width %d" % [",".join(works), grid.columns if grid != null else -1, int(grid.get_combined_minimum_size().x) if grid != null else -1])
+	# M4 adds the read-only Pottery column after the seven work types.
+	_check("priority_columns", works.size() == 7 and grid != null and grid.columns == 9, "works %s columns %d grid width %d" % [",".join(works), grid.columns if grid != null else -1, int(grid.get_combined_minimum_size().x) if grid != null else -1])
 	await _key(KEY_P)
 	# The bar fits the screen.
 	var bar_panel: Control = bar.find_child("Bar", true, false) as Control

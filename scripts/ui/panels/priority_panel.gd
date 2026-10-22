@@ -5,7 +5,10 @@
 #   cmd_set_work_priority. "모두 기본" sets every cell that differs from the default (3; elders: quarry and mine 0) back.
 #   Children have no row (the simulation refuses them). Rebuilt only when the priorities change; Esc closes it;
 #   a world reset hides it.
-# Bridge methods: via SimReads get_work_priorities; via SimReads.mutate cmd_set_work_priority; signal world_reset.
+# M4 (goal 9.5): a last, read-only column 토기 솜씨 with each adult's Pottery skill level (skill code 6, get_agent_economy
+#   `skill_levels`; potters craft under 제작), read again when the rows change or every POTTERY_TICKS ticks.
+# Bridge methods: via SimReads get_work_priorities, get_time_snapshot; get_agent_economy (direct, per adult, only on a
+#   refresh of the Pottery column); via SimReads.mutate cmd_set_work_priority; signal world_reset.
 extends Control
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
@@ -13,13 +16,17 @@ const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const TOGGLE_KEY: Key = KEY_P
-const PANEL_SIZE: Vector2 = Vector2(1000, 760)
+const PANEL_SIZE: Vector2 = Vector2(1100, 760)
 const DEFAULT_LEVEL: int = 3
-## Level column width (M3: seven work types fit the 1000-px panel: 300 + 7 × 88 + separations).
+## Level column width (M3: seven work types fit the 1000-px panel: 300 + 7 × 88 + separations; M4 adds the Pottery
+## column: 300 + 8 × 88 + separations still fit).
 const CELL_WIDTH: int = 88
 ## Cell colours by level 0–4 (0 = never: dim; 1 = first: bright green … 4 = last: muted).
 const LEVEL_COLORS: Array[Color] = [Color("6a6058"), Color("8ee07a"), Color("e8d26e"), Color("e0a060"), Color("b08878")]
 const MUTED: Color = Color("c8b89a")
+## M4: the Pottery skill (`SkillKind::code` 6) and how often its column is read again.
+const POTTERY_SKILL: int = 6
+const POTTERY_TICKS: int = 240
 
 var _world_sim: Node = null
 var _locale: Node = null
@@ -29,6 +36,9 @@ var _hint: Label
 var _reset: Button
 var _close: Button
 var _grid: GridContainer
+## M4: AgentId -> Pottery level, and the read's tick bucket and rows.
+var _pottery: Dictionary = {}
+var _pottery_key: Array = []
 
 
 func _ready() -> void:
@@ -38,7 +48,7 @@ func _ready() -> void:
 		_world_sim.connect("world_reset", func() -> void: visible = false)
 	visible = false
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	position = Vector2(460, 140)
+	position = Vector2(420, 140)
 	size = PANEL_SIZE
 	var panel: PanelContainer = ArtUI.panel(self, Rect2(Vector2.ZERO, PANEL_SIZE))
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -135,7 +145,8 @@ func _refresh() -> void:
 	if _world_sim == null:
 		return
 	var data: Dictionary = table(SimReads.read(_world_sim, "get_work_priorities"))
-	var key: int = hash([data, Chronicle.language(_locale)])
+	_read_pottery(data["rows"])
+	var key: int = hash([data, Chronicle.language(_locale), _pottery])
 	if key == _key:
 		return
 	_key = key
@@ -148,7 +159,7 @@ func _refresh() -> void:
 		child.queue_free()
 	var works: PackedStringArray = data["works"]
 	var rows: Array[Dictionary] = data["rows"]
-	_grid.columns = works.size() + 1
+	_grid.columns = works.size() + 2
 	var corner: Label = Label.new()
 	corner.text = EconomyText.ltr(_locale, "UI_PRIORITY_NAME")
 	corner.custom_minimum_size.x = 300
@@ -159,6 +170,13 @@ func _refresh() -> void:
 		title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		title.custom_minimum_size.x = CELL_WIDTH
 		_grid.add_child(title)
+	var pottery_title: Label = Label.new()
+	pottery_title.name = "PotteryTitle"
+	pottery_title.text = EconomyText.ltr(_locale, "M4_PRIORITY_POTTERY")
+	pottery_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	pottery_title.custom_minimum_size.x = CELL_WIDTH
+	pottery_title.add_theme_color_override("font_color", MUTED)
+	_grid.add_child(pottery_title)
 	if rows.is_empty():
 		var none: Label = Label.new()
 		none.text = EconomyText.ltr(_locale, "UI_PRIORITY_EMPTY")
@@ -186,6 +204,36 @@ func _refresh() -> void:
 			for state: String in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
 				cell.add_theme_color_override(state, colour)
 			_grid.add_child(cell)
+		var skill: Label = Label.new()
+		skill.name = "Pottery_%d" % r
+		skill.text = str(int(_pottery.get(agent, 0)))
+		skill.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		skill.custom_minimum_size.x = CELL_WIDTH
+		skill.add_theme_color_override("font_color", MUTED)
+		_grid.add_child(skill)
+
+
+## M4: each row's Pottery level from get_agent_economy, read when the rows change or every POTTERY_TICKS ticks.
+func _read_pottery(rows: Array) -> void:
+	var agents: Array[int] = []
+	for row: Dictionary in rows:
+		agents.append(int(row["agent"]))
+	var tick: int = int(SimReads.read(_world_sim, "get_time_snapshot").get("tick", 0))
+	@warning_ignore("integer_division")
+	var key: Array = [agents, tick / POTTERY_TICKS]
+	if key == _pottery_key:
+		return
+	_pottery_key = key
+	_pottery.clear()
+	for agent: int in agents:
+		var read: Variant = _world_sim.call("get_agent_economy", agent)
+		var levels: PackedInt32Array = (read as Dictionary).get("skill_levels", PackedInt32Array()) if read is Dictionary else PackedInt32Array()
+		_pottery[agent] = levels[POTTERY_SKILL] if POTTERY_SKILL < levels.size() else 0
+
+
+## M4: the Pottery level the table shows for `agent` (for tests).
+func pottery_level(agent: int) -> int:
+	return int(_pottery.get(agent, -1))
 
 
 ## Set person `agent`'s level for `work_name`; a rejection shows its reason as the order bar's toast.

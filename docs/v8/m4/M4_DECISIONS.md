@@ -271,3 +271,19 @@ Raw data lives in `/Users/rexxa/work/m4-data/` (`$DATA`), outside the repository
   partner who is free takes its lesson job, walks to the meeting tile and waits there up to `WAIT_TICKS` (240) for the
   other; a session that loses its learner (a need) goes back to waiting. Round 2: the doorway order completed by
   sessions on days 4.2–6.3 on all 8 seeds (15–19 sessions).
+
+## D21 — The UI (Part 4) and the M3 UI test
+
+- Built by a subagent in an isolated worktree against `276923de` (GDScript, locale, sprites only; no Rust), brought
+  into the main tree unchanged and re-checked there: strict check 33/33, smoke 0/0/0/0, `tools/v8/m4_ui_test.gd` 32
+  checks 0 failures, `m2_ui_test.gd` 0 failures, `test_locale_trf.gd` pass. Keys: T tech map, K teach dialog, F7 then
+  2 clay pit (F7 alone still enters quarry mode, M2's behaviour), build menu `0` pottery bench and `-` grinding stone,
+  the inspector's 지식 tab, a read-only 토기 솜씨 column in the priority table. Source words: 전승 (seeded), 구전 (oral),
+  관찰 (observed), 발견 (discovered), 도제 (apprenticed). 147 new locale keys (`docs/v8/m4/M4_LOCALE.md`).
+- Found on the way: the hearth's fire-pot workshop hid the hearth sprite from tick 1 (the building layer drew the
+  workshop over it) — the hearth is drawn again and a click opens its workshop panel; the chronicle panel had
+  silently dropped kind 23 (RoomFormed) — fixed with 24–28; `m2_ui_test` assumed the first workshop was the knapping
+  spot (now the hearth fire) and 6 skills — fixed.
+- `tools/v8/m3_ui_test.gd` (M3's record, not a gate step) now fails one check, `house_room`: its house is built of
+  stone walls, which M4 gates behind stone walling (a Neolithic node nobody knows at the start), so the 20 wall sites
+  wait. Kept as M3's record; `m4_ui_test.gd` covers the build menu with gating.

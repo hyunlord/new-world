@@ -180,9 +180,11 @@ func _run() -> void:
 		await process_frame
 		var shops: Dictionary = SimReads.read(_world, "get_workshops")
 		var ids: PackedInt32Array = shops.get("ids", PackedInt32Array())
-		if not ids.is_empty():
-			shop = ids[0]
-			shop_tile = Vector2i((shops["xs"] as PackedInt32Array)[0], (shops["ys"] as PackedInt32Array)[0])
+		# M4: the camp hearth is a workshop too (kind 11, fire_pot only) from the start; find the knapping spot (kind 1).
+		var row: int = (shops.get("kinds", PackedInt32Array()) as PackedInt32Array).find(1)
+		if row >= 0 and row < ids.size():
+			shop = ids[row]
+			shop_tile = Vector2i((shops["xs"] as PackedInt32Array)[row], (shops["ys"] as PackedInt32Array)[row])
 	_check("knapping_spot_built", shop >= 0, "after %d ticks" % waited)
 	if shop >= 0:
 		await _frames(2)
@@ -248,7 +250,8 @@ func _run() -> void:
 		var tool_line: Label = inspector.get("_tool_label") as Label
 		var locale: Node = root.get_node_or_null("Locale")
 		var tier0: String = str(locale.call("ltr", "SKILL_TIER_0")) if locale != null else "SKILL_TIER_0"
-		_check("inspector_skills", skills != null and skills.visible and skills.text.split("\n").size() == 6 and tier0 in skills.text, skills.text.replace("\n", " | ") if skills != null else "")
+		# Seven skills since M4 (6 = pottery).
+		_check("inspector_skills", skills != null and skills.visible and skills.text.split("\n").size() == 7 and tier0 in skills.text, skills.text.replace("\n", " | ") if skills != null else "")
 		_check("inspector_tool_line", tool_line != null and tool_line.visible, tool_line.text if tool_line != null else "")
 	_finish()
 

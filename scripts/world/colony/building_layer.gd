@@ -5,7 +5,8 @@
 # M2 workshops (get_workshops: knapping spot 1×1, wood bench and drying rack 2×1) are drawn at their footprint's
 #   top-left with the sheet's temporary sprites, with a faint frame on the work tile south of them. A building
 #   snapshot row inside a workshop footprint is skipped: the snapshot reports finished workshops as kind 0 (hearth),
-#   because they sit in the building registry without a `building_kinds` entry.
+#   because they sit in the building registry without a `building_kinds` entry. M4: the camp hearth's fire_pot
+#   workshop (kind 11 hearth_fire, at the hearth tile) is neither drawn as a workshop nor hides the hearth.
 # M3 built space (get_space, rebuilt when its `version` moves): walls on this node (z 3, with the buildings, so
 #   people at z 5 are seen passing through doors), each log/stone wall picking `<log|stone>_wall_<mask>` from its
 #   wall-or-door neighbours (N=1, E=2, S=4, W=8), a door `door_h` in an east–west wall else `door_v`; the child
@@ -92,6 +93,8 @@ func _process(delta: float) -> void:
 	var sws: PackedInt32Array = shops.get("ws", PackedInt32Array())
 	var shs: PackedInt32Array = shops.get("hs", PackedInt32Array())
 	for i: int in mini(mini(shop_kinds.size(), sxs.size()), mini(sys.size(), mini(wxs.size(), wys.size()))):
+		if shop_kinds[i] == EconomyText.HEARTH_FIRE:
+			continue
 		if shop_kinds[i] > 0 and shop_kinds[i] < EconomyText.BUILD_KINDS.size():
 			_shops.append([shop_kinds[i], Vector2i(sxs[i], sys[i]), Vector2i(wxs[i], wys[i])])
 		if i < sws.size() and i < shs.size():

@@ -1,7 +1,8 @@
 # tools/v8/test_locale_trf.gd — unit test of Locale.trf / Locale.format_text (M1 9.7).
 # Purpose: placeholder substitution with {name} params on the real locale tables (ko default, then en),
 #   including the M1.5 year key UI_TIME_YEAR_FMT as the top bar formats it (String.format), and the M3 quality
-#   words (EconomyText.quality, band edges).
+#   words (EconomyText.quality, band edges), and the M4 knowledge formats (KnowledgeText: era line, badge, warning,
+#   wait line with 을/를, subject 이/가, discovery condition, gate, inspector entry, days ago, lesson, teach row, loss).
 # Bridge methods called: none.
 # usage: Godot --headless --path . --script res://tools/v8/test_locale_trf.gd
 #   prints TRF_TEST_PASS and exits 0, or prints each failure and exits 1.
@@ -9,6 +10,7 @@ extends SceneTree
 
 const LocaleScript = preload("res://scripts/core/locale.gd")
 const EconomyTextScript = preload("res://scripts/ui/economy_text.gd")
+const KnowledgeTextScript = preload("res://scripts/ui/knowledge_text.gd")
 
 var _failures: int = 0
 
@@ -49,7 +51,31 @@ func _run() -> void:
 		_check("quality 100", EconomyTextScript.quality(locale, 100), "걸작 (100)")
 		_check("quality 0", EconomyTextScript.quality(locale, 0), "조악 (0)")
 		_check("stack fmt", EconomyTextScript.stack(locale, 4, "flint", 1, 45), "부싯돌 날 ×1 · 좋음 (45)")
+		# M4 format keys (docs/v8/m4/M4_LOCALE.md), with the Korean particles chosen from the last syllable.
+		_check("m4 era", KnowledgeTextScript.era_line(locale, {"era": 1, "progress": 318}), "신석기 전환기 31 %")
+		_check("m4 era 0", KnowledgeTextScript.era_line(locale, {"era": 0, "progress": 0}), "구석기 0 %")
+		_check("m4 badge", str(locale.call("trf", "M4_HUD_AT_RISK_FMT", {"count": 2})), "⚠ 기술 위험 2")
+		_check("m4 warning", str(locale.call("trf", "M4_WARN_AT_RISK", {"node": KnowledgeTextScript.node_name(locale, 10), "name": "카토"})), "⚠ 문 만들기: 카토만 앎")
+		_check("m4 wait vowel", KnowledgeTextScript.wait_line(locale, 19), "기다리는 중: 토기 굽기를 아는 사람이 없음")
+		_check("m4 wait final", KnowledgeTextScript.wait_line(locale, 14), "기다리는 중: 채석을 아는 사람이 없음")
+		_check("m4 wait paren", KnowledgeTextScript.wait_line(locale, 3), "기다리는 중: 돌 깨기(타제)를 아는 사람이 없음")
+		_check("m4 subject", KnowledgeTextScript.with_subject(locale, "돌도끼"), "돌도끼가")
+		_check("m4 subject final", KnowledgeTextScript.with_subject(locale, "간석기 돌"), "간석기 돌이")
+		_check("m4 cond knows", KnowledgeTextScript.condition(locale, {"cond_kinds": PackedInt64Array([2]), "cond_names": PackedStringArray(["hafting"]),
+			"cond_amounts": PackedInt64Array([500])}, 0), "자루 달기를 50 % 이상 아는 사람")
+		_check("m4 cond stock", KnowledgeTextScript.condition(locale, {"cond_kinds": PackedInt64Array([0]), "cond_names": PackedStringArray(["raw_pot"]),
+			"cond_amounts": PackedInt64Array([2])}, 0), "빚은 토기 2개 이상 쌓아 둠")
+		_check("m4 gate", KnowledgeTextScript.gate(locale, {"gate_kinds": PackedInt64Array([0]), "gate_names": PackedStringArray(["fire_pot"])}, 0), "제작: 토기 굽기")
+		_check("m4 entry", str(locale.call("trf", "M4_INSPECT_ENTRY_FMT", {"node": "문 만들기", "state": KnowledgeTextScript.entry_state(locale, 1),
+			"source": KnowledgeTextScript.source(locale, 2)})), "문 만들기 · 배우는 중 (구전)")
+		_check("m4 days", KnowledgeTextScript.days_ago(locale, 3), "3일 전")
+		_check("m4 lesson", str(locale.call("trf", "M4_LESSON_LEARNING_FMT", {"partner": "카토", "node": "문 만들기"})), "배우는 중: 카토에게서 문 만들기")
+		_check("m4 teach row", str(locale.call("trf", "M4_TEACH_ROW_FMT", {"teacher": "카토", "learner": "미나", "node": "문 만들기"})), "카토 → 미나 · 문 만들기")
+		_check("m4 lost", str(locale.call("trf", "CHRONICLE_KNOWLEDGE_LOST_FMT", {"node": "문 만들기", "person": "카토"})), "기술 소실: 문 만들기 (마지막: 카토)")
 		locale.call("set_language", "en")
+		_check("m4 en era", KnowledgeTextScript.era_line(locale, {"era": 1, "progress": 318}), "Neolithic transition 31 %")
+		_check("m4 en wait", KnowledgeTextScript.wait_line(locale, 19), "Waiting: nobody knows Pot firing")
+		_check("m4 en warning", str(locale.call("trf", "M4_WARN_AT_RISK", {"node": "Doorways", "name": "Kato"})), "⚠ Doorways: only Kato knows")
 		_check("en table", str(locale.call("trf", "UI_BLUEPRINT_LOGS", {"delivered": 5, "needed": 12})), "5/12 logs")
 		_check("en year", str(locale.call("ltr", "UI_TIME_YEAR_FMT")).format({"year": 3}), "Year 3")
 		_check("missing key", str(locale.call("trf", "NO_SUCH_KEY_M1", {"a": 1})), "NO_SUCH_KEY_M1")

@@ -18,6 +18,8 @@
 #   bury the map in labels). Dig and deconstruct marks (designation kinds 2, 3) draw `mark_dig` /
 #   `mark_deconstruct` over the whole tile. The hover text of a stack in a room adds "· 방: 창고 2" (and "· 지붕
 #   아래" when the overlay's `item_covered` says so). The room overlay is the child "Rooms" (room_layer.gd).
+# M4: clay banks (node kind 2, sprite `clay_bank`, hover "점토 둑 · 점토 6개 남음"); clay-pit marks (designation kind
+#   4) reuse `mark_dig`; the new item kinds 7–10 lie as `item_clay`, `item_raw_pot`, `item_clay_pot`, `item_ground_axe`.
 # Redrawn only when the colony overlay version or the hovered stack changes (`get_colony_versions` is polled every
 #   frame).
 # Bridge methods: via SimReads get_colony_versions, get_colony_overlay; signal world_reset.
@@ -34,12 +36,12 @@ const BAR_HEIGHT: int = 3
 const FONT_SIZE: int = 12
 const LOGS_PER_PILE: int = 4
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
-## Resource node sprites by node kind (0 boulder, 1 flint outcrop), their names and the item they yield.
-const NODE_SPRITES: Array[String] = ["boulder", "flint_outcrop"]
-const NODE_KEYS: Array[String] = ["NODE_BOULDER", "NODE_FLINT_OUTCROP"]
-const NODE_ITEMS: Array[int] = [2, 3]
-## Designation marks by designation kind (0 chop, 1 quarry; M3 2 dig, 3 deconstruct).
-const MARKS: Array[String] = ["mark_chop", "mark_quarry", "mark_dig", "mark_deconstruct"]
+## Resource node sprites by node kind (0 boulder, 1 flint outcrop, M4 2 clay bank), their names and the item they yield.
+const NODE_SPRITES: Array[String] = ["boulder", "flint_outcrop", "clay_bank"]
+const NODE_KEYS: Array[String] = ["NODE_BOULDER", "NODE_FLINT_OUTCROP", "NODE_CLAY_BANK"]
+const NODE_ITEMS: Array[int] = [2, 3, 7]
+## Designation marks by designation kind (0 chop, 1 quarry; M3 2 dig, 3 deconstruct; M4 4 clay pit = the dig mark).
+const MARKS: Array[String] = ["mark_chop", "mark_quarry", "mark_dig", "mark_deconstruct", "mark_dig"]
 const RoomLayer = preload("res://scripts/world/colony/room_layer.gd")
 const BLUEPRINT: Color = Color(0.55, 0.75, 1.0, 0.6)
 

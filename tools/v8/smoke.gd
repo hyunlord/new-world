@@ -3,7 +3,8 @@
 #   open the panels a player opens (a click on the first agent through
 #   OrderTool.click_world -> inspector; a click on an empty tile ->
 #   causal "why?" panel; the chronicle toggled as the C key does; M2: the F3
-#   build menu and the P priority table), then walk
+#   build menu and the P priority table; M4: the T tech map with a node's
+#   detail, the K teach dialog, the F7 submenu and the inspector's 지식 tab), then walk
 #   every Label / RichTextLabel / Button and report texts that are
 #   raw localization keys (Locale.ltr returns the key itself when it is missing
 #   and logs nothing, so a missing key only shows as key-shaped text).
@@ -86,5 +87,18 @@ func _open_panels(main: Node) -> void:
 	var chronicle: Node = main.get_node_or_null("UI/ChroniclePanel")
 	if chronicle != null and chronicle.has_method("toggle_visible"):
 		chronicle.call("toggle_visible")
+	# M4: the tech map with the doorway's detail (node 10), the teach dialog, the F7 submenu and the inspector's 지식 tab.
+	var tech: Node = main.get_node_or_null("UI/TechPanel")
+	if tech != null and tech.has_method("open"):
+		tech.call("open")
+		tech.call("select_node", 10)
+	var teach: Node = main.get_node_or_null("UI/TeachPanel")
+	if teach != null and teach.has_method("open_for"):
+		teach.call("open_for", 10)
+	if bar != null and bar.has_method("open_dig_menu"):
+		bar.call("open_dig_menu")
+	var inspector: Node = main.get_node_or_null("UI/AgentInspectorPanel")
+	if inspector != null and inspector.has_method("select_tab") and (inspector as Control).visible:
+		inspector.call("select_tab", 1)
 	for _i: int in 30:
 		await process_frame

@@ -22,6 +22,11 @@
 #   (the roof word "판 굴" for a dug room from the room overlay's index, ColonyView/OverlayLayer/Rooms; a hut bed from
 #   get_building_snapshot via SimReads: "잠자리: 오두막"; no bed: "잠자리: 없음"); job codes 9 dig, 10 deconstruct,
 #   11 clear (haul-away); the skill list follows the bridge's skill_names (M3 adds mining).
+# M4 (goal 9.4): two tabs under the name, 정보 (everything above) and 지식, read from get_agent_knowledge (direct, once
+#   per tick for the selected person): the current lesson ("가르치는 중: 미나에게 문 만들기" / "배우는 중: 카토에게서 문
+#   만들기", lesson_role/partner/node), then per entry "문 만들기 · 숙련 (전승)" coloured by state (숙련, 배우는 중,
+#   잊어 감), a proficiency bar with the threshold marked, and "65 % · 마지막으로 씀: 3일 전" (days_unused); node names
+#   from get_tech via SimReads. Job codes 12 dig clay, 13 teach, 14 learn. A dead person's record has no 지식 tab.
 extends Control
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
@@ -32,6 +37,17 @@ const Porter = preload("res://scripts/world/porter_presentation.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const ReadCache = preload("res://scripts/ui/person_read_cache.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
+const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
+## M4: the inspector's tabs (0 정보, 1 지식).
+const TAB_INFO: int = 0
+const TAB_KNOWLEDGE: int = 1
+var _tab: int = TAB_INFO
+var _tab_row: HBoxContainer
+var _tab_buttons: Array[Button] = []
+var _knowledge_box: VBoxContainer
+var _knowledge: Dictionary = {}
+var _knowledge_key: Vector2i = Vector2i(-1, -1)
+var _knowledge_hash: int = 0
 var _person_cache := ReadCache.new()
 var _selected_person: int = -1
 var _record_mode: bool = false
@@ -106,7 +122,9 @@ var _carried_label: Label
 var _job_label: Label
 # M2 adds 5 quarry, 6 supply, 7 craft, 8 gather.
 # M3 adds 9 dig, 10 deconstruct, 11 clear (haul-away).
-const JOB_KEYS: Array[String] = ["UI_JOB_NONE", "UI_JOB_CHOP", "UI_JOB_HAUL", "UI_JOB_DELIVER", "UI_JOB_BUILD", "UI_JOB_QUARRY", "UI_JOB_SUPPLY", "UI_JOB_CRAFT", "UI_JOB_GATHER", "UI_JOB_DIG", "UI_JOB_DECONSTRUCT", "UI_JOB_CLEAR"]
+# M4 adds 12 dig clay, 13 teach, 14 learn.
+const JOB_KEYS: Array[String] = ["UI_JOB_NONE", "UI_JOB_CHOP", "UI_JOB_HAUL", "UI_JOB_DELIVER", "UI_JOB_BUILD", "UI_JOB_QUARRY", "UI_JOB_SUPPLY", "UI_JOB_CRAFT", "UI_JOB_GATHER", "UI_JOB_DIG", "UI_JOB_DECONSTRUCT", "UI_JOB_CLEAR",
+	"UI_JOB_DIG_CLAY", "UI_JOB_TEACH", "UI_JOB_LEARN"]
 const RoomLayer = preload("res://scripts/world/colony/room_layer.gd")
 ## BuildingKind code of a hut in get_building_snapshot.
 const HUT_KIND: int = 3
@@ -198,6 +216,7 @@ func _ready() -> void:
 			_live_nodes.append(node as Control)
 	_record_summary = _make_label("")
 	_record_summary.hide()
+	_make_knowledge_tab()
 	_make_personal_sections()
 	_life_heading = _make_label("")
 	_life_heading.theme_type_variation = &"Heading"
@@ -347,6 +366,7 @@ func display_agent(detail: Dictionary) -> void:
 	_selected_entity_bits = _resolve_entity_bits(agent_id)
 	if previous_selection != _selected_entity_bits:
 		_scroll.scroll_vertical = 0
+		_knowledge_key = Vector2i(-1, -1)
 	_label_id.text = _loc("INSPECTOR_PERSON_FMT") % [Names.present(agent_id, Chronicle.language(_locale)), agent_id]
 	var home: int = SettlementSelection.home_for_agent(agent_id)
 	_village_label.visible = home >= 0
@@ -382,6 +402,158 @@ func display_agent(detail: Dictionary) -> void:
 	_cold_label.visible = _is_cold(agent_id)
 	visible = true
 	_refresh_personal_sections()
+	_apply_tab()
+
+
+## M4: the tab row (정보 / 지식) under the name and the knowledge box (not live nodes: the tabs switch them).
+func _make_knowledge_tab() -> void:
+	_tab_row = HBoxContainer.new()
+	_tab_row.name = "Tabs"
+	_tab_row.add_theme_constant_override("separation", 8)
+	_vbox.add_child(_tab_row)
+	_vbox.move_child(_tab_row, _label_id.get_index() + 1)
+	var group: ButtonGroup = ButtonGroup.new()
+	for tab: int in [TAB_INFO, TAB_KNOWLEDGE]:
+		var button: Button = Button.new()
+		button.name = "Tab_%d" % tab
+		button.toggle_mode = true
+		button.button_group = group
+		button.button_pressed = tab == _tab
+		button.focus_mode = Control.FOCUS_NONE
+		button.add_theme_color_override("font_pressed_color", Color("e8c46e"))
+		button.add_theme_color_override("font_hover_pressed_color", Color("e8c46e"))
+		button.pressed.connect(select_tab.bind(tab))
+		_tab_row.add_child(button)
+		_tab_buttons.append(button)
+	_knowledge_box = VBoxContainer.new()
+	_knowledge_box.name = "Knowledge"
+	_knowledge_box.add_theme_constant_override("separation", 4)
+	_vbox.add_child(_knowledge_box)
+	_vbox.move_child(_knowledge_box, _tab_row.get_index() + 1)
+	_knowledge_box.hide()
+
+
+## M4: show tab `tab` (0 정보, 1 지식; also used by tools).
+func select_tab(tab: int) -> void:
+	_tab = tab
+	for i: int in _tab_buttons.size():
+		_tab_buttons[i].set_pressed_no_signal(i == tab)
+	if visible and not _record_mode:
+		_set_live_visible(true)
+		_refresh_personal_sections()
+		_apply_tab()
+
+
+## The tab shown (0 정보, 1 지식).
+func current_tab() -> int:
+	return _tab
+
+
+## M4: with the 지식 tab, hide the person's info sections and show the knowledge list; a record shows no tabs.
+func _apply_tab() -> void:
+	_tab_row.visible = not _record_mode
+	_tab_buttons[0].text = _loc("M4_INSPECT_TAB_INFO")
+	_tab_buttons[1].text = _loc("M4_INSPECT_TAB_KNOWLEDGE")
+	var knowledge: bool = _tab == TAB_KNOWLEDGE and not _record_mode
+	_knowledge_box.visible = knowledge
+	if not knowledge:
+		return
+	for node: Control in _live_nodes:
+		node.visible = false
+	_temperament_box.hide()
+	_family_box.hide()
+	_life_heading.hide()
+	_life_text.hide()
+	_life_more.hide()
+	_refresh_knowledge()
+
+
+## M4: the 지식 list from get_agent_knowledge (read again only when the tick or the person changes; rebuilt only when
+## the read or the language changes).
+func _refresh_knowledge() -> void:
+	if _world_sim == null or not _world_sim.has_method("get_agent_knowledge"):
+		return
+	var tick: int = int(SimReads.read(_world_sim, "get_time_snapshot").get("tick", -1))
+	var key: Vector2i = Vector2i(_selected_person, tick)
+	if key != _knowledge_key:
+		_knowledge_key = key
+		var read: Variant = _world_sim.call("get_agent_knowledge", _selected_person)
+		_knowledge = read if read is Dictionary else {}
+	var language: String = Chronicle.language(_locale)
+	var digest: int = hash([_knowledge, language, _selected_person])
+	if digest == _knowledge_hash and _knowledge_box.get_child_count() > 0:
+		return
+	_knowledge_hash = digest
+	for child: Node in _knowledge_box.get_children():
+		_knowledge_box.remove_child(child)
+		child.queue_free()
+	var tech: Dictionary = SimReads.read(_world_sim, "get_tech")
+	var lesson: String = lesson_line(_knowledge, tech, _locale)
+	if lesson != "":
+		var lesson_label: Label = _knowledge_label(lesson, Color("e8c46e"))
+		lesson_label.name = "Lesson"
+	var lines: Array[String] = knowledge_lines(_knowledge, tech, _locale)
+	if lines.is_empty():
+		_knowledge_label(_loc("M4_INSPECT_KNOWLEDGE_NONE"), Color("c8b89a"))
+		return
+	var levels: PackedInt64Array = _knowledge.get("proficiency", PackedInt64Array())
+	var thresholds: PackedInt64Array = _knowledge.get("thresholds", PackedInt64Array())
+	var states: PackedInt64Array = _knowledge.get("states", PackedInt64Array())
+	var days: PackedInt64Array = _knowledge.get("days_unused", PackedInt64Array())
+	for i: int in mini(lines.size(), levels.size()):
+		var state: int = int(states[i]) if i < states.size() else 0
+		_knowledge_label(lines[i], KnowledgeText.state_color(state))
+		var row: HBoxContainer = HBoxContainer.new()
+		row.add_theme_constant_override("separation", 8)
+		row.add_child(ArtUI.proficiency_bar(int(levels[i]), int(thresholds[i]) if i < thresholds.size() else 0, 140))
+		var note: Label = Label.new()
+		@warning_ignore("integer_division")
+		var percent: int = int(levels[i]) / 10
+		note.text = KnowledgeText.trf(_locale, "M4_INSPECT_USE_FMT", {"percent": percent,
+			"when": KnowledgeText.days_ago(_locale, int(days[i]) if i < days.size() else 0)})
+		note.add_theme_color_override("font_color", Color("c8b89a"))
+		row.add_child(note)
+		_knowledge_box.add_child(row)
+
+
+func _knowledge_label(text: String, colour: Color) -> Label:
+	var label: Label = Label.new()
+	label.text = text
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.custom_minimum_size.x = 332
+	label.add_theme_color_override("font_color", colour)
+	_knowledge_box.add_child(label)
+	return label
+
+
+## The 지식 list's label texts (for tests).
+func knowledge_texts() -> Array[String]:
+	var out: Array[String] = []
+	for node: Node in _knowledge_box.find_children("*", "Label", true, false):
+		out.append((node as Label).text)
+	return out
+
+
+## M4: "문 만들기 · 숙련 (전승)" per entry of a get_agent_knowledge read, in node order.
+static func knowledge_lines(read: Dictionary, tech: Dictionary, locale: Node) -> Array[String]:
+	var ids: PackedInt64Array = read.get("ids", PackedInt64Array())
+	var states: PackedInt64Array = read.get("states", PackedInt64Array())
+	var sources: PackedInt64Array = read.get("sources", PackedInt64Array())
+	var lines: Array[String] = []
+	for i: int in mini(ids.size(), mini(states.size(), sources.size())):
+		lines.append(KnowledgeText.trf(locale, "M4_INSPECT_ENTRY_FMT", {"node": KnowledgeText.node_name(locale, int(ids[i]), tech),
+			"state": KnowledgeText.entry_state(locale, int(states[i])), "source": KnowledgeText.source(locale, int(sources[i]))}))
+	return lines
+
+
+## M4: "가르치는 중: 미나에게 문 만들기" / "배우는 중: 카토에게서 문 만들기", "" without a lesson.
+static func lesson_line(read: Dictionary, tech: Dictionary, locale: Node) -> String:
+	var role: int = int(read.get("lesson_role", -1))
+	if role < 0:
+		return ""
+	var partner: String = Names.present(int(read.get("lesson_partner", -1)), Chronicle.language(locale))
+	var node: String = KnowledgeText.node_name(locale, int(read.get("lesson_node", -1)), tech)
+	return KnowledgeText.trf(locale, "M4_LESSON_TEACHING_FMT" if role == 0 else "M4_LESSON_LEARNING_FMT", {"partner": partner, "node": node})
 
 
 ## M2: the carried item (kind, material, count, quality), the tool line and the skills, from get_agent_economy
@@ -806,6 +978,7 @@ func show_person(agent_id: int) -> void:
 	_record_mode = true
 	visible = true
 	_refresh_record()
+	_apply_tab()
 
 
 func _set_live_visible(value: bool) -> void:

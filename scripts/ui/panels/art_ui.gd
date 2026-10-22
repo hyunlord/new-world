@@ -1,5 +1,5 @@
 # art_ui.gd: static UI builders shared by the HUD and panels: themed PanelContainer, 32 px U1 atlas icon and
-#   icon+label pair rows.
+#   icon+label pair rows; M4: a proficiency bar (‰ 0–1000) with a 2-px mark at the practitioner threshold.
 # Bridge methods: none.
 extends RefCounted
 
@@ -37,3 +37,36 @@ static func pair(row: HBoxContainer, index: int) -> Label:
 	gap.custom_minimum_size.x = 16
 	row.add_child(gap)
 	return label
+
+## M4: a 12-px bar of `value` ‰ (0–1000) at least `width` px wide, green at or above `threshold` ‰ (amber below), with
+## a light 2-px mark where the threshold lies.
+static func proficiency_bar(value: int, threshold: int, width: int) -> ProgressBar:
+	var bar: ProgressBar = ProgressBar.new()
+	bar.min_value = 0.0
+	bar.max_value = 1000.0
+	bar.value = clampi(value, 0, 1000)
+	bar.show_percentage = false
+	bar.custom_minimum_size = Vector2(width, 12)
+	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	bar.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	var fill: StyleBoxFlat = StyleBoxFlat.new()
+	fill.bg_color = Color("8ee07a") if value >= threshold else Color("d8a050")
+	bar.add_theme_stylebox_override("fill", fill)
+	var background: StyleBoxFlat = StyleBoxFlat.new()
+	background.bg_color = Color8(41, 38, 33)
+	bar.add_theme_stylebox_override("background", background)
+	var mark: ColorRect = ColorRect.new()
+	mark.name = "Threshold"
+	mark.color = Color("f2e6c8")
+	mark.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var at: float = clampf(float(threshold) / 1000.0, 0.0, 1.0)
+	mark.anchor_left = at
+	mark.anchor_right = at
+	mark.anchor_top = 0.0
+	mark.anchor_bottom = 1.0
+	mark.offset_left = -1.0
+	mark.offset_right = 1.0
+	mark.offset_top = -2.0
+	mark.offset_bottom = 2.0
+	bar.add_child(mark)
+	return bar

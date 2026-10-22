@@ -1,12 +1,16 @@
 # chronicle_panel.gd (UI/ChroniclePanel in scenes/main.tscn): C-toggled world chronicle feed; pages new entries once
 #   per tick (even while hidden), merges porter groups, keeps the last 60 notable rows; links go to the inspector.
-#   NOTABLE lists every kind the feed keeps (M3 adds 23 RoomFormed).
+#   NOTABLE lists every kind the feed keeps (M3 adds 23 RoomFormed; M4 adds 24 ToolBroke, 25 KnowledgeLearned,
+#   26 KnowledgeDiscovered, 27 KnowledgeAtRisk, 28 KnowledgeLost). M4: a KnowledgeLost row from the last day shows the
+#   toast "기술 소실: 문 만들기 (마지막: 카토)" on the order bar (UI/OrderBar show_toast).
 # Bridge methods: get_chronicle_since (direct); via SimReads get_time_snapshot, get_world_info; signal world_reset.
 extends Control
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
-const NOTABLE: Array[int] = [0, 2, 11, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23]
+const NOTABLE: Array[int] = [0, 2, 11, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28]
+## M4: a KnowledgeLost row toasts only when it is at most this many ticks old (a reload pages old rows too).
+const LOSS_TOAST_TICKS: int = 1440
 var _world: Node
 var _locale: Node
 var _title: Label
@@ -74,10 +78,12 @@ func _ingest_row(row: Dictionary) -> void:
 	var kind: int = int(row["kind"])
 	if kind != 18:
 		_pending_porter = {}
-		if kind >= 23:
+		if kind > Chronicle.LAST_KIND:
 			_unknown_kinds += 1
 		elif kind in NOTABLE:
 			_entries.append(row)
+			if kind == 28 and int(row.get("tick", 0)) >= _tick - LOSS_TOAST_TICKS:
+				_toast_loss(row)
 		return
 	var same_trip: bool = not _pending_porter.is_empty()
 	for key: String in ["tick", "settlement", "settlement2", "cause"]:
@@ -90,6 +96,12 @@ func _ingest_row(row: Dictionary) -> void:
 		_pending_porter = row.duplicate()
 		_pending_porter["porter_count"] = 1
 		_entries.append(_pending_porter)
+
+## M4: the loss toast on the order bar.
+func _toast_loss(row: Dictionary) -> void:
+	var bar: Node = get_node_or_null("../OrderBar")
+	if bar != null and bar.has_method("show_toast"):
+		bar.call("show_toast", Chronicle.lost_plain(row, _locale))
 
 func _refresh() -> void:
 	_language = Chronicle.language(_locale)

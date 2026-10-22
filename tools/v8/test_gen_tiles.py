@@ -49,8 +49,9 @@ M3_GHOSTS = ["ghost_wall", "ghost_door", "ghost_floor", "ghost_bedroll", "ghost_
 M3_MARKS = ["mark_dig", "mark_deconstruct"]
 M3_ICONS = ["icon_dig", "icon_deconstruct"]
 M3_16 = M3_WALLS + M3_DOORS + M3_FLOORS + ["bedroll"] + M3_GHOSTS + M3_MARKS
-# M4 temporaries: the river ford (drawn over the terrain's water tile).
-M4_16 = ["ford"]
+# M4 temporaries: the river ford (drawn over the terrain's water tile); Part 4's clay bank, workshops and item kinds.
+M4_OBJECTS = ["clay_bank", "pottery_bench", "grinding_stone"] + ["item_" + k for k in ("clay", "raw_pot", "clay_pot", "ground_axe")]
+M4_16 = ["ford"] + M4_OBJECTS
 
 SIZE = {n: (16, 16) for n in GROUND + ZONE + NATURE + ITEMS + CARRY + MARKS + ["hearth_0", "hearth_1"]
         + M2_OBJECTS + ["mark_quarry"] + M3_16 + M4_16}
@@ -65,7 +66,7 @@ SIZE.update({n: ((16, 8) if n.endswith("_sleep") else (16, 16)) for n in PEOPLE}
 # Object sprites must carry the outline colour (craft rule 1); people carry it in their outline layer.
 OUTLINED = (CANOPY + NATURE + ITEMS + BUILDINGS + CARRY + ["mark_chop"] + ICONS
             + M2_OBJECTS + M2_WIDE + M2_ICONS + ["mark_quarry"]
-            + M3_WALLS + M3_DOORS + ["bedroll"] + M3_MARKS + M3_ICONS
+            + M3_WALLS + M3_DOORS + ["bedroll"] + M3_MARKS + M3_ICONS + M4_OBJECTS
             + [n for n in PEOPLE if "_outline_" in n] + ["stock_stake_" + c for c in ("nw", "ne", "sw", "se")])
 
 

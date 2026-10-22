@@ -7,10 +7,15 @@
 #
 # Mount: scenes/main.tscn → UI (CanvasLayer) → CausalPanel (Control + this script).
 # Default visibility: hidden. Q toggles via _unhandled_input.
-# Bridge methods: none (world_renderer.gd reads the tile history and passes it in).
+# M4 (goal 9.6): when a building site or a work mark on the tile waits for a practitioner, the first line after the
+#   header is "기다리는 중: 문 만들기를 아는 사람이 없음" (get_knowledge_waits kinds 1 site / 2 mark by tile; a site's
+#   footprint from get_colony_overlay).
+# Bridge methods: via SimReads get_knowledge_waits, get_colony_overlay (M4 wait line); the tile history is passed in
+#   by order_tool.gd.
 extends Control
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
+const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
 
 const PANEL_TITLE_KEY := "UI_CAUSAL_PANEL_TITLE"
 const PANEL_PLACEHOLDER_KEY := "UI_CAUSAL_PANEL_PLACEHOLDER"
@@ -81,6 +86,15 @@ func display_history(history: Array, tile_x: int, tile_y: int) -> void:
 	var tmpl := _ltr("UI_CAUSAL_TILE_HEADER")
 	header.text = tmpl.replace("{x}", str(tile_x)).replace("{y}", str(tile_y))
 	_history_container.add_child(header)
+	var wait: String = wait_text(Vector2i(tile_x, tile_y))
+	if wait != "":
+		var wait_label := Label.new()
+		wait_label.name = "Wait"
+		wait_label.text = wait
+		wait_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		wait_label.custom_minimum_size.x = 570
+		wait_label.add_theme_color_override("font_color", Color("e05a48"))
+		_history_container.add_child(wait_label)
 	if history.is_empty():
 		var empty := Label.new()
 		empty.text = _ltr("UI_CAUSAL_NO_HISTORY")
@@ -94,6 +108,14 @@ func display_history(history: Array, tile_x: int, tile_y: int) -> void:
 		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		lbl.custom_minimum_size.x = 570
 		_history_container.add_child(lbl)
+
+## M4: "기다리는 중: … 아는 사람이 없음" for a site or mark on `tile` waiting for a practitioner, else "".
+func wait_text(tile: Vector2i) -> String:
+	var world: Node = get_node_or_null("/root/Main/WorldSim")
+	if world == null:
+		return ""
+	var node: int = KnowledgeText.tile_wait(SimReads.read(world, "get_knowledge_waits"), SimReads.read(world, "get_colony_overlay"), tile)
+	return KnowledgeText.wait_line(get_node_or_null("/root/Locale"), node) if node >= 0 else ""
 
 func _format_event(ev: Dictionary) -> String:
 	var kind: String = ev.get("kind", "?")

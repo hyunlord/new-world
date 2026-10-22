@@ -1,12 +1,21 @@
 # chronicle_text.gd: static helpers that turn packed chronicle columns into rows and localized BBCode lines
 #   (day prefix, person/village links, death and porter wording); used by chronicle_panel.gd and agent_inspector_panel.gd.
 #   M3 kind 23 (RoomFormed: cause = the room's role code, value = its id): "새 방이 생김 — 침실".
+#   M4 kinds 24 ToolBroke (subject holder, cause item code, value uses) "Fox의 돌도끼가 부러졌다 (40번 씀)",
+#   25 KnowledgeLearned (subject learner, other teacher, cause channel 2 oral / 3 observed / 4 apprenticed, value node)
+#   "Fox가 Mia에게 문 만들기를 가르쳤다" (or "Mia가 문 만들기를 익혔다 (구전)" without a teacher), 26 KnowledgeDiscovered
+#   "Fox가 간석기를 발견했다!", 27 KnowledgeAtRisk "⚠ 문 만들기: Fox만 안다", 28 KnowledgeLost "기술 소실: 문 만들기
+#   (마지막: Fox)"; lost_plain() is the loss line without BBCode for the toast.
 # Bridge methods: none (formats chronicle rows and world info its callers read: ticks_per_day, ticks_per_year,
 #   clock_offset_ticks from get_world_info).
 extends RefCounted
 const LocaleScript = preload("res://scripts/core/locale.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
 const Selection = preload("res://scripts/core/settlement_selection.gd")
+const EconomyText = preload("res://scripts/ui/economy_text.gd")
+const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
+## The last chronicle kind this text knows (M4: 28 KnowledgeLost).
+const LAST_KIND: int = 28
 const COLUMNS: Array[String] = ["tick", "kind", "subject", "other", "third", "settlement", "settlement2", "cause", "value"]
 const DEPART: Array[String] = ["CHRON_CAUSE_RANKED", "CHRON_CAUSE_SEED", "CHRON_CAUSE_HOUSEHOLD", "CHRON_CAUSE_ELDER_PARTNER", "CHRON_CAUSE_TOP_UP"]
 const DEATH: Array[String] = ["CHRON_DEATH_STARVATION", "CHRON_DEATH_DEHYDRATION", "CHRON_DEATH_COMBAT", "CHRON_DEATH_OLD_AGE", "CHRON_DEATH_EXPOSURE"]
@@ -69,6 +78,7 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 			2: return loc(locale, "CHRON_PAIRED_FMT") % person(subject, locale)
 			19: return loc(locale, "CHRON_QUARREL_FMT") % [person(subject, locale), village(int(row.get("settlement", -1)), locale)]
 			22: return hut_built(row, locale)
+			25: return knowledge_sentence(row, locale)
 			_: return ""
 	var place: int = int(row.get("settlement", -1))
 	var parent: int = int(row.get("settlement2", -1))
@@ -112,6 +122,7 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 		21: return loc(locale, "CHRON_VILLAGES_RECONCILED_FMT") % [village(place, locale), village(parent, locale)]
 		22: return hut_built(row, locale)
 		23: return room_formed(row, locale)
+		24, 25, 26, 27, 28: return knowledge_sentence(row, locale)
 	return ""
 
 
@@ -126,12 +137,46 @@ static func room_formed(row: Dictionary, locale: Node) -> String:
 	var role_key: String = ROLE_KEYS[cause] if cause >= 0 and cause < ROLE_KEYS.size() else ROLE_KEYS[0]
 	return LocaleScript.format_text(loc(locale, "CHRONICLE_ROOM_FORMED"), {"role": loc(locale, role_key)})
 
+## M4 kinds 24–28 (tool wear and knowledge) as BBCode sentences with person links.
+static func knowledge_sentence(row: Dictionary, locale: Node) -> String:
+	var kind: int = int(row.get("kind", -1))
+	var subject: int = int(row.get("subject", -1))
+	var other: int = int(row.get("other", -1))
+	var cause: int = int(row.get("cause", -1))
+	var value: int = int(row.get("value", -1))
+	var node: String = "[b]%s[/b]" % KnowledgeText.node_name(locale, value)
+	var node_obj: String = "[b]%s[/b]" % KnowledgeText.with_object(locale, KnowledgeText.node_name(locale, value))
+	match kind:
+		24:
+			var tool: String = KnowledgeText.with_subject(locale, EconomyText.item(locale, cause))
+			return LocaleScript.format_text(loc(locale, "CHRONICLE_TOOL_BROKE_FMT"), {"person": person(subject, locale), "item": tool, "uses": value})
+		25:
+			if other >= 0:
+				return LocaleScript.format_text(loc(locale, "CHRONICLE_KNOWLEDGE_TAUGHT_FMT"), {"teacher": person(other, locale), "learner": person(subject, locale), "node": node_obj})
+			return LocaleScript.format_text(loc(locale, "CHRONICLE_KNOWLEDGE_LEARNED_FMT"), {"learner": person(subject, locale), "node": node_obj,
+				"channel": KnowledgeText.source(locale, cause)})
+		26: return LocaleScript.format_text(loc(locale, "CHRONICLE_KNOWLEDGE_DISCOVERED_FMT"), {"person": person(subject, locale), "node": node_obj})
+		27: return LocaleScript.format_text(loc(locale, "CHRONICLE_KNOWLEDGE_AT_RISK_FMT"), {"person": person(subject, locale), "node": node})
+		28:
+			if subject < 0:
+				return LocaleScript.format_text(loc(locale, "CHRONICLE_KNOWLEDGE_LOST_NOBODY_FMT"), {"node": node})
+			return LocaleScript.format_text(loc(locale, "CHRONICLE_KNOWLEDGE_LOST_FMT"), {"person": person(subject, locale), "node": node})
+	return ""
+
+## The KnowledgeLost line as plain text (no BBCode; the toast): "기술 소실: 문 만들기 (마지막: 카토)".
+static func lost_plain(row: Dictionary, locale: Node) -> String:
+	var subject: int = int(row.get("subject", -1))
+	var node: String = KnowledgeText.node_name(locale, int(row.get("value", -1)))
+	if subject < 0:
+		return LocaleScript.format_text(loc(locale, "CHRONICLE_KNOWLEDGE_LOST_NOBODY_FMT"), {"node": node})
+	return LocaleScript.format_text(loc(locale, "CHRONICLE_KNOWLEDGE_LOST_FMT"), {"person": Names.display_name(subject, language(locale)), "node": node})
+
 static func line(row: Dictionary, viewed: int, locale: Node, info: Dictionary, world_feed: bool = false) -> String:
 	var text: String = sentence(row, viewed, locale, info)
 	if text.is_empty():
 		return ""
 	var prefix: String = loc(locale, "CHRONICLE_DAY_FMT") % day(int(row.get("tick", 0)), info)
-	if world_feed and int(row.get("subject", -1)) >= 0 and int(row.get("porter_count", 0)) == 0 and int(row.get("kind", -1)) not in [20, 21]:
+	if world_feed and int(row.get("subject", -1)) >= 0 and int(row.get("porter_count", 0)) == 0 and int(row.get("kind", -1)) not in [20, 21, 24, 25, 26, 27, 28]:
 		text = person(int(row["subject"]), locale) + " — " + text
 	return prefix + " · " + text
 

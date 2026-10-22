@@ -3,13 +3,24 @@
 #   M1 huts), sites (V7 construction sites + M1 hut blueprints), stored food and firewood stocks, logs lying in
 #   stacks (M1 items), wild berries on the whole map, births, deaths, cold count, pause and display speed;
 #   L toggles ko/en.
+# M4 (goal 9.1): beside the calendar the era line "신석기 전환기 31 %" (get_tech `era`, `progress` ‰ as whole percent)
+#   and the badge button "⚠ 기술 위험 N" (`at_risk`; red when N ≥ 1) that opens the tech map (UI/TechPanel); on the
+#   lower row, while N ≥ 1, the warning "⚠ 문 만들기: 카토만 앎" naming the first at-risk node and its one holder
+#   (`first_names`). This node creates the tech map (UI/TechPanel, tech_panel.gd) and the teach dialog
+#   (UI/TeachPanel, teach_panel.gd) beside itself.
 # Read-only, localized counters from authoritative simulation snapshots.
 # Bridge methods: via SimReads get_agent_snapshot, get_settlement_snapshot, get_construction_snapshot,
 #   get_building_snapshot, get_time_snapshot (day_index, time_of_day, season, day_of_season, days_per_season,
-#   winter_severity, year_index), get_resource_snapshot, get_tallies, get_colony_overlay.
+#   winter_severity, year_index), get_resource_snapshot, get_tallies, get_colony_overlay, get_tech.
 extends Control
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
+const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
+const Names = preload("res://scripts/ui/person_names.gd")
+const TechPanel = preload("res://scripts/ui/panels/tech_panel.gd")
+const TeachPanel = preload("res://scripts/ui/panels/teach_panel.gd")
+const RISK_COLOR: Color = Color("e05a48")
+const QUIET_COLOR: Color = Color("c8b89a")
 
 const HUD_MARGIN: int = 12
 const HUD_SEPARATION: int = 16
@@ -33,6 +44,10 @@ var _display_speed: float = 1.0
 var _clock_icon: Sprite2D
 var _pause_icon: Control
 var _death_total: int = 0
+## M4: the era line, the at-risk badge (opens the tech map) and the at-risk warning line.
+var _era_label: Label
+var _risk_button: Button
+var _warn_label: Label
 const DEATH_TALLY_KEYS: Array[String] = ["deaths_starvation", "deaths_dehydration", "deaths_combat", "deaths_old_age", "deaths_exposure"]
 
 
@@ -57,6 +72,22 @@ func _ready() -> void:
 	_settlements_label = ArtUI.pair(_settlements_row, 2)
 	_shelters_label = ArtUI.pair(hbox, 3)
 	_sites_label = ArtUI.pair(hbox, 4)
+	_era_label = Label.new()
+	_era_label.name = "EraLabel"
+	_era_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_era_label.add_theme_color_override("font_color", Color("e8c46e"))
+	hbox.add_child(_era_label)
+	_risk_button = Button.new()
+	_risk_button.name = "RiskBadge"
+	_risk_button.focus_mode = Control.FOCUS_NONE
+	_risk_button.flat = true
+	_risk_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	_risk_button.pressed.connect(open_tech_map)
+	hbox.add_child(_risk_button)
+	var era_gap: Control = Control.new()
+	era_gap.custom_minimum_size.x = 8
+	era_gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hbox.add_child(era_gap)
 	_winter_label = Label.new()
 	_winter_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_winter_label.add_theme_color_override("font_color", Color("a8c0d0"))
@@ -94,6 +125,16 @@ func _ready() -> void:
 			_cold_icon = _make_cold_icon()
 			lower.add_child(_cold_icon)
 			_cold_icon.hide()
+			var warn_gap: Control = Control.new()
+			warn_gap.custom_minimum_size.x = 16
+			warn_gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			lower.add_child(warn_gap)
+			_warn_label = Label.new()
+			_warn_label.name = "RiskWarning"
+			_warn_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			_warn_label.add_theme_color_override("font_color", RISK_COLOR)
+			lower.add_child(_warn_label)
+			_warn_label.hide()
 	var spacer: Control = Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	lower.add_child(spacer)
@@ -101,6 +142,12 @@ func _ready() -> void:
 	lower.add_child(_pause_icon)
 	_speed_label = ArtUI.pair(lower, 15)
 
+
+	for entry: Array in [["TechPanel", TechPanel], ["TeachPanel", TeachPanel]]:
+		if get_parent() != null and get_parent().get_node_or_null(str(entry[0])) == null:
+			var panel_node: Control = (entry[1] as GDScript).new()
+			panel_node.name = str(entry[0])
+			get_parent().add_child.call_deferred(panel_node)
 
 	# Missing WorldSim is tolerated silently — counters stay at their
 	# default values. No push_error / push_warning here so the edge-case
@@ -257,9 +304,59 @@ func _refresh() -> void:
 		_display_speed = float(camera.call("get_speed"))
 	_speed_label.text = _loc("UI_SPEED_PAUSED") if paused else _loc("HUD_SPEED_FMT") % str(int(_display_speed))
 	_pause_icon.modulate.a = 1.0 if paused else 0.35
+	_refresh_knowledge()
 	ArtUI.Library.apply(_clock_icon, "U1_10" if hour >= 21 or hour < 5 else "U1_09")
 	_clock_icon.offset = Vector2.ZERO
 	_clock_icon.scale = Vector2(2, 2)
+
+
+## M4: the era line, the badge and the at-risk warning from get_tech (hidden without knowledge).
+func _refresh_knowledge() -> void:
+	var tech: Dictionary = _snapshot("get_tech")
+	var known: bool = not (tech.get("ids", PackedInt64Array()) as PackedInt64Array).is_empty()
+	_era_label.visible = known
+	_risk_button.visible = known
+	_warn_label.visible = false
+	if not known:
+		return
+	_era_label.text = KnowledgeText.era_line(_locale, tech)
+	var at_risk: int = int(tech.get("at_risk", 0))
+	_risk_button.text = KnowledgeText.trf(_locale, "M4_HUD_AT_RISK_FMT", {"count": at_risk})
+	var colour: Color = RISK_COLOR if at_risk > 0 else QUIET_COLOR
+	for state: String in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
+		_risk_button.add_theme_color_override(state, colour)
+	var first: Dictionary = KnowledgeText.first_at_risk(tech)
+	if at_risk > 0 and not first.is_empty():
+		_warn_label.text = warning_line(_locale, tech, int(first["id"]), int(first["holder"]))
+		_warn_label.visible = true
+
+
+## "⚠ 문 만들기: 카토만 앎" (`M4_WARN_AT_RISK`) for node `id` and its one holder `holder` (an AgentId).
+static func warning_line(locale: Node, tech: Dictionary, id: int, holder: int) -> String:
+	var name: String = Names.present(holder, KnowledgeText.language(locale)) if holder >= 0 else KnowledgeText.ltr(locale, "PANEL_FAMILY_NONE")
+	return KnowledgeText.trf(locale, "M4_WARN_AT_RISK", {"node": KnowledgeText.node_name(locale, id, tech), "name": name})
+
+
+## Open the tech map (the badge's action).
+func open_tech_map() -> void:
+	var panel: Node = get_parent().get_node_or_null("TechPanel") if get_parent() != null else null
+	if panel != null and panel.has_method("open"):
+		panel.call("open")
+
+
+## The era line's text (for tests).
+func era_text() -> String:
+	return _era_label.text if _era_label != null else ""
+
+
+## The badge's text (for tests).
+func risk_text() -> String:
+	return _risk_button.text if _risk_button != null else ""
+
+
+## The warning line's text, "" when hidden (for tests).
+func warning_text() -> String:
+	return _warn_label.text if _warn_label != null and _warn_label.visible else ""
 
 
 ## The clock word for `hour`, aligned with daylight_controller.gd's tint: dawn 5–7, day 7–17, evening 17–21
