@@ -59,3 +59,15 @@ Context: V2 model scores pass all nine calibration inputs, including all three n
 Choice: record combined calibration PASS6/6 anchors and3/3 negative rejections, alongside model-only rejection0/3. The preregistered rule is numeric AND model, not independent perfection of each signal. Accept only candidates with both signals and their content-specific checks passing. Two mirrored ground candidates meet that rule with four5s.
 Reason: neither invent an extra gate nor hide weak model selectivity. Ground12/2=6.0 attempts per accepted candidate exceeds the family stop bar, so stop production. All remaining zero-yield families are stopped; no retries beyond two were used.
 Evidence: IMAGE_MODEL_CALIBRATION_V2.json; art/style05/env/ground sidecars; no altered numeric thresholds.
+
+## D11 — Withdraw overhead people and scene-histogram style inference (TRIAL2b)
+Context: the original brief mandated overhead people and compared isolated objects against whole scenes. These were planning errors; their resulting observations remain historical evidence.
+Choice: front three-quarter people viewed about 20° down, 30%-height heads and simplified silhouettes; map camera stays overhead. Replace global Lab histogram judgment with family crops, line density, local saturation, stroke-width distribution and wash flatness, calibrated before rescoring all 38 original first attempts.
+Reason: readable small people and content-independent style assessment are the requested outcome. Neither the original map-02 fallback nor the historical scores authorize a style switch.
+Evidence: `art/style05/boards/people_meadow_2x.png`, `art/style05/boards/crowd_200_review.png`, `art/style05/boards/environment_first_attempt.png`, `TRIAL2_REPORT.md`, `TRIAL2B_GOAL.md` §§1–3. Original six anchor bytes remain frozen; old person is retained as withdrawn history.
+
+## D12 — Calm ground below people (TRIAL2b)
+Context: dense meadow marks obscure people, and mirror-blended floors and palisade joins remain visibly seamed.
+Choice: regenerate six grounds with calm low-contrast washes, sparse large-scale detail, no flowers or scattered stones; tile-aware prompting first. Ground-only global tone adjustment caps luminance standard deviation to 60% of foreground-masked person anchor and mean saturation to 0.35; record all values and operations. Never quantize or force outlines.
+Reason: preserve the people > work > walls > ground hierarchy while making the allowed processing measurable. New figures must be compared on old and new ground at the same scale.
+Evidence: `art/style05/boards/people_meadow_1x.png`, `AUTOTILE_REVIEW.md`, `TRIAL2B_GOAL.md` §4.1. New comparisons remain pending until their exact rendered images exist.

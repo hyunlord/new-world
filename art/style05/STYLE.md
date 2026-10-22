@@ -1,6 +1,6 @@
 # Style 05 bible v2: ink and tone
 
-Status: visual rules grounded in the six locked originals; numeric measurements are recorded below; combined V2 calibration passes, while model-only negative discrimination fails (0/3 rejected). This document does not certify any candidate as accepted.
+Status: TRIAL2b rules amended 2026-10-22. Six original images remain locked. The earlier TRIAL2 model-prompt V2 calibration is historical and is distinct from the new TRIAL2b numeric judge v2. New calibration and acceptance are pending; this document does not certify candidates.
 
 ## Authority and medium
 
@@ -10,7 +10,9 @@ Fine controlled brown-black ink sits over restrained earth-coloured washes, like
 
 The person and portrait have particularly clear contour-to-detail separation. The ground original is visibly denser than the sparse-detail prompt intended. Use its materials and colours without letting ground detail outrank a person or work action. Hierarchy: people/events, then items/work spots, then walls/floors, then ground.
 
-## Measured control sheet
+## Historical TRIAL2 measured control sheet (superseded as an acceptance instrument)
+
+The following measurements preserve the original record. Global Lab histogram thresholds are withdrawn for TRIAL2b; use family-specific calibration in `docs/v8/arttrial2/JUDGE_CALIBRATION.md` when verified. Do not apply this historical table to new acceptance decisions.
 
 Measurements must come from the locked image bytes, with method, normalization, masking and per-anchor results recorded in `docs/v8/arttrial2/JUDGE_CALIBRATION.md`. Do not fill these cells with visual guesses.
 
@@ -30,7 +32,7 @@ The visible palette spans sepia and charcoal contours, parchment/bone highlights
 
 Upper-left light; cast shadows generally fall down/right. The hut and scene show local amber hearth illumination without replacing the common daylight direction. Keep a consistent light model across independently generated pieces.
 
-Map subjects use a vertical overhead camera: crown, shoulders, hands and feet on people; plan geometry for buildings; no horizon or perspective convergence. A slight front-face cheat is allowed on tall walls and props to explain thickness. The hut shows wall tops and restrained inner wall faces; the lean-to roof hides its floor. Do not broaden that allowance into a frontal shelter or isometric scene. Only the inspector portrait uses a three-quarter front view.
+Amended 2026-10-22 (TRIAL2b, D11): the map retains a vertical overhead camera and plan geometry for buildings. A slight front-face cheat is allowed on tall walls and props. People instead use front three-quarter view from about 20° above, with visible face and chest. Feet touch the tile's lower third with a soft contact shadow. At 56 px, the head is approximately 30% of height; shoulders are wide, limbs simplified, hands mitts and feet wedges. A generated 2-px dark ink contour must make the figure readable at 48 px; do not force outlines in post-processing. Tunic/hide and hair each form a clear shape. South is front, east is side three-quarter, west is flipped east; north is optional. The axe head is head-sized; carried logs cross the shoulders and exceed body width. The old overhead-person rule is withdrawn, not an alternative camera.
 
 One tile is 64 px at 1× and a composed adult is approximately 56 px tall. Review at 0.5×, 1× and 2×. The scene anchor's people were recorded as roughly 70–90 px in the concept log: that image anchors the style, not compliant game scale. Do not inherit its size error.
 
@@ -39,6 +41,8 @@ One tile is 64 px at 1× and a composed adult is approximately 56 px tall. Revie
 Cut-outs: uniform solid `#FF00FF`, no ground plane, no magenta within the subject, entire object and held items inside frame with margin. This trial's cut-out requirement supersedes the concept study's natural-ground default. Chroma-key removal and recorded edge clean-up are permitted; painted contour replacement is not.
 
 Ground: full-frame seamless tileable natural material, no magenta, vignette, frame, label or isolated object. Verify a 3×3 repeat and edge-difference metric. A seamless-looking anchor is not proof of seamlessness.
+
+Amended 2026-10-22 (TRIAL2b, D12): calm, low contrast, soft wash, few small details, no flowers, no scattered stones; detail only at large scale. Ground alone permits a recorded global tone adjustment: luminance standard deviation ≤60% of the foreground-masked person anchor's, mean HSV saturation ≤0.35. Record raw and adjusted values and normalization/masking. Prompt seamless tiling first; mirror-blend is a disclosed last resort. Ground detail must remain below people and actions in the visual hierarchy.
 
 ## Reference attachments and prompt template
 
@@ -54,8 +58,9 @@ two-tone shading, like a carefully observed natural-history plate. Describe
 bark, reed, stone and hide through selective marks, never dense all-over
 hatching. Give major silhouettes slightly stronger ink than internal detail;
 keep people distinct from the ground. Fire is the warmest point wherever present.
-CAMERA: straight 90-degree overhead, crown-dominant people and architectural
-plan geometry; only a slight front-face cheat for tall objects.
+CAMERA: map and buildings straight overhead; people front three-quarter from
+20 degrees above with 30%-height heads, clear faces, simplified limbs and
+strong silhouettes readable at 48px. Slight front-face cheat for tall objects.
 [Cut-out: isolated on solid #FF00FF; no ground or magenta on the subject;
 all parts separated, uncropped and with margin. OR ground: full-frame seamless
 tileable material with no border, no vignette and no isolated props.]
@@ -75,4 +80,4 @@ Run numeric checks and a separate fresh-context visual judge shown both anchors 
 
 ## 한국어 요약
 
-고정 앵커 6장의 가는 잉크 외곽선, 절제한 흙빛 담채, 좌상단 광원을 유지한다. 지도는 수직 탑다운이며 높은 물체의 작은 앞면만 허용한다. 초상화만 정면 3/4 시점이다. 모든 생성과 재시도에 해당 가족 앵커와 캠프 장면 앵커를 함께 첨부한다. 바닥 원본은 세부가 조밀하고 캠프 원본의 인물 크기도 목표보다 크므로, 이를 게임 크기·가독성 합격 근거로 쓰지 않는다. 타일은 64 px, 성인은 약 56 px이다. 선폭·Lab 24색·담채 대리 지표는 위 표에 실제 측정값을 기록했으며, 팔레트 양자화나 외곽선 강제 보정은 금지한다. 수치 판정과 별도 시각 판정이 모두 통과해야 채택한다.
+고정 원본의 잉크와 절제한 담채, 좌상단 광원을 유지한다. TRIAL2b부터 지도는 탑다운, 사람은 약 20° 내려다본 정면 3/4이며 머리는 키의 약 30%다. 타일 64px, 성인 56px, 48px에서도 사람 실루엣이 보여야 한다. 바닥은 낮은 대비와 넓은 담채를 쓰고 인물 대비의 60%, 평균 채도 0.35 상한을 측정한다. 양자화·외곽선 강제 보정은 금지한다. 기존 전체 장면 Lab 분포 판정은 철회하며 가족별 v2 수치 판정과 별도 모델 판정을 모두 통과해야 채택한다.
