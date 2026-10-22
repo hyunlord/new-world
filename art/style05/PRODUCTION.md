@@ -1,5 +1,19 @@
 # Producing a style 05 asset
 
+## Current TRIAL2b override (2026-10-22)
+
+The earlier TRIAL2 procedure below is historical where it conflicts with this section. The map02 fallback is withdrawn pending the corrected trial; this is not production approval.
+
+- Characters use front three-quarter, about20 degrees down, head about30% height; south/east and mirrored west. Map objects remain overhead.
+- Use the active same-family crops in `anchors/manifest.json` v2. Never use a whole-scene global histogram as the acceptance instrument. Numeric v2 measures edges, local saturation, dark-ridge stroke distributions and enclosed wash variance. Twelve leave-one-crop-out folds and three person controls are the measured calibration; correlated crops and control content confounds limit generalization.
+- The model judge receives two same-family crop images and the exact raw candidate. Preserve scorecards and byte identities. All four scores must be at least4; C1/C2 style acceptance is numeric AND model. Content/placement QA can separately withhold promotion and must not silently redefine these rates.
+- Three attempts maximum per environment asset or part, including all prior attempts; person anchor alone permits four. Calm ground is a separately accounted replacement cohort. Charge every failed and superseded generation.
+- Ground: calm large-scale wash, no scattered detail; standard deviation at most60% of person foreground and mean saturation at most0.35. Global contrast/chroma only; no quantization or contour forcing. Tile-aware generation first, explicitly disclose any mirror fallback.
+- Accepted environment sprites live in `env/`; people, `ground_v2/` and `autotile_v2/` are explicitly labeled trial candidates retained to reproduce this requested comparison, not blanket production acceptance. Six original anchors remain immutable.
+- Final acceptance and limits: `docs/v8/arttrial2/TRIAL2B_REPORT.md`, `ENV_ACCEPTANCE_V2.json`, `JUDGE_V2_AUDIT.md`.
+
+## Historical TRIAL2 procedure
+
 Read [STYLE.md](STYLE.md) for the prompt and [anchors/ANCHORS.md](anchors/ANCHORS.md) for immutable references. This is the production procedure; its existence is not evidence that calibration or a particular asset passed.
 
 1. Name the asset with lowercase snake case under `env/<family>/`, `autotile/` or `people/`. Decide the subject, exact count, tile footprint, working size and attachment point before generation. Map tiles are 64 px; adult people approximately 56 px. Ground is 512×512; plant canopies 96–160 px; buildings 64×footprint; items 48–64 px; misc 64 px.

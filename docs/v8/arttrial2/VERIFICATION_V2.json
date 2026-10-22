@@ -1,0 +1,74 @@
+{
+  "base": "034c38abc57924c4d5de54ec4194f160d257f76c",
+  "original_anchors_verified": 6,
+  "runtime": [
+    {
+      "run": "camp-200-1",
+      "capture_sha256": "52a538e0b563a554a181e391fc1d9f0c138344eb426cf02b01176d6697e88d7e",
+      "matched_input_hashes": 66
+    },
+    {
+      "run": "camp-24-0.5",
+      "capture_sha256": "4cc675f5611c9a890e47e46e5595208392d5270601ce8df2572de19e199bf2ee",
+      "matched_input_hashes": 66
+    },
+    {
+      "run": "camp-24-1",
+      "capture_sha256": "35197d7277a7a547714f11d786796f40465151dec591695660918057677ebfe2",
+      "matched_input_hashes": 66
+    },
+    {
+      "run": "camp-24-2",
+      "capture_sha256": "9721da80769fcf7b76fecfa9e80e5dfc6db630090e35b07a04bc7648aaa564ad",
+      "matched_input_hashes": 66
+    },
+    {
+      "run": "camp-walk-200-1",
+      "capture_sha256": "db9d0c337e35c6cfbd8f0ec35ee05f2794b1c703c9c02599c81aedf5c816c9aa",
+      "matched_input_hashes": 66
+    },
+    {
+      "run": "camp-walk-24-1",
+      "capture_sha256": "7ef1f6b6e3aa637cf559c5652f3441b9fdaa0870d9aba089791c26deec258e87",
+      "matched_input_hashes": 66
+    },
+    {
+      "run": "people-forest_floor-1",
+      "capture_sha256": "1fabf2d50bfdd66b360cef3a441204ab45441112dc7f7a6934da59690b4b15e1",
+      "matched_input_hashes": 50
+    },
+    {
+      "run": "people-forest_floor-2",
+      "capture_sha256": "0b80bb4d3161dd9e6549a5fa97f3f49aeebb3819cddeb084bbc92f17c2c53f72",
+      "matched_input_hashes": 50
+    },
+    {
+      "run": "people-meadow-1",
+      "capture_sha256": "454cd7e8b424950a99c1820edd5f849a3d85d424840e26bf08123b50f0e4a872",
+      "matched_input_hashes": 50
+    },
+    {
+      "run": "people-meadow-2",
+      "capture_sha256": "f4f0737a128f3452960130cea751f1649e1a1b1610688beeded4863cf9eb8411",
+      "matched_input_hashes": 50
+    },
+    {
+      "run": "people-old-meadow-1",
+      "capture_sha256": "8b52e9e5875c65a707764d5480a61cb75ceaf6c9babdfab556d33a8fb57151d0",
+      "matched_input_hashes": 50
+    }
+  ],
+  "published_style_assets_verified": 35,
+  "changed_new_file_cap_bytes": 1500000,
+  "scoped_changed_new_files": 291,
+  "baseline_art_bytes": 52740912,
+  "current_art_bytes": 77993992,
+  "growth_from_trial2b_base_bytes": 25253080,
+  "growth_cap_bytes": 40000000,
+  "tests": "19 tests and32subtests passed",
+  "production_typing": "0errors331warnings;strictNOT_GREEN",
+  "evidence_logs": {
+    "final-pytest.log": "85e9d388fbe764a716abd28808bd997ffbd358ca3b65ee3adcd4ab869450133c",
+    "final-production-typecheck.log": "469d5a0f50ca01a6cde40b46bcfc19e261102f7875de8497c20abd727106d1c6"
+  }
+}
