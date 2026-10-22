@@ -53,3 +53,19 @@ goal's contradictory clockwise/head-left description, explicitly, in D2.
 No output pixel repair; every shape, anchor and artistic parameter belongs in
 `art/pipeline4/pawn_spec.py` or `ink_params.json`. The initial spec is fixed
 before review; later spec/ink changes consume the total two-round allowance.
+
+V2 structural sidecar inputs are final 1× outputs only (`scale: 1`). The 4×
+authoring buffers are internal generator evidence, not a supported input scale
+for v2 composition checks. Historical v1 inputs retain 1×/4× support.
+
+Shared TOP files are canonical male idle layers; registration scales width
+about x32 for each sex/age, and child HAIR scales18/22 horizontally and16/20
+vertically about the head centre. D4 records the same transform used by the
+checker and lab. The coverage target remains the actual capsule's upper70%.
+
+## Trial verdict status
+
+V2 is a tested **artist-template candidate**, not the adopted character standard.
+TRIAL4 fresh readability review failed; see
+`docs/v8/arttrial4/TRIAL4_REPORT.md`. Its numerical structural pass does not
+authorize M-ART2 integration or continuation of the people trial programme.

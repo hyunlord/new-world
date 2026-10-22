@@ -1,0 +1,47 @@
+{
+  "sex": "M",
+  "age": "adult",
+  "skin_tone": 0,
+  "hair_style": "none",
+  "hair_color": 2,
+  "top": "woven_tunic",
+  "top_palette": 0,
+  "item": "none",
+  "facing": "N",
+  "state": "idle",
+  "schema_version": 1,
+  "template_version": 2,
+  "id": "hair_none_2_N",
+  "kind": "hair",
+  "body_type": "adult",
+  "direction": "N",
+  "frame": "idle",
+  "scale": 1,
+  "variant": "none",
+  "image": "hair_none_2_N.png",
+  "mask": "hair_none_2_N.mask.png",
+  "operations": [
+    "declarative_spec",
+    "raster_4x",
+    "ink05",
+    "lanczos",
+    "template_body_support_envelope"
+  ],
+  "spec_hash": "d9133b411b0cd935ac253d3a2bddd1a2dadfe2befc8a186069c1f60780dc4b50",
+  "anchors": {
+    "grip": [
+      18,
+      64
+    ]
+  },
+  "grip": [
+    18,
+    64
+  ],
+  "head_box": [
+    21,
+    32,
+    43,
+    52
+  ]
+}

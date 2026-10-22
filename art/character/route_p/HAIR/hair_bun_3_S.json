@@ -1,0 +1,47 @@
+{
+  "sex": "M",
+  "age": "adult",
+  "skin_tone": 0,
+  "hair_style": "bun",
+  "hair_color": 3,
+  "top": "woven_tunic",
+  "top_palette": 0,
+  "item": "none",
+  "facing": "S",
+  "state": "idle",
+  "schema_version": 1,
+  "template_version": 2,
+  "id": "hair_bun_3_S",
+  "kind": "hair",
+  "body_type": "adult",
+  "direction": "S",
+  "frame": "idle",
+  "scale": 1,
+  "variant": "bun",
+  "image": "hair_bun_3_S.png",
+  "mask": "hair_bun_3_S.mask.png",
+  "operations": [
+    "declarative_spec",
+    "raster_4x",
+    "ink05",
+    "lanczos",
+    "template_body_support_envelope"
+  ],
+  "spec_hash": "d9133b411b0cd935ac253d3a2bddd1a2dadfe2befc8a186069c1f60780dc4b50",
+  "anchors": {
+    "grip": [
+      46,
+      64
+    ]
+  },
+  "grip": [
+    46,
+    64
+  ],
+  "head_box": [
+    21,
+    32,
+    43,
+    52
+  ]
+}

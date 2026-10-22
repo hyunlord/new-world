@@ -18,6 +18,9 @@ from .structure import FRAMES
 
 def inventory(layers: list[Layer], directions: list[str], route: str = 'A') -> list[Result]:
     """Fail closed for absent directions, frames, derived bodies or variant counts."""
+    if route == 'P':
+        from .pawn_sets import inventory as pawn_inventory
+        return pawn_inventory(layers, directions)
     failures: list[Finding] = []
     if not directions or not {'S','E'}.issubset(directions) or not set(directions).issubset({'S','E','N'}):
         failures.append(Finding('inventory','directions require S,E and optional N'))
@@ -80,14 +83,24 @@ def run(manifest: Path, output: Path) -> bool:
     results = [check_layer(layer) for layer in layers]
     valid = [l for l,r in zip(layers,results,strict=True) if r.passed]
     route = raw.get('route')
-    cross = fixed_overlays(layers) if route == 'B' else fixed_upper(valid)
-    if route not in ('A', 'B'):
+    if route == 'P':
+        from .pawn_sets import fixed_overlays as pawn_overlays
+        cross = pawn_overlays(valid)
+    else:
+        cross = fixed_overlays(layers) if route == 'B' else fixed_upper(valid)
+    if route not in ('A', 'B', 'P'):
         results.append(Result('route',False,(Finding('route','route must be A or B'),)))
     results.extend(cross)
     minimum = inventory(layers,raw['directions'],route=route)
     if not layers:
         results.append(Result('nonempty',False,(Finding('inventory','no layers supplied'),)))
-    combos = combinations(valid,route=route)
+    if route == 'P':
+        from .pawn_sets import combinations as pawn_combinations
+        combos = pawn_combinations(valid)
+    else:
+        combos = combinations(valid,route=route)
+    if route == 'P' and len(combos) != 48:
+        results.append(Result('sample_count', False, (Finding('inventory', f'expected48 distinct samples; found{len(combos)}'),)))
     if not combos:
         results.append(Result('combinations',False,(Finding('inventory','no combinations rendered'),)))
     subset_passed = all(r.passed for r in results) and all(c.passed for c in combos)
@@ -98,15 +111,15 @@ def run(manifest: Path, output: Path) -> bool:
     output.mkdir(parents=True,exist_ok=True)
     report = {'schema_version':1,'route':raw['route'],'passed':passed,'status':status,'subset_passed':subset_passed,'layer_count':len(layers),
               'layer_pass_count':sum(check_layer(l).passed for l in layers),
-              'sleep_coverage':'bare_sleep_only; top/hair/item/carry attributes not covered during sleep',
+              'sleep_coverage':'registered_pawn_layers' if route == 'P' else 'bare_sleep_only; top/hair/item/carry attributes not covered during sleep',
               'combination_count':len(combos),'results':[asdict(r) for r in results],
               'combinations':[asdict(c) for c in combos],
               'hashes':{str(p.resolve()):hashlib.sha256(p.read_bytes()).hexdigest() for p in [manifest]+[manifest.parent / p for p in raw['layers']]+[p for l in layers for p in (l.image,l.mask)]+[l.anatomical_mask for l in layers if l.anatomical_mask is not None] if p.exists()}}
     report['input_hashes'] = report['hashes']
     (output/'CHECKS.json').write_text(json.dumps(report,indent=2)+'\n')
     lines = [f"# CHECKS {raw['route']}",f"\nRoute acceptance: {status}. Supplied subset structural pass: {subset_passed}.",
-             f'\nLayers: {len(layers)}. Exhaustive valid-input combinations: {len(combos)}.',
-             '\nSleep coverage: bare body only on96x64; top/hair/item/carry attributes are not covered in sleep.',
+             f"\nLayers: {len(layers)}. {'Sampled' if route == 'P' else 'Exhaustive'} valid-input combinations: {len(combos)}.",
+             '\nSleep coverage: registered pawn layers.' if route == 'P' else '\nSleep coverage: bare body only on96x64; top/hair/item/carry attributes are not covered in sleep.',
              '\nSynthetic checks do not establish art, readability, provenance, or FPS acceptance.\n']
     for result in results:
         lines.append(f"- {result.id}: {'PASS' if result.passed else 'FAIL'} "+'; '.join(f'{f.rule}: {f.detail}' for f in result.findings))

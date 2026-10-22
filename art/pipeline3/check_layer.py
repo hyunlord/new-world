@@ -35,6 +35,8 @@ def read_pixels(layer: Layer) -> tuple[Pixels,Pixels]:
 def check_layer(layer: Layer) -> Result:
     """Check a layer against geometry; declarations never replace pixel checks."""
     findings: list[Finding] = []
+    if layer.template_version == 2 and layer.scale != 1:
+        return Result(layer.id, False, (Finding('scale', 'pawn output layers require1x; authoring4x is internal'),))
     def fail(rule: str, detail: str) -> None:
         findings.append(Finding(rule,detail))
     try:
@@ -48,7 +50,8 @@ def check_layer(layer: Layer) -> Result:
     alpha = pixels[:,:,3]
     silhouette = alpha > 0
     opaque = alpha == 255
-    if not np.any(silhouette):
+    explicit_none = layer.template_version == 2 and layer.variant == 'none' and layer.kind in ('hair', 'top', 'item')
+    if not np.any(silhouette) and not explicit_none:
         fail('empty','empty silhouette')
     if np.any(silhouette & ((mask < 1) | (mask > 5))) or np.any((~silhouette) & (mask != 0)):
         fail('mask_completeness','visible pixels require region1..5; transparent pixels require0')
@@ -60,12 +63,16 @@ def check_layer(layer: Layer) -> Result:
         fail('mask_semantics','item/carry visible pixels must use region5')
     if layer.kind != 'body' and np.any(mask == 1):
         fail('mask_semantics','skin region only on body')
-    if layer.kind in ('body','item','carry') and len(components(silhouette)) != 1:
+    if layer.kind in ('body','item','carry') and not explicit_none and len(components(silhouette)) != 1:
         fail('connectivity','silhouette must be one 8-connected component')
     if holes(silhouette,s):
         fail('holes','enclosed transparent region exceeds12 game px squared')
     if np.any(silhouette[0,:]) or np.any(silhouette[-1,:]) or np.any(silhouette[:,0]) or np.any(silhouette[:,-1]):
         fail('clipping','visible pixel touches canvas edge; source extent cannot be verified')
+    if layer.template_version == 2:
+        from .pawn_checks import pawn_findings
+        findings.extend(Finding(rule, detail) for rule, detail in pawn_findings(layer, pixels, mask))
+        return Result(layer.id, not findings, tuple(findings))
     geometry = GEOMETRY[layer.body_type]
     if layer.kind == 'body' and layer.frame == 'sleep' and np.any(silhouette):
         ys,xs = np.nonzero(silhouette)

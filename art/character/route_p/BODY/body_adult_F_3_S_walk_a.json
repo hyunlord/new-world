@@ -1,0 +1,47 @@
+{
+  "sex": "F",
+  "age": "adult",
+  "skin_tone": 3,
+  "hair_style": "short",
+  "hair_color": 0,
+  "top": "woven_tunic",
+  "top_palette": 0,
+  "item": "none",
+  "facing": "S",
+  "state": "walk_a",
+  "schema_version": 1,
+  "template_version": 2,
+  "id": "body_adult_F_3_S_walk_a",
+  "kind": "body",
+  "body_type": "adult",
+  "direction": "S",
+  "frame": "walk_a",
+  "scale": 1,
+  "variant": "adult",
+  "image": "body_adult_F_3_S_walk_a.png",
+  "mask": "body_adult_F_3_S_walk_a.mask.png",
+  "operations": [
+    "declarative_spec",
+    "raster_4x",
+    "ink05",
+    "lanczos",
+    "template_body_support_envelope"
+  ],
+  "spec_hash": "d9133b411b0cd935ac253d3a2bddd1a2dadfe2befc8a186069c1f60780dc4b50",
+  "anchors": {
+    "grip": [
+      46,
+      64
+    ]
+  },
+  "grip": [
+    46,
+    64
+  ],
+  "head_box": [
+    21,
+    32,
+    43,
+    52
+  ]
+}

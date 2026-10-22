@@ -1,0 +1,47 @@
+{
+  "sex": "M",
+  "age": "adult",
+  "skin_tone": 0,
+  "hair_style": "short",
+  "hair_color": 0,
+  "top": "woven_tunic",
+  "top_palette": 1,
+  "item": "none",
+  "facing": "N",
+  "state": "idle",
+  "schema_version": 1,
+  "template_version": 2,
+  "id": "top_woven_tunic_1_N",
+  "kind": "top",
+  "body_type": "adult",
+  "direction": "N",
+  "frame": "idle",
+  "scale": 1,
+  "variant": "woven_tunic",
+  "image": "top_woven_tunic_1_N.png",
+  "mask": "top_woven_tunic_1_N.mask.png",
+  "operations": [
+    "declarative_spec",
+    "raster_4x",
+    "ink05",
+    "lanczos",
+    "template_body_support_envelope"
+  ],
+  "spec_hash": "d9133b411b0cd935ac253d3a2bddd1a2dadfe2befc8a186069c1f60780dc4b50",
+  "anchors": {
+    "grip": [
+      18,
+      64
+    ]
+  },
+  "grip": [
+    18,
+    64
+  ],
+  "head_box": [
+    21,
+    32,
+    43,
+    52
+  ]
+}

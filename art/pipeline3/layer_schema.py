@@ -30,6 +30,11 @@ class Layer:
     variant: str = ''
     head_box: Box | None = None
     anatomical_mask: Path | None = None
+    template_version: int = 1
+    sex: str = "M"
+    skin_tone: int = 0
+    hair_color: int = 0
+    top_palette: int = 0
 
 def load_layer(path: Path) -> Layer:
     """Reject incomplete or unsupported declarations before inspecting pixels."""
@@ -41,7 +46,25 @@ def load_layer(path: Path) -> Layer:
         raise ValueError(f'{path}: invalid scale or body_type')
     if raw['kind'] not in ('body','top','hair','beard','headgear','item','carry','shadow'):
         raise ValueError(f'{path}: invalid kind')
-    if raw['direction'] not in ('S','E','N') or raw['frame'] not in ('idle','walk_a','walk_b','work_a','work_b','sleep'):
+    version = raw.get('template_version', 1)
+    if version not in (1, 2):
+        raise ValueError(f'{path}: unsupported template version')
+    allowed_frames = ('idle', 'walk_a', 'walk_b', 'work_a', 'work_b', 'sleep') + (('carry',) if version == 2 else ())
+    if version == 2:
+        if raw['scale'] != 1:
+            raise ValueError(f'{path}: pawn output layers require scale1; authoring4x is internal')
+        if raw.get('sex', 'M') not in ('M', 'F'):
+            raise ValueError(f'{path}: invalid pawn sex')
+        for name, limit in (('skin_tone', 4), ('hair_color', 4), ('top_palette', 2)):
+            value = raw.get(name, 0)
+            if type(value) is not int or not 0 <= value < limit:
+                raise ValueError(f'{path}: invalid pawn {name}')
+        variants = {'hair': ('none', 'short', 'long_tied', 'bun', 'braid', 'grey_thin'),
+                    'top': ('none', 'hide_wrap', 'fur_cloak', 'woven_tunic'),
+                    'item': ('none', 'stone_axe', 'log_bundle', 'basket')}
+        if raw['kind'] in variants and raw.get('variant') not in variants[raw['kind']]:
+            raise ValueError(f'{path}: unsupported pawn variant')
+    if raw['direction'] not in ('S','E','N') or raw['frame'] not in allowed_frames:
         raise ValueError(f'{path}: invalid direction or frame')
     if not isinstance(raw['operations'],list) or not all(isinstance(v,str) for v in raw['operations']):
         raise ValueError(f'{path}: operations must be a string list')
@@ -60,4 +83,6 @@ def load_layer(path: Path) -> Layer:
                  raw['scale'],tuple(raw['operations']),tuple(point(p) for p in raw.get('hands',[])),
                  point(raw['grip']) if 'grip' in raw else None,
                  point(raw['shoulder']) if 'shoulder' in raw else None,tuple(raw.get('extras',[])),str(raw.get('variant','')),head_box,
-                 path.parent / raw['anatomical_mask'] if 'anatomical_mask' in raw else None)
+                 path.parent / raw['anatomical_mask'] if 'anatomical_mask' in raw else None, version,
+                 str(raw.get('sex', 'M')), int(raw.get('skin_tone', 0)),
+                 int(raw.get('hair_color', 0)), int(raw.get('top_palette', 0)))
