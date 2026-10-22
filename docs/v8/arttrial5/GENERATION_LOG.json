@@ -1,0 +1,182 @@
+[
+  {
+    "candidate": "I-1",
+    "try": 1,
+    "prompt": "Create exactly ONE full-body standing idle stone-age adult character, isolated on genuinely transparent background, portrait 1024x1536. Reference images person.png and hut.png anchor only fine controlled brown-black ink, stronger outer contour than interior details, restrained earth-coloured washes, broad base and distinct shadow tone, selective hide/fur marks, upper-left lighting. Do NOT copy the overhead camera of references: front three-quarter seen from about 20 degrees above, clear visible face and chest. Stylized adult game proportions: head about 30% of total height, broad shoulders, simplified limbs, mitten hands and wedge feet, NOT realistic anatomy. Whole unified figure, feet together on a flat ground line with soft translucent contact shadow. Entire head to toes visible with margin. Ink silhouette must remain readable at 56px tall. No ground plane, scenery, props, text, labels, watermark, realistic anatomy, 3D render, pixel art, dense all-over hatching. Subject: adult male wearing a simple ochre hide wrap, short dark hair. Third attached scene.png is supporting palette and light reference only.",
+    "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e/exec-bfc515db-ef77-459d-868b-1ae177c5a956.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "raw_path": "/Users/rexxa/work/arttrial5-data/generations/I-1_try1.png",
+    "sha256": "f5a5f0da658d4f395126cb164ec2c82ec3a003cc109544bb96a2ab19f18fc83e",
+    "reference_sha256": {
+      "art/style05/anchors/person.png": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+      "art/style05/anchors/hut.png": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+      "art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    "tool": "built-in image_gen; transparent_background=true",
+    "selected": false
+  },
+  {
+    "candidate": "I-2",
+    "try": 1,
+    "prompt": "Create exactly ONE full-body standing idle stone-age adult character, isolated on genuinely transparent background, portrait 1024x1536. Reference images person.png and hut.png anchor only fine controlled brown-black ink, stronger outer contour than interior details, restrained earth-coloured washes, broad base and distinct shadow tone, selective hide/fur marks, upper-left lighting. Do NOT copy the overhead camera of references: front three-quarter seen from about 20 degrees above, clear visible face and chest. Stylized adult game proportions: head about 30% of total height, broad shoulders, simplified limbs, mitten hands and wedge feet, NOT realistic anatomy. Whole unified figure, feet together on a flat ground line with soft translucent contact shadow. Entire head to toes visible with margin. Ink silhouette must remain readable at 56px tall. No ground plane, scenery, props, text, labels, watermark, realistic anatomy, 3D render, pixel art, dense all-over hatching. Subject: adult female wearing a fur cloak, long dark tied hair. Third attached scene.png is supporting palette and light reference only.",
+    "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e/exec-62dea65b-2ee6-48d6-bc24-5c497e9a5ba6.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "raw_path": "/Users/rexxa/work/arttrial5-data/generations/I-2_try1.png",
+    "sha256": "8c9f0c9da017c8fffbdce1c9e5efc342a40f5a72e2370b95c4d39bd1590f090a",
+    "reference_sha256": {
+      "art/style05/anchors/person.png": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+      "art/style05/anchors/hut.png": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+      "art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    "tool": "built-in image_gen; transparent_background=true",
+    "selected": false
+  },
+  {
+    "candidate": "I-3",
+    "try": 1,
+    "prompt": "Create exactly ONE full-body standing idle stone-age adult character, isolated on genuinely transparent background, portrait 1024x1536. Reference images person.png and hut.png anchor only fine controlled brown-black ink, stronger outer contour than interior details, restrained earth-coloured washes, broad base and distinct shadow tone, selective hide/fur marks, upper-left lighting. Do NOT copy the overhead camera of references: front three-quarter seen from about 20 degrees above, clear visible face and chest. Stylized adult game proportions: head about 30% of total height, broad shoulders, simplified limbs, mitten hands and wedge feet, NOT realistic anatomy. Whole unified figure, feet together on a flat ground line with soft translucent contact shadow. Entire head to toes visible with margin. Ink silhouette must remain readable at 56px tall. No ground plane, scenery, props, text, labels, watermark, realistic anatomy, 3D render, pixel art, dense all-over hatching. Subject: adult male wearing only a modest opaque hide loincloth, dark hair in a bun, bare chest. Third attached scene.png is supporting palette and light reference only.",
+    "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e/exec-242cc69f-011e-4c24-99b3-92c3f5a6fae3.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "raw_path": "/Users/rexxa/work/arttrial5-data/generations/I-3_try1.png",
+    "sha256": "6f3abc35373bdb805c99dc9a8698c64e728ea93e83069900f4d58a747da393cb",
+    "reference_sha256": {
+      "art/style05/anchors/person.png": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+      "art/style05/anchors/hut.png": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+      "art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    "tool": "built-in image_gen; transparent_background=true",
+    "selected": false
+  },
+  {
+    "candidate": "I-4",
+    "try": 1,
+    "prompt": "Create exactly ONE full-body standing idle stone-age adult character, isolated on genuinely transparent background, portrait 1024x1536. Reference images person.png and hut.png anchor only fine controlled brown-black ink, stronger outer contour than interior details, restrained earth-coloured washes, broad base and distinct shadow tone, selective hide/fur marks, upper-left lighting. Do NOT copy the overhead camera of references: front three-quarter seen from about 20 degrees above, clear visible face and chest. Stylized adult game proportions: head about 30% of total height, broad shoulders, simplified limbs, mitten hands and wedge feet, NOT realistic anatomy. Whole unified figure, feet together on a flat ground line with soft translucent contact shadow. Entire head to toes visible with margin. Ink silhouette must remain readable at 56px tall. No ground plane, scenery, props, text, labels, watermark, realistic anatomy, 3D render, pixel art, dense all-over hatching. Subject: adult female wearing a simple ochre hide wrap, long dark braid. Third attached scene.png is supporting palette and light reference only.",
+    "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e/exec-fd01ebab-e632-4676-8dbc-ca87dde9a951.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "raw_path": "/Users/rexxa/work/arttrial5-data/generations/I-4_try1.png",
+    "sha256": "ea3a1c1707999c5b9c013ef0a39a5f6aa17ae8fd79f78aea9a08350bd9ec93d4",
+    "reference_sha256": {
+      "art/style05/anchors/person.png": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+      "art/style05/anchors/hut.png": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+      "art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    "tool": "built-in image_gen; transparent_background=true",
+    "selected": false
+  },
+  {
+    "candidate": "I-1",
+    "try": 2,
+    "prompt": "A compact 3-heads-tall adult game character (head INCLUDING hair = exactly one third of entire standing height; torso one third; legs one third). Short sturdy limbs, broad shoulders, mature adult face, mitten hands, simple wedge feet. ONE whole standing idle figure: adult male wearing a simple ochre hide wrap, short dark hair. FRONT THREE-QUARTER view 20 degrees from above, face visible. 1024x1536 transparent PNG. Background completely empty alpha zero everywhere except the figure and a very small soft shadow immediately under feet. NO brown glow, NO vignette, NO background color or painted ground. Leave generous transparent margins. Match attached person/hut/scene ONLY for fine dark brown ink outlines and quiet ochre/sepia washes; NOT their realistic body proportions or overhead camera. Simplify detail strongly for a 56px game sprite: broad flat skin planes, sparse broken hide marks, separate hair silhouette, upper-left light. Whole head-to-toes uncut. Not a realistic illustration, no muscle anatomy, no doll joints, no text, no props. Strongly enforce 30-33 percent head ratio.",
+    "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e/exec-4fafd1bf-1ac4-4e4a-9f1e-002d37c1f72f.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "raw_path": "/Users/rexxa/work/arttrial5-data/generations/I-1_try2.png",
+    "sha256": "833ac8180b9e0c4a1cd960e6fcf80b4eff5a98114913d97a34d4d6a56f8a6354",
+    "reference_sha256": {
+      "art/style05/anchors/person.png": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+      "art/style05/anchors/hut.png": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+      "art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    "tool": "built-in image_gen; transparent_background=true",
+    "selected": true
+  },
+  {
+    "candidate": "I-2",
+    "try": 2,
+    "prompt": "A compact 3-heads-tall adult game character (head INCLUDING hair = exactly one third of entire standing height; torso one third; legs one third). Short sturdy limbs, broad shoulders, mature adult face, mitten hands, simple wedge feet. ONE whole standing idle figure: adult female wearing a fur cloak, long dark tied hair. FRONT THREE-QUARTER view 20 degrees from above, face visible. 1024x1536 transparent PNG. Background completely empty alpha zero everywhere except the figure and a very small soft shadow immediately under feet. NO brown glow, NO vignette, NO background color or painted ground. Leave generous transparent margins. Match attached person/hut/scene ONLY for fine dark brown ink outlines and quiet ochre/sepia washes; NOT their realistic body proportions or overhead camera. Simplify detail strongly for a 56px game sprite: broad flat skin planes, sparse broken hide marks, separate hair silhouette, upper-left light. Whole head-to-toes uncut. Not a realistic illustration, no muscle anatomy, no doll joints, no text, no props. Strongly enforce 30-33 percent head ratio.",
+    "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e/exec-ce9bf960-b48f-4f87-9f56-d000ddc77922.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "raw_path": "/Users/rexxa/work/arttrial5-data/generations/I-2_try2.png",
+    "sha256": "bbaaca9c6f7b4d7af586080d00bcdb6cad2f7f4444ac3a4c3dd5a34504d1979c",
+    "reference_sha256": {
+      "art/style05/anchors/person.png": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+      "art/style05/anchors/hut.png": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+      "art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    "tool": "built-in image_gen; transparent_background=true",
+    "selected": false
+  },
+  {
+    "candidate": "I-3",
+    "try": 2,
+    "prompt": "A compact 3-heads-tall adult game character (head INCLUDING hair = exactly one third of entire standing height; torso one third; legs one third). Short sturdy limbs, broad shoulders, mature adult face, mitten hands, simple wedge feet. ONE whole standing idle figure: adult male wearing only a modest opaque hide loincloth, dark hair in a bun, bare chest. FRONT THREE-QUARTER view 20 degrees from above, face visible. 1024x1536 transparent PNG. Background completely empty alpha zero everywhere except the figure and a very small soft shadow immediately under feet. NO brown glow, NO vignette, NO background color or painted ground. Leave generous transparent margins. Match attached person/hut/scene ONLY for fine dark brown ink outlines and quiet ochre/sepia washes; NOT their realistic body proportions or overhead camera. Simplify detail strongly for a 56px game sprite: broad flat skin planes, sparse broken hide marks, separate hair silhouette, upper-left light. Whole head-to-toes uncut. Not a realistic illustration, no muscle anatomy, no doll joints, no text, no props. Strongly enforce 30-33 percent head ratio.",
+    "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e/exec-b8fcaa9b-abd0-4263-b8b1-eea446ad0a93.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "raw_path": "/Users/rexxa/work/arttrial5-data/generations/I-3_try2.png",
+    "sha256": "82d5bf90dcf870cfe10ebdf1177f89f294d7e97ce952cabe2e285b9d28a02b8a",
+    "reference_sha256": {
+      "art/style05/anchors/person.png": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+      "art/style05/anchors/hut.png": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+      "art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    "tool": "built-in image_gen; transparent_background=true",
+    "selected": true
+  },
+  {
+    "candidate": "I-4",
+    "try": 2,
+    "prompt": "A compact 3-heads-tall adult game character (head INCLUDING hair = exactly one third of entire standing height; torso one third; legs one third). Short sturdy limbs, broad shoulders, mature adult face, mitten hands, simple wedge feet. ONE whole standing idle figure: adult female wearing a simple ochre hide wrap, long dark braid. FRONT THREE-QUARTER view 20 degrees from above, face visible. 1024x1536 transparent PNG. Background completely empty alpha zero everywhere except the figure and a very small soft shadow immediately under feet. NO brown glow, NO vignette, NO background color or painted ground. Leave generous transparent margins. Match attached person/hut/scene ONLY for fine dark brown ink outlines and quiet ochre/sepia washes; NOT their realistic body proportions or overhead camera. Simplify detail strongly for a 56px game sprite: broad flat skin planes, sparse broken hide marks, separate hair silhouette, upper-left light. Whole head-to-toes uncut. Not a realistic illustration, no muscle anatomy, no doll joints, no text, no props. Strongly enforce 30-33 percent head ratio.",
+    "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e/exec-95dc0920-108b-4d26-b4fe-05236281bd31.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "raw_path": "/Users/rexxa/work/arttrial5-data/generations/I-4_try2.png",
+    "sha256": "3de86c9203ccbd49f97fe0e684cdb22faca00e5c5d8db273d2158eb70b7d22e5",
+    "reference_sha256": {
+      "art/style05/anchors/person.png": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+      "art/style05/anchors/hut.png": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+      "art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    "tool": "built-in image_gen; transparent_background=true",
+    "selected": true
+  },
+  {
+    "candidate": "I-1",
+    "try": 3,
+    "prompt": "Create ONE adult male wearing a simple ochre hide wrap, short dark hair. Full body STANDING IDLE, 3-heads-tall adult proportions, oversized head 33% height, short sturdy limbs, broad shoulders.  Gentle front three-quarter camera, ONLY 20 degrees above eye level, both soles on same horizontal baseline. Fine brown-black contour ink and sparse internal marks with muted ochre wash as in attached person and hut style references; scene is lighting reference. 1024x1536 PNG with TRUE TRANSPARENT empty background. CRITICAL: absolute NO ambient glow, NO brown vignette, NO aura, NO gradient surrounding figure. Alpha ZERO outside figure except a tiny ground-contact shadow confined directly under soles. Very clean isolated sprite cutout. Keep head and feet fully inside frame. Flat broad colour masses, simplify skin, hands as mittens, feet as wedges. No realistic muscle anatomy, no photorealism, no 3D, no text. The whole person is a single coherent drawing, not parts. Do not copy background or body proportions from references.",
+    "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e/exec-736bae4c-dd69-40b3-804d-a12de820caf3.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "raw_path": "/Users/rexxa/work/arttrial5-data/generations/I-1_try3.png",
+    "sha256": "ad927db80f016728c2c19b9b5543df914b88ba423078c4cbcedf7c88e7c01af3",
+    "reference_sha256": {
+      "art/style05/anchors/person.png": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+      "art/style05/anchors/hut.png": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+      "art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    "tool": "built-in image_gen; transparent_background=true",
+    "selected": false
+  },
+  {
+    "candidate": "I-2",
+    "try": 3,
+    "prompt": "Create ONE adult female wearing a fur cloak, long dark tied hair. Full body STANDING IDLE, 3-heads-tall adult proportions, oversized head 33% height, short sturdy limbs, broad shoulders. Her hair is a LONG LOW PONYTAIL hanging visibly behind shoulder, NOT a bun. A FUR CLOAK is draped over shoulders with a clearly visible broad cape silhouette, not a sleeveless dress. Gentle front three-quarter camera, ONLY 20 degrees above eye level, both soles on same horizontal baseline. Fine brown-black contour ink and sparse internal marks with muted ochre wash as in attached person and hut style references; scene is lighting reference. 1024x1536 PNG with TRUE TRANSPARENT empty background. CRITICAL: absolute NO ambient glow, NO brown vignette, NO aura, NO gradient surrounding figure. Alpha ZERO outside figure except a tiny ground-contact shadow confined directly under soles. Very clean isolated sprite cutout. Keep head and feet fully inside frame. Flat broad colour masses, simplify skin, hands as mittens, feet as wedges. No realistic muscle anatomy, no photorealism, no 3D, no text. The whole person is a single coherent drawing, not parts. Do not copy background or body proportions from references.",
+    "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e/exec-eafd821f-f298-46ee-b0f7-5653b4370ac8.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "raw_path": "/Users/rexxa/work/arttrial5-data/generations/I-2_try3.png",
+    "sha256": "ecb97239e5d27e98ac108308c1503ea3bf833f4e6e9e77fdc8e3e467790c49e3",
+    "reference_sha256": {
+      "art/style05/anchors/person.png": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+      "art/style05/anchors/hut.png": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+      "art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    "tool": "built-in image_gen; transparent_background=true",
+    "selected": true
+  },
+  {
+    "candidate": "I-3",
+    "try": 3,
+    "prompt": "Create ONE adult male wearing only a modest opaque hide loincloth, dark hair in a bun, bare chest. Full body STANDING IDLE, 3-heads-tall adult proportions, oversized head 33% height, short sturdy limbs, broad shoulders.  Gentle front three-quarter camera, ONLY 20 degrees above eye level, both soles on same horizontal baseline. Fine brown-black contour ink and sparse internal marks with muted ochre wash as in attached person and hut style references; scene is lighting reference. 1024x1536 PNG with TRUE TRANSPARENT empty background. CRITICAL: absolute NO ambient glow, NO brown vignette, NO aura, NO gradient surrounding figure. Alpha ZERO outside figure except a tiny ground-contact shadow confined directly under soles. Very clean isolated sprite cutout. Keep head and feet fully inside frame. Flat broad colour masses, simplify skin, hands as mittens, feet as wedges. No realistic muscle anatomy, no photorealism, no 3D, no text. The whole person is a single coherent drawing, not parts. Do not copy background or body proportions from references.",
+    "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e/exec-58c59d5a-f1bf-42e9-b25c-e564d0608a9e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "raw_path": "/Users/rexxa/work/arttrial5-data/generations/I-3_try3.png",
+    "sha256": "e0bb1653237c56954c41a4fc4fc28eccd17df8b2832109e4858d68a138a43945",
+    "reference_sha256": {
+      "art/style05/anchors/person.png": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+      "art/style05/anchors/hut.png": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+      "art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    "tool": "built-in image_gen; transparent_background=true",
+    "selected": false
+  },
+  {
+    "candidate": "I-4",
+    "try": 3,
+    "prompt": "Create ONE adult female wearing a simple ochre hide wrap, long dark braid. Full body STANDING IDLE, 3-heads-tall adult proportions, oversized head 33% height, short sturdy limbs, broad shoulders.  Gentle front three-quarter camera, ONLY 20 degrees above eye level, both soles on same horizontal baseline. Fine brown-black contour ink and sparse internal marks with muted ochre wash as in attached person and hut style references; scene is lighting reference. 1024x1536 PNG with TRUE TRANSPARENT empty background. CRITICAL: absolute NO ambient glow, NO brown vignette, NO aura, NO gradient surrounding figure. Alpha ZERO outside figure except a tiny ground-contact shadow confined directly under soles. Very clean isolated sprite cutout. Keep head and feet fully inside frame. Flat broad colour masses, simplify skin, hands as mittens, feet as wedges. No realistic muscle anatomy, no photorealism, no 3D, no text. The whole person is a single coherent drawing, not parts. Do not copy background or body proportions from references.",
+    "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e/exec-5e1c7db5-df9d-425f-934d-6ef3b582736d.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "raw_path": "/Users/rexxa/work/arttrial5-data/generations/I-4_try3.png",
+    "sha256": "5dab0758517377e8f2917a753fc6332e8dd4b156a499d4dc14ac3ae0e7e230fb",
+    "reference_sha256": {
+      "art/style05/anchors/person.png": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+      "art/style05/anchors/hut.png": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+      "art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    "tool": "built-in image_gen; transparent_background=true",
+    "selected": false
+  }
+]

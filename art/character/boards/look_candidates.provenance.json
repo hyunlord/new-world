@@ -1,0 +1,48 @@
+{
+  "method": "Alpha>0 bounding box crop, Lanczos scale, alpha composite; no quantization, recolour or pixel surgery.",
+  "candidate_heights": [
+    384,
+    112,
+    56
+  ],
+  "crowd_count_per_candidate": 12,
+  "crowd_positions": "Identical 4 by 3 staggered positions in every candidate column.",
+  "historical_comparators": "Native pixel sizes; composed adult male S idle, hide wrap, short hair; crop transparent margins only.",
+  "comparator_alpha_heights": {
+    "CURRENT": 58,
+    "TRIAL3-A": 58
+  },
+  "sources_sha256": {
+    "art/character/candidates/I-1.png": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc",
+    "art/character/candidates/I-2.png": "778245d9e7e24ba7f1e557b7784d485bde9eeaedd2a062c0ce0661bee177582e",
+    "art/character/candidates/I-3.png": "fc099ec0393146c35c1bd8cb5716a3003e3641ea52c678efb401258db93bb529",
+    "art/character/candidates/I-4.png": "14b84ca12d139c273bd8a2cc4d6abff0d4e4027405ef4da8a268337ebd064864",
+    "art/character/candidates/B.png": "f60099b8024a8cc5236326908b7bdb1a305077b7058d191fca380dade5a7aa82",
+    "art/style05/ground_v2/meadow.png": "fd738face2ed4ca91327c53ee6106052f892fca977f8dfec695ebc1cd27c9b60",
+    "art/character/route_a/body_S_idle.png": "299d26c7fd625f6a93bf1455dec2c16a9b9b205c7d3a0ea09437513097ceb7d7",
+    "art/character/route_a/top_hide_wrap_S.png": "9a0015cb0c748036ff980d91ec929d427f0a1e9a384910b17e746362ea968b42",
+    "art/character/route_a/hair_short_S.png": "2a55ee163d63f32a2dab81607e2f781cf4008a39b12815084711ba49306762f7",
+    "art/character/route_p/BODY/body_adult_M_0_S_idle.png": "5e688a81edea4ad5a1e60fbe718720f6a5acb6116f2cdddeb320bc6d5f7af426",
+    "art/character/route_p/TOP/top_hide_wrap_0_S.png": "a5c516a1845284ed788b84f1986e06769fc564e2f59c88b31a27995de5ec66de",
+    "art/character/route_p/HAIR/hair_short_0_S.png": "7168e67496ea225ad417a9913eacca92352adcd5af5ec5b1e0245771dfe3f148",
+    "art/character/route_p/ITEM/item_none_S_idle.png": "1ccd52f45c040c435c64d8c414beac00e0f4db89756e6b65112865efbe84f6a6"
+  },
+  "outputs": {
+    "look_candidates.png": {
+      "dimensions": [
+        1500,
+        754
+      ],
+      "sha256": "1d46e28ccf0aed2979a91eae216d9a3ca99a645a0b04b8c1b8916f1f0d2392c0",
+      "bytes": 838938
+    },
+    "look_candidates_1x_crowd.png": {
+      "dimensions": [
+        1500,
+        380
+      ],
+      "sha256": "4996ff00e300fc04b2874c23f1e1f95043ff3a3d07ccaf79b26f1331b4c02965",
+      "bytes": 498758
+    }
+  }
+}

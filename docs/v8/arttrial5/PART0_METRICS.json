@@ -1,0 +1,423 @@
+{
+  "calibration": "docs/v8/arttrial2/JUDGE_V2_CALIBRATION.json",
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "note": "Frozen judge v2 person family. Numeric measurements only; model review MISSING, total acceptance false. Failures retained.",
+  "records": [
+    {
+      "name": "I-1",
+      "attempt": 1,
+      "candidate": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e/exec-bfc515db-ef77-459d-868b-1ae177c5a956.png",
+      "sha256": "f5a5f0da658d4f395126cb164ec2c82ec3a003cc109544bb96a2ab19f18fc83e",
+      "family": "person",
+      "metrics": {
+        "edge_density": 0.19731643682445024,
+        "saturation_q25": 0.5595114729995236,
+        "saturation_q75": 0.644372214253248,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.025371648565847667,
+        "foreground_pixels": 15289
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": false,
+        "wash_flatness": true
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "name": "I-2",
+      "attempt": 1,
+      "candidate": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e/exec-62dea65b-2ee6-48d6-bc24-5c497e9a5ba6.png",
+      "sha256": "8c9f0c9da017c8fffbdce1c9e5efc342a40f5a72e2370b95c4d39bd1590f090a",
+      "family": "person",
+      "metrics": {
+        "edge_density": 0.23742021056122026,
+        "saturation_q25": 0.532189622588618,
+        "saturation_q75": 0.6433664751025858,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.03295470123416327,
+        "foreground_pixels": 13653
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": false,
+        "stroke_q90": false,
+        "wash_flatness": true
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "name": "I-3",
+      "attempt": 1,
+      "candidate": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e/exec-242cc69f-011e-4c24-99b3-92c3f5a6fae3.png",
+      "sha256": "6f3abc35373bdb805c99dc9a8698c64e728ea93e83069900f4d58a747da393cb",
+      "family": "person",
+      "metrics": {
+        "edge_density": 0.19043525826365554,
+        "saturation_q25": 0.5874953970686299,
+        "saturation_q75": 0.6366978664353413,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.018530306599371833,
+        "foreground_pixels": 14751
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": false,
+        "stroke_q90": false,
+        "wash_flatness": true
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "name": "I-4",
+      "attempt": 1,
+      "candidate": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e/exec-fd01ebab-e632-4676-8dbc-ca87dde9a951.png",
+      "sha256": "ea3a1c1707999c5b9c013ef0a39a5f6aa17ae8fd79f78aea9a08350bd9ec93d4",
+      "family": "person",
+      "metrics": {
+        "edge_density": 0.21891490765171503,
+        "saturation_q25": 0.5692081921978003,
+        "saturation_q75": 0.6470294949148042,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.02682312373507476,
+        "foreground_pixels": 13756
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": false,
+        "stroke_q90": false,
+        "wash_flatness": true
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "name": "I-1",
+      "attempt": 2,
+      "candidate": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e/exec-4fafd1bf-1ac4-4e4a-9f1e-002d37c1f72f.png",
+      "sha256": "833ac8180b9e0c4a1cd960e6fcf80b4eff5a98114913d97a34d4d6a56f8a6354",
+      "family": "person",
+      "metrics": {
+        "edge_density": 0.19939528103234166,
+        "saturation_q25": 0.5687933712585003,
+        "saturation_q75": 0.6678939283800323,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.8284271247461903,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.47213595499958,
+        "wash_flatness": 0.02705617231384885,
+        "foreground_pixels": 20472
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "name": "I-2",
+      "attempt": 2,
+      "candidate": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e/exec-ce9bf960-b48f-4f87-9f56-d000ddc77922.png",
+      "sha256": "bbaaca9c6f7b4d7af586080d00bcdb6cad2f7f4444ac3a4c3dd5a34504d1979c",
+      "family": "person",
+      "metrics": {
+        "edge_density": 0.2326700481206919,
+        "saturation_q25": 0.5241730137827256,
+        "saturation_q75": 0.6468998141124839,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.03207188375372332,
+        "foreground_pixels": 17097
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": false,
+        "wash_flatness": true
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "name": "I-3",
+      "attempt": 2,
+      "candidate": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e/exec-b8fcaa9b-abd0-4263-b8b1-eea446ad0a93.png",
+      "sha256": "82d5bf90dcf870cfe10ebdf1177f89f294d7e97ce952cabe2e285b9d28a02b8a",
+      "family": "person",
+      "metrics": {
+        "edge_density": 0.18490867884282094,
+        "saturation_q25": 0.5814789088951796,
+        "saturation_q75": 0.6219882990090235,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.029286271732003804,
+        "foreground_pixels": 17014
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": false,
+        "wash_flatness": true
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "name": "I-4",
+      "attempt": 2,
+      "candidate": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e/exec-95dc0920-108b-4d26-b4fe-05236281bd31.png",
+      "sha256": "3de86c9203ccbd49f97fe0e684cdb22faca00e5c5d8db273d2158eb70b7d22e5",
+      "family": "person",
+      "metrics": {
+        "edge_density": 0.2168631907941469,
+        "saturation_q25": 0.5431565186764641,
+        "saturation_q75": 0.6433616078429472,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.031501342663426225,
+        "foreground_pixels": 15982
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": false,
+        "wash_flatness": true
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "name": "I-1",
+      "attempt": 3,
+      "candidate": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e/exec-736bae4c-dd69-40b3-804d-a12de820caf3.png",
+      "sha256": "ad927db80f016728c2c19b9b5543df914b88ba423078c4cbcedf7c88e7c01af3",
+      "family": "person",
+      "metrics": {
+        "edge_density": 0.1911288656243543,
+        "saturation_q25": 0.5400032216193421,
+        "saturation_q75": 0.6018263045399033,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.013409670984647806,
+        "foreground_pixels": 16576
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": false,
+        "wash_flatness": true
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "name": "I-2",
+      "attempt": 3,
+      "candidate": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e/exec-eafd821f-f298-46ee-b0f7-5653b4370ac8.png",
+      "sha256": "ecb97239e5d27e98ac108308c1503ea3bf833f4e6e9e77fdc8e3e467790c49e3",
+      "family": "person",
+      "metrics": {
+        "edge_density": 0.2301146681886577,
+        "saturation_q25": 0.48076423976665994,
+        "saturation_q75": 0.6126148835045624,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.02879740548414594,
+        "foreground_pixels": 20948
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": false,
+        "stroke_q90": false,
+        "wash_flatness": true
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "name": "I-3",
+      "attempt": 3,
+      "candidate": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e/exec-58c59d5a-f1bf-42e9-b25c-e564d0608a9e.png",
+      "sha256": "e0bb1653237c56954c41a4fc4fc28eccd17df8b2832109e4858d68a138a43945",
+      "family": "person",
+      "metrics": {
+        "edge_density": 0.16195283866952492,
+        "saturation_q25": 0.6020730748074068,
+        "saturation_q75": 0.635154804530884,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.01616573935861614,
+        "foreground_pixels": 16613
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": false,
+        "stroke_q90": false,
+        "wash_flatness": true
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "name": "I-4",
+      "attempt": 3,
+      "candidate": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a163dc-d303-7e33-83a2-d098a25d5e6e/exec-5e1c7db5-df9d-425f-934d-6ef3b582736d.png",
+      "sha256": "5dab0758517377e8f2917a753fc6332e8dd4b156a499d4dc14ac3ae0e7e230fb",
+      "family": "person",
+      "metrics": {
+        "edge_density": 0.18660153524075365,
+        "saturation_q25": 0.5532162679991437,
+        "saturation_q75": 0.6415065910834474,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.023121041277501794,
+        "foreground_pixels": 16368
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": false,
+        "stroke_q90": false,
+        "wash_flatness": true
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "name": "B",
+      "attempt": 1,
+      "candidate": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/B.png",
+      "sha256": "f60099b8024a8cc5236326908b7bdb1a305077b7058d191fca380dade5a7aa82",
+      "family": "person",
+      "metrics": {
+        "edge_density": 0.14153872692772124,
+        "saturation_q25": 0.33736501086085896,
+        "saturation_q75": 0.42177494610593924,
+        "stroke_q25": 2.8284271247461903,
+        "stroke_q50": 4.0,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.022254870508987945,
+        "foreground_pixels": 13850
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": false,
+        "wash_flatness": true
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    }
+  ]
+}

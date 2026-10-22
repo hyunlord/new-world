@@ -1,0 +1,17 @@
+{
+  "selected_try": 2,
+  "raw_path": "/Users/rexxa/work/arttrial5-data/generations/I-1_try2.png",
+  "raw_sha256": "833ac8180b9e0c4a1cd960e6fcf80b4eff5a98114913d97a34d4d6a56f8a6354",
+  "crop_xyxy": [
+    0,
+    260,
+    1024,
+    1245
+  ],
+  "working_size": [
+    768,
+    739
+  ],
+  "method": "Rectangular head-to-feet framing and uniform Lanczos resize only. Halo retained; no mask, pixel painting, quantization or tone adjustment. Raw 1024x1536 external.",
+  "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+}
