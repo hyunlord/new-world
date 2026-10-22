@@ -1,8 +1,10 @@
 //! Putting items down (7.4 merge and spill) and the colony site index.
 //!
-//! Logs are never destroyed: `put_items` always finds room, ring by ring.
+//! Items are never destroyed: `put_items` always finds room, ring by ring.
+//! M2: a stack holds one [`ItemSpec`] bucket (kind, material, quality / 10),
+//! and each kind has its own stack maximum (`ColonyRule::stack_max`).
 use hecs::{Entity, World};
-use sim_core::colony::{ColonySite, ItemKind, ItemStack, MaterialNeeds};
+use sim_core::colony::{ColonySite, ItemKind, ItemSpec, ItemStack, MaterialNeeds};
 use sim_core::components::ConstructionSite;
 use sim_core::TerrainType;
 use sim_engine::SimResources;
@@ -40,34 +42,39 @@ pub fn can_hold_items(res: &SimResources, tile: (u32, u32)) -> bool {
     ) && !under_building(res, tile)
 }
 
-/// Room for `kind` on `tile` (0 when the tile cannot hold items or holds another kind).
-pub fn room_on(res: &SimResources, tile: (u32, u32), kind: ItemKind, max: u16) -> u16 {
+/// The stack maximum of `kind` under the colony rule (25 without one).
+pub fn stack_max(res: &SimResources, kind: ItemKind) -> u16 {
+    res.rules
+        .colony
+        .map_or(kind.default_stack_max(), |rule| rule.stack_max(kind))
+        .max(1)
+}
+
+/// Room for `spec` on `tile` (0 when the tile cannot hold items or holds a
+/// stack that `spec` does not merge with).
+pub fn room_on(res: &SimResources, tile: (u32, u32), spec: ItemSpec) -> u16 {
     if !can_hold_items(res, tile) {
         return 0;
     }
+    let max = stack_max(res, spec.kind);
     match res.colony.ground_items.get(&tile) {
         None => max,
-        Some(stack) if stack.kind == kind => max.saturating_sub(stack.count),
+        Some(stack) if stack.spec().merges_with(&spec) => max.saturating_sub(stack.count),
         Some(_) => 0,
     }
 }
 
-/// Put `n` items of `kind` down at `tile` (7.4): fill `tile` up to the stack
+/// Put `n` items of `spec` down at `tile` (7.4): fill `tile` up to the stack
 /// maximum, then the nearest tiles in Chebyshev ring order (within a ring
-/// `(y, x)` ascending) that can hold items and are empty or hold a
-/// same-kind stack below the maximum. Returns the tiles filled, in order.
+/// `(y, x)` ascending) that can hold items and are empty or hold a stack it
+/// merges with below the maximum. Returns the tiles filled, in order.
 /// Never destroys an item while any tile of the map has room.
 pub fn put_items(
     res: &mut SimResources,
     tile: (u32, u32),
-    kind: ItemKind,
+    spec: ItemSpec,
     n: u16,
 ) -> Vec<(u32, u32)> {
-    let max = res
-        .rules
-        .colony
-        .map_or(25, |rule| rule.stack_max_logs)
-        .max(1);
     let (w, h) = (res.tile_grid.width, res.tile_grid.height);
     let mut left = n;
     let mut filled = Vec::new();
@@ -88,7 +95,7 @@ pub fn put_items(
                 if t.0 >= w || t.1 >= h {
                     continue;
                 }
-                let room = room_on(res, t, kind, max);
+                let room = room_on(res, t, spec);
                 if room == 0 {
                     continue;
                 }
@@ -97,8 +104,8 @@ pub fn put_items(
                     .colony
                     .ground_items
                     .entry(t)
-                    .or_insert(ItemStack { kind, count: 0 });
-                stack.count += add;
+                    .or_insert(ItemStack::of(spec, 0));
+                stack.absorb(spec, add);
                 left -= add;
                 filled.push(t);
             }
@@ -116,14 +123,21 @@ pub fn put_items(
 }
 
 /// Take up to `n` items of `kind` from the stack at `tile`; removes the
-/// stack at 0. Returns the number taken.
-pub fn take_items(res: &mut SimResources, tile: (u32, u32), kind: ItemKind, n: u16) -> u16 {
+/// stack at 0. Returns the number taken and their spec.
+pub fn take_items(
+    res: &mut SimResources,
+    tile: (u32, u32),
+    kind: ItemKind,
+    n: u16,
+) -> (u16, ItemSpec) {
+    let none = (0, ItemSpec::raw(kind, None));
     let Some(stack) = res.colony.ground_items.get_mut(&tile) else {
-        return 0;
+        return none;
     };
     if stack.kind != kind {
-        return 0;
+        return none;
     }
+    let spec = stack.spec();
     let taken = stack.count.min(n);
     stack.count -= taken;
     if stack.count == 0 {
@@ -132,7 +146,7 @@ pub fn take_items(res: &mut SimResources, tile: (u32, u32), kind: ItemKind, n: u
     if taken > 0 {
         res.colony.touch(false);
     }
-    taken
+    (taken, spec)
 }
 
 /// One colony construction site as the job systems see it.
@@ -195,7 +209,8 @@ mod tests {
         // (3, 2) is water: the ring after (3, 3) skips it.
         let i = res.tile_grid.idx(3, 2);
         res.tile_grid.terrain_type[i] = TerrainType::River;
-        let filled = put_items(&mut res, (3, 3), ItemKind::Log, 12);
+        let log = ItemSpec::raw(ItemKind::Log, None);
+        let filled = put_items(&mut res, (3, 3), log, 12);
         // Ring 0: (3,3) gets 5; ring 1 in (y, x) order: (2,2) 5, then (4,2) 2 ((3,2) is water).
         assert_eq!(filled, vec![(3, 3), (2, 2), (4, 2)]);
         assert_eq!(res.colony.ground_items[&(3, 3)].count, 5);
@@ -203,23 +218,20 @@ mod tests {
         assert_eq!(res.colony.ground_items[&(4, 2)].count, 2);
         assert!(!res.colony.ground_items.contains_key(&(3, 2)));
         assert_eq!(res.colony.ground_total(ItemKind::Log), 12);
-        assert_eq!(take_items(&mut res, (4, 2), ItemKind::Log, 9), 2);
+        assert_eq!(take_items(&mut res, (4, 2), ItemKind::Log, 9), (2, log));
         assert!(!res.colony.ground_items.contains_key(&(4, 2)));
     }
 
     #[test]
     fn put_items_merges_into_a_partial_stack_and_skips_buildings() {
         let mut res = res();
-        res.colony.ground_items.insert(
-            (1, 1),
-            ItemStack {
-                kind: ItemKind::Log,
-                count: 3,
-            },
-        );
+        let log = ItemSpec::raw(ItemKind::Log, None);
+        res.colony
+            .ground_items
+            .insert((1, 1), ItemStack::of(log, 3));
         res.building_kinds
             .insert((0, 0), sim_core::components::BuildingKind::Hearth);
-        let filled = put_items(&mut res, (1, 1), ItemKind::Log, 4);
+        let filled = put_items(&mut res, (1, 1), log, 4);
         assert_eq!(filled, vec![(1, 1), (1, 0)]);
         assert_eq!(res.colony.ground_items[&(1, 1)].count, 5);
         assert_eq!(res.colony.ground_items[&(1, 0)].count, 2);

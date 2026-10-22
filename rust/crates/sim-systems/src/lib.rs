@@ -319,10 +319,12 @@ pub fn register_default_runtime_systems(engine: &mut SimEngine) {
     register_job_systems(engine);
 }
 
-/// Register the M1 job layer (`runtime::jobs`): `JobAssignSystem` (124) and
-/// `JobExecuteSystem` (127), both every tick and both no-ops without
+/// Register the M1 job layer (`runtime::jobs`): `BillSystem` (123, every 60
+/// ticks, M2), `JobAssignSystem` (124) and `JobExecuteSystem` (127, both every
+/// tick), all no-ops without
 /// `rules.colony`.
 pub fn register_job_systems(engine: &mut SimEngine) {
+    engine.register_system(Box::new(runtime::jobs::BillSystem::new()));
     engine.register_system(Box::new(runtime::jobs::JobAssignSystem::new()));
     engine.register_system(Box::new(runtime::jobs::JobExecuteSystem::new()));
 }

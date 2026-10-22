@@ -1,6 +1,7 @@
 //! The M1 colony world's extra worldgen steps (after the baseline steps):
-//! area-scaled bushes and deadwood beyond the camp, the founder adult check
-//! and the trees. Called by `build_world_with` only when `cfg.colony` is set.
+//! area-scaled bushes and deadwood beyond the camp, the founder adult check,
+//! the trees and (M2, under `ColonyRule::economy`) the material table and the
+//! resource nodes. Called by `build_world_with` only when `cfg.colony` is set.
 //!
 //! Every step draws from its own keyed stream (`STREAM_COLONY_BUSH`,
 //! `STREAM_COLONY_WOOD`, `STREAM_COLONY_FOUNDER_FIX`, `STREAM_TREE_LOGS`),
@@ -8,11 +9,12 @@
 //! baseline steps placed for this config.
 use super::camp::distance;
 use super::{ColonyGen, WorldGenConfig};
-use sim_core::colony::Tree;
+use sim_core::colony::materials::{FLINT, GRANITE, LIMESTONE};
+use sim_core::colony::{ColonyMaterials, NodeKind, ResourceNode, Tree};
 use sim_core::components::{Agent, BuildingKind, Child, Elder, Life};
 use sim_core::rng::{
-    keyed_below, STREAM_COLONY_BUSH, STREAM_COLONY_FOUNDER_FIX, STREAM_COLONY_WOOD,
-    STREAM_TREE_LOGS,
+    keyed_below, STREAM_BOULDER, STREAM_COLONY_BUSH, STREAM_COLONY_FOUNDER_FIX, STREAM_COLONY_WOOD,
+    STREAM_OUTCROP, STREAM_TREE_LOGS,
 };
 use sim_core::TerrainType;
 use sim_engine::{SimEngine, SimResources};
@@ -61,6 +63,109 @@ pub(super) fn generate(cfg: &WorldGenConfig, gen: &ColonyGen, engine: &mut SimEn
     let fixed = ensure_adults(cfg, gen, engine);
     engine.resources.colony.tallies.founder_fixes = fixed;
     trees(cfg, gen, &mut engine.resources, camp);
+    nodes(cfg, gen, &mut engine.resources, camp);
+}
+
+/// M2 (goal 3.2): the material table, boulders and flint outcrops.
+///
+/// - Boulders: a keyed draw `(seed, STREAM_BOULDER, x, y, slot 0) % 1000` below
+///   `hill_boulder_permille` on hill tiles or `grass_boulder_permille` on plain
+///   tiles; stone `boulder_stone` (slot 1); granite on hills, limestone elsewhere.
+/// - Outcrops: `bank / bank_tiles_per_outcrop` of them, where `bank` counts the
+///   tiles that are not water or mountain and lie within `bank_reach` of a
+///   river tile; placed on the free bank tiles shuffled with `STREAM_OUTCROP`
+///   (slot 0), first ones first; flint `outcrop_flint` (slot 1).
+///
+/// Never on the camp clearing, a building, a water source, a bush, a deadwood
+/// spot or a tree. Tiles in `(y, x)` order throughout.
+fn nodes(cfg: &WorldGenConfig, gen: &ColonyGen, r: &mut SimResources, camp: Tile) {
+    let Some(rule) = r.rules.colony.and_then(|rule| rule.economy) else {
+        return;
+    };
+    r.colony.materials = ColonyMaterials::load();
+    let free = |r: &SimResources, p: Tile| {
+        distance(p, camp) > gen.clearing_radius
+            && !r.building_kinds.contains_key(&p)
+            && !r.water_tiles.contains_key(&p)
+            && !r.food_source_max.contains_key(&p)
+            && !r.food_tiles.contains_key(&p)
+            && !r.wood_source_max.contains_key(&p)
+            && !r.colony.trees.contains_key(&p)
+    };
+    let amount = |stream: u64, p: Tile, range: (u8, u8)| {
+        let lo = range.0.min(range.1);
+        let span = u64::from(range.1.max(lo) - lo) + 1;
+        lo + keyed_below(cfg.seed, stream, u64::from(p.0), u64::from(p.1), 1, 0, span) as u8
+    };
+    for p in tiles(r) {
+        let permille = match terrain(r, p) {
+            TerrainType::Hill => rule.hill_boulder_permille,
+            TerrainType::Plain => rule.grass_boulder_permille,
+            _ => continue,
+        };
+        if !free(r, p) {
+            continue;
+        }
+        let draw = keyed_below(
+            cfg.seed,
+            STREAM_BOULDER,
+            u64::from(p.0),
+            u64::from(p.1),
+            0,
+            0,
+            1000,
+        );
+        if draw < u64::from(permille) {
+            let material = if terrain(r, p) == TerrainType::Hill {
+                GRANITE
+            } else {
+                LIMESTONE
+            };
+            let left = amount(STREAM_BOULDER, p, rule.boulder_stone);
+            r.colony.nodes.insert(
+                p,
+                ResourceNode {
+                    kind: NodeKind::Boulder,
+                    left,
+                    material,
+                },
+            );
+        }
+    }
+    let reach = rule.bank_reach;
+    let (w, h) = (r.tile_grid.width, r.tile_grid.height);
+    let near_water = |r: &SimResources, p: Tile| {
+        let (x0, y0) = (p.0.saturating_sub(reach), p.1.saturating_sub(reach));
+        let (x1, y1) = ((p.0 + reach).min(w - 1), (p.1 + reach).min(h - 1));
+        (y0..=y1).any(|y| (x0..=x1).any(|x| terrain(r, (x, y)) == TerrainType::River))
+    };
+    let bank: Vec<Tile> = tiles(r)
+        .into_iter()
+        .filter(|&p| {
+            !matches!(terrain(r, p), TerrainType::River | TerrainType::Mountain) && near_water(r, p)
+        })
+        .collect();
+    // One outcrop per `bank_tiles_per_outcrop` bank tiles, placed on the free ones.
+    let count = bank.len() / rule.bank_tiles_per_outcrop.max(1) as usize;
+    let mut bank: Vec<Tile> = bank
+        .into_iter()
+        .filter(|&p| free(r, p) && !r.colony.nodes.contains_key(&p))
+        .collect();
+    shuffle(&mut bank, cfg.seed, STREAM_OUTCROP, 0);
+    bank.truncate(count);
+    bank.sort_by_key(|&(x, y)| (y, x));
+    for p in bank {
+        let left = amount(STREAM_OUTCROP, p, rule.outcrop_flint);
+        r.colony.nodes.insert(
+            p,
+            ResourceNode {
+                kind: NodeKind::FlintOutcrop,
+                left,
+                material: FLINT,
+            },
+        );
+    }
+    r.colony.touch(false);
 }
 
 /// `gen.outer_bushes` bushes on Forest tiles with a Plain neighbour beyond

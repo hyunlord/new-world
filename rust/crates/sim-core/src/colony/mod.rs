@@ -12,14 +12,24 @@ use std::collections::BTreeMap;
 mod command;
 mod items;
 mod job;
+pub mod materials;
 mod orders;
+pub mod skills;
+pub mod workshop;
 
 pub use command::{Command, CommandRecord, CommandResult, RejectReason};
-pub use items::{Carry, ItemKind, ItemLedger, ItemStack};
+pub use items::{
+    quality_bucket, Carry, ItemKind, ItemLedger, ItemSpec, ItemStack, Tool, RAW_QUALITY,
+};
 pub use job::{CancelReason, Job, JobKind, JobStage, WorkType};
+pub use materials::{ColonyMaterials, MaterialStats};
 pub use orders::{
-    BlueprintKind, ColonySite, Designation, MaterialNeeds, Occupant, ReserveKey, Tree, Zone,
-    ZoneId, ZoneKind,
+    BlueprintKind, ColonySite, Designation, MaterialNeeds, NeedLine, NodeKind, Occupant,
+    ReserveKey, ResourceNode, Tree, Zone, ZoneId, ZoneKind,
+};
+pub use skills::{Skill, Skills, WorkPriorities};
+pub use workshop::{
+    recipes, Bill, BillId, BillMode, Recipe, RecipeKind, SkillKind, Workshop, WorkshopId,
 };
 
 use crate::components::AgentId;
@@ -41,6 +51,27 @@ pub struct ColonyTallies {
     pub commands_rejected: u64,
     /// Founders the colony worldgen made adults (goal 8.1; 0 when none was needed).
     pub founder_fixes: u32,
+    /// Quarry batches finished (M2).
+    #[serde(default)]
+    pub quarry_batches: u64,
+    /// Resource nodes quarried to exhaustion (M2).
+    #[serde(default)]
+    pub nodes_exhausted: u64,
+    /// Workshops finished (M2).
+    #[serde(default)]
+    pub workshops_built: u64,
+    /// Crafts finished (M2).
+    #[serde(default)]
+    pub crafts_done: u64,
+    /// Crafts cancelled after their inputs were consumed (M2; the inputs are lost).
+    #[serde(default)]
+    pub crafts_lost: u64,
+    /// Jobs taken, by `(agent, JobKind::code)` (M2; measurement and UI only).
+    #[serde(default)]
+    pub taken_by: BTreeMap<(AgentId, u8), u64>,
+    /// Crafted items' `(count, quality sum)` by `(agent, RecipeKind::code)` (M2; measurement only).
+    #[serde(default)]
+    pub craft_quality: BTreeMap<(AgentId, u8), (u64, u64)>,
 }
 
 impl ColonyTallies {
@@ -55,6 +86,21 @@ impl ColonyTallies {
 pub struct ColonyState {
     /// Standing trees by tile.
     pub trees: BTreeMap<(u32, u32), Tree>,
+    /// Resource nodes (boulders, flint outcrops) by tile (M2).
+    #[serde(default)]
+    pub nodes: BTreeMap<(u32, u32), ResourceNode>,
+    /// The colony's material table (M2; built at colony worldgen).
+    #[serde(default)]
+    pub materials: ColonyMaterials,
+    /// Finished workshops by id (M2).
+    #[serde(default)]
+    pub workshops: BTreeMap<WorkshopId, Workshop>,
+    /// Next workshop id (from 1).
+    #[serde(default)]
+    pub next_workshop_id: WorkshopId,
+    /// Next bill id (from 1).
+    #[serde(default)]
+    pub next_bill_id: BillId,
     /// Bumped whenever a tree is added or removed (renderers rebuild on change).
     pub trees_version: u64,
     /// Ground stacks, one per tile.
@@ -88,7 +134,7 @@ pub struct ColonyState {
 /// Measurement-only key of a job released to a need (`ColonyState::release_counts`):
 /// `(need, job kind, job stage, need value bin)`. Need: 0 hunger (the choice
 /// targets food), 1 thirst (water), 2 sleep, 3 social (another agent),
-/// 4 forage, 5 firewood, 6 other. Kind: 0 chop, 1 haul, 2 deliver, 3 build.
+/// 4 forage, 5 firewood, 6 other. Kind: `JobKind::code` − 1 (0 chop, 1 haul, 2 deliver, 3 build, 4 quarry, …).
 /// Stage: 0 walking to the source, 1 working, 2 walking to the destination.
 /// Bin: the chosen need's value (hunger, thirst or fatigue) in tens, 0–10;
 /// 255 for a need without a value.
@@ -103,7 +149,7 @@ impl ColonyState {
         }
     }
 
-    /// Logs (or `kind`) lying on the ground in total.
+    /// Items of `kind` lying on the ground in total.
     pub fn ground_total(&self, kind: ItemKind) -> u64 {
         self.ground_items
             .values()

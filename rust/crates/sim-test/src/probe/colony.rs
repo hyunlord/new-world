@@ -20,8 +20,12 @@
 //! a `"resolve"` key that the probe resolves against the world at tick T
 //! (goal 10.1; see [`resolve`]).
 use serde_json::{json, Value};
-use sim_core::colony::{BlueprintKind, Carry, Command, CommandRecord, ItemKind, Job};
-use sim_core::components::{Agent, Position};
+use sim_core::colony::workshop::work_tile_of;
+use sim_core::colony::{
+    BillMode, BlueprintKind, Carry, Command, CommandRecord, ItemKind, Job, NodeKind, RecipeKind,
+    WorkType,
+};
+use sim_core::components::{Agent, Child, Elder, Position};
 use sim_engine::SimEngine;
 use sim_systems::commands::{check_blueprint, submit};
 use sim_systems::runtime::jobs::invariants;
@@ -160,6 +164,25 @@ pub fn nearest_trees(engine: &SimEngine, count: usize) -> Vec<(u32, u32)> {
     trees
 }
 
+/// The `count` resource nodes of `kind` nearest the hearth, by Chebyshev
+/// distance, ties `(y, x)` (M2-U: "the 2 nearest boulders and 1 outcrop").
+pub fn nearest_nodes(engine: &SimEngine, kind: NodeKind, count: usize) -> Vec<(u32, u32)> {
+    let Some(h) = hearth(&engine.resources) else {
+        return Vec::new();
+    };
+    let mut nodes: Vec<(u32, u32)> = engine
+        .resources
+        .colony
+        .nodes
+        .iter()
+        .filter(|(_, node)| node.kind == kind)
+        .map(|(tile, _)| *tile)
+        .collect();
+    nodes.sort_by_key(|t| (chebyshev(*t, h), t.1, t.0));
+    nodes.truncate(count);
+    nodes
+}
+
 fn zoneable(engine: &SimEngine, t: (u32, u32)) -> bool {
     let r = &engine.resources;
     let grid = &r.tile_grid;
@@ -205,12 +228,23 @@ pub fn stockpile_block(engine: &SimEngine, size: u32, offset: u32) -> Option<(u3
 /// centre's Chebyshev distance, ties `(y, x)` of the top-left; `avoid` tiles
 /// (the stockpile block resolved in the same script) count as blocked.
 pub fn hut_spot(engine: &SimEngine, avoid: &[(u32, u32)]) -> Option<(u32, u32)> {
+    blueprint_spot(engine, BlueprintKind::Hut, avoid)
+}
+
+/// The spot of a blueprint of `kind` by the hut rule (centre south of the
+/// hearth, nearest by the centre's Chebyshev distance, ties `(y, x)` of the
+/// top-left), whose footprint and (for a workshop) work tile avoid `avoid`.
+pub fn blueprint_spot(
+    engine: &SimEngine,
+    kind: BlueprintKind,
+    avoid: &[(u32, u32)],
+) -> Option<(u32, u32)> {
     let h = hearth(&engine.resources)?;
     let (w, hgt) = engine
         .resources
         .rules
         .colony
-        .map_or((3, 3), |r| r.hut_footprint);
+        .map_or((3, 3), |r| kind.plan(&r).0);
     let grid = &engine.resources.tile_grid;
     let mut best: Option<(SpotKey, Tile)> = None;
     for y in h.1.saturating_sub(40)..(h.1 + 40).min(grid.height) {
@@ -219,12 +253,14 @@ pub fn hut_spot(engine: &SimEngine, avoid: &[(u32, u32)]) -> Option<(u32, u32)> 
             if centre.1 <= h.1 {
                 continue;
             }
-            if check_blueprint(&engine.resources, BlueprintKind::Hut, x, y).is_err() {
+            if check_blueprint(&engine.resources, kind, x, y).is_err() {
                 continue;
             }
-            let covers_avoid = avoid
-                .iter()
-                .any(|t| (x..x + w).contains(&t.0) && (y..y + hgt).contains(&t.1));
+            let work = work_tile_of((x, y), (w, hgt));
+            let covers_avoid = avoid.iter().any(|t| {
+                ((x..x + w).contains(&t.0) && (y..y + hgt).contains(&t.1))
+                    || (kind.is_workshop() && *t == work)
+            });
             if covers_avoid {
                 continue;
             }
@@ -235,6 +271,70 @@ pub fn hut_spot(engine: &SimEngine, avoid: &[(u32, u32)]) -> Option<(u32, u32)> 
         }
     }
     best.map(|(_, spot)| spot)
+}
+
+/// The tiles a placed blueprint of `kind` at `(x, y)` takes from later
+/// placements of the same script tick: its footprint and its work tile.
+fn blueprint_tiles(engine: &SimEngine, kind: BlueprintKind, x: u32, y: u32) -> Vec<(u32, u32)> {
+    let (w, h) = engine
+        .resources
+        .rules
+        .colony
+        .map_or((3, 3), |r| kind.plan(&r).0);
+    let mut out: Vec<(u32, u32)> = (y..y + h)
+        .flat_map(|ty| (x..x + w).map(move |tx| (tx, ty)))
+        .collect();
+    if kind.is_workshop() {
+        out.push(work_tile_of((x, y), (w, h)));
+    }
+    out
+}
+
+/// The workshop of `kind` with the lowest id.
+pub fn workshop_of(engine: &SimEngine, kind: BlueprintKind) -> Option<u32> {
+    engine
+        .resources
+        .colony
+        .workshops
+        .values()
+        .find(|shop| shop.kind == kind)
+        .map(|shop| shop.id)
+}
+
+/// The adult (no `Child`, no `Elder`) of rank `rank` by `AgentId`.
+pub fn adult_of_rank(engine: &SimEngine, rank: usize) -> Option<u64> {
+    let mut ids: Vec<u64> = engine
+        .world
+        .query::<(&Agent, Option<&Child>, Option<&Elder>)>()
+        .iter()
+        .filter(|(_, (_, c, e))| c.is_none() && e.is_none())
+        .map(|(_, (a, _, _))| a.id)
+        .collect();
+    ids.sort_unstable();
+    ids.get(rank).copied()
+}
+
+/// Whether a script entry's `"after"` condition holds (`"workshop:<kind>"`:
+/// a finished workshop of that kind exists); entries without one are ready.
+pub fn entry_ready(engine: &SimEngine, spec: &Value) -> bool {
+    match spec["after"].as_str() {
+        None => true,
+        Some(cond) => match cond.strip_prefix("workshop:") {
+            Some(kind) => BlueprintKind::from_name(kind)
+                .and_then(|k| workshop_of(engine, k))
+                .is_some(),
+            None => false,
+        },
+    }
+}
+
+fn bill_mode(spec: &Value) -> Result<BillMode, String> {
+    let n = spec["count"].as_u64().ok_or("a bill needs a count")? as u16;
+    match spec["mode"].as_str().unwrap_or("make") {
+        "make" => Ok(BillMode::Make(n)),
+        "maintain" => Ok(BillMode::Maintain(n)),
+        other => Err(format!("unknown bill mode {other}")),
+    }
 }
 
 /// The U-script (goal 10.1) resolved for `engine` (state at tick 360).
@@ -295,15 +395,65 @@ pub fn resolve(
                 None => Vec::new(),
             }
         }
-        ("place_blueprint", Some("south_of_hearth")) => match hut_spot(engine, pending_avoid) {
-            Some((x, y)) => vec![Command::PlaceBlueprint {
-                kind: BlueprintKind::Hut,
-                x,
-                y,
-            }],
-            None => Vec::new(),
-        },
+        ("place_blueprint", Some("south_of_hearth")) => {
+            let kind = BlueprintKind::from_name(spec["kind"].as_str().unwrap_or("hut"))
+                .ok_or("unknown blueprint kind")?;
+            match blueprint_spot(engine, kind, pending_avoid) {
+                Some((x, y)) => {
+                    pending_avoid.extend(blueprint_tiles(engine, kind, x, y));
+                    vec![Command::PlaceBlueprint { kind, x, y }]
+                }
+                None => Vec::new(),
+            }
+        }
+        ("add_bill", Some("workshop_of_kind")) => {
+            let kind = BlueprintKind::from_name(spec["kind"].as_str().unwrap_or(""))
+                .ok_or("add_bill needs a workshop kind")?;
+            let recipe = RecipeKind::from_name(spec["recipe"].as_str().unwrap_or(""))
+                .ok_or("add_bill needs a recipe")?;
+            match workshop_of(engine, kind) {
+                Some(workshop) => vec![Command::AddBill {
+                    workshop,
+                    recipe,
+                    mode: bill_mode(spec)?,
+                }],
+                None => Vec::new(),
+            }
+        }
+        ("set_work_priority", Some("adult_rank")) => {
+            let rank = spec["rank"].as_u64().unwrap_or(0) as usize;
+            let work = WorkType::from_name(spec["work"].as_str().unwrap_or(""))
+                .ok_or("set_work_priority needs a work type")?;
+            match adult_of_rank(engine, rank) {
+                Some(agent) => vec![Command::SetWorkPriority {
+                    agent,
+                    work,
+                    level: field(spec, "level")? as u8,
+                }],
+                None => Vec::new(),
+            }
+        }
+        ("designate_quarry", Some("nearest_nodes")) => {
+            let kind = match spec["kind"].as_str().unwrap_or("boulder") {
+                "outcrop" | "flint_outcrop" => NodeKind::FlintOutcrop,
+                _ => NodeKind::Boulder,
+            };
+            let count = spec["count"].as_u64().unwrap_or(1) as usize;
+            nearest_nodes(engine, kind, count)
+                .into_iter()
+                .map(|(x, y)| Command::DesignateQuarry {
+                    x0: x,
+                    y0: y,
+                    x1: x,
+                    y1: y,
+                })
+                .collect()
+        }
         (_, Some(other)) => return Err(format!("unknown resolve {other}")),
+        ("designate_quarry", None) => {
+            let (x0, y0, x1, y1) = rect(spec)?;
+            vec![Command::DesignateQuarry { x0, y0, x1, y1 }]
+        }
         ("designate_chop", None) => {
             let (x0, y0, x1, y1) = rect(spec)?;
             vec![Command::DesignateChop { x0, y0, x1, y1 }]
@@ -338,6 +488,39 @@ pub fn resolve(
                 y: field(spec, "y")?,
             }]
         }
+        ("add_bill", None) => vec![Command::AddBill {
+            workshop: field(spec, "workshop")?,
+            recipe: RecipeKind::from_name(spec["recipe"].as_str().unwrap_or(""))
+                .ok_or("add_bill needs a recipe")?,
+            mode: bill_mode(spec)?,
+        }],
+        ("remove_bill", None) => vec![Command::RemoveBill {
+            workshop: field(spec, "workshop")?,
+            bill: field(spec, "bill")?,
+        }],
+        ("set_bill_mode", None) => vec![Command::SetBillMode {
+            workshop: field(spec, "workshop")?,
+            bill: field(spec, "bill")?,
+            mode: bill_mode(spec)?,
+        }],
+        ("move_bill", None) => vec![Command::MoveBill {
+            workshop: field(spec, "workshop")?,
+            bill: field(spec, "bill")?,
+            up: spec["up"].as_bool().unwrap_or(true),
+        }],
+        ("set_bill_suspended", None) => vec![Command::SetBillSuspended {
+            workshop: field(spec, "workshop")?,
+            bill: field(spec, "bill")?,
+            suspended: spec["suspended"].as_bool().unwrap_or(true),
+        }],
+        ("set_work_priority", None) => vec![Command::SetWorkPriority {
+            agent: spec["agent"]
+                .as_u64()
+                .ok_or("set_work_priority needs agent")?,
+            work: WorkType::from_name(spec["work"].as_str().unwrap_or(""))
+                .ok_or("set_work_priority needs a work type")?,
+            level: field(spec, "level")? as u8,
+        }],
         ("set_drafted", None) => vec![Command::SetDrafted {
             agent: spec["agent"].as_u64().ok_or("set_drafted needs agent")?,
             drafted: spec["drafted"].as_bool().unwrap_or(true),
@@ -346,10 +529,18 @@ pub fn resolve(
     })
 }
 
+fn mode_name(mode: BillMode) -> &'static str {
+    match mode {
+        BillMode::Make(_) => "make",
+        BillMode::Maintain(_) => "maintain",
+    }
+}
+
 /// A command as a concrete script entry.
 pub fn command_json(tick: u64, cmd: &Command) -> Value {
     let mut v = match cmd {
         Command::DesignateChop { x0, y0, x1, y1 }
+        | Command::DesignateQuarry { x0, y0, x1, y1 }
         | Command::CancelArea { x0, y0, x1, y1 }
         | Command::AddStockpile { x0, y0, x1, y1 }
         | Command::RemoveZoneArea { x0, y0, x1, y1 } => {
@@ -360,6 +551,32 @@ pub fn command_json(tick: u64, cmd: &Command) -> Value {
         }
         Command::PlaceBlueprint { kind, x, y } => json!({"kind": kind.name(), "x": x, "y": y}),
         Command::SetDrafted { agent, drafted } => json!({"agent": agent, "drafted": drafted}),
+        Command::AddBill {
+            workshop,
+            recipe,
+            mode,
+        } => {
+            json!({"workshop": workshop, "recipe": recipe.name(), "mode": mode_name(*mode), "count": mode.count()})
+        }
+        Command::RemoveBill { workshop, bill } => json!({"workshop": workshop, "bill": bill}),
+        Command::SetBillMode {
+            workshop,
+            bill,
+            mode,
+        } => {
+            json!({"workshop": workshop, "bill": bill, "mode": mode_name(*mode), "count": mode.count()})
+        }
+        Command::MoveBill { workshop, bill, up } => {
+            json!({"workshop": workshop, "bill": bill, "up": up})
+        }
+        Command::SetBillSuspended {
+            workshop,
+            bill,
+            suspended,
+        } => json!({"workshop": workshop, "bill": bill, "suspended": suspended}),
+        Command::SetWorkPriority { agent, work, level } => {
+            json!({"agent": agent, "work": work.name(), "level": level})
+        }
     };
     v["tick"] = json!(tick);
     v["cmd"] = json!(cmd.name());
@@ -403,7 +620,7 @@ pub fn colony_fingerprint(engine: &SimEngine) -> String {
         .collect();
     jobs.sort_by_key(|row| row.0);
     let text = format!(
-        "{:?}|{:?}|{:?}|{:?}|{:?}|{:?}|{:?}|{:?}|{:?}|{:?}|{}",
+        "{:?}|{:?}|{:?}|{:?}|{:?}|{:?}|{:?}|{:?}|{:?}|{:?}|{}|{:?}|{:?}",
         c.trees.keys().collect::<Vec<_>>(),
         c.designations,
         c.ground_items,
@@ -415,8 +632,31 @@ pub fn colony_fingerprint(engine: &SimEngine) -> String {
         jobs,
         engine.resources.building_kinds,
         engine.resources.bed_of.len(),
+        c.nodes,
+        c.workshops,
     );
     format!("{}-{:016x}", super::fingerprint(engine), fnv(&text))
+}
+
+/// The per-kind ledger at the end of a run (M2 goal 3.1), kinds with any item only.
+fn items_json(engine: &SimEngine) -> Value {
+    let mut out = serde_json::Map::new();
+    for kind in ItemKind::ALL {
+        let t = invariants::ledger_of(&engine.world, &engine.resources, kind);
+        if t.created == 0 {
+            continue;
+        }
+        let l = &engine.resources.colony.item_ledger;
+        out.insert(
+            kind.name().to_string(),
+            json!({
+                "created": t.created, "ground": t.ground, "carried": t.carried, "held": t.held,
+                "delivered": t.delivered, "shelved": t.shelved, "consumed": t.consumed,
+                "crafted": l.crafted_of(kind), "burned": l.burned_of(kind),
+            }),
+        );
+    }
+    Value::Object(out)
 }
 
 /// Per-seed result of a colony run (goal 10.2 bars).
@@ -456,10 +696,21 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
     let mut fingerprints = BTreeMap::new();
     let mut tick_ns: Vec<u64> = Vec::with_capacity(total as usize);
     let mut demography = super::demography::Demography::new(&engine);
+    let mut waiting: Vec<usize> = Vec::new();
     for tick in 0..total {
         let mut avoid = Vec::new();
-        while next < script.len() && script[next].tick == tick {
-            for cmd in resolve(&engine, &script[next].spec, &mut avoid)? {
+        while next < script.len() && script[next].tick <= tick {
+            waiting.push(next);
+            next += 1;
+        }
+        let due: Vec<usize> = waiting
+            .iter()
+            .copied()
+            .filter(|&i| entry_ready(&engine, &script[i].spec))
+            .collect();
+        waiting.retain(|i| !due.contains(i));
+        for i in due {
+            for cmd in resolve(&engine, &script[i].spec, &mut avoid)? {
                 let result = submit(&mut engine, cmd.clone());
                 if let Some(t) = twin.as_mut() {
                     if submit(t, cmd.clone()) != result {
@@ -491,7 +742,6 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
                     }
                 }
             }
-            next += 1;
         }
         let started = Instant::now();
         engine.tick();
@@ -501,7 +751,7 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
             t.tick();
         }
         if let Err(problem) = invariants::check(&engine.world, &engine.resources) {
-            if problem.starts_with("log ledger") {
+            if problem.contains("ledger") {
                 ledger_bad += 1;
             } else {
                 reserve_bad += 1;
@@ -590,6 +840,10 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
         "huts_built": c.tallies.huts_built,
         "founder_fixes": c.tallies.founder_fixes,
         "logs": {"created": created, "ground": ground, "carried": carried, "delivered": delivered, "consumed": consumed},
+        "items": items_json(&engine),
+        "quarry_batches": c.tallies.quarry_batches,
+        "nodes_exhausted": c.tallies.nodes_exhausted,
+        "nodes_left": c.nodes.len(),
         "deaths": deaths(&engine),
         "births": engine.resources.tallies.births,
         "alive_end": alive,

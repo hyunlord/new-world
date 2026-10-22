@@ -1,8 +1,9 @@
-//! What the player orders (M1): trees, chop marks, stockpile zones, blueprints and reservations.
+//! What the player orders (M1, M2): trees, resource nodes, chop and quarry marks, stockpile zones, blueprints and reservations.
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeSet;
 
 use super::ItemKind;
+use crate::material::MaterialId;
 
 /// A standing tree on a forest tile; felling it yields `logs` logs.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -11,11 +12,51 @@ pub struct Tree {
     pub logs: u8,
 }
 
+/// What a resource node yields (M2 goal 3.2).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+pub enum NodeKind {
+    /// A boulder: quarried for `Stone`.
+    Boulder,
+    /// A river-bank flint outcrop: quarried for `Flint`.
+    FlintOutcrop,
+}
+
+impl NodeKind {
+    /// Stable code for the bridge (0 = boulder, 1 = flint outcrop).
+    pub const fn code(self) -> u8 {
+        match self {
+            Self::Boulder => 0,
+            Self::FlintOutcrop => 1,
+        }
+    }
+
+    /// The item it yields.
+    pub const fn yields(self) -> ItemKind {
+        match self {
+            Self::Boulder => ItemKind::Stone,
+            Self::FlintOutcrop => ItemKind::Flint,
+        }
+    }
+}
+
+/// A quarriable thing on one tile (M2 goal 3.2): exhausted and removed at 0, no regrowth.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub struct ResourceNode {
+    /// Boulder or outcrop.
+    pub kind: NodeKind,
+    /// Items still in it.
+    pub left: u8,
+    /// The material of what it yields (granite / limestone / flint).
+    pub material: MaterialId,
+}
+
 /// A mark the player puts on a tile.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Designation {
     /// Fell the tree on this tile.
     Chop,
+    /// Quarry the resource node on this tile (M2).
+    Quarry,
 }
 
 /// Identifier of a zone, from `ColonyState::next_zone_id`.
@@ -42,23 +83,40 @@ pub struct Zone {
 /// A building the player can place as a blueprint.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub enum BlueprintKind {
-    /// A 3×3 log hut that sleeps four (M1's only blueprint).
+    /// A 3×3 log hut that sleeps four (M1).
     Hut,
+    /// A 1×1 knapping spot (M2): makes flint blades.
+    KnappingSpot,
+    /// A 2×1 wood bench (M2): hafts axes, splits firewood.
+    WoodBench,
+    /// A 2×1 drying rack (M2): placed and built, accepts no bill yet.
+    DryingRack,
 }
 
 impl BlueprintKind {
-    /// Stable code for the bridge (0 = hut).
+    /// Every kind, in code order.
+    pub const ALL: [Self; 4] = [
+        Self::Hut,
+        Self::KnappingSpot,
+        Self::WoodBench,
+        Self::DryingRack,
+    ];
+
+    /// Stable code for the bridge (0 = hut, 1 knapping spot, 2 wood bench, 3 drying rack).
     pub const fn code(self) -> u8 {
         match self {
             Self::Hut => 0,
+            Self::KnappingSpot => 1,
+            Self::WoodBench => 2,
+            Self::DryingRack => 3,
         }
     }
 
-    /// Parse the bridge's / script's name (`"hut"`).
+    /// Parse the bridge's / script's name (`"hut"`, `"knapping_spot"`, …).
     pub fn from_name(name: &str) -> Option<Self> {
         match name {
-            "hut" | "Hut" => Some(Self::Hut),
-            _ => None,
+            "Hut" => Some(Self::Hut),
+            _ => Self::ALL.into_iter().find(|kind| kind.name() == name),
         }
     }
 
@@ -66,20 +124,142 @@ impl BlueprintKind {
     pub const fn name(self) -> &'static str {
         match self {
             Self::Hut => "hut",
+            Self::KnappingSpot => "knapping_spot",
+            Self::WoodBench => "wood_bench",
+            Self::DryingRack => "drying_rack",
+        }
+    }
+
+    /// Whether the finished building is a workshop (everything but the hut).
+    pub const fn is_workshop(self) -> bool {
+        !matches!(self, Self::Hut)
+    }
+
+    /// Footprint `(w, h)`, materials and work progress (M2 goal 3.3; the
+    /// hut's from the colony rule).
+    pub const fn plan(self, rule: &crate::rules::ColonyRule) -> ((u32, u32), MaterialNeeds, u32) {
+        match self {
+            Self::Hut => (
+                rule.hut_footprint,
+                MaterialNeeds::single(ItemKind::Log, rule.hut_logs),
+                rule.hut_progress,
+            ),
+            Self::KnappingSpot => ((1, 1), MaterialNeeds::single(ItemKind::Stone, 4), 60),
+            Self::WoodBench => (
+                (2, 1),
+                MaterialNeeds::pair((ItemKind::Log, 6), (ItemKind::Stone, 2)),
+                120,
+            ),
+            Self::DryingRack => ((2, 1), MaterialNeeds::single(ItemKind::Log, 4), 80),
         }
     }
 }
 
-/// Materials a colony construction site still needs (an ECS component next
-/// to its `ConstructionSite`): building work starts once `delivered == needed`.
+/// One material line of a site's needs.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-pub struct MaterialNeeds {
+pub struct NeedLine {
     /// The material.
     pub kind: ItemKind,
-    /// How many the blueprint needs.
+    /// How many the blueprint needs (0 = an unused line).
     pub needed: u16,
     /// How many have been brought.
     pub delivered: u16,
+}
+
+/// Materials a colony construction site still needs (an ECS component next
+/// to its `ConstructionSite`): building work starts once every line is
+/// delivered. M2: up to two lines (the wood bench needs logs and stone).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub struct MaterialNeeds {
+    /// The lines; an unused line has `needed == 0`.
+    pub lines: [NeedLine; 2],
+}
+
+impl MaterialNeeds {
+    /// One material line.
+    pub const fn single(kind: ItemKind, needed: u16) -> Self {
+        Self {
+            lines: [
+                NeedLine {
+                    kind,
+                    needed,
+                    delivered: 0,
+                },
+                NeedLine {
+                    kind,
+                    needed: 0,
+                    delivered: 0,
+                },
+            ],
+        }
+    }
+
+    /// Two material lines.
+    pub const fn pair(a: (ItemKind, u16), b: (ItemKind, u16)) -> Self {
+        Self {
+            lines: [
+                NeedLine {
+                    kind: a.0,
+                    needed: a.1,
+                    delivered: 0,
+                },
+                NeedLine {
+                    kind: b.0,
+                    needed: b.1,
+                    delivered: 0,
+                },
+            ],
+        }
+    }
+
+    /// Every used line, in order.
+    pub fn used(&self) -> impl Iterator<Item = &NeedLine> {
+        self.lines.iter().filter(|line| line.needed > 0)
+    }
+
+    /// Items needed in total.
+    pub fn needed_total(&self) -> u16 {
+        self.used().map(|line| line.needed).sum()
+    }
+
+    /// Items delivered in total.
+    pub fn delivered_total(&self) -> u16 {
+        self.used().map(|line| line.delivered).sum()
+    }
+
+    /// Items of `kind` delivered.
+    pub fn delivered_of(&self, kind: ItemKind) -> u16 {
+        self.used()
+            .filter(|line| line.kind == kind)
+            .map(|line| line.delivered)
+            .sum()
+    }
+
+    /// Items of `kind` still missing.
+    pub fn missing(&self, kind: ItemKind) -> u16 {
+        self.used()
+            .filter(|line| line.kind == kind)
+            .map(|line| line.needed.saturating_sub(line.delivered))
+            .sum()
+    }
+
+    /// Whether every line is delivered.
+    pub fn complete(&self) -> bool {
+        self.used().all(|line| line.delivered >= line.needed)
+    }
+
+    /// Add up to `n` items of `kind`; returns how many were taken.
+    pub fn deliver(&mut self, kind: ItemKind, n: u16) -> u16 {
+        let mut left = n;
+        for line in self.lines.iter_mut() {
+            if line.kind == kind && line.needed > line.delivered {
+                let add = left.min(line.needed - line.delivered);
+                line.delivered += add;
+                left -= add;
+            }
+        }
+        n - left
+    }
 }
 
 /// What the blueprint of a colony site is (an ECS component next to its
@@ -120,6 +300,8 @@ pub enum Occupant {
     Site((u32, u32)),
     /// A finished hut, by its centre tile.
     Hut((u32, u32)),
+    /// A finished workshop, by its id (M2).
+    Workshop(u32),
 }
 
 /// A thing a job holds so no one else takes it (7.2). Ordered for `BTreeMap`.
@@ -133,13 +315,22 @@ pub enum ReserveKey {
     Cell((u32, u32)),
     /// A site being built (the builder's slot), by centre tile.
     Site((u32, u32)),
+    /// A resource node being quarried, by tile (M2).
+    Node((u32, u32)),
+    /// A workshop's work tile (its crafter's slot), by the work tile (M2).
+    Bench((u32, u32)),
 }
 
 impl ReserveKey {
     /// The tile the key names.
     pub const fn tile(self) -> (u32, u32) {
         match self {
-            Self::Tree(t) | Self::Stack(t) | Self::Cell(t) | Self::Site(t) => t,
+            Self::Tree(t)
+            | Self::Stack(t)
+            | Self::Cell(t)
+            | Self::Site(t)
+            | Self::Node(t)
+            | Self::Bench(t) => t,
         }
     }
 }
@@ -163,6 +354,20 @@ mod tests {
         assert_eq!(tiles[8], (12, 22));
         assert_eq!(BlueprintKind::from_name("hut"), Some(BlueprintKind::Hut));
         assert_eq!(BlueprintKind::from_name("wall"), None);
+        for kind in BlueprintKind::ALL {
+            assert_eq!(BlueprintKind::from_name(kind.name()), Some(kind));
+        }
+        let codes: Vec<u8> = BlueprintKind::ALL.iter().map(|k| k.code()).collect();
+        assert_eq!(codes, vec![0, 1, 2, 3]);
+        let mut needs = MaterialNeeds::pair((ItemKind::Log, 6), (ItemKind::Stone, 2));
+        assert_eq!(
+            (needs.needed_total(), needs.missing(ItemKind::Stone)),
+            (8, 2)
+        );
+        assert_eq!(needs.deliver(ItemKind::Stone, 5), 2);
+        assert_eq!(needs.deliver(ItemKind::Log, 6), 6);
+        assert!(needs.complete());
+        assert_eq!(MaterialNeeds::single(ItemKind::Log, 12).needed_total(), 12);
         assert_eq!(ReserveKey::Cell((4, 5)).tile(), (4, 5));
     }
 }

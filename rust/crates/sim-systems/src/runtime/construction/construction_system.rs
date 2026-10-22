@@ -76,7 +76,7 @@ use std::collections::HashMap;
 use hecs::{Entity, World};
 use sim_core::causal::CausalEvent;
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
-use sim_core::colony::{ColonySite, ItemKind, MaterialNeeds, Occupant};
+use sim_core::colony::{ColonySite, MaterialNeeds, Occupant, Workshop};
 use sim_core::components::{
     Agent, AgentId, AgentState, BuildingBlueprint, BuildingKind, ConstructionSite, Position,
     SettlementId, TargetKind,
@@ -128,7 +128,7 @@ impl RuntimeSystem for ConstructionSystem {
             for (e, (site, needs)) in q.iter() {
                 let key = (site.position.x, site.position.y);
                 // M1: a colony site waiting for materials is not workable yet.
-                let waiting = needs.is_some_and(|n| n.delivered < n.needed);
+                let waiting = needs.is_some_and(|n| !n.complete());
                 if site.is_complete() || waiting {
                     complete_sites_by_pos.insert(key, e);
                 } else {
@@ -277,7 +277,11 @@ impl RuntimeSystem for ConstructionSystem {
                     .map(|(_, (agent, _, _))| agent.id)
                     .collect();
                 builders.sort_unstable();
-                complete_hut(world, resources, site, needs, &builders, tick);
+                if site.kind.is_workshop() {
+                    complete_workshop(resources, site, needs);
+                } else {
+                    complete_hut(world, resources, site, needs, &builders, tick);
+                }
             }
             let tile_idx = position.1 * width + position.0;
 
@@ -378,6 +382,41 @@ fn nearest_settlement(resources: &SimResources, tile: (u32, u32)) -> Option<Sett
     })
 }
 
+/// M2: a finished workshop blueprint becomes a [`Workshop`] in
+/// `colony.workshops` (no bills, an empty shelf), its footprint a workshop
+/// footprint, its materials consumed. It is not a dwelling: no sleep tile, no
+/// owner, no `building_kinds` entry.
+fn complete_workshop(resources: &mut SimResources, site: ColonySite, needs: MaterialNeeds) {
+    let id = resources.colony.next_workshop_id.max(1);
+    resources.colony.next_workshop_id = id + 1;
+    for tile in site.tiles() {
+        resources
+            .colony
+            .occupied
+            .insert(tile, Occupant::Workshop(id));
+    }
+    for line in needs.used() {
+        resources
+            .colony
+            .item_ledger
+            .consume(line.kind, u64::from(line.delivered));
+    }
+    resources.colony.workshops.insert(
+        id,
+        Workshop {
+            id,
+            kind: site.kind,
+            top_left: site.top_left,
+            size: site.size,
+            bills: Vec::new(),
+            shelf: Vec::new(),
+            active: None,
+        },
+    );
+    resources.colony.tallies.workshops_built += 1;
+    resources.colony.touch(false);
+}
+
 /// M1: a finished colony site becomes a hut — registered like a shelter at
 /// its centre, owned by the nearest settlement, its logs consumed.
 fn complete_hut(
@@ -397,10 +436,12 @@ fn complete_hut(
             .occupied
             .insert(tile, Occupant::Hut(centre));
     }
-    resources
-        .colony
-        .item_ledger
-        .consume(ItemKind::Log, u64::from(needs.delivered));
+    for line in needs.used() {
+        resources
+            .colony
+            .item_ledger
+            .consume(line.kind, u64::from(line.delivered));
+    }
     resources.colony.tallies.huts_built += 1;
     resources.colony.touch(false);
     let mut entry = ChronicleEntry::new(tick, ChronicleKind::HutBuilt);

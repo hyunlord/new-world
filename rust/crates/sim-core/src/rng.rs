@@ -114,8 +114,16 @@ pub const STREAM_COLONY_FOUNDER_FIX: u64 = 0x434F_4C46_4E46_4958;
 /// lineage key, day index)` ("conceive").
 pub const STREAM_CONCEIVE: u64 = 0x434F_4E43_4549_5645;
 
+/// M2: boulder placement and stone amounts (`"BOULDERS"`; subject x, tick y, slot 0 =
+/// placement, 1 = amount).
+pub const STREAM_BOULDER: u64 = 0x424F_554C_4445_5253;
+/// M2: flint outcrop choice and amounts (`"OUTCROPS"`; shuffle slot 0, amount slot 1).
+pub const STREAM_OUTCROP: u64 = 0x4F55_5443_524F_5053;
+/// M2: a craft's quality bonus (`"QUALITY_"`; subject agent, tick, slot bill, replicate 0/1).
+pub const STREAM_QUALITY: u64 = 0x5155_414C_4954_595F;
+
 /// Every stream constant, for the distinctness test and the inventory.
-pub const STREAMS: [u64; 27] = [
+pub const STREAMS: [u64; 30] = [
     STREAM_MOVE_PAUSE,
     STREAM_MOVE_DX,
     STREAM_MOVE_DY,
@@ -143,6 +151,9 @@ pub const STREAMS: [u64; 27] = [
     STREAM_COLONY_WOOD,
     STREAM_COLONY_FOUNDER_FIX,
     STREAM_CONCEIVE,
+    STREAM_BOULDER,
+    STREAM_OUTCROP,
+    STREAM_QUALITY,
 ];
 
 /// One splitmix64 output for state `x` (identical to `MovementRng::new(x).next_u64()`).

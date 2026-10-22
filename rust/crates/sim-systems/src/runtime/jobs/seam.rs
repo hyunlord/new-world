@@ -28,7 +28,7 @@
 //! would be undone. M1's `ColonyRule::M1` (`None`) keeps M1: every holder runs it.
 
 use hecs::{Entity, World};
-use sim_core::colony::{CancelReason, Job, JobKind, JobReleaseKey, JobStage};
+use sim_core::colony::{CancelReason, Job, JobReleaseKey, JobStage};
 use sim_core::components::{AgentState, Hunger, Position, Sleep, TargetKind, Thirst};
 use sim_engine::SimResources;
 use std::collections::BTreeSet;
@@ -38,12 +38,8 @@ use super::cancel::release_job;
 /// The measurement key of a release to `choice` (see `JobReleaseKey`).
 fn release_key(world: &World, entity: Entity, choice: AgentState) -> JobReleaseKey {
     let job = world.get::<&Job>(entity).ok().map(|job| *job);
-    let kind = match job.map(|j| j.kind) {
-        Some(JobKind::Chop { .. }) => 0,
-        Some(JobKind::Haul { .. }) => 1,
-        Some(JobKind::Deliver { .. }) => 2,
-        Some(JobKind::Build { .. }) | None => 3,
-    };
+    // `JobKind::code` − 1: 0 chop, 1 haul, 2 deliver, 3 build (and no job), 4 quarry, …
+    let kind = job.map_or(3, |j| j.kind.code().saturating_sub(1));
     let stage = match job.map(|j| j.stage) {
         Some(JobStage::ToSource) | None => 0,
         Some(JobStage::Working { .. }) => 1,
@@ -238,13 +234,15 @@ mod tests {
     ) -> (World, Entity) {
         let mut world = World::new();
         let job = Job {
-            kind: JobKind::Haul {
+            kind: sim_core::colony::JobKind::Haul {
                 from: (0, 0),
                 to: (30, 0),
             },
             stage,
             taken_at: 0,
             amount: 5,
+            item: sim_core::colony::ItemKind::Log,
+            material: None,
             best_distance: 0,
             progress_tick: 0,
         };

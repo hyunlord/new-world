@@ -1,42 +1,111 @@
-//! The 7.6 invariants: log conservation, reservations, stacks. Asserted every
-//! tick by tests and, under debug assertions, by `JobExecuteSystem`.
+//! The 7.6 invariants: item conservation per kind (M2 goal 3.1), reservations,
+//! stacks. Asserted every tick by tests and, under debug assertions, by
+//! `JobExecuteSystem`.
 use hecs::World;
-use sim_core::colony::{Carry, ItemKind, Job, ReserveKey};
+use sim_core::colony::{Carry, ItemKind, Job, ReserveKey, Tool};
 use sim_core::components::{Agent, AgentId};
 use sim_engine::SimResources;
 use std::collections::{BTreeMap, BTreeSet};
 
-use super::items::{can_hold_items, colony_sites};
+use super::items::{can_hold_items, colony_sites, stack_max};
 
-/// The ledger's terms for logs: `(created, on the ground, carried, delivered, consumed)`.
-pub fn log_ledger(world: &World, res: &SimResources) -> (u64, u64, u64, u64, u64) {
+/// Where the items of one kind are (M2 goal 3.1): the terms of the per-kind
+/// conservation `created == ground + carried + held + delivered + shelved + consumed`.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct LedgerTerms {
+    /// Items ever created (`ItemLedger::created`).
+    pub created: u64,
+    /// On the ground (stacks).
+    pub ground: u64,
+    /// In agents' hands (`Carry`).
+    pub carried: u64,
+    /// Held as tools (`Tool`).
+    pub held: u64,
+    /// Delivered to construction sites (`MaterialNeeds`).
+    pub delivered: u64,
+    /// On workshop input shelves.
+    pub shelved: u64,
+    /// Used up (`ItemLedger::consumed`).
+    pub consumed: u64,
+}
+
+impl LedgerTerms {
+    /// Whether the conservation holds.
+    pub const fn balanced(&self) -> bool {
+        self.created
+            == self.ground
+                + self.carried
+                + self.held
+                + self.delivered
+                + self.shelved
+                + self.consumed
+    }
+}
+
+/// The ledger terms of `kind`.
+pub fn ledger_of(world: &World, res: &SimResources, kind: ItemKind) -> LedgerTerms {
     let carried = world
         .query::<&Carry>()
         .iter()
-        .filter(|(_, carry)| carry.kind == ItemKind::Log)
+        .filter(|(_, carry)| carry.kind == kind)
         .map(|(_, carry)| u64::from(carry.count))
         .sum();
+    let held = world
+        .query::<&Tool>()
+        .iter()
+        .filter(|(_, tool)| tool.item.kind == kind)
+        .count() as u64;
     let delivered = colony_sites(world)
         .values()
-        .filter(|view| view.needs.kind == ItemKind::Log)
-        .map(|view| u64::from(view.needs.delivered))
+        .map(|view| u64::from(view.needs.delivered_of(kind)))
         .sum();
-    (
-        res.colony.item_ledger.created_of(ItemKind::Log),
-        res.colony.ground_total(ItemKind::Log),
+    let shelved = res
+        .colony
+        .workshops
+        .values()
+        .flat_map(|w| w.shelf.iter())
+        .filter(|stack| stack.kind == kind)
+        .map(|stack| u64::from(stack.count))
+        .sum();
+    LedgerTerms {
+        created: res.colony.item_ledger.created_of(kind),
+        ground: res.colony.ground_total(kind),
         carried,
+        held,
         delivered,
-        res.colony.item_ledger.consumed_of(ItemKind::Log),
+        shelved,
+        consumed: res.colony.item_ledger.consumed_of(kind),
+    }
+}
+
+/// The ledger's terms for logs: `(created, on the ground, carried, delivered, consumed)` (M1's form).
+pub fn log_ledger(world: &World, res: &SimResources) -> (u64, u64, u64, u64, u64) {
+    let t = ledger_of(world, res, ItemKind::Log);
+    (
+        t.created,
+        t.ground,
+        t.carried,
+        t.delivered + t.shelved + t.held,
+        t.consumed,
     )
 }
 
 /// Check every 7.6 invariant; the first broken one is returned as text.
+/// The ledger message starts with `item ledger` (`log ledger` for logs, M1's form).
 pub fn check(world: &World, res: &SimResources) -> Result<(), String> {
-    let (created, ground, carried, delivered, consumed) = log_ledger(world, res);
-    if created != ground + carried + delivered + consumed {
-        return Err(format!(
-            "log ledger: created {created} != ground {ground} + carried {carried} + delivered {delivered} + consumed {consumed}"
-        ));
+    for kind in ItemKind::ALL {
+        let t = ledger_of(world, res, kind);
+        if !t.balanced() {
+            let label = if kind == ItemKind::Log {
+                "log ledger".to_string()
+            } else {
+                format!("item ledger ({})", kind.name())
+            };
+            return Err(format!(
+                "{label}: created {} != ground {} + carried {} + held {} + delivered {} + shelved {} + consumed {}",
+                t.created, t.ground, t.carried, t.held, t.delivered, t.shelved, t.consumed
+            ));
+        }
     }
     let mut held: BTreeMap<AgentId, BTreeSet<ReserveKey>> = BTreeMap::new();
     for (_, (agent, job)) in world.query::<(&Agent, &Job)>().iter() {
@@ -68,11 +137,8 @@ pub fn check(world: &World, res: &SimResources) -> Result<(), String> {
             ));
         }
     }
-    let max = res
-        .rules
-        .colony
-        .map_or(u16::MAX, |rule| rule.stack_max_logs);
     for (tile, stack) in &res.colony.ground_items {
+        let max = stack_max(res, stack.kind);
         if stack.count == 0 || stack.count > max {
             return Err(format!("stack of {} at {tile:?} (max {max})", stack.count));
         }

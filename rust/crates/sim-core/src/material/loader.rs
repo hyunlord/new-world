@@ -72,8 +72,14 @@ impl MaterialDefRaw {
 /// Load a single RON file.
 pub fn load_ron(path: &Path) -> Result<Vec<MaterialDef>, MaterialError> {
     let text = std::fs::read_to_string(path)?;
+    parse_ron_str(&text)
+}
+
+/// Parse one material file's RON text (the body of [`load_ron`]); the M2
+/// colony parses its embedded material files with it (no file I/O at run time).
+pub fn parse_ron_str(text: &str) -> Result<Vec<MaterialDef>, MaterialError> {
     let file: MaterialFile =
-        ron::from_str(&text).map_err(|e| MaterialError::ParseError(e.to_string()))?;
+        ron::from_str(text).map_err(|e| MaterialError::ParseError(e.to_string()))?;
     if file.schema_version != CURRENT_SCHEMA_VERSION {
         return Err(MaterialError::SchemaMismatch {
             file_version: file.schema_version,

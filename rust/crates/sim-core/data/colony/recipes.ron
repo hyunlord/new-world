@@ -1,0 +1,34 @@
+// M2 recipes (docs/v8/m2/M2_GOAL.md 3.4). Loaded by sim_core::colony::workshop::recipes()
+// (embedded with include_str!, parsed once). Work ticks are at skill level 5 (speed 1000 ‰).
+(
+    schema_version: 1,
+    recipes: [
+        (
+            id: "knap_blade",
+            workshop: "knapping_spot",
+            inputs: [("flint", 1)],
+            output: ("flint_blade", 1),
+            work_ticks: 45,
+            skill: "knap",
+            work: "craft",
+        ),
+        (
+            id: "haft_axe",
+            workshop: "wood_bench",
+            inputs: [("flint_blade", 1), ("log", 1)],
+            output: ("stone_axe", 1),
+            work_ticks: 90,
+            skill: "woodwork",
+            work: "craft",
+        ),
+        (
+            id: "split_firewood",
+            workshop: "wood_bench",
+            inputs: [("log", 1)],
+            output: ("firewood", 4),
+            work_ticks: 30,
+            skill: "woodwork",
+            work: "split",
+        ),
+    ],
+)

@@ -199,8 +199,8 @@ pub fn collect_colony_overlay(world: &hecs::World, resources: &SimResources) -> 
             w: view.site.size.0,
             h: view.site.size.1,
             kind: view.site.kind.code(),
-            needed: view.needs.needed,
-            delivered: view.needs.delivered,
+            needed: view.needs.needed_total(),
+            delivered: view.needs.delivered_total(),
             progress: view.progress,
             required: view.required,
         })

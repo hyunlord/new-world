@@ -1,7 +1,7 @@
 //! Player orders as recorded commands (M1, ADR 0012): the command, its result and the log entry.
 use serde::{Deserialize, Serialize};
 
-use super::BlueprintKind;
+use super::{BillId, BillMode, BlueprintKind, RecipeKind, WorkType, WorkshopId};
 use crate::components::AgentId;
 
 /// One player order. Applied only through `sim_systems::commands::apply_command`
@@ -68,6 +68,69 @@ pub enum Command {
         /// Footprint top-left y.
         y: u32,
     },
+    /// Mark every resource node (boulder, flint outcrop) in the rectangle for quarrying (M2).
+    DesignateQuarry {
+        /// Corner x.
+        x0: u32,
+        /// Corner y.
+        y0: u32,
+        /// Opposite corner x.
+        x1: u32,
+        /// Opposite corner y.
+        y1: u32,
+    },
+    /// Add a bill at the end of a workshop's list (M2 goal 3.5).
+    AddBill {
+        /// The workshop.
+        workshop: WorkshopId,
+        /// What to make.
+        recipe: RecipeKind,
+        /// Make n / maintain n.
+        mode: BillMode,
+    },
+    /// Remove a bill (its crafts and supplies in progress are cancelled).
+    RemoveBill {
+        /// The workshop.
+        workshop: WorkshopId,
+        /// The bill.
+        bill: BillId,
+    },
+    /// Change a bill's mode (its count of crafts done restarts at 0).
+    SetBillMode {
+        /// The workshop.
+        workshop: WorkshopId,
+        /// The bill.
+        bill: BillId,
+        /// The new mode.
+        mode: BillMode,
+    },
+    /// Move a bill one place up (`up`) or down in its workshop's list.
+    MoveBill {
+        /// The workshop.
+        workshop: WorkshopId,
+        /// The bill.
+        bill: BillId,
+        /// Towards the front.
+        up: bool,
+    },
+    /// Suspend or resume a bill.
+    SetBillSuspended {
+        /// The workshop.
+        workshop: WorkshopId,
+        /// The bill.
+        bill: BillId,
+        /// Suspended or not.
+        suspended: bool,
+    },
+    /// Set one person's priority for one work type (0 = never, 1 highest … 4 lowest; M2 goal 3.6).
+    SetWorkPriority {
+        /// The person.
+        agent: AgentId,
+        /// The work type.
+        work: WorkType,
+        /// The level 0–4.
+        level: u8,
+    },
     /// Draft or release a person (reserved for M5; rejected in M1).
     SetDrafted {
         /// The person.
@@ -87,6 +150,13 @@ impl Command {
             Self::AddStockpile { .. } => "add_stockpile",
             Self::RemoveZoneArea { .. } => "remove_zone_area",
             Self::PlaceBlueprint { .. } => "place_blueprint",
+            Self::DesignateQuarry { .. } => "designate_quarry",
+            Self::AddBill { .. } => "add_bill",
+            Self::RemoveBill { .. } => "remove_bill",
+            Self::SetBillMode { .. } => "set_bill_mode",
+            Self::MoveBill { .. } => "move_bill",
+            Self::SetBillSuspended { .. } => "set_bill_suspended",
+            Self::SetWorkPriority { .. } => "set_work_priority",
             Self::SetDrafted { .. } => "set_drafted",
         }
     }
@@ -107,6 +177,10 @@ pub enum RejectReason {
     Nothing,
     /// The command exists but is not part of this milestone (drafting, M5).
     NotYet,
+    /// The workshop does not make that recipe (M2).
+    WrongWorkshop,
+    /// No such workshop, bill or person (M2).
+    Unknown,
 }
 
 impl RejectReason {
@@ -119,6 +193,8 @@ impl RejectReason {
             Self::Blocked => "blocked",
             Self::Nothing => "nothing",
             Self::NotYet => "not_yet",
+            Self::WrongWorkshop => "wrong_workshop",
+            Self::Unknown => "unknown",
         }
     }
 }

@@ -11,12 +11,15 @@
 //! rectangle wholly outside the map is `OutOfMap`, and a valid one that
 //! changes nothing is `Nothing`.
 use hecs::{Entity, World};
+use sim_core::colony::skills::LOWEST_PRIORITY;
+use sim_core::colony::workshop::work_tile_of;
 use sim_core::colony::{
-    BlueprintKind, CancelReason, ColonySite, Command, CommandRecord, CommandResult, Designation,
-    ItemKind, Job, JobKind, MaterialNeeds, Occupant, RejectReason, Zone, ZoneKind,
+    Bill, BillId, BlueprintKind, CancelReason, ColonySite, Command, CommandRecord, CommandResult,
+    Designation, ItemSpec, Job, JobKind, MaterialNeeds, Occupant, RejectReason, WorkPriorities,
+    WorkType, Workshop, WorkshopId, Zone, ZoneKind,
 };
 use sim_core::components::{
-    Agent, AgentId, BuildingBlueprint, ConstructionSite, Position, HUT_BLUEPRINT_ID,
+    Agent, AgentId, BuildingBlueprint, Child, ConstructionSite, Elder, Position, HUT_BLUEPRINT_ID,
 };
 use sim_core::TerrainType;
 use sim_engine::{SimEngine, SimResources};
@@ -97,8 +100,160 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
                 CommandResult::ok(1)
             }
         },
+        Command::DesignateQuarry { x0, y0, x1, y1 } => match rect_tiles(res, x0, y0, x1, y1) {
+            None => CommandResult::rejected(RejectReason::OutOfMap),
+            Some(tiles) => counted(designate_quarry(res, &tiles)),
+        },
+        Command::AddBill {
+            workshop,
+            recipe,
+            mode,
+        } => bill_command(res, workshop, |shop, next| {
+            let fits = recipe.recipe().is_some_and(|r| r.workshop == shop.kind);
+            if !fits {
+                return Err(RejectReason::WrongWorkshop);
+            }
+            shop.bills.push(Bill {
+                id: next,
+                recipe,
+                mode,
+                done: 0,
+                suspended: false,
+            });
+            Ok(true)
+        }),
+        Command::RemoveBill { workshop, bill } => {
+            let result = bill_command(res, workshop, |shop, _| {
+                let before = shop.bills.len();
+                shop.bills.retain(|b| b.id != bill);
+                if shop.active == Some(bill) {
+                    shop.active = None;
+                }
+                if before == shop.bills.len() {
+                    return Err(RejectReason::Unknown);
+                }
+                Ok(false)
+            });
+            if result.accepted {
+                // Its crafts and the supplies of this workshop stop; the next
+                // BillSystem run picks another bill and puts unused shelf items down.
+                cancel_jobs_where(world, res, |job| match job.kind {
+                    JobKind::Craft { bill: b, .. } => b == bill,
+                    JobKind::Supply { workshop: w, .. } => w == workshop,
+                    _ => false,
+                });
+                crate::runtime::jobs::bills::schedule(res);
+            }
+            result
+        }
+        Command::SetBillMode {
+            workshop,
+            bill,
+            mode,
+        } => bill_command(res, workshop, |shop, _| {
+            let found = shop
+                .bills
+                .iter_mut()
+                .find(|b| b.id == bill)
+                .ok_or(RejectReason::Unknown)?;
+            found.mode = mode;
+            found.done = 0;
+            Ok(false)
+        }),
+        Command::MoveBill { workshop, bill, up } => bill_command(res, workshop, |shop, _| {
+            let i = shop
+                .bills
+                .iter()
+                .position(|b| b.id == bill)
+                .ok_or(RejectReason::Unknown)?;
+            let j = if up { i.checked_sub(1) } else { Some(i + 1) };
+            match j.filter(|j| *j < shop.bills.len()) {
+                Some(j) => {
+                    shop.bills.swap(i, j);
+                    Ok(false)
+                }
+                None => Err(RejectReason::Nothing),
+            }
+        }),
+        Command::SetBillSuspended {
+            workshop,
+            bill,
+            suspended,
+        } => bill_command(res, workshop, |shop, _| {
+            let found = shop
+                .bills
+                .iter_mut()
+                .find(|b| b.id == bill)
+                .ok_or(RejectReason::Unknown)?;
+            if found.suspended == suspended {
+                return Err(RejectReason::Nothing);
+            }
+            found.suspended = suspended;
+            Ok(false)
+        }),
+        Command::SetWorkPriority { agent, work, level } => {
+            set_work_priority(world, agent, work, level)
+        }
         Command::SetDrafted { .. } => CommandResult::rejected(RejectReason::NotYet),
     }
+}
+
+/// Apply `edit` to `workshop` (`Unknown` when there is none) and reschedule
+/// its bills. `edit` gets the next bill id and returns whether it used it.
+fn bill_command(
+    res: &mut SimResources,
+    workshop: WorkshopId,
+    edit: impl FnOnce(&mut Workshop, BillId) -> Result<bool, RejectReason>,
+) -> CommandResult {
+    let next = res.colony.next_bill_id.max(1);
+    let Some(shop) = res.colony.workshops.get_mut(&workshop) else {
+        return CommandResult::rejected(RejectReason::Unknown);
+    };
+    match edit(shop, next) {
+        Err(reason) => CommandResult::rejected(reason),
+        Ok(used) => {
+            if used {
+                res.colony.next_bill_id = next + 1;
+            }
+            crate::runtime::jobs::bills::schedule(res);
+            res.colony.touch(false);
+            CommandResult::ok(1)
+        }
+    }
+}
+
+/// `SetWorkPriority` (M2 goal 3.6): insert or update the person's
+/// `WorkPriorities` (a structural insert between ticks). Children cannot work
+/// (`Blocked`); a level above 4 is `OutOfMap` (out of range).
+fn set_work_priority(
+    world: &mut World,
+    agent: AgentId,
+    work: WorkType,
+    level: u8,
+) -> CommandResult {
+    if level > LOWEST_PRIORITY {
+        return CommandResult::rejected(RejectReason::OutOfMap);
+    }
+    let Some((entity, child, elder)) = world
+        .query::<(&Agent, Option<&Child>, Option<&Elder>)>()
+        .iter()
+        .find(|(_, (a, _, _))| a.id == agent)
+        .map(|(e, (_, c, el))| (e, c.is_some(), el.is_some()))
+    else {
+        return CommandResult::rejected(RejectReason::Unknown);
+    };
+    if child {
+        return CommandResult::rejected(RejectReason::Blocked);
+    }
+    let mut priorities = world
+        .get::<&WorkPriorities>(entity)
+        .map_or(WorkPriorities::defaults(elder), |p| *p);
+    if priorities.level(work) == level {
+        return CommandResult::rejected(RejectReason::Nothing);
+    }
+    priorities.levels[work.code() as usize] = level;
+    let _ = world.insert_one(entity, priorities);
+    CommandResult::ok(1)
 }
 
 /// Apply `cmd` before the engine's next tick and append it to the command log.
@@ -118,6 +273,21 @@ fn designate(res: &mut SimResources, tiles: &[Tile]) -> usize {
     for tile in tiles {
         if res.colony.trees.contains_key(tile) && !res.colony.designations.contains_key(tile) {
             res.colony.designations.insert(*tile, Designation::Chop);
+            count += 1;
+        }
+    }
+    if count > 0 {
+        res.colony.touch(false);
+    }
+    count
+}
+
+/// Mark every unmarked resource node among `tiles` for quarrying (M2).
+fn designate_quarry(res: &mut SimResources, tiles: &[Tile]) -> usize {
+    let mut count = 0;
+    for tile in tiles {
+        if res.colony.nodes.contains_key(tile) && !res.colony.designations.contains_key(tile) {
+            res.colony.designations.insert(*tile, Designation::Quarry);
             count += 1;
         }
     }
@@ -155,11 +325,11 @@ fn cancel_area(world: &mut World, res: &mut SimResources, tiles: &[Tile]) -> usi
         res.colony.designations.remove(tile);
     }
     let marked: BTreeSet<Tile> = marks.iter().copied().collect();
-    cancel_jobs_where(
-        world,
-        res,
-        |job| matches!(job.kind, JobKind::Chop { tree } if marked.contains(&tree)),
-    );
+    cancel_jobs_where(world, res, |job| match job.kind {
+        JobKind::Chop { tree } => marked.contains(&tree),
+        JobKind::Quarry { node } => marked.contains(&node),
+        _ => false,
+    });
     // Blueprint sites whose footprint touches the area.
     let mut sites: Vec<(Tile, Entity, ColonySite, MaterialNeeds)> = world
         .query::<(&ColonySite, &MaterialNeeds)>()
@@ -178,8 +348,11 @@ fn cancel_area(world: &mut World, res: &mut SimResources, tiles: &[Tile]) -> usi
             res.colony.occupied.remove(&tile);
         }
         let _ = world.despawn(*entity);
-        if needs.delivered > 0 {
-            put_items(res, *centre, needs.kind, needs.delivered);
+        for line in needs.used() {
+            if line.delivered > 0 {
+                let spec = ItemSpec::raw(line.kind, None);
+                put_items(res, *centre, spec, line.delivered);
+            }
         }
     }
     if !marks.is_empty() || !sites.is_empty() {
@@ -276,8 +449,9 @@ fn footprint(
     x: u32,
     y: u32,
 ) -> Result<ColonySite, RejectReason> {
-    let size = match kind {
-        BlueprintKind::Hut => res.rules.colony.map_or((3, 3), |rule| rule.hut_footprint),
+    let size = match res.rules.colony {
+        Some(rule) => kind.plan(&rule).0,
+        None => (3, 3),
     };
     let (w, h) = (res.tile_grid.width, res.tile_grid.height);
     if x.checked_add(size.0).is_none_or(|end| end > w)
@@ -321,8 +495,30 @@ pub fn check_blueprint(
             || res.colony.zone_of_tile.contains_key(t)
             || reserved.contains(t)
     });
-    if blocked {
+    // M2: no footprint tile may cover a workshop's work tile, and a
+    // workshop's own work tile must be on the map, dry, flat and free of buildings.
+    let work_tiles: BTreeSet<Tile> = res
+        .colony
+        .workshops
+        .values()
+        .map(|shop| shop.work_tile())
+        .collect();
+    if blocked || tiles.iter().any(|t| work_tiles.contains(t)) {
         return Err(RejectReason::Blocked);
+    }
+    if kind.is_workshop() {
+        let work = work_tile_of(site.top_left, site.size);
+        if work.1 >= res.tile_grid.height {
+            return Err(RejectReason::OutOfMap);
+        }
+        match terrain(res, work) {
+            Some(TerrainType::River) => return Err(RejectReason::Water),
+            Some(TerrainType::Mountain) | None => return Err(RejectReason::Blocked),
+            _ => {}
+        }
+        if under_building(res, work) {
+            return Err(RejectReason::Blocked);
+        }
     }
     Ok(())
 }
@@ -339,22 +535,20 @@ fn place_blueprint(
         return;
     };
     let centre = site.centre();
-    let (logs, progress) = match kind {
-        BlueprintKind::Hut => (rule.hut_logs, rule.hut_progress),
-    };
+    let (_, needs, progress) = kind.plan(rule);
     for tile in site.tiles() {
         res.colony.occupied.insert(tile, Occupant::Site(centre));
     }
     // Loose logs under the new footprint move out (merge and spill, 7.4); none
     // of them is reserved (a reserved tile blocks the placement).
-    let under: BTreeMap<Tile, (ItemKind, u16)> = site
+    let under: BTreeMap<Tile, (ItemSpec, u16)> = site
         .tiles()
         .into_iter()
         .filter_map(|t| {
             res.colony
                 .ground_items
                 .get(&t)
-                .map(|s| (t, (s.kind, s.count)))
+                .map(|s| (t, (s.spec(), s.count)))
         })
         .collect();
     for (tile, (item, count)) in under {
@@ -366,11 +560,7 @@ fn place_blueprint(
             BuildingBlueprint::new(HUT_BLUEPRINT_ID, site.size.0, site.size.1, progress),
             Position::new(centre.0, centre.1),
         ),
-        MaterialNeeds {
-            kind: ItemKind::Log,
-            needed: logs,
-            delivered: 0,
-        },
+        needs,
         site,
     ));
     res.colony.touch(false);

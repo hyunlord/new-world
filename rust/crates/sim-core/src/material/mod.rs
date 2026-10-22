@@ -26,7 +26,9 @@ pub use derivation::{
 pub use error::MaterialError;
 pub use explanation::{explain, Explanation, PropertyKind};
 pub use id::MaterialId;
-pub use loader::{load_directory, load_ron, MaterialDefRaw, MaterialFile, CURRENT_SCHEMA_VERSION};
+pub use loader::{
+    load_directory, load_ron, parse_ron_str, MaterialDefRaw, MaterialFile, CURRENT_SCHEMA_VERSION,
+};
 pub use properties::MaterialProperties;
 pub use registry::MaterialRegistry;
 pub use terrain::TerrainType;

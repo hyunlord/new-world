@@ -22,7 +22,7 @@
 //! Integer only; nothing here is random or hash-ordered.
 use std::collections::BTreeMap;
 
-use crate::colony::ColonyState;
+use crate::colony::{ColonyState, Designation};
 use crate::components::AgentId;
 
 /// Chunk side in tiles.
@@ -226,6 +226,8 @@ pub struct ColonyIndex {
     pub cells: ChunkIndex<()>,
     /// Every tile with a chop designation.
     pub marked: ChunkIndex<()>,
+    /// Every tile with a quarry designation on a resource node (M2).
+    pub quarry: ChunkIndex<()>,
 }
 
 impl ColonyIndex {
@@ -238,14 +240,18 @@ impl ColonyIndex {
         self.ground.clear();
         self.cells.clear();
         self.marked.clear();
+        self.quarry.clear();
         for tile in colony.ground_items.keys() {
             self.ground.insert(*tile, ());
         }
         for tile in colony.zone_of_tile.keys() {
             self.cells.insert(*tile, ());
         }
-        for tile in colony.designations.keys() {
-            self.marked.insert(*tile, ());
+        for (tile, mark) in &colony.designations {
+            match mark {
+                Designation::Chop => self.marked.insert(*tile, ()),
+                Designation::Quarry => self.quarry.insert(*tile, ()),
+            }
         }
         self.version = Some(colony.overlay_version);
         true

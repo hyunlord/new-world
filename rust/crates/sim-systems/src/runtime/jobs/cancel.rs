@@ -6,7 +6,7 @@
 //! `SeekTarget`. The decision seam uses `release_job`, which leaves the state
 //! and `SeekTarget` to the decision system.
 use hecs::{Entity, World};
-use sim_core::colony::{CancelReason, Carry, Job, ReserveKey};
+use sim_core::colony::{CancelReason, Carry, Job, JobKind, JobStage, ReserveKey};
 use sim_core::components::{Agent, AgentId, AgentState, Position, SeekTarget};
 use sim_engine::SimResources;
 
@@ -30,7 +30,7 @@ pub fn drop_carry(world: &mut World, res: &mut SimResources, entity: Entity) {
         .map(|carry| *carry)
         .zip(world.get::<&Position>(entity).ok().map(|p| (p.x, p.y)));
     if let Some((carry, tile)) = load {
-        put_items(res, tile, carry.kind, carry.count);
+        put_items(res, tile, carry.spec(), carry.count);
         let _ = world.remove_one::<Carry>(entity);
     }
 }
@@ -51,8 +51,16 @@ pub fn release_job(
     if let Some(id) = agent_id(world, entity) {
         release_all(res, id);
     }
-    if world.remove_one::<Job>(entity).is_ok() {
+    if let Ok(job) = world.remove_one::<Job>(entity) {
         *res.colony.tallies.cancels.entry(reason).or_insert(0) += 1;
+        count_lost_craft(res, &job);
+    }
+}
+
+/// A craft cancelled after it started lost its inputs (M2; they were consumed at the start).
+fn count_lost_craft(res: &mut SimResources, job: &Job) {
+    if matches!(job.kind, JobKind::Craft { .. }) && matches!(job.stage, JobStage::Working { .. }) {
+        res.colony.tallies.crafts_lost += 1;
     }
 }
 
@@ -101,11 +109,12 @@ pub fn on_death(world: &mut World, res: &mut SimResources, entity: Entity) {
     if let Some(id) = agent_id(world, entity) {
         release_all(res, id);
     }
-    if world.get::<&Job>(entity).is_ok() {
+    if let Ok(job) = world.get::<&Job>(entity).map(|j| *j) {
         *res.colony
             .tallies
             .cancels
             .entry(CancelReason::Died)
             .or_insert(0) += 1;
+        count_lost_craft(res, &job);
     }
 }

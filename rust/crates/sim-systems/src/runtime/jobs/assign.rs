@@ -1,4 +1,4 @@
-//! JobAssignSystem: gives available colonists a job — Build (deliver, then build) > Chop > Haul.
+//! JobAssignSystem: gives available colonists a job — by work type: Craft > Build (deliver, then build) > Quarry > Chop > Split > Haul.
 //!
 //! Priority: 124 (`JOB_ASSIGN_PRIORITY`). Interval: 1 tick. Gate: `WorldRules.colony`.
 //! Reads: `Agent`, `Position`, `AgentState`, `Job`, `Child`, `PorterTrip`; `SimResources.colony` (trees, designations, ground items, zones, reservations, footprints), `combat_pairs`, `rules.colony`; colony sites (`ColonySite`, `MaterialNeeds`, `ConstructionSite`)
@@ -9,14 +9,14 @@
 //! porter trip, holds no `Job`, is not in a combat pair, and is `Idle` or at
 //! leisure (`Seeking`/`Consuming { Activity }`): jobs replace leisure and idle
 //! time, never survival work (ADR 0013). Agents are served in ascending
-//! `AgentId`; each takes the first work type with a target within
+//! `AgentId`; each takes the first work type (M2 goal 3.6 order) with a target within
 //! `job_scan_radius` (Chebyshev), nearest first, ties by `(y, x)` (goal 7.2),
 //! found through the spatial index (`SimResources.spatial`, M1.5 goal 6.2).
 //! Reservations are written at once, so a later agent this tick sees them.
 //! A worker leaving leisure keeps its `Activity` component for one tick:
 //! the routine's own cleanup at 125 records it as interrupted.
 use hecs::{Entity, World};
-use sim_core::colony::{ItemKind, Job, JobKind, JobStage, ReserveKey};
+use sim_core::colony::{ItemKind, ItemSpec, Job, JobKind, JobStage, ReserveKey, WorkType};
 use sim_core::components::{
     Agent, AgentId, AgentState, Child, PorterTrip, Position, SeekTarget, TargetKind,
 };
@@ -42,30 +42,60 @@ impl JobAssignSystem {
     }
 }
 
-/// Logs on their way to each site (sum of `Deliver` jobs' amounts), by site centre.
-pub fn in_transit(world: &World) -> BTreeMap<(u32, u32), u16> {
+/// Items on their way to each site, by `(site centre, kind)` (sum of `Deliver` jobs' amounts).
+pub fn in_transit(world: &World) -> BTreeMap<((u32, u32), ItemKind), u16> {
     let mut out = BTreeMap::new();
     for (_, job) in world.query::<&Job>().iter() {
         if let JobKind::Deliver { site, .. } = job.kind {
-            *out.entry(site).or_insert(0) += job.amount;
+            *out.entry((site, job.item)).or_insert(0) += job.amount;
         }
     }
     out
 }
 
+/// Items on their way to each workshop shelf, by `(workshop, kind)` (`Supply` jobs),
+/// and the crafts in progress per bill (`Craft` jobs).
+pub fn shelf_transit(world: &World) -> (BTreeMap<(u32, ItemKind), u16>, BTreeMap<u32, u32>) {
+    let mut supply = BTreeMap::new();
+    let mut crafting = BTreeMap::new();
+    for (_, job) in world.query::<&Job>().iter() {
+        match job.kind {
+            JobKind::Supply { workshop, .. } => {
+                *supply.entry((workshop, job.item)).or_insert(0) += job.amount;
+            }
+            JobKind::Craft { bill, .. } => *crafting.entry(bill).or_insert(0) += 1,
+            _ => {}
+        }
+    }
+    (supply, crafting)
+}
+
+/// Which search a memo belongs to (see [`Memo`]).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+enum Search {
+    ShortSite,
+    Stocked(ItemKind),
+    AnyStack(ItemKind),
+    ReadySite,
+    MarkedTree,
+    QuarryNode,
+    Loose,
+    OpenCell(ItemSpec),
+}
+
 /// Searches that found no candidate anywhere on the map this tick. Within one
 /// `JobAssignSystem` tick the candidates only shrink (each assignment adds
-/// reservations and logs in transit), so an empty search stays empty for
+/// reservations and items in transit), so an empty search stays empty for
 /// every later agent of the tick and is skipped (M1.5 DECISIONS D15).
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Debug, Default, Clone)]
 struct Exhausted {
-    short_site: Memo,
-    stocked_logs: Memo,
-    any_logs: Memo,
-    ready_site: Memo,
-    marked_tree: Memo,
-    loose_logs: Memo,
-    open_cell: Memo,
+    memos: BTreeMap<Search, Memo>,
+}
+
+impl Exhausted {
+    fn memo(&mut self, search: Search) -> &mut Memo {
+        self.memos.entry(search).or_default()
+    }
 }
 
 /// What this tick has learned about one search: `empty` = nothing passes its
@@ -103,103 +133,298 @@ fn search<T: Copy + Ord>(
     found
 }
 
-/// The first job (in work-type order) for an agent at `pos`, or `None`.
+/// What one tick's assignment reads, besides the resources.
+struct Ctx<'a> {
+    rule: &'a ColonyRule,
+    sites: &'a BTreeMap<(u32, u32), SiteView>,
+    site_index: &'a ChunkIndex<()>,
+    transit: &'a BTreeMap<((u32, u32), ItemKind), u16>,
+    supply: &'a BTreeMap<(u32, ItemKind), u16>,
+    crafting: &'a BTreeMap<u32, u32>,
+}
+
+/// A picked job: kind, amount, item.
+type Pick = (JobKind, u16, ItemKind);
+
+/// The first job of work type `work` for an agent at `pos`, or `None`.
 ///
 /// M1.5 (goal 6.2): every candidate search goes through the spatial index —
 /// `ChunkIndex::nearest_where` returns the same tile the M1 linear
 /// `min_by_key((Chebyshev distance, y, x))` over the filtered candidates
-/// returned (ties `(y, x)`), so assignments are unchanged (the M1 fixtures
-/// are byte-identical before and after, DECISIONS D11).
-fn pick(
+/// returned (ties `(y, x)`).
+fn pick_work(
     res: &SimResources,
-    rule: &ColonyRule,
+    ctx: &Ctx,
+    work: WorkType,
     pos: (u32, u32),
-    sites: &BTreeMap<(u32, u32), SiteView>,
-    site_index: &ChunkIndex<()>,
-    transit: &BTreeMap<(u32, u32), u16>,
     ex: &mut Exhausted,
-) -> Option<(JobKind, u16)> {
+) -> Option<Pick> {
     let colony = &res.colony;
     let index = &res.spatial.colony;
+    let rule = ctx.rule;
     let radius = rule.job_scan_radius;
     let free_stack =
         |tile: &(u32, u32)| !colony.reservations.contains_key(&ReserveKey::Stack(*tile));
-    // A loose or stocked log stack someone may take (`zoned` = in a stockpile zone).
-    let log_stack = |tile: (u32, u32), zoned: Option<bool>| {
+    // A stack of `kind` (any kind with `None`) someone may take (`zoned` = in a stockpile zone).
+    let stack_of = |tile: (u32, u32), kind: Option<ItemKind>, zoned: Option<bool>| {
         colony.ground_items.get(&tile).is_some_and(|stack| {
-            stack.kind == ItemKind::Log
+            kind.is_none_or(|k| stack.kind == k)
                 && stack.count > 0
                 && free_stack(&tile)
                 && zoned.is_none_or(|z| colony.zone_of_tile.contains_key(&tile) == z)
         })
     };
     let count = |tile: (u32, u32)| colony.ground_items.get(&tile).map_or(0, |s| s.count);
-    // Build, first half: deliver logs to the nearest site still short of them.
-    let missing = |centre: &(u32, u32)| {
-        sites.get(centre).and_then(|view| {
-            let coming = view.needs.delivered + transit.get(centre).copied().unwrap_or(0);
-            (coming < view.needs.needed).then_some(view.needs.needed - coming)
-        })
-    };
-    let short = search(site_index, pos, radius, &mut ex.short_site, |c, _| {
-        missing(&c).is_some()
-    });
-    if let Some((site, ())) = short {
-        let missing = missing(&site).unwrap_or(0);
-        let stocked = search(&index.ground, pos, radius, &mut ex.stocked_logs, |t, _| {
-            log_stack(t, Some(true))
-        });
-        let source = stocked.or_else(|| {
-            search(&index.ground, pos, radius, &mut ex.any_logs, |t, _| {
-                log_stack(t, None)
-            })
-        });
-        if let Some((from, ())) = source {
-            let amount = rule.carry_logs.min(count(from)).min(missing);
-            return Some((JobKind::Deliver { from, site }, amount));
+    match work {
+        WorkType::Craft | WorkType::Split => {
+            // Workshops whose active bill is of this work type, nearest work tile
+            // first (ties `(y, x)`, then id); workshops are few, so a sorted list
+            // stands in for an index.
+            let mut shops: Vec<(u32, u32, u32, u32)> = colony
+                .workshops
+                .values()
+                .filter_map(|shop| {
+                    let bill = shop.bill(shop.active?)?;
+                    let recipe = bill.recipe.recipe()?;
+                    let tile = shop.work_tile();
+                    let d = chebyshev(pos, tile);
+                    (recipe.work == work && d <= radius).then_some((d, tile.1, tile.0, shop.id))
+                })
+                .collect();
+            shops.sort_unstable();
+            for (_, _, _, id) in shops {
+                let Some(shop) = colony.workshops.get(&id) else {
+                    continue;
+                };
+                let Some(bill) = shop.active.and_then(|b| shop.bill(b)) else {
+                    continue;
+                };
+                let Some(recipe) = bill.recipe.recipe() else {
+                    continue;
+                };
+                let in_progress = ctx.crafting.get(&bill.id).copied().unwrap_or(0);
+                if bill.remaining().is_some_and(|left| left <= in_progress) {
+                    continue; // every remaining craft is already being made
+                }
+                let to = shop.work_tile();
+                // Supply: the first input short of one craft, from the nearest stack.
+                for &(kind, n) in &recipe.inputs {
+                    let coming = ctx.supply.get(&(id, kind)).copied().unwrap_or(0);
+                    let have = shop.shelved(kind) + coming;
+                    if have >= n {
+                        continue;
+                    }
+                    let stocked = search(
+                        &index.ground,
+                        pos,
+                        radius,
+                        ex.memo(Search::Stocked(kind)),
+                        |t, _| stack_of(t, Some(kind), Some(true)),
+                    );
+                    let source = stocked.or_else(|| {
+                        search(
+                            &index.ground,
+                            pos,
+                            radius,
+                            ex.memo(Search::AnyStack(kind)),
+                            |t, _| stack_of(t, Some(kind), None),
+                        )
+                    });
+                    if let Some((from, ())) = source {
+                        let amount = rule.carry(kind).min(count(from)).min(n - have);
+                        return Some((
+                            JobKind::Supply {
+                                from,
+                                workshop: id,
+                                to,
+                            },
+                            amount,
+                            kind,
+                        ));
+                    }
+                }
+                // Craft: every input on the shelf and the bench free.
+                let ready = recipe
+                    .inputs
+                    .iter()
+                    .all(|&(kind, n)| shop.shelved(kind) >= n);
+                if ready && !colony.reservations.contains_key(&ReserveKey::Bench(to)) {
+                    return Some((
+                        JobKind::Craft {
+                            workshop: id,
+                            bill: bill.id,
+                            at: to,
+                        },
+                        0,
+                        recipe.output.0,
+                    ));
+                }
+            }
+            None
+        }
+        WorkType::Build => {
+            // First half: deliver a material to the nearest site still short of one.
+            let missing = |centre: &(u32, u32), kind: ItemKind| {
+                ctx.sites.get(centre).and_then(|view| {
+                    let coming = ctx.transit.get(&(*centre, kind)).copied().unwrap_or(0);
+                    let short = view.needs.missing(kind).saturating_sub(coming);
+                    (short > 0).then_some(short)
+                })
+            };
+            let short_kinds = |centre: &(u32, u32)| -> Vec<ItemKind> {
+                ctx.sites.get(centre).map_or(Vec::new(), |view| {
+                    view.needs
+                        .used()
+                        .map(|line| line.kind)
+                        .filter(|kind| missing(centre, *kind).is_some())
+                        .collect()
+                })
+            };
+            let short = search(
+                ctx.site_index,
+                pos,
+                radius,
+                ex.memo(Search::ShortSite),
+                |c, _| !short_kinds(&c).is_empty(),
+            );
+            if let Some((site, ())) = short {
+                for kind in short_kinds(&site) {
+                    let need = missing(&site, kind).unwrap_or(0);
+                    let stocked = search(
+                        &index.ground,
+                        pos,
+                        radius,
+                        ex.memo(Search::Stocked(kind)),
+                        |t, _| stack_of(t, Some(kind), Some(true)),
+                    );
+                    let source = stocked.or_else(|| {
+                        search(
+                            &index.ground,
+                            pos,
+                            radius,
+                            ex.memo(Search::AnyStack(kind)),
+                            |t, _| stack_of(t, Some(kind), None),
+                        )
+                    });
+                    if let Some((from, ())) = source {
+                        let amount = rule.carry(kind).min(count(from)).min(need);
+                        return Some((JobKind::Deliver { from, site }, amount, kind));
+                    }
+                }
+            }
+            // Second half: build a site whose materials are all there.
+            let ready = |centre: (u32, u32)| {
+                ctx.sites.get(&centre).is_some_and(|view| {
+                    view.needs.complete()
+                        && view.progress < view.required
+                        && !colony.reservations.contains_key(&ReserveKey::Site(centre))
+                })
+            };
+            search(
+                ctx.site_index,
+                pos,
+                radius,
+                ex.memo(Search::ReadySite),
+                |c, _| ready(c),
+            )
+            .map(|(site, ())| (JobKind::Build { site }, 0, ItemKind::Log))
+        }
+        WorkType::Quarry => {
+            let quarriable = |tile: (u32, u32)| {
+                colony.nodes.contains_key(&tile)
+                    && !colony.reservations.contains_key(&ReserveKey::Node(tile))
+            };
+            search(
+                &index.quarry,
+                pos,
+                radius,
+                ex.memo(Search::QuarryNode),
+                |t, _| quarriable(t),
+            )
+            .map(|(node, ())| (JobKind::Quarry { node }, 0, ItemKind::Log))
+        }
+        WorkType::Chop => {
+            // The nearest marked tree no one has taken.
+            let choppable = |tile: (u32, u32)| {
+                colony.trees.contains_key(&tile)
+                    && !colony.reservations.contains_key(&ReserveKey::Tree(tile))
+            };
+            search(
+                &index.marked,
+                pos,
+                radius,
+                ex.memo(Search::MarkedTree),
+                |t, _| choppable(t),
+            )
+            .map(|(tree, ())| (JobKind::Chop { tree }, 0, ItemKind::Log))
+        }
+        WorkType::Haul => {
+            // The nearest loose stack, to the stockpile cell nearest that stack
+            // with room for it. Stacks whose spec no cell takes (a memo found
+            // none this tick) are skipped; the predicate only grows stricter
+            // within the tick, so the `Loose` memo stays valid.
+            loop {
+                let blocked: Vec<ItemSpec> = ex
+                    .memos
+                    .iter()
+                    .filter_map(|(key, memo)| match key {
+                        Search::OpenCell(spec) if memo.empty => Some(*spec),
+                        _ => None,
+                    })
+                    .collect();
+                let loose = search(
+                    &index.ground,
+                    pos,
+                    radius,
+                    ex.memo(Search::Loose),
+                    |t, _| {
+                        stack_of(t, None, Some(false))
+                            && colony
+                                .ground_items
+                                .get(&t)
+                                .is_some_and(|stack| !blocked.contains(&stack.spec()))
+                    },
+                );
+                let (from, ()) = loose?;
+                let spec = colony.ground_items.get(&from)?.spec();
+                let open = |cell: (u32, u32)| {
+                    room_on(res, cell, spec) > 0
+                        && !colony.reservations.contains_key(&ReserveKey::Cell(cell))
+                };
+                let cell = search(
+                    &index.cells,
+                    from,
+                    u32::MAX,
+                    ex.memo(Search::OpenCell(spec)),
+                    |c, _| open(c),
+                );
+                if let Some((to, ())) = cell {
+                    let amount = rule
+                        .carry(spec.kind)
+                        .min(count(from))
+                        .min(room_on(res, to, spec));
+                    return Some((JobKind::Haul { from, to }, amount, spec.kind));
+                }
+                // The whole map has no cell for `spec`: mark it (the memo may
+                // have `seen` a cell earlier this tick), so the next round
+                // skips stacks of it and the loop ends.
+                ex.memo(Search::OpenCell(spec)).empty = true;
+            }
         }
     }
-    // Build, second half: build a site whose logs are all there.
-    let ready = |centre: (u32, u32)| {
-        sites.get(&centre).is_some_and(|view| {
-            view.needs.delivered >= view.needs.needed
-                && view.progress < view.required
-                && !colony.reservations.contains_key(&ReserveKey::Site(centre))
-        })
-    };
-    if let Some((site, ())) = search(site_index, pos, radius, &mut ex.ready_site, |c, _| ready(c)) {
-        return Some((JobKind::Build { site }, 0));
-    }
-    // Chop: the nearest marked tree no one has taken.
-    let choppable = |tile: (u32, u32)| {
-        colony.trees.contains_key(&tile)
-            && !colony.reservations.contains_key(&ReserveKey::Tree(tile))
-    };
-    if let Some((tree, ())) = search(&index.marked, pos, radius, &mut ex.marked_tree, |t, _| {
-        choppable(t)
-    }) {
-        return Some((JobKind::Chop { tree }, 0));
-    }
-    // Haul: the nearest loose stack, to the stockpile cell nearest that stack.
-    if ex.open_cell.empty {
-        return None;
-    }
-    let loose = search(&index.ground, pos, radius, &mut ex.loose_logs, |t, _| {
-        log_stack(t, Some(false))
-    });
-    if let Some((from, ())) = loose {
-        let room = |cell: (u32, u32)| room_on(res, cell, ItemKind::Log, rule.stack_max_logs);
-        let open = |cell: (u32, u32)| {
-            room(cell) > 0 && !colony.reservations.contains_key(&ReserveKey::Cell(cell))
-        };
-        if let Some((to, ())) = search(&index.cells, from, u32::MAX, &mut ex.open_cell, |c, _| {
-            open(c)
-        }) {
-            let amount = rule.carry_logs.min(count(from)).min(room(to));
-            return Some((JobKind::Haul { from, to }, amount));
-        }
-    }
-    None
+}
+
+/// The first job for an agent at `pos` in work-type order, or `None`.
+fn pick(
+    res: &SimResources,
+    ctx: &Ctx,
+    order: &[WorkType],
+    pos: (u32, u32),
+    ex: &mut Exhausted,
+) -> Option<Pick> {
+    order
+        .iter()
+        .find_map(|work| pick_work(res, ctx, *work, pos, ex))
 }
 
 impl RuntimeSystem for JobAssignSystem {
@@ -257,18 +482,21 @@ impl RuntimeSystem for JobAssignSystem {
             site_index.insert(*centre, ());
         }
         let mut transit = in_transit(world);
+        let (mut supply, mut crafting) = shelf_transit(world);
         let mut taken: Vec<(Entity, Job)> = Vec::new();
         let mut exhausted = Exhausted::default();
+        let order = WorkType::ALL;
         for (id, entity, pos) in available {
-            let Some((kind, amount)) = pick(
-                resources,
-                &rule,
-                pos,
-                &sites,
-                &site_index,
-                &transit,
-                &mut exhausted,
-            ) else {
+            let ctx = Ctx {
+                rule: &rule,
+                sites: &sites,
+                site_index: &site_index,
+                transit: &transit,
+                supply: &supply,
+                crafting: &crafting,
+            };
+            let Some((kind, amount, item)) = pick(resources, &ctx, &order, pos, &mut exhausted)
+            else {
                 continue;
             };
             let job = Job {
@@ -276,16 +504,31 @@ impl RuntimeSystem for JobAssignSystem {
                 stage: JobStage::ToSource,
                 taken_at: tick,
                 amount,
+                item,
+                material: None,
                 best_distance: chebyshev(pos, kind.source()),
                 progress_tick: tick,
             };
             for key in job.keys() {
                 reserve(resources, key, id);
             }
-            if let JobKind::Deliver { site, .. } = kind {
-                *transit.entry(site).or_insert(0) += amount;
+            match kind {
+                JobKind::Deliver { site, .. } => {
+                    *transit.entry((site, item)).or_insert(0) += amount;
+                }
+                JobKind::Supply { workshop, .. } => {
+                    *supply.entry((workshop, item)).or_insert(0) += amount;
+                }
+                JobKind::Craft { bill, .. } => *crafting.entry(bill).or_insert(0) += 1,
+                _ => {}
             }
             resources.colony.tallies.jobs_taken += 1;
+            *resources
+                .colony
+                .tallies
+                .taken_by
+                .entry((id, kind.code()))
+                .or_insert(0) += 1;
             taken.push((entity, job));
         }
         for (entity, job) in taken {

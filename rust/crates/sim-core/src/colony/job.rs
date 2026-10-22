@@ -2,17 +2,72 @@
 //! `sim_systems::runtime::jobs`.
 use serde::{Deserialize, Serialize};
 
-use super::ReserveKey;
+use super::{BillId, ItemKind, ReserveKey, WorkshopId};
+use crate::material::MaterialId;
 
-/// The kinds of work, in M1's fixed priority order (Build > Chop > Haul).
+/// The kinds of work (M2 goal 3.6). The declaration order is the order among
+/// equal priorities: `JobAssignSystem` takes the lowest priority number first,
+/// then this order, then the nearest target.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub enum WorkType {
-    /// Bring logs to a blueprint, then build it.
+    /// Bring a bill's inputs to a workshop, then make the item.
+    Craft,
+    /// Bring materials to a blueprint, then build it.
     Build,
+    /// Quarry a designated boulder or outcrop.
+    Quarry,
     /// Fell a designated tree.
     Chop,
-    /// Carry loose logs into a stockpile.
+    /// Split firewood (the wood bench's firewood bill; before a bench, gather deadwood).
+    Split,
+    /// Carry loose items into a stockpile.
     Haul,
+}
+
+impl WorkType {
+    /// Every work type in tie-break order.
+    pub const ALL: [Self; 6] = [
+        Self::Craft,
+        Self::Build,
+        Self::Quarry,
+        Self::Chop,
+        Self::Split,
+        Self::Haul,
+    ];
+
+    /// Stable code for the bridge (the tie-break order, 0 = craft).
+    pub const fn code(self) -> u8 {
+        match self {
+            Self::Craft => 0,
+            Self::Build => 1,
+            Self::Quarry => 2,
+            Self::Chop => 3,
+            Self::Split => 4,
+            Self::Haul => 5,
+        }
+    }
+
+    /// Stable lowercase name.
+    pub const fn name(self) -> &'static str {
+        match self {
+            Self::Craft => "craft",
+            Self::Build => "build",
+            Self::Quarry => "quarry",
+            Self::Chop => "chop",
+            Self::Split => "split",
+            Self::Haul => "haul",
+        }
+    }
+
+    /// Parse [`Self::name`].
+    pub fn from_name(name: &str) -> Option<Self> {
+        Self::ALL.into_iter().find(|w| w.name() == name)
+    }
+
+    /// The type of the bridge's `code`.
+    pub fn from_code(code: u8) -> Option<Self> {
+        Self::ALL.into_iter().find(|w| w.code() == code)
+    }
 }
 
 /// One job's target.
@@ -42,6 +97,30 @@ pub enum JobKind {
         /// The site centre.
         site: (u32, u32),
     },
+    /// Quarry one batch from the resource node at `node` (M2).
+    Quarry {
+        /// The node tile.
+        node: (u32, u32),
+    },
+    /// Carry a bill input from the stack at `from` to the input shelf of
+    /// `workshop`, delivered at its work tile `to` (M2: `Deliver` for a shelf).
+    Supply {
+        /// The source stack tile.
+        from: (u32, u32),
+        /// The workshop.
+        workshop: WorkshopId,
+        /// Its work tile.
+        to: (u32, u32),
+    },
+    /// Make one item of `bill` at `workshop`, working at its work tile `at` (M2).
+    Craft {
+        /// The workshop.
+        workshop: WorkshopId,
+        /// The bill.
+        bill: BillId,
+        /// Its work tile.
+        at: (u32, u32),
+    },
 }
 
 impl JobKind {
@@ -52,6 +131,9 @@ impl JobKind {
             Self::Haul { .. } => 2,
             Self::Deliver { .. } => 3,
             Self::Build { .. } => 4,
+            Self::Quarry { .. } => 5,
+            Self::Supply { .. } => 6,
+            Self::Craft { .. } => 7,
         }
     }
 
@@ -62,6 +144,20 @@ impl JobKind {
             Self::Haul { .. } => "haul",
             Self::Deliver { .. } => "deliver",
             Self::Build { .. } => "build",
+            Self::Quarry { .. } => "quarry",
+            Self::Supply { .. } => "supply",
+            Self::Craft { .. } => "craft",
+        }
+    }
+
+    /// The work type the job counts as.
+    pub const fn work(self) -> WorkType {
+        match self {
+            Self::Chop { .. } => WorkType::Chop,
+            Self::Haul { .. } => WorkType::Haul,
+            Self::Deliver { .. } | Self::Build { .. } => WorkType::Build,
+            Self::Quarry { .. } => WorkType::Quarry,
+            Self::Supply { .. } | Self::Craft { .. } => WorkType::Craft,
         }
     }
 
@@ -71,15 +167,20 @@ impl JobKind {
             Self::Chop { tree } => tree,
             Self::Haul { from, .. } | Self::Deliver { from, .. } => from,
             Self::Build { site } => site,
+            Self::Quarry { node } => node,
+            Self::Supply { from, .. } => from,
+            Self::Craft { at, .. } => at,
         }
     }
 
     /// The tile the load goes to (Haul and Deliver).
     pub const fn dest(self) -> Option<(u32, u32)> {
         match self {
-            Self::Haul { to, .. } => Some(to),
+            Self::Haul { to, .. } | Self::Supply { to, .. } => Some(to),
             Self::Deliver { site, .. } => Some(site),
-            Self::Chop { .. } | Self::Build { .. } => None,
+            Self::Chop { .. } | Self::Build { .. } | Self::Quarry { .. } | Self::Craft { .. } => {
+                None
+            }
         }
     }
 }
@@ -107,8 +208,12 @@ pub struct Job {
     pub stage: JobStage,
     /// Tick the job was taken.
     pub taken_at: u64,
-    /// Logs this job moves (Haul / Deliver): reserved at the stack, then carried.
+    /// Items this job moves (Haul / Deliver): reserved at the stack, then carried.
     pub amount: u16,
+    /// The kind of item it moves (M2; `Log` for jobs that move none).
+    pub item: ItemKind,
+    /// A craft's main input material, set when the craft starts (M2; carried to the output).
+    pub material: Option<MaterialId>,
     /// Smallest Chebyshev distance to the current walking goal so far.
     pub best_distance: u32,
     /// Tick `best_distance` last shrank (the stuck rule, 7.5).
@@ -129,6 +234,10 @@ impl Job {
             (JobKind::Deliver { from, .. }, JobStage::ToSource) => vec![ReserveKey::Stack(from)],
             (JobKind::Deliver { .. }, _) => Vec::new(),
             (JobKind::Build { site }, _) => vec![ReserveKey::Site(site)],
+            (JobKind::Quarry { node }, _) => vec![ReserveKey::Node(node)],
+            (JobKind::Supply { from, .. }, JobStage::ToSource) => vec![ReserveKey::Stack(from)],
+            (JobKind::Supply { .. }, _) => Vec::new(),
+            (JobKind::Craft { at, .. }, _) => vec![ReserveKey::Bench(at)],
         }
     }
 }
@@ -165,6 +274,8 @@ mod tests {
             stage: JobStage::ToSource,
             taken_at: 0,
             amount: 5,
+            item: ItemKind::Log,
+            material: None,
             best_distance: 4,
             progress_tick: 0,
         };

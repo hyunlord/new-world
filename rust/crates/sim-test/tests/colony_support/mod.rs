@@ -62,10 +62,7 @@ pub fn drop_logs(engine: &mut SimEngine, tile: (u32, u32), count: u16) {
         .create(ItemKind::Log, u64::from(count));
     engine.resources.colony.ground_items.insert(
         tile,
-        ItemStack {
-            kind: ItemKind::Log,
-            count,
-        },
+        ItemStack::of(sim_core::colony::ItemSpec::raw(ItemKind::Log, None), count),
     );
 }
 

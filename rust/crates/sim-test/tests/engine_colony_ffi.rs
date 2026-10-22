@@ -108,10 +108,7 @@ fn agent_job_columns_match_the_snapshot_rows() {
     let entity = hecs::Entity::from_bits(rows[2].entity_bits).expect("entity");
     let _ = engine.world.insert_one(
         entity,
-        Carry {
-            kind: ItemKind::Log,
-            count: 4,
-        },
+        Carry::of(sim_core::colony::ItemSpec::raw(ItemKind::Log, None), 4),
     );
     let rows = collect_agent_snapshot(&engine.world);
     let jobs = collect_agent_jobs(&engine.world);

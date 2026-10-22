@@ -266,7 +266,10 @@ fn commands_designate_zone_place_and_cancel() {
     let (site, needs, colony_site) = sites[0];
     assert_eq!((site.position.x, site.position.y), (19, 19));
     assert_eq!(site.blueprint.required_progress, RULE.hut_progress);
-    assert_eq!((needs.needed, needs.delivered), (RULE.hut_logs, 0));
+    assert_eq!(
+        (needs.needed_total(), needs.delivered_total()),
+        (RULE.hut_logs, 0)
+    );
     assert_eq!(colony_site.tiles().len(), 9);
     assert_eq!(engine.resources.colony.occupied.len(), 9);
     // Cancel over one footprint corner and one mark: both go.
@@ -320,7 +323,7 @@ fn commands_keep_the_ledger_and_move_logs_out_of_a_new_footprint() {
     {
         let mut q = engine.world.query::<&mut MaterialNeeds>();
         for (_, needs) in q.iter() {
-            needs.delivered = 5;
+            needs.lines[0].delivered = 5;
         }
     }
     engine.resources.colony.item_ledger.create(ItemKind::Log, 5);
@@ -572,17 +575,17 @@ fn a_completed_site_frees_its_v7_seeker() {
             .map(|(e, _)| e)
             .expect("the site");
         // Deliver the logs by hand (and credit the ledger) so the site is ready.
-        let needed = engine.world.get::<&MaterialNeeds>(site).unwrap().needed;
+        let needed = engine
+            .world
+            .get::<&MaterialNeeds>(site)
+            .unwrap()
+            .needed_total();
         engine
             .resources
             .colony
             .item_ledger
             .create(ItemKind::Log, u64::from(needed));
-        engine
-            .world
-            .get::<&mut MaterialNeeds>(site)
-            .unwrap()
-            .delivered = needed;
+        engine.world.get::<&mut MaterialNeeds>(site).unwrap().lines[0].delivered = needed;
         let mut adults: Vec<(u64, Entity)> = engine
             .world
             .query::<&Agent>()

@@ -22,14 +22,17 @@
 //!
 //! Under debug assertions the 7.6 invariants are checked after every tick.
 use hecs::{Entity, World};
+use sim_core::colony::materials::OAK;
 use sim_core::colony::{
-    CancelReason, Carry, ItemKind, Job, JobKind, JobStage, MaterialNeeds, ReserveKey,
+    CancelReason, Carry, Designation, ItemKind, ItemSpec, ItemStack, Job, JobKind, JobStage,
+    MaterialNeeds, ReserveKey,
 };
 use sim_core::components::{Agent, AgentId, AgentState, Position, SeekTarget, TargetKind};
 use sim_core::rules::ColonyRule;
 use sim_engine::{RuntimeSystem, SimResources};
 
 use super::cancel::{cancel, finish, finish_in_place, release_job};
+use super::craft;
 use super::items::{chebyshev, colony_sites, put_items, take_items};
 
 /// Priority of [`JobExecuteSystem`].
@@ -91,7 +94,7 @@ fn target_exists(world: &World, res: &SimResources, job: &Job) -> bool {
         colony
             .ground_items
             .get(&tile)
-            .is_some_and(|stack| stack.kind == ItemKind::Log && stack.count > 0)
+            .is_some_and(|stack| stack.kind == job.item && stack.count > 0)
     };
     match (job.kind, job.stage) {
         (JobKind::Chop { tree }, _) => {
@@ -107,6 +110,18 @@ fn target_exists(world: &World, res: &SimResources, job: &Job) -> bool {
         (JobKind::Deliver { site, .. }, _) | (JobKind::Build { site }, _) => {
             site_needs(world, site).is_some()
         }
+        (JobKind::Quarry { node }, _) => {
+            colony.nodes.contains_key(&node)
+                && colony.designations.get(&node) == Some(&Designation::Quarry)
+        }
+        (JobKind::Supply { from, workshop, .. }, JobStage::ToSource) => {
+            stack(from) && colony.workshops.contains_key(&workshop)
+        }
+        (JobKind::Supply { workshop, .. }, _) => colony.workshops.contains_key(&workshop),
+        (JobKind::Craft { workshop, bill, .. }, _) => colony
+            .workshops
+            .get(&workshop)
+            .is_some_and(|shop| shop.bill(bill).is_some()),
     }
 }
 
@@ -142,7 +157,9 @@ fn step(
         JobStage::ToSource => {
             let source = job.kind.source();
             let reached = match job.kind {
-                JobKind::Chop { tree } => chebyshev(pos, tree) <= 1,
+                JobKind::Chop { tree: near } | JobKind::Quarry { node: near } => {
+                    chebyshev(pos, near) <= 1
+                }
                 _ => pos == source,
             };
             if !reached {
@@ -156,12 +173,30 @@ fn step(
                     };
                     set_state(world, entity, WORK_JOB);
                 }
+                JobKind::Quarry { .. } => {
+                    let ticks = rule.economy.map_or(120, |e| e.quarry_ticks);
+                    job.stage = JobStage::Working {
+                        ticks_left: ticks.max(1),
+                    };
+                    set_state(world, entity, WORK_JOB);
+                }
                 JobKind::Build { .. } => {
                     job.stage = JobStage::Working { ticks_left: 0 };
                     set_state(world, entity, BUILD);
                 }
-                JobKind::Haul { from, .. } | JobKind::Deliver { from, .. } => {
-                    let taken = take_items(res, from, ItemKind::Log, job.amount);
+                JobKind::Craft { workshop, bill, .. } => {
+                    let Some(ticks) = craft::start(world, res, entity, &mut job, workshop, bill)
+                    else {
+                        cancel(world, res, entity, CancelReason::TargetGone);
+                        return;
+                    };
+                    job.stage = JobStage::Working { ticks_left: ticks };
+                    set_state(world, entity, WORK_JOB);
+                }
+                JobKind::Haul { from, .. }
+                | JobKind::Deliver { from, .. }
+                | JobKind::Supply { from, .. } => {
+                    let (taken, spec) = take_items(res, from, job.item, job.amount);
                     res.colony.reservations.remove(&ReserveKey::Stack(from));
                     if taken == 0 {
                         cancel(world, res, entity, CancelReason::TargetGone);
@@ -172,16 +207,7 @@ fn step(
                     let dest = job.kind.dest().unwrap_or(pos);
                     job.best_distance = chebyshev(pos, dest);
                     job.progress_tick = tick;
-                    let _ = world.insert(
-                        entity,
-                        (
-                            Carry {
-                                kind: ItemKind::Log,
-                                count: taken,
-                            },
-                            SeekTarget::new(dest),
-                        ),
-                    );
+                    let _ = world.insert(entity, (Carry::of(spec, taken), SeekTarget::new(dest)));
                 }
             }
             put_job(world, entity, job);
@@ -191,9 +217,9 @@ fn step(
             }
         }
         JobStage::Working { ticks_left } => {
-            let JobKind::Chop { tree } = job.kind else {
+            if matches!(job.kind, JobKind::Build { .. }) {
                 return; // a builder: ConstructionSystem does the work
-            };
+            }
             if ticks_left > 1 {
                 job.stage = JobStage::Working {
                     ticks_left: ticks_left - 1,
@@ -201,7 +227,12 @@ fn step(
                 put_job(world, entity, job);
                 return;
             }
-            fell(res, tree);
+            match job.kind {
+                JobKind::Chop { tree } => fell(res, tree),
+                JobKind::Quarry { node } => quarry_batch(res, rule, node),
+                JobKind::Craft { .. } => craft::finish_craft(world, res, id, entity, &job),
+                _ => {}
+            }
             finish(world, res, entity);
         }
         JobStage::ToDest => {
@@ -255,7 +286,33 @@ fn fell(res: &mut SimResources, tree: (u32, u32)) {
     res.colony
         .item_ledger
         .create(ItemKind::Log, u64::from(logs));
-    put_items(res, tree, ItemKind::Log, logs);
+    put_items(res, tree, ItemSpec::raw(ItemKind::Log, Some(OAK)), logs);
+}
+
+/// One quarry batch (M2 goal 3.2): up to `quarry_batch` items of the node's
+/// yield and material land on its tile; an exhausted node is removed with its mark.
+fn quarry_batch(res: &mut SimResources, rule: &ColonyRule, node: (u32, u32)) {
+    let batch = rule.economy.map_or(4, |e| e.quarry_batch).max(1);
+    let Some(found) = res.colony.nodes.get_mut(&node) else {
+        return;
+    };
+    let n = found.left.min(batch);
+    found.left -= n;
+    let (spec, left) = (
+        ItemSpec::raw(found.kind.yields(), Some(found.material)),
+        found.left,
+    );
+    if left == 0 {
+        res.colony.nodes.remove(&node);
+        res.colony.designations.remove(&node);
+        res.colony.tallies.nodes_exhausted += 1;
+    }
+    res.colony.tallies.quarry_batches += 1;
+    res.colony.touch(false);
+    if n > 0 {
+        res.colony.item_ledger.create(spec.kind, u64::from(n));
+        put_items(res, node, spec, u16::from(n));
+    }
 }
 
 /// The load reached its destination: drop it in the cell or deliver it to the site.
@@ -271,22 +328,33 @@ fn arrive(
     let _ = world.remove_one::<Carry>(entity);
     if let Some(carry) = carry {
         match job.kind {
+            JobKind::Supply { workshop, .. } => match res.colony.workshops.get_mut(&workshop) {
+                Some(shop) => {
+                    let spec = carry.spec();
+                    match shop.shelf.iter_mut().find(|s| s.spec().merges_with(&spec)) {
+                        Some(stack) => stack.absorb(spec, carry.count),
+                        None => shop.shelf.push(ItemStack::of(spec, carry.count)),
+                    }
+                    res.colony.touch(false);
+                }
+                None => {
+                    put_items(res, pos, carry.spec(), carry.count);
+                }
+            },
             JobKind::Deliver { site, .. } => {
                 let mut rest = carry.count;
                 if let Some((site_entity, _)) = site_needs(world, site) {
                     if let Ok(mut needs) = world.get::<&mut MaterialNeeds>(site_entity) {
-                        let add = rest.min(needs.needed.saturating_sub(needs.delivered));
-                        needs.delivered += add;
-                        rest -= add;
+                        rest -= needs.deliver(carry.kind, rest);
                     }
                     res.colony.touch(false);
                 }
                 if rest > 0 {
-                    put_items(res, pos, carry.kind, rest);
+                    put_items(res, pos, carry.spec(), rest);
                 }
             }
             _ => {
-                put_items(res, pos, carry.kind, carry.count);
+                put_items(res, pos, carry.spec(), carry.count);
             }
         }
     }

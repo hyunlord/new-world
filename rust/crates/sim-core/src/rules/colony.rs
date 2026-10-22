@@ -41,6 +41,45 @@ pub struct ColonyRule {
     /// finishes the leg before yielding. `None` = M1.
     #[serde(default)]
     pub finish_leg_tiles: Option<u32>,
+    /// M2 (goal 3): the economy — resource nodes, quarrying, workshops, bills,
+    /// work priorities, skills and tools. `None` = M1.5 (no nodes, logs only).
+    #[serde(default)]
+    pub economy: Option<EconomyRule>,
+}
+
+/// The M2 economy's tunables (goal 3; `ColonyRule::economy`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub struct EconomyRule {
+    /// Work ticks of one quarry batch (goal 3.2: 120).
+    pub quarry_ticks: u32,
+    /// Items one quarry batch yields (goal 3.2: 4).
+    pub quarry_batch: u8,
+    /// Stone in a boulder, inclusive range (goal 3.2: 8–20).
+    pub boulder_stone: (u8, u8),
+    /// Flint in an outcrop, inclusive range (goal 3.2: 6–14).
+    pub outcrop_flint: (u8, u8),
+    /// Permille of hill tiles that get a boulder (DECISIONS D5).
+    pub hill_boulder_permille: u32,
+    /// Permille of grass (plain) tiles that get a boulder (goal 3.2: 2 %).
+    pub grass_boulder_permille: u32,
+    /// River-bank tiles per flint outcrop (goal 3.2: 1 per 40).
+    pub bank_tiles_per_outcrop: u32,
+    /// A bank tile lies within this Chebyshev distance of water (goal 3.2: 2).
+    pub bank_reach: u32,
+}
+
+impl EconomyRule {
+    /// The M2 values (goal 3; DECISIONS D5).
+    pub const M2: Self = Self {
+        quarry_ticks: 120,
+        quarry_batch: 4,
+        boulder_stone: (8, 20),
+        outcrop_flint: (6, 14),
+        hill_boulder_permille: 250,
+        grass_boulder_permille: 20,
+        bank_tiles_per_outcrop: 40,
+        bank_reach: 2,
+    };
 }
 
 impl ColonyRule {
@@ -59,6 +98,7 @@ impl ColonyRule {
         stuck_ticks: 240,
         yield_margin_permille: None,
         finish_leg_tiles: None,
+        economy: None,
     };
 
     /// The M1.5 colony values: [`Self::M1`] with the job-churn remedies
@@ -68,6 +108,28 @@ impl ColonyRule {
         finish_leg_tiles: Some(12),
         ..Self::M1
     };
+
+    /// The M2 colony values: [`Self::M1_5`] with the economy (goal 3).
+    pub const M2: Self = Self {
+        economy: Some(EconomyRule::M2),
+        ..Self::M1_5
+    };
+
+    /// Items of `kind` one tile holds (logs: `stack_max_logs`; goal 3.1 for the rest).
+    pub const fn stack_max(&self, kind: crate::colony::ItemKind) -> u16 {
+        match kind {
+            crate::colony::ItemKind::Log => self.stack_max_logs,
+            other => other.default_stack_max(),
+        }
+    }
+
+    /// Items of `kind` one person carries (logs: `carry_logs`; goal 3.1 for the rest).
+    pub const fn carry(&self, kind: crate::colony::ItemKind) -> u16 {
+        match kind {
+            crate::colony::ItemKind::Log => self.carry_logs,
+            other => other.default_carry(),
+        }
+    }
 }
 
 impl super::WorldRules {
@@ -128,7 +190,7 @@ impl super::WorldRules {
                 firewood,
                 ..base.society
             },
-            colony: Some(ColonyRule::M1_5),
+            colony: Some(ColonyRule::M2),
             seasons,
             calendar: COLONY_CALENDAR,
             ..base
