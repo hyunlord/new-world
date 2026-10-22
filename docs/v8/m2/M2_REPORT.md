@@ -103,7 +103,32 @@ N=1,000 시스템별 상위 10 (세 라운드 중앙값, 틱당 µs와 점유율
 
 ### 변경된 파일 목록 (커밋별)
 
-PENDING (최종 커밋 목록은 게이트 뒤에 채운다)
+경로의 `rust/crates/` 접두사는 줄였다. 게이트를 통과한 커밋은 `c0af2eb7`; 그 뒤의 보고서 커밋은 문서만 바꾼다.
+
+- `dfc9c168` p0 — records on the main line — M2 goal, ADR 0018 art direction (concept 05, 64-px illustrated top-down, cut-o
+  - CHANGELOG.md, docs/HISTORY.md, docs/ROADMAP.md, docs/VISION.md, docs/archive/INDEX.md, docs/decisions/0018-art-direction-illustrated-64px.md, docs/v8/m2/M2_DECISIONS.md, docs/v8/m2/M2_GOAL.md
+- `1436e85d` p1 — items with material and quality, boulders and flint outcrops, quarry jobs, per-kind ledger, embedded mate
+  - docs/v8/m2/M2_DECISIONS.md, sim-bridge/src/ffi/colony.rs, sim-core/data/colony/recipes.ron, sim-core/src/colony/command.rs, sim-core/src/colony/items.rs, sim-core/src/colony/job.rs, sim-core/src/colony/materials.rs, sim-core/src/colony/mod.rs, sim-core/src/colony/orders.rs, sim-core/src/colony/skills.rs, sim-core/src/colony/workshop.rs, sim-core/src/material/loader.rs, sim-core/src/material/mod.rs, sim-core/src/rng.rs, sim-core/src/rules/colony.rs, sim-core/src/rules/mod.rs, sim-core/src/spatial.rs, sim-systems/src/commands.rs, sim-systems/src/lib.rs, sim-systems/src/runtime/construction/construction_system.rs, sim-systems/src/runtime/jobs/assign.rs, sim-systems/src/runtime/jobs/bills.rs, si
+- `f36b893c` v8-m2(p2,p3): bills, supply and craft jobs, Maintain counts, work-priority passes, skills (speed, XP, quality 
+  - docs/v8/m2/M2_DECISIONS.md, sim-core/src/colony/job.rs, sim-core/src/colony/mod.rs, sim-core/src/colony/skills.rs, sim-core/src/rules/colony.rs, sim-systems/src/commands.rs, sim-systems/src/runtime/jobs/assign.rs, sim-systems/src/runtime/jobs/bills.rs, sim-systems/src/runtime/jobs/cancel.rs, sim-systems/src/runtime/jobs/execute.rs, sim-systems/src/runtime/jobs/seam.rs, sim-systems/src/save/world.rs, sim-test/src/probe/colony.rs, sim-test/src/probe/economy.rs, sim-test/src/probe/mod.rs, sim-test/tests/colony_skills.rs, sim-test/tests/colony_support/mod.rs, sim-test/tests/colony_workshops.rs, tools/v8/m2_u_script.json
+- `136b1a7d` p4 — firewood through jobs — gather deadwood as a Split job, HearthFeedSystem (146), the hearth's auto-bill; t
+  - docs/v8/m2/M2_DECISIONS.md, sim-core/src/colony/job.rs, sim-core/src/colony/orders.rs, sim-core/src/colony/workshop.rs, sim-systems/src/commands.rs, sim-systems/src/lib.rs, sim-systems/src/runtime/construction/construction_system.rs, sim-systems/src/runtime/decision/system.rs, sim-systems/src/runtime/jobs/assign.rs, sim-systems/src/runtime/jobs/execute.rs, sim-systems/src/runtime/jobs/hearth.rs, sim-systems/src/runtime/jobs/mod.rs, sim-test/src/probe/economy.rs, sim-test/tests/colony_firewood.rs
+- `d05391cc` p5 — the economy bridge (bill, priority and quarry commands; workshops, priorities, recipes, one person's econ
+  - docs/ARCHITECTURE.md, docs/v8/bridge_api_m2.txt, docs/v8/m2/m2_score.py, docs/v8/snapshot_schema.md, sim-bridge/src/ffi/colony.rs, sim-bridge/src/ffi/economy.rs, sim-bridge/src/ffi/mod.rs, sim-bridge/src/ffi/node.rs, sim-systems/src/runtime/jobs/assign.rs, sim-test/tests/engine_economy_ffi.rs, tools/v8/gate.sh, tools/v8/test_bridge_api.py
+- `a2c3cc20` p6 — firewood shortfall counts only what a hearth can use (D19, found by the evaluation); ADR 0019, ADR 0020, 
+  - .claude/skills/worldsim-architecture/SKILL.md, .claude/skills/worldsim-pitfalls/SKILL.md, .claude/skills/worldsim-testing/SKILL.md, CHANGELOG.md, docs/ARCHITECTURE.md, docs/decisions/0019-items-bills-economic-loop.md, docs/decisions/0020-skills-and-quality-tables.md, docs/v8/m2/M2_DECISIONS.md, sim-systems/src/runtime/jobs/assign.rs, sim-systems/src/runtime/jobs/hearth.rs, tools/v8/bench.sh, tools/v8/bench_ledger.py, tools/v8/gate.sh, tools/v8/test_bench_ledger.py
+- `7b7774d5` p7 — code-review fixes (D21) — a player's firewood bill takes over the auto-bill's craft, cancelled sites retu
+  - README.md, docs/v8/m2/M2_DECISIONS.md, sim-core/src/colony/mod.rs, sim-core/src/colony/orders.rs, sim-systems/src/commands.rs, sim-systems/src/runtime/construction/construction_system.rs, sim-systems/src/runtime/decision/system.rs, sim-systems/src/runtime/jobs/assign.rs, sim-systems/src/runtime/jobs/execute.rs, sim-systems/src/runtime/jobs/seam.rs, sim-test/tests/colony_workshops.rs
+- `69b5149c` p5 — UI — F3 build menu (hut, knapping spot, wood bench, drying rack), F7 quarry, workshop bill panel, P prior
+  - assets/v8/tiles.json, assets/v8/tiles.png, docs/HISTORY.md, docs/ROADMAP.md, docs/archive/INDEX.md, docs/decisions/0018-art-direction-illustrated-64px.md, docs/v8/m2/M2_LOCALE.md, localization/compiled/en.json, localization/compiled/ko.json, localization/en/buildings.json, localization/en/ui.json, localization/key_registry.json, localization/ko/buildings.json, localization/ko/ui.json, scenes/main.tscn, scripts/core/sim_reads.gd, scripts/ui/economy_text.gd, scripts/ui/economy_text.gd.uid, scripts/ui/hud/order_bar.gd, scripts/ui/panels/agent_inspector_panel.gd, scripts/ui/panels/priority_panel.gd, scripts/ui/panels/priority_panel.gd.uid, scripts/ui/panels/workshop_panel.gd, scripts/ui/panels/w
+- `f6a89e72` p7 — a finished workshop is not a V7 building (no registry entry, no BuildingPlaced; it read as a hearth in th
+  - docs/v8/m2/M2_DECISIONS.md, sim-systems/src/runtime/construction/construction_system.rs, sim-test/tests/colony_workshops.rs, sim-test/tests/engine_ascii.rs
+- `bbe04a69` p6 — evaluation on seeds 300-331 (E1 E3 E5 E6 E9 E10 PASS; E2 E4 E7 E8 FAIL), benchmark ledger blocks 'base M1
+  - .claude/skills/worldsim-testing/SKILL.md, CHANGELOG.md, docs/perf/PERF_LEDGER.md, docs/v8/m2/M2_DECISIONS.md, docs/v8/m2/M2_EVALUATION.md, docs/v8/m2/M2_REPORT.md
+- `95557d85` p7 — gate 1 — 24/25 steps, bench red under host contention (load 19.7 vs 3; the baseline-only perf scene x1.83
+  - .claude/skills/worldsim-testing/SKILL.md, docs/v8/m2/M2_DECISIONS.md
+- `c0af2eb7` p7 — bench.sh waits for a quiet host (1-min load < 8, up to 45 min) and labels the run quiet or CONTENDED (D23
+  - CHANGELOG.md, docs/v8/m2/M2_DECISIONS.md, tools/v8/bench.sh, tools/v8/gate.sh
 
 ### 리뷰 결과
 
@@ -131,8 +156,16 @@ PENDING (최종 커밋 목록은 게이트 뒤에 채운다)
 
 ### Gate 결과
 
-PENDING
+- **게이트 1**(`bbe04a69`, `/Users/rexxa/work/m2-data/gate1/gate.txt`): 24/25. `bench`만 빨강(N=1,000 ×1.142, N=2,000 ×1.218) — 1분 부하 19.7(장부 측정 때 3) 아래였고, 같은 게이트에서 baseline만 도는 perf `quick`도 ×1.83, 직후 교차 확인에서 기준도 같이 느려짐 → 경합(D23). 코드 변경 없이 `bench.sh`에 조용한 시간 대기(1분 부하 < 8, 최대 45분)를 넣고 게이트를 처음부터 다시 돌렸다.
+- **게이트 2**(`c0af2eb7`, `/Users/rexxa/work/m2-data/gate2/gate.txt`): **25/25 통과**(status 0, 14:14–16:27 KST, `dirty 0`). test_debug·test_release 1,853개 통과 0 실패; identity PASS; determinism PASS; m1_tests 46 통과; play_check 6/6; schema_docs·renderer_agreement·save_roundtrip PASS; bench: 1,650초 대기 뒤 `admission: quiet`(부하 6.78), 모든 장면 ×0.989–×1.082, RSS/사람 ×0.996, 상한 4/4 PASS. perf(보고만): natural ×1.147, quick(baseline만) ×1.131 WARN — 부하 30–70의 경합 구간에서 측정(baseline 코드는 identity로 동일).
+- `v8/main`을 `c0af2eb7`로 fast-forward했다.
 
 git ls-remote 결과
 
-PENDING
+```text
+$ git ls-remote origin v8/main v8/wip   (게이트 직후)
+c0af2eb74c12afa3d4b6a3d0926efcb16fbed599	refs/heads/v8/main
+c0af2eb74c12afa3d4b6a3d0926efcb16fbed599	refs/heads/v8/wip
+```
+
+(보고서 커밋을 올리고 `v8/main`을 다시 fast-forward한 뒤의 값은 최종 메시지에 있다.)

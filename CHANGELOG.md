@@ -7,7 +7,7 @@ tags `v7-final-sim` and `v7-final-art`.
 
 ## M2 — 2026-10-22
 
-Things and making (`docs/v8/m2/M2_GOAL.md`): stone and flint as items, workshops, bills, work priorities, skills and quality, stone axes as tools, and firewood through the job layer — the first piece taken out of the decision tick. **The colony's behaviour changes**; the `baseline` world is bit-identical (identity PASS at every Part). Evaluation `docs/v8/m2/M2_EVALUATION.md` (seeds 300–331: E1, E3, E5, E6, E9, E10 PASS; E2, E4, E7, E8 FAIL), report `docs/v8/m2/M2_REPORT.md`. Benchmark ledger `docs/perf/PERF_LEDGER.md` blocks "base M1.5" and "M2" (N = 1,000: 1.71 ms; ceilings 4/4 PASS; the decision system 82.7 % → 80.0 % of the tick).
+Things and making (`docs/v8/m2/M2_GOAL.md`): stone and flint as items, workshops, bills, work priorities, skills and quality, stone axes as tools, and firewood through the job layer — the first piece taken out of the decision tick. **The colony's behaviour changes**; the `baseline` world is bit-identical (identity PASS at every Part). Evaluation `docs/v8/m2/M2_EVALUATION.md` (seeds 300–331: E1, E3, E5, E6, E9, E10 PASS; E2, E4, E7, E8 FAIL), report `docs/v8/m2/M2_REPORT.md`. Benchmark ledger `docs/perf/PERF_LEDGER.md` blocks "base M1.5" and "M2" (N = 1,000: 1.71 ms; ceilings 4/4 PASS; the decision system 82.7 % → 80.0 % of the tick). Gate 25/25 green at `c0af2eb7` (`v8/main`).
 
 ### Added
 - ADR 0018 (art direction: illustrated 2D top-down at 64-px tiles, concept 05 ink-and-tone, cut-out people, generated environment); VISION §6 rewritten for it; ROADMAP rows ART-TRIAL, ART-CONCEPT, ART-TRIAL2, M-ART2, M-PERF; HISTORY and `docs/archive/INDEX.md` list the art branches.
