@@ -1,0 +1,46 @@
+[
+  {
+    "board": "art/style05/boards/people_meadow_1x.png",
+    "source": "/Users/rexxa/work/arttrial2-data/proto-final-people-meadow-1/capture.png",
+    "source_sha256": "1e64622a1fb226be567f9359bc4cafc3b7a8cdf00f8359ae5fcd33d1ed3300a3",
+    "operations": [
+      "RGB lossless PNG",
+      "crop (300,180,980,560), no scaling"
+    ],
+    "status": "REJECTED readability; exact source reviewed",
+    "bytes": 544043
+  },
+  {
+    "board": "art/style05/boards/people_meadow_2x.png",
+    "source": "/Users/rexxa/work/arttrial2-data/proto-final-people-meadow-2/capture.png",
+    "source_sha256": "0a644b8365854bbbbbc3fbe18ff95bb30aef18c5bf15d5dd67122ad251fce577",
+    "operations": [
+      "RGB lossless PNG",
+      "compose three full-width source bands y20:180,300:460,560:720; no scaling; ground-only gaps removed"
+    ],
+    "status": "REJECTED readability; exact source reviewed",
+    "bytes": 1072330
+  },
+  {
+    "board": "art/style05/boards/people_forest_floor_1x.png",
+    "source": "/Users/rexxa/work/arttrial2-data/proto-final-people-forest_floor-1/capture.png",
+    "source_sha256": "48f41d78ecd675eeda20708305f31b6761622b8792e38df5bb4686fb52ac8096",
+    "operations": [
+      "RGB lossless PNG",
+      "crop (300,180,980,560), no scaling"
+    ],
+    "status": "REJECTED readability; exact source reviewed",
+    "bytes": 536507
+  },
+  {
+    "board": "art/style05/boards/people_forest_floor_2x.png",
+    "source": "/Users/rexxa/work/arttrial2-data/proto-final-people-forest_floor-2/capture.png",
+    "source_sha256": "dfd5fdf20f23e6caf5111283fb02f8fd1da116e27250316616198f17a8e43aab",
+    "operations": [
+      "RGB lossless PNG",
+      "compose three full-width source bands y20:180,300:460,560:720; no scaling; ground-only gaps removed"
+    ],
+    "status": "REJECTED readability; exact source reviewed",
+    "bytes": 1061965
+  }
+]

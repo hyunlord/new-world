@@ -1,0 +1,85 @@
+{
+  "runs": [
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/proto-perf-24-v2/runtime.json",
+      "source_sha256": "6ff893c64fc22fa3e66b1b6ad324d3b91d9ccb24f4c50dec42696f3913a75d08",
+      "fps": 391.045763670894,
+      "frames": 23463,
+      "wall_seconds": 60.00065,
+      "frame_p95_ms": 3.605,
+      "headless": false,
+      "driver": "opengl3",
+      "renderer": "Sprite2D cutouts under Bone2D/Skeleton2D",
+      "viewport_size": [
+        1408.0,
+        832.0
+      ],
+      "zoom": 1.0,
+      "vsync": 0,
+      "capture_sha256": "8b7b0f7687a34d6eaeb6e91850c5536c05153498af66f627031bec812edc1f86",
+      "source_hashes_at_start": {
+        "Camp.gd": "4c866b31c2f2a0af8ae101df1c209abdf0ccb9b1870f0f3f1615bf2aa954c128",
+        "Companion.gd": "98292c1bc07535e40864d5aee395c6cc0440e023592720520ef1158f5fa5ef26",
+        "PersonComposer.gd": "09fe2d067c715d95e3211763eed2a3fa0e2b4aec7b04c9c25960141c2d98dc36",
+        "project.godot": "00fa4435fa564047a8d3afa5ba8f5fab5bfe5cc76d3910228c025454f7dcb1d3",
+        "scenes/camp.tscn": "a008c5486817b3a866ae159199a42cdc5d66ac00ce2aa01c5513e887c0b9610b",
+        "season.gdshader": "99db3e70da741485cb80a53ae3379018aae7a16acc6088f174249f83d6ee46e4",
+        "tint_mask.gdshader": "c32f8af1fd3d5f6ad803e0211c9a6fd331b95e62af9c9a4e4008272f5c74fb74"
+      },
+      "population_audit": {
+        "fully_visible_people": 24,
+        "max_people_per_tile": 1,
+        "unique_tiles": 24
+      }
+    },
+    {
+      "source": "/Users/rexxa/work/arttrial2-data/proto-perf-200-v2/runtime.json",
+      "source_sha256": "2e8d6db345aeb477aeba7f19993194b3dfa74f0ba40d5fef447874b7854572dd",
+      "fps": 85.2470760252923,
+      "frames": 5115,
+      "wall_seconds": 60.002058,
+      "frame_p95_ms": 13.567,
+      "headless": false,
+      "driver": "opengl3",
+      "renderer": "Sprite2D cutouts under Bone2D/Skeleton2D",
+      "viewport_size": [
+        1408.0,
+        832.0
+      ],
+      "zoom": 1.0,
+      "vsync": 0,
+      "capture_sha256": "27f616589e854c256ffd39fb85b997b3f14699c7d5797ed61e0c604781e695cd",
+      "source_hashes_at_start": {
+        "Camp.gd": "4c866b31c2f2a0af8ae101df1c209abdf0ccb9b1870f0f3f1615bf2aa954c128",
+        "Companion.gd": "98292c1bc07535e40864d5aee395c6cc0440e023592720520ef1158f5fa5ef26",
+        "PersonComposer.gd": "09fe2d067c715d95e3211763eed2a3fa0e2b4aec7b04c9c25960141c2d98dc36",
+        "project.godot": "00fa4435fa564047a8d3afa5ba8f5fab5bfe5cc76d3910228c025454f7dcb1d3",
+        "scenes/camp.tscn": "a008c5486817b3a866ae159199a42cdc5d66ac00ce2aa01c5513e887c0b9610b",
+        "season.gdshader": "99db3e70da741485cb80a53ae3379018aae7a16acc6088f174249f83d6ee46e4",
+        "tint_mask.gdshader": "c32f8af1fd3d5f6ad803e0211c9a6fd331b95e62af9c9a4e4008272f5c74fb74"
+      },
+      "population_audit": {
+        "fully_visible_people": 200,
+        "max_people_per_tile": 1,
+        "unique_tiles": 200
+      }
+    }
+  ],
+  "crowd_crop": {
+    "rect": [
+      64,
+      128,
+      704,
+      488
+    ],
+    "expected_centers": 60,
+    "review": {
+      "count": 60,
+      "uncertainty": "Approximately 60; moderate confidence. Some figures are horizontal or clipped at the image edges, especially the bottom row.",
+      "reason": "Image-only visual inspection shows six rows of approximately ten human figures each. Count includes standing figures, horizontal figures, and partly visible edge figures. Dense ground texture and clipped silhouettes could cause a small counting error.",
+      "method": "Independent visual count of the supplied image only"
+    },
+    "source": "/Users/rexxa/work/arttrial2-data/crowd_crop_640x360.png",
+    "sha256": "320c2e288025c17950d69710fa4b7ffa4fa56b3832856847dbf61fb7f238aec6"
+  }
+}

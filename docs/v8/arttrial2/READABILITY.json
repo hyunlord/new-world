@@ -1,0 +1,2922 @@
+{
+  "status": "FAIL",
+  "scope": "Final four captures,2 reviewers,48 responses each",
+  "policy": {
+    "activity_synonyms": {
+      "standing": "idle",
+      "walking": "walk",
+      "lying down": "sleep",
+      "carrying a load": "carry",
+      "carrying a basket": "carry",
+      "carrying something above shoulder or head": "carry",
+      "carrying a round container": "carry"
+    },
+    "held_synonyms": {
+      "none visible": "none",
+      "round basket-like object": "berry_basket",
+      "round basket with colored contents": "berry_basket",
+      "axe-like tool": "stone_axe",
+      "dark log-like object": "log_bundle",
+      "dark log-like elongated object": "log_bundle"
+    },
+    "uncertainty": "Unmapped, unknown and unclear answers are wrong. Multiple activity possibilities containing or are not resolved in favor of the key. Sitting is not knapping; holding a tool is not chopping; standing while holding is not carry-state recognition.",
+    "carrying": "All actually held items count, including axe, logs, basket and elder stick. Elder stick is shown by composer despite held=none.",
+    "sex": "NOT_RENDERED_SINGLE_ADULT_BODY earns0/8 sex recognition, never waived from24 denominator.",
+    "held": "Recognizable axe-like/log-like/basket-like categories count. Generic shape and ambiguous alternate tool or container descriptions do not. Berry contents need not be named for basket.",
+    "independence": "The two supplied fresh image-only reviews are graded by a separate key-aware grader; original responses unchanged."
+  },
+  "images": {
+    "proto-final-people-meadow-1/capture.png": {
+      "capture_sha256": "1e64622a1fb226be567f9359bc4cafc3b7a8cdf00f8359ae5fcd33d1ed3300a3",
+      "answer_key_path": "/Users/rexxa/work/arttrial2-data/proto-final-people-meadow-1/answer_key.json",
+      "answer_key_sha256": "7b158099be15839858bdeec39a108a3046afe7055d07445d115031473ce26497",
+      "answer_key_verbatim": "[\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"short\",\n      \"hat\": true,\n      \"held\": \"none\",\n      \"phase\": 0.0,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#bc916a\",\n      \"state\": \"idle\",\n      \"top\": \"hide_wrap\",\n      \"top_tint\": \"#9f8461\"\n    },\n    \"index\": 1,\n    \"world_position\": [\n      370.0,\n      220.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"long_tied\",\n      \"hat\": false,\n      \"held\": \"none\",\n      \"phase\": 0.125,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#8b6045\",\n      \"state\": \"walk\",\n      \"top\": \"fur_cloak\",\n      \"top_tint\": \"#798065\"\n    },\n    \"index\": 2,\n    \"world_position\": [\n      550.0,\n      220.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"braided\",\n      \"hat\": false,\n      \"held\": \"stone_axe\",\n      \"phase\": 0.25,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#d6af88\",\n      \"state\": \"chop\",\n      \"top\": \"woven_tunic\",\n      \"top_tint\": \"#9a7054\"\n    },\n    \"index\": 3,\n    \"world_position\": [\n      730.0,\n      220.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"short\",\n      \"hat\": false,\n      \"held\": \"log_bundle\",\n      \"phase\": 0.375,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#bc916a\",\n      \"state\": \"carry\",\n      \"top\": \"hide_wrap\",\n      \"top_tint\": \"#9f8461\"\n    },\n    \"index\": 4,\n    \"world_position\": [\n      910.0,\n      220.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"long_tied\",\n      \"hat\": false,\n      \"held\": \"none\",\n      \"phase\": 0.5,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#8b6045\",\n      \"state\": \"sleep\",\n      \"top\": \"fur_cloak\",\n      \"top_tint\": \"#798065\"\n    },\n    \"index\": 5,\n    \"world_position\": [\n      370.0,\n      360.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"braided\",\n      \"hat\": true,\n      \"held\": \"none\",\n      \"phase\": 0.625,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#d6af88\",\n      \"state\": \"knap\",\n      \"top\": \"woven_tunic\",\n      \"top_tint\": \"#9a7054\"\n    },\n    \"index\": 6,\n    \"world_position\": [\n      550.0,\n      360.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"child\",\n      \"hair\": \"short\",\n      \"hat\": false,\n      \"held\": \"none\",\n      \"phase\": 0.75,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#bc916a\",\n      \"state\": \"walk\",\n      \"top\": \"hide_wrap\",\n      \"top_tint\": \"#9f8461\"\n    },\n    \"index\": 7,\n    \"world_position\": [\n      730.0,\n      360.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"long_tied\",\n      \"hat\": false,\n      \"held\": \"berry_basket\",\n      \"phase\": 0.875,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#8b6045\",\n      \"state\": \"carry\",\n      \"top\": \"fur_cloak\",\n      \"top_tint\": \"#798065\"\n    },\n    \"index\": 8,\n    \"world_position\": [\n      910.0,\n      360.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"braided\",\n      \"hat\": false,\n      \"held\": \"none\",\n      \"phase\": 0.0,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#d6af88\",\n      \"state\": \"sleep\",\n      \"top\": \"woven_tunic\",\n      \"top_tint\": \"#9a7054\"\n    },\n    \"index\": 9,\n    \"world_position\": [\n      370.0,\n      500.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"child\",\n      \"hair\": \"short\",\n      \"hat\": false,\n      \"held\": \"none\",\n      \"phase\": 0.125,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#bc916a\",\n      \"state\": \"idle\",\n      \"top\": \"hide_wrap\",\n      \"top_tint\": \"#9f8461\"\n    },\n    \"index\": 10,\n    \"world_position\": [\n      550.0,\n      500.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"long_tied\",\n      \"hat\": true,\n      \"held\": \"stone_axe\",\n      \"phase\": 0.25,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#8b6045\",\n      \"state\": \"chop\",\n      \"top\": \"fur_cloak\",\n      \"top_tint\": \"#798065\"\n    },\n    \"index\": 11,\n    \"world_position\": [\n      730.0,\n      500.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"elder\",\n      \"hair\": \"braided\",\n      \"hat\": false,\n      \"held\": \"none\",\n      \"phase\": 0.375,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#d6af88\",\n      \"state\": \"walk\",\n      \"top\": \"woven_tunic\",\n      \"top_tint\": \"#9a7054\"\n    },\n    \"index\": 12,\n    \"world_position\": [\n      910.0,\n      500.0\n    ]\n  }\n]\n"
+    },
+    "proto-final-people-meadow-2/capture.png": {
+      "capture_sha256": "0a644b8365854bbbbbc3fbe18ff95bb30aef18c5bf15d5dd67122ad251fce577",
+      "answer_key_path": "/Users/rexxa/work/arttrial2-data/proto-final-people-meadow-2/answer_key.json",
+      "answer_key_sha256": "7b158099be15839858bdeec39a108a3046afe7055d07445d115031473ce26497",
+      "answer_key_verbatim": "[\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"short\",\n      \"hat\": true,\n      \"held\": \"none\",\n      \"phase\": 0.0,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#bc916a\",\n      \"state\": \"idle\",\n      \"top\": \"hide_wrap\",\n      \"top_tint\": \"#9f8461\"\n    },\n    \"index\": 1,\n    \"world_position\": [\n      370.0,\n      220.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"long_tied\",\n      \"hat\": false,\n      \"held\": \"none\",\n      \"phase\": 0.125,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#8b6045\",\n      \"state\": \"walk\",\n      \"top\": \"fur_cloak\",\n      \"top_tint\": \"#798065\"\n    },\n    \"index\": 2,\n    \"world_position\": [\n      550.0,\n      220.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"braided\",\n      \"hat\": false,\n      \"held\": \"stone_axe\",\n      \"phase\": 0.25,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#d6af88\",\n      \"state\": \"chop\",\n      \"top\": \"woven_tunic\",\n      \"top_tint\": \"#9a7054\"\n    },\n    \"index\": 3,\n    \"world_position\": [\n      730.0,\n      220.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"short\",\n      \"hat\": false,\n      \"held\": \"log_bundle\",\n      \"phase\": 0.375,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#bc916a\",\n      \"state\": \"carry\",\n      \"top\": \"hide_wrap\",\n      \"top_tint\": \"#9f8461\"\n    },\n    \"index\": 4,\n    \"world_position\": [\n      910.0,\n      220.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"long_tied\",\n      \"hat\": false,\n      \"held\": \"none\",\n      \"phase\": 0.5,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#8b6045\",\n      \"state\": \"sleep\",\n      \"top\": \"fur_cloak\",\n      \"top_tint\": \"#798065\"\n    },\n    \"index\": 5,\n    \"world_position\": [\n      370.0,\n      360.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"braided\",\n      \"hat\": true,\n      \"held\": \"none\",\n      \"phase\": 0.625,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#d6af88\",\n      \"state\": \"knap\",\n      \"top\": \"woven_tunic\",\n      \"top_tint\": \"#9a7054\"\n    },\n    \"index\": 6,\n    \"world_position\": [\n      550.0,\n      360.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"child\",\n      \"hair\": \"short\",\n      \"hat\": false,\n      \"held\": \"none\",\n      \"phase\": 0.75,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#bc916a\",\n      \"state\": \"walk\",\n      \"top\": \"hide_wrap\",\n      \"top_tint\": \"#9f8461\"\n    },\n    \"index\": 7,\n    \"world_position\": [\n      730.0,\n      360.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"long_tied\",\n      \"hat\": false,\n      \"held\": \"berry_basket\",\n      \"phase\": 0.875,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#8b6045\",\n      \"state\": \"carry\",\n      \"top\": \"fur_cloak\",\n      \"top_tint\": \"#798065\"\n    },\n    \"index\": 8,\n    \"world_position\": [\n      910.0,\n      360.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"braided\",\n      \"hat\": false,\n      \"held\": \"none\",\n      \"phase\": 0.0,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#d6af88\",\n      \"state\": \"sleep\",\n      \"top\": \"woven_tunic\",\n      \"top_tint\": \"#9a7054\"\n    },\n    \"index\": 9,\n    \"world_position\": [\n      370.0,\n      500.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"child\",\n      \"hair\": \"short\",\n      \"hat\": false,\n      \"held\": \"none\",\n      \"phase\": 0.125,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#bc916a\",\n      \"state\": \"idle\",\n      \"top\": \"hide_wrap\",\n      \"top_tint\": \"#9f8461\"\n    },\n    \"index\": 10,\n    \"world_position\": [\n      550.0,\n      500.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"long_tied\",\n      \"hat\": true,\n      \"held\": \"stone_axe\",\n      \"phase\": 0.25,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#8b6045\",\n      \"state\": \"chop\",\n      \"top\": \"fur_cloak\",\n      \"top_tint\": \"#798065\"\n    },\n    \"index\": 11,\n    \"world_position\": [\n      730.0,\n      500.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"elder\",\n      \"hair\": \"braided\",\n      \"hat\": false,\n      \"held\": \"none\",\n      \"phase\": 0.375,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#d6af88\",\n      \"state\": \"walk\",\n      \"top\": \"woven_tunic\",\n      \"top_tint\": \"#9a7054\"\n    },\n    \"index\": 12,\n    \"world_position\": [\n      910.0,\n      500.0\n    ]\n  }\n]\n"
+    },
+    "proto-final-people-forest_floor-1/capture.png": {
+      "capture_sha256": "48f41d78ecd675eeda20708305f31b6761622b8792e38df5bb4686fb52ac8096",
+      "answer_key_path": "/Users/rexxa/work/arttrial2-data/proto-final-people-forest_floor-1/answer_key.json",
+      "answer_key_sha256": "7b158099be15839858bdeec39a108a3046afe7055d07445d115031473ce26497",
+      "answer_key_verbatim": "[\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"short\",\n      \"hat\": true,\n      \"held\": \"none\",\n      \"phase\": 0.0,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#bc916a\",\n      \"state\": \"idle\",\n      \"top\": \"hide_wrap\",\n      \"top_tint\": \"#9f8461\"\n    },\n    \"index\": 1,\n    \"world_position\": [\n      370.0,\n      220.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"long_tied\",\n      \"hat\": false,\n      \"held\": \"none\",\n      \"phase\": 0.125,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#8b6045\",\n      \"state\": \"walk\",\n      \"top\": \"fur_cloak\",\n      \"top_tint\": \"#798065\"\n    },\n    \"index\": 2,\n    \"world_position\": [\n      550.0,\n      220.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"braided\",\n      \"hat\": false,\n      \"held\": \"stone_axe\",\n      \"phase\": 0.25,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#d6af88\",\n      \"state\": \"chop\",\n      \"top\": \"woven_tunic\",\n      \"top_tint\": \"#9a7054\"\n    },\n    \"index\": 3,\n    \"world_position\": [\n      730.0,\n      220.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"short\",\n      \"hat\": false,\n      \"held\": \"log_bundle\",\n      \"phase\": 0.375,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#bc916a\",\n      \"state\": \"carry\",\n      \"top\": \"hide_wrap\",\n      \"top_tint\": \"#9f8461\"\n    },\n    \"index\": 4,\n    \"world_position\": [\n      910.0,\n      220.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"long_tied\",\n      \"hat\": false,\n      \"held\": \"none\",\n      \"phase\": 0.5,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#8b6045\",\n      \"state\": \"sleep\",\n      \"top\": \"fur_cloak\",\n      \"top_tint\": \"#798065\"\n    },\n    \"index\": 5,\n    \"world_position\": [\n      370.0,\n      360.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"braided\",\n      \"hat\": true,\n      \"held\": \"none\",\n      \"phase\": 0.625,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#d6af88\",\n      \"state\": \"knap\",\n      \"top\": \"woven_tunic\",\n      \"top_tint\": \"#9a7054\"\n    },\n    \"index\": 6,\n    \"world_position\": [\n      550.0,\n      360.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"child\",\n      \"hair\": \"short\",\n      \"hat\": false,\n      \"held\": \"none\",\n      \"phase\": 0.75,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#bc916a\",\n      \"state\": \"walk\",\n      \"top\": \"hide_wrap\",\n      \"top_tint\": \"#9f8461\"\n    },\n    \"index\": 7,\n    \"world_position\": [\n      730.0,\n      360.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"long_tied\",\n      \"hat\": false,\n      \"held\": \"berry_basket\",\n      \"phase\": 0.875,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#8b6045\",\n      \"state\": \"carry\",\n      \"top\": \"fur_cloak\",\n      \"top_tint\": \"#798065\"\n    },\n    \"index\": 8,\n    \"world_position\": [\n      910.0,\n      360.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"braided\",\n      \"hat\": false,\n      \"held\": \"none\",\n      \"phase\": 0.0,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#d6af88\",\n      \"state\": \"sleep\",\n      \"top\": \"woven_tunic\",\n      \"top_tint\": \"#9a7054\"\n    },\n    \"index\": 9,\n    \"world_position\": [\n      370.0,\n      500.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"child\",\n      \"hair\": \"short\",\n      \"hat\": false,\n      \"held\": \"none\",\n      \"phase\": 0.125,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#bc916a\",\n      \"state\": \"idle\",\n      \"top\": \"hide_wrap\",\n      \"top_tint\": \"#9f8461\"\n    },\n    \"index\": 10,\n    \"world_position\": [\n      550.0,\n      500.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"long_tied\",\n      \"hat\": true,\n      \"held\": \"stone_axe\",\n      \"phase\": 0.25,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#8b6045\",\n      \"state\": \"chop\",\n      \"top\": \"fur_cloak\",\n      \"top_tint\": \"#798065\"\n    },\n    \"index\": 11,\n    \"world_position\": [\n      730.0,\n      500.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"elder\",\n      \"hair\": \"braided\",\n      \"hat\": false,\n      \"held\": \"none\",\n      \"phase\": 0.375,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#d6af88\",\n      \"state\": \"walk\",\n      \"top\": \"woven_tunic\",\n      \"top_tint\": \"#9a7054\"\n    },\n    \"index\": 12,\n    \"world_position\": [\n      910.0,\n      500.0\n    ]\n  }\n]\n"
+    },
+    "proto-final-people-forest_floor-2/capture.png": {
+      "capture_sha256": "dfd5fdf20f23e6caf5111283fb02f8fd1da116e27250316616198f17a8e43aab",
+      "answer_key_path": "/Users/rexxa/work/arttrial2-data/proto-final-people-forest_floor-2/answer_key.json",
+      "answer_key_sha256": "7b158099be15839858bdeec39a108a3046afe7055d07445d115031473ce26497",
+      "answer_key_verbatim": "[\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"short\",\n      \"hat\": true,\n      \"held\": \"none\",\n      \"phase\": 0.0,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#bc916a\",\n      \"state\": \"idle\",\n      \"top\": \"hide_wrap\",\n      \"top_tint\": \"#9f8461\"\n    },\n    \"index\": 1,\n    \"world_position\": [\n      370.0,\n      220.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"long_tied\",\n      \"hat\": false,\n      \"held\": \"none\",\n      \"phase\": 0.125,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#8b6045\",\n      \"state\": \"walk\",\n      \"top\": \"fur_cloak\",\n      \"top_tint\": \"#798065\"\n    },\n    \"index\": 2,\n    \"world_position\": [\n      550.0,\n      220.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"braided\",\n      \"hat\": false,\n      \"held\": \"stone_axe\",\n      \"phase\": 0.25,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#d6af88\",\n      \"state\": \"chop\",\n      \"top\": \"woven_tunic\",\n      \"top_tint\": \"#9a7054\"\n    },\n    \"index\": 3,\n    \"world_position\": [\n      730.0,\n      220.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"short\",\n      \"hat\": false,\n      \"held\": \"log_bundle\",\n      \"phase\": 0.375,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#bc916a\",\n      \"state\": \"carry\",\n      \"top\": \"hide_wrap\",\n      \"top_tint\": \"#9f8461\"\n    },\n    \"index\": 4,\n    \"world_position\": [\n      910.0,\n      220.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"long_tied\",\n      \"hat\": false,\n      \"held\": \"none\",\n      \"phase\": 0.5,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#8b6045\",\n      \"state\": \"sleep\",\n      \"top\": \"fur_cloak\",\n      \"top_tint\": \"#798065\"\n    },\n    \"index\": 5,\n    \"world_position\": [\n      370.0,\n      360.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"braided\",\n      \"hat\": true,\n      \"held\": \"none\",\n      \"phase\": 0.625,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#d6af88\",\n      \"state\": \"knap\",\n      \"top\": \"woven_tunic\",\n      \"top_tint\": \"#9a7054\"\n    },\n    \"index\": 6,\n    \"world_position\": [\n      550.0,\n      360.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"child\",\n      \"hair\": \"short\",\n      \"hat\": false,\n      \"held\": \"none\",\n      \"phase\": 0.75,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#bc916a\",\n      \"state\": \"walk\",\n      \"top\": \"hide_wrap\",\n      \"top_tint\": \"#9f8461\"\n    },\n    \"index\": 7,\n    \"world_position\": [\n      730.0,\n      360.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"long_tied\",\n      \"hat\": false,\n      \"held\": \"berry_basket\",\n      \"phase\": 0.875,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#8b6045\",\n      \"state\": \"carry\",\n      \"top\": \"fur_cloak\",\n      \"top_tint\": \"#798065\"\n    },\n    \"index\": 8,\n    \"world_position\": [\n      910.0,\n      360.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"braided\",\n      \"hat\": false,\n      \"held\": \"none\",\n      \"phase\": 0.0,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#d6af88\",\n      \"state\": \"sleep\",\n      \"top\": \"woven_tunic\",\n      \"top_tint\": \"#9a7054\"\n    },\n    \"index\": 9,\n    \"world_position\": [\n      370.0,\n      500.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"child\",\n      \"hair\": \"short\",\n      \"hat\": false,\n      \"held\": \"none\",\n      \"phase\": 0.125,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#bc916a\",\n      \"state\": \"idle\",\n      \"top\": \"hide_wrap\",\n      \"top_tint\": \"#9f8461\"\n    },\n    \"index\": 10,\n    \"world_position\": [\n      550.0,\n      500.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"adult\",\n      \"hair\": \"long_tied\",\n      \"hat\": true,\n      \"held\": \"stone_axe\",\n      \"phase\": 0.25,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#8b6045\",\n      \"state\": \"chop\",\n      \"top\": \"fur_cloak\",\n      \"top_tint\": \"#798065\"\n    },\n    \"index\": 11,\n    \"world_position\": [\n      730.0,\n      500.0\n    ]\n  },\n  {\n    \"attributes\": {\n      \"age\": \"elder\",\n      \"hair\": \"braided\",\n      \"hat\": false,\n      \"held\": \"none\",\n      \"phase\": 0.375,\n      \"sex\": \"NOT_RENDERED_SINGLE_ADULT_BODY\",\n      \"skin\": \"#d6af88\",\n      \"state\": \"walk\",\n      \"top\": \"woven_tunic\",\n      \"top_tint\": \"#9a7054\"\n    },\n    \"index\": 12,\n    \"world_position\": [\n      910.0,\n      500.0\n    ]\n  }\n]\n"
+    }
+  },
+  "summaries": [
+    {
+      "reviewer": "blind_final_a",
+      "image": "proto-final-people-meadow-1/capture.png",
+      "zoom": 1,
+      "activity_and_carrying": 6,
+      "activity_denominator": 12,
+      "activity_threshold": 8,
+      "activity_pass": false,
+      "sex": 0,
+      "age": 8,
+      "held_item": 6,
+      "attribute_total": 14,
+      "attribute_denominator": 24,
+      "attribute_threshold": 20,
+      "attribute_pass": false
+    },
+    {
+      "reviewer": "blind_final_a",
+      "image": "proto-final-people-meadow-2/capture.png",
+      "zoom": 2,
+      "activity_and_carrying": 6,
+      "activity_denominator": 12,
+      "activity_threshold": 10,
+      "activity_pass": false,
+      "sex": 0,
+      "age": 8,
+      "held_item": 8,
+      "attribute_total": 16,
+      "attribute_denominator": 24,
+      "attribute_threshold": 20,
+      "attribute_pass": false
+    },
+    {
+      "reviewer": "blind_final_a",
+      "image": "proto-final-people-forest_floor-1/capture.png",
+      "zoom": 1,
+      "activity_and_carrying": 6,
+      "activity_denominator": 12,
+      "activity_threshold": 8,
+      "activity_pass": false,
+      "sex": 0,
+      "age": 8,
+      "held_item": 6,
+      "attribute_total": 14,
+      "attribute_denominator": 24,
+      "attribute_threshold": 20,
+      "attribute_pass": false
+    },
+    {
+      "reviewer": "blind_final_a",
+      "image": "proto-final-people-forest_floor-2/capture.png",
+      "zoom": 2,
+      "activity_and_carrying": 6,
+      "activity_denominator": 12,
+      "activity_threshold": 10,
+      "activity_pass": false,
+      "sex": 0,
+      "age": 8,
+      "held_item": 8,
+      "attribute_total": 16,
+      "attribute_denominator": 24,
+      "attribute_threshold": 20,
+      "attribute_pass": false
+    },
+    {
+      "reviewer": "blind_final_b",
+      "image": "proto-final-people-meadow-1/capture.png",
+      "zoom": 1,
+      "activity_and_carrying": 4,
+      "activity_denominator": 12,
+      "activity_threshold": 8,
+      "activity_pass": false,
+      "sex": 0,
+      "age": 8,
+      "held_item": 5,
+      "attribute_total": 13,
+      "attribute_denominator": 24,
+      "attribute_threshold": 20,
+      "attribute_pass": false
+    },
+    {
+      "reviewer": "blind_final_b",
+      "image": "proto-final-people-meadow-2/capture.png",
+      "zoom": 2,
+      "activity_and_carrying": 7,
+      "activity_denominator": 12,
+      "activity_threshold": 10,
+      "activity_pass": false,
+      "sex": 0,
+      "age": 8,
+      "held_item": 6,
+      "attribute_total": 14,
+      "attribute_denominator": 24,
+      "attribute_threshold": 20,
+      "attribute_pass": false
+    },
+    {
+      "reviewer": "blind_final_b",
+      "image": "proto-final-people-forest_floor-1/capture.png",
+      "zoom": 1,
+      "activity_and_carrying": 4,
+      "activity_denominator": 12,
+      "activity_threshold": 8,
+      "activity_pass": false,
+      "sex": 0,
+      "age": 8,
+      "held_item": 5,
+      "attribute_total": 13,
+      "attribute_denominator": 24,
+      "attribute_threshold": 20,
+      "attribute_pass": false
+    },
+    {
+      "reviewer": "blind_final_b",
+      "image": "proto-final-people-forest_floor-2/capture.png",
+      "zoom": 2,
+      "activity_and_carrying": 7,
+      "activity_denominator": 12,
+      "activity_threshold": 10,
+      "activity_pass": false,
+      "sex": 0,
+      "age": 8,
+      "held_item": 6,
+      "attribute_total": 14,
+      "attribute_denominator": 24,
+      "attribute_threshold": 20,
+      "attribute_pass": false
+    }
+  ],
+  "reviews": [
+    {
+      "reviewer": "blind_final_a",
+      "source_path": "/Users/rexxa/work/arttrial2-data/blind_final_a.json",
+      "source_sha256": "49e6e0533836f594b97ef028d90a36b72325af9b05d60aa2c0bab8b55a5fc79c",
+      "raw_verbatim": "{\n  \"reviewer\": \"blind_final_a\",\n  \"method\": \"Only the four supplied PNGs viewed. No visible number labels; figures indexed left-to-right, top-to-bottom across three rows of four. Sex is not reliably legible from these images. Carrying includes visibly holding a tool.\",\n  \"answers\": [\n    {\n      \"image\": \"proto-final-people-meadow-1/capture.png\",\n      \"figure\": 1,\n      \"activity\": \"standing\",\n      \"carrying\": \"no\",\n      \"description\": \"Upright figure with arms close to the body; no separate load is visible.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-1/capture.png\",\n      \"figure\": 2,\n      \"activity\": \"walking\",\n      \"carrying\": \"no\",\n      \"description\": \"Upright figure with angled legs and arms slightly apart.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-1/capture.png\",\n      \"figure\": 3,\n      \"activity\": \"standing holding an object\",\n      \"carrying\": \"yes\",\n      \"description\": \"Upright figure with a narrow object protruding to the right.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"long narrow tool, exact type unclear\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-1/capture.png\",\n      \"figure\": 4,\n      \"activity\": \"holding or lifting overhead\",\n      \"carrying\": \"yes\",\n      \"description\": \"Bent arms rise toward a dark elongated shape above the head.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"dark elongated object\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-1/capture.png\",\n      \"figure\": 5,\n      \"activity\": \"lying down\",\n      \"carrying\": \"no\",\n      \"description\": \"Body is horizontal with legs extended to the left.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-1/capture.png\",\n      \"figure\": 6,\n      \"activity\": \"sitting with arms spread\",\n      \"carrying\": \"no\",\n      \"description\": \"Shortened lower body and arms extending sideways suggest sitting.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-1/capture.png\",\n      \"figure\": 7,\n      \"activity\": \"standing or stepping\",\n      \"carrying\": \"no\",\n      \"description\": \"Small upright figure with slightly separated legs.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"child\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-1/capture.png\",\n      \"figure\": 8,\n      \"activity\": \"carrying a load\",\n      \"carrying\": \"yes\",\n      \"description\": \"Round colored object is beside the upper body.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"round basket-like object\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-1/capture.png\",\n      \"figure\": 9,\n      \"activity\": \"lying down\",\n      \"carrying\": \"no\",\n      \"description\": \"Horizontal body with head at the right and legs at the left.\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-1/capture.png\",\n      \"figure\": 10,\n      \"activity\": \"standing\",\n      \"carrying\": \"no\",\n      \"description\": \"Small upright figure with arms down.\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-1/capture.png\",\n      \"figure\": 11,\n      \"activity\": \"holding a tool\",\n      \"carrying\": \"yes\",\n      \"description\": \"Upright figure with an object extending diagonally right.\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-1/capture.png\",\n      \"figure\": 12,\n      \"activity\": \"standing or stepping\",\n      \"carrying\": \"no\",\n      \"description\": \"Upright figure with legs apart; no clear load.\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-2/capture.png\",\n      \"figure\": 1,\n      \"activity\": \"standing\",\n      \"carrying\": \"no\",\n      \"description\": \"Upright figure, straight legs, arms beside torso.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-2/capture.png\",\n      \"figure\": 2,\n      \"activity\": \"walking\",\n      \"carrying\": \"no\",\n      \"description\": \"Crossed or stepping legs and swinging arms suggest walking.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-2/capture.png\",\n      \"figure\": 3,\n      \"activity\": \"holding a tool\",\n      \"carrying\": \"yes\",\n      \"description\": \"Arm holds a diagonal wooden handle with a pale broad head.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"axe-like tool\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-2/capture.png\",\n      \"figure\": 4,\n      \"activity\": \"carrying or lifting overhead\",\n      \"carrying\": \"yes\",\n      \"description\": \"Both arms raised around a dark oblong object above the head.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"dark log-like object\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-2/capture.png\",\n      \"figure\": 5,\n      \"activity\": \"lying down\",\n      \"carrying\": \"no\",\n      \"description\": \"Whole body is horizontal, head right and legs left; sleep versus injury cannot be determined.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-2/capture.png\",\n      \"figure\": 6,\n      \"activity\": \"sitting with arms spread\",\n      \"carrying\": \"no\",\n      \"description\": \"Bent or folded lower body with both arms extended sideways.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-2/capture.png\",\n      \"figure\": 7,\n      \"activity\": \"walking or standing with legs apart\",\n      \"carrying\": \"no\",\n      \"description\": \"Smaller figure with short limbs and splayed legs.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"child\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-2/capture.png\",\n      \"figure\": 8,\n      \"activity\": \"carrying a basket\",\n      \"carrying\": \"yes\",\n      \"description\": \"Round woven-looking container with colored contents held beside shoulder.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"round basket with colored contents\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-2/capture.png\",\n      \"figure\": 9,\n      \"activity\": \"lying down\",\n      \"carrying\": \"no\",\n      \"description\": \"Horizontal extended body; sleep versus injury unclear.\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-2/capture.png\",\n      \"figure\": 10,\n      \"activity\": \"standing\",\n      \"carrying\": \"no\",\n      \"description\": \"Small figure with arms close to torso and straight legs.\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-2/capture.png\",\n      \"figure\": 11,\n      \"activity\": \"holding a tool\",\n      \"carrying\": \"yes\",\n      \"description\": \"Diagonal wooden shaft with a pale broad head held to the right.\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-2/capture.png\",\n      \"figure\": 12,\n      \"activity\": \"standing or walking\",\n      \"carrying\": \"no\",\n      \"description\": \"Upright figure with one leg angled outward and arms near sides.\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-1/capture.png\",\n      \"figure\": 1,\n      \"activity\": \"standing\",\n      \"carrying\": \"no\",\n      \"description\": \"Upright figure with arms close to the body; no separate load is visible.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-1/capture.png\",\n      \"figure\": 2,\n      \"activity\": \"walking\",\n      \"carrying\": \"no\",\n      \"description\": \"Upright figure with angled legs and arms slightly apart.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-1/capture.png\",\n      \"figure\": 3,\n      \"activity\": \"standing holding an object\",\n      \"carrying\": \"yes\",\n      \"description\": \"Upright figure with a narrow object protruding to the right.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"long narrow tool, exact type unclear\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-1/capture.png\",\n      \"figure\": 4,\n      \"activity\": \"holding or lifting overhead\",\n      \"carrying\": \"yes\",\n      \"description\": \"Bent arms rise toward a dark elongated shape above the head.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"dark elongated object\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-1/capture.png\",\n      \"figure\": 5,\n      \"activity\": \"lying down\",\n      \"carrying\": \"no\",\n      \"description\": \"Body is horizontal with legs extended to the left.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-1/capture.png\",\n      \"figure\": 6,\n      \"activity\": \"sitting with arms spread\",\n      \"carrying\": \"no\",\n      \"description\": \"Shortened lower body and arms extending sideways suggest sitting.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-1/capture.png\",\n      \"figure\": 7,\n      \"activity\": \"standing or stepping\",\n      \"carrying\": \"no\",\n      \"description\": \"Small upright figure with slightly separated legs.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"child\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-1/capture.png\",\n      \"figure\": 8,\n      \"activity\": \"carrying a load\",\n      \"carrying\": \"yes\",\n      \"description\": \"Round colored object is beside the upper body.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"round basket-like object\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-1/capture.png\",\n      \"figure\": 9,\n      \"activity\": \"lying down\",\n      \"carrying\": \"no\",\n      \"description\": \"Horizontal body with head at the right and legs at the left.\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-1/capture.png\",\n      \"figure\": 10,\n      \"activity\": \"standing\",\n      \"carrying\": \"no\",\n      \"description\": \"Small upright figure with arms down.\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-1/capture.png\",\n      \"figure\": 11,\n      \"activity\": \"holding a tool\",\n      \"carrying\": \"yes\",\n      \"description\": \"Upright figure with an object extending diagonally right.\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-1/capture.png\",\n      \"figure\": 12,\n      \"activity\": \"standing or stepping\",\n      \"carrying\": \"no\",\n      \"description\": \"Upright figure with legs apart; no clear load.\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-2/capture.png\",\n      \"figure\": 1,\n      \"activity\": \"standing\",\n      \"carrying\": \"no\",\n      \"description\": \"Upright figure, straight legs, arms beside torso.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-2/capture.png\",\n      \"figure\": 2,\n      \"activity\": \"walking\",\n      \"carrying\": \"no\",\n      \"description\": \"Crossed or stepping legs and swinging arms suggest walking.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-2/capture.png\",\n      \"figure\": 3,\n      \"activity\": \"holding a tool\",\n      \"carrying\": \"yes\",\n      \"description\": \"Arm holds a diagonal wooden handle with a pale broad head.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"axe-like tool\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-2/capture.png\",\n      \"figure\": 4,\n      \"activity\": \"carrying or lifting overhead\",\n      \"carrying\": \"yes\",\n      \"description\": \"Both arms raised around a dark oblong object above the head.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"dark log-like object\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-2/capture.png\",\n      \"figure\": 5,\n      \"activity\": \"lying down\",\n      \"carrying\": \"no\",\n      \"description\": \"Whole body is horizontal, head right and legs left; sleep versus injury cannot be determined.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-2/capture.png\",\n      \"figure\": 6,\n      \"activity\": \"sitting with arms spread\",\n      \"carrying\": \"no\",\n      \"description\": \"Bent or folded lower body with both arms extended sideways.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-2/capture.png\",\n      \"figure\": 7,\n      \"activity\": \"walking or standing with legs apart\",\n      \"carrying\": \"no\",\n      \"description\": \"Smaller figure with short limbs and splayed legs.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"child\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-2/capture.png\",\n      \"figure\": 8,\n      \"activity\": \"carrying a basket\",\n      \"carrying\": \"yes\",\n      \"description\": \"Round woven-looking container with colored contents held beside shoulder.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"round basket with colored contents\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-2/capture.png\",\n      \"figure\": 9,\n      \"activity\": \"lying down\",\n      \"carrying\": \"no\",\n      \"description\": \"Horizontal extended body; sleep versus injury unclear.\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-2/capture.png\",\n      \"figure\": 10,\n      \"activity\": \"standing\",\n      \"carrying\": \"no\",\n      \"description\": \"Small figure with arms close to torso and straight legs.\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-2/capture.png\",\n      \"figure\": 11,\n      \"activity\": \"holding a tool\",\n      \"carrying\": \"yes\",\n      \"description\": \"Diagonal wooden shaft with a pale broad head held to the right.\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-2/capture.png\",\n      \"figure\": 12,\n      \"activity\": \"standing or walking\",\n      \"carrying\": \"no\",\n      \"description\": \"Upright figure with one leg angled outward and arms near sides.\"\n    }\n  ]\n}\n",
+      "grades": [
+        {
+          "image": "proto-final-people-meadow-1/capture.png",
+          "figure": 1,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-1/capture.png",
+            "figure": 1,
+            "activity": "standing",
+            "carrying": "no",
+            "description": "Upright figure with arms close to the body; no separate load is visible.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "idle",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "idle",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-1/capture.png",
+          "figure": 2,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-1/capture.png",
+            "figure": 2,
+            "activity": "walking",
+            "carrying": "no",
+            "description": "Upright figure with angled legs and arms slightly apart.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "walk",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "walk",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-1/capture.png",
+          "figure": 3,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-1/capture.png",
+            "figure": 3,
+            "activity": "standing holding an object",
+            "carrying": "yes",
+            "description": "Upright figure with a narrow object protruding to the right.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "long narrow tool, exact type unclear"
+          },
+          "expected": {
+            "activity": "chop",
+            "carrying": "yes",
+            "held_rendered": "stone_axe",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "UNKNOWN_OR_AMBIGUOUS",
+            "held_correct": false
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-1/capture.png",
+          "figure": 4,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-1/capture.png",
+            "figure": 4,
+            "activity": "holding or lifting overhead",
+            "carrying": "yes",
+            "description": "Bent arms rise toward a dark elongated shape above the head.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "dark elongated object"
+          },
+          "expected": {
+            "activity": "carry",
+            "carrying": "yes",
+            "held_rendered": "log_bundle",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "UNKNOWN_OR_AMBIGUOUS",
+            "held_correct": false
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-1/capture.png",
+          "figure": 5,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-1/capture.png",
+            "figure": 5,
+            "activity": "lying down",
+            "carrying": "no",
+            "description": "Body is horizontal with legs extended to the left.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "sleep",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "sleep",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-1/capture.png",
+          "figure": 6,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-1/capture.png",
+            "figure": 6,
+            "activity": "sitting with arms spread",
+            "carrying": "no",
+            "description": "Shortened lower body and arms extending sideways suggest sitting.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "knap",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-1/capture.png",
+          "figure": 7,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-1/capture.png",
+            "figure": 7,
+            "activity": "standing or stepping",
+            "carrying": "no",
+            "description": "Small upright figure with slightly separated legs.",
+            "perceived_sex": "unknown",
+            "age_group": "child",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "walk",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "child",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-1/capture.png",
+          "figure": 8,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-1/capture.png",
+            "figure": 8,
+            "activity": "carrying a load",
+            "carrying": "yes",
+            "description": "Round colored object is beside the upper body.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "round basket-like object"
+          },
+          "expected": {
+            "activity": "carry",
+            "carrying": "yes",
+            "held_rendered": "berry_basket",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "carry",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "berry_basket",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-1/capture.png",
+          "figure": 9,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-1/capture.png",
+            "figure": 9,
+            "activity": "lying down",
+            "carrying": "no",
+            "description": "Horizontal body with head at the right and legs at the left."
+          },
+          "expected": {
+            "activity": "sleep",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "sleep",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-meadow-1/capture.png",
+          "figure": 10,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-1/capture.png",
+            "figure": 10,
+            "activity": "standing",
+            "carrying": "no",
+            "description": "Small upright figure with arms down."
+          },
+          "expected": {
+            "activity": "idle",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "child",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "idle",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-meadow-1/capture.png",
+          "figure": 11,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-1/capture.png",
+            "figure": 11,
+            "activity": "holding a tool",
+            "carrying": "yes",
+            "description": "Upright figure with an object extending diagonally right."
+          },
+          "expected": {
+            "activity": "chop",
+            "carrying": "yes",
+            "held_rendered": "stone_axe",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-meadow-1/capture.png",
+          "figure": 12,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-1/capture.png",
+            "figure": 12,
+            "activity": "standing or stepping",
+            "carrying": "no",
+            "description": "Upright figure with legs apart; no clear load."
+          },
+          "expected": {
+            "activity": "walk",
+            "carrying": "yes",
+            "held_rendered": "stick",
+            "age": "elder",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": false,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-meadow-2/capture.png",
+          "figure": 1,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-2/capture.png",
+            "figure": 1,
+            "activity": "standing",
+            "carrying": "no",
+            "description": "Upright figure, straight legs, arms beside torso.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "idle",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "idle",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-2/capture.png",
+          "figure": 2,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-2/capture.png",
+            "figure": 2,
+            "activity": "walking",
+            "carrying": "no",
+            "description": "Crossed or stepping legs and swinging arms suggest walking.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "walk",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "walk",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-2/capture.png",
+          "figure": 3,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-2/capture.png",
+            "figure": 3,
+            "activity": "holding a tool",
+            "carrying": "yes",
+            "description": "Arm holds a diagonal wooden handle with a pale broad head.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "axe-like tool"
+          },
+          "expected": {
+            "activity": "chop",
+            "carrying": "yes",
+            "held_rendered": "stone_axe",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "stone_axe",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-2/capture.png",
+          "figure": 4,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-2/capture.png",
+            "figure": 4,
+            "activity": "carrying or lifting overhead",
+            "carrying": "yes",
+            "description": "Both arms raised around a dark oblong object above the head.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "dark log-like object"
+          },
+          "expected": {
+            "activity": "carry",
+            "carrying": "yes",
+            "held_rendered": "log_bundle",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "log_bundle",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-2/capture.png",
+          "figure": 5,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-2/capture.png",
+            "figure": 5,
+            "activity": "lying down",
+            "carrying": "no",
+            "description": "Whole body is horizontal, head right and legs left; sleep versus injury cannot be determined.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "sleep",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "sleep",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-2/capture.png",
+          "figure": 6,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-2/capture.png",
+            "figure": 6,
+            "activity": "sitting with arms spread",
+            "carrying": "no",
+            "description": "Bent or folded lower body with both arms extended sideways.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "knap",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-2/capture.png",
+          "figure": 7,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-2/capture.png",
+            "figure": 7,
+            "activity": "walking or standing with legs apart",
+            "carrying": "no",
+            "description": "Smaller figure with short limbs and splayed legs.",
+            "perceived_sex": "unknown",
+            "age_group": "child",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "walk",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "child",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-2/capture.png",
+          "figure": 8,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-2/capture.png",
+            "figure": 8,
+            "activity": "carrying a basket",
+            "carrying": "yes",
+            "description": "Round woven-looking container with colored contents held beside shoulder.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "round basket with colored contents"
+          },
+          "expected": {
+            "activity": "carry",
+            "carrying": "yes",
+            "held_rendered": "berry_basket",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "carry",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "berry_basket",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-2/capture.png",
+          "figure": 9,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-2/capture.png",
+            "figure": 9,
+            "activity": "lying down",
+            "carrying": "no",
+            "description": "Horizontal extended body; sleep versus injury unclear."
+          },
+          "expected": {
+            "activity": "sleep",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "sleep",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-meadow-2/capture.png",
+          "figure": 10,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-2/capture.png",
+            "figure": 10,
+            "activity": "standing",
+            "carrying": "no",
+            "description": "Small figure with arms close to torso and straight legs."
+          },
+          "expected": {
+            "activity": "idle",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "child",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "idle",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-meadow-2/capture.png",
+          "figure": 11,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-2/capture.png",
+            "figure": 11,
+            "activity": "holding a tool",
+            "carrying": "yes",
+            "description": "Diagonal wooden shaft with a pale broad head held to the right."
+          },
+          "expected": {
+            "activity": "chop",
+            "carrying": "yes",
+            "held_rendered": "stone_axe",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-meadow-2/capture.png",
+          "figure": 12,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-2/capture.png",
+            "figure": 12,
+            "activity": "standing or walking",
+            "carrying": "no",
+            "description": "Upright figure with one leg angled outward and arms near sides."
+          },
+          "expected": {
+            "activity": "walk",
+            "carrying": "yes",
+            "held_rendered": "stick",
+            "age": "elder",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": false,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-forest_floor-1/capture.png",
+          "figure": 1,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-1/capture.png",
+            "figure": 1,
+            "activity": "standing",
+            "carrying": "no",
+            "description": "Upright figure with arms close to the body; no separate load is visible.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "idle",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "idle",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-1/capture.png",
+          "figure": 2,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-1/capture.png",
+            "figure": 2,
+            "activity": "walking",
+            "carrying": "no",
+            "description": "Upright figure with angled legs and arms slightly apart.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "walk",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "walk",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-1/capture.png",
+          "figure": 3,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-1/capture.png",
+            "figure": 3,
+            "activity": "standing holding an object",
+            "carrying": "yes",
+            "description": "Upright figure with a narrow object protruding to the right.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "long narrow tool, exact type unclear"
+          },
+          "expected": {
+            "activity": "chop",
+            "carrying": "yes",
+            "held_rendered": "stone_axe",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "UNKNOWN_OR_AMBIGUOUS",
+            "held_correct": false
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-1/capture.png",
+          "figure": 4,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-1/capture.png",
+            "figure": 4,
+            "activity": "holding or lifting overhead",
+            "carrying": "yes",
+            "description": "Bent arms rise toward a dark elongated shape above the head.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "dark elongated object"
+          },
+          "expected": {
+            "activity": "carry",
+            "carrying": "yes",
+            "held_rendered": "log_bundle",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "UNKNOWN_OR_AMBIGUOUS",
+            "held_correct": false
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-1/capture.png",
+          "figure": 5,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-1/capture.png",
+            "figure": 5,
+            "activity": "lying down",
+            "carrying": "no",
+            "description": "Body is horizontal with legs extended to the left.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "sleep",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "sleep",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-1/capture.png",
+          "figure": 6,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-1/capture.png",
+            "figure": 6,
+            "activity": "sitting with arms spread",
+            "carrying": "no",
+            "description": "Shortened lower body and arms extending sideways suggest sitting.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "knap",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-1/capture.png",
+          "figure": 7,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-1/capture.png",
+            "figure": 7,
+            "activity": "standing or stepping",
+            "carrying": "no",
+            "description": "Small upright figure with slightly separated legs.",
+            "perceived_sex": "unknown",
+            "age_group": "child",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "walk",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "child",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-1/capture.png",
+          "figure": 8,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-1/capture.png",
+            "figure": 8,
+            "activity": "carrying a load",
+            "carrying": "yes",
+            "description": "Round colored object is beside the upper body.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "round basket-like object"
+          },
+          "expected": {
+            "activity": "carry",
+            "carrying": "yes",
+            "held_rendered": "berry_basket",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "carry",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "berry_basket",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-1/capture.png",
+          "figure": 9,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-1/capture.png",
+            "figure": 9,
+            "activity": "lying down",
+            "carrying": "no",
+            "description": "Horizontal body with head at the right and legs at the left."
+          },
+          "expected": {
+            "activity": "sleep",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "sleep",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-forest_floor-1/capture.png",
+          "figure": 10,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-1/capture.png",
+            "figure": 10,
+            "activity": "standing",
+            "carrying": "no",
+            "description": "Small upright figure with arms down."
+          },
+          "expected": {
+            "activity": "idle",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "child",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "idle",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-forest_floor-1/capture.png",
+          "figure": 11,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-1/capture.png",
+            "figure": 11,
+            "activity": "holding a tool",
+            "carrying": "yes",
+            "description": "Upright figure with an object extending diagonally right."
+          },
+          "expected": {
+            "activity": "chop",
+            "carrying": "yes",
+            "held_rendered": "stone_axe",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-forest_floor-1/capture.png",
+          "figure": 12,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-1/capture.png",
+            "figure": 12,
+            "activity": "standing or stepping",
+            "carrying": "no",
+            "description": "Upright figure with legs apart; no clear load."
+          },
+          "expected": {
+            "activity": "walk",
+            "carrying": "yes",
+            "held_rendered": "stick",
+            "age": "elder",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": false,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-forest_floor-2/capture.png",
+          "figure": 1,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-2/capture.png",
+            "figure": 1,
+            "activity": "standing",
+            "carrying": "no",
+            "description": "Upright figure, straight legs, arms beside torso.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "idle",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "idle",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-2/capture.png",
+          "figure": 2,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-2/capture.png",
+            "figure": 2,
+            "activity": "walking",
+            "carrying": "no",
+            "description": "Crossed or stepping legs and swinging arms suggest walking.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "walk",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "walk",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-2/capture.png",
+          "figure": 3,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-2/capture.png",
+            "figure": 3,
+            "activity": "holding a tool",
+            "carrying": "yes",
+            "description": "Arm holds a diagonal wooden handle with a pale broad head.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "axe-like tool"
+          },
+          "expected": {
+            "activity": "chop",
+            "carrying": "yes",
+            "held_rendered": "stone_axe",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "stone_axe",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-2/capture.png",
+          "figure": 4,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-2/capture.png",
+            "figure": 4,
+            "activity": "carrying or lifting overhead",
+            "carrying": "yes",
+            "description": "Both arms raised around a dark oblong object above the head.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "dark log-like object"
+          },
+          "expected": {
+            "activity": "carry",
+            "carrying": "yes",
+            "held_rendered": "log_bundle",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "log_bundle",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-2/capture.png",
+          "figure": 5,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-2/capture.png",
+            "figure": 5,
+            "activity": "lying down",
+            "carrying": "no",
+            "description": "Whole body is horizontal, head right and legs left; sleep versus injury cannot be determined.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "sleep",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "sleep",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-2/capture.png",
+          "figure": 6,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-2/capture.png",
+            "figure": 6,
+            "activity": "sitting with arms spread",
+            "carrying": "no",
+            "description": "Bent or folded lower body with both arms extended sideways.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "knap",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-2/capture.png",
+          "figure": 7,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-2/capture.png",
+            "figure": 7,
+            "activity": "walking or standing with legs apart",
+            "carrying": "no",
+            "description": "Smaller figure with short limbs and splayed legs.",
+            "perceived_sex": "unknown",
+            "age_group": "child",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "walk",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "child",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-2/capture.png",
+          "figure": 8,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-2/capture.png",
+            "figure": 8,
+            "activity": "carrying a basket",
+            "carrying": "yes",
+            "description": "Round woven-looking container with colored contents held beside shoulder.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "round basket with colored contents"
+          },
+          "expected": {
+            "activity": "carry",
+            "carrying": "yes",
+            "held_rendered": "berry_basket",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "carry",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "berry_basket",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-2/capture.png",
+          "figure": 9,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-2/capture.png",
+            "figure": 9,
+            "activity": "lying down",
+            "carrying": "no",
+            "description": "Horizontal extended body; sleep versus injury unclear."
+          },
+          "expected": {
+            "activity": "sleep",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "sleep",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-forest_floor-2/capture.png",
+          "figure": 10,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-2/capture.png",
+            "figure": 10,
+            "activity": "standing",
+            "carrying": "no",
+            "description": "Small figure with arms close to torso and straight legs."
+          },
+          "expected": {
+            "activity": "idle",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "child",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "idle",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-forest_floor-2/capture.png",
+          "figure": 11,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-2/capture.png",
+            "figure": 11,
+            "activity": "holding a tool",
+            "carrying": "yes",
+            "description": "Diagonal wooden shaft with a pale broad head held to the right."
+          },
+          "expected": {
+            "activity": "chop",
+            "carrying": "yes",
+            "held_rendered": "stone_axe",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-forest_floor-2/capture.png",
+          "figure": 12,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-2/capture.png",
+            "figure": 12,
+            "activity": "standing or walking",
+            "carrying": "no",
+            "description": "Upright figure with one leg angled outward and arms near sides."
+          },
+          "expected": {
+            "activity": "walk",
+            "carrying": "yes",
+            "held_rendered": "stick",
+            "age": "elder",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": false,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": null
+        }
+      ]
+    },
+    {
+      "reviewer": "blind_final_b",
+      "source_path": "/Users/rexxa/work/arttrial2-data/blind_final_b.json",
+      "source_sha256": "95aa7858240fb90462cb4ed1b9543a0823b5a2a13dbc41affcb0f185fce6d472",
+      "raw_verbatim": "{\n  \"reviewer\": \"blind_final_b\",\n  \"method\": \"Image-only review of four supplied PNGs. No numeric labels were legible; figures are indexed row-major, left to right, top to bottom. Sex is unknown because these sprites provide insufficient visual evidence. Age labels are apparent relative body-size impressions.\",\n  \"answers\": [\n    {\n      \"image\": \"proto-final-people-meadow-1/capture.png\",\n      \"figure\": 1,\n      \"activity\": \"standing\",\n      \"carrying\": \"no\",\n      \"description\": \"Upright figure with round brown head and arms low.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-1/capture.png\",\n      \"figure\": 2,\n      \"activity\": \"walking or standing with crossed legs\",\n      \"carrying\": \"no\",\n      \"description\": \"Upright gray-headed figure; legs appear crossed.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-1/capture.png\",\n      \"figure\": 3,\n      \"activity\": \"standing\",\n      \"carrying\": \"unclear\",\n      \"description\": \"Small upright figure; right-side protrusion is too small to identify confidently.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"unclear\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-1/capture.png\",\n      \"figure\": 4,\n      \"activity\": \"arms raised near head\",\n      \"carrying\": \"unclear\",\n      \"description\": \"Dark oblique shape merges with the head and raised arms.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"unclear dark shape\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-1/capture.png\",\n      \"figure\": 5,\n      \"activity\": \"lying down\",\n      \"carrying\": \"no\",\n      \"description\": \"Horizontal figure with head at the right.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-1/capture.png\",\n      \"figure\": 6,\n      \"activity\": \"sitting with arms out\",\n      \"carrying\": \"no\",\n      \"description\": \"Brown-headed figure has a low broad lower body and extended arms.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-1/capture.png\",\n      \"figure\": 7,\n      \"activity\": \"standing\",\n      \"carrying\": \"no\",\n      \"description\": \"Smaller upright narrow figure.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"child\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-1/capture.png\",\n      \"figure\": 8,\n      \"activity\": \"standing holding something near upper body\",\n      \"carrying\": \"yes\",\n      \"description\": \"Round dark reddish object beside head or shoulder.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"round dark reddish object\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-1/capture.png\",\n      \"figure\": 9,\n      \"activity\": \"lying down\",\n      \"carrying\": \"no\",\n      \"description\": \"Horizontal pale figure with head at the right.\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-1/capture.png\",\n      \"figure\": 10,\n      \"activity\": \"standing\",\n      \"carrying\": \"no\",\n      \"description\": \"Small upright narrow figure with arms down.\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-1/capture.png\",\n      \"figure\": 11,\n      \"activity\": \"standing with one arm out\",\n      \"carrying\": \"unclear\",\n      \"description\": \"Brown-headed figure with a small protruding shape at the side.\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-1/capture.png\",\n      \"figure\": 12,\n      \"activity\": \"standing or stepping\",\n      \"carrying\": \"no\",\n      \"description\": \"Upright figure with legs separated.\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-2/capture.png\",\n      \"figure\": 1,\n      \"activity\": \"standing\",\n      \"carrying\": \"no\",\n      \"description\": \"Brown round-headed figure upright with arms lowered.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-2/capture.png\",\n      \"figure\": 2,\n      \"activity\": \"walking\",\n      \"carrying\": \"no\",\n      \"description\": \"Arms angled outward and legs crossing in a stepping pose.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-2/capture.png\",\n      \"figure\": 3,\n      \"activity\": \"standing holding a tool\",\n      \"carrying\": \"yes\",\n      \"description\": \"Right arm extends to a brown handle with a pale gray head.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"stone-headed axe or similar tool\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-2/capture.png\",\n      \"figure\": 4,\n      \"activity\": \"carrying something above shoulder or head\",\n      \"carrying\": \"yes\",\n      \"description\": \"Both arms are raised around a large dark elongated object.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"dark log-like elongated object\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-2/capture.png\",\n      \"figure\": 5,\n      \"activity\": \"lying down\",\n      \"carrying\": \"no\",\n      \"description\": \"Body is horizontal with straight legs to the left and head to the right.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-2/capture.png\",\n      \"figure\": 6,\n      \"activity\": \"sitting with arms spread\",\n      \"carrying\": \"no\",\n      \"description\": \"Legs appear folded beneath a broad garment; arms extend outward.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-2/capture.png\",\n      \"figure\": 7,\n      \"activity\": \"standing\",\n      \"carrying\": \"no\",\n      \"description\": \"Short small-bodied figure with feet apart and arms lowered.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"child\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-2/capture.png\",\n      \"figure\": 8,\n      \"activity\": \"carrying a round container\",\n      \"carrying\": \"yes\",\n      \"description\": \"Round brown-rimmed object with reddish contents held beside the upper body.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"basket or round container\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-2/capture.png\",\n      \"figure\": 9,\n      \"activity\": \"lying down\",\n      \"carrying\": \"no\",\n      \"description\": \"Horizontal figure with head to the right and legs to the left.\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-2/capture.png\",\n      \"figure\": 10,\n      \"activity\": \"standing\",\n      \"carrying\": \"no\",\n      \"description\": \"Short upright figure with arms lowered.\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-2/capture.png\",\n      \"figure\": 11,\n      \"activity\": \"standing holding a tool\",\n      \"carrying\": \"yes\",\n      \"description\": \"Brown-headed figure holds a long brown handle with a pale gray head.\"\n    },\n    {\n      \"image\": \"proto-final-people-meadow-2/capture.png\",\n      \"figure\": 12,\n      \"activity\": \"standing or stepping\",\n      \"carrying\": \"no\",\n      \"description\": \"Upright figure with one leg angled outward and hands lowered.\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-1/capture.png\",\n      \"figure\": 1,\n      \"activity\": \"standing\",\n      \"carrying\": \"no\",\n      \"description\": \"Upright figure with round brown head and arms low.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-1/capture.png\",\n      \"figure\": 2,\n      \"activity\": \"walking or standing with crossed legs\",\n      \"carrying\": \"no\",\n      \"description\": \"Upright gray-headed figure; legs appear crossed.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-1/capture.png\",\n      \"figure\": 3,\n      \"activity\": \"standing\",\n      \"carrying\": \"unclear\",\n      \"description\": \"Small upright figure; right-side protrusion is too small to identify confidently.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"unclear\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-1/capture.png\",\n      \"figure\": 4,\n      \"activity\": \"arms raised near head\",\n      \"carrying\": \"unclear\",\n      \"description\": \"Dark oblique shape merges with the head and raised arms.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"unclear dark shape\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-1/capture.png\",\n      \"figure\": 5,\n      \"activity\": \"lying down\",\n      \"carrying\": \"no\",\n      \"description\": \"Horizontal figure with head at the right.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-1/capture.png\",\n      \"figure\": 6,\n      \"activity\": \"sitting with arms out\",\n      \"carrying\": \"no\",\n      \"description\": \"Brown-headed figure has a low broad lower body and extended arms.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-1/capture.png\",\n      \"figure\": 7,\n      \"activity\": \"standing\",\n      \"carrying\": \"no\",\n      \"description\": \"Smaller upright narrow figure.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"child\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-1/capture.png\",\n      \"figure\": 8,\n      \"activity\": \"standing holding something near upper body\",\n      \"carrying\": \"yes\",\n      \"description\": \"Round dark reddish object beside head or shoulder.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"round dark reddish object\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-1/capture.png\",\n      \"figure\": 9,\n      \"activity\": \"lying down\",\n      \"carrying\": \"no\",\n      \"description\": \"Horizontal pale figure with head at the right.\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-1/capture.png\",\n      \"figure\": 10,\n      \"activity\": \"standing\",\n      \"carrying\": \"no\",\n      \"description\": \"Small upright narrow figure with arms down.\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-1/capture.png\",\n      \"figure\": 11,\n      \"activity\": \"standing with one arm out\",\n      \"carrying\": \"unclear\",\n      \"description\": \"Brown-headed figure with a small protruding shape at the side.\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-1/capture.png\",\n      \"figure\": 12,\n      \"activity\": \"standing or stepping\",\n      \"carrying\": \"no\",\n      \"description\": \"Upright figure with legs separated.\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-2/capture.png\",\n      \"figure\": 1,\n      \"activity\": \"standing\",\n      \"carrying\": \"no\",\n      \"description\": \"Brown round-headed figure upright with arms lowered.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-2/capture.png\",\n      \"figure\": 2,\n      \"activity\": \"walking\",\n      \"carrying\": \"no\",\n      \"description\": \"Arms angled outward and legs crossing in a stepping pose.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-2/capture.png\",\n      \"figure\": 3,\n      \"activity\": \"standing holding a tool\",\n      \"carrying\": \"yes\",\n      \"description\": \"Right arm extends to a brown handle with a pale gray head.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"stone-headed axe or similar tool\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-2/capture.png\",\n      \"figure\": 4,\n      \"activity\": \"carrying something above shoulder or head\",\n      \"carrying\": \"yes\",\n      \"description\": \"Both arms are raised around a large dark elongated object.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"dark log-like elongated object\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-2/capture.png\",\n      \"figure\": 5,\n      \"activity\": \"lying down\",\n      \"carrying\": \"no\",\n      \"description\": \"Body is horizontal with straight legs to the left and head to the right.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-2/capture.png\",\n      \"figure\": 6,\n      \"activity\": \"sitting with arms spread\",\n      \"carrying\": \"no\",\n      \"description\": \"Legs appear folded beneath a broad garment; arms extend outward.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-2/capture.png\",\n      \"figure\": 7,\n      \"activity\": \"standing\",\n      \"carrying\": \"no\",\n      \"description\": \"Short small-bodied figure with feet apart and arms lowered.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"child\",\n      \"held_item\": \"none visible\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-2/capture.png\",\n      \"figure\": 8,\n      \"activity\": \"carrying a round container\",\n      \"carrying\": \"yes\",\n      \"description\": \"Round brown-rimmed object with reddish contents held beside the upper body.\",\n      \"perceived_sex\": \"unknown\",\n      \"age_group\": \"adult\",\n      \"held_item\": \"basket or round container\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-2/capture.png\",\n      \"figure\": 9,\n      \"activity\": \"lying down\",\n      \"carrying\": \"no\",\n      \"description\": \"Horizontal figure with head to the right and legs to the left.\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-2/capture.png\",\n      \"figure\": 10,\n      \"activity\": \"standing\",\n      \"carrying\": \"no\",\n      \"description\": \"Short upright figure with arms lowered.\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-2/capture.png\",\n      \"figure\": 11,\n      \"activity\": \"standing holding a tool\",\n      \"carrying\": \"yes\",\n      \"description\": \"Brown-headed figure holds a long brown handle with a pale gray head.\"\n    },\n    {\n      \"image\": \"proto-final-people-forest_floor-2/capture.png\",\n      \"figure\": 12,\n      \"activity\": \"standing or stepping\",\n      \"carrying\": \"no\",\n      \"description\": \"Upright figure with one leg angled outward and hands lowered.\"\n    }\n  ]\n}\n",
+      "grades": [
+        {
+          "image": "proto-final-people-meadow-1/capture.png",
+          "figure": 1,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-1/capture.png",
+            "figure": 1,
+            "activity": "standing",
+            "carrying": "no",
+            "description": "Upright figure with round brown head and arms low.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "idle",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "idle",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-1/capture.png",
+          "figure": 2,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-1/capture.png",
+            "figure": 2,
+            "activity": "walking or standing with crossed legs",
+            "carrying": "no",
+            "description": "Upright gray-headed figure; legs appear crossed.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "walk",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-1/capture.png",
+          "figure": 3,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-1/capture.png",
+            "figure": 3,
+            "activity": "standing",
+            "carrying": "unclear",
+            "description": "Small upright figure; right-side protrusion is too small to identify confidently.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "unclear"
+          },
+          "expected": {
+            "activity": "chop",
+            "carrying": "yes",
+            "held_rendered": "stone_axe",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "idle",
+          "activity_correct": false,
+          "carrying_correct": false,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "UNKNOWN_OR_AMBIGUOUS",
+            "held_correct": false
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-1/capture.png",
+          "figure": 4,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-1/capture.png",
+            "figure": 4,
+            "activity": "arms raised near head",
+            "carrying": "unclear",
+            "description": "Dark oblique shape merges with the head and raised arms.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "unclear dark shape"
+          },
+          "expected": {
+            "activity": "carry",
+            "carrying": "yes",
+            "held_rendered": "log_bundle",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": false,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "UNKNOWN_OR_AMBIGUOUS",
+            "held_correct": false
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-1/capture.png",
+          "figure": 5,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-1/capture.png",
+            "figure": 5,
+            "activity": "lying down",
+            "carrying": "no",
+            "description": "Horizontal figure with head at the right.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "sleep",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "sleep",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-1/capture.png",
+          "figure": 6,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-1/capture.png",
+            "figure": 6,
+            "activity": "sitting with arms out",
+            "carrying": "no",
+            "description": "Brown-headed figure has a low broad lower body and extended arms.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "knap",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-1/capture.png",
+          "figure": 7,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-1/capture.png",
+            "figure": 7,
+            "activity": "standing",
+            "carrying": "no",
+            "description": "Smaller upright narrow figure.",
+            "perceived_sex": "unknown",
+            "age_group": "child",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "walk",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "child",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "idle",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-1/capture.png",
+          "figure": 8,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-1/capture.png",
+            "figure": 8,
+            "activity": "standing holding something near upper body",
+            "carrying": "yes",
+            "description": "Round dark reddish object beside head or shoulder.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "round dark reddish object"
+          },
+          "expected": {
+            "activity": "carry",
+            "carrying": "yes",
+            "held_rendered": "berry_basket",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "UNKNOWN_OR_AMBIGUOUS",
+            "held_correct": false
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-1/capture.png",
+          "figure": 9,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-1/capture.png",
+            "figure": 9,
+            "activity": "lying down",
+            "carrying": "no",
+            "description": "Horizontal pale figure with head at the right."
+          },
+          "expected": {
+            "activity": "sleep",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "sleep",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-meadow-1/capture.png",
+          "figure": 10,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-1/capture.png",
+            "figure": 10,
+            "activity": "standing",
+            "carrying": "no",
+            "description": "Small upright narrow figure with arms down."
+          },
+          "expected": {
+            "activity": "idle",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "child",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "idle",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-meadow-1/capture.png",
+          "figure": 11,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-1/capture.png",
+            "figure": 11,
+            "activity": "standing with one arm out",
+            "carrying": "unclear",
+            "description": "Brown-headed figure with a small protruding shape at the side."
+          },
+          "expected": {
+            "activity": "chop",
+            "carrying": "yes",
+            "held_rendered": "stone_axe",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": false,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-meadow-1/capture.png",
+          "figure": 12,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-1/capture.png",
+            "figure": 12,
+            "activity": "standing or stepping",
+            "carrying": "no",
+            "description": "Upright figure with legs separated."
+          },
+          "expected": {
+            "activity": "walk",
+            "carrying": "yes",
+            "held_rendered": "stick",
+            "age": "elder",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": false,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-meadow-2/capture.png",
+          "figure": 1,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-2/capture.png",
+            "figure": 1,
+            "activity": "standing",
+            "carrying": "no",
+            "description": "Brown round-headed figure upright with arms lowered.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "idle",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "idle",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-2/capture.png",
+          "figure": 2,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-2/capture.png",
+            "figure": 2,
+            "activity": "walking",
+            "carrying": "no",
+            "description": "Arms angled outward and legs crossing in a stepping pose.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "walk",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "walk",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-2/capture.png",
+          "figure": 3,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-2/capture.png",
+            "figure": 3,
+            "activity": "standing holding a tool",
+            "carrying": "yes",
+            "description": "Right arm extends to a brown handle with a pale gray head.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "stone-headed axe or similar tool"
+          },
+          "expected": {
+            "activity": "chop",
+            "carrying": "yes",
+            "held_rendered": "stone_axe",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "UNKNOWN_OR_AMBIGUOUS",
+            "held_correct": false
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-2/capture.png",
+          "figure": 4,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-2/capture.png",
+            "figure": 4,
+            "activity": "carrying something above shoulder or head",
+            "carrying": "yes",
+            "description": "Both arms are raised around a large dark elongated object.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "dark log-like elongated object"
+          },
+          "expected": {
+            "activity": "carry",
+            "carrying": "yes",
+            "held_rendered": "log_bundle",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "carry",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "log_bundle",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-2/capture.png",
+          "figure": 5,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-2/capture.png",
+            "figure": 5,
+            "activity": "lying down",
+            "carrying": "no",
+            "description": "Body is horizontal with straight legs to the left and head to the right.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "sleep",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "sleep",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-2/capture.png",
+          "figure": 6,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-2/capture.png",
+            "figure": 6,
+            "activity": "sitting with arms spread",
+            "carrying": "no",
+            "description": "Legs appear folded beneath a broad garment; arms extend outward.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "knap",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-2/capture.png",
+          "figure": 7,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-2/capture.png",
+            "figure": 7,
+            "activity": "standing",
+            "carrying": "no",
+            "description": "Short small-bodied figure with feet apart and arms lowered.",
+            "perceived_sex": "unknown",
+            "age_group": "child",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "walk",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "child",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "idle",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-2/capture.png",
+          "figure": 8,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-2/capture.png",
+            "figure": 8,
+            "activity": "carrying a round container",
+            "carrying": "yes",
+            "description": "Round brown-rimmed object with reddish contents held beside the upper body.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "basket or round container"
+          },
+          "expected": {
+            "activity": "carry",
+            "carrying": "yes",
+            "held_rendered": "berry_basket",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "carry",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "UNKNOWN_OR_AMBIGUOUS",
+            "held_correct": false
+          }
+        },
+        {
+          "image": "proto-final-people-meadow-2/capture.png",
+          "figure": 9,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-2/capture.png",
+            "figure": 9,
+            "activity": "lying down",
+            "carrying": "no",
+            "description": "Horizontal figure with head to the right and legs to the left."
+          },
+          "expected": {
+            "activity": "sleep",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "sleep",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-meadow-2/capture.png",
+          "figure": 10,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-2/capture.png",
+            "figure": 10,
+            "activity": "standing",
+            "carrying": "no",
+            "description": "Short upright figure with arms lowered."
+          },
+          "expected": {
+            "activity": "idle",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "child",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "idle",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-meadow-2/capture.png",
+          "figure": 11,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-2/capture.png",
+            "figure": 11,
+            "activity": "standing holding a tool",
+            "carrying": "yes",
+            "description": "Brown-headed figure holds a long brown handle with a pale gray head."
+          },
+          "expected": {
+            "activity": "chop",
+            "carrying": "yes",
+            "held_rendered": "stone_axe",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-meadow-2/capture.png",
+          "figure": 12,
+          "answer_verbatim": {
+            "image": "proto-final-people-meadow-2/capture.png",
+            "figure": 12,
+            "activity": "standing or stepping",
+            "carrying": "no",
+            "description": "Upright figure with one leg angled outward and hands lowered."
+          },
+          "expected": {
+            "activity": "walk",
+            "carrying": "yes",
+            "held_rendered": "stick",
+            "age": "elder",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": false,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-forest_floor-1/capture.png",
+          "figure": 1,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-1/capture.png",
+            "figure": 1,
+            "activity": "standing",
+            "carrying": "no",
+            "description": "Upright figure with round brown head and arms low.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "idle",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "idle",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-1/capture.png",
+          "figure": 2,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-1/capture.png",
+            "figure": 2,
+            "activity": "walking or standing with crossed legs",
+            "carrying": "no",
+            "description": "Upright gray-headed figure; legs appear crossed.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "walk",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-1/capture.png",
+          "figure": 3,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-1/capture.png",
+            "figure": 3,
+            "activity": "standing",
+            "carrying": "unclear",
+            "description": "Small upright figure; right-side protrusion is too small to identify confidently.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "unclear"
+          },
+          "expected": {
+            "activity": "chop",
+            "carrying": "yes",
+            "held_rendered": "stone_axe",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "idle",
+          "activity_correct": false,
+          "carrying_correct": false,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "UNKNOWN_OR_AMBIGUOUS",
+            "held_correct": false
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-1/capture.png",
+          "figure": 4,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-1/capture.png",
+            "figure": 4,
+            "activity": "arms raised near head",
+            "carrying": "unclear",
+            "description": "Dark oblique shape merges with the head and raised arms.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "unclear dark shape"
+          },
+          "expected": {
+            "activity": "carry",
+            "carrying": "yes",
+            "held_rendered": "log_bundle",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": false,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "UNKNOWN_OR_AMBIGUOUS",
+            "held_correct": false
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-1/capture.png",
+          "figure": 5,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-1/capture.png",
+            "figure": 5,
+            "activity": "lying down",
+            "carrying": "no",
+            "description": "Horizontal figure with head at the right.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "sleep",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "sleep",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-1/capture.png",
+          "figure": 6,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-1/capture.png",
+            "figure": 6,
+            "activity": "sitting with arms out",
+            "carrying": "no",
+            "description": "Brown-headed figure has a low broad lower body and extended arms.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "knap",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-1/capture.png",
+          "figure": 7,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-1/capture.png",
+            "figure": 7,
+            "activity": "standing",
+            "carrying": "no",
+            "description": "Smaller upright narrow figure.",
+            "perceived_sex": "unknown",
+            "age_group": "child",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "walk",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "child",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "idle",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-1/capture.png",
+          "figure": 8,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-1/capture.png",
+            "figure": 8,
+            "activity": "standing holding something near upper body",
+            "carrying": "yes",
+            "description": "Round dark reddish object beside head or shoulder.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "round dark reddish object"
+          },
+          "expected": {
+            "activity": "carry",
+            "carrying": "yes",
+            "held_rendered": "berry_basket",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "UNKNOWN_OR_AMBIGUOUS",
+            "held_correct": false
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-1/capture.png",
+          "figure": 9,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-1/capture.png",
+            "figure": 9,
+            "activity": "lying down",
+            "carrying": "no",
+            "description": "Horizontal pale figure with head at the right."
+          },
+          "expected": {
+            "activity": "sleep",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "sleep",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-forest_floor-1/capture.png",
+          "figure": 10,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-1/capture.png",
+            "figure": 10,
+            "activity": "standing",
+            "carrying": "no",
+            "description": "Small upright narrow figure with arms down."
+          },
+          "expected": {
+            "activity": "idle",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "child",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "idle",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-forest_floor-1/capture.png",
+          "figure": 11,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-1/capture.png",
+            "figure": 11,
+            "activity": "standing with one arm out",
+            "carrying": "unclear",
+            "description": "Brown-headed figure with a small protruding shape at the side."
+          },
+          "expected": {
+            "activity": "chop",
+            "carrying": "yes",
+            "held_rendered": "stone_axe",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": false,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-forest_floor-1/capture.png",
+          "figure": 12,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-1/capture.png",
+            "figure": 12,
+            "activity": "standing or stepping",
+            "carrying": "no",
+            "description": "Upright figure with legs separated."
+          },
+          "expected": {
+            "activity": "walk",
+            "carrying": "yes",
+            "held_rendered": "stick",
+            "age": "elder",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": false,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-forest_floor-2/capture.png",
+          "figure": 1,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-2/capture.png",
+            "figure": 1,
+            "activity": "standing",
+            "carrying": "no",
+            "description": "Brown round-headed figure upright with arms lowered.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "idle",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "idle",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-2/capture.png",
+          "figure": 2,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-2/capture.png",
+            "figure": 2,
+            "activity": "walking",
+            "carrying": "no",
+            "description": "Arms angled outward and legs crossing in a stepping pose.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "walk",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "walk",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-2/capture.png",
+          "figure": 3,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-2/capture.png",
+            "figure": 3,
+            "activity": "standing holding a tool",
+            "carrying": "yes",
+            "description": "Right arm extends to a brown handle with a pale gray head.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "stone-headed axe or similar tool"
+          },
+          "expected": {
+            "activity": "chop",
+            "carrying": "yes",
+            "held_rendered": "stone_axe",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "UNKNOWN_OR_AMBIGUOUS",
+            "held_correct": false
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-2/capture.png",
+          "figure": 4,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-2/capture.png",
+            "figure": 4,
+            "activity": "carrying something above shoulder or head",
+            "carrying": "yes",
+            "description": "Both arms are raised around a large dark elongated object.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "dark log-like elongated object"
+          },
+          "expected": {
+            "activity": "carry",
+            "carrying": "yes",
+            "held_rendered": "log_bundle",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "carry",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "log_bundle",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-2/capture.png",
+          "figure": 5,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-2/capture.png",
+            "figure": 5,
+            "activity": "lying down",
+            "carrying": "no",
+            "description": "Body is horizontal with straight legs to the left and head to the right.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "sleep",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "sleep",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-2/capture.png",
+          "figure": 6,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-2/capture.png",
+            "figure": 6,
+            "activity": "sitting with arms spread",
+            "carrying": "no",
+            "description": "Legs appear folded beneath a broad garment; arms extend outward.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "knap",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-2/capture.png",
+          "figure": 7,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-2/capture.png",
+            "figure": 7,
+            "activity": "standing",
+            "carrying": "no",
+            "description": "Short small-bodied figure with feet apart and arms lowered.",
+            "perceived_sex": "unknown",
+            "age_group": "child",
+            "held_item": "none visible"
+          },
+          "expected": {
+            "activity": "walk",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "child",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "idle",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "none",
+            "held_correct": true
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-2/capture.png",
+          "figure": 8,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-2/capture.png",
+            "figure": 8,
+            "activity": "carrying a round container",
+            "carrying": "yes",
+            "description": "Round brown-rimmed object with reddish contents held beside the upper body.",
+            "perceived_sex": "unknown",
+            "age_group": "adult",
+            "held_item": "basket or round container"
+          },
+          "expected": {
+            "activity": "carry",
+            "carrying": "yes",
+            "held_rendered": "berry_basket",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "carry",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": {
+            "sex_correct": false,
+            "age_correct": true,
+            "held_normalized": "UNKNOWN_OR_AMBIGUOUS",
+            "held_correct": false
+          }
+        },
+        {
+          "image": "proto-final-people-forest_floor-2/capture.png",
+          "figure": 9,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-2/capture.png",
+            "figure": 9,
+            "activity": "lying down",
+            "carrying": "no",
+            "description": "Horizontal figure with head to the right and legs to the left."
+          },
+          "expected": {
+            "activity": "sleep",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "sleep",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-forest_floor-2/capture.png",
+          "figure": 10,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-2/capture.png",
+            "figure": 10,
+            "activity": "standing",
+            "carrying": "no",
+            "description": "Short upright figure with arms lowered."
+          },
+          "expected": {
+            "activity": "idle",
+            "carrying": "no",
+            "held_rendered": "none",
+            "age": "child",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "idle",
+          "activity_correct": true,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": true,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-forest_floor-2/capture.png",
+          "figure": 11,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-2/capture.png",
+            "figure": 11,
+            "activity": "standing holding a tool",
+            "carrying": "yes",
+            "description": "Brown-headed figure holds a long brown handle with a pale gray head."
+          },
+          "expected": {
+            "activity": "chop",
+            "carrying": "yes",
+            "held_rendered": "stone_axe",
+            "age": "adult",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": true,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": null
+        },
+        {
+          "image": "proto-final-people-forest_floor-2/capture.png",
+          "figure": 12,
+          "answer_verbatim": {
+            "image": "proto-final-people-forest_floor-2/capture.png",
+            "figure": 12,
+            "activity": "standing or stepping",
+            "carrying": "no",
+            "description": "Upright figure with one leg angled outward and hands lowered."
+          },
+          "expected": {
+            "activity": "walk",
+            "carrying": "yes",
+            "held_rendered": "stick",
+            "age": "elder",
+            "sex": "NOT_RENDERED_SINGLE_ADULT_BODY"
+          },
+          "activity_normalized": "UNKNOWN_OR_NOT_TARGET",
+          "activity_correct": false,
+          "carrying_correct": false,
+          "activity_and_carrying_correct": false,
+          "attribute_grading_first8": null
+        }
+      ]
+    }
+  ]
+}
