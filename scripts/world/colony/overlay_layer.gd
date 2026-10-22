@@ -3,12 +3,15 @@
 # Two draw passes:
 #   - the child node "Ground" (z 1: above the terrain, below canopy, buildings and people): stockpile zones as a
 #     tamped-earth floor with a 1-px darker border on each side without a zone neighbour and a stake where two such
-#     sides meet; log stacks by count (logs_s 1–8, logs_m 9–16, logs_l 17+); hut blueprints as the blueprint-blue
-#     ghost with the delivered logs piled on its south row as they arrive (4 logs per tile: s, s, m, l);
-#   - this node (z 4: above the canopy, below people): chop marks (an axe glyph at the tile's top-right), each
-#     blueprint's label "통나무 delivered/needed · 작업 n%" on a dark backing box above it and a 3-px bar under it
-#     (amber with the logs delivered until all are there, then green with the work done), and the count of the log
-#     stack under the mouse on a small backing box.
+#     sides meet; M2 resource nodes (boulder, flint outcrop); item stacks by kind (logs by count: logs_s 1–8,
+#     logs_m 9–16, logs_l 17+; the M2 kinds by their item sprite); hut blueprints as the blueprint-blue ghost with
+#     the delivered logs piled on its south row as they arrive (4 logs per tile: s, s, m, l); M2 workshop
+#     blueprints as the workshop's sprite tinted blueprint-blue;
+#   - this node (z 4: above the canopy, below people): chop marks (an axe glyph) and M2 quarry marks (a pick glyph)
+#     at the tile's top-right, each blueprint's label ("통나무 d/n" for a hut, "재료 d/n" for a workshop, then
+#     "· 작업 n%") on a dark backing box above it and a 3-px bar under it (amber with the materials delivered until
+#     all are there, then green with the work done), and, under the mouse, a stack's count (logs) or
+#     "부싯돌 날 ×3 · 품질 62" (M2 kinds), or a node's "바위 · 돌 12개 남음", on a small backing box.
 # Redrawn only when the colony overlay version or the hovered stack changes (`get_colony_versions` is polled every
 #   frame).
 # Bridge methods: via SimReads get_colony_versions, get_colony_overlay; signal world_reset.
@@ -24,13 +27,24 @@ const BAR_WORK: Color = Color(0.55, 0.85, 0.45, 1.0)
 const BAR_HEIGHT: int = 3
 const FONT_SIZE: int = 12
 const LOGS_PER_PILE: int = 4
+const EconomyText = preload("res://scripts/ui/economy_text.gd")
+## Resource node sprites by node kind (0 boulder, 1 flint outcrop), their names and the item they yield.
+const NODE_SPRITES: Array[String] = ["boulder", "flint_outcrop"]
+const NODE_KEYS: Array[String] = ["NODE_BOULDER", "NODE_FLINT_OUTCROP"]
+const NODE_ITEMS: Array[int] = [2, 3]
+## Designation marks by designation kind (0 chop, 1 quarry).
+const MARKS: Array[String] = ["mark_chop", "mark_quarry"]
+const BLUEPRINT: Color = Color(0.55, 0.75, 1.0, 0.6)
 
 var _world_sim: Node = null
 var _version: int = -1
 var _overlay: Dictionary = {}
 var _font: Font = null
 var _ground: Node2D = null
+## Tile -> {kind, count, quality} of the item stack on it.
 var _stacks: Dictionary = {}
+## Tile -> {kind, left} of the resource node on it.
+var _nodes: Dictionary = {}
 var _hover: Vector2i = Vector2i(-1, -1)
 
 
@@ -67,15 +81,20 @@ func _process(_delta: float) -> void:
 		queue_redraw()
 	var hover: Vector2i = View.world_to_tile(get_global_mouse_position())
 	if hover != _hover:
-		var redraw: bool = _stacks.has(hover) or _stacks.has(_hover)
+		var redraw: bool = _stacks.has(hover) or _stacks.has(_hover) or _nodes.has(hover) or _nodes.has(_hover)
 		_hover = hover
 		if redraw:
 			queue_redraw()
 
 
-## Number of log stacks currently drawn (for tests and tools).
+## Number of item stacks currently drawn (for tests and tools).
 func stack_count() -> int:
 	return _stacks.size()
+
+
+## Number of resource nodes currently drawn (for tests and tools).
+func node_count() -> int:
+	return _nodes.size()
 
 
 func _index_stacks() -> void:
@@ -83,8 +102,27 @@ func _index_stacks() -> void:
 	var ixs: PackedInt32Array = _overlay.get("item_xs", PackedInt32Array())
 	var iys: PackedInt32Array = _overlay.get("item_ys", PackedInt32Array())
 	var counts: PackedInt32Array = _overlay.get("item_counts", PackedInt32Array())
+	var kinds: PackedInt32Array = _overlay.get("item_kinds", PackedInt32Array())
+	var qualities: PackedInt32Array = _overlay.get("item_qualities", PackedInt32Array())
 	for i: int in mini(ixs.size(), mini(iys.size(), counts.size())):
-		_stacks[Vector2i(ixs[i], iys[i])] = counts[i]
+		var kind: int = kinds[i] if i < kinds.size() else 0
+		var quality: int = qualities[i] if i < qualities.size() else 50
+		_stacks[Vector2i(ixs[i], iys[i])] = {"kind": kind, "count": counts[i], "quality": quality}
+	_nodes.clear()
+	var nxs: PackedInt32Array = _overlay.get("node_xs", PackedInt32Array())
+	var nys: PackedInt32Array = _overlay.get("node_ys", PackedInt32Array())
+	var nkinds: PackedInt32Array = _overlay.get("node_kinds", PackedInt32Array())
+	var left: PackedInt32Array = _overlay.get("node_left", PackedInt32Array())
+	for i: int in mini(mini(nxs.size(), nys.size()), mini(nkinds.size(), left.size())):
+		if nkinds[i] >= 0 and nkinds[i] < NODE_SPRITES.size():
+			_nodes[Vector2i(nxs[i], nys[i])] = {"kind": nkinds[i], "left": left[i]}
+
+
+## The ground sprite for an item stack of `kind` and `count` (logs by count, else the kind's sprite).
+static func stack_sprite(kind: int, count: int) -> String:
+	if kind <= 0 or kind >= EconomyText.ITEM_SPRITES.size():
+		return pile_name(count)
+	return EconomyText.ITEM_SPRITES[kind]
 
 
 ## The pile sprite for a stack of `count` logs.
@@ -118,14 +156,25 @@ func _draw_ground() -> void:
 				[open_s and open_w, "stock_stake_sw"], [open_s and open_e, "stock_stake_se"]]:
 			if bool(part[0]):
 				_ground.draw_texture_rect_region(texture, dest, View.rect(str(part[1])))
-	# Log stacks.
+	# Resource nodes (M2).
+	for cell: Vector2i in _nodes.keys():
+		var node: Dictionary = _nodes[cell]
+		_ground.draw_texture_rect_region(texture, Rect2(View.tile_to_world(cell), tile), View.rect(NODE_SPRITES[int(node["kind"])]))
+	# Item stacks.
 	for cell: Vector2i in _stacks.keys():
-		_ground.draw_texture_rect_region(texture, Rect2(View.tile_to_world(cell), tile), View.rect(pile_name(int(_stacks[cell]))))
-	# Blueprints: the ghost, then the delivered logs piled on its south row.
+		var stack: Dictionary = _stacks[cell]
+		_ground.draw_texture_rect_region(texture, Rect2(View.tile_to_world(cell), tile), View.rect(stack_sprite(int(stack["kind"]), int(stack["count"]))))
+	# Blueprints: the hut ghost with the delivered logs piled on its south row; a workshop's sprite tinted blue.
 	var sites: Array[Dictionary] = _sites()
 	var ghost: Rect2 = View.rect("hut_ghost")
 	for site: Dictionary in sites:
 		var rect: Rect2 = site["rect"]
+		var kind: int = int(site["kind"])
+		if kind > 0 and kind < EconomyText.BUILD_KINDS.size():
+			_ground.draw_rect(rect, Color(BLUEPRINT, 0.15))
+			_ground.draw_texture_rect_region(texture, rect, View.rect(str(EconomyText.BUILD_KINDS[kind]["sprite"])), BLUEPRINT)
+			_ground.draw_rect(rect, BLUEPRINT, false, 1.0)
+			continue
 		_ground.draw_texture_rect_region(texture, rect, ghost)
 		var left: int = int(site["delivered"])
 		var columns: int = int(rect.size.x / View.TILE)
@@ -149,12 +198,14 @@ func _sites() -> Array[Dictionary]:
 	var delivered: PackedInt32Array = _overlay.get("site_delivered", PackedInt32Array())
 	var progress: PackedInt32Array = _overlay.get("site_progress", PackedInt32Array())
 	var required: PackedInt32Array = _overlay.get("site_required", PackedInt32Array())
+	var kinds: PackedInt32Array = _overlay.get("site_kinds", PackedInt32Array())
 	var n: int = mini(mini(mini(sxs.size(), sys.size()), mini(sws.size(), shs.size())),
 		mini(mini(needed.size(), delivered.size()), mini(progress.size(), required.size())))
 	for i: int in n:
 		out.append({
 			"rect": Rect2(View.tile_to_world(Vector2i(sxs[i], sys[i])), Vector2(sws[i], shs[i]) * View.TILE),
 			"needed": needed[i], "delivered": delivered[i], "progress": progress[i], "required": required[i],
+			"kind": kinds[i] if i < kinds.size() else 0,
 		})
 	return out
 
@@ -164,12 +215,13 @@ func _draw() -> void:
 	if texture == null or _overlay.is_empty():
 		return
 	var tile: Vector2 = Vector2(View.TILE, View.TILE)
-	# Chop marks (this node sits over the canopy).
+	# Chop and quarry marks (this node sits over the canopy).
 	var dxs: PackedInt32Array = _overlay.get("designation_xs", PackedInt32Array())
 	var dys: PackedInt32Array = _overlay.get("designation_ys", PackedInt32Array())
-	var mark: Rect2 = View.rect("mark_chop")
+	var dkinds: PackedInt32Array = _overlay.get("designation_kinds", PackedInt32Array())
 	for i: int in mini(dxs.size(), dys.size()):
-		draw_texture_rect_region(texture, Rect2(View.tile_to_world(Vector2i(dxs[i], dys[i])), tile), mark)
+		var mark_kind: int = clampi(dkinds[i], 0, MARKS.size() - 1) if i < dkinds.size() else 0
+		draw_texture_rect_region(texture, Rect2(View.tile_to_world(Vector2i(dxs[i], dys[i])), tile), View.rect(MARKS[mark_kind]))
 	# Blueprint labels and bars.
 	var locale: Node = get_node_or_null("/root/Locale")
 	for site: Dictionary in _sites():
@@ -186,14 +238,25 @@ func _draw() -> void:
 		if _font == null:
 			continue
 		var params: Dictionary = {"delivered": delivered, "needed": needed}
-		var logs_text: String = str(locale.call("trf", "UI_BLUEPRINT_LOGS", params)) if locale != null else "%d/%d" % [delivered, needed]
+		var needs_key: String = "UI_BLUEPRINT_LOGS" if int(site["kind"]) == 0 else "UI_BLUEPRINT_MATERIALS"
+		var logs_text: String = str(locale.call("trf", needs_key, params)) if locale != null else "%d/%d" % [delivered, needed]
 		var percent: int = floori(work_done * 100.0)
 		var text: String = str(locale.call("trf", "UI_BLUEPRINT_PROGRESS_FMT", {"logs": logs_text, "percent": percent})) if locale != null else "%s %d%%" % [logs_text, percent]
 		_label(text, Vector2(rect.position.x + rect.size.x * 0.5, rect.position.y - 2), true)
-	# The hovered stack's count.
+	# The hovered stack's count (logs) or name, count and quality (M2 kinds); else the hovered node.
+	var at: Vector2 = View.tile_to_world(_hover) + Vector2(View.TILE * 0.5, -1)
 	if _stacks.has(_hover) and _font != null:
-		var at: Vector2 = View.tile_to_world(_hover) + Vector2(View.TILE * 0.5, -1)
-		_label(str(int(_stacks[_hover])), at, true)
+		var stack: Dictionary = _stacks[_hover]
+		var kind: int = int(stack["kind"])
+		var text: String = str(int(stack["count"]))
+		if kind > 0:
+			text = EconomyText.stack(locale, kind, "", int(stack["count"]), int(stack["quality"]))
+		_label(text, at, true)
+	elif _nodes.has(_hover) and _font != null:
+		var node: Dictionary = _nodes[_hover]
+		var node_kind: int = int(node["kind"])
+		_label(EconomyText.trf(locale, "UI_NODE_LEFT_FMT", {"name": EconomyText.ltr(locale, NODE_KEYS[node_kind]),
+			"item": EconomyText.item(locale, NODE_ITEMS[node_kind]), "left": int(node["left"])}), at, true)
 
 
 ## Text centred on `anchor.x` with its box's bottom at `anchor.y`, on a dark backing box (art_ui panel colours).

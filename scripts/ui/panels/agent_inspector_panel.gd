@@ -16,7 +16,8 @@
 # Bridge methods: get_agent_detail (direct); via SimReads get_agent_snapshot (incl. M1.5 ages_years, infants,
 #   pregnant_days), get_porter_snapshot, get_world_info (ticks_per_day, ticks_per_year, clock_offset_ticks),
 #   get_activity_snapshot; via person_read_cache.gd get_person, get_person_chronicle, get_agent_family,
-#   get_agent_temperament; signal world_reset.
+#   get_agent_temperament; M2 get_agent_economy (direct, once per tick for the selected person: skills with
+#   tiers, the held tool and the carried item with material and quality); signal world_reset.
 extends Control
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
@@ -26,6 +27,7 @@ const Names = preload("res://scripts/ui/person_names.gd")
 const Porter = preload("res://scripts/world/porter_presentation.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const ReadCache = preload("res://scripts/ui/person_read_cache.gd")
+const EconomyText = preload("res://scripts/ui/economy_text.gd")
 var _person_cache := ReadCache.new()
 var _selected_person: int = -1
 var _record_mode: bool = false
@@ -98,7 +100,14 @@ var _cold_label: Label
 var _carried_label: Label
 # M1 (9.6): the job line ("지금: …") from the snapshot's `jobs` column.
 var _job_label: Label
-const JOB_KEYS: Array[String] = ["UI_JOB_NONE", "UI_JOB_CHOP", "UI_JOB_HAUL", "UI_JOB_DELIVER", "UI_JOB_BUILD"]
+# M2 adds 5 quarry, 6 supply, 7 craft, 8 gather.
+const JOB_KEYS: Array[String] = ["UI_JOB_NONE", "UI_JOB_CHOP", "UI_JOB_HAUL", "UI_JOB_DELIVER", "UI_JOB_BUILD", "UI_JOB_QUARRY", "UI_JOB_SUPPLY", "UI_JOB_CRAFT", "UI_JOB_GATHER"]
+# M2: the tool line, the skills heading and lines; the economy read is refreshed once per tick.
+var _tool_label: Label
+var _skills_heading: Label
+var _skills_label: Label
+var _economy: Dictionary = {}
+var _economy_key: Vector2i = Vector2i(-1, -1)
 const TEMPERAMENT_FIELDS: Array[String] = ["ns", "ha", "rd", "p"]
 const TEMPERAMENT_LABELS: Array[String] = ["UI_TEMPERAMENT_NS", "UI_TEMPERAMENT_HA", "UI_TEMPERAMENT_RD", "UI_TEMPERAMENT_P"]
 const FAMILY_LABELS: Array[String] = ["PANEL_FAMILY_SPOUSE", "UI_MOTHER", "UI_FATHER"]
@@ -168,6 +177,10 @@ func _ready() -> void:
 	_carried_label = _make_label("")
 	_cold_label = _make_label("")
 	_cold_label.hide()
+	_tool_label = _make_label("")
+	_skills_heading = _make_label("")
+	_skills_heading.theme_type_variation = &"Heading"
+	_skills_label = _make_label("")
 	for node: Node in _vbox.get_children():
 		if node is Control and node != _label_id:
 			_live_nodes.append(node as Control)
@@ -352,10 +365,60 @@ func display_agent(detail: Dictionary) -> void:
 	var logs: int = _carried_amount(agent_id, "carry_counts")
 	if logs > 0:
 		_carried_label.text = "%s: %s %d" % [_loc("UI_INSPECT_CARRYING"), _loc("ITEM_LOG"), logs]
+	_refresh_economy(agent_id)
 	_cold_label.text = _loc("INSPECTOR_COLD")
 	_cold_label.visible = _is_cold(agent_id)
 	visible = true
 	_refresh_personal_sections()
+
+
+## M2: the carried item (kind, material, count, quality), the tool line and the skills, from get_agent_economy
+## (read again only when the tick or the person changes).
+func _refresh_economy(agent_id: int) -> void:
+	if _world_sim == null or not _world_sim.has_method("get_agent_economy"):
+		_tool_label.hide()
+		_skills_heading.hide()
+		_skills_label.hide()
+		return
+	var tick: int = int(SimReads.read(_world_sim, "get_time_snapshot").get("tick", -1))
+	var key: Vector2i = Vector2i(agent_id, tick)
+	if key != _economy_key:
+		_economy_key = key
+		var read: Variant = _world_sim.call("get_agent_economy", agent_id)
+		_economy = read if read is Dictionary else {}
+	if not bool(_economy.get("found", false)):
+		_tool_label.hide()
+		_skills_heading.hide()
+		_skills_label.hide()
+		return
+	var carry_kind: int = int(_economy.get("carry_kind", -1))
+	if carry_kind >= 0:
+		_carried_label.text = "%s: %s" % [_loc("UI_INSPECT_CARRYING"), EconomyText.stack(_locale, carry_kind,
+			str(_economy.get("carry_material", "")), int(_economy.get("carry_count", 0)), int(_economy.get("carry_quality", 0)))]
+	var tool_kind: int = int(_economy.get("tool_kind", -1))
+	var tool_text: String = _loc("UI_INSPECT_NOTHING")
+	if tool_kind >= 0:
+		tool_text = EconomyText.trf(_locale, "UI_INSPECT_TOOL_FMT", {
+			"item": EconomyText.item_of(_locale, tool_kind, str(_economy.get("tool_material", ""))),
+			"quality": int(_economy.get("tool_quality", 0))})
+	_tool_label.text = "%s: %s" % [_loc("UI_INSPECT_TOOL"), tool_text]
+	_tool_label.show()
+	_skills_heading.text = _loc("UI_INSPECT_SKILLS")
+	_skills_heading.show()
+	_skills_label.text = "\n".join(skill_lines(_economy, _locale))
+	_skills_label.show()
+
+
+## "돌 다듬기 7 · 숙련" per skill, in the bridge's skill order.
+static func skill_lines(economy: Dictionary, locale: Node) -> Array[String]:
+	var names: PackedStringArray = economy.get("skill_names", PackedStringArray())
+	var levels: PackedInt32Array = economy.get("skill_levels", PackedInt32Array())
+	var tiers: PackedInt32Array = economy.get("skill_tiers", PackedInt32Array())
+	var lines: Array[String] = []
+	for i: int in mini(names.size(), mini(levels.size(), tiers.size())):
+		lines.append(EconomyText.trf(locale, "UI_INSPECT_SKILL_FMT", {
+			"skill": EconomyText.skill(locale, names[i]), "level": levels[i], "tier": EconomyText.tier(locale, tiers[i])}))
+	return lines
 
 
 func _refresh_porter_status() -> void:

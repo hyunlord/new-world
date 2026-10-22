@@ -2,7 +2,8 @@
 # Purpose: boot res://scenes/main.tscn, run --frames N frames (default 900),
 #   open the panels a player opens (a click on the first agent through
 #   OrderTool.click_world -> inspector; a click on an empty tile ->
-#   causal "why?" panel; the chronicle toggled as the C key does), then walk
+#   causal "why?" panel; the chronicle toggled as the C key does; M2: the F3
+#   build menu and the P priority table), then walk
 #   every Label / RichTextLabel / Button and report texts that are
 #   raw localization keys (Locale.ltr returns the key itself when it is missing
 #   and logs nothing, so a missing key only shows as key-shaped text).
@@ -76,6 +77,12 @@ func _open_panels(main: Node) -> void:
 	if bar != null and bar.has_method("select_mode"):
 		bar.call("select_mode", 3)
 		bar.call("show_toast", "x")
+	# M2: the build menu and the work-priority table (raw-key scan of their labels and buttons).
+	if bar != null and bar.has_method("open_build_menu"):
+		bar.call("open_build_menu")
+	var priorities: Node = main.get_node_or_null("UI/PriorityPanel")
+	if priorities != null and priorities.has_method("toggle_visible"):
+		priorities.call("toggle_visible")
 	var chronicle: Node = main.get_node_or_null("UI/ChroniclePanel")
 	if chronicle != null and chronicle.has_method("toggle_visible"):
 		chronicle.call("toggle_visible")

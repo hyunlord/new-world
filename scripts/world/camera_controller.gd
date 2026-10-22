@@ -2,7 +2,8 @@
 # Integer zoom only (1×/2×/3×/4×, default 2×) with the wheel, `-` and `=`; pan with WASD / arrows and a
 #   middle-button drag; starts centred on the camp hearth, and Home or H centres on it again (C is the chronicle,
 #   order_bar.gd shows the hint); bounds = the map plus a 4-tile margin. Keys 1–4 set
-#   the speed 1×–4× (12/24/36/48 ticks per second, ADR 0004); P pauses by disabling the WorldSim node.
+#   the speed 1×–4× (12/24/36/48 ticks per second, ADR 0004); Space (or Pause) pauses by disabling the WorldSim
+#   node (M2: P opens the work-priority table, priority_panel.gd).
 # Bridge methods: set_sim_speed (direct); via SimReads get_world_info, get_building_snapshot; signal world_reset.
 extends Camera2D
 
@@ -15,6 +16,8 @@ const SPEED_KEYS: Dictionary = {KEY_1: 1.0, KEY_2: 2.0, KEY_3: 3.0, KEY_4: 4.0}
 # Centre on the camp: Home, or H for keyboards without a Home key (C opens the chronicle).
 const HOME_KEYS: Array[Key] = [KEY_HOME, KEY_H]
 const TICKS_PER_SECOND_AT_1X: int = 12
+## M2: Space pauses (P became the priority table).
+const PAUSE_KEYS: Array[Key] = [KEY_SPACE, KEY_PAUSE]
 
 var _world_sim: Node = null
 var _paused: bool = false
@@ -67,7 +70,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 	elif event is InputEventKey and event.pressed and not event.echo:
 		var key: InputEventKey = event
-		if key.keycode == KEY_P:
+		if key.keycode in PAUSE_KEYS:
 			_toggle_pause()
 			get_viewport().set_input_as_handled()
 		elif key.keycode in [KEY_MINUS, KEY_KP_SUBTRACT]:

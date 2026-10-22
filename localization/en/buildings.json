@@ -1,4 +1,7 @@
 {
 	"BUILDING_SHELTER": "Shelter",
-	"BUILDING_HUT": "Hut"
+	"BUILDING_HUT": "Hut",
+	"BUILDING_KNAPPING_SPOT": "Knapping spot",
+	"BUILDING_WOOD_BENCH": "Wood bench",
+	"BUILDING_DRYING_RACK": "Drying rack"
 }

@@ -63,6 +63,11 @@ Sprites (names; see the painters for the exact pixels)
     marks: mark_chop 16x16 cell, a 7x7 yellow axe glyph at the top-right (x 9..15, y 0..6); select (1-px yellow
         rectangle), hover (1-px white, alpha 120).
     order bar icons 12x12: icon_chop, icon_stockpile, icon_hut, icon_remove, icon_cancel.
+    M2 temporaries (section "m2"; M-ART2 replaces them): boulder and flint_outcrop 16x16 (resource nodes),
+        knapping_spot 16x16, wood_bench and drying_rack 32x16 (workshops, drawn at the footprint's top-left),
+        item_firewood / item_stone / item_flint / item_blade / item_axe / item_hide 16x16 (ground stacks of the
+        new item kinds), mark_quarry 16x16 (a 7x7 pick glyph at the top-right, like mark_chop), icon_build and
+        icon_quarry 12x12 (order bar).
 
 Determinism
     Each sprite draws with its own random.Random(SEED * 1000 + k), k a fixed constant per sprite (no hash(), no
@@ -761,6 +766,141 @@ def tool_hammer():
     return im
 
 
+# ------------------------------------------------------------------ M2 temporary sprites (M-ART2 replaces them)
+STONE_D, STONE, STONE_L = (86, 82, 76), (118, 112, 104), (150, 144, 134)
+FLINT_D, FLINT, FLINT_L = (52, 56, 66), (78, 84, 98), (120, 128, 146)
+CORTEX = (196, 188, 168)
+
+
+def boulder(rr):
+    """A grey rounded rock filling most of its tile, lit top-left, outlined."""
+    im, d = new()
+    d.ellipse([1, 3, 14, 14], fill=rgba(STONE_D))
+    d.ellipse([1, 2, 13, 12], fill=rgba(STONE))
+    d.ellipse([3, 3, 8, 7], fill=rgba(STONE_L))
+    d.line([(6, 9), (10, 7)], fill=rgba(STONE_D))  # a crack
+    for _ in range(3):
+        d.point((rr.randint(4, 11), rr.randint(4, 11)), fill=rgba(shade(STONE, 0.9)))
+    return outline_alpha(im)
+
+
+def flint_outcrop(rr):
+    """Three dark blue-grey nodules with pale cortex, outlined."""
+    im, d = new()
+    for x0, y0, x1, y1 in ((1, 6, 7, 13), (6, 3, 13, 10), (8, 9, 14, 14)):
+        d.ellipse([x0, y0 + 1, x1, y1], fill=rgba(FLINT_D))
+        d.ellipse([x0, y0, x1 - 1, y1 - 1], fill=rgba(FLINT))
+        d.point((x0 + 2, y0 + 1), fill=rgba(FLINT_L))
+    for _ in range(4):
+        d.point((rr.randint(3, 12), rr.randint(5, 12)), fill=rgba(CORTEX))
+    return outline_alpha(im)
+
+
+def knapping_spot():
+    """A flat anvil stone with a hammerstone and flakes around it."""
+    im, d = new()
+    d.ellipse([2, 5, 12, 13], fill=rgba(STONE_D))
+    d.ellipse([2, 4, 12, 11], fill=rgba(STONE))
+    d.line([(4, 5), (9, 5)], fill=rgba(STONE_L))
+    d.ellipse([10, 2, 14, 6], fill=rgba(shade(STONE, 0.85)))  # hammerstone
+    d.point((11, 3), fill=rgba(STONE_L))
+    for x, y in ((6, 7), (8, 8), (1, 13), (13, 12), (4, 14)):
+        d.point((x, y), fill=rgba(FLINT_L))
+    return outline_alpha(im)
+
+
+def wood_bench():
+    """A 32x16 split-log bench on two stone feet, with a blade and a haft on it."""
+    im, d = new(32, 16)
+    for x in (4, 24):
+        d.rectangle([x, 10, x + 3, 14], fill=rgba(STONE_D))
+        d.line([(x, 10), (x + 3, 10)], fill=rgba(STONE_L))
+    d.rectangle([1, 4, 30, 10], fill=rgba(LOG_DARK))
+    d.rectangle([1, 4, 30, 8], fill=rgba(LOG))
+    d.line([(2, 5), (29, 5)], fill=rgba(LOG_LIGHT))
+    d.line([(10, 7), (19, 7)], fill=rgba(GRAIN_RING))
+    d.line([(20, 6), (26, 6)], fill=rgba((176, 128, 80)))  # a haft
+    d.rectangle([7, 5, 9, 6], fill=rgba(FLINT_L))  # a blade
+    return outline_alpha(im)
+
+
+def drying_rack():
+    """A 32x16 frame: two posts, a crossbar and two hanging hides."""
+    im, d = new(32, 16)
+    pole = (126, 92, 56)
+    for x in (2, 28):
+        d.rectangle([x, 1, x + 1, 14], fill=rgba(pole))
+    d.line([(2, 2), (29, 2)], fill=rgba(shade(pole, 1.2)))
+    for x0 in (6, 17):
+        d.rectangle([x0, 3, x0 + 7, 11], fill=rgba((152, 118, 78)))
+        d.line([(x0, 3), (x0 + 7, 3)], fill=rgba((182, 146, 100)))
+        d.line([(x0 + 3, 5), (x0 + 3, 10)], fill=rgba((114, 86, 56)))
+    return outline_alpha(im)
+
+
+def item_firewood():
+    """Split firewood: short pale billets in a small stack."""
+    im, d = new()
+    for x0, x1, y in ((4, 11, 5), (3, 12, 8), (5, 11, 11)):
+        _log(d, x0, x1, y, (214, 168, 108), (176, 130, 80), (140, 100, 62))
+    return im
+
+
+def item_pile(base, light, dark, spots):
+    """A small heap of lumps (stone, flint)."""
+    im, d = new()
+    for x0, y0 in ((3, 7), (8, 7), (5, 3), (10, 10), (2, 11)):
+        d.ellipse([x0, y0 + 1, x0 + 4, y0 + 4], fill=rgba(dark))
+        d.ellipse([x0, y0, x0 + 4, y0 + 3], fill=rgba(base))
+        d.point((x0 + 1, y0 + 1), fill=rgba(light))
+    for x, y in spots:
+        d.point((x, y), fill=rgba(CORTEX))
+    return outline_alpha(im)
+
+
+def item_blade():
+    """Three leaf-shaped flint blades side by side."""
+    im, d = new()
+    for x in (3, 7, 11):
+        d.polygon([(x, 3), (x + 2, 6), (x + 1, 13), (x - 1, 6)], fill=rgba(FLINT))
+        d.line([(x, 4), (x, 11)], fill=rgba(FLINT_L))
+    return outline_alpha(im)
+
+
+def item_axe():
+    """A hafted stone axe lying diagonally."""
+    im, d = new()
+    d.line([(3, 13), (11, 4)], fill=rgba((176, 128, 80)), width=2)
+    d.polygon([(9, 1), (14, 3), (13, 7), (9, 5)], fill=rgba(FLINT))
+    d.line([(10, 2), (13, 3)], fill=rgba(FLINT_L))
+    return outline_alpha(im)
+
+
+def item_hide():
+    """A stretched hide, tan."""
+    im, d = new()
+    d.polygon([(3, 3), (8, 2), (13, 4), (12, 9), (13, 13), (7, 12), (2, 13), (4, 8)], fill=rgba((152, 118, 78)))
+    d.polygon([(5, 4), (8, 4), (10, 6), (8, 9), (5, 8)], fill=rgba((182, 146, 100)))
+    return outline_alpha(im)
+
+
+def mark_quarry():
+    """A 7x7 pick glyph (yellow, outlined) at the cell's top-right, x 9..15, y 0..6 (like mark_chop)."""
+    glyph = from_ascii([
+        ".......",
+        ".yyyy..",
+        "y..y.y.",
+        "...y...",
+        "...y...",
+        "...y...",
+        ".......",
+    ], {"y": rgba(ACCENT)})
+    glyph = outline_alpha(glyph)
+    im, _ = new()
+    im.paste(glyph, (9, 0))
+    return im
+
+
 # ------------------------------------------------------------------ marks and icons
 def mark_chop():
     """A 7x7 axe glyph (yellow, outlined) at the cell's top-right, x 9..15, y 0..6."""
@@ -800,6 +940,14 @@ def icon(kind):
         d.rectangle([3, 3, 8, 8], fill=rgba(PAL["e"]))
         d.rectangle([4, 9, 7, 10], fill=rgba(PAL["e"]))
         d.line([(1, 1), (10, 1)], fill=rgba(LOG_LIGHT))
+    elif kind == "build":
+        d.rectangle([1, 6, 10, 10], fill=rgba(LOG))
+        d.line([(1, 6), (10, 6)], fill=rgba(LOG_LIGHT))
+        d.polygon([(1, 6), (5, 1), (10, 6)], fill=rgba((152, 118, 78)))
+    elif kind == "quarry":
+        d.ellipse([1, 5, 10, 11], fill=rgba(STONE))
+        d.line([(2, 2), (8, 2)], fill=rgba((206, 210, 220)), width=2)
+        d.line([(5, 3), (5, 8)], fill=rgba((176, 128, 80)))
     elif kind == "remove":
         d.polygon([(1, 7), (6, 2), (10, 6), (5, 11)], fill=rgba((226, 150, 150)))
         d.polygon([(1, 7), (3, 5), (7, 9), (5, 11)], fill=rgba((236, 230, 220)))
@@ -878,6 +1026,21 @@ def build_sprites():
     add("small", "hover", frame_rect((255, 255, 255, 120)))
     for kind in ("chop", "stockpile", "hut", "remove", "cancel"):
         add("small", f"icon_{kind}", icon(kind))
+    # M2 temporaries (resource nodes, workshops, item kinds, the quarry mark and order icons).
+    add("m2", "boulder", boulder(rr(95)))
+    add("m2", "flint_outcrop", flint_outcrop(rr(96)))
+    add("m2", "knapping_spot", knapping_spot())
+    add("m2", "wood_bench", wood_bench())
+    add("m2", "drying_rack", drying_rack())
+    add("m2", "item_firewood", item_firewood())
+    add("m2", "item_stone", item_pile(STONE, STONE_L, STONE_D, ()))
+    add("m2", "item_flint", item_pile(FLINT, FLINT_L, FLINT_D, ((4, 8), (9, 12))))
+    add("m2", "item_blade", item_blade())
+    add("m2", "item_axe", item_axe())
+    add("m2", "item_hide", item_hide())
+    add("m2", "mark_quarry", mark_quarry())
+    for kind in ("build", "quarry"):
+        add("m2", f"icon_{kind}", icon(kind))
     return out
 
 

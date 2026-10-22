@@ -56,7 +56,7 @@ func _run() -> void:
 	if world == null or bar == null:
 		_fail("missing WorldSim or UI/OrderBar")
 		return
-	# Pause the frame-driven clock as the P key does (a load's world_reset re-applies the speed, not the pause), so
+	# Pause the frame-driven clock as the Space key does (a load's world_reset re-applies the speed, not the pause), so
 	# only advance_ticks moves the world.
 	world.process_mode = Node.PROCESS_MODE_DISABLED
 	SimReads.mutate(world, "advance_ticks", [700])

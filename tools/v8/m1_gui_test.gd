@@ -2,7 +2,8 @@
 # Purpose: with Input.parse_input_event only (button clicks, drags, clicks — never the bridge's command calls):
 #   1. 베기: click the bar button, drag over the trees nearest the camp (≥ 15);
 #   2. 비축 구역: drag a 4×4 block next to the hearth;
-#   3. 오두막: click a spot where can_place_blueprint is true (the ghost is green there);
+#   3. 오두막: the F3 button opens the build menu (M2), key 1 picks the hut, then click a spot where
+#      can_place_blueprint is true (the ghost is green there);
 #   4. run 3 game days at 4× speed (live loop, key 4).
 #   After each step it asserts the command's effect through the colony reads, and it saves the shots
 #   before, after_orders, day1, hut_done and far. With --fps-seconds N it then measures the mean FPS at 4× for
@@ -66,8 +67,8 @@ func _run() -> void:
 		_check("scene", false, "missing WorldSim or Camera2D")
 		_finish()
 		return
-	# Freeze the clock while ordering (the player may pause; orders apply at once).
-	await _key(KEY_P)
+	# Freeze the clock while ordering (the player may pause with Space since M2; orders apply at once).
+	await _key(KEY_SPACE)
 	var hearth: Vector2i = _hearth()
 	_camera.call("center_on_tile", hearth)
 	for _i: int in 10:
@@ -246,7 +247,9 @@ func _step_stockpile(hearth: Vector2i) -> void:
 
 
 func _step_hut(hearth: Vector2i) -> void:
+	# M2: the F3 button opens the build menu; 1 picks the hut.
 	await _click_bar(2)
+	await _key(KEY_1)
 	var spot: Vector2i = Vector2i(-1, -1)
 	for dy: int in range(2, 30):
 		for dx: int in range(-8, 9):
@@ -279,7 +282,7 @@ func _step_run(hearth: Vector2i) -> void:
 	_camera.call("center_on_tile", hearth)
 	_camera.zoom = Vector2(2, 2)
 	await _key(KEY_4)
-	await _key(KEY_P)
+	await _key(KEY_SPACE)
 	_check("speed 4x", is_equal_approx(float(_camera.call("get_speed")), 4.0) and not bool(_camera.call("is_paused")))
 	var start: int = _tick()
 	var day1_done: bool = false

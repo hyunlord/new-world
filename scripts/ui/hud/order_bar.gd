@@ -1,7 +1,10 @@
 # order_bar.gd (UI/OrderBar in scenes/main.tscn): the M1 order bar at the bottom of the screen.
-# Five modes — 베기 / 비축 구역 / 오두막 / 구역 지우기 / 취소 — chosen by a click or F1–F4 and F6 (the number
-#   keys 1–4 set the speed; M1 DECISIONS D24); Esc or a right click leaves the mode. Shows the mode's hint (with no
-#   mode: the order keys and Home/H = centre on the camp, camera_controller.gd) and, on a backing panel above the
+# Six modes — 베기 / 비축 구역 / 짓기 / 구역 지우기 / 취소 / 채석 — chosen by a click or F1–F4, F6 and F7 (the
+#   number keys 1–4 set the speed; M1 DECISIONS D24); Esc or a right click leaves the mode. M2: F3 (짓기) opens a
+#   build menu above its button — 오두막 / 돌깎이 자리 / 목공대 / 건조대 — where 1–4 (or a click) pick the
+#   blueprint and enter OrderTool's build mode with that footprint (while the menu is open, 1–4 choose, not the
+#   speed; F3 or Esc closes it); F7 (채석) is an area mode like 베기. Shows the mode's hint (with no
+#   mode: the order keys, P = priorities, Space = pause and Home/H = centre on the camp) and, on a backing panel above the
 #   bar, a short toast with each order's result (count with its noun, or the reject reason). Each button carries its
 #   12×12 icon from the colony sheet (scripts/world/colony/view.gd) drawn at 2× with nearest filtering; the active
 #   mode's button is pressed and its label gold. On macOS the idle hint reads "fn + F1–F4·F6" (the F-keys need fn).
@@ -14,13 +17,18 @@ extends Control
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const View = preload("res://scripts/world/colony/view.gd")
+const EconomyText = preload("res://scripts/ui/economy_text.gd")
+const BUILD_MODE: int = 3
 const MODES: Array[Dictionary] = [
 	{"mode": 1, "key": "UI_ORDER_CHOP", "hotkey": KEY_F1, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_chop"},
 	{"mode": 2, "key": "UI_ORDER_STOCKPILE", "hotkey": KEY_F2, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_stockpile"},
-	{"mode": 3, "key": "UI_ORDER_HUT", "hotkey": KEY_F3, "hint": "UI_ORDER_HINT_PLACE", "icon": "icon_hut"},
+	{"mode": BUILD_MODE, "key": "UI_ORDER_BUILD", "hotkey": KEY_F3, "hint": "UI_ORDER_HINT_PLACE", "icon": "icon_build"},
 	{"mode": 4, "key": "UI_ORDER_REMOVE_ZONE", "hotkey": KEY_F4, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_remove"},
 	{"mode": 5, "key": "UI_ORDER_CANCEL", "hotkey": KEY_F6, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_cancel"},
+	{"mode": 6, "key": "UI_ORDER_QUARRY", "hotkey": KEY_F7, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_quarry"},
 ]
+## The build menu's keys, in EconomyText.BUILD_KINDS order.
+const MENU_KEYS: Array[Key] = [KEY_1, KEY_2, KEY_3, KEY_4]
 const ACTIVE: Color = Color("e8c46e")
 const TOAST_SECONDS: float = 2.0
 ## M1.5 quick save and load keys and folder.
@@ -37,6 +45,8 @@ var _toast_left: float = 0.0
 var _locale: Node = null
 var _world_sim: Node = null
 var _last_save: String = ""
+var _menu: PanelContainer
+var _menu_buttons: Array[Button] = []
 
 
 func _loc(key: String) -> String:
@@ -49,6 +59,7 @@ func _ready() -> void:
 	_locale = get_node_or_null("/root/Locale")
 	var panel: PanelContainer = ArtUI.panel(self, Rect2(12, 1080 - 76, 1100, 64))
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	_build_menu()
 	var row: HBoxContainer = HBoxContainer.new()
 	row.add_theme_constant_override("separation", 8)
 	panel.add_child(row)
@@ -81,6 +92,62 @@ func _ready() -> void:
 		_tool.connect("mode_changed", _on_mode_changed)
 
 
+## The F3 build menu: one button per blueprint kind ("1 오두막" with the building's sprite), above the bar.
+func _build_menu() -> void:
+	_menu = ArtUI.panel(self, Rect2(12, 1080 - 76 - 8 - 4 * 56 - 24, 0, 0))
+	_menu.mouse_filter = Control.MOUSE_FILTER_STOP
+	_menu.name = "BuildMenu"
+	var column: VBoxContainer = VBoxContainer.new()
+	column.add_theme_constant_override("separation", 6)
+	_menu.add_child(column)
+	for i: int in EconomyText.BUILD_KINDS.size():
+		var kind: Dictionary = EconomyText.BUILD_KINDS[i]
+		var button: Button = Button.new()
+		button.name = "Build_%s" % str(kind["name"])
+		button.focus_mode = Control.FOCUS_NONE
+		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		button.text = "%d %s" % [i + 1, _loc(str(kind["key"]))]
+		button.icon = _icon_fit(str(kind["sprite"]), 32)
+		button.pressed.connect(choose_build.bind(i))
+		column.add_child(button)
+		_menu_buttons.append(button)
+	_menu.visible = false
+
+
+## Whether the F3 build menu is open.
+func build_menu_open() -> bool:
+	return _menu != null and _menu.visible
+
+
+## Open the build menu (leaving any mode).
+func open_build_menu() -> void:
+	_menu.visible = true
+	_menu.size = Vector2.ZERO
+	# Above the F3 button once the bar has laid out (before that: the bar's left edge).
+	var minimum: Vector2 = _menu.get_combined_minimum_size()
+	var anchor_x: float = _buttons[2].global_position.x if _buttons.size() > 2 and _buttons[2].is_inside_tree() else 12.0
+	_menu.position = Vector2(maxf(12.0, anchor_x), 1080 - 76 - 8 - minimum.y)
+	select_mode(0)
+	_on_mode_changed(0)
+
+
+## Close the build menu without choosing.
+func close_build_menu() -> void:
+	if not build_menu_open():
+		return
+	_menu.visible = false
+	_on_mode_changed(current_mode())
+
+
+## Choose build kind `index` (EconomyText.BUILD_KINDS order): close the menu and enter the build mode.
+func choose_build(index: int) -> void:
+	if index < 0 or index >= EconomyText.BUILD_KINDS.size():
+		return
+	_menu.visible = false
+	if _tool != null:
+		_tool.call("set_build", str(EconomyText.BUILD_KINDS[index]["name"]))
+
+
 ## The idle hint key: macOS keyboards need fn for the F-keys.
 static func _idle_hint() -> String:
 	return "UI_ORDER_HINT_IDLE_MAC" if OS.get_name() == "macOS" else "UI_ORDER_HINT_IDLE"
@@ -100,8 +167,34 @@ static func _icon(name: String) -> Texture2D:
 	return ImageTexture.create_from_image(region)
 
 
+## The sheet sprite `name` scaled by a whole factor so its height is at most `height` (at least 1×), or null.
+static func _icon_fit(name: String, height: int) -> Texture2D:
+	var sheet: Texture2D = View.texture()
+	if sheet == null or not View.has(name):
+		return null
+	var image: Image = sheet.get_image()
+	if image == null:
+		return null
+	var r: Rect2 = View.rect(name)
+	var region: Image = image.get_region(Rect2i(r))
+	var factor: int = maxi(1, floori(float(height) / r.size.y))
+	region.resize(int(r.size.x) * factor, int(r.size.y) * factor, Image.INTERPOLATE_NEAREST)
+	return ImageTexture.create_from_image(region)
+
+
 func _on_button(mode: int) -> void:
+	if mode == BUILD_MODE:
+		_toggle_build_menu()
+		return
+	close_build_menu()
 	select_mode(mode if _tool == null or int(_tool.get("mode")) != mode else 0)
+
+
+func _toggle_build_menu() -> void:
+	if build_menu_open():
+		close_build_menu()
+	else:
+		open_build_menu()
 
 
 ## Choose mode `mode` (0 = none) on the order tool.
@@ -117,11 +210,17 @@ func current_mode() -> int:
 
 func _on_mode_changed(mode: int) -> void:
 	for i: int in _buttons.size():
-		_buttons[i].set_pressed_no_signal(int(MODES[i]["mode"]) == mode)
+		var on: bool = int(MODES[i]["mode"]) == mode or (int(MODES[i]["mode"]) == BUILD_MODE and build_menu_open())
+		_buttons[i].set_pressed_no_signal(on)
 	_hint.text = _loc(_idle_hint()) if mode == 0 else ""
 	for entry: Dictionary in MODES:
 		if int(entry["mode"]) == mode:
 			_hint.text = _loc(str(entry["hint"]))
+	if mode == BUILD_MODE and _tool != null:
+		var code: int = EconomyText.build_code(str(_tool.get("build_kind")))
+		_hint.text = EconomyText.trf(_locale, "UI_ORDER_HINT_PLACE_FMT", {"name": EconomyText.building(_locale, code)})
+	elif mode == 0 and build_menu_open():
+		_hint.text = _loc("UI_ORDER_HINT_BUILD_MENU")
 
 
 ## Show `text` above the bar for a short while.
@@ -189,6 +288,16 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not (event is InputEventKey and event.pressed and not event.echo):
 		return
 	var key: InputEventKey = event
+	if build_menu_open():
+		var index: int = MENU_KEYS.find(key.keycode)
+		if index >= 0:
+			choose_build(index)
+			get_viewport().set_input_as_handled()
+			return
+		if key.keycode == KEY_ESCAPE:
+			close_build_menu()
+			get_viewport().set_input_as_handled()
+			return
 	if key.keycode == SAVE_KEY:
 		quick_save()
 		get_viewport().set_input_as_handled()
@@ -199,6 +308,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	for entry: Dictionary in MODES:
 		if key.keycode == int(entry["hotkey"]):
-			select_mode(int(entry["mode"]))
+			if int(entry["mode"]) == BUILD_MODE:
+				_toggle_build_menu()
+			else:
+				close_build_menu()
+				select_mode(int(entry["mode"]))
 			get_viewport().set_input_as_handled()
 			return

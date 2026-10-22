@@ -34,8 +34,16 @@ CARRY = ["carry_back", "carry_front", "tool_axe", "tool_hammer"]
 MARKS = ["mark_chop", "select", "hover"]
 ICONS = ["icon_" + k for k in ("chop", "stockpile", "hut", "remove", "cancel")]
 GHOSTS = ["hut_ghost", "hut_ghost_place"]
+# M2 temporaries: resource nodes, workshops, item kinds, the quarry mark and two order icons.
+M2_OBJECTS = (["boulder", "flint_outcrop", "knapping_spot"]
+              + ["item_" + k for k in ("firewood", "stone", "flint", "blade", "axe", "hide")])
+M2_WIDE = ["wood_bench", "drying_rack"]
+M2_ICONS = ["icon_build", "icon_quarry"]
 
-SIZE = {n: (16, 16) for n in GROUND + ZONE + NATURE + ITEMS + CARRY + MARKS + ["hearth_0", "hearth_1"]}
+SIZE = {n: (16, 16) for n in GROUND + ZONE + NATURE + ITEMS + CARRY + MARKS + ["hearth_0", "hearth_1"]
+        + M2_OBJECTS + ["mark_quarry"]}
+SIZE.update({n: (32, 16) for n in M2_WIDE})
+SIZE.update({n: (12, 12) for n in M2_ICONS})
 SIZE.update({n: (24, 24) for n in CANOPY})
 SIZE.update({n: (12, 12) for n in ICONS})
 SIZE.update({"hut": (48, 48), "hut_ghost": (48, 48), "hut_ghost_place": (48, 48), "shelter": (16, 20),
@@ -43,6 +51,7 @@ SIZE.update({"hut": (48, 48), "hut_ghost": (48, 48), "hut_ghost_place": (48, 48)
 SIZE.update({n: ((16, 8) if n.endswith("_sleep") else (16, 16)) for n in PEOPLE})
 # Object sprites must carry the outline colour (craft rule 1); people carry it in their outline layer.
 OUTLINED = (CANOPY + NATURE + ITEMS + BUILDINGS + CARRY + ["mark_chop"] + ICONS
+            + M2_OBJECTS + M2_WIDE + M2_ICONS + ["mark_quarry"]
             + [n for n in PEOPLE if "_outline_" in n] + ["stock_stake_" + c for c in ("nw", "ne", "sw", "se")])
 
 
@@ -141,7 +150,8 @@ class GenTilesTest(unittest.TestCase):
                 self.assertIn(OUTLINE, {p[:3] for p in visible(self.tile(name))})
 
     def test_object_sprites_have_transparent_background(self):
-        for name in CANOPY + NATURE + ITEMS + ["shelter", "hearth_0", "hearth_1"] + CARRY + ["mark_chop", "shadow", "tree_shadow"]:
+        for name in (CANOPY + NATURE + ITEMS + ["shelter", "hearth_0", "hearth_1"] + CARRY
+                     + ["mark_chop", "shadow", "tree_shadow"] + M2_OBJECTS + M2_WIDE + ["mark_quarry"]):
             with self.subTest(name=name):
                 alphas = [p[3] for p in self.tile(name).get_flattened_data()]
                 self.assertIn(0, alphas)

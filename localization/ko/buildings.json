@@ -1,4 +1,7 @@
 {
 	"BUILDING_SHELTER": "거처",
-	"BUILDING_HUT": "오두막"
+	"BUILDING_HUT": "오두막",
+	"BUILDING_KNAPPING_SPOT": "돌깎이 자리",
+	"BUILDING_WOOD_BENCH": "목공대",
+	"BUILDING_DRYING_RACK": "건조대"
 }

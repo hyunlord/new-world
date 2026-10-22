@@ -64,6 +64,11 @@
 - The simulation is unaffected: the contract (ADR 0016, C2) already keeps pixels, tile sizes and sprites out of the
   sim crates, so the art change is a renderer change only.
 - VISION §6 is rewritten for this look; the 16/32-px size table and the mock-up references move to a history note.
+- Status, later on 2026-10-22: ART-TRIAL2 (`v8/art-trial2` `034c38ab`, `docs/v8/arttrial2/TRIAL2_REPORT.md`) reported
+  the sustainability condition **failed** (2 of 38 environment candidates adopted, one ground family); its
+  pre-registered rule recommends 02 woodcut for the map and 05 for portraits. ART-TRIAL2b repeats the trial with
+  corrected camera and ground rules. The look decided here stands until the owner decides on that evidence; M-ART2
+  does not start before.
 
 ## Date
 2026-10-22

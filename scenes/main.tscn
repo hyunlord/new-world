@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://v7init"]
+[gd_scene load_steps=19 format=3 uid="uid://v7init"]
 
 [ext_resource type="Script" path="res://scripts/core/sim_reads.gd" id="1_sim_reads"]
 [ext_resource type="Script" path="res://scripts/world/colony/terrain_layer.gd" id="2_terrain"]
@@ -14,6 +14,8 @@
 [ext_resource type="Script" path="res://scripts/ui/hud/hud_topbar.gd" id="12_hud"]
 [ext_resource type="Script" path="res://scripts/ui/panels/agent_inspector_panel.gd" id="13_inspector"]
 [ext_resource type="Script" path="res://scripts/ui/hud/order_bar.gd" id="14_order_bar"]
+[ext_resource type="Script" path="res://scripts/ui/panels/workshop_panel.gd" id="15_workshop"]
+[ext_resource type="Script" path="res://scripts/ui/panels/priority_panel.gd" id="16_priority"]
 
 [node name="Main" type="Node2D"]
 
@@ -64,6 +66,12 @@ script = ExtResource("12_hud")
 
 [node name="AgentInspectorPanel" type="Control" parent="UI"]
 script = ExtResource("13_inspector")
+
+[node name="WorkshopPanel" type="Control" parent="UI"]
+script = ExtResource("15_workshop")
+
+[node name="PriorityPanel" type="Control" parent="UI"]
+script = ExtResource("16_priority")
 
 [node name="OrderBar" type="Control" parent="UI"]
 script = ExtResource("14_order_bar")
