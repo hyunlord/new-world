@@ -12,6 +12,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 from .check_layer import Finding, Result, check_layer
 from .layer_schema import Layer, load_layer
+from .failure_marks import marked_preview
 from .set_checks import combinations, fixed_upper
 from .structure import FRAMES
 
@@ -56,10 +57,9 @@ def failure_board(layers: list[Layer], results: list[Result], destination: Path)
     for index,(layer,findings) in enumerate(rejected):
         x,y = index%4*256,index//4*460
         try:
-            with Image.open(layer.image) as source:
-                preview = source.convert('RGBA')
-                preview.thumbnail((248,350))
-                board.paste(preview,(x+4,y+24),preview)
+            preview = marked_preview(layer,findings)
+            preview.thumbnail((248,350))
+            board.paste(preview,(x+4,y+24),preview)
         except OSError as error:
             draw.text((x+4,y+40),str(error)[:30],fill='red')
         draw.rectangle((x+2,y+22,x+252,y+378),outline='red',width=3)
@@ -76,24 +76,29 @@ def run(manifest: Path, output: Path) -> bool:
     valid = [l for l,r in zip(layers,results,strict=True) if r.passed]
     cross = fixed_upper(valid)
     results.extend(cross)
-    if raw.get('require_minimum',True):
-        results.extend(inventory(layers,raw['directions']))
+    minimum = inventory(layers,raw['directions'])
     if not layers:
         results.append(Result('nonempty',False,(Finding('inventory','no layers supplied'),)))
     combos = combinations(valid)
     if not combos:
         results.append(Result('combinations',False,(Finding('inventory','no combinations rendered'),)))
-    passed = all(r.passed for r in results) and all(c.passed for c in combos)
+    subset_passed = all(r.passed for r in results) and all(c.passed for c in combos)
+    complete = raw.get('require_minimum',True) and all(r.passed for r in minimum)
+    passed = subset_passed and complete
+    status = 'PASS' if passed else 'NOT_COMPLETE' if subset_passed else 'FAIL'
+    results.extend(minimum)
     output.mkdir(parents=True,exist_ok=True)
-    report = {'schema_version':1,'route':raw['route'],'passed':passed,'layer_count':len(layers),
+    report = {'schema_version':1,'route':raw['route'],'passed':passed,'status':status,'subset_passed':subset_passed,'layer_count':len(layers),
               'layer_pass_count':sum(check_layer(l).passed for l in layers),
+              'sleep_coverage':'bare_sleep_only; top/hair/item/carry attributes not covered during sleep',
               'combination_count':len(combos),'results':[asdict(r) for r in results],
               'combinations':[asdict(c) for c in combos],
               'hashes':{str(p.resolve()):hashlib.sha256(p.read_bytes()).hexdigest() for p in [manifest]+[manifest.parent / p for p in raw['layers']]+[p for l in layers for p in (l.image,l.mask)] if p.exists()}}
     report['input_hashes'] = report['hashes']
     (output/'CHECKS.json').write_text(json.dumps(report,indent=2)+'\n')
-    lines = [f"# CHECKS {raw['route']}",f"\nStructural result: {'PASS' if passed else 'FAIL'}",
+    lines = [f"# CHECKS {raw['route']}",f"\nRoute acceptance: {status}. Supplied subset structural pass: {subset_passed}.",
              f'\nLayers: {len(layers)}. Exhaustive valid-input combinations: {len(combos)}.',
+             '\nSleep coverage: bare body only on96x64; top/hair/item/carry attributes are not covered in sleep.',
              '\nSynthetic checks do not establish art, readability, provenance, or FPS acceptance.\n']
     for result in results:
         lines.append(f"- {result.id}: {'PASS' if result.passed else 'FAIL'} "+'; '.join(f'{f.rule}: {f.detail}' for f in result.findings))

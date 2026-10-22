@@ -66,6 +66,22 @@ def check_layer(layer: Layer) -> Result:
     if np.any(silhouette[0,:]) or np.any(silhouette[-1,:]) or np.any(silhouette[:,0]) or np.any(silhouette[:,-1]):
         fail('clipping','visible pixel touches canvas edge; source extent cannot be verified')
     geometry = GEOMETRY[layer.body_type]
+    if layer.kind == 'body' and layer.frame == 'sleep' and np.any(silhouette):
+        ys,xs = np.nonzero(silhouette)
+        x0,y0,x1,y1 = int(xs.min()),int(ys.min()),int(xs.max())+1,int(ys.max())+1
+        if x1-x0 <= y1-y0:
+            fail('sleep_axis','sleep alpha bbox must be wider than tall')
+        center = ((x0+x1)/(2*s),(y0+y1)/(2*s))
+        if max(abs(center[0]-48),abs(center[1]-36)) > 2:
+            fail('sleep_center',f'alpha bbox center{center} must be(48,36)±2')
+        if layer.head_box is None:
+            fail('sleep_head','declare head_box on left; mask does not encode head semantics')
+        else:
+            hx0,hy0,hx1,hy1 = layer.head_box
+            if not (0 <= hx0 < hx1 <= 48 and 0 <= hy0 < hy1 <= 64):
+                fail('sleep_head','declared head_box must be inside left half of sleep canvas')
+            elif not np.any(box_region(mask.shape,layer.head_box,s) & silhouette & (mask == 1)):
+                fail('sleep_head','declared left head_box contains no visible skin')
     if layer.kind == 'body' and layer.frame != 'sleep' and np.any(silhouette):
         ys,xs = np.nonzero(silhouette)
         bottom = (int(ys.max())+1)/s

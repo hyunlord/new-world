@@ -215,3 +215,76 @@ def test_shifted_head_and_wrong_hair_region_rejected(tmp_path: Path) -> None:
     mask[mask == 2] = 5
     Image.fromarray(mask).save(hair.mask)
     assert 'mask_semantics' in rules(hair)
+
+
+def sleep_body(tmp_path: Path) -> Layer:
+    image,mask = tmp_path/'sleep.png',tmp_path/'sleep_mask.png'
+    pixels = np.zeros((64,96,4),dtype=np.uint8)
+    pixels[24:48,20:76] = (154,154,154,255)
+    Image.fromarray(pixels).save(image)
+    Image.fromarray((pixels[:,:,3]>0).astype(np.uint8)).save(mask)
+    return Layer('sleep',image,mask,'body','adult','S','sleep',1,('synthetic test only',),head_box=(20,24,36,48))
+
+
+def test_sleep_horizontal_center_and_declared_head(tmp_path: Path) -> None:
+    sleep = sleep_body(tmp_path)
+    assert check_layer(sleep).passed
+    assert 'sleep_head' in rules(replace(sleep,head_box=None))
+    assert 'sleep_head' in rules(replace(sleep,head_box=(60,24,76,48)))
+    pixels = np.zeros((64,96,4),dtype=np.uint8)
+    pixels[5:55,5:10] = (154,154,154,255)
+    Image.fromarray(pixels).save(sleep.image)
+    Image.fromarray((pixels[:,:,3]>0).astype(np.uint8)).save(sleep.mask)
+    assert {'sleep_axis','sleep_center','sleep_head'}.issubset(rules(sleep))
+
+
+def test_sleep_composition_is_explicit_bare_coverage(tmp_path: Path) -> None:
+    sleep = sleep_body(tmp_path)
+    results = combinations([sleep,overlay(tmp_path,'top','top'),overlay(tmp_path,'hair','hair')])
+    assert len(results) == 1
+    assert results[0].ids == ('sleep',)
+    assert results[0].coverage_scope == 'bare_sleep_only'
+    assert results[0].passed
+    assert not combinations([replace(sleep,head_box=None)])[0].passed
+
+
+def test_diagnostic_three_layer_subset_never_accepts_route(tmp_path: Path) -> None:
+    import json
+    from art.pipeline3.check_set import run
+    layers = [body(tmp_path),overlay(tmp_path,'top','top'),overlay(tmp_path,'hair','hair')]
+    sidecars = []
+    for layer in layers:
+        path = tmp_path/f'{layer.id}.json'
+        path.write_text(json.dumps({'schema_version':1,'id':layer.id,'kind':layer.kind,
+            'body_type':'adult','direction':'S','frame':'idle','scale':1,'mask':layer.mask.name,
+            'operations':['synthetic only']}))
+        sidecars.append(path.name)
+    manifest = tmp_path/'manifest.json'
+    manifest.write_text(json.dumps({'route':'A','directions':['S','E','N'],
+                                   'layers':sidecars,'require_minimum':False}))
+    assert run(manifest,tmp_path/'out') is False
+    report = json.loads((tmp_path/'out/CHECKS.json').read_text())
+    assert report['passed'] is False
+    assert report['subset_passed'] is True
+    assert report['status'] == 'NOT_COMPLETE'
+    assert report['combination_count'] == 1
+    assert 'NOT_COMPLETE' in (tmp_path/'out/CHECKS.md').read_text()
+
+
+def test_localized_failure_marks_target_feet_and_holes(tmp_path: Path) -> None:
+    from art.pipeline3.failure_marks import marked_preview
+    from art.pipeline3.check_layer import Finding
+    b = body(tmp_path)
+    preview = marked_preview(b,[Finding('feet','shifted')])
+    assert preview.getpixel((0,86)) == (255,32,32,255)
+    assert preview.getpixel((0,0)) == (0,0,0,0)
+    mutate(b,(25,55,35,60),(0,0,0,0))
+    preview = marked_preview(b,[Finding('holes','interior gap')])
+    assert preview.getpixel((25,55)) == (255,32,32,255)
+
+
+def test_literal_head_bbox_does_not_invent_occupancy_threshold(tmp_path: Path) -> None:
+    b = body(tmp_path)
+    mutate(b,(20,32,44,50),(0,0,0,0))
+    mutate(b,(31,32,33,50),(154,154,154,255))
+    assert 'head_alignment' not in rules(b)

@@ -7,7 +7,8 @@ not used in Trial3: forced outlines and quantization are forbidden.
 Each PNG uses the full template canvas and RGBA. Each has an equal-sized L-mode
 mask: 0 empty, 1 skin, 2 hair, 3 cloth primary, 4 cloth secondary, 5 item.
 Every nontransparent pixel requires a nonzero mask. Skin applies only to exposed
-body; cloth region IDs only to tops. Body loincloth remains untinted body region.
+body; cloth region IDs only to tops. Base loincloth uses untinted region5 as a
+worn item; skin region1 never covers the loincloth. Log the hand-coded mask.
 Household tint affects 3, agent hair tint 2, skin tint 1.
 
 An overlay is authored as the overlay itself, never obtained by subtracting

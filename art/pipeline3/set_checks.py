@@ -9,7 +9,7 @@ from itertools import product
 from typing import Final
 import numpy as np
 from PIL import Image, ImageCms
-from .check_layer import Finding, Result, read_pixels
+from .check_layer import Finding, Result, check_layer, read_pixels
 from .layer_schema import Layer
 from .structure import FRAMES, GEOMETRY, Pixels, box_region, holes
 
@@ -20,6 +20,7 @@ class Combination:
     ids: tuple[str,...]
     passed: bool
     findings: tuple[Finding,...]
+    coverage_scope: str = 'upright_cartesian'
 
 def fixed_upper(layers: list[Layer]) -> list[Result]:
     """Compare alpha exactly and CIE76 Delta E <=3 in locked boxes."""
@@ -73,7 +74,8 @@ def combinations(layers: list[Layer]) -> list[Combination]:
     results: list[Combination] = []
     for body in [l for l in layers if l.kind == 'body']:
         if body.frame == 'sleep':
-            results.append(Combination((body.id,),True,()))
+            result = check_layer(body)
+            results.append(Combination((body.id,),result.passed,result.findings,'bare_sleep_only'))
             continue
         compatible = [l for l in layers if l.body_type == body.body_type and l.direction == body.direction]
         tops = [l for l in compatible if l.kind == 'top']

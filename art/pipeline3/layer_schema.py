@@ -8,7 +8,7 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
-from .structure import Point
+from .structure import Box, Point
 
 Kind = Literal['body','top','hair','beard','headgear','item','carry','shadow']
 
@@ -28,6 +28,7 @@ class Layer:
     shoulder: Point | None = None
     extras: tuple[str,...] = ()
     variant: str = ''
+    head_box: Box | None = None
 
 def load_layer(path: Path) -> Layer:
     """Reject incomplete or unsupported declarations before inspecting pixels."""
@@ -47,8 +48,14 @@ def load_layer(path: Path) -> Layer:
         if len(value) != 2 or not all(type(v) is int for v in value):
             raise ValueError(f'{path}: points must contain two integer game coordinates')
         return value[0],value[1]
+    head_box = None
+    if 'head_box' in raw:
+        values = raw['head_box']
+        if len(values) != 4 or not all(type(v) is int for v in values):
+            raise ValueError(f'{path}: head_box requires four integer game coordinates')
+        head_box = (values[0],values[1],values[2],values[3])
     return Layer(str(raw['id']),path.parent / raw.get('image',path.with_suffix('.png').name),
                  path.parent / raw['mask'],raw['kind'],raw['body_type'],raw['direction'],raw['frame'],
                  raw['scale'],tuple(raw['operations']),tuple(point(p) for p in raw.get('hands',[])),
                  point(raw['grip']) if 'grip' in raw else None,
-                 point(raw['shoulder']) if 'shoulder' in raw else None,tuple(raw.get('extras',[])),str(raw.get('variant','')))
+                 point(raw['shoulder']) if 'shoulder' in raw else None,tuple(raw.get('extras',[])),str(raw.get('variant','')),head_box)

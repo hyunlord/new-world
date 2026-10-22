@@ -20,12 +20,44 @@ isolated experiment. STYLE v2 is a style reference; Trial3 structure gates first
 
 | Part | Deliverable and evidence | State |
 |---|---|---|
-| 0 | Template, guides, contract, checker, five synthetic defects | IN_PROGRESS |
-| 1 | A edited layers, provenance, <=3 tries each | PENDING |
-| 2 | B tool preflight then <=3 setups; explicit drop if unavailable | PENDING |
-| 3 | Actual lab, GIF blind reviews, style scores, 60s crowd | PENDING |
+| 0 | Template, guides, contract, checker; 22 synthetic tests after independent audit | IMPLEMENTED; semantic limits recorded |
+| 1 | S/E/N idle geometry passed in 1/3/2 tries; masks and full set pending | IN_PROGRESS |
+| 2 | Official CLI installed; authenticated workspace unavailable, no Meshy key | STOPPED_TOOL_UNAVAILABLE |
+| 3 | Lab implementation parses; missing assets rejected; actual GIF/runtime pending | IN_PROGRESS |
 | 4 | Registered S1/S2/R1/T1/P1/K1 and verdict | PENDING |
 | 5 | Korean goal §8 report, production guide, verified push | PENDING |
 
 No structural failure may enter a normal board. No missing review or runtime
 measurement may be reported as passing. Every attempted generation is retained.
+
+## D3 — Independent structural audit
+
+`STRUCTURE_REVIEW.md` found subset acceptance and sleep alignment gaps. The
+checker now reports diagnostic subsets as NOT_COMPLETE even when their layers
+pass. Sleep requires horizontal silhouette, bounding-box center(48,36) within
+2px, and a declared left-side head box containing actual skin. This geometric
+test cannot independently identify a semantic head; thin-head detection remains
+a disclosed limitation of the specified bounding-box rule.
+
+Sleep is one bare body render (the specified16 total bodies), not an upright
+overlay combination. Its coverage_scope is bare_sleep_only. Visible sleeping
+attributes must be answered as actually rendered, never inferred from unseen
+assigned overlays. The lab and readability records must retain this limitation.
+
+## D4 — Masks for the base loincloth
+
+Body skin uses region1. The base loincloth is a worn item and uses region5,
+which remains untinted. Cloth tint3/4 stays exclusive to top overlays. Initial
+all-region1 body masks are processing intermediates, not final accepted masks.
+Hand-coded mask corrections are explicitly permitted by goal §3.6 and must
+preserve the original image and log exact polygon coordinates. This avoids
+silently tinting the base loincloth as exposed skin.
+
+## D5 — Route B stop
+
+See ROUTE_B_PREFLIGHT.md: official CLI1.2.2 installed, but account status has no
+workspace and workspace listing fails with no response and auth-login hint.
+No Meshy key is available in inspected locations. B stops under the goal's
+fallback rule, with zero submitted jobs. This does not assert the root cause
+of the network/auth failure. Blender installation is deferred because there
+is no usable 3D generation prerequisite. No B scores are fabricated.
