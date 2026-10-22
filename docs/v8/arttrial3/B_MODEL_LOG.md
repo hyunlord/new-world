@@ -64,3 +64,11 @@ Raw 증거: `/Users/rexxa/work/arttrial3-data/b/preflight-resume-20261022/`의 �
 ## 문서 검증
 
 `git diff --check` 통과. `bash tools/v8/check_docs.sh` exit 1: 기존 `art/proto/CharacterLab.gd`, `wash_tint.gdshader`의 tracked `.uid` 누락 및 `scenes/camp.tscn`, `scenes/character_lab.tscn` header uid 누락. 해당 파일은 이번에 수정하지 않았다. 코드/런타임 gate는 미실행. 허용 경로가 `art/**`, `docs/v8/arttrial3/**`이므로 공통 문서나 스킬 파일은 변경하지 않았다.
+
+## 재개 확인 2 — 2026-10-22 08:05 UTC
+
+직전 실행은 단가 조회·문서 게시로 진전이 있었다. 이번에는 동일한 리깅 견적을 재조회했으며 exit 3과 미지원 stderr가 재현되었다. workspace는 계속 free / 10이다. Raw: 위 증거 디렉터리의 `recheck-2/`. 생성 제출은 여전히 0건이다.
+
+공식 CLI 저장소의 현재 공개 트리에는 구현 소스가 없어 해당 오류의 정확한 발생 위치를 입증할 수 없었다. [공식 모델 명세](https://github.com/higgsfield-ai/cli/blob/fd21e7cb550b5835cc00c6b4abfea0c02fe77ff2/MODELS.md#L823-L864)는 두 모델 및 애니메이션 인자를 문서화하지만, 이것은 가격이나 free plan 권한 증거가 아니다. [공식 README](https://github.com/higgsfield-ai/cli/blob/fd21e7cb550b5835cc00c6b4abfea0c02fe77ff2/README.md) 조사에서도 문서화된 3D 견적 우회 경로는 찾지 못했다. CLI 도움말은 여전히 `generate cost`만 제공한다. 서버 오류인지 클라이언트 제한인지 확정하지 않으며, 가격 미확인을 해소하려고 생성 호출을 시험하지 않는다.
+
+동일 비용 차단의 두 번째 연속 goal turn이다. 현재 목표는 active이며 완료가 아니다. 필수 견적 지원 또는 검증 가능한 비용 정보가 생기기 전에는 예산 조건을 통과시킬 근거가 없다.
