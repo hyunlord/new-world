@@ -52,6 +52,23 @@ def fixed_upper(layers: list[Layer]) -> list[Result]:
             results.append(Result(layer.id,not found,found))
     return results
 
+def fixed_overlays(layers: list[Layer]) -> list[Result]:
+    """B reuses exactly one idle overlay per direction/variant for every body pose."""
+    results: list[Result] = []
+    seen: set[tuple[str, str, str, str]] = set()
+    for layer in layers:
+        if layer.kind not in ('top', 'hair', 'beard', 'headgear', 'carry'):
+            continue
+        key = (layer.body_type, layer.direction, layer.kind, layer.variant)
+        findings: list[Finding] = []
+        if layer.frame != 'idle':
+            findings.append(Finding('fixed_overlays', 'B overlays must be authored from idle only'))
+        if key in seen:
+            findings.append(Finding('fixed_overlays', 'duplicate direction/variant overlay; no per-frame replacement'))
+        seen.add(key)
+        results.append(Result(layer.id, not findings, tuple(findings)))
+    return results
+
 def placed(layer: Layer, body: Layer) -> tuple[Pixels,bool]:
     """Place item at canonical hand/shoulder anchor without losing off-canvas pixels."""
     pixels,_ = read_pixels(layer)

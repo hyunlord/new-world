@@ -13,10 +13,10 @@ from PIL import Image, ImageDraw
 from .check_layer import Finding, Result, check_layer
 from .layer_schema import Layer, load_layer
 from .failure_marks import marked_preview
-from .set_checks import combinations, fixed_upper
+from .set_checks import combinations, fixed_upper, fixed_overlays
 from .structure import FRAMES
 
-def inventory(layers: list[Layer], directions: list[str]) -> list[Result]:
+def inventory(layers: list[Layer], directions: list[str], route: str = 'A') -> list[Result]:
     """Fail closed for absent directions, frames, derived bodies or variant counts."""
     failures: list[Finding] = []
     if not directions or not {'S','E'}.issubset(directions) or not set(directions).issubset({'S','E','N'}):
@@ -24,7 +24,12 @@ def inventory(layers: list[Layer], directions: list[str]) -> list[Result]:
     ids = [l.id for l in layers]
     if len(ids) != len(set(ids)):
         failures.append(Finding('inventory','duplicate layer ids'))
-    for body in ('adult','child','elder'):
+    if route not in ('A', 'B'):
+        failures.append(Finding('inventory', 'route must be A or B'))
+    bodies = ('adult',) if route == 'B' else ('adult','child','elder')
+    if route == 'B' and any(layer.body_type != 'adult' for layer in layers):
+        failures.append(Finding('inventory', 'TRIAL3B scope is adult only'))
+    for body in bodies:
         subset = [l for l in layers if l.body_type == body]
         for direction in directions:
             for frame in FRAMES:
@@ -74,9 +79,12 @@ def run(manifest: Path, output: Path) -> bool:
     layers = [load_layer(manifest.parent / p) for p in raw['layers']]
     results = [check_layer(layer) for layer in layers]
     valid = [l for l,r in zip(layers,results,strict=True) if r.passed]
-    cross = fixed_upper(valid)
+    route = raw.get('route')
+    cross = fixed_overlays(layers) if route == 'B' else fixed_upper(valid)
+    if route not in ('A', 'B'):
+        results.append(Result('route',False,(Finding('route','route must be A or B'),)))
     results.extend(cross)
-    minimum = inventory(layers,raw['directions'])
+    minimum = inventory(layers,raw['directions'],route=route)
     if not layers:
         results.append(Result('nonempty',False,(Finding('inventory','no layers supplied'),)))
     combos = combinations(valid)

@@ -57,3 +57,25 @@ bbox spans a gap, and missing sleep anatomical evidence. Historical sleep test
 fixtures now supply explicit pixel segmentation; no acceptance assertion was
 removed. `git diff --check` passes. These checks establish checker behaviour,
 not art readability, style, frame performance or full game validation.
+
+## B compatibility and reviewer follow-up
+
+Anatomical label1 (head) now also requires one connected component. A regression
+first failed for a head label split into disconnected islands despite a large
+bbox; it now passes by rejecting that evidence. This does not change A results.
+
+Manifest route must be explicitly A or B. A inventory still requires
+adult/child/elder and its original fixed-upper body checks. B requires the
+adult set only, with the same direction/frame/outfit/hair/prop requirements;
+unrecognized routes cannot enable a bypass. B bodies may animate head/torso.
+B overlays (top/hair/beard/headgear/carry) must each be a unique idle layer per
+body/direction/kind/variant, reused unchanged in Cartesian combinations against
+every supplied accepted body frame. Missing inventory still prevents route
+acceptance; `require_minimum=false` never creates acceptance.
+
+Follow-up verification:37 tests pass, including real `check_set.run` reports
+for identical moving-body inputs under A, B and an invalid route. Only B's
+subset passes; both body frames produce combinations; incomplete B inventory
+still rejects full acceptance. Evidence: `head-connected-red.txt`,
+`b-contract-red.txt`, `b-contract-green.txt`. `followup-a/CHECKS.json` confirms
+A remains39/87PASS and265 original file hashes remain unchanged.
