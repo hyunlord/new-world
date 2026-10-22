@@ -29,7 +29,7 @@ Things and making (`docs/v8/m2/M2_GOAL.md`): stone and flint as items, workshops
 - The decision system's firewood arms are off in the M2 colony (`jobs::hearth::decision_firewood`; `decision/system.rs` +2 −1); the baseline keeps them.
 - A job holder at work on a craft yields only to a critical need (calibration, DECISIONS D13).
 - Save `FORMAT_VERSION` 2.
-- Gate step `bench`: a C3 ceiling miss now fails (`tools/v8/bench_ledger.py check`), no justification excuses it.
+- Gate step `bench`: a C3 ceiling miss now fails (`tools/v8/bench_ledger.py check`), no justification excuses it; `tools/v8/bench.sh` waits up to 45 minutes for a 1-minute load below 8 and labels the run quiet or CONTENDED (DECISIONS D23).
 - Gate step 13 and `tools/v8/test_bridge_api.py` read `docs/v8/bridge_api_m2.txt`.
 - The colony rule is `ColonyRule::M2` (`ColonyRule::economy`).
 - Pause moved from P to Space (P opens the priority table); F3 opens a build menu; README updated.

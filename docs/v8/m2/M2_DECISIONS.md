@@ -302,3 +302,6 @@ No MAJOR finding. MINOR findings and what was done:
 - Choice: no code change; the whole gate is rerun on a committed head when the host is quieter (the testing skill:
   timings taken under different load are not comparable; a stopped or partial gate is not evidence). The ledger rows
   stay those of the quiet interleaved session.
+- Tooling: `tools/v8/bench.sh` now waits up to 45 minutes (`BENCH_WAIT_S`) for the 1-minute load to fall below 8
+  (`BENCH_MAX_LOAD`) before measuring, and prints `admission: quiet` or `admission: CONTENDED`; `gate.txt` carries
+  that line. A contended run still compares (and may fail); the label tells the reader why.

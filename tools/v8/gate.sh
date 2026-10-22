@@ -99,7 +99,7 @@ grep -q '^RENDERER_AGREEMENT PASS' "$LOG/renderer_agreement.log" || { echo "   r
 step 24 save_roundtrip bash tools/v8/save_roundtrip.sh
 grep -q '^SAVE_ROUNDTRIP PASS' "$LOG/save_roundtrip.log" || { echo "   save_roundtrip: no PASS line" >> "$SUMMARY"; status=1; }
 step 25 bench bash tools/v8/bench.sh "$LOG/bench"
-grep -E 'ceiling|bench: |x[0-9]' "$LOG/bench.log" | sed 's/^/   /' >> "$SUMMARY"
+grep -E 'admission|ceiling|bench: |x[0-9]' "$LOG/bench.log" | sed 's/^/   /' >> "$SUMMARY"
 echo "finished $(date '+%Y-%m-%d %H:%M:%S %Z') status $status" >> "$SUMMARY"
 cat "$SUMMARY"
 exit "$status"
