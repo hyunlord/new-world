@@ -288,3 +288,17 @@ No MAJOR finding. MINOR findings and what was done:
   `ConstructionCompleted`); huts keep M1's path. Test `a_finished_workshop_is_not_in_the_building_registry`. The
   building layer's GDScript guard (skip rows inside a workshop footprint) stays as a second line of defence.
 - The evaluation was rerun from the fixed commit.
+
+## D23 — Gate 1: the bench step failed under host contention
+
+- Context: gate 1 on `bbe04a69` (`$DATA/gate1/gate.txt`): 24 of 25 steps passed; `bench` failed (N = 1,000 mean
+  ×1.142, N = 2,000 ×1.218, p99 up to ×2.6 against the M2 ledger rows). The 1-minute load was 19.7 at the step's
+  start (18.0 at its end), against 2.9–3.9 when the ledger rows were measured; other sessions on the shared Mac were
+  busy (browser, node, Python).
+- Evidence that it is contention, not code: perf's `quick` scene, which runs the unchanged baseline world (identity
+  PASS in the same gate), read ×1.83 slower than its base; an interleaved check right after the gate
+  (`$DATA/try/contention`, load 14–16) gave base 1,780 / 1,964 µs and candidate 2,378 / 1,906 µs at N = 1,000 — the
+  base slows as much, and the candidate beat it in the second pair.
+- Choice: no code change; the whole gate is rerun on a committed head when the host is quieter (the testing skill:
+  timings taken under different load are not comparable; a stopped or partial gate is not evidence). The ledger rows
+  stay those of the quiet interleaved session.
