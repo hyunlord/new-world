@@ -33,8 +33,9 @@ class Selection:
 
 
 def select(production: Path, person: Person) -> Selection:
-    """Maximize passing panels, then choose the earliest attempt without mixing frames."""
+    """Use the successful review replacement, else maximize panels with earliest ties."""
     choices = []
+    review_replacements = []
     for path in sorted((production / person.look).glob('try*/sheet_checks.json')):
         raw = path.read_text()
         summary = json.loads(raw)
@@ -45,7 +46,15 @@ def select(production: Path, person: Person) -> Selection:
         passing = summary.get('passing_panels', 0)
         if type(passing) is not int or passing not in range(11):
             raise ValueError(f'Invalid passing panel count: {path}')
-        choices.append(Selection(person.look, path.parent, summary['attempt'], passing, raw))
+        choice = Selection(person.look, path.parent, summary['attempt'], passing, raw)
+        choices.append(choice)
+        reason = summary.get('review_reason')
+        if summary.get('passed') is True and isinstance(reason, str) and reason.strip():
+            review_replacements.append(choice)
+    if len(review_replacements) > 1:
+        raise ValueError(f'Multiple successful review replacements: {person.look}')
+    if review_replacements:
+        return review_replacements[0]
     if not choices:
         return Selection(person.look, None, None, 0, '{}')
     return max(choices, key=lambda value: (value.passing_panels, -(value.attempt or 0)))
@@ -150,7 +159,7 @@ def build(production: Path, output: Path) -> None:
     (output / 'DATASET_STATUS.txt').write_text(STATUS + '\nformal_R1_eligible=false\n')
     (output / 'answer_key.private.json').write_text(json.dumps(answers, indent=2) + '\n')
     (output / 'provenance.json').write_text(json.dumps({'dataset_status': STATUS,
-        'formal_R1_eligible': False, 'selection_rule': 'Fixed TRIAL5 PEOPLE; max passing_panels, earliest tie; no frame mixing',
+        'formal_R1_eligible': False, 'selection_rule': 'Fixed TRIAL5 PEOPLE; unique passed=true attempt with nonempty review_reason replaces prior best; otherwise max passing_panels, earliest tie; no frame mixing',
         'selections': [{'look': s.look, 'directory': str(s.directory) if s.directory else None,
             'attempt': s.attempt, 'passing_panels': s.passing_panels, 'sheet_summary_json_verbatim': s.summary_json,
             'sheet_summary_sha256': sha(s.directory / 'sheet_checks.json') if s.directory else None} for s in selections],

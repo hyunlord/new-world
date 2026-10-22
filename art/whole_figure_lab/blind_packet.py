@@ -31,6 +31,7 @@ def build(lab: Path, output: Path) -> None:
                         'source_gif_sha256':record['source_sha256'],'unique_screenshots':record['unique_screenshots']})
     status=(lab/'DATASET_STATUS.txt').read_text().splitlines()[0]
     (output/'manifest.json').write_text(json.dumps({'dataset_status':status,
+        'formal_R1_eligible':playback.get('formal_R1_eligible',False),
         'method':playback['method'],'target_capture_hz':8,'browser':playback['browser'],
         'records':records,'answer_key_included':False},indent=2)+'\n')
     (output/'README.md').write_text('''# Blind playback review

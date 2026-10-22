@@ -91,3 +91,36 @@ def test_crowd_accepts_complete_subset_without_demographic_quota(tmp_path: Path)
     assert {r['activity'] for r in record['sprites']} == {'idle', 'walk', 'work', 'carry', 'sleep'}
     assert len(record['input_hashes']) == 20
     assert record['formal_R1_eligible'] is False
+
+
+@pytest.mark.parametrize('review_passed,expected_attempt', [(True, 3), (False, 2)])
+def test_review_retry_replaces_only_when_successful(tmp_path: Path, review_passed: bool, expected_attempt: int) -> None:
+    person = PEOPLE[0]
+    for attempt, passed, reason in ((2, True, None), (3, review_passed, 'hair read incorrectly')):
+        directory = tmp_path / person.look / f'try{attempt}'
+        (directory / 'S').mkdir(parents=True)
+        (directory / 'sheet_checks.json').write_text(json.dumps({
+            'look': person.look, 'attempt': attempt, 'passing_panels': 10,
+            'passed': passed, 'review_reason': reason}))
+        path = directory / 'S' / 'idle.png'
+        Image.new('RGBA', (80, 112), (attempt, 20, 30, 255)).save(path)
+        path.with_suffix('.json').write_text(json.dumps({
+            'look': person.look, 'facing': 'S', 'frame': 'idle', 'attempt': attempt,
+            'image_sha256': sha(path), 'checks': {'passed': passed},
+            'judge': {'numeric_pass': passed}}))
+    chosen = select(tmp_path, person)
+    image, _ = load(chosen, 'S', 'idle')
+    assert chosen.attempt == expected_attempt
+    assert image.getpixel((40, 104)) == (expected_attempt, 20, 30, 255)
+
+
+def test_multiple_successful_review_replacements_are_rejected(tmp_path: Path) -> None:
+    person = PEOPLE[0]
+    for attempt in (2, 3):
+        directory = tmp_path / person.look / f'try{attempt}'
+        directory.mkdir(parents=True)
+        (directory / 'sheet_checks.json').write_text(json.dumps({
+            'look': person.look, 'attempt': attempt, 'passing_panels': 10,
+            'passed': True, 'review_reason': 'hair'}))
+    with pytest.raises(ValueError, match='Multiple successful review'):
+        select(tmp_path, person)
