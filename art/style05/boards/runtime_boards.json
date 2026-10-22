@@ -1,0 +1,80 @@
+[
+  {
+    "board": "art/style05/boards/autotile_1x.png",
+    "source": "/Users/rexxa/work/arttrial2-data/proto-perf-24-v2/capture.png",
+    "source_sha256": "8b7b0f7687a34d6eaeb6e91850c5536c05153498af66f627031bec812edc1f86",
+    "operations": [
+      "RGB lossless PNG",
+      "crop (0, 64, 704, 608)"
+    ],
+    "bytes": 533406,
+    "status": "REVIEW_ONLY candidate art"
+  },
+  {
+    "board": "art/style05/boards/autotile_2x_review.png",
+    "source": "/Users/rexxa/work/arttrial2-data/proto-camp-24-2-v2/capture.png",
+    "source_sha256": "4d1199c86b2b520e41b36c5506ec43f2bbbff0c08f38be9587bc6f039667a69f",
+    "operations": [
+      "RGB lossless PNG",
+      "crop (0, 128, 1408, 1216)",
+      "Lanczos review reduction (1408, 1088) to (1000, 773); not native-scale acceptance evidence",
+      "Lanczos review reduction (1000, 773) to (900, 696)"
+    ],
+    "bytes": 1355011,
+    "status": "REVIEW_ONLY candidate art"
+  },
+  {
+    "board": "art/style05/boards/crowd_200_review.png",
+    "source": "/Users/rexxa/work/arttrial2-data/proto-perf-200-v2/capture.png",
+    "source_sha256": "27f616589e854c256ffd39fb85b997b3f14699c7d5797ed61e0c604781e695cd",
+    "operations": [
+      "RGB lossless PNG",
+      "Lanczos review reduction (1408, 832) to (1000, 591); not native-scale acceptance evidence",
+      "Lanczos review reduction (1000, 591) to (900, 532)"
+    ],
+    "bytes": 1223639,
+    "status": "REVIEW_ONLY candidate art"
+  },
+  {
+    "board": "art/style05/boards/crowd_count_1x.png",
+    "source": "/Users/rexxa/work/arttrial2-data/crowd_crop_640x360.png",
+    "source_sha256": "320c2e288025c17950d69710fa4b7ffa4fa56b3832856847dbf61fb7f238aec6",
+    "operations": [
+      "RGB lossless PNG"
+    ],
+    "bytes": 306343,
+    "status": "REVIEW_ONLY candidate art"
+  },
+  {
+    "board": "art/style05/boards/code_companion_1x.png",
+    "source": "/Users/rexxa/work/arttrial2-data/proto-code-companion-crop.png",
+    "source_sha256": "3b8489d25109e9d9132d4ef6d84f5be5498cd7654758f3ab026f570896a94740",
+    "operations": [
+      "RGB lossless PNG"
+    ],
+    "bytes": 440239,
+    "status": "REVIEW_ONLY candidate art"
+  },
+  {
+    "board": "art/style05/boards/season_winter.png",
+    "source": "/Users/rexxa/work/arttrial2-data/proto-season-compare-winter/capture.png",
+    "source_sha256": "5ee7ddcd759821785bbf8e69b690ccdd5e75867227d378b17fb0712784993063",
+    "operations": [
+      "RGB lossless PNG",
+      "Lanczos review reduction (1280, 720) to (1000, 563); not native-scale acceptance evidence"
+    ],
+    "bytes": 857905,
+    "status": "REVIEW_ONLY candidate art"
+  },
+  {
+    "board": "art/style05/boards/season_autumn.png",
+    "source": "/Users/rexxa/work/arttrial2-data/proto-season-compare-autumn/capture.png",
+    "source_sha256": "02dd6fb2006bb423e85532acd41e31350d45b2e2f25f4914086957aefa0b3a9a",
+    "operations": [
+      "RGB lossless PNG",
+      "Lanczos review reduction (1280, 720) to (1000, 563); not native-scale acceptance evidence"
+    ],
+    "bytes": 849625,
+    "status": "REVIEW_ONLY candidate art"
+  }
+]
