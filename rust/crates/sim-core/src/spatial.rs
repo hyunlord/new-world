@@ -228,6 +228,10 @@ pub struct ColonyIndex {
     pub marked: ChunkIndex<()>,
     /// Every tile with a quarry designation on a resource node (M2).
     pub quarry: ChunkIndex<()>,
+    /// Every tile with a dig designation (M3).
+    pub dig: ChunkIndex<()>,
+    /// Every tile with a deconstruct designation (M3).
+    pub deconstruct: ChunkIndex<()>,
 }
 
 impl ColonyIndex {
@@ -241,6 +245,8 @@ impl ColonyIndex {
         self.cells.clear();
         self.marked.clear();
         self.quarry.clear();
+        self.dig.clear();
+        self.deconstruct.clear();
         for tile in colony.ground_items.keys() {
             self.ground.insert(*tile, ());
         }
@@ -251,6 +257,8 @@ impl ColonyIndex {
             match mark {
                 Designation::Chop => self.marked.insert(*tile, ()),
                 Designation::Quarry => self.quarry.insert(*tile, ()),
+                Designation::Dig => self.dig.insert(*tile, ()),
+                Designation::Deconstruct => self.deconstruct.insert(*tile, ()),
             }
         }
         self.version = Some(colony.overlay_version);

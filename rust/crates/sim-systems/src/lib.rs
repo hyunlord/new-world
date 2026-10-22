@@ -322,12 +322,13 @@ pub fn register_default_runtime_systems(engine: &mut SimEngine) {
 /// Register the M1 job layer (`runtime::jobs`): `BillSystem` (123, every 60
 /// ticks, M2), `JobAssignSystem` (124) and `JobExecuteSystem` (127, both every
 /// tick) and `HearthFeedSystem` (146, hourly, M2), all no-ops without
-/// `rules.colony`.
+/// `rules.colony`; and M3's `RoomSystem` (152), a no-op without the space rule.
 pub fn register_job_systems(engine: &mut SimEngine) {
     engine.register_system(Box::new(runtime::jobs::BillSystem::new()));
     engine.register_system(Box::new(runtime::jobs::JobAssignSystem::new()));
     engine.register_system(Box::new(runtime::jobs::JobExecuteSystem::new()));
     engine.register_system(Box::new(runtime::jobs::HearthFeedSystem::new()));
+    engine.register_system(Box::new(runtime::rooms::RoomSystem::new()));
 }
 
 /// Register the rules-gated Pass 5 hearth fire (priority 147, interval 60),

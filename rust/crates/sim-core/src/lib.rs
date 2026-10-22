@@ -28,6 +28,7 @@ pub mod influence;
 pub mod material;
 pub mod nav;
 pub mod rng;
+pub mod rooms;
 pub mod rules;
 pub mod save_serde;
 pub mod spatial;

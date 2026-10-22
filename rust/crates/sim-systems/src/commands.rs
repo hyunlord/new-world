@@ -93,6 +93,73 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
             None => CommandResult::rejected(RejectReason::OutOfMap),
             Some(tiles) => counted(remove_zone_area(world, res, &tiles)),
         },
+        Command::PlaceBlueprint { kind, x, y } if kind.is_space() => {
+            place_space(world, res, &rule, kind, vec![(x, y)])
+        }
+        Command::PlaceLine { kind, .. } | Command::PlaceRect { kind, .. } if !kind.is_space() => {
+            CommandResult::rejected(RejectReason::Blocked)
+        }
+        Command::PlaceLine {
+            kind,
+            x0,
+            y0,
+            x1,
+            y1,
+        } => {
+            let tiles = line_tiles((x0, y0), (x1, y1));
+            place_space(world, res, &rule, kind, tiles)
+        }
+        Command::PlaceRect {
+            kind,
+            x0,
+            y0,
+            x1,
+            y1,
+            hollow,
+        } => match rect_tiles(res, x0, y0, x1, y1) {
+            None => CommandResult::rejected(RejectReason::OutOfMap),
+            Some(tiles) => {
+                let (lx, hx) = (x0.min(x1), x0.max(x1));
+                let (ly, hy) = (y0.min(y1), y0.max(y1));
+                let tiles = tiles
+                    .into_iter()
+                    .filter(|t| !hollow || t.0 == lx || t.0 == hx || t.1 == ly || t.1 == hy)
+                    .collect();
+                place_space(world, res, &rule, kind, tiles)
+            }
+        },
+        Command::DesignateDig { .. } | Command::DesignateDeconstruct { .. }
+            if rule.space.is_none() =>
+        {
+            CommandResult::rejected(RejectReason::NotYet)
+        }
+        Command::DesignateDig { x0, y0, x1, y1 } => match rect_tiles(res, x0, y0, x1, y1) {
+            None => CommandResult::rejected(RejectReason::OutOfMap),
+            Some(tiles) => designate_space(res, &tiles, Designation::Dig),
+        },
+        Command::DesignateDeconstruct { x0, y0, x1, y1 } => match rect_tiles(res, x0, y0, x1, y1) {
+            None => CommandResult::rejected(RejectReason::OutOfMap),
+            Some(tiles) => designate_space(res, &tiles, Designation::Deconstruct),
+        },
+        Command::SetRoomRole { .. } if rule.space.is_none() => {
+            CommandResult::rejected(RejectReason::NotYet)
+        }
+        Command::SetRoomRole { room, role } => {
+            if !res.colony.rooms.contains_key(&room) {
+                return CommandResult::rejected(RejectReason::Unknown);
+            }
+            let before = res.colony.room_overrides.get(&room).copied();
+            if before == role {
+                return CommandResult::rejected(RejectReason::Nothing);
+            }
+            match role {
+                Some(r) => res.colony.room_overrides.insert(room, r),
+                None => res.colony.room_overrides.remove(&room),
+            };
+            crate::runtime::rooms::assign_roles(world, res);
+            res.colony.touch(false);
+            CommandResult::ok(1)
+        }
         Command::PlaceBlueprint { kind, x, y } => match check_blueprint(res, kind, x, y) {
             Err(reason) => CommandResult::rejected(reason),
             Ok(()) => {
@@ -377,6 +444,7 @@ fn cancel_area(world: &mut World, res: &mut SimResources, tiles: &[Tile]) -> usi
     cancel_jobs_where(world, res, |job| match job.kind {
         JobKind::Chop { tree } => marked.contains(&tree),
         JobKind::Quarry { node } => marked.contains(&node),
+        JobKind::Dig { tile } | JobKind::Deconstruct { tile } => marked.contains(&tile),
         _ => false,
     });
     // Blueprint sites whose footprint touches the area.
@@ -390,6 +458,7 @@ fn cancel_area(world: &mut World, res: &mut SimResources, tiles: &[Tile]) -> usi
     let removed: BTreeSet<Tile> = sites.iter().map(|s| s.0).collect();
     cancel_jobs_where(world, res, |job| match job.kind {
         JobKind::Deliver { site, .. } | JobKind::Build { site } => removed.contains(&site),
+        JobKind::Clear { from, .. } => removed.contains(&from),
         _ => false,
     });
     for (centre, entity, site, needs) in &sites {
@@ -398,6 +467,10 @@ fn cancel_area(world: &mut World, res: &mut SimResources, tiles: &[Tile]) -> usi
         }
         res.colony.site_work_tiles.remove(centre);
         let _ = world.despawn(*entity);
+        // M3: a space site's tile is walkable again.
+        if res.colony.space_sites.remove(centre).is_some() {
+            crate::runtime::nav::refresh(res, *centre);
+        }
         for line in needs.used() {
             if line.delivered > 0 {
                 let spec = ItemSpec::raw(line.kind, line.material);
@@ -629,4 +702,180 @@ fn place_blueprint(
         site,
     ));
     res.colony.touch(false);
+}
+
+/// The tiles of the Bresenham line from `a` to `b`, `a` first (M3 `PlaceLine`).
+pub fn line_tiles(a: Tile, b: Tile) -> Vec<Tile> {
+    let (mut x, mut y) = (i64::from(a.0), i64::from(a.1));
+    let (x1, y1) = (i64::from(b.0), i64::from(b.1));
+    let dx = (x1 - x).abs();
+    let dy = -(y1 - y).abs();
+    let sx = if x < x1 { 1 } else { -1 };
+    let sy = if y < y1 { 1 } else { -1 };
+    let mut err = dx + dy;
+    let mut out = Vec::new();
+    loop {
+        out.push((x as u32, y as u32));
+        if x == x1 && y == y1 {
+            break;
+        }
+        let e2 = 2 * err;
+        if e2 >= dy {
+            err += dy;
+            x += sx;
+        }
+        if e2 <= dx {
+            err += dx;
+            y += sy;
+        }
+    }
+    out
+}
+
+/// Whether a 1×1 space blueprint of `kind` may go on `tile` (M3, ADR 0022):
+/// on the map (`OutOfMap`), dry (`Water`), not undug hill (`Hill`), not
+/// mountain, nothing built there that the kind would replace (`Built`), no
+/// tree, resource node, building, site, workshop work tile or reservation
+/// (`Blocked`); walls, doors and bedrolls also not on a stockpile cell; a wall
+/// not where a person stands (`Person`). Items on the tile do not refuse it:
+/// a hauler carries them off first.
+pub fn check_space(
+    res: &SimResources,
+    people: &BTreeSet<Tile>,
+    kind: BlueprintKind,
+    tile: Tile,
+) -> Result<(), RejectReason> {
+    let grid = &res.tile_grid;
+    if tile.0 >= grid.width || tile.1 >= grid.height {
+        return Err(RejectReason::OutOfMap);
+    }
+    let i = grid.idx(tile.0, tile.1);
+    match grid.terrain_type[i] {
+        TerrainType::River => return Err(RejectReason::Water),
+        TerrainType::Mountain => return Err(RejectReason::Blocked),
+        TerrainType::Hill if !grid.is_dug(i) => return Err(RejectReason::Hill),
+        _ => {}
+    }
+    let walled = grid.wall_material[i].is_some();
+    let built = match kind {
+        BlueprintKind::PackedFloor => walled || grid.floor_material[i].is_some(),
+        BlueprintKind::Bedroll => walled || res.colony.beds.contains_key(&tile),
+        _ => walled || res.colony.beds.contains_key(&tile),
+    };
+    if built {
+        return Err(RejectReason::Built);
+    }
+    let work_tile = res
+        .colony
+        .workshops
+        .values()
+        .any(|shop| shop.work_tile() == tile)
+        || res.colony.site_work_tiles.values().any(|t| *t == tile);
+    let reserved = res.colony.reservations.keys().any(|k| k.tile() == tile);
+    if res.colony.trees.contains_key(&tile)
+        || res.colony.nodes.contains_key(&tile)
+        || under_building(res, tile)
+        || work_tile
+        || reserved
+        || (kind != BlueprintKind::PackedFloor && res.colony.zone_of_tile.contains_key(&tile))
+    {
+        return Err(RejectReason::Blocked);
+    }
+    if kind.is_wall() && people.contains(&tile) {
+        return Err(RejectReason::Person);
+    }
+    Ok(())
+}
+
+/// Every agent's tile.
+fn people_tiles(world: &World) -> BTreeSet<Tile> {
+    world
+        .query::<&Position>()
+        .iter()
+        .map(|(_, p)| (p.x, p.y))
+        .collect()
+}
+
+/// Place a 1×1 space site on every tile of `tiles` that passes
+/// [`check_space`] (M3; `NotYet` without the space rule). The count is the
+/// sites placed; with none, the first tile's reason.
+fn place_space(
+    world: &mut World,
+    res: &mut SimResources,
+    rule: &sim_core::rules::ColonyRule,
+    kind: BlueprintKind,
+    tiles: Vec<Tile>,
+) -> CommandResult {
+    if rule.space.is_none() || rule.economy.is_none() {
+        return CommandResult::rejected(RejectReason::NotYet);
+    }
+    let people = people_tiles(world);
+    let (_, needs, progress) = kind.plan(rule);
+    let mut placed = 0u32;
+    let mut first: Option<RejectReason> = None;
+    let mut seen: BTreeSet<Tile> = BTreeSet::new();
+    for tile in tiles {
+        if !seen.insert(tile) {
+            continue;
+        }
+        if let Err(reason) = check_space(res, &people, kind, tile) {
+            first.get_or_insert(reason);
+            continue;
+        }
+        res.colony.occupied.insert(tile, Occupant::Site(tile));
+        res.colony.space_sites.insert(tile, kind);
+        world.spawn((
+            ConstructionSite::new(
+                BuildingBlueprint::new(HUT_BLUEPRINT_ID, 1, 1, progress),
+                Position::new(tile.0, tile.1),
+            ),
+            needs,
+            ColonySite {
+                kind,
+                top_left: tile,
+                size: (1, 1),
+            },
+        ));
+        crate::runtime::nav::refresh(res, tile);
+        placed += 1;
+    }
+    if placed == 0 {
+        return CommandResult::rejected(first.unwrap_or(RejectReason::Nothing));
+    }
+    res.colony.touch(false);
+    CommandResult::ok(placed)
+}
+
+/// Mark `tiles` for digging (undug hill, not on the map edge) or for
+/// deconstruction (something built), skipping marked tiles (M3).
+fn designate_space(res: &mut SimResources, tiles: &[Tile], mark: Designation) -> CommandResult {
+    let mut count = 0usize;
+    let mut first: Option<RejectReason> = None;
+    for tile in tiles {
+        if res.colony.designations.contains_key(tile) {
+            continue;
+        }
+        let ok = match mark {
+            Designation::Dig => {
+                let edge = tile.0 == 0
+                    || tile.1 == 0
+                    || tile.0 + 1 >= res.tile_grid.width
+                    || tile.1 + 1 >= res.tile_grid.height;
+                if edge && terrain(res, *tile) == Some(TerrainType::Hill) {
+                    first.get_or_insert(RejectReason::Edge);
+                }
+                crate::runtime::jobs::space::diggable(res, *tile)
+            }
+            _ => crate::runtime::jobs::space::built_at(res, *tile).is_some(),
+        };
+        if ok {
+            res.colony.designations.insert(*tile, mark);
+            count += 1;
+        }
+    }
+    if count == 0 {
+        return CommandResult::rejected(first.unwrap_or(RejectReason::Nothing));
+    }
+    res.colony.touch(false);
+    CommandResult::ok(count as u32)
 }

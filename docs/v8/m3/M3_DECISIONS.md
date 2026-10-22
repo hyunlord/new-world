@@ -157,3 +157,30 @@ Raw data lives in `/Users/rexxa/work/m3-data/` (`$DATA`), outside the repository
   region is full), and a quarry batch drops at the quarrier's tile when the node's tile cannot hold items.
 - Probe resolvers: `stockpile_block` and `blueprint_spot` take only tiles reachable from the hearth (the M2-U
   stockpile of seed 1 lay across the river).
+
+## D11 — Built space (Part 2; ADR 0022)
+
+- Sites: `PlaceBlueprint` of a space kind, `PlaceLine` (Bresenham) and `PlaceRect` (`hollow` = border only) place one
+  1×1 site per tile that passes `commands::check_space`; refused tiles are skipped and the count is what was placed
+  (with none, the first tile's reason). Refusals: off the map, water, mountain, undug hill (`Hill`), something already
+  built that the kind replaces (`Built`), a tree, node, building, site, workshop work tile or reservation
+  (`Blocked`); walls, doors and bedrolls also not on a stockpile cell (floors may be); a wall not on a person
+  (`Person`; a door may be, it stays passable). New `RejectReason`s: `Person`, `Hill`, `Edge`, `Built`.
+- Items on a site's tile do not refuse it (the goal's haul-away): `JobKind::Clear { from, to }` (work type Build,
+  taken before deliveries) carries them to the nearest open stockpile cell, else the nearest free reachable tile
+  within 12; a space site is "ready" only with its tile clear. The 7.6 invariant allows a stack on a space site.
+- Building: a space site is worked by the job layer from beside it (a wall site is impassable from placement) or,
+  for door, floor and bedroll sites, on it; `JobExecuteSystem` advances the site's `ConstructionSite` one step per tick
+  and `jobs::space::complete_site` writes the tile (`wall_material` = the delivered log's or stone's material, `door`,
+  `floor_material = packed_earth`, a bed for a bedroll), consumes the materials and despawns the site. A V7 builder
+  working a door or floor site in place reaches the same function through `ConstructionSystem` (no building entry).
+- A bedroll needs 1 log (the goal's "Hide 1 or Log 1": hides have no source in the colony yet).
+- Deconstruct (`Designation::Deconstruct`, `JobKind::Deconstruct`, work type Build, half the build work): a bedroll
+  first, then a wall or door, then a packed floor; half the plan's materials (rounded down) come back on the tile in
+  the piece's material (log wall 1 log, stone wall 1 stone, door and bedroll none).
+- Dig (`Designation::Dig` on undug hill off the map edge, `JobKind::Dig`, `WorkType::Mine` code 6 placed after
+  quarrying in the tie-break order, `SkillKind::Mining` code 5): only frontier tiles are offered (the region filter
+  needs a passable neighbour), 150 work ticks scaled by Mining; the tile gets `dug`, `floor_material = granite` (M2 D5:
+  hills are granite) and 3 granite stone. `WorkPriorities` and `Skills` arrays grew (save format 3).
+- Every tile change calls `nav::refresh` and sets `colony.rooms_dirty`. A finished wall costs what its site cost, so
+  only placement bumps the nav version (test `a_walled_square_with_a_door_is_built_from_stockpiled_logs`).

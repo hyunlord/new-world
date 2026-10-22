@@ -142,7 +142,8 @@ pub fn check(world: &World, res: &SimResources) -> Result<(), String> {
         if stack.count == 0 || stack.count > max {
             return Err(format!("stack of {} at {tile:?} (max {max})", stack.count));
         }
-        if !can_hold_items(res, *tile) {
+        // M3: a stack may wait on a space site's tile until it is carried off.
+        if !can_hold_items(res, *tile) && !res.colony.space_sites.contains_key(tile) {
             return Err(format!(
                 "stack at {tile:?} on water, mountain or under a building"
             ));

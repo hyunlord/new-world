@@ -126,6 +126,9 @@ enum Search {
     Deadwood,
     Loose,
     OpenCell(ItemSpec),
+    ClearStack,
+    DigMark,
+    DeconMark,
 }
 
 /// Searches that found no candidate anywhere on the map this tick. Within one
@@ -141,6 +144,9 @@ struct Exhausted {
     quarry_node: Memo,
     deadwood: Memo,
     loose: Memo,
+    clear: Memo,
+    dig: Memo,
+    decon: Memo,
     stocked: [Memo; 7],
     any_stack: [Memo; 7],
     open_cell: BTreeMap<ItemSpec, Memo>,
@@ -155,6 +161,9 @@ impl Exhausted {
             Search::QuarryNode => &mut self.quarry_node,
             Search::Deadwood => &mut self.deadwood,
             Search::Loose => &mut self.loose,
+            Search::ClearStack => &mut self.clear,
+            Search::DigMark => &mut self.dig,
+            Search::DeconMark => &mut self.decon,
             Search::Stocked(kind) => &mut self.stocked[kind.code() as usize],
             Search::AnyStack(kind) => &mut self.any_stack[kind.code() as usize],
             Search::OpenCell(spec) => self.open_cell.entry(spec).or_default(),
@@ -357,6 +366,29 @@ fn pick_work(
             None
         }
         WorkType::Build => {
+            // M3: first carry the items off a space site's tile (it cannot be
+            // built while they lie there; ADR 0022's haul-away).
+            let on_space_site = |t: (u32, u32)| colony.space_sites.contains_key(&t);
+            if let Some((from, ())) = search(
+                &index.ground,
+                pos,
+                radius,
+                ex.memo(Search::ClearStack),
+                |t, _| on_space_site(t) && stack_of(t, None, None),
+            ) {
+                if let Some(stack) = colony.ground_items.get(&from) {
+                    let spec = stack.spec();
+                    if let Some(to) = clear_destination(res, ctx, from, spec) {
+                        let amount = rule
+                            .carry(spec.kind)
+                            .min(stack.count)
+                            .min(room_on(res, to, spec));
+                        if amount > 0 {
+                            return Some((JobKind::Clear { from, to }, amount, spec.kind));
+                        }
+                    }
+                }
+            }
             // First half: deliver a material to the nearest site still short of one.
             let missing = |centre: &(u32, u32), kind: ItemKind| {
                 ctx.sites.get(centre).and_then(|view| {
@@ -406,22 +438,53 @@ fn pick_work(
                     }
                 }
             }
-            // Second half: build a site whose materials are all there.
+            // Second half: build a site whose materials are all there (M3: a
+            // space site also needs its tile clear of items).
             let ready = |centre: (u32, u32)| {
                 ctx.sites.get(&centre).is_some_and(|view| {
                     view.needs.complete()
                         && view.progress < view.required
                         && !colony.reservations.contains_key(&ReserveKey::Site(centre))
+                        && !(on_space_site(centre) && colony.ground_items.contains_key(&centre))
                 })
             };
-            search(
+            if let Some((site, ())) = search(
                 ctx.site_index,
                 pos,
                 radius,
                 ex.memo(Search::ReadySite),
                 |c, _| reach(c) && ready(c),
+            ) {
+                return Some((JobKind::Build { site }, 0, ItemKind::Log));
+            }
+            // M3: take apart what is marked for deconstruction.
+            let open = |t: (u32, u32)| {
+                colony.designations.get(&t) == Some(&sim_core::colony::Designation::Deconstruct)
+                    && !colony.reservations.contains_key(&ReserveKey::Work(t))
+                    && super::space::built_at(res, t).is_some()
+                    && reach(t)
+            };
+            search(
+                &index.deconstruct,
+                pos,
+                radius,
+                ex.memo(Search::DeconMark),
+                |t, _| open(t),
             )
-            .map(|(site, ())| (JobKind::Build { site }, 0, ItemKind::Log))
+            .map(|(tile, ())| (JobKind::Deconstruct { tile }, 0, ItemKind::Log))
+        }
+        WorkType::Mine => {
+            // M3: the nearest marked hill tile someone can stand beside.
+            let open = |t: (u32, u32)| {
+                colony.designations.get(&t) == Some(&sim_core::colony::Designation::Dig)
+                    && !colony.reservations.contains_key(&ReserveKey::Work(t))
+                    && super::space::diggable(res, t)
+                    && reach(t)
+            };
+            search(&index.dig, pos, radius, ex.memo(Search::DigMark), |t, _| {
+                open(t)
+            })
+            .map(|(tile, ())| (JobKind::Dig { tile }, 0, ItemKind::Stone))
         }
         WorkType::Quarry => {
             let quarriable = |tile: (u32, u32)| {
@@ -615,7 +678,50 @@ pub fn skill_for(skills: &Skills, work: WorkType) -> u8 {
         WorkType::Chop => skills.level(SkillKind::Chop),
         WorkType::Split => skills.level(SkillKind::Woodwork),
         WorkType::Haul => 0,
+        WorkType::Mine => skills.level(SkillKind::Mining),
     }
+}
+
+/// Where the items cleared off a space site go (M3): the nearest open
+/// stockpile cell that takes them, else the nearest tile within 12 that can
+/// hold them, is not a site and is not reserved; both reachable.
+fn clear_destination(
+    res: &SimResources,
+    ctx: &Ctx,
+    from: (u32, u32),
+    spec: ItemSpec,
+) -> Option<(u32, u32)> {
+    let colony = &res.colony;
+    let free = |c: (u32, u32)| {
+        room_on(res, c, spec) > 0
+            && !colony.reservations.contains_key(&ReserveKey::Cell(c))
+            && res.nav.reaches(ctx.region, c)
+    };
+    if let Some((cell, ())) = res
+        .spatial
+        .colony
+        .cells
+        .nearest_where(from, u32::MAX, |c, _| free(c))
+    {
+        return Some(cell);
+    }
+    let (w, h) = (res.tile_grid.width, res.tile_grid.height);
+    for r in 1..=12u32 {
+        let (cx, cy) = (i64::from(from.0), i64::from(from.1));
+        let r = i64::from(r);
+        for y in (cy - r)..=(cy + r) {
+            for x in (cx - r)..=(cx + r) {
+                if (x - cx).abs().max((y - cy).abs()) != r || x < 0 || y < 0 {
+                    continue;
+                }
+                let t = (x as u32, y as u32);
+                if t.0 < w && t.1 < h && free(t) {
+                    return Some(t);
+                }
+            }
+        }
+    }
+    None
 }
 
 /// The first job for an agent at `pos` in work-type order, or `None`.

@@ -85,7 +85,7 @@ pub struct Skill {
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Skills {
     /// One entry per skill.
-    pub entries: [Skill; 5],
+    pub entries: [Skill; 6],
 }
 
 impl Skills {
@@ -168,19 +168,21 @@ pub const LOWEST_PRIORITY: u8 = 4;
 
 /// A person's work priorities (an ECS component, M2 goal 3.6): 0 = never,
 /// 1 = highest … 4 = lowest, indexed by `WorkType::code`. Without the
-/// component every type is 3, except quarrying for elders (0).
+/// component every type is 3, except quarrying and (M3) mining for elders (0).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub struct WorkPriorities {
     /// One level per work type.
-    pub levels: [u8; 6],
+    pub levels: [u8; 7],
 }
 
 impl WorkPriorities {
     /// The defaults for an adult (`elder` = false) or an elder.
     pub const fn defaults(elder: bool) -> Self {
-        let mut levels = [DEFAULT_PRIORITY; 6];
+        let mut levels = [DEFAULT_PRIORITY; 7];
         if elder {
             levels[WorkType::Quarry.code() as usize] = 0;
+            // M3: digging is quarrying's heavy work; elders leave it too.
+            levels[WorkType::Mine.code() as usize] = 0;
         }
         Self { levels }
     }
@@ -307,12 +309,12 @@ mod tests {
                 WorkType::Craft,
                 WorkType::Build,
                 WorkType::Quarry,
+                WorkType::Mine,
                 WorkType::Split
             ]
         );
-        assert!(!WorkPriorities::defaults(true)
-            .order()
-            .contains(&WorkType::Quarry));
+        let elder = WorkPriorities::defaults(true).order();
+        assert!(!elder.contains(&WorkType::Quarry) && !elder.contains(&WorkType::Mine));
         let mut s = Skills::default();
         assert_eq!(s.train(SkillKind::Knap, 100), 2);
         assert_eq!(s.level(SkillKind::Knap), 2);

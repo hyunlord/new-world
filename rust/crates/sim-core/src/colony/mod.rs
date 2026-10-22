@@ -78,6 +78,15 @@ pub struct ColonyTallies {
     /// Crafted items' `(count, quality sum)` by `(agent, RecipeKind::code)` (M2; measurement only).
     #[serde(default)]
     pub craft_quality: BTreeMap<(AgentId, u8), (u64, u64)>,
+    /// Space sites finished (walls, doors, floors, bedrolls; M3).
+    #[serde(default)]
+    pub space_built: u64,
+    /// Built pieces taken apart (M3).
+    #[serde(default)]
+    pub space_removed: u64,
+    /// Hill tiles dug out (M3).
+    #[serde(default)]
+    pub tiles_dug: u64,
 }
 
 impl ColonyTallies {
@@ -115,6 +124,33 @@ pub struct ColonyState {
     /// bedroll) by tile, while it is a blueprint; read by the nav map.
     #[serde(default)]
     pub space_sites: BTreeMap<(u32, u32), BlueprintKind>,
+    /// M3 (ADR 0023): every finished bedroll by tile, with its material (a bed).
+    #[serde(default)]
+    pub beds: BTreeMap<(u32, u32), crate::material::MaterialId>,
+    /// M3 (ADR 0023): the rooms by id (`RoomSystem`), each tile's room, the
+    /// next fresh id, the player's role overrides, the rooms announced in the
+    /// chronicle, and whether walls, doors or digging changed since the last
+    /// detection.
+    #[serde(default)]
+    pub rooms: BTreeMap<crate::rooms::RoomId, crate::rooms::Room>,
+    /// The room of each room tile.
+    #[serde(default)]
+    pub room_of_tile: BTreeMap<(u32, u32), crate::rooms::RoomId>,
+    /// Next fresh room id (from 1).
+    #[serde(default)]
+    pub next_room_id: crate::rooms::RoomId,
+    /// Roles the player set (`SetRoomRole`).
+    #[serde(default)]
+    pub room_overrides: BTreeMap<crate::rooms::RoomId, crate::rooms::RoomRole>,
+    /// Rooms already logged as formed.
+    #[serde(default)]
+    pub rooms_announced: std::collections::BTreeSet<crate::rooms::RoomId>,
+    /// A wall, door or dug tile changed since the last room detection.
+    #[serde(default)]
+    pub rooms_dirty: bool,
+    /// Bumped whenever the rooms or their roles change (renderers).
+    #[serde(default)]
+    pub rooms_version: u64,
     /// M3 (ADR 0021): targets a person found unreachable, by `(person, tile)`,
     /// with the tick until which the job assignment skips them for that person.
     #[serde(default)]

@@ -34,16 +34,19 @@ pub enum SkillKind {
     Quarry,
     /// Building.
     Build,
+    /// Digging into hills (M3).
+    Mining,
 }
 
 impl SkillKind {
     /// Every skill, in code order.
-    pub const ALL: [Self; 5] = [
+    pub const ALL: [Self; 6] = [
         Self::Knap,
         Self::Woodwork,
         Self::Chop,
         Self::Quarry,
         Self::Build,
+        Self::Mining,
     ];
 
     /// Stable code / array index (0 = knap).
@@ -54,6 +57,7 @@ impl SkillKind {
             Self::Chop => 2,
             Self::Quarry => 3,
             Self::Build => 4,
+            Self::Mining => 5,
         }
     }
 
@@ -65,6 +69,7 @@ impl SkillKind {
             Self::Chop => "chop",
             Self::Quarry => "quarry",
             Self::Build => "build",
+            Self::Mining => "mining",
         }
     }
 

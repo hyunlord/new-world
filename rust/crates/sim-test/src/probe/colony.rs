@@ -505,6 +505,49 @@ pub fn resolve(
             let (x0, y0, x1, y1) = rect(spec)?;
             vec![Command::DesignateChop { x0, y0, x1, y1 }]
         }
+        ("designate_dig", None) => {
+            let (x0, y0, x1, y1) = rect(spec)?;
+            vec![Command::DesignateDig { x0, y0, x1, y1 }]
+        }
+        ("designate_deconstruct", None) => {
+            let (x0, y0, x1, y1) = rect(spec)?;
+            vec![Command::DesignateDeconstruct { x0, y0, x1, y1 }]
+        }
+        ("place_line", None) | ("place_rect", None) => {
+            let kind = BlueprintKind::from_name(spec["kind"].as_str().unwrap_or(""))
+                .ok_or("place_line/place_rect needs a blueprint kind")?;
+            let (x0, y0, x1, y1) = rect(spec)?;
+            if name == "place_line" {
+                vec![Command::PlaceLine {
+                    kind,
+                    x0,
+                    y0,
+                    x1,
+                    y1,
+                }]
+            } else {
+                vec![Command::PlaceRect {
+                    kind,
+                    x0,
+                    y0,
+                    x1,
+                    y1,
+                    hollow: spec["hollow"].as_bool().unwrap_or(true),
+                }]
+            }
+        }
+        ("set_room_role", None) => {
+            let role = match spec["role"].as_str().unwrap_or("auto") {
+                "auto" => None,
+                other => {
+                    Some(sim_core::rooms::RoomRole::from_name(other).ok_or("unknown room role")?)
+                }
+            };
+            vec![Command::SetRoomRole {
+                room: field(spec, "room")?,
+                role,
+            }]
+        }
         ("cancel_area", None) => {
             let (x0, y0, x1, y1) = rect(spec)?;
             vec![Command::CancelArea { x0, y0, x1, y1 }]
@@ -588,6 +631,8 @@ pub fn command_json(tick: u64, cmd: &Command) -> Value {
     let mut v = match cmd {
         Command::DesignateChop { x0, y0, x1, y1 }
         | Command::DesignateQuarry { x0, y0, x1, y1 }
+        | Command::DesignateDig { x0, y0, x1, y1 }
+        | Command::DesignateDeconstruct { x0, y0, x1, y1 }
         | Command::CancelArea { x0, y0, x1, y1 }
         | Command::AddStockpile { x0, y0, x1, y1 }
         | Command::RemoveZoneArea { x0, y0, x1, y1 } => {
@@ -623,6 +668,26 @@ pub fn command_json(tick: u64, cmd: &Command) -> Value {
         } => json!({"workshop": workshop, "bill": bill, "suspended": suspended}),
         Command::SetWorkPriority { agent, work, level } => {
             json!({"agent": agent, "work": work.name(), "level": level})
+        }
+        Command::PlaceLine {
+            kind,
+            x0,
+            y0,
+            x1,
+            y1,
+        } => json!({"kind": kind.name(), "x0": x0, "y0": y0, "x1": x1, "y1": y1}),
+        Command::PlaceRect {
+            kind,
+            x0,
+            y0,
+            x1,
+            y1,
+            hollow,
+        } => {
+            json!({"kind": kind.name(), "x0": x0, "y0": y0, "x1": x1, "y1": y1, "hollow": hollow})
+        }
+        Command::SetRoomRole { room, role } => {
+            json!({"room": room, "role": role.map_or("auto", |r| r.name())})
         }
     };
     v["tick"] = json!(tick);

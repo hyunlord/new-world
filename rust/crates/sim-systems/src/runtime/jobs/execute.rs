@@ -79,10 +79,11 @@ fn set_state(world: &mut World, entity: Entity, next: AgentState) {
     }
 }
 
-/// The state a worker in `stage` of `kind` must be in.
-fn expected_state(kind: JobKind, stage: JobStage) -> AgentState {
+/// The state a worker in `stage` of `kind` must be in (`space`: a Build of an
+/// M3 space site, which the job layer works itself).
+fn expected_state(kind: JobKind, stage: JobStage, space: bool) -> AgentState {
     match (kind, stage) {
-        (JobKind::Build { .. }, JobStage::Working { .. }) => BUILD,
+        (JobKind::Build { .. }, JobStage::Working { .. }) if !space => BUILD,
         (_, JobStage::Working { .. }) => WORK_JOB,
         _ => SEEK_JOB,
     }
@@ -135,6 +136,17 @@ fn target_exists(world: &World, res: &SimResources, job: &Job) -> bool {
             .workshops
             .get(&workshop)
             .is_some_and(|shop| shop.bill(bill).is_some()),
+        (JobKind::Dig { tile }, _) => {
+            colony.designations.get(&tile) == Some(&Designation::Dig)
+                && super::space::diggable(res, tile)
+        }
+        (JobKind::Deconstruct { tile }, _) => {
+            colony.designations.get(&tile) == Some(&Designation::Deconstruct)
+                && super::space::built_at(res, tile).is_some()
+        }
+        // Clearing a site: the stack is there; the drop always exists (spill).
+        (JobKind::Clear { from, .. }, JobStage::ToSource) => stack(from),
+        (JobKind::Clear { .. }, _) => true,
     }
 }
 
@@ -149,7 +161,9 @@ fn step(
 ) {
     let tick = res.current_tick;
     let state = state_of(world, entity);
-    if state != expected_state(job.kind, job.stage) {
+    let space =
+        matches!(job.kind, JobKind::Build { site } if res.colony.space_sites.contains_key(&site));
+    if state != expected_state(job.kind, job.stage, space) {
         let built =
             matches!(job.kind, JobKind::Build { site } if site_needs(world, site).is_none());
         if built && matches!(job.stage, JobStage::Working { .. }) {
@@ -197,7 +211,9 @@ fn step(
             let reached = match job.kind {
                 JobKind::Chop { tree: near }
                 | JobKind::Quarry { node: near }
-                | JobKind::Gather { spot: near, .. } => chebyshev(pos, near) <= 1,
+                | JobKind::Gather { spot: near, .. }
+                | JobKind::Dig { tile: near }
+                | JobKind::Deconstruct { tile: near } => chebyshev(pos, near) <= 1,
                 _ => res.nav.arrived(pos, source),
             };
             if !reached {
@@ -220,7 +236,20 @@ fn step(
                 }
                 JobKind::Build { .. } => {
                     job.stage = JobStage::Working { ticks_left: 0 };
-                    set_state(world, entity, BUILD);
+                    set_state(world, entity, if space { WORK_JOB } else { BUILD });
+                }
+                JobKind::Dig { .. } => {
+                    let base = rule.space.map_or(150, |s| s.dig_ticks);
+                    let ticks = work_ticks(world, rule, entity, base, SkillKind::Mining);
+                    job.amount = ticks.min(u32::from(u16::MAX)) as u16;
+                    job.stage = JobStage::Working { ticks_left: ticks };
+                    set_state(world, entity, WORK_JOB);
+                }
+                JobKind::Deconstruct { tile } => {
+                    let ticks = super::space::built_at(res, tile)
+                        .map_or(1, |b| (b.kind().plan(rule).2 / 2).max(1));
+                    job.stage = JobStage::Working { ticks_left: ticks };
+                    set_state(world, entity, WORK_JOB);
                 }
                 JobKind::Gather { .. } => {
                     job.stage = JobStage::Working {
@@ -239,7 +268,8 @@ fn step(
                 }
                 JobKind::Haul { from, .. }
                 | JobKind::Deliver { from, .. }
-                | JobKind::Supply { from, .. } => {
+                | JobKind::Supply { from, .. }
+                | JobKind::Clear { from, .. } => {
                     let (taken, spec) = take_items(res, from, job.item, job.amount);
                     res.colony.reservations.remove(&ReserveKey::Stack(from));
                     if taken == 0 {
@@ -263,10 +293,14 @@ fn step(
             }
         }
         JobStage::Working { ticks_left } => {
-            if matches!(job.kind, JobKind::Build { .. }) {
+            if let JobKind::Build { site } = job.kind {
                 // A builder: ConstructionSystem does the work; it trains Build (M2).
                 if rule.economy.is_some() {
                     craft::train(world, entity, SkillKind::Build, 1);
+                }
+                // M3: a space site is worked from beside it, by the job layer.
+                if space {
+                    build_space(world, res, entity, site);
                 }
                 return;
             }
@@ -296,6 +330,13 @@ fn step(
                         return;
                     }
                 }
+                JobKind::Dig { tile } => {
+                    super::space::dig(res, tile);
+                    craft::train(world, entity, SkillKind::Mining, u32::from(job.amount));
+                }
+                JobKind::Deconstruct { tile } => {
+                    super::space::deconstruct(res, tile);
+                }
                 _ => {}
             }
             finish(world, res, entity);
@@ -308,6 +349,22 @@ fn step(
                 walk(world, res, id, entity, &mut job, pos, dest);
             }
         }
+    }
+}
+
+/// One tick of work on the space site at `site` (M3): its progress grows by
+/// one; at the end the tile is built (`space::complete_site`) and the job ends.
+fn build_space(world: &mut World, res: &mut SimResources, entity: Entity, site: (u32, u32)) {
+    let Some((site_entity, _)) = site_needs(world, site) else {
+        return;
+    };
+    let done = world
+        .get::<&mut sim_core::components::ConstructionSite>(site_entity)
+        .map(|mut c| c.advance())
+        .unwrap_or(false);
+    if done {
+        super::space::complete_site(world, res, site_entity);
+        finish(world, res, entity);
     }
 }
 

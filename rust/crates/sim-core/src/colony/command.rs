@@ -131,6 +131,65 @@ pub enum Command {
         /// The level 0–4.
         level: u8,
     },
+    /// Place one 1×1 space blueprint (wall, door, floor, bedroll) on every
+    /// valid tile of the Bresenham line from `(x0, y0)` to `(x1, y1)` (M3).
+    PlaceLine {
+        /// The blueprint (a space kind).
+        kind: BlueprintKind,
+        /// Start x.
+        x0: u32,
+        /// Start y.
+        y0: u32,
+        /// End x.
+        x1: u32,
+        /// End y.
+        y1: u32,
+    },
+    /// Place one 1×1 space blueprint on every valid tile of the rectangle, or
+    /// only of its border when `hollow` (M3).
+    PlaceRect {
+        /// The blueprint (a space kind).
+        kind: BlueprintKind,
+        /// Corner x.
+        x0: u32,
+        /// Corner y.
+        y0: u32,
+        /// Opposite corner x.
+        x1: u32,
+        /// Opposite corner y.
+        y1: u32,
+        /// Only the border.
+        hollow: bool,
+    },
+    /// Mark every undug hill tile of the rectangle (not on the map edge) for digging (M3).
+    DesignateDig {
+        /// Corner x.
+        x0: u32,
+        /// Corner y.
+        y0: u32,
+        /// Opposite corner x.
+        x1: u32,
+        /// Opposite corner y.
+        y1: u32,
+    },
+    /// Mark every wall, door, packed floor and bedroll of the rectangle for deconstruction (M3).
+    DesignateDeconstruct {
+        /// Corner x.
+        x0: u32,
+        /// Corner y.
+        y0: u32,
+        /// Opposite corner x.
+        x1: u32,
+        /// Opposite corner y.
+        y1: u32,
+    },
+    /// Give a room a role, or (`None`) let the colony decide again (M3, ADR 0023).
+    SetRoomRole {
+        /// The room.
+        room: u32,
+        /// The role; `None` = automatic.
+        role: Option<crate::rooms::RoomRole>,
+    },
     /// Draft or release a person (reserved for M5; rejected in M1).
     SetDrafted {
         /// The person.
@@ -158,6 +217,11 @@ impl Command {
             Self::SetBillSuspended { .. } => "set_bill_suspended",
             Self::SetWorkPriority { .. } => "set_work_priority",
             Self::SetDrafted { .. } => "set_drafted",
+            Self::PlaceLine { .. } => "place_line",
+            Self::PlaceRect { .. } => "place_rect",
+            Self::DesignateDig { .. } => "designate_dig",
+            Self::DesignateDeconstruct { .. } => "designate_deconstruct",
+            Self::SetRoomRole { .. } => "set_room_role",
         }
     }
 }
@@ -181,6 +245,14 @@ pub enum RejectReason {
     WrongWorkshop,
     /// No such workshop, bill or person (M2).
     Unknown,
+    /// A person stands on the tile (M3: a wall cannot be placed on them).
+    Person,
+    /// Undug hill: it must be dug first (M3).
+    Hill,
+    /// The map edge (M3: digging never opens it).
+    Edge,
+    /// Something is already built there (M3).
+    Built,
 }
 
 impl RejectReason {
@@ -195,6 +267,10 @@ impl RejectReason {
             Self::NotYet => "not_yet",
             Self::WrongWorkshop => "wrong_workshop",
             Self::Unknown => "unknown",
+            Self::Person => "person",
+            Self::Hill => "hill",
+            Self::Edge => "edge",
+            Self::Built => "built",
         }
     }
 }

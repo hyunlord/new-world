@@ -183,7 +183,7 @@ pub struct ColonyOverlay {
     pub version: u64,
     /// Marked tiles (chop and quarry marks).
     pub designations: Vec<(u32, u32)>,
-    /// The mark of each `designations` entry (0 chop, 1 quarry; M2).
+    /// The mark of each `designations` entry (0 chop, 1 quarry; M2; 2 dig, 3 deconstruct; M3).
     pub designation_kinds: Vec<u8>,
     /// Resource nodes: tile, `NodeKind::code`, items left (M2).
     pub nodes: Vec<((u32, u32), u8, u8)>,
@@ -217,14 +217,7 @@ pub fn collect_colony_overlay(world: &hecs::World, resources: &SimResources) -> 
     ColonyOverlay {
         version: colony.overlay_version,
         designations: colony.designations.keys().copied().collect(),
-        designation_kinds: colony
-            .designations
-            .values()
-            .map(|d| match d {
-                sim_core::colony::Designation::Chop => 0,
-                sim_core::colony::Designation::Quarry => 1,
-            })
-            .collect(),
+        designation_kinds: colony.designations.values().map(|d| d.code()).collect(),
         nodes: colony
             .nodes
             .iter()

@@ -85,11 +85,14 @@ pub enum ChronicleKind {
     /// first three builders by AgentId (those working at completion); value =
     /// how many built at completion; cause 0.
     HutBuilt = 22,
+    /// M3: no subject; settlement = the room's nearest settlement; cause = the
+    /// room's role code (`RoomRole::code`); value = the room id. Once per room.
+    RoomFormed = 23,
 }
 
 impl ChronicleKind {
     /// Every kind in discriminant order.
-    pub const ALL: [ChronicleKind; 23] = [
+    pub const ALL: [ChronicleKind; 24] = [
         Self::Born,
         Self::FoundingMember,
         Self::Paired,
@@ -113,6 +116,7 @@ impl ChronicleKind {
         Self::VillagesEstranged,
         Self::VillagesReconciled,
         Self::HutBuilt,
+        Self::RoomFormed,
     ];
 
     /// Stable numeric discriminant.
@@ -146,6 +150,7 @@ impl ChronicleKind {
             Self::VillagesEstranged => "villages_estranged",
             Self::VillagesReconciled => "villages_reconciled",
             Self::HutBuilt => "hut_built",
+            Self::RoomFormed => "room_formed",
         }
     }
 }
@@ -477,10 +482,12 @@ mod tests {
         assert_eq!(ChronicleKind::VillagesReconciled.as_u8(), 21);
         // M1: kind 22 appended; 0–21 unchanged.
         assert_eq!(ChronicleKind::HutBuilt.as_u8(), 22);
-        assert_eq!(ChronicleKind::ALL.len(), 23);
+        // M3: kind 23 appended; 0–22 unchanged.
+        assert_eq!(ChronicleKind::RoomFormed.as_u8(), 23);
+        assert_eq!(ChronicleKind::ALL.len(), 24);
         let names: std::collections::BTreeSet<&str> =
             ChronicleKind::ALL.iter().map(|k| k.as_str()).collect();
-        assert_eq!(names.len(), 23);
+        assert_eq!(names.len(), 24);
         assert_eq!(DepartCause::TopUp.as_u8(), 4);
     }
 

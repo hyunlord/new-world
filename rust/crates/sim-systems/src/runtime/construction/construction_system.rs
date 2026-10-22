@@ -70,6 +70,8 @@
 //! fallback. On completion a hut is registered through [`register_dwelling`],
 //! the path shelters use (kind, sleep tile, owner), its delivered logs move
 //! to `colony.item_ledger.consumed` and its footprint becomes a hut footprint.
+//! M3: a space site (wall, door, floor, bedroll) finishes through
+//! `jobs::space::complete_site` with no building entry.
 
 use std::collections::HashMap;
 
@@ -251,6 +253,30 @@ impl RuntimeSystem for ConstructionSystem {
             completed.sort_by_key(|(_, (_, position))| *position);
         }
         for (site_entity, (blueprint, position)) in completed {
+            // M3: a space site (wall, door, floor, bedroll) worked in place by a
+            // V7 builder finishes through the job layer's completion; no
+            // building, no BuildingPlaced (ADR 0022).
+            let space = world
+                .get::<&ColonySite>(site_entity)
+                .is_ok_and(|site| site.kind.is_space());
+            if space {
+                let mut q = world.query::<(&Position, &mut AgentState)>();
+                for (_e, (pos, state)) in q.iter() {
+                    if (pos.x, pos.y) == position
+                        && matches!(
+                            *state,
+                            AgentState::Consuming {
+                                target: TargetKind::ConstructionSite
+                            }
+                        )
+                    {
+                        *state = AgentState::Idle;
+                    }
+                }
+                drop(q);
+                crate::runtime::jobs::space::complete_site(world, resources, site_entity);
+                continue;
+            }
             if let Some(rule) = resources.rules.society.shelter_planning {
                 if let Some(sid) = resources.site_owner.remove(&position) {
                     let owner =

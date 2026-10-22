@@ -22,20 +22,25 @@ pub enum WorkType {
     Split,
     /// Carry loose items into a stockpile.
     Haul,
+    /// Dig into hills (M3, ADR 0022).
+    Mine,
 }
 
 impl WorkType {
-    /// Every work type in tie-break order.
-    pub const ALL: [Self; 6] = [
+    /// Every work type in tie-break order (M3: mining after quarrying; its
+    /// code, 6, comes last so M2's codes and saved priorities keep their places).
+    pub const ALL: [Self; 7] = [
         Self::Craft,
         Self::Build,
         Self::Quarry,
+        Self::Mine,
         Self::Chop,
         Self::Split,
         Self::Haul,
     ];
 
-    /// Stable code for the bridge (the tie-break order, 0 = craft).
+    /// Stable code for the bridge and the index into `WorkPriorities::levels`
+    /// (0 craft, 1 build, 2 quarry, 3 chop, 4 split, 5 haul, 6 mine).
     pub const fn code(self) -> u8 {
         match self {
             Self::Craft => 0,
@@ -44,6 +49,7 @@ impl WorkType {
             Self::Chop => 3,
             Self::Split => 4,
             Self::Haul => 5,
+            Self::Mine => 6,
         }
     }
 
@@ -56,6 +62,7 @@ impl WorkType {
             Self::Chop => "chop",
             Self::Split => "split",
             Self::Haul => "haul",
+            Self::Mine => "mine",
         }
     }
 
@@ -121,6 +128,24 @@ pub enum JobKind {
         /// Where the firewood goes.
         to: (u32, u32),
     },
+    /// Dig the hill tile `tile` out (M3).
+    Dig {
+        /// The hill tile.
+        tile: (u32, u32),
+    },
+    /// Take the built piece on `tile` apart (M3).
+    Deconstruct {
+        /// The tile.
+        tile: (u32, u32),
+    },
+    /// Carry the items off the space site at `from` to `to` (a stockpile cell,
+    /// or the nearest free tile; M3 "haul-away").
+    Clear {
+        /// The site tile holding the stack.
+        from: (u32, u32),
+        /// Where they go.
+        to: (u32, u32),
+    },
     /// Make one item of `bill` at `workshop`, working at its work tile `at` (M2).
     Craft {
         /// The workshop.
@@ -144,6 +169,9 @@ impl JobKind {
             Self::Supply { .. } => 6,
             Self::Craft { .. } => 7,
             Self::Gather { .. } => 8,
+            Self::Dig { .. } => 9,
+            Self::Deconstruct { .. } => 10,
+            Self::Clear { .. } => 11,
         }
     }
 
@@ -158,6 +186,9 @@ impl JobKind {
             Self::Supply { .. } => "supply",
             Self::Craft { .. } => "craft",
             Self::Gather { .. } => "gather",
+            Self::Dig { .. } => "dig",
+            Self::Deconstruct { .. } => "deconstruct",
+            Self::Clear { .. } => "clear",
         }
     }
 
@@ -170,6 +201,8 @@ impl JobKind {
             Self::Quarry { .. } => WorkType::Quarry,
             Self::Supply { .. } | Self::Craft { .. } => WorkType::Craft,
             Self::Gather { .. } => WorkType::Split,
+            Self::Dig { .. } => WorkType::Mine,
+            Self::Deconstruct { .. } | Self::Clear { .. } => WorkType::Build,
         }
     }
 
@@ -183,17 +216,25 @@ impl JobKind {
             Self::Supply { from, .. } => from,
             Self::Craft { at, .. } => at,
             Self::Gather { spot, .. } => spot,
+            Self::Dig { tile } | Self::Deconstruct { tile } => tile,
+            Self::Clear { from, .. } => from,
         }
     }
 
     /// The tile the load goes to (Haul and Deliver).
     pub const fn dest(self) -> Option<(u32, u32)> {
         match self {
-            Self::Haul { to, .. } | Self::Supply { to, .. } | Self::Gather { to, .. } => Some(to),
+            Self::Haul { to, .. }
+            | Self::Supply { to, .. }
+            | Self::Gather { to, .. }
+            | Self::Clear { to, .. } => Some(to),
             Self::Deliver { site, .. } => Some(site),
-            Self::Chop { .. } | Self::Build { .. } | Self::Quarry { .. } | Self::Craft { .. } => {
-                None
-            }
+            Self::Chop { .. }
+            | Self::Build { .. }
+            | Self::Quarry { .. }
+            | Self::Craft { .. }
+            | Self::Dig { .. }
+            | Self::Deconstruct { .. } => None,
         }
     }
 }
@@ -262,6 +303,13 @@ impl Job {
                 vec![ReserveKey::Wood(spot)]
             }
             (JobKind::Gather { .. }, JobStage::ToDest) => Vec::new(),
+            (JobKind::Dig { tile } | JobKind::Deconstruct { tile }, _) => {
+                vec![ReserveKey::Work(tile)]
+            }
+            (JobKind::Clear { from, to }, JobStage::ToSource) => {
+                vec![ReserveKey::Stack(from), ReserveKey::Cell(to)]
+            }
+            (JobKind::Clear { to, .. }, _) => vec![ReserveKey::Cell(to)],
         }
     }
 }

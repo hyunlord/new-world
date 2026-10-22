@@ -57,6 +57,22 @@ pub enum Designation {
     Chop,
     /// Quarry the resource node on this tile (M2).
     Quarry,
+    /// Dig this hill tile out (M3, ADR 0022).
+    Dig,
+    /// Take the wall, door, floor or bedroll on this tile apart (M3).
+    Deconstruct,
+}
+
+impl Designation {
+    /// Stable code for the bridge (0 chop, 1 quarry, 2 dig, 3 deconstruct).
+    pub const fn code(self) -> u8 {
+        match self {
+            Self::Chop => 0,
+            Self::Quarry => 1,
+            Self::Dig => 2,
+            Self::Deconstruct => 3,
+        }
+    }
 }
 
 /// Identifier of a zone, from `ColonyState::next_zone_id`.
@@ -391,6 +407,8 @@ pub enum ReserveKey {
     Bench((u32, u32)),
     /// A deadwood spot being gathered, by tile (M2).
     Wood((u32, u32)),
+    /// A tile being dug or taken apart, by tile (M3).
+    Work((u32, u32)),
 }
 
 impl ReserveKey {
@@ -403,7 +421,8 @@ impl ReserveKey {
             | Self::Site(t)
             | Self::Node(t)
             | Self::Bench(t)
-            | Self::Wood(t) => t,
+            | Self::Wood(t)
+            | Self::Work(t) => t,
         }
     }
 }

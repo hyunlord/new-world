@@ -84,7 +84,8 @@ fn priorities_and_one_persons_economy() {
     );
     for r in &rows {
         let quarry = if r.elder { 0 } else { 3 };
-        assert_eq!(r.levels, [3, 3, quarry, 3, 3, 3]);
+        // M3: mining (code 6) follows quarrying for elders.
+        assert_eq!(r.levels, [3, 3, quarry, 3, 3, 3, quarry]);
     }
     let first = rows[0].agent;
     let set = EconomyCommand::SetWorkPriority {

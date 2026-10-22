@@ -21,6 +21,7 @@ pub mod memory;
 pub mod nav;
 pub mod needs;
 pub mod resource_regen;
+pub mod rooms;
 pub mod settlement;
 pub mod social;
 pub mod survival;
