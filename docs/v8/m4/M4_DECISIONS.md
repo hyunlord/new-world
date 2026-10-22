@@ -330,8 +330,13 @@ Raw data lives in `/Users/rexxa/work/m4-data/` (`$DATA`), outside the repository
      low outlier).
   2. Seeding called `Knowledge::set` per node, which re-boxed each founder's slice for every entry (2,000 founders ×
      ~8 reallocations left the small-allocation zones fragmented). Seeding now fills one flat founder × node table and
-     boxes each founder's entries once (`Knowledge::from_entries`): 2,130 B against M3's 2,057 in the same run
-     (+73 B, ×1.035; medians of 3, steady: n2000 12,096–12,112 KiB).
+     boxes each founder's entries once (`Knowledge::from_entries`).
+  How much each saved is within the metric's noise: RSS per agent is (n2000 − n200 RSS after build) / 1,800, and the
+  same binary's n2000 RSS varies by up to 1 MB between runs (bimodal 12.06 / 12.45 MB for the final build; macOS
+  allocator placement). Five interleaved rounds, medians of the per-run values: M3 2,021 B, the candidate without any
+  seeding 2,075, the final build 2,157 (+136 B, ×1.067; single runs 1,593–2,658 across the three). The final ledger
+  session's median of three read 2,321 against 2,030 (×1.14). Recorded as measured; the ceiling (4,096) passes in every
+  run.
 - **Tick at N = 200, justified.** Building `worldsim_perf` at every Part's commit and timing n200 interleaved:
   M3 313 µs, Part 0 (`06c965aa`, fords and tool wear) 392, Parts 1–2 (`276923de`, knowledge) 398, Part 3 386, the
   candidate 386 — the whole step is Part 0. A diagnostic build of the candidate without fords runs n200 at ×0.981 and
