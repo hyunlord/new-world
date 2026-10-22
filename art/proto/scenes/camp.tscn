@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://dtrial4camp01"]
 
 [ext_resource type="Script" path="res://Camp.gd" id="1"]
 
