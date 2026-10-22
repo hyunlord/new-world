@@ -3,7 +3,7 @@
 # dependencies = ["pillow", "numpy", "scipy"]
 # ///
 # How to run: imported by python -m art.pipeline5.sheet_slice
-"""Lossless panel division and one idle-derived Lanczos normalization."""
+"""Lossless panel division and explicit standing/sleep Lanczos normalization."""
 from dataclasses import dataclass
 from itertools import pairwise
 from typing import Final
@@ -97,6 +97,7 @@ class Normalization:
     resized_to_canvas_offset: tuple[int, int]
     visible_pixels: int
     rotation_degrees: int = 0
+    scale: float = 1.0
 
 
 @dataclass(frozen=True, slots=True)
@@ -105,8 +106,20 @@ class NormalizedPanel:
     transform: Normalization
 
 
-def normalize_panel(panel: Image.Image, scale: float, sleep: bool) -> NormalizedPanel:
+def sleep_body_scale(panel: Image.Image, target_length: int) -> float:
+    """Calibrate the opaque body's long axis without trimming source alpha."""
+    bounds = Image.fromarray(np.asarray(panel)[:, :, 3] >= ALPHA_THRESHOLD).getbbox()
+    if bounds is None or target_length <= 0:
+        message = 'normalization: sleep requires an opaque body and positive target length'
+        raise ValueError(message)
+    return target_length / max(bounds[2] - bounds[0], bounds[3] - bounds[1])
+
+
+def normalize_panel(panel: Image.Image, scale: float, sleep: bool,
+                    *, sleep_length: int | None = None) -> NormalizedPanel:
     """Trim only zero-alpha post-Lanczos padding, then register visible content."""
+    if sleep and sleep_length is not None:
+        scale = sleep_body_scale(panel, sleep_length)
     oriented = panel
     rotation = 0
     if sleep:
@@ -147,7 +160,7 @@ def normalize_panel(panel: Image.Image, scale: float, sleep: bool) -> Normalized
         raise ValueError(message)
     canvas = Image.new('RGBA', canvas_size)
     canvas.paste(trimmed, (x, y))
-    transform = Normalization(size, box, (x, y), (x-box[0], y-box[1]), int(np.count_nonzero(alpha)), rotation)
+    transform = Normalization(size, box, (x, y), (x-box[0], y-box[1]), int(np.count_nonzero(alpha)), rotation, scale)
     return NormalizedPanel(canvas, transform)
 
 

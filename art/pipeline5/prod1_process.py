@@ -31,7 +31,7 @@ from art.pipeline5.prod1_storage import (
     record_attempt,
     reserve,
 )
-from art.pipeline5.sheet_geometry import normalize_panel, split_panels
+from art.pipeline5.sheet_geometry import normalize_panel, sleep_body_scale, split_panels
 from art.pipeline5.whole_checks import FRAMES, WholeResult, check_whole
 
 
@@ -61,9 +61,12 @@ def evaluate(request: ProductionRequest) -> SheetRecord:
                 message = f'raw_sheet: expected 1536x1024 RGBA, got {source.size} {source.mode}'
                 raise ValueError(message)
             panels = split_panels(source, rows=2)
-        scale = (40 if request.age == 'child' else 56) / panels.idle_height
+        target = 40 if request.age == 'child' else 56
+        scale = target / panels.idle_height
+        sleep_scales = tuple(sleep_body_scale(panels.images[index], target) for index in (4, 9))
         judges = judge_panels(request.diagnostic / 'raw.png', panels.images, request.diagnostic / 'judge', expected_count=10)
         ownership = {'idle_source_height': panels.idle_height, 'scale': scale,
+                     'sleep_scales': dict(zip(FACINGS, sleep_scales, strict=True)),
                      'source_boxes': panels.boxes, 'ownership': asdict(panels.ownership)}
         _ = (request.diagnostic / 'ownership.json').write_text(json.dumps(ownership, indent=2) + '\n')
         records: list[FrameRecord] = []
@@ -73,15 +76,16 @@ def evaluate(request: ProductionRequest) -> SheetRecord:
             directory.mkdir(exist_ok=True)
             verdict = judges.panels[index].verdict
             try:
-                normalized = normalize_panel(panel, scale, frame == 'sleep')
+                normalized = normalize_panel(panel, scale, frame == 'sleep', sleep_length=target)
                 checks = check_whole(normalized.image, request.age, frame)
                 path = directory / (frame + '.png')
                 normalized.image.save(path)
                 metadata = Sidecar(request.look, request.age, facing, frame, request.attempt,
                                    raw_hash, prompt_hash, digest(path), str(request.diagnostic / 'raw.png'),
-                                   str(request.diagnostic), index, judges.calibration_sha256, scale,
+                                   str(request.diagnostic), index, judges.calibration_sha256, normalized.transform.scale,
                                    normalized.transform.rotation_degrees, box,
-                                   normalized.transform, checks, verdict)
+                                   normalized.transform, checks, verdict,
+                                   standing_scale=scale, sleep_scale=sleep_scales[index // 5])
                 _ = path.with_suffix('.json').write_text(json.dumps(asdict(metadata), indent=2) + '\n')
                 records.append(FrameRecord(facing, frame, checks.passed and verdict.numeric_pass,
                                            checks, verdict))

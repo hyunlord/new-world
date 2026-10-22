@@ -256,7 +256,7 @@ def test_prod1_child_height_and_sleep_width() -> None:
         image = Image.new('RGBA', (80, 112))
         ImageDraw.Draw(image).rectangle((30, 105-height, 49, 104), fill=(1, 2, 3, 255))
         assert check_whole(image, 'child', 'idle').passed == passed
-    for width, passed in ((48, True), (60, True), (61, False)):
+    for width, passed in ((48, False), (52, True), (60, True), (61, False)):
         image = Image.new('RGBA', (112, 80))
         ImageDraw.Draw(image).rectangle((20, 55, 19+width, 72), fill=(1, 2, 3, 255))
         assert check_whole(image, 'adult', 'sleep').passed == passed

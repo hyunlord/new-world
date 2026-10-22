@@ -101,6 +101,8 @@ class Sidecar:
     normalization: Normalization
     checks: WholeResult
     judge: Verdict
+    standing_scale: float
+    sleep_scale: float
     template_version: int = 3
 
 

@@ -1,6 +1,6 @@
-# Character template v3 — PROD1 whole figure candidate
+# Character template v3 — PROD2 whole figure candidate
 
-PROD1 route I, identity reference I-1. Candidate until S1 + R1 + P1 authorize
+PROD2 route I, identity reference I-1. Candidate until S1 + R1 + P1 authorize
 adoption. Historical TRIAL5 rules remain in
 `docs/v8/arttrial5/WHOLE_FIGURE_CONTRACT.md`; layered pawn contracts remain in
 TEMPLATE.md and TEMPLATE_V2_HISTORICAL.md. No layer or material masks apply.
@@ -21,7 +21,11 @@ TEMPLATE.md and TEMPLATE_V2_HISTORICAL.md. No layer or material masks apply.
   The standing-height calibration is measured on idle, not an axe or log's
   raised extent. Walk/work/carry use the same S-idle-derived scale, without
   pose-specific resizing; their full extent must fit the canvas.
-- Sleep opaque width **48–60**, wider than tall. Before scaling, a vertical
+- Sleep uses its own uniform scale: target body length **56 adult / 40 child**
+  divided by the source opaque bbox long axis. Adult sleep length **52–60**,
+  height **≤36**; child length **37–43**, height **≤28**; wider than tall.
+  Lanczos sampling can round the final opaque extent within these bands.
+  Before scaling, a vertical
   sleep opaque (alpha≥128) bbox rotates90° or270° so the end with larger total alpha mass in its
   outer30% lies left; already-horizontal head-right figures rotate180°.
   Equal masses retain the first end as head. Rotation is exact, logged in
@@ -38,13 +42,18 @@ contains two rows of five: S above E, each idle, walk_a, work_a, carry, sleep.
 Exactly10 major components with one bbox-centre per grid cell; ownership
 preserves source RGBA exactly even when component bounding boxes overlap.
 Five-panel slicing remains available only for historical TRIAL5 remeasurement.
-The S idle supplies one scale for all10 poses. No per-facing or per-pose scale.
+The S idle supplies one common scale for idle/walk/work/carry in both facings.
+Each facing's sleep panel uses its independent body-length scale; no other
+pose receives individual resizing.
 
 Outputs: `route_i/<look>/<S|E>/{idle,walk_a,work_a,carry,sleep}.png` plus JSON
 sidecars and MANIFEST.json. Metadata records source and prompt hashes, attempt,
-source boxes, scale, rotation, ownership, checker and source-resolution padded
+source boxes, actual frame `scale`, `standing_scale`, facing-specific
+`sleep_scale`, rotation, ownership, checker and source-resolution padded
 panel judge verdicts. A failed sheet never supplies individual accepted frames.
-Maximum3 generations/sheet including any targeted readability retry.
+PROD2 permits at most2 new generations per remaining look and40 total,
+including any targeted readability retry; preserved PROD1 sources are re-sliced
+without consuming new generation attempts.
 
 ## Display contract
 

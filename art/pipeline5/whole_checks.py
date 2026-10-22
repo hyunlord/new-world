@@ -28,7 +28,7 @@ class WholeResult:
     sleep_axis_ok: bool = True
     opaque_height: int = 0
     opaque_width: int = 0
-    coverage_rule: str = 'idle height only; sleep width; posed extent constrained by canvas'
+    coverage_rule: str = 'idle height only; age-specific sleep length and height; posed extent constrained by canvas'
     limb_ok: str = 'NOT_MEASURED: whole figures have no semantic limb masks'
 
 
@@ -59,8 +59,12 @@ def check_whole(image: Image.Image, age: str, frame: str) -> WholeResult:
         lower, upper = (37, 43) if age == 'child' else (52, 58)
         if not lower <= height <= upper:
             findings.append(f'coverage: idle opaque height {height} outside [{lower},{upper}]')
-    if sleep and not 48 <= width <= 60:
-        findings.append(f'coverage: sleep opaque width {width} outside [48,60]')
+    if sleep:
+        lower, upper, max_height = (37, 43, 28) if age == 'child' else (52, 60, 36)
+        if not lower <= width <= upper:
+            findings.append(f'coverage: sleep opaque width {width} outside [{lower},{upper}]')
+        if height > max_height:
+            findings.append(f'coverage: sleep opaque height {height} exceeds {max_height}')
     contact = bool(len(oy) and abs(int(oy.max()) - (72 if sleep else 104)) <= 2)
     if not contact:
         findings.append('contact_ok: lowest alpha128 pixel off baseline or missing')
