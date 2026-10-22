@@ -18,7 +18,8 @@
 //! `x0 y0 x1 y1`; `designate_chop_tiles`: `tiles` [[x, y], …];
 //! `place_blueprint`: `kind`, `x`, `y`; `set_drafted`: `agent`, `drafted`), or
 //! a `"resolve"` key that the probe resolves against the world at tick T
-//! (goal 10.1; see [`resolve`]).
+//! (goal 10.1; see [`resolve`]). M3 (goal 3.4): an entry with `"every_days": n`
+//! is applied again every `n` days after it was first applied (resolved anew each time).
 use serde_json::{json, Value};
 use sim_core::colony::workshop::work_tile_of;
 use sim_core::colony::{
@@ -159,6 +160,24 @@ pub fn nearest_trees(engine: &SimEngine, count: usize) -> Vec<(u32, u32)> {
         return Vec::new();
     };
     let mut trees: Vec<(u32, u32)> = engine.resources.colony.trees.keys().copied().collect();
+    trees.sort_by_key(|t| (chebyshev(*t, h), t.1, t.0));
+    trees.truncate(count);
+    trees
+}
+
+/// The `count` standing trees nearest the hearth that carry no mark yet, by
+/// Chebyshev distance, ties `(y, x)` (M3 soak: chop marks renewed every 2 days).
+pub fn nearest_unmarked_trees(engine: &SimEngine, count: usize) -> Vec<(u32, u32)> {
+    let Some(h) = hearth(&engine.resources) else {
+        return Vec::new();
+    };
+    let c = &engine.resources.colony;
+    let mut trees: Vec<(u32, u32)> = c
+        .trees
+        .keys()
+        .copied()
+        .filter(|t| !c.designations.contains_key(t))
+        .collect();
     trees.sort_by_key(|t| (chebyshev(*t, h), t.1, t.0));
     trees.truncate(count);
     trees
@@ -383,6 +402,15 @@ pub fn resolve(
             vec![Command::DesignateChopTiles {
                 tiles: nearest_trees(engine, count),
             }]
+        }
+        ("designate_chop_tiles", Some("nearest_unmarked_trees")) => {
+            let count = spec["count"].as_u64().unwrap_or(15) as usize;
+            let tiles = nearest_unmarked_trees(engine, count);
+            if tiles.is_empty() {
+                Vec::new()
+            } else {
+                vec![Command::DesignateChopTiles { tiles }]
+            }
         }
         ("add_stockpile", Some("stockpile_east")) => {
             let size = spec["size"].as_u64().unwrap_or(4) as u32;
@@ -698,12 +726,22 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
     let mut demography = super::demography::Demography::new(&engine);
     let mut economy = super::economy::Economy::new();
     let mut waiting: Vec<usize> = Vec::new();
+    // `"every_days"` entries: (tick of the next application, entry), M3.
+    let mut repeats: Vec<(u64, usize)> = Vec::new();
     for tick in 0..total {
         let mut avoid = Vec::new();
         while next < script.len() && script[next].tick <= tick {
             waiting.push(next);
             next += 1;
         }
+        repeats.retain(|&(at, i)| {
+            if at <= tick {
+                waiting.push(i);
+                false
+            } else {
+                true
+            }
+        });
         let due: Vec<usize> = waiting
             .iter()
             .copied()
@@ -711,6 +749,9 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
             .collect();
         waiting.retain(|i| !due.contains(i));
         for i in due {
+            if let Some(days) = script[i].spec["every_days"].as_u64().filter(|d| *d > 0) {
+                repeats.push((tick + days * DAY, i));
+            }
             for cmd in resolve(&engine, &script[i].spec, &mut avoid)? {
                 let result = submit(&mut engine, cmd.clone());
                 if let Some(t) = twin.as_mut() {

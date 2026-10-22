@@ -5,6 +5,7 @@
 #   (0 knap_blade, 1 haft_axe, 2 split_firewood) or name, work types by name (craft, build, quarry, chop, split,
 #   haul), skills by name (knap, woodwork, chop, quarry, build) and tiers 0–3, workshop/blueprint kinds (0 hut,
 #   1 knapping_spot, 2 wood_bench, 3 drying_rack) and command reject reasons. Unknown codes fall back to UI_UNKNOWN.
+# M3 (goal 3.4): quality as a word and a number ("좋음 (62)"), five bands of 20 (0–19 조악 … 80–100 걸작).
 # Bridge methods called: none (callers pass the dictionaries they read).
 extends RefCounted
 
@@ -29,6 +30,7 @@ const SKILL_KEYS: Dictionary = {
 	"quarry": "SKILL_QUARRY", "build": "SKILL_BUILD",
 }
 const TIER_KEYS: Array[String] = ["SKILL_TIER_0", "SKILL_TIER_1", "SKILL_TIER_2", "SKILL_TIER_3"]
+const QUALITY_KEYS: Array[String] = ["QUALITY_BAND_0", "QUALITY_BAND_1", "QUALITY_BAND_2", "QUALITY_BAND_3", "QUALITY_BAND_4"]
 ## Blueprint / workshop kinds by code: bridge name, footprint, localization key, sheet sprite.
 const BUILD_KINDS: Array[Dictionary] = [
 	{"name": "hut", "size": Vector2i(3, 3), "key": "BUILDING_HUT", "sprite": "hut"},
@@ -68,9 +70,19 @@ static func item_of(locale: Node, kind: int, material: String) -> String:
 	return trf(locale, ITEM_FMT_KEYS[kind], {"material": ltr(locale, str(MATERIAL_KEYS[material]))})
 
 
-## "{item} ×{count} · 품질 {quality}".
-static func stack(locale: Node, kind: int, material: String, count: int, quality: int) -> String:
-	return trf(locale, "UI_STACK_FMT", {"item": item_of(locale, kind, material), "count": count, "quality": quality})
+## The quality band 0–4 of quality 0–100 (0–19, 20–39, 40–59, 60–79, 80–100).
+static func quality_band(value: int) -> int:
+	return clampi(floori(value / 20.0), 0, QUALITY_KEYS.size() - 1)
+
+
+## "좋음 (62)": the band word and the number.
+static func quality(locale: Node, value: int) -> String:
+	return trf(locale, "UI_QUALITY_FMT", {"word": ltr(locale, QUALITY_KEYS[quality_band(value)]), "value": value})
+
+
+## "{item} ×{count} · 좋음 (62)".
+static func stack(locale: Node, kind: int, material: String, count: int, value: int) -> String:
+	return trf(locale, "UI_STACK_FMT", {"item": item_of(locale, kind, material), "count": count, "quality": quality(locale, value)})
 
 
 ## The recipe name for recipe code `code`.

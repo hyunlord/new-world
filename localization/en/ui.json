@@ -216,7 +216,7 @@
 	"NODE_BOULDER": "Boulder",
 	"NODE_FLINT_OUTCROP": "Flint outcrop",
 	"UI_NODE_LEFT_FMT": "{name} · {left} {item} left",
-	"UI_STACK_FMT": "{item} ×{count} · quality {quality}",
+	"UI_STACK_FMT": "{item} ×{count} · {quality}",
 	"RECIPE_KNAP_BLADE": "Knap a flint blade",
 	"RECIPE_HAFT_AXE": "Haft a stone axe",
 	"RECIPE_SPLIT_FIREWOOD": "Split firewood",
@@ -276,10 +276,16 @@
 	"UI_INSPECT_SKILLS": "Skills",
 	"UI_INSPECT_SKILL_FMT": "{skill} {level} · {tier}",
 	"UI_INSPECT_TOOL": "Tool",
-	"UI_INSPECT_TOOL_FMT": "{item} · quality {quality}",
+	"UI_INSPECT_TOOL_FMT": "{item} · {quality}",
 	"UI_INSPECT_NOTHING": "none",
 	"UI_JOB_QUARRY": "Quarrying",
 	"UI_JOB_SUPPLY": "Supplying a workshop",
 	"UI_JOB_CRAFT": "Crafting",
-	"UI_JOB_GATHER": "Gathering deadwood"
+	"UI_JOB_GATHER": "Gathering deadwood",
+	"QUALITY_BAND_0": "crude",
+	"QUALITY_BAND_1": "plain",
+	"QUALITY_BAND_2": "good",
+	"QUALITY_BAND_3": "fine",
+	"QUALITY_BAND_4": "masterwork",
+	"UI_QUALITY_FMT": "{word} ({value})"
 }

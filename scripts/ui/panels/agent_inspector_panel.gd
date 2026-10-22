@@ -400,7 +400,7 @@ func _refresh_economy(agent_id: int) -> void:
 	if tool_kind >= 0:
 		tool_text = EconomyText.trf(_locale, "UI_INSPECT_TOOL_FMT", {
 			"item": EconomyText.item_of(_locale, tool_kind, str(_economy.get("tool_material", ""))),
-			"quality": int(_economy.get("tool_quality", 0))})
+			"quality": EconomyText.quality(_locale, int(_economy.get("tool_quality", 0)))})
 	_tool_label.text = "%s: %s" % [_loc("UI_INSPECT_TOOL"), tool_text]
 	_tool_label.show()
 	_skills_heading.text = _loc("UI_INSPECT_SKILLS")

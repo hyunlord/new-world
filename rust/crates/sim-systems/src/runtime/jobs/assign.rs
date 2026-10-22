@@ -8,8 +8,12 @@
 //! An agent is available when it is an adult or elder (no `Child`), not on a
 //! porter trip, holds no `Job`, is not in a combat pair, and is `Idle` or at
 //! leisure (`Seeking`/`Consuming { Activity }`): jobs replace leisure and idle
-//! time, never survival work (ADR 0013). Agents are served in ascending
-//! `AgentId`; each takes the first work type (M2 goal 3.6 order) with a target within
+//! time, never survival work (ADR 0013). Under the economy the assignment runs
+//! in rounds of (priority level, work type) — level 1 first, work types in the
+//! M2 goal 3.6 order — serving in each round the people with that level for it,
+//! highest skill for it first, then ascending `AgentId` (M3 goal 3.4); without
+//! it (M1 rules) each person in `AgentId` order takes the first work type with a
+//! target. Targets lie within
 //! `job_scan_radius` (Chebyshev), nearest first, ties by `(y, x)` (goal 7.2),
 //! found through the spatial index (`SimResources.spatial`, M1.5 goal 6.2).
 //! Reservations are written at once, so a later agent this tick sees them.
@@ -17,8 +21,8 @@
 //! the routine's own cleanup at 125 records it as interrupted.
 use hecs::{Entity, World};
 use sim_core::colony::{
-    BillMode, ItemKind, ItemSpec, Job, JobKind, JobStage, ReserveKey, Tool, WorkPriorities,
-    WorkType,
+    BillMode, ItemKind, ItemSpec, Job, JobKind, JobStage, ReserveKey, SkillKind, Skills, Tool,
+    WorkPriorities, WorkType,
 };
 use sim_core::components::{
     Agent, AgentId, AgentState, Child, Elder, PorterTrip, Position, SeekTarget, TargetKind,
@@ -581,6 +585,22 @@ fn best_axe(res: &SimResources, pos: (u32, u32), reach: u32) -> Option<(u32, u32
     best.map(|(_, _, y, x)| (x, y))
 }
 
+/// A person's skill level for work type `work` (M3 goal 3.4 tie-break):
+/// crafting counts the better of knapping and woodworking, splitting
+/// woodworking, hauling none.
+pub fn skill_for(skills: &Skills, work: WorkType) -> u8 {
+    match work {
+        WorkType::Craft => skills
+            .level(SkillKind::Knap)
+            .max(skills.level(SkillKind::Woodwork)),
+        WorkType::Build => skills.level(SkillKind::Build),
+        WorkType::Quarry => skills.level(SkillKind::Quarry),
+        WorkType::Chop => skills.level(SkillKind::Chop),
+        WorkType::Split => skills.level(SkillKind::Woodwork),
+        WorkType::Haul => 0,
+    }
+}
+
 /// The first job for an agent at `pos` in work-type order, or `None`.
 fn pick(
     res: &SimResources,
@@ -620,8 +640,8 @@ impl RuntimeSystem for JobAssignSystem {
                 .iter()
                 .any(|&(a, b)| a == id || b == id)
         };
-        // (id, entity, tile, work priorities, holds a tool)
-        type Row = (AgentId, Entity, (u32, u32), WorkPriorities, bool);
+        // (id, entity, tile, work priorities, holds a tool, skills)
+        type Row = (AgentId, Entity, (u32, u32), WorkPriorities, bool, Skills);
         let mut available: Vec<Row> = world
             .query::<(
                 &Agent,
@@ -630,12 +650,13 @@ impl RuntimeSystem for JobAssignSystem {
                 Option<&WorkPriorities>,
                 Option<&Elder>,
                 Option<&Tool>,
+                Option<&Skills>,
             )>()
             .without::<&Job>()
             .without::<&Child>()
             .without::<&PorterTrip>()
             .iter()
-            .filter(|(_, (agent, _, state, _, _, _))| {
+            .filter(|(_, (agent, _, state, _, _, _, _))| {
                 matches!(
                     state,
                     AgentState::Idle
@@ -647,12 +668,15 @@ impl RuntimeSystem for JobAssignSystem {
                         }
                 ) && !in_combat(agent.id)
             })
-            .map(|(entity, (agent, pos, _, priorities, elder, tool))| {
-                let p = priorities
-                    .copied()
-                    .unwrap_or(WorkPriorities::defaults(elder.is_some()));
-                (agent.id, entity, (pos.x, pos.y), p, tool.is_some())
-            })
+            .map(
+                |(entity, (agent, pos, _, priorities, elder, tool, skills))| {
+                    let p = priorities
+                        .copied()
+                        .unwrap_or(WorkPriorities::defaults(elder.is_some()));
+                    let skills = skills.copied().unwrap_or_default();
+                    (agent.id, entity, (pos.x, pos.y), p, tool.is_some(), skills)
+                },
+            )
             .collect();
         if available.is_empty() {
             return;
@@ -684,22 +708,31 @@ impl RuntimeSystem for JobAssignSystem {
         let hearth = std::cell::OnceCell::new();
         let mut taken: Vec<(Entity, Job)> = Vec::new();
         let mut exhausted = Exhausted::default();
-        // M2 (goal 3.6, DECISIONS D14): passes by priority level — every
-        // available person (AgentId order) first tries their level-1 work
-        // types, then everyone their level-2 types, … 4, so a person with
-        // priority 1 gets first pick of that work. Without the economy one
-        // pass over every work type (M1).
-        let passes: Vec<u8> = if rule.economy.is_some() {
-            (1..=sim_core::colony::skills::LOWEST_PRIORITY).collect()
+        // M2 (goal 3.6, DECISIONS D14): passes by priority level — level 1
+        // first, then 2, … 4, so a person with priority 1 gets first pick of
+        // that work. M3 (goal 3.4, M3 DECISIONS D3): within a level, one round
+        // per work type (tie-break order), and in it the people with that level
+        // for it ordered by their skill for it, highest first, then `AgentId`.
+        // Without the economy one pass over every work type per person (M1).
+        let rounds: Vec<(u8, Option<WorkType>)> = if rule.economy.is_some() {
+            (1..=sim_core::colony::skills::LOWEST_PRIORITY)
+                .flat_map(|pass| WorkType::ALL.into_iter().map(move |w| (pass, Some(w))))
+                .collect()
         } else {
-            vec![0]
+            vec![(0, None)]
         };
         let mut assigned: std::collections::BTreeSet<AgentId> = std::collections::BTreeSet::new();
-        for pass in passes {
-            for &(id, entity, pos, priorities, has_tool) in &available {
-                if assigned.contains(&id) || (pass != 0 && !priorities.levels.contains(&pass)) {
-                    continue;
-                }
+        for (pass, work) in rounds {
+            let mut order: Vec<&Row> = available
+                .iter()
+                .filter(|row| {
+                    !assigned.contains(&row.0) && work.is_none_or(|w| row.3.level(w) == pass)
+                })
+                .collect();
+            if let Some(w) = work {
+                order.sort_by_key(|row| (std::cmp::Reverse(skill_for(&row.5, w)), row.0));
+            }
+            for &&(id, entity, pos, priorities, has_tool, _) in &order {
                 let ctx = Ctx {
                     rule: &rule,
                     sites: &sites,
@@ -714,9 +747,11 @@ impl RuntimeSystem for JobAssignSystem {
                     gather_short: &gather_short,
                     hearth: &hearth,
                 };
-                let Some((kind, amount, item)) =
-                    pick(resources, &ctx, &priorities, pass, pos, &mut exhausted)
-                else {
+                let found = match work {
+                    Some(w) => pick_work(resources, &ctx, w, pos, &mut exhausted),
+                    None => pick(resources, &ctx, &priorities, pass, pos, &mut exhausted),
+                };
+                let Some((kind, amount, item)) = found else {
                     continue;
                 };
                 // A chopper without a tool stops for the best axe in a stockpile on the way.

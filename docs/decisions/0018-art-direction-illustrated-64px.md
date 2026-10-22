@@ -64,14 +64,32 @@
 - The simulation is unaffected: the contract (ADR 0016, C2) already keeps pixels, tile sizes and sprites out of the
   sim crates, so the art change is a renderer change only.
 - VISION §6 is rewritten for this look; the 16/32-px size table and the mock-up references move to a history note.
-- Status, later on 2026-10-22: ART-TRIAL2 (`v8/art-trial2` `034c38ab`, `docs/v8/arttrial2/TRIAL2_REPORT.md`) reported
-  the sustainability condition **failed** (2 of 38 environment candidates adopted, one ground family); its
-  pre-registered rule recommends 02 woodcut for the map and 05 for portraits. ART-TRIAL2b repeats the trial with
-  corrected camera and ground rules. The look decided here stands until the owner decides on that evidence; M-ART2
-  does not start before.
+- Status (updated 2026-10-22, M3 Part 0; read from the art branches, which are never merged):
+  - ART-TRIAL2 (`v8/art-trial2` `034c38ab`, `docs/v8/arttrial2/TRIAL2_REPORT.md`) reported the sustainability
+    condition **failed** (2 of 38 environment candidates adopted, one ground family) and, by its pre-registered rule,
+    recommended 02 woodcut for the map and 05 for portraits.
+  - ART-TRIAL2b (`v8/art-trial2` `2433a612`, `docs/v8/arttrial2/TRIAL2B_REPORT.md`) corrected the judge and the
+    camera/ground rules and **withdrew the 02 woodcut fallback**: environment 35/38 accepted after retries (30/38 on
+    the first try), C1 = 70 calls / 35 assets = 2.0 tries per asset (2.34 with the calm-ground replacements); 200
+    people at 88 FPS. People readability still failed (C5, G1; activity+carry 6–8/12 at 1× and 6–7/12 at 2×
+    against bars 8 and 10), part yield failed (C7, 46/2) and seasons stayed unmet (C4). So the environment passes in
+    05 (C1, C2), but 05 as a whole is not proven sustainable; "05 environment + another way to make people" is a
+    conditional candidate (C4 open), not a verdict.
+  - ART-TRIAL3 (`v8/art-trial3` `352f4101`, `docs/v8/arttrial3/TRIAL3_REPORT.md`, verdict PARTIAL) built a character
+    template, a layer contract and a structural checker: 87/87 accepted layers and 603/603 combinations pass
+    (22 checker tests). Route A (generated 2D layers) is structurally sound but incomplete (the south fur cloak hit
+    its 3-try cap), its timed-playback readability is NOT_VERIFIED and its style scored 2.54/5 (bar 4.0 preferred);
+    200 people at 78.9 FPS in the lab. Route B (rigged 3D through an ink shader) did not run: the Higgsfield CLI had
+    no workspace. Pre-registered recommendation with no viable route: commission the base figures from a 2D artist
+    against the template and contract, keep generation for the environment.
+  - ART-TRIAL3b (`v8/art-trial3` `b2a06115`, `docs/v8/arttrial3/TRIAL3B_REPORT.md`), the route-B retry, stopped at
+    its Part 0 tool check: `higgsfield account status` exited 4, "No workspace selected"; no generation was
+    submitted. Route B is still unjudged; the artist recommendation stands until B runs.
+  - The look decided here (05) stands, with the environment as its tested part, until the owner decides how people
+    are made; M-ART2 does not start before that decision.
 
 ## Date
 2026-10-22
 
 ## Source
-docs/v8/m2/M2_GOAL.md §2, §4; branch `v8/art-trial` (`c3dafb07`: docs/v8/arttrial/DECISION_BRIEF.md, TRIAL_REPORT.md); branch `v8/art-concept` (`a5406866`: docs/v8/artconcept/CONCEPT_REPORT.md, art/concepts/05_ink_and_tone/CONCEPT.md); docs/v8/m1art/ART_REPORT.md 8.2; docs/decisions/0015-colony-art-one-code-drawn-sheet.md; docs/decisions/0002-view-b-top-down.md
+docs/v8/m2/M2_GOAL.md §2, §4; branch `v8/art-trial` (`c3dafb07`: docs/v8/arttrial/DECISION_BRIEF.md, TRIAL_REPORT.md); branch `v8/art-concept` (`a5406866`: docs/v8/artconcept/CONCEPT_REPORT.md, art/concepts/05_ink_and_tone/CONCEPT.md); branch `v8/art-trial2` (`034c38ab`: docs/v8/arttrial2/TRIAL2_REPORT.md; `2433a612`: TRIAL2B_REPORT.md); branch `v8/art-trial3` (`352f4101`: docs/v8/arttrial3/TRIAL3_REPORT.md, VERDICT.json; `b2a06115`: TRIAL3B_REPORT.md); docs/v8/m1art/ART_REPORT.md 8.2; docs/decisions/0015-colony-art-one-code-drawn-sheet.md; docs/decisions/0002-view-b-top-down.md

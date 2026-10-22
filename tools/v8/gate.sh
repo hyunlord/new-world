@@ -2,7 +2,7 @@
 # usage: gate.sh <log_dir> [--base-data DIR]
 #
 # V8 gate (V8-0 goal 11.1; M1 11.3 added steps 17-20; V8-PLAY 2.3 added step 21; M1.5 10.4 added steps
-# 22-25). Twenty-five steps, each logged to <log_dir>/<step>.log
+# 22-25; M3 added step 26). Twenty-six steps, each logged to <log_dir>/<step>.log
 # with its start time, duration and exit code in <log_dir>/gate.txt. The
 # gate passes only when every step except `perf` (report only) exits 0.
 #    1 fmt               cargo fmt --all -- --check
@@ -37,6 +37,8 @@
 #   24 save_roundtrip    tools/v8/save_roundtrip.sh: save -> load -> tick equals tick, colony seeds 0-7 (C1)
 #   25 bench             tools/v8/bench.sh: the standing colony benchmark against docs/perf/PERF_LEDGER.md
 #                        (> +10 % on tick mean, p99 or RSS/agent fails; since M2 a C3 ceiling miss fails)
+#   26 soak              tools/v8/soak.sh: the economy soak fixture (M3 goal 3.4), seeds 0..4, 20 days,
+#                        tools/v8/m3_soak_script.json: ledger and reservations exact, 0 deaths, determinism
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
@@ -100,6 +102,9 @@ step 24 save_roundtrip bash tools/v8/save_roundtrip.sh
 grep -q '^SAVE_ROUNDTRIP PASS' "$LOG/save_roundtrip.log" || { echo "   save_roundtrip: no PASS line" >> "$SUMMARY"; status=1; }
 step 25 bench bash tools/v8/bench.sh "$LOG/bench"
 grep -E 'admission|ceiling|bench: |x[0-9]' "$LOG/bench.log" | sed 's/^/   /' >> "$SUMMARY"
+# M3 (goal 3.4): the economy soak fixture, every pass from now on.
+step 26 soak bash tools/v8/soak.sh "$LOG/soak" rust/target/release/worldsim_probe
+grep -E '^SOAK' "$LOG/soak.log" | sed 's/^/   /' >> "$SUMMARY"
 echo "finished $(date '+%Y-%m-%d %H:%M:%S %Z') status $status" >> "$SUMMARY"
 cat "$SUMMARY"
 exit "$status"

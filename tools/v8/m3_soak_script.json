@@ -1,0 +1,12 @@
+[
+  {"tick": 360, "cmd": "designate_chop_tiles", "resolve": "nearest_unmarked_trees", "count": 15, "every_days": 2},
+  {"tick": 360, "cmd": "add_stockpile", "resolve": "stockpile_east", "size": 6, "offset": 3},
+  {"tick": 360, "cmd": "designate_quarry", "resolve": "nearest_nodes", "kind": "boulder", "count": 1},
+  {"tick": 360, "cmd": "designate_quarry", "resolve": "nearest_nodes", "kind": "outcrop", "count": 2},
+  {"tick": 360, "cmd": "place_blueprint", "kind": "knapping_spot", "resolve": "south_of_hearth"},
+  {"tick": 360, "cmd": "place_blueprint", "kind": "wood_bench", "resolve": "south_of_hearth"},
+  {"tick": 360, "cmd": "add_bill", "resolve": "workshop_of_kind", "kind": "knapping_spot", "recipe": "knap_blade", "mode": "make", "count": 20, "after": "workshop:knapping_spot"},
+  {"tick": 360, "cmd": "add_bill", "resolve": "workshop_of_kind", "kind": "knapping_spot", "recipe": "knap_blade", "mode": "maintain", "count": 10, "after": "workshop:knapping_spot"},
+  {"tick": 360, "cmd": "add_bill", "resolve": "workshop_of_kind", "kind": "wood_bench", "recipe": "haft_axe", "mode": "make", "count": 4, "after": "workshop:wood_bench"},
+  {"tick": 360, "cmd": "add_bill", "resolve": "workshop_of_kind", "kind": "wood_bench", "recipe": "split_firewood", "mode": "maintain", "count": 40, "after": "workshop:wood_bench"}
+]

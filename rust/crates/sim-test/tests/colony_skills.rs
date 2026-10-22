@@ -205,3 +205,47 @@ fn a_person_with_chop_0_never_chops() {
         .sum();
     assert!(work > 0, "the Chop = 0 adult did other work");
 }
+
+/// Two idle adults the same distance from one marked tree, both Chop 3 (the
+/// default); `skilled` (if any) gets a Chop level of 4. Returns who took the job.
+fn chop_taker(skilled: Option<usize>) -> (Vec<hecs::Entity>, Option<hecs::Entity>) {
+    let mut engine = job_world_m2(40, 40);
+    let people = vec![worker(&mut engine, 10, 20), worker(&mut engine, 30, 20)];
+    if let Some(i) = skilled {
+        let mut s = Skills::default();
+        // 4 levels: XP_TABLE[4] = 15·16 + 15·4 = 300.
+        assert_eq!(s.train(SkillKind::Chop, 300), 4);
+        let _ = engine.world.insert_one(people[i], s);
+    }
+    plant(&mut engine, (20, 5), 4);
+    assert!(
+        submit(
+            &mut engine,
+            Command::DesignateChopTiles {
+                tiles: vec![(20, 5)]
+            }
+        )
+        .accepted
+    );
+    tick_checked(&mut engine);
+    let taker = people.iter().copied().find(|e| {
+        engine
+            .world
+            .get::<&Job>(*e)
+            .is_ok_and(|j| matches!(j.kind, JobKind::Chop { .. }))
+    });
+    (people, taker)
+}
+
+#[test]
+fn within_a_priority_level_the_more_skilled_person_takes_the_job() {
+    // Equal skill: the lower AgentId (the first spawned) takes it.
+    let (people, taker) = chop_taker(None);
+    assert_eq!(taker, Some(people[0]));
+    // The second person has Chop 4: they take it although their AgentId is higher.
+    let (people, taker) = chop_taker(Some(1));
+    assert_eq!(taker, Some(people[1]));
+    // And the first again when the skill is theirs.
+    let (people, taker) = chop_taker(Some(0));
+    assert_eq!(taker, Some(people[0]));
+}

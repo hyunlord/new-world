@@ -216,7 +216,7 @@
 	"NODE_BOULDER": "바위",
 	"NODE_FLINT_OUTCROP": "부싯돌 노두",
 	"UI_NODE_LEFT_FMT": "{name} · {item} {left}개 남음",
-	"UI_STACK_FMT": "{item} ×{count} · 품질 {quality}",
+	"UI_STACK_FMT": "{item} ×{count} · {quality}",
 	"RECIPE_KNAP_BLADE": "부싯돌 날 깎기",
 	"RECIPE_HAFT_AXE": "돌도끼 만들기",
 	"RECIPE_SPLIT_FIREWOOD": "장작 패기",
@@ -276,10 +276,16 @@
 	"UI_INSPECT_SKILLS": "기술",
 	"UI_INSPECT_SKILL_FMT": "{skill} {level} · {tier}",
 	"UI_INSPECT_TOOL": "도구",
-	"UI_INSPECT_TOOL_FMT": "{item} · 품질 {quality}",
+	"UI_INSPECT_TOOL_FMT": "{item} · {quality}",
 	"UI_INSPECT_NOTHING": "없음",
 	"UI_JOB_QUARRY": "돌 캐는 중",
 	"UI_JOB_SUPPLY": "작업장에 재료 가져가는 중",
 	"UI_JOB_CRAFT": "만드는 중",
-	"UI_JOB_GATHER": "땔감 줍는 중"
+	"UI_JOB_GATHER": "땔감 줍는 중",
+	"QUALITY_BAND_0": "조악",
+	"QUALITY_BAND_1": "보통",
+	"QUALITY_BAND_2": "좋음",
+	"QUALITY_BAND_3": "훌륭",
+	"QUALITY_BAND_4": "걸작",
+	"UI_QUALITY_FMT": "{word} ({value})"
 }
