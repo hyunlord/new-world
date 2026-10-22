@@ -17,6 +17,10 @@
 //! `job_scan_radius` (Chebyshev), nearest first, ties by `(y, x)` (goal 7.2),
 //! found through the spatial index (`SimResources.spatial`, M1.5 goal 6.2).
 //! Reservations are written at once, so a later agent this tick sees them.
+//! M4 (ADR 0024): under `ColonyRule::knowledge` a craft, a build, a quarry, a
+//! dig or a clay pit is offered only to a practitioner of its gate
+//! (`knowledge::gates()`, the person's cached bitset); apprenticeship sessions
+//! are given first (`teach::assign`), after open orders are tidied.
 //! A worker leaving leisure keeps its `Activity` component for one tick:
 //! the routine's own cleanup at 125 records it as interrupted.
 use hecs::{Entity, World};
@@ -35,6 +39,7 @@ use std::collections::BTreeMap;
 use super::bills::{bill_count, maintain_count};
 use super::cancel::reserve;
 use super::items::{chebyshev, colony_sites, room_on, SiteView};
+use sim_core::colony::knowledge::{gates, Knowledge};
 
 /// Priority of [`JobAssignSystem`].
 pub const JOB_ASSIGN_PRIORITY: u32 = 124;
@@ -133,6 +138,7 @@ enum Search {
     DigMark,
     DeconMark,
     Restock,
+    ClayMark,
 }
 
 /// Searches that found no candidate anywhere on the map this tick. Within one
@@ -152,8 +158,9 @@ struct Exhausted {
     dig: Memo,
     decon: Memo,
     restock: Memo,
-    stocked: [Memo; 7],
-    any_stack: [Memo; 7],
+    clay: Memo,
+    stocked: [Memo; 11],
+    any_stack: [Memo; 11],
     open_cell: BTreeMap<ItemSpec, Memo>,
 }
 
@@ -170,6 +177,7 @@ impl Exhausted {
             Search::DigMark => &mut self.dig,
             Search::DeconMark => &mut self.decon,
             Search::Restock => &mut self.restock,
+            Search::ClayMark => &mut self.clay,
             Search::Stocked(kind) => &mut self.stocked[kind.code() as usize],
             Search::AnyStack(kind) => &mut self.any_stack[kind.code() as usize],
             Search::OpenCell(spec) => self.open_cell.entry(spec).or_default(),
@@ -235,6 +243,8 @@ struct Ctx<'a> {
     hearth: &'a std::cell::OnceCell<Vec<(u32, u32)>>,
     /// The agent's nav region (M3, ADR 0021): only targets reachable from it are offered.
     region: u32,
+    /// The agent's practitioner bitset (M4; all bits without the knowledge rule).
+    practice: u32,
 }
 
 /// A picked job: kind, amount, item.
@@ -371,7 +381,9 @@ fn pick_work(
                     .inputs
                     .iter()
                     .all(|&(kind, n)| shop.shelved(kind) >= n);
-                if ready && !colony.reservations.contains_key(&ReserveKey::Bench(to)) {
+                // M4: only a practitioner of the recipe's gate crafts it.
+                let allowed = gates().recipe(recipe.id) & !ctx.practice == 0;
+                if ready && allowed && !colony.reservations.contains_key(&ReserveKey::Bench(to)) {
                     return Some((
                         JobKind::Craft {
                             workshop: id,
@@ -471,6 +483,14 @@ fn pick_work(
                         && !(on_space_site(centre) && colony.ground_items.contains_key(&centre))
                 })
             };
+            // M4: a site whose blueprint is gated is built only by its practitioners;
+            // the memoised search stays person-independent, and a gated nearest site
+            // falls back to an unmemoised search with the gate.
+            let allowed = |c: (u32, u32)| {
+                ctx.sites
+                    .get(&c)
+                    .is_none_or(|v| gates().build(v.site.kind) & !ctx.practice == 0)
+            };
             if let Some((site, ())) = search(
                 ctx.site_index,
                 pos,
@@ -478,7 +498,15 @@ fn pick_work(
                 ex.memo(Search::ReadySite),
                 |c, _| reach(c) && ready(c),
             ) {
-                return Some((JobKind::Build { site }, 0, ItemKind::Log));
+                if allowed(site) {
+                    return Some((JobKind::Build { site }, 0, ItemKind::Log));
+                }
+                if let Some((site, ())) = ctx
+                    .site_index
+                    .nearest_where(pos, radius, |c, _| reach(c) && ready(c) && allowed(c))
+                {
+                    return Some((JobKind::Build { site }, 0, ItemKind::Log));
+                }
             }
             // M3: take apart what is marked for deconstruction.
             let open = |t: (u32, u32)| {
@@ -504,10 +532,39 @@ fn pick_work(
                     && super::space::diggable(res, t)
                     && reach(t)
             };
-            search(&index.dig, pos, radius, ex.memo(Search::DigMark), |t, _| {
-                open(t)
-            })
-            .map(|(tile, ())| (JobKind::Dig { tile }, 0, ItemKind::Stone))
+            let may =
+                |d: sim_core::colony::Designation| gates().designation(d) & !ctx.practice == 0;
+            let dig = if may(sim_core::colony::Designation::Dig) {
+                search(&index.dig, pos, radius, ex.memo(Search::DigMark), |t, _| {
+                    open(t)
+                })
+                .map(|(tile, ())| (JobKind::Dig { tile }, 0, ItemKind::Stone))
+            } else {
+                None
+            };
+            if dig.is_some() || !may(sim_core::colony::Designation::ClayPit) {
+                return dig;
+            }
+            // M4: then the nearest marked clay bank no one has taken.
+            let clay = |t: (u32, u32)| {
+                colony.designations.get(&t) == Some(&sim_core::colony::Designation::ClayPit)
+                    && colony.nodes.contains_key(&t)
+                    && !colony.reservations.contains_key(&ReserveKey::Node(t))
+                    && reach(t)
+            };
+            search(
+                &index.clay,
+                pos,
+                radius,
+                ex.memo(Search::ClayMark),
+                |t, _| clay(t),
+            )
+            .map(|(node, ())| (JobKind::DigClay { node }, 0, ItemKind::Clay))
+        }
+        WorkType::Quarry
+            if gates().designation(sim_core::colony::Designation::Quarry) & !ctx.practice != 0 =>
+        {
+            None
         }
         WorkType::Quarry => {
             let quarriable = |tile: (u32, u32)| {
@@ -857,14 +914,28 @@ impl RuntimeSystem for JobAssignSystem {
             return;
         };
         let tick = resources.current_tick;
+        // M4: open apprenticeship orders whose people are gone or done are closed first.
+        if rule.knowledge.is_some() && !resources.colony.teach_orders.is_empty() {
+            super::teach::tidy(world, resources);
+        }
         let in_combat = |id: AgentId| {
             resources
                 .combat_pairs
                 .iter()
                 .any(|&(a, b)| a == id || b == id)
         };
-        // (id, entity, tile, work priorities, holds a tool, skills)
-        type Row = (AgentId, Entity, (u32, u32), WorkPriorities, bool, Skills);
+        // (id, entity, tile, work priorities, holds a tool, skills, practitioner bits)
+        type Row = (
+            AgentId,
+            Entity,
+            (u32, u32),
+            WorkPriorities,
+            bool,
+            Skills,
+            u32,
+        );
+        let knowledge_rule = rule.knowledge;
+        let gating = knowledge_rule.is_some();
         // M3 (DECISIONS D16): a person whose hunger or thirst is at its seek
         // threshold is about to leave for food or water; no new job then.
         let needy = |e: Entity| {
@@ -886,13 +957,14 @@ impl RuntimeSystem for JobAssignSystem {
                 Option<&Elder>,
                 Option<&Tool>,
                 Option<&Skills>,
+                Option<&Knowledge>,
             )>()
             .without::<&Job>()
             .without::<&Child>()
             .without::<&PorterTrip>()
             .iter()
             .filter(|(entity, _)| !needy(*entity))
-            .filter(|(_, (agent, _, state, _, _, _, _))| {
+            .filter(|(_, (agent, _, state, _, _, _, _, _))| {
                 matches!(
                     state,
                     AgentState::Idle
@@ -905,16 +977,29 @@ impl RuntimeSystem for JobAssignSystem {
                 ) && !in_combat(agent.id)
             })
             .map(
-                |(entity, (agent, pos, _, priorities, elder, tool, skills))| {
+                |(entity, (agent, pos, _, priorities, elder, tool, skills, knowledge))| {
                     let p = priorities
                         .copied()
                         .unwrap_or(WorkPriorities::defaults(elder.is_some()));
                     let skills = skills.copied().unwrap_or_default();
-                    (agent.id, entity, (pos.x, pos.y), p, tool.is_some(), skills)
+                    let practice = if gating {
+                        knowledge.map_or(0, |k| k.practice())
+                    } else {
+                        u32::MAX
+                    };
+                    (
+                        agent.id,
+                        entity,
+                        (pos.x, pos.y),
+                        p,
+                        tool.is_some(),
+                        skills,
+                        practice,
+                    )
                 },
             )
             .collect();
-        if available.is_empty() {
+        if available.is_empty() && resources.colony.teach_orders.is_empty() {
             return;
         }
         available.sort_by_key(|row| row.0);
@@ -964,6 +1049,10 @@ impl RuntimeSystem for JobAssignSystem {
             vec![(0, None)]
         };
         let mut assigned: std::collections::BTreeSet<AgentId> = std::collections::BTreeSet::new();
+        // M4: today's apprenticeship sessions first (both partners must be free).
+        if let Some(k) = knowledge_rule {
+            super::teach::assign(world, resources, &k, &mut assigned, &mut taken);
+        }
         // The skills of the crafts on offer (active bills of work type Craft), for the craft round's order.
         let mut craft_skills: Vec<SkillKind> = resources
             .colony
@@ -990,7 +1079,7 @@ impl RuntimeSystem for JobAssignSystem {
                     )
                 });
             }
-            for &&(id, entity, pos, priorities, has_tool, _) in &order {
+            for &&(id, entity, pos, priorities, has_tool, _, practice) in &order {
                 let ctx = Ctx {
                     rule: &rule,
                     sites: &sites,
@@ -1005,6 +1094,7 @@ impl RuntimeSystem for JobAssignSystem {
                     gather_short: &gather_short,
                     hearth: &hearth,
                     region: resources.nav.region_of(pos),
+                    practice,
                 };
                 let ex = exhausted.entry(ctx.region).or_default();
                 let found = match work {

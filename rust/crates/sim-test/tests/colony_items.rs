@@ -71,6 +71,8 @@ fn resource_nodes_follow_the_placement_rule() {
                     assert_eq!(node.material, FLINT);
                     outcrops += 1;
                 }
+                // M4: clay banks (checked in colony_knowledge.rs).
+                NodeKind::ClayBank => assert_eq!(node.left, 18, "{node:?}"),
             }
         }
         let count = |t: TerrainType| r.tile_grid.terrain_type.iter().filter(|x| **x == t).count();

@@ -1,0 +1,87 @@
+// M4 knowledge map (docs/v8/m4/M4_GOAL.md 3.1, ADR 0024). Loaded by
+// sim_core::colony::knowledge::defs() (embedded with include_str!, parsed once).
+// A node's KnowledgeId is its index in this list (file order).
+//
+// Fields: id, lane (survival | craft | build | mine | pottery | social), era (paleolithic | neolithic),
+// threshold (‰ at which a person is a practitioner and may do the gated work), prereqs (ids; discovery only),
+// difficulty (1–3: the discovery chance class), discover (settlement conditions, all must hold),
+// gates (what only practitioners may do), marker_weight (0 = not an era marker), seed (who knows it at the start),
+// name_key (locale key).
+//
+// Conditions: Stockpile(item, n) — n or more of the item on stockpile cells; Skill(skill, level) — someone has the
+// skill at the level; Knows(id, permille) — someone holds the knowledge at the proficiency; ClayBankNear(tiles) — a
+// clay bank within that Chebyshev distance of the camp hearth (worldgen).
+// Gates: Recipe(id), Blueprint(kind) (building its site), Workshop(kind) (building its site), Designation(kind),
+// Channel(apprenticeship | oral) (teaching fidelity / storytelling), Lore(what) (no job is gated; used in daily life).
+// Seed: All (every founder at 600 ‰), Count(n) (n of 10 founders at 500–700 ‰, scaled to the founder count), None.
+// Difficulty of discoverable nodes is not in the goal table: chosen in M4 DECISIONS D9.
+(
+    schema_version: 1,
+    // Neolithic markers that M4 does not have yet; they count in the era progress denominator (goal 3.4).
+    absent_markers: [("farming", 3), ("weaving", 2)],
+    knowledge: [
+        (id: "fire_keeping", lane: "survival", era: "paleolithic", threshold: 300, prereqs: [], difficulty: 1,
+         discover: [], gates: [Lore("hearth")], marker_weight: 0, seed: All, name_key: "KNOWLEDGE_FIRE_KEEPING"),
+        (id: "foraging", lane: "survival", era: "paleolithic", threshold: 300, prereqs: [], difficulty: 1,
+         discover: [], gates: [Lore("forage")], marker_weight: 0, seed: All, name_key: "KNOWLEDGE_FORAGING"),
+        (id: "water_finding", lane: "survival", era: "paleolithic", threshold: 200, prereqs: [], difficulty: 1,
+         discover: [], gates: [Lore("water")], marker_weight: 0, seed: All, name_key: "KNOWLEDGE_WATER_FINDING"),
+        (id: "flint_knapping", lane: "craft", era: "paleolithic", threshold: 300, prereqs: [], difficulty: 1,
+         discover: [], gates: [Recipe("knap_blade"), Workshop("knapping_spot")], marker_weight: 0, seed: Count(3),
+         name_key: "KNOWLEDGE_FLINT_KNAPPING"),
+        (id: "hafting", lane: "craft", era: "paleolithic", threshold: 300, prereqs: ["flint_knapping"], difficulty: 1,
+         discover: [], gates: [Recipe("haft_axe")], marker_weight: 0, seed: Count(2), name_key: "KNOWLEDGE_HAFTING"),
+        (id: "firewood_splitting", lane: "craft", era: "paleolithic", threshold: 200, prereqs: [], difficulty: 1,
+         discover: [], gates: [Recipe("split_firewood"), Workshop("wood_bench")], marker_weight: 0, seed: Count(4),
+         name_key: "KNOWLEDGE_FIREWOOD_SPLITTING"),
+        (id: "pressure_flaking", lane: "craft", era: "paleolithic", threshold: 400, prereqs: ["flint_knapping"],
+         difficulty: 2, discover: [Stockpile("flint_blade", 10), Skill("knap", 6)], gates: [Recipe("knap_fine_blade")],
+         marker_weight: 0, seed: None, name_key: "KNOWLEDGE_PRESSURE_FLAKING"),
+        (id: "stone_grinding", lane: "craft", era: "neolithic", threshold: 400, prereqs: ["hafting", "stone_quarrying"],
+         difficulty: 2, discover: [Stockpile("stone", 12), Knows("hafting", 500)],
+         gates: [Recipe("grind_axe"), Workshop("grinding_stone")], marker_weight: 3, seed: None,
+         name_key: "KNOWLEDGE_STONE_GRINDING"),
+        (id: "hut_building", lane: "build", era: "paleolithic", threshold: 300, prereqs: [], difficulty: 1,
+         discover: [], gates: [Blueprint("hut")], marker_weight: 0, seed: All, name_key: "KNOWLEDGE_HUT_BUILDING"),
+        (id: "timber_wall", lane: "build", era: "neolithic", threshold: 300, prereqs: ["hut_building"], difficulty: 1,
+         discover: [Stockpile("log", 8)], gates: [Blueprint("log_wall")], marker_weight: 2, seed: Count(2),
+         name_key: "KNOWLEDGE_TIMBER_WALL"),
+        (id: "doorway", lane: "build", era: "paleolithic", threshold: 200, prereqs: ["timber_wall"], difficulty: 1,
+         discover: [], gates: [Blueprint("door")], marker_weight: 0, seed: Count(1), name_key: "KNOWLEDGE_DOORWAY"),
+        (id: "packed_floor", lane: "build", era: "paleolithic", threshold: 200, prereqs: [], difficulty: 1,
+         discover: [], gates: [Blueprint("packed_floor")], marker_weight: 0, seed: Count(2),
+         name_key: "KNOWLEDGE_PACKED_FLOOR"),
+        (id: "bedding", lane: "build", era: "paleolithic", threshold: 200, prereqs: [], difficulty: 1,
+         discover: [], gates: [Blueprint("bedroll")], marker_weight: 0, seed: Count(3), name_key: "KNOWLEDGE_BEDDING"),
+        (id: "stone_walling", lane: "build", era: "neolithic", threshold: 400, prereqs: ["timber_wall", "stone_quarrying"],
+         difficulty: 2, discover: [Stockpile("stone", 20), Knows("timber_wall", 500)], gates: [Blueprint("stone_wall")],
+         marker_weight: 1, seed: None, name_key: "KNOWLEDGE_STONE_WALLING"),
+        (id: "stone_quarrying", lane: "mine", era: "paleolithic", threshold: 300, prereqs: [], difficulty: 1,
+         discover: [], gates: [Designation("quarry")], marker_weight: 0, seed: Count(3),
+         name_key: "KNOWLEDGE_STONE_QUARRYING"),
+        (id: "digging", lane: "mine", era: "paleolithic", threshold: 300, prereqs: ["stone_quarrying"], difficulty: 1,
+         discover: [], gates: [Designation("dig")], marker_weight: 0, seed: Count(2), name_key: "KNOWLEDGE_DIGGING"),
+        (id: "clay_digging", lane: "mine", era: "neolithic", threshold: 300, prereqs: ["digging"], difficulty: 1,
+         discover: [ClayBankNear(24), Knows("digging", 400)], gates: [Designation("clay_pit")], marker_weight: 0,
+         seed: None, name_key: "KNOWLEDGE_CLAY_DIGGING"),
+        (id: "clay_prep", lane: "pottery", era: "neolithic", threshold: 300, prereqs: ["clay_digging"], difficulty: 1,
+         discover: [Stockpile("clay", 4)], gates: [], marker_weight: 0, seed: None, name_key: "KNOWLEDGE_CLAY_PREP"),
+        (id: "pot_forming", lane: "pottery", era: "neolithic", threshold: 400, prereqs: ["clay_prep"], difficulty: 2,
+         discover: [Knows("clay_prep", 500), Knows("fire_keeping", 300)],
+         gates: [Recipe("form_pot"), Workshop("pottery_bench")], marker_weight: 0, seed: None,
+         name_key: "KNOWLEDGE_POT_FORMING"),
+        (id: "pot_firing", lane: "pottery", era: "neolithic", threshold: 400, prereqs: ["pot_forming", "fire_keeping"],
+         difficulty: 2, discover: [Stockpile("raw_pot", 2)], gates: [Recipe("fire_pot")], marker_weight: 3, seed: None,
+         name_key: "KNOWLEDGE_POT_FIRING"),
+        (id: "instruction", lane: "social", era: "paleolithic", threshold: 300, prereqs: [], difficulty: 1,
+         discover: [], gates: [Channel("apprenticeship")], marker_weight: 0, seed: Count(2),
+         name_key: "KNOWLEDGE_INSTRUCTION"),
+        (id: "storytelling", lane: "social", era: "paleolithic", threshold: 200, prereqs: [], difficulty: 1,
+         discover: [], gates: [Channel("oral")], marker_weight: 0, seed: All, name_key: "KNOWLEDGE_STORYTELLING"),
+        (id: "tracking", lane: "survival", era: "paleolithic", threshold: 300, prereqs: [], difficulty: 1,
+         discover: [], gates: [], marker_weight: 0, seed: Count(2), name_key: "KNOWLEDGE_TRACKING"),
+        (id: "hide_scraping", lane: "craft", era: "paleolithic", threshold: 300, prereqs: ["flint_knapping"],
+         difficulty: 1, discover: [], gates: [Workshop("drying_rack")], marker_weight: 0, seed: Count(1),
+         name_key: "KNOWLEDGE_HIDE_SCRAPING"),
+    ],
+)

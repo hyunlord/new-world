@@ -50,6 +50,11 @@ pub struct ColonyRule {
     /// every colony world, ADR 0021).
     #[serde(default)]
     pub space: Option<SpaceRule>,
+    /// M4 (ADR 0024–0026): knowledge — who may do gated work, the channels,
+    /// forgetting, discovery and the settlement's technology. `None` = M3
+    /// (everyone may do everything).
+    #[serde(default)]
+    pub knowledge: Option<super::KnowledgeRule>,
 }
 
 /// M3's tunables (goal 3.2–3.3; `ColonyRule::space`).
@@ -162,6 +167,7 @@ impl ColonyRule {
         finish_leg_tiles: None,
         economy: None,
         space: None,
+        knowledge: None,
     };
 
     /// The M1.5 colony values: [`Self::M1`] with the job-churn remedies
@@ -184,9 +190,10 @@ impl ColonyRule {
         ..Self::M2
     };
 
-    /// The M4 colony values: [`Self::M3`] with tool wear (goal 3.5).
+    /// The M4 colony values: [`Self::M3`] with tool wear (goal 3.5) and knowledge (goal 3.1–3.4).
     pub const M4: Self = Self {
         economy: Some(EconomyRule::M4),
+        knowledge: Some(super::KnowledgeRule::M4),
         ..Self::M3
     };
 

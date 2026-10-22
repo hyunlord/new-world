@@ -36,17 +36,20 @@ pub enum SkillKind {
     Build,
     /// Digging into hills (M3).
     Mining,
+    /// Forming and firing pots (M4).
+    Pottery,
 }
 
 impl SkillKind {
     /// Every skill, in code order.
-    pub const ALL: [Self; 6] = [
+    pub const ALL: [Self; 7] = [
         Self::Knap,
         Self::Woodwork,
         Self::Chop,
         Self::Quarry,
         Self::Build,
         Self::Mining,
+        Self::Pottery,
     ];
 
     /// Stable code / array index (0 = knap).
@@ -58,6 +61,7 @@ impl SkillKind {
             Self::Quarry => 3,
             Self::Build => 4,
             Self::Mining => 5,
+            Self::Pottery => 6,
         }
     }
 
@@ -70,6 +74,7 @@ impl SkillKind {
             Self::Quarry => "quarry",
             Self::Build => "build",
             Self::Mining => "mining",
+            Self::Pottery => "pottery",
         }
     }
 
@@ -88,11 +93,27 @@ pub enum RecipeKind {
     HaftAxe,
     /// Split one log into four firewood.
     SplitFirewood,
+    /// Knap a fine blade by pressure flaking (M4).
+    KnapFineBlade,
+    /// Grind a stone axe into a ground axe (M4).
+    GrindAxe,
+    /// Form a raw pot from clay (M4).
+    FormPot,
+    /// Fire a raw pot at the hearth (M4).
+    FirePot,
 }
 
 impl RecipeKind {
     /// Every recipe, in code order.
-    pub const ALL: [Self; 3] = [Self::KnapBlade, Self::HaftAxe, Self::SplitFirewood];
+    pub const ALL: [Self; 7] = [
+        Self::KnapBlade,
+        Self::HaftAxe,
+        Self::SplitFirewood,
+        Self::KnapFineBlade,
+        Self::GrindAxe,
+        Self::FormPot,
+        Self::FirePot,
+    ];
 
     /// Stable code (0 = knap blade).
     pub const fn code(self) -> u8 {
@@ -100,6 +121,10 @@ impl RecipeKind {
             Self::KnapBlade => 0,
             Self::HaftAxe => 1,
             Self::SplitFirewood => 2,
+            Self::KnapFineBlade => 3,
+            Self::GrindAxe => 4,
+            Self::FormPot => 5,
+            Self::FirePot => 6,
         }
     }
 
@@ -109,6 +134,10 @@ impl RecipeKind {
             Self::KnapBlade => "knap_blade",
             Self::HaftAxe => "haft_axe",
             Self::SplitFirewood => "split_firewood",
+            Self::KnapFineBlade => "knap_fine_blade",
+            Self::GrindAxe => "grind_axe",
+            Self::FormPot => "form_pot",
+            Self::FirePot => "fire_pot",
         }
     }
 
@@ -140,6 +169,8 @@ pub struct Recipe {
     pub skill: SkillKind,
     /// The work type a craft counts as (priorities).
     pub work: WorkType,
+    /// Quality added to every craft of it (M4: pressure flaking's +15).
+    pub quality_add: i32,
 }
 
 #[derive(Deserialize)]
@@ -157,6 +188,8 @@ struct RecipeRaw {
     work_ticks: u32,
     skill: String,
     work: String,
+    #[serde(default)]
+    quality_add: i32,
 }
 
 impl RecipeRaw {
@@ -173,6 +206,7 @@ impl RecipeRaw {
             work_ticks: self.work_ticks,
             skill: SkillKind::from_name(&self.skill)?,
             work: WorkType::from_name(&self.work)?,
+            quality_add: self.quality_add,
         })
     }
 }
@@ -312,7 +346,7 @@ mod tests {
     #[test]
     fn the_recipe_file_parses_to_the_goal_table() {
         let table = recipes();
-        assert_eq!(table.len(), 3);
+        assert_eq!(table.len(), 7);
         let knap = RecipeKind::KnapBlade.recipe().cloned();
         assert_eq!(
             knap,
@@ -324,7 +358,65 @@ mod tests {
                 work_ticks: 45,
                 skill: SkillKind::Knap,
                 work: WorkType::Craft,
+                quality_add: 0,
             })
+        );
+        // M4 (goal 3.5): the pottery chain, ground stone and fine blades.
+        let pots: Vec<_> = [
+            RecipeKind::FormPot,
+            RecipeKind::FirePot,
+            RecipeKind::GrindAxe,
+            RecipeKind::KnapFineBlade,
+        ]
+        .iter()
+        .filter_map(|r| r.recipe())
+        .map(|r| {
+            (
+                r.workshop,
+                r.inputs.clone(),
+                r.output,
+                r.work_ticks,
+                r.skill,
+                r.quality_add,
+            )
+        })
+        .collect();
+        assert_eq!(
+            pots,
+            vec![
+                (
+                    BlueprintKind::PotteryBench,
+                    vec![(ItemKind::Clay, 2)],
+                    (ItemKind::RawPot, 1),
+                    60,
+                    SkillKind::Pottery,
+                    0
+                ),
+                (
+                    BlueprintKind::HearthFire,
+                    vec![(ItemKind::RawPot, 1), (ItemKind::Firewood, 2)],
+                    (ItemKind::ClayPot, 1),
+                    90,
+                    SkillKind::Pottery,
+                    0
+                ),
+                (
+                    BlueprintKind::GrindingStone,
+                    vec![(ItemKind::StoneAxe, 1), (ItemKind::Stone, 1)],
+                    (ItemKind::GroundAxe, 1),
+                    120,
+                    SkillKind::Woodwork,
+                    0
+                ),
+                (
+                    BlueprintKind::KnappingSpot,
+                    vec![(ItemKind::Flint, 1)],
+                    (ItemKind::FlintBlade, 1),
+                    60,
+                    SkillKind::Knap,
+                    15
+                ),
+            ]
         );
         let axe = RecipeKind::HaftAxe
             .recipe()

@@ -376,9 +376,9 @@ pub(super) fn recipes_to_dict(rows: &[(u8, &'static str, u8, u8, u16, u32, u8)])
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct AgentEconomyRow {
     /// Levels by `SkillKind::code`.
-    pub levels: [u8; 6],
+    pub levels: [u8; 7],
     /// XP by `SkillKind::code`.
-    pub xp: [u32; 6],
+    pub xp: [u32; 7],
     /// Held tool: `(ItemKind::code, quality, material name)`.
     pub tool: Option<(u8, u8, String)>,
     /// Carried load: `(ItemKind::code, count, quality, material name)`.

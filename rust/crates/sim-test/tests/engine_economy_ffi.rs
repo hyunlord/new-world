@@ -65,7 +65,12 @@ fn workshops_list_bills_in_order_and_commands_parse_names() {
         vec![
             (0, "knap_blade", 1),
             (1, "haft_axe", 2),
-            (2, "split_firewood", 2)
+            (2, "split_firewood", 2),
+            // M4: pressure flaking, ground stone and the pottery chain.
+            (3, "knap_fine_blade", 1),
+            (4, "grind_axe", 9),
+            (5, "form_pot", 10),
+            (6, "fire_pot", 11)
         ]
     );
     // A workshop and its site appear in the overlay as nothing else.

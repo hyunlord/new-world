@@ -190,6 +190,38 @@ pub enum Command {
         /// The role; `None` = automatic.
         role: Option<crate::rooms::RoomRole>,
     },
+    /// Mark every clay bank in the rectangle for digging clay (M4).
+    DesignateClay {
+        /// Corner x.
+        x0: u32,
+        /// Corner y.
+        y0: u32,
+        /// Opposite corner x.
+        x1: u32,
+        /// Opposite corner y.
+        y1: u32,
+    },
+    /// Order `teacher` to teach `learner` the knowledge node `knowledge` in
+    /// apprenticeship sessions (M4 goal 3.3).
+    OrderTeach {
+        /// The teacher (a practitioner of the node).
+        teacher: AgentId,
+        /// The learner (an adult or a child of at least 10 years, below the threshold).
+        learner: AgentId,
+        /// The node (`KnowledgeId`).
+        knowledge: u8,
+    },
+    /// Cancel the apprenticeship order `order` (M4).
+    CancelTeach {
+        /// The order id.
+        order: u32,
+    },
+    /// Test and probe only (M4 F10, never reachable from the game bridge):
+    /// the person dies at once.
+    DebugKill {
+        /// The person.
+        agent: AgentId,
+    },
     /// Draft or release a person (reserved for M5; rejected in M1).
     SetDrafted {
         /// The person.
@@ -222,6 +254,10 @@ impl Command {
             Self::DesignateDig { .. } => "designate_dig",
             Self::DesignateDeconstruct { .. } => "designate_deconstruct",
             Self::SetRoomRole { .. } => "set_room_role",
+            Self::DesignateClay { .. } => "designate_clay",
+            Self::OrderTeach { .. } => "order_teach",
+            Self::CancelTeach { .. } => "cancel_teach",
+            Self::DebugKill { .. } => "debug_kill",
         }
     }
 }
@@ -256,6 +292,10 @@ pub enum RejectReason {
     /// No one from the camp can walk there (M4 goal 3.6: across the river
     /// without a ford); the bridge shows "닿을 수 없음: 강 건너".
     Unreachable,
+    /// The teacher does not practise what it should teach (M4).
+    NoPractitioner,
+    /// The learner is younger than the rule's learner age (M4).
+    TooYoung,
 }
 
 impl RejectReason {
@@ -275,6 +315,8 @@ impl RejectReason {
             Self::Edge => "edge",
             Self::Built => "built",
             Self::Unreachable => "unreachable",
+            Self::NoPractitioner => "no_practitioner",
+            Self::TooYoung => "too_young",
         }
     }
 }

@@ -329,6 +329,20 @@ pub fn register_job_systems(engine: &mut SimEngine) {
     engine.register_system(Box::new(runtime::jobs::JobExecuteSystem::new()));
     engine.register_system(Box::new(runtime::jobs::HearthFeedSystem::new()));
     engine.register_system(Box::new(runtime::rooms::RoomSystem::new()));
+    register_knowledge_systems(engine);
+}
+
+/// Register M4's knowledge systems (ADR 0024–0026), all no-ops without
+/// `ColonyRule::knowledge`: `OralTransmissionSystem` (160, daily at the evening
+/// gathering), `ObservationSystem` (161, every 30 ticks),
+/// `KnowledgeDecaySystem` (162, every 60), `DiscoverySystem` (163, every 240)
+/// and `TechAggregateSystem` (164, every 240).
+pub fn register_knowledge_systems(engine: &mut SimEngine) {
+    engine.register_system(Box::new(runtime::knowledge::OralTransmissionSystem));
+    engine.register_system(Box::new(runtime::knowledge::ObservationSystem));
+    engine.register_system(Box::new(runtime::knowledge::KnowledgeDecaySystem));
+    engine.register_system(Box::new(runtime::knowledge::DiscoverySystem));
+    engine.register_system(Box::new(runtime::knowledge::TechAggregateSystem));
 }
 
 /// Register the rules-gated Pass 5 hearth fire (priority 147, interval 60),

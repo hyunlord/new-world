@@ -974,6 +974,25 @@ pub fn resolve(
             agent: spec["agent"].as_u64().ok_or("set_drafted needs agent")?,
             drafted: spec["drafted"].as_bool().unwrap_or(true),
         }],
+        ("designate_clay", None) => {
+            let (x0, y0, x1, y1) = rect(spec)?;
+            vec![Command::DesignateClay { x0, y0, x1, y1 }]
+        }
+        ("order_teach", None) => vec![Command::OrderTeach {
+            teacher: spec["teacher"]
+                .as_u64()
+                .ok_or("order_teach needs teacher")?,
+            learner: spec["learner"]
+                .as_u64()
+                .ok_or("order_teach needs learner")?,
+            knowledge: field(spec, "knowledge")? as u8,
+        }],
+        ("cancel_teach", None) => vec![Command::CancelTeach {
+            order: field(spec, "order")?,
+        }],
+        ("debug_kill", None) => vec![Command::DebugKill {
+            agent: spec["agent"].as_u64().ok_or("debug_kill needs agent")?,
+        }],
         (other, None) => return Err(format!("unknown command {other}")),
     })
 }
@@ -992,6 +1011,7 @@ pub fn command_json(tick: u64, cmd: &Command) -> Value {
         | Command::DesignateQuarry { x0, y0, x1, y1 }
         | Command::DesignateDig { x0, y0, x1, y1 }
         | Command::DesignateDeconstruct { x0, y0, x1, y1 }
+        | Command::DesignateClay { x0, y0, x1, y1 }
         | Command::CancelArea { x0, y0, x1, y1 }
         | Command::AddStockpile { x0, y0, x1, y1 }
         | Command::RemoveZoneArea { x0, y0, x1, y1 } => {
@@ -1048,6 +1068,13 @@ pub fn command_json(tick: u64, cmd: &Command) -> Value {
         Command::SetRoomRole { room, role } => {
             json!({"room": room, "role": role.map_or("auto", |r| r.name())})
         }
+        Command::OrderTeach {
+            teacher,
+            learner,
+            knowledge,
+        } => json!({"teacher": teacher, "learner": learner, "knowledge": knowledge}),
+        Command::CancelTeach { order } => json!({"order": order}),
+        Command::DebugKill { agent } => json!({"agent": agent}),
     };
     v["tick"] = json!(tick);
     v["cmd"] = json!(cmd.name());
@@ -1169,6 +1196,7 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
     let mut demography = super::demography::Demography::new(&engine);
     let mut economy = super::economy::Economy::new();
     let mut space = super::space::SpaceWatch::new();
+    let mut knowledge = super::knowledge::KnowledgeWatch::new();
     let mut waiting: Vec<usize> = Vec::new();
     // `"every_days"` entries: (tick of the next application, entry), M3.
     let mut repeats: Vec<(u64, usize)> = Vec::new();
@@ -1235,6 +1263,7 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
         demography.after_tick(&engine);
         economy.after_tick(&engine);
         space.after_tick(&engine);
+        knowledge.after_tick(&engine);
         if let Some(t) = twin.as_mut() {
             t.tick();
         }
@@ -1310,7 +1339,7 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
         (Some(a), Some(b)) => b.saturating_sub(a) <= limit,
         _ => false,
     };
-    let summary = json!({
+    let mut summary = json!({
         "seed": seed,
         "days": args.days,
         "commands": c.command_log.len(),
@@ -1353,6 +1382,7 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
         "m2": economy.report(&engine),
         "m3": space.report(&engine),
     });
+    summary["m4"] = knowledge.report(&engine);
     let mut sorted = tick_ns.clone();
     sorted.sort_unstable();
     let mean = tick_ns.iter().sum::<u64>() as f64 / tick_ns.len().max(1) as f64 / 1e6;

@@ -166,10 +166,20 @@ pub fn finish_craft(
         .map(|stats| stats.hardness_percent());
     let quality = craft_quality(
         level,
-        bonus,
+        bonus + recipe.quality_add,
         material_term(recipe.id, hardness),
         temperament_quality(temperament.as_ref()),
     );
+    // M4 (goal 3.2, ADR 0024): what the crafter knows caps the quality
+    // (`QUAL_CAP` of the lowest proficiency among the recipe's gating nodes).
+    let gate = sim_core::colony::knowledge::gates().recipe(recipe.id);
+    let gated = crate::runtime::knowledge::rule(res).is_some() && gate != 0;
+    let quality = if gated {
+        let p = crate::runtime::knowledge::proficiency_of(world, entity, gate);
+        quality.min(sim_core::colony::knowledge::quality_cap(p))
+    } else {
+        quality
+    };
     let (kind, n) = recipe.output;
     let spec = ItemSpec {
         kind,
@@ -197,4 +207,7 @@ pub fn finish_craft(
     entry.1 += u64::from(quality);
     let ticks = scaled_ticks(recipe.work_ticks, level);
     train(world, entity, recipe.skill, ticks);
+    if gated {
+        crate::runtime::knowledge::used(world, res, entity, gate);
+    }
 }

@@ -232,6 +232,8 @@ pub struct ColonyIndex {
     pub dig: ChunkIndex<()>,
     /// Every tile with a deconstruct designation (M3).
     pub deconstruct: ChunkIndex<()>,
+    /// Every tile with a clay-pit designation (M4).
+    pub clay: ChunkIndex<()>,
 }
 
 impl ColonyIndex {
@@ -247,6 +249,7 @@ impl ColonyIndex {
         self.quarry.clear();
         self.dig.clear();
         self.deconstruct.clear();
+        self.clay.clear();
         for tile in colony.ground_items.keys() {
             self.ground.insert(*tile, ());
         }
@@ -259,6 +262,7 @@ impl ColonyIndex {
                 Designation::Quarry => self.quarry.insert(*tile, ()),
                 Designation::Dig => self.dig.insert(*tile, ()),
                 Designation::Deconstruct => self.deconstruct.insert(*tile, ()),
+                Designation::ClayPit => self.clay.insert(*tile, ()),
             }
         }
         self.version = Some(colony.overlay_version);

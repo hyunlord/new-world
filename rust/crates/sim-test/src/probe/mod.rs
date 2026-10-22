@@ -17,6 +17,8 @@ mod family_samples;
 mod family_trace;
 mod fingerprint;
 pub(crate) mod fission_settlements;
+/// M3 built space and rooms in a colony run (`m3` summary block).
+pub mod knowledge;
 mod long_run;
 pub(crate) mod meals_firewood;
 pub(crate) mod metrics;
@@ -28,7 +30,6 @@ mod routine_observer;
 mod routine_trace;
 mod runner;
 mod seasons_forage;
-/// M3 built space and rooms in a colony run (`m3` summary block).
 pub mod space;
 mod summary;
 mod winter_severity;

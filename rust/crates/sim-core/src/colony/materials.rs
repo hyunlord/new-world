@@ -97,6 +97,8 @@ pub const GRANITE: MaterialId = MaterialId::from_str_hash("granite");
 pub const LIMESTONE: MaterialId = MaterialId::from_str_hash("limestone");
 /// `oak` (every log until trees have species).
 pub const OAK: MaterialId = MaterialId::from_str_hash("oak");
+/// `clay` (river-bank clay, M4; no stats file: no craft reads its hardness).
+pub const CLAY: MaterialId = MaterialId::from_str_hash("clay");
 
 #[cfg(test)]
 mod tests {

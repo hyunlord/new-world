@@ -147,6 +147,12 @@ fn target_exists(world: &World, res: &SimResources, job: &Job) -> bool {
         // Clearing a site: the stack is there; the drop always exists (spill).
         (JobKind::Clear { from, .. }, JobStage::ToSource) => stack(from),
         (JobKind::Clear { .. }, _) => true,
+        (JobKind::DigClay { node }, _) => {
+            colony.nodes.contains_key(&node)
+                && colony.designations.get(&node) == Some(&Designation::ClayPit)
+        }
+        // Apprenticeship: `teach::step` checks the order and the partner.
+        (JobKind::Teach { .. } | JobKind::Learn { .. }, _) => true,
     }
 }
 
@@ -160,6 +166,10 @@ fn step(
     mut job: Job,
 ) {
     let tick = res.current_tick;
+    // A partner's step this tick may already have ended this job (M4 apprenticeship).
+    if world.get::<&Job>(entity).is_err() {
+        return;
+    }
     let state = state_of(world, entity);
     let space =
         matches!(job.kind, JobKind::Build { site } if res.colony.space_sites.contains_key(&site));
@@ -195,6 +205,18 @@ fn step(
         cancel(world, res, entity, CancelReason::Unreachable);
         return;
     }
+    // M4: apprenticeship jobs walk to the meeting tile, then `teach::step` runs them.
+    if matches!(job.kind, JobKind::Teach { .. } | JobKind::Learn { .. }) {
+        let at = job.kind.source();
+        if job.stage == JobStage::ToSource && chebyshev(pos, at) > 1 {
+            walk(world, res, id, entity, &mut job, pos, at);
+            return;
+        }
+        if let Some(next) = super::teach::step(world, res, entity, job, pos) {
+            put_job(world, entity, next);
+        }
+        return;
+    }
     match job.stage {
         JobStage::ToSource => {
             // M2: a chopper first stops at its axe (goal 3.7).
@@ -213,6 +235,7 @@ fn step(
                 | JobKind::Quarry { node: near }
                 | JobKind::Gather { spot: near, .. }
                 | JobKind::Dig { tile: near }
+                | JobKind::DigClay { node: near }
                 | JobKind::Deconstruct { tile: near } => chebyshev(pos, near) <= 1,
                 _ => res.nav.arrived(pos, source),
             };
@@ -234,9 +257,21 @@ fn step(
                     job.stage = JobStage::Working { ticks_left: ticks };
                     set_state(world, entity, WORK_JOB);
                 }
-                JobKind::Build { .. } => {
+                JobKind::Build { site } => {
                     job.stage = JobStage::Working { ticks_left: 0 };
                     set_state(world, entity, if space { WORK_JOB } else { BUILD });
+                    // M4: building a gated blueprint uses its knowledge (stamped as work starts).
+                    let kind = colony_sites(world).get(&site).map(|v| v.site.kind);
+                    if let Some(kind) = kind {
+                        let mask = sim_core::colony::knowledge::gates().build(kind);
+                        crate::runtime::knowledge::used(world, res, entity, mask);
+                    }
+                }
+                JobKind::DigClay { .. } => {
+                    let ticks = work_ticks(world, rule, entity, CLAY_TICKS, SkillKind::Mining);
+                    job.amount = ticks.min(u32::from(u16::MAX)) as u16;
+                    job.stage = JobStage::Working { ticks_left: ticks };
+                    set_state(world, entity, WORK_JOB);
                 }
                 JobKind::Dig { .. } => {
                     let base = rule.space.map_or(150, |s| s.dig_ticks);
@@ -266,6 +301,8 @@ fn step(
                     job.stage = JobStage::Working { ticks_left: ticks };
                     set_state(world, entity, WORK_JOB);
                 }
+                // Handled before the stage match (M4 apprenticeship).
+                JobKind::Teach { .. } | JobKind::Learn { .. } => {}
                 JobKind::Haul { from, .. }
                 | JobKind::Deliver { from, .. }
                 | JobKind::Supply { from, .. }
@@ -322,6 +359,16 @@ fn step(
                 JobKind::Quarry { node } => {
                     quarry_batch(res, rule, node, pos);
                     craft::train(world, entity, SkillKind::Quarry, u32::from(job.amount));
+                    let mask =
+                        sim_core::colony::knowledge::gates().designation(Designation::Quarry);
+                    crate::runtime::knowledge::used(world, res, entity, mask);
+                }
+                JobKind::DigClay { node } => {
+                    clay_batch(res, node, pos);
+                    craft::train(world, entity, SkillKind::Mining, u32::from(job.amount));
+                    let mask =
+                        sim_core::colony::knowledge::gates().designation(Designation::ClayPit);
+                    crate::runtime::knowledge::used(world, res, entity, mask);
                 }
                 JobKind::Craft { workshop, bill, at } => {
                     craft::finish_craft(world, res, id, entity, &job);
@@ -349,6 +396,8 @@ fn step(
                 JobKind::Dig { tile } => {
                     super::space::dig(res, tile);
                     craft::train(world, entity, SkillKind::Mining, u32::from(job.amount));
+                    let mask = sim_core::colony::knowledge::gates().designation(Designation::Dig);
+                    crate::runtime::knowledge::used(world, res, entity, mask);
                 }
                 JobKind::Deconstruct { tile } => {
                     super::space::deconstruct(res, tile);
@@ -625,6 +674,42 @@ fn quarry_batch(res: &mut SimResources, rule: &ColonyRule, node: (u32, u32), at:
     res.colony.touch(false);
     if n > 0 {
         res.colony.item_ledger.create(spec.kind, u64::from(n));
+        let drop = if super::items::can_hold_items(res, node) {
+            node
+        } else {
+            at
+        };
+        put_items(res, drop, spec, u16::from(n));
+    }
+}
+
+/// Work ticks of one clay batch at skill level 5 (M4 goal 3.5: 60).
+pub const CLAY_TICKS: u32 = 60;
+/// Clay one batch yields (M4 goal 3.5: 3).
+pub const CLAY_BATCH: u8 = 3;
+
+/// One clay batch (M4 goal 3.5): up to [`CLAY_BATCH`] clay of the bank lands
+/// on the digger's tile (a bank on the river's edge may not hold items); a
+/// bank dug out (after 6 batches) is removed with its mark.
+fn clay_batch(res: &mut SimResources, node: (u32, u32), at: (u32, u32)) {
+    let Some(found) = res.colony.nodes.get_mut(&node) else {
+        return;
+    };
+    let n = found.left.min(CLAY_BATCH);
+    found.left -= n;
+    let (spec, left) = (
+        ItemSpec::raw(ItemKind::Clay, Some(found.material)),
+        found.left,
+    );
+    if left == 0 {
+        res.colony.nodes.remove(&node);
+        res.colony.designations.remove(&node);
+        res.colony.tallies.nodes_exhausted += 1;
+    }
+    res.colony.tallies.clay_batches += 1;
+    res.colony.touch(false);
+    if n > 0 {
+        res.colony.item_ledger.create(ItemKind::Clay, u64::from(n));
         let drop = if super::items::can_hold_items(res, node) {
             node
         } else {

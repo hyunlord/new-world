@@ -42,8 +42,10 @@ pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 /// Save format version; a file of any other version is rejected. Bump it
 /// whenever a saved type or the layout changes. 2 = M2 (item specs, nodes,
 /// workshops and bills, multi-line material needs, tools, skills, priorities);
-/// 3 = M3 (door and dug tile columns, navigation paths, space sites, rooms).
-pub const FORMAT_VERSION: u32 = 3;
+/// 3 = M3 (door and dug tile columns, navigation paths, space sites, rooms);
+/// 4 = M4 (`Knowledge`, seven skills, the ford column, apprenticeship orders,
+/// the technology aggregate, new item, recipe, blueprint and job kinds).
+pub const FORMAT_VERSION: u32 = 4;
 
 /// Upper bound for one decode (guards against corrupt length prefixes).
 const DECODE_LIMIT: u64 = 1 << 31;

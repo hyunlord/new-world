@@ -12,7 +12,8 @@
 //! are on the shelf or available (unreserved stacks anywhere on the map, in
 //! or out of stockpiles). The first runnable bill becomes `active`; the job
 //! layer then supplies its inputs (`JobKind::Supply`) and crafts it
-//! (`JobKind::Craft`). Shelf items that no live bill of the workshop uses (a
+//! (`JobKind::Craft`). M4: under the knowledge rule a bill is runnable only
+//! while some living adult practises its recipe's gate. Shelf items that no live bill of the workshop uses (a
 //! bill removed, suspended or done) are put down at the work tile (merge and
 //! spill), so nothing stays stranded on a shelf.
 use hecs::World;
@@ -123,6 +124,15 @@ pub fn runnable(world: &World, res: &SimResources, shop: &Workshop, index: usize
         return false;
     };
     if bill.suspended || recipe.workshop != shop.kind {
+        return false;
+    }
+    // M4 (ADR 0024): a bill no living adult can craft waits (`NoPractitioner`).
+    if crate::runtime::knowledge::rule(res).is_some()
+        && !crate::runtime::knowledge::anyone_practises(
+            world,
+            sim_core::colony::knowledge::gates().recipe(recipe.id),
+        )
+    {
         return false;
     }
     let more = match bill.mode {

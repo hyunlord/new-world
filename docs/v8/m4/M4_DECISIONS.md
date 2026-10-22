@@ -90,3 +90,122 @@ Raw data lives in `/Users/rexxa/work/m4-data/` (`$DATA`), outside the repository
   M3 ceilings 4/4 PASS. So M3 did exceed +10 % on the 64² scene's mean and on three p99s, which the contended session
   had hidden; recorded, not re-litigated (M3 is closed). The M4 gate compares with these M3 rows.
 - Evidence: `$DATA/bench/RUN.txt`, `$DATA/bench/{base,cand}_bench.json`.
+
+## D7 — States of a technology: "at risk" means one holder
+
+- Context: goal 3.4 defines AtRisk as 1–2 practitioners and the event "when practitioners drop to 1", while §13 and F1
+  expect the start to show "⚠ 기술 위험 2" with doorway and hide scraping red ("1명만 앎") — but hafting, timber walls,
+  instruction, tracking, packed floors and digging also start with two holders, so the literal rule would show 8.
+- Choice: `TechStatus` from the holders (at threshold) and the practitioners (adult holders who used it, or gained it,
+  within 6 days): 0 holders → Lost if it was ever held, else Unknown; exactly 1 holder → AtRisk; ≥ 3 practitioners →
+  Stable; otherwise Known. `KnowledgeAtRisk` is logged when a node moves from Known or Stable into AtRisk (naming the
+  one holder); `KnowledgeLost` when it moves into Lost (naming the last named holder). The HUD badge counts AtRisk.
+- Reason: the warning names one person ("문: Fox만 앎"), which is exactly the one-holder case; a two-holder node is
+  "known but not stable" (yellow on the tech map).
+
+## D8 — Teaching without instruction
+
+- Context: goal 3.3 requires the teacher to know `instruction` (seeded to 2 of 10 founders), and F3 expects the doorway
+  order from its single holder to complete by day 8 on ≥ 28/32 seeds. With independent seeding the doorway holder
+  knows instruction in about 2 worlds of 10, so the core loop (the one holder teaches) would be impossible in most.
+- Choice: any practitioner may teach; `instruction` is the full-fidelity channel: fidelity 950 ‰ with it, 700 ‰
+  without (`KnowledgeRule::fidelity_untrained`), × 1,100 ‰ at ≥ 800 ‰ proficiency. A session gives
+  round(15 × fidelity / 1000) ‰: 14 with instruction (15 sessions to 200 ‰), 11 without (19 sessions).
+- The K dialog lists every practitioner as a teacher and marks those with instruction.
+
+## D9 — Seeding order, difficulty classes, fine blades
+
+- Seeding (goal 3.1 leaves "who" open): nodes in id order; for a `Count(n)` node the adult founders are ranked by a
+  keyed draw (`STREAM_KNOWLEDGE`, subject = lineage key, slot = node id), those already practising every prerequisite
+  first, and the first n get it at 500 + a keyed draw below 201 ‰ (slot 0x100 + id). So hafters knap, the door-maker
+  builds log walls, the hide scraper knaps. `All` nodes go to every founder at 600 ‰. For N founders a `Count(n)` is
+  scaled to round(n · N / 10), at least 1 (the benchmark's 1,000 founders).
+- Difficulty (the goal table gives none for discoverable nodes): timber walls 1, clay digging 1, clay preparation 1,
+  pressure flaking 2, stone grinding 2, stone walling 2, pot forming 2, pot firing 2 — the chain of four pottery
+  discoveries and F6's 20/32 by day 30 need odds of about 1 in 90 per check (6 checks a day per candidate).
+- `knap_fine_blade`: 60 work ticks (the goal gives none), `quality_add` +15 ("quality +15 floor" read as +15 to the
+  craft's quality before the knowledge cap).
+
+## D10 — Storage of `Knowledge`
+
+- Choice: a sorted `Vec<KnowledgeEntry>` (12 B an entry: last use `u32`, proficiency and observed `u16`, id and source
+  `u8`) and the cached `u32` practitioner bitset, instead of the goal's `SmallVec<[_; 12]>`: no new dependency
+  (`arrayvec` is fixed-capacity, and a person may come to hold all 24). A founder holds ≈ 8–12 entries: 32 B inline +
+  96–144 B on the heap. Measured in Part 5 (bytes per person).
+
+## D11 — What is gated (gating completeness)
+
+- Gated (`knowledge::gates()`): every recipe (`knap_blade` flint knapping, `haft_axe` hafting, `split_firewood`
+  firewood splitting, `knap_fine_blade` pressure flaking, `grind_axe` stone grinding, `form_pot` pot forming,
+  `fire_pot` pot firing); building every blueprint (hut hut-building, log wall timber walls, door doorway, packed floor,
+  bedroll bedding, stone wall stone walling, knapping spot flint knapping, wood bench firewood splitting, drying rack
+  hide scraping, grinding stone stone grinding, pottery bench pot forming); the designations quarry (stone quarrying),
+  dig (digging) and clay pit (clay digging).
+- Universal (open to everyone): delivering materials to a site, supplying a workshop shelf, hauling, restocking,
+  clearing a site, chopping, gathering deadwood, deconstructing, and all survival work. Fire keeping, foraging and
+  water finding are everyday lore: no job is gated by them (gating food or water would kill), they are stamped used by
+  daily life (D13).
+- A bill no living adult can craft is not runnable (`BillSystem`), so another bill of the same workshop runs (a wood
+  bench without a hafter still splits firewood). A site waits built-ready until a practitioner comes.
+- "Use" is stamped when a gated job completes (crafts, quarry, dig and clay batches) or, for buildings, when the build
+  work starts (a V7 hut is finished by `ConstructionSystem`, after which the site is gone).
+
+## D12 — The era at the start is not 0 %
+
+- Context: goal 3.4/§13 expect "구석기 0 %" at the start, but the table seeds timber walls (a Neolithic marker, weight 2)
+  to 2 founders (it gates the log walls M3 already builds).
+- Choice: the table wins over the sentence; the start reads 2 practitioners of 10 adults × weight 2 / 14 ≈ 28 ‰ ("구석기
+  2 %"), and falls to 0 when nobody has built a log wall for 6 days. Tests assert the start value computed from the
+  table, not 0.
+
+## D13 — Everyday lore and the evening telling
+
+- Oral telling runs at 20:30 (`oral_minute` 1230; inside the 18:00–21:00 evening-gather window, before night rest).
+  The gathered: within 12 tiles of a hearth (the camp) or in the hall (D14).
+- Fire keeping is stamped used by every gathered holder each evening; foraging when the person is seen seeking or
+  eating food (sampled at each forgetting step), water finding when seen drinking. Storytelling is used by a teller.
+- A listener "lacks" a node when below its threshold, so a forgotten node can be heard again.
+- Oral learning is not logged in the chronicle (it would flood it); the knowledge tab shows it.
+
+## D14 — The evening telling: who gathers, rehearsal, telling is use (calibration before Part 2's tests)
+
+- Measured on the soak (seeds 0–3, 20 days; `$DATA/scan/`): with the gathered read as "within 6 tiles of the hearth"
+  only 3.4 of 10 people were there at 20:30 (busy people work into the evening; the soak's walled house lies 8–12 tiles
+  east across a ford), and every variant lost nodes within 20 days:
+  - no rehearsal: hut building on all 4 seeds at day 18.7 — everyone held it at 600 ‰, no hut was ordered, all faded
+    on the same day, and talk could not help since nobody "lacked" it;
+  - rehearsal only when the teller had nothing new: radius 6 / 10 / 12 / 16 at 20:30, 18:30 or 19:30 still lost
+    3–7 nodes (hut building, hide scraping, instruction, tracking, clay digging);
+  - rehearsal by every pair: radius 10 lost instruction, radius 12 hide scraping;
+  - plus "telling is use" for the teller: radius 10 and 12 lost nothing.
+- Choice: the gathered are the people within 12 tiles of a hearth (6.9 of 10 a night) or in the hall; every pair
+  rehearses one node both practise (keyed), stamping it used for both; the teller is stamped as using what it tells.
+  Shared knowledge lives while people talk; a node held by one person spreads by talk or dies with them or fades if
+  they never tell it — the at-risk drama stays.
+- Same measurement: adult knappers on day 12: 7, 8, 8, 5 (F2 needs 6); seeded entries forgotten by day 20: 1, 1, 0, 1;
+  `Knowledge` 144–155 B a person (after D10's 8-byte entries; 182–226 B before).
+
+## D15 — The hearth as the pot-firing workshop
+
+- Context: goal 3.5 — `fire_pot` is made "at the hearth (the hearth becomes a workshop target for this recipe only)".
+- Choice: under the knowledge rule the colony worldgen adds a `Workshop` of kind `BlueprintKind::HearthFire` (1×1 at
+  the camp hearth's tile, worked from the tile south of it, never placeable, `placeable()` false) with the next
+  workshop id. It occupies no tile (the hearth stays the settlement's building), so rooms never count it as a workshop
+  and a hall stays a hall. Its only recipe is `fire_pot`; bills are added to it like any workshop's.
+
+## D16 — Clay banks
+
+- Choice (goal 3.5: "density such that ≥ 3 banks lie within 24 tiles of the camp in ≥ 30/32 seeds"): under the
+  knowledge rule, one clay bank per 80 river-bank tiles on the free bank tiles (shuffled with `STREAM_CLAY`, slot 0),
+  then, while fewer than 3 lie within 24 tiles of the camp, more on the free bank tiles within that distance (slot 1).
+  A bank holds 18 clay = 6 digs of 3 (`DigClay` jobs, `WorkType::Mine`, 60 ticks at level 5, skill Mining). The bank
+  material is `clay` (no stats file: nothing reads its hardness). Quarry marks skip clay banks; `DesignateClay` marks
+  them.
+- Measured: PENDING (banks within 24 tiles on seeds 0–31).
+
+## D17 — `DebugKill` (F10's fixture)
+
+- A recorded command (`Command::DebugKill { agent }`) that kills a person through the normal despawn path (recorded as
+  old age, so the death reaches the chronicle, the settlement and the job layer exactly as a death does). The probe
+  script parser accepts `debug_kill`; the game bridge has no `cmd_debug_kill` (the bridge API list does not change for
+  it), so a player cannot issue it.

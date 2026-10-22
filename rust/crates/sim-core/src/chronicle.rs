@@ -91,11 +91,22 @@ pub enum ChronicleKind {
     /// M4: subject = the person whose tool broke; cause = the tool's
     /// `ItemKind::code`; value = the uses it lasted. The tool is used up.
     ToolBroke = 24,
+    /// M4: subject = the learner, other = the teacher (none for talk); cause =
+    /// the channel (`knowledge::Source::code`: 2 oral, 3 observed, 4
+    /// apprenticed); value = the knowledge node id. Logged when an
+    /// apprenticeship makes the learner a practitioner.
+    KnowledgeLearned = 25,
+    /// M4: subject = the discoverer; value = the knowledge node id.
+    KnowledgeDiscovered = 26,
+    /// M4: subject = the one person left who holds it; value = the node id.
+    KnowledgeAtRisk = 27,
+    /// M4: subject = the last holder (when known); value = the node id.
+    KnowledgeLost = 28,
 }
 
 impl ChronicleKind {
     /// Every kind in discriminant order.
-    pub const ALL: [ChronicleKind; 25] = [
+    pub const ALL: [ChronicleKind; 29] = [
         Self::Born,
         Self::FoundingMember,
         Self::Paired,
@@ -121,6 +132,10 @@ impl ChronicleKind {
         Self::HutBuilt,
         Self::RoomFormed,
         Self::ToolBroke,
+        Self::KnowledgeLearned,
+        Self::KnowledgeDiscovered,
+        Self::KnowledgeAtRisk,
+        Self::KnowledgeLost,
     ];
 
     /// Stable numeric discriminant.
@@ -156,6 +171,10 @@ impl ChronicleKind {
             Self::HutBuilt => "hut_built",
             Self::RoomFormed => "room_formed",
             Self::ToolBroke => "tool_broke",
+            Self::KnowledgeLearned => "knowledge_learned",
+            Self::KnowledgeDiscovered => "knowledge_discovered",
+            Self::KnowledgeAtRisk => "knowledge_at_risk",
+            Self::KnowledgeLost => "knowledge_lost",
         }
     }
 }
@@ -491,10 +510,11 @@ mod tests {
         assert_eq!(ChronicleKind::RoomFormed.as_u8(), 23);
         // M4: kind 24 appended; 0–23 unchanged.
         assert_eq!(ChronicleKind::ToolBroke.as_u8(), 24);
-        assert_eq!(ChronicleKind::ALL.len(), 25);
+        assert_eq!(ChronicleKind::KnowledgeLost.as_u8(), 28);
+        assert_eq!(ChronicleKind::ALL.len(), 29);
         let names: std::collections::BTreeSet<&str> =
             ChronicleKind::ALL.iter().map(|k| k.as_str()).collect();
-        assert_eq!(names.len(), 25);
+        assert_eq!(names.len(), 29);
         assert_eq!(DepartCause::TopUp.as_u8(), 4);
     }
 

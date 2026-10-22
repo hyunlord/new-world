@@ -19,6 +19,8 @@ pub enum NodeKind {
     Boulder,
     /// A river-bank flint outcrop: quarried for `Flint`.
     FlintOutcrop,
+    /// A river-bank clay bank: dug for `Clay` (M4, designation `ClayPit`).
+    ClayBank,
 }
 
 impl NodeKind {
@@ -27,6 +29,7 @@ impl NodeKind {
         match self {
             Self::Boulder => 0,
             Self::FlintOutcrop => 1,
+            Self::ClayBank => 2,
         }
     }
 
@@ -35,6 +38,7 @@ impl NodeKind {
         match self {
             Self::Boulder => ItemKind::Stone,
             Self::FlintOutcrop => ItemKind::Flint,
+            Self::ClayBank => ItemKind::Clay,
         }
     }
 }
@@ -61,16 +65,19 @@ pub enum Designation {
     Dig,
     /// Take the wall, door, floor or bedroll on this tile apart (M3).
     Deconstruct,
+    /// Dig clay from the clay bank on this tile (M4).
+    ClayPit,
 }
 
 impl Designation {
-    /// Stable code for the bridge (0 chop, 1 quarry, 2 dig, 3 deconstruct).
+    /// Stable code for the bridge (0 chop, 1 quarry, 2 dig, 3 deconstruct, 4 clay pit).
     pub const fn code(self) -> u8 {
         match self {
             Self::Chop => 0,
             Self::Quarry => 1,
             Self::Dig => 2,
             Self::Deconstruct => 3,
+            Self::ClayPit => 4,
         }
     }
 }
@@ -117,11 +124,18 @@ pub enum BlueprintKind {
     PackedFloor,
     /// A 1×1 bedroll: one bed (M3, ADR 0023).
     Bedroll,
+    /// A 1×1 grinding stone (M4): grinds stone axes.
+    GrindingStone,
+    /// A 1×1 pottery bench (M4): forms pots.
+    PotteryBench,
+    /// The camp hearth as a workshop for firing pots (M4): made by the colony
+    /// worldgen at the hearth, never placed by the player.
+    HearthFire,
 }
 
 impl BlueprintKind {
     /// Every kind, in code order.
-    pub const ALL: [Self; 9] = [
+    pub const ALL: [Self; 12] = [
         Self::Hut,
         Self::KnappingSpot,
         Self::WoodBench,
@@ -131,10 +145,14 @@ impl BlueprintKind {
         Self::Door,
         Self::PackedFloor,
         Self::Bedroll,
+        Self::GrindingStone,
+        Self::PotteryBench,
+        Self::HearthFire,
     ];
 
     /// Stable code for the bridge (0 = hut, 1 knapping spot, 2 wood bench, 3 drying
-    /// rack, 4 log wall, 5 stone wall, 6 door, 7 packed floor, 8 bedroll).
+    /// rack, 4 log wall, 5 stone wall, 6 door, 7 packed floor, 8 bedroll; M4: 9
+    /// grinding stone, 10 pottery bench, 11 hearth fire).
     pub const fn code(self) -> u8 {
         match self {
             Self::Hut => 0,
@@ -146,6 +164,9 @@ impl BlueprintKind {
             Self::Door => 6,
             Self::PackedFloor => 7,
             Self::Bedroll => 8,
+            Self::GrindingStone => 9,
+            Self::PotteryBench => 10,
+            Self::HearthFire => 11,
         }
     }
 
@@ -169,15 +190,29 @@ impl BlueprintKind {
             Self::Door => "door",
             Self::PackedFloor => "packed_floor",
             Self::Bedroll => "bedroll",
+            Self::GrindingStone => "grinding_stone",
+            Self::PotteryBench => "pottery_bench",
+            Self::HearthFire => "hearth_fire",
         }
     }
 
-    /// Whether the finished building is a workshop (knapping spot, wood bench, drying rack).
+    /// Whether the finished building is a workshop (knapping spot, wood bench,
+    /// drying rack; M4 grinding stone, pottery bench, the hearth fire).
     pub const fn is_workshop(self) -> bool {
         matches!(
             self,
-            Self::KnappingSpot | Self::WoodBench | Self::DryingRack
+            Self::KnappingSpot
+                | Self::WoodBench
+                | Self::DryingRack
+                | Self::GrindingStone
+                | Self::PotteryBench
+                | Self::HearthFire
         )
+    }
+
+    /// Whether the player may place it (M4: the hearth fire is made by the worldgen).
+    pub const fn placeable(self) -> bool {
+        !matches!(self, Self::HearthFire)
     }
 
     /// Whether it is a 1×1 piece of built space (M3: wall, door, floor,
@@ -215,6 +250,9 @@ impl BlueprintKind {
             Self::Door => ((1, 1), MaterialNeeds::single(ItemKind::Log, 1), 30),
             Self::PackedFloor => ((1, 1), MaterialNeeds::none(), 15),
             Self::Bedroll => ((1, 1), MaterialNeeds::single(ItemKind::Log, 1), 10),
+            Self::GrindingStone => ((1, 1), MaterialNeeds::single(ItemKind::Stone, 2), 30),
+            Self::PotteryBench => ((1, 1), MaterialNeeds::single(ItemKind::Log, 1), 20),
+            Self::HearthFire => ((1, 1), MaterialNeeds::none(), 0),
         }
     }
 }
@@ -450,11 +488,11 @@ mod tests {
             assert_eq!(BlueprintKind::from_name(kind.name()), Some(kind));
         }
         let codes: Vec<u8> = BlueprintKind::ALL.iter().map(|k| k.code()).collect();
-        assert_eq!(codes, vec![0, 1, 2, 3, 4, 5, 6, 7, 8]);
+        assert_eq!(codes, vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
         let space: Vec<bool> = BlueprintKind::ALL.iter().map(|k| k.is_space()).collect();
         assert_eq!(
             space,
-            vec![false, false, false, false, true, true, true, true, true]
+            vec![false, false, false, false, true, true, true, true, true, false, false, false]
         );
         assert!(MaterialNeeds::none().complete());
         assert_eq!(MaterialNeeds::none().needed_total(), 0);

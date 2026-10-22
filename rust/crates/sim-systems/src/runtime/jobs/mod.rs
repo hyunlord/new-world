@@ -10,7 +10,8 @@
 //! - [`cancel`] ends jobs and releases reservations; [`items`] puts items down
 //!   (merge and spill) and indexes colony sites; [`craft`] starts and finishes
 //!   crafts; [`invariants`] checks the per-kind ledger, the reservations and
-//!   the stacks; [`space`] finishes, takes apart and digs built space (M3).
+//!   the stacks; [`space`] finishes, takes apart and digs built space (M3);
+//!   [`teach`] runs apprenticeship orders as paired Teach / Learn jobs (M4).
 //!
 //! Data flow: command → designation / zone / site (`crate::commands`) →
 //! assign (reserve) → execute (move logs, ledger) → `ConstructionSystem`
@@ -26,6 +27,7 @@ pub mod invariants;
 pub mod items;
 pub mod seam;
 pub mod space;
+pub mod teach;
 
 pub use assign::{JobAssignSystem, JOB_ASSIGN_PRIORITY};
 pub use bills::{BillSystem, BILL_PRIORITY};

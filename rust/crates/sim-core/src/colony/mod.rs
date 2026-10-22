@@ -12,6 +12,7 @@ use std::collections::BTreeMap;
 mod command;
 mod items;
 mod job;
+pub mod knowledge;
 pub mod materials;
 mod orders;
 pub mod skills;
@@ -98,6 +99,42 @@ pub struct ColonyTallies {
     /// Tools broken by wear (M4 goal 3.5: used up, not turned into stone).
     #[serde(default)]
     pub tools_broken: u64,
+    /// Evening tellings with something to tell (M4; measurement only).
+    #[serde(default)]
+    pub oral_tellings: u64,
+    /// Tellings that took (M4).
+    #[serde(default)]
+    pub oral_learned: u64,
+    /// People gathered at the evening tellings, summed over evenings (M4).
+    #[serde(default)]
+    pub oral_gathered: u64,
+    /// Evening pairs that rehearsed a shared node (M4).
+    #[serde(default)]
+    pub oral_rehearsed: u64,
+    /// Practitioner bits lost to forgetting (M4).
+    #[serde(default)]
+    pub forgotten: u64,
+    /// Of them, seeded entries (M4 F5).
+    #[serde(default)]
+    pub forgotten_seeded: u64,
+    /// Discoveries (M4).
+    #[serde(default)]
+    pub discoveries: u64,
+    /// Observation gains (M4).
+    #[serde(default)]
+    pub observed: u64,
+    /// Apprenticeship sessions held (M4).
+    #[serde(default)]
+    pub teach_sessions: u64,
+    /// Apprenticeship orders completed (M4).
+    #[serde(default)]
+    pub teach_done: u64,
+    /// Apprenticeship orders cancelled (M4).
+    #[serde(default)]
+    pub teach_cancelled: u64,
+    /// Clay batches dug (M4).
+    #[serde(default)]
+    pub clay_batches: u64,
 }
 
 impl ColonyTallies {
@@ -190,6 +227,15 @@ pub struct ColonyState {
     pub overlay_version: u64,
     /// Counters.
     pub tallies: ColonyTallies,
+    /// M4 (ADR 0026): the settlement's technology (`TechAggregateSystem`).
+    #[serde(default)]
+    pub tech: knowledge::TechAggregate,
+    /// M4 (goal 3.3): open apprenticeship orders in id order.
+    #[serde(default)]
+    pub teach_orders: Vec<knowledge::TeachOrder>,
+    /// Next apprenticeship order id (from 1).
+    #[serde(default)]
+    pub next_teach_id: u32,
     /// Measurement only (M1.5 goal 8.2.1): jobs the decision seam released to
     /// a need, counted by [`JobReleaseKey`]. No system reads it, and no
     /// fingerprint or summary includes it.

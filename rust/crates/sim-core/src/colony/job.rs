@@ -146,6 +146,26 @@ pub enum JobKind {
         /// Where they go.
         to: (u32, u32),
     },
+    /// Dig one batch of clay from the clay bank at `node` (M4).
+    DigClay {
+        /// The clay bank tile.
+        node: (u32, u32),
+    },
+    /// Teach the apprenticeship order `order` one session at `at` (M4).
+    Teach {
+        /// The order (`TeachOrder::id`).
+        order: u32,
+        /// The meeting tile.
+        at: (u32, u32),
+    },
+    /// Learn from the apprenticeship order `order` at `at` (M4; the teacher's
+    /// job runs the session and ends both).
+    Learn {
+        /// The order (`TeachOrder::id`).
+        order: u32,
+        /// The meeting tile.
+        at: (u32, u32),
+    },
     /// Make one item of `bill` at `workshop`, working at its work tile `at` (M2).
     Craft {
         /// The workshop.
@@ -172,6 +192,9 @@ impl JobKind {
             Self::Dig { .. } => 9,
             Self::Deconstruct { .. } => 10,
             Self::Clear { .. } => 11,
+            Self::DigClay { .. } => 12,
+            Self::Teach { .. } => 13,
+            Self::Learn { .. } => 14,
         }
     }
 
@@ -189,6 +212,9 @@ impl JobKind {
             Self::Dig { .. } => "dig",
             Self::Deconstruct { .. } => "deconstruct",
             Self::Clear { .. } => "clear",
+            Self::DigClay { .. } => "dig_clay",
+            Self::Teach { .. } => "teach",
+            Self::Learn { .. } => "learn",
         }
     }
 
@@ -203,6 +229,8 @@ impl JobKind {
             Self::Gather { .. } => WorkType::Split,
             Self::Dig { .. } => WorkType::Mine,
             Self::Deconstruct { .. } | Self::Clear { .. } => WorkType::Build,
+            Self::DigClay { .. } => WorkType::Mine,
+            Self::Teach { .. } | Self::Learn { .. } => WorkType::Craft,
         }
     }
 
@@ -218,6 +246,8 @@ impl JobKind {
             Self::Gather { spot, .. } => spot,
             Self::Dig { tile } | Self::Deconstruct { tile } => tile,
             Self::Clear { from, .. } => from,
+            Self::DigClay { node } => node,
+            Self::Teach { at, .. } | Self::Learn { at, .. } => at,
         }
     }
 
@@ -234,7 +264,10 @@ impl JobKind {
             | Self::Quarry { .. }
             | Self::Craft { .. }
             | Self::Dig { .. }
-            | Self::Deconstruct { .. } => None,
+            | Self::Deconstruct { .. }
+            | Self::DigClay { .. }
+            | Self::Teach { .. }
+            | Self::Learn { .. } => None,
         }
     }
 }
@@ -310,6 +343,8 @@ impl Job {
                 vec![ReserveKey::Stack(from), ReserveKey::Cell(to)]
             }
             (JobKind::Clear { to, .. }, _) => vec![ReserveKey::Cell(to)],
+            (JobKind::DigClay { node }, _) => vec![ReserveKey::Node(node)],
+            (JobKind::Teach { .. } | JobKind::Learn { .. }, _) => Vec::new(),
         }
     }
 }

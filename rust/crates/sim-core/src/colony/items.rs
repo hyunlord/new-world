@@ -21,11 +21,19 @@ pub enum ItemKind {
     StoneAxe,
     /// A hide (no source in M2; the drying rack accepts no bill yet).
     Hide,
+    /// Clay dug from a river-bank clay pit (M4).
+    Clay,
+    /// A formed, unfired pot (M4).
+    RawPot,
+    /// A fired clay pot (M4).
+    ClayPot,
+    /// A ground-stone axe: a stone axe ground on a grinding stone (M4): a tool.
+    GroundAxe,
 }
 
 impl ItemKind {
     /// Every kind, in code order.
-    pub const ALL: [Self; 7] = [
+    pub const ALL: [Self; 11] = [
         Self::Log,
         Self::Firewood,
         Self::Stone,
@@ -33,9 +41,14 @@ impl ItemKind {
         Self::FlintBlade,
         Self::StoneAxe,
         Self::Hide,
+        Self::Clay,
+        Self::RawPot,
+        Self::ClayPot,
+        Self::GroundAxe,
     ];
 
-    /// Stable code for the bridge's packed columns (0 = log … 6 = hide).
+    /// Stable code for the bridge's packed columns (0 = log … 6 = hide; M4: 7
+    /// clay, 8 raw pot, 9 clay pot, 10 ground axe).
     pub const fn code(self) -> u8 {
         match self {
             Self::Log => 0,
@@ -45,6 +58,10 @@ impl ItemKind {
             Self::FlintBlade => 4,
             Self::StoneAxe => 5,
             Self::Hide => 6,
+            Self::Clay => 7,
+            Self::RawPot => 8,
+            Self::ClayPot => 9,
+            Self::GroundAxe => 10,
         }
     }
 
@@ -58,6 +75,10 @@ impl ItemKind {
             Self::FlintBlade => "flint_blade",
             Self::StoneAxe => "stone_axe",
             Self::Hide => "hide",
+            Self::Clay => "clay",
+            Self::RawPot => "raw_pot",
+            Self::ClayPot => "clay_pot",
+            Self::GroundAxe => "ground_axe",
         }
     }
 
@@ -73,8 +94,9 @@ impl ItemKind {
             Self::Firewood => 50,
             Self::Stone | Self::Flint => 30,
             Self::FlintBlade => 20,
-            Self::StoneAxe => 5,
-            Self::Hide => 10,
+            Self::StoneAxe | Self::GroundAxe => 5,
+            Self::Hide | Self::RawPot | Self::ClayPot => 10,
+            Self::Clay => 30,
         }
     }
 
@@ -86,8 +108,10 @@ impl ItemKind {
             Self::Stone => 6,
             Self::Flint => 8,
             Self::FlintBlade => 10,
-            Self::StoneAxe => 2,
+            Self::StoneAxe | Self::GroundAxe => 2,
             Self::Hide => 5,
+            Self::Clay => 8,
+            Self::RawPot | Self::ClayPot => 2,
         }
     }
 }
@@ -338,7 +362,7 @@ mod tests {
             (3, 3)
         );
         let codes: Vec<u8> = ItemKind::ALL.iter().map(|k| k.code()).collect();
-        assert_eq!(codes, vec![0, 1, 2, 3, 4, 5, 6]);
+        assert_eq!(codes, vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
         assert_eq!((ItemKind::Log.code(), ItemKind::Log.name()), (0, "log"));
         for kind in ItemKind::ALL {
             assert_eq!(ItemKind::from_name(kind.name()), Some(kind));

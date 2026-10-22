@@ -64,11 +64,130 @@ pub(super) fn generate(cfg: &WorldGenConfig, gen: &ColonyGen, engine: &mut SimEn
     engine.resources.colony.tallies.founder_fixes = fixed;
     trees(cfg, gen, &mut engine.resources, camp);
     nodes(cfg, gen, &mut engine.resources, camp);
+    clay_banks(cfg, gen, &mut engine.resources, camp);
+    hearth_fire(&mut engine.resources, camp);
     let opened = open_the_camp(&mut engine.resources, camp);
     engine.resources.colony.tallies.camp_pass_tiles = opened;
     let fords = fords(&mut engine.resources, camp);
     engine.resources.colony.tallies.ford_tiles = fords;
     founders_on_open_ground(engine, camp);
+    // M4: who knows what at the start (after the founders are final).
+    crate::runtime::knowledge::seed::seed_founders(engine);
+}
+
+/// River-bank tiles per clay bank (M4 goal 3.5).
+pub const BANK_TILES_PER_CLAY: u32 = 80;
+/// Clay banks the worldgen makes sure lie near the camp (M4 goal 3.5: ≥ 3 within 24).
+pub const CLAY_NEAR_MIN: usize = 3;
+/// Chebyshev distance from the camp of the near clay banks.
+pub const CLAY_NEAR: u32 = 24;
+/// Clay in a bank: 6 digs of 3 (M4 goal 3.5).
+pub const CLAY_PER_BANK: u8 = 18;
+
+/// M4 (goal 3.5; under `ColonyRule::knowledge`): clay banks on river-bank
+/// tiles (within `bank_reach` of water, not water or mountain, free as for the
+/// outcrops), one per [`BANK_TILES_PER_CLAY`] bank tiles on the free bank
+/// tiles shuffled with `STREAM_CLAY` (slot 0); then, while fewer than
+/// [`CLAY_NEAR_MIN`] lie within [`CLAY_NEAR`] of the camp, more on the free
+/// bank tiles within that distance, shuffled with slot 1. Each holds
+/// [`CLAY_PER_BANK`] clay (river clay material).
+fn clay_banks(cfg: &WorldGenConfig, gen: &ColonyGen, r: &mut SimResources, camp: Tile) {
+    let Some(rule) = r.rules.colony.and_then(|c| c.economy) else {
+        return;
+    };
+    if r.rules.colony.and_then(|c| c.knowledge).is_none() {
+        return;
+    }
+    let reach = rule.bank_reach;
+    let (w, h) = (r.tile_grid.width, r.tile_grid.height);
+    let near_water = |r: &SimResources, p: Tile| {
+        let (x0, y0) = (p.0.saturating_sub(reach), p.1.saturating_sub(reach));
+        let (x1, y1) = ((p.0 + reach).min(w - 1), (p.1 + reach).min(h - 1));
+        (y0..=y1).any(|y| (x0..=x1).any(|x| terrain(r, (x, y)) == TerrainType::River))
+    };
+    let free = |r: &SimResources, p: Tile| {
+        distance(p, camp) > gen.clearing_radius
+            && !matches!(terrain(r, p), TerrainType::River | TerrainType::Mountain)
+            && !r.building_kinds.contains_key(&p)
+            && !r.water_tiles.contains_key(&p)
+            && !r.food_source_max.contains_key(&p)
+            && !r.food_tiles.contains_key(&p)
+            && !r.wood_source_max.contains_key(&p)
+            && !r.colony.trees.contains_key(&p)
+            && !r.colony.nodes.contains_key(&p)
+            && near_water(r, p)
+    };
+    let bank_total = tiles(r)
+        .into_iter()
+        .filter(|&p| {
+            !matches!(terrain(r, p), TerrainType::River | TerrainType::Mountain) && near_water(r, p)
+        })
+        .count();
+    let mut bank: Vec<Tile> = tiles(r).into_iter().filter(|&p| free(r, p)).collect();
+    shuffle(&mut bank, cfg.seed, sim_core::rng::STREAM_CLAY, 0);
+    bank.truncate(bank_total / BANK_TILES_PER_CLAY.max(1) as usize);
+    let clay = sim_core::colony::materials::CLAY;
+    for p in bank {
+        r.colony.nodes.insert(
+            p,
+            ResourceNode {
+                kind: NodeKind::ClayBank,
+                left: CLAY_PER_BANK,
+                material: clay,
+            },
+        );
+    }
+    let near = |r: &SimResources| {
+        r.colony
+            .nodes
+            .iter()
+            .filter(|(t, n)| n.kind == NodeKind::ClayBank && distance(**t, camp) <= CLAY_NEAR)
+            .count()
+    };
+    let missing = CLAY_NEAR_MIN.saturating_sub(near(r));
+    if missing > 0 {
+        let mut close: Vec<Tile> = tiles(r)
+            .into_iter()
+            .filter(|&p| distance(p, camp) <= CLAY_NEAR && free(r, p))
+            .collect();
+        shuffle(&mut close, cfg.seed, sim_core::rng::STREAM_CLAY, 1);
+        for p in close.into_iter().take(missing) {
+            r.colony.nodes.insert(
+                p,
+                ResourceNode {
+                    kind: NodeKind::ClayBank,
+                    left: CLAY_PER_BANK,
+                    material: clay,
+                },
+            );
+        }
+    }
+    r.colony.touch(false);
+}
+
+/// M4 (goal 3.5; under `ColonyRule::knowledge`): the camp hearth becomes a
+/// workshop for firing pots only (`BlueprintKind::HearthFire`, 1×1 at the
+/// hearth tile, worked from the tile south of it). It occupies no tile (the
+/// hearth is the settlement's building; rooms do not count it as a workshop).
+fn hearth_fire(r: &mut SimResources, camp: Tile) {
+    if r.rules.colony.and_then(|c| c.knowledge).is_none() {
+        return;
+    }
+    let id = r.colony.next_workshop_id.max(1);
+    r.colony.next_workshop_id = id + 1;
+    r.colony.workshops.insert(
+        id,
+        sim_core::colony::Workshop {
+            id,
+            kind: sim_core::colony::BlueprintKind::HearthFire,
+            top_left: camp,
+            size: (1, 1),
+            bills: Vec::new(),
+            shelf: Vec::new(),
+            active: None,
+        },
+    );
+    r.colony.touch(false);
 }
 
 /// Chebyshev distance from the camp within which fords are placed (M4 goal 3.6).

@@ -84,8 +84,8 @@ pub struct Skill {
 /// that trains one). Indexed by `SkillKind::code`.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Skills {
-    /// One entry per skill.
-    pub entries: [Skill; 6],
+    /// One entry per skill (M4: 7, pottery last).
+    pub entries: [Skill; 7],
 }
 
 impl Skills {

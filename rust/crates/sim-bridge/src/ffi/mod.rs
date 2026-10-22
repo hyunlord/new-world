@@ -21,6 +21,7 @@ pub mod colony;
 pub mod economy;
 pub mod engine_build;
 pub mod family;
+pub mod knowledge;
 pub mod node;
 pub mod reads_agent;
 pub mod reads_settlement;
@@ -41,6 +42,11 @@ pub use economy::{
     PriorityRow, WorkshopRow,
 };
 pub use family::{collect_agent_family, AgentFamilyRow};
+pub use knowledge::{
+    collect_agent_knowledge, collect_knowledge_waits, collect_teach_orders, collect_tech,
+    collect_tech_node, AgentKnowledgeView, KnowledgeRow, TeachRow, TechNodeView, TechRow, TechView,
+    WaitRow,
+};
 pub use space::{
     collect_place_preview, collect_room_detail, collect_rooms, collect_space, submit_space,
     PlacePreview, RoomDetail, RoomRow, RoomsView, SpaceCommand, SpaceView,

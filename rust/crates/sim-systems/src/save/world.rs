@@ -24,6 +24,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use hecs::{Archetype, ColumnBatchType, Component, Entity, EntityBuilder, World};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
+use sim_core::colony::knowledge::Knowledge;
 use sim_core::colony::{Carry, ColonySite, Job, MaterialNeeds, Skills, Tool, WorkPriorities};
 use sim_core::components::{
     Activity, ActivityRest, Agent, AgentState, BodyHealth, Child, Cold, ConstructionSite, Elder,
@@ -109,6 +110,7 @@ pub fn registry() -> Vec<ComponentCodec> {
         codec::<Inventory>("Inventory"),
         codec::<Job>("Job"),
         codec::<Kin>("Kin"),
+        codec::<Knowledge>("Knowledge"),
         codec::<Life>("Life"),
         codec::<Lineage>("Lineage"),
         codec::<MaterialNeeds>("MaterialNeeds"),

@@ -719,17 +719,126 @@ order; their bills (work order) and shelf stacks flattened, each with the row in
 | `bed_room_role` | int | M3: that room's `RoomRole::code`, -1 none |
 | `bed_roofed` | bool | M3: that room is roofed |
 
+## Knowledge (M4)
+
+Every knowledge read returns its empty form (version 0, empty columns, `found` false) in the baseline world and under
+colony rules without `ColonyRule::knowledge`. Node ids are `KnowledgeId` (the index in
+`rust/crates/sim-core/data/colony/knowledge.ron`); people are `AgentId`.
+
+### `get_tech`
+`collect_tech(&World, &SimResources) -> TechView` → `tech_to_dict` (`ffi/knowledge.rs`). Nodes in id order.
+
+| key | type | meaning |
+|---|---|---|
+| `version` | int | `TechAggregate::version` (bumped when a state or the progress changes) |
+| `progress` | int | era progress ‰ (Σ weight · coverage / Σ weight, absent markers included; ceiling 643) |
+| `era` | int | era label: 0 구석기 (< 250), 1 신석기 전환기 (250–749), 2 신석기 시대 (≥ 750) |
+| `adults` | int | adults counted at the last aggregate |
+| `at_risk` | int | nodes with exactly one holder (the HUD badge) |
+| `ids` | PackedInt64Array | node id |
+| `names` | PackedStringArray | stable node name (`knowledge.ron` id) |
+| `name_keys` | PackedStringArray | locale key of the node's name |
+| `lanes` | PackedInt64Array | `Lane::code`: 0 survival, 1 craft, 2 build, 3 mine, 4 pottery, 5 social |
+| `eras` | PackedInt64Array | `Era::code`: 0 paleolithic, 1 neolithic |
+| `thresholds` | PackedInt64Array | practitioner threshold ‰ |
+| `statuses` | PackedInt64Array | `TechStatus::code`: 0 unknown, 1 at risk, 2 known, 3 stable, 4 lost |
+| `practitioners` | PackedInt64Array | adults at threshold who used it (or gained it) in the last 6 days |
+| `holders` | PackedInt64Array | people at threshold |
+| `marker_weights` | PackedInt64Array | era-marker weight (0 = not a marker) |
+| `first_names` | PackedInt64Array | `AgentId` of the first named practitioner (or holder; the one holder of an at-risk node), -1 when none |
+| `conditions_met` | PackedInt64Array | 1 = every discovery condition holds now |
+| `prereq_from` | PackedInt64Array | prerequisite edge: the prerequisite node |
+| `prereq_to` | PackedInt64Array | prerequisite edge: the node that needs it |
+
+### `get_tech_node`
+`collect_tech_node(&World, &SimResources, i64) -> TechNodeView` → `tech_node_to_dict` (`ffi/knowledge.rs`). Argument:
+the node id. Not in `SimReads.GETTERS` (it takes an argument). People in `AgentId` order.
+
+| key | type | meaning |
+|---|---|---|
+| `found` | bool | false for an unknown node or without knowledge |
+| `id` | int | node id |
+| `name` | String | stable node name |
+| `name_key` | String | locale key of its name |
+| `status` | int | `TechStatus::code` |
+| `threshold` | int | threshold ‰ |
+| `practitioners` | int | practitioners (as `get_tech`) |
+| `holders` | int | holders |
+| `lane` | int | `Lane::code` |
+| `era` | int | `Era::code` |
+| `marker_weight` | int | era-marker weight |
+| `prereqs` | PackedInt64Array | prerequisite node ids |
+| `holder_ids` | PackedInt64Array | `AgentId` of each holder |
+| `holder_proficiency` | PackedInt64Array | the holder's proficiency ‰ |
+| `holder_instruction` | PackedInt64Array | 1 = the holder knows instruction (teaches at full fidelity) |
+| `learner_ids` | PackedInt64Array | `AgentId` of each person who could learn it (adults and children of 10+ years below the threshold) |
+| `learner_proficiency` | PackedInt64Array | their proficiency ‰ (0 = none) |
+| `cond_kinds` | PackedInt64Array | discovery condition: 0 stockpile, 1 skill, 2 knows, 3 clay bank near |
+| `cond_names` | PackedStringArray | item, skill or node name (empty for a clay bank) |
+| `cond_amounts` | PackedInt64Array | items, skill level, ‰, or tiles |
+| `cond_met` | PackedInt64Array | 1 = the condition holds now |
+| `gate_kinds` | PackedInt64Array | what it gates: 0 recipe, 1 blueprint, 2 workshop, 3 designation, 4 channel, 5 lore |
+| `gate_names` | PackedStringArray | recipe, blueprint, designation, channel or lore name |
+
+### `get_agent_knowledge`
+`collect_agent_knowledge(&World, &SimResources, i64) -> AgentKnowledgeView` → `agent_knowledge_to_dict`
+(`ffi/knowledge.rs`). Argument: the person's `AgentId`. Not in `SimReads.GETTERS`. Entries in node id order.
+
+| key | type | meaning |
+|---|---|---|
+| `found` | bool | false when there is no such person |
+| `ids` | PackedInt64Array | node id |
+| `proficiency` | PackedInt64Array | proficiency ‰ |
+| `thresholds` | PackedInt64Array | the node's threshold ‰ |
+| `sources` | PackedInt64Array | `Source::code`: 0 seeded, 1 discovered, 2 oral, 3 observed, 4 apprenticed |
+| `last_used` | PackedInt64Array | tick of the start of the day of the last use |
+| `days_unused` | PackedInt64Array | whole days since the last use |
+| `states` | PackedInt64Array | 0 숙련 (at threshold), 1 배우는 중 (below, used lately), 2 잊어 감 (unused past 6 days) |
+| `lesson_role` | int | the person's lesson: 0 teaching, 1 learning, -1 none |
+| `lesson_order` | int | its order id, -1 none |
+| `lesson_partner` | int | the partner's `AgentId`, -1 none |
+| `lesson_node` | int | the node taught, -1 none |
+
+### `get_teach_orders`
+`collect_teach_orders(&World, &SimResources) -> Vec<TeachRow>` → `teach_orders_to_dict` (`ffi/knowledge.rs`). Open
+apprenticeship orders in id order.
+
+| key | type | meaning |
+|---|---|---|
+| `ids` | PackedInt64Array | order id |
+| `teachers` | PackedInt64Array | teacher `AgentId` |
+| `learners` | PackedInt64Array | learner `AgentId` |
+| `knowledge` | PackedInt64Array | node id |
+| `sessions` | PackedInt64Array | sessions held |
+| `proficiency` | PackedInt64Array | the learner's proficiency ‰ now |
+| `thresholds` | PackedInt64Array | the node's threshold ‰ (the order ends there) |
+| `in_session` | PackedInt64Array | 1 = a lesson is under way |
+
+### `get_knowledge_waits`
+`collect_knowledge_waits(&World, &SimResources) -> Vec<WaitRow>` → `waits_to_dict` (`ffi/knowledge.rs`). Every bill
+with work left, building site and work mark whose gate no living adult practises: bills by workshop id and list order,
+then sites by centre `(x, y)`, then marks by tile.
+
+| key | type | meaning |
+|---|---|---|
+| `kinds` | PackedInt64Array | 0 a bill, 1 a site, 2 a mark |
+| `a` | PackedInt64Array | bill: workshop id; site or mark: tile x |
+| `b` | PackedInt64Array | bill: bill id; site or mark: tile y |
+| `nodes` | PackedInt64Array | the node no living adult practises ("기다리는 중: … 아는 사람이 없음") |
+
 ## Commands and lifecycle (not snapshot reads)
 
 The mutators GDScript may call (`SimReads.MUTATORS`): the M1 orders `cmd_designate_chop`, `cmd_designate_chop_tiles`,
 `cmd_cancel_area`, `cmd_add_stockpile`, `cmd_remove_zone_area`, `cmd_place_blueprint` (kinds `hut`, `knapping_spot`,
-`wood_bench`, `drying_rack`) and the M2 orders `cmd_designate_quarry`, `cmd_add_bill`, `cmd_remove_bill`,
+`wood_bench`, `drying_rack`; M4 `grinding_stone`, `pottery_bench`) and the M2 orders `cmd_designate_quarry`, `cmd_add_bill`, `cmd_remove_bill`,
 `cmd_set_bill_mode`, `cmd_move_bill`, `cmd_set_bill_suspended`, `cmd_set_work_priority` (`ffi/economy.rs`; names
 parsed at the boundary, an unknown name is `unknown` without a log entry), the M3 orders `cmd_place_line(kind, x0,
 y0, x1, y1)`, `cmd_place_rect(kind, x0, y0, x1, y1, hollow)` (space kinds `log_wall`, `stone_wall`, `door`,
 `packed_floor`, `bedroll`; `cmd_place_blueprint` takes them too, one tile), `cmd_designate_dig`,
 `cmd_designate_deconstruct` (rectangles) and `cmd_set_room_role(room, role)` (`bedroom`, `storehouse`,
-`workshop`, `hall`, `unassigned` or `auto`; `ffi/space.rs`), each returning
+`workshop`, `hall`, `unassigned` or `auto`; `ffi/space.rs`), the M4 orders `cmd_designate_clay(x0, y0, x1, y1)`,
+`cmd_order_teach(teacher, learner, knowledge)` (`AgentId`s and a node id; `count` = the new order id) and
+`cmd_cancel_teach(order)` (`ffi/knowledge.rs`; reasons add `unreachable`, `no_practitioner`, `too_young`), each returning
 `{accepted: bool, count: int, reason: String}` (`result_to_dict` in `ffi/colony.rs`; `reason` is `""` or a
 `RejectReason` name) and logged with the next tick (ADR 0012); `can_place_blueprint(kind, x, y) -> bool`;
 `advance_ticks(n) -> int` (the final absolute tick, at most 200,000 per call); `reset_world(seed)`,

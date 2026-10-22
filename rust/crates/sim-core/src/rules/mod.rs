@@ -4,9 +4,11 @@ use serde::{Deserialize, Serialize};
 mod baseline;
 mod calendar;
 mod colony;
+mod knowledge;
 mod routine;
 pub use calendar::CalendarRule;
 pub use colony::{ColonyRule, EconomyRule, SpaceRule};
+pub use knowledge::KnowledgeRule;
 pub use routine::{EndStagger, FamilyRule, RelationsRule, RoutineRule};
 
 /// Rules selected once when a world is constructed.

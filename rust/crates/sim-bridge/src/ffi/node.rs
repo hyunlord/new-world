@@ -54,6 +54,12 @@ use super::economy::{
 };
 use super::engine_build::{advance_engine_ticks, build_game_engine, build_stress_engine};
 use super::family::{agent_family_to_dict, collect_agent_family};
+use super::knowledge::{
+    agent_knowledge_to_dict, collect_agent_knowledge, collect_knowledge_waits,
+    collect_teach_orders, collect_tech, collect_tech_node, submit_cancel_teach,
+    submit_designate_clay, submit_order_teach, teach_orders_to_dict, tech_node_to_dict,
+    tech_to_dict, waits_to_dict,
+};
 use super::reads_agent::{
     agent_detail_to_dict, agent_temperament_to_dict, collect_agent_detail,
     collect_agent_temperament, collect_relationship_snapshot, relationship_rows_to_variant_array,
@@ -706,6 +712,74 @@ impl WorldSimNode {
         result_to_dict(submit_space(
             &mut self.engine,
             SpaceCommand::Dig((x0, y0, x1, y1)),
+        ))
+    }
+
+    /// M4 order: mark the rectangle's clay banks for digging clay (`{accepted, count, reason}`).
+    #[func]
+    fn cmd_designate_clay(&mut self, x0: i32, y0: i32, x1: i32, y1: i32) -> VarDictionary {
+        submit_designate_clay(&mut self.engine, x0, y0, x1, y1)
+    }
+
+    /// M4 order: `teacher` teaches `learner` the knowledge node `knowledge` in
+    /// apprenticeship sessions (`AgentId`s, `KnowledgeId`; `{accepted, count, reason}`,
+    /// count = the new order id).
+    #[func]
+    fn cmd_order_teach(&mut self, teacher: i64, learner: i64, knowledge: i64) -> VarDictionary {
+        submit_order_teach(&mut self.engine, teacher, learner, knowledge)
+    }
+
+    /// M4 order: cancel the apprenticeship order `order`.
+    #[func]
+    fn cmd_cancel_teach(&mut self, order: i64) -> VarDictionary {
+        submit_cancel_teach(&mut self.engine, order)
+    }
+
+    /// M4: the tech map — era progress and label, the at-risk badge, and per
+    /// node (id order) name, lane, era, threshold, status, practitioners,
+    /// holders, marker weight, first named person, conditions met, prereq edges.
+    #[func]
+    fn get_tech(&self) -> VarDictionary {
+        tech_to_dict(&collect_tech(&self.engine.world, &self.engine.resources))
+    }
+
+    /// M4: one node's detail — holders with proficiency, who could learn it,
+    /// discovery conditions (met or not) and what it gates.
+    #[func]
+    fn get_tech_node(&self, node: i64) -> VarDictionary {
+        tech_node_to_dict(&collect_tech_node(
+            &self.engine.world,
+            &self.engine.resources,
+            node,
+        ))
+    }
+
+    /// M4: one person's knowledge tab (`AgentId`): entries by node id and the
+    /// current teach or learn job.
+    #[func]
+    fn get_agent_knowledge(&self, agent_id: i64) -> VarDictionary {
+        agent_knowledge_to_dict(&collect_agent_knowledge(
+            &self.engine.world,
+            &self.engine.resources,
+            agent_id,
+        ))
+    }
+
+    /// M4: the open apprenticeship orders with the learner's progress.
+    #[func]
+    fn get_teach_orders(&self) -> VarDictionary {
+        teach_orders_to_dict(&collect_teach_orders(
+            &self.engine.world,
+            &self.engine.resources,
+        ))
+    }
+
+    /// M4: the bills, sites and marks waiting for a practitioner (the "why?" line).
+    #[func]
+    fn get_knowledge_waits(&self) -> VarDictionary {
+        waits_to_dict(&collect_knowledge_waits(
+            &self.engine.world,
+            &self.engine.resources,
         ))
     }
 

@@ -122,8 +122,17 @@ pub const STREAM_OUTCROP: u64 = 0x4F55_5443_524F_5053;
 /// M2: a craft's quality bonus (`"QUALITY_"`; subject agent, tick, slot bill, replicate 0/1).
 pub const STREAM_QUALITY: u64 = 0x5155_414C_4954_595F;
 
+/// M4: knowledge — founders' seeding (slot = node id, 0x100 + id for the
+/// proficiency), the evening telling (slots 0x1_0000–0x1_0002) and discovery
+/// (slot 0x2_0000 + id); subject = the lineage key (`"KNOWLEDG"`).
+pub const STREAM_KNOWLEDGE: u64 = 0x4B4E_4F57_4C45_4447;
+
+/// M4: clay banks on the river bank (`"CLAYBANK"`; shuffle slot 0, the
+/// near-camp top-up slot 1).
+pub const STREAM_CLAY: u64 = 0x434C_4159_4241_4E4B;
+
 /// Every stream constant, for the distinctness test and the inventory.
-pub const STREAMS: [u64; 30] = [
+pub const STREAMS: [u64; 32] = [
     STREAM_MOVE_PAUSE,
     STREAM_MOVE_DX,
     STREAM_MOVE_DY,
@@ -154,6 +163,8 @@ pub const STREAMS: [u64; 30] = [
     STREAM_BOULDER,
     STREAM_OUTCROP,
     STREAM_QUALITY,
+    STREAM_KNOWLEDGE,
+    STREAM_CLAY,
 ];
 
 /// One splitmix64 output for state `x` (identical to `MovementRng::new(x).next_u64()`).

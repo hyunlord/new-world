@@ -340,7 +340,51 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
             set_work_priority(world, agent, work, level)
         }
         Command::SetDrafted { .. } => CommandResult::rejected(RejectReason::NotYet),
+        Command::DesignateClay { .. }
+        | Command::OrderTeach { .. }
+        | Command::CancelTeach { .. }
+            if rule.knowledge.is_none() =>
+        {
+            CommandResult::rejected(RejectReason::NotYet)
+        }
+        Command::DesignateClay { x0, y0, x1, y1 } => match rect_tiles(res, x0, y0, x1, y1) {
+            None => CommandResult::rejected(RejectReason::OutOfMap),
+            Some(tiles) => marked(designate_clay(res, &tiles)),
+        },
+        Command::OrderTeach {
+            teacher,
+            learner,
+            knowledge,
+        } => crate::runtime::jobs::teach::order(world, res, teacher, learner, knowledge),
+        Command::CancelTeach { order } => {
+            crate::runtime::jobs::teach::cancel_order(world, res, order)
+        }
+        Command::DebugKill { agent } => debug_kill(world, res, agent),
     }
+}
+
+/// `DebugKill` (M4 F10; tests and the probe only, never the game bridge):
+/// the person dies at once (recorded as old age) through the despawn path.
+fn debug_kill(world: &mut World, res: &mut SimResources, agent: AgentId) -> CommandResult {
+    let Some((entity, pos)) = world
+        .query::<(&Agent, &Position)>()
+        .iter()
+        .find(|(_, (a, _))| a.id == agent)
+        .map(|(e, (_, p))| (e, (p.x, p.y)))
+    else {
+        return CommandResult::rejected(RejectReason::Unknown);
+    };
+    let tick = res.current_tick;
+    crate::runtime::survival::despawn_agent(
+        world,
+        res,
+        entity,
+        agent,
+        pos,
+        sim_core::causal::DeathReason::OldAge,
+        tick,
+    );
+    CommandResult::ok(1)
 }
 
 /// Apply `edit` to `workshop` (`Unknown` when there is none) and reschedule
@@ -436,12 +480,41 @@ fn designate(res: &mut SimResources, tiles: &[Tile]) -> (usize, usize) {
 fn designate_quarry(res: &mut SimResources, tiles: &[Tile]) -> (usize, usize) {
     let (mut count, mut far) = (0, 0);
     for tile in tiles {
-        if res.colony.nodes.contains_key(tile) && !res.colony.designations.contains_key(tile) {
+        let quarriable = res
+            .colony
+            .nodes
+            .get(tile)
+            .is_some_and(|n| n.kind != sim_core::colony::NodeKind::ClayBank);
+        if quarriable && !res.colony.designations.contains_key(tile) {
             if !camp_reaches(res, *tile) {
                 far += 1;
                 continue;
             }
             res.colony.designations.insert(*tile, Designation::Quarry);
+            count += 1;
+        }
+    }
+    if count > 0 {
+        res.colony.touch(false);
+    }
+    (count, far)
+}
+
+/// Mark every unmarked clay bank among `tiles` for digging clay (M4 goal 3.5).
+fn designate_clay(res: &mut SimResources, tiles: &[Tile]) -> (usize, usize) {
+    let (mut count, mut far) = (0, 0);
+    for tile in tiles {
+        let bank = res
+            .colony
+            .nodes
+            .get(tile)
+            .is_some_and(|n| n.kind == sim_core::colony::NodeKind::ClayBank);
+        if bank && !res.colony.designations.contains_key(tile) {
+            if !camp_reaches(res, *tile) {
+                far += 1;
+                continue;
+            }
+            res.colony.designations.insert(*tile, Designation::ClayPit);
             count += 1;
         }
     }
@@ -641,6 +714,16 @@ pub fn check_blueprint(
     };
     // Workshops exist only with the economy (M2 review m4).
     if kind.is_workshop() && rule.economy.is_none() {
+        return Err(RejectReason::NotYet);
+    }
+    // M4: the hearth fire is made by the worldgen; the pottery bench and the
+    // grinding stone only exist under the knowledge rule.
+    if !kind.placeable()
+        || (matches!(
+            kind,
+            BlueprintKind::PotteryBench | BlueprintKind::GrindingStone
+        ) && rule.knowledge.is_none())
+    {
         return Err(RejectReason::NotYet);
     }
     let site = footprint(res, kind, x, y)?;
