@@ -7,7 +7,7 @@ const INK: Color = Color("#30291f")
 func _line(a: Vector2, b: Vector2, salt: int) -> void:
     var offset: float = (float((salt * 37) % 101) / 100.0 - 0.5)
     var mid: Vector2 = (a + b) * 0.5 + Vector2(offset, -offset)
-    draw_polyline(PackedVector2Array([a, mid, b]), INK, 1.5, true)
+    draw_polyline(PackedVector2Array([a, mid, b]), INK, 2.0, true)
 
 func _box(rect: Rect2, dashed: bool, salt: int) -> void:
     var points: Array[Vector2] = [rect.position, Vector2(rect.end.x, rect.position.y), rect.end, Vector2(rect.position.x, rect.end.y), rect.position]
@@ -22,7 +22,7 @@ func _box(rect: Rect2, dashed: bool, salt: int) -> void:
             _line(points[index], points[index + 1], salt + index)
 
 func _draw() -> void:
-    var wash: Color = Color(0.40, 0.49, 0.47, 0.15)
+    var wash: Color = Color(0.40, 0.49, 0.47, 0.25)
     draw_rect(Rect2(0, 0, 96, 64), wash)
     _box(Rect2(0, 0, 96, 64), true, 1)
     _box(Rect2(120, 0, 96, 64), true, 8)

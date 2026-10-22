@@ -1,5 +1,7 @@
 """Connectivity tests exercise real composition with synthetic source pixels."""
 import unittest
+from collections import deque
+from pathlib import Path
 
 from PIL import Image
 
@@ -30,8 +32,37 @@ class AutotileTests(unittest.TestCase):
     def test_bad_mask_is_rejected(self) -> None:
         # Given an out-of-range mask, when requesting a recipe, then reject it.
         with self.assertRaises(ValueError):
-            autotile.recipe(16)
+            _ = autotile.recipe(16)
+
+    def test_v2_real_assets_are_single_connected_components_with_exact_edges(self) -> None:
+        root = Path(__file__).resolve().parents[1] / "style05" / "autotile_v2"
+        for mask in range(16):
+            with self.subTest(mask=mask), Image.open(root / f"wall_{mask:02d}.png") as tile:
+                self.assertEqual(tile.size, (64, 64))
+                occupied: set[tuple[int, int]] = set()
+                for y in range(64):
+                    for x in range(64):
+                        pixel = tile.getpixel((x, y))
+                        self.assertIsInstance(pixel, tuple)
+                        if isinstance(pixel, tuple) and pixel[3] > 128:
+                            occupied.add((x, y))
+                self.assertTrue(occupied)
+                pending = deque([occupied.pop()])
+                component = set(pending)
+                while pending:
+                    x, y = pending.popleft()
+                    for point in ((x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)):
+                        if point in occupied:
+                            occupied.remove(point)
+                            component.add(point)
+                            pending.append(point)
+                self.assertFalse(occupied, "Disconnected generated wall geometry")
+                observed = (int(any(y == 0 for _, y in component))
+                            + 2 * int(any(x == 63 for x, _ in component))
+                            + 4 * int(any(y == 63 for _, y in component))
+                            + 8 * int(any(x == 0 for x, _ in component)))
+                self.assertEqual(observed, mask)
 
 
 if __name__ == '__main__':
-    unittest.main()
+    _ = unittest.main()

@@ -1,0 +1,448 @@
+{
+  "scope": "Final processed calm-ground candidates; original38 C2 unaffected",
+  "model_review": {
+    "tool": "builtin image_gen.imagegen",
+    "scope": "six final ground_v2 selected try2 working candidates; separate from original 38 C2 cohort",
+    "pass_rule": "all four integer scores >=4",
+    "counts": {
+      "reviewed": 6,
+      "model_rule_pass": 6
+    },
+    "records": [
+      {
+        "family": "ground",
+        "name": "dark_grass",
+        "candidate": "/Users/rexxa/work/new-world-art-prod/art/style05/ground_v2/dark_grass.png",
+        "refs": [
+          "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png",
+          "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png",
+          "/Users/rexxa/work/new-world-art-prod/art/style05/ground_v2/dark_grass.png"
+        ],
+        "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+        "input_sha256": {
+          "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d",
+          "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9",
+          "/Users/rexxa/work/new-world-art-prod/art/style05/ground_v2/dark_grass.png": "5ea5c22072969e71beb11c3208eff8024d0c7a69f9b6b06fe6a492537999aabb"
+        },
+        "started_at": {
+          "current_time": "2026-10-22 03:14:24 UTC"
+        },
+        "completed_at": {
+          "current_time": "2026-10-22 03:17:03 UTC"
+        },
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-1436031e-e201-41ec-b9b9-aa5df7656ea6.png",
+        "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/calm-dark_grass-scorecard.png",
+        "scorecard_sha256": "7c3dfff1a43f187e66c8f507e2b75e6227d1ca7472e626ffa83415a1070562b4",
+        "ocr": "MEDIUM\n4\nLINE 4\nLIGHT 4\nPALETTE 4\nReason: A simple painted ground texture in the same fine ink and watercolor-like\nmedium with matching mottled brushwork, soft tonal transitions, and muted earthy\ngreen palette, with fewer ink outlines due to the subject being a flat surface.\n",
+        "scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4
+        },
+        "reason": "A simple painted ground texture in the same fine ink and watercolor-like medium with matching mottled brushwork, soft tonal transitions, and muted earthy green palette, with fewer ink outlines due to the subject being a flat surface.",
+        "model_rule_pass": true,
+        "printed_verdict": null,
+        "usable_transcription": true,
+        "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+      },
+      {
+        "family": "ground",
+        "name": "forest_floor",
+        "candidate": "/Users/rexxa/work/new-world-art-prod/art/style05/ground_v2/forest_floor.png",
+        "refs": [
+          "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png",
+          "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png",
+          "/Users/rexxa/work/new-world-art-prod/art/style05/ground_v2/forest_floor.png"
+        ],
+        "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+        "input_sha256": {
+          "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d",
+          "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9",
+          "/Users/rexxa/work/new-world-art-prod/art/style05/ground_v2/forest_floor.png": "c608cbcb9516154047cdd065b80de33f6da6844e39c0a4b3764b0f216add19f5"
+        },
+        "started_at": {
+          "current_time": "2026-10-22 03:14:24 UTC"
+        },
+        "completed_at": {
+          "current_time": "2026-10-22 03:17:03 UTC"
+        },
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-a2d15a86-0306-4cf7-828d-23100994ea2d.png",
+        "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/calm-forest_floor-scorecard.png",
+        "scorecard_sha256": "af009737c6e206c4af13c2feb4891fec06217302fe9505c4d6e63a1e2cdbda1a",
+        "ocr": "MEDIUM\nLINE\nLIGHT\nPALETTE\n4\n4\n4\nCandidate is a simple, unobtrusive ground texture, but it uses the same\nfine inked, watercolor-like wash, mottled tonal transitions, and earthy\nmuted palette as the references, with no noticeable stylistic drift.\n",
+        "scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4
+        },
+        "reason": "Candidate is a simple, unobtrusive ground texture, but it uses the same fine inked, watercolor-like wash, mottled tonal transitions, and earthy muted palette as the references, with no noticeable stylistic drift.",
+        "model_rule_pass": true,
+        "printed_verdict": null,
+        "usable_transcription": true,
+        "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+      },
+      {
+        "family": "ground",
+        "name": "hill_rock",
+        "candidate": "/Users/rexxa/work/new-world-art-prod/art/style05/ground_v2/hill_rock.png",
+        "refs": [
+          "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png",
+          "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png",
+          "/Users/rexxa/work/new-world-art-prod/art/style05/ground_v2/hill_rock.png"
+        ],
+        "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+        "input_sha256": {
+          "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d",
+          "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9",
+          "/Users/rexxa/work/new-world-art-prod/art/style05/ground_v2/hill_rock.png": "3f0b15d28a1296dcc5f9fc9b202cc24dcd9d7fffd542b02e2771a15a7a7342c9"
+        },
+        "started_at": {
+          "current_time": "2026-10-22 03:14:24 UTC"
+        },
+        "completed_at": {
+          "current_time": "2026-10-22 03:17:03 UTC"
+        },
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-f0303077-a0cf-41b5-9d0a-5e0a88c682ca.png",
+        "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/calm-hill_rock-scorecard.png",
+        "scorecard_sha256": "95cebf800402bbd6c01070d319de1a9c11bc64e73d52368da08820d31cf768e5",
+        "ocr": "MEDIUM\nLINE\nLIGHT\nPALETTE\n4\n4\n4\nSame hand-painted ink-and-wash medium with fine linework, textured brush\nshading and earthy muted palette as the references, applied to a stone surface\nrather than vegetation.\n",
+        "scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4
+        },
+        "reason": "Same hand-painted ink-and-wash medium with fine linework, textured brush shading and earthy muted palette as the references, applied to a stone surface rather than vegetation.",
+        "model_rule_pass": true,
+        "printed_verdict": null,
+        "usable_transcription": true,
+        "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+      },
+      {
+        "family": "ground",
+        "name": "meadow",
+        "candidate": "/Users/rexxa/work/new-world-art-prod/art/style05/ground_v2/meadow.png",
+        "refs": [
+          "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png",
+          "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png",
+          "/Users/rexxa/work/new-world-art-prod/art/style05/ground_v2/meadow.png"
+        ],
+        "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+        "input_sha256": {
+          "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d",
+          "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9",
+          "/Users/rexxa/work/new-world-art-prod/art/style05/ground_v2/meadow.png": "fd738face2ed4ca91327c53ee6106052f892fca977f8dfec695ebc1cd27c9b60"
+        },
+        "started_at": {
+          "current_time": "2026-10-22 03:14:24 UTC"
+        },
+        "completed_at": {
+          "current_time": "2026-10-22 03:17:03 UTC"
+        },
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-72bbd680-ff14-480b-bb69-c134bda1eb29.png",
+        "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/calm-meadow-scorecard.png",
+        "scorecard_sha256": "f5116b1f718b975d652b28e33e6c6f37a0f331cfe0e96691f76a55b7cdf6367c",
+        "ocr": "Reference 1\nReference 2\nCandidate (Image 3)\nMEDIUM\n5\nLINE\n4\nLIGHT\n5\nPALETTE\n5\nThe candidate uses the same hand-inked, watercolor-like painted texture\nwith mottled tones and subtle ink grain as the references, just without distinct objects.\n",
+        "scores": {
+          "medium": 5,
+          "line": 4,
+          "light": 5,
+          "palette": 5
+        },
+        "reason": "The candidate uses the same hand-inked, watercolor-like painted texture with mottled tones and subtle ink grain as the references, just without distinct objects.",
+        "model_rule_pass": true,
+        "printed_verdict": null,
+        "usable_transcription": true,
+        "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+      },
+      {
+        "family": "ground",
+        "name": "packed_earth",
+        "candidate": "/Users/rexxa/work/new-world-art-prod/art/style05/ground_v2/packed_earth.png",
+        "refs": [
+          "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png",
+          "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png",
+          "/Users/rexxa/work/new-world-art-prod/art/style05/ground_v2/packed_earth.png"
+        ],
+        "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+        "input_sha256": {
+          "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d",
+          "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9",
+          "/Users/rexxa/work/new-world-art-prod/art/style05/ground_v2/packed_earth.png": "d542982c9a3d5abbf34a6ed2938005d6000834ca9b68d98035beff0be6e8a999"
+        },
+        "started_at": {
+          "current_time": "2026-10-22 03:14:24 UTC"
+        },
+        "completed_at": {
+          "current_time": "2026-10-22 03:16:40 UTC"
+        },
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-ba982dc8-a11d-4ac9-bf8d-519bd811279f.png",
+        "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/calm-packed_earth-scorecard.png",
+        "scorecard_sha256": "20726ac936b356c20766a9f86ea5f559975a617b6f8cb4ee54340ec2270cc730",
+        "ocr": "Reference 1\nMEDIUM\n5\nReference 2\nLINE\n5\nLIGHT\n5\nCandidate (Image 3)\nPALETTE\n4\nReason: Same hand-painted ink-and-wash medium with fine outlines and mottled\nwatercolor texture; candidate is a plainer ground fill with a slightly more uniform, lower-\ncontrast brown palette compared to the richer greens and varied elements in the references.\n",
+        "scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 4
+        },
+        "reason": "Same hand-painted ink-and-wash medium with fine outlines and mottled watercolor texture; candidate is a plainer ground fill with a slightly more uniform, lower- contrast brown palette compared to the richer greens and varied elements in the references.",
+        "model_rule_pass": true,
+        "printed_verdict": null,
+        "usable_transcription": true,
+        "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted."
+      },
+      {
+        "family": "ground",
+        "name": "river_bank",
+        "candidate": "/Users/rexxa/work/new-world-art-prod/art/style05/ground_v2/river_bank.png",
+        "refs": [
+          "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png",
+          "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png",
+          "/Users/rexxa/work/new-world-art-prod/art/style05/ground_v2/river_bank.png"
+        ],
+        "prompt": "Image3 alone is candidate; images1and2 are references ONLY. Compare candidate's actual rendering style RELATIVELY with the supplied references, not with an idealized art brief. Score1unrelated,2substantially different,3mixed/noticeable drift,4close match,5indistinguishable language in MEDIUM,LINE,LIGHT,PALETTE. Fine ink/tone is the reference name; inspect the actual marks and tonal transitions present in the references. Judge content/camera separately, do not penalize different depicted subject. Outputplain scorecard four scores, all>=4PASS, one reason describing candidate content plus actual style difference. Do not evaluate/repaint reference instead of candidate; don't assume expectedoutcome.",
+        "input_sha256": {
+          "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_meadow.png": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d",
+          "/Users/rexxa/work/arttrial2-data/trial2b/model-review/frozen-references/ground_forest.png": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9",
+          "/Users/rexxa/work/new-world-art-prod/art/style05/ground_v2/river_bank.png": "e4706a09320f1557e61f7a72f8da8353b76c21874be86c56d0d6fb0f353ebb7b"
+        },
+        "started_at": {
+          "current_time": "2026-10-22 03:14:24 UTC"
+        },
+        "completed_at": {
+          "current_time": "2026-10-22 03:17:03 UTC"
+        },
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616e-89de-7c80-bc69-3f2059323f6b/exec-81ac8c83-6e01-4dc0-960f-5818c5f7cc94.png",
+        "scorecard": "/Users/rexxa/work/arttrial2-data/trial2b/model-review/calm-river_bank-scorecard.png",
+        "scorecard_sha256": "8d2e91067e1f27608c519b2dd8de263b55022f7525ccaf5b602e738b964e1acf",
+        "ocr": "Image 1\n(reference)\nMEDIUM\nLINE\nLIGHT\nPALETTE\nREASON\nImage 2\n(reference)\n5\n5\n5\n5\n5\n5\n5\n5\nImage 3\n(candidate)\n4\n4\n4\n4\nThe candidate uses the same hand-painted, fine ink and watercolor-like tonal\ntexture and earthy muted palette as the references, but lacks the detailed drawn\nelements (plants, rocks, lines), resulting in a simpler, more uniform surface.\n",
+        "scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4
+        },
+        "reason": "The candidate uses the same hand-painted, fine ink and watercolor-like tonal texture and earthy muted palette as the references, but lacks the detailed drawn elements (plants, rocks, lines), resulting in a simpler, more uniform surface.",
+        "model_rule_pass": true,
+        "printed_verdict": null,
+        "usable_transcription": true,
+        "format_deviation": "Illustrated/repainted comparison despite plain-scorecard request; scores legible; printed verdict omitted. Model also scored references; only rightmost Image 3 candidate column transcribed."
+      }
+    ]
+  },
+  "numeric_records": [
+    {
+      "name": "dark_grass",
+      "candidate": "art/style05/ground_v2/dark_grass.png",
+      "sha256": "5ea5c22072969e71beb11c3208eff8024d0c7a69f9b6b06fe6a492537999aabb",
+      "numeric": {
+        "candidate": "art/style05/ground_v2/dark_grass.png",
+        "sha256": "5ea5c22072969e71beb11c3208eff8024d0c7a69f9b6b06fe6a492537999aabb",
+        "family": "ground",
+        "metrics": {
+          "edge_density": 0.0,
+          "saturation_q25": 0.3427402520052797,
+          "saturation_q75": 0.35247030800599044,
+          "stroke_q25": 0.0,
+          "stroke_q50": 0.0,
+          "stroke_q75": 0.0,
+          "stroke_q90": 0.0,
+          "wash_flatness": 0.0003024932416997624,
+          "foreground_pixels": 65536
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": false,
+          "stroke_q50": true,
+          "stroke_q75": false,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      }
+    },
+    {
+      "name": "forest_floor",
+      "candidate": "art/style05/ground_v2/forest_floor.png",
+      "sha256": "c608cbcb9516154047cdd065b80de33f6da6844e39c0a4b3764b0f216add19f5",
+      "numeric": {
+        "candidate": "art/style05/ground_v2/forest_floor.png",
+        "sha256": "c608cbcb9516154047cdd065b80de33f6da6844e39c0a4b3764b0f216add19f5",
+        "family": "ground",
+        "metrics": {
+          "edge_density": 0.0,
+          "saturation_q25": 0.3435108745310187,
+          "saturation_q75": 0.35208804016589146,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.0,
+          "wash_flatness": 0.0005568716304097022,
+          "foreground_pixels": 65536
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      }
+    },
+    {
+      "name": "hill_rock",
+      "candidate": "art/style05/ground_v2/hill_rock.png",
+      "sha256": "3f0b15d28a1296dcc5f9fc9b202cc24dcd9d7fffd542b02e2771a15a7a7342c9",
+      "numeric": {
+        "candidate": "art/style05/ground_v2/hill_rock.png",
+        "sha256": "3f0b15d28a1296dcc5f9fc9b202cc24dcd9d7fffd542b02e2771a15a7a7342c9",
+        "family": "ground",
+        "metrics": {
+          "edge_density": 0.16789493575207862,
+          "saturation_q25": 0.1536504903461515,
+          "saturation_q75": 0.1658514803932678,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.0012127233213656185,
+          "foreground_pixels": 65536
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": false,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      }
+    },
+    {
+      "name": "meadow",
+      "candidate": "art/style05/ground_v2/meadow.png",
+      "sha256": "fd738face2ed4ca91327c53ee6106052f892fca977f8dfec695ebc1cd27c9b60",
+      "numeric": {
+        "candidate": "art/style05/ground_v2/meadow.png",
+        "sha256": "fd738face2ed4ca91327c53ee6106052f892fca977f8dfec695ebc1cd27c9b60",
+        "family": "ground",
+        "metrics": {
+          "edge_density": 0.0,
+          "saturation_q25": 0.31502658634244485,
+          "saturation_q75": 0.3305836588919706,
+          "stroke_q25": 0.0,
+          "stroke_q50": 0.0,
+          "stroke_q75": 0.0,
+          "stroke_q90": 0.0,
+          "wash_flatness": 0.000458805517389852,
+          "foreground_pixels": 65536
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": false,
+          "stroke_q50": true,
+          "stroke_q75": false,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      }
+    },
+    {
+      "name": "packed_earth",
+      "candidate": "art/style05/ground_v2/packed_earth.png",
+      "sha256": "d542982c9a3d5abbf34a6ed2938005d6000834ca9b68d98035beff0be6e8a999",
+      "numeric": {
+        "candidate": "art/style05/ground_v2/packed_earth.png",
+        "sha256": "d542982c9a3d5abbf34a6ed2938005d6000834ca9b68d98035beff0be6e8a999",
+        "family": "ground",
+        "metrics": {
+          "edge_density": 0.01758944318468128,
+          "saturation_q25": 0.3426552337149712,
+          "saturation_q75": 0.352302246472757,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.0,
+          "wash_flatness": 0.0008718328402791023,
+          "foreground_pixels": 65536
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      }
+    },
+    {
+      "name": "river_bank",
+      "candidate": "art/style05/ground_v2/river_bank.png",
+      "sha256": "e4706a09320f1557e61f7a72f8da8353b76c21874be86c56d0d6fb0f353ebb7b",
+      "numeric": {
+        "candidate": "art/style05/ground_v2/river_bank.png",
+        "sha256": "e4706a09320f1557e61f7a72f8da8353b76c21874be86c56d0d6fb0f353ebb7b",
+        "family": "ground",
+        "metrics": {
+          "edge_density": 0.0,
+          "saturation_q25": 0.1624329177810925,
+          "saturation_q75": 0.18933169754627377,
+          "stroke_q25": 0.0,
+          "stroke_q50": 0.0,
+          "stroke_q75": 0.0,
+          "stroke_q90": 0.0,
+          "wash_flatness": 0.0002711064800777856,
+          "foreground_pixels": 65536
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": false,
+          "stroke_q25": false,
+          "stroke_q50": true,
+          "stroke_q75": false,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      }
+    }
+  ]
+}

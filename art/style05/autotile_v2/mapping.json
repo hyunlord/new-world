@@ -1,0 +1,120 @@
+{
+  "version": 2,
+  "bits": {
+    "N": 1,
+    "E": 2,
+    "S": 4,
+    "W": 8
+  },
+  "sources": {
+    "/Users/rexxa/work/arttrial2-data/trial2b/autotile/straight_try2_raw.png": "a9c3a5e8d2de2284d280b7fc4d9e93cc0461d7212aaac44872040ca1f3ae36ee",
+    "/Users/rexxa/work/arttrial2-data/trial2b/autotile/corner_try2_raw.png": "ed3b8534fdee2e064c996e1b3141150f2eecb4146da1be18ef52e6bbd43db5fe",
+    "/Users/rexxa/work/arttrial2-data/trial2b/ground/working/packed_earth.png": "d396e5884d2f7dc612b5c457e4bbc56c570cba5ddfd8a4e5ca424d565e9a8347",
+    "/Users/rexxa/work/arttrial2-data/trial2b/ground/working/meadow.png": "2820939f06032e8b1a739bb30c6df869a59adf27e973d91e7a103fd7f4b7a041",
+    "/Users/rexxa/work/arttrial2-data/trial2b/autotile/floor_edge_try1_raw.png": "1019633f1dd4a191bdb47b909d2f4b42fe492678482384ab54f63543f95e92d7",
+    "/Users/rexxa/work/arttrial2-data/trial2b/autotile/floor_edge_working/candidate.png": "7c4def2ee64f89b0a90152e499c2a0a24284bf370c60a6ed350c3e19c943ec9a"
+  },
+  "straight_raw_crop": [
+    374,
+    510,
+    1094,
+    698
+  ],
+  "corner_raw_crop": [
+    -13,
+    712,
+    587,
+    1312
+  ],
+  "operations": [
+    "magenta alpha key only",
+    "crop generated strip; Lanczos 64x16",
+    "crop generated 2x2 corner lower-left elbow; Lanczos 64x64",
+    "quarter rotations; partial generated strip overlay only for T/X and terminals",
+    "no painted outline; no quantization; no floor mirror/blend"
+  ],
+  "floor01": "generated earth-meadow transition; global ground saturation cap; no synthetic grass strip",
+  "topology": [
+    {
+      "mask": 0,
+      "observed": 0,
+      "pass": true
+    },
+    {
+      "mask": 1,
+      "observed": 1,
+      "pass": true
+    },
+    {
+      "mask": 2,
+      "observed": 2,
+      "pass": true
+    },
+    {
+      "mask": 3,
+      "observed": 3,
+      "pass": true
+    },
+    {
+      "mask": 4,
+      "observed": 4,
+      "pass": true
+    },
+    {
+      "mask": 5,
+      "observed": 5,
+      "pass": true
+    },
+    {
+      "mask": 6,
+      "observed": 6,
+      "pass": true
+    },
+    {
+      "mask": 7,
+      "observed": 7,
+      "pass": true
+    },
+    {
+      "mask": 8,
+      "observed": 8,
+      "pass": true
+    },
+    {
+      "mask": 9,
+      "observed": 9,
+      "pass": true
+    },
+    {
+      "mask": 10,
+      "observed": 10,
+      "pass": true
+    },
+    {
+      "mask": 11,
+      "observed": 11,
+      "pass": true
+    },
+    {
+      "mask": 12,
+      "observed": 12,
+      "pass": true
+    },
+    {
+      "mask": 13,
+      "observed": 13,
+      "pass": true
+    },
+    {
+      "mask": 14,
+      "observed": 14,
+      "pass": true
+    },
+    {
+      "mask": 15,
+      "observed": 15,
+      "pass": true
+    }
+  ],
+  "visual_verdict": "see AUTOTILE_REVIEW_V2.md; topology is not visual acceptance"
+}

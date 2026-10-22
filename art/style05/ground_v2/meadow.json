@@ -1,0 +1,118 @@
+{
+  "status": "candidate; style model and numeric acceptance NOT_VERIFIED",
+  "generated_attempts": 2,
+  "selected_attempt": 2,
+  "file_sha256": "fd738face2ed4ca91327c53ee6106052f892fca977f8dfec695ebc1cd27c9b60",
+  "generation_request": {
+    "id": "meadow",
+    "try": 2,
+    "prompt": "Use case: stylized-concept. Asset: one square seamless top-down game ground tile. Make pale muted sage-grey green meadow, conveyed by COLOR ONLY, with no drawn grass blades. Reference image 1 and 2 are ONLY for the hand-painted ink-and-wash medium; DO NOT copy their objects, density, texture or composition. Reference image 3 is the calm density ceiling: the new tile must be EVEN PLAINER and less textured than reference3. CRITICAL: this is visual silence under small game characters. 95 percent nearly flat uniform soft watercolor wash, only 3 or 4 extremely faint broad diffuse color variations across the WHOLE image. No high-frequency marks whatsoever. No paper grain, mottling, stipple, dots, speckles, hash, outlines, individual plants, flowers, stones, cracks, veins, leaves, roots, shadows, vignette, bright highlights, diagonal bands, borders, scenes or quadrants. Calm, low contrast, soft wash, few small details, no flowers, no scattered stones; detail only at large scale. Use faint desaturated pigment, mean saturation below .25, very low contrast. NO solid graphic vector shapes either; very soft restrained watercolor washes. Seamless horizontally AND vertically: opposing edges identical in tone, no bands or boundary marks. Full bleed. No text. 90-degree overhead. The tile should feel almost blank compared with first two references; few broad washes give subtle material color only.",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616d-e443-7f90-9a8e-3dc55f9ceb83/exec-2afcc768-af02-409c-8757-27438f19eed5.png",
+    "anchors": [
+      "art/style05/anchors/ground.png",
+      "art/style05/anchors/scene.png",
+      "/Users/rexxa/work/arttrial2-data/trial2b/ground/packed_earth/try2_capped/candidate.png"
+    ],
+    "tool": "builtin image_gen.imagegen"
+  },
+  "metrics": {
+    "name": "meadow",
+    "source": "/Users/rexxa/work/arttrial2-data/trial2b/ground/meadow/try2_raw.png",
+    "source_sha256": "1ea75bceaa17a562da77764d9f6df6dad8b1afc6715f3552e38a66239b6126cd",
+    "person_sha256": "5818c46b0e7bcb23ec6e627d85682ad535a2dad79610e646f3eec8146a8e5f4a",
+    "person_luminance_std": 0.271425622737489,
+    "cap": 0.1628553736424934,
+    "before": {
+      "luminance_std": 0.023738409508356456,
+      "saturation_mean": 0.3229058932576549
+    },
+    "after": {
+      "luminance_std": 0.023738409508356456,
+      "saturation_mean": 0.3229058932576549
+    },
+    "contrast_scale": 1.0,
+    "saturation_scale": 0.9999999403953552,
+    "seam": {
+      "horizontal_mae": 4.559895833333333,
+      "vertical_mae": 4.241536458333333,
+      "horizontal_ratio": 1.4168865142882479,
+      "vertical_ratio": 1.2689576652641104,
+      "passed": true
+    },
+    "tone_pass": true,
+    "mirror_blend": false,
+    "style_acceptance": "NOT_VERIFIED",
+    "comparison_size": 512
+  },
+  "attempt_ledger": [
+    {
+      "name": "meadow",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/ground/meadow/try1_raw.png",
+      "source_sha256": "266668a9f5b55e0199a92213365bf61af8d0539757de76a13607370aaa7c8690",
+      "person_sha256": "5818c46b0e7bcb23ec6e627d85682ad535a2dad79610e646f3eec8146a8e5f4a",
+      "person_luminance_std": 0.271425622737489,
+      "cap": 0.1628553736424934,
+      "before": {
+        "luminance_std": 0.08923377399278459,
+        "saturation_mean": 0.5641856354609762
+      },
+      "after": {
+        "luminance_std": 0.08919650896322884,
+        "saturation_mean": 0.3479978829096577
+      },
+      "contrast_scale": 1.0,
+      "saturation_scale": 0.5885289311408997,
+      "seam": {
+        "horizontal_mae": 17.84765625,
+        "vertical_mae": 16.06640625,
+        "horizontal_ratio": 1.1080528718379663,
+        "vertical_ratio": 1.0977463676448005,
+        "passed": true
+      },
+      "tone_pass": true,
+      "mirror_blend": false,
+      "style_acceptance": "NOT_VERIFIED",
+      "comparison_size": 512
+    },
+    {
+      "name": "meadow",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/ground/meadow/try2_raw.png",
+      "source_sha256": "1ea75bceaa17a562da77764d9f6df6dad8b1afc6715f3552e38a66239b6126cd",
+      "person_sha256": "5818c46b0e7bcb23ec6e627d85682ad535a2dad79610e646f3eec8146a8e5f4a",
+      "person_luminance_std": 0.271425622737489,
+      "cap": 0.1628553736424934,
+      "before": {
+        "luminance_std": 0.023738409508356456,
+        "saturation_mean": 0.3229058932576549
+      },
+      "after": {
+        "luminance_std": 0.023738409508356456,
+        "saturation_mean": 0.3229058932576549
+      },
+      "contrast_scale": 1.0,
+      "saturation_scale": 0.9999999403953552,
+      "seam": {
+        "horizontal_mae": 4.559895833333333,
+        "vertical_mae": 4.241536458333333,
+        "horizontal_ratio": 1.4168865142882479,
+        "vertical_ratio": 1.2689576652641104,
+        "passed": true
+      },
+      "tone_pass": true,
+      "mirror_blend": false,
+      "style_acceptance": "NOT_VERIFIED",
+      "comparison_size": 512
+    }
+  ],
+  "previous_selection": {
+    "archive": "/Users/rexxa/work/arttrial2-data/trial2b/ground/round1_selected/meadow.png",
+    "sha256": "2820939f06032e8b1a739bb30c6df869a59adf27e973d91e7a103fd7f4b7a041",
+    "selected_attempt": 1,
+    "reason_replaced": "quiet wash revision; broad foliage detail rejected despite tone cap"
+  },
+  "final_style_status": "FAIL numeric AND model; candidate only",
+  "numeric_pass": false,
+  "model_pass": true,
+  "style_evidence": "docs/v8/arttrial2/GROUND_STYLE_V2.json",
+  "style_evidence_sha256": "643cd17fa3ea4dfea4accd37ee101c7fff59461aee92303a3ac70982f4f1c70e"
+}

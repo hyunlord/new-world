@@ -1,5 +1,7 @@
 # Autotile review — first material set FAIL
 
+Historical TRIAL2 review retained. Latest TRIAL2b generated-material correction: [AUTOTILE_REVIEW_V2.md](AUTOTILE_REVIEW_V2.md).
+
 The three generated pieces produce all 16 connectivity masks, with two derived floors. The two unit tests and actual 16-mask edge-presence check pass. This is a topology result, not a seamless-art result. All three sources, sixteen walls and two floors fail frozen numeric style checks.
 
 Inspected actual windowed 1× capture: `/Users/rexxa/work/arttrial2-data/proto-perf-24-v2/capture.png`. The 10×8 enclosure has a two-cell south doorway and a five-cell internal partition. Cell/mask provenance is `enclosure_cells.json` in that run directory. The internal partition is freestanding, rather than joined to the exterior wall.

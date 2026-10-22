@@ -59,7 +59,7 @@ def compose(mask: int, sources: Sources) -> Image.Image:
     return image
 
 
-def extract(path: Path) -> Image.Image:
+def extract(path: Path, *, crop_bounds: bool = True) -> Image.Image:
     """Remove magenta and mixed fringe alpha, preserving remaining RGB values."""
     with Image.open(path) as source:
         rgba = np.asarray(source.convert("RGBA")).copy()
@@ -71,7 +71,7 @@ def extract(path: Path) -> Image.Image:
     if bounds is None:
         message = f"Empty chroma cutout: {path}"
         raise ValueError(message)
-    return cut.crop(bounds)
+    return cut.crop(bounds) if crop_bounds else cut
 
 
 def build(raw: Path, output: Path, earth: Path, grass: Path) -> None:

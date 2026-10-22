@@ -1,0 +1,116 @@
+{
+  "status": "candidate; style model and numeric acceptance NOT_VERIFIED",
+  "generated_attempts": 2,
+  "selected_attempt": 2,
+  "file_sha256": "3f0b15d28a1296dcc5f9fc9b202cc24dcd9d7fffd542b02e2771a15a7a7342c9",
+  "generation_request": {
+    "id": "hill_rock",
+    "try": 2,
+    "prompt": "Use case stylized-concept. Generate ONE full bleed square seamlessly tileable ground texture of pale taupe grey exposed bedrock with extremely subtle broad fissures for a top-down colony game. Attached ground anchor is a MEDIUM reference only, NOT a composition or density reference. Calm, low contrast, soft wash, few small details, no flowers, no scattered stones; detail only at large scale. Make the surface extremely plain, even, pale and quiet: virtually flat soft watercolor washes with only a few faint broad changes. NO stippling, no granular noise, no speckles, no fine hatch marks, no individual rocks or plants. Desaturated mean saturation below 0.30. Strict top-down view. Seamless horizontally and vertically: identical tonal balance at opposite borders, no diagonal lighting bands, no vignette, no edge darkening. Horizontal and vertical repetition must be invisible. Faint hand-ink character only, no photographic detail or digital noise. No text, frames, objects, quadrants, shadows or perspective. Ground is visual silence under small characters.",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616d-e443-7f90-9a8e-3dc55f9ceb83/exec-2f6f0f06-8101-448e-bbcb-f9fd7df9d9e6.png",
+    "anchors": [
+      "art/style05/anchors/ground.png"
+    ],
+    "tool": "builtin image_gen.imagegen"
+  },
+  "metrics": {
+    "name": "hill_rock",
+    "source": "/Users/rexxa/work/arttrial2-data/trial2b/ground/hill_rock/try2_raw.png",
+    "source_sha256": "7531b9dcf35bc9cb237fe59aae17648a8850cbc50331238bdd77152d33355d98",
+    "person_sha256": "5818c46b0e7bcb23ec6e627d85682ad535a2dad79610e646f3eec8146a8e5f4a",
+    "person_luminance_std": 0.271425622737489,
+    "cap": 0.1628553736424934,
+    "before": {
+      "luminance_std": 0.05282101526770715,
+      "saturation_mean": 0.15986013038793806
+    },
+    "after": {
+      "luminance_std": 0.05282101526770715,
+      "saturation_mean": 0.15986013038793806
+    },
+    "contrast_scale": 1.0,
+    "saturation_scale": 0.9999999403953552,
+    "seam": {
+      "horizontal_mae": 6.930989583333333,
+      "vertical_mae": 8.913411458333334,
+      "horizontal_ratio": 1.0933796349147904,
+      "vertical_ratio": 1.207240265471684,
+      "passed": true
+    },
+    "tone_pass": true,
+    "mirror_blend": false,
+    "style_acceptance": "NOT_VERIFIED",
+    "comparison_size": 512
+  },
+  "attempt_ledger": [
+    {
+      "name": "hill_rock",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/ground/hill_rock/try1_raw.png",
+      "source_sha256": "558ae47ebc4ecbdd5029651d700b3b581322e689186f0afae2f5a2d21a7e85ee",
+      "person_sha256": "5818c46b0e7bcb23ec6e627d85682ad535a2dad79610e646f3eec8146a8e5f4a",
+      "person_luminance_std": 0.271425622737489,
+      "cap": 0.1628553736424934,
+      "before": {
+        "luminance_std": 0.11554614498590081,
+        "saturation_mean": 0.3703220999033501
+      },
+      "after": {
+        "luminance_std": 0.11550965947420931,
+        "saturation_mean": 0.347946703320689
+      },
+      "contrast_scale": 1.0,
+      "saturation_scale": 0.9295936822891235,
+      "seam": {
+        "horizontal_mae": 17.733072916666668,
+        "vertical_mae": 19.05078125,
+        "horizontal_ratio": 1.2024921359400285,
+        "vertical_ratio": 1.2007409271595078,
+        "passed": false
+      },
+      "tone_pass": true,
+      "mirror_blend": false,
+      "style_acceptance": "NOT_VERIFIED",
+      "comparison_size": 512
+    },
+    {
+      "name": "hill_rock",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/ground/hill_rock/try2_raw.png",
+      "source_sha256": "7531b9dcf35bc9cb237fe59aae17648a8850cbc50331238bdd77152d33355d98",
+      "person_sha256": "5818c46b0e7bcb23ec6e627d85682ad535a2dad79610e646f3eec8146a8e5f4a",
+      "person_luminance_std": 0.271425622737489,
+      "cap": 0.1628553736424934,
+      "before": {
+        "luminance_std": 0.05282101526770715,
+        "saturation_mean": 0.15986013038793806
+      },
+      "after": {
+        "luminance_std": 0.05282101526770715,
+        "saturation_mean": 0.15986013038793806
+      },
+      "contrast_scale": 1.0,
+      "saturation_scale": 0.9999999403953552,
+      "seam": {
+        "horizontal_mae": 6.930989583333333,
+        "vertical_mae": 8.913411458333334,
+        "horizontal_ratio": 1.0933796349147904,
+        "vertical_ratio": 1.207240265471684,
+        "passed": true
+      },
+      "tone_pass": true,
+      "mirror_blend": false,
+      "style_acceptance": "NOT_VERIFIED",
+      "comparison_size": 512
+    }
+  ],
+  "previous_selection": {
+    "archive": "/Users/rexxa/work/arttrial2-data/trial2b/ground/round1_selected/hill_rock.png",
+    "sha256": "3f0b15d28a1296dcc5f9fc9b202cc24dcd9d7fffd542b02e2771a15a7a7342c9",
+    "selected_attempt": 2,
+    "reason_replaced": "same original, post-step now measures 8-bit saturation during bisection"
+  },
+  "final_style_status": "FAIL numeric AND model; candidate only",
+  "numeric_pass": false,
+  "model_pass": true,
+  "style_evidence": "docs/v8/arttrial2/GROUND_STYLE_V2.json",
+  "style_evidence_sha256": "643cd17fa3ea4dfea4accd37ee101c7fff59461aee92303a3ac70982f4f1c70e"
+}

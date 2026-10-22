@@ -1,0 +1,118 @@
+{
+  "status": "candidate; style model and numeric acceptance NOT_VERIFIED",
+  "generated_attempts": 2,
+  "selected_attempt": 2,
+  "file_sha256": "5ea5c22072969e71beb11c3208eff8024d0c7a69f9b6b06fe6a492537999aabb",
+  "generation_request": {
+    "id": "dark_grass",
+    "try": 2,
+    "prompt": "Use case: stylized-concept. Asset: one square seamless top-down game ground tile. Make slightly darker muted olive-grey green grassy ground, conveyed by COLOR ONLY, with no drawn grass blades. Reference image 1 and 2 are ONLY for the hand-painted ink-and-wash medium; DO NOT copy their objects, density, texture or composition. Reference image 3 is the calm density ceiling: the new tile must be EVEN PLAINER and less textured than reference3. CRITICAL: this is visual silence under small game characters. 95 percent nearly flat uniform soft watercolor wash, only 3 or 4 extremely faint broad diffuse color variations across the WHOLE image. No high-frequency marks whatsoever. No paper grain, mottling, stipple, dots, speckles, hash, outlines, individual plants, flowers, stones, cracks, veins, leaves, roots, shadows, vignette, bright highlights, diagonal bands, borders, scenes or quadrants. Calm, low contrast, soft wash, few small details, no flowers, no scattered stones; detail only at large scale. Use faint desaturated pigment, mean saturation below .25, very low contrast. NO solid graphic vector shapes either; very soft restrained watercolor washes. Seamless horizontally AND vertically: opposing edges identical in tone, no bands or boundary marks. Full bleed. No text. 90-degree overhead. The tile should feel almost blank compared with first two references; few broad washes give subtle material color only.",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616d-e443-7f90-9a8e-3dc55f9ceb83/exec-a3d71e5b-bee4-4d7c-bbaf-5a198f8768ae.png",
+    "anchors": [
+      "art/style05/anchors/ground.png",
+      "art/style05/anchors/scene.png",
+      "/Users/rexxa/work/arttrial2-data/trial2b/ground/packed_earth/try2_capped/candidate.png"
+    ],
+    "tool": "builtin image_gen.imagegen"
+  },
+  "metrics": {
+    "name": "dark_grass",
+    "source": "/Users/rexxa/work/arttrial2-data/trial2b/ground/dark_grass/try2_raw.png",
+    "source_sha256": "eda8ca76344093403c5988c27fd5dd7898c7f57d975e5544ba82e057ea7d5a37",
+    "person_sha256": "5818c46b0e7bcb23ec6e627d85682ad535a2dad79610e646f3eec8146a8e5f4a",
+    "person_luminance_std": 0.271425622737489,
+    "cap": 0.1628553736424934,
+    "before": {
+      "luminance_std": 0.019563853168490932,
+      "saturation_mean": 0.3740785998832815
+    },
+    "after": {
+      "luminance_std": 0.01944508310685537,
+      "saturation_mean": 0.34755195953247764
+    },
+    "contrast_scale": 1.0,
+    "saturation_scale": 0.9228891134262085,
+    "seam": {
+      "horizontal_mae": 4.4453125,
+      "vertical_mae": 3.7682291666666665,
+      "horizontal_ratio": 1.678456387461756,
+      "vertical_ratio": 1.3556041594860775,
+      "passed": true
+    },
+    "tone_pass": true,
+    "mirror_blend": false,
+    "style_acceptance": "NOT_VERIFIED",
+    "comparison_size": 512
+  },
+  "attempt_ledger": [
+    {
+      "name": "dark_grass",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/ground/dark_grass/try1_raw.png",
+      "source_sha256": "f6b3fc3c8d613a6cd8994e607797d94316a19d644a4fe6938b8c89df38daa622",
+      "person_sha256": "5818c46b0e7bcb23ec6e627d85682ad535a2dad79610e646f3eec8146a8e5f4a",
+      "person_luminance_std": 0.271425622737489,
+      "cap": 0.1628553736424934,
+      "before": {
+        "luminance_std": 0.08652330976721612,
+        "saturation_mean": 0.6714772209432552
+      },
+      "after": {
+        "luminance_std": 0.08652261083513456,
+        "saturation_mean": 0.34799596864341853
+      },
+      "contrast_scale": 1.0,
+      "saturation_scale": 0.489279568195343,
+      "seam": {
+        "horizontal_mae": 15.432942708333334,
+        "vertical_mae": 14.6953125,
+        "horizontal_ratio": 1.101632733946062,
+        "vertical_ratio": 1.147062772201726,
+        "passed": true
+      },
+      "tone_pass": true,
+      "mirror_blend": false,
+      "style_acceptance": "NOT_VERIFIED",
+      "comparison_size": 512
+    },
+    {
+      "name": "dark_grass",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/ground/dark_grass/try2_raw.png",
+      "source_sha256": "eda8ca76344093403c5988c27fd5dd7898c7f57d975e5544ba82e057ea7d5a37",
+      "person_sha256": "5818c46b0e7bcb23ec6e627d85682ad535a2dad79610e646f3eec8146a8e5f4a",
+      "person_luminance_std": 0.271425622737489,
+      "cap": 0.1628553736424934,
+      "before": {
+        "luminance_std": 0.019563853168490932,
+        "saturation_mean": 0.3740785998832815
+      },
+      "after": {
+        "luminance_std": 0.01944508310685537,
+        "saturation_mean": 0.34755195953247764
+      },
+      "contrast_scale": 1.0,
+      "saturation_scale": 0.9228891134262085,
+      "seam": {
+        "horizontal_mae": 4.4453125,
+        "vertical_mae": 3.7682291666666665,
+        "horizontal_ratio": 1.678456387461756,
+        "vertical_ratio": 1.3556041594860775,
+        "passed": true
+      },
+      "tone_pass": true,
+      "mirror_blend": false,
+      "style_acceptance": "NOT_VERIFIED",
+      "comparison_size": 512
+    }
+  ],
+  "previous_selection": {
+    "archive": "/Users/rexxa/work/arttrial2-data/trial2b/ground/round1_selected/dark_grass.png",
+    "sha256": "6bd1352ffafa500a9f65e1d7200f6423a47923ced3a7963a979dfda8a381ba14",
+    "selected_attempt": 1,
+    "reason_replaced": "quiet wash revision; broad foliage detail rejected despite tone cap"
+  },
+  "final_style_status": "FAIL numeric AND model; candidate only",
+  "numeric_pass": false,
+  "model_pass": true,
+  "style_evidence": "docs/v8/arttrial2/GROUND_STYLE_V2.json",
+  "style_evidence_sha256": "643cd17fa3ea4dfea4accd37ee101c7fff59461aee92303a3ac70982f4f1c70e"
+}

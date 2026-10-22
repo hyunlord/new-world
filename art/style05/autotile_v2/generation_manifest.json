@@ -1,0 +1,111 @@
+{
+  "version": 2,
+  "generation_tool": "builtin image_gen reference mode",
+  "attempts": [
+    {
+      "asset": "straight",
+      "try": 1,
+      "generation_id": "exec-91b34dcb-674e-4711-8f77-314a5bbd2189",
+      "source_session": "01a16170-7ca8-7b60-9b4f-cab25230b11f",
+      "raw": "/Users/rexxa/work/arttrial2-data/trial2b/autotile/straight_try1_raw.png",
+      "sha256": "7bf6426ad28ada4b9384d813c8c15ff0aca6e2c30359a35b15d57a4c0c5ba200",
+      "dimensions": [
+        1774,
+        887
+      ],
+      "prompt": "Use case: stylized-concept. Create ONE game sprite: a continuous straight timber palisade wall strip, strictly overhead map view, matching attached hut and camp ink-and-muted-wash medium. Solid magenta #ff00ff backdrop, no lettering, no border, no ground, no cast shadow. A horizontal row of closely packed circular cut timber post tops with just a small south face, warm ochre wood and dark ink outlines. The row extends FULL WIDTH from x=0 to x=right edge, at constant y centered around 50%, occupies only 18% of image height. Seamless along the horizontal axis: equal post size, spacing and cross-section at both ends, no terminal end posts, no end caps, no special center joint, no rope. Symmetric diffuse illumination suitable for rotation. The surrounding magenta area is empty. This is material for 64-pixel autotiles; prioritize simple chunky clear connected silhouette. Attachments are medium/palette references only; do not copy their buildings, terrain, people, or layout.\n",
+      "references": [
+        "art/style05/anchors/hut.png",
+        "art/style05/anchors/scene.png"
+      ],
+      "selected": false,
+      "wall_seconds": "NOT_MEASURED",
+      "rejected_reason": "oblique bark faces rotate into inconsistent corner/straight cross sections"
+    },
+    {
+      "asset": "corner",
+      "try": 1,
+      "generation_id": "exec-34463131-643f-4c4c-a667-58cb1b7619de",
+      "source_session": "01a16170-7ca8-7b60-9b4f-cab25230b11f",
+      "raw": "/Users/rexxa/work/arttrial2-data/trial2b/autotile/corner_try1_raw.png",
+      "sha256": "28182e7ce5f87d84b759eedc6ce7e6bec58e1c9b32ce2d763b2f22804737d052",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "prompt": "Use case: stylized-concept. Make ONE square 2x2-tile corner source image for a map palisade matching the attached straight sprite EXACTLY in wood material, post shape, circular cut tops, ink contour and muted ochre wash. Other attachments hut/camp are medium reference. Solid magenta background #ff00ff; no ground, cast shadows, labels, borders, or grid. Strict overhead, small south face like straight reference. The invisible 2x2 grid has an L-shaped palisade: elbow CENTER at 25% width and 75% height; horizontal wall from elbow to RIGHT IMAGE EDGE at y75%; vertical wall from TOP IMAGE EDGE down to elbow at x25%. Each wall is 12% of full image width thick, consists of contiguous same-sized circular post tops; elbow is exactly one ordinary circular corner post, no oversized support or ropes. Thus lower-left quadrant contains entire elbow with arms to its top and right boundaries, upper-left quadrant straight vertical, lower-right quadrant straight horizontal, upper-right quadrant empty magenta. Edge crops must meet without caps. Neutral diffuse light suitable for tile rotation. No perspective taper, no diagonal wall, no open gaps between posts.\n",
+      "references": [
+        "art/style05/anchors/hut.png",
+        "art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/autotile/straight_try1_raw.png"
+      ],
+      "selected": false,
+      "wall_seconds": "NOT_MEASURED",
+      "rejected_reason": "oblique bark faces rotate into inconsistent corner/straight cross sections"
+    },
+    {
+      "asset": "straight",
+      "try": 2,
+      "generation_id": "exec-bb7402c1-d644-4125-8b10-d49a73731af5",
+      "source_session": "01a16170-7ca8-7b60-9b4f-cab25230b11f",
+      "raw": "/Users/rexxa/work/arttrial2-data/trial2b/autotile/straight_try2_raw.png",
+      "sha256": "a9c3a5e8d2de2284d280b7fc4d9e93cc0461d7212aaac44872040ca1f3ae36ee",
+      "dimensions": [
+        1293,
+        1217
+      ],
+      "prompt": "Edit/reference correction for game palisade autotile. Replace the oblique post geometry with STRICTLY VERTICAL OVERHEAD view: ONLY circular cut timber tops, NO visible bark side faces and NO cast shadows. A SINGLE horizontal row of identical-size contiguous circular ochre wood post tops with dark fine ink outlines, concentric grain, matching hut ink/wash medium. Solid magenta #ff00ff background. Exactly 8 full circular timber tops across entire width, first and last half-top cropped at left/right edges to make seamless along horizontal axis. Row centered y50%, top-to-bottom thickness approximately 12% canvas width. The post tops must TOUCH each other without magenta cracks in the central horizontal line. Uniform soft omnidirectional light so 90-degree rotation changes no shading. No rope, supports, center joint, soil or labels. This is a seamless material strip, not an illustration of a fence in perspective. Attached current board illustrates unwanted oblique bark faces and corner seams; eliminate these, do not copy board layout.\n",
+      "references": [
+        "art/style05/autotile_v2/wall_board.png",
+        "art/style05/anchors/hut.png"
+      ],
+      "selected": true,
+      "wall_seconds": "NOT_MEASURED",
+      "reference_board_preserved_at": "/Users/rexxa/work/arttrial2-data/trial2b/autotile/diagnostic_try1/wall_board.png",
+      "reference_board_sha256": "8c155febb16f76195ba3189f0b801cc898943d6e8a723a0d222be65070d54c20"
+    },
+    {
+      "asset": "corner",
+      "try": 2,
+      "generation_id": "exec-796c12e5-5029-4e3d-8e3d-8b6558ebfb39",
+      "source_session": "01a16170-7ca8-7b60-9b4f-cab25230b11f",
+      "raw": "/Users/rexxa/work/arttrial2-data/trial2b/autotile/corner_try2_raw.png",
+      "sha256": "ed3b8534fdee2e064c996e1b3141150f2eecb4146da1be18ef52e6bbd43db5fe",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "prompt": "Generate a square 2x2-tile palisade L-corner source. Match attached straight overhead timber top strip exactly: all posts are circles with ochre rings, DARK fine ink outlines, NO bark side faces, NO shadow. Strict directly vertical overhead. Solid magenta #ff00ff background, no ground or text. Imagine an invisible 2x2 tile grid. Lower-left quadrant contains the L elbow; upper-left the north-going wall; lower-right the east-going wall; upper-right empty. CENTER of elbow post at (25%width,75%height). Circle diameter 12.5% image width. Post centers spaced exactly12.5%: north arm centers at x25%, y0%,12.5%,25%,37.5%,50%,62.5%,75%; east arm centers x25%,37.5%,50%,62.5%,75%,87.5%,100% at y75%. Tops touch and connect at tangent points; one shared elbow post. No grid lines or labels, no perspective, no vertical side faces, no oversized corner. Seamless if the upper-left and lower-right quadrants repeat in their wall directions. Use reference solely for exact material/ink/rings and uniform light.\n",
+      "references": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/autotile/straight_try2_raw.png",
+        "art/style05/anchors/hut.png"
+      ],
+      "selected": true,
+      "wall_seconds": "NOT_MEASURED"
+    },
+    {
+      "asset": "floor_edge",
+      "try": 1,
+      "generation_id": "exec-981c8aa0-edfc-4d34-a1ae-baf4cd279739",
+      "source_session": "01a16170-7ca8-7b60-9b4f-cab25230b11f",
+      "raw": "/Users/rexxa/work/arttrial2-data/trial2b/autotile/floor_edge_try1_raw.png",
+      "sha256": "1019633f1dd4a191bdb47b909d2f4b42fe492678482384ab54f63543f95e92d7",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "prompt": "Game ground-edge tile, strictly top-down, square full-bleed, same quiet ink-and-soft-wash medium and exact muted palette as the two attached ground textures. First image packed earth is the base material and MUST cover lower 80% of tile, including all bottom edge. Second image meadow is only a thin band at the TOP edge, with an irregular organic grass-to-earth boundary within top20%. Match both textures' scale and colours precisely. Grass tips very sparse and small, no flowers, no stones, no outlines around the terrain boundary. Calm low contrast soft wash, detail only at large scale. Seamless along horizontal axis, left/right edges correspond. Not a vignette, no directional gradient, no frame or grid. Do not mirror-blend. Keep the generated transition entirely in upper20%, leaving lower80% the same earth grain as input1.\n",
+      "references": [
+        "/Users/rexxa/work/arttrial2-data/trial2b/ground/working/packed_earth.png",
+        "/Users/rexxa/work/arttrial2-data/trial2b/ground/working/meadow.png"
+      ],
+      "selected": true,
+      "wall_seconds": "NOT_MEASURED"
+    }
+  ],
+  "retries": 2,
+  "raw_originals_unchanged": true,
+  "attempt_count": 5,
+  "selected_source_count": 3,
+  "attempt1_diagnostics": "/Users/rexxa/work/arttrial2-data/trial2b/autotile/diagnostic_try1"
+}

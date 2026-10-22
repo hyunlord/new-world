@@ -1,0 +1,116 @@
+{
+  "status": "candidate; style model and numeric acceptance NOT_VERIFIED",
+  "generated_attempts": 2,
+  "selected_attempt": 2,
+  "file_sha256": "d542982c9a3d5abbf34a6ed2938005d6000834ca9b68d98035beff0be6e8a999",
+  "generation_request": {
+    "id": "packed_earth",
+    "try": 2,
+    "prompt": "Use case stylized-concept. Generate ONE full bleed square seamlessly tileable ground texture of warm taupe packed earthen soil for a top-down colony game. Attached ground anchor is a MEDIUM reference only, NOT a composition or density reference. Calm, low contrast, soft wash, few small details, no flowers, no scattered stones; detail only at large scale. Make the surface extremely plain, even, pale and quiet: virtually flat soft watercolor washes with only a few faint broad changes. NO stippling, no granular noise, no speckles, no fine hatch marks, no individual rocks or plants. Desaturated mean saturation below 0.30. Strict top-down view. Seamless horizontally and vertically: identical tonal balance at opposite borders, no diagonal lighting bands, no vignette, no edge darkening. Horizontal and vertical repetition must be invisible. Faint hand-ink character only, no photographic detail or digital noise. No text, frames, objects, quadrants, shadows or perspective. Ground is visual silence under small characters.",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616d-e443-7f90-9a8e-3dc55f9ceb83/exec-ccd577eb-cca0-4ca6-b503-7bc24703825f.png",
+    "anchors": [
+      "art/style05/anchors/ground.png"
+    ],
+    "tool": "builtin image_gen.imagegen"
+  },
+  "metrics": {
+    "name": "packed_earth",
+    "source": "/Users/rexxa/work/arttrial2-data/trial2b/ground/packed_earth/try2_raw.png",
+    "source_sha256": "0dc7a078b59d942eb292fda16e3d08d58714f96e7309bb277e5e137ed4293267",
+    "person_sha256": "5818c46b0e7bcb23ec6e627d85682ad535a2dad79610e646f3eec8146a8e5f4a",
+    "person_luminance_std": 0.271425622737489,
+    "cap": 0.1628553736424934,
+    "before": {
+      "luminance_std": 0.034625862849967645,
+      "saturation_mean": 0.40750201476171466
+    },
+    "after": {
+      "luminance_std": 0.03467428371558415,
+      "saturation_mean": 0.34795893616285656
+    },
+    "contrast_scale": 1.0,
+    "saturation_scale": 0.8308562636375427,
+    "seam": {
+      "horizontal_mae": 6.66796875,
+      "vertical_mae": 7.197916666666667,
+      "horizontal_ratio": 1.3255468677183926,
+      "vertical_ratio": 1.3878317450382256,
+      "passed": true
+    },
+    "tone_pass": true,
+    "mirror_blend": false,
+    "style_acceptance": "NOT_VERIFIED",
+    "comparison_size": 512
+  },
+  "attempt_ledger": [
+    {
+      "name": "packed_earth",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/ground/packed_earth/try1_raw.png",
+      "source_sha256": "85e2285676634eca5544e89d77c2d1cbfb5a3941ab5a469ff6882dda89fab065",
+      "person_sha256": "5818c46b0e7bcb23ec6e627d85682ad535a2dad79610e646f3eec8146a8e5f4a",
+      "person_luminance_std": 0.271425622737489,
+      "cap": 0.1628553736424934,
+      "before": {
+        "luminance_std": 0.07695100501911076,
+        "saturation_mean": 0.5272115487988978
+      },
+      "after": {
+        "luminance_std": 0.07697886718889253,
+        "saturation_mean": 0.34799429328914167
+      },
+      "contrast_scale": 1.0,
+      "saturation_scale": 0.6056227684020996,
+      "seam": {
+        "horizontal_mae": 25.311197916666668,
+        "vertical_mae": 18.201822916666668,
+        "horizontal_ratio": 2.2046687358009653,
+        "vertical_ratio": 1.6002893092243808,
+        "passed": false
+      },
+      "tone_pass": true,
+      "mirror_blend": false,
+      "style_acceptance": "NOT_VERIFIED",
+      "comparison_size": 512
+    },
+    {
+      "name": "packed_earth",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/ground/packed_earth/try2_raw.png",
+      "source_sha256": "0dc7a078b59d942eb292fda16e3d08d58714f96e7309bb277e5e137ed4293267",
+      "person_sha256": "5818c46b0e7bcb23ec6e627d85682ad535a2dad79610e646f3eec8146a8e5f4a",
+      "person_luminance_std": 0.271425622737489,
+      "cap": 0.1628553736424934,
+      "before": {
+        "luminance_std": 0.034625862849967645,
+        "saturation_mean": 0.40750201476171466
+      },
+      "after": {
+        "luminance_std": 0.03467428371558415,
+        "saturation_mean": 0.34795893616285656
+      },
+      "contrast_scale": 1.0,
+      "saturation_scale": 0.8308562636375427,
+      "seam": {
+        "horizontal_mae": 6.66796875,
+        "vertical_mae": 7.197916666666667,
+        "horizontal_ratio": 1.3255468677183926,
+        "vertical_ratio": 1.3878317450382256,
+        "passed": true
+      },
+      "tone_pass": true,
+      "mirror_blend": false,
+      "style_acceptance": "NOT_VERIFIED",
+      "comparison_size": 512
+    }
+  ],
+  "previous_selection": {
+    "archive": "/Users/rexxa/work/arttrial2-data/trial2b/ground/round1_selected/packed_earth.png",
+    "sha256": "d396e5884d2f7dc612b5c457e4bbc56c570cba5ddfd8a4e5ca424d565e9a8347",
+    "selected_attempt": 2,
+    "reason_replaced": "same original, post-step now measures 8-bit saturation during bisection"
+  },
+  "final_style_status": "FAIL numeric AND model; candidate only",
+  "numeric_pass": false,
+  "model_pass": true,
+  "style_evidence": "docs/v8/arttrial2/GROUND_STYLE_V2.json",
+  "style_evidence_sha256": "643cd17fa3ea4dfea4accd37ee101c7fff59461aee92303a3ac70982f4f1c70e"
+}

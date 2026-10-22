@@ -1,0 +1,118 @@
+{
+  "status": "candidate; style model and numeric acceptance NOT_VERIFIED",
+  "generated_attempts": 2,
+  "selected_attempt": 2,
+  "file_sha256": "e4706a09320f1557e61f7a72f8da8353b76c21874be86c56d0d6fb0f353ebb7b",
+  "generation_request": {
+    "id": "river_bank",
+    "try": 2,
+    "prompt": "Use case: stylized-concept. Asset: one square seamless top-down game ground tile. Make pale cool grey beige damp riverbank soil with a very faint desaturated blue-grey wash, NO water lines, NO caustics, NO pebbles. Reference image 1 and 2 are ONLY for the hand-painted ink-and-wash medium; DO NOT copy their objects, density, texture or composition. Reference image 3 is the calm density ceiling: the new tile must be EVEN PLAINER and less textured than reference3. CRITICAL: this is visual silence under small game characters. 95 percent nearly flat uniform soft watercolor wash, only 3 or 4 extremely faint broad diffuse color variations across the WHOLE image. No high-frequency marks whatsoever. No paper grain, mottling, stipple, dots, speckles, hash, outlines, individual plants, flowers, stones, cracks, veins, leaves, roots, shadows, vignette, bright highlights, diagonal bands, borders, scenes or quadrants. Calm, low contrast, soft wash, few small details, no flowers, no scattered stones; detail only at large scale. Use faint desaturated pigment, mean saturation below .25, very low contrast. NO solid graphic vector shapes either; very soft restrained watercolor washes. Seamless horizontally AND vertically: opposing edges identical in tone, no bands or boundary marks. Full bleed. No text. 90-degree overhead. The tile should feel almost blank compared with first two references; few broad washes give subtle material color only.",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616d-e443-7f90-9a8e-3dc55f9ceb83/exec-39138310-3e38-4237-9163-3cd0f96dbf98.png",
+    "anchors": [
+      "art/style05/anchors/ground.png",
+      "art/style05/anchors/scene.png",
+      "/Users/rexxa/work/arttrial2-data/trial2b/ground/packed_earth/try2_capped/candidate.png"
+    ],
+    "tool": "builtin image_gen.imagegen"
+  },
+  "metrics": {
+    "name": "river_bank",
+    "source": "/Users/rexxa/work/arttrial2-data/trial2b/ground/river_bank/try2_raw.png",
+    "source_sha256": "eecc53a16eb93dd2800dd75e81eafb56aa034a2e8bf9d81e8932d2472ce7bfbe",
+    "person_sha256": "5818c46b0e7bcb23ec6e627d85682ad535a2dad79610e646f3eec8146a8e5f4a",
+    "person_luminance_std": 0.271425622737489,
+    "cap": 0.1628553736424934,
+    "before": {
+      "luminance_std": 0.01820885066314087,
+      "saturation_mean": 0.17489190726868542
+    },
+    "after": {
+      "luminance_std": 0.01820885066314087,
+      "saturation_mean": 0.17489190726868542
+    },
+    "contrast_scale": 1.0,
+    "saturation_scale": 0.9999999403953552,
+    "seam": {
+      "horizontal_mae": 3.5169270833333335,
+      "vertical_mae": 3.4895833333333335,
+      "horizontal_ratio": 1.4738396088301533,
+      "vertical_ratio": 1.4086996057229322,
+      "passed": true
+    },
+    "tone_pass": true,
+    "mirror_blend": false,
+    "style_acceptance": "NOT_VERIFIED",
+    "comparison_size": 512
+  },
+  "attempt_ledger": [
+    {
+      "name": "river_bank",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/ground/river_bank/try1_raw.png",
+      "source_sha256": "7aea339a1eebd0aa2f34517204ef947dfa40cd366ce062c6852e3c080d6fa09f",
+      "person_sha256": "5818c46b0e7bcb23ec6e627d85682ad535a2dad79610e646f3eec8146a8e5f4a",
+      "person_luminance_std": 0.271425622737489,
+      "cap": 0.1628553736424934,
+      "before": {
+        "luminance_std": 0.08065849388012904,
+        "saturation_mean": 0.1713805784926858
+      },
+      "after": {
+        "luminance_std": 0.08065849388012904,
+        "saturation_mean": 0.1713805784926858
+      },
+      "contrast_scale": 1.0,
+      "saturation_scale": 0.9999999403953552,
+      "seam": {
+        "horizontal_mae": 11.360677083333334,
+        "vertical_mae": 10.813802083333334,
+        "horizontal_ratio": 1.317214196744482,
+        "vertical_ratio": 1.110239219729447,
+        "passed": true
+      },
+      "tone_pass": true,
+      "mirror_blend": false,
+      "style_acceptance": "NOT_VERIFIED",
+      "comparison_size": 512
+    },
+    {
+      "name": "river_bank",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/ground/river_bank/try2_raw.png",
+      "source_sha256": "eecc53a16eb93dd2800dd75e81eafb56aa034a2e8bf9d81e8932d2472ce7bfbe",
+      "person_sha256": "5818c46b0e7bcb23ec6e627d85682ad535a2dad79610e646f3eec8146a8e5f4a",
+      "person_luminance_std": 0.271425622737489,
+      "cap": 0.1628553736424934,
+      "before": {
+        "luminance_std": 0.01820885066314087,
+        "saturation_mean": 0.17489190726868542
+      },
+      "after": {
+        "luminance_std": 0.01820885066314087,
+        "saturation_mean": 0.17489190726868542
+      },
+      "contrast_scale": 1.0,
+      "saturation_scale": 0.9999999403953552,
+      "seam": {
+        "horizontal_mae": 3.5169270833333335,
+        "vertical_mae": 3.4895833333333335,
+        "horizontal_ratio": 1.4738396088301533,
+        "vertical_ratio": 1.4086996057229322,
+        "passed": true
+      },
+      "tone_pass": true,
+      "mirror_blend": false,
+      "style_acceptance": "NOT_VERIFIED",
+      "comparison_size": 512
+    }
+  ],
+  "previous_selection": {
+    "archive": "/Users/rexxa/work/arttrial2-data/trial2b/ground/round1_selected/river_bank.png",
+    "sha256": "8866f9dd92ffec7491f6ffce704a9ec84c11b9d13541a5ed15661fea5b7e1b13",
+    "selected_attempt": 1,
+    "reason_replaced": "quiet wash revision; broad foliage detail rejected despite tone cap"
+  },
+  "final_style_status": "FAIL numeric AND model; candidate only",
+  "numeric_pass": false,
+  "model_pass": true,
+  "style_evidence": "docs/v8/arttrial2/GROUND_STYLE_V2.json",
+  "style_evidence_sha256": "643cd17fa3ea4dfea4accd37ee101c7fff59461aee92303a3ac70982f4f1c70e"
+}

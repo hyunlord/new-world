@@ -1,0 +1,118 @@
+{
+  "status": "candidate; style model and numeric acceptance NOT_VERIFIED",
+  "generated_attempts": 2,
+  "selected_attempt": 2,
+  "file_sha256": "c608cbcb9516154047cdd065b80de33f6da6844e39c0a4b3764b0f216add19f5",
+  "generation_request": {
+    "id": "forest_floor",
+    "try": 2,
+    "prompt": "Use case: stylized-concept. Asset: one square seamless top-down game ground tile. Make warm grey brown woodland soil with a faint desaturated umber wash, NO individual leaves, NO roots or twigs. Reference image 1 and 2 are ONLY for the hand-painted ink-and-wash medium; DO NOT copy their objects, density, texture or composition. Reference image 3 is the calm density ceiling: the new tile must be EVEN PLAINER and less textured than reference3. CRITICAL: this is visual silence under small game characters. 95 percent nearly flat uniform soft watercolor wash, only 3 or 4 extremely faint broad diffuse color variations across the WHOLE image. No high-frequency marks whatsoever. No paper grain, mottling, stipple, dots, speckles, hash, outlines, individual plants, flowers, stones, cracks, veins, leaves, roots, shadows, vignette, bright highlights, diagonal bands, borders, scenes or quadrants. Calm, low contrast, soft wash, few small details, no flowers, no scattered stones; detail only at large scale. Use faint desaturated pigment, mean saturation below .25, very low contrast. NO solid graphic vector shapes either; very soft restrained watercolor washes. Seamless horizontally AND vertically: opposing edges identical in tone, no bands or boundary marks. Full bleed. No text. 90-degree overhead. The tile should feel almost blank compared with first two references; few broad washes give subtle material color only.",
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1616d-e443-7f90-9a8e-3dc55f9ceb83/exec-d3d8ebed-ef7d-4878-805b-3c347c89ecb4.png",
+    "anchors": [
+      "art/style05/anchors/ground.png",
+      "art/style05/anchors/scene.png",
+      "/Users/rexxa/work/arttrial2-data/trial2b/ground/packed_earth/try2_capped/candidate.png"
+    ],
+    "tool": "builtin image_gen.imagegen"
+  },
+  "metrics": {
+    "name": "forest_floor",
+    "source": "/Users/rexxa/work/arttrial2-data/trial2b/ground/forest_floor/try2_raw.png",
+    "source_sha256": "81d2bd78a0b09ec1ab6f363112e487300c3c834224cfea98b6320e327e74614e",
+    "person_sha256": "5818c46b0e7bcb23ec6e627d85682ad535a2dad79610e646f3eec8146a8e5f4a",
+    "person_luminance_std": 0.271425622737489,
+    "cap": 0.1628553736424934,
+    "before": {
+      "luminance_std": 0.02598252160869939,
+      "saturation_mean": 0.3924821576825658
+    },
+    "after": {
+      "luminance_std": 0.025884797161284907,
+      "saturation_mean": 0.3479775651290914
+    },
+    "contrast_scale": 1.0,
+    "saturation_scale": 0.8720575571060181,
+    "seam": {
+      "horizontal_mae": 5.076822916666667,
+      "vertical_mae": 4.561848958333333,
+      "horizontal_ratio": 1.524930656755532,
+      "vertical_ratio": 1.3325650609364188,
+      "passed": true
+    },
+    "tone_pass": true,
+    "mirror_blend": false,
+    "style_acceptance": "NOT_VERIFIED",
+    "comparison_size": 512
+  },
+  "attempt_ledger": [
+    {
+      "name": "forest_floor",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/ground/forest_floor/try1_raw.png",
+      "source_sha256": "80a98c5cbab3869754817e6ebe7f5c268abd04b4eeee05d1b16c6606b266e693",
+      "person_sha256": "5818c46b0e7bcb23ec6e627d85682ad535a2dad79610e646f3eec8146a8e5f4a",
+      "person_luminance_std": 0.271425622737489,
+      "cap": 0.1628553736424934,
+      "before": {
+        "luminance_std": 0.09464835125294736,
+        "saturation_mean": 0.636640440111139
+      },
+      "after": {
+        "luminance_std": 0.09462683768536496,
+        "saturation_mean": 0.3479836202899136
+      },
+      "contrast_scale": 1.0,
+      "saturation_scale": 0.4699569344520569,
+      "seam": {
+        "horizontal_mae": 14.065755208333334,
+        "vertical_mae": 13.46875,
+        "horizontal_ratio": 1.032542785157144,
+        "vertical_ratio": 0.9771099949903966,
+        "passed": true
+      },
+      "tone_pass": true,
+      "mirror_blend": false,
+      "style_acceptance": "NOT_VERIFIED",
+      "comparison_size": 512
+    },
+    {
+      "name": "forest_floor",
+      "source": "/Users/rexxa/work/arttrial2-data/trial2b/ground/forest_floor/try2_raw.png",
+      "source_sha256": "81d2bd78a0b09ec1ab6f363112e487300c3c834224cfea98b6320e327e74614e",
+      "person_sha256": "5818c46b0e7bcb23ec6e627d85682ad535a2dad79610e646f3eec8146a8e5f4a",
+      "person_luminance_std": 0.271425622737489,
+      "cap": 0.1628553736424934,
+      "before": {
+        "luminance_std": 0.02598252160869939,
+        "saturation_mean": 0.3924821576825658
+      },
+      "after": {
+        "luminance_std": 0.025884797161284907,
+        "saturation_mean": 0.3479775651290914
+      },
+      "contrast_scale": 1.0,
+      "saturation_scale": 0.8720575571060181,
+      "seam": {
+        "horizontal_mae": 5.076822916666667,
+        "vertical_mae": 4.561848958333333,
+        "horizontal_ratio": 1.524930656755532,
+        "vertical_ratio": 1.3325650609364188,
+        "passed": true
+      },
+      "tone_pass": true,
+      "mirror_blend": false,
+      "style_acceptance": "NOT_VERIFIED",
+      "comparison_size": 512
+    }
+  ],
+  "previous_selection": {
+    "archive": "/Users/rexxa/work/arttrial2-data/trial2b/ground/round1_selected/forest_floor.png",
+    "sha256": "eff8d04053f61c42253f6ec2389fbb8de74f90337b94ba9fc80fbc993d6e2125",
+    "selected_attempt": 1,
+    "reason_replaced": "quiet wash revision; broad foliage detail rejected despite tone cap"
+  },
+  "final_style_status": "FAIL numeric AND model; candidate only",
+  "numeric_pass": false,
+  "model_pass": true,
+  "style_evidence": "docs/v8/arttrial2/GROUND_STYLE_V2.json",
+  "style_evidence_sha256": "643cd17fa3ea4dfea4accd37ee101c7fff59461aee92303a3ac70982f4f1c70e"
+}

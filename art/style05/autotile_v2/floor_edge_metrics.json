@@ -1,0 +1,29 @@
+{
+  "name": "autotile",
+  "source": "/Users/rexxa/work/arttrial2-data/trial2b/autotile/floor_edge_try1_raw.png",
+  "source_sha256": "1019633f1dd4a191bdb47b909d2f4b42fe492678482384ab54f63543f95e92d7",
+  "person_sha256": "325664c4a12af09ce5324876008a24547664662596c97d5ecc1cb90d6a32b62c",
+  "person_luminance_std": 0.27866641418879795,
+  "cap": 0.16719984851327876,
+  "before": {
+    "luminance_std": 0.06606589860176158,
+    "saturation_mean": 0.3818351257285564
+  },
+  "after": {
+    "luminance_std": 0.0656397053534307,
+    "saturation_mean": 0.34815086494928393
+  },
+  "contrast_scale": 1.0,
+  "saturation_scale": 0.8981444835662842,
+  "seam": {
+    "horizontal_mae": 9.782552083333334,
+    "vertical_mae": 32.677734375,
+    "horizontal_ratio": 1.4759968182092549,
+    "vertical_ratio": 5.060757607476827,
+    "passed": false
+  },
+  "tone_pass": true,
+  "mirror_blend": false,
+  "style_acceptance": "NOT_VERIFIED",
+  "comparison_size": 512
+}

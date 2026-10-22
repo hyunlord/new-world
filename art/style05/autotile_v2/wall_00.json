@@ -1,0 +1,20 @@
+{
+  "status": "reviewed_candidate",
+  "mask": 0,
+  "sources": {
+    "/Users/rexxa/work/arttrial2-data/trial2b/autotile/straight_try2_raw.png": "a9c3a5e8d2de2284d280b7fc4d9e93cc0461d7212aaac44872040ca1f3ae36ee",
+    "/Users/rexxa/work/arttrial2-data/trial2b/autotile/corner_try2_raw.png": "ed3b8534fdee2e064c996e1b3141150f2eecb4146da1be18ef52e6bbd43db5fe",
+    "/Users/rexxa/work/arttrial2-data/trial2b/ground/working/packed_earth.png": "d396e5884d2f7dc612b5c457e4bbc56c570cba5ddfd8a4e5ca424d565e9a8347",
+    "/Users/rexxa/work/arttrial2-data/trial2b/ground/working/meadow.png": "2820939f06032e8b1a739bb30c6df869a59adf27e973d91e7a103fd7f4b7a041",
+    "/Users/rexxa/work/arttrial2-data/trial2b/autotile/floor_edge_try1_raw.png": "1019633f1dd4a191bdb47b909d2f4b42fe492678482384ab54f63543f95e92d7",
+    "/Users/rexxa/work/arttrial2-data/trial2b/autotile/floor_edge_working/candidate.png": "7c4def2ee64f89b0a90152e499c2a0a24284bf370c60a6ed350c3e19c943ec9a"
+  },
+  "operations": [
+    "magenta alpha key only",
+    "crop generated strip; Lanczos 64x16",
+    "crop generated 2x2 corner lower-left elbow; Lanczos 64x64",
+    "quarter rotations; partial generated strip overlay only for T/X and terminals",
+    "no painted outline; no quantization; no floor mirror/blend"
+  ],
+  "sha256": "95de5e1a39c38da440983701fc3f0c8578e66f1cafde337aee5dedce13da7470"
+}
