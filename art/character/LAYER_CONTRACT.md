@@ -37,3 +37,9 @@ Preserve generation prompt, references with SHA256, raw identity, tool result,
 attempt index, elapsed minutes, processing and checker outcomes as provenance.
 Only checker-passing assets enter normal boards; failures go to failure boards.
 Style scores are reported after structure and do not replace it.
+
+TRIAL3B amendment: `contact_ok` and `limb_ok` use the pixel definitions and
+explicit sleep/overlay applicability in TEMPLATE.md. Optional `anatomical_mask`
+is a relative L PNG path with anatomical labels, separate from material IDs.
+A historical asset needs no new sidecar: template-window measurements run on
+its existing alpha. No declaration of `contact_ok` or `limb_ok` is trusted.

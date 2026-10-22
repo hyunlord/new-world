@@ -223,7 +223,19 @@ def sleep_body(tmp_path: Path) -> Layer:
     pixels[24:48,20:76] = (154,154,154,255)
     Image.fromarray(pixels).save(image)
     Image.fromarray((pixels[:,:,3]>0).astype(np.uint8)).save(mask)
-    return Layer('sleep',image,mask,'body','adult','S','sleep',1,('synthetic test only',),head_box=(20,24,36,48))
+    labels = np.zeros((64,96),dtype=np.uint8)
+    labels[24:48,20:36] = 1
+    labels[24:30,36:48] = 6
+    labels[42:48,36:48] = 7
+    labels[24:30,48:54] = 2
+    labels[42:48,48:54] = 3
+    labels[24:33,54:68] = 8
+    labels[39:48,54:68] = 9
+    labels[24:33,68:76] = 4
+    labels[39:48,68:76] = 5
+    anatomical = tmp_path/'sleep_anatomy.png'
+    Image.fromarray(labels).save(anatomical)
+    return Layer('sleep',image,mask,'body','adult','S','sleep',1,('synthetic test only',),head_box=(20,24,36,48),anatomical_mask=anatomical)
 
 
 def test_sleep_horizontal_center_and_declared_head(tmp_path: Path) -> None:

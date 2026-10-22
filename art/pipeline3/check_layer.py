@@ -11,6 +11,7 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 from .layer_schema import Layer, load_layer
+from .anatomy import anatomy_findings
 from .structure import GEOMETRY, Pixels, box_region, components, holes
 
 @dataclass(frozen=True, slots=True)
@@ -128,6 +129,7 @@ def check_layer(layer: Layer) -> Result:
             x,y = anchor
             if not (0 <= x*s < width*s and 0 <= y*s < height*s) or not silhouette[y*s,x*s]:
                 fail('anchor','declared anchor must land on a visible pixel')
+    findings.extend(Finding(rule, detail) for rule, detail in anatomy_findings(layer, alpha))
     return Result(layer.id,not findings,tuple(findings))
 
 def main() -> int:

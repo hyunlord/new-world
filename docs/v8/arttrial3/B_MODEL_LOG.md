@@ -1,3 +1,13 @@
+# Current route — owner amendment 2026-10-22
+
+Part0 completed: A recheck39/87 pass,48 fail; original265 files unchanged. See B_PART0_CHECKS.md. Free CC0 rigged model route now proceeds. No Higgsfield payment, optional one-shot omitted, credits spent0. Historical cost blockage below no longer blocks the amended model route.
+
+Model acquisition candidate1: Kenney Mini Characters. Source https://kenney.nl/assets/mini-characters ; anonymous archive https://kenney.nl/media/pages/assets/mini-characters/bfc7e272b4-1774770718/kenney_mini-characters.zip ; license CC0 https://creativecommons.org/publicdomain/zero/1.0/ . Mesh/rig inspection and selection pending. Author-made clothes/hair/props and at most6-keyframe clips planned; no Mixamo account used.
+
+Blender4.5.14 LTS, build62c1db4208e8, installed portably outside repo at `/Users/rexxa/work/arttrial3-data/b/tools/Blender.app`. Official binary https://download.blender.org/release/Blender4.5/blender-4.5.14-macos-arm64.dmg . Version invocation succeeded. Raw tools and model archive retained outside repo.
+
+---
+
 # TRIAL3B — 모델·클립 비용 사전 확인
 
 2026-10-22 KST. **STOPPED_COST_UNAVAILABLE**. 생성 제출 **0건**, 소비 **0크레딧**, 보유 **10크레딧**. 필요 크레딧 **산출 불가 / 보유 10**. 10 이내임을 입증하지 못해 Part 1에 진입하지 않았다. 비용 미확인을 0크레딧이나 무료 호출 가능으로 해석하지 않는다.

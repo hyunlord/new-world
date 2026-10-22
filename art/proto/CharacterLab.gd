@@ -269,7 +269,7 @@ func _person(ids: Array, point: Vector2, phase: int) -> void:
         body = _body_for(body, frame)
     var shadow_size := Vector2(22, 6) if body["body_type"] == "child" else Vector2(28, 8)
     if body["frame"] != "sleep":
-        draw_set_transform((point + Vector2(32, 90)) * zoom, 0, shadow_size * zoom / 2)
+        draw_set_transform((point + Vector2(32, 88)) * zoom, 0, shadow_size * zoom / 2)
         draw_circle(Vector2.ZERO, 1, Color(0, 0, 0, 110.0 / 255.0))
     draw_set_transform(Vector2.ZERO)
     for id: String in ids:
