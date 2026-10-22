@@ -117,6 +117,10 @@ def publish(request: ProductionRequest, record: SheetRecord) -> None:
                     'diagnostics': str(request.diagnostic), 'sheet_try': request.attempt,
                     'calibration_sha256': CALIBRATION_SHA256,
                     'attempt': request.attempt, 'scale': record.scale,
+                    'standing_scale': record.scale,
+                    'sleep_scales': {facing: json.loads(
+                        (stage / facing / 'sleep.json').read_text()).get('sleep_scale', record.scale)
+                        for facing in FACINGS},
                     'raw_sha256': record.raw_sha256, 'prompt_sha256': record.prompt_sha256,
                     'rotations': {f'{facing}/{frame}': json.loads(
                         (stage / facing / (frame + '.json')).read_text())['rotation']

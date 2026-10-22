@@ -13,7 +13,7 @@ import sys
 import tempfile
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Final, TypedDict
+from typing import Final, NotRequired, TypedDict
 
 from PIL import Image
 
@@ -47,9 +47,12 @@ class Metadata(TypedDict):
     prompt_sha256: str
     image_sha256: str
     scale: float
+    standing_scale: NotRequired[float]
+    sleep_scale: NotRequired[float]
     panel_index: int
     rotation: int
     source_box: list[int]
+    normalization: NotRequired[dict[str, int | float | list[int]]]
     calibration_sha256: str
     judge: NumericRecord
     checks: dict[str, str | bool | int | float | list[str]]
@@ -63,6 +66,8 @@ class Manifest(TypedDict):
     hair: str
     attempt: int
     scale: float
+    standing_scale: NotRequired[float]
+    sleep_scale: NotRequired[float]
     raw: str
     raw_sha256: str
     prompt_sha256: str
@@ -133,10 +138,22 @@ def audit_manifest(directory: Path, first: Metadata) -> None:
         message = 'missing required MANIFEST.json'
         raise ValueError(message)
     manifest: Manifest = json.loads(path.read_text())
+    if ('standing_scale' in manifest) != ('standing_scale' in first):
+        message = 'manifest and sidecar scale schema mismatch'
+        raise ValueError(message)
     for key in ('look', 'age', 'attempt', 'scale', 'raw', 'raw_sha256', 'prompt_sha256', 'calibration_sha256'):
         if manifest[key] != first[key]:
             message = f'manifest identity mismatch: {key}'
             raise ValueError(message)
+    if 'standing_scale' in first:
+        if manifest.get('standing_scale') != first['standing_scale']:
+            message = 'manifest standing scale mismatch'
+            raise ValueError(message)
+        for facing in FACINGS:
+            sleep = json.loads((directory / facing / 'sleep.json').read_text())
+            if json.loads(path.read_text()).get('sleep_scales', {}).get(facing) != sleep['sleep_scale']:
+                message = 'manifest sleep scale mismatch'
+                raise ValueError(message)
     parts = first['look'].split('_')
     hair = 'long_tied' if first['look'].endswith('_long_tied') else parts[-1]
     top = first['look'][len(parts[0]) + len(parts[1]) + 2:-(len(hair) + 1)]
@@ -183,14 +200,28 @@ def audit_look(directory: Path, temporary: Path) -> int:
             data = audit_frame(directory / facing / (frame + '.png'),
                                (directory.name, facing, frame, facing_index * 5 + frame_index), fresh)
             index = facing_index * 5 + frame_index
-            normalized = normalize_panel(panels.images[index], scale, frame == 'sleep')
+            target = (40 if age == 'child' else 56) if 'standing_scale' in first else None
+            normalized = normalize_panel(panels.images[index], scale, frame == 'sleep', sleep_length=target)
+            if target is not None:
+                sleep_normalized = normalize_panel(panels.images[facing_index * 5 + 4], scale, True, sleep_length=target)
+                if (data.get('standing_scale') != scale
+                        or data.get('sleep_scale') != sleep_normalized.transform.scale
+                        or data['scale'] != normalized.transform.scale):
+                    message = 'incorrect standing, sleep or actual frame scale'
+                    raise ValueError(message)
+            if target is not None and data.get('normalization') != json.loads(json.dumps(asdict(normalized.transform))):
+                message = 'normalization transform differs from regenerated source'
+                raise ValueError(message)
             with Image.open(directory / facing / (frame + '.png')) as saved:
                 same_pixels = saved.tobytes() == normalized.image.tobytes()
             if (not same_pixels or data['rotation'] != normalized.transform.rotation_degrees
                     or data['source_box'] != list(panels.boxes[index])):
                 message = 'delivery pixels, source box or rotation differ from raw source normalization'
                 raise ValueError(message)
-            if any(data[key] != first[key] for key in ('attempt', 'raw_sha256', 'prompt_sha256', 'scale')):
+            shared = ('attempt', 'raw_sha256', 'prompt_sha256')
+            if target is None:
+                shared += ('scale',)
+            if any(data[key] != first[key] for key in shared):
                 message = 'ten frames do not share source try, prompt, raw hash and scale'
                 raise ValueError(message)
     audit_manifest(directory, first)
