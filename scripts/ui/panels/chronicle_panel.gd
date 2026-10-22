@@ -1,11 +1,12 @@
 # chronicle_panel.gd (UI/ChroniclePanel in scenes/main.tscn): C-toggled world chronicle feed; pages new entries once
 #   per tick (even while hidden), merges porter groups, keeps the last 60 notable rows; links go to the inspector.
+#   NOTABLE lists every kind the feed keeps (M3 adds 23 RoomFormed).
 # Bridge methods: get_chronicle_since (direct); via SimReads get_time_snapshot, get_world_info; signal world_reset.
 extends Control
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
-const NOTABLE: Array[int] = [0, 2, 11, 13, 14, 15, 16, 18, 19, 20, 21, 22]
+const NOTABLE: Array[int] = [0, 2, 11, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23]
 var _world: Node
 var _locale: Node
 var _title: Label

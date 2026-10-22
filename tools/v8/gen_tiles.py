@@ -68,6 +68,27 @@ Sprites (names; see the painters for the exact pixels)
         item_firewood / item_stone / item_flint / item_blade / item_axe / item_hide 16x16 (ground stacks of the
         new item kinds), mark_quarry 16x16 (a 7x7 pick glyph at the top-right, like mark_chop), icon_build and
         icon_quarry 12x12 (order bar).
+    M3 temporaries (section "m3"; M-ART2 replaces them), all 16x16 unless noted:
+        log_wall_0..15 and stone_wall_0..15: wall autotiles; the number is the 4-bit mask of wall-or-door
+        neighbours (N=1, E=2, S=4, W=8, as bank_*). Every tile is a 10-px band through the centre (rows/columns
+        3..12) with an arm to each connected side that runs to the tile edge without an outline, so neighbours join.
+        Mask -> shape: 10 (E+W) = horizontal run (courses run east-west, no post); 5 (N+S) = vertical run (courses
+        run north-south, no post); 0 = an isolated post; 1/2/4/8 = an end (post + one arm); 3/6/9/12 = a corner,
+        7/11/13/14 = a tee, 15 = a cross (post + arms). The post is a 12x12 square (x, y 2..13): a cut log end for
+        log walls, a squared cornerstone for stone walls. Logs: two per course, lit on the north/west side;
+        stone: grey blocks in a running bond.
+        door_h (in an east-west wall: log-end jambs at x 0..2 and 13..15 joining the wall arms, a plank leaf
+        between them) and door_v (the same turned for a north-south wall).
+        floor_packed (packed earth, opaque, a little darker than dirt, tamped dashes), floor_rock (dug rock floor
+        inside a hill, opaque grey chipped stone); both are ground-like (no outline).
+        bedroll (a 14x8 hide with a straw pillow to the west at x 1..14, y 4..11, like the hut's bedrolls).
+        ghost_wall / ghost_door / ghost_floor / ghost_bedroll: blueprint ghosts in hut_ghost's style (blueprint
+        blue, translucent, the 3-on-2-off dashed tile outline): hatched block; jambs + leaf + swing arc; dotted
+        tamping lines; the bedroll's plan outline. ghost_refused: ONE red overlay for a refused tile of any kind
+        (red fill, red dashed outline, a cross), drawn in place of (or over) the kind's ghost.
+        mark_dig (yellow corner brackets around the tile plus a 7x7 diagonal pick glyph at the top-right) and
+        mark_deconstruct (a 7x7 yellow X at the top-right), outlined like mark_chop; icon_dig and
+        icon_deconstruct 12x12 (order bar).
 
 Determinism
     Each sprite draws with its own random.Random(SEED * 1000 + k), k a fixed constant per sprite (no hash(), no
@@ -901,6 +922,308 @@ def mark_quarry():
     return im
 
 
+# ------------------------------------------------------------------ M3 temporary sprites (M-ART2 replaces them)
+# Wall autotile: the 4-bit mask of wall-or-door neighbours (N=1, E=2, S=4, W=8). A wall is a 10-px band through the
+#   tile centre (rows/columns 3..12, outline included) with an arm to every connected side; the arm reaches the
+#   tile edge without an outline there, so neighbouring wall tiles join. Straight runs (mask 10 = E+W, mask 5 = N+S)
+#   show only courses running along the wall; every other mask (0 isolated, 1/2/4/8 ends, corners, tees, the cross)
+#   carries a 12x12 post (x, y 2..13) in the centre with its arms.
+WALL_BAND = (3, 12)   # first and last row of a horizontal band (outline rows included)
+WALL_POST = (2, 13)   # first and last row/column of the post square (outline included)
+STONE_WALL_D, STONE_WALL, STONE_WALL_L, STONE_WALL_HI = (74, 72, 68), (112, 108, 102), (138, 134, 126), (160, 156, 146)
+ROCK_FLOOR = (78, 75, 70)
+PACKED = (76, 64, 48)
+GHOST_BLUE = dict(fill=(120, 176, 236, 80), faint=(120, 176, 236, 30), line=(170, 214, 255, 235),
+                  plan=(170, 214, 255, 120))
+GHOST_RED = dict(fill=(236, 84, 72, 70), line=(255, 120, 104, 235), plan=(255, 140, 120, 200))
+DOOR_WOOD, DOOR_WOOD_L, DOOR_WOOD_D = (150, 108, 66), (182, 138, 88), (104, 72, 42)
+
+
+def wall_straight(mask):
+    """'h' for a pure east-west run, 'v' for a pure north-south run, None where the tile carries a post."""
+    return {10: "h", 5: "v"}.get(mask)
+
+
+def wall_silhouette(mask):
+    """The set of (x, y) a wall with neighbour mask `mask` covers."""
+    a, b = WALL_BAND
+    pts = set()
+
+    def box(x0, y0, x1, y1):
+        pts.update((x, y) for y in range(y0, y1 + 1) for x in range(x0, x1 + 1))
+    if wall_straight(mask) is None:
+        p0, p1 = WALL_POST
+        box(p0, p0, p1, p1)
+    else:
+        box(a, a, b, b)
+    if mask & 1:
+        box(a, 0, b, b)
+    if mask & 2:
+        box(a, a, T - 1, b)
+    if mask & 4:
+        box(a, a, b, T - 1)
+    if mask & 8:
+        box(0, a, b, b)
+    return pts
+
+
+def wall_outline_pixels(pts):
+    """Silhouette pixels next to a pixel outside it (pixels beyond the tile edge count as inside: arms continue)."""
+    out = set()
+    for x, y in pts:
+        for dx in (-1, 0, 1):
+            for dy in (-1, 0, 1):
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < T and 0 <= ny < T and (nx, ny) not in pts:
+                    out.add((x, y))
+    return out
+
+
+def wall_region(mask, x, y):
+    """Which part of wall tile `mask` the silhouette pixel (x, y) belongs to: 'h' (a course running east-west),
+    'v' (north-south) or 'post'."""
+    straight = wall_straight(mask)
+    if straight:
+        return straight
+    p0, p1 = WALL_POST
+    if p0 <= x <= p1 and p0 <= y <= p1:
+        return "post"
+    return "h" if WALL_BAND[0] <= y <= WALL_BAND[1] and (x < p0 or x > p1) else "v"
+
+
+def _paint_wall(mask, rr, course, post):
+    """Fill the silhouette of `mask`: course(along, across) -> colour for the arms (across 0..7 = the band's inner
+    rows from its north/west side), post(x, y) -> colour inside the post; then the outline."""
+    im, _ = new()
+    px = im.load()
+    pts = wall_silhouette(mask)
+    a = WALL_BAND[0] + 1
+    for x, y in pts:
+        part = wall_region(mask, x, y)
+        if part == "h":
+            px[x, y] = rgba(course(x, y - a))
+        elif part == "v":
+            px[x, y] = rgba(course(y, x - a))
+        else:
+            px[x, y] = rgba(post(x, y))
+    for x, y in wall_outline_pixels(pts):
+        px[x, y] = rgba(OUTLINE)
+    return im
+
+
+def log_wall(mask, rr):
+    """A log wall tile for neighbour mask `mask`: two logs per course along each arm (lit on the north/west side,
+    staggered joints), a post showing a cut log end (bark rim, grain, a ring, a lit top-left)."""
+    logs = [LOG_LIGHT, LOG, LOG, LOG_DARK] * 2
+    joints = {(5, 0), (5, 1), (5, 2), (11, 4), (11, 5), (11, 6)}
+    knot = rr.randrange(2, 13)
+
+    def course(along, across):
+        if (along % 16, across) in joints:
+            return LOG_DARK
+        if along % 16 == knot and across == 2:
+            return GRAIN_RING
+        return logs[across] if 0 <= across < 8 else LOG
+
+    p0, p1 = WALL_POST
+    c = (p0 + p1) / 2.0
+
+    def post(x, y):
+        r2 = (x - c) ** 2 + (y - c) ** 2
+        if (x, y) == (p0 + 3, p0 + 3):
+            return (222, 190, 140)
+        if r2 <= 1.0:
+            return GRAIN_RING
+        if 6.0 <= r2 <= 9.5:
+            return GRAIN_RING
+        if r2 <= 20.5:
+            return GRAIN
+        return LOG_DARK
+    return _paint_wall(mask, rr, course, post)
+
+
+def stone_wall(mask, rr):
+    """A dry-stone wall tile for neighbour mask `mask`: grey blocks in a running bond (two courses of 4 rows, blocks
+    5 long, the second course offset), each lit on its top/left edge; the post is a squared cornerstone."""
+    def course(along, across):
+        row = across % 4
+        k = (along + 2 * (across // 4)) % 5
+        if row == 3 or k == 0:
+            return STONE_WALL_D  # bed and head joints
+        if row == 0 or k == 1:
+            return STONE_WALL_L
+        return STONE_WALL
+
+    p0, p1 = WALL_POST
+    chips = {(rr.randrange(p0 + 3, p1 - 2), rr.randrange(p0 + 3, p1 - 2)) for _ in range(3)}
+
+    def post(x, y):
+        if y == p0 + 1 or (x, y) == (p0 + 1, p0 + 1):
+            return STONE_WALL_HI
+        if x == p0 + 1:
+            return STONE_WALL_L
+        if x == p1 - 1 or y == p1 - 1:
+            return STONE_WALL_D
+        return shade(STONE_WALL, 0.88) if (x, y) in chips else STONE_WALL
+    return _paint_wall(mask, rr, course, post)
+
+
+def door(orientation):
+    """A plank door in a wall. 'h' sits in an east-west wall: two jambs (log ends, x 0..2 and 13..15, the wall band's
+    rows 3..12) that join the wall arms on both sides, and between them the closed leaf (vertical planks, rows
+    5..10) with the ground showing at its two edges. 'v' is the same door turned for a north-south wall."""
+    im, d = new()
+    a, b = WALL_BAND
+    for x0, x1, inner in ((0, 2, 2), (13, 15, 13)):
+        d.rectangle([x0, a, x1, b], fill=rgba(LOG_DARK))
+        d.line([(x0, a), (x1, a)], fill=rgba(OUTLINE))
+        d.line([(x0, b), (x1, b)], fill=rgba(OUTLINE))
+        d.line([(inner, a), (inner, b)], fill=rgba(OUTLINE))
+        jx0, jx1 = (0, 1) if x0 == 0 else (14, 15)
+        d.rectangle([jx0, a + 2, jx1, b - 2], fill=rgba(GRAIN))
+        d.point((jx0, a + 2), fill=rgba((222, 190, 140)))
+    d.line([(3, 5), (12, 5)], fill=rgba(OUTLINE))
+    d.line([(3, 10), (12, 10)], fill=rgba(OUTLINE))
+    d.rectangle([3, 6, 12, 9], fill=rgba(DOOR_WOOD))
+    d.line([(3, 6), (12, 6)], fill=rgba(DOOR_WOOD_L))
+    for x in (5, 8, 11):
+        d.line([(x, 7), (x, 9)], fill=rgba(DOOR_WOOD_D))
+    d.point((10, 8), fill=rgba((214, 190, 150)))  # the pull: a bone peg
+    return im if orientation == "h" else im.transpose(Image.Transpose.TRANSPOSE)
+
+
+def floor_packed(rr):
+    """Packed earth: flat, a little darker than worn earth, with a few tamped marks (short light and dark dashes)."""
+    im, d = new(fill=rgba(PACKED))
+    speckle(im, PACKED, 2, 0.10, rr)
+    for y in (2, 7, 12):
+        x = rr.randrange(1, 8)
+        d.line([(x, y), (x + rr.randrange(3, 6), y)], fill=rgba(shade(PACKED, 1.08)))
+        d.line([(x + 1, y + 1), (x + rr.randrange(2, 4), y + 1)], fill=rgba(shade(PACKED, 0.92)))
+    return im
+
+
+def floor_rock(rr):
+    """Dug rock floor inside a hill: grey chipped stone, chisel scars lit on their upper-left lip."""
+    im, d = new(fill=rgba(ROCK_FLOOR))
+    speckle(im, ROCK_FLOOR, 3, 0.16, rr)
+    for _ in range(4):
+        x, y = rr.randrange(1, 13), rr.randrange(1, 14)
+        d.line([(x, y), (x + 2, y)], fill=rgba(shade(ROCK_FLOOR, 0.86)))
+        d.point((x, y - 1), fill=rgba(shade(ROCK_FLOOR, 1.14)))
+    return im
+
+
+def bedroll(rr):
+    """A hide-and-straw bedroll from above, lying east-west (head to the west) like the hut's bedrolls and the sleep
+    frame: a 14x8 outlined hide at x 1..14, y 4..11, a straw pillow at the west end."""
+    im, d = new()
+    hide = (140, 106, 70)
+    d.rectangle([1, 4, 14, 11], fill=rgba(OUTLINE))
+    d.rectangle([2, 5, 13, 10], fill=rgba(hide))
+    d.line([(2, 10), (13, 10)], fill=rgba(shade(hide, 0.8)))
+    d.line([(5, 5), (13, 5)], fill=rgba(shade(hide, 1.16)))
+    for _ in range(4):
+        d.point((rr.randrange(6, 13), rr.randrange(6, 10)), fill=rgba(shade(hide, 1.12)))
+    d.rectangle([2, 5, 4, 9], fill=rgba((196, 176, 112)))  # straw pillow
+    d.point((3, 6), fill=rgba((226, 206, 140)))
+    d.line([(4, 5), (4, 9)], fill=rgba((160, 140, 86)))
+    return im
+
+
+def _ghost_border(px, line):
+    """The hut ghost's dash (3 on, 2 off) around the tile edge."""
+    ring = [(x, 0) for x in range(T)] + [(T - 1, y) for y in range(1, T)] + \
+        [(x, T - 1) for x in range(T - 2, -1, -1)] + [(0, y) for y in range(T - 2, 0, -1)]
+    for i, (x, y) in enumerate(ring):
+        if i % 5 < 3:
+            px[x, y] = line
+
+
+def ghost(kind):
+    """Blueprint ghosts in the hut ghost's style (blueprint blue, translucent, dashed outline):
+    wall = hatched block; door = jambs and the leaf with its swing arc (a plan's door symbol); floor = a faint fill
+    with dotted tamping lines; bedroll = the bedroll's plan outline and pillow line."""
+    g = GHOST_BLUE
+    im, d = new()
+    px = im.load()
+    if kind == "wall":
+        d.rectangle([0, 0, T - 1, T - 1], fill=g["fill"])
+        for y in range(T):
+            for x in range(T):
+                if (x + y) % 4 == 0:
+                    px[x, y] = g["plan"]
+    elif kind == "door":
+        d.rectangle([0, 0, T - 1, T - 1], fill=g["faint"])
+        d.rectangle([0, 3, 2, 12], fill=g["fill"])
+        d.rectangle([13, 3, 15, 12], fill=g["fill"])
+        d.line([(3, 8), (12, 8)], fill=g["line"])          # the leaf, closed
+        d.arc([-6, -1, 12, 17], 270, 360, fill=g["plan"])  # its swing to the north
+        d.line([(3, 8), (3, 0)], fill=g["plan"])
+    elif kind == "floor":
+        d.rectangle([0, 0, T - 1, T - 1], fill=g["faint"])
+        for y in (4, 8, 12):
+            for x in range(2, 14, 2):
+                px[x, y] = g["plan"]
+    else:  # bedroll
+        d.rectangle([0, 0, T - 1, T - 1], fill=g["faint"])
+        d.rectangle([1, 4, 14, 11], outline=g["plan"])
+        d.line([(4, 5), (4, 10)], fill=g["plan"])
+    _ghost_border(px, g["line"])
+    return im
+
+
+def ghost_refused():
+    """One red overlay for a refused tile of any blueprint kind (drawn in place of the kind's ghost, or over it):
+    a translucent red fill, a red dashed outline and a cross."""
+    g = GHOST_RED
+    im, d = new(fill=g["fill"])
+    px = im.load()
+    for i in range(2, T - 2):
+        px[i, i] = g["plan"]
+        px[T - 1 - i, i] = g["plan"]
+    _ghost_border(px, g["line"])
+    return im
+
+
+def mark_dig():
+    """Dig designation on a hill tile: yellow corner brackets around the whole tile (the tile is to be dug out) and a
+    7x7 diagonal pick glyph at the top-right (x 9..15, y 0..6), outlined like mark_chop and mark_quarry."""
+    glyph = outline_alpha(from_ascii([
+        ".......",
+        "..yy...",
+        "...yy..",
+        "..y.y..",
+        ".y...y.",
+        "y......",
+        ".......",
+    ], {"y": rgba(ACCENT)}))
+    im, d = new()
+    for (x0, y0, dx, dy) in ((1, 1, 1, 1), (1, 14, 1, -1), (14, 14, -1, -1)):  # three corners; the glyph is the 4th
+        d.line([(x0, y0), (x0 + 3 * dx, y0)], fill=rgba(OUTLINE))
+        d.line([(x0, y0), (x0, y0 + 3 * dy)], fill=rgba(OUTLINE))
+        d.line([(x0, y0), (x0 + 2 * dx, y0)], fill=rgba(ACCENT))
+        d.line([(x0, y0), (x0, y0 + 2 * dy)], fill=rgba(ACCENT))
+    im.paste(glyph, (9, 0), glyph)
+    return im
+
+
+def mark_deconstruct():
+    """Deconstruct designation: a 7x7 crossed-out glyph (a yellow X, outlined) at the top-right (x 9..15, y 0..6)."""
+    glyph = outline_alpha(from_ascii([
+        ".......",
+        ".y...y.",
+        "..y.y..",
+        "...y...",
+        "..y.y..",
+        ".y...y.",
+        ".......",
+    ], {"y": rgba(ACCENT)}))
+    im, _ = new()
+    im.paste(glyph, (9, 0))
+    return im
+
+
 # ------------------------------------------------------------------ marks and icons
 def mark_chop():
     """A 7x7 axe glyph (yellow, outlined) at the cell's top-right, x 9..15, y 0..6."""
@@ -948,6 +1271,14 @@ def icon(kind):
         d.ellipse([1, 5, 10, 11], fill=rgba(STONE))
         d.line([(2, 2), (8, 2)], fill=rgba((206, 210, 220)), width=2)
         d.line([(5, 3), (5, 8)], fill=rgba((176, 128, 80)))
+    elif kind == "dig":  # a pick over a dark hole
+        d.ellipse([1, 6, 10, 11], fill=rgba((46, 40, 34)))
+        d.line([(3, 9), (9, 2)], fill=rgba((176, 128, 80)), width=2)
+        d.line([(5, 1), (10, 5)], fill=rgba((206, 210, 220)))
+    elif kind == "deconstruct":  # a log wall stub, crossed out
+        d.rectangle([1, 4, 10, 8], fill=rgba(LOG))
+        d.line([(1, 4), (10, 4)], fill=rgba(LOG_LIGHT))
+        d.line([(2, 10), (9, 1)], fill=rgba((236, 96, 80)), width=2)
     elif kind == "remove":
         d.polygon([(1, 7), (6, 2), (10, 6), (5, 11)], fill=rgba((226, 150, 150)))
         d.polygon([(1, 7), (3, 5), (7, 9), (5, 11)], fill=rgba((236, 230, 220)))
@@ -1041,6 +1372,23 @@ def build_sprites():
     add("m2", "mark_quarry", mark_quarry())
     for kind in ("build", "quarry"):
         add("m2", f"icon_{kind}", icon(kind))
+    # M3 temporaries (walls, doors, floors, bedroll, ghosts, the dig and deconstruct marks and order icons).
+    for mask in range(16):
+        add("m3", f"log_wall_{mask}", log_wall(mask, rr(100 + mask)))
+    for mask in range(16):
+        add("m3", f"stone_wall_{mask}", stone_wall(mask, rr(120 + mask)))
+    add("m3", "door_h", door("h"))
+    add("m3", "door_v", door("v"))
+    add("m3", "floor_packed", floor_packed(rr(140)))
+    add("m3", "floor_rock", floor_rock(rr(141)))
+    add("m3", "bedroll", bedroll(rr(142)))
+    for kind in ("wall", "door", "floor", "bedroll"):
+        add("m3", f"ghost_{kind}", ghost(kind))
+    add("m3", "ghost_refused", ghost_refused())
+    add("m3", "mark_dig", mark_dig())
+    add("m3", "mark_deconstruct", mark_deconstruct())
+    for kind in ("dig", "deconstruct"):
+        add("m3", f"icon_{kind}", icon(kind))
     return out
 
 

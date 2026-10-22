@@ -37,8 +37,8 @@ pub use colony::{
 };
 pub use economy::{
     collect_agent_economy, collect_recipes, collect_work_priorities, collect_workshops,
-    parse_economy, submit_economy, AgentEconomyRow, BillRow, EconomyCommand, PriorityRow,
-    WorkshopRow,
+    levels_in_work_order, parse_economy, submit_economy, AgentEconomyRow, BillRow, EconomyCommand,
+    PriorityRow, WorkshopRow,
 };
 pub use family::{collect_agent_family, AgentFamilyRow};
 pub use space::{

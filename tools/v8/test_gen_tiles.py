@@ -1,6 +1,7 @@
 """Unit tests for tools/v8/gen_tiles.py: sheet size and name contract, every sprite inside its rect, the outline
 rule, greyscale person layers, value hierarchy (ground calm, people brightest, tunics lighter than the forest
-floor), the committed sheet equal to a fresh run, and byte-identical determinism."""
+floor), the M3 sprites (wall autotiles follow their neighbour mask, doors join their wall, floors calm, ghosts
+translucent), the committed sheet equal to a fresh run, and byte-identical determinism."""
 import json
 import sys
 import tempfile
@@ -39,10 +40,19 @@ M2_OBJECTS = (["boulder", "flint_outcrop", "knapping_spot"]
               + ["item_" + k for k in ("firewood", "stone", "flint", "blade", "axe", "hide")])
 M2_WIDE = ["wood_bench", "drying_rack"]
 M2_ICONS = ["icon_build", "icon_quarry"]
+# M3 temporaries: wall autotiles (16 masks each), doors, floors, bedroll, blueprint ghosts, marks, order icons.
+M3_WALLS = ["%s_wall_%d" % (m, k) for m in ("log", "stone") for k in range(16)]
+M3_DOORS = ["door_h", "door_v"]
+M3_FLOORS = ["floor_packed", "floor_rock"]
+M3_GHOSTS = ["ghost_wall", "ghost_door", "ghost_floor", "ghost_bedroll", "ghost_refused"]
+M3_MARKS = ["mark_dig", "mark_deconstruct"]
+M3_ICONS = ["icon_dig", "icon_deconstruct"]
+M3_16 = M3_WALLS + M3_DOORS + M3_FLOORS + ["bedroll"] + M3_GHOSTS + M3_MARKS
 
 SIZE = {n: (16, 16) for n in GROUND + ZONE + NATURE + ITEMS + CARRY + MARKS + ["hearth_0", "hearth_1"]
-        + M2_OBJECTS + ["mark_quarry"]}
+        + M2_OBJECTS + ["mark_quarry"] + M3_16}
 SIZE.update({n: (32, 16) for n in M2_WIDE})
+SIZE.update({n: (12, 12) for n in M3_ICONS})
 SIZE.update({n: (12, 12) for n in M2_ICONS})
 SIZE.update({n: (24, 24) for n in CANOPY})
 SIZE.update({n: (12, 12) for n in ICONS})
@@ -52,6 +62,7 @@ SIZE.update({n: ((16, 8) if n.endswith("_sleep") else (16, 16)) for n in PEOPLE}
 # Object sprites must carry the outline colour (craft rule 1); people carry it in their outline layer.
 OUTLINED = (CANOPY + NATURE + ITEMS + BUILDINGS + CARRY + ["mark_chop"] + ICONS
             + M2_OBJECTS + M2_WIDE + M2_ICONS + ["mark_quarry"]
+            + M3_WALLS + M3_DOORS + ["bedroll"] + M3_MARKS + M3_ICONS
             + [n for n in PEOPLE if "_outline_" in n] + ["stock_stake_" + c for c in ("nw", "ne", "sw", "se")])
 
 
@@ -66,6 +77,13 @@ def visible(img):
 def stdev(values):
     m = sum(values) / len(values)
     return (sum((v - m) ** 2 for v in values) / len(values)) ** 0.5
+
+
+def img_edge(img, side):
+    """Whether any opaque pixel lies on that edge of a 16x16 image."""
+    pts = {"n": [(x, 0) for x in range(16)], "s": [(x, 15) for x in range(16)],
+           "w": [(0, y) for y in range(16)], "e": [(15, y) for y in range(16)]}[side]
+    return any(img.getpixel(p)[3] for p in pts)
 
 
 def hex_rgb(h):
@@ -151,7 +169,8 @@ class GenTilesTest(unittest.TestCase):
 
     def test_object_sprites_have_transparent_background(self):
         for name in (CANOPY + NATURE + ITEMS + ["shelter", "hearth_0", "hearth_1"] + CARRY
-                     + ["mark_chop", "shadow", "tree_shadow"] + M2_OBJECTS + M2_WIDE + ["mark_quarry"]):
+                     + ["mark_chop", "shadow", "tree_shadow"] + M2_OBJECTS + M2_WIDE + ["mark_quarry"]
+                     + M3_WALLS + M3_DOORS + ["bedroll"] + M3_MARKS):
             with self.subTest(name=name):
                 alphas = [p[3] for p in self.tile(name).get_flattened_data()]
                 self.assertIn(0, alphas)
@@ -275,6 +294,54 @@ class GenTilesTest(unittest.TestCase):
             with self.subTest(file=fname):
                 self.assertEqual((REPO / "assets" / "v8" / fname).read_bytes(), (self.dir_a / fname).read_bytes(),
                                  "run python3 tools/v8/gen_tiles.py")
+
+    def test_m3_sprites_in_json_16x16_and_not_empty(self):
+        js = json.loads((REPO / "assets" / "v8" / "tiles.json").read_text())["tiles"]
+        for name in M3_16:
+            with self.subTest(name=name):
+                self.assertIn(name, js, "committed tiles.json")
+                self.assertEqual(js[name][2:], [16, 16])
+                self.assertTrue(any(p[3] for p in self.tile(name).get_flattened_data()), "fully transparent")
+
+    def test_wall_autotile_follows_the_mask(self):
+        # bit 1 N, 2 E, 4 S, 8 W: a connected side reaches that tile edge, an open side does not; straight runs
+        # (5, 10) have no post, every other mask has the 12x12 post (its corner pixel (2, 2) is opaque)
+        edges = {1: [(x, 0) for x in range(16)], 2: [(15, y) for y in range(16)],
+                 4: [(x, 15) for x in range(16)], 8: [(0, y) for y in range(16)]}
+        for kind in ("log", "stone"):
+            for mask in range(16):
+                img = self.tile("%s_wall_%d" % (kind, mask))
+                with self.subTest(kind=kind, mask=mask):
+                    for bit, pts in edges.items():
+                        touches = any(img.getpixel(p)[3] for p in pts)
+                        self.assertEqual(touches, bool(mask & bit), "side %d" % bit)
+                    self.assertEqual(img.getpixel((2, 2))[3] > 0, mask not in (5, 10))
+
+    def test_doors_join_their_wall(self):
+        h, v = self.tile("door_h"), self.tile("door_v")
+        self.assertTrue(img_edge(h, "w") and img_edge(h, "e") and not img_edge(h, "n") and not img_edge(h, "s"))
+        self.assertTrue(img_edge(v, "n") and img_edge(v, "s") and not img_edge(v, "w") and not img_edge(v, "e"))
+
+    def test_m3_floors_opaque_calm_without_outline(self):
+        for name in M3_FLOORS:
+            with self.subTest(name=name):
+                px = self.tile(name).get_flattened_data()
+                self.assertEqual(min(p[3] for p in px), 255)
+                self.assertNotIn(OUTLINE, {p[:3] for p in px})
+                self.assertLess(stdev([luminance(p) for p in px]), 6.0)
+                self.assertLess(max(luminance(p) for p in px), 140)
+        dirt = sum(luminance(p) for p in visible(self.tile("dirt_0"))) / 256
+        packed = sum(luminance(p) for p in visible(self.tile("floor_packed"))) / 256
+        self.assertLess(packed, dirt, "packed earth is a little darker than worn earth")
+
+    def test_m3_ghosts_translucent_and_refused_is_red(self):
+        for name in M3_GHOSTS:
+            with self.subTest(name=name):
+                self.assertTrue(all(p[3] < 255 for p in visible(self.tile(name))))
+        blue = [p for p in visible(self.tile("ghost_wall"))]
+        red = [p for p in visible(self.tile("ghost_refused"))]
+        self.assertTrue(all(p[2] > p[0] for p in blue))
+        self.assertTrue(all(p[0] > p[2] for p in red))
 
     def test_json_keys_sorted(self):
         self.assertEqual(list(self.rects), sorted(self.rects))

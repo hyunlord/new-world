@@ -320,12 +320,18 @@ pub fn collect_work_priorities(world: &hecs::World) -> Vec<PriorityRow> {
     rows
 }
 
+/// A row's levels in `WorkType::ALL` order, the order of `work_types` (M3:
+/// mining's code is 6 but it sits fourth, after quarrying).
+pub fn levels_in_work_order(row: &PriorityRow) -> [u8; 7] {
+    WorkType::ALL.map(|w| row.levels[w.code() as usize])
+}
+
 pub(super) fn priorities_to_dict(rows: &[PriorityRow]) -> VarDictionary {
     let mut dict = VarDictionary::new();
     let ids: Vec<i64> = rows.iter().map(|r| r.agent as i64).collect();
     dict.set("agent_ids", PackedInt64Array::from(ids.as_slice()));
     dict.set("elders", i32s(rows.iter().map(|r| i64::from(r.elder))));
-    let levels: Vec<u8> = rows.iter().flat_map(|r| r.levels).collect();
+    let levels: Vec<u8> = rows.iter().flat_map(levels_in_work_order).collect();
     dict.set("levels", PackedByteArray::from(levels.as_slice()));
     let works: Vec<GString> = WorkType::ALL
         .iter()

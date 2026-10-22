@@ -236,7 +236,7 @@ func _run() -> void:
 		_check("priorities_rows", false, "no adults")
 	await _key(KEY_P)
 	_check("p_closes_priorities", not (priorities as Control).visible)
-	# Inspector: skill lines for the first person.
+	# Inspector: skill lines for the first person (six since M3: mining).
 	var snap: Dictionary = SimReads.read(_world, "get_agent_snapshot")
 	var bits_list: PackedInt64Array = snap.get("ids", PackedInt64Array())
 	if not bits_list.is_empty():
@@ -248,7 +248,7 @@ func _run() -> void:
 		var tool_line: Label = inspector.get("_tool_label") as Label
 		var locale: Node = root.get_node_or_null("Locale")
 		var tier0: String = str(locale.call("ltr", "SKILL_TIER_0")) if locale != null else "SKILL_TIER_0"
-		_check("inspector_skills", skills != null and skills.visible and skills.text.split("\n").size() == 5 and tier0 in skills.text, skills.text.replace("\n", " | ") if skills != null else "")
+		_check("inspector_skills", skills != null and skills.visible and skills.text.split("\n").size() == 6 and tier0 in skills.text, skills.text.replace("\n", " | ") if skills != null else "")
 		_check("inspector_tool_line", tool_line != null and tool_line.visible, tool_line.text if tool_line != null else "")
 	_finish()
 

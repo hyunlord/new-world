@@ -1,8 +1,8 @@
 # priority_panel.gd (UI/PriorityPanel in scenes/main.tscn): the M2 work-priority table, toggled with P.
 # Rows = the adults (get_work_priorities, AgentId order; name as the inspector shows it, "노인" for elders),
-#   columns = the six work types in the bridge's order (제작, 건축, 채석, 벌목, 장작, 운반). A cell shows the level
+#   columns = the work types in the bridge's order (제작, 건축, 채석, M3 채굴, 벌목, 장작, 운반). A cell shows the level
 #   (1 first … 4 last, "—" = 0 never) in a colour per level; a click cycles 0→1→2→3→4→0 through
-#   cmd_set_work_priority. "모두 기본" sets every cell that differs from the default (3; elders: quarry 0) back.
+#   cmd_set_work_priority. "모두 기본" sets every cell that differs from the default (3; elders: quarry and mine 0) back.
 #   Children have no row (the simulation refuses them). Rebuilt only when the priorities change; Esc closes it;
 #   a world reset hides it.
 # Bridge methods: via SimReads get_work_priorities; via SimReads.mutate cmd_set_work_priority; signal world_reset.
@@ -15,6 +15,8 @@ const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const TOGGLE_KEY: Key = KEY_P
 const PANEL_SIZE: Vector2 = Vector2(1000, 760)
 const DEFAULT_LEVEL: int = 3
+## Level column width (M3: seven work types fit the 1000-px panel: 300 + 7 × 88 + separations).
+const CELL_WIDTH: int = 88
 ## Cell colours by level 0–4 (0 = never: dim; 1 = first: bright green … 4 = last: muted).
 const LEVEL_COLORS: Array[Color] = [Color("6a6058"), Color("8ee07a"), Color("e8d26e"), Color("e0a060"), Color("b08878")]
 const MUTED: Color = Color("c8b89a")
@@ -119,9 +121,9 @@ static func table(snap: Dictionary) -> Dictionary:
 	return {"rows": rows, "works": works}
 
 
-## The default level of work type `work` for a person (elders never quarry).
+## The default level of work type `work` for a person (elders never quarry or, M3, mine).
 static func default_level(work_name: String, elder: bool) -> int:
-	return 0 if elder and work_name == "quarry" else DEFAULT_LEVEL
+	return 0 if elder and (work_name == "quarry" or work_name == "mine") else DEFAULT_LEVEL
 
 
 ## The level after `level` in the click cycle 0→1→2→3→4→0.
@@ -155,7 +157,7 @@ func _refresh() -> void:
 		var title: Label = Label.new()
 		title.text = EconomyText.work(_locale, w)
 		title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		title.custom_minimum_size.x = 96
+		title.custom_minimum_size.x = CELL_WIDTH
 		_grid.add_child(title)
 	if rows.is_empty():
 		var none: Label = Label.new()
@@ -179,7 +181,7 @@ func _refresh() -> void:
 			var level: int = levels[w]
 			var cell: Button = _button("Cell_%d_%d" % [r, w], set_level.bind(agent, works[w], next_level(level)))
 			cell.text = str(level) if level > 0 else "—"
-			cell.custom_minimum_size = Vector2(96, 0)
+			cell.custom_minimum_size = Vector2(CELL_WIDTH, 0)
 			var colour: Color = LEVEL_COLORS[clampi(level, 0, LEVEL_COLORS.size() - 1)]
 			for state: String in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
 				cell.add_theme_color_override(state, colour)

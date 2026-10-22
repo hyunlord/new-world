@@ -3,5 +3,10 @@
 	"BUILDING_HUT": "Hut",
 	"BUILDING_KNAPPING_SPOT": "Knapping spot",
 	"BUILDING_WOOD_BENCH": "Wood bench",
-	"BUILDING_DRYING_RACK": "Drying rack"
+	"BUILDING_DRYING_RACK": "Drying rack",
+	"BUILDING_LOG_WALL": "Log wall",
+	"BUILDING_DOOR": "Door",
+	"BUILDING_PACKED_FLOOR": "Packed floor",
+	"BUILDING_BEDROLL": "Bedroll",
+	"BUILDING_STONE_WALL": "Stone wall"
 }

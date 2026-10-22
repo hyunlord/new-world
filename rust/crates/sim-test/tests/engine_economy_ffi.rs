@@ -7,7 +7,7 @@ mod colony_support;
 use colony_support::{build_workshop, drop_items, job_world_m2, worker};
 use sim_bridge::ffi::{
     collect_agent_economy, collect_colony_overlay, collect_recipes, collect_work_priorities,
-    collect_workshops, submit_economy, EconomyCommand,
+    collect_workshops, levels_in_work_order, submit_economy, EconomyCommand,
 };
 use sim_core::colony::{BlueprintKind, ItemKind, ItemSpec, RejectReason, Skills, Tool};
 use sim_core::components::Agent;
@@ -104,6 +104,26 @@ fn priorities_and_one_persons_economy() {
         Some(RejectReason::Unknown)
     );
     assert_eq!(collect_work_priorities(&engine.world)[0].levels[3], 0);
+    // M3: the bridge lists levels in `work_types` (WorkType::ALL) order, where
+    // mining (code 6) is fourth; a code-order flatten showed chop's level under
+    // the mining column.
+    let mine = EconomyCommand::SetWorkPriority {
+        agent: first as i64,
+        work: "mine".into(),
+        level: 1,
+    };
+    assert!(submit_economy(&mut engine, &mine).accepted);
+    let row = collect_work_priorities(&engine.world)[0];
+    let order: Vec<&str> = sim_core::colony::WorkType::ALL
+        .iter()
+        .map(|w| w.name())
+        .collect();
+    assert_eq!(
+        order,
+        ["craft", "build", "quarry", "mine", "chop", "split", "haul"]
+    );
+    assert_eq!(levels_in_work_order(&row)[3], 1, "mine");
+    assert_eq!(levels_in_work_order(&row)[4], 0, "chop");
     // Economy of one person: skills, a tool, a load.
     let entity = engine
         .world

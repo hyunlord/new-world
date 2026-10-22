@@ -627,7 +627,7 @@ impl WorldSimNode {
         workshops_to_dict(&collect_workshops(&self.engine.resources))
     }
 
-    /// M2: the adults' work priorities (`agent_ids`, `levels` 6 per row, `work_types`).
+    /// M2: the adults' work priorities (`agent_ids`, `levels` 7 per row in `work_types` order, `work_types`).
     #[func]
     fn get_work_priorities(&self) -> VarDictionary {
         priorities_to_dict(&collect_work_priorities(&self.engine.world))

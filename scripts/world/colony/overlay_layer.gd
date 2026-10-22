@@ -12,6 +12,12 @@
 #     "· 작업 n%") on a dark backing box above it and a 3-px bar under it (amber with the materials delivered until
 #     all are there, then green with the work done), and, under the mouse, a stack's count (logs) or
 #     "부싯돌 날 ×3 · 품질 62" (M2 kinds), or a node's "바위 · 돌 12개 남음", on a small backing box.
+# M3: space sites (site kinds 4 log wall, 5 stone wall, 6 door, 7 packed floor, 8 bedroll) are drawn as their
+#   blueprint ghost (`ghost_wall` on a wall site, `ghost_door`, `ghost_floor`, `ghost_bedroll`) with a 2-px bar
+#   inside the tile's bottom; their "재료 d/n · 작업 n%" label shows only under the mouse (a drag of 30 walls would
+#   bury the map in labels). Dig and deconstruct marks (designation kinds 2, 3) draw `mark_dig` /
+#   `mark_deconstruct` over the whole tile. The hover text of a stack in a room adds "· 방: 창고 2" (and "· 지붕
+#   아래" when the overlay's `item_covered` says so). The room overlay is the child "Rooms" (room_layer.gd).
 # Redrawn only when the colony overlay version or the hovered stack changes (`get_colony_versions` is polled every
 #   frame).
 # Bridge methods: via SimReads get_colony_versions, get_colony_overlay; signal world_reset.
@@ -32,8 +38,9 @@ const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const NODE_SPRITES: Array[String] = ["boulder", "flint_outcrop"]
 const NODE_KEYS: Array[String] = ["NODE_BOULDER", "NODE_FLINT_OUTCROP"]
 const NODE_ITEMS: Array[int] = [2, 3]
-## Designation marks by designation kind (0 chop, 1 quarry).
-const MARKS: Array[String] = ["mark_chop", "mark_quarry"]
+## Designation marks by designation kind (0 chop, 1 quarry; M3 2 dig, 3 deconstruct).
+const MARKS: Array[String] = ["mark_chop", "mark_quarry", "mark_dig", "mark_deconstruct"]
+const RoomLayer = preload("res://scripts/world/colony/room_layer.gd")
 const BLUEPRINT: Color = Color(0.55, 0.75, 1.0, 0.6)
 
 var _world_sim: Node = null
@@ -41,11 +48,14 @@ var _version: int = -1
 var _overlay: Dictionary = {}
 var _font: Font = null
 var _ground: Node2D = null
-## Tile -> {kind, count, quality} of the item stack on it.
+var _rooms: Node2D = null
+## Tile -> {kind, count, quality, covered} of the item stack on it.
 var _stacks: Dictionary = {}
 ## Tile -> {kind, left} of the resource node on it.
 var _nodes: Dictionary = {}
 var _hover: Vector2i = Vector2i(-1, -1)
+## Tiles of M3 space sites (their label shows under the mouse).
+var _space_sites: Dictionary = {}
 
 
 func _ready() -> void:
@@ -59,6 +69,9 @@ func _ready() -> void:
 	_ground.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_ground.draw.connect(_draw_ground)
 	add_child(_ground)
+	_rooms = RoomLayer.new()
+	_rooms.name = "Rooms"
+	add_child(_rooms)
 	_world_sim = get_node_or_null("/root/Main/WorldSim")
 	if _world_sim != null:
 		_world_sim.connect("world_reset", _on_world_reset)
@@ -81,7 +94,8 @@ func _process(_delta: float) -> void:
 		queue_redraw()
 	var hover: Vector2i = View.world_to_tile(get_global_mouse_position())
 	if hover != _hover:
-		var redraw: bool = _stacks.has(hover) or _stacks.has(_hover) or _nodes.has(hover) or _nodes.has(_hover)
+		var redraw: bool = _stacks.has(hover) or _stacks.has(_hover) or _nodes.has(hover) or _nodes.has(_hover) \
+			or _space_sites.has(hover) or _space_sites.has(_hover)
 		_hover = hover
 		if redraw:
 			queue_redraw()
@@ -104,10 +118,16 @@ func _index_stacks() -> void:
 	var counts: PackedInt32Array = _overlay.get("item_counts", PackedInt32Array())
 	var kinds: PackedInt32Array = _overlay.get("item_kinds", PackedInt32Array())
 	var qualities: PackedInt32Array = _overlay.get("item_qualities", PackedInt32Array())
+	var covered: PackedInt32Array = _overlay.get("item_covered", PackedInt32Array())
 	for i: int in mini(ixs.size(), mini(iys.size(), counts.size())):
 		var kind: int = kinds[i] if i < kinds.size() else 0
 		var quality: int = qualities[i] if i < qualities.size() else 50
-		_stacks[Vector2i(ixs[i], iys[i])] = {"kind": kind, "count": counts[i], "quality": quality}
+		var under_roof: bool = i < covered.size() and covered[i] != 0
+		_stacks[Vector2i(ixs[i], iys[i])] = {"kind": kind, "count": counts[i], "quality": quality, "covered": under_roof}
+	_space_sites.clear()
+	for site: Dictionary in _sites():
+		if EconomyText.is_space(int(site["kind"])):
+			_space_sites[View.world_to_tile((site["rect"] as Rect2).position)] = true
 	_nodes.clear()
 	var nxs: PackedInt32Array = _overlay.get("node_xs", PackedInt32Array())
 	var nys: PackedInt32Array = _overlay.get("node_ys", PackedInt32Array())
@@ -170,6 +190,10 @@ func _draw_ground() -> void:
 	for site: Dictionary in sites:
 		var rect: Rect2 = site["rect"]
 		var kind: int = int(site["kind"])
+		if EconomyText.is_space(kind):
+			# M3: the kind's blueprint ghost (a wall ghost on a wall site).
+			_ground.draw_texture_rect_region(texture, rect, View.rect(str(EconomyText.BUILD_KINDS[kind]["ghost"])))
+			continue
 		if kind > 0 and kind < EconomyText.BUILD_KINDS.size():
 			_ground.draw_rect(rect, Color(BLUEPRINT, 0.15))
 			_ground.draw_texture_rect_region(texture, rect, View.rect(str(EconomyText.BUILD_KINDS[kind]["sprite"])), BLUEPRINT)
@@ -230,11 +254,20 @@ func _draw() -> void:
 		var delivered: int = int(site["delivered"])
 		var logs_done: float = clampf(float(delivered) / maxf(1.0, float(needed)), 0.0, 1.0)
 		var work_done: float = clampf(float(site["progress"]) / maxf(1.0, float(site["required"])), 0.0, 1.0)
-		var bar: Rect2 = Rect2(rect.position + Vector2(0, rect.size.y + 1), Vector2(rect.size.x, BAR_HEIGHT + 2))
-		draw_rect(bar, BACK)
 		var building: bool = delivered >= needed
 		var fill: float = work_done if building else logs_done
-		draw_rect(Rect2(bar.position + Vector2(1, 1), Vector2((bar.size.x - 2) * fill, BAR_HEIGHT)), BAR_WORK if building else BAR_LOGS)
+		var space: bool = EconomyText.is_space(int(site["kind"]))
+		if space:
+			# M3: a 2-px bar inside the tile (a line of sites would overlap bars below the tile); label on hover only.
+			var inner: Rect2 = Rect2(rect.position + Vector2(2, rect.size.y - 4), Vector2(rect.size.x - 4, 3))
+			draw_rect(inner, BACK)
+			draw_rect(Rect2(inner.position + Vector2(1, 1), Vector2((inner.size.x - 2) * fill, 1)), BAR_WORK if building else BAR_LOGS)
+			if not rect.has_point(View.tile_to_world(_hover) + Vector2(1, 1)):
+				continue
+		else:
+			var bar: Rect2 = Rect2(rect.position + Vector2(0, rect.size.y + 1), Vector2(rect.size.x, BAR_HEIGHT + 2))
+			draw_rect(bar, BACK)
+			draw_rect(Rect2(bar.position + Vector2(1, 1), Vector2((bar.size.x - 2) * fill, BAR_HEIGHT)), BAR_WORK if building else BAR_LOGS)
 		if _font == null:
 			continue
 		var params: Dictionary = {"delivered": delivered, "needed": needed}
@@ -251,12 +284,30 @@ func _draw() -> void:
 		var text: String = str(int(stack["count"]))
 		if kind > 0:
 			text = EconomyText.stack(locale, kind, "", int(stack["count"]), int(stack["quality"]))
+		text += room_suffix(_rooms, _hover, bool(stack.get("covered", false)), locale)
 		_label(text, at, true)
 	elif _nodes.has(_hover) and _font != null:
 		var node: Dictionary = _nodes[_hover]
 		var node_kind: int = int(node["kind"])
 		_label(EconomyText.trf(locale, "UI_NODE_LEFT_FMT", {"name": EconomyText.ltr(locale, NODE_KEYS[node_kind]),
 			"item": EconomyText.item(locale, NODE_ITEMS[node_kind]), "left": int(node["left"])}), at, true)
+
+
+## M3: " · 방: 창고 2" for a tile inside a room of `rooms` (room_layer.gd), plus " · 지붕 아래" when `covered`; "" outside.
+static func room_suffix(rooms: Node, tile: Vector2i, covered: bool, locale: Node) -> String:
+	var text: String = ""
+	var id: int = int(rooms.call("room_at", tile)) if rooms != null else -1
+	if id >= 0:
+		var info: Dictionary = rooms.call("room", id)
+		text += " · " + EconomyText.trf(locale, "UI_INSPECT_ROOM_FMT", {"role": EconomyText.role(locale, int(info.get("role", 0))), "id": id})
+	if covered:
+		text += " · " + EconomyText.ltr(locale, "UI_ITEM_COVERED")
+	return text
+
+
+## The room overlay node (room_layer.gd; for the order tool, the order bar, the inspector and tools).
+func rooms() -> Node2D:
+	return _rooms
 
 
 ## Text centred on `anchor.x` with its box's bottom at `anchor.y`, on a dark backing box (art_ui panel colours).

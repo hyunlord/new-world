@@ -18,6 +18,10 @@
 #   get_activity_snapshot; via person_read_cache.gd get_person, get_person_chronicle, get_agent_family,
 #   get_agent_temperament; M2 get_agent_economy (direct, once per tick for the selected person: skills with
 #   tiers, the held tool and the carried item with material and quality); signal world_reset.
+# M3: the bed line "잠자리: 침실 3 (지붕 있음)" from get_agent_economy's bed_x/bed_y/bed_room/bed_room_role/bed_roofed
+#   (the roof word "판 굴" for a dug room from the room overlay's index, ColonyView/OverlayLayer/Rooms; a hut bed from
+#   get_building_snapshot via SimReads: "잠자리: 오두막"; no bed: "잠자리: 없음"); job codes 9 dig, 10 deconstruct,
+#   11 clear (haul-away); the skill list follows the bridge's skill_names (M3 adds mining).
 extends Control
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
@@ -101,9 +105,15 @@ var _carried_label: Label
 # M1 (9.6): the job line ("지금: …") from the snapshot's `jobs` column.
 var _job_label: Label
 # M2 adds 5 quarry, 6 supply, 7 craft, 8 gather.
-const JOB_KEYS: Array[String] = ["UI_JOB_NONE", "UI_JOB_CHOP", "UI_JOB_HAUL", "UI_JOB_DELIVER", "UI_JOB_BUILD", "UI_JOB_QUARRY", "UI_JOB_SUPPLY", "UI_JOB_CRAFT", "UI_JOB_GATHER"]
+# M3 adds 9 dig, 10 deconstruct, 11 clear (haul-away).
+const JOB_KEYS: Array[String] = ["UI_JOB_NONE", "UI_JOB_CHOP", "UI_JOB_HAUL", "UI_JOB_DELIVER", "UI_JOB_BUILD", "UI_JOB_QUARRY", "UI_JOB_SUPPLY", "UI_JOB_CRAFT", "UI_JOB_GATHER", "UI_JOB_DIG", "UI_JOB_DECONSTRUCT", "UI_JOB_CLEAR"]
+const RoomLayer = preload("res://scripts/world/colony/room_layer.gd")
+## BuildingKind code of a hut in get_building_snapshot.
+const HUT_KIND: int = 3
 # M2: the tool line, the skills heading and lines; the economy read is refreshed once per tick.
 var _tool_label: Label
+## M3: where the person sleeps.
+var _bed_label: Label
 var _skills_heading: Label
 var _skills_label: Label
 var _economy: Dictionary = {}
@@ -178,6 +188,8 @@ func _ready() -> void:
 	_cold_label = _make_label("")
 	_cold_label.hide()
 	_tool_label = _make_label("")
+	_bed_label = _make_label("")
+	_bed_label.hide()
 	_skills_heading = _make_label("")
 	_skills_heading.theme_type_variation = &"Heading"
 	_skills_label = _make_label("")
@@ -377,6 +389,7 @@ func display_agent(detail: Dictionary) -> void:
 func _refresh_economy(agent_id: int) -> void:
 	if _world_sim == null or not _world_sim.has_method("get_agent_economy"):
 		_tool_label.hide()
+		_bed_label.hide()
 		_skills_heading.hide()
 		_skills_label.hide()
 		return
@@ -388,6 +401,7 @@ func _refresh_economy(agent_id: int) -> void:
 		_economy = read if read is Dictionary else {}
 	if not bool(_economy.get("found", false)):
 		_tool_label.hide()
+		_bed_label.hide()
 		_skills_heading.hide()
 		_skills_label.hide()
 		return
@@ -403,10 +417,49 @@ func _refresh_economy(agent_id: int) -> void:
 			"quality": EconomyText.quality(_locale, int(_economy.get("tool_quality", 0)))})
 	_tool_label.text = "%s: %s" % [_loc("UI_INSPECT_TOOL"), tool_text]
 	_tool_label.show()
+	_bed_label.visible = _economy.has("bed_x")
+	if _bed_label.visible:
+		var bed: Vector2i = Vector2i(int(_economy.get("bed_x", -1)), int(_economy.get("bed_y", -1)))
+		_bed_label.text = bed_line(_economy, get_node_or_null("/root/Main/ColonyView/OverlayLayer/Rooms"), _is_hut_bed(bed), _locale)
 	_skills_heading.text = _loc("UI_INSPECT_SKILLS")
 	_skills_heading.show()
 	_skills_label.text = "\n".join(skill_lines(_economy, _locale))
 	_skills_label.show()
+
+
+## M3: "잠자리: 침실 3 (지붕 있음)" from get_agent_economy's bed fields (`rooms` = the room overlay node for the
+## dug-pocket roof word, may be null); "잠자리: 오두막" for a hut bed (`hut`), "잠자리: (x, y)" for a bed outside any
+## room, "잠자리: 없음" without a bed.
+static func bed_line(economy: Dictionary, rooms: Node, hut: bool, locale: Node) -> String:
+	var x: int = int(economy.get("bed_x", -1))
+	var y: int = int(economy.get("bed_y", -1))
+	if x < 0 or y < 0:
+		return EconomyText.ltr(locale, "UI_INSPECT_BED_NONE")
+	var room: int = int(economy.get("bed_room", -1))
+	if room >= 0:
+		var info: Dictionary = rooms.call("room", room) if rooms != null else {}
+		if info.is_empty():
+			info = {"roofed": bool(economy.get("bed_roofed", false))}
+		var role_code: int = int(economy.get("bed_room_role", int(info.get("role", 0))))
+		return EconomyText.trf(locale, "UI_INSPECT_BED_FMT", {"room": EconomyText.role(locale, role_code), "id": room,
+			"roof": RoomLayer.roof_text(info, locale)})
+	if hut:
+		return EconomyText.ltr(locale, "UI_INSPECT_BED_HUT")
+	return EconomyText.trf(locale, "UI_INSPECT_BED_TILE_FMT", {"x": x, "y": y})
+
+
+## Whether `bed` is a hut's bed (huts give their beds at the centre tile; the drawing spreads the bedrolls).
+func _is_hut_bed(bed: Vector2i) -> bool:
+	if bed.x < 0 or _world_sim == null:
+		return false
+	var snap: Dictionary = SimReads.read(_world_sim, "get_building_snapshot")
+	var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
+	var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
+	var kinds: PackedByteArray = snap.get("kinds", PackedByteArray())
+	for i: int in mini(kinds.size(), mini(xs.size(), ys.size())):
+		if kinds[i] == HUT_KIND and absi(xs[i] - bed.x) <= 1 and absi(ys[i] - bed.y) <= 1:
+			return true
+	return false
 
 
 ## "돌 다듬기 7 · 숙련" per skill, in the bridge's skill order.

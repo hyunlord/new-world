@@ -1,5 +1,6 @@
 # chronicle_text.gd: static helpers that turn packed chronicle columns into rows and localized BBCode lines
 #   (day prefix, person/village links, death and porter wording); used by chronicle_panel.gd and agent_inspector_panel.gd.
+#   M3 kind 23 (RoomFormed: cause = the room's role code, value = its id): "새 방이 생김 — 침실".
 # Bridge methods: none (formats chronicle rows and world info its callers read: ticks_per_day, ticks_per_year,
 #   clock_offset_ticks from get_world_info).
 extends RefCounted
@@ -110,12 +111,20 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 		20: return loc(locale, "CHRON_VILLAGES_ESTRANGED_FMT") % [village(place, locale), village(parent, locale)]
 		21: return loc(locale, "CHRON_VILLAGES_RECONCILED_FMT") % [village(place, locale), village(parent, locale)]
 		22: return hut_built(row, locale)
+		23: return room_formed(row, locale)
 	return ""
 
 
 ## M1 kind 22 (HutBuilt): "A hut was finished in {settlement}".
 static func hut_built(row: Dictionary, locale: Node) -> String:
 	return LocaleScript.format_text(loc(locale, "CHRONICLE_HUT_BUILT"), {"settlement": village(int(row.get("settlement", -1)), locale)})
+
+## M3 kind 23 (RoomFormed): "A new room: {role}" (cause = `RoomRole::code`, 0 unassigned … 4 hall).
+static func room_formed(row: Dictionary, locale: Node) -> String:
+	const ROLE_KEYS: Array[String] = ["ROOM_ROLE_UNASSIGNED", "ROOM_ROLE_BEDROOM", "ROOM_ROLE_STOREHOUSE", "ROOM_ROLE_WORKSHOP", "ROOM_ROLE_HALL"]
+	var cause: int = int(row.get("cause", 0))
+	var role_key: String = ROLE_KEYS[cause] if cause >= 0 and cause < ROLE_KEYS.size() else ROLE_KEYS[0]
+	return LocaleScript.format_text(loc(locale, "CHRONICLE_ROOM_FORMED"), {"role": loc(locale, role_key)})
 
 static func line(row: Dictionary, viewed: int, locale: Node, info: Dictionary, world_feed: bool = false) -> String:
 	var text: String = sentence(row, viewed, locale, info)
