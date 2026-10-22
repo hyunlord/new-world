@@ -22,7 +22,8 @@ def prompt_for(age: str, sex: str, top: str, hair: str) -> str:
     if age == 'child':
         build = ('young boy' if sex == 'M' else 'young girl') + ', round face, no beard, large head about 32% of height, simple opaque tunic or chest wrap'
     garment = {
-        'loincloth': 'opaque loincloth and bare upper torso for adult male; adult female wears opaque chest band plus skirt; child wears opaque chest band plus skirt',
+        'loincloth': ('opaque loincloth with bare upper torso' if age == 'adult' and sex == 'M'
+                      else 'opaque chest band plus skirt, chest securely covered'),
         'hide_wrap': 'one-shoulder asymmetric hide wrap with one visible bare shoulder, chest securely covered',
         'fur_cloak': 'wide fur collar and hood shape, cloak hanging past hips, clearly darker than skin and distinct in tone and contour from hair, chest covered',
     }[top]

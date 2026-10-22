@@ -129,8 +129,9 @@ def audit_frame(path: Path, expected: tuple[str, str, str, int], fresh: SheetVer
 def audit_manifest(directory: Path, first: Metadata) -> None:
     """Require exact manifest coverage and independently hashed image/JSON pairs."""
     path = directory / 'MANIFEST.json'
-    if not path.exists():
-        return
+    if not path.is_file():
+        message = 'missing required MANIFEST.json'
+        raise ValueError(message)
     manifest: Manifest = json.loads(path.read_text())
     for key in ('look', 'age', 'attempt', 'scale', 'raw', 'raw_sha256', 'prompt_sha256', 'calibration_sha256'):
         if manifest[key] != first[key]:

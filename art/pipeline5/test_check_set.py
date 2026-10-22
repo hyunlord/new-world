@@ -70,3 +70,19 @@ def test_fresh_frame_verification_rejects_metadata_and_pixel_tampering(tmp_path:
     image.save(path)
     with pytest.raises(ValueError, match='hash'):
         _ = check_set.audit_frame(path, identity, fresh)
+
+
+def test_missing_required_manifest_fails(tmp_path: Path) -> None:
+    import pytest
+
+    metadata: check_set.Metadata = {
+        'look': 'adult_M_hide_wrap_short', 'age': 'adult', 'facing': 'S',
+        'frame': 'idle', 'attempt': 1, 'raw': 'unused.png', 'raw_sha256': '',
+        'prompt_sha256': '', 'image_sha256': '', 'scale': 1.0,
+        'panel_index': 0, 'rotation': 0, 'source_box': [0, 0, 1, 1],
+        'calibration_sha256': '', 'checks': {},
+        'judge': {'candidate': '', 'sha256': '', 'family': 'person',
+                  'metrics': {}, 'numeric_checks': {}, 'numeric_pass': False},
+    }
+    with pytest.raises(ValueError, match='missing required MANIFEST'):
+        check_set.audit_manifest(tmp_path, metadata)
