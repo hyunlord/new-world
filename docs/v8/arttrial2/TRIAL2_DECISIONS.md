@@ -71,3 +71,16 @@ Context: dense meadow marks obscure people, and mirror-blended floors and palisa
 Choice: regenerate six grounds with calm low-contrast washes, sparse large-scale detail, no flowers or scattered stones; tile-aware prompting first. Ground-only global tone adjustment caps luminance standard deviation to 60% of foreground-masked person anchor and mean saturation to 0.35; record all values and operations. Never quantize or force outlines.
 Reason: preserve the people > work > walls > ground hierarchy while making the allowed processing measurable. New figures must be compared on old and new ground at the same scale.
 Evidence: `art/style05/boards/people_meadow_1x.png`, `AUTOTILE_REVIEW.md`, `TRIAL2B_GOAL.md` §4.1. New comparisons remain pending until their exact rendered images exist.
+
+
+## D13 — Keep corrected style yield separate from content and runtime acceptance
+Context: the goal fixes C2 as numeric AND fresh same-family model, while content, seams, ground tone and readability are distinct checks.
+Choice: preserve the38 original first attempts and historical59 generation costs; new retry costs and calm-ground costs remain separately visible. Content QA gates copying but does not silently change C2. Candidate proto assets are labeled as such.
+Reason: correcting the instrument must not replace the preregistered measure with a more favorable or more restrictive unannounced one.
+Evidence: ENV_ACCEPTANCE_V2.json, ENV_CONTENT_V2.md and COST_V2.md.
+
+## D14 — Stop people iteration at the declared ceiling and preserve the decision gap
+Context: both fresh review rounds miss required readability; one revision was authorized. C4 remains historically NOT_MET and is not re-tested in TRIAL2b.
+Choice: freeze final people, retain C5/G1 failures and the C7 whole-person-versus-part measurement limitation. Do not silently claim the C1–C4 prerequisite of the code-people fallback; do not resurrect the withdrawn map02 conclusion from the broken instrument.
+Reason: a bounded experiment can finish with an unresolved production choice. No game integration or style switch is authorized by these observations.
+Evidence: READABILITY_V2_ROUND1/2.md, PEOPLE_MODEL_REVIEW_V2.json, original TRIAL2_GOAL.md section8 and TRIAL2_REPORT.md season evidence.
