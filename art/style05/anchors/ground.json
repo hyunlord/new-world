@@ -1,0 +1,30 @@
+{
+  "concept": "05_ink_and_tone",
+  "file": "S6_1.png",
+  "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S6_1.png",
+  "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-8483166d-468f-4245-b1db-d85eafd0da14.png",
+  "sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+  "dimensions": [
+    1254,
+    1254
+  ],
+  "wall_seconds": 51.664,
+  "generator_kept": true,
+  "reason": "Four overhead ground quadrants with fine ink botanical detail; forest/meadow available, seamlessness unverified and texture dense.",
+  "name": "ground",
+  "destination": "art/style05/anchors/ground.png",
+  "asset_role": "locked_reference_original",
+  "prompt": "Create one 1024x1024 square concept image. Subject: one image split in four equal square quadrants, each a seamless-looking top-down ground: TOP LEFT river bank with shallow water; TOP RIGHT forest floor under canopy; BOTTOM LEFT grassy meadow; BOTTOM RIGHT bare hill rock. No text or dividers. STRICT CAMERA: vertically above looking straight 90 degrees down, no horizon or isometric view. Full figures/objects with margin, crown of heads and shoulders visible. Stone-age hide, bark, reeds, river stone, bone only; no metal, dyed cloth or modern items. Attached image is STYLE REFERENCE ONLY. Match this exact style, same lighting and material treatment, but render the new requested subject. Illustrated 2D with fine controlled ink line work, restrained colour washes and two-tone shading, like a carefully observed natural-history plate. Describe bark, reed, stone and hide through selective marks, never dense all-over hatching. Give major silhouettes slightly stronger ink than internal detail; keep people distinct from the ground. Use consistent upper-left light. Fire is the warmest point wherever present. Preserve the exact content and camera in the subject prompt: straight top-down for map subjects, with only a slight front-face cheat for tall objects. Paint the requested natural ground rather than a blank plate. No labels, lettering, watermark or UI. Only the four ground quadrants, no people or objects from reference. Whole canvas tiled by equal four squares, no borders or labels.",
+  "try_count_this_pass": 0,
+  "operations": [
+    "byte-identical copy"
+  ],
+  "working_size": [
+    1254,
+    1254
+  ],
+  "anchors_used_this_pass": [],
+  "generation_id": "exec-8483166d-468f-4245-b1db-d85eafd0da14",
+  "judge_status": "see docs/v8/arttrial2/CALIBRATION_RESULTS.json; original acceptance does not imply current judge pass",
+  "anchor_point": null
+}

@@ -1,0 +1,30 @@
+{
+  "concept": "05_ink_and_tone",
+  "file": "S4_1.png",
+  "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S4_1.png",
+  "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-547ca291-c1d0-4f78-9db0-792f5075bd1d.png",
+  "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+  "dimensions": [
+    1254,
+    1254
+  ],
+  "wall_seconds": 36.33,
+  "generator_kept": true,
+  "reason": "Roofless overhead four-bed hut with warm central hearth and south door; fine outlines consistent, walls use permissible face cheat.",
+  "name": "hut",
+  "destination": "art/style05/anchors/hut.png",
+  "asset_role": "locked_reference_original",
+  "prompt": "Create one 1024x1024 square concept image. Subject: a 3\u00d73-tile log-walled hut from directly above, absolutely no roof; interior visible: packed earth floor, exactly four bedrolls and a small stone hearth with fire; south doorway. STRICT CAMERA: vertically above looking straight 90 degrees down, no horizon or isometric view. Full figures/objects with margin, crown of heads and shoulders visible. Stone-age hide, bark, reeds, river stone, bone only; no metal, dyed cloth or modern items. Attached image is STYLE REFERENCE ONLY. Match this exact style, same lighting and material treatment, but render the new requested subject. Illustrated 2D with fine controlled ink line work, restrained colour washes and two-tone shading, like a carefully observed natural-history plate. Describe bark, reed, stone and hide through selective marks, never dense all-over hatching. Give major silhouettes slightly stronger ink than internal detail; keep people distinct from the ground. Use consistent upper-left light. Fire is the warmest point wherever present. Preserve the exact content and camera in the subject prompt: straight top-down for map subjects, with only a slight front-face cheat for tall objects. Paint the requested natural ground rather than a blank plate. No labels, lettering, watermark or UI. Architectural orthographic roofless PLAN. Square log walls aligned image edges; exactly four bedrolls in 2x2 layout; warm hearth central; south door bottom gap. No people or basket from reference.",
+  "try_count_this_pass": 0,
+  "operations": [
+    "byte-identical copy"
+  ],
+  "working_size": [
+    1254,
+    1254
+  ],
+  "anchors_used_this_pass": [],
+  "generation_id": "exec-547ca291-c1d0-4f78-9db0-792f5075bd1d",
+  "judge_status": "see docs/v8/arttrial2/CALIBRATION_RESULTS.json; original acceptance does not imply current judge pass",
+  "anchor_point": null
+}

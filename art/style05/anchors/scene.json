@@ -1,0 +1,30 @@
+{
+  "concept": "05_ink_and_tone",
+  "file": "S7_3.png",
+  "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S7_3.png",
+  "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-256113b0-ca7c-4671-b14b-78b5b02e91fc.png",
+  "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+  "dimensions": [
+    1536,
+    1024
+  ],
+  "wall_seconds": 81.747,
+  "generator_kept": true,
+  "reason": "Eight people and three single-panel roofs, overhead plan restored with roofless four-bed hut; best camera/scale compromise. Visible body extents roughly70-90px, still larger than64px target; limitation remains.",
+  "name": "scene",
+  "destination": "art/style05/anchors/scene.png",
+  "asset_role": "locked_reference_original",
+  "prompt": "Create one 1536x1024 landscape concept image. Subject: the whole founding camp from directly overhead at scale where a person is about 64 px tall: one hut, exactly three lean-tos, central hearth with fire, stockpile, river bank on left, forest edge at top, exactly eight people at work distributed around camp. STRICT CAMERA: vertically above looking straight 90 degrees down, no horizon or isometric view. Full figures/objects with margin, crown of heads and shoulders visible. Stone-age hide, bark, reeds, river stone, bone only; no metal, dyed cloth or modern items. Attached image is STYLE REFERENCE ONLY. Match this exact style, same lighting and material treatment, but render the new requested subject. Illustrated 2D with fine controlled ink line work, restrained colour washes and two-tone shading, like a carefully observed natural-history plate. Describe bark, reed, stone and hide through selective marks, never dense all-over hatching. Give major silhouettes slightly stronger ink than internal detail; keep people distinct from the ground. Use consistent upper-left light. Fire is the warmest point wherever present. Preserve the exact content and camera in the subject prompt: straight top-down for map subjects, with only a slight front-face cheat for tall objects. Paint the requested natural ground rather than a blank plate. No labels, lettering, watermark or UI. AERIAL ORTHOGRAPHIC FLOOR PLAN; 90-degree vertical camera. THREE single-sheet rectangular lean-to roofs flat to viewer, no ridge/no tent/no visible interior or standing poles. Roofs occlude floor. Square roofless hut four bedrolls. EXACTLY EIGHT people, each about64px in1024px canvas height, tiny heads and shoulders. Positions: (1) river upper-left, (2) reeds upper-middle, (3) stockpile upper-right, (4) hearth center, (5) hide mid-right, (6) stones lower-left, (7) logs lower-middle, (8) berries lower-right. Do not draw numbers. More terrain for high-altitude scale. Natural fine ink ground, no perspective horizon.",
+  "try_count_this_pass": 0,
+  "operations": [
+    "byte-identical copy"
+  ],
+  "working_size": [
+    1536,
+    1024
+  ],
+  "anchors_used_this_pass": [],
+  "generation_id": "exec-256113b0-ca7c-4671-b14b-78b5b02e91fc",
+  "judge_status": "see docs/v8/arttrial2/CALIBRATION_RESULTS.json; original acceptance does not imply current judge pass",
+  "anchor_point": null
+}

@@ -1,0 +1,30 @@
+{
+  "concept": "05_ink_and_tone",
+  "file": "S1_2.png",
+  "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S1_2.png",
+  "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-865946d0-dd0d-4d6e-8f39-067a7c1ed54b.png",
+  "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+  "dimensions": [
+    1254,
+    1254
+  ],
+  "wall_seconds": 32.224,
+  "generator_kept": true,
+  "reason": "Crown-dominant vertical overhead view with feet; precise ink silhouettes, restrained washes and two-tone arms match concept.",
+  "name": "person",
+  "destination": "art/style05/anchors/person.png",
+  "asset_role": "locked_reference_original",
+  "prompt": "Create one 1024x1024 square concept image. Subject: a stone-age woman with a reed basket of berries, seen from above, standing on packed earth. STRICT CAMERA: vertically above looking straight 90 degrees down, no horizon or isometric view. Full figures/objects with margin, crown of heads and shoulders visible. Stone-age hide, bark, reeds, river stone, bone only; no metal, dyed cloth or modern items. Illustrated 2D with fine controlled ink line work, restrained colour washes and two-tone shading, like a carefully observed natural-history plate. Describe bark, reed, stone and hide through selective marks, never dense all-over hatching. Give major silhouettes slightly stronger ink than internal detail; keep people distinct from the ground. Use consistent upper-left light. Fire is the warmest point wherever present. Preserve the exact content and camera in the subject prompt: straight top-down for map subjects, with only a slight front-face cheat for tall objects. Paint the requested natural ground rather than a blank plate. No labels, lettering, watermark or UI. ",
+  "try_count_this_pass": 0,
+  "operations": [
+    "byte-identical copy"
+  ],
+  "working_size": [
+    1254,
+    1254
+  ],
+  "anchors_used_this_pass": [],
+  "generation_id": "exec-865946d0-dd0d-4d6e-8f39-067a7c1ed54b",
+  "judge_status": "see docs/v8/arttrial2/CALIBRATION_RESULTS.json; original acceptance does not imply current judge pass",
+  "anchor_point": null
+}

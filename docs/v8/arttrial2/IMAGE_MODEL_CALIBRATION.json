@@ -1,0 +1,309 @@
+{
+  "provenance": "Actual built-in image_gen raster scorecards, manually transcribed by multimodal Codex after view_image; these scores are generated model outputs, not Codex scores. Exact underlying model version is not exposed by this tool.",
+  "tool": "image_gen.imagegen",
+  "prompt": "Independent style evaluation, not an illustration request. Image1 and2 locked ink-and-tone anchors, Image3 candidate. Score MEDIUM fine ink/two-tone wash, LINE fine controlled contours, LIGHT upper-left, PALETTE restrained earth colours, each integer1\u20135; all>=4 to pass. Return plain white scorecard containing four names/scores, PASS/FAIL, one English reason sentence, no illustration/decoration. Be critical, never assume desired verdict.",
+  "pass_rule": "All four integer scores >= 4",
+  "calibration_verdict": "FAIL",
+  "calibration_note": "Five of six anchors pass; ground fails. Two of three negatives fail; woodcut passes. Scene duplicate-reference score inconsistency retained.",
+  "unusable_cards": [],
+  "records": [
+    {
+      "name": "person",
+      "candidate": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png"
+      ],
+      "prompt": "Independent style evaluation, not an illustration request. Image1 and2 locked ink-and-tone anchors, Image3 candidate. Score MEDIUM fine ink/two-tone wash, LINE fine controlled contours, LIGHT upper-left, PALETTE restrained earth colours, each integer1\u20135; all>=4 to pass. Return plain white scorecard containing four names/scores, PASS/FAIL, one English reason sentence, no illustration/decoration. Be critical, never assume desired verdict.",
+      "started_at": "2026-10-21 23:55:03 UTC",
+      "completed_at": "2026-10-21 23:58:03 UTC",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160da-7c83-72a2-92d7-3018c7309f01/exec-72c26b39-2d95-46bf-b00d-e4578669ef68.png",
+      "error": null,
+      "medium": 5,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "verdict": "PASS",
+      "reason": "The image matches the locked style in medium, line, lighting, and palette.",
+      "usable": true,
+      "scorecard_path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration/person-scorecard.png",
+      "scorecard_sha256": "d338ae61fa42d5994128141a726bf3498f977ea0151869f14644e48534aeec31",
+      "source_sha256": "d338ae61fa42d5994128141a726bf3498f977ea0151869f14644e48534aeec31",
+      "candidate_sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+      "reference_sha256": [
+        "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+      ],
+      "time_basis": "per-call UTC observations around awaited invocation within concurrent batch; not isolated model latency"
+    },
+    {
+      "name": "hut",
+      "candidate": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png"
+      ],
+      "prompt": "Independent style evaluation, not an illustration request. Image1 and2 locked ink-and-tone anchors, Image3 candidate. Score MEDIUM fine ink/two-tone wash, LINE fine controlled contours, LIGHT upper-left, PALETTE restrained earth colours, each integer1\u20135; all>=4 to pass. Return plain white scorecard containing four names/scores, PASS/FAIL, one English reason sentence, no illustration/decoration. Be critical, never assume desired verdict.",
+      "started_at": "2026-10-21 23:55:03 UTC",
+      "completed_at": "2026-10-21 23:58:03 UTC",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160da-7c83-72a2-92d7-3018c7309f01/exec-202393e3-5d0e-431a-adaf-70459fae2d46.png",
+      "error": null,
+      "medium": 4,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "verdict": "PASS",
+      "reason": "Consistent fine ink linework with two-tone wash, clear upper-left lighting, and a restrained earthy palette.",
+      "usable": true,
+      "scorecard_path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration/hut-scorecard.png",
+      "scorecard_sha256": "80283a82d21fb75ad1f1e2d54d57af57f157e260ec8f4ad52fcd971295375845",
+      "source_sha256": "80283a82d21fb75ad1f1e2d54d57af57f157e260ec8f4ad52fcd971295375845",
+      "candidate_sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+      "reference_sha256": [
+        "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e"
+      ],
+      "time_basis": "per-call UTC observations around awaited invocation within concurrent batch; not isolated model latency"
+    },
+    {
+      "name": "props",
+      "candidate": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png"
+      ],
+      "prompt": "Independent style evaluation, not an illustration request. Image1 and2 locked ink-and-tone anchors, Image3 candidate. Score MEDIUM fine ink/two-tone wash, LINE fine controlled contours, LIGHT upper-left, PALETTE restrained earth colours, each integer1\u20135; all>=4 to pass. Return plain white scorecard containing four names/scores, PASS/FAIL, one English reason sentence, no illustration/decoration. Be critical, never assume desired verdict.",
+      "started_at": "2026-10-21 23:55:03 UTC",
+      "completed_at": "2026-10-21 23:58:03 UTC",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160da-7c83-72a2-92d7-3018c7309f01/exec-b4be69bd-4e03-43f9-b860-d0f8e3f185ec.png",
+      "error": null,
+      "medium": 4,
+      "line": 5,
+      "light": 4,
+      "palette": 5,
+      "verdict": "PASS",
+      "reason": "The image maintains the established ink-and-tone style, controlled linework, upper-left lighting, and a restrained earthy palette consistent with the anchors.",
+      "usable": true,
+      "scorecard_path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration/props-scorecard.png",
+      "scorecard_sha256": "09759979bcaf7d9ffb55d8ce41833df2bad07e32f5a640c1ce69fd953802666d",
+      "source_sha256": "09759979bcaf7d9ffb55d8ce41833df2bad07e32f5a640c1ce69fd953802666d",
+      "candidate_sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+      "reference_sha256": [
+        "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      ],
+      "time_basis": "per-call UTC observations around awaited invocation within concurrent batch; not isolated model latency"
+    },
+    {
+      "name": "ground",
+      "candidate": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/ground.png"
+      ],
+      "prompt": "Independent style evaluation, not an illustration request. Image1 and2 locked ink-and-tone anchors, Image3 candidate. Score MEDIUM fine ink/two-tone wash, LINE fine controlled contours, LIGHT upper-left, PALETTE restrained earth colours, each integer1\u20135; all>=4 to pass. Return plain white scorecard containing four names/scores, PASS/FAIL, one English reason sentence, no illustration/decoration. Be critical, never assume desired verdict.",
+      "started_at": "2026-10-21 23:55:03 UTC",
+      "completed_at": "2026-10-21 23:58:03 UTC",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160da-7c83-72a2-92d7-3018c7309f01/exec-beed73fb-8ea6-4b65-9361-844a1d6c5272.png",
+      "error": null,
+      "medium": 3,
+      "line": 5,
+      "light": 4,
+      "palette": 5,
+      "verdict": "FAIL",
+      "reason": "The foliage and water use richer colours and softer multi-tone modelling than the locked ink-and-tone style, breaking the restrained two-tone wash look.",
+      "usable": true,
+      "scorecard_path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration/ground-scorecard.png",
+      "scorecard_sha256": "5d738b5de408d12d9111b5a4251d05b1462870a6942d7ccc327f1e61f4cb5648",
+      "source_sha256": "5d738b5de408d12d9111b5a4251d05b1462870a6942d7ccc327f1e61f4cb5648",
+      "candidate_sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+      "reference_sha256": [
+        "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+      ],
+      "time_basis": "per-call UTC observations around awaited invocation within concurrent batch; not isolated model latency"
+    },
+    {
+      "name": "scene",
+      "candidate": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+      ],
+      "prompt": "Independent style evaluation, not an illustration request. Image1 and2 locked ink-and-tone anchors, Image3 candidate. Score MEDIUM fine ink/two-tone wash, LINE fine controlled contours, LIGHT upper-left, PALETTE restrained earth colours, each integer1\u20135; all>=4 to pass. Return plain white scorecard containing four names/scores, PASS/FAIL, one English reason sentence, no illustration/decoration. Be critical, never assume desired verdict.",
+      "started_at": "2026-10-21 23:55:03 UTC",
+      "completed_at": "2026-10-21 23:57:23 UTC",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160da-7c83-72a2-92d7-3018c7309f01/exec-7ebbabcf-91b6-4ae8-a148-cba80daf4a3d.png",
+      "error": null,
+      "medium": 4,
+      "line": 4,
+      "light": 4,
+      "palette": 4,
+      "verdict": "PASS",
+      "reason": "Image 3 matches the ink-and-tone style with consistent fine lines, upper-left lighting, and restrained earth colours, though slightly less refined than the anchors.",
+      "usable": true,
+      "additional_card_content": {
+        "Image1": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "verdict": "PASS"
+        },
+        "Image2": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "verdict": "PASS"
+        },
+        "note": "Candidate is identical to Image2; image-generation model nonetheless assigned different scores. Preserved without correction."
+      },
+      "scorecard_path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration/scene-scorecard.png",
+      "scorecard_sha256": "12551c07e59d86b508e6fe67a8840acdb7e4543b511409f507cfe16480471f66",
+      "source_sha256": "12551c07e59d86b508e6fe67a8840acdb7e4543b511409f507cfe16480471f66",
+      "candidate_sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+      "reference_sha256": [
+        "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      ],
+      "time_basis": "per-call UTC observations around awaited invocation within concurrent batch; not isolated model latency"
+    },
+    {
+      "name": "portrait",
+      "candidate": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/portrait.png",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/portrait.png"
+      ],
+      "prompt": "Independent style evaluation, not an illustration request. Image1 and2 locked ink-and-tone anchors, Image3 candidate. Score MEDIUM fine ink/two-tone wash, LINE fine controlled contours, LIGHT upper-left, PALETTE restrained earth colours, each integer1\u20135; all>=4 to pass. Return plain white scorecard containing four names/scores, PASS/FAIL, one English reason sentence, no illustration/decoration. Be critical, never assume desired verdict.",
+      "started_at": "2026-10-21 23:55:03 UTC",
+      "completed_at": "2026-10-21 23:58:03 UTC",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160da-7c83-72a2-92d7-3018c7309f01/exec-f38764b2-52b5-469a-8ce2-5a168883089d.png",
+      "error": null,
+      "medium": 4,
+      "line": 4,
+      "light": 4,
+      "palette": 4,
+      "verdict": "PASS",
+      "reason": "The image maintains consistent ink linework, two-tone wash rendering, upper-left lighting, and a restrained earthy palette in line with the locked anchors.",
+      "usable": true,
+      "scorecard_path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration/portrait-scorecard.png",
+      "scorecard_sha256": "0295b01fcaa6a82e58be83415fdd5a1a71d71dc408fc23cac0289ae48d1f0145",
+      "source_sha256": "0295b01fcaa6a82e58be83415fdd5a1a71d71dc408fc23cac0289ae48d1f0145",
+      "candidate_sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c",
+      "reference_sha256": [
+        "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c"
+      ],
+      "time_basis": "per-call UTC observations around awaited invocation within concurrent batch; not isolated model latency"
+    },
+    {
+      "name": "negative_painterly",
+      "candidate": "/Users/rexxa/work/arttrial2-data/negative_painterly.png",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/negative_painterly.png"
+      ],
+      "prompt": "Independent style evaluation, not an illustration request. Image1 and2 locked ink-and-tone anchors, Image3 candidate. Score MEDIUM fine ink/two-tone wash, LINE fine controlled contours, LIGHT upper-left, PALETTE restrained earth colours, each integer1\u20135; all>=4 to pass. Return plain white scorecard containing four names/scores, PASS/FAIL, one English reason sentence, no illustration/decoration. Be critical, never assume desired verdict.",
+      "started_at": "2026-10-21 23:55:04 UTC",
+      "completed_at": "2026-10-21 23:58:03 UTC",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160da-7c83-72a2-92d7-3018c7309f01/exec-b8f98f40-dc22-459d-99e8-9763ca886c25.png",
+      "error": null,
+      "medium": 3,
+      "line": 3,
+      "light": 4,
+      "palette": 4,
+      "verdict": "FAIL",
+      "reason": "The third image is a painterly, textured oil style rather than a clean fine ink and two-tone wash.",
+      "usable": true,
+      "scorecard_path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration/negative_painterly-scorecard.png",
+      "scorecard_sha256": "384683c6e50299d666cb0a81d3cb112a48531f4a455f3d5eb7900068c2b9abfe",
+      "source_sha256": "384683c6e50299d666cb0a81d3cb112a48531f4a455f3d5eb7900068c2b9abfe",
+      "candidate_sha256": "83785dc9e933598a4c3e4fd7e5dd8e8305d9eae96ad246d41063c647b3eed76d",
+      "reference_sha256": [
+        "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "83785dc9e933598a4c3e4fd7e5dd8e8305d9eae96ad246d41063c647b3eed76d"
+      ],
+      "time_basis": "per-call UTC observations around awaited invocation within concurrent batch; not isolated model latency"
+    },
+    {
+      "name": "negative_woodcut",
+      "candidate": "/Users/rexxa/work/arttrial2-data/negative_woodcut.png",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/negative_woodcut.png"
+      ],
+      "prompt": "Independent style evaluation, not an illustration request. Image1 and2 locked ink-and-tone anchors, Image3 candidate. Score MEDIUM fine ink/two-tone wash, LINE fine controlled contours, LIGHT upper-left, PALETTE restrained earth colours, each integer1\u20135; all>=4 to pass. Return plain white scorecard containing four names/scores, PASS/FAIL, one English reason sentence, no illustration/decoration. Be critical, never assume desired verdict.",
+      "started_at": "2026-10-21 23:55:04 UTC",
+      "completed_at": "2026-10-21 23:57:44 UTC",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160da-7c83-72a2-92d7-3018c7309f01/exec-467b6366-b938-46b3-8eba-01c8e5745e4d.png",
+      "error": null,
+      "medium": 4,
+      "line": 5,
+      "light": 4,
+      "palette": 5,
+      "verdict": "PASS",
+      "reason": "The candidate closely matches the established ink-and-tone style with controlled fine lines, consistent upper-left lighting, and a restrained earth-colour palette.",
+      "usable": true,
+      "scorecard_path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration/negative_woodcut-scorecard.png",
+      "scorecard_sha256": "f0e57835e210bc25488ca0ded220da073b82dc4cc94c06839375c2b83e5444c4",
+      "source_sha256": "f0e57835e210bc25488ca0ded220da073b82dc4cc94c06839375c2b83e5444c4",
+      "candidate_sha256": "555adc7e283d9c1ed02efa2793718d3cdd8ef190c9150462f7526473b78e548e",
+      "reference_sha256": [
+        "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "555adc7e283d9c1ed02efa2793718d3cdd8ef190c9150462f7526473b78e548e"
+      ],
+      "time_basis": "per-call UTC observations around awaited invocation within concurrent batch; not isolated model latency"
+    },
+    {
+      "name": "negative_photo_try1",
+      "candidate": "/Users/rexxa/work/arttrial2-data/negative_photo_try1.png",
+      "references": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/arttrial2-data/negative_photo_try1.png"
+      ],
+      "prompt": null,
+      "prompt_note": "Leader capability probe; exact prompt not independently available to this transcriber.",
+      "started_at": null,
+      "completed_at": null,
+      "timing_status": "unknown",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a160d8-0970-7090-82bf-0d6f2747a615/exec-86d21acd-9a57-4cbc-adfa-cd0fd1c0329f.png",
+      "medium": 2,
+      "line": 3,
+      "light": 4,
+      "palette": 4,
+      "verdict": "FAIL",
+      "reason": "The image is photorealistic with natural textures and shading, lacking the stylized ink-and-wash medium and controlled linework of the anchors.",
+      "usable": true,
+      "error": null,
+      "scorecard_path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration/negative_photo_try1-scorecard.png",
+      "scorecard_sha256": "e4a0825e757bfe3b1b9a0a4aee974860e57cd6455df8607e2cb00a35e797fa30",
+      "source_sha256": "e4a0825e757bfe3b1b9a0a4aee974860e57cd6455df8607e2cb00a35e797fa30",
+      "candidate_sha256": "0f3ac1e665c19e4dab1c011067e1ccc9e29d2424f3797a651a50d15015d36a08",
+      "reference_sha256": [
+        "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+        "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "0f3ac1e665c19e4dab1c011067e1ccc9e29d2424f3797a651a50d15015d36a08"
+      ],
+      "time_basis": "unknown"
+    }
+  ]
+}

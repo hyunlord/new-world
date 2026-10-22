@@ -1,0 +1,30 @@
+{
+  "concept": "05_ink_and_tone",
+  "file": "S8_1.png",
+  "path": "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S8_1.png",
+  "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a15f4d-afca-7d12-a2fd-f5adf73a8703/exec-89e60a81-53f9-4b0a-a20c-8c39b79af127.png",
+  "sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c",
+  "dimensions": [
+    1254,
+    1254
+  ],
+  "wall_seconds": 34.323,
+  "generator_kept": true,
+  "reason": "Three-quarter front male portrait with face and shoulders; same ink, hides and restrained wash. Portrait requested512 but actual output recorded separately.",
+  "name": "portrait",
+  "destination": "art/style05/anchors/portrait.png",
+  "asset_role": "locked_reference_original",
+  "prompt": "Create one 512x512 square concept image. Subject: a 3/4 front portrait of the stone-age woodcutter's face and shoulders, natural hide clothes, for an inspector panel, no UI. Portrait is the only front-facing subject. Stone-age hide, bark, reeds, river stone, bone only; no metal, dyed cloth or modern items. Attached image is STYLE REFERENCE ONLY. Match this exact style, same lighting and material treatment, but render the new requested subject. Illustrated 2D with fine controlled ink line work, restrained colour washes and two-tone shading, like a carefully observed natural-history plate. Describe bark, reed, stone and hide through selective marks, never dense all-over hatching. Give major silhouettes slightly stronger ink than internal detail; keep people distinct from the ground. Use consistent upper-left light. Fire is the warmest point wherever present. Preserve the exact content and camera in the subject prompt: straight top-down for map subjects, with only a slight front-face cheat for tall objects. Paint the requested natural ground rather than a blank plate. No labels, lettering, watermark or UI. Male woodcutter face and shoulders, dark tied hair with bone pin, hide tunic and bone necklace as S2. Three-quarter front eye-level portrait, beard, no basket, same fine ink and two-tone wash.",
+  "try_count_this_pass": 0,
+  "operations": [
+    "byte-identical copy"
+  ],
+  "working_size": [
+    1254,
+    1254
+  ],
+  "anchors_used_this_pass": [],
+  "generation_id": "exec-89e60a81-53f9-4b0a-a20c-8c39b79af127",
+  "judge_status": "see docs/v8/arttrial2/CALIBRATION_RESULTS.json; original acceptance does not imply current judge pass",
+  "anchor_point": null
+}

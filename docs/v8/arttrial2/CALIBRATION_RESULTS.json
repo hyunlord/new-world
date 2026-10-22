@@ -1,0 +1,182 @@
+[
+  {
+    "name": "person",
+    "numeric_checks": {
+      "lab_histogram": true,
+      "line_density": true,
+      "local_saturation": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "sentence": "The image matches the locked style in medium, line, lighting, and palette."
+    },
+    "passed": true,
+    "candidate_sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+    "scorecard_path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration/person-scorecard.png",
+    "scorecard_sha256": "d338ae61fa42d5994128141a726bf3498f977ea0151869f14644e48534aeec31"
+  },
+  {
+    "name": "hut",
+    "numeric_checks": {
+      "lab_histogram": true,
+      "line_density": true,
+      "local_saturation": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 4,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "sentence": "Consistent fine ink linework with two-tone wash, clear upper-left lighting, and a restrained earthy palette."
+    },
+    "passed": true,
+    "candidate_sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+    "scorecard_path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration/hut-scorecard.png",
+    "scorecard_sha256": "80283a82d21fb75ad1f1e2d54d57af57f157e260ec8f4ad52fcd971295375845"
+  },
+  {
+    "name": "props",
+    "numeric_checks": {
+      "lab_histogram": true,
+      "line_density": true,
+      "local_saturation": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 4,
+      "line": 5,
+      "light": 4,
+      "palette": 5,
+      "sentence": "The image maintains the established ink-and-tone style, controlled linework, upper-left lighting, and a restrained earthy palette consistent with the anchors."
+    },
+    "passed": true,
+    "candidate_sha256": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+    "scorecard_path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration/props-scorecard.png",
+    "scorecard_sha256": "09759979bcaf7d9ffb55d8ce41833df2bad07e32f5a640c1ce69fd953802666d"
+  },
+  {
+    "name": "ground",
+    "numeric_checks": {
+      "lab_histogram": true,
+      "line_density": true,
+      "local_saturation": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 3,
+      "line": 5,
+      "light": 4,
+      "palette": 5,
+      "sentence": "The foliage and water use richer colours and softer multi-tone modelling than the locked ink-and-tone style, breaking the restrained two-tone wash look."
+    },
+    "passed": false,
+    "candidate_sha256": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+    "scorecard_path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration/ground-scorecard.png",
+    "scorecard_sha256": "5d738b5de408d12d9111b5a4251d05b1462870a6942d7ccc327f1e61f4cb5648"
+  },
+  {
+    "name": "scene",
+    "numeric_checks": {
+      "lab_histogram": true,
+      "line_density": true,
+      "local_saturation": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 4,
+      "line": 4,
+      "light": 4,
+      "palette": 4,
+      "sentence": "Image 3 matches the ink-and-tone style with consistent fine lines, upper-left lighting, and restrained earth colours, though slightly less refined than the anchors."
+    },
+    "passed": true,
+    "candidate_sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+    "scorecard_path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration/scene-scorecard.png",
+    "scorecard_sha256": "12551c07e59d86b508e6fe67a8840acdb7e4543b511409f507cfe16480471f66"
+  },
+  {
+    "name": "portrait",
+    "numeric_checks": {
+      "lab_histogram": true,
+      "line_density": true,
+      "local_saturation": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 4,
+      "line": 4,
+      "light": 4,
+      "palette": 4,
+      "sentence": "The image maintains consistent ink linework, two-tone wash rendering, upper-left lighting, and a restrained earthy palette in line with the locked anchors."
+    },
+    "passed": true,
+    "candidate_sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c",
+    "scorecard_path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration/portrait-scorecard.png",
+    "scorecard_sha256": "0295b01fcaa6a82e58be83415fdd5a1a71d71dc408fc23cac0289ae48d1f0145"
+  },
+  {
+    "name": "negative_painterly",
+    "numeric_checks": {
+      "lab_histogram": false,
+      "line_density": true,
+      "local_saturation": true
+    },
+    "numeric_pass": false,
+    "model_scores": {
+      "medium": 3,
+      "line": 3,
+      "light": 4,
+      "palette": 4,
+      "sentence": "The third image is a painterly, textured oil style rather than a clean fine ink and two-tone wash."
+    },
+    "passed": false,
+    "candidate_sha256": "83785dc9e933598a4c3e4fd7e5dd8e8305d9eae96ad246d41063c647b3eed76d",
+    "scorecard_path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration/negative_painterly-scorecard.png",
+    "scorecard_sha256": "384683c6e50299d666cb0a81d3cb112a48531f4a455f3d5eb7900068c2b9abfe"
+  },
+  {
+    "name": "negative_woodcut",
+    "numeric_checks": {
+      "lab_histogram": false,
+      "line_density": true,
+      "local_saturation": false
+    },
+    "numeric_pass": false,
+    "model_scores": {
+      "medium": 4,
+      "line": 5,
+      "light": 4,
+      "palette": 5,
+      "sentence": "The candidate closely matches the established ink-and-tone style with controlled fine lines, consistent upper-left lighting, and a restrained earth-colour palette."
+    },
+    "passed": false,
+    "candidate_sha256": "555adc7e283d9c1ed02efa2793718d3cdd8ef190c9150462f7526473b78e548e",
+    "scorecard_path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration/negative_woodcut-scorecard.png",
+    "scorecard_sha256": "f0e57835e210bc25488ca0ded220da073b82dc4cc94c06839375c2b83e5444c4"
+  },
+  {
+    "name": "negative_photo_try1",
+    "numeric_checks": {
+      "lab_histogram": true,
+      "line_density": true,
+      "local_saturation": false
+    },
+    "numeric_pass": false,
+    "model_scores": {
+      "medium": 2,
+      "line": 3,
+      "light": 4,
+      "palette": 4,
+      "sentence": "The image is photorealistic with natural textures and shading, lacking the stylized ink-and-wash medium and controlled linework of the anchors."
+    },
+    "passed": false,
+    "candidate_sha256": "0f3ac1e665c19e4dab1c011067e1ccc9e29d2424f3797a651a50d15015d36a08",
+    "scorecard_path": "/Users/rexxa/work/arttrial2-data/image-judge-calibration/negative_photo_try1-scorecard.png",
+    "scorecard_sha256": "e4a0825e757bfe3b1b9a0a4aee974860e57cd6455df8607e2cb00a35e797fa30"
+  }
+]
