@@ -38,6 +38,10 @@ from art.pipeline_polish2.portrait_models import (
     ToolRequest,
     write_evidence,
 )
+from art.pipeline_polish2.portrait_previous import (
+    bind_previous_portrait,
+    verify_previous_for_retry,
+)
 
 
 def prompt_for(look: LookVariants, variant: Variant, appearance: SourceAppearance) -> str:
@@ -125,7 +129,8 @@ def tool_request(row: Request, request_path: Path) -> ToolRequest:
     return ToolRequest(id=f"{row.look}/{row.variant}", look=row.look, variant=row.variant, attempt=row.attempt,
                        prompt=row.prompt, referenced_image_paths=tuple(str(ref.path) for ref in row.references),
                        references=row.references, canonical_path=row.canonical_path,
-                       raw_directory=row.raw_directory, request_path=request_path, bust_detail=row.bust_detail)
+                       raw_directory=row.raw_directory, request_path=request_path, bust_detail=row.bust_detail,
+                       previous_portrait=row.previous_portrait)
 
 
 def started(directory: Path) -> bool:
@@ -165,9 +170,11 @@ def prepare(root: Path = ROOT, output: Path = DATA, available_only: bool = False
 
 
 def prepare_retry(request_path: Path, correction: str, root: Path = ROOT, *, include_bust_detail: bool = False,
-                  prompt_override: str | None = None) -> Request:
+                  prompt_override: str | None = None, use_previous_portrait: bool = False) -> Request:
     """Create a separate immutable second-attempt request without rewriting first-attempt evidence."""
     previous = Request.model_validate_json(request_path.read_bytes())
+    original_ref = AssetRef.of(request_path)
+    detail_requested = include_bust_detail or use_previous_portrait
     if prompt_override is not None and not prompt_override.strip():
         message = "Retry override requires a nonblank full prompt"
         raise ValueError(message)
@@ -192,8 +199,9 @@ def prepare_retry(request_path: Path, correction: str, root: Path = ROOT, *, inc
         raise ValueError(message)
     if destination.exists():
         existing = Request.model_validate_json(destination.read_bytes())
-        if (existing.attempt != 2 or existing.previous_request != AssetRef.of(request_path)
-                or existing.correction != correction or (existing.bust_detail is not None) != include_bust_detail
+        if (existing.attempt != 2 or existing.previous_request != original_ref
+                or existing.correction != correction or (existing.bust_detail is not None) != detail_requested
+                or (existing.previous_portrait is not None) != use_previous_portrait
                 or (prompt_override is not None and existing.prompt != prompt_override)):
             message = f"Conflicting frozen evidence: {destination}"
             raise ValueError(message)
@@ -205,16 +213,29 @@ def prepare_retry(request_path: Path, correction: str, root: Path = ROOT, *, inc
             existing.source_appearance.source.verify()
         if existing.bust_detail is not None:
             _ = verify_bust_detail(existing.bust_detail, existing.references[0], existing.references[3])
+        if existing.previous_portrait is not None:
+            verify_previous_for_retry(existing)
         if ToolRequest.model_validate_json(queue_path.read_bytes()) != tool_request(existing, destination):
             message = f"Conflicting frozen evidence: {queue_path}"
             raise ValueError(message)
+    previous_portrait = bind_previous_portrait(original_ref) if use_previous_portrait else None
     look = FacePlan.read(current_plan).for_look(previous.look)
     variant = next(row for row in look.variants if row.id == previous.variant)
-    fresh = build_request(root, previous.raw_directory, (look, variant), include_bust_detail=include_bust_detail)
+    if previous_portrait is not None and (
+            previous.references[0].sha256 != AssetRef.of(baked_frame(root, look, variant)).sha256
+            or previous.canonical_path.resolve() != (root / "art/portrait/polish2" / look.look / f"{variant.id}.png").resolve()):
+        message = "Previous portrait requires the same frozen native input and canonical output"
+        raise ValueError(message)
+    fresh = build_request(root, previous.raw_directory, (look, variant), include_bust_detail=detail_requested)
     prompt = (f"Second and final attempt. Explicit correction: {correction}\n{fresh.prompt}"
               if prompt_override is None else prompt_override)
-    retry = fresh.model_copy(update={"attempt": 2, "previous_request": AssetRef.of(request_path),
-        "correction": correction, "prompt": prompt})
+    if previous_portrait is not None and prompt_override is None:
+        prompt = "Reference 5 is the preserved first-attempt portrait to edit. Correct the stated defect using references 1, 3 and 4 for source appearance and reference 2 for style. " + prompt
+    retry = fresh.model_copy(update={"attempt": 2, "previous_request": original_ref,
+        "correction": correction, "prompt": prompt, "previous_portrait": previous_portrait,
+        "references": (*fresh.references, previous_portrait.raw) if previous_portrait is not None else fresh.references})
+    if previous_portrait is not None:
+        verify_previous_for_retry(retry)
     _ = seal_model(destination, retry)
     _ = seal_model(queue_path, tool_request(retry, destination))
     return retry
@@ -222,13 +243,17 @@ def prepare_retry(request_path: Path, correction: str, root: Path = ROOT, *, inc
 
 def main(available_only: bool = False, unstarted_only: bool = False,
          retry_request: Path | None = None, correction: str = "", include_bust_detail: bool = False,
-         prompt_file: Path | None = None) -> None:
+         prompt_file: Path | None = None, use_previous_portrait: bool = False) -> None:
     if prompt_file is not None and retry_request is None:
         message = "--prompt-file is only valid with --retry-request"
         raise ValueError(message)
+    if use_previous_portrait and retry_request is None:
+        message = "--use-previous-portrait is only valid with --retry-request"
+        raise ValueError(message)
     if retry_request is not None:
         override = prompt_file.read_bytes().decode("utf-8") if prompt_file is not None else None
-        result = prepare_retry(retry_request, correction, include_bust_detail=include_bust_detail, prompt_override=override)
+        result = prepare_retry(retry_request, correction, include_bust_detail=include_bust_detail,
+                               prompt_override=override, use_previous_portrait=use_previous_portrait)
         print(f"Prepared attempt2 only: {result.raw_directory / 'try2.queue.json'}")
         return
     result = prepare(available_only=available_only, unstarted_only=unstarted_only)

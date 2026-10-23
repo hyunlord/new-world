@@ -32,6 +32,7 @@ from art.pipeline_polish2.portrait_models import (
     Request,
     write_evidence,
 )
+from art.pipeline_polish2.portrait_previous import verify_previous_for_retry
 
 
 class Processed(Evidence):
@@ -65,6 +66,8 @@ def process(spec: ProcessInput) -> Processed:
         reference.verify()
     if request.previous_request is not None:
         request.previous_request.verify()
+        if request.previous_portrait is not None:
+            verify_previous_for_retry(request)
     if request.appearance_manifest is not None:
         _ = verified_appearance(request.appearance_manifest)
     if request.source_appearance is not None:

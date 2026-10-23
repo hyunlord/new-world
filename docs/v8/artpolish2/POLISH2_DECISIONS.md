@@ -200,10 +200,30 @@ frozen identity plan changes. Further repair waits for the first blind round.
 
 Completing204 candidates after the30 already-consumed replacements uses273
 calls including39 textures, leaving at most47. Select only variants that have
-used one attempt. Prioritize eligible blind-miss targets, then geometry defects,
+used one attempt. Prioritize eligible target misses within a failed blind gate
+(a reviewer below32/36 or a look/direction below5/6), then geometry defects,
 then explicit planned-identity contradictions, then source-garment defects;
 deduplicate the union and sort look/variant keys within each priority. If the
 union exceeds the available budget, preserve the unselected failures and report
 that no retry was available. Never exceed320, give a third attempt, replace the
 original failed score, or treat a budget limit as a waiver. After the coordinated
 repair use two new isolated reviewers against the newly frozen final pool.
+This priority is clarified before any actual blind round: isolated misses inside
+a passing gate remain reported, but do not silently replace the specified bars
+with a100% requirement or take priority over observed source defects.
+
+## D16 — Allow a preserved first portrait as an explicit repair reference
+
+The source-only pilots improved either coverage or edge shape without matching
+both, and later source-specific first attempts retain garment discrepancies.
+Within the same single repair round, an eligible second attempt may also attach
+its exact preserved first raw portrait as reference5. The image tool can then
+edit the existing candidate against native/style/enlarged/source-detail refs1–4.
+No code paints, warps or patches generated pixels. This is not an extra attempt.
+
+The optional mode must bind that fifth image to the immutable first processing
+record's raw hash and request hash, verify it before preparation/processing
+writes, retain native reference0 for identity packets, and reject any conflict
+with an already sealed retry. Legacy requests keep their existing2/3/4-reference
+behavior. Independent integrity verification is required before real use;
+successful input validation does not imply that an image edit will succeed.

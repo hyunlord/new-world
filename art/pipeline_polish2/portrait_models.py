@@ -77,19 +77,30 @@ class BustDetail(Evidence):
     coordinate_rule: Literal["left_top_inclusive_right_bottom_exclusive"] = "left_top_inclusive_right_bottom_exclusive"
 
 
+class PreviousPortrait(Evidence):
+    processed: AssetRef
+    request: AssetRef
+    raw: AssetRef
+
+
+def omit_absent_previous(value: PreviousPortrait | None) -> bool:
+    return value is None
+
+
 class Request(Evidence):
     schema_version: Literal[1] = 1
     look: str
     variant: PortraitVariant
     description: str
     prompt: str
-    references: tuple[AssetRef, ...] = Field(min_length=2, max_length=4)
+    references: tuple[AssetRef, ...] = Field(min_length=2, max_length=5)
     face_plan: AssetRef
     attempt: Literal[1, 2] = 1
     appearance_manifest: AssetRef | None = None
     source_appearance: SourceAppearance | None = None
     bust_detail: AssetRef | None = None
     previous_request: AssetRef | None = None
+    previous_portrait: PreviousPortrait | None = Field(default=None, exclude_if=omit_absent_previous)
     correction: str | None = None
     canonical_path: Path
     raw_directory: Path
@@ -98,8 +109,15 @@ class Request(Evidence):
 
     @model_validator(mode="after")
     def detail_binding(self) -> Self:
-        if (len(self.references) == 4) != (self.bust_detail is not None):
-            message = "Four references require a bound bust detail; legacy references have no detail"
+        if (len(self.references) >= 4) != (self.bust_detail is not None):
+            message = "Four/five references require a bound bust detail; legacy references have no detail"
+            raise ValueError(message)
+        if (len(self.references) == 5) != (self.previous_portrait is not None):
+            message = "Five references require a bound previous portrait"
+            raise ValueError(message)
+        if self.previous_portrait is not None and (self.attempt != 2 or self.previous_request is None
+                or self.references[4] != self.previous_portrait.raw):
+            message = "Previous portrait must be exact reference5 of an explicit second attempt"
             raise ValueError(message)
         return self
 
@@ -120,9 +138,10 @@ class ToolRequest(Evidence):
     variant: PortraitVariant
     attempt: Literal[1, 2] = 1
     prompt: str
-    referenced_image_paths: tuple[str, ...] = Field(min_length=2, max_length=4)
-    references: tuple[AssetRef, ...] = Field(min_length=2, max_length=4)
+    referenced_image_paths: tuple[str, ...] = Field(min_length=2, max_length=5)
+    references: tuple[AssetRef, ...] = Field(min_length=2, max_length=5)
     bust_detail: AssetRef | None = None
+    previous_portrait: PreviousPortrait | None = Field(default=None, exclude_if=omit_absent_previous)
     request_path: Path | None = None
     canonical_path: Path
     raw_directory: Path

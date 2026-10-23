@@ -447,3 +447,105 @@ Implementation red evidence remains in `red_retry_prompt_override.txt` and
 records with the passing result. No production request, asset or portrait
 content was inspected or changed by this review, and no generation was run.
 This is tooling verification only, with no new attempts or acceptance claimed.
+
+### Previous-portrait fifth-reference review — initial finding, 2026-10-24 KST
+
+**Initial disposition: P1 OPEN — complete foreign provenance chain accepted.**
+This finding is bounded to the new optional attempt2 fifth-reference path.
+The existing six-module checks plus the new previous-portrait module passed
+**71 tests in 6.79s**, but the independent substitution below still published
+output. Prior closed findings remain closed; their evidence is unchanged.
+
+- **Location:** `portrait_previous.py:31`–`:49`, called by
+  `portrait_process.py:68`. The helper verifies the first record/request/raw
+  chain internally, but receives no consuming retry identity, output directory
+  or frozen-plan context against which to authenticate that chain.
+- **Reproduction:** create two valid synthetic first attempts in separate
+  temporary roots with different raw images. Prepare a five-reference target
+  retry, retain its native/style/4x/detail references, appearance, face plan,
+  identity and output directory, then replace only `previous_request`,
+  `previous_portrait` and reference5 with the second first attempt's complete
+  valid chain. Parsing succeeds. Actual `process(..., attempt=2)` also succeeds
+  and publishes the target `try2/processed.json` and canonical image.
+- **Observed hashes:** target first raw
+  `acab5ce0e0322f5940bbd0165334b3fbd8327ef087f290b349217a9d5caf64bc`;
+  foreign first raw
+  `a56bd6a6ab87f5fef11bf20fc19accf9a6a5f83817a5073a8ff1efef29b123ec`.
+  These are different bytes, not an alternate path to the same input.
+- **Required boundary:** verify that the authenticated first attempt belongs
+  to the current retry's identity, preserved generation directory and frozen
+  face plan before preparation/processing writes. Validity of an unrelated
+  chain alone must not authorize reference5 substitution. Preserve the
+  existing allowance for legitimate current native tint references.
+- **Evidence:** external
+  `protocol_review/previous_portrait_foreign_chain_reproduction.json`.
+
+Root and implementation lane were notified immediately. All reproduction
+assets were synthetic and temporary; no production requests/assets were
+prepared or changed, and no portrait content was reviewed.
+
+### Fifth-reference consuming-context recheck — 2026-10-24 KST
+
+**Disposition: foreign-chain P1 CLOSED; bounded fifth-reference review PASS.**
+The accepted exploit and its original hashes remain above and in the original
+external evidence. The final rerun rejects the same complete foreign-chain
+substitution before creating `try2` or changing any file.
+
+`verify_previous_for_retry()` (`portrait_previous.py:52`) now authenticates the
+first history and matches its look, variant, generation directory, canonical
+output, frozen face-plan hash and native reference0 hash to the consuming retry.
+The first native file itself is also verified (`:48`). Both preparation and
+processing call this consumer-aware guard; preparation checks the current
+baked native and canonical destination before creating additional references.
+The root explicitly tightened fifth-reference mode to require the unchanged
+first native hash. Existing two/three/four-reference tint-repair behavior remains
+available and passed its existing regressions.
+
+Independent final temporary-fixture results:
+
+- The original foreign-chain substitution, changed look, variant, generation
+  directory, canonical output, plan and native reference all rejected. A foreign
+  fifth image with refreshed binding and a replaced raw with refreshed raw/
+  processed-record bindings also rejected. Each rejection retained the entire
+  temporary file inventory and every file hash; no attempt2 output was created.
+- Preparation rejected changed native/raw/request evidence, a missing first
+  processed record, a changed first-record candidate, and a rehashed raw
+  replacement before any reference/request/queue writes.
+- Historical **2-, 3- and 4-reference** first requests each successfully prepared
+  and processed an eligible five-reference retry. `use_previous_portrait=True`
+  forced the verified fourth detail without a separate flag. Exact order is
+  native, style, 4x enlargement, bust detail, preserved `try1/raw.png`.
+- The fifth reference is bound through `PreviousPortrait` to immutable
+  `try1/processed.json`, its original request and its raw hash; its raw hash also
+  agrees with the verified tool source. An unusable mutable `selected.json`
+  did not affect preparation. Request and queue reference ordering agreed.
+- Identical repeats changed no files. Sealed retry mode/prompt conflicts
+  rejected without changing files. Invalid five-reference attempt1/attempt3,
+  missing detail/previous-request bindings and an inconsistent reference count
+  all failed request validation. The maximum remains attempt2.
+- Actual synthetic processing preserved first request/raw/processed-record,
+  native and plan bytes and retained `Candidate.sprite == references[0]`.
+  The CLI edit option also exercised the actual preparation path with a
+  temporary root and rejected use outside retry preparation.
+
+Legacy serialized request and queue bytes for all **six** combinations of
+2/3/4 references and attempt1/2 exactly matched pre-patch commit
+`9c782e39a72e9fc0b604021e0b7a969035357f6b`. Absent previous-portrait metadata is
+omitted. Function-source hashes for the existing prompt, request construction,
+crop and appearance guards are unchanged. The final seven-module suite passed
+**81 tests in 7.98s**.
+
+Independent evidence under external `portraits/protocol_review/`:
+
+- `previous_portrait_foreign_chain_reproduction.json` — preserved initial FAIL.
+- `previous_portrait_final_recheck.json` — rejection, valid controls and unchanged
+  file inventories under the final fix.
+- `previous_portrait_valid_compatibility_recheck.json` — ordering and CLI path.
+- `previous_portrait_legacy_serialization.json` — pre-patch byte comparison.
+- `previous_portrait_prepatch_guard_hashes.json`
+- `previous_portrait_final_suite.txt`
+
+The implementation's additional failing context regressions remain in
+`red_previous_foreign_context.txt`; they are not erased by this closure.
+No production preparation, asset changes, generation, extra attempts, portrait
+content review or owner/blind acceptance was performed or claimed by this lane.

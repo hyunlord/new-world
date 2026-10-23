@@ -363,3 +363,35 @@ External records: `portraits/protocol_review/red_retry_prompt_override.txt`,
 `red_retry_override_orphan_queue.txt`, and `green_retry_prompt_override.txt`.
 No production request preparation, generation or portrait editing was performed
 by this tooling followup.
+
+Eligible second attempts may additionally opt into the actual first portrait as
+an edit input via `prepare_retry(..., use_previous_portrait=True)` or CLI
+`--use-previous-portrait`. This implies the verified bust detail and orders the
+five references as native S/idle, style anchor, exact4x native enlargement,
+exact12x source bust detail, then preserved first-attempt raw. A supplied full
+prompt remains exact; without one, the default prompt identifies reference5 as
+the portrait to edit. The explicit correction still records the observed defect.
+
+`previous_portrait` binds the immutable `try1/processed.json`, its first-request
+reference and `try1/raw.png`. Both preparation and processing verify these hashes,
+the original tool-source hash, first candidate identity/native reference, and
+the consuming retry's look, variant, raw directory, canonical output, face-plan
+hash and native input hash. Fifth-reference mode requires unchanged frozen native
+input. A valid chain belonging to another candidate or output directory cannot
+authorize publication. The mutable `selected.json` and later observation
+revisions are never the first-portrait authority.
+
+The field is omitted when unused, retaining legacy2/3/4 serialized requests and
+default behavior. Existing second requests/queues reject different reference
+mode or prompt before writes; malformed, stale or foreign first history also
+rejects before reference or candidate writes. `Candidate.sprite` remains native
+reference0. This adds no attempts or generation allowance and performs no pixel
+editing. No production preparation or generation was performed by this patch.
+
+Previous-portrait verification:81 tests passed, including21 focused provenance
+tests; strict typing reported0errors/0warnings, Ruff and the21-file programming
+audit passed. Regression evidence preserves the initial missing-feature failures
+and eight reproduced foreign/context failures in external
+`portraits/protocol_review/red_previous_portrait.txt` and
+`red_previous_foreign_context.txt`; final checks are recorded in
+`green_previous_portrait.txt`.
