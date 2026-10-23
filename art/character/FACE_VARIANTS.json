@@ -1,0 +1,4719 @@
+{
+  "schema_version": 1,
+  "source_manifest": "art/character/route_i/MANIFEST.json",
+  "source_manifest_sha256": "02dc7aa392d231206e550b137e1c3165b680a0e480a32b1e0cf26de699f223d9",
+  "palette": "art/style05/palette_05.json",
+  "rule": "((agent_id * 2654435761) & 0xffffffff) % pool_size",
+  "looks": [
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "narrow face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "young woman; light warm skin; dark brown hair; narrow face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "adult",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "adult woman; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "adult",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "adult woman; deep brown skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H4",
+          "age_band": "older",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "older woman; light warm skin; grey hair; round face, freckles; clearly aged 55-70, visible facial age lines",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            160,
+            155,
+            140
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H3",
+          "age_band": "older",
+          "features": [
+            "broad nose",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "older woman; mid warm brown skin; auburn hair; broad nose, a scar; clearly aged 55-70, visible facial age lines",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "round face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "young woman; deep brown skin; dark brown hair; round face, heavy brows",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "adult_F_fur_cloak_long_tied",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "narrow face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "young woman; light warm skin; dark brown hair; narrow face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "adult",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "adult woman; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "adult",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "adult woman; deep brown skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H4",
+          "age_band": "older",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "older woman; light warm skin; grey hair; round face, freckles; clearly aged 55-70, visible facial age lines",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            160,
+            155,
+            140
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H3",
+          "age_band": "older",
+          "features": [
+            "broad nose",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "older woman; mid warm brown skin; auburn hair; broad nose, a scar; clearly aged 55-70, visible facial age lines",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "round face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "young woman; deep brown skin; dark brown hair; round face, heavy brows",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "adult_F_fur_cloak_short",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "narrow face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "young woman; light warm skin; dark brown hair; narrow face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "adult",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "adult woman; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "adult",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "adult woman; deep brown skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H4",
+          "age_band": "older",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "older woman; light warm skin; grey hair; round face, freckles; clearly aged 55-70, visible facial age lines",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            160,
+            155,
+            140
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H3",
+          "age_band": "older",
+          "features": [
+            "broad nose",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "older woman; mid warm brown skin; auburn hair; broad nose, a scar; clearly aged 55-70, visible facial age lines",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "round face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "young woman; deep brown skin; dark brown hair; round face, heavy brows",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "adult_F_hide_wrap_bun",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "narrow face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "young woman; light warm skin; dark brown hair; narrow face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "adult",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "adult woman; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "adult",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "adult woman; deep brown skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H4",
+          "age_band": "older",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "older woman; light warm skin; grey hair; round face, freckles; clearly aged 55-70, visible facial age lines",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            160,
+            155,
+            140
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H3",
+          "age_band": "older",
+          "features": [
+            "broad nose",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "older woman; mid warm brown skin; auburn hair; broad nose, a scar; clearly aged 55-70, visible facial age lines",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "round face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "young woman; deep brown skin; dark brown hair; round face, heavy brows",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "adult_F_hide_wrap_long_tied",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "narrow face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "young woman; light warm skin; dark brown hair; narrow face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "adult",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "adult woman; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "adult",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "adult woman; deep brown skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H4",
+          "age_band": "older",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "older woman; light warm skin; grey hair; round face, freckles; clearly aged 55-70, visible facial age lines",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            160,
+            155,
+            140
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H3",
+          "age_band": "older",
+          "features": [
+            "broad nose",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "older woman; mid warm brown skin; auburn hair; broad nose, a scar; clearly aged 55-70, visible facial age lines",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "round face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "young woman; deep brown skin; dark brown hair; round face, heavy brows",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "adult_F_hide_wrap_short",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "narrow face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "young woman; light warm skin; dark brown hair; narrow face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "adult",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "adult woman; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "adult",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "adult woman; deep brown skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H4",
+          "age_band": "older",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "older woman; light warm skin; grey hair; round face, freckles; clearly aged 55-70, visible facial age lines",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            160,
+            155,
+            140
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H3",
+          "age_band": "older",
+          "features": [
+            "broad nose",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "older woman; mid warm brown skin; auburn hair; broad nose, a scar; clearly aged 55-70, visible facial age lines",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "round face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "young woman; deep brown skin; dark brown hair; round face, heavy brows",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "adult_F_loincloth_bun",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "narrow face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "young woman; light warm skin; dark brown hair; narrow face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "adult",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "adult woman; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "adult",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "adult woman; deep brown skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H4",
+          "age_band": "older",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "older woman; light warm skin; grey hair; round face, freckles; clearly aged 55-70, visible facial age lines",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            160,
+            155,
+            140
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H3",
+          "age_band": "older",
+          "features": [
+            "broad nose",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "older woman; mid warm brown skin; auburn hair; broad nose, a scar; clearly aged 55-70, visible facial age lines",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "round face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "young woman; deep brown skin; dark brown hair; round face, heavy brows",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "adult_F_loincloth_long_tied",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "narrow face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "young woman; light warm skin; dark brown hair; narrow face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "adult",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "adult woman; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "adult",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "adult woman; deep brown skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H4",
+          "age_band": "older",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "older woman; light warm skin; grey hair; round face, freckles; clearly aged 55-70, visible facial age lines",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            160,
+            155,
+            140
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H3",
+          "age_band": "older",
+          "features": [
+            "broad nose",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "older woman; mid warm brown skin; auburn hair; broad nose, a scar; clearly aged 55-70, visible facial age lines",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "round face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "young woman; deep brown skin; dark brown hair; round face, heavy brows",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "adult_F_loincloth_short",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "narrow face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "young woman; light warm skin; dark brown hair; narrow face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "adult",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "adult woman; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "adult",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "adult woman; deep brown skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H4",
+          "age_band": "older",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "older woman; light warm skin; grey hair; round face, freckles; clearly aged 55-70, visible facial age lines",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            160,
+            155,
+            140
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H3",
+          "age_band": "older",
+          "features": [
+            "broad nose",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "older woman; mid warm brown skin; auburn hair; broad nose, a scar; clearly aged 55-70, visible facial age lines",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "round face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "young woman; deep brown skin; dark brown hair; round face, heavy brows",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "narrow face",
+            "freckles"
+          ],
+          "beard": "clean",
+          "description": "young man; light warm skin; dark brown hair; narrow face, freckles; clean shaven",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "adult",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "full",
+          "description": "adult man; mid warm brown skin; black hair; broad nose, heavy brows; full beard",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "adult",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "short",
+          "description": "adult man; deep brown skin; auburn hair; narrow face, a scar; short beard",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H4",
+          "age_band": "older",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "full",
+          "description": "older man; light warm skin; grey hair; round face, freckles; clearly aged 55-70, visible facial age lines; full beard",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            160,
+            155,
+            140
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H3",
+          "age_band": "older",
+          "features": [
+            "broad nose",
+            "a scar"
+          ],
+          "beard": "short",
+          "description": "older man; mid warm brown skin; auburn hair; broad nose, a scar; clearly aged 55-70, visible facial age lines; short beard",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "round face",
+            "heavy brows"
+          ],
+          "beard": "clean",
+          "description": "young man; deep brown skin; dark brown hair; round face, heavy brows; clean shaven",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "adult_M_fur_cloak_short",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "narrow face",
+            "freckles"
+          ],
+          "beard": "clean",
+          "description": "young man; light warm skin; dark brown hair; narrow face, freckles; clean shaven",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "adult",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "full",
+          "description": "adult man; mid warm brown skin; black hair; broad nose, heavy brows; full beard",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "adult",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "short",
+          "description": "adult man; deep brown skin; auburn hair; narrow face, a scar; short beard",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H4",
+          "age_band": "older",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "full",
+          "description": "older man; light warm skin; grey hair; round face, freckles; clearly aged 55-70, visible facial age lines; full beard",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            160,
+            155,
+            140
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H3",
+          "age_band": "older",
+          "features": [
+            "broad nose",
+            "a scar"
+          ],
+          "beard": "short",
+          "description": "older man; mid warm brown skin; auburn hair; broad nose, a scar; clearly aged 55-70, visible facial age lines; short beard",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "round face",
+            "heavy brows"
+          ],
+          "beard": "clean",
+          "description": "young man; deep brown skin; dark brown hair; round face, heavy brows; clean shaven",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "adult_M_hide_wrap_bun",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "narrow face",
+            "freckles"
+          ],
+          "beard": "clean",
+          "description": "young man; light warm skin; dark brown hair; narrow face, freckles; clean shaven",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "adult",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "full",
+          "description": "adult man; mid warm brown skin; black hair; broad nose, heavy brows; full beard",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "adult",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "short",
+          "description": "adult man; deep brown skin; auburn hair; narrow face, a scar; short beard",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H4",
+          "age_band": "older",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "full",
+          "description": "older man; light warm skin; grey hair; round face, freckles; clearly aged 55-70, visible facial age lines; full beard",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            160,
+            155,
+            140
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H3",
+          "age_band": "older",
+          "features": [
+            "broad nose",
+            "a scar"
+          ],
+          "beard": "short",
+          "description": "older man; mid warm brown skin; auburn hair; broad nose, a scar; clearly aged 55-70, visible facial age lines; short beard",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "round face",
+            "heavy brows"
+          ],
+          "beard": "clean",
+          "description": "young man; deep brown skin; dark brown hair; round face, heavy brows; clean shaven",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "adult_M_hide_wrap_short",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "narrow face",
+            "freckles"
+          ],
+          "beard": "clean",
+          "description": "young man; light warm skin; dark brown hair; narrow face, freckles; clean shaven",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "adult",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "full",
+          "description": "adult man; mid warm brown skin; black hair; broad nose, heavy brows; full beard",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "adult",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "short",
+          "description": "adult man; deep brown skin; auburn hair; narrow face, a scar; short beard",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H4",
+          "age_band": "older",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "full",
+          "description": "older man; light warm skin; grey hair; round face, freckles; clearly aged 55-70, visible facial age lines; full beard",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            160,
+            155,
+            140
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H3",
+          "age_band": "older",
+          "features": [
+            "broad nose",
+            "a scar"
+          ],
+          "beard": "short",
+          "description": "older man; mid warm brown skin; auburn hair; broad nose, a scar; clearly aged 55-70, visible facial age lines; short beard",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "round face",
+            "heavy brows"
+          ],
+          "beard": "clean",
+          "description": "young man; deep brown skin; dark brown hair; round face, heavy brows; clean shaven",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "adult_M_loincloth_bun",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "narrow face",
+            "freckles"
+          ],
+          "beard": "clean",
+          "description": "young man; light warm skin; dark brown hair; narrow face, freckles; clean shaven",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "adult",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "full",
+          "description": "adult man; mid warm brown skin; black hair; broad nose, heavy brows; full beard",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "adult",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "short",
+          "description": "adult man; deep brown skin; auburn hair; narrow face, a scar; short beard",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H4",
+          "age_band": "older",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "full",
+          "description": "older man; light warm skin; grey hair; round face, freckles; clearly aged 55-70, visible facial age lines; full beard",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            160,
+            155,
+            140
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H3",
+          "age_band": "older",
+          "features": [
+            "broad nose",
+            "a scar"
+          ],
+          "beard": "short",
+          "description": "older man; mid warm brown skin; auburn hair; broad nose, a scar; clearly aged 55-70, visible facial age lines; short beard",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "round face",
+            "heavy brows"
+          ],
+          "beard": "clean",
+          "description": "young man; deep brown skin; dark brown hair; round face, heavy brows; clean shaven",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "adult_M_loincloth_long_tied",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "narrow face",
+            "freckles"
+          ],
+          "beard": "clean",
+          "description": "young man; light warm skin; dark brown hair; narrow face, freckles; clean shaven",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "adult",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "full",
+          "description": "adult man; mid warm brown skin; black hair; broad nose, heavy brows; full beard",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "adult",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "short",
+          "description": "adult man; deep brown skin; auburn hair; narrow face, a scar; short beard",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H4",
+          "age_band": "older",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "full",
+          "description": "older man; light warm skin; grey hair; round face, freckles; clearly aged 55-70, visible facial age lines; full beard",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            160,
+            155,
+            140
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H3",
+          "age_band": "older",
+          "features": [
+            "broad nose",
+            "a scar"
+          ],
+          "beard": "short",
+          "description": "older man; mid warm brown skin; auburn hair; broad nose, a scar; clearly aged 55-70, visible facial age lines; short beard",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "round face",
+            "heavy brows"
+          ],
+          "beard": "clean",
+          "description": "young man; deep brown skin; dark brown hair; round face, heavy brows; clean shaven",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "adult_M_loincloth_short",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "narrow face",
+            "freckles"
+          ],
+          "beard": "clean",
+          "description": "young man; light warm skin; dark brown hair; narrow face, freckles; clean shaven",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "adult",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "full",
+          "description": "adult man; mid warm brown skin; black hair; broad nose, heavy brows; full beard",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "adult",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "short",
+          "description": "adult man; deep brown skin; auburn hair; narrow face, a scar; short beard",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H4",
+          "age_band": "older",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "full",
+          "description": "older man; light warm skin; grey hair; round face, freckles; clearly aged 55-70, visible facial age lines; full beard",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            160,
+            155,
+            140
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H3",
+          "age_band": "older",
+          "features": [
+            "broad nose",
+            "a scar"
+          ],
+          "beard": "short",
+          "description": "older man; mid warm brown skin; auburn hair; broad nose, a scar; clearly aged 55-70, visible facial age lines; short beard",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "young",
+          "features": [
+            "round face",
+            "heavy brows"
+          ],
+          "beard": "clean",
+          "description": "young man; deep brown skin; dark brown hair; round face, heavy brows; clean shaven",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child girl; light warm skin; black hair; round face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child girl; mid warm brown skin; dark brown hair; narrow face, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child girl; deep brown skin; auburn hair; broad nose, freckles",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child girl; light warm skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child girl; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child girl; deep brown skin; dark brown hair; round face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child girl; light warm skin; black hair; round face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child girl; mid warm brown skin; dark brown hair; narrow face, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child girl; deep brown skin; auburn hair; broad nose, freckles",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child girl; light warm skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child girl; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child girl; deep brown skin; dark brown hair; round face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "child_F_fur_cloak_short",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child girl; light warm skin; black hair; round face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child girl; mid warm brown skin; dark brown hair; narrow face, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child girl; deep brown skin; auburn hair; broad nose, freckles",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child girl; light warm skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child girl; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child girl; deep brown skin; dark brown hair; round face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "child_F_hide_wrap_bun",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child girl; light warm skin; black hair; round face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child girl; mid warm brown skin; dark brown hair; narrow face, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child girl; deep brown skin; auburn hair; broad nose, freckles",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child girl; light warm skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child girl; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child girl; deep brown skin; dark brown hair; round face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "child_F_hide_wrap_long_tied",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child girl; light warm skin; black hair; round face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child girl; mid warm brown skin; dark brown hair; narrow face, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child girl; deep brown skin; auburn hair; broad nose, freckles",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child girl; light warm skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child girl; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child girl; deep brown skin; dark brown hair; round face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "child_F_hide_wrap_short",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child girl; light warm skin; black hair; round face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child girl; mid warm brown skin; dark brown hair; narrow face, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child girl; deep brown skin; auburn hair; broad nose, freckles",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child girl; light warm skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child girl; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child girl; deep brown skin; dark brown hair; round face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "child_F_loincloth_bun",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child girl; light warm skin; black hair; round face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child girl; mid warm brown skin; dark brown hair; narrow face, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child girl; deep brown skin; auburn hair; broad nose, freckles",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child girl; light warm skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child girl; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child girl; deep brown skin; dark brown hair; round face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "child_F_loincloth_long_tied",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child girl; light warm skin; black hair; round face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child girl; mid warm brown skin; dark brown hair; narrow face, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child girl; deep brown skin; auburn hair; broad nose, freckles",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child girl; light warm skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child girl; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child girl; deep brown skin; dark brown hair; round face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "child_F_loincloth_short",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child girl; light warm skin; black hair; round face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child girl; mid warm brown skin; dark brown hair; narrow face, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child girl; deep brown skin; auburn hair; broad nose, freckles",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child girl; light warm skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child girl; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child girl; deep brown skin; dark brown hair; round face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child boy; light warm skin; black hair; round face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child boy; mid warm brown skin; dark brown hair; narrow face, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child boy; deep brown skin; auburn hair; broad nose, freckles",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child boy; light warm skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child boy; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child boy; deep brown skin; dark brown hair; round face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "child_M_fur_cloak_long_tied",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child boy; light warm skin; black hair; round face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child boy; mid warm brown skin; dark brown hair; narrow face, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child boy; deep brown skin; auburn hair; broad nose, freckles",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child boy; light warm skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child boy; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child boy; deep brown skin; dark brown hair; round face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "child_M_fur_cloak_short",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child boy; light warm skin; black hair; round face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child boy; mid warm brown skin; dark brown hair; narrow face, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child boy; deep brown skin; auburn hair; broad nose, freckles",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child boy; light warm skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child boy; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child boy; deep brown skin; dark brown hair; round face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "child_M_hide_wrap_bun",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child boy; light warm skin; black hair; round face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child boy; mid warm brown skin; dark brown hair; narrow face, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child boy; deep brown skin; auburn hair; broad nose, freckles",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child boy; light warm skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child boy; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child boy; deep brown skin; dark brown hair; round face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "child_M_hide_wrap_long_tied",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child boy; light warm skin; black hair; round face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child boy; mid warm brown skin; dark brown hair; narrow face, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child boy; deep brown skin; auburn hair; broad nose, freckles",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child boy; light warm skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child boy; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child boy; deep brown skin; dark brown hair; round face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "child_M_hide_wrap_short",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child boy; light warm skin; black hair; round face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child boy; mid warm brown skin; dark brown hair; narrow face, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child boy; deep brown skin; auburn hair; broad nose, freckles",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child boy; light warm skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child boy; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child boy; deep brown skin; dark brown hair; round face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "child_M_loincloth_bun",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child boy; light warm skin; black hair; round face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child boy; mid warm brown skin; dark brown hair; narrow face, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child boy; deep brown skin; auburn hair; broad nose, freckles",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child boy; light warm skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child boy; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child boy; deep brown skin; dark brown hair; round face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "child_M_loincloth_long_tied",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child boy; light warm skin; black hair; round face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child boy; mid warm brown skin; dark brown hair; narrow face, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child boy; deep brown skin; auburn hair; broad nose, freckles",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child boy; light warm skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child boy; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child boy; deep brown skin; dark brown hair; round face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    },
+    {
+      "look": "child_M_loincloth_short",
+      "variants": [
+        {
+          "id": "v1",
+          "skin": "S1",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child boy; light warm skin; black hair; round face, freckles",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v2",
+          "skin": "S2",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child boy; mid warm brown skin; dark brown hair; narrow face, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        },
+        {
+          "id": "v3",
+          "skin": "S3",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "freckles"
+          ],
+          "beard": "none",
+          "description": "child boy; deep brown skin; auburn hair; broad nose, freckles",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v4",
+          "skin": "S1",
+          "hair": "H3",
+          "age_band": "child",
+          "features": [
+            "narrow face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child boy; light warm skin; auburn hair; narrow face, a scar",
+          "skin_rgb": [
+            224,
+            189,
+            142
+          ],
+          "hair_rgb": [
+            139,
+            73,
+            43
+          ]
+        },
+        {
+          "id": "v5",
+          "skin": "S2",
+          "hair": "H1",
+          "age_band": "child",
+          "features": [
+            "broad nose",
+            "heavy brows"
+          ],
+          "beard": "none",
+          "description": "child boy; mid warm brown skin; black hair; broad nose, heavy brows",
+          "skin_rgb": [
+            181,
+            141,
+            97
+          ],
+          "hair_rgb": [
+            44,
+            32,
+            20
+          ]
+        },
+        {
+          "id": "v6",
+          "skin": "S3",
+          "hair": "H2",
+          "age_band": "child",
+          "features": [
+            "round face",
+            "a scar"
+          ],
+          "beard": "none",
+          "description": "child boy; deep brown skin; dark brown hair; round face, a scar",
+          "skin_rgb": [
+            113,
+            74,
+            47
+          ],
+          "hair_rgb": [
+            83,
+            66,
+            45
+          ]
+        }
+      ]
+    }
+  ],
+  "fallbacks": {
+    "adult_M_fur_cloak_long_tied": "adult_M_fur_cloak_bun",
+    "adult_M_hide_wrap_long_tied": "adult_M_hide_wrap_bun"
+  },
+  "owner_sample": [
+    "adult_F_fur_cloak_bun",
+    "adult_F_fur_cloak_long_tied",
+    "adult_M_fur_cloak_bun",
+    "adult_M_fur_cloak_short",
+    "child_F_fur_cloak_bun",
+    "child_F_fur_cloak_long_tied",
+    "child_M_fur_cloak_bun",
+    "child_M_fur_cloak_long_tied"
+  ],
+  "identity_sample": [
+    "adult_F_fur_cloak_bun/v1",
+    "adult_F_fur_cloak_bun/v2",
+    "adult_F_fur_cloak_bun/v3",
+    "adult_F_fur_cloak_bun/v4",
+    "adult_F_fur_cloak_bun/v5",
+    "adult_F_fur_cloak_bun/v6",
+    "adult_F_fur_cloak_long_tied/v1",
+    "adult_F_fur_cloak_long_tied/v2",
+    "adult_F_fur_cloak_long_tied/v3",
+    "adult_F_fur_cloak_long_tied/v4",
+    "adult_F_fur_cloak_long_tied/v5",
+    "adult_F_fur_cloak_long_tied/v6",
+    "adult_M_fur_cloak_bun/v1",
+    "adult_M_fur_cloak_bun/v2",
+    "adult_M_fur_cloak_bun/v3",
+    "adult_M_fur_cloak_bun/v4",
+    "adult_M_fur_cloak_bun/v5",
+    "adult_M_fur_cloak_bun/v6",
+    "child_F_fur_cloak_bun/v1",
+    "child_F_fur_cloak_bun/v2",
+    "child_F_fur_cloak_bun/v3",
+    "child_F_fur_cloak_bun/v4",
+    "child_F_fur_cloak_bun/v5",
+    "child_F_fur_cloak_bun/v6",
+    "child_M_fur_cloak_bun/v1",
+    "child_M_fur_cloak_bun/v2",
+    "child_M_fur_cloak_bun/v3",
+    "child_M_fur_cloak_bun/v4",
+    "child_M_fur_cloak_bun/v5",
+    "child_M_fur_cloak_bun/v6",
+    "child_M_fur_cloak_long_tied/v1",
+    "child_M_fur_cloak_long_tied/v2",
+    "child_M_fur_cloak_long_tied/v3",
+    "child_M_fur_cloak_long_tied/v4",
+    "child_M_fur_cloak_long_tied/v5",
+    "child_M_fur_cloak_long_tied/v6"
+  ]
+}

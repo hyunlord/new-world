@@ -251,5 +251,48 @@
     "ground": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
     "scene": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
     "portrait": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c"
+  },
+  "character_variant_targets": {
+    "schema_version": 1,
+    "skin": {
+      "S1": [
+        224,
+        189,
+        142
+      ],
+      "S2": [
+        181,
+        141,
+        97
+      ],
+      "S3": [
+        113,
+        74,
+        47
+      ]
+    },
+    "hair": {
+      "H1": [
+        44,
+        32,
+        20
+      ],
+      "H2": [
+        83,
+        66,
+        45
+      ],
+      "H3": [
+        139,
+        73,
+        43
+      ],
+      "H4": [
+        160,
+        155,
+        140
+      ]
+    },
+    "purpose": "POLISH2 masked Lab tint targets; original judging palette remains unchanged"
   }
 }
