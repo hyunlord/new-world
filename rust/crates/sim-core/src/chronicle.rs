@@ -102,11 +102,38 @@ pub enum ChronicleKind {
     KnowledgeAtRisk = 27,
     /// M4: subject = the last holder (when known); value = the node id.
     KnowledgeLost = 28,
+    /// M5: no subject (illness: the first sick person); cause = the pressure's
+    /// `PressureKind::code`; value = its intensity (wolves; extra days).
+    PressureBegan = 29,
+    /// M5: cause = the pressure's kind code; value = deaths while it was
+    /// active; third-party detail (items lost, work days) in the storyteller's
+    /// history. The cause side table points at its `PressureBegan`.
+    PressureEnded = 30,
+    /// M5: subject = the hunter; cause = the animal kind code (1 deer, 0 wolf);
+    /// value = meat dropped.
+    Hunted = 31,
+    /// M5: subject = the one who struck first, other = the other; cause =
+    /// 1 + the quarrel cause code; value = damage dealt. A fight after a quarrel.
+    Fight = 32,
+    /// M5: subject; value = the three largest negative mood modifier codes
+    /// (`code1 | code2 << 8 | code3 << 16`); cause = their count.
+    Breakdown = 33,
+    /// M5: subject; cause 0 drafted by the player, 1 undrafted by the player,
+    /// 2 undrafted itself at a critical need.
+    Drafted = 34,
+    /// M5: subject = the person who struck the killing blow (none if no person);
+    /// value = the wolves of the pack still alive.
+    WolfKilled = 35,
+    /// M5: subject = the sick person; other = who passed it on (none: the
+    /// storyteller's illness).
+    Sick = 36,
+    /// M5: subject = the person recovered.
+    Recovered = 37,
 }
 
 impl ChronicleKind {
     /// Every kind in discriminant order.
-    pub const ALL: [ChronicleKind; 29] = [
+    pub const ALL: [ChronicleKind; 38] = [
         Self::Born,
         Self::FoundingMember,
         Self::Paired,
@@ -136,6 +163,15 @@ impl ChronicleKind {
         Self::KnowledgeDiscovered,
         Self::KnowledgeAtRisk,
         Self::KnowledgeLost,
+        Self::PressureBegan,
+        Self::PressureEnded,
+        Self::Hunted,
+        Self::Fight,
+        Self::Breakdown,
+        Self::Drafted,
+        Self::WolfKilled,
+        Self::Sick,
+        Self::Recovered,
     ];
 
     /// Stable numeric discriminant.
@@ -175,6 +211,15 @@ impl ChronicleKind {
             Self::KnowledgeDiscovered => "knowledge_discovered",
             Self::KnowledgeAtRisk => "knowledge_at_risk",
             Self::KnowledgeLost => "knowledge_lost",
+            Self::PressureBegan => "pressure_began",
+            Self::PressureEnded => "pressure_ended",
+            Self::Hunted => "hunted",
+            Self::Fight => "fight",
+            Self::Breakdown => "breakdown",
+            Self::Drafted => "drafted",
+            Self::WolfKilled => "wolf_killed",
+            Self::Sick => "sick",
+            Self::Recovered => "recovered",
         }
     }
 }
@@ -344,6 +389,31 @@ pub struct PersonRecord {
     pub death_reason: Option<u8>,
 }
 
+/// M5 (ADR 0030): why an entry happened — the target of its "→ 왜?" line.
+#[derive(
+    Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, serde::Serialize, serde::Deserialize,
+)]
+pub enum CauseRef {
+    /// Another chronicle entry (its index).
+    Entry(u32),
+    /// A pressure (its `PressureKind::code`), with the index of its
+    /// `PressureBegan` entry when known.
+    Pressure {
+        /// The pressure kind code.
+        kind: u8,
+        /// Its `PressureBegan` entry.
+        entry: Option<u32>,
+    },
+    /// A mood modifier (its code), with the entry that started it when there
+    /// is one (the death a grief is for, the pressure a cold night came from).
+    Modifier {
+        /// The modifier code (`sim_core::colony::people::Modifier::code`).
+        code: u8,
+        /// The entry behind it.
+        entry: Option<u32>,
+    },
+}
+
 /// The chronicle store (`SimResources::chronicle`).
 #[derive(Clone, Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct Chronicle {
@@ -351,6 +421,10 @@ pub struct Chronicle {
     by_agent: BTreeMap<AgentId, Vec<u32>>,
     by_settlement: BTreeMap<SettlementId, Vec<u32>>,
     people: BTreeMap<AgentId, PersonRecord>,
+    /// M5: the cause of an entry, by entry index (a side table: entries keep
+    /// their V7 layout, so the baseline's chronicle files are unchanged).
+    #[serde(default)]
+    causes: BTreeMap<u32, CauseRef>,
 }
 
 impl Chronicle {
@@ -370,6 +444,36 @@ impl Chronicle {
             self.by_settlement.entry(id).or_default().push(index);
         }
         self.entries.push(entry);
+    }
+
+    /// M5: append `entry` with its cause (if any) and return its index.
+    pub fn push_caused(&mut self, entry: ChronicleEntry, cause: Option<CauseRef>) -> u32 {
+        let index = u32::try_from(self.entries.len()).unwrap_or(u32::MAX);
+        self.push(entry);
+        if let Some(cause) = cause {
+            self.causes.insert(index, cause);
+        }
+        index
+    }
+
+    /// M5: the cause recorded for entry `index`.
+    pub fn cause_of(&self, index: u32) -> Option<CauseRef> {
+        self.causes.get(&index).copied()
+    }
+
+    /// M5: the entry at `index`.
+    pub fn entry(&self, index: u32) -> Option<&ChronicleEntry> {
+        self.entries.get(index as usize)
+    }
+
+    /// M5: indices of the entries naming person `id`, in append order.
+    pub fn indices_of_agent(&self, id: AgentId) -> &[u32] {
+        self.by_agent.get(&id).map_or(&[], |v| v.as_slice())
+    }
+
+    /// M5: every recorded cause, by entry index.
+    pub fn causes(&self) -> impl Iterator<Item = (u32, CauseRef)> + '_ {
+        self.causes.iter().map(|(i, c)| (*i, *c))
     }
 
     /// Create the record of `id` the first time it is seen: `record` is called
@@ -473,6 +577,7 @@ impl Chronicle {
             + agent_index
             + settlement_index
             + self.people.len() * (size_of::<AgentId>() + size_of::<PersonRecord>())
+            + self.causes.len() * (size_of::<u32>() + size_of::<CauseRef>())
     }
 }
 
@@ -511,10 +616,13 @@ mod tests {
         // M4: kind 24 appended; 0–23 unchanged.
         assert_eq!(ChronicleKind::ToolBroke.as_u8(), 24);
         assert_eq!(ChronicleKind::KnowledgeLost.as_u8(), 28);
-        assert_eq!(ChronicleKind::ALL.len(), 29);
+        // M5: kinds 29–37 appended; 0–28 unchanged.
+        assert_eq!(ChronicleKind::PressureBegan.as_u8(), 29);
+        assert_eq!(ChronicleKind::Recovered.as_u8(), 37);
+        assert_eq!(ChronicleKind::ALL.len(), 38);
         let names: std::collections::BTreeSet<&str> =
             ChronicleKind::ALL.iter().map(|k| k.as_str()).collect();
-        assert_eq!(names.len(), 29);
+        assert_eq!(names.len(), 38);
         assert_eq!(DepartCause::TopUp.as_u8(), 4);
     }
 

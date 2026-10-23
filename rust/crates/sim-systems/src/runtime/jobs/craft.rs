@@ -98,11 +98,18 @@ pub fn start(
     if in_room {
         ticks = (ticks * WORKSHOP_ROOM_PERMILLE + 500) / 1000;
     }
-    Some(
-        ticks
-            .saturating_sub(temperament_ticks(temperament.as_ref()))
-            .max(1),
-    )
+    let ticks = ticks
+        .saturating_sub(temperament_ticks(temperament.as_ref()))
+        .max(1);
+    // M5 (ADR 0027, 0030): a cold snap outdoors, illness and mood.
+    let at = res
+        .colony
+        .workshops
+        .get(&workshop)
+        .map_or((0, 0), |s| s.top_left);
+    Some(crate::runtime::story::scale_work(
+        world, res, entity, at, ticks,
+    ))
 }
 
 /// Whether `bill` at `workshop` wants another craft now (M3, DECISIONS D13): it

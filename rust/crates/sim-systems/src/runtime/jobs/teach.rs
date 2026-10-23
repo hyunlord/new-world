@@ -238,7 +238,7 @@ pub fn assign(
     res: &mut SimResources,
     rule: &KnowledgeRule,
     assigned: &mut BTreeSet<AgentId>,
-    taken: &mut Vec<(Entity, Job)>,
+    taken: &mut Vec<(Entity, Job, (u32, u32))>,
 ) {
     let tick = res.current_tick;
     let day = tick / res.ticks_per_day.max(1);
@@ -307,6 +307,7 @@ pub fn assign(
                     best_distance: chebyshev(p, at),
                     progress_tick: tick,
                 },
+                at,
             ));
             assigned.insert(id);
             res.colony.tallies.jobs_taken += 1;

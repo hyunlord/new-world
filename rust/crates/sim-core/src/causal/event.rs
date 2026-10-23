@@ -599,6 +599,27 @@ pub enum CausalEvent {
         /// Simulation tick at which the death occurred.
         tick: u64,
     },
+
+    /// M5 (ADR 0027): a pressure touched a person — "why?" names it. Emitted
+    /// at the person's tile, at most once per person per pressure and effect
+    /// (the first cold hour of a snap, the first wolf bite, the onset of an
+    /// illness). A causal leaf (`parent == None`).
+    PressureCause {
+        /// This event's unique id.
+        id: EventId,
+        /// Always `None`.
+        parent: Option<EventId>,
+        /// The person.
+        agent: AgentId,
+        /// The person's tile.
+        position: (u32, u32),
+        /// The pressure's `PressureKind::code` (0 cold snap, 1 drought, 2 beasts, 3 illness).
+        kind: u8,
+        /// What it did: 0 cold, 1 a wound, 2 sickness, 3 thirst or empty forage.
+        effect: u8,
+        /// Simulation tick.
+        tick: u64,
+    },
 }
 
 impl CausalEvent {
@@ -619,7 +640,8 @@ impl CausalEvent {
             | CausalEvent::AgentBorn { id, .. }
             | CausalEvent::SettlementFormed { id, .. }
             | CausalEvent::SettlementDissolved { id, .. }
-            | CausalEvent::AgentDied { id, .. } => *id,
+            | CausalEvent::AgentDied { id, .. }
+            | CausalEvent::PressureCause { id, .. } => *id,
         }
     }
 
@@ -650,7 +672,8 @@ impl CausalEvent {
             | CausalEvent::AgentBorn { parent, .. }
             | CausalEvent::SettlementFormed { parent, .. }
             | CausalEvent::SettlementDissolved { parent, .. }
-            | CausalEvent::AgentDied { parent, .. } => *parent,
+            | CausalEvent::AgentDied { parent, .. }
+            | CausalEvent::PressureCause { parent, .. } => *parent,
         }
     }
 
@@ -671,7 +694,8 @@ impl CausalEvent {
             | CausalEvent::AgentBorn { tick, .. }
             | CausalEvent::SettlementFormed { tick, .. }
             | CausalEvent::SettlementDissolved { tick, .. }
-            | CausalEvent::AgentDied { tick, .. } => *tick,
+            | CausalEvent::AgentDied { tick, .. }
+            | CausalEvent::PressureCause { tick, .. } => *tick,
         }
     }
 
@@ -694,7 +718,8 @@ impl CausalEvent {
             | CausalEvent::AgentBorn { .. }
             | CausalEvent::SettlementFormed { .. }
             | CausalEvent::SettlementDissolved { .. }
-            | CausalEvent::AgentDied { .. } => None,
+            | CausalEvent::AgentDied { .. }
+            | CausalEvent::PressureCause { .. } => None,
             CausalEvent::StampDirty { channel, .. }
             | CausalEvent::InfluenceChanged { channel, .. } => Some(*channel),
         }

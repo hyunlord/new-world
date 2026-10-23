@@ -99,8 +99,8 @@ pub struct Skill {
 /// that trains one). Indexed by `SkillKind::code`.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Skills {
-    /// One entry per skill (M4: 7, pottery last).
-    pub entries: [Skill; 7],
+    /// One entry per skill (M4: 7, pottery last; M5: 8, hunting last).
+    pub entries: [Skill; SkillKind::ALL.len()],
 }
 
 impl Skills {
@@ -187,17 +187,19 @@ pub const LOWEST_PRIORITY: u8 = 4;
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub struct WorkPriorities {
     /// One level per work type.
-    pub levels: [u8; 7],
+    pub levels: [u8; WorkType::ALL.len()],
 }
 
 impl WorkPriorities {
     /// The defaults for an adult (`elder` = false) or an elder.
     pub const fn defaults(elder: bool) -> Self {
-        let mut levels = [DEFAULT_PRIORITY; 7];
+        let mut levels = [DEFAULT_PRIORITY; WorkType::ALL.len()];
         if elder {
             levels[WorkType::Quarry.code() as usize] = 0;
             // M3: digging is quarrying's heavy work; elders leave it too.
             levels[WorkType::Mine.code() as usize] = 0;
+            // M5: and the chase of hunting (DECISIONS D8).
+            levels[WorkType::Hunt.code() as usize] = 0;
         }
         Self { levels }
     }
@@ -335,11 +337,13 @@ mod tests {
                 WorkType::Build,
                 WorkType::Quarry,
                 WorkType::Mine,
+                WorkType::Hunt,
                 WorkType::Split
             ]
         );
         let elder = WorkPriorities::defaults(true).order();
         assert!(!elder.contains(&WorkType::Quarry) && !elder.contains(&WorkType::Mine));
+        assert!(!elder.contains(&WorkType::Hunt), "M5: elders do not hunt");
         let mut s = Skills::default();
         assert_eq!(s.train(SkillKind::Knap, 100), 2);
         assert_eq!(s.level(SkillKind::Knap), 2);

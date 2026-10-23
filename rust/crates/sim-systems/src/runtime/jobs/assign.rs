@@ -159,8 +159,8 @@ struct Exhausted {
     decon: Memo,
     restock: Memo,
     clay: Memo,
-    stocked: [Memo; 11],
-    any_stack: [Memo; 11],
+    stocked: [Memo; ItemKind::ALL.len()],
+    any_stack: [Memo; ItemKind::ALL.len()],
     open_cell: BTreeMap<ItemSpec, Memo>,
 }
 
@@ -581,6 +581,9 @@ fn pick_work(
             )
             .map(|(node, ())| (JobKind::Quarry { node }, 0, ItemKind::Log))
         }
+        // M5 (ADR 0028): the nearest huntable deer (a tracking practitioner only).
+        WorkType::Hunt => super::hunt::pick(res, ctx.practice, ctx.region, pos, radius)
+            .map(|(animal, _)| (JobKind::Hunt { animal }, 0, ItemKind::Meat)),
         WorkType::Chop => {
             // The nearest marked tree no one has taken.
             let choppable = |tile: (u32, u32)| {
@@ -771,6 +774,7 @@ pub fn skill_for(skills: &Skills, work: WorkType, crafts: &[SkillKind]) -> u8 {
         WorkType::Split => skills.level(SkillKind::Woodwork),
         WorkType::Haul => 0,
         WorkType::Mine => skills.level(SkillKind::Mining),
+        WorkType::Hunt => skills.level(SkillKind::Hunting),
     }
 }
 
@@ -1024,7 +1028,7 @@ impl RuntimeSystem for JobAssignSystem {
         let deadwood = std::cell::OnceCell::new();
         let gather_short = std::cell::Cell::new(None);
         let hearth = std::cell::OnceCell::new();
-        let mut taken: Vec<(Entity, Job)> = Vec::new();
+        let mut taken: Vec<(Entity, Job, (u32, u32))> = Vec::new();
         // M3: the "found nothing" memos hold per nav region (the searches filter by it).
         let mut exhausted: BTreeMap<u32, Exhausted> = BTreeMap::new();
         // M2 (goal 3.6, DECISIONS D14): passes by priority level — level 1
@@ -1105,12 +1109,26 @@ impl RuntimeSystem for JobAssignSystem {
                 {
                     continue;
                 }
-                // A chopper without a tool stops for the best axe in a stockpile on the way.
+                // A chopper without a tool stops for the best axe in a stockpile on the way;
+                // M5: a hunter without one for a spear (else a knife).
                 let fetch = match (kind, rule.economy) {
                     (JobKind::Chop { .. }, Some(e)) if !has_tool => {
                         best_axe(resources, pos, e.axe_reach)
                     }
+                    (JobKind::Hunt { .. }, Some(e)) if !has_tool => {
+                        super::hunt::hunting_fetch(resources, pos, e.axe_reach)
+                    }
                     _ => None,
+                };
+                // M5: a hunt walks to the deer's tile (its `source` is not a tile).
+                let target = match kind {
+                    JobKind::Hunt { animal } => resources
+                        .colony
+                        .wildlife
+                        .animals
+                        .get(&animal)
+                        .map_or(pos, |a| a.pos),
+                    _ => kind.source(),
                 };
                 let job = Job {
                     kind,
@@ -1120,7 +1138,7 @@ impl RuntimeSystem for JobAssignSystem {
                     item,
                     material: None,
                     fetch,
-                    best_distance: chebyshev(pos, fetch.unwrap_or(kind.source())),
+                    best_distance: chebyshev(pos, fetch.unwrap_or(target)),
                     progress_tick: tick,
                 };
                 for key in job.keys() {
@@ -1161,12 +1179,11 @@ impl RuntimeSystem for JobAssignSystem {
                     .taken_by
                     .entry((id, kind.code()))
                     .or_insert(0) += 1;
-                taken.push((entity, job));
+                taken.push((entity, job, fetch.unwrap_or(target)));
                 assigned.insert(id);
             }
         }
-        for (entity, job) in taken {
-            let goal = job.fetch.unwrap_or(job.kind.source());
+        for (entity, job, goal) in taken {
             let _ = world.insert(entity, (job, SeekTarget::new(goal)));
             if let Ok(mut state) = world.get::<&mut AgentState>(entity) {
                 *state = AgentState::Seeking {

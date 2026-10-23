@@ -70,7 +70,12 @@ fn workshops_list_bills_in_order_and_commands_parse_names() {
             (3, "knap_fine_blade", 1),
             (4, "grind_axe", 9),
             (5, "form_pot", 10),
-            (6, "fire_pot", 11)
+            (6, "fire_pot", 11),
+            // M5: spears at the wood bench (2), hide work at the drying rack (3).
+            (7, "haft_spear", 2),
+            (8, "scrape_hide", 3),
+            (9, "make_hide_wrap", 3),
+            (10, "make_fur_cloak", 3),
         ]
     );
     // A workshop and its site appear in the overlay as nothing else.
@@ -89,8 +94,8 @@ fn priorities_and_one_persons_economy() {
     );
     for r in &rows {
         let quarry = if r.elder { 0 } else { 3 };
-        // M3: mining (code 6) follows quarrying for elders.
-        assert_eq!(r.levels, [3, 3, quarry, 3, 3, 3, quarry]);
+        // M3: mining (code 6) follows quarrying for elders; M5: hunting (code 7) too.
+        assert_eq!(r.levels, [3, 3, quarry, 3, 3, 3, quarry, quarry]);
     }
     let first = rows[0].agent;
     let set = EconomyCommand::SetWorkPriority {
@@ -125,10 +130,10 @@ fn priorities_and_one_persons_economy() {
         .collect();
     assert_eq!(
         order,
-        ["craft", "build", "quarry", "mine", "chop", "split", "haul"]
+        ["craft", "build", "quarry", "mine", "hunt", "chop", "split", "haul"]
     );
     assert_eq!(levels_in_work_order(&row)[3], 1, "mine");
-    assert_eq!(levels_in_work_order(&row)[4], 0, "chop");
+    assert_eq!(levels_in_work_order(&row)[5], 0, "chop (M5: hunt is 4th in work order)");
     // Economy of one person: skills, a tool, a load.
     let entity = engine
         .world

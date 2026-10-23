@@ -15,7 +15,10 @@ mod job;
 pub mod knowledge;
 pub mod materials;
 mod orders;
+pub mod people;
 pub mod skills;
+pub mod story;
+pub mod wildlife;
 pub mod workshop;
 
 pub use command::{Command, CommandRecord, CommandResult, RejectReason};
@@ -236,6 +239,19 @@ pub struct ColonyState {
     /// Next apprenticeship order id (from 1).
     #[serde(default)]
     pub next_teach_id: u32,
+    /// M5 (ADR 0027): the storyteller — planned, active and past pressures.
+    #[serde(default)]
+    pub story: story::Storyteller,
+    /// M5 (ADR 0028): animals, hunt marks and zones, meat lots.
+    #[serde(default)]
+    pub wildlife: wildlife::Wildlife,
+    /// M5 (ADR 0029): the standing order "everyone in hides" is off (it is on by default).
+    #[serde(default)]
+    pub dress_off: bool,
+    /// M5 (ADR 0028): one side's attack in a fight, by `(attacker, defender)`;
+    /// resolved by `CombatSystem`.
+    #[serde(default)]
+    pub fights: BTreeMap<(wildlife::Fighter, wildlife::Fighter), wildlife::Fight>,
     /// Measurement only (M1.5 goal 8.2.1): jobs the decision seam released to
     /// a need, counted by [`JobReleaseKey`]. No system reads it, and no
     /// fingerprint or summary includes it.

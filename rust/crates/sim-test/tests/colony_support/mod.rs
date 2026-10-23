@@ -185,3 +185,93 @@ pub fn build_workshop(
         .map(|s| s.id);
     shop.expect("the workshop was built within 3,000 ticks")
 }
+
+// M3 room fixtures (moved here from colony_rooms.rs in M5 so the story tests share them).
+/// A built wall (a door when `door`) on `tile`, as `jobs::space` writes it.
+pub fn wall(engine: &mut SimEngine, tile: (u32, u32), door: bool) {
+    let g = &mut engine.resources.tile_grid;
+    let i = g.idx(tile.0, tile.1);
+    g.wall_material[i] = Some(sim_core::colony::materials::OAK);
+    g.set_door(i, door);
+    sim_systems::runtime::nav::refresh(&mut engine.resources, tile);
+    engine.resources.colony.rooms_dirty = true;
+}
+
+/// A finished bedroll on `tile`.
+pub fn bedroll(engine: &mut SimEngine, tile: (u32, u32)) {
+    engine
+        .resources
+        .colony
+        .beds
+        .insert(tile, sim_core::colony::materials::OAK);
+    engine
+        .resources
+        .set_sleep_tile(tile.0, tile.1, sim_engine::RESOURCE_SOURCE_INFINITE);
+}
+
+/// Walls around the `w × h` box with its top-left at `at`; a door in the
+/// middle of the south wall when `door`. Returns the interior tiles.
+pub fn walled_box(
+    engine: &mut SimEngine,
+    at: (u32, u32),
+    w: u32,
+    h: u32,
+    door: bool,
+) -> Vec<(u32, u32)> {
+    let (x0, y0) = at;
+    let (x1, y1) = (x0 + w - 1, y0 + h - 1);
+    for y in y0..=y1 {
+        for x in x0..=x1 {
+            if x == x0 || x == x1 || y == y0 || y == y1 {
+                let is_door = door && y == y1 && x == x0 + w / 2;
+                wall(engine, (x, y), is_door);
+            }
+        }
+    }
+    (y0 + 1..y1)
+        .flat_map(|y| (x0 + 1..x1).map(move |x| (x, y)))
+        .collect()
+}
+
+/// Detect the rooms now (`RoomSystem`'s detection).
+pub fn detect(engine: &mut SimEngine) {
+    sim_systems::runtime::rooms::detect_rooms(&engine.world, &mut engine.resources);
+}
+
+/// The top-left of a free `w × h` area south of the hearth of a colony world
+/// (every tile can hold items, no tree or node), reachable from the hearth.
+pub fn open_area(engine: &SimEngine, w: u32, h: u32) -> (u32, u32) {
+    let hearth = sim_systems::worldgen::colony::hearth(&engine.resources).expect("hearth");
+    let r = &engine.resources;
+    let free = |t: (u32, u32)| {
+        sim_systems::runtime::jobs::items::can_hold_items(r, t)
+            && !r.colony.trees.contains_key(&t)
+            && !r.colony.nodes.contains_key(&t)
+    };
+    for d in 3..40u32 {
+        for dx in 0..=2 * d {
+            let x = (hearth.0 + dx).saturating_sub(d);
+            let y = hearth.1 + d;
+            let ok = (y..y + h).all(|ty| (x..x + w).all(|tx| free((tx, ty))))
+                && r.nav.reachable(hearth, (x, y));
+            if ok {
+                return (x, y);
+            }
+        }
+    }
+    panic!("no free {w}x{h} area near the hearth");
+}
+
+/// The adults of a colony world in `AgentId` order.
+pub fn adults(engine: &SimEngine) -> Vec<(u64, hecs::Entity)> {
+    let mut out: Vec<_> = engine
+        .world
+        .query::<&sim_core::components::Agent>()
+        .without::<&sim_core::components::Child>()
+        .without::<&sim_core::components::Elder>()
+        .iter()
+        .map(|(e, a)| (a.id, e))
+        .collect();
+    out.sort();
+    out
+}

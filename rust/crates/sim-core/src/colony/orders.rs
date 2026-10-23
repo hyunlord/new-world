@@ -67,10 +67,13 @@ pub enum Designation {
     Deconstruct,
     /// Dig clay from the clay bank on this tile (M4).
     ClayPit,
+    /// Hunt (M5): never on a tile — deer move; the hunt marks live in
+    /// `ColonyState::wildlife`. The variant names hunting's knowledge gate.
+    Hunt,
 }
 
 impl Designation {
-    /// Stable code for the bridge (0 chop, 1 quarry, 2 dig, 3 deconstruct, 4 clay pit).
+    /// Stable code for the bridge (0 chop, 1 quarry, 2 dig, 3 deconstruct, 4 clay pit, 5 hunt).
     pub const fn code(self) -> u8 {
         match self {
             Self::Chop => 0,
@@ -78,6 +81,7 @@ impl Designation {
             Self::Dig => 2,
             Self::Deconstruct => 3,
             Self::ClayPit => 4,
+            Self::Hunt => 5,
         }
     }
 }
@@ -447,6 +451,8 @@ pub enum ReserveKey {
     Wood((u32, u32)),
     /// A tile being dug or taken apart, by tile (M3).
     Work((u32, u32)),
+    /// An animal being hunted, by `AnimalId` (M5).
+    Animal(u32),
 }
 
 impl ReserveKey {
@@ -461,6 +467,8 @@ impl ReserveKey {
             | Self::Bench(t)
             | Self::Wood(t)
             | Self::Work(t) => t,
+            // Not a tile: an animal moves (off the map, so it blocks no placement).
+            Self::Animal(id) => (u32::MAX, id),
         }
     }
 }

@@ -6,101 +6,20 @@
 
 mod colony_support;
 
-use colony_support::{drop_items, job_world_m2, run_until, worker};
+use colony_support::{
+    adults, bedroll, detect, drop_items, job_world_m2, open_area, run_until, wall, walled_box,
+    worker,
+};
 use sim_core::colony::materials::OAK;
 use sim_core::colony::{Command, ItemKind, ItemSpec, Occupant, RejectReason};
-use sim_core::components::{
-    Agent, AgentState, BuildingKind, Child, Cold, Elder, Position, ResourceKind, TargetKind,
-};
+use sim_core::components::{AgentState, BuildingKind, Cold, Position, ResourceKind, TargetKind};
 use sim_core::rooms::RoomRole;
 use sim_core::rules::ColonyRule;
 use sim_core::TerrainType;
-use sim_engine::{RuntimeSystem, SimEngine, RESOURCE_SOURCE_INFINITE};
+use sim_engine::{RuntimeSystem, SimEngine};
 use sim_systems::commands::submit;
-use sim_systems::runtime::rooms::{detect_rooms, room_at};
-use sim_systems::runtime::{jobs::items::can_hold_items, nav};
-
-/// A built wall (a door when `door`) on `tile`, as `jobs::space` writes it.
-fn wall(engine: &mut SimEngine, tile: (u32, u32), door: bool) {
-    let g = &mut engine.resources.tile_grid;
-    let i = g.idx(tile.0, tile.1);
-    g.wall_material[i] = Some(OAK);
-    g.set_door(i, door);
-    nav::refresh(&mut engine.resources, tile);
-    engine.resources.colony.rooms_dirty = true;
-}
-
-/// A finished bedroll on `tile`.
-fn bedroll(engine: &mut SimEngine, tile: (u32, u32)) {
-    engine.resources.colony.beds.insert(tile, OAK);
-    engine
-        .resources
-        .set_sleep_tile(tile.0, tile.1, RESOURCE_SOURCE_INFINITE);
-}
-
-/// Walls around the `w × h` box with its top-left at `at`; a door in the
-/// middle of the south wall when `door`. Returns the interior tiles.
-fn walled_box(
-    engine: &mut SimEngine,
-    at: (u32, u32),
-    w: u32,
-    h: u32,
-    door: bool,
-) -> Vec<(u32, u32)> {
-    let (x0, y0) = at;
-    let (x1, y1) = (x0 + w - 1, y0 + h - 1);
-    for y in y0..=y1 {
-        for x in x0..=x1 {
-            if x == x0 || x == x1 || y == y0 || y == y1 {
-                let is_door = door && y == y1 && x == x0 + w / 2;
-                wall(engine, (x, y), is_door);
-            }
-        }
-    }
-    (y0 + 1..y1)
-        .flat_map(|y| (x0 + 1..x1).map(move |x| (x, y)))
-        .collect()
-}
-
-fn detect(engine: &mut SimEngine) {
-    detect_rooms(&engine.world, &mut engine.resources);
-}
-
-/// The top-left of a free `w × h` area south of the hearth of a colony world
-/// (every tile can hold items, no tree or node), reachable from the hearth.
-fn open_area(engine: &SimEngine, w: u32, h: u32) -> (u32, u32) {
-    let hearth = sim_systems::worldgen::colony::hearth(&engine.resources).expect("hearth");
-    let r = &engine.resources;
-    let free = |t: (u32, u32)| {
-        can_hold_items(r, t) && !r.colony.trees.contains_key(&t) && !r.colony.nodes.contains_key(&t)
-    };
-    for d in 3..40u32 {
-        for dx in 0..=2 * d {
-            let x = (hearth.0 + dx).saturating_sub(d);
-            let y = hearth.1 + d;
-            let ok = (y..y + h).all(|ty| (x..x + w).all(|tx| free((tx, ty))))
-                && r.nav.reachable(hearth, (x, y));
-            if ok {
-                return (x, y);
-            }
-        }
-    }
-    panic!("no free {w}x{h} area near the hearth");
-}
-
-/// The adults of a colony world in `AgentId` order.
-fn adults(engine: &SimEngine) -> Vec<(u64, hecs::Entity)> {
-    let mut out: Vec<_> = engine
-        .world
-        .query::<&Agent>()
-        .without::<&Child>()
-        .without::<&Elder>()
-        .iter()
-        .map(|(e, a)| (a.id, e))
-        .collect();
-    out.sort();
-    out
-}
+use sim_systems::runtime::nav;
+use sim_systems::runtime::rooms::room_at;
 
 #[test]
 fn an_enclosure_is_a_room_with_or_without_its_door_but_its_beds_need_the_door() {

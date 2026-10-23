@@ -75,3 +75,57 @@ owner": every open question is decided here.
 - Chronicle causes are a side table of the chronicle (`Chronicle::causes`, entry index → `CauseRef`), not a field of
   `ChronicleEntry`: the probe's chronicle files carry the entry size and the approximate bytes, and identity compares
   them for the baseline; the side table is empty there.
+
+## D7 — The storyteller's schedule (goal 3.1)
+
+- "Days 2–5 of a season" = 0-based days 1–4 of the colony's 6-day season. The storyteller runs at the first tick of
+  each display day (08:00 with the colony's clock offset), so a pressure begins at 08:00 of its day and an `end_day`
+  ends it at 08:00 (a 3-day cold snap covers three nights).
+- The goal's kind weights are read per season: winter ColdSnap 600 / Beasts 400; summer Drought 600 / Beasts 400;
+  spring Beasts 700 / no major 300; autumn Beasts 700 / Illness 300 (Illness is an autumn-winter pressure, so the
+  spring's 300 is a quiet season). Autumn and winter also plan one minor Illness (not when Illness is the major).
+- F1 (32/32 worlds see a cold snap and beasts in two years) cannot hold with independent draws (P(no snap in two
+  winters) = 0.16). A kind is **due** when it has not come for a while: ColdSnap when none began in the last 24 days
+  (a winter missed; only from the second winter on), Beasts when none in the last 18 days (three seasons). A due kind
+  replaces the season's draw where its season and mercy allow (ColdSnap only in winter; in winter a due ColdSnap wins
+  over a due Beasts).
+- Mercy and gaps move the drawn day forward inside the season, never back; a day that no longer fits drops the
+  major (`Storyteller::skipped`). "Winter's last days" for Beasts = the last two days. "Not before day 12" excludes
+  the first spring and summer from every major (both seasons end by day 11).
+- Illness: the onset picks one healthy adult (keyed, `STREAM_STORY`, slot 5); the spread is checked each morning for
+  the night before: a person whose bed (`bed_of`) lies in the same roofed bedroom as a sick person's bed falls ill at
+  200 ‰ (keyed per person and day). The illness pressure ends when nobody is sick any more.
+- Costs: deaths of any cause while active; items lost = the extra firewood a snap burned (lit hours only) and the
+  forage units a drought did not regrow (units per pulse × sources); work lost = sick person-ticks (counted daily)
+  and drafted person-ticks during beasts.
+- Evidence: `colony_story.rs` (schedule on seeds 0–7 × 48 days with mercy and gaps; F1's schedule half on seeds 0–7
+  and the held-out 800–831, registered before any evaluation run).
+
+## D8 — Animals, hunting and drafting: the numbers the goal leaves open
+
+- Fights: every resolved hit is `hit_ticks` = 20 ticks apart for each attacker (the goal gives damage per resolved
+  combat, not a rate). A person a wolf bites strikes back with what they hold unless drafted (then the draft's orders
+  decide). A person–animal fight uses `colony.fights` (`Fighter::Person | Animal`); V7's `combat_pairs` stay
+  person–person and untouched.
+- Deer: the first goal draft (flee 4 steps of 2 tiles, then rest 10 steps while still wandering) made hunting all but
+  impossible: a hunt's attack takes 60+ ticks and a deer that rested 30 ticks bolted before it ended (trace: one
+  attack in three days). Now a deer rests **in place** for 40 steps (120 ticks) after a flight and wanders only
+  within 16 tiles of where it was born (fleeing deer drifted out of the 96-tile job radius). A kill then takes about
+  1,600 ticks for a level-0 hunter with a spear (`colony_wildlife.rs`).
+- Hunting: hit chance 400 + 20 × level ‰ (to 800 at 20); a spear doubles it, capped at 950 ‰. A hunter without a
+  tool fetches a spear, else a flint blade (a knife) from a stockpile within `axe_reach` (24). Elders do not hunt
+  (default priority 0, like quarrying and mining).
+- Drafting: the drafted state is `Seeking { Job }` (walking) or `Consuming { Job }` (holding) without a `Job`; the
+  decision seam puts every drafted entity into its "may not yield" set, so `decision/system.rs` is unchanged (+0
+  lines; budget +20). `JobAssignSystem` never assigns them (it takes `Idle` and leisure only). Critical need = the
+  agent rule's `critical_preemption` (75).
+- Meat: "eaten like foraged food" = meat on a stockpile cell or by a hearth goes into the settlement's food at 2 units
+  a piece every hour (`meat_eaten` counts it there); the larder then feeds people as V7's stockpile does. Spoilage
+  works on lots by kill day (a lot's meat spoils from the ground stacks in tile order; meat in someone's hands waits
+  for the next day).
+
+## D9 — Hunting and hides are gated
+
+- `tracking` gates `Designation::Hunt` (a gate-only variant: hunt marks live in `ColonyState::wildlife`, never on a
+  tile), `hafting` also gates `haft_spear`, `hide_scraping` also gates `scrape_hide`, `make_hide_wrap` and
+  `make_fur_cloak` (knowledge.ron). The M4 rules have no hunting and no such recipes, so M4 worlds are unchanged.

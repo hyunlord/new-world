@@ -1088,6 +1088,30 @@ pub fn resolve(
         ("debug_kill", None) => vec![Command::DebugKill {
             agent: spec["agent"].as_u64().ok_or("debug_kill needs agent")?,
         }],
+        // M5 (ADR 0028, 0029).
+        ("draft_move", None) => vec![Command::DraftMove {
+            agent: spec["agent"].as_u64().ok_or("draft_move needs agent")?,
+            x: field(spec, "x")?,
+            y: field(spec, "y")?,
+        }],
+        ("draft_attack", None) => vec![Command::DraftAttack {
+            agent: spec["agent"].as_u64().ok_or("draft_attack needs agent")?,
+            animal: field(spec, "animal")?,
+        }],
+        ("designate_hunt", None) => vec![Command::DesignateHunt {
+            animal: field(spec, "animal")?,
+        }],
+        ("add_hunt_zone", None) => {
+            let (x0, y0, x1, y1) = rect(spec)?;
+            vec![Command::AddHuntZone { x0, y0, x1, y1 }]
+        }
+        ("cancel_hunt", None) => {
+            let (x0, y0, x1, y1) = rect(spec)?;
+            vec![Command::CancelHunt { x0, y0, x1, y1 }]
+        }
+        ("set_dress_order", None) => vec![Command::SetDressOrder {
+            on: spec["on"].as_bool().unwrap_or(true),
+        }],
         (other, None) => return Err(format!("unknown command {other}")),
     })
 }
@@ -1109,9 +1133,15 @@ pub fn command_json(tick: u64, cmd: &Command) -> Value {
         | Command::DesignateClay { x0, y0, x1, y1 }
         | Command::CancelArea { x0, y0, x1, y1 }
         | Command::AddStockpile { x0, y0, x1, y1 }
+        | Command::AddHuntZone { x0, y0, x1, y1 }
+        | Command::CancelHunt { x0, y0, x1, y1 }
         | Command::RemoveZoneArea { x0, y0, x1, y1 } => {
             json!({"x0": x0, "y0": y0, "x1": x1, "y1": y1})
         }
+        Command::DraftMove { agent, x, y } => json!({"agent": agent, "x": x, "y": y}),
+        Command::DraftAttack { agent, animal } => json!({"agent": agent, "animal": animal}),
+        Command::DesignateHunt { animal } => json!({"animal": animal}),
+        Command::SetDressOrder { on } => json!({"on": on}),
         Command::DesignateChopTiles { tiles } => {
             json!({"tiles": tiles.iter().map(|t| json!([t.0, t.1])).collect::<Vec<_>>()})
         }

@@ -2,8 +2,13 @@
 //!
 //! Priority: 137 · Interval: 1 tick · Gate: none
 //! Reads: `Agent`, `Position`, `BodyHealth`; `SimResources.combat_pairs`, `causal_log` (`CombatStarted`), `settlements`
-//! Writes: `BodyHealth`, `AgentState`, `Memory`; `SimResources.combat_pairs`, `combat_progress`, `relationships` (hostility), `causal_log`; deaths via `despawn_agent`
-//! Events: `CausalEvent::CombatCompleted`; on death `CausalEvent::AgentDied`, chronicle `Died`/`Widowed`, tally `deaths_combat`
+//! Writes: `BodyHealth`, `AgentState`, `Memory`, `Tool` (M5 spear wear); `SimResources.combat_pairs`, `combat_progress`, `relationships` (hostility), `causal_log`, `colony` (fights, wildlife, ground items, ledger; M5); deaths via `despawn_agent`
+//! Events: `CausalEvent::CombatCompleted`; on death `CausalEvent::AgentDied`, chronicle `Died`/`Widowed`, tally `deaths_combat`; M5: `WolfKilled`, `PressureCause` (a bite)
+//!
+//! M5 (ADR 0028): after the V7 pairs, the colony's fights (`colony.fights`:
+//! a person or an animal against a person or an animal, each side's attack a
+//! pair with its own hit interval and damage) are resolved by
+//! `wildlife::fight::resolve_fights` — the same pair, progress and resolution model.
 //!
 //! `CombatSystem` (priority 137) — Phase 9-β runtime combat resolution.
 //!
@@ -264,6 +269,8 @@ impl RuntimeSystem for CombatSystem {
                 }
             }
         }
+        // M5 (ADR 0028): the colony's fights (people and animals) on the same pair model.
+        crate::runtime::wildlife::fight::resolve_fights(world, resources);
     }
 }
 

@@ -23,6 +23,7 @@ pub mod cancel;
 pub mod craft;
 pub mod execute;
 pub mod hearth;
+pub mod hunt;
 pub mod invariants;
 pub mod items;
 pub mod seam;

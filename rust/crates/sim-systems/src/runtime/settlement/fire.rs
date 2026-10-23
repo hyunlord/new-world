@@ -1,8 +1,8 @@
 //! FireSystem: burns stockpile wood in each hearth at night and marks members `Cold` (with exposure damage) when the fire is out on a winter night.
 //!
 //! Priority: 147 · Interval: 60 ticks · Gate: `WorldRules.society.firewood`
-//! Reads: `Agent`, `Founding`, `PorterTrip`, `Child`, `Elder`, `Hardiness`, `Hunger`, `Position`, `AgentState`; `SimResources.settlements`, `rules`, `colony.rooms` (M3)
-//! Writes: `Cold`, `ExposureClock`, `BodyHealth`; `SimResources.fires`, `settlements` (stockpile wood), `tallies`; deaths via `despawn_agent`
+//! Reads: `Agent`, `Founding`, `PorterTrip`, `Child`, `Elder`, `Hardiness`, `Hunger`, `Position`, `AgentState`, `Apparel` (M5); `SimResources.settlements`, `rules`, `colony.rooms` (M3), `colony.story` (M5)
+//! Writes: `Cold`, `ExposureClock`, `BodyHealth`; `SimResources.fires`, `settlements` (stockpile wood), `tallies`, `colony.story` (snap cost, touched), `causal_log` (M5); deaths via `despawn_agent`
 //! Events: tally `cold_member_hours`; on death `CausalEvent::AgentDied`, chronicle `Died`/`Widowed`, tally `deaths_exposure`
 //!
 //! Revitalize Pass 5 — `FireSystem` (priority 147, every 60 ticks).
@@ -46,6 +46,13 @@
 //!
 //! M3 (ADR 0023, colony with built space): a sleeper (`Consuming { Sleep }`)
 //! on a tile of a roofed room is sheltered and is not marked `Cold`.
+//!
+//! M5 (ADR 0027): in a cold snap the night's burn is ×`snap_burn_permille`
+//! (the extra wood is the snap's cost), roofed sleepers are no longer sheltered
+//! when the fire is out (only a roof with the hearth lit keeps them warm), a
+//! cold person outside a roofed room takes ×`snap_exposure_permille` damage, and
+//! each cold person gets one `PressureCause` event per snap. A worn hide wrap or
+//! fur cloak scales the damage (ADR 0029, `story::apparel_cold_permille`).
 //!
 //! (The rain rule acted only on intervention rain, removed in V8-0 with its
 //! `rain_wet_burn` field; `rain_soak_permille` remains in the rules data.)
@@ -102,6 +109,15 @@ impl RuntimeSystem for FireSystem {
         // Pass 7: the night's rate, the severity of its winter included;
         // Pass 8: the night's drawn change too (`night_rate`).
         let per_hour = night_rate(resources, &rule, resources.current_tick);
+        // M5 (ADR 0027): a cold snap doubles the night's burn.
+        let snap = crate::runtime::story::active(
+            resources,
+            sim_core::colony::story::PressureKind::ColdSnap,
+        );
+        let normal = per_hour;
+        let per_hour = snap.map_or(per_hour, |s| {
+            (u64::from(per_hour) * u64::from(s.snap_burn_permille)).div_ceil(1000) as u32
+        });
         let now = resources.current_tick;
         let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
         ids.sort_unstable();
@@ -115,6 +131,14 @@ impl RuntimeSystem for FireSystem {
                         settlement.withdraw(ResourceKind::Wood, per_hour) == per_hour
                     });
             fires.insert(*sid, FireState { lit });
+            if lit && snap.is_some() {
+                crate::runtime::story::add_cost(
+                    resources,
+                    sim_core::colony::story::PressureKind::ColdSnap,
+                    per_hour.saturating_sub(normal),
+                    0,
+                );
+            }
         }
         resources.fires = fires;
 
@@ -143,8 +167,10 @@ impl RuntimeSystem for FireSystem {
                 }
             }
         }
-        // M3: sleepers under a roof (a roofed room) keep warm.
+        // M3: sleepers under a roof (a roofed room) keep warm — M5: not in a
+        // cold snap, when only a roof with the hearth's fire lit keeps them warm.
         if cold_night
+            && snap.is_none()
             && resources
                 .rules
                 .colony
@@ -192,7 +218,7 @@ impl RuntimeSystem for FireSystem {
         }
         resources.tallies.cold_member_hours += marked;
         if let Some(exposure) = resources.rules.society.exposure {
-            expose(world, resources, &exposure, &exposed, now);
+            expose(world, resources, &exposure, &exposed, now, snap);
         }
     }
 }
@@ -210,6 +236,7 @@ fn expose(
     rule: &ExposureRule,
     exposed: &[(AgentId, hecs::Entity)],
     now: u64,
+    snap: Option<sim_core::rules::StoryRule>,
 ) {
     let mut deaths: Vec<(hecs::Entity, AgentId, (u32, u32))> = Vec::new();
     for &(id, entity) in exposed {
@@ -240,7 +267,29 @@ fn expose(
             .get::<&Hunger>(entity)
             .map(|h| f64::from(h.value))
             .unwrap_or(0.0);
-        let damage = exposure_damage(rule, stage, hardiness, hunger);
+        let mut damage = exposure_damage(rule, stage, hardiness, hunger);
+        // M5: a cold snap doubles the damage outside a roofed room (ADR 0027),
+        // and a hide wrap or fur cloak cuts it (ADR 0029).
+        let pos = world
+            .get::<&Position>(entity)
+            .map_or((0, 0), |p| (p.x, p.y));
+        if let Some(snap) = snap {
+            if !crate::runtime::rooms::roofed(resources, pos) {
+                damage = damage * f64::from(snap.snap_exposure_permille) / 1000.0;
+            }
+            crate::runtime::story::note_cause(
+                resources,
+                id,
+                pos,
+                sim_core::colony::story::PressureKind::ColdSnap,
+                0,
+            );
+        }
+        // Only a factor other than 1,000 ‰ touches the float (the baseline's damage stays bit-identical).
+        let worn = crate::runtime::story::apparel_cold_permille(world, resources, entity);
+        if worn != 1000 {
+            damage = damage * f64::from(worn) / 1000.0;
+        }
         let dead = match world.get::<&mut BodyHealth>(entity) {
             Ok(mut health) => {
                 health.apply_damage(damage);

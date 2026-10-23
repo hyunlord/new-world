@@ -161,11 +161,18 @@ pub fn holders(world: &World, res: &SimResources) -> JobHolders {
         .iter()
         .map(|(entity, _)| entity)
         .collect();
-    let inert = all
+    let mut inert: BTreeSet<Entity> = all
         .iter()
         .copied()
         .filter(|&entity| !may_yield(world, res, entity))
         .collect();
+    // M5 (ADR 0028): a drafted person takes only direct orders; the decision skips them.
+    inert.extend(
+        world
+            .query::<&sim_core::colony::people::Drafted>()
+            .iter()
+            .map(|(entity, _)| entity),
+    );
     JobHolders { all, inert }
 }
 
@@ -186,7 +193,8 @@ pub fn hold_for_decision(entity: Entity, state: AgentState, holders: &JobHolders
 }
 
 /// Whether a held worker skips the decision this tick: it may not yield, so it
-/// keeps its job and state and no arm runs for it (M1.5, review MAJOR-1).
+/// keeps its job and state and no arm runs for it (M1.5, review MAJOR-1); M5:
+/// a drafted person (walking or holding as `Seeking`/`Consuming { Job }`) too.
 pub fn skips_decision(entity: Entity, holders: &JobHolders) -> bool {
     holders.inert.contains(&entity)
 }

@@ -55,6 +55,14 @@ pub struct ColonyRule {
     /// (everyone may do everything).
     #[serde(default)]
     pub knowledge: Option<super::KnowledgeRule>,
+    /// M5 (ADR 0027): the storyteller and seasonal pressure. `None` = M4 (no
+    /// pressure beyond the calendar's winter severity).
+    #[serde(default)]
+    pub story: Option<super::StoryRule>,
+    /// M5 (ADR 0028, 0029): animals, hunting, fights, drafting, hides and
+    /// apparel. `None` = M4 (no animals).
+    #[serde(default)]
+    pub wildlife: Option<super::WildlifeRule>,
 }
 
 /// M3's tunables (goal 3.2–3.3; `ColonyRule::space`).
@@ -173,6 +181,8 @@ impl ColonyRule {
         economy: None,
         space: None,
         knowledge: None,
+        story: None,
+        wildlife: None,
     };
 
     /// The M1.5 colony values: [`Self::M1`] with the job-churn remedies
@@ -200,6 +210,13 @@ impl ColonyRule {
         economy: Some(EconomyRule::M4),
         knowledge: Some(super::KnowledgeRule::M4),
         ..Self::M3
+    };
+
+    /// The M5 colony values: [`Self::M4`] with the storyteller (ADR 0027).
+    pub const M5: Self = Self {
+        story: Some(super::StoryRule::M5),
+        wildlife: Some(super::WildlifeRule::M5),
+        ..Self::M4
     };
 
     /// Items of `kind` one tile holds (logs: `stack_max_logs`; goal 3.1 for the rest).
@@ -277,7 +294,7 @@ impl super::WorldRules {
                 firewood,
                 ..base.society
             },
-            colony: Some(ColonyRule::M4),
+            colony: Some(ColonyRule::M5),
             seasons,
             calendar: COLONY_CALENDAR,
             ..base

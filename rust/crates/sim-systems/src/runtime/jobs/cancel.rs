@@ -116,6 +116,21 @@ pub fn on_death(world: &mut World, res: &mut SimResources, entity: Entity) {
         put_items(res, tile, item, 1);
         let _ = world.remove_one::<Tool>(entity);
     }
+    // M5: a worn top is left where the person fell (ADR 0029).
+    let worn = world
+        .get::<&sim_core::colony::people::Apparel>(entity)
+        .ok()
+        .map(|a| a.top)
+        .zip(world.get::<&Position>(entity).ok().map(|p| (p.x, p.y)));
+    if let Some((top, tile)) = worn {
+        put_items(
+            res,
+            tile,
+            sim_core::colony::ItemSpec::raw(top.item(), None),
+            1,
+        );
+        let _ = world.remove_one::<sim_core::colony::people::Apparel>(entity);
+    }
     if let Some(id) = agent_id(world, entity) {
         release_all(res, id);
     }

@@ -222,12 +222,60 @@ pub enum Command {
         /// The person.
         agent: AgentId,
     },
-    /// Draft or release a person (reserved for M5; rejected in M1).
+    /// Draft or release a person (M5, ADR 0028; rejected before M5).
     SetDrafted {
         /// The person.
         agent: AgentId,
         /// Drafted or not.
         drafted: bool,
+    },
+    /// Order a drafted person to walk to `(x, y)` and stand there (M5).
+    DraftMove {
+        /// The person.
+        agent: AgentId,
+        /// Target x.
+        x: u32,
+        /// Target y.
+        y: u32,
+    },
+    /// Order a drafted person to attack the animal `animal` (M5).
+    DraftAttack {
+        /// The person.
+        agent: AgentId,
+        /// The animal (`AnimalId`).
+        animal: u32,
+    },
+    /// Mark the deer `animal` to be hunted (M5).
+    DesignateHunt {
+        /// The deer (`AnimalId`).
+        animal: u32,
+    },
+    /// Add a hunt zone: every deer inside the rect may be hunted (M5).
+    AddHuntZone {
+        /// Corner x.
+        x0: u32,
+        /// Corner y.
+        y0: u32,
+        /// Opposite corner x.
+        x1: u32,
+        /// Opposite corner y.
+        y1: u32,
+    },
+    /// Remove the hunt zones overlapping the rect and the hunt marks of the deer inside it (M5).
+    CancelHunt {
+        /// Corner x.
+        x0: u32,
+        /// Corner y.
+        y0: u32,
+        /// Opposite corner x.
+        x1: u32,
+        /// Opposite corner y.
+        y1: u32,
+    },
+    /// Turn the standing order "everyone in hides" on or off (M5, ADR 0029; on by default).
+    SetDressOrder {
+        /// On or off.
+        on: bool,
     },
 }
 
@@ -258,6 +306,12 @@ impl Command {
             Self::OrderTeach { .. } => "order_teach",
             Self::CancelTeach { .. } => "cancel_teach",
             Self::DebugKill { .. } => "debug_kill",
+            Self::DraftMove { .. } => "draft_move",
+            Self::DraftAttack { .. } => "draft_attack",
+            Self::DesignateHunt { .. } => "designate_hunt",
+            Self::AddHuntZone { .. } => "add_hunt_zone",
+            Self::CancelHunt { .. } => "cancel_hunt",
+            Self::SetDressOrder { .. } => "set_dress_order",
         }
     }
 }
@@ -275,7 +329,7 @@ pub enum RejectReason {
     Blocked,
     /// Valid, but there was nothing to change.
     Nothing,
-    /// The command exists but is not part of this milestone (drafting, M5).
+    /// The command exists but is not part of this milestone (or rule set).
     NotYet,
     /// The workshop does not make that recipe (M2).
     WrongWorkshop,
@@ -294,8 +348,10 @@ pub enum RejectReason {
     Unreachable,
     /// The teacher does not practise what it should teach (M4).
     NoPractitioner,
-    /// The learner is younger than the rule's learner age (M4).
+    /// The learner is younger than the rule's learner age (M4); M5: a child cannot be drafted.
     TooYoung,
+    /// The person is not drafted (M5: a draft order to someone not drafted).
+    NotDrafted,
 }
 
 impl RejectReason {
@@ -317,6 +373,7 @@ impl RejectReason {
             Self::Unreachable => "unreachable",
             Self::NoPractitioner => "no_practitioner",
             Self::TooYoung => "too_young",
+            Self::NotDrafted => "not_drafted",
         }
     }
 }

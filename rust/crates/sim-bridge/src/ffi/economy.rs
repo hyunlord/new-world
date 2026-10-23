@@ -297,7 +297,7 @@ pub struct PriorityRow {
     /// An elder (quarrying defaults to 0).
     pub elder: bool,
     /// Levels by `WorkType::code` (0 never, 1 highest … 4 lowest).
-    pub levels: [u8; 7],
+    pub levels: [u8; WorkType::ALL.len()],
 }
 
 /// Every adult (no `Child`), in `AgentId` order, with their priorities (the
@@ -322,7 +322,7 @@ pub fn collect_work_priorities(world: &hecs::World) -> Vec<PriorityRow> {
 
 /// A row's levels in `WorkType::ALL` order, the order of `work_types` (M3:
 /// mining's code is 6 but it sits fourth, after quarrying).
-pub fn levels_in_work_order(row: &PriorityRow) -> [u8; 7] {
+pub fn levels_in_work_order(row: &PriorityRow) -> [u8; WorkType::ALL.len()] {
     WorkType::ALL.map(|w| row.levels[w.code() as usize])
 }
 
@@ -376,9 +376,9 @@ pub(super) fn recipes_to_dict(rows: &[(u8, &'static str, u8, u8, u16, u32, u8)])
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct AgentEconomyRow {
     /// Levels by `SkillKind::code`.
-    pub levels: [u8; 7],
+    pub levels: [u8; SkillKind::ALL.len()],
     /// XP by `SkillKind::code`.
-    pub xp: [u32; 7],
+    pub xp: [u32; SkillKind::ALL.len()],
     /// Held tool: `(ItemKind::code, quality, material name)`.
     pub tool: Option<(u8, u8, String)>,
     /// Carried load: `(ItemKind::code, count, quality, material name)`.

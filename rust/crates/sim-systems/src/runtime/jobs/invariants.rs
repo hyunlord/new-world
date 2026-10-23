@@ -50,11 +50,18 @@ pub fn ledger_of(world: &World, res: &SimResources, kind: ItemKind) -> LedgerTer
         .filter(|(_, carry)| carry.kind == kind)
         .map(|(_, carry)| u64::from(carry.count))
         .sum();
+    // M5: a worn top counts as held (ADR 0029).
+    let worn = world
+        .query::<&sim_core::colony::people::Apparel>()
+        .iter()
+        .filter(|(_, a)| a.top.item() == kind)
+        .count() as u64;
     let held = world
         .query::<&Tool>()
         .iter()
         .filter(|(_, tool)| tool.item.kind == kind)
-        .count() as u64;
+        .count() as u64
+        + worn;
     let delivered = colony_sites(world)
         .values()
         .map(|view| u64::from(view.needs.delivered_of(kind)))

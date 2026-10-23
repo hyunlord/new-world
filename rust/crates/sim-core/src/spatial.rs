@@ -263,6 +263,8 @@ impl ColonyIndex {
                 Designation::Dig => self.dig.insert(*tile, ()),
                 Designation::Deconstruct => self.deconstruct.insert(*tile, ()),
                 Designation::ClayPit => self.clay.insert(*tile, ()),
+                // M5: hunting is never a tile mark (deer move).
+                Designation::Hunt => {}
             }
         }
         self.version = Some(colony.overlay_version);

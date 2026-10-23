@@ -1,7 +1,7 @@
 //! SleepDecaySystem: advances every agent's sleep need.
 //!
 //! Priority: 132 · Interval: 1 tick · Gate: none
-//! Reads: `Sleep`, `AgentState`, `Position`; `SimResources.colony.rooms` (M3)
+//! Reads: `Sleep`, `AgentState`, `Position`, `Sick` (M5); `SimResources.colony.rooms` (M3), `rules.colony.story` (M5)
 //! Writes: `Sleep`
 //! Events: none
 //!
@@ -65,6 +65,19 @@ impl RuntimeSystem for SleepDecaySystem {
     }
 
     fn tick(&mut self, world: &mut World, resources: &mut SimResources) {
+        // M5 (ADR 0027): a sick person's sleep need grows faster.
+        let sick = crate::runtime::story::rule(resources)
+            .filter(|r| r.illness)
+            .map(|r| f64::from(r.sick_sleep_permille) / 1000.0);
+        if let Some(factor) = sick {
+            for (_entity, (sleep, _)) in world
+                .query::<(&mut Sleep, &sim_core::colony::people::Sick)>()
+                .iter()
+            {
+                sleep.fatigue = (sleep.fatigue + sleep.growth_rate * (factor - 1.0))
+                    .clamp(0.0, Sleep::SATURATION);
+            }
+        }
         let bedroom = resources
             .rules
             .colony

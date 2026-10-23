@@ -24,23 +24,27 @@ pub enum WorkType {
     Haul,
     /// Dig into hills (M3, ADR 0022).
     Mine,
+    /// Hunt deer (M5, ADR 0028).
+    Hunt,
 }
 
 impl WorkType {
     /// Every work type in tie-break order (M3: mining after quarrying; its
-    /// code, 6, comes last so M2's codes and saved priorities keep their places).
-    pub const ALL: [Self; 7] = [
+    /// code, 6, comes last so M2's codes and saved priorities keep their places;
+    /// M5: hunting after mining, code 7).
+    pub const ALL: [Self; 8] = [
         Self::Craft,
         Self::Build,
         Self::Quarry,
         Self::Mine,
+        Self::Hunt,
         Self::Chop,
         Self::Split,
         Self::Haul,
     ];
 
     /// Stable code for the bridge and the index into `WorkPriorities::levels`
-    /// (0 craft, 1 build, 2 quarry, 3 chop, 4 split, 5 haul, 6 mine).
+    /// (0 craft, 1 build, 2 quarry, 3 chop, 4 split, 5 haul, 6 mine, 7 hunt).
     pub const fn code(self) -> u8 {
         match self {
             Self::Craft => 0,
@@ -50,6 +54,7 @@ impl WorkType {
             Self::Split => 4,
             Self::Haul => 5,
             Self::Mine => 6,
+            Self::Hunt => 7,
         }
     }
 
@@ -63,6 +68,7 @@ impl WorkType {
             Self::Split => "split",
             Self::Haul => "haul",
             Self::Mine => "mine",
+            Self::Hunt => "hunt",
         }
     }
 
@@ -166,6 +172,16 @@ pub enum JobKind {
         /// The meeting tile.
         at: (u32, u32),
     },
+    /// Hunt the deer `animal` (M5, ADR 0028): walk within reach, attack until it falls.
+    Hunt {
+        /// The deer (`AnimalId`).
+        animal: u32,
+    },
+    /// Fetch one top from the stack at `from` and put it on (M5, ADR 0029).
+    Equip {
+        /// The stack tile.
+        from: (u32, u32),
+    },
     /// Make one item of `bill` at `workshop`, working at its work tile `at` (M2).
     Craft {
         /// The workshop.
@@ -195,6 +211,8 @@ impl JobKind {
             Self::DigClay { .. } => 12,
             Self::Teach { .. } => 13,
             Self::Learn { .. } => 14,
+            Self::Hunt { .. } => 15,
+            Self::Equip { .. } => 16,
         }
     }
 
@@ -215,6 +233,8 @@ impl JobKind {
             Self::DigClay { .. } => "dig_clay",
             Self::Teach { .. } => "teach",
             Self::Learn { .. } => "learn",
+            Self::Hunt { .. } => "hunt",
+            Self::Equip { .. } => "equip",
         }
     }
 
@@ -231,6 +251,8 @@ impl JobKind {
             Self::Deconstruct { .. } | Self::Clear { .. } => WorkType::Build,
             Self::DigClay { .. } => WorkType::Mine,
             Self::Teach { .. } | Self::Learn { .. } => WorkType::Craft,
+            Self::Hunt { .. } => WorkType::Hunt,
+            Self::Equip { .. } => WorkType::Haul,
         }
     }
 
@@ -248,6 +270,9 @@ impl JobKind {
             Self::Clear { from, .. } => from,
             Self::DigClay { node } => node,
             Self::Teach { at, .. } | Self::Learn { at, .. } => at,
+            // The deer moves: the job layer walks to its current tile.
+            Self::Hunt { .. } => (u32::MAX, u32::MAX),
+            Self::Equip { from } => from,
         }
     }
 
@@ -267,7 +292,9 @@ impl JobKind {
             | Self::Deconstruct { .. }
             | Self::DigClay { .. }
             | Self::Teach { .. }
-            | Self::Learn { .. } => None,
+            | Self::Learn { .. }
+            | Self::Hunt { .. }
+            | Self::Equip { .. } => None,
         }
     }
 }
@@ -345,6 +372,14 @@ impl Job {
             (JobKind::Clear { to, .. }, _) => vec![ReserveKey::Cell(to)],
             (JobKind::DigClay { node }, _) => vec![ReserveKey::Node(node)],
             (JobKind::Teach { .. } | JobKind::Learn { .. }, _) => Vec::new(),
+            (JobKind::Hunt { animal }, _) => match self.fetch {
+                Some(spear) if self.stage == JobStage::ToSource => {
+                    vec![ReserveKey::Animal(animal), ReserveKey::Stack(spear)]
+                }
+                _ => vec![ReserveKey::Animal(animal)],
+            },
+            (JobKind::Equip { from }, JobStage::ToSource) => vec![ReserveKey::Stack(from)],
+            (JobKind::Equip { .. }, _) => Vec::new(),
         }
     }
 }

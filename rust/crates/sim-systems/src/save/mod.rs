@@ -44,8 +44,10 @@ pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 /// workshops and bills, multi-line material needs, tools, skills, priorities);
 /// 3 = M3 (door and dug tile columns, navigation paths, space sites, rooms);
 /// 4 = M4 (`Knowledge`, seven skills, the ford column, apprenticeship orders,
-/// the technology aggregate, new item, recipe, blueprint and job kinds).
-pub const FORMAT_VERSION: u32 = 4;
+/// the technology aggregate, new item, recipe, blueprint and job kinds);
+/// 5 = M5 (the storyteller, `Sick`, `Apparel`, new item and chronicle kinds,
+/// the chronicle's cause table, animals, fights, drafting, mood, bonds).
+pub const FORMAT_VERSION: u32 = 5;
 
 /// Upper bound for one decode (guards against corrupt length prefixes).
 const DECODE_LIMIT: u64 = 1 << 31;

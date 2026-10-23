@@ -262,7 +262,8 @@ fn classify_event(
         | CausalEvent::SettlementDissolved { .. }
         // add-starvation-death: AgentDied is a causal leaf — the dead agent has
         // no Memory to encode into, so it is a non-actor event here.
-        | CausalEvent::AgentDied { .. } => None,
+        | CausalEvent::AgentDied { .. }
+        | CausalEvent::PressureCause { .. } => None,
     }
 }
 

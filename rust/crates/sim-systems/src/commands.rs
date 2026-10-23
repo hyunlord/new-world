@@ -339,7 +339,99 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
         Command::SetWorkPriority { agent, work, level } => {
             set_work_priority(world, agent, work, level)
         }
-        Command::SetDrafted { .. } => CommandResult::rejected(RejectReason::NotYet),
+        // M5 (ADR 0028): drafting and hunting.
+        Command::SetDrafted { .. }
+        | Command::DraftMove { .. }
+        | Command::DraftAttack { .. }
+        | Command::DesignateHunt { .. }
+        | Command::AddHuntZone { .. }
+        | Command::CancelHunt { .. }
+        | Command::SetDressOrder { .. }
+            if rule.wildlife.is_none() =>
+        {
+            CommandResult::rejected(RejectReason::NotYet)
+        }
+        Command::SetDrafted { agent, drafted } => set_drafted(world, res, agent, drafted),
+        Command::DraftMove { agent, x, y } => {
+            if x >= res.tile_grid.width || y >= res.tile_grid.height {
+                return CommandResult::rejected(RejectReason::OutOfMap);
+            }
+            draft_order(
+                world,
+                agent,
+                sim_core::colony::people::DraftOrder::MoveTo((x, y)),
+            )
+        }
+        Command::DraftAttack { agent, animal } => {
+            if !res.colony.wildlife.animals.contains_key(&animal) {
+                return CommandResult::rejected(RejectReason::Unknown);
+            }
+            draft_order(
+                world,
+                agent,
+                sim_core::colony::people::DraftOrder::Attack(
+                    sim_core::colony::wildlife::Fighter::Animal(animal),
+                ),
+            )
+        }
+        Command::DesignateHunt { animal } => {
+            let w = &mut res.colony.wildlife;
+            match w.animals.get(&animal) {
+                Some(a) if a.kind == sim_core::colony::wildlife::AnimalKind::Deer => {
+                    if w.marks.insert(animal) {
+                        w.version += 1;
+                        CommandResult::ok(1)
+                    } else {
+                        CommandResult::rejected(RejectReason::Nothing)
+                    }
+                }
+                Some(_) => CommandResult::rejected(RejectReason::Blocked),
+                None => CommandResult::rejected(RejectReason::Unknown),
+            }
+        }
+        Command::AddHuntZone { x0, y0, x1, y1 } => match rect_tiles(res, x0, y0, x1, y1) {
+            None => CommandResult::rejected(RejectReason::OutOfMap),
+            Some(_) => {
+                let zone = (x0.min(x1), y0.min(y1), x0.max(x1), y0.max(y1));
+                let w = &mut res.colony.wildlife;
+                if w.zones.contains(&zone) {
+                    CommandResult::rejected(RejectReason::Nothing)
+                } else {
+                    w.zones.push(zone);
+                    w.version += 1;
+                    CommandResult::ok(1)
+                }
+            }
+        },
+        Command::CancelHunt { x0, y0, x1, y1 } => match rect_tiles(res, x0, y0, x1, y1) {
+            None => CommandResult::rejected(RejectReason::OutOfMap),
+            Some(_) => {
+                let (ax, ay, bx, by) = (x0.min(x1), y0.min(y1), x0.max(x1), y0.max(y1));
+                let w = &mut res.colony.wildlife;
+                let before = w.zones.len() + w.marks.len();
+                w.zones
+                    .retain(|&(zx0, zy0, zx1, zy1)| zx1 < ax || zx0 > bx || zy1 < ay || zy0 > by);
+                let inside: Vec<u32> = w
+                    .animals
+                    .values()
+                    .filter(|a| (ax..=bx).contains(&a.pos.0) && (ay..=by).contains(&a.pos.1))
+                    .map(|a| a.id)
+                    .collect();
+                for id in inside {
+                    w.marks.remove(&id);
+                }
+                let removed = before - (w.zones.len() + w.marks.len());
+                w.version += 1;
+                counted(removed)
+            }
+        },
+        Command::SetDressOrder { on } => {
+            if res.colony.dress_off != on {
+                return CommandResult::rejected(RejectReason::Nothing);
+            }
+            res.colony.dress_off = !on;
+            CommandResult::ok(1)
+        }
         Command::DesignateClay { .. }
         | Command::OrderTeach { .. }
         | Command::CancelTeach { .. }
@@ -360,6 +452,58 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
             crate::runtime::jobs::teach::cancel_order(world, res, order)
         }
         Command::DebugKill { agent } => debug_kill(world, res, agent),
+    }
+}
+
+/// The living person `agent`: its entity and whether it is a child.
+fn person(world: &World, agent: AgentId) -> Option<(hecs::Entity, bool)> {
+    world
+        .query::<(&Agent, Option<&sim_core::components::Child>)>()
+        .iter()
+        .find(|(_, (a, _))| a.id == agent)
+        .map(|(e, (_, child))| (e, child.is_some()))
+}
+
+/// `SetDrafted` (M5): draft or release `agent`.
+fn set_drafted(
+    world: &mut World,
+    res: &mut SimResources,
+    agent: AgentId,
+    drafted: bool,
+) -> CommandResult {
+    let Some((entity, child)) = person(world, agent) else {
+        return CommandResult::rejected(RejectReason::Unknown);
+    };
+    let now = world
+        .get::<&sim_core::colony::people::Drafted>(entity)
+        .is_ok();
+    if now == drafted {
+        return CommandResult::rejected(RejectReason::Nothing);
+    }
+    if drafted {
+        if child {
+            return CommandResult::rejected(RejectReason::TooYoung);
+        }
+        crate::runtime::wildlife::draft::draft(world, res, entity, agent);
+    } else {
+        crate::runtime::wildlife::draft::undraft(world, res, entity, agent, 1);
+    }
+    CommandResult::ok(1)
+}
+
+/// A drafted person's new order (M5).
+fn draft_order(
+    world: &mut World,
+    agent: AgentId,
+    order: sim_core::colony::people::DraftOrder,
+) -> CommandResult {
+    let Some((entity, _)) = person(world, agent) else {
+        return CommandResult::rejected(RejectReason::Unknown);
+    };
+    if crate::runtime::wildlife::draft::order(world, entity, order) {
+        CommandResult::ok(1)
+    } else {
+        CommandResult::rejected(RejectReason::NotDrafted)
     }
 }
 

@@ -153,6 +153,14 @@ fn target_exists(world: &World, res: &SimResources, job: &Job) -> bool {
         }
         // Apprenticeship: `teach::step` checks the order and the partner.
         (JobKind::Teach { .. } | JobKind::Learn { .. }, _) => true,
+        // M5: the hunted deer is alive; the top is still on its stack.
+        (JobKind::Hunt { animal }, _) => colony.wildlife.animals.contains_key(&animal),
+        (JobKind::Equip { from }, JobStage::ToSource) => {
+            colony.ground_items.get(&from).is_some_and(|s| {
+                sim_core::colony::people::Top::of_item(s.kind).is_some() && s.count > 0
+            })
+        }
+        (JobKind::Equip { .. }, _) => true,
     }
 }
 
@@ -205,6 +213,18 @@ fn step(
         cancel(world, res, entity, CancelReason::Unreachable);
         return;
     }
+    // M5: hunting and dressing run in `hunt`.
+    match job.kind {
+        JobKind::Hunt { .. } => {
+            super::hunt::step(world, res, id, entity, job, pos);
+            return;
+        }
+        JobKind::Equip { .. } => {
+            super::hunt::equip_step(world, res, id, entity, job, pos);
+            return;
+        }
+        _ => {}
+    }
     // M4: apprenticeship jobs walk to the meeting tile, then `teach::step` runs them.
     if matches!(job.kind, JobKind::Teach { .. } | JobKind::Learn { .. }) {
         let at = job.kind.source();
@@ -246,6 +266,8 @@ fn step(
             match job.kind {
                 JobKind::Chop { .. } => {
                     let ticks = work_ticks(world, rule, entity, rule.chop_ticks, SkillKind::Chop);
+                    let ticks =
+                        crate::runtime::story::scale_work(world, res, entity, source, ticks);
                     job.amount = ticks.min(u32::from(u16::MAX)) as u16;
                     job.stage = JobStage::Working { ticks_left: ticks };
                     set_state(world, entity, WORK_JOB);
@@ -253,6 +275,8 @@ fn step(
                 JobKind::Quarry { .. } => {
                     let base = rule.economy.map_or(120, |e| e.quarry_ticks);
                     let ticks = work_ticks(world, rule, entity, base, SkillKind::Quarry);
+                    let ticks =
+                        crate::runtime::story::scale_work(world, res, entity, source, ticks);
                     job.amount = ticks.min(u32::from(u16::MAX)) as u16;
                     job.stage = JobStage::Working { ticks_left: ticks };
                     set_state(world, entity, WORK_JOB);
@@ -269,6 +293,8 @@ fn step(
                 }
                 JobKind::DigClay { .. } => {
                     let ticks = work_ticks(world, rule, entity, CLAY_TICKS, SkillKind::Mining);
+                    let ticks =
+                        crate::runtime::story::scale_work(world, res, entity, source, ticks);
                     job.amount = ticks.min(u32::from(u16::MAX)) as u16;
                     job.stage = JobStage::Working { ticks_left: ticks };
                     set_state(world, entity, WORK_JOB);
@@ -276,6 +302,8 @@ fn step(
                 JobKind::Dig { .. } => {
                     let base = rule.space.map_or(150, |s| s.dig_ticks);
                     let ticks = work_ticks(world, rule, entity, base, SkillKind::Mining);
+                    let ticks =
+                        crate::runtime::story::scale_work(world, res, entity, source, ticks);
                     job.amount = ticks.min(u32::from(u16::MAX)) as u16;
                     job.stage = JobStage::Working { ticks_left: ticks };
                     set_state(world, entity, WORK_JOB);
@@ -301,8 +329,11 @@ fn step(
                     job.stage = JobStage::Working { ticks_left: ticks };
                     set_state(world, entity, WORK_JOB);
                 }
-                // Handled before the stage match (M4 apprenticeship).
-                JobKind::Teach { .. } | JobKind::Learn { .. } => {}
+                // Handled before the stage match (M4 apprenticeship, M5 hunting and dressing).
+                JobKind::Teach { .. }
+                | JobKind::Learn { .. }
+                | JobKind::Hunt { .. }
+                | JobKind::Equip { .. } => {}
                 JobKind::Haul { from, .. }
                 | JobKind::Deliver { from, .. }
                 | JobKind::Supply { from, .. }
@@ -556,6 +587,19 @@ fn put_job(world: &mut World, entity: Entity, job: Job) {
     if let Ok(mut held) = world.get::<&mut Job>(entity) {
         *held = job;
     }
+}
+
+/// [`walk`] for the job layer's other modules (M5 hunting and dressing).
+pub(super) fn walk_job(
+    world: &mut World,
+    res: &mut SimResources,
+    id: AgentId,
+    entity: Entity,
+    job: &mut Job,
+    pos: (u32, u32),
+    goal: (u32, u32),
+) {
+    walk(world, res, id, entity, job, pos, goal);
 }
 
 /// Track walking progress; cancel a job stuck for `stuck_ticks`. On a stored

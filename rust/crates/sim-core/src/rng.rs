@@ -132,8 +132,19 @@ pub const STREAM_KNOWLEDGE: u64 = 0x4B4E_4F57_4C45_4447;
 /// near-camp top-up slot 1).
 pub const STREAM_CLAY: u64 = 0x434C_4159_4241_4E4B;
 
+/// M5: the storyteller's season plans and illness (`"STORYTEL"`; subject = the
+/// season index or a lineage key, slot = the draw within it).
+pub const STREAM_STORY: u64 = 0x5354_4F52_5954_454C;
+
+/// M5: hunting rolls and animal movement (`"WILDLIFE"`; subject = a hunter's
+/// lineage key or an animal id, slot = the animal or the step).
+pub const STREAM_WILDLIFE: u64 = 0x5749_4C44_4C49_4645;
+
+/// M5: quarrels (`"QUARRELS"`; subject = the pair's lower lineage key, slot = the other's).
+pub const STREAM_QUARREL: u64 = 0x5155_4152_5245_4C53;
+
 /// Every stream constant, for the distinctness test and the inventory.
-pub const STREAMS: [u64; 32] = [
+pub const STREAMS: [u64; 35] = [
     STREAM_MOVE_PAUSE,
     STREAM_MOVE_DX,
     STREAM_MOVE_DY,
@@ -166,6 +177,9 @@ pub const STREAMS: [u64; 32] = [
     STREAM_QUALITY,
     STREAM_KNOWLEDGE,
     STREAM_CLAY,
+    STREAM_STORY,
+    STREAM_WILDLIFE,
+    STREAM_QUARREL,
 ];
 
 /// One splitmix64 output for state `x` (identical to `MovementRng::new(x).next_u64()`).

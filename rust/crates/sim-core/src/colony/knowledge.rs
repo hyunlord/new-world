@@ -360,6 +360,7 @@ fn designation_from_name(name: &str) -> Option<Designation> {
         "dig" => Some(Designation::Dig),
         "deconstruct" => Some(Designation::Deconstruct),
         "clay_pit" => Some(Designation::ClayPit),
+        "hunt" => Some(Designation::Hunt),
         _ => None,
     }
 }

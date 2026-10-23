@@ -38,11 +38,13 @@ pub enum SkillKind {
     Mining,
     /// Forming and firing pots (M4).
     Pottery,
+    /// Hunting (M5).
+    Hunting,
 }
 
 impl SkillKind {
     /// Every skill, in code order.
-    pub const ALL: [Self; 7] = [
+    pub const ALL: [Self; 8] = [
         Self::Knap,
         Self::Woodwork,
         Self::Chop,
@@ -50,6 +52,7 @@ impl SkillKind {
         Self::Build,
         Self::Mining,
         Self::Pottery,
+        Self::Hunting,
     ];
 
     /// Stable code / array index (0 = knap).
@@ -62,6 +65,7 @@ impl SkillKind {
             Self::Build => 4,
             Self::Mining => 5,
             Self::Pottery => 6,
+            Self::Hunting => 7,
         }
     }
 
@@ -75,6 +79,7 @@ impl SkillKind {
             Self::Build => "build",
             Self::Mining => "mining",
             Self::Pottery => "pottery",
+            Self::Hunting => "hunting",
         }
     }
 
@@ -101,11 +106,19 @@ pub enum RecipeKind {
     FormPot,
     /// Fire a raw pot at the hearth (M4).
     FirePot,
+    /// Haft a flint spear (M5).
+    HaftSpear,
+    /// Scrape a hide with a knife (M5).
+    ScrapeHide,
+    /// Make a hide wrap from cured hides (M5).
+    MakeHideWrap,
+    /// Make a fur cloak from wolf hides (M5).
+    MakeFurCloak,
 }
 
 impl RecipeKind {
     /// Every recipe, in code order.
-    pub const ALL: [Self; 7] = [
+    pub const ALL: [Self; 11] = [
         Self::KnapBlade,
         Self::HaftAxe,
         Self::SplitFirewood,
@@ -113,6 +126,10 @@ impl RecipeKind {
         Self::GrindAxe,
         Self::FormPot,
         Self::FirePot,
+        Self::HaftSpear,
+        Self::ScrapeHide,
+        Self::MakeHideWrap,
+        Self::MakeFurCloak,
     ];
 
     /// Stable code (0 = knap blade).
@@ -125,6 +142,10 @@ impl RecipeKind {
             Self::GrindAxe => 4,
             Self::FormPot => 5,
             Self::FirePot => 6,
+            Self::HaftSpear => 7,
+            Self::ScrapeHide => 8,
+            Self::MakeHideWrap => 9,
+            Self::MakeFurCloak => 10,
         }
     }
 
@@ -138,6 +159,10 @@ impl RecipeKind {
             Self::GrindAxe => "grind_axe",
             Self::FormPot => "form_pot",
             Self::FirePot => "fire_pot",
+            Self::HaftSpear => "haft_spear",
+            Self::ScrapeHide => "scrape_hide",
+            Self::MakeHideWrap => "make_hide_wrap",
+            Self::MakeFurCloak => "make_fur_cloak",
         }
     }
 
@@ -171,6 +196,8 @@ pub struct Recipe {
     pub work: WorkType,
     /// Quality added to every craft of it (M4: pressure flaking's +15).
     pub quality_add: i32,
+    /// Whether a craft needs a knife: the workshop's flint blade tool, worn one use a craft (M5, ADR 0029).
+    pub knife: bool,
 }
 
 #[derive(Deserialize)]
@@ -190,6 +217,8 @@ struct RecipeRaw {
     work: String,
     #[serde(default)]
     quality_add: i32,
+    #[serde(default)]
+    knife: bool,
 }
 
 impl RecipeRaw {
@@ -207,6 +236,7 @@ impl RecipeRaw {
             skill: SkillKind::from_name(&self.skill)?,
             work: WorkType::from_name(&self.work)?,
             quality_add: self.quality_add,
+            knife: self.knife,
         })
     }
 }
@@ -346,7 +376,8 @@ mod tests {
     #[test]
     fn the_recipe_file_parses_to_the_goal_table() {
         let table = recipes();
-        assert_eq!(table.len(), 7);
+        // M2's three, M4's four, M5's four.
+        assert_eq!(table.len(), 11);
         let knap = RecipeKind::KnapBlade.recipe().cloned();
         assert_eq!(
             knap,
@@ -359,7 +390,60 @@ mod tests {
                 skill: SkillKind::Knap,
                 work: WorkType::Craft,
                 quality_add: 0,
+                knife: false,
             })
+        );
+        // M5 (goal 3.2, 3.3): spears and hide work; only scraping needs a knife.
+        let m5: Vec<_> = [
+            RecipeKind::HaftSpear,
+            RecipeKind::ScrapeHide,
+            RecipeKind::MakeHideWrap,
+            RecipeKind::MakeFurCloak,
+        ]
+        .iter()
+        .filter_map(|r| r.recipe())
+        .map(|r| {
+            (
+                r.workshop,
+                r.inputs.clone(),
+                r.output,
+                r.work_ticks,
+                r.knife,
+            )
+        })
+        .collect();
+        assert_eq!(
+            m5,
+            vec![
+                (
+                    BlueprintKind::WoodBench,
+                    vec![(ItemKind::FlintBlade, 1), (ItemKind::Log, 1)],
+                    (ItemKind::Spear, 1),
+                    60,
+                    false
+                ),
+                (
+                    BlueprintKind::DryingRack,
+                    vec![(ItemKind::Hide, 1)],
+                    (ItemKind::CuredHide, 1),
+                    60,
+                    true
+                ),
+                (
+                    BlueprintKind::DryingRack,
+                    vec![(ItemKind::CuredHide, 2)],
+                    (ItemKind::HideWrap, 1),
+                    90,
+                    false
+                ),
+                (
+                    BlueprintKind::DryingRack,
+                    vec![(ItemKind::WolfHide, 2)],
+                    (ItemKind::FurCloak, 1),
+                    120,
+                    false
+                ),
+            ]
         );
         // M4 (goal 3.5): the pottery chain, ground stone and fine blades.
         let pots: Vec<_> = [

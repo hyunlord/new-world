@@ -502,6 +502,42 @@ impl CausalEventView {
                 defender_id: None,
                 hp_after: None,
             },
+            // M5 (ADR 0027): a pressure touched a person. `reason` is the pressure's
+            // name, `triggered_by` what it did.
+            CausalEvent::PressureCause {
+                id,
+                parent,
+                agent,
+                position,
+                kind,
+                effect,
+                tick,
+            } => Self {
+                kind: "pressure_cause",
+                id: *id,
+                parent: *parent,
+                tick: *tick,
+                channel: None,
+                position: Some(*position),
+                radius: None,
+                region: None,
+                old_value: None,
+                new_value: None,
+                agent_id: Some(*agent),
+                reason: Some(
+                    sim_core::colony::story::PressureKind::from_code(*kind)
+                        .map_or("unknown", |k| k.name()),
+                ),
+                triggered_by: Some(match effect {
+                    0 => "cold",
+                    1 => "wound",
+                    2 => "sickness",
+                    _ => "thirst",
+                }),
+                recalled_event: None,
+                defender_id: None,
+                hp_after: None,
+            },
         }
     }
 }

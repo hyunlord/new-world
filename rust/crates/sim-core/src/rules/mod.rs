@@ -6,10 +6,14 @@ mod calendar;
 mod colony;
 mod knowledge;
 mod routine;
+mod story;
+mod wildlife;
 pub use calendar::CalendarRule;
 pub use colony::{ColonyRule, EconomyRule, SpaceRule};
 pub use knowledge::KnowledgeRule;
 pub use routine::{EndStagger, FamilyRule, RelationsRule, RoutineRule};
+pub use story::StoryRule;
+pub use wildlife::WildlifeRule;
 
 /// Rules selected once when a world is constructed.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]

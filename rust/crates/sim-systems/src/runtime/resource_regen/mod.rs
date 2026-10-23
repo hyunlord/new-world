@@ -1,8 +1,8 @@
 //! ResourceRegenSystem: refills finite resource tiles toward their caps; StaleSeekTargetSystem: re-targets or idles agents whose seek tile is gone.
 //!
 //! Priority: ResourceRegenSystem 140, StaleSeekTargetSystem 126 · Interval: ResourceRegenSystem 120 ticks, StaleSeekTargetSystem 1 tick · Gate: none
-//! Reads: ResourceRegenSystem — `SimResources.*_source_max`, `wood_spot_area`, `wild_regions`, `settlements`, `rules`; StaleSeekTargetSystem — `AgentState`, `Position`, `SeekTarget`, food/water/sleep tile maps
-//! Writes: ResourceRegenSystem — `SimResources` food/water/sleep/wood tile maps, regen accumulators and cursors, `tallies`; StaleSeekTargetSystem — `SeekTarget` (insert/remove), `AgentState`
+//! Reads: ResourceRegenSystem — `SimResources.*_source_max`, `wood_spot_area`, `wild_regions`, `settlements`, `rules`, `colony.story` (M5 drought); StaleSeekTargetSystem — `AgentState`, `Position`, `SeekTarget`, food/water/sleep tile maps
+//! Writes: ResourceRegenSystem — `SimResources` food/water/sleep/wood tile maps, regen accumulators and cursors, `tallies`, `colony.story` (drought cost); StaleSeekTargetSystem — `SeekTarget` (insert/remove), `AgentState`
 //! Events: ResourceRegenSystem — tallies `regen_lost_at_cap`, `winter_wood_lost*`, `area_floor_*`; StaleSeekTargetSystem — none
 //!
 //! V7 feature `add-resource-scarcity-regen` — resource regeneration subsystem.
@@ -416,7 +416,26 @@ impl RuntimeSystem for ResourceRegenSystem {
         // channel so no zero-valued tile is ever inserted.
         let food_units = match (resources.rules.seasons, season_at(resources)) {
             (Some(rule), Some((season, _))) => {
-                resources.food_regen_acc += u32::from(rule.regen_permille[season]);
+                // M5 (ADR 0027): a drought slows forage regrowth.
+                let permille = u32::from(rule.regen_permille[season]);
+                let drought = crate::runtime::story::active(
+                    resources,
+                    sim_core::colony::story::PressureKind::Drought,
+                );
+                let slowed =
+                    drought.map_or(permille, |d| permille * d.drought_regen_permille / 1000);
+                if drought.is_some() {
+                    // The cost: units a pulse would have regrown on every source.
+                    let lost =
+                        (permille - slowed) as usize * resources.food_source_max.len() / 1000;
+                    crate::runtime::story::add_cost(
+                        resources,
+                        sim_core::colony::story::PressureKind::Drought,
+                        lost as u32,
+                        0,
+                    );
+                }
+                resources.food_regen_acc += slowed;
                 let units = resources.food_regen_acc / 1000;
                 resources.food_regen_acc %= 1000;
                 u8::try_from(units).unwrap_or(u8::MAX)

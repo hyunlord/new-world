@@ -191,6 +191,7 @@ fn harness_p6_beta_a3_causal_event_enumeration_accessors_and_channel() {
             CausalEvent::SettlementFormed { .. } => "settlement_formed",
             CausalEvent::SettlementDissolved { .. } => "settlement_dissolved",
             CausalEvent::AgentDied { .. } => "agent_died",
+            CausalEvent::PressureCause { .. } => "pressure_cause",
         }
     }
     assert_eq!(classify(&started), "construction_started");
@@ -728,6 +729,7 @@ fn harness_p6_beta_a9_full_4_link_causal_chain_walk() {
             CausalEvent::SettlementFormed { .. } => "settlement_formed",
             CausalEvent::SettlementDissolved { .. } => "settlement_dissolved",
             CausalEvent::AgentDied { .. } => "agent_died",
+            CausalEvent::PressureCause { .. } => "pressure_cause",
         })
         .collect();
 
