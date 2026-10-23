@@ -18,8 +18,9 @@
 //! - anyone else begins a flight: the job is cancelled (`CancelReason::Needs`,
 //!   the flight is a survival choice), and the person walks (`Seeking { Job }`
 //!   with a `SeekTarget`, as a drafted person walks) to the nearest tile of a
-//!   roofed room they can reach, else to the hearth, else to the tile
-//!   `flee_tiles` steps away from the wolf.
+//!   roofed room they reach before the wolf, else to the hearth if they reach
+//!   it first, else to the tile `flee_tiles` steps away from the wolf; a refuge
+//!   the wolf comes to reach first is given up for a new one ([`refuge`]).
 //!
 //! A flight whose `until` has passed ends: `Fleeing` and the `SeekTarget` are
 //! removed and the person is `Idle`. The decision seam (`jobs::seam::holders`)
@@ -64,22 +65,24 @@ pub fn threats(res: &SimResources) -> Vec<(u32, (u32, u32))> {
         .collect()
 }
 
-/// Where a person at `pos` runs from a wolf at `wolf`: the nearest reachable tile of a roofed room
-/// (`(distance, y, x)`), else the hearth, else `reach` steps away from the wolf.
+/// Where a person at `pos` runs from a wolf at `wolf`: the nearest reachable tile of a roofed room (`(distance, y, x)`)
+/// that they reach before the wolf (nearer to them than to it); else the hearth, if they reach it first; else
+/// `reach` steps away from the wolf (M5.5 calibration r1, DECISIONS D15: a refuge past the wolf is no refuge).
 pub fn refuge(res: &SimResources, pos: (u32, u32), wolf: (u32, u32), reach: u32) -> (u32, u32) {
     let region = res.nav.region_of(pos);
+    let first = |t: (u32, u32)| chebyshev(pos, t) < chebyshev(wolf, t);
     let room = res
         .colony
         .rooms
         .values()
         .filter(|r| r.roofed)
         .flat_map(|r| r.tiles.iter().copied())
-        .filter(|t| res.nav.passable(*t) && res.nav.reaches(region, *t))
+        .filter(|t| res.nav.passable(*t) && res.nav.reaches(region, *t) && first(*t))
         .min_by_key(|t| (chebyshev(pos, *t), t.1, t.0));
     if let Some(t) = room {
         return t;
     }
-    if let Some(h) = crate::worldgen::colony::hearth(res) {
+    if let Some(h) = crate::worldgen::colony::hearth(res).filter(|h| first(*h)) {
         return h;
     }
     let mut at = pos;
@@ -192,8 +195,24 @@ impl RuntimeSystem for FleeSystem {
                 continue;
             }
             if let Ok(flight) = world.get::<&Fleeing>(entity).map(|f| *f) {
+                // Renewed; a refuge the wolf now reaches first is given up for a new one.
+                let to = if chebyshev(wpos, flight.to) <= chebyshev(pos, flight.to)
+                    && !arrived(res, pos, flight.to)
+                {
+                    refuge(res, pos, wpos, rule.flee_tiles)
+                } else {
+                    flight.to
+                };
                 if let Ok(mut f) = world.get::<&mut Fleeing>(entity) {
                     f.until = now + rule.flee_ticks;
+                    f.to = to;
+                }
+                if to != flight.to {
+                    let _ = world.insert_one(entity, SeekTarget::new(to));
+                    if let Ok(mut state) = world.get::<&mut AgentState>(entity) {
+                        *state = WALK;
+                    }
+                    continue;
                 }
                 if arrived(res, pos, flight.to) {
                     let _ = world.remove_one::<SeekTarget>(entity);

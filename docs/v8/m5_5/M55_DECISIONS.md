@@ -190,7 +190,48 @@ amendment:
 
 ## D15 — Calibration rounds (seeds 0–7, 48 days; ≤ 8 rounds)
 
-Recorded with the calibration commit (after Part 3): the M55-U script needs caravans and migrant waves (D14).
+Each round runs the M55-U script (pressure), the no-draft script, the script with `--story off` and the script with
+`--story off --neighbours off` on seeds 0–7 for 48 days (`$DATA/cal/run_round.sh`, `$DATA/cal/<round>/`), scored by
+`m55_score.py` (bars scaled to 8 worlds). Targets (goal §3.1.6): breakdowns per world 0.5–1.5 with the storyteller,
+≤ 0.25 without; quarrels per world-year 3–8.
+
+| round | change before it | breakdowns / world (story / off) | quarrels / world-year | causes resolve | F2b | F2c | F8a | F8b | failing bars (8 worlds) |
+|---|---|---|---|---|---|---|---|---|---|
+| r0 | Parts 1–3 as committed (M5 mood values) | 0.25 / 0.25 | 14.8 | 0.937 | 0/8 | 0.769 | 5/8 | 5/8 | F2b, F2c, F7b, F8a, F8b, F9 |
+| r1 | quarrel base 2 → 1 ‰, relation divisor 100 → 200; pressure −40 → −80, sick −80 → −160 (×2); breakdown 100 → 120; wolves run 2 tiles a step when chasing within 8 (M5: 1); a refuge must be reached before the wolf; caravan dates avoid planned majors; one neighbour always knows pot firing | 2.38 / 0 | 8.8 | 0.993 | 8/8 | 0.943 | 8/8 | 6/8 | F5a (a world with 4), F8b |
+| r2 | breakdown 120 → 105; quarrel mood divisor 25 → 40 | 1.12 / 0 | 6.8 | 0.972 | 8/8 | 0.927 | 8/8 | 6/8 | F8b |
+
+Calibration ends at r2 (3 rounds); the held-out evaluation runs the r2 values. The M5.5 mood values against M5
+(declared, goal §0): `pressure_weight` −40 → −80, `sick_weight` −80 → −160 (both ×2, the limit), `breakdown` 100 →
+105 (limit 150), `quarrel_base_permille` 2 → 1, `quarrel_relation_divisor` 100 → 200, `quarrel_mood_divisor` 25 → 40
+(the quarrel formula's constants); cold night, hungry and kin died unchanged (−120, −150, −250); the tantrum threshold
+unchanged (250).
+
+What the rounds showed:
+- r0's no-draft worlds were never bitten (0 bites in every pack): a fleeing person walks at the wolves' pace, so
+  flight always escaped and drafting stopped mattering the other way round. The goal allows wolf strength to change
+  when calibration needs it: a wolf now runs two tiles a step while it chases a person within the flight distance
+  (`WildlifeRule::wolf_chase_tiles`, M5.5 2, M5 1). r1: every no-draft world has someone below 50 hp or killed,
+  every draft world 0 wolf deaths.
+- r0's flights that did not move away were people running for a roofed room past the wolf (the house by the hearth,
+  where the wolves walk when no one is outside). A refuge is now only a room (or the hearth) the person reaches before
+  the wolf; a refuge the wolf comes to reach first is given up (`flee::refuge`). F2c 0.769 → 0.943.
+- r0's caravans: a date inside a major pressure moved past its season's end on three worlds (4–5 caravans). The
+  caravan's keyed date is now drawn among the season's days 2–5 that no planned major covers (D23); the shift rule
+  stays for what is not planned. F8a 5/8 → 8/8.
+- F8b (an unknown artifact bought) stays 6/8: on seeds 0 and 3 no caravan ever offered one — the neighbour that makes
+  clay pots came after the colony had learned pot firing (from a migrant or by discovery). When an unknown artifact is
+  offered it is bought as far as the blades allow (`$DATA/cal/r2dbg`: offered on 6 worlds, bought on 6). Not tuned
+  further (the goods table's weights and the trade script are the goal's).
+
+## D23 — Caravan dates and pot firing (calibration r1)
+
+- A caravan's date: on the season's first day the keyed day is drawn among the season's days 2–5 not covered by a
+  major the storyteller has planned (or begun) — traders hear of trouble; when every day is covered, the keyed day of
+  all four, and the goal's shift rule (to the major's end + 1, skipped past the season) applies on the day.
+- "At least one of the pottery chain in at least one neighbour": the chain's end, **pot firing** (the node that makes a
+  clay pot, the goal's first artifact). When neither neighbour drew it, the first neighbour's last-drawn Neolithic node
+  is replaced by it (it keeps its 2–4 nodes).
 
 ## D16 — Visitors are not ECS entities; the Part 1 commit carries Part 2's code switched off
 

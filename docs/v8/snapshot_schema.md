@@ -1,6 +1,6 @@
 # Snapshot schema — the bridge's read surface
 
-Schema version: 5 (M5: the story, animal and mood reads `get_story`, `get_animals`, `get_agent_m5`, `get_drafted`, `get_chronicle_why`, `get_year_summary`, `get_teach_suggestion`, the snapshot's `tops`, `mood_bands`, `drafted`, `sick` and the chronicle rows' `index` and links; M4 the knowledge reads `get_tech`, `get_tech_node`, `get_agent_knowledge`, `get_teach_orders`, `get_knowledge_waits`, `get_space`'s fords and the new item, recipe, blueprint, job and chronicle codes; M3 added built space, rooms, the place preview and the overlay's `item_covered`; M2 the economy reads and the overlay's node, mark and quality columns).
+Schema version: 6 (M5.5: the neighbour reads `get_neighbours`, `get_wave`, `get_caravan`, the snapshot's `fleeing`, `get_agent_m5`'s `fleeing`, `get_year_summary`'s `migrants_joined`, `trades`, `eurekas` and chronicle kinds 38–44; M5: the story, animal and mood reads `get_story`, `get_animals`, `get_agent_m5`, `get_drafted`, `get_chronicle_why`, `get_year_summary`, `get_teach_suggestion`, the snapshot's `tops`, `mood_bands`, `drafted`, `sick` and the chronicle rows' `index` and links; M4 the knowledge reads `get_tech`, `get_tech_node`, `get_agent_knowledge`, `get_teach_orders`, `get_knowledge_waits`, `get_space`'s fords and the new item, recipe, blueprint, job and chronicle codes; M3 added built space, rooms, the place preview and the overlay's `item_covered`; M2 the economy reads and the overlay's node, mark and quality columns).
 
 Every `#[func] fn get_*` that `WorldSimNode` (`rust/crates/sim-bridge/src/ffi/node.rs`) exposes to GDScript, with the
 keys it returns, their types, id spaces, units and row order, and the pure collector that backs it. A `#[func]` body
@@ -164,6 +164,7 @@ between two reads of an unchanged world, **not** sorted by id and not stable acr
 | `mood_bands` | PackedByteArray | M5: 0 no mood (a child under 10), 1 우울 (below 250), 2 보통, 3 흡족 (750 or more), 4 in a breakdown |
 | `drafted` | PackedByteArray | M5: 1 when drafted |
 | `sick` | PackedByteArray | M5: 1 when sick |
+| `fleeing` | PackedByteArray | M5.5: 1 when running from a wolf (`Fleeing`) |
 
 A person sleeps when `states` is 3 and `target_kinds` is 3 (the agent layer's sleep frame; the text renderer's `z`).
 
@@ -915,6 +916,7 @@ A carcass is not an animal: a kill drops meat and a hide as ground items (`get_c
 | `draft_x` | int | the move's tile x, or the attack's target id; -1 none |
 | `draft_y` | int | the move's tile y; -1 otherwise |
 | `sick` | bool | sick |
+| `fleeing` | bool | M5.5: running from a wolf (`Fleeing`; the inspector's "도망 중: 늑대") |
 | `sick_ticks_left` | int | ticks until the illness passes, 0 when not sick |
 | `hp` | int | hit points 0–100 |
 
@@ -968,12 +970,103 @@ of the entry: one row per link, from the entry itself to its first cause (`mood:
 | `hunted` | int | deer hunted |
 | `wolves_killed` | int | wolves killed |
 | `era_progress` | int | era progress ‰ now |
+| `migrants_joined` | int | M5.5: people who joined from migrant waves in the year |
+| `trades` | int | M5.5: trades and gifts made with caravans in the year |
+| `eurekas` | int | M5.5: discoveries helped by an artifact in the year |
 
 ### `get_teach_suggestion`
 `get_teach_suggestion(teacher, knowledge) -> int`: `collect_teach_suggestion(&World, i64, i64)` (`ffi/knowledge.rs`).
 The teach dialog's pre-selected learner (M4 owner decision; M5 DECISIONS D5): among living adults other than the
 teacher who do not practise the node, the highest novelty seeking, then the youngest, then the lowest `AgentId`; -1
 when there is none.
+
+## Neighbours (M5.5)
+
+The two neighbours, their migrant waves and caravans (`ffi/neighbours.rs`, ADR 0031, 0032). Visitors are not agents:
+a wave or a caravan is one group on one tile. Every read returns its empty form (empty columns, `found` false) in the
+baseline world and without the neighbour rule.
+
+### `get_neighbours`
+`collect_neighbours(&World, &SimResources) -> NeighboursView` → `neighbours_to_dict`. Neighbours by id, waves and
+caravans by number (the gone ones stay), clues by node id. In `SimReads.GETTERS`.
+
+| key | type | meaning |
+|---|---|---|
+| `version` | int | `Neighbours::version` (bumped when anything shown changes) |
+| `now` | int | the current tick |
+| `ids` | PackedInt32Array | neighbour id (0, 1) |
+| `name_keys` | PackedInt32Array | n of the locale key `NEIGHBOUR_NAME_<n>` |
+| `edges` | PackedInt32Array | 0 north, 1 east, 2 south, 3 west |
+| `distance_days` | PackedInt32Array | days of travel (2–5) |
+| `populations` | PackedInt32Array | its people |
+| `attitudes` | PackedInt32Array | attitude toward the colony 0–100 |
+| `last_contact` | PackedInt32Array | display day of the last wave or caravan at the hearth, -1 none |
+| `rumoured` | PackedInt64Array | bitmask of the Neolithic nodes it knows (bit = `KnowledgeId`) |
+| `wave_ids` | PackedInt32Array | wave number (1, 2, …) |
+| `wave_neighbours` | PackedInt32Array | its neighbour id |
+| `wave_states` | PackedInt32Array | 0 walking in, 1 waiting at the hearth, 2 leaving, 3 gone |
+| `wave_x` | PackedInt32Array | the group's tile x |
+| `wave_y` | PackedInt32Array | the group's tile y |
+| `wave_sizes` | PackedInt32Array | people in it |
+| `wave_deadline` | PackedInt64Array | the tick an unanswered waiting wave leaves, -1 unless waiting |
+| `wave_answers` | PackedInt32Array | -1 none, 0 accepted, 1 declined, 2 unanswered |
+| `caravan_ids` | PackedInt32Array | caravan number (1, 2, …) |
+| `caravan_neighbours` | PackedInt32Array | its neighbour id |
+| `caravan_states` | PackedInt32Array | as `wave_states` (1 = trading at the hearth) |
+| `caravan_x` | PackedInt32Array | the group's tile x |
+| `caravan_y` | PackedInt32Array | the group's tile y |
+| `caravan_leaves` | PackedInt64Array | the tick a trading caravan leaves, -1 unless trading |
+| `caravan_trades` | PackedInt32Array | trades made with it |
+| `clue_nodes` | PackedInt32Array | nodes hinted by an artifact the colony holds that no colonist practises (eureka) |
+| `clue_items` | PackedInt32Array | the hinting artifact's `ItemKind::code`, one per `clue_nodes` row |
+| `migrants_joined` | int | people who joined so far |
+| `trades` | int | trades so far |
+| `gifts` | int | gifts so far |
+| `eurekas` | int | discoveries helped by an artifact so far |
+
+### `get_wave`
+`get_wave(id)`: `collect_wave(&SimResources, i64) -> WaveView` → `wave_to_dict`. Wave `id`'s people in their order;
+three knowledge slots per person (their best by ‰, then node id), padded with node -1.
+
+| key | type | meaning |
+|---|---|---|
+| `found` | bool | the wave exists |
+| `id` | int | its number |
+| `neighbour` | int | its neighbour id |
+| `state` | int | as `wave_states` |
+| `deadline` | int | as `wave_deadline` |
+| `agents` | PackedInt64Array | the `AgentId` each will have when the wave joins (reserved when it set out; names) |
+| `female` | PackedInt32Array | 1 a woman |
+| `age_years` | PackedInt32Array | age in years |
+| `wrap` | PackedInt32Array | 1 arrives in a hide wrap |
+| `know_nodes` | PackedInt32Array | three per person: `KnowledgeId`, -1 none |
+| `know_permille` | PackedInt32Array | three per person: proficiency ‰ |
+| `know_practice` | PackedInt32Array | three per person: 1 at or above the node's threshold (숙련) |
+
+### `get_caravan`
+`get_caravan(id)`: `collect_caravan(&World, &SimResources, i64) -> CaravanView` → `caravan_to_dict`. Caravan `id`'s
+goods in its order (the `take` index of `cmd_trade`) and the colony's stockpiled stacks in `(y, x)` order.
+
+| key | type | meaning |
+|---|---|---|
+| `found` | bool | the caravan exists |
+| `id` | int | its number |
+| `neighbour` | int | its neighbour id |
+| `state` | int | as `caravan_states` |
+| `leaves` | int | as `caravan_leaves` |
+| `buy_permille` | int | the traders buy at this ‰ of value (800) |
+| `sell_permille` | int | and sell at this ‰ (1,200) |
+| `goods_kind` | PackedInt32Array | `ItemKind::code` |
+| `goods_count` | PackedInt32Array | items left |
+| `goods_quality` | PackedInt32Array | quality 0–100 |
+| `goods_value` | PackedInt32Array | one item's value at 100 % (`values.ron`) |
+| `goods_unknown` | PackedInt32Array | 1 when no colonist practises a node that makes it (처음 보는 물건 — 단서) |
+| `stock_x` | PackedInt32Array | a stockpiled stack's tile x |
+| `stock_y` | PackedInt32Array | its tile y |
+| `stock_kind` | PackedInt32Array | `ItemKind::code` |
+| `stock_count` | PackedInt32Array | items |
+| `stock_quality` | PackedInt32Array | quality 0–100 |
+| `stock_value` | PackedInt32Array | one item's value at 100 % |
 
 ## Commands and lifecycle (not snapshot reads)
 
@@ -991,7 +1084,10 @@ y0, x1, y1)`, `cmd_place_rect(kind, x0, y0, x1, y1, hollow)` (space kinds `log_w
 `cmd_draft(agent, on)`, `cmd_undraft_all()` (`count` = people released), `cmd_draft_move(agent, x, y)`,
 `cmd_draft_attack(agent, animal)`, `cmd_draft_attack_person(agent, target)`, `cmd_designate_hunt(animal)`,
 `cmd_add_hunt_zone(x0, y0, x1, y1)`, `cmd_cancel_hunt(x0, y0, x1, y1)` and `cmd_set_dress_order(on)` (`ffi/story.rs`;
-reasons add `not_drafted`), each returning
+reasons add `not_drafted`), the M5.5 orders `cmd_accept_migrants(wave)`, `cmd_decline_migrants(wave)` and
+`cmd_trade(caravan, give, take)` (`give` flat `(x, y, count)` triples of stockpiled stacks, `take` flat
+`(goods index, count)` pairs; an empty `take` is a gift; `ffi/neighbours.rs`; reasons add `no_visitor`,
+`unbalanced`), each returning
 `{accepted: bool, count: int, reason: String}` (`result_to_dict` in `ffi/colony.rs`; `reason` is `""` or a
 `RejectReason` name) and logged with the next tick (ADR 0012); `can_place_blueprint(kind, x, y) -> bool`;
 `advance_ticks(n) -> int` (the final absolute tick, at most 200,000 per call); `reset_world(seed)`,

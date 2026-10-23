@@ -77,39 +77,53 @@ pub struct Scene {
     pub side: u32,
     /// Whether the scaled U-script runs.
     pub script: bool,
+    /// M5.5 (goal §4): wolves of a pack brought to the map edge after the warm-up (0 = none).
+    pub wolves: u32,
 }
 
-/// The scenes in run order.
-pub const SCENES: [Scene; 5] = [
+/// The scenes in run order (M5.5: `n1000_wolves`, N = 1,000 with a 4-wolf pack through the measured ticks; goal §4).
+pub const SCENES: [Scene; 6] = [
     Scene {
         label: "n200",
         agents: 200,
         side: 192,
         script: false,
+        wolves: 0,
     },
     Scene {
         label: "n1000",
         agents: 1_000,
         side: 192,
         script: false,
+        wolves: 0,
     },
     Scene {
         label: "n2000",
         agents: 2_000,
         side: 192,
         script: false,
+        wolves: 0,
     },
     Scene {
         label: "n200_script",
         agents: 200,
         side: 192,
         script: true,
+        wolves: 0,
     },
     Scene {
         label: "n200_side64",
         agents: 200,
         side: 64,
         script: false,
+        wolves: 0,
+    },
+    Scene {
+        label: "n1000_wolves",
+        agents: 1_000,
+        side: 192,
+        script: false,
+        wolves: 4,
     },
 ];
 
@@ -259,6 +273,21 @@ pub fn run_one(scene: &Scene, script_path: Option<&Path>) -> Result<Value, Strin
         gift(&mut engine);
     }
     let alive_after_warmup = crate::perf::alive(&engine);
+    // M5.5: the wolves line — a pack at the map edge nearest the camp's forest, hunting through the measured ticks.
+    if scene.wolves > 0 {
+        if let Some(h) = sim_systems::worldgen::colony::hearth(&engine.resources) {
+            sim_systems::runtime::nav::ensure(&mut engine.resources);
+            if let Some(edge) = sim_systems::runtime::wildlife::wolf_edge(&engine.resources, h) {
+                let day = (engine.current_tick() / 1_440) as u32;
+                sim_systems::runtime::wildlife::spawn_pack(
+                    &mut engine.resources,
+                    edge,
+                    scene.wolves,
+                    day,
+                );
+            }
+        }
+    }
     let mut profile = engine.new_tick_profile();
     // Each measured tick's per-system ns (M5 D18: the p99 tick's breakdown).
     let mut tick_ns: Vec<Vec<u64>> = Vec::with_capacity(MEASURED_TICKS as usize);
@@ -322,9 +351,16 @@ pub fn run_one(scene: &Scene, script_path: Option<&Path>) -> Result<Value, Strin
         "MoodSystem",
         "QuarrelSystem",
     ]);
+    // M5.5 (goal §4, F11): flight, the neighbours and their visitors together; flight alone.
+    let m55_us = per_tick(&["FleeSystem", "NeighbourSystem", "VisitorSystem"]);
+    let flee_us = per_tick(&["FleeSystem"]);
     Ok(json!({
         "knowledge_us_per_tick": knowledge_us,
         "m5_us_per_tick": m5_us,
+        "m55_us_per_tick": m55_us,
+        "flee_us_per_tick": flee_us,
+        "wolves": scene.wolves,
+        "wolves_left_end": engine.resources.colony.wildlife.wolves().count(),
         "p99_tick": tail,
         "job_assign_us_per_tick": job_assign_us,
         "label": scene.label, "agents": scene.agents, "side": scene.side, "script": scene.script,
@@ -431,6 +467,9 @@ pub fn summarise(all_runs: &std::collections::BTreeMap<String, Vec<Value>>, comm
                 "rss_kib_before_build": median_of(list, &["rss_kib", "before_build"]),
                 "rss_kib_after_run": median_of(list, &["rss_kib", "after_run"]),
                 "alloc_bytes_after_build": median_opt(list, &["alloc_bytes", "after_build"]),
+                "m55_us_per_tick": median_opt(list, &["m55_us_per_tick"]),
+                "flee_us_per_tick": median_opt(list, &["flee_us_per_tick"]),
+                "m5_us_per_tick": median_opt(list, &["m5_us_per_tick"]),
                 "top_systems": mid["systems"].as_array().map(|s| s.iter().take(TOP_SYSTEMS).cloned().collect::<Vec<_>>()),
                 "founders": mid["founders"], "alive_end": mid["alive_end"], "deaths": mid["deaths"],
                 "births": mid["births"], "jobs_taken": mid["jobs_taken"], "jobs_done": mid["jobs_done"],

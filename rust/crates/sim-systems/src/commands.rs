@@ -466,7 +466,8 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
         } => {
             let give: Vec<((u32, u32), u16)> = give.iter().map(|&(x, y, n)| ((x, y), n)).collect();
             use crate::runtime::neighbours::trade::{trade, TradeRefusal};
-            match trade(res, caravan, &give, take) {
+            let practice = crate::runtime::neighbours::trade::colony_practice(world);
+            match trade(res, practice, caravan, &give, take) {
                 Ok(n) => CommandResult::ok(n),
                 Err(TradeRefusal::NoCaravan) => CommandResult::rejected(RejectReason::NoVisitor),
                 Err(TradeRefusal::BadItems) => CommandResult::rejected(RejectReason::Unknown),

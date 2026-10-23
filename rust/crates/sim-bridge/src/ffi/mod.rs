@@ -22,6 +22,7 @@ pub mod economy;
 pub mod engine_build;
 pub mod family;
 pub mod knowledge;
+pub mod neighbours;
 pub mod node;
 pub mod reads_agent;
 pub mod reads_settlement;
@@ -47,6 +48,10 @@ pub use knowledge::{
     collect_agent_knowledge, collect_knowledge_waits, collect_teach_orders,
     collect_teach_suggestion, collect_tech, collect_tech_node, AgentKnowledgeView, KnowledgeRow,
     TeachRow, TechNodeView, TechRow, TechView, WaitRow,
+};
+pub use neighbours::{
+    collect_caravan, collect_fleeing_column, collect_neighbours, collect_wave, submit_neighbours,
+    CaravanView, NeighbourCommand, NeighboursView, WaveView,
 };
 pub use space::{
     collect_place_preview, collect_room_detail, collect_rooms, collect_space, submit_space,

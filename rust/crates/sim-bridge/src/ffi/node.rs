@@ -60,6 +60,10 @@ use super::knowledge::{
     submit_designate_clay, submit_order_teach, teach_orders_to_dict, tech_node_to_dict,
     tech_to_dict, waits_to_dict,
 };
+use super::neighbours::{
+    caravan_to_dict, collect_caravan, collect_fleeing_column, collect_neighbours, collect_wave,
+    neighbours_to_dict, submit_neighbours, wave_to_dict, NeighbourCommand,
+};
 use super::reads_agent::{
     agent_detail_to_dict, agent_temperament_to_dict, collect_agent_detail,
     collect_agent_temperament, collect_relationship_snapshot, relationship_rows_to_variant_array,
@@ -481,6 +485,9 @@ impl WorldSimNode {
         dict.set("mood_bands", col(|r| r.1));
         dict.set("drafted", col(|r| r.2));
         dict.set("sick", col(|r| r.3));
+        // M5.5: `fleeing` (0/1) in the same row order.
+        let fleeing = collect_fleeing_column(&self.engine.world);
+        dict.set("fleeing", PackedByteArray::from(fleeing.as_slice()));
         dict
     }
 
@@ -853,6 +860,64 @@ impl WorldSimNode {
     #[func]
     fn get_year_summary(&self, year: i64) -> VarDictionary {
         year_summary_to_dict(&collect_year_summary(&self.engine.resources, year))
+    }
+
+    /// M5.5: the two neighbours, their migrant waves and caravans, and the clues of the moment (`ffi/neighbours.rs`).
+    #[func]
+    fn get_neighbours(&self) -> VarDictionary {
+        neighbours_to_dict(&collect_neighbours(
+            &self.engine.world,
+            &self.engine.resources,
+        ))
+    }
+
+    /// M5.5: migrant wave `wave` (its number) and its people.
+    #[func]
+    fn get_wave(&self, wave: i64) -> VarDictionary {
+        wave_to_dict(&collect_wave(&self.engine.resources, wave))
+    }
+
+    /// M5.5: caravan `caravan` (its number), its goods and the colony's stockpiled stacks.
+    #[func]
+    fn get_caravan(&self, caravan: i64) -> VarDictionary {
+        caravan_to_dict(&collect_caravan(
+            &self.engine.world,
+            &self.engine.resources,
+            caravan,
+        ))
+    }
+
+    /// M5.5 order: accept migrant wave `wave`.
+    #[func]
+    fn cmd_accept_migrants(&mut self, wave: i64) -> VarDictionary {
+        result_to_dict(submit_neighbours(
+            &mut self.engine,
+            NeighbourCommand::Accept(wave),
+        ))
+    }
+
+    /// M5.5 order: send migrant wave `wave` away.
+    #[func]
+    fn cmd_decline_migrants(&mut self, wave: i64) -> VarDictionary {
+        result_to_dict(submit_neighbours(
+            &mut self.engine,
+            NeighbourCommand::Decline(wave),
+        ))
+    }
+
+    /// M5.5 order: trade with caravan `caravan` — `give` flat `(x, y, count)` triples of stockpiled stacks, `take`
+    /// flat `(goods index, count)` pairs (empty: a gift).
+    #[func]
+    fn cmd_trade(
+        &mut self,
+        caravan: i64,
+        give: PackedInt32Array,
+        take: PackedInt32Array,
+    ) -> VarDictionary {
+        result_to_dict(submit_neighbours(
+            &mut self.engine,
+            NeighbourCommand::Trade(caravan, give.to_vec(), take.to_vec()),
+        ))
     }
 
     /// M5 order: draft (`on`) or release person `agent` (`AgentId`).

@@ -218,7 +218,7 @@ Reads/writes come from each file's `//!` header.
 
 All methods live on the one Godot class `WorldSimNode` (signal `world_reset`
 after a reset or a load). The exact exported list is checked by gate step 13, currently
-`python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_m5.txt` (M5, 91 items; M4 checked `docs/v8/bridge_api_m4.txt`, M3 `docs/v8/bridge_api_m3.txt`, M2 `docs/v8/bridge_api_m2.txt`, M1.5 `docs/v8/bridge_api_m1_5.txt`, M1 `docs/v8/bridge_api_m1.txt`, V8-0 `docs/v8/bridge_api_v7_final.txt` minus `docs/v8/bridge_api_removed.txt`)
+`python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_m5_5.txt` (M5.5, 97 items; M5 checked `docs/v8/bridge_api_m5.txt` (91), M4 `docs/v8/bridge_api_m4.txt`, M3 `docs/v8/bridge_api_m3.txt`, M2 `docs/v8/bridge_api_m2.txt`, M1.5 `docs/v8/bridge_api_m1_5.txt`, M1 `docs/v8/bridge_api_m1.txt`, V8-0 `docs/v8/bridge_api_v7_final.txt` minus `docs/v8/bridge_api_removed.txt`)
 (a pass that changes the API updates this command; section 6).
 
 | concern | methods |
@@ -236,10 +236,11 @@ after a reset or a load). The exact exported list is checked by gate step 13, cu
 | built space and rooms (M3) | orders `cmd_place_line`, `cmd_place_rect`, `cmd_designate_dig`, `cmd_designate_deconstruct`, `cmd_set_room_role` (`ffi/space.rs`; `cmd_place_blueprint` kinds `log_wall`, `stone_wall`, `door`, `packed_floor`, `bedroll`); reads `get_place_preview` (drag ghost with per-tile reasons), `get_space` (walls, doors, floors, dug tiles), `get_rooms`, `get_room_detail(room_id)`; `get_colony_versions`' `rooms_version`; `get_colony_overlay`'s `item_covered`; `get_agent_economy`'s `bed`, `bed_room` |
 | knowledge (M4) | orders `cmd_order_teach(teacher, learner, node)`, `cmd_cancel_teach(order)`, `cmd_designate_clay` (`ffi/knowledge.rs`; `cmd_place_blueprint` kinds `grinding_stone`, `pottery_bench`; recipes `knap_fine_blade`, `grind_axe`, `form_pot`, `fire_pot`); reads `get_tech` (per node state, holders, practitioners, names; era progress ‰ and label; at-risk count), `get_tech_node(node)` (holders with proficiency, learners, discovery conditions, gates), `get_agent_knowledge(agent_id)` (entries with proficiency, source, last use, practitioner flag), `get_teach_orders`, `get_knowledge_waits` (bills, sites and marks waiting for a practitioner, with the missing node); `get_space`'s `ford_xs`, `ford_ys` |
 | story, animals and mood (M5) | orders `cmd_draft(agent, on)`, `cmd_undraft_all`, `cmd_draft_move`, `cmd_draft_attack` (an animal), `cmd_draft_attack_person`, `cmd_designate_hunt(animal)`, `cmd_add_hunt_zone`, `cmd_cancel_hunt`, `cmd_set_dress_order` (`ffi/story.rs`); reads `get_story` (pressures in force, the firewood line, wolves), `get_animals` (deer and wolves, hunt zones), `get_agent_m5(agent_id)` (mood, modifiers, apparel, draft, illness), `get_drafted`, `get_chronicle_why(index)` (the "→ 왜?" chain), `get_year_summary(year)`, `get_teach_suggestion(teacher, node)`; the agent snapshot's `tops`, `mood_bands`, `drafted`, `sick` columns; the chronicle rows' `index`, `link`, `link_entry`, `link_code` |
+| neighbours and trade (M5.5) | orders `cmd_accept_migrants(wave)`, `cmd_decline_migrants(wave)`, `cmd_trade(caravan, give, take)` (`ffi/neighbours.rs`); reads `get_neighbours` (the two neighbours, waves, caravans, clues), `get_wave(wave)` (its people with reserved ids and top knowledge), `get_caravan(caravan)` (goods with values and unknown marks, the colony's stockpiled stacks); the agent snapshot's `fleeing` column; `get_agent_m5`'s `fleeing`; `get_year_summary`'s `migrants_joined`, `trades`, `eurekas` |
 | calendar and ages (M1.5) | `get_time_snapshot`'s `year_index`, `season_index`, `day_of_year`, `days_per_year`; `get_world_info`'s `ticks_per_year`; the agent snapshot's `ages_years`, `infants`, `pregnant_days` columns |
 
 Every getter, key, type, id space and row order is documented in
-`docs/v8/snapshot_schema.md` (schema version 5, M5); the gate step
+`docs/v8/snapshot_schema.md` (schema version 6, M5.5); the gate step
 `schema_docs` (`python3 tools/v8/check_docs_helpers.py schema .`) fails on any
 getter or key missing there (ADR 0016 C2).
 
@@ -506,4 +507,50 @@ chronicle cause side table (Chronicle::causes: CauseRef entry / pressure / modif
   `docs/v8/m5/m5_score.py` (F1–F10; `--story` for the gate's fixture), `tools/v8/m5_u_script.json` and
   `m5_u_nodraft_script.json`; tests `colony_story.rs`, `colony_wildlife.rs`, `colony_hides.rs`, `colony_mood.rs`,
   `engine_story_ffi.rs`.
+
+## 13. Neighbours, migrants and trade (M5.5, ADR 0031–0032; corrections to ADR 0027–0030)
+
+Two neighbours off the map send migrant waves and caravans, under `ColonyRule::neighbours` (`NeighbourRule::M5_5`;
+`None` before M5.5 and in the baseline, where every system below returns at once). Visitors are not ECS entities
+until a wave is accepted (M5.5 DECISIONS D16: V7's proximity sync would admit anyone standing at the hearth):
+
+```
+NeighbourSystem 174 (daily): ColonyState.neighbours — two neighbours drawn from the seed (STREAM_NEIGHBOURS: edge,
+   │  distance, population, attitude, the Neolithic nodes they know), populations drift ±1 %; waves 1 (day 8–12) and 2
+   │  (day 20–26), then a roll each later season (chance from food surplus, stock value, attitude; cap 40 people);
+   │  a caravan date each season (STREAM_TRADE goods: the artifacts the neighbour can make and the colony cannot,
+   │  staples), never in a major pressure or before day 6
+   ▼
+VisitorSystem 175 (every 3, offset 1): a wave / a caravan walks as one group from its edge to the meeting tile by the
+   │  hearth (chronicle MigrantsArrived / TraderArrived); a wave waits a day for AcceptMigrants / DeclineMigrants
+   │  (unanswered: it leaves, attitude −5), a caravan trades a day, then they walk out
+   ▼
+commands: AcceptMigrants → neighbours::join (founder-like colonists: reserved AgentIds, Knowledge source Migrant,
+   │  wraps, settlement membership; beds at 20:00) · Trade → neighbours::trade (80 % / 120 % balance; taken goods on the
+   │  spot = ledger traded_in; given stacks owed) → job layer JobKind::Trade (Haul work, before carcasses and loose
+   │  stacks) carries them to the spot = ledger traded_out
+   ▼
+DiscoverySystem 163: clues (an artifact held that no colonist can make → its producing nodes) count their stockpile
+   │  conditions as met and win the keyed draw ×3 → chronicle Eureka
+   ▼
+bridge ffi/neighbours.rs (get_neighbours, get_wave, get_caravan, cmd_accept_migrants, cmd_decline_migrants,
+    cmd_trade; the snapshot's fleeing) ──► the migrant dialog, the trade dialog, the N panel, the tech map's rumours
+```
+
+- **Corrections** (ADR 0027–0030 amendments): the storyteller holds back an illness during or 2 days after a major
+  and a major while 2 or more are sick (`story::held_back`); `FleeSystem` 123 (every 3) sends undrafted people near a
+  hunting wolf to a roofed room, else the hearth (`Fleeing`; the decision seam skips them; `decision/system.rs` +0);
+  the hunt turns into a haul of the meat at the kill (`hunt::haul_home`; the rest of a carcass is hauled first,
+  `Wildlife::carcasses`); a hide wrap takes 1 cured hide, a knife lasts 4 uses; the mood's pressure weights and the
+  quarrel constants are rule fields; a quarrel's cause is a concrete record (`chronicle::NeedSample` behind
+  `CauseRef::Sample`, a death, a pressure, an earlier quarrel) checked by `mood::check_cause`.
+- **Ledger**: per kind, created + traded_in = ground + carried + held + delivered + shelved + consumed + traded_out.
+- **Items and values**: `sim-core/data/colony/values.ron` (`colony::values::value`: base × (500 + 5 q) / 1,000).
+- **Keyed draws**: `STREAM_NEIGHBOURS`, `STREAM_TRADE`; 38 streams.
+- **Save**: `FORMAT_VERSION` 6 (`Fleeing`, neighbours, waves, caravans, the ledger's traded terms, need samples, the
+  knowledge source `Migrant`, chronicle kinds 38–44).
+- **Measurement**: the probe's `m55` block (`rust/crates/sim-test/src/probe/m55.rs`), `--neighbours on|off`,
+  `docs/v8/m5_5/m55_score.py` (F1–F10; `--neighbours` for the gate's step 30), `tools/v8/m55_u_script.json` and
+  `m55_u_nodraft_script.json`; tests `colony_neighbours.rs`, `engine_neighbours_ffi.rs` and the M5.5 cases in
+  `colony_story.rs`, `colony_wildlife.rs`, `colony_hides.rs`, `colony_mood.rs`.
 

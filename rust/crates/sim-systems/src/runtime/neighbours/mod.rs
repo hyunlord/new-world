@@ -145,10 +145,22 @@ pub fn generate(seed: u64, rule: &NeighbourRule) -> Vec<Neighbour> {
             }
         })
         .collect();
-    // At least one neighbour knows a node of the pottery chain (goal §3.2): the first takes pot forming.
-    if list.iter().all(|n| n.known & pottery_mask() == 0) {
-        if let Some(id) = sim_core::colony::knowledge::id("pot_forming") {
-            list[0].known |= bit(id);
+    // At least one neighbour knows the pottery chain's end, pot firing (goal §3.2: "at least one of the pottery chain";
+    // M5.5 DECISIONS D23 — the one that makes a clay pot, the goal's first artifact): when neither drew it, the first
+    // neighbour's last-drawn Neolithic node is replaced by it (it keeps 2–4).
+    if let Some(firing) = sim_core::colony::knowledge::id("pot_firing") {
+        if list.iter().all(|n| n.known & bit(firing) == 0) {
+            let mut order = neo.clone();
+            for i in (1..order.len()).rev() {
+                let j = draw(16 + 5 + i as u32, (0, i as u64)) as usize;
+                order.swap(i, j);
+            }
+            let (lo, hi) = rule.neolithic_known;
+            let k = draw(16 + 4, (u64::from(lo), u64::from(hi))) as usize;
+            if let Some(last) = order.get(k.min(order.len()).saturating_sub(1)) {
+                list[0].known &= !bit(*last);
+            }
+            list[0].known |= bit(firing);
         }
     }
     list
@@ -313,6 +325,7 @@ pub fn migrants(
                 ((-life.born_tick).max(0) as u64 / year) as u16
             });
             MigrantSpec {
+                agent: 0,
                 key,
                 female: sim_core::components::Sex::from_lineage(seed, key).female,
                 age_years,
@@ -340,7 +353,11 @@ fn send_wave(world: &World, res: &mut SimResources, rule: &NeighbourRule, size: 
         return;
     };
     let id = res.colony.neighbours.waves.len() as u32 + 1;
-    let people = migrants(res.world_seed, rule, &n, id, size, res.rules.society.aging);
+    let mut people = migrants(res.world_seed, rule, &n, id, size, res.rules.society.aging);
+    // Their ids are reserved now, so the dialog names them as the colony will.
+    for p in &mut people {
+        p.agent = res.issue_agent_id();
+    }
     let day = today(res);
     let nb = &mut res.colony.neighbours;
     nb.waves.push(Wave {
@@ -375,9 +392,29 @@ fn plan_season(res: &mut SimResources, rule: &NeighbourRule, index: u32, per_sea
         .chain(res.colony.neighbours.waves.iter().map(|w| w.day))
         .max()
         .unwrap_or(rule.wave2_days.1);
+    // The caravan's date avoids the season's planned majors when it can (M5.5 DECISIONS D23: traders hear of trouble):
+    // its keyed day among the season's days 2–5 that no planned major covers, else the keyed day (the shift rule then
+    // applies on the day).
+    let blocked: Vec<(u32, u32)> = res
+        .colony
+        .story
+        .planned
+        .iter()
+        .chain(res.colony.story.active.iter())
+        .filter(|p| p.kind.is_major())
+        .map(|p| (p.start_day, p.end_day))
+        .collect();
+    let free: Vec<u32> = (first_day + 1..=first_day + days)
+        .filter(|d| !blocked.iter().any(|(s, e)| (*s..*e).contains(d)))
+        .collect();
+    let caravan_day = if free.is_empty() {
+        day_of(0)
+    } else {
+        free[span(seed, 0x53, u64::from(index), 2, (0, free.len() as u64 - 1)) as usize]
+    };
     let nb = &mut res.colony.neighbours;
     if rule.caravans {
-        nb.planned_caravans.push((day_of(0), 0));
+        nb.planned_caravans.push((caravan_day, 0));
     }
     // Seasonal waves begin with the first season that starts after wave 2 (goal §3.2: "then one roll per season").
     if first_day > wave2.max(rule.wave2_days.1) {

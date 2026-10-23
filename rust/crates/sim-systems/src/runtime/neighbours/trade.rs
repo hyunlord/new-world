@@ -318,9 +318,11 @@ pub const fn balanced(rule: &NeighbourRule, give: u64, take: u64) -> bool {
     give * rule.buy_permille as u64 >= take * rule.sell_permille as u64
 }
 
-/// Apply a `Trade` with caravan `caravan` (see the module header); `Ok(items given + taken)`.
+/// Apply a `Trade` with caravan `caravan` (see the module header); `Ok(items given + taken)`. `practice` is the nodes
+/// the colony practises now (the unknown artifacts bought are counted, F8).
 pub fn trade(
     res: &mut SimResources,
+    practice: u32,
     caravan: u32,
     give: &[((u32, u32), u16)],
     take: &[(u16, u16)],
@@ -352,6 +354,10 @@ pub fn trade(
             continue;
         };
         g.count -= count;
+        let nodes = producing_nodes(g.kind);
+        if !nodes.is_empty() && nodes.iter().any(|n| practice & bit(*n) == 0) {
+            res.colony.neighbours.tallies.unknown_bought += u64::from(count);
+        }
         let spec = sim_core::colony::ItemSpec {
             kind: g.kind,
             material: None,

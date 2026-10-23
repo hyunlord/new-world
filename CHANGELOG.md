@@ -5,6 +5,51 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## M5.5 — 2026-10-24
+
+Neighbours and the M5 corrections (`docs/v8/m5_5/M55_GOAL.md`): two neighbours off the map send migrant waves who bring
+their knowledge and seasonal caravans whose goods are clues to technologies the colony lacks and who buy its surplus
+blades; the undrafted flee from wolves, pressures no longer stack, the hunter carries the meat home, a wrap takes one
+hide and a knife four uses, mood and quarrels are tuned to be felt and every quarrel's cause is a record that can be
+checked; ADR 0016 is amended for the memory instrument. Report: `docs/v8/m5_5/M55_REPORT.md`.
+
+### Added
+- ADR 0031 (neighbours and migrants), ADR 0032 (traders, barter, eureka); amendments to ADR 0016 (memory instrument),
+  0027 (no stacked pressure), 0028 (flight, the hunter's haul), 0029 (one hide a wrap, four uses a knife), 0030 (mood
+  tuned, causes as records).
+- `ColonyRule::M5_5` (`WorldRules::colony` uses it): `StoryRule::M5_5`, `WildlifeRule::M5_5`, `MoodRule::M5_5`,
+  `NeighbourRule::M5_5`.
+- Systems: `FleeSystem` (123, every 3), `NeighbourSystem` (174, daily), `VisitorSystem` (175, every 3, offset 1).
+- Neighbours (`ColonyState::neighbours`): two per world from the seed (`STREAM_NEIGHBOURS`); migrant waves on days
+  8–12 and 20–26 and a seasonal roll after (cap 40 people), accepted or declined by the player; migrants join with
+  reserved ids, their neighbour's knowledge (source `Migrant`, floored as apprenticed) and a wrap half the time.
+- Caravans one a season (`STREAM_TRADE` goods, never in a major or before day 6), barter at 80 % / 120 % of the value
+  table `sim-core/data/colony/values.ron`, `JobKind::Trade` hauling owed items to the caravan, the ledger terms
+  `traded_in` / `traded_out`, attitude +3 a trade and +1 per 10 of a gift; eureka: an artifact no colonist can make
+  triples the discovery draw of its producing nodes and meets their stockpile conditions.
+- Commands `AcceptMigrants`, `DeclineMigrants`, `Trade` (reasons `NoVisitor`, `Unbalanced`), the probe and test order
+  `DebugGive`; chronicle kinds 38–44 (`MigrantsArrived`, `MigrantsJoined`, `MigrantsDeclined`, `TraderArrived`,
+  `Traded`, `TraderLeft`, `Eureka`); the chronicle's need samples (`NeedSample`, `CauseRef::Sample`).
+- Bridge (`ffi/neighbours.rs`): `get_neighbours`, `get_wave`, `get_caravan`, `cmd_accept_migrants`,
+  `cmd_decline_migrants`, `cmd_trade`; the agent snapshot's `fleeing`; `get_agent_m5`'s `fleeing`;
+  `get_year_summary`'s `migrants_joined`, `trades`, `eurekas` (`docs/v8/bridge_api_m5_5.txt`, schema 6).
+- Benchmark: the RSS outer bound (5 build-only repeats; ceilings `rss_per_agent_le_5120`, `rss_per_tile_le_128`).
+- Gate step 30 `neighbours` (two worlds × 48 days: waves accepted, a trade, ledger exact).
+- Probe: the `m55` block, `--neighbours on|off`; `tools/v8/m55_u_script.json`, `m55_u_nodraft_script.json`;
+  `docs/v8/m5_5/m55_score.py`.
+
+### Changed
+- The storyteller holds an illness back during or 2 days after a major and a major while 2 or more are sick.
+- Undrafted people near a hunting wolf flee to a roofed room or the hearth they reach first (the decision seam skips
+  them; `decision/system.rs` +0) and strike back at half damage; wolves run two tiles a step when they chase.
+- A kill turns the hunt into a haul of the meat to the nearest stockpile cell; a carcass's leftovers are hauled first.
+- `make_hide_wrap` takes 1 cured hide (was 2); a knife lasts 4 uses (was 8).
+- Mood (calibrated on seeds 0–7, DECISIONS D15): pressure weight −80 (was −40), sick −160 (was −80), breakdown at 105
+  (was 100); quarrel base 1 ‰ (was 2), relation divisor 200 (was 100), mood divisor 40 (was 25).
+- A quarrel's cause is a concrete record (a need sample, a death, a pressure, an earlier quarrel), checked by
+  `mood::check_cause`.
+- Save format 6.
+
 ## M5 — 2026-10-23
 
 Pressure and story (`docs/v8/m5/M5_GOAL.md`): a storyteller sends cold snaps, droughts, wolf packs and illness at

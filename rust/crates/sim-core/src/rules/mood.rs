@@ -157,5 +157,15 @@ impl MoodRule {
     };
 
     /// The M5.5 values: [`Self::M5`] as calibrated on seeds 0–7 (goal M5.5 §3.1.6; M5.5 DECISIONS, calibration rounds).
-    pub const M5_5: Self = Self { ..Self::M5 };
+    pub const M5_5: Self = Self {
+        // Calibration (M5.5 DECISIONS D15): r1 fewer quarrels between strangers, the pressure felt more; r2 a
+        // breakdown a little rarer, a low mood less quarrelsome.
+        quarrel_base_permille: 1,
+        quarrel_relation_divisor: 200,
+        quarrel_mood_divisor: 40,
+        pressure_weight: -80,
+        sick_weight: -160,
+        breakdown: 105,
+        ..Self::M5
+    };
 }

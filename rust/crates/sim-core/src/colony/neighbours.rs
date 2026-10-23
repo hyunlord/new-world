@@ -77,6 +77,9 @@ pub struct Neighbour {
 /// One person of a migrant wave before they join: what the dialog shows and what they bring.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct MigrantSpec {
+    /// The `AgentId` they will have, reserved when the wave set out (the dialog names them by it).
+    #[serde(default)]
+    pub agent: crate::components::AgentId,
     /// The lineage key they will carry (keyed on the wave and their place in it).
     pub key: u64,
     /// Whether they are a woman (`Sex::from_lineage` of the key).
@@ -222,6 +225,9 @@ pub struct NeighbourTallies {
     pub value_taken: u64,
     /// Discoveries helped by an artifact (eureka).
     pub eurekas: u64,
+    /// Items taken in trades whose producing node no living colonist practised at the trade (F8).
+    #[serde(default)]
+    pub unknown_bought: u64,
 }
 
 /// The colony's neighbours and their visitors (`ColonyState::neighbours`; ADR 0031, 0032).

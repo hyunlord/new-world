@@ -12,6 +12,7 @@
 //! - `quarrels`: each quarrel `{tick, a, b, cause, resolved, reason}` checked by `mood::check_cause` with a 2-day
 //!   window (F6), at the end of the run;
 //! - `overlap`: minor pressures that began during a major or within 2 days after one ended (F1);
+//! - `apparel`: people wearing a top (hide wrap or fur cloak) at the end of day 30 and at the end (F4);
 //! - `population`: people at the start and at the end, the most at once and the fewest after day 1 (F1, F7);
 //! - `neighbours`: the two neighbours at the end, every wave `{id, neighbour, day, arrived, size, answer, joined,
 //!   neolithic_practitioners}` (a migrant who brought a Neolithic node at or above its threshold, F7), every caravan
@@ -44,7 +45,18 @@ pub struct M55Watch {
     most_people: u64,
     fewest_people: Option<u64>,
     wave_arrived: BTreeMap<u32, u64>,
+    wearers_day30: Option<u64>,
     caravan_arrived: BTreeMap<u32, u64>,
+    caravan_offered: BTreeMap<u32, Value>,
+}
+
+/// People wearing a top (hide wrap or fur cloak).
+fn wearers(engine: &SimEngine) -> u64 {
+    engine
+        .world
+        .query::<&sim_core::colony::people::Apparel>()
+        .iter()
+        .count() as u64
 }
 
 fn cheb(a: (u32, u32), b: (u32, u32)) -> u32 {
@@ -84,7 +96,17 @@ impl M55Watch {
                 sim_core::colony::neighbours::VisitState::Waiting { .. }
             ) {
                 self.caravan_arrived.entry(c.id).or_insert(tick);
+                self.caravan_offered.entry(c.id).or_insert_with(|| {
+                    json!(c
+                        .goods
+                        .iter()
+                        .map(|g| json!([g.kind.name(), g.count, g.quality]))
+                        .collect::<Vec<_>>())
+                });
             }
+        }
+        if tick + 1 == 30 * 1_440 {
+            self.wearers_day30 = Some(wearers(engine));
         }
         let Some(rule) = sim_systems::runtime::wildlife::rule(res) else {
             return;
@@ -219,6 +241,7 @@ impl M55Watch {
             .map(|c| {
                 json!({"id": c.id, "neighbour": c.neighbour, "day": c.day, "arrived": self.caravan_arrived.get(&c.id),
                     "trades": c.trades, "goods_left": c.goods.iter().map(|g| u64::from(g.count)).sum::<u64>(),
+                    "offered": self.caravan_offered.get(&c.id),
                     "goods": c.goods.iter().map(|g| json!([g.kind.name(), g.count, g.quality])).collect::<Vec<_>>()})
             })
             .collect();
@@ -246,6 +269,7 @@ impl M55Watch {
             "flight": {"episodes": self.episodes, "moved_away": self.moved_away,
                 "open_at_end": self.open.len()},
             "min_hp": self.min_hp,
+            "apparel": {"wearers_day30": self.wearers_day30, "wearers_end": wearers(engine)},
             "wolf_deaths": self.wolf_deaths,
             "quarrels": quarrels,
             "quarrels_resolved": resolved,

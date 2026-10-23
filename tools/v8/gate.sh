@@ -2,7 +2,7 @@
 # usage: gate.sh <log_dir> [--base-data DIR]
 #
 # V8 gate (V8-0 goal 11.1; M1 11.3 added steps 17-20; V8-PLAY 2.3 added step 21; M1.5 10.4 added steps
-# 22-25; M3 added steps 26-27; M4 added step 28; M5 added step 29). Twenty-nine steps, each logged to <log_dir>/<step>.log
+# 22-25; M3 added steps 26-27; M4 added step 28; M5 added step 29; M5.5 added step 30). Thirty steps, each logged to <log_dir>/<step>.log
 # with its start time, duration and exit code in <log_dir>/gate.txt. The
 # gate passes only when every step except `perf` and `nav_bench` (report only) exits 0.
 #    1 fmt               cargo fmt --all -- --check
@@ -19,7 +19,7 @@
 #   11 determinism       probe --check-determinism, seeds 0..4
 #   12 perf              tools/v8/perf.sh + perf_summary.py --compare (report only;
 #                        > +10 % mean is a WARN)
-#   13 bridge_api        tools/v8/bridge_api.py --check docs/v8/bridge_api_m5.txt
+#   13 bridge_api        tools/v8/bridge_api.py --check docs/v8/bridge_api_m5_5.txt
 #   14 docs              tools/v8/check_docs.sh
 #   15 inventory_closure tools/v8/inventory.py check docs/v8/V8_0_INVENTORY.md
 #   16 python_unittest   python3 -m unittest discover -s tools/v8 -p 'test_*.py'
@@ -49,6 +49,9 @@
 #   29 story             the storyteller fixture (M5 goal §12): colony seeds 0..2 × 48 days with
 #                        tools/v8/m5_u_script.json (no panic: the probe exits 0), scored by
 #                        docs/v8/m5/m5_score.py --story (F1's schedule, ledger and reservations exact every tick)
+#   30 neighbours        the neighbours fixture (M5.5 goal §11): colony seeds 0..2 × 48 days with
+#                        tools/v8/m55_u_script.json, scored by docs/v8/m5_5/m55_score.py --neighbours (two
+#                        neighbours, waves 1 and 2 in their windows and accepted, a trade, ledger and reservations exact)
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
@@ -90,7 +93,7 @@ step 11 determinism bash -c 'cd rust && cargo build --release -p sim-test --bin 
 grep -q 'DETERMINISM PASS' "$LOG/determinism.log" || { echo "   determinism: no DETERMINISM PASS line" >> "$SUMMARY"; status=1; }
 step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && bash tools/v8/perf.sh rust/target/release "$0/perf" candidate > /dev/null && python3 tools/v8/perf_summary.py --compare "$1/perf/perf_summary.json" "$0/perf/perf_summary.json"' "$LOG" "$BASE_DATA"
 grep -E 'WARN|OK \(' "$LOG/perf.log" | sed 's/^/   /' >> "$SUMMARY"
-step 13 bridge_api python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_m5.txt
+step 13 bridge_api python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_m5_5.txt
 step 14 docs bash tools/v8/check_docs.sh
 step 15 inventory_closure python3 tools/v8/inventory.py check docs/v8/V8_0_INVENTORY.md
 step 16 python_unittest python3 -m unittest discover -s tools/v8 -p 'test_*.py'
@@ -124,6 +127,11 @@ grep -E '^F10|test result' "$LOG/knowledge.log" | sed 's/^/   /' >> "$SUMMARY"
 # M5 (goal §12): the storyteller fixture — two worlds through two years of pressure.
 step 29 story bash -c 'rust/target/release/worldsim_probe --scene colony --seeds 0..2 --days 48 --workers 2 --commands tools/v8/m5_u_script.json --out "$0/story" > /dev/null && python3 docs/v8/m5/m5_score.py --story "$0/story/summary.json"' "$LOG"
 grep -E '^STORY' "$LOG/story.log" | sed 's/^/   /' >> "$SUMMARY"
+# M5.5 (goal §11): the neighbours fixture — two worlds × 48 days with neighbours on, every wave accepted, the blade
+# trade at every caravan: waves 1 and 2 in their windows and accepted, at least one trade, ledger exact (with traded
+# in and out) and reservations exact every tick.
+step 30 neighbours bash -c 'rust/target/release/worldsim_probe --scene colony --seeds 0..2 --days 48 --workers 2 --commands tools/v8/m55_u_script.json --out "$0/neighbours" > /dev/null && python3 docs/v8/m5_5/m55_score.py --neighbours "$0/neighbours/summary.json"' "$LOG"
+grep -E '^NEIGHBOURS' "$LOG/neighbours.log" | sed 's/^/   /' >> "$SUMMARY"
 echo "finished $(date '+%Y-%m-%d %H:%M:%S %Z') status $status" >> "$SUMMARY"
 cat "$SUMMARY"
 exit "$status"

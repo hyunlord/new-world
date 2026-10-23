@@ -573,6 +573,15 @@ fn wolf_steps(
                     w.state = AnimalState::Hunt;
                 }
                 wolf_walk(res, id, p);
+                // M5.5 (calibration r1): a wolf outruns a person it chases within the flight distance.
+                let chasing = chebyshev(p, a.pos) <= rule.flee_tiles;
+                for _ in 1..rule.wolf_chase_tiles.max(1) {
+                    let at = res.colony.wildlife.animals.get(&id).map(|w| w.pos);
+                    if !chasing || at.is_none_or(|at| chebyshev(at, p) <= 1) {
+                        break;
+                    }
+                    wolf_walk(res, id, p);
+                }
             }
             None => {
                 fight::drop_fights_of_attacker(res, Fighter::Animal(id));

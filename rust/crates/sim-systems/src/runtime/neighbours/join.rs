@@ -69,7 +69,12 @@ fn spawn(
 ) -> (AgentId, Entity) {
     let seed = res.world_seed;
     let now = res.current_tick;
-    let id = res.issue_agent_id();
+    // The id reserved when the wave set out (a spec without one takes the next).
+    let id = if spec.agent != 0 {
+        spec.agent
+    } else {
+        res.issue_agent_id()
+    };
     let entity = world.spawn((Position::new(tile.0, tile.1), Agent { id }));
     let rng = MovementRng::new(spec.key ^ 0x4D49_4752_414E_5453);
     let _ = world.insert(

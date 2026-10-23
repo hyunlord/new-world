@@ -333,6 +333,8 @@ pub struct AgentM5View {
     pub sick_ticks_left: i64,
     /// Hit points (0..=100).
     pub hp: i32,
+    /// M5.5: running from a wolf.
+    pub fleeing: bool,
 }
 
 /// Person `agent_id`'s mood, modifiers, apparel, draft and illness.
@@ -399,6 +401,9 @@ pub fn collect_agent_m5(world: &hecs::World, res: &SimResources, agent_id: i64) 
         hp: world
             .get::<&BodyHealth>(entity)
             .map_or(0, |h| h.hp.clamp(0.0, 100.0) as i32),
+        fleeing: world
+            .get::<&sim_core::colony::people::Fleeing>(entity)
+            .is_ok(),
     }
 }
 
@@ -427,6 +432,7 @@ pub(super) fn agent_m5_to_dict(v: &AgentM5View) -> VarDictionary {
     d.set("draft_x", v.draft_x);
     d.set("draft_y", v.draft_y);
     d.set("sick", v.sick);
+    d.set("fleeing", v.fleeing);
     d.set("sick_ticks_left", v.sick_ticks_left);
     d.set("hp", v.hp);
     d
@@ -647,6 +653,12 @@ pub struct YearSummary {
     pub wolves_killed: u32,
     /// Era progress ‰ now (the tech aggregate's).
     pub era_progress: u16,
+    /// M5.5: people who joined from migrant waves.
+    pub migrants_joined: u32,
+    /// M5.5: trades and gifts.
+    pub trades: u32,
+    /// M5.5: discoveries helped by an artifact.
+    pub eurekas: u32,
 }
 
 /// The summary of year `year` (0-based) from the chronicle, by entry tick.
@@ -691,6 +703,11 @@ pub fn collect_year_summary(res: &SimResources, year: i64) -> YearSummary {
             ChronicleKind::Breakdown => bump(&mut out.breakdowns),
             ChronicleKind::Hunted if e.cause == AnimalKind::Deer.code() => bump(&mut out.hunted),
             ChronicleKind::WolfKilled => bump(&mut out.wolves_killed),
+            ChronicleKind::MigrantsJoined => {
+                out.migrants_joined = out.migrants_joined.saturating_add((e.value & 0xFF) as u32)
+            }
+            ChronicleKind::Traded => bump(&mut out.trades),
+            ChronicleKind::Eureka => bump(&mut out.eurekas),
             _ => {}
         }
     }
@@ -716,6 +733,9 @@ pub(super) fn year_summary_to_dict(s: &YearSummary) -> VarDictionary {
     d.set("hunted", i64::from(s.hunted));
     d.set("wolves_killed", i64::from(s.wolves_killed));
     d.set("era_progress", i64::from(s.era_progress));
+    d.set("migrants_joined", i64::from(s.migrants_joined));
+    d.set("trades", i64::from(s.trades));
+    d.set("eurekas", i64::from(s.eurekas));
     d
 }
 

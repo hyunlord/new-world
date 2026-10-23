@@ -79,12 +79,20 @@ pub struct WildlifeRule {
     /// A fleeing person's blows at a wolf, ‰ of the weapon's damage (goal M5.5 §3.1.2: 500).
     #[serde(default = "flee_defence")]
     pub flee_defence_permille: u32,
+    /// Tiles a wolf runs a step while chasing a person within `flee_tiles` (M5.5 calibration r1, DECISIONS D15: 2 —
+    /// a wolf outruns a person; M5: 1, the person's pace).
+    #[serde(default = "one")]
+    pub wolf_chase_tiles: u32,
     /// M5.5 (ADR 0028 amendment): a hunter carries the kill's meat to a stockpile right after the kill. `false` = M5.
     #[serde(default)]
     pub hunter_hauls: bool,
     /// Most meat the hunter carries home (goal M5.5 §3.1.3: 3).
     #[serde(default = "hunter_meat")]
     pub hunter_meat: u16,
+}
+
+const fn one() -> u32 {
+    1
 }
 
 const fn flee_tiles() -> u32 {
@@ -141,6 +149,7 @@ impl WildlifeRule {
         flee_tiles: 8,
         flee_ticks: 30,
         flee_defence_permille: 500,
+        wolf_chase_tiles: 1,
         hunter_hauls: false,
         hunter_meat: 3,
     };
@@ -149,6 +158,7 @@ impl WildlifeRule {
     pub const M5_5: Self = Self {
         knife_uses: 4,
         flee: true,
+        wolf_chase_tiles: 2,
         hunter_hauls: true,
         ..Self::M5
     };
