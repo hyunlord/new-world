@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "categories": [
+    {
+      "category": "Stone",
+      "default_style": "drystone",
+      "kind_defaults": {
+        "wall": "drystone",
+        "floor": "packed_earth",
+        "door": "inset_door"
+      },
+      "tint": {
+        "dL": 0,
+        "da": 0,
+        "db": 0
+      }
+    },
+    {
+      "category": "Wood",
+      "default_style": "log",
+      "kind_defaults": {
+        "wall": "log",
+        "floor": "packed_earth",
+        "door": "slab_door"
+      },
+      "tint": {
+        "dL": 0,
+        "da": 0,
+        "db": 0
+      }
+    },
+    {
+      "category": "Animal",
+      "default_style": "log",
+      "kind_defaults": {
+        "wall": "log",
+        "floor": "packed_earth",
+        "door": "slab_door"
+      },
+      "tint": {
+        "dL": 0,
+        "da": 0,
+        "db": 0
+      }
+    },
+    {
+      "category": "Mineral",
+      "default_style": "drystone",
+      "kind_defaults": {
+        "wall": "drystone",
+        "floor": "packed_earth",
+        "door": "inset_door"
+      },
+      "tint": {
+        "dL": 0,
+        "da": 0,
+        "db": 0
+      }
+    },
+    {
+      "category": "Plant",
+      "default_style": "log",
+      "kind_defaults": {
+        "wall": "log",
+        "floor": "packed_earth",
+        "door": "slab_door"
+      },
+      "tint": {
+        "dL": 0,
+        "da": 0,
+        "db": 0
+      }
+    },
+    {
+      "category": "Mod",
+      "default_style": "log",
+      "kind_defaults": {
+        "wall": "log",
+        "floor": "packed_earth",
+        "door": "slab_door"
+      },
+      "tint": {
+        "dL": 0,
+        "da": 0,
+        "db": 0
+      }
+    }
+  ]
+}

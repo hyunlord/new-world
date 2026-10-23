@@ -1,0 +1,105 @@
+{
+  "$defs": {
+    "CategoryDefault": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "title": "Category",
+          "type": "string"
+        },
+        "default_style": {
+          "title": "Default Style",
+          "type": "string"
+        },
+        "kind_defaults": {
+          "$ref": "#/$defs/KindDefaults"
+        },
+        "tint": {
+          "$ref": "#/$defs/LabTint"
+        }
+      },
+      "required": [
+        "category",
+        "default_style",
+        "kind_defaults",
+        "tint"
+      ],
+      "title": "CategoryDefault",
+      "type": "object"
+    },
+    "KindDefaults": {
+      "additionalProperties": false,
+      "properties": {
+        "wall": {
+          "title": "Wall",
+          "type": "string"
+        },
+        "floor": {
+          "title": "Floor",
+          "type": "string"
+        },
+        "door": {
+          "title": "Door",
+          "type": "string"
+        }
+      },
+      "required": [
+        "wall",
+        "floor",
+        "door"
+      ],
+      "title": "KindDefaults",
+      "type": "object"
+    },
+    "LabTint": {
+      "additionalProperties": false,
+      "properties": {
+        "dL": {
+          "default": 0,
+          "maximum": 100,
+          "minimum": -100,
+          "title": "Dl",
+          "type": "number"
+        },
+        "da": {
+          "default": 0,
+          "maximum": 128,
+          "minimum": -128,
+          "title": "Da",
+          "type": "number"
+        },
+        "db": {
+          "default": 0,
+          "maximum": 128,
+          "minimum": -128,
+          "title": "Db",
+          "type": "number"
+        }
+      },
+      "title": "LabTint",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "categories": {
+      "items": {
+        "$ref": "#/$defs/CategoryDefault"
+      },
+      "minItems": 1,
+      "title": "Categories",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "categories"
+  ],
+  "title": "CategoriesDocument",
+  "type": "object"
+}

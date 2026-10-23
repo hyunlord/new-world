@@ -1,0 +1,567 @@
+{
+  "schema_version": 1,
+  "source_revision": "cb58a801d656291a04a5ebfb3be9805845ee6433",
+  "source_path": "rust/crates/sim-core/data/material/**",
+  "materials": [
+    {
+      "id": "acacia",
+      "category": "Wood",
+      "sim_id": 4049192823
+    },
+    {
+      "id": "agate",
+      "category": "Stone",
+      "sim_id": 252997639
+    },
+    {
+      "id": "andesite",
+      "category": "Stone",
+      "sim_id": 80967058
+    },
+    {
+      "id": "anthracite",
+      "category": "Stone",
+      "sim_id": 799279016
+    },
+    {
+      "id": "antler",
+      "category": "Animal",
+      "sim_id": 4062930443
+    },
+    {
+      "id": "ash",
+      "category": "Wood",
+      "sim_id": 193486529
+    },
+    {
+      "id": "bamboo",
+      "category": "Wood",
+      "sim_id": 4086386741
+    },
+    {
+      "id": "bark",
+      "category": "Plant",
+      "sim_id": 2090104933
+    },
+    {
+      "id": "basalt",
+      "category": "Stone",
+      "tint": {
+        "dL": -15,
+        "da": -1,
+        "db": -2
+      },
+      "sim_id": 4086601180
+    },
+    {
+      "id": "beech",
+      "category": "Wood",
+      "sim_id": 254115484
+    },
+    {
+      "id": "berries",
+      "category": "Plant",
+      "sim_id": 1869815697
+    },
+    {
+      "id": "birch",
+      "category": "Wood",
+      "tint": {
+        "dL": 12,
+        "da": -3,
+        "db": -3
+      },
+      "sim_id": 254273389
+    },
+    {
+      "id": "bone",
+      "category": "Animal",
+      "sim_id": 2090120041
+    },
+    {
+      "id": "cedar",
+      "category": "Wood",
+      "sim_id": 255300260
+    },
+    {
+      "id": "chalcedony",
+      "category": "Stone",
+      "sim_id": 86003711
+    },
+    {
+      "id": "chalk",
+      "category": "Mineral",
+      "sim_id": 255405160
+    },
+    {
+      "id": "cherry",
+      "category": "Wood",
+      "sim_id": 4133553618
+    },
+    {
+      "id": "chert",
+      "category": "Stone",
+      "sim_id": 255409723
+    },
+    {
+      "id": "claw",
+      "category": "Animal",
+      "sim_id": 2090152300
+    },
+    {
+      "id": "clay",
+      "category": "Mineral",
+      "sim_id": 2090152302
+    },
+    {
+      "id": "copper_ore",
+      "category": "Mineral",
+      "sim_id": 1172219283
+    },
+    {
+      "id": "cotton",
+      "category": "Plant",
+      "sim_id": 4142396188
+    },
+    {
+      "id": "cypress",
+      "category": "Wood",
+      "sim_id": 3941615790
+    },
+    {
+      "id": "diorite",
+      "category": "Stone",
+      "sim_id": 310768629
+    },
+    {
+      "id": "dolomite",
+      "category": "Stone",
+      "sim_id": 703471810
+    },
+    {
+      "id": "ebony",
+      "category": "Wood",
+      "sim_id": 257576706
+    },
+    {
+      "id": "elm",
+      "category": "Wood",
+      "sim_id": 193490659
+    },
+    {
+      "id": "fang",
+      "category": "Animal",
+      "sim_id": 2090248545
+    },
+    {
+      "id": "feather",
+      "category": "Animal",
+      "sim_id": 2720630404
+    },
+    {
+      "id": "fir",
+      "category": "Wood",
+      "sim_id": 193491654
+    },
+    {
+      "id": "flax",
+      "category": "Plant",
+      "sim_id": 2090260112
+    },
+    {
+      "id": "flint",
+      "category": "Stone",
+      "sim_id": 259115458
+    },
+    {
+      "id": "fur_bear",
+      "category": "Animal",
+      "sim_id": 3710289707
+    },
+    {
+      "id": "fur_fox",
+      "category": "Animal",
+      "sim_id": 3366200830
+    },
+    {
+      "id": "fur_rabbit",
+      "category": "Animal",
+      "sim_id": 3857677381
+    },
+    {
+      "id": "gabbro",
+      "category": "Stone",
+      "sim_id": 4281668498
+    },
+    {
+      "id": "gneiss",
+      "category": "Stone",
+      "sim_id": 2233646
+    },
+    {
+      "id": "gold_ore",
+      "category": "Mineral",
+      "sim_id": 3991207376
+    },
+    {
+      "id": "granite",
+      "category": "Stone",
+      "tint": {
+        "dL": 0,
+        "da": 0,
+        "db": 0
+      },
+      "sim_id": 225677135
+    },
+    {
+      "id": "gut",
+      "category": "Animal",
+      "sim_id": 193493141
+    },
+    {
+      "id": "gypsum",
+      "category": "Stone",
+      "sim_id": 15685034
+    },
+    {
+      "id": "gypsum_raw",
+      "category": "Mineral",
+      "sim_id": 4006356115
+    },
+    {
+      "id": "halite",
+      "category": "Stone",
+      "sim_id": 26203644
+    },
+    {
+      "id": "hemp",
+      "category": "Plant",
+      "sim_id": 2090324751
+    },
+    {
+      "id": "herbs",
+      "category": "Plant",
+      "sim_id": 261245145
+    },
+    {
+      "id": "hickory",
+      "category": "Wood",
+      "sim_id": 1167197086
+    },
+    {
+      "id": "hide_thick",
+      "category": "Animal",
+      "sim_id": 796675985
+    },
+    {
+      "id": "hide_thin",
+      "category": "Animal",
+      "sim_id": 805044849
+    },
+    {
+      "id": "horn",
+      "category": "Animal",
+      "sim_id": 2090335804
+    },
+    {
+      "id": "iron_ore",
+      "category": "Mineral",
+      "sim_id": 3037449410
+    },
+    {
+      "id": "ivory",
+      "category": "Animal",
+      "sim_id": 263039262
+    },
+    {
+      "id": "jasper",
+      "category": "Stone",
+      "sim_id": 104733130
+    },
+    {
+      "id": "juniper",
+      "category": "Wood",
+      "sim_id": 4232731650
+    },
+    {
+      "id": "lead_ore",
+      "category": "Mineral",
+      "sim_id": 1874790336
+    },
+    {
+      "id": "leaf_dye",
+      "category": "Plant",
+      "sim_id": 1877150430
+    },
+    {
+      "id": "leather_boar",
+      "category": "Animal",
+      "sim_id": 1469653869
+    },
+    {
+      "id": "leather_cow",
+      "category": "Animal",
+      "sim_id": 825439218
+    },
+    {
+      "id": "leather_deer",
+      "category": "Animal",
+      "sim_id": 1469714985
+    },
+    {
+      "id": "leather_wolf",
+      "category": "Animal",
+      "sim_id": 1470408897
+    },
+    {
+      "id": "lignite",
+      "category": "Stone",
+      "sim_id": 2042946673
+    },
+    {
+      "id": "limestone",
+      "category": "Stone",
+      "tint": {
+        "dL": 14,
+        "da": 1,
+        "db": 5
+      },
+      "sim_id": 3089363381
+    },
+    {
+      "id": "mahogany",
+      "category": "Wood",
+      "sim_id": 959920793
+    },
+    {
+      "id": "maple",
+      "category": "Wood",
+      "sim_id": 267029140
+    },
+    {
+      "id": "marble",
+      "category": "Stone",
+      "sim_id": 222088344
+    },
+    {
+      "id": "mica",
+      "category": "Mineral",
+      "sim_id": 2090508447
+    },
+    {
+      "id": "oak",
+      "category": "Wood",
+      "tint": {
+        "dL": 0,
+        "da": 0,
+        "db": 0
+      },
+      "sim_id": 193501184
+    },
+    {
+      "id": "obsidian",
+      "category": "Stone",
+      "sim_id": 2012203054
+    },
+    {
+      "id": "palm",
+      "category": "Wood",
+      "sim_id": 2090607855
+    },
+    {
+      "id": "papyrus",
+      "category": "Plant",
+      "sim_id": 2611846553
+    },
+    {
+      "id": "peat",
+      "category": "Mineral",
+      "sim_id": 2090611855
+    },
+    {
+      "id": "peridotite",
+      "category": "Stone",
+      "sim_id": 2830603070
+    },
+    {
+      "id": "pine",
+      "category": "Wood",
+      "tint": {
+        "dL": 5,
+        "da": -2,
+        "db": 8
+      },
+      "sim_id": 2090616625
+    },
+    {
+      "id": "poplar",
+      "category": "Wood",
+      "sim_id": 356036083
+    },
+    {
+      "id": "pumice",
+      "category": "Stone",
+      "sim_id": 363040584
+    },
+    {
+      "id": "quartzite",
+      "category": "Stone",
+      "sim_id": 2488640110
+    },
+    {
+      "id": "redwood",
+      "category": "Wood",
+      "sim_id": 1042050361
+    },
+    {
+      "id": "reed",
+      "category": "Plant",
+      "sim_id": 2090683845
+    },
+    {
+      "id": "resin",
+      "category": "Plant",
+      "sim_id": 273105670
+    },
+    {
+      "id": "rhyolite",
+      "category": "Stone",
+      "sim_id": 419602325
+    },
+    {
+      "id": "root_food",
+      "category": "Plant",
+      "sim_id": 3088701616
+    },
+    {
+      "id": "saltpeter",
+      "category": "Mineral",
+      "sim_id": 1530992473
+    },
+    {
+      "id": "sand",
+      "category": "Mineral",
+      "sim_id": 2090715723
+    },
+    {
+      "id": "sandstone",
+      "category": "Stone",
+      "tint": {
+        "dL": 10,
+        "da": 5,
+        "db": 12
+      },
+      "sim_id": 3491853780
+    },
+    {
+      "id": "sap",
+      "category": "Plant",
+      "sim_id": 193505545
+    },
+    {
+      "id": "scale",
+      "category": "Animal",
+      "sim_id": 274200205
+    },
+    {
+      "id": "schist",
+      "category": "Stone",
+      "sim_id": 458921043
+    },
+    {
+      "id": "seeds",
+      "category": "Plant",
+      "sim_id": 274276185
+    },
+    {
+      "id": "sequoia",
+      "category": "Wood",
+      "sim_id": 2348863228
+    },
+    {
+      "id": "serpentinite",
+      "category": "Stone",
+      "sim_id": 376371231
+    },
+    {
+      "id": "shell",
+      "category": "Animal",
+      "sim_id": 274384253
+    },
+    {
+      "id": "silver_ore",
+      "category": "Mineral",
+      "sim_id": 3899861663
+    },
+    {
+      "id": "sinew",
+      "category": "Animal",
+      "sim_id": 274429771
+    },
+    {
+      "id": "slate",
+      "category": "Stone",
+      "sim_id": 274523902
+    },
+    {
+      "id": "soapstone",
+      "category": "Stone",
+      "sim_id": 4010011617
+    },
+    {
+      "id": "soil",
+      "category": "Mineral",
+      "sim_id": 2090730812
+    },
+    {
+      "id": "spruce",
+      "category": "Wood",
+      "sim_id": 474709911
+    },
+    {
+      "id": "straw",
+      "category": "Plant",
+      "sim_id": 274829302
+    },
+    {
+      "id": "sulfur",
+      "category": "Mineral",
+      "sim_id": 480408166
+    },
+    {
+      "id": "talc",
+      "category": "Stone",
+      "sim_id": 2090751593
+    },
+    {
+      "id": "teak",
+      "category": "Wood",
+      "sim_id": 2090755594
+    },
+    {
+      "id": "tin_ore",
+      "category": "Mineral",
+      "sim_id": 3792524693
+    },
+    {
+      "id": "tuff",
+      "category": "Stone",
+      "sim_id": 2090773178
+    },
+    {
+      "id": "walnut",
+      "category": "Wood",
+      "sim_id": 613240032
+    },
+    {
+      "id": "willow",
+      "category": "Wood",
+      "sim_id": 622725027
+    },
+    {
+      "id": "wool_grade_plant",
+      "category": "Plant",
+      "sim_id": 3021244198
+    }
+  ]
+}

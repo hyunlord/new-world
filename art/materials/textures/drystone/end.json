@@ -1,0 +1,36 @@
+{
+  "id": "drystone/end",
+  "attempt": 2,
+  "source": "/Users/rexxa/work/artpolish2-data/materials/originals/drystone_end_try2.png",
+  "source_sha256": "d7d1b118e4b14bd6bf68066dec1e84fda59e6cf59ddc80480cfd59da9b1493c0",
+  "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a169d1-0aa7-7952-8adf-21ec2890edd7/exec-6bc380bf-21f6-4595-b55c-31f7eb58560a.png",
+  "prompt": "Generate ONE isolated vertical wall-end component with actual transparent background, no white backdrop. Use case: game texture asset. Generate ONE narrow vertical the final sprite size solid wall face END piece, front elevation, end of the stacked construction, face only, solid material with transparent surrounding background for a stone-age settlement game. Construction style: dry-stacked irregular grey granite stones fitted in broad courses without mortar; rounded angular stones and ink-lined narrow crevices. Material: granite. Era: Stone Age. Style reference is only for ink/watercolor rendering and palette, not its composition. Natural-history illustration, warm restrained earth colors, dark-brown hand-inked contours and broad watercolor planes; no photorealism, no 3D rendering. Lighting stays upper-left: upper-left facets subtly lit, lower-right facets shaded. Show the terminating ends of three stacked courses, no top surface, no perspective ground No text, frame, ground, scenery, labels or watermark. Broad readable forms surviving reduction to the final sprite size. CRITICAL RETRY CORRECTION: The generated image must be entirely filled with the material from edge to edge, including every corner. DO NOT place a strip or rectangle on a white background. DO NOT add any white or blank gutters, letterboxing, padding or margin. The texture IS the whole canvas. Its exact pixel dimensions will be normalized later, so fill the available image shape completely. Keep opposite repeating edges compatible and identical in average color; no global left-to-right or top-to-bottom lighting gradient. Local upper-left facet lighting only. Use broad uniform material tones and low-contrast surface variation rather than different brightness at opposite edges. The only pixels outside the vertical stack are transparent, never white. Complete rectangular silhouette fills almost entire canvas.",
+  "prompt_sha256": "567fdee77b8f7a8d0c2b35e3ed2a60bfaefdb02e1b96fd90cb0d12d226586b43",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/ground_stone.png",
+      "sha256": "a6a501b0c4ff9b80f434f9d2e409bb31652510a218bd2a1f06522bf745e4a45c"
+    }
+  ],
+  "normalized_path": "/Users/rexxa/work/artpolish2-data/materials/normalized/drystone_end_try2.png",
+  "normalized_sha256": "e650e43d754dd224e0a7fe071c4cd4509085bda1ec5c1d85e093532a27223736",
+  "size": [
+    24,
+    44
+  ],
+  "operations": [
+    "STRUCT alpha>=128 bbox+2 fringe crop (31, 0, 992, 1536)",
+    "uniform LANCZOS scale 0.02497398543184183",
+    "bottom-aligned transparent canvas padding; no pixel edits"
+  ],
+  "opaque": false,
+  "seam_x": null,
+  "seam_y": null,
+  "seam_applicability": "Repeat axes only; isolated end/junction/door do not tile.",
+  "projection": null,
+  "projection_applicability": "Standing doors only; wall components/top/floor do not have a standing silhouette.",
+  "numeric_pass": true,
+  "owner_approval": "NOT_CLAIMED",
+  "visual_rejection": "",
+  "candidate_ready": true
+}

@@ -1,0 +1,50 @@
+{
+  "id": "log/face",
+  "attempt": 1,
+  "source": "/Users/rexxa/work/artpolish2-data/materials/originals/log_face_try1.png",
+  "source_sha256": "6b0f924aaa57f89435977c1aa4d74d1fccd2eaaad10e534ef9459e4533d5c48f",
+  "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a169d1-0aa7-7952-8adf-21ec2890edd7/exec-ad1a6087-e06f-4987-a0ee-87417b33b3f4.png",
+  "prompt": "Use case: game texture asset. Generate ONE wide 256x44 wall FACE strip, front elevation from south, showing 3 stacked courses running east-west, opaque material full bleed for a stone-age settlement game. Construction style: rough stacked oak logs with bark; horizontal cylindrical logs, not smooth milled planks. Material: oak. Era: Stone Age. Style reference is only for ink/watercolor rendering and palette, not its composition. Natural-history illustration, warm restrained earth colors, dark-brown hand-inked contours and broad watercolor planes; no photorealism, no 3D rendering. Lighting stays upper-left: upper-left facets subtly lit, lower-right facets shaded. Seamless left-to-right. Match left and right boundary colors and course heights; no exterior ends, no top surface, no top or bottom exterior black frame No text, frame, ground, scenery, labels or watermark. Broad readable forms surviving reduction to 256x44.",
+  "prompt_sha256": "4958df410b368307a6d50a7fbcfdc2b7ea510d6a6d72e24f8e586c4349d2e3ac",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+      "sha256": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458"
+    }
+  ],
+  "normalized_path": "/Users/rexxa/work/artpolish2-data/materials/normalized/log_face_try1.png",
+  "normalized_sha256": "3ed372b6c9cd7a9500c881178cc0302daf36522c6a8045925b6285933d2a30be",
+  "size": [
+    256,
+    44
+  ],
+  "operations": [
+    "full-frame LANCZOS resize (1983, 793) -> (256, 44)"
+  ],
+  "opaque": true,
+  "seam_x": {
+    "width": 256,
+    "height": 44,
+    "interior_p95": 15.229545454545452,
+    "join_columns": [
+      256,
+      512,
+      768
+    ],
+    "join_mad": [
+      9.325757575757576,
+      9.325757575757576,
+      9.325757575757576
+    ],
+    "limit": 17.513977272727267,
+    "passed": true
+  },
+  "seam_y": null,
+  "seam_applicability": "Repeat axes only; isolated end/junction/door do not tile.",
+  "projection": null,
+  "projection_applicability": "Standing doors only; wall components/top/floor do not have a standing silhouette.",
+  "numeric_pass": true,
+  "owner_approval": "NOT_CLAIMED",
+  "visual_rejection": "",
+  "candidate_ready": true
+}

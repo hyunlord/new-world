@@ -1,0 +1,58 @@
+{
+  "id": "log/door_open",
+  "attempt": 1,
+  "source": "/Users/rexxa/work/artpolish2-data/materials/originals/log_door_open_try1.png",
+  "source_sha256": "072057f6a3a7151fe63a8c42632406d62049e0e40e7b129841987866cac56ccf",
+  "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a169d1-0aa7-7952-8adf-21ec2890edd7/exec-872ca536-f402-4d94-b8a1-8d483fc20daf.png",
+  "prompt": "Use case: transparent game sprite. Generate ONE OPEN rectangular doorway/frame with a fully transparent empty opening and the door slab swung toward the right, in the wall material. Wall construction: rough stacked oak logs with bark; horizontal cylindrical logs, not smooth milled planks. Material: oak. Era: Stone Age. Door slab may use rough timber with plain lashings appropriate to the wall, never modern hardware. Straight-on front elevation from the south with only a very small top visible; not isometric, not a perspective room. Entire standing doorway fills most canvas with generous transparent margin and completely transparent background/opening, no ground or cast shadow. Full square outer silhouette, top lintel horizontal and uprights vertical; no arch. Style reference for controlled dark-brown hand ink and warm watercolor earth tones. Keep upper-left edges brighter, right/bottom surfaces distinctly shaded, strong upper-left light. No text or framing. Will be uniformly reduced to 60 pixels tall and padded to 64x60, so broad shapes.",
+  "prompt_sha256": "47bf841551ee51704af2ec935e02736b1aaf79ef96d7a0ec7b58aac4e908736a",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+      "sha256": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458"
+    }
+  ],
+  "normalized_path": "/Users/rexxa/work/artpolish2-data/materials/normalized/log_door_open_try1.png",
+  "normalized_sha256": "e52c8d34c1443a50103bb06f880fecedf5a00cf1173e21500b2d90d12b69857c",
+  "size": [
+    64,
+    60
+  ],
+  "operations": [
+    "STRUCT alpha>=128 bbox+2 fringe crop (22, 12, 1275, 1194)",
+    "uniform LANCZOS scale 0.050761421319796954",
+    "bottom-aligned transparent canvas padding; no pixel edits"
+  ],
+  "opaque": false,
+  "seam_x": null,
+  "seam_y": null,
+  "seam_applicability": "Repeat axes only; isolated end/junction/door do not tile.",
+  "projection": {
+    "family": "door",
+    "anchor": [
+      32,
+      59
+    ],
+    "height_band": [
+      58,
+      62
+    ],
+    "height_band_override": false,
+    "opaque_pixels": 2505,
+    "base_row": 59,
+    "base_error": 0,
+    "height": 60,
+    "gradient_x": -2.2909409261576976,
+    "gradient_y": -1.4362997938144326,
+    "light_angle_degrees": 212.08555475718268,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "projection_applicability": "Standing doors only; wall components/top/floor do not have a standing silhouette.",
+  "numeric_pass": true,
+  "owner_approval": "NOT_CLAIMED",
+  "visual_rejection": "",
+  "candidate_ready": true
+}

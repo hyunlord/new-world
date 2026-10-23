@@ -1,0 +1,50 @@
+{
+  "id": "log/top_ns",
+  "attempt": 1,
+  "source": "/Users/rexxa/work/artpolish2-data/materials/originals/log_top_ns_try1.png",
+  "source_sha256": "d8e10f878377758925a24eef1047e9df2e77f633ff27fbd13695af55bcb910e9",
+  "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a169d1-0aa7-7952-8adf-21ec2890edd7/exec-0cd1790b-fca5-4eb7-828e-0020ea17750b.png",
+  "prompt": "Use case: game texture asset. Generate ONE tall narrow 64x256 wall TOP strip seen exactly overhead; the built courses and long axes lie vertically NORTH-SOUTH top-to-bottom for a stone-age settlement game. Construction style: rough stacked oak logs with bark; horizontal cylindrical logs, not smooth milled planks. Material: oak. Era: Stone Age. Style reference is only for ink/watercolor rendering and palette, not its composition. Natural-history illustration, warm restrained earth colors, dark-brown hand-inked contours and broad watercolor planes; no photorealism, no 3D rendering. Lighting stays upper-left: upper-left facets subtly lit, lower-right facets shaded. Independently draw north-south geometry with light from UPPER LEFT. Do NOT rotate an east-west texture. Seamless top-to-bottom; top/bottom boundary colors and course positions compatible. No wall face, no log ends, no planks or decking No text, frame, ground, scenery, labels or watermark. Broad readable forms surviving reduction to 64x256.",
+  "prompt_sha256": "baf1fb7e72d1d57e4ff75968eb3d8a7f14273dd9831ba71b02d9d15c7b3fd93f",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+      "sha256": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458"
+    }
+  ],
+  "normalized_path": "/Users/rexxa/work/artpolish2-data/materials/normalized/log_top_ns_try1.png",
+  "normalized_sha256": "00f92664cacf52828bb5afa665a5936576adf5b063764508a10d8c2dfe2cfbe3",
+  "size": [
+    64,
+    256
+  ],
+  "operations": [
+    "full-frame LANCZOS resize (793, 1983) -> (64, 256)"
+  ],
+  "opaque": true,
+  "seam_x": null,
+  "seam_y": {
+    "width": 256,
+    "height": 64,
+    "interior_p95": 15.247916666666663,
+    "join_columns": [
+      256,
+      512,
+      768
+    ],
+    "join_mad": [
+      17.401041666666668,
+      17.401041666666668,
+      17.401041666666668
+    ],
+    "limit": 17.53510416666666,
+    "passed": true
+  },
+  "seam_applicability": "Repeat axes only; isolated end/junction/door do not tile.",
+  "projection": null,
+  "projection_applicability": "Standing doors only; wall components/top/floor do not have a standing silhouette.",
+  "numeric_pass": true,
+  "owner_approval": "NOT_CLAIMED",
+  "visual_rejection": "",
+  "candidate_ready": true
+}

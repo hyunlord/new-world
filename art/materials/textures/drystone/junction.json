@@ -1,0 +1,34 @@
+{
+  "id": "drystone/junction",
+  "attempt": 1,
+  "source": "/Users/rexxa/work/artpolish2-data/materials/originals/drystone_junction_try1.png",
+  "source_sha256": "c2a0f7369b22b82c6d7f9506dc043204b7301ddff802b7d71416cd69592b0e09",
+  "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a169d1-0aa7-7952-8adf-21ec2890edd7/exec-30eb81e4-79d0-4a26-bac9-a018e44149fb.png",
+  "prompt": "Use case: game texture asset. Generate ONE square 64x64 wall TOP junction piece seen directly overhead with material courses interlocking at a corner and crossing for a stone-age settlement game. Construction style: dry-stacked irregular grey granite stones fitted in broad courses without mortar; rounded angular stones and ink-lined narrow crevices. Material: granite. Era: Stone Age. Style reference is only for ink/watercolor rendering and palette, not its composition. Natural-history illustration, warm restrained earth colors, dark-brown hand-inked contours and broad watercolor planes; no photorealism, no 3D rendering. Lighting stays upper-left: upper-left facets subtly lit, lower-right facets shaded. Opaque full bleed square top surface. Broad interlocking courses compatible with straight strips. No wall face, no ground, no exterior silhouette No text, frame, ground, scenery, labels or watermark. Broad readable forms surviving reduction to 64x64.",
+  "prompt_sha256": "f035bc2dcde1cb18d8a53b4c2a4c5604d08f315ab504f2a24b4c24a443630619",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/ground_stone.png",
+      "sha256": "a6a501b0c4ff9b80f434f9d2e409bb31652510a218bd2a1f06522bf745e4a45c"
+    }
+  ],
+  "normalized_path": "/Users/rexxa/work/artpolish2-data/materials/normalized/drystone_junction_try1.png",
+  "normalized_sha256": "7f23847290dc8f0540c32acf456bdfee845e6aa5515ff900a135ac607f44d832",
+  "size": [
+    64,
+    64
+  ],
+  "operations": [
+    "full-frame LANCZOS resize (1254, 1254) -> (64, 64)"
+  ],
+  "opaque": true,
+  "seam_x": null,
+  "seam_y": null,
+  "seam_applicability": "Repeat axes only; isolated end/junction/door do not tile.",
+  "projection": null,
+  "projection_applicability": "Standing doors only; wall components/top/floor do not have a standing silhouette.",
+  "numeric_pass": true,
+  "owner_approval": "NOT_CLAIMED",
+  "visual_rejection": "",
+  "candidate_ready": true
+}

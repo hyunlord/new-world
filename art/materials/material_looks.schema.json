@@ -1,0 +1,227 @@
+{
+  "$defs": {
+    "LabTint": {
+      "additionalProperties": false,
+      "properties": {
+        "dL": {
+          "default": 0,
+          "maximum": 100,
+          "minimum": -100,
+          "title": "Dl",
+          "type": "number"
+        },
+        "da": {
+          "default": 0,
+          "maximum": 128,
+          "minimum": -128,
+          "title": "Da",
+          "type": "number"
+        },
+        "db": {
+          "default": 0,
+          "maximum": 128,
+          "minimum": -128,
+          "title": "Db",
+          "type": "number"
+        }
+      },
+      "title": "LabTint",
+      "type": "object"
+    },
+    "MaterialLook": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "sim_id": {
+          "maximum": 4294967295,
+          "minimum": 0,
+          "title": "Sim Id",
+          "type": "integer"
+        },
+        "category": {
+          "title": "Category",
+          "type": "string"
+        },
+        "tint": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LabTint"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "texture_override": {
+          "additionalProperties": {
+            "$ref": "#/$defs/TextureSet"
+          },
+          "title": "Texture Override",
+          "type": "object"
+        }
+      },
+      "required": [
+        "id",
+        "sim_id",
+        "category"
+      ],
+      "title": "MaterialLook",
+      "type": "object"
+    },
+    "TextureSet": {
+      "additionalProperties": false,
+      "properties": {
+        "face": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*(?:\\s|\\\\|:))[^\\x00-\\x1f\\x7f]+\\.png$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Face"
+        },
+        "top_ew": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*(?:\\s|\\\\|:))[^\\x00-\\x1f\\x7f]+\\.png$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Top Ew"
+        },
+        "top_ns": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*(?:\\s|\\\\|:))[^\\x00-\\x1f\\x7f]+\\.png$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Top Ns"
+        },
+        "end": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*(?:\\s|\\\\|:))[^\\x00-\\x1f\\x7f]+\\.png$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End"
+        },
+        "junction": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*(?:\\s|\\\\|:))[^\\x00-\\x1f\\x7f]+\\.png$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Junction"
+        },
+        "door_closed": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*(?:\\s|\\\\|:))[^\\x00-\\x1f\\x7f]+\\.png$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Door Closed"
+        },
+        "door_open": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*(?:\\s|\\\\|:))[^\\x00-\\x1f\\x7f]+\\.png$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Door Open"
+        },
+        "floor": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*(?:\\s|\\\\|:))[^\\x00-\\x1f\\x7f]+\\.png$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Floor"
+        }
+      },
+      "title": "TextureSet",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "source_revision": {
+      "title": "Source Revision",
+      "type": "string"
+    },
+    "source_path": {
+      "title": "Source Path",
+      "type": "string"
+    },
+    "materials": {
+      "items": {
+        "$ref": "#/$defs/MaterialLook"
+      },
+      "minItems": 1,
+      "title": "Materials",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "source_revision",
+    "source_path",
+    "materials"
+  ],
+  "title": "MaterialsDocument",
+  "type": "object"
+}

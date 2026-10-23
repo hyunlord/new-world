@@ -1,0 +1,504 @@
+{
+  "$defs": {
+    "ConstructionStyle": {
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "wall"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "textures": {
+                "properties": {
+                  "face": {
+                    "type": "string"
+                  },
+                  "top_ew": {
+                    "type": "string"
+                  },
+                  "top_ns": {
+                    "type": "string"
+                  },
+                  "end": {
+                    "type": "string"
+                  },
+                  "junction": {
+                    "type": "string"
+                  },
+                  "door_closed": {
+                    "type": "string"
+                  },
+                  "door_open": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "face",
+                  "top_ew",
+                  "top_ns",
+                  "end",
+                  "junction",
+                  "door_closed",
+                  "door_open"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "floor"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "textures": {
+                "properties": {
+                  "floor": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "floor"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "door"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "textures": {
+                "properties": {
+                  "door_closed": {
+                    "type": "string"
+                  },
+                  "door_open": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "door_closed",
+                  "door_open"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "wall"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "ends": {
+                "type": "string"
+              },
+              "corner": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "ends",
+              "corner"
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "wall",
+            "floor",
+            "door"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "era": {
+          "title": "Era",
+          "type": "string"
+        },
+        "textures": {
+          "$ref": "#/$defs/TextureSet"
+        },
+        "top": {
+          "$ref": "#/$defs/Top",
+          "default": {
+            "value": 0.75,
+            "saturation": 0.85,
+            "blur_px": 2.0,
+            "ink_edge_px": 2,
+            "width_px": 64,
+            "side_shadow": 0.0,
+            "orientation": "along_run"
+          }
+        },
+        "face": {
+          "$ref": "#/$defs/Face",
+          "default": {
+            "height_px": 44
+          }
+        },
+        "ends": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*(?:\\s|\\\\|:))[^\\x00-\\x1f\\x7f]+\\.png$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ends"
+        },
+        "corner": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*(?:\\s|\\\\|:))[^\\x00-\\x1f\\x7f]+\\.png$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Corner"
+        },
+        "prompt_template": {
+          "title": "Prompt Template",
+          "type": "string"
+        },
+        "sim_blueprints": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Sim Blueprints",
+          "type": "array"
+        },
+        "default_tint": {
+          "$ref": "#/$defs/LabTint",
+          "default": {
+            "dL": 0.0,
+            "da": 0.0,
+            "db": 0.0
+          }
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "era",
+        "textures",
+        "prompt_template",
+        "sim_blueprints"
+      ],
+      "title": "ConstructionStyle",
+      "type": "object"
+    },
+    "Face": {
+      "additionalProperties": false,
+      "properties": {
+        "height_px": {
+          "const": 44,
+          "default": 44,
+          "title": "Height Px",
+          "type": "integer"
+        }
+      },
+      "title": "Face",
+      "type": "object"
+    },
+    "KindDefaults": {
+      "additionalProperties": false,
+      "properties": {
+        "wall": {
+          "title": "Wall",
+          "type": "string"
+        },
+        "floor": {
+          "title": "Floor",
+          "type": "string"
+        },
+        "door": {
+          "title": "Door",
+          "type": "string"
+        }
+      },
+      "required": [
+        "wall",
+        "floor",
+        "door"
+      ],
+      "title": "KindDefaults",
+      "type": "object"
+    },
+    "LabTint": {
+      "additionalProperties": false,
+      "properties": {
+        "dL": {
+          "default": 0,
+          "maximum": 100,
+          "minimum": -100,
+          "title": "Dl",
+          "type": "number"
+        },
+        "da": {
+          "default": 0,
+          "maximum": 128,
+          "minimum": -128,
+          "title": "Da",
+          "type": "number"
+        },
+        "db": {
+          "default": 0,
+          "maximum": 128,
+          "minimum": -128,
+          "title": "Db",
+          "type": "number"
+        }
+      },
+      "title": "LabTint",
+      "type": "object"
+    },
+    "TextureSet": {
+      "additionalProperties": false,
+      "properties": {
+        "face": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*(?:\\s|\\\\|:))[^\\x00-\\x1f\\x7f]+\\.png$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Face"
+        },
+        "top_ew": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*(?:\\s|\\\\|:))[^\\x00-\\x1f\\x7f]+\\.png$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Top Ew"
+        },
+        "top_ns": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*(?:\\s|\\\\|:))[^\\x00-\\x1f\\x7f]+\\.png$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Top Ns"
+        },
+        "end": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*(?:\\s|\\\\|:))[^\\x00-\\x1f\\x7f]+\\.png$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End"
+        },
+        "junction": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*(?:\\s|\\\\|:))[^\\x00-\\x1f\\x7f]+\\.png$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Junction"
+        },
+        "door_closed": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*(?:\\s|\\\\|:))[^\\x00-\\x1f\\x7f]+\\.png$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Door Closed"
+        },
+        "door_open": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*(?:\\s|\\\\|:))[^\\x00-\\x1f\\x7f]+\\.png$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Door Open"
+        },
+        "floor": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*(?:\\s|\\\\|:))[^\\x00-\\x1f\\x7f]+\\.png$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Floor"
+        }
+      },
+      "title": "TextureSet",
+      "type": "object"
+    },
+    "Top": {
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "default": 0.75,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Value",
+          "type": "number"
+        },
+        "saturation": {
+          "default": 0.85,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Saturation",
+          "type": "number"
+        },
+        "blur_px": {
+          "default": 2,
+          "maximum": 8,
+          "minimum": 0,
+          "title": "Blur Px",
+          "type": "number"
+        },
+        "ink_edge_px": {
+          "default": 2,
+          "maximum": 8,
+          "minimum": 0,
+          "title": "Ink Edge Px",
+          "type": "integer"
+        },
+        "width_px": {
+          "default": 64,
+          "maximum": 64,
+          "minimum": 1,
+          "title": "Width Px",
+          "type": "integer"
+        },
+        "side_shadow": {
+          "default": 0,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Side Shadow",
+          "type": "number"
+        },
+        "orientation": {
+          "const": "along_run",
+          "default": "along_run",
+          "title": "Orientation",
+          "type": "string"
+        }
+      },
+      "title": "Top",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "default_styles": {
+      "$ref": "#/$defs/KindDefaults"
+    },
+    "styles": {
+      "items": {
+        "$ref": "#/$defs/ConstructionStyle"
+      },
+      "minItems": 1,
+      "title": "Styles",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "default_styles",
+    "styles"
+  ],
+  "title": "StylesDocument",
+  "type": "object"
+}

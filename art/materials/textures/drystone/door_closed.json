@@ -1,0 +1,58 @@
+{
+  "id": "drystone/door_closed",
+  "attempt": 1,
+  "source": "/Users/rexxa/work/artpolish2-data/materials/originals/drystone_door_closed_try1.png",
+  "source_sha256": "79431345d84354d34996bad2e89ca1feafd9fefd969df17b7c36b565c8235a3d",
+  "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a169d1-0aa7-7952-8adf-21ec2890edd7/exec-ded37a03-077b-4af8-9046-c11ec694eaae.png",
+  "prompt": "Use case: transparent game sprite. Generate ONE CLOSED solid rectangular doorway/frame with its shut rough slab, in the wall material. Wall construction: dry-stacked irregular grey granite stones fitted in broad courses without mortar; rounded angular stones and ink-lined narrow crevices. Material: granite. Era: Stone Age. Door slab may use rough timber with plain lashings appropriate to the wall, never modern hardware. Straight-on front elevation from the south with only a very small top visible; not isometric, not a perspective room. Entire standing doorway fills most canvas with generous transparent margin and completely transparent background/opening, no ground or cast shadow. Full square outer silhouette, top lintel horizontal and uprights vertical; no arch. Style reference for controlled dark-brown hand ink and warm watercolor earth tones. Keep upper-left edges brighter, right/bottom surfaces distinctly shaded, strong upper-left light. No text or framing. Will be uniformly reduced to 60 pixels tall and padded to 64x60, so broad shapes.",
+  "prompt_sha256": "1d0366b6f9d553138ad09bf333ef8c3cd08231a208f4c5cbb89e505b6a63f3d8",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/ground_stone.png",
+      "sha256": "a6a501b0c4ff9b80f434f9d2e409bb31652510a218bd2a1f06522bf745e4a45c"
+    }
+  ],
+  "normalized_path": "/Users/rexxa/work/artpolish2-data/materials/normalized/drystone_door_closed_try1.png",
+  "normalized_sha256": "5758040c4a94f9ad1f143e5f708f8f04c0941d4cb087c8dba108773791b61644",
+  "size": [
+    64,
+    60
+  ],
+  "operations": [
+    "STRUCT alpha>=128 bbox+2 fringe crop (43, 69, 1209, 1200)",
+    "uniform LANCZOS scale 0.05305039787798409",
+    "bottom-aligned transparent canvas padding; no pixel edits"
+  ],
+  "opaque": false,
+  "seam_x": null,
+  "seam_y": null,
+  "seam_applicability": "Repeat axes only; isolated end/junction/door do not tile.",
+  "projection": {
+    "family": "door",
+    "anchor": [
+      32,
+      59
+    ],
+    "height_band": [
+      58,
+      62
+    ],
+    "height_band_override": false,
+    "opaque_pixels": 3344,
+    "base_row": 59,
+    "base_error": 0,
+    "height": 60,
+    "gradient_x": -1.7012095150960658,
+    "gradient_y": -1.564171664122137,
+    "light_angle_degrees": 222.59688519849834,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "projection_applicability": "Standing doors only; wall components/top/floor do not have a standing silhouette.",
+  "numeric_pass": true,
+  "owner_approval": "NOT_CLAIMED",
+  "visual_rejection": "",
+  "candidate_ready": true
+}

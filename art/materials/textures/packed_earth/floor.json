@@ -1,0 +1,66 @@
+{
+  "id": "packed_earth/floor",
+  "attempt": 1,
+  "source": "/Users/rexxa/work/artpolish2-data/materials/originals/packed_earth_floor_try1.png",
+  "source_sha256": "f4712a40826e4d90889e3aeb48b01d2375b33572fcb9de2e263d035d7127ad97",
+  "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a169d1-0aa7-7952-8adf-21ec2890edd7/exec-fffe4e8f-7e05-4f38-81d3-59804cb8133f.png",
+  "prompt": "Use case: seamless game floor texture. Generate ONE opaque square top-down 256x256 texture of compacted earthen floor with restrained fine clay grit and a few tiny flattened straw fibres, material packed warm brown earth, era Neolithic. Restrained natural-history hand ink and watercolor earthy colors, subtle upper-left light on small details but no global gradient, no central feature, no objects, no border. Perfect seamless repeat on BOTH axes; irregular small variation evenly distributed, all corners compatible. Material fills every pixel.",
+  "prompt_sha256": "468b61c74cc4a54e701c4815c68ee988a5cc47896e4ca8a6a3be9b34daecd8fc",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/ground_stone.png",
+      "sha256": "a6a501b0c4ff9b80f434f9d2e409bb31652510a218bd2a1f06522bf745e4a45c"
+    }
+  ],
+  "normalized_path": "/Users/rexxa/work/artpolish2-data/materials/normalized/packed_earth_floor_try1.png",
+  "normalized_sha256": "c4cef172345fbbdb287c3ba7c83b6116e00c1b77effc44995593d9905d1693c1",
+  "size": [
+    256,
+    256
+  ],
+  "operations": [
+    "full-frame LANCZOS resize (1254, 1254) -> (256, 256)"
+  ],
+  "opaque": true,
+  "seam_x": {
+    "width": 256,
+    "height": 256,
+    "interior_p95": 30.73138020833333,
+    "join_columns": [
+      256,
+      512,
+      768
+    ],
+    "join_mad": [
+      21.119791666666668,
+      21.119791666666668,
+      21.119791666666668
+    ],
+    "limit": 35.34108723958333,
+    "passed": true
+  },
+  "seam_y": {
+    "width": 256,
+    "height": 256,
+    "interior_p95": 31.71744791666666,
+    "join_columns": [
+      256,
+      512,
+      768
+    ],
+    "join_mad": [
+      22.244791666666668,
+      22.244791666666668,
+      22.244791666666668
+    ],
+    "limit": 36.47506510416666,
+    "passed": true
+  },
+  "seam_applicability": "Repeat axes only; isolated end/junction/door do not tile.",
+  "projection": null,
+  "projection_applicability": "Standing doors only; wall components/top/floor do not have a standing silhouette.",
+  "numeric_pass": true,
+  "owner_approval": "NOT_CLAIMED",
+  "visual_rejection": "",
+  "candidate_ready": true
+}

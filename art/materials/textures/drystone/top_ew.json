@@ -1,0 +1,50 @@
+{
+  "id": "drystone/top_ew",
+  "attempt": 2,
+  "source": "/Users/rexxa/work/artpolish2-data/materials/originals/drystone_top_ew_try2.png",
+  "source_sha256": "fbd5f990e5186a4beb25f0615b8264a72c39b05dcdb27e5322038fa80f352260",
+  "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a169d1-0aa7-7952-8adf-21ec2890edd7/exec-52782e9f-6dde-43cb-a51e-3200c834bb66.png",
+  "prompt": "Use case: game texture asset. Generate ONE wide the final sprite size wall TOP strip seen exactly overhead; the built courses and long axes lie horizontally EAST-WEST left-to-right for a stone-age settlement game. Construction style: dry-stacked irregular grey granite stones fitted in broad courses without mortar; rounded angular stones and ink-lined narrow crevices. Material: granite. Era: Stone Age. Style reference is only for ink/watercolor rendering and palette, not its composition. Natural-history illustration, warm restrained earth colors, dark-brown hand-inked contours and broad watercolor planes; no photorealism, no 3D rendering. Lighting stays upper-left: upper-left facets subtly lit, lower-right facets shaded. Seamless left-to-right. Keep left/right boundary colors and course positions compatible. No wall face, no visible log ends, no planks or decking No text, frame, ground, scenery, labels or watermark. Broad readable forms surviving reduction to the final sprite size. CRITICAL RETRY CORRECTION: The generated image must be entirely filled with the material from edge to edge, including every corner. DO NOT place a strip or rectangle on a white background. DO NOT add any white or blank gutters, letterboxing, padding or margin. The texture IS the whole canvas. Its exact pixel dimensions will be normalized later, so fill the available image shape completely. Keep opposite repeating edges compatible and identical in average color; no global left-to-right or top-to-bottom lighting gradient. Local upper-left facet lighting only. Use broad uniform material tones and low-contrast surface variation rather than different brightness at opposite edges.",
+  "prompt_sha256": "a909203667ae434827a34c2ba762655381da7f33be089f30f4bf88f8e8eaf9be",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/ground_stone.png",
+      "sha256": "a6a501b0c4ff9b80f434f9d2e409bb31652510a218bd2a1f06522bf745e4a45c"
+    }
+  ],
+  "normalized_path": "/Users/rexxa/work/artpolish2-data/materials/normalized/drystone_top_ew_try2.png",
+  "normalized_sha256": "da69983a6b11042dd1bfb6f492636f194b4142b78d9b2523c030f636234efd20",
+  "size": [
+    256,
+    64
+  ],
+  "operations": [
+    "full-frame LANCZOS resize (2172, 724) -> (256, 64)"
+  ],
+  "opaque": true,
+  "seam_x": {
+    "width": 256,
+    "height": 64,
+    "interior_p95": 29.883854166666666,
+    "join_columns": [
+      256,
+      512,
+      768
+    ],
+    "join_mad": [
+      24.260416666666668,
+      24.260416666666668,
+      24.260416666666668
+    ],
+    "limit": 34.36643229166666,
+    "passed": true
+  },
+  "seam_y": null,
+  "seam_applicability": "Repeat axes only; isolated end/junction/door do not tile.",
+  "projection": null,
+  "projection_applicability": "Standing doors only; wall components/top/floor do not have a standing silhouette.",
+  "numeric_pass": true,
+  "owner_approval": "NOT_CLAIMED",
+  "visual_rejection": "",
+  "candidate_ready": true
+}
