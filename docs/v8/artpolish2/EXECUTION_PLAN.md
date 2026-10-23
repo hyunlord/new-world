@@ -134,3 +134,19 @@ Godot runtime integration or owner approval.
   foreign-chain rejection failure and its regression/closure remain recorded.
   Actual image-edit quality still requires observation. One selected retry will
   run first, then the remaining fixed union; no variant can receive a third call.
+
+## Checkpoint: 2026-10-23 21:30 UTC
+
+- Root and the child observer viewed the first repair, child_F_hide_wrap_bun/v1.
+  Try2 improves coverage about 5–8px, preserves identity and geometry with a21px
+  margin, and adds no collar or armhole trim. Garment correspondence remains
+  FAIL. The improved try2 is selected with that failure retained.
+- Remaining46 fixed calls are released, with independent adult9/child37
+  observers. No third attempt or further selection expansion is permitted.
+  Final selection must preserve try1 if try2 is worse or ambiguous and record
+  the reason; all attempted images and actual failures remain immutable.
+- The repair selection intersects owner48 only at adult_M_fur_cloak_short/v1
+  and identity36 nowhere. Both exhausted failed child-bun targets are unchanged.
+  Round1 therefore cannot establish regeneration improvement for these images.
+- Current3130 committed changed paths are all in scope and all files are under
+  1,500,000 bytes. Final portraits, round1, face board and publication remain.

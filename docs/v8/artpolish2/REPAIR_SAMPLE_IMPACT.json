@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "selection_sha256": "59b7f6df1e4effa3c10b56c2384a7fb1302e8f813b77e808fada9000d9b2f4ad",
+  "face_plan_sha256": "310a6de08234571c74df9845dc20d2f7c5377bb8aa2d0f861529d555f10f25b1",
+  "owner48_selected_for_repair": [
+    "adult_M_fur_cloak_short/v1"
+  ],
+  "identity36_selected_for_repair": [],
+  "exhausted_failed_distinctness_targets": [
+    "child_F_fur_cloak_bun/v2",
+    "child_F_fur_cloak_bun/v5"
+  ],
+  "interpretation": "Round1 is an independent retest of unchanged identity36 images and the unchanged exhausted failed child-bun images. Only the listed owner portrait can change. A different later verdict is not evidence that unchanged images were repaired.",
+  "owner_adopted": false
+}
