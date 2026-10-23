@@ -1,0 +1,652 @@
+{
+  "mappings": [
+    {
+      "packet_id": "G5185",
+      "image_id": "P99556",
+      "mark": "A",
+      "answer": "Using an axe",
+      "expected": "chop",
+      "score": 1,
+      "reason": "Primary action identifies active use of an axe, matching chop by the same ordinary-meaning rule as Round 0; uncertainty about motion in the still image does not change the selected primary answer."
+    },
+    {
+      "packet_id": "G5185",
+      "image_id": "P99556",
+      "mark": "B",
+      "answer": "Carrying wood",
+      "expected": "carry",
+      "score": 1,
+      "reason": "Primary action explicitly names carrying wood, a log or a bundle of logs, matching carry."
+    },
+    {
+      "packet_id": "G5185",
+      "image_id": "P99556",
+      "mark": "C",
+      "answer": "Standing",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G5185",
+      "image_id": "P45286",
+      "mark": "A",
+      "answer": "Standing beside a workbench",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G5185",
+      "image_id": "P45286",
+      "mark": "B",
+      "answer": "Standing on a marked ground tile",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G5185",
+      "image_id": "P45286",
+      "mark": "C",
+      "answer": "Standing near the fire",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G5185",
+      "image_id": "P41952",
+      "mark": "A",
+      "answer": "Chopping wood with an axe",
+      "expected": "chop",
+      "score": 1,
+      "reason": "Primary action explicitly names chopping wood or chopping with an axe, matching chop."
+    },
+    {
+      "packet_id": "G5185",
+      "image_id": "P41952",
+      "mark": "B",
+      "answer": "Carrying a log on the shoulders",
+      "expected": "carry",
+      "score": 1,
+      "reason": "Primary action explicitly names carrying wood, a log or a bundle of logs, matching carry."
+    },
+    {
+      "packet_id": "G5185",
+      "image_id": "P41952",
+      "mark": "C",
+      "answer": "Walking",
+      "expected": "awake",
+      "score": 0,
+      "reason": "Primary action is walking, not the displayed awake idle posture. No tool or load does not turn the selected walking reading into idle; the same distinction was retained in Round 0."
+    },
+    {
+      "packet_id": "G5185",
+      "image_id": "P30648",
+      "mark": "A",
+      "answer": "Standing beside a workbench",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G5185",
+      "image_id": "P30648",
+      "mark": "B",
+      "answer": "Standing on a marked ground tile",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G5185",
+      "image_id": "P30648",
+      "mark": "C",
+      "answer": "Standing near the fire",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G4995",
+      "image_id": "P45286",
+      "mark": "A",
+      "answer": "Standing beside the workbench.",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G4995",
+      "image_id": "P45286",
+      "mark": "B",
+      "answer": "Standing in a marked construction square.",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G4995",
+      "image_id": "P45286",
+      "mark": "C",
+      "answer": "Standing near the campfire.",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G4995",
+      "image_id": "P99556",
+      "mark": "A",
+      "answer": "Using an axe.",
+      "expected": "chop",
+      "score": 1,
+      "reason": "Primary action identifies active use of an axe, matching chop by the same ordinary-meaning rule as Round 0; uncertainty about motion in the still image does not change the selected primary answer."
+    },
+    {
+      "packet_id": "G4995",
+      "image_id": "P99556",
+      "mark": "B",
+      "answer": "Carrying a log.",
+      "expected": "carry",
+      "score": 1,
+      "reason": "Primary action explicitly names carrying wood, a log or a bundle of logs, matching carry."
+    },
+    {
+      "packet_id": "G4995",
+      "image_id": "P99556",
+      "mark": "C",
+      "answer": "Standing by the stream.",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G4995",
+      "image_id": "P41952",
+      "mark": "A",
+      "answer": "Chopping wood at a stump.",
+      "expected": "chop",
+      "score": 1,
+      "reason": "Primary action explicitly names chopping wood or chopping with an axe, matching chop."
+    },
+    {
+      "packet_id": "G4995",
+      "image_id": "P41952",
+      "mark": "B",
+      "answer": "Carrying logs on the shoulders.",
+      "expected": "carry",
+      "score": 1,
+      "reason": "Primary action explicitly names carrying wood, a log or a bundle of logs, matching carry."
+    },
+    {
+      "packet_id": "G4995",
+      "image_id": "P41952",
+      "mark": "C",
+      "answer": "Walking beside the stream.",
+      "expected": "awake",
+      "score": 0,
+      "reason": "Primary action is walking, not the displayed awake idle posture. No tool or load does not turn the selected walking reading into idle; the same distinction was retained in Round 0."
+    },
+    {
+      "packet_id": "G4995",
+      "image_id": "P30648",
+      "mark": "A",
+      "answer": "Standing beside the workbench.",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G4995",
+      "image_id": "P30648",
+      "mark": "B",
+      "answer": "Standing in a marked construction square.",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G4995",
+      "image_id": "P30648",
+      "mark": "C",
+      "answer": "Standing near the campfire.",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G7461",
+      "image_id": "P23321",
+      "mark": "A",
+      "answer": "Sleeping horizontally inside the shelter",
+      "expected": "sleep",
+      "score": 1,
+      "reason": "Primary observation explicitly identifies sleeping, matching the displayed sleep posture."
+    },
+    {
+      "packet_id": "G7461",
+      "image_id": "P23321",
+      "mark": "B",
+      "answer": "Carrying a bundle of wood near the fire",
+      "expected": "sleep",
+      "score": 0,
+      "reason": "Primary action is carrying wood, conflicting with the expected sleeping posture."
+    },
+    {
+      "packet_id": "G7461",
+      "image_id": "P23321",
+      "mark": "C",
+      "answer": "Standing at the workbench",
+      "expected": "sleep",
+      "score": 0,
+      "reason": "Primary observation is standing at or beside the workbench, conflicting with the expected sleeping posture."
+    },
+    {
+      "packet_id": "G7461",
+      "image_id": "P34553",
+      "mark": "A",
+      "answer": "Chopping wood at a stump",
+      "expected": "chop",
+      "score": 1,
+      "reason": "Primary action explicitly names chopping wood or chopping with an axe, matching chop."
+    },
+    {
+      "packet_id": "G7461",
+      "image_id": "P34553",
+      "mark": "B",
+      "answer": "Carrying a bundle of logs on the shoulders",
+      "expected": "carry",
+      "score": 1,
+      "reason": "Primary action explicitly names carrying wood, a log or a bundle of logs, matching carry."
+    },
+    {
+      "packet_id": "G7461",
+      "image_id": "P34553",
+      "mark": "C",
+      "answer": "Walking beside the shelter",
+      "expected": "awake",
+      "score": 0,
+      "reason": "Primary action is walking, not the displayed awake idle posture. No tool or load does not turn the selected walking reading into idle; the same distinction was retained in Round 0."
+    },
+    {
+      "packet_id": "G7461",
+      "image_id": "P81008",
+      "mark": "A",
+      "answer": "Chopping wood with an axe",
+      "expected": "chop",
+      "score": 1,
+      "reason": "Primary action explicitly names chopping wood or chopping with an axe, matching chop."
+    },
+    {
+      "packet_id": "G7461",
+      "image_id": "P81008",
+      "mark": "B",
+      "answer": "Carrying a log",
+      "expected": "carry",
+      "score": 1,
+      "reason": "Primary action explicitly names carrying wood, a log or a bundle of logs, matching carry."
+    },
+    {
+      "packet_id": "G7461",
+      "image_id": "P81008",
+      "mark": "C",
+      "answer": "Standing idle",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G7461",
+      "image_id": "P39774",
+      "mark": "A",
+      "answer": "Sleeping horizontally inside the shelter",
+      "expected": "sleep",
+      "score": 1,
+      "reason": "Primary observation explicitly identifies sleeping, matching the displayed sleep posture."
+    },
+    {
+      "packet_id": "G7461",
+      "image_id": "P39774",
+      "mark": "B",
+      "answer": "Carrying a bundle of wood near the fire",
+      "expected": "sleep",
+      "score": 0,
+      "reason": "Primary action is carrying wood, conflicting with the expected sleeping posture."
+    },
+    {
+      "packet_id": "G7461",
+      "image_id": "P39774",
+      "mark": "C",
+      "answer": "Standing at the workbench",
+      "expected": "sleep",
+      "score": 0,
+      "reason": "Primary observation is standing at or beside the workbench, conflicting with the expected sleeping posture."
+    },
+    {
+      "packet_id": "G9478",
+      "image_id": "P34553",
+      "mark": "A",
+      "answer": "Chopping wood at a stump with a raised axe",
+      "expected": "chop",
+      "score": 1,
+      "reason": "Primary action explicitly names chopping wood or chopping with an axe, matching chop."
+    },
+    {
+      "packet_id": "G9478",
+      "image_id": "P34553",
+      "mark": "B",
+      "answer": "Carrying a bundle of logs",
+      "expected": "carry",
+      "score": 1,
+      "reason": "Primary action explicitly names carrying wood, a log or a bundle of logs, matching carry."
+    },
+    {
+      "packet_id": "G9478",
+      "image_id": "P34553",
+      "mark": "C",
+      "answer": "Walking empty-handed",
+      "expected": "awake",
+      "score": 0,
+      "reason": "Primary action is walking, not the displayed awake idle posture. No tool or load does not turn the selected walking reading into idle; the same distinction was retained in Round 0."
+    },
+    {
+      "packet_id": "G9478",
+      "image_id": "P39774",
+      "mark": "A",
+      "answer": "Sleeping in the shelter",
+      "expected": "sleep",
+      "score": 1,
+      "reason": "Primary observation explicitly identifies sleeping, matching the displayed sleep posture."
+    },
+    {
+      "packet_id": "G9478",
+      "image_id": "P39774",
+      "mark": "B",
+      "answer": "Carrying a wood bundle",
+      "expected": "sleep",
+      "score": 0,
+      "reason": "Primary action is carrying wood, conflicting with the expected sleeping posture."
+    },
+    {
+      "packet_id": "G9478",
+      "image_id": "P39774",
+      "mark": "C",
+      "answer": "Standing beside the workbench",
+      "expected": "sleep",
+      "score": 0,
+      "reason": "Primary observation is standing at or beside the workbench, conflicting with the expected sleeping posture."
+    },
+    {
+      "packet_id": "G9478",
+      "image_id": "P23321",
+      "mark": "A",
+      "answer": "Sleeping in the shelter",
+      "expected": "sleep",
+      "score": 1,
+      "reason": "Primary observation explicitly identifies sleeping, matching the displayed sleep posture."
+    },
+    {
+      "packet_id": "G9478",
+      "image_id": "P23321",
+      "mark": "B",
+      "answer": "Carrying a wood bundle",
+      "expected": "sleep",
+      "score": 0,
+      "reason": "Primary action is carrying wood, conflicting with the expected sleeping posture."
+    },
+    {
+      "packet_id": "G9478",
+      "image_id": "P23321",
+      "mark": "C",
+      "answer": "Standing beside the workbench",
+      "expected": "sleep",
+      "score": 0,
+      "reason": "Primary observation is standing at or beside the workbench, conflicting with the expected sleeping posture."
+    },
+    {
+      "packet_id": "G9478",
+      "image_id": "P81008",
+      "mark": "A",
+      "answer": "Chopping wood with an axe",
+      "expected": "chop",
+      "score": 1,
+      "reason": "Primary action explicitly names chopping wood or chopping with an axe, matching chop."
+    },
+    {
+      "packet_id": "G9478",
+      "image_id": "P81008",
+      "mark": "B",
+      "answer": "Carrying logs",
+      "expected": "carry",
+      "score": 1,
+      "reason": "Primary action explicitly names carrying wood, a log or a bundle of logs, matching carry."
+    },
+    {
+      "packet_id": "G9478",
+      "image_id": "P81008",
+      "mark": "C",
+      "answer": "Standing empty-handed",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G7606",
+      "image_id": "P75918",
+      "mark": "A",
+      "answer": "Chopping wood at a stump",
+      "expected": "chop",
+      "score": 1,
+      "reason": "Primary action explicitly names chopping wood or chopping with an axe, matching chop."
+    },
+    {
+      "packet_id": "G7606",
+      "image_id": "P75918",
+      "mark": "B",
+      "answer": "Carrying logs on the shoulders",
+      "expected": "carry",
+      "score": 1,
+      "reason": "Primary action explicitly names carrying wood, a log or a bundle of logs, matching carry."
+    },
+    {
+      "packet_id": "G7606",
+      "image_id": "P75918",
+      "mark": "C",
+      "answer": "Walking",
+      "expected": "awake",
+      "score": 0,
+      "reason": "Primary action is walking, not the displayed awake idle posture. No tool or load does not turn the selected walking reading into idle; the same distinction was retained in Round 0."
+    },
+    {
+      "packet_id": "G7606",
+      "image_id": "P35624",
+      "mark": "A",
+      "answer": "Standing beside the river",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G7606",
+      "image_id": "P35624",
+      "mark": "B",
+      "answer": "Standing beside a shelter",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G7606",
+      "image_id": "P35624",
+      "mark": "C",
+      "answer": "Standing beside the campfire",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G7606",
+      "image_id": "P10413",
+      "mark": "A",
+      "answer": "Standing beside the river",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G7606",
+      "image_id": "P10413",
+      "mark": "B",
+      "answer": "Standing beside a shelter",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G7606",
+      "image_id": "P10413",
+      "mark": "C",
+      "answer": "Standing beside the campfire",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G7606",
+      "image_id": "P52533",
+      "mark": "A",
+      "answer": "Chopping with an axe",
+      "expected": "chop",
+      "score": 1,
+      "reason": "Primary action explicitly names chopping wood or chopping with an axe, matching chop."
+    },
+    {
+      "packet_id": "G7606",
+      "image_id": "P52533",
+      "mark": "B",
+      "answer": "Carrying wood",
+      "expected": "carry",
+      "score": 1,
+      "reason": "Primary action explicitly names carrying wood, a log or a bundle of logs, matching carry."
+    },
+    {
+      "packet_id": "G7606",
+      "image_id": "P52533",
+      "mark": "C",
+      "answer": "Standing",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G3215",
+      "image_id": "P52533",
+      "mark": "A",
+      "answer": "Chopping with an axe",
+      "expected": "chop",
+      "score": 1,
+      "reason": "Primary action explicitly names chopping wood or chopping with an axe, matching chop."
+    },
+    {
+      "packet_id": "G3215",
+      "image_id": "P52533",
+      "mark": "B",
+      "answer": "Carrying wood",
+      "expected": "carry",
+      "score": 1,
+      "reason": "Primary action explicitly names carrying wood, a log or a bundle of logs, matching carry."
+    },
+    {
+      "packet_id": "G3215",
+      "image_id": "P52533",
+      "mark": "C",
+      "answer": "Standing idle",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G3215",
+      "image_id": "P10413",
+      "mark": "A",
+      "answer": "Standing beside the river",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G3215",
+      "image_id": "P10413",
+      "mark": "B",
+      "answer": "Standing near a shelter",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G3215",
+      "image_id": "P10413",
+      "mark": "C",
+      "answer": "Standing by the campfire",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G3215",
+      "image_id": "P35624",
+      "mark": "A",
+      "answer": "Standing beside the river",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G3215",
+      "image_id": "P35624",
+      "mark": "B",
+      "answer": "Standing behind a shelter",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G3215",
+      "image_id": "P35624",
+      "mark": "C",
+      "answer": "Standing beside the campfire",
+      "expected": "awake",
+      "score": 1,
+      "reason": "Primary observation is standing, including location-only or idle wording, matching awake idle without inferring an interaction from nearby context."
+    },
+    {
+      "packet_id": "G3215",
+      "image_id": "P75918",
+      "mark": "A",
+      "answer": "Chopping wood with an axe",
+      "expected": "chop",
+      "score": 1,
+      "reason": "Primary action explicitly names chopping wood or chopping with an axe, matching chop."
+    },
+    {
+      "packet_id": "G3215",
+      "image_id": "P75918",
+      "mark": "B",
+      "answer": "Carrying logs on the shoulders",
+      "expected": "carry",
+      "score": 1,
+      "reason": "Primary action explicitly names carrying wood, a log or a bundle of logs, matching carry."
+    },
+    {
+      "packet_id": "G3215",
+      "image_id": "P75918",
+      "mark": "C",
+      "answer": "Walking",
+      "expected": "awake",
+      "score": 0,
+      "reason": "Primary action is walking, not the displayed awake idle posture. No tool or load does not turn the selected walking reading into idle; the same distinction was retained in Round 0."
+    }
+  ]
+}

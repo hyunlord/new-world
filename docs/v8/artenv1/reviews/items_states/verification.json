@@ -1,0 +1,26 @@
+{
+  "entries": 67,
+  "existing_entry_bucket_combinations": 66,
+  "additional_derived_states": 1,
+  "unique_source_paths": 61,
+  "duplicate_source_pixel_groups": 3,
+  "occurrences_per_duplicate_group": 3,
+  "retained_duplicate_occurrences_beyond_first": 6,
+  "native_board_pixels": [
+    800,
+    820
+  ],
+  "sprite_max_pixels": 32,
+  "cell_pixels": [
+    100,
+    88
+  ],
+  "all_67_source_hashes_unchanged": true,
+  "all_67_display_crops_exact": true,
+  "public_manifest_has_no_truth_fields": true,
+  "maximum_source_file_bytes": 10182,
+  "board_bytes": 119912,
+  "file_cap_bytes": 1500000,
+  "board_sha256": "826490bc76ececac96404ac16cd809e6e8175d5ef2850db6098cde1a62abaf97",
+  "status": "PACKET_READY_NOT_SCORED"
+}

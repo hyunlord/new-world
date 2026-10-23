@@ -1,0 +1,880 @@
+{
+  "species": "wolf",
+  "attempt": 3,
+  "raw": "/Users/rexxa/work/artenv1-data/animals/wolf_try3.png",
+  "raw_sha256": "d9095e609ee333a7ef46c9d05c0eeafb4e21cd423b98b95153f14ea18228cd58",
+  "prompt": "/Users/rexxa/work/artenv1-data/animals/wolf_try3.prompt.txt",
+  "prompt_sha256": "9417f5bfb540356fb2fab50cafeb577a4f93652052b5f0800f3152986f1aa2a4",
+  "shoulder_landmarks": {
+    "species": "wolf",
+    "attempt": 3,
+    "shoulder_y": 252,
+    "hoof_y": 474,
+    "shoulder_target": 28,
+    "dead_length": 56,
+    "special_pose": "attack"
+  },
+  "standing_scale": 0.12612612612612611,
+  "normalization": "route I ownership; one S-stand shoulder scale; dead body-length scale",
+  "ownership": {
+    "source_rgba_sha256": "151649b32ce943c37139b08c8433e68d0feae828def7a67a7e6af8c6d5a83917",
+    "ownership_sha256": "ab59ba63dda865618f04a35cfaecea9e7a132e8c22bb081e9b014a6bc1dd0e5a",
+    "visible_pixels": 481697,
+    "tied_visible_pixels": 6,
+    "reconstructed_exactly": true,
+    "foreign_major_pixels": 0,
+    "fragments": [
+      {
+        "area": 1,
+        "box": [
+          835,
+          222,
+          836,
+          223
+        ],
+        "panel_indices": [
+          2
+        ],
+        "distance": 2.0,
+        "tied_panels": [
+          2
+        ]
+      },
+      {
+        "area": 1,
+        "box": [
+          864,
+          258,
+          865,
+          259
+        ],
+        "panel_indices": [
+          2
+        ],
+        "distance": 2.0,
+        "tied_panels": [
+          2
+        ]
+      },
+      {
+        "area": 1,
+        "box": [
+          310,
+          312,
+          311,
+          313
+        ],
+        "panel_indices": [
+          1
+        ],
+        "distance": 2.23606797749979,
+        "tied_panels": [
+          1
+        ]
+      },
+      {
+        "area": 1,
+        "box": [
+          227,
+          326,
+          228,
+          327
+        ],
+        "panel_indices": [
+          0
+        ],
+        "distance": 2.23606797749979,
+        "tied_panels": [
+          0
+        ]
+      },
+      {
+        "area": 1,
+        "box": [
+          246,
+          352,
+          247,
+          353
+        ],
+        "panel_indices": [
+          0
+        ],
+        "distance": 2.0,
+        "tied_panels": [
+          0
+        ]
+      },
+      {
+        "area": 1,
+        "box": [
+          451,
+          669,
+          452,
+          670
+        ],
+        "panel_indices": [
+          6
+        ],
+        "distance": 2.23606797749979,
+        "tied_panels": [
+          6
+        ]
+      },
+      {
+        "area": 1,
+        "box": [
+          296,
+          738,
+          297,
+          739
+        ],
+        "panel_indices": [
+          6
+        ],
+        "distance": 2.23606797749979,
+        "tied_panels": [
+          6
+        ]
+      },
+      {
+        "area": 1,
+        "box": [
+          274,
+          834,
+          275,
+          835
+        ],
+        "panel_indices": [
+          6
+        ],
+        "distance": 2.23606797749979,
+        "tied_panels": [
+          6
+        ]
+      }
+    ]
+  },
+  "major_components": 10,
+  "source_opaque_border_pixels": 0,
+  "structural_pass": true,
+  "frames": [
+    {
+      "species": "wolf",
+      "facing": "S",
+      "pose": "stand",
+      "attempt": 3,
+      "image": "art/animal/wolf/S/stand.png",
+      "image_sha256": "bfa49aed5cca79f730cad2a9fccf8ebf1e003513b3d846147a8d51cfa14b6504",
+      "source_panel": "/Users/rexxa/work/artenv1-data/animals/wolf_try3_S_stand.png",
+      "source_panel_sha256": "937cc70aa6516526be79ff89d4f47b54272776828b0e29956379942909a7bded",
+      "source_box": [
+        0,
+        39,
+        274,
+        541
+      ],
+      "raw_sha256": "d9095e609ee333a7ef46c9d05c0eeafb4e21cd423b98b95153f14ea18228cd58",
+      "prompt_sha256": "9417f5bfb540356fb2fab50cafeb577a4f93652052b5f0800f3152986f1aa2a4",
+      "standing_scale": 0.12612612612612611,
+      "scale": 0.12612612612612611,
+      "normalization": {
+        "scaled_size": [
+          35,
+          63
+        ],
+        "trim_box": [
+          1,
+          14,
+          34,
+          55
+        ],
+        "placement": [
+          31,
+          32
+        ],
+        "resized_to_canvas_offset": [
+          30,
+          18
+        ],
+        "visible_pixels": 782,
+        "rotation_degrees": 0,
+        "scale": 0.12612612612612611,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true
+      },
+      "component_count": 1,
+      "visible_width": 33,
+      "visible_height": 41,
+      "structural_pass": true,
+      "status": "CANDIDATE_NOT_ADOPTED",
+      "species_readability": "READABILITY_FAIL",
+      "numeric_negative_control_calibration": "FAIL",
+      "review_report": "docs/v8/artenv1/animal_reviews_round1.json"
+    },
+    {
+      "species": "wolf",
+      "facing": "S",
+      "pose": "walk",
+      "attempt": 3,
+      "image": "art/animal/wolf/S/walk.png",
+      "image_sha256": "a2f4007ed481a5b23ae9b3f9f00612ac1e869c33c793da547639081b5c27358f",
+      "source_panel": "/Users/rexxa/work/artenv1-data/animals/wolf_try3_S_walk.png",
+      "source_panel_sha256": "7da1cea788cd0818e2d05ca2de08a11434302d46ec48cde7d837640c3175c0a4",
+      "source_box": [
+        225,
+        21,
+        562,
+        575
+      ],
+      "raw_sha256": "d9095e609ee333a7ef46c9d05c0eeafb4e21cd423b98b95153f14ea18228cd58",
+      "prompt_sha256": "9417f5bfb540356fb2fab50cafeb577a4f93652052b5f0800f3152986f1aa2a4",
+      "standing_scale": 0.12612612612612611,
+      "scale": 0.12612612612612611,
+      "normalization": {
+        "scaled_size": [
+          43,
+          70
+        ],
+        "trim_box": [
+          9,
+          21,
+          42,
+          58
+        ],
+        "placement": [
+          31,
+          36
+        ],
+        "resized_to_canvas_offset": [
+          22,
+          15
+        ],
+        "visible_pixels": 741,
+        "rotation_degrees": 0,
+        "scale": 0.12612612612612611,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true
+      },
+      "component_count": 1,
+      "visible_width": 33,
+      "visible_height": 37,
+      "structural_pass": true,
+      "status": "CANDIDATE_NOT_ADOPTED",
+      "species_readability": "READABILITY_FAIL",
+      "numeric_negative_control_calibration": "FAIL",
+      "review_report": "docs/v8/artenv1/animal_reviews_round1.json"
+    },
+    {
+      "species": "wolf",
+      "facing": "S",
+      "pose": "run",
+      "attempt": 3,
+      "image": "art/animal/wolf/S/run.png",
+      "image_sha256": "ff66e21ec36e601f46a1499fd12e392f4b6cc95379795223fe530f8264cdc461",
+      "source_panel": "/Users/rexxa/work/artenv1-data/animals/wolf_try3_S_run.png",
+      "source_panel_sha256": "8f3eb5a2e7a3e163b56a8565ef18de450076c1a4eb6a61a523a68ef0f23c0988",
+      "source_box": [
+        507,
+        28,
+        880,
+        570
+      ],
+      "raw_sha256": "d9095e609ee333a7ef46c9d05c0eeafb4e21cd423b98b95153f14ea18228cd58",
+      "prompt_sha256": "9417f5bfb540356fb2fab50cafeb577a4f93652052b5f0800f3152986f1aa2a4",
+      "standing_scale": 0.12612612612612611,
+      "scale": 0.12612612612612611,
+      "normalization": {
+        "scaled_size": [
+          47,
+          68
+        ],
+        "trim_box": [
+          8,
+          21,
+          47,
+          54
+        ],
+        "placement": [
+          28,
+          40
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          19
+        ],
+        "visible_pixels": 756,
+        "rotation_degrees": 0,
+        "scale": 0.12612612612612611,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true
+      },
+      "component_count": 1,
+      "visible_width": 39,
+      "visible_height": 33,
+      "structural_pass": true,
+      "status": "CANDIDATE_NOT_ADOPTED",
+      "species_readability": "READABILITY_FAIL",
+      "numeric_negative_control_calibration": "FAIL",
+      "review_report": "docs/v8/artenv1/animal_reviews_round1.json"
+    },
+    {
+      "species": "wolf",
+      "facing": "S",
+      "pose": "attack",
+      "attempt": 3,
+      "image": "art/animal/wolf/S/attack.png",
+      "image_sha256": "de4caf282d0afe6c0530031fdf6fa03ce6e0d7ddcd45c0c4ded4f361c37e06a5",
+      "source_panel": "/Users/rexxa/work/artenv1-data/animals/wolf_try3_S_attack.png",
+      "source_panel_sha256": "20c9460dc1bd8994d1cfc96b1db1130240b20da89bcb85da56e47b14652b5802",
+      "source_box": [
+        763,
+        33,
+        1254,
+        556
+      ],
+      "raw_sha256": "d9095e609ee333a7ef46c9d05c0eeafb4e21cd423b98b95153f14ea18228cd58",
+      "prompt_sha256": "9417f5bfb540356fb2fab50cafeb577a4f93652052b5f0800f3152986f1aa2a4",
+      "standing_scale": 0.12612612612612611,
+      "scale": 0.12612612612612611,
+      "normalization": {
+        "scaled_size": [
+          62,
+          66
+        ],
+        "trim_box": [
+          15,
+          12,
+          45,
+          55
+        ],
+        "placement": [
+          33,
+          30
+        ],
+        "resized_to_canvas_offset": [
+          18,
+          18
+        ],
+        "visible_pixels": 810,
+        "rotation_degrees": 0,
+        "scale": 0.12612612612612611,
+        "discarded_pixels": 1,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true
+      },
+      "component_count": 1,
+      "visible_width": 30,
+      "visible_height": 43,
+      "structural_pass": true,
+      "status": "CANDIDATE_NOT_ADOPTED",
+      "species_readability": "READABILITY_FAIL",
+      "numeric_negative_control_calibration": "FAIL",
+      "review_report": "docs/v8/artenv1/animal_reviews_round1.json"
+    },
+    {
+      "species": "wolf",
+      "facing": "S",
+      "pose": "dead",
+      "attempt": 3,
+      "image": "art/animal/wolf/S/dead.png",
+      "image_sha256": "7f69b2962bbdd02be5b0721739ab4180d08f7d1533b96986ed55d9614e688643",
+      "source_panel": "/Users/rexxa/work/artenv1-data/animals/wolf_try3_S_dead.png",
+      "source_panel_sha256": "670d3b34f366635a9a4681a5029e05041d2e877c03fd4d3da547fca45dd9a9d5",
+      "source_box": [
+        1139,
+        163,
+        1528,
+        647
+      ],
+      "raw_sha256": "d9095e609ee333a7ef46c9d05c0eeafb4e21cd423b98b95153f14ea18228cd58",
+      "prompt_sha256": "9417f5bfb540356fb2fab50cafeb577a4f93652052b5f0800f3152986f1aa2a4",
+      "standing_scale": 0.12612612612612611,
+      "scale": 0.14775725593667546,
+      "normalization": {
+        "scaled_size": [
+          57,
+          72
+        ],
+        "trim_box": [
+          0,
+          28,
+          57,
+          47
+        ],
+        "placement": [
+          19,
+          38
+        ],
+        "resized_to_canvas_offset": [
+          19,
+          10
+        ],
+        "visible_pixels": 725,
+        "rotation_degrees": 0,
+        "scale": 0.14775725593667546,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true
+      },
+      "component_count": 1,
+      "visible_width": 57,
+      "visible_height": 19,
+      "structural_pass": true,
+      "status": "CANDIDATE_NOT_ADOPTED",
+      "species_readability": "READABILITY_FAIL",
+      "numeric_negative_control_calibration": "FAIL",
+      "review_report": "docs/v8/artenv1/animal_reviews_round1.json"
+    },
+    {
+      "species": "wolf",
+      "facing": "E",
+      "pose": "stand",
+      "attempt": 3,
+      "image": "art/animal/wolf/E/stand.png",
+      "image_sha256": "a3adadf342932b69b97051bbb00c83fdf30ffacc464634a9b851aee5a04fd700",
+      "source_panel": "/Users/rexxa/work/artenv1-data/animals/wolf_try3_E_stand.png",
+      "source_panel_sha256": "7d196bdf13ec76c3cb8b7926bb31d08ea996fc8b6f63bf4169f337aa91bca0ed",
+      "source_box": [
+        0,
+        539,
+        322,
+        912
+      ],
+      "raw_sha256": "d9095e609ee333a7ef46c9d05c0eeafb4e21cd423b98b95153f14ea18228cd58",
+      "prompt_sha256": "9417f5bfb540356fb2fab50cafeb577a4f93652052b5f0800f3152986f1aa2a4",
+      "standing_scale": 0.12612612612612611,
+      "scale": 0.12612612612612611,
+      "normalization": {
+        "scaled_size": [
+          41,
+          47
+        ],
+        "trim_box": [
+          1,
+          9,
+          35,
+          46
+        ],
+        "placement": [
+          31,
+          36
+        ],
+        "resized_to_canvas_offset": [
+          30,
+          27
+        ],
+        "visible_pixels": 708,
+        "rotation_degrees": 0,
+        "scale": 0.12612612612612611,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true
+      },
+      "component_count": 1,
+      "visible_width": 34,
+      "visible_height": 37,
+      "structural_pass": true,
+      "status": "CANDIDATE_NOT_ADOPTED",
+      "species_readability": "READABILITY_FAIL",
+      "numeric_negative_control_calibration": "FAIL",
+      "review_report": "docs/v8/artenv1/animal_reviews_round1.json"
+    },
+    {
+      "species": "wolf",
+      "facing": "E",
+      "pose": "walk",
+      "attempt": 3,
+      "image": "art/animal/wolf/E/walk.png",
+      "image_sha256": "2fecb42e3692f1c07b9ab22b63f18cc5723643317a8c4dca3d8cbecc9970c72b",
+      "source_panel": "/Users/rexxa/work/artenv1-data/animals/wolf_try3_E_walk.png",
+      "source_panel_sha256": "ba40e0c174c39beeb257be3ed527fb117145f526c2c0596cc010086a5f582317",
+      "source_box": [
+        255,
+        549,
+        636,
+        1002
+      ],
+      "raw_sha256": "d9095e609ee333a7ef46c9d05c0eeafb4e21cd423b98b95153f14ea18228cd58",
+      "prompt_sha256": "9417f5bfb540356fb2fab50cafeb577a4f93652052b5f0800f3152986f1aa2a4",
+      "standing_scale": 0.12612612612612611,
+      "scale": 0.12612612612612611,
+      "normalization": {
+        "scaled_size": [
+          48,
+          57
+        ],
+        "trim_box": [
+          0,
+          12,
+          41,
+          44
+        ],
+        "placement": [
+          27,
+          41
+        ],
+        "resized_to_canvas_offset": [
+          27,
+          29
+        ],
+        "visible_pixels": 733,
+        "rotation_degrees": 0,
+        "scale": 0.12612612612612611,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true
+      },
+      "component_count": 1,
+      "visible_width": 41,
+      "visible_height": 32,
+      "structural_pass": true,
+      "status": "CANDIDATE_NOT_ADOPTED",
+      "species_readability": "READABILITY_FAIL",
+      "numeric_negative_control_calibration": "FAIL",
+      "review_report": "docs/v8/artenv1/animal_reviews_round1.json"
+    },
+    {
+      "species": "wolf",
+      "facing": "E",
+      "pose": "run",
+      "attempt": 3,
+      "image": "art/animal/wolf/E/run.png",
+      "image_sha256": "73835e18450c95ca6edc03855ca85d9c8d3fbc6c0856e6dbc76c7f8529b95b7c",
+      "source_panel": "/Users/rexxa/work/artenv1-data/animals/wolf_try3_E_run.png",
+      "source_panel_sha256": "c1a28204d159d2f858f27a49445a8be002536bab122f977ddf8b7feb1e619d43",
+      "source_box": [
+        571,
+        545,
+        961,
+        1008
+      ],
+      "raw_sha256": "d9095e609ee333a7ef46c9d05c0eeafb4e21cd423b98b95153f14ea18228cd58",
+      "prompt_sha256": "9417f5bfb540356fb2fab50cafeb577a4f93652052b5f0800f3152986f1aa2a4",
+      "standing_scale": 0.12612612612612611,
+      "scale": 0.12612612612612611,
+      "normalization": {
+        "scaled_size": [
+          49,
+          58
+        ],
+        "trim_box": [
+          0,
+          13,
+          49,
+          40
+        ],
+        "placement": [
+          23,
+          46
+        ],
+        "resized_to_canvas_offset": [
+          23,
+          33
+        ],
+        "visible_pixels": 725,
+        "rotation_degrees": 0,
+        "scale": 0.12612612612612611,
+        "discarded_pixels": 1,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true
+      },
+      "component_count": 1,
+      "visible_width": 49,
+      "visible_height": 27,
+      "structural_pass": true,
+      "status": "CANDIDATE_NOT_ADOPTED",
+      "species_readability": "READABILITY_FAIL",
+      "numeric_negative_control_calibration": "FAIL",
+      "review_report": "docs/v8/artenv1/animal_reviews_round1.json"
+    },
+    {
+      "species": "wolf",
+      "facing": "E",
+      "pose": "attack",
+      "attempt": 3,
+      "image": "art/animal/wolf/E/attack.png",
+      "image_sha256": "6224f02adc924b809fb842873367f53a55bc7e2aad036147f8cc5c845338fbb0",
+      "source_panel": "/Users/rexxa/work/artenv1-data/animals/wolf_try3_E_attack.png",
+      "source_panel_sha256": "b9ac0aca290175e9ffbda22db5a83712842db9c67bdea9c23508072e944a80bc",
+      "source_box": [
+        881,
+        514,
+        1354,
+        1008
+      ],
+      "raw_sha256": "d9095e609ee333a7ef46c9d05c0eeafb4e21cd423b98b95153f14ea18228cd58",
+      "prompt_sha256": "9417f5bfb540356fb2fab50cafeb577a4f93652052b5f0800f3152986f1aa2a4",
+      "standing_scale": 0.12612612612612611,
+      "scale": 0.12612612612612611,
+      "normalization": {
+        "scaled_size": [
+          60,
+          62
+        ],
+        "trim_box": [
+          7,
+          6,
+          40,
+          48
+        ],
+        "placement": [
+          31,
+          31
+        ],
+        "resized_to_canvas_offset": [
+          24,
+          25
+        ],
+        "visible_pixels": 705,
+        "rotation_degrees": 0,
+        "scale": 0.12612612612612611,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true
+      },
+      "component_count": 1,
+      "visible_width": 33,
+      "visible_height": 42,
+      "structural_pass": true,
+      "status": "CANDIDATE_NOT_ADOPTED",
+      "species_readability": "READABILITY_FAIL",
+      "numeric_negative_control_calibration": "FAIL",
+      "review_report": "docs/v8/artenv1/animal_reviews_round1.json"
+    },
+    {
+      "species": "wolf",
+      "facing": "E",
+      "pose": "dead",
+      "attempt": 3,
+      "image": "art/animal/wolf/E/dead.png",
+      "image_sha256": "7b210af1bd0aae0e68ee837a98cbb6b1a36ad958f2b4893701b0e9832c1d5d05",
+      "source_panel": "/Users/rexxa/work/artenv1-data/animals/wolf_try3_E_dead.png",
+      "source_panel_sha256": "fbb402d15c6c2532b43c93a98b55712ba046e50866cf1ee2f2638f2729c3ec53",
+      "source_box": [
+        1175,
+        639,
+        1536,
+        996
+      ],
+      "raw_sha256": "d9095e609ee333a7ef46c9d05c0eeafb4e21cd423b98b95153f14ea18228cd58",
+      "prompt_sha256": "9417f5bfb540356fb2fab50cafeb577a4f93652052b5f0800f3152986f1aa2a4",
+      "standing_scale": 0.12612612612612611,
+      "scale": 0.16184971098265896,
+      "normalization": {
+        "scaled_size": [
+          58,
+          58
+        ],
+        "trim_box": [
+          0,
+          27,
+          57,
+          43
+        ],
+        "placement": [
+          19,
+          41
+        ],
+        "resized_to_canvas_offset": [
+          19,
+          14
+        ],
+        "visible_pixels": 677,
+        "rotation_degrees": 0,
+        "scale": 0.16184971098265896,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true
+      },
+      "component_count": 1,
+      "visible_width": 57,
+      "visible_height": 16,
+      "structural_pass": true,
+      "status": "CANDIDATE_NOT_ADOPTED",
+      "species_readability": "READABILITY_FAIL",
+      "numeric_negative_control_calibration": "FAIL",
+      "review_report": "docs/v8/artenv1/animal_reviews_round1.json"
+    }
+  ],
+  "status": "CANDIDATE_NOT_ADOPTED",
+  "acceptance": {
+    "status": "CANDIDATE_NOT_ADOPTED",
+    "readability": "READABILITY_FAIL",
+    "numeric_negative_control_calibration": "FAIL",
+    "review_round": 1,
+    "review_report": "docs/v8/artenv1/animal_reviews_round1.json",
+    "review_report_sha256": "5887fdb9036cbe00e252486d6e228143f5d2ff7dabd33aae96194a4731b09d45",
+    "generation_attempts_used": 3,
+    "generation_attempts_cap": 3,
+    "generation_attempts_remaining": 0,
+    "groups": [
+      {
+        "reviewer": "animal_c",
+        "species": "wolf",
+        "scale": 1,
+        "denominator": 10,
+        "species_correct": 10,
+        "pose_correct": 8,
+        "species_minimum": 9,
+        "pose_minimum": 8,
+        "species_pass": true,
+        "pose_pass": true,
+        "passed": true,
+        "species_failed_ids": [],
+        "pose_failed_ids": [
+          "R1-1X-11",
+          "R1-1X-15"
+        ]
+      },
+      {
+        "reviewer": "animal_c",
+        "species": "wolf",
+        "scale": 2,
+        "denominator": 10,
+        "species_correct": 10,
+        "pose_correct": 8,
+        "species_minimum": 9,
+        "pose_minimum": 8,
+        "species_pass": true,
+        "pose_pass": true,
+        "passed": true,
+        "species_failed_ids": [],
+        "pose_failed_ids": [
+          "R1-2X-04",
+          "R1-2X-14"
+        ]
+      },
+      {
+        "reviewer": "animal_d",
+        "species": "wolf",
+        "scale": 1,
+        "denominator": 10,
+        "species_correct": 10,
+        "pose_correct": 7,
+        "species_minimum": 9,
+        "pose_minimum": 8,
+        "species_pass": true,
+        "pose_pass": false,
+        "passed": false,
+        "species_failed_ids": [],
+        "pose_failed_ids": [
+          "R1-1X-09",
+          "R1-1X-12",
+          "R1-1X-15"
+        ]
+      },
+      {
+        "reviewer": "animal_d",
+        "species": "wolf",
+        "scale": 2,
+        "denominator": 10,
+        "species_correct": 10,
+        "pose_correct": 7,
+        "species_minimum": 9,
+        "pose_minimum": 8,
+        "species_pass": true,
+        "pose_pass": false,
+        "passed": false,
+        "species_failed_ids": [],
+        "pose_failed_ids": [
+          "R1-2X-10",
+          "R1-2X-13",
+          "R1-2X-14"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,203 @@
+{
+  "id": "meat",
+  "path": "art/style05/env1/items/meat.png",
+  "family": "items",
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "source": "/Users/rexxa/work/artenv1-data/items/meat_try2_raw.png",
+  "source_sha256": "3170c9d7c9998ab8000b8dea6a2acb067ffb69bd539006deef2407ba31c110c5",
+  "sha256": "d3a8165f64dccb33577db38b7a0908c32a716c27dcbe34ec0d5e6e757e7f4714",
+  "attempts": [
+    {
+      "id": "meat",
+      "attempt": 1,
+      "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE compact cut of fresh raw game meat, chunky irregular warm muted brick-red meat haunch with a short cream bone end sticking from one side and a thin pale fat rim, tasteful small game resource icon, no blood or gore, no plate. Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, broad muted two-tone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+      "refs": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+      ],
+      "started_at": "2026-10-23T06:26:04.289Z",
+      "completed_at": "2026-10-23T06:28:27.266Z",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-03eb1dde-7ac8-41bd-8574-05e40f81262a.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "tool": "image_gen__imagegen",
+      "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+      "raw": "/Users/rexxa/work/artenv1-data/items/meat_try1_raw.png",
+      "raw_sha256": "bd56068df9a200bc70e47feda06a556db95e1381eb8a122ff47940ccf915d3c4",
+      "references_sha256": {
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      },
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/items/meat_try1_raw.png",
+        "sha256": "bd56068df9a200bc70e47feda06a556db95e1381eb8a122ff47940ccf915d3c4",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.23228664997110382,
+          "saturation_q25": 0.608963912803802,
+          "saturation_q75": 0.775691132504007,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.02373917862971819,
+          "foreground_pixels": 27247
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      }
+    },
+    {
+      "id": "meat",
+      "attempt": 2,
+      "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE compact cut of fresh raw game meat, chunky irregular warm muted brick-red meat haunch with a short cream bone end sticking from one side and a thin pale fat rim, tasteful small game resource icon, no blood or gore, no plate. Use delicate dark hand-ink contours, restrained translucent earthy pigment washes with quieter lower-contrast interiors: no broad black shadow masses, no bright ivory highlights, no high contrast mottling. Keep moderate fine internal marks and a narrow range of mids. Muted taupe, grey-brown, buff palette; any orange or red is greyed and muted. Reference3 props_logs and4 props_hearth are authoritative same-family detail references. . Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, muted closely related midtone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+      "refs": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png"
+      ],
+      "started_at": "2026-10-23T06:31:43.470Z",
+      "completed_at": "2026-10-23T06:37:43.737Z",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-43a11d81-546a-4b90-910f-f321700a4189.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "tool": "image_gen__imagegen",
+      "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+      "raw": "/Users/rexxa/work/artenv1-data/items/meat_try2_raw.png",
+      "raw_sha256": "3170c9d7c9998ab8000b8dea6a2acb067ffb69bd539006deef2407ba31c110c5",
+      "references_sha256": {
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832"
+      },
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/items/meat_try2_raw.png",
+        "sha256": "3170c9d7c9998ab8000b8dea6a2acb067ffb69bd539006deef2407ba31c110c5",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.27052246151423287,
+          "saturation_q25": 0.5621872426944664,
+          "saturation_q75": 0.6929020940436876,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.011280021664964616,
+          "foreground_pixels": 26658
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      }
+    }
+  ],
+  "numeric": {
+    "candidate": "/Users/rexxa/work/artenv1-data/items/meat_try2_raw.png",
+    "sha256": "3170c9d7c9998ab8000b8dea6a2acb067ffb69bd539006deef2407ba31c110c5",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.27052246151423287,
+      "saturation_q25": 0.5621872426944664,
+      "saturation_q75": 0.6929020940436876,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.011280021664964616,
+      "foreground_pixels": 26658
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 4,
+      "palette": 5,
+      "sentence": "Matches the hand-drawn ink marks, wash variation, and muted earthy palette of the originals, with the same illustrative rendering."
+    },
+    "model_status": "SAME_FAMILY_VERIFIED",
+    "passed": true
+  },
+  "status": "STYLE_ACCEPTED_SEMANTIC_REVIEWED",
+  "operations": [
+    "generated alpha preserved",
+    "alpha-bounds crop",
+    "proportional Lanczos fit to58px",
+    "center in64px tile"
+  ],
+  "count_buckets": [
+    "art/style05/env1/items/meat_count_1.png",
+    "art/style05/env1/items/meat_count_2_8.png",
+    "art/style05/env1/items/meat_count_9_plus.png"
+  ],
+  "count_bucket_sha256": {
+    "art/style05/env1/items/meat_count_1.png": "d3a8165f64dccb33577db38b7a0908c32a716c27dcbe34ec0d5e6e757e7f4714",
+    "art/style05/env1/items/meat_count_2_8.png": "03465edc30a76aba75062c6bc0b147482804617a400e7ee9f44f9007c6759432",
+    "art/style05/env1/items/meat_count_9_plus.png": "1a5b74646c6340b4d99b81cf552c2bba6d0be478408b617a7f5c0f866fef7d96"
+  },
+  "model": {
+    "scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 4,
+      "palette": 5,
+      "sentence": "Matches the hand-drawn ink marks, wash variation, and muted earthy palette of the originals, with the same illustrative rendering."
+    },
+    "evidence": "art/style05/env1/items/model_scorecard3.png",
+    "raw_sha256": "ce3e64826599487d58e2cb1b0bcbc225f0dc045bf6a03db9386f721e6b51281a",
+    "mechanism": "built-in image-generation model rendered scorecard; actual printed scores visually transcribed; model version not exposed"
+  },
+  "reading": "탁한 붉은 고기와 한쪽 뼈 돌출부가 작은 고기 자원으로 읽힌다.",
+  "style_accepted": true,
+  "readability_status": "EXACT_KIND_RECOGNIZED_BOTH",
+  "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+  "readability_review_ids": [
+    "a",
+    "b"
+  ],
+  "exact_kind_scores": [
+    true,
+    true
+  ]
+}

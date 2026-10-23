@@ -1,0 +1,80 @@
+{
+  "manifest_sha256": "c586d83d5178f55d2c9922c3ac757469a0aba4c33b034a592105f16c17231e2b",
+  "asset_count": 55,
+  "file_dimensions_hashes_cap_pass": true,
+  "ground_caps": [
+    {
+      "id": "floor_packed_earth",
+      "mean": 0.39497853649662995,
+      "std": 0.053571034153655904,
+      "saturation": 0.28809040743863235,
+      "pass": true
+    },
+    {
+      "id": "floor_dug_rock",
+      "mean": 0.39498856971890317,
+      "std": 0.07068226342576282,
+      "saturation": 0.2881291525266113,
+      "pass": true
+    },
+    {
+      "id": "ford",
+      "mean": 0.3950590712124694,
+      "std": 0.07986063724367529,
+      "saturation": 0.22218538502174862,
+      "pass": true
+    },
+    {
+      "id": "hill_edge",
+      "mean": 0.3952171999463848,
+      "std": 0.11908569205643754,
+      "saturation": 0.2878161812210077,
+      "pass": true
+    },
+    {
+      "id": "dug_face",
+      "mean": 0.3630405650658701,
+      "std": 0.13052019168201623,
+      "saturation": 0.28918302340355395,
+      "pass": true
+    }
+  ],
+  "snow_alpha_max": 153,
+  "generation_calls": 55,
+  "max_asset_tries": 3,
+  "static_checks": [
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "b53fb7",
+        "wall_time_seconds": 0.022442333,
+        "exit_code": 0,
+        "original_token_count": 5,
+        "output": "All checks passed!\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "5448d6",
+        "wall_time_seconds": 0.927325708,
+        "exit_code": 0,
+        "original_token_count": 8,
+        "output": "0 errors, 0 warnings, 0 notes\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "6bfe1a",
+        "wall_time_seconds": 0.015132292,
+        "exit_code": 0,
+        "original_token_count": 0,
+        "output": ""
+      }
+    }
+  ],
+  "final_review_board": "art/style05/env1/built/built_review_board.png",
+  "final_review_board_sha256": "4e20ceeee23edf2a6fe3fe07c1b516a2dfabc73ed8b34557ada06e738347ffbd",
+  "post_documentation_freeze_unchanged": true
+}

@@ -1,0 +1,60 @@
+{
+  "species": "wolf",
+  "facing": "E",
+  "pose": "stand",
+  "attempt": 2,
+  "image": "art/animal/wolf/E/stand.png",
+  "image_sha256": "0a2379f384a5c527e5da2a2a3827aab05dcd815d1d9c11b6f8006f62511c77be",
+  "source_panel": "/Users/rexxa/work/artenv1-data/animals/wolf_try2_E_stand.png",
+  "source_panel_sha256": "34a584420b2922e65b1b580c09eaecbf2df5d78a01d967656eb14ed8534c12dc",
+  "source_box": [
+    0,
+    535,
+    348,
+    1024
+  ],
+  "raw_sha256": "29a229c978dc2afaf6b455f2db9f65c85d683f69d8d228b73481ab1a28b69213",
+  "prompt_sha256": "17e618f5870af6a4e8abe4f6c525e96d2fe9769227999409f5955665d9807bc5",
+  "standing_scale": 0.11336032388663968,
+  "scale": 0.11336032388663968,
+  "normalization": {
+    "scaled_size": [
+      39,
+      55
+    ],
+    "trim_box": [
+      1,
+      11,
+      35,
+      40
+    ],
+    "placement": [
+      31,
+      44
+    ],
+    "resized_to_canvas_offset": [
+      30,
+      33
+    ],
+    "visible_pixels": 544,
+    "rotation_degrees": 0,
+    "scale": 0.11336032388663968,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true
+  },
+  "component_count": 1,
+  "visible_width": 34,
+  "visible_height": 29,
+  "structural_pass": true,
+  "status": "CANDIDATE_PENDING_REVIEW"
+}

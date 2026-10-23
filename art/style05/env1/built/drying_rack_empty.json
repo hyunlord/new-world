@@ -1,0 +1,77 @@
+{
+  "id": "drying_rack_empty",
+  "path": "art/style05/env1/built/drying_rack_empty.png",
+  "width": 128,
+  "height": 64,
+  "footprint": [
+    2,
+    1
+  ],
+  "family": "buildings",
+  "attempts": 3,
+  "selected_attempt": 3,
+  "status": "ACCEPTED_ASSET",
+  "raw": "/Users/rexxa/work/artenv1-data/built/drying_rack_empty_try3_raw.png",
+  "raw_sha256": "3a40a42598220f5c89e935406744b6e0140ba69f719e22ffa900c597fddb46b9",
+  "sha256": "50e32910561dbe492ce8bcd9897824ab7fb31970beeeda40a4c9403c0126d7a9",
+  "metadata": "/Users/rexxa/work/artenv1-data/built/drying_rack_empty_try3.json",
+  "metadata_sha256": "2046863f095c0d6dc4a273ebfdba545d8b11d4f32d3284705d6da8fd2a5a5f6a",
+  "numeric": {
+    "candidate": "/Users/rexxa/work/artenv1-data/built/drying_rack_empty_try3_raw.png",
+    "sha256": "3a40a42598220f5c89e935406744b6e0140ba69f719e22ffa900c597fddb46b9",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.2142129912441458,
+      "saturation_q25": 0.5342407774113103,
+      "saturation_q75": 0.5623953604096625,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.018040821644675954,
+      "foreground_pixels": 8042
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "operations": [
+    "crop alpha>=128 bounds plus2px fringe (104, 113, 1670, 772); no alpha edits",
+    "Lanczos contain (124, 52) offset(2, 6)"
+  ],
+  "tone": null,
+  "seam": null,
+  "bytes": 8896,
+  "model": {
+    "scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "sentence": "Matches the hand-drawn ink linework, textured brush/wash rendering, wood grain detail, and same upper-left sunlight and natural earth tones as the reference buildings."
+    },
+    "review_id": "judge_buildings_c",
+    "candidate_raw_sha256": "3a40a42598220f5c89e935406744b6e0140ba69f719e22ffa900c597fddb46b9",
+    "scorecard_sha256": "dc5934bf68b9cea98d8abe9928c93bec63c708c40e15e9932ea5977b5287d998"
+  },
+  "physical_footprint": [
+    2,
+    1
+  ],
+  "style_pass": true,
+  "reading": "Four poles and thin tension ropes surround an empty center, distinct from the filled rack.",
+  "semantic_pass": true,
+  "required_wrap_pass": true,
+  "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+}

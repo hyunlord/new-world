@@ -1,0 +1,77 @@
+{
+  "id": "door_log_closed",
+  "path": "art/style05/env1/built/door_log_closed.png",
+  "width": 64,
+  "height": 64,
+  "footprint": [
+    1,
+    1
+  ],
+  "family": "buildings",
+  "attempts": 3,
+  "selected_attempt": 3,
+  "status": "NUMERIC_FAIL_CANDIDATE",
+  "raw": "/Users/rexxa/work/artenv1-data/built/door_log_closed_try3_raw.png",
+  "raw_sha256": "4f509cc26a90d0600dc158cb300d4934eb21f96c382e6f622131d610a1e505e8",
+  "sha256": "bb29977ba9a4d29d9eebd7f1a0505dfde292fc63d3eb192f3e4ef28adf95fb58",
+  "metadata": "/Users/rexxa/work/artenv1-data/built/door_log_closed_try3.json",
+  "metadata_sha256": "894cda8c71e38a28a30c7470713b8518a40d5b38180df2e611dc2022264efb74",
+  "numeric": {
+    "candidate": "/Users/rexxa/work/artenv1-data/built/door_log_closed_try3_raw.png",
+    "sha256": "4f509cc26a90d0600dc158cb300d4934eb21f96c382e6f622131d610a1e505e8",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.1774033696729435,
+      "saturation_q25": 0.52378724509532,
+      "saturation_q75": 0.5767192137343002,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.03331141837830195,
+      "foreground_pixels": 4162
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": false
+    },
+    "numeric_pass": false,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "operations": [
+    "crop alpha>=128 bounds plus2px fringe (159, 409, 1377, 614); no alpha edits",
+    "Lanczos contain (60, 10) offset(2, 27)"
+  ],
+  "tone": null,
+  "seam": null,
+  "bytes": 1448,
+  "model": {
+    "scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "sentence": "Matches the hand-drawn ink-and-wash medium, line weight and texture, upper-left lighting, and warm earthy palette almost exactly, with the same wood rendering and rope lashings as the reference structures."
+    },
+    "review_id": "judge_buildings_b",
+    "candidate_raw_sha256": "4f509cc26a90d0600dc158cb300d4934eb21f96c382e6f622131d610a1e505e8",
+    "scorecard_sha256": "816a6cb5e5250c66fd574ce78979547ed5f5e150add2f7f453a573ef3bca171a"
+  },
+  "physical_footprint": [
+    1,
+    1
+  ],
+  "style_pass": false,
+  "reading": "Thin horizontal gate bar reads closed, but it is too slight beside16px walls and fails numeric wash.",
+  "semantic_pass": true,
+  "required_wrap_pass": true,
+  "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+}

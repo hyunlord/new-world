@@ -1,0 +1,77 @@
+{
+  "id": "door_log_open",
+  "path": "art/style05/env1/built/door_log_open.png",
+  "width": 64,
+  "height": 64,
+  "footprint": [
+    1,
+    1
+  ],
+  "family": "buildings",
+  "attempts": 3,
+  "selected_attempt": 3,
+  "status": "NUMERIC_FAIL_CANDIDATE",
+  "raw": "/Users/rexxa/work/artenv1-data/built/door_log_open_try3_raw.png",
+  "raw_sha256": "92361e1f42a5860fd7ee918fb7f26f8c9c748e1fac760eb65a6e60e07794a8ee",
+  "sha256": "a0708f809e3e606b165a37303940aa3500024a576f820c99cb455f5f958edb30",
+  "metadata": "/Users/rexxa/work/artenv1-data/built/door_log_open_try3.json",
+  "metadata_sha256": "828e2248ef46a466f1729dd6ea8565a05166c16b6516bfc2a31f4794c5d3f850",
+  "numeric": {
+    "candidate": "/Users/rexxa/work/artenv1-data/built/door_log_open_try3_raw.png",
+    "sha256": "92361e1f42a5860fd7ee918fb7f26f8c9c748e1fac760eb65a6e60e07794a8ee",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.2530546623794212,
+      "saturation_q25": 0.561012910049858,
+      "saturation_q75": 0.6529294824468015,
+      "stroke_q25": 2.0,
+      "stroke_q50": 4.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 6.0,
+      "wash_flatness": 0.02989376260201524,
+      "foreground_pixels": 10872
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": false
+    },
+    "numeric_pass": false,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "operations": [
+    "crop alpha>=128 bounds plus2px fringe (290, 247, 985, 924); no alpha edits",
+    "Lanczos contain (60, 58) offset(2, 3)"
+  ],
+  "tone": null,
+  "seam": null,
+  "bytes": 3049,
+  "model": {
+    "scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "sentence": "Indistinguishable in style, using the same inked contours, wood grain detail, lashings, value treatment, and Earth-tone palette as the reference images, consistent with the same lighting and material look."
+    },
+    "review_id": "judge_buildings_b",
+    "candidate_raw_sha256": "92361e1f42a5860fd7ee918fb7f26f8c9c748e1fac760eb65a6e60e07794a8ee",
+    "scorecard_sha256": "816a6cb5e5250c66fd574ce78979547ed5f5e150add2f7f453a573ef3bca171a"
+  },
+  "physical_footprint": [
+    1,
+    1
+  ],
+  "style_pass": false,
+  "reading": "Two post tops and a north-swung panel leave a clear passage; panel is narrow at half scale.",
+  "semantic_pass": true,
+  "required_wrap_pass": true,
+  "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+}

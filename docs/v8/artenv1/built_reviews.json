@@ -1,0 +1,637 @@
+{
+  "mechanism": "actual builtin image-model scorecards",
+  "reviews": [
+    {
+      "id": "judge_buildings_a",
+      "type": "image_model_scorecard",
+      "prompt": "Act as a fresh independent image-model STYLE judge. Images1and2 are locked SAME-FAMILY building style crops; image3 is locked original shared-lighting scene. Image4 alone contains FOUR labeled candidates in reading order: wall_log_straight, wall_log_corner, wall_stone_straight, wall_stone_corner. Compare each candidate's ACTUAL rendering style to images1and2; do not score references or repaint art. Output clean highly legible white scorecard TABLE: one row per candidate, columns ID,MEDIUM,LINE,LIGHT,PALETTE,ONE-SENTENCE REASON. Scores1unrelated,2substantiallydifferent,3mixed/notabledrift,4closematch,5indistinguishable style. Four independent integer scores1to5; no assumed pass. Judge content/camera separately, do not penalize different depicted subjects or naturally sparser bare material. Focus ink+wash technique, contour/detail balance, upper-left lighting, natural earth palette. Make actual style differences explicit. Be strict, any3is failure. All four rows and full sentences readable. Output onlyscorecard; no decorative art or candidate reproduction.",
+      "refs": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/building_hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/building_roof.png",
+        "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S7_3.png",
+        "/Users/rexxa/work/artenv1-data/built/judge_buildings_a_candidates.png"
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-08c7-7070-b1e2-5305974ed20f/exec-5f5be1f3-3642-4ac1-9944-fe403e8cf10f.png",
+      "start": "2026-10-23T06:56:49.645Z",
+      "end": "2026-10-23T06:57:12.894Z",
+      "candidate_ids": [
+        "wall_log_straight",
+        "wall_log_corner",
+        "wall_stone_straight",
+        "wall_stone_corner"
+      ],
+      "transcription": {
+        "wall_log_straight": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Matches the hand-drawn ink-and-wash look, outline weight, wood texture detail, and warm earth palette with the same upper-left lighting and soft shadows as the reference images."
+        },
+        "wall_log_corner": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Same rendering style, contour treatment, rugged lashed-log detailing, and natural color range as the references, with consistent lighting and shading."
+        },
+        "wall_stone_straight": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Closely matches the hand-painted ink-and-wash technique, line work, and lighting, with only slightly smoother stone texture and marginally cleaner outlines than the reference crops."
+        },
+        "wall_stone_corner": {
+          "medium": 3,
+          "line": 3,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Same overall style and palette, but the stone shapes are a bit cleaner and more uniform with thicker, neater outlines and less gritty texture variation than in the reference images."
+        }
+      },
+      "transcription_method": "Manually transcribed after seeing actual builtin image-model scorecard output.",
+      "frozen_candidates": {
+        "board": "/Users/rexxa/work/artenv1-data/built/judge_buildings_a_candidates.png",
+        "sha256": "dbf2992050746ed47ef355f7831af14c32865754bc968578ccbb82b7208ff892",
+        "candidates": [
+          {
+            "id": "wall_log_straight",
+            "raw": "/Users/rexxa/work/artenv1-data/built/wall_log_straight_try3_raw.png",
+            "sha256": "7f97189eaa78cdae96d0776cd742feaa933d8c05da12cb69448a425981d02a0d"
+          },
+          {
+            "id": "wall_log_corner",
+            "raw": "/Users/rexxa/work/artenv1-data/built/wall_log_corner_try1_raw.png",
+            "sha256": "34ea7a4a8d6aeba6b27482a6dafa0035d59dfee37ce5496b4f7193bb9ee98aa0"
+          },
+          {
+            "id": "wall_stone_straight",
+            "raw": "/Users/rexxa/work/artenv1-data/built/wall_stone_straight_try1_raw.png",
+            "sha256": "4e0e101e04916d1efca7e5f267ccb1257194a43b0c7b94d21a7828d96f8eacc7"
+          },
+          {
+            "id": "wall_stone_corner",
+            "raw": "/Users/rexxa/work/artenv1-data/built/wall_stone_corner_try2_raw.png",
+            "sha256": "6ad298f9c96fbc74fedf22b4b118680c6b6f469bc1b59b68e8d50b3363aeaf46"
+          }
+        ]
+      },
+      "scorecard": "/Users/rexxa/work/artenv1-data/built/judge_buildings_a_scorecard_raw.png",
+      "scorecard_sha256": "46c9b583aea782f0a65ee5b9c85fb814fe5420667c05d3b0bf36def31b85f409",
+      "preview": "art/style05/env1/built/judge_buildings_a_scorecard.png",
+      "preview_sha256": "a942adbae2b885924db846635fba6e41e360d6c6b5aeef7cf9e00f2c3b7c4b79",
+      "input_sha256": {
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/building_hut.png": "e98dac4d6e5c3c1010595fbcd9915beb6f1967b153ae666399e81806c28e743e",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/building_roof.png": "abcc7e568094356e5a7fd89478ca87e8ddc932a0b55e19ccbca6675104148c1c",
+        "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S7_3.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "/Users/rexxa/work/artenv1-data/built/judge_buildings_a_candidates.png": "dbf2992050746ed47ef355f7831af14c32865754bc968578ccbb82b7208ff892"
+      },
+      "mechanism": "builtin image_gen independent scorecard; actual image manually read"
+    },
+    {
+      "id": "judge_buildings_b",
+      "type": "image_model_scorecard",
+      "prompt": "Act as a fresh independent image-model STYLE judge. Images1and2 are locked SAME-FAMILY building style crops; image3 is locked original shared-lighting scene. Image4 alone contains FOUR labeled candidates in reading order: door_log_closed, door_log_open, door_stone_closed, door_stone_open. Compare each candidate's ACTUAL rendering style to images1and2; do not score references or repaint art. Output clean highly legible white scorecard TABLE: one row per candidate, columns ID,MEDIUM,LINE,LIGHT,PALETTE,ONE-SENTENCE REASON. Scores1unrelated,2substantiallydifferent,3mixed/notabledrift,4closematch,5indistinguishable style. Four independent integer scores1to5; no assumed pass. Judge content/camera separately, do not penalize different depicted subjects or naturally sparser bare material. Focus ink+wash technique, contour/detail balance, upper-left lighting, natural earth palette. Make actual style differences explicit. Be strict, any3is failure. All four rows and full sentences readable. Output onlyscorecard; no decorative art or candidate reproduction.",
+      "refs": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/building_hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/building_roof.png",
+        "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S7_3.png",
+        "/Users/rexxa/work/artenv1-data/built/judge_buildings_b_candidates.png"
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-08c7-7070-b1e2-5305974ed20f/exec-cee70ba7-2c77-4c5e-abb5-2b8c9c8a8cd0.png",
+      "start": "2026-10-23T06:56:49.646Z",
+      "end": "2026-10-23T06:57:35.674Z",
+      "candidate_ids": [
+        "door_log_closed",
+        "door_log_open",
+        "door_stone_closed",
+        "door_stone_open"
+      ],
+      "transcription": {
+        "door_log_closed": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Matches the hand-drawn ink-and-wash medium, line weight and texture, upper-left lighting, and warm earthy palette almost exactly, with the same wood rendering and rope lashings as the reference structures."
+        },
+        "door_log_open": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Indistinguishable in style, using the same inked contours, wood grain detail, lashings, value treatment, and Earth-tone palette as the reference images, consistent with the same lighting and material look."
+        },
+        "door_stone_closed": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Very close match with the same ink-and-wash technique, contour style, and lighting, though the stone textures are slightly cleaner and less gritty/detailed than the more textured natural surfaces in the reference crops."
+        },
+        "door_stone_open": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Close match in overall style, lighting, and earthy palette, with consistent ink line and shading, but the stone work is a bit smoother and less textured than the rougher, more varied stone rendering in the reference images."
+        }
+      },
+      "transcription_method": "Manually transcribed after seeing actual builtin image-model scorecard output.",
+      "frozen_candidates": {
+        "board": "/Users/rexxa/work/artenv1-data/built/judge_buildings_b_candidates.png",
+        "sha256": "37245254e91c48c7a444d8c4e96e4c1f84cf57fa467b731bce167fcc752ddbb3",
+        "candidates": [
+          {
+            "id": "door_log_closed",
+            "raw": "/Users/rexxa/work/artenv1-data/built/door_log_closed_try3_raw.png",
+            "sha256": "4f509cc26a90d0600dc158cb300d4934eb21f96c382e6f622131d610a1e505e8"
+          },
+          {
+            "id": "door_log_open",
+            "raw": "/Users/rexxa/work/artenv1-data/built/door_log_open_try3_raw.png",
+            "sha256": "92361e1f42a5860fd7ee918fb7f26f8c9c748e1fac760eb65a6e60e07794a8ee"
+          },
+          {
+            "id": "door_stone_closed",
+            "raw": "/Users/rexxa/work/artenv1-data/built/door_stone_closed_try2_raw.png",
+            "sha256": "f0c5f70c05a5fa1c82699c044a99d4c96daaf7a8f3a76474a53daf8e5f0ec2a3"
+          },
+          {
+            "id": "door_stone_open",
+            "raw": "/Users/rexxa/work/artenv1-data/built/door_stone_open_try2_raw.png",
+            "sha256": "99b6884663a3380791005df4afc8b765de6fac0298d33e9bd6c1fc0c880b3299"
+          }
+        ]
+      },
+      "scorecard": "/Users/rexxa/work/artenv1-data/built/judge_buildings_b_scorecard_raw.png",
+      "scorecard_sha256": "816a6cb5e5250c66fd574ce78979547ed5f5e150add2f7f453a573ef3bca171a",
+      "preview": "art/style05/env1/built/judge_buildings_b_scorecard.png",
+      "preview_sha256": "ac2ae2f25b457167ed946c1ac7ed97f7fca644cc49ac75acd1af40a001016746",
+      "input_sha256": {
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/building_hut.png": "e98dac4d6e5c3c1010595fbcd9915beb6f1967b153ae666399e81806c28e743e",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/building_roof.png": "abcc7e568094356e5a7fd89478ca87e8ddc932a0b55e19ccbca6675104148c1c",
+        "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S7_3.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "/Users/rexxa/work/artenv1-data/built/judge_buildings_b_candidates.png": "37245254e91c48c7a444d8c4e96e4c1f84cf57fa467b731bce167fcc752ddbb3"
+      },
+      "mechanism": "builtin image_gen independent scorecard; actual image manually read"
+    },
+    {
+      "id": "judge_buildings_c",
+      "type": "image_model_scorecard",
+      "prompt": "Act as a fresh independent image-model STYLE judge. Images1and2 are locked SAME-FAMILY building style crops; image3 is locked original shared-lighting scene. Image4 alone contains FOUR labeled candidates in reading order: drying_rack_empty, drying_rack_hide, pottery_bench, grinding_stone. Compare each candidate's ACTUAL rendering style to images1and2; do not score references or repaint art. Output clean highly legible white scorecard TABLE: one row per candidate, columns ID,MEDIUM,LINE,LIGHT,PALETTE,ONE-SENTENCE REASON. Scores1unrelated,2substantiallydifferent,3mixed/notabledrift,4closematch,5indistinguishable style. Four independent integer scores1to5; no assumed pass. Judge content/camera separately, do not penalize different depicted subjects or naturally sparser bare material. Focus ink+wash technique, contour/detail balance, upper-left lighting, natural earth palette. Make actual style differences explicit. Be strict, any3is failure. All four rows and full sentences readable. Output onlyscorecard; no decorative art or candidate reproduction.",
+      "refs": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/building_hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/building_roof.png",
+        "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S7_3.png",
+        "/Users/rexxa/work/artenv1-data/built/judge_buildings_c_candidates.png"
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-08c7-7070-b1e2-5305974ed20f/exec-de435436-8e23-4fcd-9654-b6d6c13a8327.png",
+      "start": "2026-10-23T06:56:49.646Z",
+      "end": "2026-10-23T06:58:01.096Z",
+      "candidate_ids": [
+        "drying_rack_empty",
+        "drying_rack_hide",
+        "pottery_bench",
+        "grinding_stone"
+      ],
+      "transcription": {
+        "drying_rack_empty": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Matches the hand-drawn ink linework, textured brush/wash rendering, wood grain detail, and same upper-left sunlight and natural earth tones as the reference buildings."
+        },
+        "drying_rack_hide": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Uses the identical illustration technique and contour style, with consistent wood and hide textures, shading, and the same muted, earthy color palette and lighting direction."
+        },
+        "pottery_bench": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Very close match in ink-and-wash technique, materials, and lighting, with slightly heavier outlines and marginally warmer, more saturated browns in the pottery and wood giving a mild drift from the reference."
+        },
+        "grinding_stone": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Consistent hand-drawn linework and watercolor-style rendering with the same rock texture treatment, highlight direction, and natural earth color palette as the reference images."
+        }
+      },
+      "transcription_method": "Manually transcribed after seeing actual builtin image-model scorecard output.",
+      "frozen_candidates": {
+        "board": "/Users/rexxa/work/artenv1-data/built/judge_buildings_c_candidates.png",
+        "sha256": "c1e862c777068cab3ab0bf020320fe235a57e41765cde46b044b2f51bb611ef7",
+        "candidates": [
+          {
+            "id": "drying_rack_empty",
+            "raw": "/Users/rexxa/work/artenv1-data/built/drying_rack_empty_try3_raw.png",
+            "sha256": "3a40a42598220f5c89e935406744b6e0140ba69f719e22ffa900c597fddb46b9"
+          },
+          {
+            "id": "drying_rack_hide",
+            "raw": "/Users/rexxa/work/artenv1-data/built/drying_rack_hide_try3_raw.png",
+            "sha256": "7d718dd21874a71ba553e94d2b92275775bc10967234097c1c34e8d4697b4467"
+          },
+          {
+            "id": "pottery_bench",
+            "raw": "/Users/rexxa/work/artenv1-data/built/pottery_bench_try1_raw.png",
+            "sha256": "afbf7ae0d2581b14d629b915001dac21ed314b9e419217694bde49e89181da2e"
+          },
+          {
+            "id": "grinding_stone",
+            "raw": "/Users/rexxa/work/artenv1-data/built/grinding_stone_try1_raw.png",
+            "sha256": "4c19312eb4480c50f0a9a3920b162e14d2c4a57e2bde1c42c82bd46972638068"
+          }
+        ]
+      },
+      "scorecard": "/Users/rexxa/work/artenv1-data/built/judge_buildings_c_scorecard_raw.png",
+      "scorecard_sha256": "dc5934bf68b9cea98d8abe9928c93bec63c708c40e15e9932ea5977b5287d998",
+      "preview": "art/style05/env1/built/judge_buildings_c_scorecard.png",
+      "preview_sha256": "b4904c91f0fbb247ec7d30ab57e6e18dd2d27c78703454e54ad99b1e1957e235",
+      "input_sha256": {
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/building_hut.png": "e98dac4d6e5c3c1010595fbcd9915beb6f1967b153ae666399e81806c28e743e",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/building_roof.png": "abcc7e568094356e5a7fd89478ca87e8ddc932a0b55e19ccbca6675104148c1c",
+        "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S7_3.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "/Users/rexxa/work/artenv1-data/built/judge_buildings_c_candidates.png": "c1e862c777068cab3ab0bf020320fe235a57e41765cde46b044b2f51bb611ef7"
+      },
+      "mechanism": "builtin image_gen independent scorecard; actual image manually read"
+    },
+    {
+      "id": "judge_buildings_retry",
+      "type": "image_model_scorecard",
+      "prompt": "Independent fresh-context image-model STYLE audit. First2images are locked samefamily building reference crops; third is locked originalscene commonlightreference. Fourthimage only is labeledcandidateboard: wall_log_corner,wall_stone_corner. Output clean white legible SCORECARD only, row per candidate columns ID,MEDIUM,LINE,LIGHT,PALETTE,one-sentenceactualreason. Rateeach1unrelated2substantiallydifferent3mixed/drift4closematch5indistinguishable. Judgeactualink/washtechnique, contour/detail balance, upperleft light, earthpalette RELATIVEtofirst2images. Differentcontent isnot failure byitself. No assumedpass, no previousscoresprovided, don'trate orrepaintanchors. Strictlyshowall4integer scores and actualstyledifference. No decoration orassetreproduction.",
+      "refs": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/building_hut.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/building_roof.png",
+        "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S7_3.png",
+        "/Users/rexxa/work/artenv1-data/built/judge_buildings_retry_candidates.png"
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-08c7-7070-b1e2-5305974ed20f/exec-8b2967fe-4ac8-463e-90b6-718b01948091.png",
+      "start": "2026-10-23T07:10:09.133Z",
+      "end": "2026-10-23T07:10:35.266Z",
+      "candidate_ids": [
+        "wall_log_corner",
+        "wall_stone_corner"
+      ],
+      "transcription": {
+        "wall_log_corner": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Matches the same hand-drawn ink and watercolor wash with identical contour style, detail level, upper-left lighting, and earthy color palette as the reference buildings."
+        },
+        "wall_stone_corner": {
+          "medium": 4,
+          "line": 4,
+          "light": 5,
+          "palette": 4,
+          "sentence": "Uses the same hand-drawn ink/wash technique and lighting, but stone texture has slightly different line density and color balance (a bit more yellow/gray and higher contrast) than the reference buildings."
+        }
+      },
+      "transcription_method": "Manually transcribed after seeing actual builtin image-model scorecard output.",
+      "frozen_candidates": {
+        "board": "/Users/rexxa/work/artenv1-data/built/judge_buildings_retry_candidates.png",
+        "sha256": "4bdd5e1fa3f1ea9ad6dec14b4d4ae9b5135c5b24e937ce349aab3176ab0996b0",
+        "candidates": [
+          {
+            "id": "wall_log_corner",
+            "raw": "/Users/rexxa/work/artenv1-data/built/wall_log_corner_try3_raw.png",
+            "sha256": "000cf29e988794fda68a283a2f52d7f5cbef11ab1413be54862c27bb937fa710"
+          },
+          {
+            "id": "wall_stone_corner",
+            "raw": "/Users/rexxa/work/artenv1-data/built/wall_stone_corner_try3_raw.png",
+            "sha256": "fd77749a9a0b295a7b3132f067d5a9fec13d8f04c621cbbfff91fb1d6c2b9710"
+          }
+        ]
+      },
+      "scorecard": "/Users/rexxa/work/artenv1-data/built/judge_buildings_retry_scorecard_raw.png",
+      "scorecard_sha256": "b82d2f2b5fd2799a8f19cedde31cd4ec407ba24100e5ef16f5373f7e532e8eb0",
+      "preview": "art/style05/env1/built/judge_buildings_retry_scorecard.png",
+      "preview_sha256": "005f659cc39e967a74d6c627e3bec5ea6fb8acd97c7332036648199d5954e491",
+      "input_sha256": {
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/building_hut.png": "e98dac4d6e5c3c1010595fbcd9915beb6f1967b153ae666399e81806c28e743e",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/building_roof.png": "abcc7e568094356e5a7fd89478ca87e8ddc932a0b55e19ccbca6675104148c1c",
+        "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S7_3.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "/Users/rexxa/work/artenv1-data/built/judge_buildings_retry_candidates.png": "4bdd5e1fa3f1ea9ad6dec14b4d4ae9b5135c5b24e937ce349aab3176ab0996b0"
+      },
+      "mechanism": "builtin image_gen independent scorecard; actual image manually read"
+    },
+    {
+      "id": "judge_ground_a",
+      "type": "image_model_scorecard",
+      "prompt": "Act as a fresh independent image-model STYLE judge. Images1and2 are locked SAME-FAMILY ground style crops; image3 is locked original shared-lighting scene. Image4 alone contains FOUR labeled candidates in reading order: floor_packed_earth, floor_dug_rock, claybank_full, claybank_depleted. Compare each candidate's ACTUAL rendering style to images1and2; do not score references or repaint art. Output clean highly legible white scorecard TABLE: one row per candidate, columns ID,MEDIUM,LINE,LIGHT,PALETTE,ONE-SENTENCE REASON. Scores1unrelated,2substantiallydifferent,3mixed/notabledrift,4closematch,5indistinguishable style. Four independent integer scores1to5; no assumed pass. Judge content/camera separately, do not penalize different depicted subjects or naturally sparser bare material. Focus ink+wash technique, contour/detail balance, upper-left lighting, natural earth palette. Make actual style differences explicit. Be strict, any3is failure. All four rows and full sentences readable. Output onlyscorecard; no decorative art or candidate reproduction.",
+      "refs": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/ground_forest.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/ground_meadow.png",
+        "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S7_3.png",
+        "/Users/rexxa/work/artenv1-data/built/judge_ground_a_candidates.png"
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-08c7-7070-b1e2-5305974ed20f/exec-b6d16f6c-575f-462c-99d9-62a2efddf49a.png",
+      "start": "2026-10-23T06:56:49.646Z",
+      "end": "2026-10-23T06:58:38.032Z",
+      "candidate_ids": [
+        "floor_packed_earth",
+        "floor_dug_rock",
+        "claybank_full",
+        "claybank_depleted"
+      ],
+      "transcription": {
+        "floor_packed_earth": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 5,
+          "sentence": "Matches the hand-painted ink-and-wash texture, crisp natural contours and speckled watercolor grain seen in the references, with the same warm earth palette and upper-left lighting."
+        },
+        "floor_dug_rock": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Uses the same illustrative brushwork, inked edges and watercolor washes with consistent lighting and a slightly cooler, natural stone palette that still fits the reference style."
+        },
+        "claybank_full": {
+          "medium": 3,
+          "line": 3,
+          "light": 3,
+          "palette": 3,
+          "sentence": "Renders in the same general hand-painted approach and lighting but has heavier, thicker contour lines, more pronounced shading and texture detail, and a redder, higher-saturation palette than the reference grounds."
+        },
+        "claybank_depleted": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Closely matches the ink-and-wash technique, edge treatment and upper-left lighting with natural earth tones, with only slightly stronger line weight and texture detail but still clearly within the same style family."
+        }
+      },
+      "transcription_method": "Manually transcribed after seeing actual builtin image-model scorecard output.",
+      "frozen_candidates": {
+        "board": "/Users/rexxa/work/artenv1-data/built/judge_ground_a_candidates.png",
+        "sha256": "9d8395ff263f10f5677a1d968264d1f9151c662ba89c194738bfe36573c9a472",
+        "candidates": [
+          {
+            "id": "floor_packed_earth",
+            "raw": "/Users/rexxa/work/artenv1-data/built/floor_packed_earth_try3_raw.png",
+            "sha256": "1c6d4f49775b2dc60998a51c507debdba6184df806cb1ca42b4c3ccf0cb8c866"
+          },
+          {
+            "id": "floor_dug_rock",
+            "raw": "/Users/rexxa/work/artenv1-data/built/floor_dug_rock_try3_raw.png",
+            "sha256": "d42563077d99156ba44018056bc54bc5b9a107168b60bef15bb6fc1da2fc4bca"
+          },
+          {
+            "id": "claybank_full",
+            "raw": "/Users/rexxa/work/artenv1-data/built/claybank_full_try1_raw.png",
+            "sha256": "9dcfbea537cbb6824f1b3f1c2643ced32464d59c56ae2a9250cd6323d0bb50b7"
+          },
+          {
+            "id": "claybank_depleted",
+            "raw": "/Users/rexxa/work/artenv1-data/built/claybank_depleted_try1_raw.png",
+            "sha256": "44d2e9c045b245c504690d44dc6ab1fd435370bce489135e786de1dd38a3b096"
+          }
+        ]
+      },
+      "scorecard": "/Users/rexxa/work/artenv1-data/built/judge_ground_a_scorecard_raw.png",
+      "scorecard_sha256": "34d4df7ec86b5ca3ecfd6028960409d4370841b0eb0d4ba7a65be6939499ac9b",
+      "preview": "art/style05/env1/built/judge_ground_a_scorecard.png",
+      "preview_sha256": "9ccf98388107b1afbff7266e79cbe2136ca669224e60fab2bdb48de56005f972",
+      "input_sha256": {
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/ground_forest.png": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/ground_meadow.png": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d",
+        "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S7_3.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "/Users/rexxa/work/artenv1-data/built/judge_ground_a_candidates.png": "9d8395ff263f10f5677a1d968264d1f9151c662ba89c194738bfe36573c9a472"
+      },
+      "mechanism": "builtin image_gen independent scorecard; actual image manually read"
+    },
+    {
+      "id": "judge_ground_b",
+      "type": "image_model_scorecard",
+      "prompt": "Act as a fresh independent image-model STYLE judge. Images1and2 are locked SAME-FAMILY ground style crops; image3 is locked original shared-lighting scene. Image4 alone contains FOUR labeled candidates in reading order: ford, hill_edge, dug_face, snow_overlay. Compare each candidate's ACTUAL rendering style to images1and2; do not score references or repaint art. Output clean highly legible white scorecard TABLE: one row per candidate, columns ID,MEDIUM,LINE,LIGHT,PALETTE,ONE-SENTENCE REASON. Scores1unrelated,2substantiallydifferent,3mixed/notabledrift,4closematch,5indistinguishable style. Four independent integer scores1to5; no assumed pass. Judge content/camera separately, do not penalize different depicted subjects or naturally sparser bare material. Focus ink+wash technique, contour/detail balance, upper-left lighting, natural earth palette. Make actual style differences explicit. Be strict, any3is failure. All four rows and full sentences readable. Output onlyscorecard; no decorative art or candidate reproduction.",
+      "refs": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/ground_forest.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/ground_meadow.png",
+        "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S7_3.png",
+        "/Users/rexxa/work/artenv1-data/built/judge_ground_b_candidates.png"
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-08c7-7070-b1e2-5305974ed20f/exec-b5a71c79-9f22-417f-bb03-5e7b8d5930da.png",
+      "start": "2026-10-23T06:56:49.646Z",
+      "end": "2026-10-23T06:59:04.432Z",
+      "candidate_ids": [
+        "ford",
+        "hill_edge",
+        "dug_face",
+        "snow_overlay"
+      ],
+      "transcription": {
+        "ford": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Same hand-painted ink-and-wash look with textured watercolor washes, crisp ink contours, pebble detail, and the same warm natural palette and upper-left lighting as the reference."
+        },
+        "hill_edge": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Virtually identical rendering style, with matching ink line quality, stippled watercolor texture, rock and soil treatment, and the same color range and lighting direction as the reference images."
+        },
+        "dug_face": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Consistent ink-and-wash technique and palette with matching linework and lighting, with only a slightly heavier, chunkier rock texture and broader wash areas but still clearly the same style family."
+        },
+        "snow_overlay": {
+          "medium": 3,
+          "line": 3,
+          "light": 4,
+          "palette": 3,
+          "sentence": "Same overall technique and lighting, but snow rendered with brighter, cooler whites and softer, more diffuse treatment that looks less earthy and slightly different in texture and color balance compared to the reference style."
+        }
+      },
+      "transcription_method": "Manually transcribed after seeing actual builtin image-model scorecard output.",
+      "frozen_candidates": {
+        "board": "/Users/rexxa/work/artenv1-data/built/judge_ground_b_candidates.png",
+        "sha256": "0a045e84a636aeb3f1523c7ea63560c35ea240ef9b295c7c9fd2aa4ab2bdc4b3",
+        "candidates": [
+          {
+            "id": "ford",
+            "raw": "/Users/rexxa/work/artenv1-data/built/ford_try1_raw.png",
+            "sha256": "36dd1c990f2ca53a3a889c70885881b134246db46308a6e191163120c410de19"
+          },
+          {
+            "id": "hill_edge",
+            "raw": "/Users/rexxa/work/artenv1-data/built/hill_edge_try1_raw.png",
+            "sha256": "9a0960359ef6197d519262b5d7849c93ac0f469f6f812cadcaa148da12b74b4e"
+          },
+          {
+            "id": "dug_face",
+            "raw": "/Users/rexxa/work/artenv1-data/built/dug_face_try3_raw.png",
+            "sha256": "6d87a34ef11ecb9d4deb07a3caf2f7500b7d07465a10b528889b3905181d6499"
+          },
+          {
+            "id": "snow_overlay",
+            "raw": "/Users/rexxa/work/artenv1-data/built/snow_overlay_try1_raw.png",
+            "sha256": "2316e9b9b104240f92e301388804a6efcd0c926fd147e5ec9e415470394f40ee"
+          }
+        ]
+      },
+      "scorecard": "/Users/rexxa/work/artenv1-data/built/judge_ground_b_scorecard_raw.png",
+      "scorecard_sha256": "4b84dfd8086a5e08185f6da422ab83f4222561b2ae6d96f57432ccd6c8142413",
+      "preview": "art/style05/env1/built/judge_ground_b_scorecard.png",
+      "preview_sha256": "082faa2c467d569460942808317061155bd15ec24277a566f5510071c7c2aedf",
+      "input_sha256": {
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/ground_forest.png": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/ground_meadow.png": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d",
+        "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S7_3.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "/Users/rexxa/work/artenv1-data/built/judge_ground_b_candidates.png": "0a045e84a636aeb3f1523c7ea63560c35ea240ef9b295c7c9fd2aa4ab2bdc4b3"
+      },
+      "mechanism": "builtin image_gen independent scorecard; actual image manually read"
+    },
+    {
+      "id": "judge_ground_retry",
+      "type": "image_model_scorecard",
+      "prompt": "Independent fresh-context image-model STYLE audit. First2images are locked samefamily ground reference crops; third is locked originalscene commonlightreference. Fourthimage only is labeledcandidateboard: claybank_full. Output clean white legible SCORECARD only, row per candidate columns ID,MEDIUM,LINE,LIGHT,PALETTE,one-sentenceactualreason. Rateeach1unrelated2substantiallydifferent3mixed/drift4closematch5indistinguishable. Judgeactualink/washtechnique, contour/detail balance, upperleft light, earthpalette RELATIVEtofirst2images. Differentcontent isnot failure byitself. No assumedpass, no previousscoresprovided, don'trate orrepaintanchors. Strictlyshowall4integer scores and actualstyledifference. No decoration orassetreproduction.",
+      "refs": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/ground_forest.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/ground_meadow.png",
+        "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S7_3.png",
+        "/Users/rexxa/work/artenv1-data/built/judge_ground_retry_candidates.png"
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-08c7-7070-b1e2-5305974ed20f/exec-737fe8d1-06e6-4154-8eeb-bbd9ee9a7347.png",
+      "start": "2026-10-23T07:10:09.133Z",
+      "end": "2026-10-23T07:10:56.706Z",
+      "candidate_ids": [
+        "claybank_full"
+      ],
+      "transcription": {
+        "claybank_full": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Matches the same hand-drawn ink and watercolor wash style with similar line weight, textured brushwork, upper-left lighting, and earthy brown-green palette with muted natural tones."
+        }
+      },
+      "transcription_method": "Manually transcribed after seeing actual builtin image-model scorecard output.",
+      "frozen_candidates": {
+        "board": "/Users/rexxa/work/artenv1-data/built/judge_ground_retry_candidates.png",
+        "sha256": "7d0d0fbd0b901a4caa0c496d91743ae5a44cffca69efe3c4027557f7d8eb932d",
+        "candidates": [
+          {
+            "id": "claybank_full",
+            "raw": "/Users/rexxa/work/artenv1-data/built/claybank_full_try2_raw.png",
+            "sha256": "585ae7469bcf665e12713474d27abc8a3cad30b10dfb945d943c3273a05e7627"
+          }
+        ]
+      },
+      "scorecard": "/Users/rexxa/work/artenv1-data/built/judge_ground_retry_scorecard_raw.png",
+      "scorecard_sha256": "97170a31baba46d1c7d096f203e9cba9789316711dc33bb3e4b8a874bc56d2f0",
+      "preview": "art/style05/env1/built/judge_ground_retry_scorecard.png",
+      "preview_sha256": "141aa6bd0239b74963630aab4ddefacce94c71d342365b05d3d98c3046aa5f43",
+      "input_sha256": {
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/ground_forest.png": "1b624cecd2bdc5d85b0b9f6ed594048e7821bae18fc74838e83c8dd433fb1fb9",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/ground_meadow.png": "3ef42cf58d72c4d79b863059d31dbf73ec5cfa05d73c7316f29fa67f3ee3db3d",
+        "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S7_3.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "/Users/rexxa/work/artenv1-data/built/judge_ground_retry_candidates.png": "7d0d0fbd0b901a4caa0c496d91743ae5a44cffca69efe3c4027557f7d8eb932d"
+      },
+      "mechanism": "builtin image_gen independent scorecard; actual image manually read"
+    },
+    {
+      "id": "judge_items",
+      "type": "image_model_scorecard",
+      "prompt": "Act as a fresh independent image-model style judge. Images1and2 are locked SAME-FAMILY item style crops; image3 is locked original shared lighting scene. Image4 alone contains THREE labeled candidates: bedroll,hearth_pots,hearth_unlit. Compare each candidate's ACTUAL rendering to images1and2; do not score references or repaint art. Output a clean highly legible white scorecard TABLE, one row per candidate, columns ID,MEDIUM,LINE,LIGHT,PALETTE,ONE-SENTENCE REASON. Scores are integer1unrelated,2substantiallydifferent,3mixed/drift,4closematch,5indistinguishable style. Four independent scores each from1to5, no assumed pass. Judge content/camera separately, don't penalize new subject; focus ink+wash technique, contour/detail balance, upper-left lighting treatment, natural earth palette. A different material such as hide may use appropriate color. Show actual differences in reason. Be strict; any score3is a failure. Output only scorecard, no decorative art, no asset reproduction, all three rows and complete sentences fully readable.",
+      "refs": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png",
+        "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S7_3.png",
+        "/Users/rexxa/work/artenv1-data/built/judge_items_candidates.png"
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-08c7-7070-b1e2-5305974ed20f/exec-9b2d2a8d-5051-4b91-9c6b-a4df74241ad9.png",
+      "start": "2026-10-23T06:49:50.097Z",
+      "end": "2026-10-23T06:50:09.205Z",
+      "candidate_ids": [
+        "bedroll",
+        "hearth_pots",
+        "hearth_unlit"
+      ],
+      "transcription": {
+        "bedroll": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Matches the same hand-drawn ink-and-wash medium with textured brushwork, strong dark contours, natural earth tones, and consistent upper-left lighting and shadow treatment as the reference items."
+        },
+        "hearth_pots": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Very close match with the same illustrative ink-and-wash style, detailed outlines and textures, and consistent upper-left lighting, with only minor differences due to denser glow and warmer oranges from the fire."
+        },
+        "hearth_unlit": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Indistinguishable in style, using the same inked contours, watercolor texture, stone and wood rendering, muted earth palette, and upper-left lighting and shadows as the reference items."
+        }
+      },
+      "transcription_method": "Manually transcribed after seeing actual builtin image-model scorecard output.",
+      "frozen_candidates": {
+        "board": "/Users/rexxa/work/artenv1-data/built/judge_items_candidates.png",
+        "sha256": "2d146a6deabfd0bfb250939ae34d687cc8e0a9f56b9aa96bdfe9431c1e4c1b2d",
+        "candidates": [
+          {
+            "id": "bedroll",
+            "raw": "/Users/rexxa/work/artenv1-data/built/bedroll_try2_raw.png",
+            "sha256": "a893c88570fd5307f261c66b060e7792cfda18a85e62e4453abaeb36eb560522"
+          },
+          {
+            "id": "hearth_pots",
+            "raw": "/Users/rexxa/work/artenv1-data/built/hearth_pots_try1_raw.png",
+            "sha256": "3a9919e95cc526b13650e1a36143b04c173f07beb0786b890ba033a2879d5101"
+          },
+          {
+            "id": "hearth_unlit",
+            "raw": "/Users/rexxa/work/artenv1-data/built/hearth_unlit_try1_raw.png",
+            "sha256": "fbdc2646eb1566dc135bacfe101e18f9d7b42f17f5ce835d3e5e279ce5e94dad"
+          }
+        ]
+      },
+      "scorecard": "/Users/rexxa/work/artenv1-data/built/judge_items_scorecard_raw.png",
+      "scorecard_sha256": "25f9e6b1f8c1167574f715f7e5f760d259f7416bcf19ac463d5f109b95f564c4",
+      "preview": "art/style05/env1/built/judge_items_scorecard.png",
+      "preview_sha256": "303212f33e833e53e5cb3c22aec6ea5e6631adad946e030908479f973a159c65",
+      "input_sha256": {
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+        "/Users/rexxa/work/artconcept-data/05_ink_and_tone/S7_3.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "/Users/rexxa/work/artenv1-data/built/judge_items_candidates.png": "2d146a6deabfd0bfb250939ae34d687cc8e0a9f56b9aa96bdfe9431c1e4c1b2d"
+      },
+      "mechanism": "builtin image_gen independent scorecard; actual image manually read"
+    }
+  ],
+  "status_counts": {
+    "SEAM_FAIL_CANDIDATE": 37,
+    "NUMERIC_FAIL_CANDIDATE": 4,
+    "ACCEPTED_ASSET": 13,
+    "NUMERIC_MODEL_SEMANTIC_SEAM_FAIL_CANDIDATE": 1
+  }
+}

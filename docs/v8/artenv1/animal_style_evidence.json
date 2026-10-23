@@ -1,0 +1,936 @@
+{
+  "calibration_sha256": "e48654cbbf7e63505723d092dd0cd679c0ae4942fc8703494e84ac9d5abf694d",
+  "leave_one_out_pass": true,
+  "negative_controls": [
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/negative_painterly.png",
+      "sha256": "83785dc9e933598a4c3e4fd7e5dd8e8305d9eae96ad246d41063c647b3eed76d",
+      "family": "animal",
+      "metrics": {
+        "edge_density": 0.246897833207357,
+        "saturation_q25": 0.4098452267976646,
+        "saturation_q75": 0.48354798732077836,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.009392636612974984,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/negative_woodcut.png",
+      "sha256": "555adc7e283d9c1ed02efa2793718d3cdd8ef190c9150462f7526473b78e548e",
+      "family": "animal",
+      "metrics": {
+        "edge_density": 0.2401581002771479,
+        "saturation_q25": 0.6307616325115623,
+        "saturation_q75": 0.6660704173253539,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.001658567089815866,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/arttrial2-data/negative_photo_try1.png",
+      "sha256": "0f3ac1e665c19e4dab1c011067e1ccc9e29d2424f3797a651a50d15015d36a08",
+      "family": "animal",
+      "metrics": {
+        "edge_density": 0.2901864449483497,
+        "saturation_q25": 0.38063352448526416,
+        "saturation_q75": 0.4843761704523152,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.014404297439150513,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    }
+  ],
+  "negative_controls_pass": false,
+  "model_reviews": [
+    {
+      "species": "wolf",
+      "raw_sha256": "d9095e609ee333a7ef46c9d05c0eeafb4e21cd423b98b95153f14ea18228cd58",
+      "scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Matches the references very closely with the same inked linework, textured watercolor washes, earthy brown palette, and consistent upper-left lighting."
+      },
+      "mechanism": "built-in image_gen scorecard, visually transcribed",
+      "scorecard": "/Users/rexxa/work/artenv1-data/animals/wolf_try3_style_scorecard.png",
+      "scorecard_sha256": "10e2e55125f8da38c4104a2bbcd9780884e880b441ecf940fb06ad15d028496b",
+      "prompt_sha256": "9a77b0d7ef95fa01cca75f9e397ac64b0e828906606ba38258573417179d6c00",
+      "references": [
+        {
+          "path": "art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ]
+    },
+    {
+      "species": "deer",
+      "raw_sha256": "fca0336b664abc7ea73c2f59b91519a8e0a5d211b27f992eb772b3d7568003f5",
+      "scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 5,
+        "sentence": "Overall a very close match to the reference style with correct medium, line, lighting, and palette."
+      },
+      "mechanism": "built-in image_gen scorecard, visually transcribed",
+      "scorecard": "/Users/rexxa/work/artenv1-data/animals/deer_style_scorecard.png",
+      "scorecard_sha256": "d1d851f1f9ca18cc540ee1a2ac6147e6aec446dd836ec9e3b4e8de6a78df482d",
+      "prompt_sha256": "75db5481c528ba5a62d4efa6a3d5fe1679f7d8dc61ccac60b9407a73cb15ac5f",
+      "references": [
+        {
+          "path": "art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ]
+    }
+  ],
+  "native_panel_verdicts": [
+    {
+      "species": "wolf",
+      "facing": "S",
+      "pose": "stand",
+      "candidate": "/Users/rexxa/work/artenv1-data/animals/wolf_try3_S_stand.png",
+      "sha256": "937cc70aa6516526be79ff89d4f47b54272776828b0e29956379942909a7bded",
+      "family": "animal",
+      "metrics": {
+        "edge_density": 0.24225135550700008,
+        "saturation_q25": 0.4080466316390906,
+        "saturation_q75": 0.5095134749959996,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.8284271247461903,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.47213595499958,
+        "wash_flatness": 0.023172088150514747,
+        "foreground_pixels": 27186
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Matches the references very closely with the same inked linework, textured watercolor washes, earthy brown palette, and consistent upper-left lighting."
+      },
+      "model_status": "SAME_FAMILY_VERIFIED",
+      "passed": true
+    },
+    {
+      "species": "wolf",
+      "facing": "S",
+      "pose": "walk",
+      "candidate": "/Users/rexxa/work/artenv1-data/animals/wolf_try3_S_walk.png",
+      "sha256": "7da1cea788cd0818e2d05ca2de08a11434302d46ec48cde7d837640c3175c0a4",
+      "family": "animal",
+      "metrics": {
+        "edge_density": 0.23693943596856218,
+        "saturation_q25": 0.41604885199665964,
+        "saturation_q75": 0.5229708357541899,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.8284271247461903,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.47213595499958,
+        "wash_flatness": 0.02314692331604947,
+        "foreground_pixels": 32858
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Matches the references very closely with the same inked linework, textured watercolor washes, earthy brown palette, and consistent upper-left lighting."
+      },
+      "model_status": "SAME_FAMILY_VERIFIED",
+      "passed": true
+    },
+    {
+      "species": "wolf",
+      "facing": "S",
+      "pose": "run",
+      "candidate": "/Users/rexxa/work/artenv1-data/animals/wolf_try3_S_run.png",
+      "sha256": "8f3eb5a2e7a3e163b56a8565ef18de450076c1a4eb6a61a523a68ef0f23c0988",
+      "family": "animal",
+      "metrics": {
+        "edge_density": 0.2510790083823792,
+        "saturation_q25": 0.42171945958066104,
+        "saturation_q75": 0.5148249645641849,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.8284271247461903,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.47213595499958,
+        "wash_flatness": 0.024081276083948052,
+        "foreground_pixels": 30197
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Matches the references very closely with the same inked linework, textured watercolor washes, earthy brown palette, and consistent upper-left lighting."
+      },
+      "model_status": "SAME_FAMILY_VERIFIED",
+      "passed": true
+    },
+    {
+      "species": "wolf",
+      "facing": "S",
+      "pose": "attack",
+      "candidate": "/Users/rexxa/work/artenv1-data/animals/wolf_try3_S_attack.png",
+      "sha256": "20c9460dc1bd8994d1cfc96b1db1130240b20da89bcb85da56e47b14652b5802",
+      "family": "animal",
+      "metrics": {
+        "edge_density": 0.2512576858580212,
+        "saturation_q25": 0.42025916068445873,
+        "saturation_q75": 0.5101048154403407,
+        "stroke_q25": 2.0,
+        "stroke_q50": 4.0,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.47213595499958,
+        "wash_flatness": 0.023166486906361097,
+        "foreground_pixels": 26972
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Matches the references very closely with the same inked linework, textured watercolor washes, earthy brown palette, and consistent upper-left lighting."
+      },
+      "model_status": "SAME_FAMILY_VERIFIED",
+      "passed": true
+    },
+    {
+      "species": "wolf",
+      "facing": "S",
+      "pose": "dead",
+      "candidate": "/Users/rexxa/work/artenv1-data/animals/wolf_try3_S_dead.png",
+      "sha256": "670d3b34f366635a9a4681a5029e05041d2e877c03fd4d3da547fca45dd9a9d5",
+      "family": "animal",
+      "metrics": {
+        "edge_density": 0.23950992953235106,
+        "saturation_q25": 0.40640212094568107,
+        "saturation_q75": 0.4968440471886545,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.8284271247461903,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.47213595499958,
+        "wash_flatness": 0.031061924166202987,
+        "foreground_pixels": 13723
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Matches the references very closely with the same inked linework, textured watercolor washes, earthy brown palette, and consistent upper-left lighting."
+      },
+      "model_status": "SAME_FAMILY_VERIFIED",
+      "passed": true
+    },
+    {
+      "species": "wolf",
+      "facing": "E",
+      "pose": "stand",
+      "candidate": "/Users/rexxa/work/artenv1-data/animals/wolf_try3_E_stand.png",
+      "sha256": "7d196bdf13ec76c3cb8b7926bb31d08ea996fc8b6f63bf4169f337aa91bca0ed",
+      "family": "animal",
+      "metrics": {
+        "edge_density": 0.24373156342182892,
+        "saturation_q25": 0.41164093685406467,
+        "saturation_q75": 0.503419865807769,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.8284271247461903,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.47213595499958,
+        "wash_flatness": 0.024891340459809987,
+        "foreground_pixels": 29648
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Matches the references very closely with the same inked linework, textured watercolor washes, earthy brown palette, and consistent upper-left lighting."
+      },
+      "model_status": "SAME_FAMILY_VERIFIED",
+      "passed": true
+    },
+    {
+      "species": "wolf",
+      "facing": "E",
+      "pose": "walk",
+      "candidate": "/Users/rexxa/work/artenv1-data/animals/wolf_try3_E_walk.png",
+      "sha256": "ba40e0c174c39beeb257be3ed527fb117145f526c2c0596cc010086a5f582317",
+      "family": "animal",
+      "metrics": {
+        "edge_density": 0.2444076222038111,
+        "saturation_q25": 0.4377767796076219,
+        "saturation_q75": 0.5137188404140107,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.8284271247461903,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.47213595499958,
+        "wash_flatness": 0.02541252527782049,
+        "foreground_pixels": 25312
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Matches the references very closely with the same inked linework, textured watercolor washes, earthy brown palette, and consistent upper-left lighting."
+      },
+      "model_status": "SAME_FAMILY_VERIFIED",
+      "passed": true
+    },
+    {
+      "species": "wolf",
+      "facing": "E",
+      "pose": "run",
+      "candidate": "/Users/rexxa/work/artenv1-data/animals/wolf_try3_E_run.png",
+      "sha256": "c1a28204d159d2f858f27a49445a8be002536bab122f977ddf8b7feb1e619d43",
+      "family": "animal",
+      "metrics": {
+        "edge_density": 0.248913755133623,
+        "saturation_q25": 0.4308508738552048,
+        "saturation_q75": 0.5079456049988257,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.8284271247461903,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.47213595499958,
+        "wash_flatness": 0.03105591438373903,
+        "foreground_pixels": 18488
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Matches the references very closely with the same inked linework, textured watercolor washes, earthy brown palette, and consistent upper-left lighting."
+      },
+      "model_status": "SAME_FAMILY_VERIFIED",
+      "passed": true
+    },
+    {
+      "species": "wolf",
+      "facing": "E",
+      "pose": "attack",
+      "candidate": "/Users/rexxa/work/artenv1-data/animals/wolf_try3_E_attack.png",
+      "sha256": "b9ac0aca290175e9ffbda22db5a83712842db9c67bdea9c23508072e944a80bc",
+      "family": "animal",
+      "metrics": {
+        "edge_density": 0.24379770992366412,
+        "saturation_q25": 0.4105396908202257,
+        "saturation_q75": 0.4965363516922492,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.8284271247461903,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.47213595499958,
+        "wash_flatness": 0.01782267286262606,
+        "foreground_pixels": 22968
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Matches the references very closely with the same inked linework, textured watercolor washes, earthy brown palette, and consistent upper-left lighting."
+      },
+      "model_status": "SAME_FAMILY_VERIFIED",
+      "passed": true
+    },
+    {
+      "species": "wolf",
+      "facing": "E",
+      "pose": "dead",
+      "candidate": "/Users/rexxa/work/artenv1-data/animals/wolf_try3_E_dead.png",
+      "sha256": "fbb402d15c6c2532b43c93a98b55712ba046e50866cf1ee2f2638f2729c3ec53",
+      "family": "animal",
+      "metrics": {
+        "edge_density": 0.23777197563098346,
+        "saturation_q25": 0.40321146491423343,
+        "saturation_q75": 0.4928681822433339,
+        "stroke_q25": 2.0,
+        "stroke_q50": 4.0,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.47213595499958,
+        "wash_flatness": 0.037365388459189644,
+        "foreground_pixels": 12682
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Matches the references very closely with the same inked linework, textured watercolor washes, earthy brown palette, and consistent upper-left lighting."
+      },
+      "model_status": "SAME_FAMILY_VERIFIED",
+      "passed": true
+    },
+    {
+      "species": "deer",
+      "facing": "S",
+      "pose": "stand",
+      "candidate": "/Users/rexxa/work/artenv1-data/animals/deer_try1_S_stand.png",
+      "sha256": "867b5eccb032ece5cd429745d37e00af19123f64f14171ed7dc05564806e139f",
+      "family": "animal",
+      "metrics": {
+        "edge_density": 0.20720904184909886,
+        "saturation_q25": 0.429309417417817,
+        "saturation_q75": 0.5678873623148205,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.8284271247461903,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.01775031607887103,
+        "foreground_pixels": 12196
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 5,
+        "sentence": "Overall a very close match to the reference style with correct medium, line, lighting, and palette."
+      },
+      "model_status": "SAME_FAMILY_VERIFIED",
+      "passed": true
+    },
+    {
+      "species": "deer",
+      "facing": "S",
+      "pose": "walk",
+      "candidate": "/Users/rexxa/work/artenv1-data/animals/deer_try1_S_walk.png",
+      "sha256": "e4adbe9e4af04f704ccf9a86d3dbe28a4766dcb6adca482e11c84ee84efef785",
+      "family": "animal",
+      "metrics": {
+        "edge_density": 0.1990790319126151,
+        "saturation_q25": 0.442418622255646,
+        "saturation_q75": 0.5713259758149912,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.8284271247461903,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.013279822266907392,
+        "foreground_pixels": 11849
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 5,
+        "sentence": "Overall a very close match to the reference style with correct medium, line, lighting, and palette."
+      },
+      "model_status": "SAME_FAMILY_VERIFIED",
+      "passed": true
+    },
+    {
+      "species": "deer",
+      "facing": "S",
+      "pose": "run",
+      "candidate": "/Users/rexxa/work/artenv1-data/animals/deer_try1_S_run.png",
+      "sha256": "85a414522f6283de8ee52e44835cee297eb0fa46cf1c76623f29f8228fa4af5a",
+      "family": "animal",
+      "metrics": {
+        "edge_density": 0.1932517243522028,
+        "saturation_q25": 0.4626136974200191,
+        "saturation_q75": 0.587361191998432,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.8284271247461903,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.47213595499958,
+        "wash_flatness": 0.014738646000835073,
+        "foreground_pixels": 18896
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 5,
+        "sentence": "Overall a very close match to the reference style with correct medium, line, lighting, and palette."
+      },
+      "model_status": "SAME_FAMILY_VERIFIED",
+      "passed": true
+    },
+    {
+      "species": "deer",
+      "facing": "S",
+      "pose": "graze",
+      "candidate": "/Users/rexxa/work/artenv1-data/animals/deer_try1_S_graze.png",
+      "sha256": "c455d08d184907e24780d52ce441af0fa6d4d7948a9ad0b525474586a20ffbaa",
+      "family": "animal",
+      "metrics": {
+        "edge_density": 0.193260080963146,
+        "saturation_q25": 0.5264155903894592,
+        "saturation_q75": 0.6010302639927181,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.8284271247461903,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.47213595499958,
+        "wash_flatness": 0.009625699275793369,
+        "foreground_pixels": 21670
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 5,
+        "sentence": "Overall a very close match to the reference style with correct medium, line, lighting, and palette."
+      },
+      "model_status": "SAME_FAMILY_VERIFIED",
+      "passed": true
+    },
+    {
+      "species": "deer",
+      "facing": "S",
+      "pose": "dead",
+      "candidate": "/Users/rexxa/work/artenv1-data/animals/deer_try1_S_dead.png",
+      "sha256": "21e991b33480c6ece61e6cbe2cdd7e518b3499d01d0b2665761db8aec16514e1",
+      "family": "animal",
+      "metrics": {
+        "edge_density": 0.2004488950276243,
+        "saturation_q25": 0.3989497271527067,
+        "saturation_q75": 0.5626919418778078,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.8284271247461903,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.47213595499958,
+        "wash_flatness": 0.01868790671094401,
+        "foreground_pixels": 13673
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 5,
+        "sentence": "Overall a very close match to the reference style with correct medium, line, lighting, and palette."
+      },
+      "model_status": "SAME_FAMILY_VERIFIED",
+      "passed": true
+    },
+    {
+      "species": "deer",
+      "facing": "E",
+      "pose": "stand",
+      "candidate": "/Users/rexxa/work/artenv1-data/animals/deer_try1_E_stand.png",
+      "sha256": "7257a5b880d8b52340891889b5fbc47432680ae43ddeff0b2472e2a5b968b1c4",
+      "family": "animal",
+      "metrics": {
+        "edge_density": 0.17516644931017913,
+        "saturation_q25": 0.44017017484032406,
+        "saturation_q75": 0.5802006257797143,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.8284271247461903,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.01422532400562033,
+        "foreground_pixels": 17432
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 5,
+        "sentence": "Overall a very close match to the reference style with correct medium, line, lighting, and palette."
+      },
+      "model_status": "SAME_FAMILY_VERIFIED",
+      "passed": true
+    },
+    {
+      "species": "deer",
+      "facing": "E",
+      "pose": "walk",
+      "candidate": "/Users/rexxa/work/artenv1-data/animals/deer_try1_E_walk.png",
+      "sha256": "4fda5b48d9c20b12667f8fc865035c536cf253f5fc7dabf9f5af8a0d042371f3",
+      "family": "animal",
+      "metrics": {
+        "edge_density": 0.16589601894665615,
+        "saturation_q25": 0.4772641021349651,
+        "saturation_q75": 0.5812040392524753,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.8284271247461903,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.47213595499958,
+        "wash_flatness": 0.011354647937627634,
+        "foreground_pixels": 20640
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 5,
+        "sentence": "Overall a very close match to the reference style with correct medium, line, lighting, and palette."
+      },
+      "model_status": "SAME_FAMILY_VERIFIED",
+      "passed": true
+    },
+    {
+      "species": "deer",
+      "facing": "E",
+      "pose": "run",
+      "candidate": "/Users/rexxa/work/artenv1-data/animals/deer_try1_E_run.png",
+      "sha256": "f9a87f66ce3ed4f87392749ce9b759edcf82318b50763269425f43a184af8c76",
+      "family": "animal",
+      "metrics": {
+        "edge_density": 0.1748356043658057,
+        "saturation_q25": 0.4810221219101159,
+        "saturation_q75": 0.5816276368447993,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.8284271247461903,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.01289408494147418,
+        "foreground_pixels": 17342
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 5,
+        "sentence": "Overall a very close match to the reference style with correct medium, line, lighting, and palette."
+      },
+      "model_status": "SAME_FAMILY_VERIFIED",
+      "passed": true
+    },
+    {
+      "species": "deer",
+      "facing": "E",
+      "pose": "graze",
+      "candidate": "/Users/rexxa/work/artenv1-data/animals/deer_try1_E_graze.png",
+      "sha256": "9ea770c4a5c361da72820acb11ba9b280d7bfbc0638621887f3931abfe133951",
+      "family": "animal",
+      "metrics": {
+        "edge_density": 0.1790486170889629,
+        "saturation_q25": 0.4825302200267283,
+        "saturation_q75": 0.5919956490903797,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.8284271247461903,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.47213595499958,
+        "wash_flatness": 0.014160210686179057,
+        "foreground_pixels": 30225
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 5,
+        "sentence": "Overall a very close match to the reference style with correct medium, line, lighting, and palette."
+      },
+      "model_status": "SAME_FAMILY_VERIFIED",
+      "passed": true
+    },
+    {
+      "species": "deer",
+      "facing": "E",
+      "pose": "dead",
+      "candidate": "/Users/rexxa/work/artenv1-data/animals/deer_try1_E_dead.png",
+      "sha256": "1eed47409e0e0391565cf702b253552d7885bcf72e607e149c09b251826a938b",
+      "family": "animal",
+      "metrics": {
+        "edge_density": 0.20047645226314825,
+        "saturation_q25": 0.3673635710284952,
+        "saturation_q75": 0.5576549637779438,
+        "stroke_q25": 2.0,
+        "stroke_q50": 4.0,
+        "stroke_q75": 4.47213595499958,
+        "stroke_q90": 5.656854249492381,
+        "wash_flatness": 0.01825792544973241,
+        "foreground_pixels": 18603
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 5,
+        "sentence": "Overall a very close match to the reference style with correct medium, line, lighting, and palette."
+      },
+      "model_status": "SAME_FAMILY_VERIFIED",
+      "passed": true
+    }
+  ],
+  "numeric_pass_panels": 20,
+  "style_pass_panels": 20,
+  "panel_count": 20,
+  "semantic_review": "Round1 PENDING: two NEW fresh no-key reviewers at 1x and 2x; round0 retained",
+  "calibration_limit": "Frozen wolf try2 and deer try1 native S-stand panels; wolf try3 did not change the calibration. Each anchor held out against the other. Sheet model judges establish their compatibility with locked originals, not owner adoption."
+}

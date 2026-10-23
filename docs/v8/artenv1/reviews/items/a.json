@@ -1,0 +1,140 @@
+{
+  "reviewer": "a",
+  "image_path": "/Users/rexxa/work/new-world-art-prod/art/style05/env1/items/items_32px_blind.png",
+  "started_at": "2026-10-23 06:46:52 UTC",
+  "ended_at": "2026-10-23 06:47:57 UTC",
+  "answers": [
+    {
+      "id": 1,
+      "name": "Single wooden log",
+      "confidence": "high",
+      "notes": "Short tan cylinder with a visible end and bark-like marks."
+    },
+    {
+      "id": 2,
+      "name": "Stone axe",
+      "confidence": "high",
+      "notes": "Broad pale head across a brown wooden handle."
+    },
+    {
+      "id": 3,
+      "name": "Spear",
+      "confidence": "medium",
+      "notes": "Long thin shaft with a small pale tip; could also be an arrow at this size."
+    },
+    {
+      "id": 4,
+      "name": "Orange animal hide",
+      "confidence": "high",
+      "notes": "Flattened pelt silhouette with projecting limbs and an irregular edge."
+    },
+    {
+      "id": 5,
+      "name": "Brown fur or folded animal hide",
+      "confidence": "medium",
+      "notes": "Narrow irregular brown shape; its exact animal or processed state is unclear."
+    },
+    {
+      "id": 6,
+      "name": "Dark rock or ore chunk",
+      "confidence": "low",
+      "notes": "Rough, peaked brown-gray mass; could alternatively be folded hide or another crumpled material."
+    },
+    {
+      "id": 7,
+      "name": "Gray animal hide stretched on a frame",
+      "confidence": "medium",
+      "notes": "Four pointed corners surround a darker center; hide and supporting frame are hard to separate."
+    },
+    {
+      "id": 8,
+      "name": "Clay lump",
+      "confidence": "medium",
+      "notes": "Small orange-brown irregular lump; could also be a reddish stone or ore."
+    },
+    {
+      "id": 9,
+      "name": "Small clay bowl or pot",
+      "confidence": "high",
+      "notes": "Rounded gray-brown vessel with a clear dark opening."
+    },
+    {
+      "id": 10,
+      "name": "Empty terracotta pot",
+      "confidence": "high",
+      "notes": "Orange round vessel with a wide dark opening and small side projections."
+    },
+    {
+      "id": 11,
+      "name": "Water-filled clay pot",
+      "confidence": "high",
+      "notes": "Orange vessel with an unmistakable blue surface inside its opening."
+    },
+    {
+      "id": 12,
+      "name": "Raw meat on a bone",
+      "confidence": "high",
+      "notes": "Red fleshy portion with pale marbling and a short projection to the right."
+    },
+    {
+      "id": 13,
+      "name": "Small knapped stone or flint flake",
+      "confidence": "low",
+      "notes": "Pale mottled oval tapering to a gray point; could be a small fish."
+    },
+    {
+      "id": 14,
+      "name": "Stack of wooden logs",
+      "confidence": "high",
+      "notes": "Several parallel tan cylinders, with pale cut ends."
+    },
+    {
+      "id": 15,
+      "name": "Pile of chopped firewood",
+      "confidence": "medium",
+      "notes": "Small brown pieces with lighter ends; wood blocks are more likely than stones."
+    },
+    {
+      "id": 16,
+      "name": "Wooden plank or log panel",
+      "confidence": "medium",
+      "notes": "Rectangular stack of horizontal strips with darker crosswise bindings; could be a small raft, fence panel, or bundled lumber."
+    },
+    {
+      "id": 17,
+      "name": "Pile of rounded stones",
+      "confidence": "high",
+      "notes": "Several distinct beige-gray rounded rocks."
+    },
+    {
+      "id": 18,
+      "name": "Pile of sharp stone shards",
+      "confidence": "high",
+      "notes": "Angular pale broken pieces; exact stone or mineral is unclear."
+    },
+    {
+      "id": 19,
+      "name": "Pointed stone blade or spearhead",
+      "confidence": "medium",
+      "notes": "Long narrow pale flaked shape without a visible shaft; could also read as a bone fragment."
+    },
+    {
+      "id": 20,
+      "name": "Small stone axe",
+      "confidence": "high",
+      "notes": "Light stone head attached to a long tan handle."
+    },
+    {
+      "id": 21,
+      "name": "Pale animal hide",
+      "confidence": "high",
+      "notes": "Flat four-limbed pelt silhouette; exact species and processing cannot be distinguished."
+    },
+    {
+      "id": 22,
+      "name": "Basket of mixed berries",
+      "confidence": "high",
+      "notes": "Round rim filled with small red, blue, and yellow dots."
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "id": "drying_rack_hide",
+  "path": "art/style05/env1/built/drying_rack_hide.png",
+  "width": 128,
+  "height": 64,
+  "footprint": [
+    2,
+    1
+  ],
+  "family": "buildings",
+  "attempts": 3,
+  "selected_attempt": 3,
+  "status": "ACCEPTED_ASSET",
+  "raw": "/Users/rexxa/work/artenv1-data/built/drying_rack_hide_try3_raw.png",
+  "raw_sha256": "7d718dd21874a71ba553e94d2b92275775bc10967234097c1c34e8d4697b4467",
+  "sha256": "71d576287f37e881b4f94456546a361c55b6ba7b49721b377a0c4cdac8121dda",
+  "metadata": "/Users/rexxa/work/artenv1-data/built/drying_rack_hide_try3.json",
+  "metadata_sha256": "08bbbeb00b04173b4c980de4089550642f0f6aabe7f0712f70a872ad46fc5c9f",
+  "numeric": {
+    "candidate": "/Users/rexxa/work/artenv1-data/built/drying_rack_hide_try3_raw.png",
+    "sha256": "7d718dd21874a71ba553e94d2b92275775bc10967234097c1c34e8d4697b4467",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.1731744664561202,
+      "saturation_q25": 0.3667687807743833,
+      "saturation_q75": 0.517580927277522,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.012528981584417486,
+      "foreground_pixels": 24698
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "operations": [
+    "crop alpha>=128 bounds plus2px fringe (319, 85, 1465, 793); no alpha edits",
+    "Lanczos contain (97, 60) offset(15, 2)"
+  ],
+  "tone": null,
+  "seam": null,
+  "bytes": 13725,
+  "model": {
+    "scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "sentence": "Uses the identical illustration technique and contour style, with consistent wood and hide textures, shading, and the same muted, earthy color palette and lighting direction."
+    },
+    "review_id": "judge_buildings_c",
+    "candidate_raw_sha256": "7d718dd21874a71ba553e94d2b92275775bc10967234097c1c34e8d4697b4467",
+    "scorecard_sha256": "dc5934bf68b9cea98d8abe9928c93bec63c708c40e15e9932ea5977b5287d998"
+  },
+  "physical_footprint": [
+    2,
+    1
+  ],
+  "style_pass": true,
+  "reading": "A pale stretched hide fills the lashed frame and distinguishes the active rack.",
+  "semantic_pass": true,
+  "required_wrap_pass": true,
+  "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+}

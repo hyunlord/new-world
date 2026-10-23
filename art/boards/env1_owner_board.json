@@ -1,0 +1,22 @@
+{
+  "sources": [
+    {
+      "path": "docs/v8/artenv1/reference/current_day6_noon_1x.png",
+      "sha256": "e033dbef9c450fe992d0890394c5ba5e579e5e62a7fa87a7391cc216f69b7d21"
+    },
+    {
+      "path": "docs/v8/artenv1/renders/scene_day6_noon_day_1x_figures.png",
+      "sha256": "abe826694acfc6a54aa1e5581cc849ffaa61a7063e49d91dac9de94128a04129"
+    },
+    {
+      "path": "docs/v8/artenv1/renders/scene_day6_noon_day_half_lod.png",
+      "sha256": "1e0df4b75a8a1905b4997fd2eecf5fb0f529e5eb350e9b46ba162b74bbb07b05"
+    },
+    {
+      "path": "docs/v8/artenv1/renders/scene_day6_noon_night_1x_figures.png",
+      "sha256": "b764c5bfce3b8a65e42aa03f1e230aa9f332bdccf8e5441d46996d361bdffad7"
+    }
+  ],
+  "operation": "uniform 0.5 Lanczos panel resize, no quantization",
+  "owner_approval": "NOT_REQUESTED"
+}

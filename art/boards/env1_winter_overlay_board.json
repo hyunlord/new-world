@@ -1,0 +1,22 @@
+{
+  "sources": [
+    {
+      "path": "docs/v8/artenv1/reference/current_winter_noon_1x.png",
+      "sha256": "b8620a1f5c80ee6b18836b30089ff4f8de438a3de0e38c8b5a78eb9ac1d9d12c"
+    },
+    {
+      "path": "docs/v8/artenv1/renders/scene_winter_noon_winter_1x_figures.png",
+      "sha256": "b409b61c15eeeac0302e064368418e578c4d80e72983f1959c9e9ade4dd0f73c"
+    },
+    {
+      "path": "docs/v8/artenv1/renders/scene_winter_noon_winter_half_lod.png",
+      "sha256": "8225ab76fa6c103a8f4d0c7e3030ebeece8fea0b077d3374e0df0f13a00f05ea"
+    },
+    {
+      "path": "docs/v8/artenv1/renders/scene_winter_noon_day_1x_figures.png",
+      "sha256": "ff4928515aac7ef3ed6cf3874ee4995137e924753104d7356e733855ff786dbc"
+    }
+  ],
+  "operation": "uniform 0.5 Lanczos panel resize, no quantization",
+  "owner_approval": "NOT_REQUESTED"
+}

@@ -1,0 +1,77 @@
+{
+  "id": "wall_stone_straight",
+  "path": "art/style05/env1/built/wall_stone_straight.png",
+  "width": 256,
+  "height": 64,
+  "footprint": [
+    4,
+    1
+  ],
+  "family": "buildings",
+  "attempts": 1,
+  "selected_attempt": 1,
+  "status": "SEAM_FAIL_CANDIDATE",
+  "raw": "/Users/rexxa/work/artenv1-data/built/wall_stone_straight_try1_raw.png",
+  "raw_sha256": "4e0e101e04916d1efca7e5f267ccb1257194a43b0c7b94d21a7828d96f8eacc7",
+  "sha256": "2f609525ae87aff9f23d72dcf9417fcd9f3ec0804ffc556df41a74a3c2a3e77a",
+  "metadata": "/Users/rexxa/work/artenv1-data/built/wall_stone_straight_try1.json",
+  "metadata_sha256": "0643cd3522aa965af0bd71d9623aa665722faf2d540fdaac8c338be9f5584154",
+  "numeric": {
+    "candidate": "/Users/rexxa/work/artenv1-data/built/wall_stone_straight_try1_raw.png",
+    "sha256": "4e0e101e04916d1efca7e5f267ccb1257194a43b0c7b94d21a7828d96f8eacc7",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.2798335887891395,
+      "saturation_q25": 0.39394601164871845,
+      "saturation_q75": 0.5036817421903443,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.020756378521189132,
+      "foreground_pixels": 10307
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "operations": [
+    "crop alpha>=128 bounds plus2px fringe (0, 522, 1254, 740); no alpha edits",
+    "Lanczos contain (252, 44) offset(2, 10)"
+  ],
+  "tone": null,
+  "seam": null,
+  "bytes": 32712,
+  "model": {
+    "scores": {
+      "medium": 4,
+      "line": 4,
+      "light": 4,
+      "palette": 4,
+      "sentence": "Closely matches the hand-painted ink-and-wash technique, line work, and lighting, with only slightly smoother stone texture and marginally cleaner outlines than the reference crops."
+    },
+    "review_id": "judge_buildings_a",
+    "candidate_raw_sha256": "4e0e101e04916d1efca7e5f267ccb1257194a43b0c7b94d21a7828d96f8eacc7",
+    "scorecard_sha256": "46c9b583aea782f0a65ee5b9c85fb814fe5420667c05d3b0bf36def31b85f409"
+  },
+  "physical_footprint": [
+    4,
+    1
+  ],
+  "style_pass": true,
+  "reading": "Two courses of irregular dry stone read as a wall; yellow lichen differs from the corner material.",
+  "semantic_pass": true,
+  "required_wrap_pass": true,
+  "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+}

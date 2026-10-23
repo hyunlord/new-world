@@ -1,0 +1,6944 @@
+{
+  "source_path": "/Users/rexxa/work/artenv1-data/baseline/baseline_capture.json",
+  "source_sha256": "1c956af0b1ca4fd93e1840e556812c8a04abf41263399aff016d17cbd47a7dce",
+  "source_commit": "3a3b236c125c0c25e9b74261be88536473fc01e9",
+  "derivation": "Exact frozen-save read-only bridge capture. Native codes checked in sim-core colony/items.rs, orders.rs, wildlife.rs and sim-bridge ffi/space.rs. Resource-node and extra routine animation layers remain outside this normalized subset.",
+  "scenes": [
+    {
+      "scene_id": "day6_night",
+      "tick": 6840,
+      "people": [
+        {
+          "agent_id": 6,
+          "tile": [
+            91,
+            103
+          ],
+          "activity_kind": -1,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 7,
+          "tile": [
+            93,
+            100
+          ],
+          "activity_kind": -1,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 8,
+          "tile": [
+            91,
+            103
+          ],
+          "activity_kind": -1,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 2,
+          "tile": [
+            84,
+            106
+          ],
+          "activity_kind": -1,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 0,
+          "tile": [
+            82,
+            106
+          ],
+          "activity_kind": -1,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 9,
+          "tile": [
+            91,
+            103
+          ],
+          "activity_kind": -1,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 5,
+          "tile": [
+            89,
+            100
+          ],
+          "activity_kind": -1,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 3,
+          "tile": [
+            85,
+            106
+          ],
+          "activity_kind": -1,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 1,
+          "tile": [
+            83,
+            106
+          ],
+          "activity_kind": -1,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 4,
+          "tile": [
+            82,
+            106
+          ],
+          "activity_kind": -1,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        }
+      ],
+      "sprites": [
+        {
+          "id": "bridge_wall_0",
+          "asset": "wall_log_06",
+          "position": [
+            100,
+            94
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_1",
+          "asset": "wall_log_05",
+          "position": [
+            100,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_2",
+          "asset": "wall_log_05",
+          "position": [
+            100,
+            96
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_3",
+          "asset": "wall_log_03",
+          "position": [
+            100,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_4",
+          "asset": "wall_log_10",
+          "position": [
+            101,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_5",
+          "asset": "wall_log_10",
+          "position": [
+            102,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_6",
+          "asset": "door_log_closed",
+          "position": [
+            104,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_7",
+          "asset": "wall_log_06",
+          "position": [
+            81,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_8",
+          "asset": "wall_log_10",
+          "position": [
+            82,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_9",
+          "asset": "wall_log_10",
+          "position": [
+            83,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_10",
+          "asset": "wall_log_10",
+          "position": [
+            84,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_11",
+          "asset": "wall_log_10",
+          "position": [
+            85,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_12",
+          "asset": "wall_log_10",
+          "position": [
+            86,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_13",
+          "asset": "wall_log_12",
+          "position": [
+            87,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_14",
+          "asset": "wall_log_05",
+          "position": [
+            81,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_15",
+          "asset": "wall_log_05",
+          "position": [
+            87,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_16",
+          "asset": "wall_log_05",
+          "position": [
+            81,
+            107
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_17",
+          "asset": "wall_log_05",
+          "position": [
+            87,
+            107
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_18",
+          "asset": "wall_log_05",
+          "position": [
+            81,
+            108
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_19",
+          "asset": "wall_log_05",
+          "position": [
+            87,
+            108
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_20",
+          "asset": "wall_log_03",
+          "position": [
+            81,
+            109
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_21",
+          "asset": "wall_log_10",
+          "position": [
+            82,
+            109
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_22",
+          "asset": "wall_log_10",
+          "position": [
+            83,
+            109
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_23",
+          "asset": "door_log_closed",
+          "position": [
+            84,
+            109
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_24",
+          "asset": "wall_log_10",
+          "position": [
+            85,
+            109
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_25",
+          "asset": "wall_log_10",
+          "position": [
+            86,
+            109
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_26",
+          "asset": "wall_log_09",
+          "position": [
+            87,
+            109
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_0",
+          "asset": "wall_log_05",
+          "position": [
+            100,
+            97
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_1",
+          "asset": "wall_log_05",
+          "position": [
+            100,
+            98
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_2",
+          "asset": "wall_log_05",
+          "position": [
+            100,
+            99
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_3",
+          "asset": "wall_log_05",
+          "position": [
+            100,
+            100
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_4",
+          "asset": "wall_log_10",
+          "position": [
+            101,
+            94
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_5",
+          "asset": "wall_log_10",
+          "position": [
+            102,
+            94
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_6",
+          "asset": "wall_log_10",
+          "position": [
+            103,
+            94
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_7",
+          "asset": "wall_log_10",
+          "position": [
+            103,
+            101
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_8",
+          "asset": "wall_log_10",
+          "position": [
+            104,
+            94
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_9",
+          "asset": "wall_log_10",
+          "position": [
+            105,
+            94
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_10",
+          "asset": "wall_log_10",
+          "position": [
+            105,
+            101
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_11",
+          "asset": "wall_log_10",
+          "position": [
+            106,
+            94
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_12",
+          "asset": "wall_log_10",
+          "position": [
+            106,
+            101
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_13",
+          "asset": "wall_log_12",
+          "position": [
+            107,
+            94
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_14",
+          "asset": "wall_log_05",
+          "position": [
+            107,
+            95
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_15",
+          "asset": "wall_log_05",
+          "position": [
+            107,
+            96
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_16",
+          "asset": "wall_log_05",
+          "position": [
+            107,
+            97
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_17",
+          "asset": "wall_log_05",
+          "position": [
+            107,
+            98
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_18",
+          "asset": "wall_log_05",
+          "position": [
+            107,
+            99
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_19",
+          "asset": "wall_log_05",
+          "position": [
+            107,
+            100
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_20",
+          "asset": "wall_log_09",
+          "position": [
+            107,
+            101
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_item_0",
+          "asset": "firewood",
+          "position": [
+            94,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 22
+        },
+        {
+          "id": "bridge_item_1",
+          "asset": "flint_nodule",
+          "position": [
+            94,
+            102
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 3,
+          "native_count": 9
+        },
+        {
+          "id": "bridge_item_2",
+          "asset": "firewood",
+          "position": [
+            94,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 6
+        },
+        {
+          "id": "bridge_item_3",
+          "asset": "stone_pile",
+          "position": [
+            95,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 2,
+          "native_count": 3
+        },
+        {
+          "id": "bridge_item_4",
+          "asset": "flint_nodule",
+          "position": [
+            95,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 3,
+          "native_count": 8
+        },
+        {
+          "id": "bridge_item_5",
+          "asset": "firewood",
+          "position": [
+            98,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 23
+        },
+        {
+          "id": "bridge_item_6",
+          "asset": "firewood",
+          "position": [
+            99,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 2
+        },
+        {
+          "id": "bridge_item_7",
+          "asset": "firewood",
+          "position": [
+            99,
+            104
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 10
+        },
+        {
+          "id": "bridge_item_8",
+          "asset": "stone_pile",
+          "position": [
+            101,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 2,
+          "native_count": 7
+        },
+        {
+          "id": "bridge_item_9",
+          "asset": "firewood",
+          "position": [
+            101,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 23
+        },
+        {
+          "id": "bridge_item_10",
+          "asset": "firewood",
+          "position": [
+            102,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 7
+        },
+        {
+          "id": "bridge_item_11",
+          "asset": "firewood",
+          "position": [
+            102,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 12
+        },
+        {
+          "id": "bridge_item_12",
+          "asset": "firewood",
+          "position": [
+            105,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 10
+        },
+        {
+          "id": "bridge_item_13",
+          "asset": "firewood",
+          "position": [
+            106,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 6
+        },
+        {
+          "id": "bridge_floor_0",
+          "asset": "floor_dug_rock",
+          "position": [
+            80,
+            85
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_1",
+          "asset": "floor_packed_earth",
+          "position": [
+            86,
+            106
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_2",
+          "asset": "floor_packed_earth",
+          "position": [
+            82,
+            107
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_3",
+          "asset": "floor_packed_earth",
+          "position": [
+            83,
+            107
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_4",
+          "asset": "floor_packed_earth",
+          "position": [
+            84,
+            107
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_5",
+          "asset": "floor_packed_earth",
+          "position": [
+            85,
+            107
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_6",
+          "asset": "floor_packed_earth",
+          "position": [
+            86,
+            107
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_7",
+          "asset": "floor_packed_earth",
+          "position": [
+            82,
+            108
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_8",
+          "asset": "floor_packed_earth",
+          "position": [
+            83,
+            108
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_9",
+          "asset": "floor_packed_earth",
+          "position": [
+            84,
+            108
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_10",
+          "asset": "floor_packed_earth",
+          "position": [
+            85,
+            108
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_11",
+          "asset": "floor_packed_earth",
+          "position": [
+            86,
+            108
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_bed_0",
+          "asset": "bedroll",
+          "position": [
+            82,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": null,
+          "native_count": null
+        },
+        {
+          "id": "bridge_bed_1",
+          "asset": "bedroll",
+          "position": [
+            83,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": null,
+          "native_count": null
+        },
+        {
+          "id": "bridge_bed_2",
+          "asset": "bedroll",
+          "position": [
+            84,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": null,
+          "native_count": null
+        },
+        {
+          "id": "bridge_bed_3",
+          "asset": "bedroll",
+          "position": [
+            85,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": null,
+          "native_count": null
+        },
+        {
+          "id": "bridge_ford_0",
+          "asset": "ford",
+          "position": [
+            86,
+            100
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": null,
+          "native_count": null
+        },
+        {
+          "id": "bridge_ford_1",
+          "asset": "ford",
+          "position": [
+            87,
+            100
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": null,
+          "native_count": null
+        },
+        {
+          "id": "bridge_ford_2",
+          "asset": "ford",
+          "position": [
+            89,
+            109
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": null,
+          "native_count": null
+        },
+        {
+          "id": "bridge_ford_3",
+          "asset": "ford",
+          "position": [
+            90,
+            109
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": null,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_0",
+          "asset": "floor_packed_earth",
+          "position": [
+            94,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_1",
+          "asset": "floor_packed_earth",
+          "position": [
+            94,
+            102
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_2",
+          "asset": "floor_packed_earth",
+          "position": [
+            94,
+            103
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_3",
+          "asset": "floor_packed_earth",
+          "position": [
+            94,
+            104
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_4",
+          "asset": "floor_packed_earth",
+          "position": [
+            94,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_5",
+          "asset": "floor_packed_earth",
+          "position": [
+            94,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_6",
+          "asset": "floor_packed_earth",
+          "position": [
+            95,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_7",
+          "asset": "floor_packed_earth",
+          "position": [
+            95,
+            102
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_8",
+          "asset": "floor_packed_earth",
+          "position": [
+            95,
+            103
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_9",
+          "asset": "floor_packed_earth",
+          "position": [
+            95,
+            104
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_10",
+          "asset": "floor_packed_earth",
+          "position": [
+            95,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_11",
+          "asset": "floor_packed_earth",
+          "position": [
+            95,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_12",
+          "asset": "floor_packed_earth",
+          "position": [
+            96,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_13",
+          "asset": "floor_packed_earth",
+          "position": [
+            96,
+            102
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_14",
+          "asset": "floor_packed_earth",
+          "position": [
+            96,
+            103
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_15",
+          "asset": "floor_packed_earth",
+          "position": [
+            96,
+            104
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_16",
+          "asset": "floor_packed_earth",
+          "position": [
+            96,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_17",
+          "asset": "floor_packed_earth",
+          "position": [
+            96,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_18",
+          "asset": "floor_packed_earth",
+          "position": [
+            97,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_19",
+          "asset": "floor_packed_earth",
+          "position": [
+            97,
+            102
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_20",
+          "asset": "floor_packed_earth",
+          "position": [
+            97,
+            103
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_21",
+          "asset": "floor_packed_earth",
+          "position": [
+            97,
+            104
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_22",
+          "asset": "floor_packed_earth",
+          "position": [
+            97,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_23",
+          "asset": "floor_packed_earth",
+          "position": [
+            97,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_24",
+          "asset": "floor_packed_earth",
+          "position": [
+            98,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_25",
+          "asset": "floor_packed_earth",
+          "position": [
+            98,
+            102
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_26",
+          "asset": "floor_packed_earth",
+          "position": [
+            98,
+            103
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_27",
+          "asset": "floor_packed_earth",
+          "position": [
+            98,
+            104
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_28",
+          "asset": "floor_packed_earth",
+          "position": [
+            98,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_29",
+          "asset": "floor_packed_earth",
+          "position": [
+            98,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_30",
+          "asset": "floor_packed_earth",
+          "position": [
+            99,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_31",
+          "asset": "floor_packed_earth",
+          "position": [
+            99,
+            102
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_32",
+          "asset": "floor_packed_earth",
+          "position": [
+            99,
+            103
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_33",
+          "asset": "floor_packed_earth",
+          "position": [
+            99,
+            104
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_34",
+          "asset": "floor_packed_earth",
+          "position": [
+            99,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_35",
+          "asset": "floor_packed_earth",
+          "position": [
+            99,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_36",
+          "asset": "floor_packed_earth",
+          "position": [
+            101,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_37",
+          "asset": "floor_packed_earth",
+          "position": [
+            101,
+            96
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_38",
+          "asset": "floor_packed_earth",
+          "position": [
+            101,
+            97
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_39",
+          "asset": "floor_packed_earth",
+          "position": [
+            101,
+            98
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_40",
+          "asset": "floor_packed_earth",
+          "position": [
+            101,
+            99
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_41",
+          "asset": "floor_packed_earth",
+          "position": [
+            101,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_42",
+          "asset": "floor_packed_earth",
+          "position": [
+            102,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_43",
+          "asset": "floor_packed_earth",
+          "position": [
+            102,
+            96
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_44",
+          "asset": "floor_packed_earth",
+          "position": [
+            102,
+            97
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_45",
+          "asset": "floor_packed_earth",
+          "position": [
+            102,
+            98
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_46",
+          "asset": "floor_packed_earth",
+          "position": [
+            102,
+            99
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_47",
+          "asset": "floor_packed_earth",
+          "position": [
+            102,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_48",
+          "asset": "floor_packed_earth",
+          "position": [
+            103,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_49",
+          "asset": "floor_packed_earth",
+          "position": [
+            103,
+            96
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_50",
+          "asset": "floor_packed_earth",
+          "position": [
+            103,
+            97
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_51",
+          "asset": "floor_packed_earth",
+          "position": [
+            103,
+            98
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_52",
+          "asset": "floor_packed_earth",
+          "position": [
+            103,
+            99
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_53",
+          "asset": "floor_packed_earth",
+          "position": [
+            103,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_54",
+          "asset": "floor_packed_earth",
+          "position": [
+            104,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_55",
+          "asset": "floor_packed_earth",
+          "position": [
+            104,
+            96
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_56",
+          "asset": "floor_packed_earth",
+          "position": [
+            104,
+            97
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_57",
+          "asset": "floor_packed_earth",
+          "position": [
+            104,
+            98
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_58",
+          "asset": "floor_packed_earth",
+          "position": [
+            104,
+            99
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_59",
+          "asset": "floor_packed_earth",
+          "position": [
+            104,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_60",
+          "asset": "floor_packed_earth",
+          "position": [
+            105,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_61",
+          "asset": "floor_packed_earth",
+          "position": [
+            105,
+            96
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_62",
+          "asset": "floor_packed_earth",
+          "position": [
+            105,
+            97
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_63",
+          "asset": "floor_packed_earth",
+          "position": [
+            105,
+            98
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_64",
+          "asset": "floor_packed_earth",
+          "position": [
+            105,
+            99
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_65",
+          "asset": "floor_packed_earth",
+          "position": [
+            105,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_66",
+          "asset": "floor_packed_earth",
+          "position": [
+            106,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_67",
+          "asset": "floor_packed_earth",
+          "position": [
+            106,
+            96
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_68",
+          "asset": "floor_packed_earth",
+          "position": [
+            106,
+            97
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_69",
+          "asset": "floor_packed_earth",
+          "position": [
+            106,
+            98
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_70",
+          "asset": "floor_packed_earth",
+          "position": [
+            106,
+            99
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_71",
+          "asset": "floor_packed_earth",
+          "position": [
+            106,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_1",
+          "asset": "deer_S_stand",
+          "position": [
+            98,
+            71
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_2",
+          "asset": "deer_S_stand",
+          "position": [
+            69,
+            90
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_3",
+          "asset": "deer_S_stand",
+          "position": [
+            99,
+            61
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_4",
+          "asset": "deer_S_stand",
+          "position": [
+            84,
+            76
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_5",
+          "asset": "deer_S_stand",
+          "position": [
+            73,
+            61
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_6",
+          "asset": "deer_S_stand",
+          "position": [
+            102,
+            77
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_7",
+          "asset": "deer_S_stand",
+          "position": [
+            100,
+            70
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_8",
+          "asset": "deer_S_stand",
+          "position": [
+            87,
+            61
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_9",
+          "asset": "deer_S_stand",
+          "position": [
+            80,
+            69
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_building_0",
+          "asset": "hearth_1",
+          "position": [
+            91,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_building_1",
+          "asset": "lean_to",
+          "position": [
+            89,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_building_2",
+          "asset": "lean_to",
+          "position": [
+            93,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_building_3",
+          "asset": "lean_to",
+          "position": [
+            91,
+            103
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        }
+      ]
+    },
+    {
+      "scene_id": "day6_noon",
+      "tick": 7440,
+      "people": [
+        {
+          "agent_id": 0,
+          "tile": [
+            100,
+            102
+          ],
+          "activity_kind": -1,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 6,
+          "tile": [
+            78,
+            87
+          ],
+          "activity_kind": -1,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 7,
+          "tile": [
+            77,
+            87
+          ],
+          "activity_kind": 4,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 1,
+          "tile": [
+            92,
+            102
+          ],
+          "activity_kind": 1,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 8,
+          "tile": [
+            92,
+            99
+          ],
+          "activity_kind": 2,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 2,
+          "tile": [
+            93,
+            102
+          ],
+          "activity_kind": 1,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 9,
+          "tile": [
+            89,
+            99
+          ],
+          "activity_kind": 3,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 5,
+          "tile": [
+            89,
+            103
+          ],
+          "activity_kind": -1,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 3,
+          "tile": [
+            88,
+            101
+          ],
+          "activity_kind": -1,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 4,
+          "tile": [
+            91,
+            99
+          ],
+          "activity_kind": -1,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        }
+      ],
+      "sprites": [
+        {
+          "id": "bridge_wall_0",
+          "asset": "wall_log_06",
+          "position": [
+            100,
+            94
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_1",
+          "asset": "wall_log_05",
+          "position": [
+            100,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_2",
+          "asset": "wall_log_05",
+          "position": [
+            100,
+            96
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_3",
+          "asset": "wall_log_03",
+          "position": [
+            100,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_4",
+          "asset": "wall_log_10",
+          "position": [
+            101,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_5",
+          "asset": "wall_log_10",
+          "position": [
+            102,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_6",
+          "asset": "door_log_closed",
+          "position": [
+            104,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_7",
+          "asset": "wall_log_06",
+          "position": [
+            81,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_8",
+          "asset": "wall_log_10",
+          "position": [
+            82,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_9",
+          "asset": "wall_log_10",
+          "position": [
+            83,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_10",
+          "asset": "wall_log_10",
+          "position": [
+            84,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_11",
+          "asset": "wall_log_10",
+          "position": [
+            85,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_12",
+          "asset": "wall_log_10",
+          "position": [
+            86,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_13",
+          "asset": "wall_log_12",
+          "position": [
+            87,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_14",
+          "asset": "wall_log_05",
+          "position": [
+            81,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_15",
+          "asset": "wall_log_05",
+          "position": [
+            87,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_16",
+          "asset": "wall_log_05",
+          "position": [
+            81,
+            107
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_17",
+          "asset": "wall_log_05",
+          "position": [
+            87,
+            107
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_18",
+          "asset": "wall_log_05",
+          "position": [
+            81,
+            108
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_19",
+          "asset": "wall_log_05",
+          "position": [
+            87,
+            108
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_20",
+          "asset": "wall_log_03",
+          "position": [
+            81,
+            109
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_21",
+          "asset": "wall_log_10",
+          "position": [
+            82,
+            109
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_22",
+          "asset": "wall_log_10",
+          "position": [
+            83,
+            109
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_23",
+          "asset": "door_log_closed",
+          "position": [
+            84,
+            109
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_24",
+          "asset": "wall_log_10",
+          "position": [
+            85,
+            109
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_25",
+          "asset": "wall_log_10",
+          "position": [
+            86,
+            109
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_26",
+          "asset": "wall_log_09",
+          "position": [
+            87,
+            109
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_0",
+          "asset": "wall_log_05",
+          "position": [
+            100,
+            97
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_1",
+          "asset": "wall_log_05",
+          "position": [
+            100,
+            98
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_2",
+          "asset": "wall_log_05",
+          "position": [
+            100,
+            99
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_3",
+          "asset": "wall_log_05",
+          "position": [
+            100,
+            100
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_4",
+          "asset": "wall_log_10",
+          "position": [
+            101,
+            94
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_5",
+          "asset": "wall_log_10",
+          "position": [
+            102,
+            94
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_6",
+          "asset": "wall_log_10",
+          "position": [
+            103,
+            94
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_7",
+          "asset": "wall_log_10",
+          "position": [
+            103,
+            101
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_8",
+          "asset": "wall_log_10",
+          "position": [
+            104,
+            94
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_9",
+          "asset": "wall_log_10",
+          "position": [
+            105,
+            94
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_10",
+          "asset": "wall_log_10",
+          "position": [
+            105,
+            101
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_11",
+          "asset": "wall_log_10",
+          "position": [
+            106,
+            94
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_12",
+          "asset": "wall_log_10",
+          "position": [
+            106,
+            101
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_13",
+          "asset": "wall_log_12",
+          "position": [
+            107,
+            94
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_14",
+          "asset": "wall_log_05",
+          "position": [
+            107,
+            95
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_15",
+          "asset": "wall_log_05",
+          "position": [
+            107,
+            96
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_16",
+          "asset": "wall_log_05",
+          "position": [
+            107,
+            97
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_17",
+          "asset": "wall_log_05",
+          "position": [
+            107,
+            98
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_18",
+          "asset": "wall_log_05",
+          "position": [
+            107,
+            99
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_19",
+          "asset": "wall_log_05",
+          "position": [
+            107,
+            100
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_20",
+          "asset": "wall_log_09",
+          "position": [
+            107,
+            101
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_item_0",
+          "asset": "firewood",
+          "position": [
+            94,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 25
+        },
+        {
+          "id": "bridge_item_1",
+          "asset": "flint_nodule",
+          "position": [
+            94,
+            102
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 3,
+          "native_count": 9
+        },
+        {
+          "id": "bridge_item_2",
+          "asset": "firewood",
+          "position": [
+            94,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 6
+        },
+        {
+          "id": "bridge_item_3",
+          "asset": "stone_pile",
+          "position": [
+            95,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 2,
+          "native_count": 3
+        },
+        {
+          "id": "bridge_item_4",
+          "asset": "flint_nodule",
+          "position": [
+            95,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 3,
+          "native_count": 8
+        },
+        {
+          "id": "bridge_item_5",
+          "asset": "firewood",
+          "position": [
+            98,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 27
+        },
+        {
+          "id": "bridge_item_6",
+          "asset": "firewood",
+          "position": [
+            99,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 2
+        },
+        {
+          "id": "bridge_item_7",
+          "asset": "firewood",
+          "position": [
+            99,
+            104
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 10
+        },
+        {
+          "id": "bridge_item_8",
+          "asset": "stone_pile",
+          "position": [
+            101,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 2,
+          "native_count": 7
+        },
+        {
+          "id": "bridge_item_9",
+          "asset": "firewood",
+          "position": [
+            101,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 23
+        },
+        {
+          "id": "bridge_item_10",
+          "asset": "firewood",
+          "position": [
+            102,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 7
+        },
+        {
+          "id": "bridge_item_11",
+          "asset": "firewood",
+          "position": [
+            102,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 19
+        },
+        {
+          "id": "bridge_item_12",
+          "asset": "firewood",
+          "position": [
+            105,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 10
+        },
+        {
+          "id": "bridge_item_13",
+          "asset": "firewood",
+          "position": [
+            106,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 6
+        },
+        {
+          "id": "bridge_floor_0",
+          "asset": "floor_dug_rock",
+          "position": [
+            80,
+            85
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_1",
+          "asset": "floor_packed_earth",
+          "position": [
+            86,
+            106
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_2",
+          "asset": "floor_packed_earth",
+          "position": [
+            82,
+            107
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_3",
+          "asset": "floor_packed_earth",
+          "position": [
+            83,
+            107
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_4",
+          "asset": "floor_packed_earth",
+          "position": [
+            84,
+            107
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_5",
+          "asset": "floor_packed_earth",
+          "position": [
+            85,
+            107
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_6",
+          "asset": "floor_packed_earth",
+          "position": [
+            86,
+            107
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_7",
+          "asset": "floor_packed_earth",
+          "position": [
+            82,
+            108
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_8",
+          "asset": "floor_packed_earth",
+          "position": [
+            83,
+            108
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_9",
+          "asset": "floor_packed_earth",
+          "position": [
+            84,
+            108
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_10",
+          "asset": "floor_packed_earth",
+          "position": [
+            85,
+            108
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_11",
+          "asset": "floor_packed_earth",
+          "position": [
+            86,
+            108
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_bed_0",
+          "asset": "bedroll",
+          "position": [
+            82,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": null,
+          "native_count": null
+        },
+        {
+          "id": "bridge_bed_1",
+          "asset": "bedroll",
+          "position": [
+            83,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": null,
+          "native_count": null
+        },
+        {
+          "id": "bridge_bed_2",
+          "asset": "bedroll",
+          "position": [
+            84,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": null,
+          "native_count": null
+        },
+        {
+          "id": "bridge_bed_3",
+          "asset": "bedroll",
+          "position": [
+            85,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": null,
+          "native_count": null
+        },
+        {
+          "id": "bridge_ford_0",
+          "asset": "ford",
+          "position": [
+            86,
+            100
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": null,
+          "native_count": null
+        },
+        {
+          "id": "bridge_ford_1",
+          "asset": "ford",
+          "position": [
+            87,
+            100
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": null,
+          "native_count": null
+        },
+        {
+          "id": "bridge_ford_2",
+          "asset": "ford",
+          "position": [
+            89,
+            109
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": null,
+          "native_count": null
+        },
+        {
+          "id": "bridge_ford_3",
+          "asset": "ford",
+          "position": [
+            90,
+            109
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": null,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_0",
+          "asset": "floor_packed_earth",
+          "position": [
+            94,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_1",
+          "asset": "floor_packed_earth",
+          "position": [
+            94,
+            102
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_2",
+          "asset": "floor_packed_earth",
+          "position": [
+            94,
+            103
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_3",
+          "asset": "floor_packed_earth",
+          "position": [
+            94,
+            104
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_4",
+          "asset": "floor_packed_earth",
+          "position": [
+            94,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_5",
+          "asset": "floor_packed_earth",
+          "position": [
+            94,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_6",
+          "asset": "floor_packed_earth",
+          "position": [
+            95,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_7",
+          "asset": "floor_packed_earth",
+          "position": [
+            95,
+            102
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_8",
+          "asset": "floor_packed_earth",
+          "position": [
+            95,
+            103
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_9",
+          "asset": "floor_packed_earth",
+          "position": [
+            95,
+            104
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_10",
+          "asset": "floor_packed_earth",
+          "position": [
+            95,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_11",
+          "asset": "floor_packed_earth",
+          "position": [
+            95,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_12",
+          "asset": "floor_packed_earth",
+          "position": [
+            96,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_13",
+          "asset": "floor_packed_earth",
+          "position": [
+            96,
+            102
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_14",
+          "asset": "floor_packed_earth",
+          "position": [
+            96,
+            103
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_15",
+          "asset": "floor_packed_earth",
+          "position": [
+            96,
+            104
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_16",
+          "asset": "floor_packed_earth",
+          "position": [
+            96,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_17",
+          "asset": "floor_packed_earth",
+          "position": [
+            96,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_18",
+          "asset": "floor_packed_earth",
+          "position": [
+            97,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_19",
+          "asset": "floor_packed_earth",
+          "position": [
+            97,
+            102
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_20",
+          "asset": "floor_packed_earth",
+          "position": [
+            97,
+            103
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_21",
+          "asset": "floor_packed_earth",
+          "position": [
+            97,
+            104
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_22",
+          "asset": "floor_packed_earth",
+          "position": [
+            97,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_23",
+          "asset": "floor_packed_earth",
+          "position": [
+            97,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_24",
+          "asset": "floor_packed_earth",
+          "position": [
+            98,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_25",
+          "asset": "floor_packed_earth",
+          "position": [
+            98,
+            102
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_26",
+          "asset": "floor_packed_earth",
+          "position": [
+            98,
+            103
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_27",
+          "asset": "floor_packed_earth",
+          "position": [
+            98,
+            104
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_28",
+          "asset": "floor_packed_earth",
+          "position": [
+            98,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_29",
+          "asset": "floor_packed_earth",
+          "position": [
+            98,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_30",
+          "asset": "floor_packed_earth",
+          "position": [
+            99,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_31",
+          "asset": "floor_packed_earth",
+          "position": [
+            99,
+            102
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_32",
+          "asset": "floor_packed_earth",
+          "position": [
+            99,
+            103
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_33",
+          "asset": "floor_packed_earth",
+          "position": [
+            99,
+            104
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_34",
+          "asset": "floor_packed_earth",
+          "position": [
+            99,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_35",
+          "asset": "floor_packed_earth",
+          "position": [
+            99,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_36",
+          "asset": "floor_packed_earth",
+          "position": [
+            101,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_37",
+          "asset": "floor_packed_earth",
+          "position": [
+            101,
+            96
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_38",
+          "asset": "floor_packed_earth",
+          "position": [
+            101,
+            97
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_39",
+          "asset": "floor_packed_earth",
+          "position": [
+            101,
+            98
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_40",
+          "asset": "floor_packed_earth",
+          "position": [
+            101,
+            99
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_41",
+          "asset": "floor_packed_earth",
+          "position": [
+            101,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_42",
+          "asset": "floor_packed_earth",
+          "position": [
+            102,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_43",
+          "asset": "floor_packed_earth",
+          "position": [
+            102,
+            96
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_44",
+          "asset": "floor_packed_earth",
+          "position": [
+            102,
+            97
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_45",
+          "asset": "floor_packed_earth",
+          "position": [
+            102,
+            98
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_46",
+          "asset": "floor_packed_earth",
+          "position": [
+            102,
+            99
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_47",
+          "asset": "floor_packed_earth",
+          "position": [
+            102,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_48",
+          "asset": "floor_packed_earth",
+          "position": [
+            103,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_49",
+          "asset": "floor_packed_earth",
+          "position": [
+            103,
+            96
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_50",
+          "asset": "floor_packed_earth",
+          "position": [
+            103,
+            97
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_51",
+          "asset": "floor_packed_earth",
+          "position": [
+            103,
+            98
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_52",
+          "asset": "floor_packed_earth",
+          "position": [
+            103,
+            99
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_53",
+          "asset": "floor_packed_earth",
+          "position": [
+            103,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_54",
+          "asset": "floor_packed_earth",
+          "position": [
+            104,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_55",
+          "asset": "floor_packed_earth",
+          "position": [
+            104,
+            96
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_56",
+          "asset": "floor_packed_earth",
+          "position": [
+            104,
+            97
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_57",
+          "asset": "floor_packed_earth",
+          "position": [
+            104,
+            98
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_58",
+          "asset": "floor_packed_earth",
+          "position": [
+            104,
+            99
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_59",
+          "asset": "floor_packed_earth",
+          "position": [
+            104,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_60",
+          "asset": "floor_packed_earth",
+          "position": [
+            105,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_61",
+          "asset": "floor_packed_earth",
+          "position": [
+            105,
+            96
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_62",
+          "asset": "floor_packed_earth",
+          "position": [
+            105,
+            97
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_63",
+          "asset": "floor_packed_earth",
+          "position": [
+            105,
+            98
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_64",
+          "asset": "floor_packed_earth",
+          "position": [
+            105,
+            99
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_65",
+          "asset": "floor_packed_earth",
+          "position": [
+            105,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_66",
+          "asset": "floor_packed_earth",
+          "position": [
+            106,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_67",
+          "asset": "floor_packed_earth",
+          "position": [
+            106,
+            96
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_68",
+          "asset": "floor_packed_earth",
+          "position": [
+            106,
+            97
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_69",
+          "asset": "floor_packed_earth",
+          "position": [
+            106,
+            98
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_70",
+          "asset": "floor_packed_earth",
+          "position": [
+            106,
+            99
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_71",
+          "asset": "floor_packed_earth",
+          "position": [
+            106,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_1",
+          "asset": "deer_S_stand",
+          "position": [
+            97,
+            70
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_2",
+          "asset": "deer_S_stand",
+          "position": [
+            65,
+            86
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_3",
+          "asset": "deer_S_stand",
+          "position": [
+            101,
+            74
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_4",
+          "asset": "deer_S_stand",
+          "position": [
+            84,
+            74
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_5",
+          "asset": "deer_S_stand",
+          "position": [
+            71,
+            60
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_6",
+          "asset": "deer_S_stand",
+          "position": [
+            103,
+            66
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_7",
+          "asset": "deer_S_stand",
+          "position": [
+            104,
+            64
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_8",
+          "asset": "deer_S_stand",
+          "position": [
+            96,
+            62
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_9",
+          "asset": "deer_S_stand",
+          "position": [
+            70,
+            74
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_building_0",
+          "asset": "hearth_1",
+          "position": [
+            91,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_building_1",
+          "asset": "lean_to",
+          "position": [
+            89,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_building_2",
+          "asset": "lean_to",
+          "position": [
+            93,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_building_3",
+          "asset": "lean_to",
+          "position": [
+            91,
+            103
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        }
+      ]
+    },
+    {
+      "scene_id": "winter_noon",
+      "tick": 26160,
+      "people": [
+        {
+          "agent_id": 9,
+          "tile": [
+            93,
+            102
+          ],
+          "activity_kind": 1,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 1,
+          "tile": [
+            94,
+            102
+          ],
+          "activity_kind": 1,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 6,
+          "tile": [
+            91,
+            100
+          ],
+          "activity_kind": 0,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 8,
+          "tile": [
+            78,
+            87
+          ],
+          "activity_kind": 4,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 3,
+          "tile": [
+            90,
+            100
+          ],
+          "activity_kind": 0,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 2,
+          "tile": [
+            89,
+            99
+          ],
+          "activity_kind": 3,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 7,
+          "tile": [
+            88,
+            99
+          ],
+          "activity_kind": 2,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 4,
+          "tile": [
+            77,
+            87
+          ],
+          "activity_kind": 4,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 5,
+          "tile": [
+            90,
+            97
+          ],
+          "activity_kind": -1,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        },
+        {
+          "agent_id": 0,
+          "tile": [
+            92,
+            102
+          ],
+          "activity_kind": -1,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "job": 0
+        }
+      ],
+      "sprites": [
+        {
+          "id": "bridge_wall_0",
+          "asset": "wall_log_06",
+          "position": [
+            100,
+            94
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_1",
+          "asset": "wall_log_05",
+          "position": [
+            100,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_2",
+          "asset": "wall_log_05",
+          "position": [
+            100,
+            96
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_3",
+          "asset": "wall_log_03",
+          "position": [
+            100,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_4",
+          "asset": "wall_log_10",
+          "position": [
+            101,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_5",
+          "asset": "wall_log_10",
+          "position": [
+            102,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_6",
+          "asset": "door_log_closed",
+          "position": [
+            104,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_7",
+          "asset": "wall_log_06",
+          "position": [
+            81,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_8",
+          "asset": "wall_log_10",
+          "position": [
+            82,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_9",
+          "asset": "wall_log_10",
+          "position": [
+            83,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_10",
+          "asset": "wall_log_10",
+          "position": [
+            84,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_11",
+          "asset": "wall_log_10",
+          "position": [
+            85,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_12",
+          "asset": "wall_log_10",
+          "position": [
+            86,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_13",
+          "asset": "wall_log_12",
+          "position": [
+            87,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_14",
+          "asset": "wall_log_05",
+          "position": [
+            81,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_15",
+          "asset": "wall_log_05",
+          "position": [
+            87,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_16",
+          "asset": "wall_log_05",
+          "position": [
+            81,
+            107
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_17",
+          "asset": "wall_log_05",
+          "position": [
+            87,
+            107
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_18",
+          "asset": "wall_log_05",
+          "position": [
+            81,
+            108
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_19",
+          "asset": "wall_log_05",
+          "position": [
+            87,
+            108
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_20",
+          "asset": "wall_log_03",
+          "position": [
+            81,
+            109
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_21",
+          "asset": "wall_log_10",
+          "position": [
+            82,
+            109
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_22",
+          "asset": "wall_log_10",
+          "position": [
+            83,
+            109
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_23",
+          "asset": "door_log_closed",
+          "position": [
+            84,
+            109
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_24",
+          "asset": "wall_log_10",
+          "position": [
+            85,
+            109
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_25",
+          "asset": "wall_log_10",
+          "position": [
+            86,
+            109
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_wall_26",
+          "asset": "wall_log_09",
+          "position": [
+            87,
+            109
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_0",
+          "asset": "wall_log_05",
+          "position": [
+            100,
+            97
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_1",
+          "asset": "wall_log_05",
+          "position": [
+            100,
+            98
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_2",
+          "asset": "wall_log_05",
+          "position": [
+            100,
+            99
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_3",
+          "asset": "wall_log_05",
+          "position": [
+            100,
+            100
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_4",
+          "asset": "wall_log_10",
+          "position": [
+            101,
+            94
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_5",
+          "asset": "wall_log_10",
+          "position": [
+            102,
+            94
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_6",
+          "asset": "wall_log_10",
+          "position": [
+            103,
+            94
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_7",
+          "asset": "wall_log_10",
+          "position": [
+            103,
+            101
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_8",
+          "asset": "wall_log_10",
+          "position": [
+            104,
+            94
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_9",
+          "asset": "wall_log_10",
+          "position": [
+            105,
+            94
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_10",
+          "asset": "wall_log_10",
+          "position": [
+            105,
+            101
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_11",
+          "asset": "wall_log_10",
+          "position": [
+            106,
+            94
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_12",
+          "asset": "wall_log_10",
+          "position": [
+            106,
+            101
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_13",
+          "asset": "wall_log_12",
+          "position": [
+            107,
+            94
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_14",
+          "asset": "wall_log_05",
+          "position": [
+            107,
+            95
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_15",
+          "asset": "wall_log_05",
+          "position": [
+            107,
+            96
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_16",
+          "asset": "wall_log_05",
+          "position": [
+            107,
+            97
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_17",
+          "asset": "wall_log_05",
+          "position": [
+            107,
+            98
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_18",
+          "asset": "wall_log_05",
+          "position": [
+            107,
+            99
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_19",
+          "asset": "wall_log_05",
+          "position": [
+            107,
+            100
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_site_20",
+          "asset": "wall_log_09",
+          "position": [
+            107,
+            101
+          ],
+          "category": "object",
+          "site": true,
+          "zone": false,
+          "native_kind": 4,
+          "native_count": null
+        },
+        {
+          "id": "bridge_item_0",
+          "asset": "flint_nodule",
+          "position": [
+            94,
+            102
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 3,
+          "native_count": 9
+        },
+        {
+          "id": "bridge_item_1",
+          "asset": "wolf_hide",
+          "position": [
+            94,
+            104
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 16,
+          "native_count": 2
+        },
+        {
+          "id": "bridge_item_2",
+          "asset": "firewood",
+          "position": [
+            94,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 6
+        },
+        {
+          "id": "bridge_item_3",
+          "asset": "stone_pile",
+          "position": [
+            95,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 2,
+          "native_count": 3
+        },
+        {
+          "id": "bridge_item_4",
+          "asset": "flint_nodule",
+          "position": [
+            95,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 3,
+          "native_count": 8
+        },
+        {
+          "id": "bridge_item_5",
+          "asset": "firewood",
+          "position": [
+            96,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 20
+        },
+        {
+          "id": "bridge_item_6",
+          "asset": "firewood",
+          "position": [
+            97,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 2
+        },
+        {
+          "id": "bridge_item_7",
+          "asset": "firewood",
+          "position": [
+            98,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 50
+        },
+        {
+          "id": "bridge_item_8",
+          "asset": "firewood",
+          "position": [
+            99,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 2
+        },
+        {
+          "id": "bridge_item_9",
+          "asset": "firewood",
+          "position": [
+            99,
+            104
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 17
+        },
+        {
+          "id": "bridge_item_10",
+          "asset": "firewood",
+          "position": [
+            99,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 19
+        },
+        {
+          "id": "bridge_item_11",
+          "asset": "stone_pile",
+          "position": [
+            101,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 2,
+          "native_count": 7
+        },
+        {
+          "id": "bridge_item_12",
+          "asset": "firewood",
+          "position": [
+            101,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 30
+        },
+        {
+          "id": "bridge_item_13",
+          "asset": "firewood",
+          "position": [
+            102,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 7
+        },
+        {
+          "id": "bridge_item_14",
+          "asset": "firewood",
+          "position": [
+            102,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 38
+        },
+        {
+          "id": "bridge_item_15",
+          "asset": "firewood",
+          "position": [
+            105,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 16
+        },
+        {
+          "id": "bridge_item_16",
+          "asset": "firewood",
+          "position": [
+            106,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": 6
+        },
+        {
+          "id": "bridge_floor_0",
+          "asset": "floor_dug_rock",
+          "position": [
+            80,
+            85
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_1",
+          "asset": "floor_packed_earth",
+          "position": [
+            86,
+            106
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_2",
+          "asset": "floor_packed_earth",
+          "position": [
+            82,
+            107
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_3",
+          "asset": "floor_packed_earth",
+          "position": [
+            83,
+            107
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_4",
+          "asset": "floor_packed_earth",
+          "position": [
+            84,
+            107
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_5",
+          "asset": "floor_packed_earth",
+          "position": [
+            85,
+            107
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_6",
+          "asset": "floor_packed_earth",
+          "position": [
+            86,
+            107
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_7",
+          "asset": "floor_packed_earth",
+          "position": [
+            82,
+            108
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_8",
+          "asset": "floor_packed_earth",
+          "position": [
+            83,
+            108
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_9",
+          "asset": "floor_packed_earth",
+          "position": [
+            84,
+            108
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_10",
+          "asset": "floor_packed_earth",
+          "position": [
+            85,
+            108
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_floor_11",
+          "asset": "floor_packed_earth",
+          "position": [
+            86,
+            108
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_bed_0",
+          "asset": "bedroll",
+          "position": [
+            82,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": null,
+          "native_count": null
+        },
+        {
+          "id": "bridge_bed_1",
+          "asset": "bedroll",
+          "position": [
+            83,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": null,
+          "native_count": null
+        },
+        {
+          "id": "bridge_bed_2",
+          "asset": "bedroll",
+          "position": [
+            84,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": null,
+          "native_count": null
+        },
+        {
+          "id": "bridge_bed_3",
+          "asset": "bedroll",
+          "position": [
+            85,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": null,
+          "native_count": null
+        },
+        {
+          "id": "bridge_ford_0",
+          "asset": "ford",
+          "position": [
+            86,
+            100
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": null,
+          "native_count": null
+        },
+        {
+          "id": "bridge_ford_1",
+          "asset": "ford",
+          "position": [
+            87,
+            100
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": null,
+          "native_count": null
+        },
+        {
+          "id": "bridge_ford_2",
+          "asset": "ford",
+          "position": [
+            89,
+            109
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": null,
+          "native_count": null
+        },
+        {
+          "id": "bridge_ford_3",
+          "asset": "ford",
+          "position": [
+            90,
+            109
+          ],
+          "category": "floor",
+          "site": false,
+          "zone": false,
+          "native_kind": null,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_0",
+          "asset": "floor_packed_earth",
+          "position": [
+            94,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_1",
+          "asset": "floor_packed_earth",
+          "position": [
+            94,
+            102
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_2",
+          "asset": "floor_packed_earth",
+          "position": [
+            94,
+            103
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_3",
+          "asset": "floor_packed_earth",
+          "position": [
+            94,
+            104
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_4",
+          "asset": "floor_packed_earth",
+          "position": [
+            94,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_5",
+          "asset": "floor_packed_earth",
+          "position": [
+            94,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_6",
+          "asset": "floor_packed_earth",
+          "position": [
+            95,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_7",
+          "asset": "floor_packed_earth",
+          "position": [
+            95,
+            102
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_8",
+          "asset": "floor_packed_earth",
+          "position": [
+            95,
+            103
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_9",
+          "asset": "floor_packed_earth",
+          "position": [
+            95,
+            104
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_10",
+          "asset": "floor_packed_earth",
+          "position": [
+            95,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_11",
+          "asset": "floor_packed_earth",
+          "position": [
+            95,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_12",
+          "asset": "floor_packed_earth",
+          "position": [
+            96,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_13",
+          "asset": "floor_packed_earth",
+          "position": [
+            96,
+            102
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_14",
+          "asset": "floor_packed_earth",
+          "position": [
+            96,
+            103
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_15",
+          "asset": "floor_packed_earth",
+          "position": [
+            96,
+            104
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_16",
+          "asset": "floor_packed_earth",
+          "position": [
+            96,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_17",
+          "asset": "floor_packed_earth",
+          "position": [
+            96,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_18",
+          "asset": "floor_packed_earth",
+          "position": [
+            97,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_19",
+          "asset": "floor_packed_earth",
+          "position": [
+            97,
+            102
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_20",
+          "asset": "floor_packed_earth",
+          "position": [
+            97,
+            103
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_21",
+          "asset": "floor_packed_earth",
+          "position": [
+            97,
+            104
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_22",
+          "asset": "floor_packed_earth",
+          "position": [
+            97,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_23",
+          "asset": "floor_packed_earth",
+          "position": [
+            97,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_24",
+          "asset": "floor_packed_earth",
+          "position": [
+            98,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_25",
+          "asset": "floor_packed_earth",
+          "position": [
+            98,
+            102
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_26",
+          "asset": "floor_packed_earth",
+          "position": [
+            98,
+            103
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_27",
+          "asset": "floor_packed_earth",
+          "position": [
+            98,
+            104
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_28",
+          "asset": "floor_packed_earth",
+          "position": [
+            98,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_29",
+          "asset": "floor_packed_earth",
+          "position": [
+            98,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_30",
+          "asset": "floor_packed_earth",
+          "position": [
+            99,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_31",
+          "asset": "floor_packed_earth",
+          "position": [
+            99,
+            102
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_32",
+          "asset": "floor_packed_earth",
+          "position": [
+            99,
+            103
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_33",
+          "asset": "floor_packed_earth",
+          "position": [
+            99,
+            104
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_34",
+          "asset": "floor_packed_earth",
+          "position": [
+            99,
+            105
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_35",
+          "asset": "floor_packed_earth",
+          "position": [
+            99,
+            106
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_36",
+          "asset": "floor_packed_earth",
+          "position": [
+            101,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_37",
+          "asset": "floor_packed_earth",
+          "position": [
+            101,
+            96
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_38",
+          "asset": "floor_packed_earth",
+          "position": [
+            101,
+            97
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_39",
+          "asset": "floor_packed_earth",
+          "position": [
+            101,
+            98
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_40",
+          "asset": "floor_packed_earth",
+          "position": [
+            101,
+            99
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_41",
+          "asset": "floor_packed_earth",
+          "position": [
+            101,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_42",
+          "asset": "floor_packed_earth",
+          "position": [
+            102,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_43",
+          "asset": "floor_packed_earth",
+          "position": [
+            102,
+            96
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_44",
+          "asset": "floor_packed_earth",
+          "position": [
+            102,
+            97
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_45",
+          "asset": "floor_packed_earth",
+          "position": [
+            102,
+            98
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_46",
+          "asset": "floor_packed_earth",
+          "position": [
+            102,
+            99
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_47",
+          "asset": "floor_packed_earth",
+          "position": [
+            102,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_48",
+          "asset": "floor_packed_earth",
+          "position": [
+            103,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_49",
+          "asset": "floor_packed_earth",
+          "position": [
+            103,
+            96
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_50",
+          "asset": "floor_packed_earth",
+          "position": [
+            103,
+            97
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_51",
+          "asset": "floor_packed_earth",
+          "position": [
+            103,
+            98
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_52",
+          "asset": "floor_packed_earth",
+          "position": [
+            103,
+            99
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_53",
+          "asset": "floor_packed_earth",
+          "position": [
+            103,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_54",
+          "asset": "floor_packed_earth",
+          "position": [
+            104,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_55",
+          "asset": "floor_packed_earth",
+          "position": [
+            104,
+            96
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_56",
+          "asset": "floor_packed_earth",
+          "position": [
+            104,
+            97
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_57",
+          "asset": "floor_packed_earth",
+          "position": [
+            104,
+            98
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_58",
+          "asset": "floor_packed_earth",
+          "position": [
+            104,
+            99
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_59",
+          "asset": "floor_packed_earth",
+          "position": [
+            104,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_60",
+          "asset": "floor_packed_earth",
+          "position": [
+            105,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_61",
+          "asset": "floor_packed_earth",
+          "position": [
+            105,
+            96
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_62",
+          "asset": "floor_packed_earth",
+          "position": [
+            105,
+            97
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_63",
+          "asset": "floor_packed_earth",
+          "position": [
+            105,
+            98
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_64",
+          "asset": "floor_packed_earth",
+          "position": [
+            105,
+            99
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_65",
+          "asset": "floor_packed_earth",
+          "position": [
+            105,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_66",
+          "asset": "floor_packed_earth",
+          "position": [
+            106,
+            95
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_67",
+          "asset": "floor_packed_earth",
+          "position": [
+            106,
+            96
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_68",
+          "asset": "floor_packed_earth",
+          "position": [
+            106,
+            97
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_69",
+          "asset": "floor_packed_earth",
+          "position": [
+            106,
+            98
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_70",
+          "asset": "floor_packed_earth",
+          "position": [
+            106,
+            99
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_zone_71",
+          "asset": "floor_packed_earth",
+          "position": [
+            106,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": true,
+          "native_kind": 2,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_1",
+          "asset": "deer_S_stand",
+          "position": [
+            83,
+            47
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_2",
+          "asset": "deer_S_stand",
+          "position": [
+            65,
+            87
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_3",
+          "asset": "deer_S_stand",
+          "position": [
+            99,
+            72
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_4",
+          "asset": "deer_S_stand",
+          "position": [
+            66,
+            67
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_5",
+          "asset": "deer_S_stand",
+          "position": [
+            71,
+            70
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_6",
+          "asset": "deer_S_stand",
+          "position": [
+            95,
+            67
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_7",
+          "asset": "deer_S_stand",
+          "position": [
+            110,
+            51
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_8",
+          "asset": "deer_S_stand",
+          "position": [
+            85,
+            46
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_animal_9",
+          "asset": "deer_S_stand",
+          "position": [
+            78,
+            76
+          ],
+          "category": "animal",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_building_0",
+          "asset": "hearth_1",
+          "position": [
+            91,
+            101
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 0,
+          "native_count": null
+        },
+        {
+          "id": "bridge_building_1",
+          "asset": "lean_to",
+          "position": [
+            89,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_building_2",
+          "asset": "lean_to",
+          "position": [
+            93,
+            100
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        },
+        {
+          "id": "bridge_building_3",
+          "asset": "lean_to",
+          "position": [
+            91,
+            103
+          ],
+          "category": "object",
+          "site": false,
+          "zone": false,
+          "native_kind": 1,
+          "native_count": null
+        }
+      ]
+    }
+  ]
+}

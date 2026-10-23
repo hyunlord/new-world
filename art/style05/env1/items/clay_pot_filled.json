@@ -1,0 +1,149 @@
+{
+  "id": "clay_pot_filled",
+  "path": "art/style05/env1/items/clay_pot_filled.png",
+  "family": "items",
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "source": "/Users/rexxa/work/artenv1-data/items/clay_pot_filled_try1_raw.png",
+  "source_sha256": "e69febd70249a6a28185f085e7e748ffdb3653351477a771226d501b2f0b34a6",
+  "sha256": "f0e0dad614a9a0d5c394099cdaf00f1af1e40e25234cd76b08af50cd46c5d4b3",
+  "attempts": [
+    {
+      "id": "clay_pot_filled",
+      "attempt": 1,
+      "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE finished fired clay pot, a sturdy terracotta orange-brown round handbuilt jar seen from above with visible oval open mouth filled to rim with calm muted blue-grey WATER and small clear light reflection, thick irregular rim and short side handles; strong round silhouette, no decoration. Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, broad muted two-tone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+      "refs": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+      ],
+      "started_at": "2026-10-23T06:26:04.289Z",
+      "completed_at": "2026-10-23T06:27:41.478Z",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-e6d7a0c8-28dc-4e5e-a8a0-86950f36986b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "tool": "image_gen__imagegen",
+      "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+      "raw": "/Users/rexxa/work/artenv1-data/items/clay_pot_filled_try1_raw.png",
+      "raw_sha256": "e69febd70249a6a28185f085e7e748ffdb3653351477a771226d501b2f0b34a6",
+      "references_sha256": {
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      },
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/items/clay_pot_filled_try1_raw.png",
+        "sha256": "e69febd70249a6a28185f085e7e748ffdb3653351477a771226d501b2f0b34a6",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.17349148301414685,
+          "saturation_q25": 0.5126883891422754,
+          "saturation_q75": 0.7741357466462926,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.01607315717922233,
+          "foreground_pixels": 43028
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      }
+    }
+  ],
+  "numeric": {
+    "candidate": "/Users/rexxa/work/artenv1-data/items/clay_pot_filled_try1_raw.png",
+    "sha256": "e69febd70249a6a28185f085e7e748ffdb3653351477a771226d501b2f0b34a6",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.17349148301414685,
+      "saturation_q25": 0.5126883891422754,
+      "saturation_q75": 0.7741357466462926,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.01607315717922233,
+      "foreground_pixels": 43028
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 4,
+      "palette": 5,
+      "sentence": "Fully aligns with the reference visual language: strong ink lines, watercolor washes, subtle texture, and matching earthy palette with blue water rendered in the same style."
+    },
+    "model_status": "SAME_FAMILY_VERIFIED",
+    "passed": true
+  },
+  "status": "STYLE_ACCEPTED_SEMANTIC_REVIEWED",
+  "operations": [
+    "generated alpha preserved",
+    "alpha-bounds crop",
+    "proportional Lanczos fit to58px",
+    "center in64px tile"
+  ],
+  "count_buckets": [
+    "art/style05/env1/items/clay_pot_filled_count_1.png",
+    "art/style05/env1/items/clay_pot_filled_count_2_8.png",
+    "art/style05/env1/items/clay_pot_filled_count_9_plus.png"
+  ],
+  "count_bucket_sha256": {
+    "art/style05/env1/items/clay_pot_filled_count_1.png": "f0e0dad614a9a0d5c394099cdaf00f1af1e40e25234cd76b08af50cd46c5d4b3",
+    "art/style05/env1/items/clay_pot_filled_count_2_8.png": "b82b18a1a09f942e4c3f96331e0b7e2b53f093919d229f92343b50ba4c3c20bf",
+    "art/style05/env1/items/clay_pot_filled_count_9_plus.png": "3cff102f645204f62197c51df5c4798d3213bde0536e68225ac381b1d25cd776"
+  },
+  "model": {
+    "scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 4,
+      "palette": 5,
+      "sentence": "Fully aligns with the reference visual language: strong ink lines, watercolor washes, subtle texture, and matching earthy palette with blue water rendered in the same style."
+    },
+    "evidence": "art/style05/env1/items/model_scorecard1.png",
+    "raw_sha256": "884e2f91b66544c5267be7a3f2983ce612aa74c3c1d0e15f3917506b41b81f6e",
+    "mechanism": "built-in image-generation model rendered scorecard; actual printed scores visually transcribed; model version not exposed"
+  },
+  "reading": "같은 토기 계열의 푸른 수면이 채워진 상태를 나타낸다.",
+  "style_accepted": true,
+  "readability_status": "EXACT_KIND_RECOGNIZED_BOTH",
+  "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+  "readability_review_ids": [
+    "a",
+    "b"
+  ],
+  "exact_kind_scores": [
+    true,
+    true
+  ]
+}

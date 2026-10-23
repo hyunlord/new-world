@@ -1,0 +1,128 @@
+{
+  "reviewer": "a",
+  "packet_id": "G7461",
+  "answers": [
+    {
+      "image_id": "P23321",
+      "started_at": "2026-10-23T07:47:12Z",
+      "ended_at": "2026-10-23T07:47:47Z",
+      "people_count": 10,
+      "storage": {
+        "present": true,
+        "point": [
+          1146,
+          660
+        ]
+      },
+      "carriers": 3,
+      "wolves": {
+        "present": false,
+        "points": []
+      },
+      "time_class": "night",
+      "activities": {
+        "A": "Sleeping horizontally inside the shelter",
+        "B": "Carrying a bundle of wood near the fire",
+        "C": "Standing at the workbench"
+      },
+      "confidence": "low",
+      "notes": "People overlap closely at C. The raised shapes above three standing people resemble carried wood, but carrying and workstation activity are ambiguous. Response directory initially absent; created before recording answers."
+    },
+    {
+      "image_id": "P34553",
+      "started_at": "2026-10-23T07:47:56Z",
+      "ended_at": "2026-10-23T07:48:12Z",
+      "people_count": 9,
+      "storage": {
+        "present": true,
+        "point": [
+          152,
+          600
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": true,
+        "points": [
+          [
+            800,
+            184
+          ],
+          [
+            928,
+            184
+          ]
+        ]
+      },
+      "time_class": "night",
+      "activities": {
+        "A": "Chopping wood at a stump",
+        "B": "Carrying a bundle of logs on the shoulders",
+        "C": "Walking beside the shelter"
+      },
+      "confidence": "medium",
+      "notes": "Two horizontal people appear in the bottom shelter, in addition to seven upright people. C has no clear tool or load; walking is the primary reading."
+    },
+    {
+      "image_id": "P81008",
+      "started_at": "2026-10-23T07:48:19Z",
+      "ended_at": "2026-10-23T07:48:34Z",
+      "people_count": 9,
+      "storage": {
+        "present": true,
+        "point": [
+          479,
+          553
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": true,
+        "points": [
+          [
+            800,
+            347
+          ],
+          [
+            864,
+            347
+          ]
+        ]
+      },
+      "time_class": "night",
+      "activities": {
+        "A": "Chopping wood with an axe",
+        "B": "Carrying a log",
+        "C": "Standing idle"
+      },
+      "confidence": "medium",
+      "notes": "People are small circular markers. A and B have tool or load icons, but C has no visible action cue. The two red triangular markers are read as wolves; their shapes alone are ambiguous."
+    },
+    {
+      "image_id": "P39774",
+      "started_at": "2026-10-23T07:48:41Z",
+      "ended_at": "2026-10-23T07:48:57Z",
+      "people_count": 10,
+      "storage": {
+        "present": true,
+        "point": [
+          1200,
+          395
+        ]
+      },
+      "carriers": 3,
+      "wolves": {
+        "present": false,
+        "points": []
+      },
+      "time_class": "night",
+      "activities": {
+        "A": "Sleeping horizontally inside the shelter",
+        "B": "Carrying a bundle of wood near the fire",
+        "C": "Standing at the workbench"
+      },
+      "confidence": "low",
+      "notes": "Five horizontal sleepers and five upright people are perceived, with three upright people overlapping at C. Raised shapes on three people resemble carried wood but could be part of their figures; C activity is unclear."
+    }
+  ]
+}

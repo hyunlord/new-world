@@ -1,0 +1,128 @@
+{
+  "reviewer": "b",
+  "packet_id": "G4995",
+  "answers": [
+    {
+      "image_id": "P45286",
+      "started_at": "2026-10-23T07:47:12Z",
+      "ended_at": "2026-10-23T07:47:42Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          350,
+          840
+        ]
+      },
+      "carriers": 0,
+      "wolves": {
+        "present": false,
+        "points": []
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Standing beside the workbench.",
+        "B": "Standing in a marked construction square.",
+        "C": "Standing near the campfire."
+      },
+      "confidence": "medium",
+      "notes": "No carried items or wolves are discernible. Exact actions of A, B and C are unclear in the static sprites; the activity readings describe their visible positions."
+    },
+    {
+      "image_id": "P99556",
+      "started_at": "2026-10-23T07:47:50Z",
+      "ended_at": "2026-10-23T07:48:14Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          478,
+          552
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": true,
+        "points": [
+          [
+            800,
+            347
+          ],
+          [
+            864,
+            347
+          ]
+        ]
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Using an axe.",
+        "B": "Carrying a log.",
+        "C": "Standing by the stream."
+      },
+      "confidence": "medium",
+      "notes": "People appear as small circular markers. Two circles have visible carried objects. I read the two red triangular markers as wolves, with uncertainty because animal silhouettes are not discernible. C has no readable activity cue."
+    },
+    {
+      "image_id": "P41952",
+      "started_at": "2026-10-23T07:48:21Z",
+      "ended_at": "2026-10-23T07:48:42Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          161,
+          595
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": true,
+        "points": [
+          [
+            800,
+            185
+          ],
+          [
+            928,
+            185
+          ]
+        ]
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Chopping wood at a stump.",
+        "B": "Carrying logs on the shoulders.",
+        "C": "Walking beside the stream."
+      },
+      "confidence": "high",
+      "notes": "C has no tool or carried object; the precise movement is less clear than the actions of A and B."
+    },
+    {
+      "image_id": "P30648",
+      "started_at": "2026-10-23T07:48:50Z",
+      "ended_at": "2026-10-23T07:49:08Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          576,
+          700
+        ]
+      },
+      "carriers": 0,
+      "wolves": {
+        "present": false,
+        "points": []
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Standing beside the workbench.",
+        "B": "Standing in a marked construction square.",
+        "C": "Standing near the campfire."
+      },
+      "confidence": "medium",
+      "notes": "No carried items or wolves are discernible. Exact actions of A, B and C are not legible at this scale, so their visible positions are recorded as the primary readings."
+    }
+  ]
+}

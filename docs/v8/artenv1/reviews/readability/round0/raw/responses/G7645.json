@@ -1,0 +1,128 @@
+{
+  "reviewer": "b",
+  "packet_id": "G7645",
+  "answers": [
+    {
+      "image_id": "P25079",
+      "started_at": "2026-10-23T07:26:16Z",
+      "ended_at": "2026-10-23T07:26:42Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          349,
+          834
+        ]
+      },
+      "carriers": 1,
+      "wolves": {
+        "present": false,
+        "points": []
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Standing beside the river",
+        "B": "Working beside a wooden stump",
+        "C": "Tending the campfire"
+      },
+      "confidence": "low",
+      "notes": "Activities are difficult to infer from the static upright figures. The lower-right blue person appears to hold a gray object; other figures show no clear carried item. Storage identification is based on the lower-left enclosure containing rectangular goods."
+    },
+    {
+      "image_id": "P42953",
+      "started_at": "2026-10-23T07:26:47Z",
+      "ended_at": "2026-10-23T07:27:20Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          480,
+          553
+        ]
+      },
+      "carriers": 3,
+      "wolves": {
+        "present": true,
+        "points": [
+          [
+            800,
+            347
+          ],
+          [
+            864,
+            347
+          ]
+        ]
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Holding an axe",
+        "B": "Carrying a small bundle",
+        "C": "Standing idle"
+      },
+      "confidence": "low",
+      "notes": "People appear as very small orange circles, so activity readings are uncertain. A has a small diagonal tool and two other circles have small tan objects. The two red triangles are read as wolves. The small left enclosure with a pot and stored goods is read as storage."
+    },
+    {
+      "image_id": "P52988",
+      "started_at": "2026-10-23T07:27:24Z",
+      "ended_at": "2026-10-23T07:27:40Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          158,
+          599
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": true,
+        "points": [
+          [
+            800,
+            185
+          ],
+          [
+            930,
+            185
+          ]
+        ]
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Swinging an axe",
+        "B": "Carrying logs on the shoulders",
+        "C": "Standing idle"
+      },
+      "confidence": "high",
+      "notes": "Two people visibly shoulder log bundles. A is using a raised axe and is counted as working rather than transporting a load. C has an upright empty-handed pose; no specific work is visibly apparent."
+    },
+    {
+      "image_id": "P79356",
+      "started_at": "2026-10-23T07:27:44Z",
+      "ended_at": "2026-10-23T07:28:03Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          1203,
+          398
+        ]
+      },
+      "carriers": 1,
+      "wolves": {
+        "present": false,
+        "points": []
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Standing beside the river",
+        "B": "Standing beside a wooden stump",
+        "C": "Tending the campfire"
+      },
+      "confidence": "low",
+      "notes": "The upper-right partly built wall enclosure is read as the storage construction site. The lower-right blue person appears to have a gray object at one side. The small upright sprites do not clearly show distinct actions, so the activity readings depend partly on their immediate surroundings."
+    }
+  ]
+}

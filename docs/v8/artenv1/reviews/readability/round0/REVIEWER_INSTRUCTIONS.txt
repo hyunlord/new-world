@@ -1,0 +1,18 @@
+You are an independent visual reviewer. Work only on the assigned packet directory and your assigned response JSON. Read order.json, then open its four PNGs in exactly that order using view_image at detail=original. Do not resize, crop, sharpen, perform pixel analysis, inspect source files, answer keys, other packets or other reviewers. Do not delegate. The 1600x900 image is the evidence; read visible content, including ambiguity, without guessing intended answers.
+
+For EACH image: record actual UTC clock immediately before calling view_image. Answer all six tasks and record your answers to the response file; then read the actual clock and record ended_at. Aim to finish within60 seconds per image. Preserve late answers and actual elapsed time; never fabricate timestamps. This is tool/model elapsed time, not human reaction time. Complete one image before opening the next.
+
+Tasks:
+1. Count people visible in the map area, excluding HUD icons.
+2. Point inside the storage building or its wall construction site, or say absent.
+3. How many visible people are carrying something?
+4. Are wolves present? Point to each wolf, or say absent.
+5. Is it day or night?
+6. Describe what each person labelled A, B and C is doing. State one primary reading; record uncertainty in notes rather than offering incompatible answers as one answer.
+
+Coordinates use the full image's top-left origin (x right, y down). Distinguish people from animals/objects. Do not treat a total HUD population as necessarily visible map population.
+
+Write JSON with this schema:
+{"reviewer":"ASSIGNED a OR b","packet_id":"ASSIGNED G...","answers":[{"image_id":"P...","started_at":"actual UTC ISO8601 ending Z","ended_at":"actual UTC ISO8601 ending Z","people_count":0,"storage":{"present":false,"point":null},"carriers":0,"wolves":{"present":false,"points":[]},"time_class":"day OR night OR uncertain","activities":{"A":"primary action","B":"primary action","C":"primary action"},"confidence":"high OR medium OR low","notes":"ambiguities or timing notes"}]}
+
+If storage is present, point must be [x,y]. If wolves are present, points must contain one [x,y] for each perceived wolf. Preserve your actual uncertain answers. Verify exactly four unique IDs matching packet order and real timestamps. Do not change answers after receiving any external feedback. Report the output path and any limitation; do not send the key or infer scoring.

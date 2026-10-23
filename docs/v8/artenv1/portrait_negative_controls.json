@@ -1,0 +1,92 @@
+[
+  {
+    "candidate": "/Users/rexxa/work/arttrial2-data/negative_painterly.png",
+    "sha256": "83785dc9e933598a4c3e4fd7e5dd8e8305d9eae96ad246d41063c647b3eed76d",
+    "family": "portrait",
+    "metrics": {
+      "edge_density": 0.246897833207357,
+      "saturation_q25": 0.4098452267976646,
+      "saturation_q75": 0.48354798732077836,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.009392636612974984,
+      "foreground_pixels": 65536
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  {
+    "candidate": "/Users/rexxa/work/arttrial2-data/negative_woodcut.png",
+    "sha256": "555adc7e283d9c1ed02efa2793718d3cdd8ef190c9150462f7526473b78e548e",
+    "family": "portrait",
+    "metrics": {
+      "edge_density": 0.2401581002771479,
+      "saturation_q25": 0.6307616325115623,
+      "saturation_q75": 0.6660704173253539,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.001658567089815866,
+      "foreground_pixels": 65536
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": false
+    },
+    "numeric_pass": false,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  {
+    "candidate": "/Users/rexxa/work/arttrial2-data/negative_photo_try1.png",
+    "sha256": "0f3ac1e665c19e4dab1c011067e1ccc9e29d2424f3797a651a50d15015d36a08",
+    "family": "portrait",
+    "metrics": {
+      "edge_density": 0.2901864449483497,
+      "saturation_q25": 0.38063352448526416,
+      "saturation_q75": 0.4843761704523152,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.014404297439150513,
+      "foreground_pixels": 65536
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  }
+]

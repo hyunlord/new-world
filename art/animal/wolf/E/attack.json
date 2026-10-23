@@ -1,0 +1,63 @@
+{
+  "species": "wolf",
+  "facing": "E",
+  "pose": "attack",
+  "attempt": 3,
+  "image": "art/animal/wolf/E/attack.png",
+  "image_sha256": "6224f02adc924b809fb842873367f53a55bc7e2aad036147f8cc5c845338fbb0",
+  "source_panel": "/Users/rexxa/work/artenv1-data/animals/wolf_try3_E_attack.png",
+  "source_panel_sha256": "b9ac0aca290175e9ffbda22db5a83712842db9c67bdea9c23508072e944a80bc",
+  "source_box": [
+    881,
+    514,
+    1354,
+    1008
+  ],
+  "raw_sha256": "d9095e609ee333a7ef46c9d05c0eeafb4e21cd423b98b95153f14ea18228cd58",
+  "prompt_sha256": "9417f5bfb540356fb2fab50cafeb577a4f93652052b5f0800f3152986f1aa2a4",
+  "standing_scale": 0.12612612612612611,
+  "scale": 0.12612612612612611,
+  "normalization": {
+    "scaled_size": [
+      60,
+      62
+    ],
+    "trim_box": [
+      7,
+      6,
+      40,
+      48
+    ],
+    "placement": [
+      31,
+      31
+    ],
+    "resized_to_canvas_offset": [
+      24,
+      25
+    ],
+    "visible_pixels": 705,
+    "rotation_degrees": 0,
+    "scale": 0.12612612612612611,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true
+  },
+  "component_count": 1,
+  "visible_width": 33,
+  "visible_height": 42,
+  "structural_pass": true,
+  "status": "CANDIDATE_NOT_ADOPTED",
+  "species_readability": "READABILITY_FAIL",
+  "numeric_negative_control_calibration": "FAIL",
+  "review_report": "docs/v8/artenv1/animal_reviews_round1.json"
+}

@@ -1,0 +1,631 @@
+{
+  "schema_version": 1,
+  "warning": "ANSWER KEY. Exclude from blind packets. FROZEN is artifact identity, not asset or readability acceptance.",
+  "frozen_at_utc": "2026-10-23T07:45:54.312898+00:00",
+  "render_manifest_sha256": "a4e98dd3af6c2d44286a69083358bcaf2e1cae39c91df76f770c55e4e96b3b98",
+  "renders": [
+    {
+      "source_path": "/Users/rexxa/work/new-world-art-prod/docs/v8/artenv1/renders/scene_day6_noon_day_1x_figures.png",
+      "sha256": "abe826694acfc6a54aa1e5581cc849ffaa61a7063e49d91dac9de94128a04129",
+      "scene": "day6_noon",
+      "condition": "day",
+      "zoom": 1,
+      "tick": 7440,
+      "visible_people_ids": [
+        9,
+        4,
+        1,
+        8,
+        2,
+        0,
+        5,
+        3
+      ],
+      "visible_people_count": 8,
+      "carrier_ids": [
+        9,
+        5
+      ],
+      "carrier_count": 2,
+      "storehouse_bbox": [
+        0,
+        474,
+        320.0,
+        730.0
+      ],
+      "wolf_bboxes": [
+        [
+          775,
+          171,
+          824,
+          198
+        ],
+        [
+          903,
+          171,
+          952,
+          198
+        ]
+      ],
+      "marks": {
+        "C": {
+          "actor_id": 1,
+          "activity": "awake",
+          "bbox": [
+            531,
+            461,
+            556,
+            518
+          ],
+          "foot": [
+            544,
+            517
+          ],
+          "label_anchor": [
+            539,
+            443
+          ]
+        },
+        "B": {
+          "actor_id": 5,
+          "activity": "carry",
+          "bbox": [
+            905,
+            592,
+            948,
+            646
+          ],
+          "foot": [
+            928,
+            645
+          ],
+          "label_anchor": [
+            923,
+            574
+          ]
+        },
+        "A": {
+          "actor_id": 3,
+          "activity": "chop",
+          "bbox": [
+            466,
+            646,
+            496,
+            711
+          ],
+          "foot": [
+            480,
+            709
+          ],
+          "label_anchor": [
+            475,
+            628
+          ]
+        }
+      },
+      "raw_key": "/Users/rexxa/work/artenv1-data/compositor/scene_day6_noon_day_1x_figures.json",
+      "raw_key_sha256": "bf41ccdd15ea59176df8e3ae25273aa49d0d0c5a3d58a433847d58f1e6384f03",
+      "status": "FROZEN"
+    },
+    {
+      "source_path": "/Users/rexxa/work/new-world-art-prod/docs/v8/artenv1/renders/scene_day6_noon_day_half_lod.png",
+      "sha256": "1e0df4b75a8a1905b4997fd2eecf5fb0f529e5eb350e9b46ba162b74bbb07b05",
+      "scene": "day6_noon",
+      "condition": "day",
+      "zoom": 0.5,
+      "tick": 7440,
+      "visible_people_ids": [
+        9,
+        4,
+        1,
+        8,
+        2,
+        0,
+        5,
+        3
+      ],
+      "visible_people_count": 8,
+      "carrier_ids": [
+        9,
+        5
+      ],
+      "carrier_count": 2,
+      "storehouse_bbox": [
+        400,
+        490,
+        560.0,
+        618.0
+      ],
+      "wolf_bboxes": [
+        [
+          795,
+          341,
+          805,
+          351
+        ],
+        [
+          859,
+          341,
+          869,
+          351
+        ]
+      ],
+      "marks": {
+        "C": {
+          "actor_id": 1,
+          "activity": "awake",
+          "bbox": [
+            667,
+            507,
+            677,
+            517
+          ],
+          "foot": [
+            672,
+            512
+          ],
+          "label_anchor": [
+            667,
+            489
+          ]
+        },
+        "B": {
+          "actor_id": 5,
+          "activity": "carry",
+          "bbox": [
+            859,
+            571,
+            869,
+            581
+          ],
+          "foot": [
+            864,
+            576
+          ],
+          "label_anchor": [
+            859,
+            553
+          ]
+        },
+        "A": {
+          "actor_id": 3,
+          "activity": "chop",
+          "bbox": [
+            635,
+            603,
+            645,
+            613
+          ],
+          "foot": [
+            640,
+            608
+          ],
+          "label_anchor": [
+            635,
+            585
+          ]
+        }
+      },
+      "raw_key": "/Users/rexxa/work/artenv1-data/compositor/scene_day6_noon_day_half_lod.json",
+      "raw_key_sha256": "b13034824cc704bc5c76258d9806732886e68bec2c5e32a63b889d08606ece83",
+      "status": "FROZEN"
+    },
+    {
+      "source_path": "/Users/rexxa/work/new-world-art-prod/docs/v8/artenv1/renders/scene_day6_night_night_1x_figures.png",
+      "sha256": "0519e5a57927b3203652d5b69c501e7c6755da553af1d5fd81cd42ac75b1f3e6",
+      "scene": "day6_night",
+      "condition": "night",
+      "zoom": 1,
+      "tick": 6840,
+      "visible_people_ids": [
+        3,
+        8,
+        6,
+        5,
+        9,
+        7,
+        2,
+        0,
+        4,
+        1
+      ],
+      "visible_people_count": 10,
+      "carrier_ids": [
+        3,
+        7
+      ],
+      "carrier_count": 2,
+      "storehouse_bbox": [
+        0,
+        474,
+        320.0,
+        730.0
+      ],
+      "wolf_bboxes": [
+        [
+          775,
+          171,
+          824,
+          198
+        ],
+        [
+          903,
+          171,
+          952,
+          198
+        ]
+      ],
+      "marks": {
+        "C": {
+          "actor_id": 6,
+          "activity": "awake",
+          "bbox": [
+            531,
+            461,
+            556,
+            518
+          ],
+          "foot": [
+            544,
+            517
+          ],
+          "label_anchor": [
+            539,
+            443
+          ]
+        },
+        "B": {
+          "actor_id": 7,
+          "activity": "carry",
+          "bbox": [
+            906,
+            593,
+            947,
+            646
+          ],
+          "foot": [
+            928,
+            645
+          ],
+          "label_anchor": [
+            923,
+            575
+          ]
+        },
+        "A": {
+          "actor_id": 2,
+          "activity": "chop",
+          "bbox": [
+            463,
+            643,
+            496,
+            711
+          ],
+          "foot": [
+            480,
+            709
+          ],
+          "label_anchor": [
+            475,
+            625
+          ]
+        }
+      },
+      "raw_key": "/Users/rexxa/work/artenv1-data/compositor/scene_day6_night_night_1x_figures.json",
+      "raw_key_sha256": "18aa36af53f0d4cf40874c3f89a0a3fed85c19cf4de0bc7af76e84f3b72880f6",
+      "status": "FROZEN"
+    },
+    {
+      "source_path": "/Users/rexxa/work/new-world-art-prod/docs/v8/artenv1/renders/scene_day6_night_night_half_lod.png",
+      "sha256": "fd4a83e9e0efca7c914b35e854b78d525ee7da6f0b042203650f768b5c49bddc",
+      "scene": "day6_night",
+      "condition": "night",
+      "zoom": 0.5,
+      "tick": 6840,
+      "visible_people_ids": [
+        3,
+        8,
+        6,
+        5,
+        9,
+        7,
+        2,
+        0,
+        4,
+        1
+      ],
+      "visible_people_count": 10,
+      "carrier_ids": [
+        3,
+        7
+      ],
+      "carrier_count": 2,
+      "storehouse_bbox": [
+        400,
+        490,
+        560.0,
+        618.0
+      ],
+      "wolf_bboxes": [
+        [
+          795,
+          341,
+          805,
+          351
+        ],
+        [
+          859,
+          341,
+          869,
+          351
+        ]
+      ],
+      "marks": {
+        "C": {
+          "actor_id": 6,
+          "activity": "awake",
+          "bbox": [
+            667,
+            507,
+            677,
+            517
+          ],
+          "foot": [
+            672,
+            512
+          ],
+          "label_anchor": [
+            667,
+            489
+          ]
+        },
+        "B": {
+          "actor_id": 7,
+          "activity": "carry",
+          "bbox": [
+            859,
+            571,
+            869,
+            581
+          ],
+          "foot": [
+            864,
+            576
+          ],
+          "label_anchor": [
+            859,
+            553
+          ]
+        },
+        "A": {
+          "actor_id": 2,
+          "activity": "chop",
+          "bbox": [
+            635,
+            603,
+            645,
+            613
+          ],
+          "foot": [
+            640,
+            608
+          ],
+          "label_anchor": [
+            635,
+            585
+          ]
+        }
+      },
+      "raw_key": "/Users/rexxa/work/artenv1-data/compositor/scene_day6_night_night_half_lod.json",
+      "raw_key_sha256": "cc86258568cd6aebfbd79dd98dc0055e1d6ef8b90c869118bdb81c32e8ff9a3c",
+      "status": "FROZEN"
+    },
+    {
+      "source_path": "/Users/rexxa/work/new-world-art-prod/docs/v8/artenv1/renders/scene_winter_noon_winter_1x_figures.png",
+      "sha256": "b409b61c15eeeac0302e064368418e578c4d80e72983f1959c9e9ade4dd0f73c",
+      "scene": "winter_noon",
+      "condition": "winter",
+      "zoom": 1,
+      "tick": 26160,
+      "visible_people_ids": [
+        5,
+        1,
+        0,
+        6,
+        9,
+        3,
+        2,
+        7
+      ],
+      "visible_people_count": 8,
+      "carrier_ids": [
+        1,
+        2
+      ],
+      "carrier_count": 2,
+      "storehouse_bbox": [
+        0,
+        474,
+        320.0,
+        730.0
+      ],
+      "wolf_bboxes": [
+        [
+          775,
+          171,
+          824,
+          198
+        ],
+        [
+          903,
+          171,
+          952,
+          198
+        ]
+      ],
+      "marks": {
+        "C": {
+          "actor_id": 6,
+          "activity": "awake",
+          "bbox": [
+            531,
+            461,
+            556,
+            518
+          ],
+          "foot": [
+            544,
+            517
+          ],
+          "label_anchor": [
+            539,
+            443
+          ]
+        },
+        "B": {
+          "actor_id": 2,
+          "activity": "carry",
+          "bbox": [
+            905,
+            592,
+            948,
+            646
+          ],
+          "foot": [
+            928,
+            645
+          ],
+          "label_anchor": [
+            923,
+            574
+          ]
+        },
+        "A": {
+          "actor_id": 7,
+          "activity": "chop",
+          "bbox": [
+            467,
+            645,
+            493,
+            711
+          ],
+          "foot": [
+            480,
+            709
+          ],
+          "label_anchor": [
+            475,
+            627
+          ]
+        }
+      },
+      "raw_key": "/Users/rexxa/work/artenv1-data/compositor/scene_winter_noon_winter_1x_figures.json",
+      "raw_key_sha256": "44d90c2b286daa281554a01cffa4f2a9dfca6fc3880cc0c7f71cfbffe58e856f",
+      "status": "FROZEN"
+    },
+    {
+      "source_path": "/Users/rexxa/work/new-world-art-prod/docs/v8/artenv1/renders/scene_winter_noon_winter_half_lod.png",
+      "sha256": "8225ab76fa6c103a8f4d0c7e3030ebeece8fea0b077d3374e0df0f13a00f05ea",
+      "scene": "winter_noon",
+      "condition": "winter",
+      "zoom": 0.5,
+      "tick": 26160,
+      "visible_people_ids": [
+        5,
+        1,
+        0,
+        6,
+        9,
+        3,
+        2,
+        7
+      ],
+      "visible_people_count": 8,
+      "carrier_ids": [
+        1,
+        2
+      ],
+      "carrier_count": 2,
+      "storehouse_bbox": [
+        400,
+        490,
+        560.0,
+        618.0
+      ],
+      "wolf_bboxes": [
+        [
+          795,
+          341,
+          805,
+          351
+        ],
+        [
+          859,
+          341,
+          869,
+          351
+        ]
+      ],
+      "marks": {
+        "C": {
+          "actor_id": 6,
+          "activity": "awake",
+          "bbox": [
+            667,
+            507,
+            677,
+            517
+          ],
+          "foot": [
+            672,
+            512
+          ],
+          "label_anchor": [
+            667,
+            489
+          ]
+        },
+        "B": {
+          "actor_id": 2,
+          "activity": "carry",
+          "bbox": [
+            859,
+            571,
+            869,
+            581
+          ],
+          "foot": [
+            864,
+            576
+          ],
+          "label_anchor": [
+            859,
+            553
+          ]
+        },
+        "A": {
+          "actor_id": 7,
+          "activity": "chop",
+          "bbox": [
+            635,
+            603,
+            645,
+            613
+          ],
+          "foot": [
+            640,
+            608
+          ],
+          "label_anchor": [
+            635,
+            585
+          ]
+        }
+      },
+      "raw_key": "/Users/rexxa/work/artenv1-data/compositor/scene_winter_noon_winter_half_lod.json",
+      "raw_key_sha256": "c582e1bcf098ab492985848186e01b5791b1e92c54ada260ccb92d0b6905fc1d",
+      "status": "FROZEN"
+    }
+  ],
+  "readability_repair_round": 1
+}

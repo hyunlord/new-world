@@ -1,0 +1,128 @@
+{
+  "reviewer": "b",
+  "packet_id": "G3913",
+  "answers": [
+    {
+      "image_id": "P99373",
+      "started_at": "2026-10-23T07:24:07Z",
+      "ended_at": "2026-10-23T07:24:27Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          1200,
+          398
+        ]
+      },
+      "carriers": 0,
+      "wolves": {
+        "present": false,
+        "points": []
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Working at the wooden bench.",
+        "B": "Working on the marked construction square.",
+        "C": "Standing beside the campfire."
+      },
+      "confidence": "medium",
+      "notes": "No clearly separable carried object was visible. Activities are inferred from positions beside the bench, construction square, and campfire; pose details are ambiguous."
+    },
+    {
+      "image_id": "P62328",
+      "started_at": "2026-10-23T07:24:33Z",
+      "ended_at": "2026-10-23T07:24:56Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          479,
+          554
+        ]
+      },
+      "carriers": 3,
+      "wolves": {
+        "present": true,
+        "points": [
+          [
+            800,
+            346
+          ],
+          [
+            864,
+            346
+          ]
+        ]
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Carrying a small object beside the river.",
+        "B": "Carrying a small object beside the stockpile.",
+        "C": "Standing at the river's edge."
+      },
+      "confidence": "low",
+      "notes": "People are represented by small brown circular markers. Three have a small adjacent bar/object. Two red triangular markers are interpreted as wolves, but animal anatomy is not readable. Exact activity beyond position and nearby carried marks is unclear."
+    },
+    {
+      "image_id": "P58058",
+      "started_at": "2026-10-23T07:25:01Z",
+      "ended_at": "2026-10-23T07:25:16Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          1495,
+          305
+        ]
+      },
+      "carriers": 0,
+      "wolves": {
+        "present": false,
+        "points": []
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Standing beside the workbench.",
+        "B": "Standing inside a marked construction tile.",
+        "C": "Standing beside the campfire."
+      },
+      "confidence": "medium",
+      "notes": "No visible handheld load is distinguishable. The labelled people face forward with similar poses, so specific work actions are unclear despite nearby fixtures."
+    },
+    {
+      "image_id": "P44412",
+      "started_at": "2026-10-23T07:25:21Z",
+      "ended_at": "2026-10-23T07:25:41Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          165,
+          602
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": true,
+        "points": [
+          [
+            800,
+            185
+          ],
+          [
+            929,
+            185
+          ]
+        ]
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Raising an axe overhead.",
+        "B": "Carrying a bundle of logs.",
+        "C": "Standing idle beside the river."
+      },
+      "confidence": "medium",
+      "notes": "Two people visibly carry log bundles. A holds a raised tool and is read as working rather than carrying a load; the target of the axe action is not visible. C has no clear work gesture."
+    }
+  ]
+}

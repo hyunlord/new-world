@@ -1,0 +1,128 @@
+{
+  "reviewer": "b",
+  "packet_id": "G7049",
+  "answers": [
+    {
+      "image_id": "P81143",
+      "started_at": "2026-10-23T07:24:18Z",
+      "ended_at": "2026-10-23T07:24:39Z",
+      "people_count": 9,
+      "storage": {
+        "present": true,
+        "point": [
+          480,
+          554
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": true,
+        "points": [
+          [
+            800,
+            346
+          ],
+          [
+            864,
+            346
+          ]
+        ]
+      },
+      "time_class": "night",
+      "activities": {
+        "A": "working with a hand tool",
+        "B": "carrying a bundle",
+        "C": "standing idle"
+      },
+      "confidence": "low",
+      "notes": "People are tiny circles; A has a small diagonal tool-like mark, B has horizontal bundle-like marks, and C has no discernible action. Two red triangular figures read as wolves."
+    },
+    {
+      "image_id": "P53765",
+      "started_at": "2026-10-23T07:24:47Z",
+      "ended_at": "2026-10-23T07:25:11Z",
+      "people_count": 9,
+      "storage": {
+        "present": true,
+        "point": [
+          1184,
+          400
+        ]
+      },
+      "carriers": 1,
+      "wolves": {
+        "present": false,
+        "points": []
+      },
+      "time_class": "night",
+      "activities": {
+        "A": "sleeping in a bed",
+        "B": "carrying a bundle",
+        "C": "standing near the campfire"
+      },
+      "confidence": "low",
+      "notes": "Several horizontal figures overlap in the sleeping building, and two figures overlap near C. B appears to hold a pale bundle; other carrying cues are unclear."
+    },
+    {
+      "image_id": "P73793",
+      "started_at": "2026-10-23T07:25:19Z",
+      "ended_at": "2026-10-23T07:25:40Z",
+      "people_count": 10,
+      "storage": {
+        "present": true,
+        "point": [
+          1475,
+          300
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": false,
+        "points": []
+      },
+      "time_class": "night",
+      "activities": {
+        "A": "sleeping in a bed",
+        "B": "carrying firewood",
+        "C": "standing beside other people"
+      },
+      "confidence": "medium",
+      "notes": "Three people appear stacked together near C and five are lying in beds. The two upper people have large gray bundles with projecting sticks. C has no clearly readable active task."
+    },
+    {
+      "image_id": "P82562",
+      "started_at": "2026-10-23T07:25:48Z",
+      "ended_at": "2026-10-23T07:26:02Z",
+      "people_count": 9,
+      "storage": {
+        "present": true,
+        "point": [
+          160,
+          605
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": true,
+        "points": [
+          [
+            801,
+            184
+          ],
+          [
+            928,
+            184
+          ]
+        ]
+      },
+      "time_class": "night",
+      "activities": {
+        "A": "swinging an axe",
+        "B": "carrying firewood on the shoulders",
+        "C": "walking"
+      },
+      "confidence": "high",
+      "notes": "Seven upright people and two sleeping people are visible. C reads as walking from the stance, although a static idle pose remains possible."
+    }
+  ]
+}

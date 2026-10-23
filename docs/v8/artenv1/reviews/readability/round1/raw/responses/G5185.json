@@ -1,0 +1,128 @@
+{
+  "reviewer": "a",
+  "packet_id": "G5185",
+  "answers": [
+    {
+      "image_id": "P99556",
+      "started_at": "2026-10-23T07:47:01Z",
+      "ended_at": "2026-10-23T07:47:42Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          481,
+          552
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": true,
+        "points": [
+          [
+            800,
+            346
+          ],
+          [
+            864,
+            346
+          ]
+        ]
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Using an axe",
+        "B": "Carrying wood",
+        "C": "Standing"
+      },
+      "confidence": "low",
+      "notes": "People are small circular markers. A appears to have an axe; motion is not evident in the still image. The two red triangles read as wolves, with low visual certainty. Carriers excludes the apparent tool held by A. Initial response write failed because the output directory did not exist; it was created before recording the final end time."
+    },
+    {
+      "image_id": "P45286",
+      "started_at": "2026-10-23T07:47:46Z",
+      "ended_at": "2026-10-23T07:48:08Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          1486,
+          315
+        ]
+      },
+      "carriers": 0,
+      "wolves": {
+        "present": false,
+        "points": []
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Standing beside a workbench",
+        "B": "Standing on a marked ground tile",
+        "C": "Standing near the fire"
+      },
+      "confidence": "medium",
+      "notes": "No carried objects or distinct working gestures are visible on the people. The partially built enclosure at the upper right is my storage-site reading; its exact function is uncertain."
+    },
+    {
+      "image_id": "P41952",
+      "started_at": "2026-10-23T07:48:14Z",
+      "ended_at": "2026-10-23T07:48:29Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          164,
+          601
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": true,
+        "points": [
+          [
+            800,
+            185
+          ],
+          [
+            927,
+            185
+          ]
+        ]
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Chopping wood with an axe",
+        "B": "Carrying a log on the shoulders",
+        "C": "Walking"
+      },
+      "confidence": "high",
+      "notes": "C has no visible carried object; walking is inferred from the stance, although motion cannot be confirmed in a still image."
+    },
+    {
+      "image_id": "P30648",
+      "started_at": "2026-10-23T07:48:34Z",
+      "ended_at": "2026-10-23T07:48:47Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          1196,
+          390
+        ]
+      },
+      "carriers": 0,
+      "wolves": {
+        "present": false,
+        "points": []
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Standing beside a workbench",
+        "B": "Standing on a marked ground tile",
+        "C": "Standing near the fire"
+      },
+      "confidence": "medium",
+      "notes": "People show no clearly visible carried objects or distinct work gestures. The upper-right wall construction site is my storage reading, but the building function is uncertain."
+    }
+  ]
+}

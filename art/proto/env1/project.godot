@@ -1,0 +1,14 @@
+; Isolated ENV1 art crowd, with no simulation or bridge dependencies.
+config_version=5
+[application]
+config/name="ART-ENV1 crowd"
+run/main_scene="res://crowd.tscn"
+[display]
+window/size/viewport_width=1600
+window/size/viewport_height=900
+window/size/resizable=false
+window/vsync/vsync_mode=0
+[rendering]
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/canvas_textures/default_texture_filter=0

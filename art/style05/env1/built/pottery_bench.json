@@ -1,0 +1,77 @@
+{
+  "id": "pottery_bench",
+  "path": "art/style05/env1/built/pottery_bench.png",
+  "width": 128,
+  "height": 64,
+  "footprint": [
+    2,
+    1
+  ],
+  "family": "buildings",
+  "attempts": 1,
+  "selected_attempt": 1,
+  "status": "ACCEPTED_ASSET",
+  "raw": "/Users/rexxa/work/artenv1-data/built/pottery_bench_try1_raw.png",
+  "raw_sha256": "afbf7ae0d2581b14d629b915001dac21ed314b9e419217694bde49e89181da2e",
+  "sha256": "dfca911c50b63dfab024319d784e42647db327d6f4b83e563bebc809c60e07ff",
+  "metadata": "/Users/rexxa/work/artenv1-data/built/pottery_bench_try1.json",
+  "metadata_sha256": "fbec450714171829f5fd96ea35c3e1d5c9f4f99de480ab3c107d3f4b8b93a375",
+  "numeric": {
+    "candidate": "/Users/rexxa/work/artenv1-data/built/pottery_bench_try1_raw.png",
+    "sha256": "afbf7ae0d2581b14d629b915001dac21ed314b9e419217694bde49e89181da2e",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.25011317338162065,
+      "saturation_q25": 0.5443520995285948,
+      "saturation_q75": 0.7246756424292685,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.013583667323562617,
+      "foreground_pixels": 19065
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "operations": [
+    "crop alpha>=128 bounds plus2px fringe (91, 162, 1684, 748); no alpha edits",
+    "Lanczos contain (124, 46) offset(2, 9)"
+  ],
+  "tone": null,
+  "seam": null,
+  "bytes": 15151,
+  "model": {
+    "scores": {
+      "medium": 4,
+      "line": 4,
+      "light": 4,
+      "palette": 4,
+      "sentence": "Very close match in ink-and-wash technique, materials, and lighting, with slightly heavier outlines and marginally warmer, more saturated browns in the pottery and wood giving a mild drift from the reference."
+    },
+    "review_id": "judge_buildings_c",
+    "candidate_raw_sha256": "afbf7ae0d2581b14d629b915001dac21ed314b9e419217694bde49e89181da2e",
+    "scorecard_sha256": "dc5934bf68b9cea98d8abe9928c93bec63c708c40e15e9932ea5977b5287d998"
+  },
+  "physical_footprint": [
+    1,
+    1
+  ],
+  "style_pass": true,
+  "reading": "Two clay pots, clay coil and bone scraper identify a pottery work surface.",
+  "semantic_pass": true,
+  "required_wrap_pass": true,
+  "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+}

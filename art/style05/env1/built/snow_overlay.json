@@ -1,0 +1,87 @@
+{
+  "id": "snow_overlay",
+  "path": "art/style05/env1/built/snow_overlay.png",
+  "width": 64,
+  "height": 64,
+  "footprint": [
+    1,
+    1
+  ],
+  "family": "ground",
+  "attempts": 1,
+  "selected_attempt": 1,
+  "status": "NUMERIC_MODEL_SEMANTIC_SEAM_FAIL_CANDIDATE",
+  "raw": "/Users/rexxa/work/artenv1-data/built/snow_overlay_try1_raw.png",
+  "raw_sha256": "2316e9b9b104240f92e301388804a6efcd0c926fd147e5ec9e415470394f40ee",
+  "sha256": "412e01a22c0520c3d6225bfdef00ff84b37bbb5dc24944bb015a858377426012",
+  "metadata": "/Users/rexxa/work/artenv1-data/built/snow_overlay_try1.json",
+  "metadata_sha256": "9b72af40895e1b8d9ecb110a663b31ada6e44ac6cc10c85c9369ba29259087d3",
+  "numeric": {
+    "candidate": "/Users/rexxa/work/artenv1-data/built/snow_overlay_try1_raw.png",
+    "sha256": "2316e9b9b104240f92e301388804a6efcd0c926fd147e5ec9e415470394f40ee",
+    "family": "ground",
+    "metrics": {
+      "edge_density": 0.22403741752275955,
+      "saturation_q25": 0.06227762845703251,
+      "saturation_q75": 0.35128866011826837,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.0326259571266309,
+      "foreground_pixels": 62478
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": false
+    },
+    "numeric_pass": false,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "operations": [
+    "full-frame Lanczos resize",
+    "global alpha multiplied by 0.6; maximum153/255"
+  ],
+  "tone": null,
+  "seam": {
+    "horizontal_mae": 32.09375,
+    "vertical_mae": 28.6875,
+    "horizontal_ratio": 1.2415599534342259,
+    "vertical_ratio": 0.9606976744186047,
+    "passed": false
+  },
+  "bytes": 13816,
+  "model": {
+    "scores": {
+      "medium": 3,
+      "line": 3,
+      "light": 4,
+      "palette": 3,
+      "sentence": "Same overall technique and lighting, but snow rendered with brighter, cooler whites and softer, more diffuse treatment that looks less earthy and slightly different in texture and color balance compared to the reference style."
+    },
+    "review_id": "judge_ground_b",
+    "candidate_raw_sha256": "2316e9b9b104240f92e301388804a6efcd0c926fd147e5ec9e415470394f40ee",
+    "scorecard_sha256": "4b84dfd8086a5e08185f6da422ab83f4222561b2ae6d96f57432ccd6c8142413"
+  },
+  "physical_footprint": [
+    1,
+    1
+  ],
+  "style_pass": false,
+  "reading": "Snow patches contain baked soil and vegetation between them instead of clean transparent gaps; overlay semantics fail.",
+  "semantic_pass": false,
+  "required_wrap_axes": [
+    "horizontal",
+    "vertical"
+  ],
+  "required_wrap_pass": false,
+  "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+}

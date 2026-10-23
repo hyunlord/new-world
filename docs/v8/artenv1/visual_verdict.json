@@ -1,0 +1,37 @@
+{
+  "checked_at": "2026-10-23T07:53:05.079081+00:00",
+  "method": "Root direct view_image detail original; entire boards and two actual non-headless Godot viewport captures",
+  "files": [
+    {
+      "path": "art/boards/env1_owner_board.png",
+      "sha256": "6f2575dc96722b2e86ce89b8e129014936f3379e9959360066d4091f43fbee3b"
+    },
+    {
+      "path": "art/boards/env1_winter_overlay_board.png",
+      "sha256": "98e196c07363129f1392b1049ef2ac04f61a939b25530c0bfa3376269dd9ea4f"
+    },
+    {
+      "path": "art/boards/portraits_34.png",
+      "sha256": "a48004fe0118101d7238f18b3f4f9196b5599cedc6e59200a612602b4c89aa2e"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/crowd/serial_r1_1x/final.png",
+      "sha256": "8b48f4df5e6c5117dcd9aa1c66e9cf85a221e191271a8118ffb2718473b27d87"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/crowd/serial_r1_half/final.png",
+      "sha256": "6bed4457d59a05f28004c4ccb905234370a743f2cfa136c660ef3975f9c448c6"
+    }
+  ],
+  "implementation_verdict": "PASS with known limitations",
+  "findings": [
+    "Owner panels are ordered current/05 1x/05 half LOD/night; second board shows winter and declared overlay; captions disclose candidates and no owner approval.",
+    "Portrait board has34 candidates at128/64 with calibration FAIL label; unchanged acceptance0.",
+    "Crowd 1x shows adopted whole figures and environment; half shows exact exported axe/log symbols and circles; nodes and fullbounds verified independently."
+  ],
+  "limitations": [
+    "Board downsampling is for overview; native1600x900 packets determine readability.",
+    "Night glyph crowding and winter repetitive texture remain.",
+    "No owner approval or physical display scanout claim."
+  ]
+}

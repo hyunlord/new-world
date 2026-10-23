@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "probe_commit": "3a3b236c125c0c25e9b74261be88536473fc01e9",
+  "probe_worktree": "/Users/rexxa/work/artenv1-data/probe-worktree",
+  "raw_directory": "/Users/rexxa/work/artenv1-data/scenes",
+  "scenes": [
+    {
+      "scene_id": "scene_day6_noon",
+      "path": "art/compositor/scenes/scene_day6_noon.json",
+      "sha256": "7b33293b070f15dddb5f7fc36f4e3762f7ecc0cac066cf67c3f2563ff7c5f346",
+      "bytes": 79652,
+      "seed": 0,
+      "tick": 7440,
+      "people": 10,
+      "display_day": 6,
+      "clock_minute": 720,
+      "season": "spring"
+    },
+    {
+      "scene_id": "scene_day6_night",
+      "path": "art/compositor/scenes/scene_day6_night.json",
+      "sha256": "4b9b6a24cf96f5c44c7b27b6e4becc0ac7bb8bd692a7aa0a5dbf567f67fd624f",
+      "bytes": 79652,
+      "seed": 0,
+      "tick": 6840,
+      "people": 10,
+      "display_day": 6,
+      "clock_minute": 120,
+      "season": "spring"
+    },
+    {
+      "scene_id": "scene_winter_noon",
+      "path": "art/compositor/scenes/scene_winter_noon.json",
+      "sha256": "243ace38a652ffcb4a02708b8fac6a298968c871629fa85288b3302081eaf139",
+      "bytes": 79667,
+      "seed": 0,
+      "tick": 26160,
+      "people": 10,
+      "display_day": 19,
+      "clock_minute": 720,
+      "season": "winter"
+    }
+  ],
+  "native_ascii_equal": true,
+  "native_people_multiset_equal": true,
+  "source_builder": "art/compositor/source_scene.py",
+  "read_only_extractor": "art/compositor/probe_extract/src/main.rs",
+  "calendar": {
+    "ticks_per_day": 1440,
+    "offset_ticks": 480,
+    "days_per_season": 6
+  }
+}

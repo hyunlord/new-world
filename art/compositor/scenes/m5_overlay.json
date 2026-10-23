@@ -1,0 +1,357 @@
+{
+  "schema_version": 1,
+  "coordinate_system": "camp_relative_tiles",
+  "interpretation": "Every placement is declared, not an observed M3-M5 state. Seven existing people nearest camp retain actual IDs/sex/life stages; their positions, tops and activities are declared overrides. Total real population is unchanged.",
+  "structures": [
+    {
+      "id": "declared_house",
+      "offset": [
+        -12,
+        -5
+      ],
+      "size": [
+        7,
+        5
+      ],
+      "material": "log",
+      "floor": "floor_packed_earth",
+      "declared": true
+    },
+    {
+      "id": "declared_storehouse",
+      "offset": [
+        -12,
+        0
+      ],
+      "size": [
+        5,
+        4
+      ],
+      "material": "stone",
+      "floor": "floor_packed_earth",
+      "declared": true
+    }
+  ],
+  "sprites": [
+    {
+      "id": "bedroll_a",
+      "asset": "bedroll",
+      "offset": [
+        -10,
+        -3
+      ],
+      "declared": true
+    },
+    {
+      "id": "bedroll_b",
+      "asset": "bedroll",
+      "offset": [
+        -8,
+        -3
+      ],
+      "declared": true
+    },
+    {
+      "id": "bedroll_c",
+      "asset": "bedroll",
+      "offset": [
+        -7,
+        -3
+      ],
+      "declared": true
+    },
+    {
+      "id": "store_logs",
+      "asset": "log_pile_medium",
+      "offset": [
+        -11,
+        1
+      ],
+      "declared": true
+    },
+    {
+      "id": "store_clay",
+      "asset": "clay",
+      "offset": [
+        -10,
+        1
+      ],
+      "declared": true
+    },
+    {
+      "id": "store_hide",
+      "asset": "cured_hide",
+      "offset": [
+        -9,
+        1
+      ],
+      "declared": true
+    },
+    {
+      "id": "store_pots",
+      "asset": "clay_pot_filled",
+      "offset": [
+        -10,
+        2
+      ],
+      "declared": true
+    },
+    {
+      "id": "dug_floor_a",
+      "asset": "floor_dug_rock",
+      "offset": [
+        -5,
+        -4
+      ],
+      "category": "floor",
+      "declared": true
+    },
+    {
+      "id": "dug_floor_b",
+      "asset": "floor_dug_rock",
+      "offset": [
+        -4,
+        -4
+      ],
+      "category": "floor",
+      "declared": true
+    },
+    {
+      "id": "dug_floor_c",
+      "asset": "floor_dug_rock",
+      "offset": [
+        -5,
+        -3
+      ],
+      "category": "floor",
+      "declared": true
+    },
+    {
+      "id": "dug_floor_d",
+      "asset": "floor_dug_rock",
+      "offset": [
+        -4,
+        -3
+      ],
+      "category": "floor",
+      "declared": true
+    },
+    {
+      "id": "dug_face_a",
+      "asset": "dug_face",
+      "offset": [
+        -5,
+        -5
+      ],
+      "declared": true
+    },
+    {
+      "id": "dug_face_b",
+      "asset": "dug_face",
+      "offset": [
+        -4,
+        -5
+      ],
+      "declared": true
+    },
+    {
+      "id": "hill_edge",
+      "asset": "hill_edge",
+      "offset": [
+        -3,
+        -4
+      ],
+      "declared": true
+    },
+    {
+      "id": "pottery",
+      "asset": "pottery_bench",
+      "offset": [
+        -2,
+        -5
+      ],
+      "declared": true
+    },
+    {
+      "id": "grinding",
+      "asset": "grinding_stone",
+      "offset": [
+        1,
+        -4
+      ],
+      "declared": true
+    },
+    {
+      "id": "rack",
+      "asset": "drying_rack_hide",
+      "offset": [
+        2,
+        4
+      ],
+      "declared": true
+    },
+    {
+      "id": "firing",
+      "asset": "hearth_pots",
+      "offset": [
+        0,
+        4
+      ],
+      "declared": true
+    },
+    {
+      "id": "claybank",
+      "asset": "claybank_full",
+      "offset": [
+        -2,
+        5
+      ],
+      "declared": true
+    },
+    {
+      "id": "ford_a",
+      "asset": "ford",
+      "offset": [
+        -3,
+        -2
+      ],
+      "category": "floor",
+      "declared": true
+    },
+    {
+      "id": "ford_b",
+      "asset": "ford",
+      "offset": [
+        -2,
+        -2
+      ],
+      "category": "floor",
+      "declared": true
+    },
+    {
+      "id": "wolf_a",
+      "asset": "wolf_E_run",
+      "offset": [
+        0,
+        -5
+      ],
+      "category": "animal",
+      "declared": true
+    },
+    {
+      "id": "wolf_b",
+      "asset": "wolf_E_run",
+      "offset": [
+        2,
+        -5
+      ],
+      "category": "animal",
+      "declared": true
+    },
+    {
+      "id": "deer_a",
+      "asset": "deer_S_graze",
+      "offset": [
+        11,
+        2
+      ],
+      "category": "animal",
+      "declared": true
+    },
+    {
+      "id": "deer_b",
+      "asset": "deer_E_stand",
+      "offset": [
+        11,
+        4
+      ],
+      "category": "animal",
+      "declared": true
+    },
+    {
+      "id": "deer_c",
+      "asset": "deer_S_stand",
+      "offset": [
+        10,
+        5
+      ],
+      "category": "animal",
+      "declared": true
+    }
+  ],
+  "people": [
+    {
+      "id": "wrap_a",
+      "offset": [
+        -4,
+        0
+      ],
+      "top": "hide_wrap",
+      "activity": "awake",
+      "mark": "C",
+      "declared": true
+    },
+    {
+      "id": "wrap_b",
+      "offset": [
+        0,
+        -1
+      ],
+      "top": "hide_wrap",
+      "activity": "awake",
+      "declared": true
+    },
+    {
+      "id": "wrap_c",
+      "offset": [
+        1,
+        1
+      ],
+      "top": "hide_wrap",
+      "activity": "awake",
+      "declared": true
+    },
+    {
+      "id": "wrap_d",
+      "offset": [
+        -2,
+        1
+      ],
+      "top": "hide_wrap",
+      "activity": "awake",
+      "declared": true
+    },
+    {
+      "id": "carrier_a",
+      "offset": [
+        2,
+        2
+      ],
+      "top": "loincloth",
+      "activity": "carry",
+      "mark": "B",
+      "declared": true
+    },
+    {
+      "id": "carrier_b",
+      "offset": [
+        2,
+        -3
+      ],
+      "top": "fur_cloak",
+      "activity": "carry",
+      "declared": true
+    },
+    {
+      "id": "chopper",
+      "offset": [
+        -5,
+        3
+      ],
+      "top": "loincloth",
+      "activity": "chop",
+      "mark": "A",
+      "declared": true
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "id": "wall_log_10",
+  "path": "art/style05/env1/built/wall_log_10.png",
+  "width": 64,
+  "height": 64,
+  "footprint": [
+    1,
+    1
+  ],
+  "family": "buildings",
+  "attempts": 0,
+  "status": "SEAM_FAIL_CANDIDATE",
+  "sha256": "e57bb8fda9b5e8e23ab22bf5ff34932913c3ce82ad6db133aaebc7dc07c9f2ea",
+  "recipe": {
+    "mask": 10,
+    "core": "end",
+    "clockwise_arm_rotations": [
+      0,
+      180
+    ]
+  },
+  "bits": {
+    "N": 1,
+    "E": 2,
+    "S": 4,
+    "W": 8
+  },
+  "source_ids": [
+    "wall_log_straight",
+    "wall_log_corner"
+  ],
+  "source_sha256": [
+    "7f97189eaa78cdae96d0776cd742feaa933d8c05da12cb69448a425981d02a0d",
+    "000cf29e988794fda68a283a2f52d7f5cbef11ab1413be54862c27bb937fa710"
+  ],
+  "straight_bounds": [
+    0,
+    560,
+    1254,
+    693
+  ],
+  "corner_crop": [
+    0,
+    515,
+    800,
+    1315
+  ],
+  "bytes": 3200,
+  "operations": [
+    "generated straight alpha crop then64x16 resize",
+    "generated2x2 elbow crop then64x64 resize",
+    "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+  ],
+  "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+  "physical_footprint": [
+    1,
+    1
+  ]
+}

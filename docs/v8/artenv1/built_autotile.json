@@ -1,0 +1,3015 @@
+{
+  "topology": [
+    {
+      "material": "log",
+      "mask": 0,
+      "observed": 0,
+      "pass": true
+    },
+    {
+      "material": "log",
+      "mask": 1,
+      "observed": 1,
+      "pass": true
+    },
+    {
+      "material": "log",
+      "mask": 2,
+      "observed": 2,
+      "pass": true
+    },
+    {
+      "material": "log",
+      "mask": 3,
+      "observed": 3,
+      "pass": true
+    },
+    {
+      "material": "log",
+      "mask": 4,
+      "observed": 4,
+      "pass": true
+    },
+    {
+      "material": "log",
+      "mask": 5,
+      "observed": 5,
+      "pass": true
+    },
+    {
+      "material": "log",
+      "mask": 6,
+      "observed": 6,
+      "pass": true
+    },
+    {
+      "material": "log",
+      "mask": 7,
+      "observed": 7,
+      "pass": true
+    },
+    {
+      "material": "log",
+      "mask": 8,
+      "observed": 8,
+      "pass": true
+    },
+    {
+      "material": "log",
+      "mask": 9,
+      "observed": 9,
+      "pass": true
+    },
+    {
+      "material": "log",
+      "mask": 10,
+      "observed": 10,
+      "pass": true
+    },
+    {
+      "material": "log",
+      "mask": 11,
+      "observed": 11,
+      "pass": true
+    },
+    {
+      "material": "log",
+      "mask": 12,
+      "observed": 12,
+      "pass": true
+    },
+    {
+      "material": "log",
+      "mask": 13,
+      "observed": 13,
+      "pass": true
+    },
+    {
+      "material": "log",
+      "mask": 14,
+      "observed": 14,
+      "pass": true
+    },
+    {
+      "material": "log",
+      "mask": 15,
+      "observed": 15,
+      "pass": true
+    },
+    {
+      "material": "stone",
+      "mask": 0,
+      "observed": 0,
+      "pass": true
+    },
+    {
+      "material": "stone",
+      "mask": 1,
+      "observed": 1,
+      "pass": true
+    },
+    {
+      "material": "stone",
+      "mask": 2,
+      "observed": 2,
+      "pass": true
+    },
+    {
+      "material": "stone",
+      "mask": 3,
+      "observed": 3,
+      "pass": true
+    },
+    {
+      "material": "stone",
+      "mask": 4,
+      "observed": 4,
+      "pass": true
+    },
+    {
+      "material": "stone",
+      "mask": 5,
+      "observed": 5,
+      "pass": true
+    },
+    {
+      "material": "stone",
+      "mask": 6,
+      "observed": 6,
+      "pass": true
+    },
+    {
+      "material": "stone",
+      "mask": 7,
+      "observed": 7,
+      "pass": true
+    },
+    {
+      "material": "stone",
+      "mask": 8,
+      "observed": 8,
+      "pass": true
+    },
+    {
+      "material": "stone",
+      "mask": 9,
+      "observed": 9,
+      "pass": true
+    },
+    {
+      "material": "stone",
+      "mask": 10,
+      "observed": 10,
+      "pass": true
+    },
+    {
+      "material": "stone",
+      "mask": 11,
+      "observed": 11,
+      "pass": true
+    },
+    {
+      "material": "stone",
+      "mask": 12,
+      "observed": 12,
+      "pass": true
+    },
+    {
+      "material": "stone",
+      "mask": 13,
+      "observed": 13,
+      "pass": true
+    },
+    {
+      "material": "stone",
+      "mask": 14,
+      "observed": 14,
+      "pass": true
+    },
+    {
+      "material": "stone",
+      "mask": 15,
+      "observed": 15,
+      "pass": true
+    }
+  ],
+  "compatible_pairs": [
+    {
+      "material": "log",
+      "pair": [
+        2,
+        8
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 38.127731092436974,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        2,
+        9
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 43.21437908496733,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        2,
+        10
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 12.60485527544351,
+      "alpha_gap_pixels": 0,
+      "flagged": false
+    },
+    {
+      "material": "log",
+      "pair": [
+        2,
+        11
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 38.127731092436974,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        2,
+        12
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        2,
+        13
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        2,
+        14
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 38.127731092436974,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        2,
+        15
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 38.127731092436974,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        3,
+        8
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        3,
+        9
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 40.2638779956427,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        3,
+        10
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 22.440989729225027,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        3,
+        11
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        3,
+        12
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 43.21512605042017,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        3,
+        13
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 43.21512605042017,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        3,
+        14
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        3,
+        15
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        6,
+        8
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 43.21437908496732,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        6,
+        9
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 47.64232026143791,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        6,
+        10
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 27.04653594771242,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        6,
+        11
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 43.21437908496732,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        6,
+        12
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 40.26387799564271,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        6,
+        13
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 40.26387799564271,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        6,
+        14
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 43.21437908496732,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        6,
+        15
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 43.21437908496732,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        7,
+        8
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        7,
+        9
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 40.2638779956427,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        7,
+        10
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 22.440989729225027,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        7,
+        11
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        7,
+        12
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 43.21512605042017,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        7,
+        13
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 43.21512605042017,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        7,
+        14
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        7,
+        15
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        10,
+        8
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 38.127731092436974,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        10,
+        9
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 43.21437908496733,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        10,
+        10
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 12.60485527544351,
+      "alpha_gap_pixels": 0,
+      "flagged": false
+    },
+    {
+      "material": "log",
+      "pair": [
+        10,
+        11
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 38.127731092436974,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        10,
+        12
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        10,
+        13
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        10,
+        14
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 38.127731092436974,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        10,
+        15
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 38.127731092436974,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        11,
+        8
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        11,
+        9
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 40.2638779956427,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        11,
+        10
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 22.440989729225027,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        11,
+        11
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        11,
+        12
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 43.21512605042017,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        11,
+        13
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 43.21512605042017,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        11,
+        14
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        11,
+        15
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        14,
+        8
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 43.21437908496732,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        14,
+        9
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 47.64232026143791,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        14,
+        10
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 27.04653594771242,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        14,
+        11
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 43.21437908496732,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        14,
+        12
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 40.26387799564271,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        14,
+        13
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 40.26387799564271,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        14,
+        14
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 43.21437908496732,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        14,
+        15
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 43.21437908496732,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        15,
+        8
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        15,
+        9
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 40.2638779956427,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        15,
+        10
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 22.440989729225027,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        15,
+        11
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        15,
+        12
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 43.21512605042017,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        15,
+        13
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 43.21512605042017,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        15,
+        14
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        15,
+        15
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        4,
+        1
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 38.127731092436974,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        4,
+        3
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 43.21437908496732,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        4,
+        5
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 38.127731092436974,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        4,
+        7
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 43.21437908496732,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        4,
+        9
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        4,
+        11
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 43.21437908496732,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        4,
+        13
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 38.127731092436974,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        4,
+        15
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 43.21437908496732,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        5,
+        1
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 12.60485527544351,
+      "alpha_gap_pixels": 0,
+      "flagged": false
+    },
+    {
+      "material": "log",
+      "pair": [
+        5,
+        3
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 27.04653594771242,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        5,
+        5
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 12.60485527544351,
+      "alpha_gap_pixels": 0,
+      "flagged": false
+    },
+    {
+      "material": "log",
+      "pair": [
+        5,
+        7
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 27.04653594771242,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        5,
+        9
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 22.440989729225027,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        5,
+        11
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 27.04653594771242,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        5,
+        13
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 12.60485527544351,
+      "alpha_gap_pixels": 0,
+      "flagged": false
+    },
+    {
+      "material": "log",
+      "pair": [
+        5,
+        15
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 27.04653594771242,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        6,
+        1
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        6,
+        3
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 40.26387799564271,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        6,
+        5
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        6,
+        7
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 40.26387799564271,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        6,
+        9
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 43.21512605042017,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        6,
+        11
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 40.26387799564271,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        6,
+        13
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        6,
+        15
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 40.26387799564271,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        7,
+        1
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 38.127731092436974,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        7,
+        3
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 43.21437908496732,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        7,
+        5
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 38.127731092436974,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        7,
+        7
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 43.21437908496732,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        7,
+        9
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        7,
+        11
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 43.21437908496732,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        7,
+        13
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 38.127731092436974,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        7,
+        15
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 43.21437908496732,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        12,
+        1
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 43.21437908496733,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        12,
+        3
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 47.64232026143791,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        12,
+        5
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 43.21437908496733,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        12,
+        7
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 47.64232026143791,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        12,
+        9
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 40.2638779956427,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        12,
+        11
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 47.64232026143791,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        12,
+        13
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 43.21437908496733,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        12,
+        15
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 47.64232026143791,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        13,
+        1
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 43.21437908496733,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        13,
+        3
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 47.64232026143791,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        13,
+        5
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 43.21437908496733,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        13,
+        7
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 47.64232026143791,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        13,
+        9
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 40.2638779956427,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        13,
+        11
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 47.64232026143791,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        13,
+        13
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 43.21437908496733,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        13,
+        15
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 47.64232026143791,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        14,
+        1
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        14,
+        3
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 40.26387799564271,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        14,
+        5
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        14,
+        7
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 40.26387799564271,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        14,
+        9
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 43.21512605042017,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        14,
+        11
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 40.26387799564271,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        14,
+        13
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        14,
+        15
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 40.26387799564271,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        15,
+        1
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 38.127731092436974,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        15,
+        3
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 43.21437908496732,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        15,
+        5
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 38.127731092436974,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        15,
+        7
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 43.21437908496732,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        15,
+        9
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 37.156582633053226,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        15,
+        11
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 43.21437908496732,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        15,
+        13
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 38.127731092436974,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "log",
+      "pair": [
+        15,
+        15
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 43.21437908496732,
+      "alpha_gap_pixels": 1,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        2,
+        8
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 57.38594771241829,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        2,
+        9
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 53.59493464052287,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        2,
+        10
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 11.227859477124184,
+      "alpha_gap_pixels": 0,
+      "flagged": false
+    },
+    {
+      "material": "stone",
+      "pair": [
+        2,
+        11
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 57.38594771241829,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        2,
+        12
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        2,
+        13
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        2,
+        14
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 57.38594771241829,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        2,
+        15
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 57.38594771241829,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        3,
+        8
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        3,
+        9
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 60.387499999999996,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        3,
+        10
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 45.74971164936562,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        3,
+        11
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        3,
+        12
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 55.5436456063907,
+      "alpha_gap_pixels": 4,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        3,
+        13
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 55.5436456063907,
+      "alpha_gap_pixels": 4,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        3,
+        14
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        3,
+        15
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        6,
+        8
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 53.594934640522865,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        6,
+        9
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 78.28347338935573,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        6,
+        10
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 52.59060457516339,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        6,
+        11
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 53.594934640522865,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        6,
+        12
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 60.38750000000001,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        6,
+        13
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 60.38750000000001,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        6,
+        14
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 53.594934640522865,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        6,
+        15
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 53.594934640522865,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        7,
+        8
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        7,
+        9
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 60.387499999999996,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        7,
+        10
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 45.74971164936562,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        7,
+        11
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        7,
+        12
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 55.5436456063907,
+      "alpha_gap_pixels": 4,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        7,
+        13
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 55.5436456063907,
+      "alpha_gap_pixels": 4,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        7,
+        14
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        7,
+        15
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        10,
+        8
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 57.38594771241829,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        10,
+        9
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 53.59493464052287,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        10,
+        10
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 11.227859477124184,
+      "alpha_gap_pixels": 0,
+      "flagged": false
+    },
+    {
+      "material": "stone",
+      "pair": [
+        10,
+        11
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 57.38594771241829,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        10,
+        12
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        10,
+        13
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        10,
+        14
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 57.38594771241829,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        10,
+        15
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 57.38594771241829,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        11,
+        8
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        11,
+        9
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 60.387499999999996,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        11,
+        10
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 45.74971164936562,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        11,
+        11
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        11,
+        12
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 55.5436456063907,
+      "alpha_gap_pixels": 4,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        11,
+        13
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 55.5436456063907,
+      "alpha_gap_pixels": 4,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        11,
+        14
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        11,
+        15
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        14,
+        8
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 53.594934640522865,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        14,
+        9
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 78.28347338935573,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        14,
+        10
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 52.59060457516339,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        14,
+        11
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 53.594934640522865,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        14,
+        12
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 60.38750000000001,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        14,
+        13
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 60.38750000000001,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        14,
+        14
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 53.594934640522865,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        14,
+        15
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 53.594934640522865,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        15,
+        8
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        15,
+        9
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 60.387499999999996,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        15,
+        10
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 45.74971164936562,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        15,
+        11
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        15,
+        12
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 55.5436456063907,
+      "alpha_gap_pixels": 4,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        15,
+        13
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 55.5436456063907,
+      "alpha_gap_pixels": 4,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        15,
+        14
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        15,
+        15
+      ],
+      "axis": "E-W",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        4,
+        1
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 57.38594771241829,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        4,
+        3
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 53.594934640522865,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        4,
+        5
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 57.38594771241829,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        4,
+        7
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 53.594934640522865,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        4,
+        9
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        4,
+        11
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 53.594934640522865,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        4,
+        13
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 57.38594771241829,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        4,
+        15
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 53.594934640522865,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        5,
+        1
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 11.227859477124184,
+      "alpha_gap_pixels": 0,
+      "flagged": false
+    },
+    {
+      "material": "stone",
+      "pair": [
+        5,
+        3
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 52.59060457516339,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        5,
+        5
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 11.227859477124184,
+      "alpha_gap_pixels": 0,
+      "flagged": false
+    },
+    {
+      "material": "stone",
+      "pair": [
+        5,
+        7
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 52.59060457516339,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        5,
+        9
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 45.74971164936562,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        5,
+        11
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 52.59060457516339,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        5,
+        13
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 11.227859477124184,
+      "alpha_gap_pixels": 0,
+      "flagged": false
+    },
+    {
+      "material": "stone",
+      "pair": [
+        5,
+        15
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 52.59060457516339,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        6,
+        1
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        6,
+        3
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 60.38750000000001,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        6,
+        5
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        6,
+        7
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 60.38750000000001,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        6,
+        9
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 55.5436456063907,
+      "alpha_gap_pixels": 4,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        6,
+        11
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 60.38750000000001,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        6,
+        13
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        6,
+        15
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 60.38750000000001,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        7,
+        1
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 57.38594771241829,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        7,
+        3
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 53.594934640522865,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        7,
+        5
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 57.38594771241829,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        7,
+        7
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 53.594934640522865,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        7,
+        9
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        7,
+        11
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 53.594934640522865,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        7,
+        13
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 57.38594771241829,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        7,
+        15
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 53.594934640522865,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        12,
+        1
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 53.59493464052287,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        12,
+        3
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 78.28347338935573,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        12,
+        5
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 53.59493464052287,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        12,
+        7
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 78.28347338935573,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        12,
+        9
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 60.387499999999996,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        12,
+        11
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 78.28347338935573,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        12,
+        13
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 53.59493464052287,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        12,
+        15
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 78.28347338935573,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        13,
+        1
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 53.59493464052287,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        13,
+        3
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 78.28347338935573,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        13,
+        5
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 53.59493464052287,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        13,
+        7
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 78.28347338935573,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        13,
+        9
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 60.387499999999996,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        13,
+        11
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 78.28347338935573,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        13,
+        13
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 53.59493464052287,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        13,
+        15
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 78.28347338935573,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        14,
+        1
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        14,
+        3
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 60.38750000000001,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        14,
+        5
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        14,
+        7
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 60.38750000000001,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        14,
+        9
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 55.5436456063907,
+      "alpha_gap_pixels": 4,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        14,
+        11
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 60.38750000000001,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        14,
+        13
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        14,
+        15
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 60.38750000000001,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        15,
+        1
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 57.38594771241829,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        15,
+        3
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 53.594934640522865,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        15,
+        5
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 57.38594771241829,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        15,
+        7
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 53.594934640522865,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        15,
+        9
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 47.120184544405994,
+      "alpha_gap_pixels": 2,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        15,
+        11
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 53.594934640522865,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        15,
+        13
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 57.38594771241829,
+      "alpha_gap_pixels": 0,
+      "flagged": true
+    },
+    {
+      "material": "stone",
+      "pair": [
+        15,
+        15
+      ],
+      "axis": "S-N",
+      "visible_rgb_mae": 53.594934640522865,
+      "alpha_gap_pixels": 3,
+      "flagged": true
+    }
+  ],
+  "all_topology_pass": true
+}

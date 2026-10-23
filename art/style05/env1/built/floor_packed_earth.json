@@ -1,0 +1,101 @@
+{
+  "id": "floor_packed_earth",
+  "path": "art/style05/env1/built/floor_packed_earth.png",
+  "width": 64,
+  "height": 64,
+  "footprint": [
+    1,
+    1
+  ],
+  "family": "ground",
+  "attempts": 3,
+  "selected_attempt": 3,
+  "status": "NUMERIC_FAIL_CANDIDATE",
+  "raw": "/Users/rexxa/work/artenv1-data/built/floor_packed_earth_try3_raw.png",
+  "raw_sha256": "1c6d4f49775b2dc60998a51c507debdba6184df806cb1ca42b4c3ccf0cb8c866",
+  "sha256": "0b83ab8da396f218fb53749f4bb3f4ddcd88e612b34bbdc898c1c0fdd577c2eb",
+  "metadata": "/Users/rexxa/work/artenv1-data/built/floor_packed_earth_try3.json",
+  "metadata_sha256": "c131b2a472990818f3676ebf3ccc0640c0752dfedf672084c8543454494edf4a",
+  "numeric": {
+    "candidate": "/Users/rexxa/work/artenv1-data/built/floor_packed_earth_try3_raw.png",
+    "sha256": "1c6d4f49775b2dc60998a51c507debdba6184df806cb1ca42b4c3ccf0cb8c866",
+    "family": "ground",
+    "metrics": {
+      "edge_density": 0.19071239606953894,
+      "saturation_q25": 0.6422228601904085,
+      "saturation_q75": 0.6766931304550038,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.0,
+      "wash_flatness": 0.0026259416839050274,
+      "foreground_pixels": 65536
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": false,
+      "wash_flatness": false
+    },
+    "numeric_pass": false,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "operations": [
+    "full-frame Lanczos resize",
+    "logged global contrast/chroma/value scales; no local edits"
+  ],
+  "tone": {
+    "before_mean": 0.4391329367723652,
+    "before_std": 0.05952599539620942,
+    "before_saturation": 0.658572749081595,
+    "after_mean": 0.39497853649662995,
+    "after_std": 0.053571034153655904,
+    "after_saturation": 0.28809040743863235,
+    "person_std_cap": 0.16719984851327876,
+    "contrast_scale": 1.0,
+    "chroma_scales": [
+      0.4479904770851135,
+      0.8046167016630278
+    ],
+    "value_scale": 0.898899633356836
+  },
+  "seam": {
+    "horizontal_mae": 7.828125,
+    "vertical_mae": 6.1875,
+    "horizontal_ratio": 1.2145065093311103,
+    "vertical_ratio": 0.885078404011258,
+    "passed": true
+  },
+  "bytes": 8474,
+  "model": {
+    "scores": {
+      "medium": 4,
+      "line": 4,
+      "light": 4,
+      "palette": 5,
+      "sentence": "Matches the hand-painted ink-and-wash texture, crisp natural contours and speckled watercolor grain seen in the references, with the same warm earth palette and upper-left lighting."
+    },
+    "review_id": "judge_ground_a",
+    "candidate_raw_sha256": "1c6d4f49775b2dc60998a51c507debdba6184df806cb1ca42b4c3ccf0cb8c866",
+    "scorecard_sha256": "34d4df7ec86b5ca3ecfd6028960409d4370841b0eb0d4ba7a65be6939499ac9b"
+  },
+  "physical_footprint": [
+    1,
+    1
+  ],
+  "style_pass": false,
+  "reading": "Quiet ochre cracked-earth repeat is distinct from rock, but raw style metrics fail after three attempts.",
+  "semantic_pass": true,
+  "required_wrap_axes": [
+    "horizontal",
+    "vertical"
+  ],
+  "required_wrap_pass": true,
+  "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+}

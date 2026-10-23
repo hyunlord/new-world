@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "status": "HASH_AND_RAW_AUDIT_PASS",
+  "readability_repair_round": 1,
+  "verified_at_utc": "2026-10-23T07:45:54.312898+00:00",
+  "paired_images": 48,
+  "immutable_archive_files": 161,
+  "stable_round0_fields": {
+    "asset_input_sha256": 48,
+    "route_i_manifest_sha256": 48,
+    "palette_sha256": 48,
+    "overlay_sha256": 48,
+    "native_extension_sha256": 48,
+    "ground_final_pixels": 48,
+    "ground": 48,
+    "tick": 48,
+    "visible_population": 48,
+    "visible_carriers": 48
+  },
+  "ground_tile_crops": 93888,
+  "ground_maxima": {
+    "luminance_mean": 0.29436117647058824,
+    "luminance_std": 0.04130795511027067,
+    "saturation_mean": 0.21322438333172045
+  },
+  "selected_truth_sha256": "8d8986820816a777b68103bab774610d78e9aa0e85e11f2cab5e7d106d9360f5",
+  "render_manifest_sha256": "a4e98dd3af6c2d44286a69083358bcaf2e1cae39c91df76f770c55e4e96b3b98",
+  "max_render_bytes": 1246505,
+  "object_status_occurrences": {
+    "CODE_ZONE_OUTLINE": 3384,
+    "SEAM_FAIL_CANDIDATE": 3720,
+    "accepted under judge v2, TRIAL2b": 29100,
+    "REUSED_PRIOR_ACCEPTANCE": 144,
+    "STYLE_ACCEPTED_SEMANTIC_REVIEWED": 756,
+    "ACCEPTED_ASSET": 672,
+    "CANDIDATE_NOT_ADOPTED": 292,
+    "NUMERIC_FAIL_CANDIDATE": 144
+  },
+  "ground_source_status_occurrences": {
+    "accepted under judge v2, TRIAL2b": 180,
+    "NUMERIC_FAIL_CANDIDATE": 96,
+    "ACCEPTED_ASSET": 48
+  },
+  "scope": "Hash/raw verification. HUD pixel, board and fresh checks recorded by final verification separately."
+}

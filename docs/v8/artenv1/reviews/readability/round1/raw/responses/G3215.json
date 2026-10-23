@@ -1,0 +1,128 @@
+{
+  "reviewer": "b",
+  "packet_id": "G3215",
+  "answers": [
+    {
+      "image_id": "P52533",
+      "started_at": "2026-10-23T07:49:08Z",
+      "ended_at": "2026-10-23T07:49:31Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          480,
+          553
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": true,
+        "points": [
+          [
+            800,
+            347
+          ],
+          [
+            864,
+            347
+          ]
+        ]
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Chopping with an axe",
+        "B": "Carrying wood",
+        "C": "Standing idle"
+      },
+      "confidence": "low",
+      "notes": "People and animals appear as tiny circle and triangle markers. The two horizontal object marks beside people look like carried wood; A's angled object looks like an axe. Wolf identity from the red triangular markers is uncertain."
+    },
+    {
+      "image_id": "P10413",
+      "started_at": "2026-10-23T07:49:38Z",
+      "ended_at": "2026-10-23T07:50:17Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          1193,
+          396
+        ]
+      },
+      "carriers": 0,
+      "wolves": {
+        "present": false,
+        "points": []
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Standing beside the river",
+        "B": "Standing near a shelter",
+        "C": "Standing by the campfire"
+      },
+      "confidence": "medium",
+      "notes": "No distinct carried objects or action poses are visible on the labelled people. The large upper-right wall construction site appears to be storage, but its function is inferred from the resource piles. Initial response write failed due to JSON array punctuation and was repaired without changing answers."
+    },
+    {
+      "image_id": "P35624",
+      "started_at": "2026-10-23T07:50:25Z",
+      "ended_at": "2026-10-23T07:50:40Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          1504,
+          312
+        ]
+      },
+      "carriers": 0,
+      "wolves": {
+        "present": false,
+        "points": []
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Standing beside the river",
+        "B": "Standing behind a shelter",
+        "C": "Standing beside the campfire"
+      },
+      "confidence": "medium",
+      "notes": "The upper-right wall construction site is partly outside the image. All labelled people have static upright poses without a clearly recognizable task or carried object. The lower-right blue-clothed person has side protrusions that may be arms; no carried item is clearly distinguishable."
+    },
+    {
+      "image_id": "P75918",
+      "started_at": "2026-10-23T07:50:49Z",
+      "ended_at": "2026-10-23T07:51:09Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          157,
+          590
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": true,
+        "points": [
+          [
+            802,
+            185
+          ],
+          [
+            929,
+            185
+          ]
+        ]
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Chopping wood with an axe",
+        "B": "Carrying logs on the shoulders",
+        "C": "Walking"
+      },
+      "confidence": "high",
+      "notes": "C has an open stride and no visible tool or load. The enclosed resource area on the left is read as storage."
+    }
+  ]
+}

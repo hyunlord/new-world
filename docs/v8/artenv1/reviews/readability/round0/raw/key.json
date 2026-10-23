@@ -1,0 +1,1081 @@
+{
+  "round": 0,
+  "images": [
+    {
+      "image_id": "P58058",
+      "renderer": "before",
+      "condition": "day",
+      "zoom": "1x",
+      "source": {
+        "path": "docs/v8/artenv1/reference/current_day6_noon_1x.png",
+        "sha256": "e033dbef9c450fe992d0890394c5ba5e579e5e62a7fa87a7391cc216f69b7d21"
+      },
+      "frozen": {
+        "path": "docs/v8/artenv1/reviews/readability/round0/images/P58058.png",
+        "sha256": "8c45830ba718a6cc79f06feff249e5775df9ee11a098db6a2db1804183a84a6d"
+      },
+      "visible_people": 8,
+      "carriers": 0,
+      "storage_bboxes": [
+        [
+          1344.0,
+          112.0,
+          1600.0,
+          538.0
+        ]
+      ],
+      "wolves": [],
+      "time_class": "day",
+      "marks": {
+        "C": {
+          "agent_id": 1,
+          "activity": "awake",
+          "source_activity": "craft",
+          "point": [
+            864.0,
+            570.0
+          ],
+          "label_bbox": [
+            858.0,
+            516.0,
+            870.0,
+            528.0
+          ]
+        },
+        "B": {
+          "agent_id": 5,
+          "activity": "awake",
+          "source_activity": "none",
+          "point": [
+            672.0,
+            634.0
+          ],
+          "label_bbox": [
+            666.0,
+            580.0,
+            677.0,
+            592.0
+          ]
+        },
+        "A": {
+          "agent_id": 3,
+          "activity": "awake",
+          "source_activity": "none",
+          "point": [
+            608.0,
+            506.0
+          ],
+          "label_bbox": [
+            601.0,
+            452.0,
+            614.0,
+            464.0
+          ]
+        }
+      },
+      "limitations": [
+        "A genuine designated storage target exists and may be scored as unfinished walled stockpile. It is not a finished Storehouse room. A completed declared-after storehouse differs in state,position,and visible area; this is not a pure controlled same-state comparison.",
+        "Before wolves absent; after two declared wolves.",
+        "Seven existing actors have declared positions, tops and actions after."
+      ],
+      "comparability": {
+        "people": "MISMATCH: declared actor positions; raw count score remains valid",
+        "storage": "NOT_COMPARABLE: unfinished native versus finished declared storage",
+        "carriers": "NOT_COMPARABLE: native zero versus two declared carriers",
+        "wolves": "NOT_COMPARABLE: native absence versus two declared wolves",
+        "time": "COMPARABLE: same native clock class",
+        "activities": "NOT_COMPARABLE: declared action overrides; displayed poses scored"
+      }
+    },
+    {
+      "image_id": "P44412",
+      "renderer": "after",
+      "condition": "day",
+      "zoom": "1x",
+      "source": {
+        "path": "docs/v8/artenv1/renders/scene_day6_noon_day_1x_figures.png",
+        "sha256": "87cd5e83f2c4a5055646db23cdc717b7d70b9135a303fef7881b6e2ee36c930f"
+      },
+      "frozen": {
+        "path": "docs/v8/artenv1/reviews/readability/round0/images/P44412.png",
+        "sha256": "87cd5e83f2c4a5055646db23cdc717b7d70b9135a303fef7881b6e2ee36c930f"
+      },
+      "visible_people": 8,
+      "carriers": 2,
+      "storage_bboxes": [
+        [
+          0.0,
+          474.0,
+          320.0,
+          730.0
+        ],
+        [
+          1344.0,
+          112.0,
+          1600.0,
+          538.0
+        ]
+      ],
+      "wolves": [
+        [
+          775.0,
+          171.0,
+          824.0,
+          198.0
+        ],
+        [
+          903.0,
+          171.0,
+          952.0,
+          198.0
+        ]
+      ],
+      "time_class": "day",
+      "marks": {
+        "C": {
+          "agent_id": 1,
+          "activity": "awake",
+          "source_activity": null,
+          "point": null,
+          "label_bbox": null
+        },
+        "B": {
+          "agent_id": 5,
+          "activity": "carry",
+          "source_activity": null,
+          "point": null,
+          "label_bbox": null
+        },
+        "A": {
+          "agent_id": 3,
+          "activity": "chop",
+          "source_activity": null,
+          "point": null,
+          "label_bbox": null
+        }
+      },
+      "limitations": [
+        "A genuine designated storage target exists and may be scored as unfinished walled stockpile. It is not a finished Storehouse room. A completed declared-after storehouse differs in state,position,and visible area; this is not a pure controlled same-state comparison.",
+        "Before wolves absent; after two declared wolves.",
+        "Seven existing actors have declared positions, tops and actions after."
+      ],
+      "comparability": {
+        "people": "MISMATCH: declared actor positions; raw count score remains valid",
+        "storage": "NOT_COMPARABLE: unfinished native versus finished declared storage",
+        "carriers": "NOT_COMPARABLE: native zero versus two declared carriers",
+        "wolves": "NOT_COMPARABLE: native absence versus two declared wolves",
+        "time": "COMPARABLE: same native clock class",
+        "activities": "NOT_COMPARABLE: declared action overrides; displayed poses scored"
+      }
+    },
+    {
+      "image_id": "P99373",
+      "renderer": "before",
+      "condition": "day",
+      "zoom": "half",
+      "source": {
+        "path": "docs/v8/artenv1/reference/current_day6_noon_half.png",
+        "sha256": "578fc74bc16a1fe150cffc694a0e2d66fee449ae50ec7b70c11a5c4996ce5c88"
+      },
+      "frozen": {
+        "path": "docs/v8/artenv1/reviews/readability/round0/images/P99373.png",
+        "sha256": "f4df8b1319e2133b4358860740c88f4f7b10368d42c2d73739fcf988539af1f0"
+      },
+      "visible_people": 8,
+      "carriers": 0,
+      "storage_bboxes": [
+        [
+          1072.0,
+          266.0,
+          1328.0,
+          522.0
+        ]
+      ],
+      "wolves": [],
+      "time_class": "day",
+      "marks": {
+        "C": {
+          "agent_id": 1,
+          "activity": "awake",
+          "source_activity": "craft",
+          "point": [
+            832.0,
+            538.0
+          ],
+          "label_bbox": [
+            826.0,
+            508.0,
+            838.0,
+            520.0
+          ]
+        },
+        "B": {
+          "agent_id": 5,
+          "activity": "awake",
+          "source_activity": "none",
+          "point": [
+            736.0,
+            570.0
+          ],
+          "label_bbox": [
+            730.0,
+            540.0,
+            741.0,
+            552.0
+          ]
+        },
+        "A": {
+          "agent_id": 3,
+          "activity": "awake",
+          "source_activity": "none",
+          "point": [
+            704.0,
+            506.0
+          ],
+          "label_bbox": [
+            697.0,
+            476.0,
+            710.0,
+            488.0
+          ]
+        }
+      },
+      "limitations": [
+        "A genuine designated storage target exists and may be scored as unfinished walled stockpile. It is not a finished Storehouse room. A completed declared-after storehouse differs in state,position,and visible area; this is not a pure controlled same-state comparison.",
+        "Before wolves absent; after two declared wolves.",
+        "Seven existing actors have declared positions, tops and actions after."
+      ],
+      "comparability": {
+        "people": "MISMATCH: declared actor positions; raw count score remains valid",
+        "storage": "NOT_COMPARABLE: unfinished native versus finished declared storage",
+        "carriers": "NOT_COMPARABLE: native zero versus two declared carriers",
+        "wolves": "NOT_COMPARABLE: native absence versus two declared wolves",
+        "time": "COMPARABLE: same native clock class",
+        "activities": "NOT_COMPARABLE: declared action overrides; displayed poses scored"
+      }
+    },
+    {
+      "image_id": "P62328",
+      "renderer": "after",
+      "condition": "day",
+      "zoom": "half",
+      "source": {
+        "path": "docs/v8/artenv1/renders/scene_day6_noon_day_half_lod.png",
+        "sha256": "ecd4977533414f84ce51ed1c3ee8667cc314fd4f63a75bfdbf014ced3a10a50e"
+      },
+      "frozen": {
+        "path": "docs/v8/artenv1/reviews/readability/round0/images/P62328.png",
+        "sha256": "ecd4977533414f84ce51ed1c3ee8667cc314fd4f63a75bfdbf014ced3a10a50e"
+      },
+      "visible_people": 8,
+      "carriers": 2,
+      "storage_bboxes": [
+        [
+          400.0,
+          490.0,
+          560.0,
+          618.0
+        ],
+        [
+          1072.0,
+          266.0,
+          1328.0,
+          522.0
+        ]
+      ],
+      "wolves": [
+        [
+          795.0,
+          341.0,
+          805.0,
+          351.0
+        ],
+        [
+          859.0,
+          341.0,
+          869.0,
+          351.0
+        ]
+      ],
+      "time_class": "day",
+      "marks": {
+        "C": {
+          "agent_id": 1,
+          "activity": "awake",
+          "source_activity": null,
+          "point": null,
+          "label_bbox": null
+        },
+        "B": {
+          "agent_id": 5,
+          "activity": "carry",
+          "source_activity": null,
+          "point": null,
+          "label_bbox": null
+        },
+        "A": {
+          "agent_id": 3,
+          "activity": "chop",
+          "source_activity": null,
+          "point": null,
+          "label_bbox": null
+        }
+      },
+      "limitations": [
+        "A genuine designated storage target exists and may be scored as unfinished walled stockpile. It is not a finished Storehouse room. A completed declared-after storehouse differs in state,position,and visible area; this is not a pure controlled same-state comparison.",
+        "Before wolves absent; after two declared wolves.",
+        "Seven existing actors have declared positions, tops and actions after."
+      ],
+      "comparability": {
+        "people": "MISMATCH: declared actor positions; raw count score remains valid",
+        "storage": "NOT_COMPARABLE: unfinished native versus finished declared storage",
+        "carriers": "NOT_COMPARABLE: native zero versus two declared carriers",
+        "wolves": "NOT_COMPARABLE: native absence versus two declared wolves",
+        "time": "COMPARABLE: same native clock class",
+        "activities": "NOT_COMPARABLE: declared action overrides; displayed poses scored"
+      }
+    },
+    {
+      "image_id": "P73793",
+      "renderer": "before",
+      "condition": "night",
+      "zoom": "1x",
+      "source": {
+        "path": "docs/v8/artenv1/reference/current_day6_night_1x.png",
+        "sha256": "63bdc93dc699ae6e23642a1291bd19ad80077e2363c28b3eff7171e350735241"
+      },
+      "frozen": {
+        "path": "docs/v8/artenv1/reviews/readability/round0/images/P73793.png",
+        "sha256": "9204422072b27492dd2f4b692e1aac6464f6b5532960e3eb082133757f6d785f"
+      },
+      "visible_people": 10,
+      "carriers": 0,
+      "storage_bboxes": [
+        [
+          1344.0,
+          112.0,
+          1600.0,
+          538.0
+        ]
+      ],
+      "wolves": [],
+      "time_class": "night",
+      "marks": {
+        "C": {
+          "agent_id": 6,
+          "activity": "sleep",
+          "source_activity": "sleep",
+          "point": [
+            800.0,
+            634.0
+          ],
+          "label_bbox": [
+            746.0,
+            628.0,
+            758.0,
+            640.0
+          ]
+        },
+        "B": {
+          "agent_id": 7,
+          "activity": "sleep",
+          "source_activity": "sleep",
+          "point": [
+            928.0,
+            442.0
+          ],
+          "label_bbox": [
+            922.0,
+            412.0,
+            933.0,
+            424.0
+          ]
+        },
+        "A": {
+          "agent_id": 2,
+          "activity": "sleep",
+          "source_activity": "sleep",
+          "point": [
+            352.0,
+            826.0
+          ],
+          "label_bbox": [
+            345.0,
+            796.0,
+            358.0,
+            808.0
+          ]
+        }
+      },
+      "limitations": [
+        "A genuine designated storage target exists and may be scored as unfinished walled stockpile. It is not a finished Storehouse room. A completed declared-after storehouse differs in state,position,and visible area; this is not a pure controlled same-state comparison.",
+        "Before wolves absent; after two declared wolves.",
+        "Seven existing actors have declared positions, tops and actions after."
+      ],
+      "comparability": {
+        "people": "MISMATCH: declared actor positions; raw count score remains valid",
+        "storage": "NOT_COMPARABLE: unfinished native versus finished declared storage",
+        "carriers": "NOT_COMPARABLE: native zero versus two declared carriers",
+        "wolves": "NOT_COMPARABLE: native absence versus two declared wolves",
+        "time": "COMPARABLE: same native clock class",
+        "activities": "NOT_COMPARABLE: declared action overrides; displayed poses scored"
+      }
+    },
+    {
+      "image_id": "P82562",
+      "renderer": "after",
+      "condition": "night",
+      "zoom": "1x",
+      "source": {
+        "path": "docs/v8/artenv1/renders/scene_day6_night_night_1x_figures.png",
+        "sha256": "c9aabc6f9bbb3589b48a4a054f107eea879b133e553674651b6cef545077beee"
+      },
+      "frozen": {
+        "path": "docs/v8/artenv1/reviews/readability/round0/images/P82562.png",
+        "sha256": "c9aabc6f9bbb3589b48a4a054f107eea879b133e553674651b6cef545077beee"
+      },
+      "visible_people": 10,
+      "carriers": 2,
+      "storage_bboxes": [
+        [
+          0.0,
+          474.0,
+          320.0,
+          730.0
+        ],
+        [
+          1344.0,
+          112.0,
+          1600.0,
+          538.0
+        ]
+      ],
+      "wolves": [
+        [
+          775.0,
+          171.0,
+          824.0,
+          198.0
+        ],
+        [
+          903.0,
+          171.0,
+          952.0,
+          198.0
+        ]
+      ],
+      "time_class": "night",
+      "marks": {
+        "C": {
+          "agent_id": 6,
+          "activity": "awake",
+          "source_activity": null,
+          "point": null,
+          "label_bbox": null
+        },
+        "B": {
+          "agent_id": 7,
+          "activity": "carry",
+          "source_activity": null,
+          "point": null,
+          "label_bbox": null
+        },
+        "A": {
+          "agent_id": 2,
+          "activity": "chop",
+          "source_activity": null,
+          "point": null,
+          "label_bbox": null
+        }
+      },
+      "limitations": [
+        "A genuine designated storage target exists and may be scored as unfinished walled stockpile. It is not a finished Storehouse room. A completed declared-after storehouse differs in state,position,and visible area; this is not a pure controlled same-state comparison.",
+        "Before wolves absent; after two declared wolves.",
+        "Seven existing actors have declared positions, tops and actions after."
+      ],
+      "comparability": {
+        "people": "MISMATCH: declared actor positions; raw count score remains valid",
+        "storage": "NOT_COMPARABLE: unfinished native versus finished declared storage",
+        "carriers": "NOT_COMPARABLE: native zero versus two declared carriers",
+        "wolves": "NOT_COMPARABLE: native absence versus two declared wolves",
+        "time": "COMPARABLE: same native clock class",
+        "activities": "NOT_COMPARABLE: declared action overrides; displayed poses scored"
+      }
+    },
+    {
+      "image_id": "P53765",
+      "renderer": "before",
+      "condition": "night",
+      "zoom": "half",
+      "source": {
+        "path": "docs/v8/artenv1/reference/current_day6_night_half.png",
+        "sha256": "b88449bb9cbbdcf94ff1855b4e7082af2d08218133711ba2debafff4d65cf5a1"
+      },
+      "frozen": {
+        "path": "docs/v8/artenv1/reviews/readability/round0/images/P53765.png",
+        "sha256": "9dfc0b0ac6c54f1bba0202661e090090d3541d06bfa1ba14bdd3d9a8f2592f85"
+      },
+      "visible_people": 10,
+      "carriers": 0,
+      "storage_bboxes": [
+        [
+          1072.0,
+          266.0,
+          1328.0,
+          522.0
+        ]
+      ],
+      "wolves": [],
+      "time_class": "night",
+      "marks": {
+        "C": {
+          "agent_id": 6,
+          "activity": "sleep",
+          "source_activity": "sleep",
+          "point": [
+            800.0,
+            570.0
+          ],
+          "label_bbox": [
+            770.0,
+            564.0,
+            782.0,
+            576.0
+          ]
+        },
+        "B": {
+          "agent_id": 7,
+          "activity": "sleep",
+          "source_activity": "sleep",
+          "point": [
+            864.0,
+            474.0
+          ],
+          "label_bbox": [
+            858.0,
+            444.0,
+            869.0,
+            456.0
+          ]
+        },
+        "A": {
+          "agent_id": 2,
+          "activity": "sleep",
+          "source_activity": "sleep",
+          "point": [
+            576.0,
+            666.0
+          ],
+          "label_bbox": [
+            569.0,
+            636.0,
+            582.0,
+            648.0
+          ]
+        }
+      },
+      "limitations": [
+        "A genuine designated storage target exists and may be scored as unfinished walled stockpile. It is not a finished Storehouse room. A completed declared-after storehouse differs in state,position,and visible area; this is not a pure controlled same-state comparison.",
+        "Before wolves absent; after two declared wolves.",
+        "Seven existing actors have declared positions, tops and actions after."
+      ],
+      "comparability": {
+        "people": "MISMATCH: declared actor positions; raw count score remains valid",
+        "storage": "NOT_COMPARABLE: unfinished native versus finished declared storage",
+        "carriers": "NOT_COMPARABLE: native zero versus two declared carriers",
+        "wolves": "NOT_COMPARABLE: native absence versus two declared wolves",
+        "time": "COMPARABLE: same native clock class",
+        "activities": "NOT_COMPARABLE: declared action overrides; displayed poses scored"
+      }
+    },
+    {
+      "image_id": "P81143",
+      "renderer": "after",
+      "condition": "night",
+      "zoom": "half",
+      "source": {
+        "path": "docs/v8/artenv1/renders/scene_day6_night_night_half_lod.png",
+        "sha256": "4867e8634fcf4d7f5fe7648315f827ed9567798820f2cc4c0a62dab82d53e54d"
+      },
+      "frozen": {
+        "path": "docs/v8/artenv1/reviews/readability/round0/images/P81143.png",
+        "sha256": "4867e8634fcf4d7f5fe7648315f827ed9567798820f2cc4c0a62dab82d53e54d"
+      },
+      "visible_people": 10,
+      "carriers": 2,
+      "storage_bboxes": [
+        [
+          400.0,
+          490.0,
+          560.0,
+          618.0
+        ],
+        [
+          1072.0,
+          266.0,
+          1328.0,
+          522.0
+        ]
+      ],
+      "wolves": [
+        [
+          795.0,
+          341.0,
+          805.0,
+          351.0
+        ],
+        [
+          859.0,
+          341.0,
+          869.0,
+          351.0
+        ]
+      ],
+      "time_class": "night",
+      "marks": {
+        "C": {
+          "agent_id": 6,
+          "activity": "awake",
+          "source_activity": null,
+          "point": null,
+          "label_bbox": null
+        },
+        "B": {
+          "agent_id": 7,
+          "activity": "carry",
+          "source_activity": null,
+          "point": null,
+          "label_bbox": null
+        },
+        "A": {
+          "agent_id": 2,
+          "activity": "chop",
+          "source_activity": null,
+          "point": null,
+          "label_bbox": null
+        }
+      },
+      "limitations": [
+        "A genuine designated storage target exists and may be scored as unfinished walled stockpile. It is not a finished Storehouse room. A completed declared-after storehouse differs in state,position,and visible area; this is not a pure controlled same-state comparison.",
+        "Before wolves absent; after two declared wolves.",
+        "Seven existing actors have declared positions, tops and actions after."
+      ],
+      "comparability": {
+        "people": "MISMATCH: declared actor positions; raw count score remains valid",
+        "storage": "NOT_COMPARABLE: unfinished native versus finished declared storage",
+        "carriers": "NOT_COMPARABLE: native zero versus two declared carriers",
+        "wolves": "NOT_COMPARABLE: native absence versus two declared wolves",
+        "time": "COMPARABLE: same native clock class",
+        "activities": "NOT_COMPARABLE: declared action overrides; displayed poses scored"
+      }
+    },
+    {
+      "image_id": "P25079",
+      "renderer": "before",
+      "condition": "winter",
+      "zoom": "1x",
+      "source": {
+        "path": "docs/v8/artenv1/reference/current_winter_noon_1x.png",
+        "sha256": "b8620a1f5c80ee6b18836b30089ff4f8de438a3de0e38c8b5a78eb9ac1d9d12c"
+      },
+      "frozen": {
+        "path": "docs/v8/artenv1/reviews/readability/round0/images/P25079.png",
+        "sha256": "a2b3655307be8626090e7397e13adc94247a5f073984dc26c4b088784e1c383d"
+      },
+      "visible_people": 8,
+      "carriers": 0,
+      "storage_bboxes": [
+        [
+          1344.0,
+          112.0,
+          1600.0,
+          538.0
+        ]
+      ],
+      "wolves": [],
+      "time_class": "day",
+      "marks": {
+        "C": {
+          "agent_id": 6,
+          "activity": "awake",
+          "source_activity": "tend_fire",
+          "point": [
+            800.0,
+            442.0
+          ],
+          "label_bbox": [
+            794.0,
+            388.0,
+            806.0,
+            400.0
+          ]
+        },
+        "B": {
+          "agent_id": 2,
+          "activity": "awake",
+          "source_activity": "hearth_circle",
+          "point": [
+            672.0,
+            378.0
+          ],
+          "label_bbox": [
+            666.0,
+            324.0,
+            677.0,
+            336.0
+          ]
+        },
+        "A": {
+          "agent_id": 7,
+          "activity": "awake",
+          "source_activity": "repair",
+          "point": [
+            608.0,
+            378.0
+          ],
+          "label_bbox": [
+            601.0,
+            324.0,
+            614.0,
+            336.0
+          ]
+        }
+      },
+      "limitations": [
+        "A genuine designated storage target exists and may be scored as unfinished walled stockpile. It is not a finished Storehouse room. A completed declared-after storehouse differs in state,position,and visible area; this is not a pure controlled same-state comparison.",
+        "Before wolves absent; after two declared wolves.",
+        "Seven existing actors have declared positions, tops and actions after."
+      ],
+      "comparability": {
+        "people": "MISMATCH: declared actor positions; raw count score remains valid",
+        "storage": "NOT_COMPARABLE: unfinished native versus finished declared storage",
+        "carriers": "NOT_COMPARABLE: native zero versus two declared carriers",
+        "wolves": "NOT_COMPARABLE: native absence versus two declared wolves",
+        "time": "COMPARABLE: same native clock class",
+        "activities": "NOT_COMPARABLE: declared action overrides; displayed poses scored"
+      }
+    },
+    {
+      "image_id": "P52988",
+      "renderer": "after",
+      "condition": "winter",
+      "zoom": "1x",
+      "source": {
+        "path": "docs/v8/artenv1/renders/scene_winter_noon_winter_1x_figures.png",
+        "sha256": "4489665ecfcd024f33c30676f00724433e0ed8aac2b7795023c77060116f9741"
+      },
+      "frozen": {
+        "path": "docs/v8/artenv1/reviews/readability/round0/images/P52988.png",
+        "sha256": "4489665ecfcd024f33c30676f00724433e0ed8aac2b7795023c77060116f9741"
+      },
+      "visible_people": 8,
+      "carriers": 2,
+      "storage_bboxes": [
+        [
+          0.0,
+          474.0,
+          320.0,
+          730.0
+        ],
+        [
+          1344.0,
+          112.0,
+          1600.0,
+          538.0
+        ]
+      ],
+      "wolves": [
+        [
+          775.0,
+          171.0,
+          824.0,
+          198.0
+        ],
+        [
+          903.0,
+          171.0,
+          952.0,
+          198.0
+        ]
+      ],
+      "time_class": "day",
+      "marks": {
+        "C": {
+          "agent_id": 6,
+          "activity": "awake",
+          "source_activity": null,
+          "point": null,
+          "label_bbox": null
+        },
+        "B": {
+          "agent_id": 2,
+          "activity": "carry",
+          "source_activity": null,
+          "point": null,
+          "label_bbox": null
+        },
+        "A": {
+          "agent_id": 7,
+          "activity": "chop",
+          "source_activity": null,
+          "point": null,
+          "label_bbox": null
+        }
+      },
+      "limitations": [
+        "A genuine designated storage target exists and may be scored as unfinished walled stockpile. It is not a finished Storehouse room. A completed declared-after storehouse differs in state,position,and visible area; this is not a pure controlled same-state comparison.",
+        "Before wolves absent; after two declared wolves.",
+        "Seven existing actors have declared positions, tops and actions after."
+      ],
+      "comparability": {
+        "people": "MISMATCH: declared actor positions; raw count score remains valid",
+        "storage": "NOT_COMPARABLE: unfinished native versus finished declared storage",
+        "carriers": "NOT_COMPARABLE: native zero versus two declared carriers",
+        "wolves": "NOT_COMPARABLE: native absence versus two declared wolves",
+        "time": "COMPARABLE: same native clock class",
+        "activities": "NOT_COMPARABLE: declared action overrides; displayed poses scored"
+      }
+    },
+    {
+      "image_id": "P79356",
+      "renderer": "before",
+      "condition": "winter",
+      "zoom": "half",
+      "source": {
+        "path": "docs/v8/artenv1/reference/current_winter_noon_half.png",
+        "sha256": "e4c9cb37233a6fc40eedac2ac998cccec860510236ffbe1aa19c6ca5178a271f"
+      },
+      "frozen": {
+        "path": "docs/v8/artenv1/reviews/readability/round0/images/P79356.png",
+        "sha256": "1d5698f29c2b678dc07da88002335b25a7726bb0a02b17eb4e73b7803d278ddc"
+      },
+      "visible_people": 8,
+      "carriers": 0,
+      "storage_bboxes": [
+        [
+          1072.0,
+          266.0,
+          1328.0,
+          522.0
+        ]
+      ],
+      "wolves": [],
+      "time_class": "day",
+      "marks": {
+        "C": {
+          "agent_id": 6,
+          "activity": "awake",
+          "source_activity": "tend_fire",
+          "point": [
+            800.0,
+            474.0
+          ],
+          "label_bbox": [
+            794.0,
+            444.0,
+            806.0,
+            456.0
+          ]
+        },
+        "B": {
+          "agent_id": 2,
+          "activity": "awake",
+          "source_activity": "hearth_circle",
+          "point": [
+            736.0,
+            442.0
+          ],
+          "label_bbox": [
+            730.0,
+            412.0,
+            741.0,
+            424.0
+          ]
+        },
+        "A": {
+          "agent_id": 7,
+          "activity": "awake",
+          "source_activity": "repair",
+          "point": [
+            704.0,
+            442.0
+          ],
+          "label_bbox": [
+            697.0,
+            412.0,
+            710.0,
+            424.0
+          ]
+        }
+      },
+      "limitations": [
+        "A genuine designated storage target exists and may be scored as unfinished walled stockpile. It is not a finished Storehouse room. A completed declared-after storehouse differs in state,position,and visible area; this is not a pure controlled same-state comparison.",
+        "Before wolves absent; after two declared wolves.",
+        "Seven existing actors have declared positions, tops and actions after."
+      ],
+      "comparability": {
+        "people": "MISMATCH: declared actor positions; raw count score remains valid",
+        "storage": "NOT_COMPARABLE: unfinished native versus finished declared storage",
+        "carriers": "NOT_COMPARABLE: native zero versus two declared carriers",
+        "wolves": "NOT_COMPARABLE: native absence versus two declared wolves",
+        "time": "COMPARABLE: same native clock class",
+        "activities": "NOT_COMPARABLE: declared action overrides; displayed poses scored"
+      }
+    },
+    {
+      "image_id": "P42953",
+      "renderer": "after",
+      "condition": "winter",
+      "zoom": "half",
+      "source": {
+        "path": "docs/v8/artenv1/renders/scene_winter_noon_winter_half_lod.png",
+        "sha256": "97bd154d992a101b5f7621da6f05ed3035d532636e9da9ec7e853d4e306119ae"
+      },
+      "frozen": {
+        "path": "docs/v8/artenv1/reviews/readability/round0/images/P42953.png",
+        "sha256": "97bd154d992a101b5f7621da6f05ed3035d532636e9da9ec7e853d4e306119ae"
+      },
+      "visible_people": 8,
+      "carriers": 2,
+      "storage_bboxes": [
+        [
+          400.0,
+          490.0,
+          560.0,
+          618.0
+        ],
+        [
+          1072.0,
+          266.0,
+          1328.0,
+          522.0
+        ]
+      ],
+      "wolves": [
+        [
+          795.0,
+          341.0,
+          805.0,
+          351.0
+        ],
+        [
+          859.0,
+          341.0,
+          869.0,
+          351.0
+        ]
+      ],
+      "time_class": "day",
+      "marks": {
+        "C": {
+          "agent_id": 6,
+          "activity": "awake",
+          "source_activity": null,
+          "point": null,
+          "label_bbox": null
+        },
+        "B": {
+          "agent_id": 2,
+          "activity": "carry",
+          "source_activity": null,
+          "point": null,
+          "label_bbox": null
+        },
+        "A": {
+          "agent_id": 7,
+          "activity": "chop",
+          "source_activity": null,
+          "point": null,
+          "label_bbox": null
+        }
+      },
+      "limitations": [
+        "A genuine designated storage target exists and may be scored as unfinished walled stockpile. It is not a finished Storehouse room. A completed declared-after storehouse differs in state,position,and visible area; this is not a pure controlled same-state comparison.",
+        "Before wolves absent; after two declared wolves.",
+        "Seven existing actors have declared positions, tops and actions after."
+      ],
+      "comparability": {
+        "people": "MISMATCH: declared actor positions; raw count score remains valid",
+        "storage": "NOT_COMPARABLE: unfinished native versus finished declared storage",
+        "carriers": "NOT_COMPARABLE: native zero versus two declared carriers",
+        "wolves": "NOT_COMPARABLE: native absence versus two declared wolves",
+        "time": "COMPARABLE: same native clock class",
+        "activities": "NOT_COMPARABLE: declared action overrides; displayed poses scored"
+      }
+    }
+  ],
+  "packets": [
+    {
+      "packet_id": "G8996",
+      "condition": "day",
+      "reviewer": "a",
+      "path": "/Users/rexxa/work/artenv1-data/reviews/readability/round0/packets/G8996",
+      "order": [
+        "P44412",
+        "P99373",
+        "P62328",
+        "P58058"
+      ]
+    },
+    {
+      "packet_id": "G3913",
+      "condition": "day",
+      "reviewer": "b",
+      "path": "/Users/rexxa/work/artenv1-data/reviews/readability/round0/packets/G3913",
+      "order": [
+        "P99373",
+        "P62328",
+        "P58058",
+        "P44412"
+      ]
+    },
+    {
+      "packet_id": "G7021",
+      "condition": "night",
+      "reviewer": "a",
+      "path": "/Users/rexxa/work/artenv1-data/reviews/readability/round0/packets/G7021",
+      "order": [
+        "P73793",
+        "P81143",
+        "P53765",
+        "P82562"
+      ]
+    },
+    {
+      "packet_id": "G7049",
+      "condition": "night",
+      "reviewer": "b",
+      "path": "/Users/rexxa/work/artenv1-data/reviews/readability/round0/packets/G7049",
+      "order": [
+        "P81143",
+        "P53765",
+        "P73793",
+        "P82562"
+      ]
+    },
+    {
+      "packet_id": "G7842",
+      "condition": "winter",
+      "reviewer": "a",
+      "path": "/Users/rexxa/work/artenv1-data/reviews/readability/round0/packets/G7842",
+      "order": [
+        "P52988",
+        "P79356",
+        "P42953",
+        "P25079"
+      ]
+    },
+    {
+      "packet_id": "G7645",
+      "condition": "winter",
+      "reviewer": "b",
+      "path": "/Users/rexxa/work/artenv1-data/reviews/readability/round0/packets/G7645",
+      "order": [
+        "P25079",
+        "P42953",
+        "P52988",
+        "P79356"
+      ]
+    }
+  ]
+}

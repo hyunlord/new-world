@@ -1,0 +1,100 @@
+{
+  "id": "dug_face",
+  "path": "art/style05/env1/built/dug_face.png",
+  "width": 64,
+  "height": 64,
+  "footprint": [
+    1,
+    1
+  ],
+  "family": "ground",
+  "attempts": 3,
+  "selected_attempt": 3,
+  "status": "SEAM_FAIL_CANDIDATE",
+  "raw": "/Users/rexxa/work/artenv1-data/built/dug_face_try3_raw.png",
+  "raw_sha256": "6d87a34ef11ecb9d4deb07a3caf2f7500b7d07465a10b528889b3905181d6499",
+  "sha256": "ce737879a8348e83e5262fba2823dd55187121fdfa06195a58307cfc072fe8bc",
+  "metadata": "/Users/rexxa/work/artenv1-data/built/dug_face_try3.json",
+  "metadata_sha256": "96b372787d1c92c56c7f48174b00eb7cae36fafa42ccd1eece6a55ea384167aa",
+  "numeric": {
+    "candidate": "/Users/rexxa/work/artenv1-data/built/dug_face_try3_raw.png",
+    "sha256": "6d87a34ef11ecb9d4deb07a3caf2f7500b7d07465a10b528889b3905181d6499",
+    "family": "ground",
+    "metrics": {
+      "edge_density": 0.2701719576719577,
+      "saturation_q25": 0.4327301011794329,
+      "saturation_q75": 0.6375355589672032,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.008562957941830521,
+      "foreground_pixels": 65536
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "operations": [
+    "full-frame Lanczos resize",
+    "logged global contrast/chroma/value scales; no local edits"
+  ],
+  "tone": {
+    "before_mean": 0.3632618905101103,
+    "before_std": 0.130938111055168,
+    "before_saturation": 0.5286676173570539,
+    "after_mean": 0.3630405650658701,
+    "after_std": 0.13052019168201623,
+    "after_saturation": 0.28918302340355395,
+    "person_std_cap": 0.16719984851327876,
+    "contrast_scale": 1.0,
+    "chroma_scales": [
+      0.592481791973114,
+      0.8046745407665019
+    ],
+    "value_scale": 1.0
+  },
+  "seam": {
+    "horizontal_mae": 21.697916666666668,
+    "vertical_mae": 54.333333333333336,
+    "horizontal_ratio": 1.8937456707457863,
+    "vertical_ratio": 4.235840057748331,
+    "passed": false
+  },
+  "bytes": 10216,
+  "model": {
+    "scores": {
+      "medium": 4,
+      "line": 4,
+      "light": 4,
+      "palette": 4,
+      "sentence": "Consistent ink-and-wash technique and palette with matching linework and lighting, with only a slightly heavier, chunkier rock texture and broader wash areas but still clearly the same style family."
+    },
+    "review_id": "judge_ground_b",
+    "candidate_raw_sha256": "6d87a34ef11ecb9d4deb07a3caf2f7500b7d07465a10b528889b3905181d6499",
+    "scorecard_sha256": "4b84dfd8086a5e08185f6da422ab83f4222561b2ae6d96f57432ccd6c8142413"
+  },
+  "physical_footprint": [
+    1,
+    1
+  ],
+  "style_pass": true,
+  "reading": "Cut rock face and darker excavated floor are distinct; horizontal boundary exceeds the seam limit.",
+  "semantic_pass": true,
+  "required_wrap_axes": [
+    "horizontal"
+  ],
+  "required_wrap_pass": false,
+  "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+}

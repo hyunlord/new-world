@@ -1,0 +1,63 @@
+{
+  "numeric_calibration_status": "FAIL_UNCHANGED",
+  "supplementary_combined_control_rejection": "PASS: painterly/photo rejected by actual model; woodcut already numericFAIL",
+  "not_a_replacement": "No threshold change and no withdrawal of frozen numeric negative-control failure. These are existing cross-family negative controls, not new animal-shaped controls.",
+  "records": [
+    {
+      "name": "negative_painterly",
+      "candidate": "/Users/rexxa/work/arttrial2-data/negative_painterly.png",
+      "candidate_sha256": "83785dc9e933598a4c3e4fd7e5dd8e8305d9eae96ad246d41063c647b3eed76d",
+      "scorecard": "/Users/rexxa/work/artenv1-data/animals/negative_painterly_style_scorecard.png",
+      "scorecard_sha256": "e79f55ed581fb682e71751016dee5fe754e510bf75d279d0ba66e45725a1506d",
+      "prompt": "/Users/rexxa/work/artenv1-data/animals/negative_painterly_style_judge.prompt.txt",
+      "prompt_sha256": "3f1d2c53cd3f1c77e3c105570d7cc5df8876b365d64e08278183bdee1cb857dc",
+      "medium": 2,
+      "line": 2,
+      "light": 3,
+      "palette": 3,
+      "reason": "Painterly, brushy oil-paint texture with softer, less defined linework and a more varied, painterly color palette than the clean ink-and-wash look of the references.",
+      "model_pass": false,
+      "numeric_pass": true,
+      "numeric_and_model_pass": false,
+      "mechanism": "actual image_gen scorecard, visually transcribed, locked person+scene references",
+      "references": [
+        {
+          "path": "art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ]
+    },
+    {
+      "name": "negative_photo",
+      "candidate": "/Users/rexxa/work/arttrial2-data/negative_photo_try1.png",
+      "candidate_sha256": "0f3ac1e665c19e4dab1c011067e1ccc9e29d2424f3797a651a50d15015d36a08",
+      "scorecard": "/Users/rexxa/work/artenv1-data/animals/negative_photo_style_scorecard.png",
+      "scorecard_sha256": "03aacc7df60c55f59c11de12c194214b2b0a6f5e921841d59de880eabaf9bb61",
+      "prompt": "/Users/rexxa/work/artenv1-data/animals/negative_photo_style_judge.prompt.txt",
+      "prompt_sha256": "d4d91d712d7282e5abe5d36d5f7732a925b90836dc6e72bea4075f273bd91d10",
+      "medium": 2,
+      "line": 3,
+      "light": 3,
+      "palette": 3,
+      "reason": "More photographic and highly detailed with realistic textures and lighting, not the controlled ink-and-wash, stylized illustration look.",
+      "model_pass": false,
+      "numeric_pass": true,
+      "numeric_and_model_pass": false,
+      "mechanism": "actual image_gen scorecard, visually transcribed, locked person+scene references",
+      "references": [
+        {
+          "path": "art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ]
+    }
+  ]
+}

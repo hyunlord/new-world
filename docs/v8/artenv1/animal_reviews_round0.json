@@ -1,0 +1,1956 @@
+{
+  "round": 0,
+  "verdict": "FAIL",
+  "protocol": "docs/v8/artenv1/ANIMAL_REVIEW_PROTOCOL.md",
+  "protocol_sha256": "98fd315ca4783feea12a860eacb4cd2adb667d7d115a7c2057d039cc0cf9b32b",
+  "protocol_mtime_utc": "2026-10-23T06:34:54.523960+00:00",
+  "protocol_precedes_answer_files": true,
+  "answer_key": "/Users/rexxa/work/artenv1-data/animals/review_answer_key.json",
+  "answer_key_sha256": "000792a384077b9ba7c67b47baa6a3e813f055e83fbf63fb9c3034da59735bf6",
+  "boards": [
+    {
+      "scale": 1,
+      "path": "art/animal/boards/round0/blind_frames_1x.png",
+      "sha256": "9d101e40e7003410739cb6f381aad883c643dfa0611c08b2ac9eeeab836d5d82"
+    },
+    {
+      "scale": 2,
+      "path": "art/animal/boards/round0/blind_frames_2x.png",
+      "sha256": "a42a4098bb30d5c1118e0af01bb48e9a870a8d3942669b40a3106550227d9e82"
+    }
+  ],
+  "sources": [
+    {
+      "reviewer": "animal_a",
+      "source": "/Users/rexxa/work/artenv1-data/reviews/animal_a.json",
+      "copy": "docs/v8/artenv1/reviews/animals/a.json",
+      "sha256": "ebb86c3860f5ce03502e0b8dcbfe62ffb617c1ac6fe3ce2f51a99d69b13d490d",
+      "copy_sha256": "ebb86c3860f5ce03502e0b8dcbfe62ffb617c1ac6fe3ce2f51a99d69b13d490d",
+      "byte_identical": true,
+      "source_md": "/Users/rexxa/work/artenv1-data/reviews/animal_a.md",
+      "source_md_sha256": "c36ec0919f17194dceea717d657a851766edfa4ec3a6ebee3cad0e1fc5e48717",
+      "recorded_order": [
+        1,
+        2
+      ]
+    },
+    {
+      "reviewer": "animal_b",
+      "source": "/Users/rexxa/work/artenv1-data/reviews/animal_b.json",
+      "copy": "docs/v8/artenv1/reviews/animals/b.json",
+      "sha256": "e590d692fcb8c0f8db145e46cd3507d27aeae1e9bc256f7089fc8b49d4010b53",
+      "copy_sha256": "e590d692fcb8c0f8db145e46cd3507d27aeae1e9bc256f7089fc8b49d4010b53",
+      "byte_identical": true,
+      "source_md": "/Users/rexxa/work/artenv1-data/reviews/animal_b.md",
+      "source_md_sha256": "eb5a5615f2813719fba1d8ec4e882053120ac6c7849d60f93f5386b17edfe25f",
+      "recorded_order": [
+        2,
+        1
+      ]
+    }
+  ],
+  "timings": [
+    {
+      "reviewer": "animal_a",
+      "scale": 1,
+      "started_at": "2026-10-23 06:33:20 UTC",
+      "ended_at": "2026-10-23 06:34:09 UTC",
+      "elapsed_seconds": 49,
+      "scope": "reviewer-recorded model/tool wallclock, not human response time",
+      "limit": "A excludes file writing; B includes recording answers; these timings are not comparable reaction-time measures"
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 2,
+      "started_at": "2026-10-23 06:34:18 UTC",
+      "ended_at": "2026-10-23 06:35:00 UTC",
+      "elapsed_seconds": 42,
+      "scope": "reviewer-recorded model/tool wallclock, not human response time",
+      "limit": "A excludes file writing; B includes recording answers; these timings are not comparable reaction-time measures"
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 2,
+      "started_at": "2026-10-23 06:33:49 UTC",
+      "ended_at": "2026-10-23 06:34:43 UTC",
+      "elapsed_seconds": 54,
+      "scope": "reviewer-recorded model/tool wallclock, not human response time",
+      "limit": "A excludes file writing; B includes recording answers; these timings are not comparable reaction-time measures"
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 1,
+      "started_at": "2026-10-23 06:34:43 UTC",
+      "ended_at": "2026-10-23 06:35:47 UTC",
+      "elapsed_seconds": 64,
+      "scope": "reviewer-recorded model/tool wallclock, not human response time",
+      "limit": "A excludes file writing; B includes recording answers; these timings are not comparable reaction-time measures"
+    }
+  ],
+  "groups": [
+    {
+      "reviewer": "animal_a",
+      "species": "wolf",
+      "scale": 1,
+      "denominator": 10,
+      "species_correct": 0,
+      "pose_correct": 4,
+      "species_minimum": 9,
+      "pose_minimum": 8,
+      "species_pass": false,
+      "pose_pass": false,
+      "passed": false,
+      "species_failed_ids": [
+        "1X-05",
+        "1X-06",
+        "1X-07",
+        "1X-09",
+        "1X-14",
+        "1X-15",
+        "1X-16",
+        "1X-17",
+        "1X-18",
+        "1X-19"
+      ],
+      "pose_failed_ids": [
+        "1X-07",
+        "1X-09",
+        "1X-14",
+        "1X-15",
+        "1X-16",
+        "1X-18"
+      ]
+    },
+    {
+      "reviewer": "animal_a",
+      "species": "deer",
+      "scale": 1,
+      "denominator": 10,
+      "species_correct": 10,
+      "pose_correct": 8,
+      "species_minimum": 9,
+      "pose_minimum": 8,
+      "species_pass": true,
+      "pose_pass": true,
+      "passed": true,
+      "species_failed_ids": [],
+      "pose_failed_ids": [
+        "1X-02",
+        "1X-04"
+      ]
+    },
+    {
+      "reviewer": "animal_a",
+      "species": "wolf",
+      "scale": 2,
+      "denominator": 10,
+      "species_correct": 10,
+      "pose_correct": 7,
+      "species_minimum": 9,
+      "pose_minimum": 8,
+      "species_pass": true,
+      "pose_pass": false,
+      "passed": false,
+      "species_failed_ids": [],
+      "pose_failed_ids": [
+        "2X-05",
+        "2X-07",
+        "2X-11"
+      ]
+    },
+    {
+      "reviewer": "animal_a",
+      "species": "deer",
+      "scale": 2,
+      "denominator": 10,
+      "species_correct": 10,
+      "pose_correct": 9,
+      "species_minimum": 9,
+      "pose_minimum": 8,
+      "species_pass": true,
+      "pose_pass": true,
+      "passed": true,
+      "species_failed_ids": [],
+      "pose_failed_ids": [
+        "2X-03"
+      ]
+    },
+    {
+      "reviewer": "animal_b",
+      "species": "wolf",
+      "scale": 2,
+      "denominator": 10,
+      "species_correct": 10,
+      "pose_correct": 6,
+      "species_minimum": 9,
+      "pose_minimum": 8,
+      "species_pass": true,
+      "pose_pass": false,
+      "passed": false,
+      "species_failed_ids": [],
+      "pose_failed_ids": [
+        "2X-02",
+        "2X-04",
+        "2X-05",
+        "2X-07"
+      ]
+    },
+    {
+      "reviewer": "animal_b",
+      "species": "deer",
+      "scale": 2,
+      "denominator": 10,
+      "species_correct": 10,
+      "pose_correct": 10,
+      "species_minimum": 9,
+      "pose_minimum": 8,
+      "species_pass": true,
+      "pose_pass": true,
+      "passed": true,
+      "species_failed_ids": [],
+      "pose_failed_ids": []
+    },
+    {
+      "reviewer": "animal_b",
+      "species": "wolf",
+      "scale": 1,
+      "denominator": 10,
+      "species_correct": 10,
+      "pose_correct": 5,
+      "species_minimum": 9,
+      "pose_minimum": 8,
+      "species_pass": true,
+      "pose_pass": false,
+      "passed": false,
+      "species_failed_ids": [],
+      "pose_failed_ids": [
+        "1X-07",
+        "1X-14",
+        "1X-15",
+        "1X-17",
+        "1X-18"
+      ]
+    },
+    {
+      "reviewer": "animal_b",
+      "species": "deer",
+      "scale": 1,
+      "denominator": 10,
+      "species_correct": 10,
+      "pose_correct": 10,
+      "species_minimum": 9,
+      "pose_minimum": 8,
+      "species_pass": true,
+      "pose_pass": true,
+      "passed": true,
+      "species_failed_ids": [],
+      "pose_failed_ids": []
+    }
+  ],
+  "records": [
+    {
+      "reviewer": "animal_a",
+      "scale": 1,
+      "id": "1X-01",
+      "expected": {
+        "species": "deer",
+        "facing": "S",
+        "pose": "dead"
+      },
+      "image": "art/animal/deer/S/dead.png",
+      "image_sha256": "28f134d43b1f61e9f8696bc400e9898de81e165a74f15732de03a69c7055c145",
+      "raw_species": "Antlered deer / stag",
+      "raw_pose": "Lying on its side with head low toward the left and legs extended.",
+      "raw_notes": "Looks collapsed or resting; still image does not distinguish death from rest.",
+      "normalized_species": "deer",
+      "normalized_pose": "dead",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "Explicit sideways/on-side lying or collapsed-on-side observation accepted under dead (lying); this does not establish death versus rest."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 1,
+      "id": "1X-02",
+      "expected": {
+        "species": "deer",
+        "facing": "S",
+        "pose": "walk"
+      },
+      "image": "art/animal/deer/S/walk.png",
+      "image_sha256": "d9637cb1009d4618b16c2bc650d04bce160cd6f3fa4835753e637b7738e102e6",
+      "raw_species": "Antlered deer / stag",
+      "raw_pose": "Standing facing the viewer.",
+      "raw_notes": "Forelegs overlap slightly; no clear motion.",
+      "normalized_species": "deer",
+      "normalized_pose": "stand",
+      "species_correct": true,
+      "pose_correct": false,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 1,
+      "id": "1X-03",
+      "expected": {
+        "species": "deer",
+        "facing": "E",
+        "pose": "walk"
+      },
+      "image": "art/animal/deer/E/walk.png",
+      "image_sha256": "c909cb4ae376ff59117048e101c970469200ee5e084cffa950f003a611a98690",
+      "raw_species": "Antlered deer / stag",
+      "raw_pose": "Walking or trotting toward the right in side view.",
+      "raw_notes": "Separated legs suggest a stride; exact gait is uncertain.",
+      "normalized_species": "deer",
+      "normalized_pose": "walk",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 1,
+      "id": "1X-04",
+      "expected": {
+        "species": "deer",
+        "facing": "E",
+        "pose": "run"
+      },
+      "image": "art/animal/deer/E/run.png",
+      "image_sha256": "b27635b1221c308604cc048d652fc288864a7687b7c9ca44bfbcd24625f135af",
+      "raw_species": "Antlered deer / stag",
+      "raw_pose": "Bounding or running toward the right.",
+      "raw_notes": "Extended body and outstretched legs read as fast movement.",
+      "normalized_species": "deer",
+      "normalized_pose": "unsupported_bounding",
+      "species_correct": true,
+      "pose_correct": false,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First pose is not an accepted frozen synonym; later alternatives or notes do not replace it."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 1,
+      "id": "1X-05",
+      "expected": {
+        "species": "wolf",
+        "facing": "E",
+        "pose": "walk"
+      },
+      "image": "art/animal/archive/wolf_try2/E/walk.png",
+      "image_sha256": "484d2ffef3695554fa0ff195d075ffd3ef151b050e16ac0906fc13f02d6e90c5",
+      "raw_species": "Wolf-like canid",
+      "raw_pose": "Walking toward the right in side view.",
+      "raw_notes": "Small scale makes wolf versus dog uncertain.",
+      "normalized_species": "unsupported_qualified_wolf_like",
+      "normalized_pose": "walk",
+      "species_correct": false,
+      "pose_correct": true,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 1,
+      "id": "1X-06",
+      "expected": {
+        "species": "wolf",
+        "facing": "E",
+        "pose": "run"
+      },
+      "image": "art/animal/archive/wolf_try2/E/run.png",
+      "image_sha256": "0d309758ecfe0ee1957585c83e868f1065ba674021bbaf9294215802deccb3fc",
+      "raw_species": "Wolf-like canid",
+      "raw_pose": "Running toward the left with legs stretched apart.",
+      "raw_notes": "Direction and gait are less certain at this size.",
+      "normalized_species": "unsupported_qualified_wolf_like",
+      "normalized_pose": "run",
+      "species_correct": false,
+      "pose_correct": true,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 1,
+      "id": "1X-07",
+      "expected": {
+        "species": "wolf",
+        "facing": "S",
+        "pose": "dead"
+      },
+      "image": "art/animal/archive/wolf_try2/S/dead.png",
+      "image_sha256": "d85175731ac9dd37a79393859444d762a3ee410c408f2d7458bb13a9d550a789",
+      "raw_species": "Wolf-like canid",
+      "raw_pose": "Very low or collapsed sideways, head toward the left.",
+      "raw_notes": "Could be lying down or crouching; death is not visually established.",
+      "normalized_species": "unsupported_qualified_wolf_like",
+      "normalized_pose": "unsupported_low_or_collapsed",
+      "species_correct": false,
+      "pose_correct": false,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First pose is not an accepted frozen synonym; later alternatives or notes do not replace it."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 1,
+      "id": "1X-08",
+      "expected": {
+        "species": "deer",
+        "facing": "E",
+        "pose": "dead"
+      },
+      "image": "art/animal/deer/E/dead.png",
+      "image_sha256": "951c5c28b907a666ab8bd8cfeaf03f7d415aca8d800e8ebf35f8e6d5fae1a4d0",
+      "raw_species": "Antlered deer / stag",
+      "raw_pose": "Lying down sideways, head toward the right.",
+      "raw_notes": "Legs appear folded or extended along the ground; rest versus collapse uncertain.",
+      "normalized_species": "deer",
+      "normalized_pose": "dead",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "Explicit sideways/on-side lying or collapsed-on-side observation accepted under dead (lying); this does not establish death versus rest."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 1,
+      "id": "1X-09",
+      "expected": {
+        "species": "wolf",
+        "facing": "S",
+        "pose": "walk"
+      },
+      "image": "art/animal/archive/wolf_try2/S/walk.png",
+      "image_sha256": "f0697cc60f33ed42c7ea6e745afcae1908002a3496f672239ab1a5dbb732808a",
+      "raw_species": "Wolf-like canid",
+      "raw_pose": "Moving toward the viewer with head lowered.",
+      "raw_notes": "Overlapping legs make walking versus standing uncertain.",
+      "normalized_species": "unsupported_qualified_wolf_like",
+      "normalized_pose": "unsupported_moving",
+      "species_correct": false,
+      "pose_correct": false,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First pose is not an accepted frozen synonym; later alternatives or notes do not replace it."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 1,
+      "id": "1X-10",
+      "expected": {
+        "species": "deer",
+        "facing": "S",
+        "pose": "graze"
+      },
+      "image": "art/animal/deer/S/graze.png",
+      "image_sha256": "d3d991db1746d8f2d24156d7bc87936a7e25b39d3b54adeb5dc288e98c9fe9a7",
+      "raw_species": "Deer",
+      "raw_pose": "Grazing or sniffing the ground, viewed from behind at an angle.",
+      "raw_notes": "Head is low and body faces away; antlers are difficult to resolve.",
+      "normalized_species": "deer",
+      "normalized_pose": "graze",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 1,
+      "id": "1X-11",
+      "expected": {
+        "species": "deer",
+        "facing": "S",
+        "pose": "stand"
+      },
+      "image": "art/animal/deer/S/stand.png",
+      "image_sha256": "80ab5eb1d723716286c292e3619d004abb0d85cc28794c825db9761c6d007958",
+      "raw_species": "Antlered deer / stag",
+      "raw_pose": "Standing alert facing the viewer, slightly angled.",
+      "raw_notes": "No obvious action beyond standing.",
+      "normalized_species": "deer",
+      "normalized_pose": "stand",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 1,
+      "id": "1X-12",
+      "expected": {
+        "species": "deer",
+        "facing": "E",
+        "pose": "stand"
+      },
+      "image": "art/animal/deer/E/stand.png",
+      "image_sha256": "dab6b289eb5a200879b686fe3f1f8d2fa7d0861814face28db266093a6d33e1d",
+      "raw_species": "Antlered deer / stag",
+      "raw_pose": "Standing in side view facing the right.",
+      "raw_notes": "Legs read as planted.",
+      "normalized_species": "deer",
+      "normalized_pose": "stand",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 1,
+      "id": "1X-13",
+      "expected": {
+        "species": "deer",
+        "facing": "S",
+        "pose": "run"
+      },
+      "image": "art/animal/deer/S/run.png",
+      "image_sha256": "fc398f03c644521da4235a91acefc0ec3a5b1d8e19edcce24585bacb21e705fc",
+      "raw_species": "Antlered deer / stag",
+      "raw_pose": "Running or bounding toward the viewer at an angle.",
+      "raw_notes": "Splayed legs suggest motion rather than a stationary stance.",
+      "normalized_species": "deer",
+      "normalized_pose": "run",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 1,
+      "id": "1X-14",
+      "expected": {
+        "species": "wolf",
+        "facing": "E",
+        "pose": "attack"
+      },
+      "image": "art/animal/archive/wolf_try2/E/attack.png",
+      "image_sha256": "5eca849bde95696fd95ebbaf11a717cba91e50fc1e1e7a764c17f1438a94d381",
+      "raw_species": "Wolf-like canid",
+      "raw_pose": "Low running or crouched stride toward the right.",
+      "raw_notes": "Small silhouette makes the gait difficult to distinguish from a crouch.",
+      "normalized_species": "unsupported_qualified_wolf_like",
+      "normalized_pose": "run",
+      "species_correct": false,
+      "pose_correct": false,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 1,
+      "id": "1X-15",
+      "expected": {
+        "species": "wolf",
+        "facing": "S",
+        "pose": "attack"
+      },
+      "image": "art/animal/archive/wolf_try2/S/attack.png",
+      "image_sha256": "bc959c1cfe94efc4aa3cc8d7faad414a2f1d2a34ea63c5db4ae985c6c818cbe3",
+      "raw_species": "Wolf-like canid",
+      "raw_pose": "Facing the viewer with body low and head lowered.",
+      "raw_notes": "Could be crouching or moving forward; exact action is ambiguous.",
+      "normalized_species": "unsupported_qualified_wolf_like",
+      "normalized_pose": "unsupported_facing",
+      "species_correct": false,
+      "pose_correct": false,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First pose is not an accepted frozen synonym; later alternatives or notes do not replace it."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 1,
+      "id": "1X-16",
+      "expected": {
+        "species": "wolf",
+        "facing": "S",
+        "pose": "stand"
+      },
+      "image": "art/animal/archive/wolf_try2/S/stand.png",
+      "image_sha256": "beabc36d3aa897dbf6be448b68fc628d581e8b99c48a9d1c1527220b6cb8ae65",
+      "raw_species": "Wolf-like canid",
+      "raw_pose": "Facing the viewer with head low and forelegs extended downward.",
+      "raw_notes": "Standing versus walking is unclear.",
+      "normalized_species": "unsupported_qualified_wolf_like",
+      "normalized_pose": "unsupported_facing",
+      "species_correct": false,
+      "pose_correct": false,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First pose is not an accepted frozen synonym; later alternatives or notes do not replace it."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 1,
+      "id": "1X-17",
+      "expected": {
+        "species": "wolf",
+        "facing": "E",
+        "pose": "dead"
+      },
+      "image": "art/animal/archive/wolf_try2/E/dead.png",
+      "image_sha256": "a22770249a26b63c6d74404c1229af9e0e8f0475dd39196082d42fab62e771b6",
+      "raw_species": "Wolf-like canid",
+      "raw_pose": "Lying very low sideways with head toward the left.",
+      "raw_notes": "Could also be a crouch; rest versus collapse cannot be determined.",
+      "normalized_species": "unsupported_qualified_wolf_like",
+      "normalized_pose": "dead",
+      "species_correct": false,
+      "pose_correct": true,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "Explicit sideways/on-side lying or collapsed-on-side observation accepted under dead (lying); this does not establish death versus rest."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 1,
+      "id": "1X-18",
+      "expected": {
+        "species": "wolf",
+        "facing": "S",
+        "pose": "run"
+      },
+      "image": "art/animal/archive/wolf_try2/S/run.png",
+      "image_sha256": "28e2ffb8becd9d0897a6514279c55dc338cd80668a04552e7465075ccd19c3f8",
+      "raw_species": "Wolf-like canid",
+      "raw_pose": "Walking toward the viewer at a slight angle.",
+      "raw_notes": "Raised rear tail and staggered legs suggest movement.",
+      "normalized_species": "unsupported_qualified_wolf_like",
+      "normalized_pose": "walk",
+      "species_correct": false,
+      "pose_correct": false,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 1,
+      "id": "1X-19",
+      "expected": {
+        "species": "wolf",
+        "facing": "E",
+        "pose": "stand"
+      },
+      "image": "art/animal/archive/wolf_try2/E/stand.png",
+      "image_sha256": "0a2379f384a5c527e5da2a2a3827aab05dcd815d1d9c11b6f8006f62511c77be",
+      "raw_species": "Wolf-like canid",
+      "raw_pose": "Standing in side view facing the right.",
+      "raw_notes": "Species could be a dog; motion is not strongly indicated.",
+      "normalized_species": "unsupported_qualified_wolf_like",
+      "normalized_pose": "stand",
+      "species_correct": false,
+      "pose_correct": true,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 1,
+      "id": "1X-20",
+      "expected": {
+        "species": "deer",
+        "facing": "E",
+        "pose": "graze"
+      },
+      "image": "art/animal/deer/E/graze.png",
+      "image_sha256": "c53e5ed09a45eccfcaf45923e9ca29455dcb862a68e574b0c027314495a492c5",
+      "raw_species": "Antlered deer / stag",
+      "raw_pose": "Grazing with head down, body angled toward the right.",
+      "raw_notes": "Legs look planted; head is near the ground.",
+      "normalized_species": "deer",
+      "normalized_pose": "graze",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 2,
+      "id": "2X-01",
+      "expected": {
+        "species": "deer",
+        "facing": "E",
+        "pose": "stand"
+      },
+      "image": "art/animal/deer/E/stand.png",
+      "image_sha256": "dab6b289eb5a200879b686fe3f1f8d2fa7d0861814face28db266093a6d33e1d",
+      "raw_species": "Antlered deer / stag",
+      "raw_pose": "Standing alert in side view facing the right.",
+      "raw_notes": "All feet appear planted.",
+      "normalized_species": "deer",
+      "normalized_pose": "stand",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 2,
+      "id": "2X-02",
+      "expected": {
+        "species": "wolf",
+        "facing": "S",
+        "pose": "dead"
+      },
+      "image": "art/animal/archive/wolf_try2/S/dead.png",
+      "image_sha256": "d85175731ac9dd37a79393859444d762a3ee410c408f2d7458bb13a9d550a789",
+      "raw_species": "Wolf / wolf-like canid",
+      "raw_pose": "Lying or collapsed sideways with head toward the left and legs extended.",
+      "raw_notes": "Could represent a dead animal, but a single still cannot establish death.",
+      "normalized_species": "wolf",
+      "normalized_pose": "dead",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "Explicit sideways/on-side lying or collapsed-on-side observation accepted under dead (lying); this does not establish death versus rest."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 2,
+      "id": "2X-03",
+      "expected": {
+        "species": "deer",
+        "facing": "E",
+        "pose": "run"
+      },
+      "image": "art/animal/deer/E/run.png",
+      "image_sha256": "b27635b1221c308604cc048d652fc288864a7687b7c9ca44bfbcd24625f135af",
+      "raw_species": "Antlered deer / stag",
+      "raw_pose": "Bounding or running toward the right with stretched legs.",
+      "raw_notes": "Clear fast movement.",
+      "normalized_species": "deer",
+      "normalized_pose": "unsupported_bounding",
+      "species_correct": true,
+      "pose_correct": false,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First pose is not an accepted frozen synonym; later alternatives or notes do not replace it."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 2,
+      "id": "2X-04",
+      "expected": {
+        "species": "wolf",
+        "facing": "E",
+        "pose": "dead"
+      },
+      "image": "art/animal/archive/wolf_try2/E/dead.png",
+      "image_sha256": "a22770249a26b63c6d74404c1229af9e0e8f0475dd39196082d42fab62e771b6",
+      "raw_species": "Wolf / wolf-like canid",
+      "raw_pose": "Lying or collapsed on its side with head toward the left.",
+      "raw_notes": "Legs appear tucked or stretched close to the body; rest versus death remains uncertain.",
+      "normalized_species": "wolf",
+      "normalized_pose": "dead",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "Explicit sideways/on-side lying or collapsed-on-side observation accepted under dead (lying); this does not establish death versus rest."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 2,
+      "id": "2X-05",
+      "expected": {
+        "species": "wolf",
+        "facing": "E",
+        "pose": "attack"
+      },
+      "image": "art/animal/archive/wolf_try2/E/attack.png",
+      "image_sha256": "5eca849bde95696fd95ebbaf11a717cba91e50fc1e1e7a764c17f1438a94d381",
+      "raw_species": "Wolf / wolf-like canid",
+      "raw_pose": "Running or making a low leap toward the right.",
+      "raw_notes": "Compact airborne-looking body; could be a pounce.",
+      "normalized_species": "wolf",
+      "normalized_pose": "run",
+      "species_correct": true,
+      "pose_correct": false,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 2,
+      "id": "2X-06",
+      "expected": {
+        "species": "deer",
+        "facing": "E",
+        "pose": "graze"
+      },
+      "image": "art/animal/deer/E/graze.png",
+      "image_sha256": "c53e5ed09a45eccfcaf45923e9ca29455dcb862a68e574b0c027314495a492c5",
+      "raw_species": "Antlered deer / stag",
+      "raw_pose": "Grazing with head down toward the right.",
+      "raw_notes": "Body is seen from a slight rear angle.",
+      "normalized_species": "deer",
+      "normalized_pose": "graze",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 2,
+      "id": "2X-07",
+      "expected": {
+        "species": "wolf",
+        "facing": "S",
+        "pose": "attack"
+      },
+      "image": "art/animal/archive/wolf_try2/S/attack.png",
+      "image_sha256": "bc959c1cfe94efc4aa3cc8d7faad414a2f1d2a34ea63c5db4ae985c6c818cbe3",
+      "raw_species": "Wolf / wolf-like canid",
+      "raw_pose": "Crouching or lunging toward the viewer with bent forelegs.",
+      "raw_notes": "Low frontal posture suggests aggression or a pounce, but exact action is uncertain.",
+      "normalized_species": "wolf",
+      "normalized_pose": "unsupported_crouching",
+      "species_correct": true,
+      "pose_correct": false,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First pose is not an accepted frozen synonym; later alternatives or notes do not replace it."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 2,
+      "id": "2X-08",
+      "expected": {
+        "species": "deer",
+        "facing": "S",
+        "pose": "walk"
+      },
+      "image": "art/animal/deer/S/walk.png",
+      "image_sha256": "d9637cb1009d4618b16c2bc650d04bce160cd6f3fa4835753e637b7738e102e6",
+      "raw_species": "Antlered deer / stag",
+      "raw_pose": "Walking toward the viewer.",
+      "raw_notes": "Staggered forelegs indicate a step.",
+      "normalized_species": "deer",
+      "normalized_pose": "walk",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 2,
+      "id": "2X-09",
+      "expected": {
+        "species": "wolf",
+        "facing": "S",
+        "pose": "stand"
+      },
+      "image": "art/animal/archive/wolf_try2/S/stand.png",
+      "image_sha256": "beabc36d3aa897dbf6be448b68fc628d581e8b99c48a9d1c1527220b6cb8ae65",
+      "raw_species": "Wolf / wolf-like canid",
+      "raw_pose": "Standing facing the viewer with head lowered.",
+      "raw_notes": "Legs look nearly planted; a slow step remains possible.",
+      "normalized_species": "wolf",
+      "normalized_pose": "stand",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 2,
+      "id": "2X-10",
+      "expected": {
+        "species": "deer",
+        "facing": "S",
+        "pose": "stand"
+      },
+      "image": "art/animal/deer/S/stand.png",
+      "image_sha256": "80ab5eb1d723716286c292e3619d004abb0d85cc28794c825db9761c6d007958",
+      "raw_species": "Antlered deer / stag",
+      "raw_pose": "Standing facing the viewer at a slight angle.",
+      "raw_notes": "Upright alert posture.",
+      "normalized_species": "deer",
+      "normalized_pose": "stand",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 2,
+      "id": "2X-11",
+      "expected": {
+        "species": "wolf",
+        "facing": "S",
+        "pose": "run"
+      },
+      "image": "art/animal/archive/wolf_try2/S/run.png",
+      "image_sha256": "28e2ffb8becd9d0897a6514279c55dc338cd80668a04552e7465075ccd19c3f8",
+      "raw_species": "Wolf / wolf-like canid",
+      "raw_pose": "Striding toward the viewer at a slight angle.",
+      "raw_notes": "One foreleg is extended; exact gait is uncertain.",
+      "normalized_species": "wolf",
+      "normalized_pose": "unsupported_striding",
+      "species_correct": true,
+      "pose_correct": false,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First pose is not an accepted frozen synonym; later alternatives or notes do not replace it."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 2,
+      "id": "2X-12",
+      "expected": {
+        "species": "wolf",
+        "facing": "E",
+        "pose": "stand"
+      },
+      "image": "art/animal/archive/wolf_try2/E/stand.png",
+      "image_sha256": "0a2379f384a5c527e5da2a2a3827aab05dcd815d1d9c11b6f8006f62511c77be",
+      "raw_species": "Wolf / wolf-like canid",
+      "raw_pose": "Standing in side view facing the right.",
+      "raw_notes": "Could be a dog-like animal, but wolf is the strongest reading.",
+      "normalized_species": "wolf",
+      "normalized_pose": "stand",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 2,
+      "id": "2X-13",
+      "expected": {
+        "species": "deer",
+        "facing": "E",
+        "pose": "walk"
+      },
+      "image": "art/animal/deer/E/walk.png",
+      "image_sha256": "c909cb4ae376ff59117048e101c970469200ee5e084cffa950f003a611a98690",
+      "raw_species": "Antlered deer / stag",
+      "raw_pose": "Walking toward the right.",
+      "raw_notes": "Clear separated-leg walking stride.",
+      "normalized_species": "deer",
+      "normalized_pose": "walk",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 2,
+      "id": "2X-14",
+      "expected": {
+        "species": "deer",
+        "facing": "E",
+        "pose": "dead"
+      },
+      "image": "art/animal/deer/E/dead.png",
+      "image_sha256": "951c5c28b907a666ab8bd8cfeaf03f7d415aca8d800e8ebf35f8e6d5fae1a4d0",
+      "raw_species": "Antlered deer / stag",
+      "raw_pose": "Lying sideways with head facing the right and legs stretched along the ground.",
+      "raw_notes": "Resting versus collapsed/dead cannot be determined from this frame.",
+      "normalized_species": "deer",
+      "normalized_pose": "dead",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "Explicit sideways/on-side lying or collapsed-on-side observation accepted under dead (lying); this does not establish death versus rest."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 2,
+      "id": "2X-15",
+      "expected": {
+        "species": "wolf",
+        "facing": "S",
+        "pose": "walk"
+      },
+      "image": "art/animal/archive/wolf_try2/S/walk.png",
+      "image_sha256": "f0697cc60f33ed42c7ea6e745afcae1908002a3496f672239ab1a5dbb732808a",
+      "raw_species": "Wolf / wolf-like canid",
+      "raw_pose": "Walking toward the viewer with head lowered.",
+      "raw_notes": "Forelegs overlap in a narrow stride.",
+      "normalized_species": "wolf",
+      "normalized_pose": "walk",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 2,
+      "id": "2X-16",
+      "expected": {
+        "species": "deer",
+        "facing": "S",
+        "pose": "dead"
+      },
+      "image": "art/animal/deer/S/dead.png",
+      "image_sha256": "28f134d43b1f61e9f8696bc400e9898de81e165a74f15732de03a69c7055c145",
+      "raw_species": "Antlered deer / stag",
+      "raw_pose": "Collapsed on its side, head down toward the left and legs stretched out.",
+      "raw_notes": "Strong fallen/dead visual reading, but the still alone does not prove death.",
+      "normalized_species": "deer",
+      "normalized_pose": "dead",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "Explicit sideways/on-side lying or collapsed-on-side observation accepted under dead (lying); this does not establish death versus rest."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 2,
+      "id": "2X-17",
+      "expected": {
+        "species": "wolf",
+        "facing": "E",
+        "pose": "walk"
+      },
+      "image": "art/animal/archive/wolf_try2/E/walk.png",
+      "image_sha256": "484d2ffef3695554fa0ff195d075ffd3ef151b050e16ac0906fc13f02d6e90c5",
+      "raw_species": "Wolf / wolf-like canid",
+      "raw_pose": "Walking toward the right.",
+      "raw_notes": "Side-view staggered legs indicate a stride.",
+      "normalized_species": "wolf",
+      "normalized_pose": "walk",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 2,
+      "id": "2X-18",
+      "expected": {
+        "species": "wolf",
+        "facing": "E",
+        "pose": "run"
+      },
+      "image": "art/animal/archive/wolf_try2/E/run.png",
+      "image_sha256": "0d309758ecfe0ee1957585c83e868f1065ba674021bbaf9294215802deccb3fc",
+      "raw_species": "Wolf / wolf-like canid",
+      "raw_pose": "Running toward the right with legs outstretched.",
+      "raw_notes": "Clear stretched running silhouette.",
+      "normalized_species": "wolf",
+      "normalized_pose": "run",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 2,
+      "id": "2X-19",
+      "expected": {
+        "species": "deer",
+        "facing": "S",
+        "pose": "run"
+      },
+      "image": "art/animal/deer/S/run.png",
+      "image_sha256": "fc398f03c644521da4235a91acefc0ec3a5b1d8e19edcce24585bacb21e705fc",
+      "raw_species": "Antlered deer / stag",
+      "raw_pose": "Running or bounding toward the viewer at an angle.",
+      "raw_notes": "Splayed forelegs and tilted body suggest fast motion.",
+      "normalized_species": "deer",
+      "normalized_pose": "run",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_a",
+      "scale": 2,
+      "id": "2X-20",
+      "expected": {
+        "species": "deer",
+        "facing": "S",
+        "pose": "graze"
+      },
+      "image": "art/animal/deer/S/graze.png",
+      "image_sha256": "d3d991db1746d8f2d24156d7bc87936a7e25b39d3b54adeb5dc288e98c9fe9a7",
+      "raw_species": "Antlered deer / stag",
+      "raw_pose": "Grazing with head down, viewed nearly from behind.",
+      "raw_notes": "Head is close to the ground beyond the forelegs.",
+      "normalized_species": "deer",
+      "normalized_pose": "graze",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 2,
+      "id": "2X-01",
+      "expected": {
+        "species": "deer",
+        "facing": "E",
+        "pose": "stand"
+      },
+      "image": "art/animal/deer/E/stand.png",
+      "image_sha256": "dab6b289eb5a200879b686fe3f1f8d2fa7d0861814face28db266093a6d33e1d",
+      "raw_species": "deer (antlered stag)",
+      "raw_pose": "standing still in right-facing side profile, head raised",
+      "raw_notes": "Clear antlers, long thin legs and white throat.",
+      "normalized_species": "deer",
+      "normalized_pose": "stand",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 2,
+      "id": "2X-02",
+      "expected": {
+        "species": "wolf",
+        "facing": "S",
+        "pose": "dead"
+      },
+      "image": "art/animal/archive/wolf_try2/S/dead.png",
+      "image_sha256": "d85175731ac9dd37a79393859444d762a3ee410c408f2d7458bb13a9d550a789",
+      "raw_species": "wolf",
+      "raw_pose": "low airborne bound or collapsing forward, facing left with legs gathered under the body",
+      "raw_notes": "Species is fairly clear; the drooping head and sideways legs could also indicate a falling or dying pose.",
+      "normalized_species": "wolf",
+      "normalized_pose": "unsupported_airborne_bound",
+      "species_correct": true,
+      "pose_correct": false,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First pose is not an accepted frozen synonym; later alternatives or notes do not replace it."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 2,
+      "id": "2X-03",
+      "expected": {
+        "species": "deer",
+        "facing": "E",
+        "pose": "run"
+      },
+      "image": "art/animal/deer/E/run.png",
+      "image_sha256": "b27635b1221c308604cc048d652fc288864a7687b7c9ca44bfbcd24625f135af",
+      "raw_species": "deer (antlered stag)",
+      "raw_pose": "running or leaping to the right with legs stretched fore and aft",
+      "raw_notes": "Clear elongated bounding silhouette.",
+      "normalized_species": "deer",
+      "normalized_pose": "run",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 2,
+      "id": "2X-04",
+      "expected": {
+        "species": "wolf",
+        "facing": "E",
+        "pose": "dead"
+      },
+      "image": "art/animal/archive/wolf_try2/E/dead.png",
+      "image_sha256": "a22770249a26b63c6d74404c1229af9e0e8f0475dd39196082d42fab62e771b6",
+      "raw_species": "wolf",
+      "raw_pose": "crouched very low or lying/collapsing, facing left",
+      "raw_notes": "Could instead be a compressed gallop frame; paws and ground contact are not decisive.",
+      "normalized_species": "wolf",
+      "normalized_pose": "unsupported_crouched",
+      "species_correct": true,
+      "pose_correct": false,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First pose is not an accepted frozen synonym; later alternatives or notes do not replace it."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 2,
+      "id": "2X-05",
+      "expected": {
+        "species": "wolf",
+        "facing": "E",
+        "pose": "attack"
+      },
+      "image": "art/animal/archive/wolf_try2/E/attack.png",
+      "image_sha256": "5eca849bde95696fd95ebbaf11a717cba91e50fc1e1e7a764c17f1438a94d381",
+      "raw_species": "wolf",
+      "raw_pose": "bounding or running to the right, body compact and legs bent",
+      "raw_notes": "Small side view; could be a crouch or pounce.",
+      "normalized_species": "wolf",
+      "normalized_pose": "unsupported_bounding",
+      "species_correct": true,
+      "pose_correct": false,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First pose is not an accepted frozen synonym; later alternatives or notes do not replace it."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 2,
+      "id": "2X-06",
+      "expected": {
+        "species": "deer",
+        "facing": "E",
+        "pose": "graze"
+      },
+      "image": "art/animal/deer/E/graze.png",
+      "image_sha256": "c53e5ed09a45eccfcaf45923e9ca29455dcb862a68e574b0c027314495a492c5",
+      "raw_species": "deer (antlered stag)",
+      "raw_pose": "grazing, side view with head lowered to the right",
+      "raw_notes": "The muzzle is near the ground.",
+      "normalized_species": "deer",
+      "normalized_pose": "graze",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 2,
+      "id": "2X-07",
+      "expected": {
+        "species": "wolf",
+        "facing": "S",
+        "pose": "attack"
+      },
+      "image": "art/animal/archive/wolf_try2/S/attack.png",
+      "image_sha256": "bc959c1cfe94efc4aa3cc8d7faad414a2f1d2a34ea63c5db4ae985c6c818cbe3",
+      "raw_species": "wolf",
+      "raw_pose": "crouching or pouncing toward the viewer with a low head and wide forepaws",
+      "raw_notes": "Frontal body is compressed; exact phase of motion is ambiguous.",
+      "normalized_species": "wolf",
+      "normalized_pose": "unsupported_crouching",
+      "species_correct": true,
+      "pose_correct": false,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First pose is not an accepted frozen synonym; later alternatives or notes do not replace it."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 2,
+      "id": "2X-08",
+      "expected": {
+        "species": "deer",
+        "facing": "S",
+        "pose": "walk"
+      },
+      "image": "art/animal/deer/S/walk.png",
+      "image_sha256": "d9637cb1009d4618b16c2bc650d04bce160cd6f3fa4835753e637b7738e102e6",
+      "raw_species": "deer (antlered stag)",
+      "raw_pose": "walking slowly toward the viewer with one foreleg advanced",
+      "raw_notes": "Could be a frontal standing pose with offset legs.",
+      "normalized_species": "deer",
+      "normalized_pose": "walk",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 2,
+      "id": "2X-09",
+      "expected": {
+        "species": "wolf",
+        "facing": "S",
+        "pose": "stand"
+      },
+      "image": "art/animal/archive/wolf_try2/S/stand.png",
+      "image_sha256": "beabc36d3aa897dbf6be448b68fc628d581e8b99c48a9d1c1527220b6cb8ae65",
+      "raw_species": "wolf",
+      "raw_pose": "standing facing the viewer, head slightly lowered",
+      "raw_notes": "Both forelegs appear planted; a very slow forward step is possible.",
+      "normalized_species": "wolf",
+      "normalized_pose": "stand",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 2,
+      "id": "2X-10",
+      "expected": {
+        "species": "deer",
+        "facing": "S",
+        "pose": "stand"
+      },
+      "image": "art/animal/deer/S/stand.png",
+      "image_sha256": "80ab5eb1d723716286c292e3619d004abb0d85cc28794c825db9761c6d007958",
+      "raw_species": "deer (antlered stag)",
+      "raw_pose": "standing facing the viewer",
+      "raw_notes": "Upright, nearly parallel forelegs.",
+      "normalized_species": "deer",
+      "normalized_pose": "stand",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 2,
+      "id": "2X-11",
+      "expected": {
+        "species": "wolf",
+        "facing": "S",
+        "pose": "run"
+      },
+      "image": "art/animal/archive/wolf_try2/S/run.png",
+      "image_sha256": "28e2ffb8becd9d0897a6514279c55dc338cd80668a04552e7465075ccd19c3f8",
+      "raw_species": "wolf",
+      "raw_pose": "running or trotting toward the viewer, one foreleg reaching down and forward",
+      "raw_notes": "Tail is raised to one side; speed is uncertain from a single frame.",
+      "normalized_species": "wolf",
+      "normalized_pose": "run",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 2,
+      "id": "2X-12",
+      "expected": {
+        "species": "wolf",
+        "facing": "E",
+        "pose": "stand"
+      },
+      "image": "art/animal/archive/wolf_try2/E/stand.png",
+      "image_sha256": "0a2379f384a5c527e5da2a2a3827aab05dcd815d1d9c11b6f8006f62511c77be",
+      "raw_species": "wolf",
+      "raw_pose": "standing in right-facing side profile",
+      "raw_notes": "Could be a paused walking frame, but silhouette reads as standing.",
+      "normalized_species": "wolf",
+      "normalized_pose": "stand",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 2,
+      "id": "2X-13",
+      "expected": {
+        "species": "deer",
+        "facing": "E",
+        "pose": "walk"
+      },
+      "image": "art/animal/deer/E/walk.png",
+      "image_sha256": "c909cb4ae376ff59117048e101c970469200ee5e084cffa950f003a611a98690",
+      "raw_species": "deer (antlered stag)",
+      "raw_pose": "walking to the right",
+      "raw_notes": "One foreleg and a hind leg are advanced; body remains upright.",
+      "normalized_species": "deer",
+      "normalized_pose": "walk",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 2,
+      "id": "2X-14",
+      "expected": {
+        "species": "deer",
+        "facing": "E",
+        "pose": "dead"
+      },
+      "image": "art/animal/deer/E/dead.png",
+      "image_sha256": "951c5c28b907a666ab8bd8cfeaf03f7d415aca8d800e8ebf35f8e6d5fae1a4d0",
+      "raw_species": "deer (antlered stag)",
+      "raw_pose": "lying or falling onto its side, legs extended to the right",
+      "raw_notes": "Head is raised and legs stretch forward, so a low leap is an alternative; reads more like a fallen deer.",
+      "normalized_species": "deer",
+      "normalized_pose": "dead",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "Explicit sideways/on-side lying or collapsed-on-side observation accepted under dead (lying); this does not establish death versus rest."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 2,
+      "id": "2X-15",
+      "expected": {
+        "species": "wolf",
+        "facing": "S",
+        "pose": "walk"
+      },
+      "image": "art/animal/archive/wolf_try2/S/walk.png",
+      "image_sha256": "f0697cc60f33ed42c7ea6e745afcae1908002a3496f672239ab1a5dbb732808a",
+      "raw_species": "wolf",
+      "raw_pose": "walking or trotting toward the viewer with one foreleg extended",
+      "raw_notes": "Frontal gait is clear; walk versus trot is uncertain.",
+      "normalized_species": "wolf",
+      "normalized_pose": "walk",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 2,
+      "id": "2X-16",
+      "expected": {
+        "species": "deer",
+        "facing": "S",
+        "pose": "dead"
+      },
+      "image": "art/animal/deer/S/dead.png",
+      "image_sha256": "28f134d43b1f61e9f8696bc400e9898de81e165a74f15732de03a69c7055c145",
+      "raw_species": "deer (antlered stag)",
+      "raw_pose": "lying on its side, apparently dead or incapacitated, head to the left",
+      "raw_notes": "Head and antlers rest low; legs are splayed sideways.",
+      "normalized_species": "deer",
+      "normalized_pose": "dead",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "Explicit sideways/on-side lying or collapsed-on-side observation accepted under dead (lying); this does not establish death versus rest."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 2,
+      "id": "2X-17",
+      "expected": {
+        "species": "wolf",
+        "facing": "E",
+        "pose": "walk"
+      },
+      "image": "art/animal/archive/wolf_try2/E/walk.png",
+      "image_sha256": "484d2ffef3695554fa0ff195d075ffd3ef151b050e16ac0906fc13f02d6e90c5",
+      "raw_species": "wolf",
+      "raw_pose": "walking to the right with one foreleg raised",
+      "raw_notes": "A slow trot is possible.",
+      "normalized_species": "wolf",
+      "normalized_pose": "walk",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 2,
+      "id": "2X-18",
+      "expected": {
+        "species": "wolf",
+        "facing": "E",
+        "pose": "run"
+      },
+      "image": "art/animal/archive/wolf_try2/E/run.png",
+      "image_sha256": "0d309758ecfe0ee1957585c83e868f1065ba674021bbaf9294215802deccb3fc",
+      "raw_species": "wolf",
+      "raw_pose": "running or leaping to the right with legs extended",
+      "raw_notes": "Clear horizontal bounding silhouette.",
+      "normalized_species": "wolf",
+      "normalized_pose": "run",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 2,
+      "id": "2X-19",
+      "expected": {
+        "species": "deer",
+        "facing": "S",
+        "pose": "run"
+      },
+      "image": "art/animal/deer/S/run.png",
+      "image_sha256": "fc398f03c644521da4235a91acefc0ec3a5b1d8e19edcce24585bacb21e705fc",
+      "raw_species": "deer (antlered stag)",
+      "raw_pose": "running diagonally toward the viewer and right",
+      "raw_notes": "Forelegs extend forward and apart.",
+      "normalized_species": "deer",
+      "normalized_pose": "run",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 2,
+      "id": "2X-20",
+      "expected": {
+        "species": "deer",
+        "facing": "S",
+        "pose": "graze"
+      },
+      "image": "art/animal/deer/S/graze.png",
+      "image_sha256": "d3d991db1746d8f2d24156d7bc87936a7e25b39d3b54adeb5dc288e98c9fe9a7",
+      "raw_species": "deer (antlered stag)",
+      "raw_pose": "grazing with head lowered, viewed nearly from the front",
+      "raw_notes": "The back and rump are more prominent than the lowered face.",
+      "normalized_species": "deer",
+      "normalized_pose": "graze",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 1,
+      "id": "1X-01",
+      "expected": {
+        "species": "deer",
+        "facing": "S",
+        "pose": "dead"
+      },
+      "image": "art/animal/deer/S/dead.png",
+      "image_sha256": "28f134d43b1f61e9f8696bc400e9898de81e165a74f15732de03a69c7055c145",
+      "raw_species": "deer (antlered stag)",
+      "raw_pose": "lying on its side, apparently dead or incapacitated, head to the left",
+      "raw_notes": "Antlers and head are low against the ground; feet extend sideways.",
+      "normalized_species": "deer",
+      "normalized_pose": "dead",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "Explicit sideways/on-side lying or collapsed-on-side observation accepted under dead (lying); this does not establish death versus rest."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 1,
+      "id": "1X-02",
+      "expected": {
+        "species": "deer",
+        "facing": "S",
+        "pose": "walk"
+      },
+      "image": "art/animal/deer/S/walk.png",
+      "image_sha256": "d9637cb1009d4618b16c2bc650d04bce160cd6f3fa4835753e637b7738e102e6",
+      "raw_species": "deer (antlered stag)",
+      "raw_pose": "walking toward the viewer or standing with one foreleg advanced",
+      "raw_notes": "Species is clear; the small legs do not establish movement confidently.",
+      "normalized_species": "deer",
+      "normalized_pose": "walk",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 1,
+      "id": "1X-03",
+      "expected": {
+        "species": "deer",
+        "facing": "E",
+        "pose": "walk"
+      },
+      "image": "art/animal/deer/E/walk.png",
+      "image_sha256": "c909cb4ae376ff59117048e101c970469200ee5e084cffa950f003a611a98690",
+      "raw_species": "deer (antlered stag)",
+      "raw_pose": "walking to the right",
+      "raw_notes": "Upright body and spaced legs indicate a walking stride.",
+      "normalized_species": "deer",
+      "normalized_pose": "walk",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 1,
+      "id": "1X-04",
+      "expected": {
+        "species": "deer",
+        "facing": "E",
+        "pose": "run"
+      },
+      "image": "art/animal/deer/E/run.png",
+      "image_sha256": "b27635b1221c308604cc048d652fc288864a7687b7c9ca44bfbcd24625f135af",
+      "raw_species": "deer (antlered stag)",
+      "raw_pose": "running or leaping to the right",
+      "raw_notes": "Long, extended fore and hind legs.",
+      "normalized_species": "deer",
+      "normalized_pose": "run",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 1,
+      "id": "1X-05",
+      "expected": {
+        "species": "wolf",
+        "facing": "E",
+        "pose": "walk"
+      },
+      "image": "art/animal/archive/wolf_try2/E/walk.png",
+      "image_sha256": "484d2ffef3695554fa0ff195d075ffd3ef151b050e16ac0906fc13f02d6e90c5",
+      "raw_species": "wolf",
+      "raw_pose": "walking to the right",
+      "raw_notes": "A dog is a possible species reading at this size; one foreleg seems lifted.",
+      "normalized_species": "wolf",
+      "normalized_pose": "walk",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 1,
+      "id": "1X-06",
+      "expected": {
+        "species": "wolf",
+        "facing": "E",
+        "pose": "run"
+      },
+      "image": "art/animal/archive/wolf_try2/E/run.png",
+      "image_sha256": "0d309758ecfe0ee1957585c83e868f1065ba674021bbaf9294215802deccb3fc",
+      "raw_species": "wolf",
+      "raw_pose": "running or bounding to the right",
+      "raw_notes": "The extended body and legs read as a run; wolf versus dog is less certain.",
+      "normalized_species": "wolf",
+      "normalized_pose": "run",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 1,
+      "id": "1X-07",
+      "expected": {
+        "species": "wolf",
+        "facing": "S",
+        "pose": "dead"
+      },
+      "image": "art/animal/archive/wolf_try2/S/dead.png",
+      "image_sha256": "d85175731ac9dd37a79393859444d762a3ee410c408f2d7458bb13a9d550a789",
+      "raw_species": "wolf",
+      "raw_pose": "falling or lying low facing left, legs bent sideways",
+      "raw_notes": "Could be an airborne gallop frame. The small silhouette does not clearly show ground contact.",
+      "normalized_species": "wolf",
+      "normalized_pose": "unsupported_falling",
+      "species_correct": true,
+      "pose_correct": false,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First pose is not an accepted frozen synonym; later alternatives or notes do not replace it."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 1,
+      "id": "1X-08",
+      "expected": {
+        "species": "deer",
+        "facing": "E",
+        "pose": "dead"
+      },
+      "image": "art/animal/deer/E/dead.png",
+      "image_sha256": "951c5c28b907a666ab8bd8cfeaf03f7d415aca8d800e8ebf35f8e6d5fae1a4d0",
+      "raw_species": "deer (antlered stag)",
+      "raw_pose": "lying or falling onto its side, head and legs toward the right",
+      "raw_notes": "A low forward leap is possible; the folded hindquarters make it read as downed.",
+      "normalized_species": "deer",
+      "normalized_pose": "dead",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "Explicit sideways/on-side lying or collapsed-on-side observation accepted under dead (lying); this does not establish death versus rest."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 1,
+      "id": "1X-09",
+      "expected": {
+        "species": "wolf",
+        "facing": "S",
+        "pose": "walk"
+      },
+      "image": "art/animal/archive/wolf_try2/S/walk.png",
+      "image_sha256": "f0697cc60f33ed42c7ea6e745afcae1908002a3496f672239ab1a5dbb732808a",
+      "raw_species": "wolf",
+      "raw_pose": "walking or trotting toward the viewer",
+      "raw_notes": "One front leg projects downward. Species could also read as a dog.",
+      "normalized_species": "wolf",
+      "normalized_pose": "walk",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 1,
+      "id": "1X-10",
+      "expected": {
+        "species": "deer",
+        "facing": "S",
+        "pose": "graze"
+      },
+      "image": "art/animal/deer/S/graze.png",
+      "image_sha256": "d3d991db1746d8f2d24156d7bc87936a7e25b39d3b54adeb5dc288e98c9fe9a7",
+      "raw_species": "deer",
+      "raw_pose": "grazing with head lowered, viewed nearly from the front",
+      "raw_notes": "Antlers are less obvious at this scale; body and long legs indicate deer.",
+      "normalized_species": "deer",
+      "normalized_pose": "graze",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 1,
+      "id": "1X-11",
+      "expected": {
+        "species": "deer",
+        "facing": "S",
+        "pose": "stand"
+      },
+      "image": "art/animal/deer/S/stand.png",
+      "image_sha256": "80ab5eb1d723716286c292e3619d004abb0d85cc28794c825db9761c6d007958",
+      "raw_species": "deer (antlered stag)",
+      "raw_pose": "standing facing the viewer",
+      "raw_notes": "A slight forward step remains possible.",
+      "normalized_species": "deer",
+      "normalized_pose": "stand",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 1,
+      "id": "1X-12",
+      "expected": {
+        "species": "deer",
+        "facing": "E",
+        "pose": "stand"
+      },
+      "image": "art/animal/deer/E/stand.png",
+      "image_sha256": "dab6b289eb5a200879b686fe3f1f8d2fa7d0861814face28db266093a6d33e1d",
+      "raw_species": "deer (antlered stag)",
+      "raw_pose": "standing in right-facing side profile",
+      "raw_notes": "Head raised and all legs nearly vertical.",
+      "normalized_species": "deer",
+      "normalized_pose": "stand",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 1,
+      "id": "1X-13",
+      "expected": {
+        "species": "deer",
+        "facing": "S",
+        "pose": "run"
+      },
+      "image": "art/animal/deer/S/run.png",
+      "image_sha256": "fc398f03c644521da4235a91acefc0ec3a5b1d8e19edcce24585bacb21e705fc",
+      "raw_species": "deer (antlered stag)",
+      "raw_pose": "running diagonally toward the viewer and right",
+      "raw_notes": "Wide, extended legs make the motion clear.",
+      "normalized_species": "deer",
+      "normalized_pose": "run",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 1,
+      "id": "1X-14",
+      "expected": {
+        "species": "wolf",
+        "facing": "E",
+        "pose": "attack"
+      },
+      "image": "art/animal/archive/wolf_try2/E/attack.png",
+      "image_sha256": "5eca849bde95696fd95ebbaf11a717cba91e50fc1e1e7a764c17f1438a94d381",
+      "raw_species": "wolf",
+      "raw_pose": "crouched or bounding to the right",
+      "raw_notes": "Tiny compact silhouette; cannot confidently distinguish a pounce, run or low crouch.",
+      "normalized_species": "wolf",
+      "normalized_pose": "unsupported_crouched",
+      "species_correct": true,
+      "pose_correct": false,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First pose is not an accepted frozen synonym; later alternatives or notes do not replace it."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 1,
+      "id": "1X-15",
+      "expected": {
+        "species": "wolf",
+        "facing": "S",
+        "pose": "attack"
+      },
+      "image": "art/animal/archive/wolf_try2/S/attack.png",
+      "image_sha256": "bc959c1cfe94efc4aa3cc8d7faad414a2f1d2a34ea63c5db4ae985c6c818cbe3",
+      "raw_species": "wolf",
+      "raw_pose": "crouching or pouncing toward the viewer",
+      "raw_notes": "Wide forepaws and low head; could be a compressed running frame.",
+      "normalized_species": "wolf",
+      "normalized_pose": "unsupported_crouching",
+      "species_correct": true,
+      "pose_correct": false,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First pose is not an accepted frozen synonym; later alternatives or notes do not replace it."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 1,
+      "id": "1X-16",
+      "expected": {
+        "species": "wolf",
+        "facing": "S",
+        "pose": "stand"
+      },
+      "image": "art/animal/archive/wolf_try2/S/stand.png",
+      "image_sha256": "beabc36d3aa897dbf6be448b68fc628d581e8b99c48a9d1c1527220b6cb8ae65",
+      "raw_species": "wolf",
+      "raw_pose": "standing facing the viewer with head lowered",
+      "raw_notes": "Both forelegs seem planted; dog is an alternative species reading.",
+      "normalized_species": "wolf",
+      "normalized_pose": "stand",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 1,
+      "id": "1X-17",
+      "expected": {
+        "species": "wolf",
+        "facing": "E",
+        "pose": "dead"
+      },
+      "image": "art/animal/archive/wolf_try2/E/dead.png",
+      "image_sha256": "a22770249a26b63c6d74404c1229af9e0e8f0475dd39196082d42fab62e771b6",
+      "raw_species": "wolf",
+      "raw_pose": "lying or crouched very low facing left",
+      "raw_notes": "Could be a compressed bound or a dying/fallen pose. Exact action remains ambiguous.",
+      "normalized_species": "wolf",
+      "normalized_pose": "unsupported_lying_without_side",
+      "species_correct": true,
+      "pose_correct": false,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First pose is not an accepted frozen synonym; later alternatives or notes do not replace it."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 1,
+      "id": "1X-18",
+      "expected": {
+        "species": "wolf",
+        "facing": "S",
+        "pose": "run"
+      },
+      "image": "art/animal/archive/wolf_try2/S/run.png",
+      "image_sha256": "28e2ffb8becd9d0897a6514279c55dc338cd80668a04552e7465075ccd19c3f8",
+      "raw_species": "wolf",
+      "raw_pose": "trotting or running toward the viewer",
+      "raw_notes": "One foreleg extends forward and the tail is raised to the side.",
+      "normalized_species": "wolf",
+      "normalized_pose": "unsupported_trotting",
+      "species_correct": true,
+      "pose_correct": false,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First pose is not an accepted frozen synonym; later alternatives or notes do not replace it."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 1,
+      "id": "1X-19",
+      "expected": {
+        "species": "wolf",
+        "facing": "E",
+        "pose": "stand"
+      },
+      "image": "art/animal/archive/wolf_try2/E/stand.png",
+      "image_sha256": "0a2379f384a5c527e5da2a2a3827aab05dcd815d1d9c11b6f8006f62511c77be",
+      "raw_species": "wolf",
+      "raw_pose": "standing in right-facing side profile",
+      "raw_notes": "Reads as a wild canine; a dog remains possible at this size.",
+      "normalized_species": "wolf",
+      "normalized_pose": "stand",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Qualified wolf-like canid is resemblance, not an explicit wolf assertion; first explicit wolf is accepted.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    },
+    {
+      "reviewer": "animal_b",
+      "scale": 1,
+      "id": "1X-20",
+      "expected": {
+        "species": "deer",
+        "facing": "E",
+        "pose": "graze"
+      },
+      "image": "art/animal/deer/E/graze.png",
+      "image_sha256": "c53e5ed09a45eccfcaf45923e9ca29455dcb862a68e574b0c027314495a492c5",
+      "raw_species": "deer (antlered stag)",
+      "raw_pose": "grazing in side profile with head lowered to the right",
+      "raw_notes": "The bent neck and ground-facing muzzle read clearly.",
+      "normalized_species": "deer",
+      "normalized_pose": "graze",
+      "species_correct": true,
+      "pose_correct": true,
+      "species_rule": "Explicit deer/stag identification.",
+      "pose_rule": "First asserted pose matches the frozen synonym class."
+    }
+  ],
+  "decision_notes": [
+    "Apply every reviewer/species/scale denominator separately; no aggregate substitution.",
+    "Strict frozen synonym interpretation: bounding, striding, trotting, falling, crouching, and vague facing/moving do not silently expand whitelist.",
+    "A1 wolf-like canid is not treated as an explicit wolf species assertion. This is a protocol-language limitation; reviewer recognized canid resemblance.",
+    "Even crediting all qualified wolf-like species and all non-attack motion synonyms, wolf attack/dead distinctions remain weak and no new pass is claimed.",
+    "Numeric animal negative-control calibration FAIL remains independent of semantic review.",
+    "Qualified wolf-like recognition sensitivity: A1x wolf species10/10, pose4/10 unchanged, groupFAIL."
+  ],
+  "remaining_retry_budget": {
+    "wolf": 1,
+    "deer": 2
+  },
+  "retry_recommendation": "If leader authorizes the last wolf sheet try, emphasize open mouth enlarged at final scale, lunging forepaws, unmistakably side-lying limp dead posture, and separated frontal stand/walk/run silhouettes. Keep one-scale geometry and no pixel surgery. Two new no-key reviewers would be required; numeric control failure is not fixed by this retry.",
+  "qualified_species_sensitivity": {
+    "rule": "Treat first species phrase Wolf-like canid as qualified recognition of intended wolf; retain qualification and dog ambiguity. This supplementary reading does not replace strict frozen scoring.",
+    "animal_a_1x_wolf": {
+      "strict_species_correct": 0,
+      "qualified_species_correct": 10,
+      "denominator": 10,
+      "strict_pose_correct": 4,
+      "semantic_group_pass": false
+    },
+    "conclusion": "Species is qualified wolf recognition, not total species unrecognizability. Pose FAIL remains."
+  }
+}

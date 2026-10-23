@@ -1,0 +1,77 @@
+{
+  "id": "wall_log_straight",
+  "path": "art/style05/env1/built/wall_log_straight.png",
+  "width": 256,
+  "height": 64,
+  "footprint": [
+    4,
+    1
+  ],
+  "family": "buildings",
+  "attempts": 3,
+  "selected_attempt": 3,
+  "status": "SEAM_FAIL_CANDIDATE",
+  "raw": "/Users/rexxa/work/artenv1-data/built/wall_log_straight_try3_raw.png",
+  "raw_sha256": "7f97189eaa78cdae96d0776cd742feaa933d8c05da12cb69448a425981d02a0d",
+  "sha256": "bdec79f2f6e680842e8a8da40edc15484c11a3dab2b5b1bb6defa2a5850c4dea",
+  "metadata": "/Users/rexxa/work/artenv1-data/built/wall_log_straight_try3.json",
+  "metadata_sha256": "428de2b0bd39559b7ba1acab44e4c653c98344ed9abf31bf31b798a925d51de9",
+  "numeric": {
+    "candidate": "/Users/rexxa/work/artenv1-data/built/wall_log_straight_try3_raw.png",
+    "sha256": "7f97189eaa78cdae96d0776cd742feaa933d8c05da12cb69448a425981d02a0d",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.2790174002047083,
+      "saturation_q25": 0.4244345421086264,
+      "saturation_q75": 0.5298873556693223,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.018802394748029645,
+      "foreground_pixels": 5985
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "operations": [
+    "crop alpha>=128 bounds plus2px fringe (0, 558, 1254, 695); no alpha edits",
+    "Lanczos contain (252, 28) offset(2, 18)"
+  ],
+  "tone": null,
+  "seam": null,
+  "bytes": 19612,
+  "model": {
+    "scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "sentence": "Matches the hand-drawn ink-and-wash look, outline weight, wood texture detail, and warm earth palette with the same upper-left lighting and soft shadows as the reference images."
+    },
+    "review_id": "judge_buildings_a",
+    "candidate_raw_sha256": "7f97189eaa78cdae96d0776cd742feaa933d8c05da12cb69448a425981d02a0d",
+    "scorecard_sha256": "46c9b583aea782f0a65ee5b9c85fb814fe5420667c05d3b0bf36def31b85f409"
+  },
+  "physical_footprint": [
+    4,
+    1
+  ],
+  "style_pass": true,
+  "reading": "Continuous lashed bark spine reads as a low log wall; generated end texture does not exactly match.",
+  "semantic_pass": true,
+  "required_wrap_pass": true,
+  "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+}

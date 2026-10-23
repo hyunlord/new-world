@@ -1,0 +1,145 @@
+{
+  "status": "PREVIEW_VERIFIED_NOT_FROZEN",
+  "round0_archive_manifest_sha256": "9fdee5b20747df94cfa41b57b01ed5122928b420379c800f592bd4576b54bc81",
+  "diff_mask_note": "Union of new 14px glyph and old ink stroke fringe: old width-2 diagonal reaches one pixel left of its nominal origin. Initial narrower diagnostic mask flagged that one removed pixel; no raster repair was required.",
+  "immutable_inputs": [
+    {
+      "path": "art/compositor/scenes/scene_day6_night.json",
+      "sha256": "4b9b6a24cf96f5c44c7b27b6e4becc0ac7bb8bd692a7aa0a5dbf567f67fd624f"
+    },
+    {
+      "path": "art/compositor/scenes/scene_winter_noon.json",
+      "sha256": "243ace38a652ffcb4a02708b8fac6a298968c871629fa85288b3302081eaf139"
+    },
+    {
+      "path": "art/compositor/scenes/native_layers.json",
+      "sha256": "25fe3c959ea05e5de0f0a80fe842be85e0e380623934e669024d249c5ee851b7"
+    },
+    {
+      "path": "art/compositor/scenes/scene_day6_noon.json",
+      "sha256": "7b33293b070f15dddb5f7fc36f4e3762f7ecc0cac066cf67c3f2563ff7c5f346"
+    },
+    {
+      "path": "art/compositor/scenes/m5_overlay.json",
+      "sha256": "7632324050843df7ad4e4c1213fd4e54c656052a100669a4e959f1852335b317"
+    },
+    {
+      "path": "art/compositor/top_colours.json",
+      "sha256": "7276251637b93a92853a09856f1731c78a31b9113fedcbb6f3e8a283c0f857eb"
+    },
+    {
+      "path": "docs/v8/artenv1/built_assets.json",
+      "sha256": "c586d83d5178f55d2c9922c3ac757469a0aba4c33b034a592105f16c17231e2b"
+    },
+    {
+      "path": "docs/v8/artenv1/items_manifest.json",
+      "sha256": "40255673dbc2c6521b319f4de1ec5e8c5a929cb7dc2a0fbea69061aadaadccb4"
+    },
+    {
+      "path": "art/animal/wolf/MANIFEST.json",
+      "sha256": "7f8f1feb24956f1841062197f632c4554a8995c45ff0a94cd53ddad06e1e8189"
+    },
+    {
+      "path": "art/animal/deer/MANIFEST.json",
+      "sha256": "5026df441fb3eca6f1ed001ec88c0f7affbb748f8bcae02076336f9d86206f40"
+    }
+  ],
+  "previews": [
+    {
+      "image": "/Users/rexxa/work/artenv1-data/compositor/round1_preview/scene_day6_night_night_1x_figures.png",
+      "sha256": "0519e5a57927b3203652d5b69c501e7c6755da553af1d5fd81cd42ac75b1f3e6",
+      "changed_pixels": 3846,
+      "changes_outside_registered_context_glyph_footer": 0,
+      "source_and_actor_metadata_unchanged": true,
+      "declared_context": [
+        {
+          "asset": "stump",
+          "declared": true,
+          "source": "declared_activity_context",
+          "scale": 0.5,
+          "status": "accepted under judge v2, TRIAL2b",
+          "bbox": [
+            486,
+            689,
+            518,
+            721
+          ]
+        }
+      ],
+      "bytes": 1244946
+    },
+    {
+      "image": "/Users/rexxa/work/artenv1-data/compositor/round1_preview/scene_day6_night_night_half_lod.png",
+      "sha256": "fd4a83e9e0efca7c914b35e854b78d525ee7da6f0b042203650f768b5c49bddc",
+      "changed_pixels": 3502,
+      "changes_outside_registered_context_glyph_footer": 0,
+      "source_and_actor_metadata_unchanged": true,
+      "declared_context": [],
+      "bytes": 734343
+    },
+    {
+      "image": "/Users/rexxa/work/artenv1-data/compositor/round1_preview/scene_day6_noon_day_1x_figures.png",
+      "sha256": "abe826694acfc6a54aa1e5581cc849ffaa61a7063e49d91dac9de94128a04129",
+      "changed_pixels": 3856,
+      "changes_outside_registered_context_glyph_footer": 0,
+      "source_and_actor_metadata_unchanged": true,
+      "declared_context": [
+        {
+          "asset": "stump",
+          "declared": true,
+          "source": "declared_activity_context",
+          "scale": 0.5,
+          "status": "accepted under judge v2, TRIAL2b",
+          "bbox": [
+            486,
+            689,
+            518,
+            721
+          ]
+        }
+      ],
+      "bytes": 839302
+    },
+    {
+      "image": "/Users/rexxa/work/artenv1-data/compositor/round1_preview/scene_day6_noon_day_half_lod.png",
+      "sha256": "1e0df4b75a8a1905b4997fd2eecf5fb0f529e5eb350e9b46ba162b74bbb07b05",
+      "changed_pixels": 3502,
+      "changes_outside_registered_context_glyph_footer": 0,
+      "source_and_actor_metadata_unchanged": true,
+      "declared_context": [],
+      "bytes": 636612
+    },
+    {
+      "image": "/Users/rexxa/work/artenv1-data/compositor/round1_preview/scene_winter_noon_winter_1x_figures.png",
+      "sha256": "b409b61c15eeeac0302e064368418e578c4d80e72983f1959c9e9ade4dd0f73c",
+      "changed_pixels": 3871,
+      "changes_outside_registered_context_glyph_footer": 0,
+      "source_and_actor_metadata_unchanged": true,
+      "declared_context": [
+        {
+          "asset": "stump",
+          "declared": true,
+          "source": "declared_activity_context",
+          "scale": 0.5,
+          "status": "accepted under judge v2, TRIAL2b",
+          "bbox": [
+            486,
+            689,
+            518,
+            721
+          ]
+        }
+      ],
+      "bytes": 828390
+    },
+    {
+      "image": "/Users/rexxa/work/artenv1-data/compositor/round1_preview/scene_winter_noon_winter_half_lod.png",
+      "sha256": "8225ab76fa6c103a8f4d0c7e3030ebeece8fea0b077d3374e0df0f13a00f05ea",
+      "changed_pixels": 3502,
+      "changes_outside_registered_context_glyph_footer": 0,
+      "source_and_actor_metadata_unchanged": true,
+      "declared_context": [],
+      "bytes": 631498
+    }
+  ]
+}

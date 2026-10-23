@@ -1,0 +1,140 @@
+{
+  "reviewer": "b",
+  "image_path": "/Users/rexxa/work/new-world-art-prod/art/style05/env1/items/items_32px_blind.png",
+  "started_at": "2026-10-23 06:48:23 UTC",
+  "ended_at": "2026-10-23 06:49:23 UTC",
+  "answers": [
+    {
+      "id": 1,
+      "name": "Single cut log",
+      "confidence": "high",
+      "notes": "Short light-brown piece of wood with a cut end."
+    },
+    {
+      "id": 2,
+      "name": "Stone axe",
+      "confidence": "high",
+      "notes": "Grey head on a diagonal wooden handle; small enough that the head material is less certain than the tool type."
+    },
+    {
+      "id": 3,
+      "name": "Spear",
+      "confidence": "medium",
+      "notes": "Very thin long shaft with a dark pointed end; could also read as an arrow."
+    },
+    {
+      "id": 4,
+      "name": "Stretched orange animal hide",
+      "confidence": "high",
+      "notes": "Four projecting corners and a broad central skin surface."
+    },
+    {
+      "id": 5,
+      "name": "Small brown animal pelt",
+      "confidence": "medium",
+      "notes": "Narrow furry-looking hide silhouette; species and condition are unreadable."
+    },
+    {
+      "id": 6,
+      "name": "Folded brown hide or cloth",
+      "confidence": "low",
+      "notes": "Lumpy triangular silhouette with pale lines; also resembles a wicker or fiber bundle. Cannot confidently identify its material at native size."
+    },
+    {
+      "id": 7,
+      "name": "Stretched grey animal hide",
+      "confidence": "high",
+      "notes": "Narrow centre and four spread extremities; distinct hide outline."
+    },
+    {
+      "id": 8,
+      "name": "Reddish mineral lump",
+      "confidence": "medium",
+      "notes": "Orange-red irregular clump; could be clay or ore, with no decisive material cue."
+    },
+    {
+      "id": 9,
+      "name": "Small grey-beige bowl",
+      "confidence": "high",
+      "notes": "Open round vessel; could be stone or pale ceramic."
+    },
+    {
+      "id": 10,
+      "name": "Terracotta pot",
+      "confidence": "high",
+      "notes": "Round reddish vessel with a dark open mouth and small side protrusions."
+    },
+    {
+      "id": 11,
+      "name": "Water-filled terracotta pot",
+      "confidence": "high",
+      "notes": "Similar vessel to ID 10 with a clearly blue interior."
+    },
+    {
+      "id": 12,
+      "name": "Raw meat on a bone",
+      "confidence": "high",
+      "notes": "Red flesh with a small pale bone projecting to the right."
+    },
+    {
+      "id": 13,
+      "name": "Chipped stone chunk",
+      "confidence": "medium",
+      "notes": "Pale irregular tapered rock with facets; could be a rough tool head."
+    },
+    {
+      "id": 14,
+      "name": "Bundle of logs",
+      "confidence": "high",
+      "notes": "Several parallel bark-textured lengths with cut ends."
+    },
+    {
+      "id": 15,
+      "name": "Pile of chopped wood",
+      "confidence": "high",
+      "notes": "Short brown pieces with bright cut faces."
+    },
+    {
+      "id": 16,
+      "name": "Stack of wooden planks",
+      "confidence": "medium",
+      "notes": "Rectangular stack of many horizontal wood-like lengths; could also be a small stick mat or rack."
+    },
+    {
+      "id": 17,
+      "name": "Pile of rounded stones",
+      "confidence": "high",
+      "notes": "Several distinct rounded grey-tan rocks."
+    },
+    {
+      "id": 18,
+      "name": "Pile of angular stone fragments",
+      "confidence": "high",
+      "notes": "Sharp pale facets distinguish it from the rounded stones in ID 17."
+    },
+    {
+      "id": 19,
+      "name": "Flint blade or stone point",
+      "confidence": "medium",
+      "notes": "Narrow pale chipped silhouette with pointed ends; exact tool use is unclear."
+    },
+    {
+      "id": 20,
+      "name": "Small stone hatchet",
+      "confidence": "high",
+      "notes": "Pale head on a long diagonal wooden handle; specific distinction from ID 2 is unclear."
+    },
+    {
+      "id": 21,
+      "name": "Stretched pale animal hide",
+      "confidence": "high",
+      "notes": "Broad tan pelt with projecting corners and irregular furry edges."
+    },
+    {
+      "id": 22,
+      "name": "Bowl of berries",
+      "confidence": "high",
+      "notes": "Round container filled with small red, dark, and yellow-orange dots; individual food type is not certain."
+    }
+  ]
+}

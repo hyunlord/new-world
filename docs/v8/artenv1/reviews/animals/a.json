@@ -1,0 +1,299 @@
+{
+  "reviewer": "animal_a",
+  "boards": [
+    {
+      "scale": 1,
+      "started_at": "2026-10-23 06:33:20 UTC",
+      "answers": [
+        {
+          "id": "1X-01",
+          "species": "Antlered deer / stag",
+          "pose": "Lying on its side with head low toward the left and legs extended.",
+          "confidence": "high species; medium pose",
+          "notes": "Looks collapsed or resting; still image does not distinguish death from rest."
+        },
+        {
+          "id": "1X-02",
+          "species": "Antlered deer / stag",
+          "pose": "Standing facing the viewer.",
+          "confidence": "high",
+          "notes": "Forelegs overlap slightly; no clear motion."
+        },
+        {
+          "id": "1X-03",
+          "species": "Antlered deer / stag",
+          "pose": "Walking or trotting toward the right in side view.",
+          "confidence": "high species; medium pose",
+          "notes": "Separated legs suggest a stride; exact gait is uncertain."
+        },
+        {
+          "id": "1X-04",
+          "species": "Antlered deer / stag",
+          "pose": "Bounding or running toward the right.",
+          "confidence": "high",
+          "notes": "Extended body and outstretched legs read as fast movement."
+        },
+        {
+          "id": "1X-05",
+          "species": "Wolf-like canid",
+          "pose": "Walking toward the right in side view.",
+          "confidence": "medium-high",
+          "notes": "Small scale makes wolf versus dog uncertain."
+        },
+        {
+          "id": "1X-06",
+          "species": "Wolf-like canid",
+          "pose": "Running toward the left with legs stretched apart.",
+          "confidence": "medium",
+          "notes": "Direction and gait are less certain at this size."
+        },
+        {
+          "id": "1X-07",
+          "species": "Wolf-like canid",
+          "pose": "Very low or collapsed sideways, head toward the left.",
+          "confidence": "medium",
+          "notes": "Could be lying down or crouching; death is not visually established."
+        },
+        {
+          "id": "1X-08",
+          "species": "Antlered deer / stag",
+          "pose": "Lying down sideways, head toward the right.",
+          "confidence": "high species; medium pose",
+          "notes": "Legs appear folded or extended along the ground; rest versus collapse uncertain."
+        },
+        {
+          "id": "1X-09",
+          "species": "Wolf-like canid",
+          "pose": "Moving toward the viewer with head lowered.",
+          "confidence": "medium",
+          "notes": "Overlapping legs make walking versus standing uncertain."
+        },
+        {
+          "id": "1X-10",
+          "species": "Deer",
+          "pose": "Grazing or sniffing the ground, viewed from behind at an angle.",
+          "confidence": "high species; medium-high pose",
+          "notes": "Head is low and body faces away; antlers are difficult to resolve."
+        },
+        {
+          "id": "1X-11",
+          "species": "Antlered deer / stag",
+          "pose": "Standing alert facing the viewer, slightly angled.",
+          "confidence": "high",
+          "notes": "No obvious action beyond standing."
+        },
+        {
+          "id": "1X-12",
+          "species": "Antlered deer / stag",
+          "pose": "Standing in side view facing the right.",
+          "confidence": "high",
+          "notes": "Legs read as planted."
+        },
+        {
+          "id": "1X-13",
+          "species": "Antlered deer / stag",
+          "pose": "Running or bounding toward the viewer at an angle.",
+          "confidence": "high species; medium-high pose",
+          "notes": "Splayed legs suggest motion rather than a stationary stance."
+        },
+        {
+          "id": "1X-14",
+          "species": "Wolf-like canid",
+          "pose": "Low running or crouched stride toward the right.",
+          "confidence": "medium",
+          "notes": "Small silhouette makes the gait difficult to distinguish from a crouch."
+        },
+        {
+          "id": "1X-15",
+          "species": "Wolf-like canid",
+          "pose": "Facing the viewer with body low and head lowered.",
+          "confidence": "medium",
+          "notes": "Could be crouching or moving forward; exact action is ambiguous."
+        },
+        {
+          "id": "1X-16",
+          "species": "Wolf-like canid",
+          "pose": "Facing the viewer with head low and forelegs extended downward.",
+          "confidence": "medium",
+          "notes": "Standing versus walking is unclear."
+        },
+        {
+          "id": "1X-17",
+          "species": "Wolf-like canid",
+          "pose": "Lying very low sideways with head toward the left.",
+          "confidence": "medium",
+          "notes": "Could also be a crouch; rest versus collapse cannot be determined."
+        },
+        {
+          "id": "1X-18",
+          "species": "Wolf-like canid",
+          "pose": "Walking toward the viewer at a slight angle.",
+          "confidence": "medium-high species; medium pose",
+          "notes": "Raised rear tail and staggered legs suggest movement."
+        },
+        {
+          "id": "1X-19",
+          "species": "Wolf-like canid",
+          "pose": "Standing in side view facing the right.",
+          "confidence": "medium-high",
+          "notes": "Species could be a dog; motion is not strongly indicated."
+        },
+        {
+          "id": "1X-20",
+          "species": "Antlered deer / stag",
+          "pose": "Grazing with head down, body angled toward the right.",
+          "confidence": "high",
+          "notes": "Legs look planted; head is near the ground."
+        }
+      ],
+      "ended_at": "2026-10-23 06:34:09 UTC"
+    },
+    {
+      "scale": 2,
+      "started_at": "2026-10-23 06:34:18 UTC",
+      "answers": [
+        {
+          "id": "2X-01",
+          "species": "Antlered deer / stag",
+          "pose": "Standing alert in side view facing the right.",
+          "confidence": "high",
+          "notes": "All feet appear planted."
+        },
+        {
+          "id": "2X-02",
+          "species": "Wolf / wolf-like canid",
+          "pose": "Lying or collapsed sideways with head toward the left and legs extended.",
+          "confidence": "high species; medium-high pose",
+          "notes": "Could represent a dead animal, but a single still cannot establish death."
+        },
+        {
+          "id": "2X-03",
+          "species": "Antlered deer / stag",
+          "pose": "Bounding or running toward the right with stretched legs.",
+          "confidence": "high",
+          "notes": "Clear fast movement."
+        },
+        {
+          "id": "2X-04",
+          "species": "Wolf / wolf-like canid",
+          "pose": "Lying or collapsed on its side with head toward the left.",
+          "confidence": "high species; medium-high pose",
+          "notes": "Legs appear tucked or stretched close to the body; rest versus death remains uncertain."
+        },
+        {
+          "id": "2X-05",
+          "species": "Wolf / wolf-like canid",
+          "pose": "Running or making a low leap toward the right.",
+          "confidence": "high species; medium-high pose",
+          "notes": "Compact airborne-looking body; could be a pounce."
+        },
+        {
+          "id": "2X-06",
+          "species": "Antlered deer / stag",
+          "pose": "Grazing with head down toward the right.",
+          "confidence": "high",
+          "notes": "Body is seen from a slight rear angle."
+        },
+        {
+          "id": "2X-07",
+          "species": "Wolf / wolf-like canid",
+          "pose": "Crouching or lunging toward the viewer with bent forelegs.",
+          "confidence": "high species; medium pose",
+          "notes": "Low frontal posture suggests aggression or a pounce, but exact action is uncertain."
+        },
+        {
+          "id": "2X-08",
+          "species": "Antlered deer / stag",
+          "pose": "Walking toward the viewer.",
+          "confidence": "high species; medium-high pose",
+          "notes": "Staggered forelegs indicate a step."
+        },
+        {
+          "id": "2X-09",
+          "species": "Wolf / wolf-like canid",
+          "pose": "Standing facing the viewer with head lowered.",
+          "confidence": "high species; medium-high pose",
+          "notes": "Legs look nearly planted; a slow step remains possible."
+        },
+        {
+          "id": "2X-10",
+          "species": "Antlered deer / stag",
+          "pose": "Standing facing the viewer at a slight angle.",
+          "confidence": "high",
+          "notes": "Upright alert posture."
+        },
+        {
+          "id": "2X-11",
+          "species": "Wolf / wolf-like canid",
+          "pose": "Striding toward the viewer at a slight angle.",
+          "confidence": "high species; medium-high pose",
+          "notes": "One foreleg is extended; exact gait is uncertain."
+        },
+        {
+          "id": "2X-12",
+          "species": "Wolf / wolf-like canid",
+          "pose": "Standing in side view facing the right.",
+          "confidence": "high",
+          "notes": "Could be a dog-like animal, but wolf is the strongest reading."
+        },
+        {
+          "id": "2X-13",
+          "species": "Antlered deer / stag",
+          "pose": "Walking toward the right.",
+          "confidence": "high",
+          "notes": "Clear separated-leg walking stride."
+        },
+        {
+          "id": "2X-14",
+          "species": "Antlered deer / stag",
+          "pose": "Lying sideways with head facing the right and legs stretched along the ground.",
+          "confidence": "high species; medium-high pose",
+          "notes": "Resting versus collapsed/dead cannot be determined from this frame."
+        },
+        {
+          "id": "2X-15",
+          "species": "Wolf / wolf-like canid",
+          "pose": "Walking toward the viewer with head lowered.",
+          "confidence": "high species; medium-high pose",
+          "notes": "Forelegs overlap in a narrow stride."
+        },
+        {
+          "id": "2X-16",
+          "species": "Antlered deer / stag",
+          "pose": "Collapsed on its side, head down toward the left and legs stretched out.",
+          "confidence": "high species; medium-high pose",
+          "notes": "Strong fallen/dead visual reading, but the still alone does not prove death."
+        },
+        {
+          "id": "2X-17",
+          "species": "Wolf / wolf-like canid",
+          "pose": "Walking toward the right.",
+          "confidence": "high",
+          "notes": "Side-view staggered legs indicate a stride."
+        },
+        {
+          "id": "2X-18",
+          "species": "Wolf / wolf-like canid",
+          "pose": "Running toward the right with legs outstretched.",
+          "confidence": "high",
+          "notes": "Clear stretched running silhouette."
+        },
+        {
+          "id": "2X-19",
+          "species": "Antlered deer / stag",
+          "pose": "Running or bounding toward the viewer at an angle.",
+          "confidence": "high",
+          "notes": "Splayed forelegs and tilted body suggest fast motion."
+        },
+        {
+          "id": "2X-20",
+          "species": "Antlered deer / stag",
+          "pose": "Grazing with head down, viewed nearly from behind.",
+          "confidence": "high",
+          "notes": "Head is close to the ground beyond the forelegs."
+        }
+      ],
+      "ended_at": "2026-10-23 06:35:00 UTC"
+    }
+  ]
+}

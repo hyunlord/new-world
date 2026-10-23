@@ -1,0 +1,203 @@
+{
+  "id": "wolf_hide",
+  "path": "art/style05/env1/items/wolf_hide.png",
+  "family": "items",
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "source": "/Users/rexxa/work/artenv1-data/items/wolf_hide_try2_raw.png",
+  "source_sha256": "f8933fdaf0ef019d5b165670bcd3daa373b1683d198d9f4ed9e732d859477079",
+  "sha256": "3320a868ecd38ecebedffd2a82de7278c4af1a632592c20049e6e02173720085",
+  "attempts": [
+    {
+      "id": "wolf_hide",
+      "attempt": 1,
+      "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE wolf pelt spread flat, cool grey fur with pointed ears on a flattened narrow muzzle head, four splayed short tapered paw lobes and a long unmistakable tail; dark dorsal stripe, cream edges, visibly a wolf skin not a cloak. Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, broad muted two-tone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+      "refs": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+      ],
+      "started_at": "2026-10-23T06:23:39.938Z",
+      "completed_at": "2026-10-23T06:26:53.029Z",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-3b185959-3a29-48aa-9b59-303531dac308.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "tool": "image_gen__imagegen",
+      "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+      "raw": "/Users/rexxa/work/artenv1-data/items/wolf_hide_try1_raw.png",
+      "raw_sha256": "d97e214da7dd7383747422c7faff20f2ca117005d3ac6906b9295b179899b3a5",
+      "references_sha256": {
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      },
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/items/wolf_hide_try1_raw.png",
+        "sha256": "d97e214da7dd7383747422c7faff20f2ca117005d3ac6906b9295b179899b3a5",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.2410799965105121,
+          "saturation_q25": 0.2518749823254163,
+          "saturation_q75": 0.3214006440148137,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.02719888576759315,
+          "foreground_pixels": 24766
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      }
+    },
+    {
+      "id": "wolf_hide",
+      "attempt": 2,
+      "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE wolf pelt spread flat, cool grey fur with pointed ears on a flattened narrow muzzle head, four splayed short tapered paw lobes and a long unmistakable tail; dark dorsal stripe, cream edges, visibly a wolf skin not a cloak. Use delicate dark hand-ink contours, restrained translucent earthy pigment washes with quieter lower-contrast interiors: no broad black shadow masses, no bright ivory highlights, no high contrast mottling. Keep moderate fine internal marks and a narrow range of mids. Muted taupe, grey-brown, buff palette; any orange or red is greyed and muted. Reference3 props_logs and4 props_hearth are authoritative same-family detail references. . Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, muted closely related midtone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+      "refs": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png"
+      ],
+      "started_at": "2026-10-23T06:31:43.470Z",
+      "completed_at": "2026-10-23T06:36:03.617Z",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-8d958c76-9330-40a2-9807-f55da4f82397.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "tool": "image_gen__imagegen",
+      "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+      "raw": "/Users/rexxa/work/artenv1-data/items/wolf_hide_try2_raw.png",
+      "raw_sha256": "f8933fdaf0ef019d5b165670bcd3daa373b1683d198d9f4ed9e732d859477079",
+      "references_sha256": {
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832"
+      },
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/items/wolf_hide_try2_raw.png",
+        "sha256": "f8933fdaf0ef019d5b165670bcd3daa373b1683d198d9f4ed9e732d859477079",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.25422262503089726,
+          "saturation_q25": 0.2927566347105631,
+          "saturation_q75": 0.35720477737583733,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.015288288993210868,
+          "foreground_pixels": 26244
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      }
+    }
+  ],
+  "numeric": {
+    "candidate": "/Users/rexxa/work/artenv1-data/items/wolf_hide_try2_raw.png",
+    "sha256": "f8933fdaf0ef019d5b165670bcd3daa373b1683d198d9f4ed9e732d859477079",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.25422262503089726,
+      "saturation_q25": 0.2927566347105631,
+      "saturation_q75": 0.35720477737583733,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.015288288993210868,
+      "foreground_pixels": 26244
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 4,
+      "palette": 5,
+      "sentence": "Matches the originals' inked linework, textured watercolor washes, and earthy limited palette very closely, with consistent shading and edge treatment."
+    },
+    "model_status": "SAME_FAMILY_VERIFIED",
+    "passed": true
+  },
+  "status": "STYLE_ACCEPTED_SEMANTIC_REVIEWED",
+  "operations": [
+    "generated alpha preserved",
+    "alpha-bounds crop",
+    "proportional Lanczos fit to58px",
+    "center in64px tile"
+  ],
+  "count_buckets": [
+    "art/style05/env1/items/wolf_hide_count_1.png",
+    "art/style05/env1/items/wolf_hide_count_2_8.png",
+    "art/style05/env1/items/wolf_hide_count_9_plus.png"
+  ],
+  "count_bucket_sha256": {
+    "art/style05/env1/items/wolf_hide_count_1.png": "3320a868ecd38ecebedffd2a82de7278c4af1a632592c20049e6e02173720085",
+    "art/style05/env1/items/wolf_hide_count_2_8.png": "3e447f2f7fdb2bcf5f63da901a44789ad459099277946887cda41dbf1533c388",
+    "art/style05/env1/items/wolf_hide_count_9_plus.png": "823ea06cd230584a51accfb1e2620e475db2b6a5f9467742c415faedd50fbd3f"
+  },
+  "model": {
+    "scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 4,
+      "palette": 5,
+      "sentence": "Matches the originals' inked linework, textured watercolor washes, and earthy limited palette very closely, with consistent shading and edge treatment."
+    },
+    "evidence": "art/style05/env1/items/model_scorecard3.png",
+    "raw_sha256": "ce3e64826599487d58e2cb1b0bcbc225f0dc045bf6a03db9386f721e6b51281a",
+    "mechanism": "built-in image-generation model rendered scorecard; actual printed scores visually transcribed; model version not exposed"
+  },
+  "reading": "긴 꼬리와 네 발, 머리 및 어두운 등줄기가 늑대 가죽을 나타낸다.",
+  "style_accepted": true,
+  "readability_status": "EXACT_KIND_CONFUSION",
+  "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+  "readability_review_ids": [
+    "a",
+    "b"
+  ],
+  "exact_kind_scores": [
+    false,
+    false
+  ]
+}

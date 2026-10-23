@@ -1,0 +1,129 @@
+{
+  "anchors": [
+    {
+      "name": "portrait_full",
+      "family": "portrait",
+      "file": "/Users/rexxa/work/artenv1-data/portraits/references/portrait_full.png",
+      "sha256": "8e5a85e759a1dd729d5a1a5385a11ee854d174b8fca1118877209c519d95bc83",
+      "metrics": {
+        "edge_density": 0.25612559838750315,
+        "saturation_q25": 0.4842594888168099,
+        "saturation_q75": 0.6097239924511612,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.009487485668825615,
+        "foreground_pixels": 65536
+      }
+    },
+    {
+      "name": "portrait_bust",
+      "family": "portrait",
+      "file": "/Users/rexxa/work/artenv1-data/portraits/references/portrait_bust.png",
+      "sha256": "bbcbec4b9b7ac098034d152a2fd47f55985875c3fb440aaa167674e063bbe6ae",
+      "metrics": {
+        "edge_density": 0.24742504409171076,
+        "saturation_q25": 0.4920864143568211,
+        "saturation_q75": 0.6162764920185921,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.010030211936290714,
+        "foreground_pixels": 58624
+      }
+    },
+    {
+      "name": "portrait_head_shoulders",
+      "family": "portrait",
+      "file": "/Users/rexxa/work/artenv1-data/portraits/references/portrait_head_shoulders.png",
+      "sha256": "66c7d4a05b9ba1adb43009fd6faa444a79e4da2e068d4904171374e06c547635",
+      "metrics": {
+        "edge_density": 0.24044928705945656,
+        "saturation_q25": 0.5009339028794834,
+        "saturation_q75": 0.6267221073677692,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.010891824123811336,
+        "foreground_pixels": 46336
+      }
+    }
+  ],
+  "ranges": [
+    {
+      "family": "portrait",
+      "lower": [
+        0.11630556569771663,
+        0.2379611408927366,
+        0.30061246749642856,
+        1.0,
+        0.0,
+        0.0,
+        1.0784271247461903,
+        0.004312493485829825
+      ],
+      "upper": [
+        0.38026931974924305,
+        0.7472322508035567,
+        0.9358336323225018,
+        3.0,
+        4.0,
+        4.0,
+        4.57842712474619,
+        0.02396201307238494
+      ]
+    }
+  ],
+  "leave_one_out": [
+    {
+      "name": "portrait_full",
+      "family": "portrait",
+      "passed": true,
+      "checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      }
+    },
+    {
+      "name": "portrait_bust",
+      "family": "portrait",
+      "passed": true,
+      "checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      }
+    },
+    {
+      "name": "portrait_head_shoulders",
+      "family": "portrait",
+      "passed": true,
+      "checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      }
+    }
+  ],
+  "comparison_size": 256,
+  "version": 2
+}

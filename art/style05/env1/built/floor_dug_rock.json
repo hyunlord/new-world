@@ -1,0 +1,101 @@
+{
+  "id": "floor_dug_rock",
+  "path": "art/style05/env1/built/floor_dug_rock.png",
+  "width": 64,
+  "height": 64,
+  "footprint": [
+    1,
+    1
+  ],
+  "family": "ground",
+  "attempts": 3,
+  "selected_attempt": 3,
+  "status": "NUMERIC_FAIL_CANDIDATE",
+  "raw": "/Users/rexxa/work/artenv1-data/built/floor_dug_rock_try3_raw.png",
+  "raw_sha256": "d42563077d99156ba44018056bc54bc5b9a107168b60bef15bb6fc1da2fc4bca",
+  "sha256": "703cc65ecd935228095c25f1814fb989ac97a9e587ae41b3f4d4e336eb8729d3",
+  "metadata": "/Users/rexxa/work/artenv1-data/built/floor_dug_rock_try3.json",
+  "metadata_sha256": "9ca806483c1b922b9bf166fcffa41765425fa82ee4c2476e9466d3249d4f7f2c",
+  "numeric": {
+    "candidate": "/Users/rexxa/work/artenv1-data/built/floor_dug_rock_try3_raw.png",
+    "sha256": "d42563077d99156ba44018056bc54bc5b9a107168b60bef15bb6fc1da2fc4bca",
+    "family": "ground",
+    "metrics": {
+      "edge_density": 0.23707168052406147,
+      "saturation_q25": 0.33243213789774767,
+      "saturation_q75": 0.372079657233557,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.002512073463155339,
+      "foreground_pixels": 65536
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": false
+    },
+    "numeric_pass": false,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "operations": [
+    "full-frame Lanczos resize",
+    "logged global contrast/chroma/value scales; no local edits"
+  ],
+  "tone": {
+    "before_mean": 0.41877233503753064,
+    "before_std": 0.07485839306477224,
+    "before_saturation": 0.3517153158186261,
+    "after_mean": 0.39498856971890317,
+    "after_std": 0.07068226342576282,
+    "after_saturation": 0.2881291525266113,
+    "person_std_cap": 0.16719984851327876,
+    "contrast_scale": 1.0,
+    "chroma_scales": [
+      0.980462372303009,
+      0.8051190037394789
+    ],
+    "value_scale": 0.9428946671426399
+  },
+  "seam": {
+    "horizontal_mae": 10.354166666666666,
+    "vertical_mae": 9.932291666666666,
+    "horizontal_ratio": 1.0455296769346354,
+    "vertical_ratio": 0.9033905059816977,
+    "passed": true
+  },
+  "bytes": 9985,
+  "model": {
+    "scores": {
+      "medium": 4,
+      "line": 4,
+      "light": 4,
+      "palette": 4,
+      "sentence": "Uses the same illustrative brushwork, inked edges and watercolor washes with consistent lighting and a slightly cooler, natural stone palette that still fits the reference style."
+    },
+    "review_id": "judge_ground_a",
+    "candidate_raw_sha256": "d42563077d99156ba44018056bc54bc5b9a107168b60bef15bb6fc1da2fc4bca",
+    "scorecard_sha256": "34d4df7ec86b5ca3ecfd6028960409d4370841b0eb0d4ba7a65be6939499ac9b"
+  },
+  "physical_footprint": [
+    1,
+    1
+  ],
+  "style_pass": false,
+  "reading": "Broad grey excavation slabs remain visible under the tone cap; raw wash metric fails after three attempts.",
+  "semantic_pass": true,
+  "required_wrap_axes": [
+    "horizontal",
+    "vertical"
+  ],
+  "required_wrap_pass": true,
+  "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+}

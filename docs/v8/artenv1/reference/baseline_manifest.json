@@ -1,0 +1,4735 @@
+{
+  "schema": 1,
+  "status": "CAPTURED_AND_VERIFIED",
+  "kind": "unchanged_current_game_renderer",
+  "created_utc": "2026-10-23T06:36:11.089417+00:00",
+  "source_commit": "3a3b236c125c0c25e9b74261be88536473fc01e9",
+  "source_worktree": "/Users/rexxa/work/artenv1-data/probe-worktree",
+  "source_tracked_changes": "",
+  "art_base": "159ef0f9a1cfb7ee9e6005e85d5388d677e07fa8",
+  "capture_command": "bash art/compositor/baseline_capture.sh /Users/rexxa/work/artenv1-data/baseline",
+  "windowed": true,
+  "headless": false,
+  "godot_version": "4.6.stable.official.89cea1439",
+  "renderer": "OpenGL API 4.1 Metal - 91.7 - Compatibility - Apple M4 Max",
+  "viewport": [
+    1600,
+    900
+  ],
+  "hud_rect": [
+    0,
+    0,
+    1600,
+    112
+  ],
+  "map_rect": [
+    0,
+    112,
+    1600,
+    788
+  ],
+  "camp_tile": [
+    91,
+    101
+  ],
+  "camp_screen": [
+    800,
+    506
+  ],
+  "zoom_contract": {
+    "1x": {
+      "camera_zoom": 4,
+      "tile_pixels": 64
+    },
+    "half": {
+      "camera_zoom": 2,
+      "tile_pixels": 32
+    }
+  },
+  "screen_mapping": "tile centre = [800+(x-91)*tile_pixels,506+(y-101)*tile_pixels]; person centres use AgentLayer.drawn_position plus half-tile and include current sleeping offsets",
+  "visibility_rule": "Person in_map_view means drawn centre is inside [0,112,1600,788], not a pixel-occlusion or whole-sprite test. HUD-hidden centres are excluded. Animal centres below are tile-centre projections.",
+  "simulation_access": "Load exact native verified save through SimReads.mutate_raw(load_world); WorldSim processing disabled before any awaited frame; no advance_ticks, orders, spawn, or simulation source edits. All six saved frame ticks asserted.",
+  "harness": [
+    {
+      "path": "art/compositor/baseline_capture.gd",
+      "sha256": "ce5beac95fe4c432a09c4125adbb5198d1efdad49367c5d81f6465b9bdd558a9",
+      "bytes": 5969
+    },
+    {
+      "path": "art/compositor/baseline_capture.gd.uid",
+      "sha256": "3f7dce2f6f444b6a062a799aaee8f9bc066ff04e31f82225d6659d21db848f46",
+      "bytes": 20
+    },
+    {
+      "path": "art/compositor/baseline_capture.sh",
+      "sha256": "2978882cc107b41f4d1bcfdab134c25006ef5beacc7f65521b6c7d12dc31ee83",
+      "bytes": 926
+    }
+  ],
+  "runtime_bridge": {
+    "path": "/Users/rexxa/work/artenv1-data/probe-worktree/rust/target/debug/libsim_bridge.dylib",
+    "sha256": "14ed426ef99ea83e6e6d685ab60bfbea29da77030136c900c08c820b0d8f21f0",
+    "bytes": 39260208
+  },
+  "source_dependencies": [
+    {
+      "path": "/Users/rexxa/work/artenv1-data/probe-worktree/tools/v8/capture.gd",
+      "sha256": "6aec93ba25d945212fdc7912c200c7def848971351e33917c194e4b3ab3b73a8",
+      "bytes": 81461
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/probe-worktree/scenes/main.tscn",
+      "sha256": "39e06b07fd5fbdb07d0e295bcac6e88b58565d78fb838b7b439d21e8e9c239f0",
+      "bytes": 3502
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/probe-worktree/docs/v8/snapshot_schema.md",
+      "sha256": "d604a5a9b498e3f764bdbd240b4f326f733be2c2d9d33b369e4ae237d5575c3e",
+      "bytes": 60921
+    }
+  ],
+  "raw_metadata": {
+    "path": "/Users/rexxa/work/artenv1-data/baseline/baseline_capture.json",
+    "sha256": "1c956af0b1ca4fd93e1840e556812c8a04abf41263399aff016d17cbd47a7dce",
+    "bytes": 397091
+  },
+  "capture_log": {
+    "path": "/Users/rexxa/work/artenv1-data/baseline/capture.log",
+    "sha256": "dea0f0ed9cfa2a34b50e233ba34bad01725c2c941237a2afc393c8b3f28e6f54",
+    "bytes": 561
+  },
+  "superseded_diagnostics": "/Users/rexxa/work/artenv1-data/baseline/superseded_camp_y450",
+  "scenes": {
+    "day6_noon": {
+      "tick": 7440,
+      "display_day": 6,
+      "clock_minute": 720,
+      "season_index": 0,
+      "native_ascii_equal": true,
+      "native_people_multiset_equal": true,
+      "save": {
+        "path": "/Users/rexxa/work/artenv1-data/scenes/rich_day6_noon.save",
+        "sha256": "66c777b0d20a1728876e26725b502b1b0044c553333b31dcad2c2efa11e18f6c",
+        "bytes": 993858
+      },
+      "native_scene": {
+        "path": "/Users/rexxa/work/artenv1-data/scenes/rich_day6_noon.json",
+        "sha256": "6915716131079a0545e3838a697416a6af63412c708d93eb6de3df70e84309bd",
+        "bytes": 76589
+      },
+      "native_ascii": {
+        "path": "/Users/rexxa/work/artenv1-data/scenes/scene_day6_noon.txt",
+        "sha256": "f44088a3140490575c682a5fb2c8129a094319c48bff8345be4884539b4e5fdd",
+        "bytes": 37056
+      }
+    },
+    "day6_night": {
+      "tick": 6840,
+      "display_day": 6,
+      "clock_minute": 120,
+      "season_index": 0,
+      "native_ascii_equal": true,
+      "native_people_multiset_equal": true,
+      "save": {
+        "path": "/Users/rexxa/work/artenv1-data/scenes/rich_day6_night.save",
+        "sha256": "f66d81d84d8d3a978c1a73682063dff1adcf3f4522b45483eb52bc47a45bafa3",
+        "bytes": 993315
+      },
+      "native_scene": {
+        "path": "/Users/rexxa/work/artenv1-data/scenes/rich_day6_night.json",
+        "sha256": "d2c59af025234a1eab67121c1f11295e89ca7da8a4b6041b985bc56678c609f5",
+        "bytes": 76583
+      },
+      "native_ascii": {
+        "path": "/Users/rexxa/work/artenv1-data/scenes/scene_day6_night.txt",
+        "sha256": "43ac3843f1740e72dc6082cc1c8045cffa454cbdc60be1d02a73f527459a895f",
+        "bytes": 37056
+      }
+    },
+    "winter_noon": {
+      "tick": 26160,
+      "display_day": 19,
+      "clock_minute": 720,
+      "season_index": 3,
+      "native_ascii_equal": true,
+      "native_people_multiset_equal": true,
+      "save": {
+        "path": "/Users/rexxa/work/artenv1-data/scenes/rich_winter_noon.save",
+        "sha256": "570e61d744c76264d371bda0598bf51d3d09f1f64c724677f4480cf4a58c65f1",
+        "bytes": 999531
+      },
+      "native_scene": {
+        "path": "/Users/rexxa/work/artenv1-data/scenes/rich_winter_noon.json",
+        "sha256": "b83d1b68a185b5a32eea617a5cd5c7fbf028bdd587ad3a25be45cb06fd4ae9e2",
+        "bytes": 76590
+      },
+      "native_ascii": {
+        "path": "/Users/rexxa/work/artenv1-data/scenes/scene_winter_noon.txt",
+        "sha256": "765ba0827d712041a71832605d4ebd3554ae58250e58c5bb81152407ed59b9d6",
+        "bytes": 37056
+      }
+    }
+  },
+  "captures": [
+    {
+      "id": "day6_noon_1x",
+      "image": {
+        "path": "docs/v8/artenv1/reference/current_day6_noon_1x.png",
+        "sha256": "e033dbef9c450fe992d0890394c5ba5e579e5e62a7fa87a7391cc216f69b7d21",
+        "bytes": 74721
+      },
+      "hud": {
+        "path": "docs/v8/artenv1/reference/current_day6_noon_1x_hud.png",
+        "sha256": "052e3d8625708f0cdc280c42313e987ceff6f324c76068e2bbd2b0386baa86bc",
+        "bytes": 14133
+      },
+      "raw_image": {
+        "path": "/Users/rexxa/work/artenv1-data/baseline/current_day6_noon_1x.png",
+        "sha256": "e033dbef9c450fe992d0890394c5ba5e579e5e62a7fa87a7391cc216f69b7d21",
+        "bytes": 74721
+      },
+      "clock": {
+        "day_index": 5,
+        "day_of_season": 6,
+        "day_of_year": 6,
+        "days_per_season": 6,
+        "days_per_year": 24,
+        "season": 0,
+        "season_index": 0,
+        "tick": 7440,
+        "ticks_per_day": 1440,
+        "time_of_day": 12.0,
+        "winter_severity": -1,
+        "year_index": 0
+      },
+      "camera_zoom": 4.0,
+      "tile_pixels": 64.0,
+      "camp_screen": [
+        800.0,
+        506.0
+      ],
+      "people_total": 10,
+      "people_in_map_view": 8,
+      "people_map_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        8,
+        9
+      ],
+      "people_outside_map_ids": [
+        6,
+        7
+      ],
+      "people": [
+        {
+          "activity_kind": -1,
+          "agent_id": 0,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967296,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            1376,
+            570
+          ],
+          "stage": 0,
+          "tile": [
+            100,
+            102
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "none"
+        },
+        {
+          "activity_kind": 1,
+          "agent_id": 1,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967297,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            864,
+            570
+          ],
+          "stage": 0,
+          "tile": [
+            92,
+            102
+          ],
+          "top": 0,
+          "activity_name": "craft",
+          "job_name": "none",
+          "review_action": "craft"
+        },
+        {
+          "activity_kind": 1,
+          "agent_id": 2,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967298,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            928,
+            570
+          ],
+          "stage": 0,
+          "tile": [
+            93,
+            102
+          ],
+          "top": 0,
+          "activity_name": "craft",
+          "job_name": "none",
+          "review_action": "craft"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 3,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967299,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            608,
+            506
+          ],
+          "stage": 0,
+          "tile": [
+            88,
+            101
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "none"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 4,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967300,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            800,
+            378
+          ],
+          "stage": 0,
+          "tile": [
+            91,
+            99
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "none"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 5,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967301,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            672,
+            634
+          ],
+          "stage": 0,
+          "tile": [
+            89,
+            103
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "none"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 6,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967302,
+          "in_map_view": false,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": true,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": false,
+          "screen": [
+            -32,
+            -390
+          ],
+          "stage": 0,
+          "tile": [
+            78,
+            87
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "none"
+        },
+        {
+          "activity_kind": 4,
+          "agent_id": 7,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967303,
+          "in_map_view": false,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": false,
+          "screen": [
+            -96,
+            -390
+          ],
+          "stage": 0,
+          "tile": [
+            77,
+            87
+          ],
+          "top": 0,
+          "activity_name": "explore",
+          "job_name": "none",
+          "review_action": "explore"
+        },
+        {
+          "activity_kind": 2,
+          "agent_id": 8,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967304,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            864,
+            378
+          ],
+          "stage": 0,
+          "tile": [
+            92,
+            99
+          ],
+          "top": 0,
+          "activity_name": "repair",
+          "job_name": "none",
+          "review_action": "repair"
+        },
+        {
+          "activity_kind": 3,
+          "agent_id": 9,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967305,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            672,
+            378
+          ],
+          "stage": 0,
+          "tile": [
+            89,
+            99
+          ],
+          "top": 0,
+          "activity_name": "hearth_circle",
+          "job_name": "none",
+          "review_action": "hearth_circle"
+        }
+      ],
+      "buildings": [
+        {
+          "kind": 0,
+          "screen": [
+            800,
+            506
+          ],
+          "tile": [
+            91,
+            101
+          ],
+          "kind_name": "hearth"
+        },
+        {
+          "kind": 1,
+          "screen": [
+            672,
+            442
+          ],
+          "tile": [
+            89,
+            100
+          ],
+          "kind_name": "shelter"
+        },
+        {
+          "kind": 1,
+          "screen": [
+            928,
+            442
+          ],
+          "tile": [
+            93,
+            100
+          ],
+          "kind_name": "shelter"
+        },
+        {
+          "kind": 1,
+          "screen": [
+            800,
+            634
+          ],
+          "tile": [
+            91,
+            103
+          ],
+          "kind_name": "shelter"
+        },
+        {
+          "kind": 2,
+          "screen": [
+            928,
+            634
+          ],
+          "tile": [
+            93,
+            103
+          ],
+          "kind_name": "stockpile"
+        }
+      ],
+      "rooms": [
+        {
+          "id": 1,
+          "role_code": 1,
+          "role": "bedroom",
+          "centre_tile": [
+            84,
+            107
+          ],
+          "tiles": 15,
+          "beds": 4,
+          "doors": 1,
+          "roofed": 1
+        }
+      ],
+      "storehouse_count": 0,
+      "wolf_count": 0,
+      "wolves_in_map_view": 0,
+      "deer_count": 9,
+      "deer_in_map_view": 0,
+      "animals": [
+        {
+          "id": 1,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            97,
+            70
+          ],
+          "tile_centre_screen": [
+            1184.0,
+            -1478.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 2,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            65,
+            86
+          ],
+          "tile_centre_screen": [
+            -864.0,
+            -454.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 3,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            101,
+            74
+          ],
+          "tile_centre_screen": [
+            1440.0,
+            -1222.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 4,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            84,
+            74
+          ],
+          "tile_centre_screen": [
+            352.0,
+            -1222.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 5,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            71,
+            60
+          ],
+          "tile_centre_screen": [
+            -480.0,
+            -2118.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 6,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            103,
+            66
+          ],
+          "tile_centre_screen": [
+            1568.0,
+            -1734.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 7,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            104,
+            64
+          ],
+          "tile_centre_screen": [
+            1632.0,
+            -1862.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 8,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            96,
+            62
+          ],
+          "tile_centre_screen": [
+            1120.0,
+            -1990.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 9,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            70,
+            74
+          ],
+          "tile_centre_screen": [
+            -544.0,
+            -1222.0
+          ],
+          "in_map_view": false
+        }
+      ],
+      "unfinished_site_count": 21,
+      "unfinished_site_kinds": [
+        4
+      ],
+      "visual_review": {
+        "status": "REVIEWED",
+        "full_hud_visible": true,
+        "camp_at_expected_screen_point": true,
+        "no_wolves_or_storehouse_added": true
+      },
+      "designated_stockpiles": [
+        {
+          "zone_id": 1,
+          "kind": "Stockpile",
+          "cell_count": 36,
+          "tile_bounds_inclusive": [
+            94,
+            101,
+            99,
+            106
+          ],
+          "screen_bbox": [
+            960.0,
+            474.0,
+            1344.0,
+            858.0
+          ],
+          "map_visible_bbox": [
+            960.0,
+            474.0,
+            1344.0,
+            858.0
+          ],
+          "source": "get_colony_overlay.zone_ids/zone_xs/zone_ys"
+        },
+        {
+          "zone_id": 2,
+          "kind": "Stockpile",
+          "cell_count": 36,
+          "tile_bounds_inclusive": [
+            101,
+            95,
+            106,
+            100
+          ],
+          "screen_bbox": [
+            1408.0,
+            90.0,
+            1792.0,
+            474.0
+          ],
+          "map_visible_bbox": [
+            1408.0,
+            112,
+            1600,
+            474.0
+          ],
+          "source": "get_colony_overlay.zone_ids/zone_xs/zone_ys"
+        }
+      ],
+      "storage_readability_target": {
+        "semantic_label": "unfinished walled stockpile",
+        "zone_id": 2,
+        "finished_room_role_storehouse": false,
+        "planned_perimeter_tile_bounds_inclusive": [
+          100,
+          94,
+          107,
+          101
+        ],
+        "planned_perimeter_screen_bbox": [
+          1344.0,
+          26.0,
+          1856.0,
+          538.0
+        ],
+        "planned_perimeter_map_visible_bbox": [
+          1344.0,
+          112,
+          1600,
+          538.0
+        ],
+        "storage_interior_screen_bbox": [
+          1408.0,
+          90.0,
+          1792.0,
+          474.0
+        ],
+        "storage_interior_map_visible_bbox": [
+          1408.0,
+          112,
+          1600,
+          474.0
+        ],
+        "suggested_visible_point": [
+          1504,
+          282
+        ],
+        "completed_log_wall_cells": [
+          [
+            100,
+            94
+          ],
+          [
+            100,
+            95
+          ],
+          [
+            100,
+            96
+          ],
+          [
+            100,
+            101
+          ],
+          [
+            101,
+            101
+          ],
+          [
+            102,
+            101
+          ]
+        ],
+        "completed_door_cells": [
+          [
+            104,
+            101
+          ]
+        ],
+        "unfinished_log_wall_site_count": 21,
+        "site_progress": 0,
+        "site_required": 40,
+        "source_fields": [
+          "get_colony_overlay.zone_*",
+          "get_colony_overlay.site_*",
+          "get_space.wall_*",
+          "get_rooms.roles"
+        ],
+        "comparison_limit": "A genuine designated storage target exists and may be scored as unfinished walled stockpile. It is not a finished Storehouse room. A completed declared-after storehouse differs in state,position,and visible area; this is not a pure controlled same-state comparison."
+      }
+    },
+    {
+      "id": "day6_noon_half",
+      "image": {
+        "path": "docs/v8/artenv1/reference/current_day6_noon_half.png",
+        "sha256": "578fc74bc16a1fe150cffc694a0e2d66fee449ae50ec7b70c11a5c4996ce5c88",
+        "bytes": 202837
+      },
+      "hud": {
+        "path": "docs/v8/artenv1/reference/current_day6_noon_half_hud.png",
+        "sha256": "677364fd0bfb2539073266d3488a8bae6a61d4be0ef437f7b443b44effe79d2c",
+        "bytes": 27177
+      },
+      "raw_image": {
+        "path": "/Users/rexxa/work/artenv1-data/baseline/current_day6_noon_half.png",
+        "sha256": "578fc74bc16a1fe150cffc694a0e2d66fee449ae50ec7b70c11a5c4996ce5c88",
+        "bytes": 202837
+      },
+      "clock": {
+        "day_index": 5,
+        "day_of_season": 6,
+        "day_of_year": 6,
+        "days_per_season": 6,
+        "days_per_year": 24,
+        "season": 0,
+        "season_index": 0,
+        "tick": 7440,
+        "ticks_per_day": 1440,
+        "time_of_day": 12.0,
+        "winter_severity": -1,
+        "year_index": 0
+      },
+      "camera_zoom": 2.0,
+      "tile_pixels": 32.0,
+      "camp_screen": [
+        800.0,
+        506.0
+      ],
+      "people_total": 10,
+      "people_in_map_view": 8,
+      "people_map_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        8,
+        9
+      ],
+      "people_outside_map_ids": [
+        6,
+        7
+      ],
+      "people": [
+        {
+          "activity_kind": -1,
+          "agent_id": 0,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967296,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            1088,
+            538
+          ],
+          "stage": 0,
+          "tile": [
+            100,
+            102
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "none"
+        },
+        {
+          "activity_kind": 1,
+          "agent_id": 1,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967297,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            832,
+            538
+          ],
+          "stage": 0,
+          "tile": [
+            92,
+            102
+          ],
+          "top": 0,
+          "activity_name": "craft",
+          "job_name": "none",
+          "review_action": "craft"
+        },
+        {
+          "activity_kind": 1,
+          "agent_id": 2,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967298,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            864,
+            538
+          ],
+          "stage": 0,
+          "tile": [
+            93,
+            102
+          ],
+          "top": 0,
+          "activity_name": "craft",
+          "job_name": "none",
+          "review_action": "craft"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 3,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967299,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            704,
+            506
+          ],
+          "stage": 0,
+          "tile": [
+            88,
+            101
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "none"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 4,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967300,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            800,
+            442
+          ],
+          "stage": 0,
+          "tile": [
+            91,
+            99
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "none"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 5,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967301,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            736,
+            570
+          ],
+          "stage": 0,
+          "tile": [
+            89,
+            103
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "none"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 6,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967302,
+          "in_map_view": false,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": true,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            384,
+            58
+          ],
+          "stage": 0,
+          "tile": [
+            78,
+            87
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "none"
+        },
+        {
+          "activity_kind": 4,
+          "agent_id": 7,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967303,
+          "in_map_view": false,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            352,
+            58
+          ],
+          "stage": 0,
+          "tile": [
+            77,
+            87
+          ],
+          "top": 0,
+          "activity_name": "explore",
+          "job_name": "none",
+          "review_action": "explore"
+        },
+        {
+          "activity_kind": 2,
+          "agent_id": 8,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967304,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            832,
+            442
+          ],
+          "stage": 0,
+          "tile": [
+            92,
+            99
+          ],
+          "top": 0,
+          "activity_name": "repair",
+          "job_name": "none",
+          "review_action": "repair"
+        },
+        {
+          "activity_kind": 3,
+          "agent_id": 9,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967305,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            736,
+            442
+          ],
+          "stage": 0,
+          "tile": [
+            89,
+            99
+          ],
+          "top": 0,
+          "activity_name": "hearth_circle",
+          "job_name": "none",
+          "review_action": "hearth_circle"
+        }
+      ],
+      "buildings": [
+        {
+          "kind": 0,
+          "screen": [
+            800,
+            506
+          ],
+          "tile": [
+            91,
+            101
+          ],
+          "kind_name": "hearth"
+        },
+        {
+          "kind": 1,
+          "screen": [
+            736,
+            474
+          ],
+          "tile": [
+            89,
+            100
+          ],
+          "kind_name": "shelter"
+        },
+        {
+          "kind": 1,
+          "screen": [
+            864,
+            474
+          ],
+          "tile": [
+            93,
+            100
+          ],
+          "kind_name": "shelter"
+        },
+        {
+          "kind": 1,
+          "screen": [
+            800,
+            570
+          ],
+          "tile": [
+            91,
+            103
+          ],
+          "kind_name": "shelter"
+        },
+        {
+          "kind": 2,
+          "screen": [
+            864,
+            570
+          ],
+          "tile": [
+            93,
+            103
+          ],
+          "kind_name": "stockpile"
+        }
+      ],
+      "rooms": [
+        {
+          "id": 1,
+          "role_code": 1,
+          "role": "bedroom",
+          "centre_tile": [
+            84,
+            107
+          ],
+          "tiles": 15,
+          "beds": 4,
+          "doors": 1,
+          "roofed": 1
+        }
+      ],
+      "storehouse_count": 0,
+      "wolf_count": 0,
+      "wolves_in_map_view": 0,
+      "deer_count": 9,
+      "deer_in_map_view": 0,
+      "animals": [
+        {
+          "id": 1,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            97,
+            70
+          ],
+          "tile_centre_screen": [
+            992.0,
+            -486.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 2,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            65,
+            86
+          ],
+          "tile_centre_screen": [
+            -32.0,
+            26.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 3,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            101,
+            74
+          ],
+          "tile_centre_screen": [
+            1120.0,
+            -358.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 4,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            84,
+            74
+          ],
+          "tile_centre_screen": [
+            576.0,
+            -358.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 5,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            71,
+            60
+          ],
+          "tile_centre_screen": [
+            160.0,
+            -806.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 6,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            103,
+            66
+          ],
+          "tile_centre_screen": [
+            1184.0,
+            -614.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 7,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            104,
+            64
+          ],
+          "tile_centre_screen": [
+            1216.0,
+            -678.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 8,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            96,
+            62
+          ],
+          "tile_centre_screen": [
+            960.0,
+            -742.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 9,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            70,
+            74
+          ],
+          "tile_centre_screen": [
+            128.0,
+            -358.0
+          ],
+          "in_map_view": false
+        }
+      ],
+      "unfinished_site_count": 21,
+      "unfinished_site_kinds": [
+        4
+      ],
+      "visual_review": {
+        "status": "REVIEWED",
+        "full_hud_visible": true,
+        "camp_at_expected_screen_point": true,
+        "no_wolves_or_storehouse_added": true
+      },
+      "designated_stockpiles": [
+        {
+          "zone_id": 1,
+          "kind": "Stockpile",
+          "cell_count": 36,
+          "tile_bounds_inclusive": [
+            94,
+            101,
+            99,
+            106
+          ],
+          "screen_bbox": [
+            880.0,
+            490.0,
+            1072.0,
+            682.0
+          ],
+          "map_visible_bbox": [
+            880.0,
+            490.0,
+            1072.0,
+            682.0
+          ],
+          "source": "get_colony_overlay.zone_ids/zone_xs/zone_ys"
+        },
+        {
+          "zone_id": 2,
+          "kind": "Stockpile",
+          "cell_count": 36,
+          "tile_bounds_inclusive": [
+            101,
+            95,
+            106,
+            100
+          ],
+          "screen_bbox": [
+            1104.0,
+            298.0,
+            1296.0,
+            490.0
+          ],
+          "map_visible_bbox": [
+            1104.0,
+            298.0,
+            1296.0,
+            490.0
+          ],
+          "source": "get_colony_overlay.zone_ids/zone_xs/zone_ys"
+        }
+      ],
+      "storage_readability_target": {
+        "semantic_label": "unfinished walled stockpile",
+        "zone_id": 2,
+        "finished_room_role_storehouse": false,
+        "planned_perimeter_tile_bounds_inclusive": [
+          100,
+          94,
+          107,
+          101
+        ],
+        "planned_perimeter_screen_bbox": [
+          1072.0,
+          266.0,
+          1328.0,
+          522.0
+        ],
+        "planned_perimeter_map_visible_bbox": [
+          1072.0,
+          266.0,
+          1328.0,
+          522.0
+        ],
+        "storage_interior_screen_bbox": [
+          1104.0,
+          298.0,
+          1296.0,
+          490.0
+        ],
+        "storage_interior_map_visible_bbox": [
+          1104.0,
+          298.0,
+          1296.0,
+          490.0
+        ],
+        "suggested_visible_point": [
+          1200,
+          394
+        ],
+        "completed_log_wall_cells": [
+          [
+            100,
+            94
+          ],
+          [
+            100,
+            95
+          ],
+          [
+            100,
+            96
+          ],
+          [
+            100,
+            101
+          ],
+          [
+            101,
+            101
+          ],
+          [
+            102,
+            101
+          ]
+        ],
+        "completed_door_cells": [
+          [
+            104,
+            101
+          ]
+        ],
+        "unfinished_log_wall_site_count": 21,
+        "site_progress": 0,
+        "site_required": 40,
+        "source_fields": [
+          "get_colony_overlay.zone_*",
+          "get_colony_overlay.site_*",
+          "get_space.wall_*",
+          "get_rooms.roles"
+        ],
+        "comparison_limit": "A genuine designated storage target exists and may be scored as unfinished walled stockpile. It is not a finished Storehouse room. A completed declared-after storehouse differs in state,position,and visible area; this is not a pure controlled same-state comparison."
+      }
+    },
+    {
+      "id": "day6_night_1x",
+      "image": {
+        "path": "docs/v8/artenv1/reference/current_day6_night_1x.png",
+        "sha256": "63bdc93dc699ae6e23642a1291bd19ad80077e2363c28b3eff7171e350735241",
+        "bytes": 90192
+      },
+      "hud": {
+        "path": "docs/v8/artenv1/reference/current_day6_night_1x_hud.png",
+        "sha256": "250709c4f855b12b1c6dbf5e6a93b1c3965063c1742ef041bfdd92920aefdd44",
+        "bytes": 13117
+      },
+      "raw_image": {
+        "path": "/Users/rexxa/work/artenv1-data/baseline/current_day6_night_1x.png",
+        "sha256": "63bdc93dc699ae6e23642a1291bd19ad80077e2363c28b3eff7171e350735241",
+        "bytes": 90192
+      },
+      "clock": {
+        "day_index": 5,
+        "day_of_season": 6,
+        "day_of_year": 6,
+        "days_per_season": 6,
+        "days_per_year": 24,
+        "season": 0,
+        "season_index": 0,
+        "tick": 6840,
+        "ticks_per_day": 1440,
+        "time_of_day": 2.0,
+        "winter_severity": -1,
+        "year_index": 0
+      },
+      "camera_zoom": 4.0,
+      "tile_pixels": 64.0,
+      "camp_screen": [
+        800.0,
+        506.0
+      ],
+      "people_total": 10,
+      "people_in_map_view": 10,
+      "people_map_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "people_outside_map_ids": [],
+      "people": [
+        {
+          "activity_kind": -1,
+          "agent_id": 0,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967296,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "sleep",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            224,
+            826
+          ],
+          "stage": 0,
+          "tile": [
+            82,
+            106
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "sleep"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 1,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967297,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "sleep",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            288,
+            826
+          ],
+          "stage": 0,
+          "tile": [
+            83,
+            106
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "sleep"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 2,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967298,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "sleep",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            352,
+            826
+          ],
+          "stage": 0,
+          "tile": [
+            84,
+            106
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "sleep"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 3,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967299,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "sleep",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            416,
+            826
+          ],
+          "stage": 0,
+          "tile": [
+            85,
+            106
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "sleep"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 4,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967300,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "sleep",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            224,
+            802
+          ],
+          "stage": 0,
+          "tile": [
+            82,
+            106
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "sleep"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 5,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967301,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "sleep",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": true,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            672,
+            442
+          ],
+          "stage": 0,
+          "tile": [
+            89,
+            100
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "sleep"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 6,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967302,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "sleep",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": true,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            800,
+            634
+          ],
+          "stage": 0,
+          "tile": [
+            91,
+            103
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "sleep"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 7,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967303,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "sleep",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": true,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            928,
+            442
+          ],
+          "stage": 0,
+          "tile": [
+            93,
+            100
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "sleep"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 8,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967304,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "sleep",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": true,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            800,
+            610
+          ],
+          "stage": 0,
+          "tile": [
+            91,
+            103
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "sleep"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 9,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967305,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "sleep",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": true,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            800,
+            658
+          ],
+          "stage": 0,
+          "tile": [
+            91,
+            103
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "sleep"
+        }
+      ],
+      "buildings": [
+        {
+          "kind": 0,
+          "screen": [
+            800,
+            506
+          ],
+          "tile": [
+            91,
+            101
+          ],
+          "kind_name": "hearth"
+        },
+        {
+          "kind": 1,
+          "screen": [
+            672,
+            442
+          ],
+          "tile": [
+            89,
+            100
+          ],
+          "kind_name": "shelter"
+        },
+        {
+          "kind": 1,
+          "screen": [
+            928,
+            442
+          ],
+          "tile": [
+            93,
+            100
+          ],
+          "kind_name": "shelter"
+        },
+        {
+          "kind": 1,
+          "screen": [
+            800,
+            634
+          ],
+          "tile": [
+            91,
+            103
+          ],
+          "kind_name": "shelter"
+        },
+        {
+          "kind": 2,
+          "screen": [
+            928,
+            634
+          ],
+          "tile": [
+            93,
+            103
+          ],
+          "kind_name": "stockpile"
+        }
+      ],
+      "rooms": [
+        {
+          "id": 1,
+          "role_code": 1,
+          "role": "bedroom",
+          "centre_tile": [
+            84,
+            107
+          ],
+          "tiles": 15,
+          "beds": 4,
+          "doors": 1,
+          "roofed": 1
+        }
+      ],
+      "storehouse_count": 0,
+      "wolf_count": 0,
+      "wolves_in_map_view": 0,
+      "deer_count": 9,
+      "deer_in_map_view": 0,
+      "animals": [
+        {
+          "id": 1,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            98,
+            71
+          ],
+          "tile_centre_screen": [
+            1248.0,
+            -1414.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 2,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            69,
+            90
+          ],
+          "tile_centre_screen": [
+            -608.0,
+            -198.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 3,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            99,
+            61
+          ],
+          "tile_centre_screen": [
+            1312.0,
+            -2054.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 4,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            84,
+            76
+          ],
+          "tile_centre_screen": [
+            352.0,
+            -1094.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 5,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            73,
+            61
+          ],
+          "tile_centre_screen": [
+            -352.0,
+            -2054.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 6,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            102,
+            77
+          ],
+          "tile_centre_screen": [
+            1504.0,
+            -1030.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 7,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            100,
+            70
+          ],
+          "tile_centre_screen": [
+            1376.0,
+            -1478.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 8,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            87,
+            61
+          ],
+          "tile_centre_screen": [
+            544.0,
+            -2054.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 9,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            80,
+            69
+          ],
+          "tile_centre_screen": [
+            96.0,
+            -1542.0
+          ],
+          "in_map_view": false
+        }
+      ],
+      "unfinished_site_count": 21,
+      "unfinished_site_kinds": [
+        4
+      ],
+      "visual_review": {
+        "status": "REVIEWED",
+        "full_hud_visible": true,
+        "camp_at_expected_screen_point": true,
+        "no_wolves_or_storehouse_added": true
+      },
+      "designated_stockpiles": [
+        {
+          "zone_id": 1,
+          "kind": "Stockpile",
+          "cell_count": 36,
+          "tile_bounds_inclusive": [
+            94,
+            101,
+            99,
+            106
+          ],
+          "screen_bbox": [
+            960.0,
+            474.0,
+            1344.0,
+            858.0
+          ],
+          "map_visible_bbox": [
+            960.0,
+            474.0,
+            1344.0,
+            858.0
+          ],
+          "source": "get_colony_overlay.zone_ids/zone_xs/zone_ys"
+        },
+        {
+          "zone_id": 2,
+          "kind": "Stockpile",
+          "cell_count": 36,
+          "tile_bounds_inclusive": [
+            101,
+            95,
+            106,
+            100
+          ],
+          "screen_bbox": [
+            1408.0,
+            90.0,
+            1792.0,
+            474.0
+          ],
+          "map_visible_bbox": [
+            1408.0,
+            112,
+            1600,
+            474.0
+          ],
+          "source": "get_colony_overlay.zone_ids/zone_xs/zone_ys"
+        }
+      ],
+      "storage_readability_target": {
+        "semantic_label": "unfinished walled stockpile",
+        "zone_id": 2,
+        "finished_room_role_storehouse": false,
+        "planned_perimeter_tile_bounds_inclusive": [
+          100,
+          94,
+          107,
+          101
+        ],
+        "planned_perimeter_screen_bbox": [
+          1344.0,
+          26.0,
+          1856.0,
+          538.0
+        ],
+        "planned_perimeter_map_visible_bbox": [
+          1344.0,
+          112,
+          1600,
+          538.0
+        ],
+        "storage_interior_screen_bbox": [
+          1408.0,
+          90.0,
+          1792.0,
+          474.0
+        ],
+        "storage_interior_map_visible_bbox": [
+          1408.0,
+          112,
+          1600,
+          474.0
+        ],
+        "suggested_visible_point": [
+          1504,
+          282
+        ],
+        "completed_log_wall_cells": [
+          [
+            100,
+            94
+          ],
+          [
+            100,
+            95
+          ],
+          [
+            100,
+            96
+          ],
+          [
+            100,
+            101
+          ],
+          [
+            101,
+            101
+          ],
+          [
+            102,
+            101
+          ]
+        ],
+        "completed_door_cells": [
+          [
+            104,
+            101
+          ]
+        ],
+        "unfinished_log_wall_site_count": 21,
+        "site_progress": 0,
+        "site_required": 40,
+        "source_fields": [
+          "get_colony_overlay.zone_*",
+          "get_colony_overlay.site_*",
+          "get_space.wall_*",
+          "get_rooms.roles"
+        ],
+        "comparison_limit": "A genuine designated storage target exists and may be scored as unfinished walled stockpile. It is not a finished Storehouse room. A completed declared-after storehouse differs in state,position,and visible area; this is not a pure controlled same-state comparison."
+      }
+    },
+    {
+      "id": "day6_night_half",
+      "image": {
+        "path": "docs/v8/artenv1/reference/current_day6_night_half.png",
+        "sha256": "b88449bb9cbbdcf94ff1855b4e7082af2d08218133711ba2debafff4d65cf5a1",
+        "bytes": 218326
+      },
+      "hud": {
+        "path": "docs/v8/artenv1/reference/current_day6_night_half_hud.png",
+        "sha256": "6f339c5940f455f28d495f1da80a6d8efb11f28652e99fa6aeb902314722dcf6",
+        "bytes": 26445
+      },
+      "raw_image": {
+        "path": "/Users/rexxa/work/artenv1-data/baseline/current_day6_night_half.png",
+        "sha256": "b88449bb9cbbdcf94ff1855b4e7082af2d08218133711ba2debafff4d65cf5a1",
+        "bytes": 218326
+      },
+      "clock": {
+        "day_index": 5,
+        "day_of_season": 6,
+        "day_of_year": 6,
+        "days_per_season": 6,
+        "days_per_year": 24,
+        "season": 0,
+        "season_index": 0,
+        "tick": 6840,
+        "ticks_per_day": 1440,
+        "time_of_day": 2.0,
+        "winter_severity": -1,
+        "year_index": 0
+      },
+      "camera_zoom": 2.0,
+      "tile_pixels": 32.0,
+      "camp_screen": [
+        800.0,
+        506.0
+      ],
+      "people_total": 10,
+      "people_in_map_view": 10,
+      "people_map_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "people_outside_map_ids": [],
+      "people": [
+        {
+          "activity_kind": -1,
+          "agent_id": 0,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967296,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "sleep",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            512,
+            666
+          ],
+          "stage": 0,
+          "tile": [
+            82,
+            106
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "sleep"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 1,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967297,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "sleep",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            544,
+            666
+          ],
+          "stage": 0,
+          "tile": [
+            83,
+            106
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "sleep"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 2,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967298,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "sleep",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            576,
+            666
+          ],
+          "stage": 0,
+          "tile": [
+            84,
+            106
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "sleep"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 3,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967299,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "sleep",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            608,
+            666
+          ],
+          "stage": 0,
+          "tile": [
+            85,
+            106
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "sleep"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 4,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967300,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "sleep",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            512,
+            654
+          ],
+          "stage": 0,
+          "tile": [
+            82,
+            106
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "sleep"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 5,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967301,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "sleep",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": true,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            736,
+            474
+          ],
+          "stage": 0,
+          "tile": [
+            89,
+            100
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "sleep"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 6,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967302,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "sleep",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": true,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            800,
+            570
+          ],
+          "stage": 0,
+          "tile": [
+            91,
+            103
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "sleep"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 7,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967303,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "sleep",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": true,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            864,
+            474
+          ],
+          "stage": 0,
+          "tile": [
+            93,
+            100
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "sleep"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 8,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967304,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "sleep",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": true,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            800,
+            558
+          ],
+          "stage": 0,
+          "tile": [
+            91,
+            103
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "sleep"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 9,
+          "asleep": true,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967305,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "sleep",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": true,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            800,
+            582
+          ],
+          "stage": 0,
+          "tile": [
+            91,
+            103
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "sleep"
+        }
+      ],
+      "buildings": [
+        {
+          "kind": 0,
+          "screen": [
+            800,
+            506
+          ],
+          "tile": [
+            91,
+            101
+          ],
+          "kind_name": "hearth"
+        },
+        {
+          "kind": 1,
+          "screen": [
+            736,
+            474
+          ],
+          "tile": [
+            89,
+            100
+          ],
+          "kind_name": "shelter"
+        },
+        {
+          "kind": 1,
+          "screen": [
+            864,
+            474
+          ],
+          "tile": [
+            93,
+            100
+          ],
+          "kind_name": "shelter"
+        },
+        {
+          "kind": 1,
+          "screen": [
+            800,
+            570
+          ],
+          "tile": [
+            91,
+            103
+          ],
+          "kind_name": "shelter"
+        },
+        {
+          "kind": 2,
+          "screen": [
+            864,
+            570
+          ],
+          "tile": [
+            93,
+            103
+          ],
+          "kind_name": "stockpile"
+        }
+      ],
+      "rooms": [
+        {
+          "id": 1,
+          "role_code": 1,
+          "role": "bedroom",
+          "centre_tile": [
+            84,
+            107
+          ],
+          "tiles": 15,
+          "beds": 4,
+          "doors": 1,
+          "roofed": 1
+        }
+      ],
+      "storehouse_count": 0,
+      "wolf_count": 0,
+      "wolves_in_map_view": 0,
+      "deer_count": 9,
+      "deer_in_map_view": 1,
+      "animals": [
+        {
+          "id": 1,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            98,
+            71
+          ],
+          "tile_centre_screen": [
+            1024.0,
+            -454.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 2,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            69,
+            90
+          ],
+          "tile_centre_screen": [
+            96.0,
+            154.0
+          ],
+          "in_map_view": true
+        },
+        {
+          "id": 3,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            99,
+            61
+          ],
+          "tile_centre_screen": [
+            1056.0,
+            -774.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 4,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            84,
+            76
+          ],
+          "tile_centre_screen": [
+            576.0,
+            -294.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 5,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            73,
+            61
+          ],
+          "tile_centre_screen": [
+            224.0,
+            -774.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 6,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            102,
+            77
+          ],
+          "tile_centre_screen": [
+            1152.0,
+            -262.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 7,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            100,
+            70
+          ],
+          "tile_centre_screen": [
+            1088.0,
+            -486.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 8,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            87,
+            61
+          ],
+          "tile_centre_screen": [
+            672.0,
+            -774.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 9,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            80,
+            69
+          ],
+          "tile_centre_screen": [
+            448.0,
+            -518.0
+          ],
+          "in_map_view": false
+        }
+      ],
+      "unfinished_site_count": 21,
+      "unfinished_site_kinds": [
+        4
+      ],
+      "visual_review": {
+        "status": "REVIEWED",
+        "full_hud_visible": true,
+        "camp_at_expected_screen_point": true,
+        "no_wolves_or_storehouse_added": true
+      },
+      "designated_stockpiles": [
+        {
+          "zone_id": 1,
+          "kind": "Stockpile",
+          "cell_count": 36,
+          "tile_bounds_inclusive": [
+            94,
+            101,
+            99,
+            106
+          ],
+          "screen_bbox": [
+            880.0,
+            490.0,
+            1072.0,
+            682.0
+          ],
+          "map_visible_bbox": [
+            880.0,
+            490.0,
+            1072.0,
+            682.0
+          ],
+          "source": "get_colony_overlay.zone_ids/zone_xs/zone_ys"
+        },
+        {
+          "zone_id": 2,
+          "kind": "Stockpile",
+          "cell_count": 36,
+          "tile_bounds_inclusive": [
+            101,
+            95,
+            106,
+            100
+          ],
+          "screen_bbox": [
+            1104.0,
+            298.0,
+            1296.0,
+            490.0
+          ],
+          "map_visible_bbox": [
+            1104.0,
+            298.0,
+            1296.0,
+            490.0
+          ],
+          "source": "get_colony_overlay.zone_ids/zone_xs/zone_ys"
+        }
+      ],
+      "storage_readability_target": {
+        "semantic_label": "unfinished walled stockpile",
+        "zone_id": 2,
+        "finished_room_role_storehouse": false,
+        "planned_perimeter_tile_bounds_inclusive": [
+          100,
+          94,
+          107,
+          101
+        ],
+        "planned_perimeter_screen_bbox": [
+          1072.0,
+          266.0,
+          1328.0,
+          522.0
+        ],
+        "planned_perimeter_map_visible_bbox": [
+          1072.0,
+          266.0,
+          1328.0,
+          522.0
+        ],
+        "storage_interior_screen_bbox": [
+          1104.0,
+          298.0,
+          1296.0,
+          490.0
+        ],
+        "storage_interior_map_visible_bbox": [
+          1104.0,
+          298.0,
+          1296.0,
+          490.0
+        ],
+        "suggested_visible_point": [
+          1200,
+          394
+        ],
+        "completed_log_wall_cells": [
+          [
+            100,
+            94
+          ],
+          [
+            100,
+            95
+          ],
+          [
+            100,
+            96
+          ],
+          [
+            100,
+            101
+          ],
+          [
+            101,
+            101
+          ],
+          [
+            102,
+            101
+          ]
+        ],
+        "completed_door_cells": [
+          [
+            104,
+            101
+          ]
+        ],
+        "unfinished_log_wall_site_count": 21,
+        "site_progress": 0,
+        "site_required": 40,
+        "source_fields": [
+          "get_colony_overlay.zone_*",
+          "get_colony_overlay.site_*",
+          "get_space.wall_*",
+          "get_rooms.roles"
+        ],
+        "comparison_limit": "A genuine designated storage target exists and may be scored as unfinished walled stockpile. It is not a finished Storehouse room. A completed declared-after storehouse differs in state,position,and visible area; this is not a pure controlled same-state comparison."
+      }
+    },
+    {
+      "id": "winter_noon_1x",
+      "image": {
+        "path": "docs/v8/artenv1/reference/current_winter_noon_1x.png",
+        "sha256": "b8620a1f5c80ee6b18836b30089ff4f8de438a3de0e38c8b5a78eb9ac1d9d12c",
+        "bytes": 74768
+      },
+      "hud": {
+        "path": "docs/v8/artenv1/reference/current_winter_noon_1x_hud.png",
+        "sha256": "0a645a0712648666fa9c5492f66b37a4c674516cc381170899e0c3edb0537567",
+        "bytes": 13968
+      },
+      "raw_image": {
+        "path": "/Users/rexxa/work/artenv1-data/baseline/current_winter_noon_1x.png",
+        "sha256": "b8620a1f5c80ee6b18836b30089ff4f8de438a3de0e38c8b5a78eb9ac1d9d12c",
+        "bytes": 74768
+      },
+      "clock": {
+        "day_index": 18,
+        "day_of_season": 1,
+        "day_of_year": 19,
+        "days_per_season": 6,
+        "days_per_year": 24,
+        "season": 3,
+        "season_index": 3,
+        "tick": 26160,
+        "ticks_per_day": 1440,
+        "time_of_day": 12.0,
+        "winter_severity": 1,
+        "year_index": 0
+      },
+      "camera_zoom": 4.0,
+      "tile_pixels": 64.0,
+      "camp_screen": [
+        800.0,
+        506.0
+      ],
+      "people_total": 10,
+      "people_in_map_view": 8,
+      "people_map_ids": [
+        0,
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        9
+      ],
+      "people_outside_map_ids": [
+        4,
+        8
+      ],
+      "people": [
+        {
+          "activity_kind": -1,
+          "agent_id": 0,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967296,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            864,
+            570
+          ],
+          "stage": 0,
+          "tile": [
+            92,
+            102
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "none"
+        },
+        {
+          "activity_kind": 1,
+          "agent_id": 1,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967297,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            992,
+            570
+          ],
+          "stage": 0,
+          "tile": [
+            94,
+            102
+          ],
+          "top": 0,
+          "activity_name": "craft",
+          "job_name": "none",
+          "review_action": "craft"
+        },
+        {
+          "activity_kind": 3,
+          "agent_id": 2,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967298,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            672,
+            378
+          ],
+          "stage": 0,
+          "tile": [
+            89,
+            99
+          ],
+          "top": 0,
+          "activity_name": "hearth_circle",
+          "job_name": "none",
+          "review_action": "hearth_circle"
+        },
+        {
+          "activity_kind": 0,
+          "agent_id": 3,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967299,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            736,
+            442
+          ],
+          "stage": 0,
+          "tile": [
+            90,
+            100
+          ],
+          "top": 0,
+          "activity_name": "tend_fire",
+          "job_name": "none",
+          "review_action": "tend_fire"
+        },
+        {
+          "activity_kind": 4,
+          "agent_id": 4,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967300,
+          "in_map_view": false,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": false,
+          "screen": [
+            -96,
+            -390
+          ],
+          "stage": 0,
+          "tile": [
+            77,
+            87
+          ],
+          "top": 0,
+          "activity_name": "explore",
+          "job_name": "none",
+          "review_action": "explore"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 5,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967301,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            736,
+            250
+          ],
+          "stage": 0,
+          "tile": [
+            90,
+            97
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "none"
+        },
+        {
+          "activity_kind": 0,
+          "agent_id": 6,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967302,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            800,
+            442
+          ],
+          "stage": 0,
+          "tile": [
+            91,
+            100
+          ],
+          "top": 0,
+          "activity_name": "tend_fire",
+          "job_name": "none",
+          "review_action": "tend_fire"
+        },
+        {
+          "activity_kind": 2,
+          "agent_id": 7,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967303,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            608,
+            378
+          ],
+          "stage": 0,
+          "tile": [
+            88,
+            99
+          ],
+          "top": 0,
+          "activity_name": "repair",
+          "job_name": "none",
+          "review_action": "repair"
+        },
+        {
+          "activity_kind": 4,
+          "agent_id": 8,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967304,
+          "in_map_view": false,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": true,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": false,
+          "screen": [
+            -32,
+            -390
+          ],
+          "stage": 0,
+          "tile": [
+            78,
+            87
+          ],
+          "top": 0,
+          "activity_name": "explore",
+          "job_name": "none",
+          "review_action": "explore"
+        },
+        {
+          "activity_kind": 1,
+          "agent_id": 9,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967305,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            928,
+            570
+          ],
+          "stage": 0,
+          "tile": [
+            93,
+            102
+          ],
+          "top": 0,
+          "activity_name": "craft",
+          "job_name": "none",
+          "review_action": "craft"
+        }
+      ],
+      "buildings": [
+        {
+          "kind": 0,
+          "screen": [
+            800,
+            506
+          ],
+          "tile": [
+            91,
+            101
+          ],
+          "kind_name": "hearth"
+        },
+        {
+          "kind": 1,
+          "screen": [
+            672,
+            442
+          ],
+          "tile": [
+            89,
+            100
+          ],
+          "kind_name": "shelter"
+        },
+        {
+          "kind": 1,
+          "screen": [
+            928,
+            442
+          ],
+          "tile": [
+            93,
+            100
+          ],
+          "kind_name": "shelter"
+        },
+        {
+          "kind": 1,
+          "screen": [
+            800,
+            634
+          ],
+          "tile": [
+            91,
+            103
+          ],
+          "kind_name": "shelter"
+        },
+        {
+          "kind": 2,
+          "screen": [
+            928,
+            634
+          ],
+          "tile": [
+            93,
+            103
+          ],
+          "kind_name": "stockpile"
+        }
+      ],
+      "rooms": [
+        {
+          "id": 1,
+          "role_code": 1,
+          "role": "bedroom",
+          "centre_tile": [
+            84,
+            107
+          ],
+          "tiles": 15,
+          "beds": 4,
+          "doors": 1,
+          "roofed": 1
+        }
+      ],
+      "storehouse_count": 0,
+      "wolf_count": 0,
+      "wolves_in_map_view": 0,
+      "deer_count": 9,
+      "deer_in_map_view": 0,
+      "animals": [
+        {
+          "id": 1,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            83,
+            47
+          ],
+          "tile_centre_screen": [
+            288.0,
+            -2950.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 2,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            65,
+            87
+          ],
+          "tile_centre_screen": [
+            -864.0,
+            -390.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 3,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            99,
+            72
+          ],
+          "tile_centre_screen": [
+            1312.0,
+            -1350.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 4,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            66,
+            67
+          ],
+          "tile_centre_screen": [
+            -800.0,
+            -1670.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 5,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            71,
+            70
+          ],
+          "tile_centre_screen": [
+            -480.0,
+            -1478.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 6,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            95,
+            67
+          ],
+          "tile_centre_screen": [
+            1056.0,
+            -1670.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 7,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            110,
+            51
+          ],
+          "tile_centre_screen": [
+            2016.0,
+            -2694.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 8,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            85,
+            46
+          ],
+          "tile_centre_screen": [
+            416.0,
+            -3014.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 9,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            78,
+            76
+          ],
+          "tile_centre_screen": [
+            -32.0,
+            -1094.0
+          ],
+          "in_map_view": false
+        }
+      ],
+      "unfinished_site_count": 21,
+      "unfinished_site_kinds": [
+        4
+      ],
+      "visual_review": {
+        "status": "REVIEWED",
+        "full_hud_visible": true,
+        "camp_at_expected_screen_point": true,
+        "no_wolves_or_storehouse_added": true
+      },
+      "designated_stockpiles": [
+        {
+          "zone_id": 1,
+          "kind": "Stockpile",
+          "cell_count": 36,
+          "tile_bounds_inclusive": [
+            94,
+            101,
+            99,
+            106
+          ],
+          "screen_bbox": [
+            960.0,
+            474.0,
+            1344.0,
+            858.0
+          ],
+          "map_visible_bbox": [
+            960.0,
+            474.0,
+            1344.0,
+            858.0
+          ],
+          "source": "get_colony_overlay.zone_ids/zone_xs/zone_ys"
+        },
+        {
+          "zone_id": 2,
+          "kind": "Stockpile",
+          "cell_count": 36,
+          "tile_bounds_inclusive": [
+            101,
+            95,
+            106,
+            100
+          ],
+          "screen_bbox": [
+            1408.0,
+            90.0,
+            1792.0,
+            474.0
+          ],
+          "map_visible_bbox": [
+            1408.0,
+            112,
+            1600,
+            474.0
+          ],
+          "source": "get_colony_overlay.zone_ids/zone_xs/zone_ys"
+        }
+      ],
+      "storage_readability_target": {
+        "semantic_label": "unfinished walled stockpile",
+        "zone_id": 2,
+        "finished_room_role_storehouse": false,
+        "planned_perimeter_tile_bounds_inclusive": [
+          100,
+          94,
+          107,
+          101
+        ],
+        "planned_perimeter_screen_bbox": [
+          1344.0,
+          26.0,
+          1856.0,
+          538.0
+        ],
+        "planned_perimeter_map_visible_bbox": [
+          1344.0,
+          112,
+          1600,
+          538.0
+        ],
+        "storage_interior_screen_bbox": [
+          1408.0,
+          90.0,
+          1792.0,
+          474.0
+        ],
+        "storage_interior_map_visible_bbox": [
+          1408.0,
+          112,
+          1600,
+          474.0
+        ],
+        "suggested_visible_point": [
+          1504,
+          282
+        ],
+        "completed_log_wall_cells": [
+          [
+            100,
+            94
+          ],
+          [
+            100,
+            95
+          ],
+          [
+            100,
+            96
+          ],
+          [
+            100,
+            101
+          ],
+          [
+            101,
+            101
+          ],
+          [
+            102,
+            101
+          ]
+        ],
+        "completed_door_cells": [
+          [
+            104,
+            101
+          ]
+        ],
+        "unfinished_log_wall_site_count": 21,
+        "site_progress": 0,
+        "site_required": 40,
+        "source_fields": [
+          "get_colony_overlay.zone_*",
+          "get_colony_overlay.site_*",
+          "get_space.wall_*",
+          "get_rooms.roles"
+        ],
+        "comparison_limit": "A genuine designated storage target exists and may be scored as unfinished walled stockpile. It is not a finished Storehouse room. A completed declared-after storehouse differs in state,position,and visible area; this is not a pure controlled same-state comparison."
+      }
+    },
+    {
+      "id": "winter_noon_half",
+      "image": {
+        "path": "docs/v8/artenv1/reference/current_winter_noon_half.png",
+        "sha256": "e4c9cb37233a6fc40eedac2ac998cccec860510236ffbe1aa19c6ca5178a271f",
+        "bytes": 203144
+      },
+      "hud": {
+        "path": "docs/v8/artenv1/reference/current_winter_noon_half_hud.png",
+        "sha256": "b7dc8a59d263f4b075eba41af9db4ecd190c3ac58ae55333daf484173c8b271f",
+        "bytes": 27061
+      },
+      "raw_image": {
+        "path": "/Users/rexxa/work/artenv1-data/baseline/current_winter_noon_half.png",
+        "sha256": "e4c9cb37233a6fc40eedac2ac998cccec860510236ffbe1aa19c6ca5178a271f",
+        "bytes": 203144
+      },
+      "clock": {
+        "day_index": 18,
+        "day_of_season": 1,
+        "day_of_year": 19,
+        "days_per_season": 6,
+        "days_per_year": 24,
+        "season": 3,
+        "season_index": 3,
+        "tick": 26160,
+        "ticks_per_day": 1440,
+        "time_of_day": 12.0,
+        "winter_severity": 1,
+        "year_index": 0
+      },
+      "camera_zoom": 2.0,
+      "tile_pixels": 32.0,
+      "camp_screen": [
+        800.0,
+        506.0
+      ],
+      "people_total": 10,
+      "people_in_map_view": 8,
+      "people_map_ids": [
+        0,
+        1,
+        2,
+        3,
+        5,
+        6,
+        7,
+        9
+      ],
+      "people_outside_map_ids": [
+        4,
+        8
+      ],
+      "people": [
+        {
+          "activity_kind": -1,
+          "agent_id": 0,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967296,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            832,
+            538
+          ],
+          "stage": 0,
+          "tile": [
+            92,
+            102
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "none"
+        },
+        {
+          "activity_kind": 1,
+          "agent_id": 1,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967297,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            896,
+            538
+          ],
+          "stage": 0,
+          "tile": [
+            94,
+            102
+          ],
+          "top": 0,
+          "activity_name": "craft",
+          "job_name": "none",
+          "review_action": "craft"
+        },
+        {
+          "activity_kind": 3,
+          "agent_id": 2,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967298,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            736,
+            442
+          ],
+          "stage": 0,
+          "tile": [
+            89,
+            99
+          ],
+          "top": 0,
+          "activity_name": "hearth_circle",
+          "job_name": "none",
+          "review_action": "hearth_circle"
+        },
+        {
+          "activity_kind": 0,
+          "agent_id": 3,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967299,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            768,
+            474
+          ],
+          "stage": 0,
+          "tile": [
+            90,
+            100
+          ],
+          "top": 0,
+          "activity_name": "tend_fire",
+          "job_name": "none",
+          "review_action": "tend_fire"
+        },
+        {
+          "activity_kind": 4,
+          "agent_id": 4,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967300,
+          "in_map_view": false,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            352,
+            58
+          ],
+          "stage": 0,
+          "tile": [
+            77,
+            87
+          ],
+          "top": 0,
+          "activity_name": "explore",
+          "job_name": "none",
+          "review_action": "explore"
+        },
+        {
+          "activity_kind": -1,
+          "agent_id": 5,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967301,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            768,
+            378
+          ],
+          "stage": 0,
+          "tile": [
+            90,
+            97
+          ],
+          "top": 0,
+          "activity_name": "none",
+          "job_name": "none",
+          "review_action": "none"
+        },
+        {
+          "activity_kind": 0,
+          "agent_id": 6,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967302,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            800,
+            474
+          ],
+          "stage": 0,
+          "tile": [
+            91,
+            100
+          ],
+          "top": 0,
+          "activity_name": "tend_fire",
+          "job_name": "none",
+          "review_action": "tend_fire"
+        },
+        {
+          "activity_kind": 2,
+          "agent_id": 7,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967303,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            704,
+            442
+          ],
+          "stage": 0,
+          "tile": [
+            88,
+            99
+          ],
+          "top": 0,
+          "activity_name": "repair",
+          "job_name": "none",
+          "review_action": "repair"
+        },
+        {
+          "activity_kind": 4,
+          "agent_id": 8,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967304,
+          "in_map_view": false,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": true,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            384,
+            58
+          ],
+          "stage": 0,
+          "tile": [
+            78,
+            87
+          ],
+          "top": 0,
+          "activity_name": "explore",
+          "job_name": "none",
+          "review_action": "explore"
+        },
+        {
+          "activity_kind": 1,
+          "agent_id": 9,
+          "asleep": false,
+          "carry": 0,
+          "carry_kind": -1,
+          "entity_bits": 4294967305,
+          "in_map_view": true,
+          "job": 0,
+          "look": {
+            "carry": false,
+            "drafted": false,
+            "frame": "0",
+            "halo": false,
+            "sick": false,
+            "tool": false,
+            "warm": false,
+            "west": false
+          },
+          "on_screen": true,
+          "screen": [
+            864,
+            538
+          ],
+          "stage": 0,
+          "tile": [
+            93,
+            102
+          ],
+          "top": 0,
+          "activity_name": "craft",
+          "job_name": "none",
+          "review_action": "craft"
+        }
+      ],
+      "buildings": [
+        {
+          "kind": 0,
+          "screen": [
+            800,
+            506
+          ],
+          "tile": [
+            91,
+            101
+          ],
+          "kind_name": "hearth"
+        },
+        {
+          "kind": 1,
+          "screen": [
+            736,
+            474
+          ],
+          "tile": [
+            89,
+            100
+          ],
+          "kind_name": "shelter"
+        },
+        {
+          "kind": 1,
+          "screen": [
+            864,
+            474
+          ],
+          "tile": [
+            93,
+            100
+          ],
+          "kind_name": "shelter"
+        },
+        {
+          "kind": 1,
+          "screen": [
+            800,
+            570
+          ],
+          "tile": [
+            91,
+            103
+          ],
+          "kind_name": "shelter"
+        },
+        {
+          "kind": 2,
+          "screen": [
+            864,
+            570
+          ],
+          "tile": [
+            93,
+            103
+          ],
+          "kind_name": "stockpile"
+        }
+      ],
+      "rooms": [
+        {
+          "id": 1,
+          "role_code": 1,
+          "role": "bedroom",
+          "centre_tile": [
+            84,
+            107
+          ],
+          "tiles": 15,
+          "beds": 4,
+          "doors": 1,
+          "roofed": 1
+        }
+      ],
+      "storehouse_count": 0,
+      "wolf_count": 0,
+      "wolves_in_map_view": 0,
+      "deer_count": 9,
+      "deer_in_map_view": 0,
+      "animals": [
+        {
+          "id": 1,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            83,
+            47
+          ],
+          "tile_centre_screen": [
+            544.0,
+            -1222.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 2,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            65,
+            87
+          ],
+          "tile_centre_screen": [
+            -32.0,
+            58.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 3,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            99,
+            72
+          ],
+          "tile_centre_screen": [
+            1056.0,
+            -422.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 4,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            66,
+            67
+          ],
+          "tile_centre_screen": [
+            0.0,
+            -582.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 5,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            71,
+            70
+          ],
+          "tile_centre_screen": [
+            160.0,
+            -486.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 6,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            95,
+            67
+          ],
+          "tile_centre_screen": [
+            928.0,
+            -582.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 7,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            110,
+            51
+          ],
+          "tile_centre_screen": [
+            1408.0,
+            -1094.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 8,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            85,
+            46
+          ],
+          "tile_centre_screen": [
+            608.0,
+            -1254.0
+          ],
+          "in_map_view": false
+        },
+        {
+          "id": 9,
+          "kind": 1,
+          "kind_name": "deer",
+          "state": 0,
+          "tile": [
+            78,
+            76
+          ],
+          "tile_centre_screen": [
+            384.0,
+            -294.0
+          ],
+          "in_map_view": false
+        }
+      ],
+      "unfinished_site_count": 21,
+      "unfinished_site_kinds": [
+        4
+      ],
+      "visual_review": {
+        "status": "REVIEWED",
+        "full_hud_visible": true,
+        "camp_at_expected_screen_point": true,
+        "no_wolves_or_storehouse_added": true
+      },
+      "designated_stockpiles": [
+        {
+          "zone_id": 1,
+          "kind": "Stockpile",
+          "cell_count": 36,
+          "tile_bounds_inclusive": [
+            94,
+            101,
+            99,
+            106
+          ],
+          "screen_bbox": [
+            880.0,
+            490.0,
+            1072.0,
+            682.0
+          ],
+          "map_visible_bbox": [
+            880.0,
+            490.0,
+            1072.0,
+            682.0
+          ],
+          "source": "get_colony_overlay.zone_ids/zone_xs/zone_ys"
+        },
+        {
+          "zone_id": 2,
+          "kind": "Stockpile",
+          "cell_count": 36,
+          "tile_bounds_inclusive": [
+            101,
+            95,
+            106,
+            100
+          ],
+          "screen_bbox": [
+            1104.0,
+            298.0,
+            1296.0,
+            490.0
+          ],
+          "map_visible_bbox": [
+            1104.0,
+            298.0,
+            1296.0,
+            490.0
+          ],
+          "source": "get_colony_overlay.zone_ids/zone_xs/zone_ys"
+        }
+      ],
+      "storage_readability_target": {
+        "semantic_label": "unfinished walled stockpile",
+        "zone_id": 2,
+        "finished_room_role_storehouse": false,
+        "planned_perimeter_tile_bounds_inclusive": [
+          100,
+          94,
+          107,
+          101
+        ],
+        "planned_perimeter_screen_bbox": [
+          1072.0,
+          266.0,
+          1328.0,
+          522.0
+        ],
+        "planned_perimeter_map_visible_bbox": [
+          1072.0,
+          266.0,
+          1328.0,
+          522.0
+        ],
+        "storage_interior_screen_bbox": [
+          1104.0,
+          298.0,
+          1296.0,
+          490.0
+        ],
+        "storage_interior_map_visible_bbox": [
+          1104.0,
+          298.0,
+          1296.0,
+          490.0
+        ],
+        "suggested_visible_point": [
+          1200,
+          394
+        ],
+        "completed_log_wall_cells": [
+          [
+            100,
+            94
+          ],
+          [
+            100,
+            95
+          ],
+          [
+            100,
+            96
+          ],
+          [
+            100,
+            101
+          ],
+          [
+            101,
+            101
+          ],
+          [
+            102,
+            101
+          ]
+        ],
+        "completed_door_cells": [
+          [
+            104,
+            101
+          ]
+        ],
+        "unfinished_log_wall_site_count": 21,
+        "site_progress": 0,
+        "site_required": 40,
+        "source_fields": [
+          "get_colony_overlay.zone_*",
+          "get_colony_overlay.site_*",
+          "get_space.wall_*",
+          "get_rooms.roles"
+        ],
+        "comparison_limit": "A genuine designated storage target exists and may be scored as unfinished walled stockpile. It is not a finished Storehouse room. A completed declared-after storehouse differs in state,position,and visible area; this is not a pure controlled same-state comparison."
+      }
+    }
+  ],
+  "limitations": [
+    "All three native source saves have ten alive people, one Bedroom room, zero finished Storehouse rooms, two designated Stockpile zones, and zero wolves. Zone2 has an unfinished planned wall perimeter and is a genuine storage-location task target.",
+    "Day6 noon and winter noon have eight person centres in the unobscured map view; the two explorers lie outside 1x and behind the HUD at half. Night has ten sleeping people.",
+    "Every native person has job code0 and carry count0/kind-1 at these ticks. Routine ActivityKind records do not change the current renderer standing frame.",
+    "Current winter renderer keeps green/brown terrain; this is an authentic winter tick and ordinary winter, not a snow overlay or cold-snap event.",
+    "Declared after-only M5 objects, completed storehouse, wolves, jobs, carry states, person look replacements or pose overrides are not same-state before/after evidence. Preserve declared overlay metadata.",
+    "Historical M5 reference images remain separate scenario references; their different source time/camera and 93px HUD crop are not substituted for these112px exact-source HUD crops.",
+    "No performance or runtime integration acceptance follows from still-image capture."
+  ],
+  "verification_report": {
+    "path": "/Users/rexxa/work/artenv1-data/baseline/verification_report.json",
+    "sha256": "5f7ee1498cd57270350611d63aa7bd9303ac3256fa64de36415e2e64cdd5744b",
+    "bytes": 1185,
+    "status": "PASS"
+  },
+  "storage_target_audit": {
+    "status": "VERIFIED_FROM_ORIGINAL_SNAPSHOT",
+    "source_raw_sha256": "1c956af0b1ca4fd93e1840e556812c8a04abf41263399aff016d17cbd47a7dce",
+    "source_conditions_compared": 3,
+    "role_storehouse_count_preserved": 0,
+    "completed_walls": 6,
+    "completed_doors": 1,
+    "unfinished_log_wall_sites": 21,
+    "zone2_cells": 36,
+    "raw_files_modified": false
+  }
+}

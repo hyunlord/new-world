@@ -1,0 +1,543 @@
+{
+  "reviewer": "a",
+  "opened_at_utc": "2026-10-23 07:26:26 UTC",
+  "completed_at_utc": "2026-10-23 07:29:36 UTC",
+  "answers": [
+    {
+      "id": "QC680AB",
+      "primary_name": "Cluster of tied hide pouches",
+      "quantity_bucket": "2–8",
+      "visible_state": "Brown, creased or stitched hide-like surfaces",
+      "confidence": "medium",
+      "ambiguity": "Could be folded skins; exact number is hard to separate."
+    },
+    {
+      "id": "QB3797A",
+      "primary_name": "Reddish clay lump",
+      "quantity_bucket": "1",
+      "visible_state": "Orange-red, irregular and faceted",
+      "confidence": "low",
+      "ambiguity": "Could be an ore lump or a small piece of meat."
+    },
+    {
+      "id": "QD7A1CD",
+      "primary_name": "Overlapping brown hides",
+      "quantity_bucket": "2–8",
+      "visible_state": "Brown, rough-edged and folded",
+      "confidence": "medium",
+      "ambiguity": "Could be one crumpled hide."
+    },
+    {
+      "id": "QB23905",
+      "primary_name": "Small handled axes",
+      "quantity_bucket": "2–8",
+      "visible_state": "Pale heads on brown handles",
+      "confidence": "low",
+      "ambiguity": "Could be picks; overlapping handles make the count uncertain."
+    },
+    {
+      "id": "QAC3D78",
+      "primary_name": "Pieces of meat",
+      "quantity_bucket": "2–8",
+      "visible_state": "Red flesh with pale edging",
+      "confidence": "medium",
+      "ambiguity": "Could be another reddish food; exact count is uncertain."
+    },
+    {
+      "id": "QC82889",
+      "primary_name": "Stack of pale hides",
+      "quantity_bucket": "9+",
+      "visible_state": "Tan, rough-edged sheets with repeated outlines",
+      "confidence": "medium",
+      "ambiguity": "Could be woven or bark sheets rather than hides."
+    },
+    {
+      "id": "Q319404",
+      "primary_name": "Pile of rounded stones",
+      "quantity_bucket": "2–8",
+      "visible_state": "Tan and grey, with shaded rounded faces",
+      "confidence": "medium",
+      "ambiguity": "Some stones overlap, so the count may be larger."
+    },
+    {
+      "id": "QE4505F",
+      "primary_name": "Tied hide pouch",
+      "quantity_bucket": "1",
+      "visible_state": "Brown, gathered at the top, with seam-like lines",
+      "confidence": "medium",
+      "ambiguity": "Could be a folded animal skin."
+    },
+    {
+      "id": "Q4B9C66",
+      "primary_name": "Pile of short logs",
+      "quantity_bucket": "2–8",
+      "visible_state": "Brown bark and pale cut ends",
+      "confidence": "medium",
+      "ambiguity": "Exact number is difficult to separate."
+    },
+    {
+      "id": "QC628A8",
+      "primary_name": "Pile of rounded stones",
+      "quantity_bucket": "9+",
+      "visible_state": "Many small tan-grey stones",
+      "confidence": "high",
+      "ambiguity": "none"
+    },
+    {
+      "id": "Q45E0C7",
+      "primary_name": "Basket of berries",
+      "quantity_bucket": "1",
+      "visible_state": "Round rim enclosing many red and yellow-brown dots",
+      "confidence": "medium",
+      "ambiguity": "Contents could be small mixed fruit or seeds."
+    },
+    {
+      "id": "QFA02D7",
+      "primary_name": "Cluster of handled axes",
+      "quantity_bucket": "unclear",
+      "visible_state": "Pale heads and brown shafts",
+      "confidence": "low",
+      "ambiguity": "Could be picks; I cannot reliably separate a 2–8 cluster from 9+."
+    },
+    {
+      "id": "Q4B4287",
+      "primary_name": "Group of small pots",
+      "quantity_bucket": "9+",
+      "visible_state": "Grey-brown pottery with dark openings; no contents apparent",
+      "confidence": "medium",
+      "ambiguity": "The rear pots overlap."
+    },
+    {
+      "id": "QEC2086",
+      "primary_name": "Animal hide",
+      "quantity_bucket": "1",
+      "visible_state": "Orange-tan, spread out with jagged leg-like edges",
+      "confidence": "medium",
+      "ambiguity": "Some edge shapes could belong to an overlapping second hide."
+    },
+    {
+      "id": "QA24C7A",
+      "primary_name": "Stack of logs",
+      "quantity_bucket": "9+",
+      "visible_state": "Golden-brown wood in several horizontal layers",
+      "confidence": "high",
+      "ambiguity": "none"
+    },
+    {
+      "id": "Q2A053E",
+      "primary_name": "Brown animal hide",
+      "quantity_bucket": "1",
+      "visible_state": "Folded or crumpled, with uneven edges",
+      "confidence": "medium",
+      "ambiguity": "Could be a short strip of bark."
+    },
+    {
+      "id": "Q266EBB",
+      "primary_name": "Pile of chipped stone",
+      "quantity_bucket": "2–8",
+      "visible_state": "Pale tan, angular and fractured",
+      "confidence": "low",
+      "ambiguity": "Could be dry wood fragments; overlapping pieces obscure the count."
+    },
+    {
+      "id": "QF44A5A",
+      "primary_name": "Stretched animal skin",
+      "quantity_bucket": "1",
+      "visible_state": "Dark brown center with a pale irregular border",
+      "confidence": "high",
+      "ambiguity": "none"
+    },
+    {
+      "id": "QEFFD57",
+      "primary_name": "Pot of water",
+      "quantity_bucket": "1",
+      "visible_state": "Orange pottery surrounding a blue liquid surface",
+      "confidence": "high",
+      "ambiguity": "none"
+    },
+    {
+      "id": "Q925061",
+      "primary_name": "Split pieces of wood",
+      "quantity_bucket": "2–8",
+      "visible_state": "Pale cut faces and brown edges",
+      "confidence": "medium",
+      "ambiguity": "Could be two short bones."
+    },
+    {
+      "id": "Q820D6F",
+      "primary_name": "Bundle of spears",
+      "quantity_bucket": "2–8",
+      "visible_state": "Thin brown shafts with light pointed ends",
+      "confidence": "medium",
+      "ambiguity": "Could be arrows or plain sticks; exact count is uncertain."
+    },
+    {
+      "id": "Q27F923",
+      "primary_name": "Small pile of stones",
+      "quantity_bucket": "2–8",
+      "visible_state": "Rounded tan-grey stones",
+      "confidence": "high",
+      "ambiguity": "none"
+    },
+    {
+      "id": "QD6C554",
+      "primary_name": "Pale bone points",
+      "quantity_bucket": "2–8",
+      "visible_state": "Slender, off-white and ridged",
+      "confidence": "low",
+      "ambiguity": "Could be grain heads or small carved sticks."
+    },
+    {
+      "id": "QE26D0E",
+      "primary_name": "Cluster of reddish clay lumps",
+      "quantity_bucket": "2–8",
+      "visible_state": "Orange-red, irregular pieces",
+      "confidence": "low",
+      "ambiguity": "Could be ore or pieces of meat."
+    },
+    {
+      "id": "Q33AA8C",
+      "primary_name": "Stone axe",
+      "quantity_bucket": "1",
+      "visible_state": "Grey-brown head attached to a wooden handle",
+      "confidence": "high",
+      "ambiguity": "none"
+    },
+    {
+      "id": "QC0C489",
+      "primary_name": "Empty clay pot",
+      "quantity_bucket": "1",
+      "visible_state": "Orange-brown vessel with a dark open mouth; no contents apparent",
+      "confidence": "high",
+      "ambiguity": "none"
+    },
+    {
+      "id": "Q19AB72",
+      "primary_name": "Overlapping pale hides",
+      "quantity_bucket": "2–8",
+      "visible_state": "Tan, stretched-looking sheets with uneven edges",
+      "confidence": "medium",
+      "ambiguity": "Could be one heavily folded hide."
+    },
+    {
+      "id": "QB7836B",
+      "primary_name": "Cluster of stone flakes",
+      "quantity_bucket": "2–8",
+      "visible_state": "Pale brown, angular or chipped surfaces",
+      "confidence": "medium",
+      "ambiguity": "Could be bone fragments or dry wood."
+    },
+    {
+      "id": "Q0AEFBF",
+      "primary_name": "Small grey pot",
+      "quantity_bucket": "1",
+      "visible_state": "Grey-brown vessel with a dark mouth; no contents apparent",
+      "confidence": "high",
+      "ambiguity": "none"
+    },
+    {
+      "id": "QC12CE3",
+      "primary_name": "Group of empty clay pots",
+      "quantity_bucket": "9+",
+      "visible_state": "Orange pottery with dark open mouths; no contents apparent",
+      "confidence": "high",
+      "ambiguity": "none"
+    },
+    {
+      "id": "Q13F1EF",
+      "primary_name": "Small group of handled axes",
+      "quantity_bucket": "2–8",
+      "visible_state": "Pale heads on brown shafts",
+      "confidence": "medium",
+      "ambiguity": "Could be picks."
+    },
+    {
+      "id": "Q3D4EF6",
+      "primary_name": "Overlapping stone flakes",
+      "quantity_bucket": "2–8",
+      "visible_state": "Pale tan, elongated and chipped-looking",
+      "confidence": "low",
+      "ambiguity": "Could be a single rough stone or bone fragment."
+    },
+    {
+      "id": "Q210699",
+      "primary_name": "Pale animal hide",
+      "quantity_bucket": "1",
+      "visible_state": "Spread out, cream-tan, with irregular corners",
+      "confidence": "medium",
+      "ambiguity": "Doubled edges could indicate more than one hide."
+    },
+    {
+      "id": "QE4A74C",
+      "primary_name": "Split wood piece",
+      "quantity_bucket": "1",
+      "visible_state": "Pale cut surface and darker brown edge",
+      "confidence": "medium",
+      "ambiguity": "Could be a short bone."
+    },
+    {
+      "id": "Q85E074",
+      "primary_name": "Spears",
+      "quantity_bucket": "2–8",
+      "visible_state": "Two thin brown shafts with light tips",
+      "confidence": "high",
+      "ambiguity": "Could be arrows."
+    },
+    {
+      "id": "Q5ED247",
+      "primary_name": "Pile of stone flakes",
+      "quantity_bucket": "9+",
+      "visible_state": "Dense cluster of pale angular pieces",
+      "confidence": "medium",
+      "ambiguity": "Could be bone fragments or dry wood chips."
+    },
+    {
+      "id": "QFAE10D",
+      "primary_name": "Pots of water",
+      "quantity_bucket": "2–8",
+      "visible_state": "Orange pots with visible blue liquid",
+      "confidence": "high",
+      "ambiguity": "none"
+    },
+    {
+      "id": "Q83A561",
+      "primary_name": "Spear",
+      "quantity_bucket": "1",
+      "visible_state": "Long brown shaft with a light pointed end",
+      "confidence": "high",
+      "ambiguity": "Could be an arrow."
+    },
+    {
+      "id": "Q68350B",
+      "primary_name": "Stone flake",
+      "quantity_bucket": "1",
+      "visible_state": "Elongated, pale tan and chipped-looking",
+      "confidence": "medium",
+      "ambiguity": "Could be a bone fragment."
+    },
+    {
+      "id": "QE077F5",
+      "primary_name": "Baskets of berries",
+      "quantity_bucket": "9+",
+      "visible_state": "Repeated round rims containing red and brown dots",
+      "confidence": "medium",
+      "ambiguity": "Could be bowls of another small food; individual rims overlap."
+    },
+    {
+      "id": "Q3FB343",
+      "primary_name": "Empty clay pots",
+      "quantity_bucket": "2–8",
+      "visible_state": "Orange-brown vessels with dark openings; no contents apparent",
+      "confidence": "high",
+      "ambiguity": "none"
+    },
+    {
+      "id": "QDC2B9D",
+      "primary_name": "Group of tied hide pouches",
+      "quantity_bucket": "9+",
+      "visible_state": "Brown repeated bag-like shapes with gathered tops",
+      "confidence": "medium",
+      "ambiguity": "Could be folded skins."
+    },
+    {
+      "id": "Q16F831",
+      "primary_name": "Group of pots of water",
+      "quantity_bucket": "9+",
+      "visible_state": "Orange vessels with blue liquid surfaces",
+      "confidence": "high",
+      "ambiguity": "none"
+    },
+    {
+      "id": "QC65A70",
+      "primary_name": "Cluster of handled axes",
+      "quantity_bucket": "2–8",
+      "visible_state": "Pale heads on brown handles",
+      "confidence": "low",
+      "ambiguity": "Could be picks; overlapping shafts make the exact count uncertain."
+    },
+    {
+      "id": "QCEC34F",
+      "primary_name": "Pale bone point",
+      "quantity_bucket": "1",
+      "visible_state": "Slender, off-white and ridged",
+      "confidence": "low",
+      "ambiguity": "Could be a grain head or carved stick."
+    },
+    {
+      "id": "Q44C1CF",
+      "primary_name": "Piece of meat",
+      "quantity_bucket": "1",
+      "visible_state": "Red flesh with pale marbling and a small projecting end",
+      "confidence": "high",
+      "ambiguity": "The projecting end may be bone."
+    },
+    {
+      "id": "Q19ACB6",
+      "primary_name": "Pile of chipped stone",
+      "quantity_bucket": "9+",
+      "visible_state": "Many pale angular fragments",
+      "confidence": "low",
+      "ambiguity": "Could be dry wood or bone fragments; exact count is obscured."
+    },
+    {
+      "id": "QFE65EB",
+      "primary_name": "Overlapping animal skins",
+      "quantity_bucket": "2–8",
+      "visible_state": "Dark brown centers with pale irregular edges",
+      "confidence": "high",
+      "ambiguity": "none"
+    },
+    {
+      "id": "QEE0C04",
+      "primary_name": "Small grey pots",
+      "quantity_bucket": "2–8",
+      "visible_state": "Grey-brown vessels with dark openings; no contents apparent",
+      "confidence": "high",
+      "ambiguity": "none"
+    },
+    {
+      "id": "Q18411A",
+      "primary_name": "Pale bone points",
+      "quantity_bucket": "2–8",
+      "visible_state": "Three slender, ridged off-white pieces",
+      "confidence": "medium",
+      "ambiguity": "Could be grain heads or carved sticks."
+    },
+    {
+      "id": "Q73BE1D",
+      "primary_name": "Stone axe",
+      "quantity_bucket": "1",
+      "visible_state": "Pale head on a brown handle",
+      "confidence": "high",
+      "ambiguity": "Could be a small adze."
+    },
+    {
+      "id": "QCE752A",
+      "primary_name": "Group of animal skins",
+      "quantity_bucket": "9+",
+      "visible_state": "Repeated dark centers and pale stretched edges",
+      "confidence": "medium",
+      "ambiguity": "The number is inferred from the repeated visible outlines."
+    },
+    {
+      "id": "Q79A013",
+      "primary_name": "Bundle of logs",
+      "quantity_bucket": "2–8",
+      "visible_state": "Brown bark, pale cut ends, several parallel pieces",
+      "confidence": "high",
+      "ambiguity": "none"
+    },
+    {
+      "id": "QF778E9",
+      "primary_name": "Pile of short logs",
+      "quantity_bucket": "2–8",
+      "visible_state": "Brown bark with pale cut ends",
+      "confidence": "medium",
+      "ambiguity": "Overlapping logs make the exact count uncertain."
+    },
+    {
+      "id": "QCF96A6",
+      "primary_name": "Pile of short logs",
+      "quantity_bucket": "2–8",
+      "visible_state": "Brown bark with pale cut ends",
+      "confidence": "medium",
+      "ambiguity": "Overlapping logs make the exact count uncertain."
+    },
+    {
+      "id": "QBC258F",
+      "primary_name": "Animal hide",
+      "quantity_bucket": "1",
+      "visible_state": "Orange-tan, spread out with a darker center",
+      "confidence": "high",
+      "ambiguity": "none"
+    },
+    {
+      "id": "QBFF808",
+      "primary_name": "Pieces of meat",
+      "quantity_bucket": "2–8",
+      "visible_state": "Red flesh with pale streaks and projecting ends",
+      "confidence": "high",
+      "ambiguity": "none"
+    },
+    {
+      "id": "Q57B2BA",
+      "primary_name": "Bundle of logs",
+      "quantity_bucket": "2–8",
+      "visible_state": "Brown bark and pale cut ends",
+      "confidence": "high",
+      "ambiguity": "none"
+    },
+    {
+      "id": "Q9C5022",
+      "primary_name": "Stack of logs",
+      "quantity_bucket": "9+",
+      "visible_state": "Several horizontal layers of golden-brown wood",
+      "confidence": "high",
+      "ambiguity": "none"
+    },
+    {
+      "id": "Q9FE716",
+      "primary_name": "Group of split wood pieces",
+      "quantity_bucket": "9+",
+      "visible_state": "Short pale pieces with brown edges",
+      "confidence": "medium",
+      "ambiguity": "Could be short bones; several pieces overlap."
+    },
+    {
+      "id": "Q821449",
+      "primary_name": "Bundle of logs",
+      "quantity_bucket": "2–8",
+      "visible_state": "Brown bark and pale cut ends",
+      "confidence": "high",
+      "ambiguity": "none"
+    },
+    {
+      "id": "Q999806",
+      "primary_name": "Stack of logs",
+      "quantity_bucket": "9+",
+      "visible_state": "Several horizontal layers of golden-brown wood",
+      "confidence": "high",
+      "ambiguity": "none"
+    },
+    {
+      "id": "Q8D6CEF",
+      "primary_name": "Group of brown hides",
+      "quantity_bucket": "2–8",
+      "visible_state": "Folded-looking brown sheets with repeated uneven edges",
+      "confidence": "medium",
+      "ambiguity": "Could be bark sheets; exact number is uncertain."
+    },
+    {
+      "id": "QEA2A35",
+      "primary_name": "Discolored piece of meat",
+      "quantity_bucket": "1",
+      "visible_state": "Brown flesh-like shape with greenish areas",
+      "confidence": "medium",
+      "ambiguity": "Could be spoiled meat; the condition is suggested by the green tint rather than certain."
+    },
+    {
+      "id": "QBD20C6",
+      "primary_name": "Baskets of berries",
+      "quantity_bucket": "2–8",
+      "visible_state": "Overlapping round rims with red and brown contents",
+      "confidence": "high",
+      "ambiguity": "Contents could be other small fruit or seeds."
+    },
+    {
+      "id": "Q6D58A1",
+      "primary_name": "Group of animal hides",
+      "quantity_bucket": "9+",
+      "visible_state": "Repeated orange-tan spread-out skins",
+      "confidence": "medium",
+      "ambiguity": "Overlapping edges make the exact count uncertain."
+    },
+    {
+      "id": "Q2929F2",
+      "primary_name": "Pile of reddish clay lumps",
+      "quantity_bucket": "9+",
+      "visible_state": "Many small orange-red irregular pieces",
+      "confidence": "low",
+      "ambiguity": "Could be ore or pieces of meat."
+    }
+  ]
+}

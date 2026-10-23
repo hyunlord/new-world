@@ -1,0 +1,1159 @@
+{
+  "schema_version": 1,
+  "board": "docs/v8/artenv1/reviews/items_states/blind_states_32px.png",
+  "sha256": "826490bc76ececac96404ac16cd809e6e8175d5ef2850db6098cde1a62abaf97",
+  "bytes": 119912,
+  "canvas_px": [
+    800,
+    820
+  ],
+  "entries": 67,
+  "sprite_max_px": 32,
+  "cell_px": [
+    100,
+    88
+  ],
+  "resize": "proportional Lanczos reduction only; no alpha crop or enlargement",
+  "cells": [
+    {
+      "opaque_id": "QC680AB",
+      "row": 0,
+      "column": 0,
+      "cell_box": [
+        0,
+        28,
+        100,
+        116
+      ],
+      "sprite_box": [
+        34,
+        40,
+        66,
+        72
+      ]
+    },
+    {
+      "opaque_id": "QB7397A",
+      "row": 0,
+      "column": 1,
+      "cell_box": [
+        100,
+        28,
+        200,
+        116
+      ],
+      "sprite_box": [
+        134,
+        40,
+        166,
+        72
+      ]
+    },
+    {
+      "opaque_id": "QD7A1CD",
+      "row": 0,
+      "column": 2,
+      "cell_box": [
+        200,
+        28,
+        300,
+        116
+      ],
+      "sprite_box": [
+        234,
+        40,
+        266,
+        72
+      ]
+    },
+    {
+      "opaque_id": "QB23905",
+      "row": 0,
+      "column": 3,
+      "cell_box": [
+        300,
+        28,
+        400,
+        116
+      ],
+      "sprite_box": [
+        334,
+        40,
+        366,
+        72
+      ]
+    },
+    {
+      "opaque_id": "QAC3D78",
+      "row": 0,
+      "column": 4,
+      "cell_box": [
+        400,
+        28,
+        500,
+        116
+      ],
+      "sprite_box": [
+        434,
+        40,
+        466,
+        72
+      ]
+    },
+    {
+      "opaque_id": "Q8C2889",
+      "row": 0,
+      "column": 5,
+      "cell_box": [
+        500,
+        28,
+        600,
+        116
+      ],
+      "sprite_box": [
+        534,
+        40,
+        566,
+        72
+      ]
+    },
+    {
+      "opaque_id": "Q319404",
+      "row": 0,
+      "column": 6,
+      "cell_box": [
+        600,
+        28,
+        700,
+        116
+      ],
+      "sprite_box": [
+        634,
+        40,
+        666,
+        72
+      ]
+    },
+    {
+      "opaque_id": "QE4505F",
+      "row": 0,
+      "column": 7,
+      "cell_box": [
+        700,
+        28,
+        800,
+        116
+      ],
+      "sprite_box": [
+        734,
+        40,
+        766,
+        72
+      ]
+    },
+    {
+      "opaque_id": "Q4B9C66",
+      "row": 1,
+      "column": 0,
+      "cell_box": [
+        0,
+        116,
+        100,
+        204
+      ],
+      "sprite_box": [
+        34,
+        128,
+        66,
+        160
+      ]
+    },
+    {
+      "opaque_id": "QC628A8",
+      "row": 1,
+      "column": 1,
+      "cell_box": [
+        100,
+        116,
+        200,
+        204
+      ],
+      "sprite_box": [
+        134,
+        128,
+        166,
+        160
+      ]
+    },
+    {
+      "opaque_id": "Q45E0C7",
+      "row": 1,
+      "column": 2,
+      "cell_box": [
+        200,
+        116,
+        300,
+        204
+      ],
+      "sprite_box": [
+        234,
+        128,
+        266,
+        160
+      ]
+    },
+    {
+      "opaque_id": "QFA02D7",
+      "row": 1,
+      "column": 3,
+      "cell_box": [
+        300,
+        116,
+        400,
+        204
+      ],
+      "sprite_box": [
+        334,
+        128,
+        366,
+        160
+      ]
+    },
+    {
+      "opaque_id": "Q4B4287",
+      "row": 1,
+      "column": 4,
+      "cell_box": [
+        400,
+        116,
+        500,
+        204
+      ],
+      "sprite_box": [
+        434,
+        128,
+        466,
+        160
+      ]
+    },
+    {
+      "opaque_id": "QEC2086",
+      "row": 1,
+      "column": 5,
+      "cell_box": [
+        500,
+        116,
+        600,
+        204
+      ],
+      "sprite_box": [
+        534,
+        128,
+        566,
+        160
+      ]
+    },
+    {
+      "opaque_id": "QA24C7A",
+      "row": 1,
+      "column": 6,
+      "cell_box": [
+        600,
+        116,
+        700,
+        204
+      ],
+      "sprite_box": [
+        634,
+        128,
+        666,
+        160
+      ]
+    },
+    {
+      "opaque_id": "Q2A053E",
+      "row": 1,
+      "column": 7,
+      "cell_box": [
+        700,
+        116,
+        800,
+        204
+      ],
+      "sprite_box": [
+        734,
+        128,
+        766,
+        160
+      ]
+    },
+    {
+      "opaque_id": "Q266EBB",
+      "row": 2,
+      "column": 0,
+      "cell_box": [
+        0,
+        204,
+        100,
+        292
+      ],
+      "sprite_box": [
+        34,
+        216,
+        66,
+        248
+      ]
+    },
+    {
+      "opaque_id": "QF44A5A",
+      "row": 2,
+      "column": 1,
+      "cell_box": [
+        100,
+        204,
+        200,
+        292
+      ],
+      "sprite_box": [
+        134,
+        216,
+        166,
+        248
+      ]
+    },
+    {
+      "opaque_id": "QEFFD57",
+      "row": 2,
+      "column": 2,
+      "cell_box": [
+        200,
+        204,
+        300,
+        292
+      ],
+      "sprite_box": [
+        234,
+        216,
+        266,
+        248
+      ]
+    },
+    {
+      "opaque_id": "Q925061",
+      "row": 2,
+      "column": 3,
+      "cell_box": [
+        300,
+        204,
+        400,
+        292
+      ],
+      "sprite_box": [
+        334,
+        216,
+        366,
+        248
+      ]
+    },
+    {
+      "opaque_id": "Q820D6F",
+      "row": 2,
+      "column": 4,
+      "cell_box": [
+        400,
+        204,
+        500,
+        292
+      ],
+      "sprite_box": [
+        434,
+        216,
+        466,
+        248
+      ]
+    },
+    {
+      "opaque_id": "Q27F923",
+      "row": 2,
+      "column": 5,
+      "cell_box": [
+        500,
+        204,
+        600,
+        292
+      ],
+      "sprite_box": [
+        534,
+        216,
+        566,
+        248
+      ]
+    },
+    {
+      "opaque_id": "QD6C554",
+      "row": 2,
+      "column": 6,
+      "cell_box": [
+        600,
+        204,
+        700,
+        292
+      ],
+      "sprite_box": [
+        634,
+        216,
+        666,
+        248
+      ]
+    },
+    {
+      "opaque_id": "QE26D0E",
+      "row": 2,
+      "column": 7,
+      "cell_box": [
+        700,
+        204,
+        800,
+        292
+      ],
+      "sprite_box": [
+        734,
+        216,
+        766,
+        248
+      ]
+    },
+    {
+      "opaque_id": "Q33AA8C",
+      "row": 3,
+      "column": 0,
+      "cell_box": [
+        0,
+        292,
+        100,
+        380
+      ],
+      "sprite_box": [
+        34,
+        304,
+        66,
+        336
+      ]
+    },
+    {
+      "opaque_id": "QC0C489",
+      "row": 3,
+      "column": 1,
+      "cell_box": [
+        100,
+        292,
+        200,
+        380
+      ],
+      "sprite_box": [
+        134,
+        304,
+        166,
+        336
+      ]
+    },
+    {
+      "opaque_id": "Q19AB72",
+      "row": 3,
+      "column": 2,
+      "cell_box": [
+        200,
+        292,
+        300,
+        380
+      ],
+      "sprite_box": [
+        234,
+        304,
+        266,
+        336
+      ]
+    },
+    {
+      "opaque_id": "QB7836B",
+      "row": 3,
+      "column": 3,
+      "cell_box": [
+        300,
+        292,
+        400,
+        380
+      ],
+      "sprite_box": [
+        334,
+        304,
+        366,
+        336
+      ]
+    },
+    {
+      "opaque_id": "Q0AEFBF",
+      "row": 3,
+      "column": 4,
+      "cell_box": [
+        400,
+        292,
+        500,
+        380
+      ],
+      "sprite_box": [
+        434,
+        304,
+        466,
+        336
+      ]
+    },
+    {
+      "opaque_id": "QC12CE3",
+      "row": 3,
+      "column": 5,
+      "cell_box": [
+        500,
+        292,
+        600,
+        380
+      ],
+      "sprite_box": [
+        534,
+        304,
+        566,
+        336
+      ]
+    },
+    {
+      "opaque_id": "Q13F1EF",
+      "row": 3,
+      "column": 6,
+      "cell_box": [
+        600,
+        292,
+        700,
+        380
+      ],
+      "sprite_box": [
+        634,
+        304,
+        666,
+        336
+      ]
+    },
+    {
+      "opaque_id": "Q3D4EF6",
+      "row": 3,
+      "column": 7,
+      "cell_box": [
+        700,
+        292,
+        800,
+        380
+      ],
+      "sprite_box": [
+        734,
+        304,
+        766,
+        336
+      ]
+    },
+    {
+      "opaque_id": "Q210699",
+      "row": 4,
+      "column": 0,
+      "cell_box": [
+        0,
+        380,
+        100,
+        468
+      ],
+      "sprite_box": [
+        34,
+        392,
+        66,
+        424
+      ]
+    },
+    {
+      "opaque_id": "QE4A74C",
+      "row": 4,
+      "column": 1,
+      "cell_box": [
+        100,
+        380,
+        200,
+        468
+      ],
+      "sprite_box": [
+        134,
+        392,
+        166,
+        424
+      ]
+    },
+    {
+      "opaque_id": "Q85E074",
+      "row": 4,
+      "column": 2,
+      "cell_box": [
+        200,
+        380,
+        300,
+        468
+      ],
+      "sprite_box": [
+        234,
+        392,
+        266,
+        424
+      ]
+    },
+    {
+      "opaque_id": "Q5ED247",
+      "row": 4,
+      "column": 3,
+      "cell_box": [
+        300,
+        380,
+        400,
+        468
+      ],
+      "sprite_box": [
+        334,
+        392,
+        366,
+        424
+      ]
+    },
+    {
+      "opaque_id": "QFAE10D",
+      "row": 4,
+      "column": 4,
+      "cell_box": [
+        400,
+        380,
+        500,
+        468
+      ],
+      "sprite_box": [
+        434,
+        392,
+        466,
+        424
+      ]
+    },
+    {
+      "opaque_id": "Q83A561",
+      "row": 4,
+      "column": 5,
+      "cell_box": [
+        500,
+        380,
+        600,
+        468
+      ],
+      "sprite_box": [
+        534,
+        392,
+        566,
+        424
+      ]
+    },
+    {
+      "opaque_id": "Q68350B",
+      "row": 4,
+      "column": 6,
+      "cell_box": [
+        600,
+        380,
+        700,
+        468
+      ],
+      "sprite_box": [
+        634,
+        392,
+        666,
+        424
+      ]
+    },
+    {
+      "opaque_id": "QE077F5",
+      "row": 4,
+      "column": 7,
+      "cell_box": [
+        700,
+        380,
+        800,
+        468
+      ],
+      "sprite_box": [
+        734,
+        392,
+        766,
+        424
+      ]
+    },
+    {
+      "opaque_id": "Q3FB343",
+      "row": 5,
+      "column": 0,
+      "cell_box": [
+        0,
+        468,
+        100,
+        556
+      ],
+      "sprite_box": [
+        34,
+        480,
+        66,
+        512
+      ]
+    },
+    {
+      "opaque_id": "QDC2B9D",
+      "row": 5,
+      "column": 1,
+      "cell_box": [
+        100,
+        468,
+        200,
+        556
+      ],
+      "sprite_box": [
+        134,
+        480,
+        166,
+        512
+      ]
+    },
+    {
+      "opaque_id": "Q16F831",
+      "row": 5,
+      "column": 2,
+      "cell_box": [
+        200,
+        468,
+        300,
+        556
+      ],
+      "sprite_box": [
+        234,
+        480,
+        266,
+        512
+      ]
+    },
+    {
+      "opaque_id": "QC65A70",
+      "row": 5,
+      "column": 3,
+      "cell_box": [
+        300,
+        468,
+        400,
+        556
+      ],
+      "sprite_box": [
+        334,
+        480,
+        366,
+        512
+      ]
+    },
+    {
+      "opaque_id": "QCEC34F",
+      "row": 5,
+      "column": 4,
+      "cell_box": [
+        400,
+        468,
+        500,
+        556
+      ],
+      "sprite_box": [
+        434,
+        480,
+        466,
+        512
+      ]
+    },
+    {
+      "opaque_id": "Q44C1CF",
+      "row": 5,
+      "column": 5,
+      "cell_box": [
+        500,
+        468,
+        600,
+        556
+      ],
+      "sprite_box": [
+        534,
+        480,
+        566,
+        512
+      ]
+    },
+    {
+      "opaque_id": "Q19ACB6",
+      "row": 5,
+      "column": 6,
+      "cell_box": [
+        600,
+        468,
+        700,
+        556
+      ],
+      "sprite_box": [
+        634,
+        480,
+        666,
+        512
+      ]
+    },
+    {
+      "opaque_id": "QFE65EB",
+      "row": 5,
+      "column": 7,
+      "cell_box": [
+        700,
+        468,
+        800,
+        556
+      ],
+      "sprite_box": [
+        734,
+        480,
+        766,
+        512
+      ]
+    },
+    {
+      "opaque_id": "QEE0C04",
+      "row": 6,
+      "column": 0,
+      "cell_box": [
+        0,
+        556,
+        100,
+        644
+      ],
+      "sprite_box": [
+        34,
+        568,
+        66,
+        600
+      ]
+    },
+    {
+      "opaque_id": "Q18411A",
+      "row": 6,
+      "column": 1,
+      "cell_box": [
+        100,
+        556,
+        200,
+        644
+      ],
+      "sprite_box": [
+        134,
+        568,
+        166,
+        600
+      ]
+    },
+    {
+      "opaque_id": "Q73BE1D",
+      "row": 6,
+      "column": 2,
+      "cell_box": [
+        200,
+        556,
+        300,
+        644
+      ],
+      "sprite_box": [
+        234,
+        568,
+        266,
+        600
+      ]
+    },
+    {
+      "opaque_id": "QCE752A",
+      "row": 6,
+      "column": 3,
+      "cell_box": [
+        300,
+        556,
+        400,
+        644
+      ],
+      "sprite_box": [
+        334,
+        568,
+        366,
+        600
+      ]
+    },
+    {
+      "opaque_id": "Q79A013",
+      "row": 6,
+      "column": 4,
+      "cell_box": [
+        400,
+        556,
+        500,
+        644
+      ],
+      "sprite_box": [
+        434,
+        568,
+        466,
+        600
+      ]
+    },
+    {
+      "opaque_id": "QF778E9",
+      "row": 6,
+      "column": 5,
+      "cell_box": [
+        500,
+        556,
+        600,
+        644
+      ],
+      "sprite_box": [
+        534,
+        568,
+        566,
+        600
+      ]
+    },
+    {
+      "opaque_id": "QCF96A6",
+      "row": 6,
+      "column": 6,
+      "cell_box": [
+        600,
+        556,
+        700,
+        644
+      ],
+      "sprite_box": [
+        634,
+        568,
+        666,
+        600
+      ]
+    },
+    {
+      "opaque_id": "QBC258F",
+      "row": 6,
+      "column": 7,
+      "cell_box": [
+        700,
+        556,
+        800,
+        644
+      ],
+      "sprite_box": [
+        734,
+        568,
+        766,
+        600
+      ]
+    },
+    {
+      "opaque_id": "QBFF808",
+      "row": 7,
+      "column": 0,
+      "cell_box": [
+        0,
+        644,
+        100,
+        732
+      ],
+      "sprite_box": [
+        34,
+        656,
+        66,
+        688
+      ]
+    },
+    {
+      "opaque_id": "Q57B2BA",
+      "row": 7,
+      "column": 1,
+      "cell_box": [
+        100,
+        644,
+        200,
+        732
+      ],
+      "sprite_box": [
+        134,
+        656,
+        166,
+        688
+      ]
+    },
+    {
+      "opaque_id": "Q9C5022",
+      "row": 7,
+      "column": 2,
+      "cell_box": [
+        200,
+        644,
+        300,
+        732
+      ],
+      "sprite_box": [
+        234,
+        656,
+        266,
+        688
+      ]
+    },
+    {
+      "opaque_id": "Q9FE716",
+      "row": 7,
+      "column": 3,
+      "cell_box": [
+        300,
+        644,
+        400,
+        732
+      ],
+      "sprite_box": [
+        334,
+        656,
+        366,
+        688
+      ]
+    },
+    {
+      "opaque_id": "Q821449",
+      "row": 7,
+      "column": 4,
+      "cell_box": [
+        400,
+        644,
+        500,
+        732
+      ],
+      "sprite_box": [
+        434,
+        656,
+        466,
+        688
+      ]
+    },
+    {
+      "opaque_id": "Q999806",
+      "row": 7,
+      "column": 5,
+      "cell_box": [
+        500,
+        644,
+        600,
+        732
+      ],
+      "sprite_box": [
+        534,
+        656,
+        566,
+        688
+      ]
+    },
+    {
+      "opaque_id": "Q8D6CEF",
+      "row": 7,
+      "column": 6,
+      "cell_box": [
+        600,
+        644,
+        700,
+        732
+      ],
+      "sprite_box": [
+        634,
+        656,
+        666,
+        688
+      ]
+    },
+    {
+      "opaque_id": "QEA2A35",
+      "row": 7,
+      "column": 7,
+      "cell_box": [
+        700,
+        644,
+        800,
+        732
+      ],
+      "sprite_box": [
+        734,
+        656,
+        766,
+        688
+      ]
+    },
+    {
+      "opaque_id": "QBD20C6",
+      "row": 8,
+      "column": 0,
+      "cell_box": [
+        0,
+        732,
+        100,
+        820
+      ],
+      "sprite_box": [
+        34,
+        744,
+        66,
+        776
+      ]
+    },
+    {
+      "opaque_id": "Q6D58A1",
+      "row": 8,
+      "column": 1,
+      "cell_box": [
+        100,
+        732,
+        200,
+        820
+      ],
+      "sprite_box": [
+        134,
+        744,
+        166,
+        776
+      ]
+    },
+    {
+      "opaque_id": "Q2929F2",
+      "row": 8,
+      "column": 2,
+      "cell_box": [
+        200,
+        732,
+        300,
+        820
+      ],
+      "sprite_box": [
+        234,
+        744,
+        266,
+        776
+      ]
+    }
+  ],
+  "answer_key": "external_only"
+}

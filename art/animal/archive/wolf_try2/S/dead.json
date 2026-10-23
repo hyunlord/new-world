@@ -1,0 +1,60 @@
+{
+  "species": "wolf",
+  "facing": "S",
+  "pose": "dead",
+  "attempt": 2,
+  "image": "art/animal/wolf/S/dead.png",
+  "image_sha256": "d85175731ac9dd37a79393859444d762a3ee410c408f2d7458bb13a9d550a789",
+  "source_panel": "/Users/rexxa/work/artenv1-data/animals/wolf_try2_S_dead.png",
+  "source_panel_sha256": "1d4d235c0771d5516d80a4f85c727ccc5e10971180e52925c6797b287f6cf4e2",
+  "source_box": [
+    1119,
+    19,
+    1536,
+    614
+  ],
+  "raw_sha256": "29a229c978dc2afaf6b455f2db9f65c85d683f69d8d228b73481ab1a28b69213",
+  "prompt_sha256": "17e618f5870af6a4e8abe4f6c525e96d2fe9769227999409f5955665d9807bc5",
+  "standing_scale": 0.11336032388663968,
+  "scale": 0.15258855585831063,
+  "normalization": {
+    "scaled_size": [
+      64,
+      91
+    ],
+    "trim_box": [
+      6,
+      44,
+      63,
+      73
+    ],
+    "placement": [
+      19,
+      28
+    ],
+    "resized_to_canvas_offset": [
+      13,
+      -16
+    ],
+    "visible_pixels": 1050,
+    "rotation_degrees": 0,
+    "scale": 0.15258855585831063,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true
+  },
+  "component_count": 1,
+  "visible_width": 57,
+  "visible_height": 29,
+  "structural_pass": true,
+  "status": "CANDIDATE_PENDING_REVIEW"
+}

@@ -1,0 +1,77 @@
+{
+  "id": "grinding_stone",
+  "path": "art/style05/env1/built/grinding_stone.png",
+  "width": 64,
+  "height": 64,
+  "footprint": [
+    1,
+    1
+  ],
+  "family": "buildings",
+  "attempts": 1,
+  "selected_attempt": 1,
+  "status": "ACCEPTED_ASSET",
+  "raw": "/Users/rexxa/work/artenv1-data/built/grinding_stone_try1_raw.png",
+  "raw_sha256": "4c19312eb4480c50f0a9a3920b162e14d2c4a57e2bde1c42c82bd46972638068",
+  "sha256": "c1a2e6a06b4cc723e780b4a5903716c325740ee86c6712bf91043a31aedc5c85",
+  "metadata": "/Users/rexxa/work/artenv1-data/built/grinding_stone_try1.json",
+  "metadata_sha256": "17bec750d3d5aab893f6cd40a716005c8a09abf250d7ef934d5dfde498a23872",
+  "numeric": {
+    "candidate": "/Users/rexxa/work/artenv1-data/built/grinding_stone_try1_raw.png",
+    "sha256": "4c19312eb4480c50f0a9a3920b162e14d2c4a57e2bde1c42c82bd46972638068",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.2817235756761941,
+      "saturation_q25": 0.271465187204293,
+      "saturation_q75": 0.39243225466843634,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.010654841159839322,
+      "foreground_pixels": 43060
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "operations": [
+    "crop alpha>=128 bounds plus2px fringe (216, 118, 1073, 1142); no alpha edits",
+    "Lanczos contain (50, 60) offset(7, 2)"
+  ],
+  "tone": null,
+  "seam": null,
+  "bytes": 8034,
+  "model": {
+    "scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "sentence": "Consistent hand-drawn linework and watercolor-style rendering with the same rock texture treatment, highlight direction, and natural earth color palette as the reference images."
+    },
+    "review_id": "judge_buildings_c",
+    "candidate_raw_sha256": "4c19312eb4480c50f0a9a3920b162e14d2c4a57e2bde1c42c82bd46972638068",
+    "scorecard_sha256": "dc5934bf68b9cea98d8abe9928c93bec63c708c40e15e9932ea5977b5287d998"
+  },
+  "physical_footprint": [
+    1,
+    1
+  ],
+  "style_pass": true,
+  "reading": "Oval quern basin and oblong hand-stone read as a two-stone grinding work spot.",
+  "semantic_pass": true,
+  "required_wrap_pass": true,
+  "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+}

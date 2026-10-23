@@ -1,0 +1,128 @@
+{
+  "reviewer": "a",
+  "packet_id": "G7021",
+  "answers": [
+    {
+      "image_id": "P73793",
+      "started_at": "2026-10-23T07:24:12Z",
+      "ended_at": "2026-10-23T07:24:41Z",
+      "people_count": 10,
+      "storage": {
+        "present": true,
+        "point": [
+          1144,
+          654
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": false,
+        "points": []
+      },
+      "time_class": "night",
+      "activities": {
+        "A": "Sleeping lying down inside the shelter",
+        "B": "Carrying a bundle beside the campfire",
+        "C": "Standing beside the workbench"
+      },
+      "confidence": "low",
+      "notes": "Several people overlap at C. The two figures beside the fire appear to hold bundles, but their silhouettes are ambiguous. The large marked construction area on the right is read as storage."
+    },
+    {
+      "image_id": "P81143",
+      "started_at": "2026-10-23T07:24:47Z",
+      "ended_at": "2026-10-23T07:25:09Z",
+      "people_count": 9,
+      "storage": {
+        "present": true,
+        "point": [
+          478,
+          550
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": true,
+        "points": [
+          [
+            800,
+            346
+          ],
+          [
+            864,
+            346
+          ]
+        ]
+      },
+      "time_class": "night",
+      "activities": {
+        "A": "Walking toward the southern shelter",
+        "B": "Carrying wood",
+        "C": "Standing idle"
+      },
+      "confidence": "low",
+      "notes": "People appear as small brown circles; two sleepers are visible in the southern building. Wolves are read from two red triangular markers, with little anatomical detail. Direction of movement for A is uncertain. Storage is read as the small western room containing goods."
+    },
+    {
+      "image_id": "P53765",
+      "started_at": "2026-10-23T07:25:17Z",
+      "ended_at": "2026-10-23T07:25:38Z",
+      "people_count": 10,
+      "storage": {
+        "present": true,
+        "point": [
+          1199,
+          389
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": false,
+        "points": []
+      },
+      "time_class": "night",
+      "activities": {
+        "A": "Sleeping lying down inside the shelter",
+        "B": "Carrying a bundle beside the fire",
+        "C": "Standing beside the workbench"
+      },
+      "confidence": "medium",
+      "notes": "Five sleepers, three overlapping figures near C, and two figures beside the fire are perceived. The unfinished walled building at the northeast is read as storage. Small grey ground shapes resemble scattered branches rather than wolves."
+    },
+    {
+      "image_id": "P82562",
+      "started_at": "2026-10-23T07:25:44Z",
+      "ended_at": "2026-10-23T07:25:59Z",
+      "people_count": 9,
+      "storage": {
+        "present": true,
+        "point": [
+          164,
+          600
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": true,
+        "points": [
+          [
+            802,
+            185
+          ],
+          [
+            929,
+            185
+          ]
+        ]
+      },
+      "time_class": "night",
+      "activities": {
+        "A": "Swinging an axe overhead",
+        "B": "Carrying a bundle of wood on the shoulders",
+        "C": "Walking empty-handed"
+      },
+      "confidence": "high",
+      "notes": "Two sleeping people and seven upright people are visible. C may be standing rather than moving; the primary reading is walking. A has a raised tool but the object being worked on is not visible."
+    }
+  ]
+}

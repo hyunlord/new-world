@@ -1,0 +1,149 @@
+{
+  "id": "clay",
+  "path": "art/style05/env1/items/clay.png",
+  "family": "items",
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "source": "/Users/rexxa/work/artenv1-data/items/clay_try1_raw.png",
+  "source_sha256": "78129cdf41aeff5acb57307fcfd0d6c534be31d6705eb98f06c7cea7d781053d",
+  "sha256": "f868ba9f89f4a5cb00a4f3348f762fb8e16a10d51d923cfca5968580037304fc",
+  "attempts": [
+    {
+      "id": "clay",
+      "attempt": 1,
+      "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE shapeless lump of wet raw reddish grey brown clay, squat irregular rounded three-lobed mound with one soft thumb impression and a folded moist edge, minimal linework; no stone facets, no pot shape. Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, broad muted two-tone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+      "refs": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+      ],
+      "started_at": "2026-10-23T06:23:39.938Z",
+      "completed_at": "2026-10-23T06:27:33.535Z",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-54e723a7-3fdb-470f-a47e-08630748d050.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "tool": "image_gen__imagegen",
+      "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+      "raw": "/Users/rexxa/work/artenv1-data/items/clay_try1_raw.png",
+      "raw_sha256": "78129cdf41aeff5acb57307fcfd0d6c534be31d6705eb98f06c7cea7d781053d",
+      "references_sha256": {
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      },
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/items/clay_try1_raw.png",
+        "sha256": "78129cdf41aeff5acb57307fcfd0d6c534be31d6705eb98f06c7cea7d781053d",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.15881904398799027,
+          "saturation_q25": 0.5531949314451106,
+          "saturation_q75": 0.6594335342267983,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.00901062991928439,
+          "foreground_pixels": 43396
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      }
+    }
+  ],
+  "numeric": {
+    "candidate": "/Users/rexxa/work/artenv1-data/items/clay_try1_raw.png",
+    "sha256": "78129cdf41aeff5acb57307fcfd0d6c534be31d6705eb98f06c7cea7d781053d",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.15881904398799027,
+      "saturation_q25": 0.5531949314451106,
+      "saturation_q75": 0.6594335342267983,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.00901062991928439,
+      "foreground_pixels": 43396
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 4,
+      "line": 4,
+      "light": 4,
+      "palette": 5,
+      "sentence": "Follows the same ink-and-wash approach with readable contour lines, mottled brush texture, and earthy tones; slightly smoother surfaces than some references but still close."
+    },
+    "model_status": "SAME_FAMILY_VERIFIED",
+    "passed": true
+  },
+  "status": "STYLE_ACCEPTED_SEMANTIC_REVIEWED",
+  "operations": [
+    "generated alpha preserved",
+    "alpha-bounds crop",
+    "proportional Lanczos fit to58px",
+    "center in64px tile"
+  ],
+  "count_buckets": [
+    "art/style05/env1/items/clay_count_1.png",
+    "art/style05/env1/items/clay_count_2_8.png",
+    "art/style05/env1/items/clay_count_9_plus.png"
+  ],
+  "count_bucket_sha256": {
+    "art/style05/env1/items/clay_count_1.png": "f868ba9f89f4a5cb00a4f3348f762fb8e16a10d51d923cfca5968580037304fc",
+    "art/style05/env1/items/clay_count_2_8.png": "b5ba0c522acfcc9350d05de2e1a348e6a27526934d6c694f1f4b9cc263984992",
+    "art/style05/env1/items/clay_count_9_plus.png": "dad5192a0ddb5c9829810122e6dbaad1e51931bd00b3f9d8f0e41eb880f5297d"
+  },
+  "model": {
+    "scores": {
+      "medium": 4,
+      "line": 4,
+      "light": 4,
+      "palette": 5,
+      "sentence": "Follows the same ink-and-wash approach with readable contour lines, mottled brush texture, and earthy tones; slightly smoother surfaces than some references but still close."
+    },
+    "evidence": "art/style05/env1/items/model_scorecard1.png",
+    "raw_sha256": "884e2f91b66544c5267be7a3f2983ce612aa74c3c1d0e15f3917506b41b81f6e",
+    "mechanism": "built-in image-generation model rendered scorecard; actual printed scores visually transcribed; model version not exposed"
+  },
+  "reading": "부드러운 적갈색 덩어리와 눌린 홈이 돌의 각진 면과 구별된다.",
+  "style_accepted": true,
+  "readability_status": "EXACT_KIND_CONFUSION",
+  "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+  "readability_review_ids": [
+    "a",
+    "b"
+  ],
+  "exact_kind_scores": [
+    true,
+    false
+  ]
+}

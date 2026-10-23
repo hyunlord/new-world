@@ -1,0 +1,77 @@
+{
+  "id": "claybank_depleted",
+  "path": "art/style05/env1/built/claybank_depleted.png",
+  "width": 128,
+  "height": 128,
+  "footprint": [
+    2,
+    2
+  ],
+  "family": "ground",
+  "attempts": 1,
+  "selected_attempt": 1,
+  "status": "ACCEPTED_ASSET",
+  "raw": "/Users/rexxa/work/artenv1-data/built/claybank_depleted_try1_raw.png",
+  "raw_sha256": "44d2e9c045b245c504690d44dc6ab1fd435370bce489135e786de1dd38a3b096",
+  "sha256": "3439fa091a328e298f07a5e2d638e8d9c460be4b11c58588eea5d6864343ad6e",
+  "metadata": "/Users/rexxa/work/artenv1-data/built/claybank_depleted_try1.json",
+  "metadata_sha256": "af9e7d8894a7e0656b86ca56255fdabf72bba78058dd3fc22d849e0e31b7f3bb",
+  "numeric": {
+    "candidate": "/Users/rexxa/work/artenv1-data/built/claybank_depleted_try1_raw.png",
+    "sha256": "44d2e9c045b245c504690d44dc6ab1fd435370bce489135e786de1dd38a3b096",
+    "family": "ground",
+    "metrics": {
+      "edge_density": 0.27737003834725854,
+      "saturation_q25": 0.43078525254543476,
+      "saturation_q75": 0.5483669197236984,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.007849569879751626,
+      "foreground_pixels": 40862
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "operations": [
+    "crop alpha>=128 bounds plus2px fringe (27, 97, 1226, 1170); no alpha edits",
+    "Lanczos contain (124, 111) offset(2, 8)"
+  ],
+  "tone": null,
+  "seam": null,
+  "bytes": 31102,
+  "model": {
+    "scores": {
+      "medium": 4,
+      "line": 4,
+      "light": 4,
+      "palette": 4,
+      "sentence": "Closely matches the ink-and-wash technique, edge treatment and upper-left lighting with natural earth tones, with only slightly stronger line weight and texture detail but still clearly within the same style family."
+    },
+    "review_id": "judge_ground_a",
+    "candidate_raw_sha256": "44d2e9c045b245c504690d44dc6ab1fd435370bce489135e786de1dd38a3b096",
+    "scorecard_sha256": "34d4df7ec86b5ca3ecfd6028960409d4370841b0eb0d4ba7a65be6939499ac9b"
+  },
+  "physical_footprint": [
+    1,
+    1
+  ],
+  "style_pass": true,
+  "reading": "Scraped grey-brown hollow and small clay rim read depleted.",
+  "semantic_pass": true,
+  "required_wrap_pass": true,
+  "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+}

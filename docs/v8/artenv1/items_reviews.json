@@ -1,0 +1,662 @@
+{
+  "schema": 1,
+  "board": "art/style05/env1/items/items_32px_blind.png",
+  "board_sha256": "88d35167c06bf7364525e8d2d6dd84bd5c794e8507f9d27bd2444c5b914930ed",
+  "review_mode": "Two fresh Codex native reviewers supplied blind board only by leader; no answer key; native32px",
+  "scoring_policy": {
+    "primary": "Semantic coarse category in primary name; generic wood, hide, axe, vessel, chipped stone allowed. Does not establish exact kind or state.",
+    "exact": "Primary name must identify expected kind, not merely list it as an alternative. GroundAxe/CuredHide/RawPot/WolfHide require their distinction. Ordinary stone axe is accepted for StoneAxe while cross-axe discrimination is separately unproven.",
+    "threshold": "No numerical pass threshold was preregistered for this item-name review; none is invented.",
+    "count_buckets": "Reviewers were asked names, not quantity. No count-bucket accuracy claim is made."
+  },
+  "reviews": [
+    {
+      "reviewer": "a",
+      "raw_path": "docs/v8/artenv1/reviews/items/a.json",
+      "raw_sha256": "db8af9990a77b6ccefcb12dc3e8f456671b2f9406b276860bf453010875ffb70",
+      "started_at": "2026-10-23 06:46:52 UTC",
+      "ended_at": "2026-10-23 06:47:57 UTC",
+      "primary_category_count": 20,
+      "exact_kind_count": 10,
+      "denominator": 22,
+      "answers": [
+        {
+          "id": 1,
+          "expected_asset": "firewood",
+          "expected_broad_category": "wood",
+          "raw_answer": {
+            "id": 1,
+            "name": "Single wooden log",
+            "confidence": "high",
+            "notes": "Short tan cylinder with a visible end and bark-like marks."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": false,
+          "scoring_reason": "Wood is recognized, but a single log is named instead of split firewood."
+        },
+        {
+          "id": 2,
+          "expected_asset": "ground_axe",
+          "expected_broad_category": "axe",
+          "raw_answer": {
+            "id": 2,
+            "name": "Stone axe",
+            "confidence": "high",
+            "notes": "Broad pale head across a brown wooden handle."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": false,
+          "scoring_reason": "A stone axe is recognized; polishing/ground-axe distinction is not named."
+        },
+        {
+          "id": 3,
+          "expected_asset": "spear",
+          "expected_broad_category": "spear",
+          "raw_answer": {
+            "id": 3,
+            "name": "Spear",
+            "confidence": "medium",
+            "notes": "Long thin shaft with a small pale tip; could also be an arrow at this size."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": true,
+          "scoring_reason": "Spear is the primary name; both retain arrow ambiguity."
+        },
+        {
+          "id": 4,
+          "expected_asset": "cured_hide",
+          "expected_broad_category": "hide",
+          "raw_answer": {
+            "id": 4,
+            "name": "Orange animal hide",
+            "confidence": "high",
+            "notes": "Flattened pelt silhouette with projecting limbs and an irregular edge."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": false,
+          "scoring_reason": "Hide is recognized; cured/processed state is not named."
+        },
+        {
+          "id": 5,
+          "expected_asset": "hide_wrap",
+          "expected_broad_category": "wearable wrap",
+          "raw_answer": {
+            "id": 5,
+            "name": "Brown fur or folded animal hide",
+            "confidence": "medium",
+            "notes": "Narrow irregular brown shape; its exact animal or processed state is unclear."
+          },
+          "primary_category_recognized": false,
+          "exact_kind_recognized": false,
+          "scoring_reason": "Both name a pelt rather than a wearable wrap garment."
+        },
+        {
+          "id": 6,
+          "expected_asset": "fur_cloak",
+          "expected_broad_category": "cloak",
+          "raw_answer": {
+            "id": 6,
+            "name": "Dark rock or ore chunk",
+            "confidence": "low",
+            "notes": "Rough, peaked brown-gray mass; could alternatively be folded hide or another crumpled material."
+          },
+          "primary_category_recognized": false,
+          "exact_kind_recognized": false,
+          "scoring_reason": "Neither identifies a cloak: rock/ore for A, folded hide or cloth for B."
+        },
+        {
+          "id": 7,
+          "expected_asset": "wolf_hide",
+          "expected_broad_category": "hide",
+          "raw_answer": {
+            "id": 7,
+            "name": "Gray animal hide stretched on a frame",
+            "confidence": "medium",
+            "notes": "Four pointed corners surround a darker center; hide and supporting frame are hard to separate."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": false,
+          "scoring_reason": "Hide is recognized; wolf species is not named. A adds an incorrect supporting frame."
+        },
+        {
+          "id": 8,
+          "expected_asset": "clay",
+          "expected_broad_category": "clay",
+          "raw_answer": {
+            "id": 8,
+            "name": "Clay lump",
+            "confidence": "medium",
+            "notes": "Small orange-brown irregular lump; could also be a reddish stone or ore."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": true,
+          "scoring_reason": "A names clay with an ore alternative; B primarily names mineral and leaves clay as an alternative."
+        },
+        {
+          "id": 9,
+          "expected_asset": "raw_pot",
+          "expected_broad_category": "vessel",
+          "raw_answer": {
+            "id": 9,
+            "name": "Small clay bowl or pot",
+            "confidence": "high",
+            "notes": "Rounded gray-brown vessel with a clear dark opening."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": false,
+          "scoring_reason": "A vessel is recognized; unfired/raw ceramic is not identified."
+        },
+        {
+          "id": 10,
+          "expected_asset": "clay_pot_empty",
+          "expected_broad_category": "pot",
+          "raw_answer": {
+            "id": 10,
+            "name": "Empty terracotta pot",
+            "confidence": "high",
+            "notes": "Orange round vessel with a wide dark opening and small side projections."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": true,
+          "scoring_reason": "Terracotta pot kind is recognized. Empty is explicit only in A, so state clarity is incomplete."
+        },
+        {
+          "id": 11,
+          "expected_asset": "clay_pot_filled",
+          "expected_broad_category": "filled pot",
+          "raw_answer": {
+            "id": 11,
+            "name": "Water-filled clay pot",
+            "confidence": "high",
+            "notes": "Orange vessel with an unmistakable blue surface inside its opening."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": true,
+          "scoring_reason": "Both identify water-filled fired-clay vessels."
+        },
+        {
+          "id": 12,
+          "expected_asset": "meat",
+          "expected_broad_category": "meat",
+          "raw_answer": {
+            "id": 12,
+            "name": "Raw meat on a bone",
+            "confidence": "high",
+            "notes": "Red fleshy portion with pale marbling and a short projection to the right."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": true,
+          "scoring_reason": "Both identify raw meat with a bone."
+        },
+        {
+          "id": 13,
+          "expected_asset": "flint_nodule",
+          "expected_broad_category": "chipped stone",
+          "raw_answer": {
+            "id": 13,
+            "name": "Small knapped stone or flint flake",
+            "confidence": "low",
+            "notes": "Pale mottled oval tapering to a gray point; could be a small fish."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": false,
+          "scoring_reason": "Chipped stone is recognized; no primary unambiguous flint nodule name. A alternates flint flake/fish."
+        },
+        {
+          "id": 14,
+          "expected_asset": "log_pile_small",
+          "expected_broad_category": "logs",
+          "raw_answer": {
+            "id": 14,
+            "name": "Stack of wooden logs",
+            "confidence": "high",
+            "notes": "Several parallel tan cylinders, with pale cut ends."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": true,
+          "scoring_reason": "Both identify logs; the quantity bucket was not asked and is not scored."
+        },
+        {
+          "id": 15,
+          "expected_asset": "log_pile_medium",
+          "expected_broad_category": "wood pile",
+          "raw_answer": {
+            "id": 15,
+            "name": "Pile of chopped firewood",
+            "confidence": "medium",
+            "notes": "Small brown pieces with lighter ends; wood blocks are more likely than stones."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": false,
+          "scoring_reason": "Wood is recognized; A calls firewood and B chopped wood, without a log distinction."
+        },
+        {
+          "id": 16,
+          "expected_asset": "log_pile_large",
+          "expected_broad_category": "lumber stack",
+          "raw_answer": {
+            "id": 16,
+            "name": "Wooden plank or log panel",
+            "confidence": "medium",
+            "notes": "Rectangular stack of horizontal strips with darker crosswise bindings; could be a small raft, fence panel, or bundled lumber."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": false,
+          "scoring_reason": "Wood/lumber is recognized; both primarily name a panel/planks instead of a log pile."
+        },
+        {
+          "id": 17,
+          "expected_asset": "stone_pile",
+          "expected_broad_category": "stones",
+          "raw_answer": {
+            "id": 17,
+            "name": "Pile of rounded stones",
+            "confidence": "high",
+            "notes": "Several distinct beige-gray rounded rocks."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": true,
+          "scoring_reason": "Both name a pile of rounded stones."
+        },
+        {
+          "id": 18,
+          "expected_asset": "flint_pile",
+          "expected_broad_category": "stone shards",
+          "raw_answer": {
+            "id": 18,
+            "name": "Pile of sharp stone shards",
+            "confidence": "high",
+            "notes": "Angular pale broken pieces; exact stone or mineral is unclear."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": false,
+          "scoring_reason": "Stone fragments are recognized; flint material is not named."
+        },
+        {
+          "id": 19,
+          "expected_asset": "flint_blade",
+          "expected_broad_category": "blade",
+          "raw_answer": {
+            "id": 19,
+            "name": "Pointed stone blade or spearhead",
+            "confidence": "medium",
+            "notes": "Long narrow pale flaked shape without a visible shaft; could also read as a bone fragment."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": false,
+          "scoring_reason": "Both recognize a blade/point. B primarily names flint blade; A does not identify flint."
+        },
+        {
+          "id": 20,
+          "expected_asset": "stone_axe",
+          "expected_broad_category": "stone axe",
+          "raw_answer": {
+            "id": 20,
+            "name": "Small stone axe",
+            "confidence": "high",
+            "notes": "Light stone head attached to a long tan handle."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": true,
+          "scoring_reason": "Stone axe/hatchet is named; B explicitly cannot distinguish it from ID2, so pair discrimination is unproven."
+        },
+        {
+          "id": 21,
+          "expected_asset": "hide",
+          "expected_broad_category": "hide",
+          "raw_answer": {
+            "id": 21,
+            "name": "Pale animal hide",
+            "confidence": "high",
+            "notes": "Flat four-limbed pelt silhouette; exact species and processing cannot be distinguished."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": true,
+          "scoring_reason": "Both name animal hide; neither can identify processing/species, so Hide/CuredHide separation is unproven."
+        },
+        {
+          "id": 22,
+          "expected_asset": "berry_basket",
+          "expected_broad_category": "berries container",
+          "raw_answer": {
+            "id": 22,
+            "name": "Basket of mixed berries",
+            "confidence": "high",
+            "notes": "Round rim filled with small red, blue, and yellow dots."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": true,
+          "scoring_reason": "Both identify berries in a container. A names basket; B names bowl, so exact container is wrong for B."
+        }
+      ]
+    },
+    {
+      "reviewer": "b",
+      "raw_path": "docs/v8/artenv1/reviews/items/b.json",
+      "raw_sha256": "fd8a22d6e5cb49f8a853b05116e44de56f69d997ecf15d9e822b04d2b8e60b54",
+      "started_at": "2026-10-23 06:48:23 UTC",
+      "ended_at": "2026-10-23 06:49:23 UTC",
+      "primary_category_count": 19,
+      "exact_kind_count": 9,
+      "denominator": 22,
+      "answers": [
+        {
+          "id": 1,
+          "expected_asset": "firewood",
+          "expected_broad_category": "wood",
+          "raw_answer": {
+            "id": 1,
+            "name": "Single cut log",
+            "confidence": "high",
+            "notes": "Short light-brown piece of wood with a cut end."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": false,
+          "scoring_reason": "Wood is recognized, but a single log is named instead of split firewood."
+        },
+        {
+          "id": 2,
+          "expected_asset": "ground_axe",
+          "expected_broad_category": "axe",
+          "raw_answer": {
+            "id": 2,
+            "name": "Stone axe",
+            "confidence": "high",
+            "notes": "Grey head on a diagonal wooden handle; small enough that the head material is less certain than the tool type."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": false,
+          "scoring_reason": "A stone axe is recognized; polishing/ground-axe distinction is not named."
+        },
+        {
+          "id": 3,
+          "expected_asset": "spear",
+          "expected_broad_category": "spear",
+          "raw_answer": {
+            "id": 3,
+            "name": "Spear",
+            "confidence": "medium",
+            "notes": "Very thin long shaft with a dark pointed end; could also read as an arrow."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": true,
+          "scoring_reason": "Spear is the primary name; both retain arrow ambiguity."
+        },
+        {
+          "id": 4,
+          "expected_asset": "cured_hide",
+          "expected_broad_category": "hide",
+          "raw_answer": {
+            "id": 4,
+            "name": "Stretched orange animal hide",
+            "confidence": "high",
+            "notes": "Four projecting corners and a broad central skin surface."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": false,
+          "scoring_reason": "Hide is recognized; cured/processed state is not named."
+        },
+        {
+          "id": 5,
+          "expected_asset": "hide_wrap",
+          "expected_broad_category": "wearable wrap",
+          "raw_answer": {
+            "id": 5,
+            "name": "Small brown animal pelt",
+            "confidence": "medium",
+            "notes": "Narrow furry-looking hide silhouette; species and condition are unreadable."
+          },
+          "primary_category_recognized": false,
+          "exact_kind_recognized": false,
+          "scoring_reason": "Both name a pelt rather than a wearable wrap garment."
+        },
+        {
+          "id": 6,
+          "expected_asset": "fur_cloak",
+          "expected_broad_category": "cloak",
+          "raw_answer": {
+            "id": 6,
+            "name": "Folded brown hide or cloth",
+            "confidence": "low",
+            "notes": "Lumpy triangular silhouette with pale lines; also resembles a wicker or fiber bundle. Cannot confidently identify its material at native size."
+          },
+          "primary_category_recognized": false,
+          "exact_kind_recognized": false,
+          "scoring_reason": "Neither identifies a cloak: rock/ore for A, folded hide or cloth for B."
+        },
+        {
+          "id": 7,
+          "expected_asset": "wolf_hide",
+          "expected_broad_category": "hide",
+          "raw_answer": {
+            "id": 7,
+            "name": "Stretched grey animal hide",
+            "confidence": "high",
+            "notes": "Narrow centre and four spread extremities; distinct hide outline."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": false,
+          "scoring_reason": "Hide is recognized; wolf species is not named. A adds an incorrect supporting frame."
+        },
+        {
+          "id": 8,
+          "expected_asset": "clay",
+          "expected_broad_category": "clay",
+          "raw_answer": {
+            "id": 8,
+            "name": "Reddish mineral lump",
+            "confidence": "medium",
+            "notes": "Orange-red irregular clump; could be clay or ore, with no decisive material cue."
+          },
+          "primary_category_recognized": false,
+          "exact_kind_recognized": false,
+          "scoring_reason": "A names clay with an ore alternative; B primarily names mineral and leaves clay as an alternative."
+        },
+        {
+          "id": 9,
+          "expected_asset": "raw_pot",
+          "expected_broad_category": "vessel",
+          "raw_answer": {
+            "id": 9,
+            "name": "Small grey-beige bowl",
+            "confidence": "high",
+            "notes": "Open round vessel; could be stone or pale ceramic."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": false,
+          "scoring_reason": "A vessel is recognized; unfired/raw ceramic is not identified."
+        },
+        {
+          "id": 10,
+          "expected_asset": "clay_pot_empty",
+          "expected_broad_category": "pot",
+          "raw_answer": {
+            "id": 10,
+            "name": "Terracotta pot",
+            "confidence": "high",
+            "notes": "Round reddish vessel with a dark open mouth and small side protrusions."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": true,
+          "scoring_reason": "Terracotta pot kind is recognized. Empty is explicit only in A, so state clarity is incomplete."
+        },
+        {
+          "id": 11,
+          "expected_asset": "clay_pot_filled",
+          "expected_broad_category": "filled pot",
+          "raw_answer": {
+            "id": 11,
+            "name": "Water-filled terracotta pot",
+            "confidence": "high",
+            "notes": "Similar vessel to ID 10 with a clearly blue interior."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": true,
+          "scoring_reason": "Both identify water-filled fired-clay vessels."
+        },
+        {
+          "id": 12,
+          "expected_asset": "meat",
+          "expected_broad_category": "meat",
+          "raw_answer": {
+            "id": 12,
+            "name": "Raw meat on a bone",
+            "confidence": "high",
+            "notes": "Red flesh with a small pale bone projecting to the right."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": true,
+          "scoring_reason": "Both identify raw meat with a bone."
+        },
+        {
+          "id": 13,
+          "expected_asset": "flint_nodule",
+          "expected_broad_category": "chipped stone",
+          "raw_answer": {
+            "id": 13,
+            "name": "Chipped stone chunk",
+            "confidence": "medium",
+            "notes": "Pale irregular tapered rock with facets; could be a rough tool head."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": false,
+          "scoring_reason": "Chipped stone is recognized; no primary unambiguous flint nodule name. A alternates flint flake/fish."
+        },
+        {
+          "id": 14,
+          "expected_asset": "log_pile_small",
+          "expected_broad_category": "logs",
+          "raw_answer": {
+            "id": 14,
+            "name": "Bundle of logs",
+            "confidence": "high",
+            "notes": "Several parallel bark-textured lengths with cut ends."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": true,
+          "scoring_reason": "Both identify logs; the quantity bucket was not asked and is not scored."
+        },
+        {
+          "id": 15,
+          "expected_asset": "log_pile_medium",
+          "expected_broad_category": "wood pile",
+          "raw_answer": {
+            "id": 15,
+            "name": "Pile of chopped wood",
+            "confidence": "high",
+            "notes": "Short brown pieces with bright cut faces."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": false,
+          "scoring_reason": "Wood is recognized; A calls firewood and B chopped wood, without a log distinction."
+        },
+        {
+          "id": 16,
+          "expected_asset": "log_pile_large",
+          "expected_broad_category": "lumber stack",
+          "raw_answer": {
+            "id": 16,
+            "name": "Stack of wooden planks",
+            "confidence": "medium",
+            "notes": "Rectangular stack of many horizontal wood-like lengths; could also be a small stick mat or rack."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": false,
+          "scoring_reason": "Wood/lumber is recognized; both primarily name a panel/planks instead of a log pile."
+        },
+        {
+          "id": 17,
+          "expected_asset": "stone_pile",
+          "expected_broad_category": "stones",
+          "raw_answer": {
+            "id": 17,
+            "name": "Pile of rounded stones",
+            "confidence": "high",
+            "notes": "Several distinct rounded grey-tan rocks."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": true,
+          "scoring_reason": "Both name a pile of rounded stones."
+        },
+        {
+          "id": 18,
+          "expected_asset": "flint_pile",
+          "expected_broad_category": "stone shards",
+          "raw_answer": {
+            "id": 18,
+            "name": "Pile of angular stone fragments",
+            "confidence": "high",
+            "notes": "Sharp pale facets distinguish it from the rounded stones in ID 17."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": false,
+          "scoring_reason": "Stone fragments are recognized; flint material is not named."
+        },
+        {
+          "id": 19,
+          "expected_asset": "flint_blade",
+          "expected_broad_category": "blade",
+          "raw_answer": {
+            "id": 19,
+            "name": "Flint blade or stone point",
+            "confidence": "medium",
+            "notes": "Narrow pale chipped silhouette with pointed ends; exact tool use is unclear."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": true,
+          "scoring_reason": "Both recognize a blade/point. B primarily names flint blade; A does not identify flint."
+        },
+        {
+          "id": 20,
+          "expected_asset": "stone_axe",
+          "expected_broad_category": "stone axe",
+          "raw_answer": {
+            "id": 20,
+            "name": "Small stone hatchet",
+            "confidence": "high",
+            "notes": "Pale head on a long diagonal wooden handle; specific distinction from ID 2 is unclear."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": true,
+          "scoring_reason": "Stone axe/hatchet is named; B explicitly cannot distinguish it from ID2, so pair discrimination is unproven."
+        },
+        {
+          "id": 21,
+          "expected_asset": "hide",
+          "expected_broad_category": "hide",
+          "raw_answer": {
+            "id": 21,
+            "name": "Stretched pale animal hide",
+            "confidence": "high",
+            "notes": "Broad tan pelt with projecting corners and irregular furry edges."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": true,
+          "scoring_reason": "Both name animal hide; neither can identify processing/species, so Hide/CuredHide separation is unproven."
+        },
+        {
+          "id": 22,
+          "expected_asset": "berry_basket",
+          "expected_broad_category": "berries container",
+          "raw_answer": {
+            "id": 22,
+            "name": "Bowl of berries",
+            "confidence": "high",
+            "notes": "Round container filled with small red, dark, and yellow-orange dots; individual food type is not certain."
+          },
+          "primary_category_recognized": true,
+          "exact_kind_recognized": false,
+          "scoring_reason": "Both identify berries in a container. A names basket; B names bowl, so exact container is wrong for B."
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "raw_answers_preserved": 44,
+    "primary_category_correct": 39,
+    "exact_kind_correct": 19,
+    "denominator": 44,
+    "status": "DISTINCT_KIND_READABILITY_NOT_MET",
+    "reason": "Both miss garments and material/processing distinctions; aggregate category recognition does not establish distinct silhouettes."
+  }
+}

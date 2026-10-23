@@ -1,0 +1,299 @@
+{
+  "reviewer": "animal_b",
+  "boards": [
+    {
+      "scale": 2,
+      "started_at": "2026-10-23 06:33:49 UTC",
+      "ended_at": "2026-10-23 06:34:43 UTC",
+      "answers": [
+        {
+          "id": "2X-01",
+          "species": "deer (antlered stag)",
+          "pose": "standing still in right-facing side profile, head raised",
+          "confidence": 0.98,
+          "notes": "Clear antlers, long thin legs and white throat."
+        },
+        {
+          "id": "2X-02",
+          "species": "wolf",
+          "pose": "low airborne bound or collapsing forward, facing left with legs gathered under the body",
+          "confidence": 0.64,
+          "notes": "Species is fairly clear; the drooping head and sideways legs could also indicate a falling or dying pose."
+        },
+        {
+          "id": "2X-03",
+          "species": "deer (antlered stag)",
+          "pose": "running or leaping to the right with legs stretched fore and aft",
+          "confidence": 0.96,
+          "notes": "Clear elongated bounding silhouette."
+        },
+        {
+          "id": "2X-04",
+          "species": "wolf",
+          "pose": "crouched very low or lying/collapsing, facing left",
+          "confidence": 0.62,
+          "notes": "Could instead be a compressed gallop frame; paws and ground contact are not decisive."
+        },
+        {
+          "id": "2X-05",
+          "species": "wolf",
+          "pose": "bounding or running to the right, body compact and legs bent",
+          "confidence": 0.79,
+          "notes": "Small side view; could be a crouch or pounce."
+        },
+        {
+          "id": "2X-06",
+          "species": "deer (antlered stag)",
+          "pose": "grazing, side view with head lowered to the right",
+          "confidence": 0.97,
+          "notes": "The muzzle is near the ground."
+        },
+        {
+          "id": "2X-07",
+          "species": "wolf",
+          "pose": "crouching or pouncing toward the viewer with a low head and wide forepaws",
+          "confidence": 0.82,
+          "notes": "Frontal body is compressed; exact phase of motion is ambiguous."
+        },
+        {
+          "id": "2X-08",
+          "species": "deer (antlered stag)",
+          "pose": "walking slowly toward the viewer with one foreleg advanced",
+          "confidence": 0.81,
+          "notes": "Could be a frontal standing pose with offset legs."
+        },
+        {
+          "id": "2X-09",
+          "species": "wolf",
+          "pose": "standing facing the viewer, head slightly lowered",
+          "confidence": 0.9,
+          "notes": "Both forelegs appear planted; a very slow forward step is possible."
+        },
+        {
+          "id": "2X-10",
+          "species": "deer (antlered stag)",
+          "pose": "standing facing the viewer",
+          "confidence": 0.94,
+          "notes": "Upright, nearly parallel forelegs."
+        },
+        {
+          "id": "2X-11",
+          "species": "wolf",
+          "pose": "running or trotting toward the viewer, one foreleg reaching down and forward",
+          "confidence": 0.89,
+          "notes": "Tail is raised to one side; speed is uncertain from a single frame."
+        },
+        {
+          "id": "2X-12",
+          "species": "wolf",
+          "pose": "standing in right-facing side profile",
+          "confidence": 0.95,
+          "notes": "Could be a paused walking frame, but silhouette reads as standing."
+        },
+        {
+          "id": "2X-13",
+          "species": "deer (antlered stag)",
+          "pose": "walking to the right",
+          "confidence": 0.94,
+          "notes": "One foreleg and a hind leg are advanced; body remains upright."
+        },
+        {
+          "id": "2X-14",
+          "species": "deer (antlered stag)",
+          "pose": "lying or falling onto its side, legs extended to the right",
+          "confidence": 0.75,
+          "notes": "Head is raised and legs stretch forward, so a low leap is an alternative; reads more like a fallen deer."
+        },
+        {
+          "id": "2X-15",
+          "species": "wolf",
+          "pose": "walking or trotting toward the viewer with one foreleg extended",
+          "confidence": 0.89,
+          "notes": "Frontal gait is clear; walk versus trot is uncertain."
+        },
+        {
+          "id": "2X-16",
+          "species": "deer (antlered stag)",
+          "pose": "lying on its side, apparently dead or incapacitated, head to the left",
+          "confidence": 0.96,
+          "notes": "Head and antlers rest low; legs are splayed sideways."
+        },
+        {
+          "id": "2X-17",
+          "species": "wolf",
+          "pose": "walking to the right with one foreleg raised",
+          "confidence": 0.91,
+          "notes": "A slow trot is possible."
+        },
+        {
+          "id": "2X-18",
+          "species": "wolf",
+          "pose": "running or leaping to the right with legs extended",
+          "confidence": 0.95,
+          "notes": "Clear horizontal bounding silhouette."
+        },
+        {
+          "id": "2X-19",
+          "species": "deer (antlered stag)",
+          "pose": "running diagonally toward the viewer and right",
+          "confidence": 0.93,
+          "notes": "Forelegs extend forward and apart."
+        },
+        {
+          "id": "2X-20",
+          "species": "deer (antlered stag)",
+          "pose": "grazing with head lowered, viewed nearly from the front",
+          "confidence": 0.96,
+          "notes": "The back and rump are more prominent than the lowered face."
+        }
+      ]
+    },
+    {
+      "scale": 1,
+      "started_at": "2026-10-23 06:34:43 UTC",
+      "ended_at": "2026-10-23 06:35:47 UTC",
+      "answers": [
+        {
+          "id": "1X-01",
+          "species": "deer (antlered stag)",
+          "pose": "lying on its side, apparently dead or incapacitated, head to the left",
+          "confidence": 0.93,
+          "notes": "Antlers and head are low against the ground; feet extend sideways."
+        },
+        {
+          "id": "1X-02",
+          "species": "deer (antlered stag)",
+          "pose": "walking toward the viewer or standing with one foreleg advanced",
+          "confidence": 0.76,
+          "notes": "Species is clear; the small legs do not establish movement confidently."
+        },
+        {
+          "id": "1X-03",
+          "species": "deer (antlered stag)",
+          "pose": "walking to the right",
+          "confidence": 0.9,
+          "notes": "Upright body and spaced legs indicate a walking stride."
+        },
+        {
+          "id": "1X-04",
+          "species": "deer (antlered stag)",
+          "pose": "running or leaping to the right",
+          "confidence": 0.93,
+          "notes": "Long, extended fore and hind legs."
+        },
+        {
+          "id": "1X-05",
+          "species": "wolf",
+          "pose": "walking to the right",
+          "confidence": 0.81,
+          "notes": "A dog is a possible species reading at this size; one foreleg seems lifted."
+        },
+        {
+          "id": "1X-06",
+          "species": "wolf",
+          "pose": "running or bounding to the right",
+          "confidence": 0.9,
+          "notes": "The extended body and legs read as a run; wolf versus dog is less certain."
+        },
+        {
+          "id": "1X-07",
+          "species": "wolf",
+          "pose": "falling or lying low facing left, legs bent sideways",
+          "confidence": 0.59,
+          "notes": "Could be an airborne gallop frame. The small silhouette does not clearly show ground contact."
+        },
+        {
+          "id": "1X-08",
+          "species": "deer (antlered stag)",
+          "pose": "lying or falling onto its side, head and legs toward the right",
+          "confidence": 0.71,
+          "notes": "A low forward leap is possible; the folded hindquarters make it read as downed."
+        },
+        {
+          "id": "1X-09",
+          "species": "wolf",
+          "pose": "walking or trotting toward the viewer",
+          "confidence": 0.8,
+          "notes": "One front leg projects downward. Species could also read as a dog."
+        },
+        {
+          "id": "1X-10",
+          "species": "deer",
+          "pose": "grazing with head lowered, viewed nearly from the front",
+          "confidence": 0.91,
+          "notes": "Antlers are less obvious at this scale; body and long legs indicate deer."
+        },
+        {
+          "id": "1X-11",
+          "species": "deer (antlered stag)",
+          "pose": "standing facing the viewer",
+          "confidence": 0.88,
+          "notes": "A slight forward step remains possible."
+        },
+        {
+          "id": "1X-12",
+          "species": "deer (antlered stag)",
+          "pose": "standing in right-facing side profile",
+          "confidence": 0.95,
+          "notes": "Head raised and all legs nearly vertical."
+        },
+        {
+          "id": "1X-13",
+          "species": "deer (antlered stag)",
+          "pose": "running diagonally toward the viewer and right",
+          "confidence": 0.9,
+          "notes": "Wide, extended legs make the motion clear."
+        },
+        {
+          "id": "1X-14",
+          "species": "wolf",
+          "pose": "crouched or bounding to the right",
+          "confidence": 0.69,
+          "notes": "Tiny compact silhouette; cannot confidently distinguish a pounce, run or low crouch."
+        },
+        {
+          "id": "1X-15",
+          "species": "wolf",
+          "pose": "crouching or pouncing toward the viewer",
+          "confidence": 0.74,
+          "notes": "Wide forepaws and low head; could be a compressed running frame."
+        },
+        {
+          "id": "1X-16",
+          "species": "wolf",
+          "pose": "standing facing the viewer with head lowered",
+          "confidence": 0.82,
+          "notes": "Both forelegs seem planted; dog is an alternative species reading."
+        },
+        {
+          "id": "1X-17",
+          "species": "wolf",
+          "pose": "lying or crouched very low facing left",
+          "confidence": 0.59,
+          "notes": "Could be a compressed bound or a dying/fallen pose. Exact action remains ambiguous."
+        },
+        {
+          "id": "1X-18",
+          "species": "wolf",
+          "pose": "trotting or running toward the viewer",
+          "confidence": 0.82,
+          "notes": "One foreleg extends forward and the tail is raised to the side."
+        },
+        {
+          "id": "1X-19",
+          "species": "wolf",
+          "pose": "standing in right-facing side profile",
+          "confidence": 0.86,
+          "notes": "Reads as a wild canine; a dog remains possible at this size."
+        },
+        {
+          "id": "1X-20",
+          "species": "deer (antlered stag)",
+          "pose": "grazing in side profile with head lowered to the right",
+          "confidence": 0.94,
+          "notes": "The bent neck and ground-facing muzzle read clearly."
+        }
+      ]
+    }
+  ]
+}

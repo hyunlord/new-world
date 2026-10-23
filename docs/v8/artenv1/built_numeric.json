@@ -1,0 +1,1416 @@
+{
+  "calibration": "docs/v8/arttrial2/JUDGE_V2_CALIBRATION.json",
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "attempts": [
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/wall_log_straight_try1_raw.png",
+      "sha256": "bb0406d9a41842674786666a89eccc17e11a94df5090a970ff56eb8d9c04f818",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.2892051030421982,
+        "saturation_q25": 0.4838334477373658,
+        "saturation_q75": 0.6079462715200419,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.024049836919897847,
+        "foreground_pixels": 11398
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/wall_log_straight_try2_raw.png",
+      "sha256": "d5807a9cd7b246c0ad9ecb5b44bdf93f76b15659e3a3b710d3d36c093c671c06",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.2715343915343915,
+        "saturation_q25": 0.4205925744171817,
+        "saturation_q75": 0.522197570453213,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.026985171830668283,
+        "foreground_pixels": 5829
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/wall_log_straight_try3_raw.png",
+      "sha256": "7f97189eaa78cdae96d0776cd742feaa933d8c05da12cb69448a425981d02a0d",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.2790174002047083,
+        "saturation_q25": 0.4244345421086264,
+        "saturation_q75": 0.5298873556693223,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.018802394748029645,
+        "foreground_pixels": 5985
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/wall_log_corner_try1_raw.png",
+      "sha256": "34ea7a4a8d6aeba6b27482a6dafa0035d59dfee37ce5496b4f7193bb9ee98aa0",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.2956935403104657,
+        "saturation_q25": 0.43651955474956006,
+        "saturation_q75": 0.6311548837056827,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.02298966653634609,
+        "foreground_pixels": 21853
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/wall_log_corner_try2_raw.png",
+      "sha256": "d7dd15ed9c081f0d354aff06ccc672b8927cb002f8392b9bcaa37dd5289e0bc1",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.2976547346147064,
+        "saturation_q25": 0.438749737202451,
+        "saturation_q75": 0.5810404507459872,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.029343270202056165,
+        "foreground_pixels": 18881
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/wall_log_corner_try3_raw.png",
+      "sha256": "000cf29e988794fda68a283a2f52d7f5cbef11ab1413be54862c27bb937fa710",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.2961585433551682,
+        "saturation_q25": 0.4262766897366773,
+        "saturation_q75": 0.5684822114932606,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.019220419372873717,
+        "foreground_pixels": 19882
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/wall_stone_straight_try1_raw.png",
+      "sha256": "4e0e101e04916d1efca7e5f267ccb1257194a43b0c7b94d21a7828d96f8eacc7",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.2798335887891395,
+        "saturation_q25": 0.39394601164871845,
+        "saturation_q75": 0.5036817421903443,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.020756378521189132,
+        "foreground_pixels": 10307
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/wall_stone_corner_try1_raw.png",
+      "sha256": "23467a0c20c6fbff2af465d661c7cab6270eb5cdc397a08ac44e517b92f69030",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.26908344733242134,
+        "saturation_q25": 0.33517978846399593,
+        "saturation_q75": 0.4776237839467349,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.02747633878280065,
+        "foreground_pixels": 31198
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/wall_stone_corner_try2_raw.png",
+      "sha256": "6ad298f9c96fbc74fedf22b4b118680c6b6f469bc1b59b68e8d50b3363aeaf46",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.2602666258044744,
+        "saturation_q25": 0.3067750680662974,
+        "saturation_q75": 0.40573933063386414,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.008535912064158128,
+        "foreground_pixels": 28076
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/wall_stone_corner_try3_raw.png",
+      "sha256": "fd77749a9a0b295a7b3132f067d5a9fec13d8f04c621cbbfff91fb1d6c2b9710",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.27710138140950596,
+        "saturation_q25": 0.40634211312955915,
+        "saturation_q75": 0.5485978075073518,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.020146842850297147,
+        "foreground_pixels": 27440
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/door_log_closed_try1_raw.png",
+      "sha256": "912f3e53e133b48eb166a0478f8d4d4aa060dc53ac26e80068c15db14b864598",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.2878526761534295,
+        "saturation_q25": 0.48470119813058915,
+        "saturation_q75": 0.632906775753655,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.0384182406718752,
+        "foreground_pixels": 21948
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/door_log_closed_try2_raw.png",
+      "sha256": "bcbdf949ffb41d3a64a98650b232af4dbc973ffa20026cec549fa57373d3fe09",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.2883917264668637,
+        "saturation_q25": 0.5266681192902286,
+        "saturation_q75": 0.6192144466516863,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.04394570400570866,
+        "foreground_pixels": 13087
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/door_log_closed_try3_raw.png",
+      "sha256": "4f509cc26a90d0600dc158cb300d4934eb21f96c382e6f622131d610a1e505e8",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.1774033696729435,
+        "saturation_q25": 0.52378724509532,
+        "saturation_q75": 0.5767192137343002,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.03331141837830195,
+        "foreground_pixels": 4162
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/door_log_open_try1_raw.png",
+      "sha256": "c9bdebb192cc1c3b11dcbec146b9cfdae1a7559c9fec408b701a465942eeb960",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.2779748468236053,
+        "saturation_q25": 0.49565639251210447,
+        "saturation_q75": 0.6782547585542082,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.046557879888926054,
+        "foreground_pixels": 10871
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/door_log_open_try2_raw.png",
+      "sha256": "a2f8e8b85a1e8a19da2e269caabb2350e74c6b3ceade8d5a808ad8b3201cf426",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.2600995316159251,
+        "saturation_q25": 0.43968111516285446,
+        "saturation_q75": 0.5835019242506299,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.026889214361969022,
+        "foreground_pixels": 8339
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/door_log_open_try3_raw.png",
+      "sha256": "92361e1f42a5860fd7ee918fb7f26f8c9c748e1fac760eb65a6e60e07794a8ee",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.2530546623794212,
+        "saturation_q25": 0.561012910049858,
+        "saturation_q75": 0.6529294824468015,
+        "stroke_q25": 2.0,
+        "stroke_q50": 4.0,
+        "stroke_q75": 4.0,
+        "stroke_q90": 6.0,
+        "wash_flatness": 0.02989376260201524,
+        "foreground_pixels": 10872
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/door_stone_closed_try1_raw.png",
+      "sha256": "1ee80adc43a6e51acfc0080231d70487e9a647023bfadf9f28b38f8ddefc9b96",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.25063514856953495,
+        "saturation_q25": 0.39828140499894116,
+        "saturation_q75": 0.5384909684985963,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.030076592392224738,
+        "foreground_pixels": 10238
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/door_stone_closed_try2_raw.png",
+      "sha256": "f0c5f70c05a5fa1c82699c044a99d4c96daaf7a8f3a76474a53daf8e5f0ec2a3",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.253411306042885,
+        "saturation_q25": 0.3029331693785756,
+        "saturation_q75": 0.5372186855630472,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.006165589792300896,
+        "foreground_pixels": 13002
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/door_stone_open_try1_raw.png",
+      "sha256": "779bbee6aab4d122e4b0ae8e41935ba2e68ef02fc22c589ba7de7bf5bece8217",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.2647742566988866,
+        "saturation_q25": 0.34280384365056377,
+        "saturation_q75": 0.5434468952988493,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.03780773073769516,
+        "foreground_pixels": 9450
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/door_stone_open_try2_raw.png",
+      "sha256": "99b6884663a3380791005df4afc8b765de6fac0298d33e9bd6c1fc0c880b3299",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.26994091580502216,
+        "saturation_q25": 0.28359888729010296,
+        "saturation_q75": 0.3776963162477076,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.01612434329296433,
+        "foreground_pixels": 6634
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/floor_packed_earth_try1_raw.png",
+      "sha256": "c5a85502be8076446fd7f110cf14b0807e5fd00ee62313206e5dbfd0466dc215",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.18057130259511212,
+        "saturation_q25": 0.5950376838627425,
+        "saturation_q75": 0.6062741997271733,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.0,
+        "wash_flatness": 0.0015051300253526175,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": false,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/floor_packed_earth_try2_raw.png",
+      "sha256": "dca1a06a6e9b8de35fe83715f306a43c8abe1a27a5f85d77be3a8b0b6b993684",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.24297682035777274,
+        "saturation_q25": 0.5857784562686066,
+        "saturation_q75": 0.6041991988868367,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.0,
+        "wash_flatness": 0.0022029092250438935,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": false,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/floor_packed_earth_try3_raw.png",
+      "sha256": "1c6d4f49775b2dc60998a51c507debdba6184df806cb1ca42b4c3ccf0cb8c866",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.19071239606953894,
+        "saturation_q25": 0.6422228601904085,
+        "saturation_q75": 0.6766931304550038,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.0,
+        "wash_flatness": 0.0026259416839050274,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": false,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/floor_dug_rock_try1_raw.png",
+      "sha256": "1c8b44717180599a69c242a78a784c34cebe4a5649499ab6c13ed2b97d2842ef",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.2833522297808012,
+        "saturation_q25": 0.3831068456582392,
+        "saturation_q75": 0.4372141367370509,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.0,
+        "wash_flatness": 0.0022820182844686234,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": false,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/floor_dug_rock_try2_raw.png",
+      "sha256": "9a9eccdeabae1e33accd8c9dc41c6a3ba9f4ed961e7a9a21a8e9d32c839dba99",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.3154132023179642,
+        "saturation_q25": 0.29045459079063396,
+        "saturation_q75": 0.32155762311607516,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.0,
+        "wash_flatness": 0.0031374376656529714,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": false,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/floor_dug_rock_try3_raw.png",
+      "sha256": "d42563077d99156ba44018056bc54bc5b9a107168b60bef15bb6fc1da2fc4bca",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.23707168052406147,
+        "saturation_q25": 0.33243213789774767,
+        "saturation_q75": 0.372079657233557,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.002512073463155339,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/bedroll_try1_raw.png",
+      "sha256": "a0e5570ac1501f674babefb097812008f5e248871070545fd204d1acc09fe58b",
+      "family": "items",
+      "metrics": {
+        "edge_density": 0.23736363293193916,
+        "saturation_q25": 0.3996793915278912,
+        "saturation_q75": 0.5639896477650974,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.021692923498256828,
+        "foreground_pixels": 27929
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/bedroll_try2_raw.png",
+      "sha256": "a893c88570fd5307f261c66b060e7792cfda18a85e62e4453abaeb36eb560522",
+      "family": "items",
+      "metrics": {
+        "edge_density": 0.22723129510064566,
+        "saturation_q25": 0.35466952890329173,
+        "saturation_q75": 0.5114421542625155,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.016399780547801782,
+        "foreground_pixels": 27733
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/drying_rack_empty_try1_raw.png",
+      "sha256": "6cf6fe4ef2fe8802cb9f09f47086f60a4175abe7e244c3c744d8c368c54381fc",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.24089907448215073,
+        "saturation_q25": 0.4462528194496469,
+        "saturation_q75": 0.5774840328916613,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.034498268907417744,
+        "foreground_pixels": 15944
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/drying_rack_empty_try2_raw.png",
+      "sha256": "bd986e7567c164590fa00c0d142411a158a61f32fad5c80f33148eba7f117226",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.2113221694576356,
+        "saturation_q25": 0.4316940399892743,
+        "saturation_q75": 0.5066626561382963,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.04066138085931722,
+        "foreground_pixels": 12718
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/drying_rack_empty_try3_raw.png",
+      "sha256": "3a40a42598220f5c89e935406744b6e0140ba69f719e22ffa900c597fddb46b9",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.2142129912441458,
+        "saturation_q25": 0.5342407774113103,
+        "saturation_q75": 0.5623953604096625,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.018040821644675954,
+        "foreground_pixels": 8042
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/drying_rack_hide_try1_raw.png",
+      "sha256": "46d1be6eda57574be13ff6eef1fd30ce108134701b1d8c398ff42c3c03b377c6",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.20913082399079244,
+        "saturation_q25": 0.3708657596240905,
+        "saturation_q75": 0.5088787163918336,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.0409512232274849,
+        "foreground_pixels": 27813
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/drying_rack_hide_try2_raw.png",
+      "sha256": "4cd647dc294f0a2e4b1a2636fbb4bfb1a65c18119aa1ff8ceaef2bbc8b7b1824",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.21380038563951886,
+        "saturation_q25": 0.3809840940848752,
+        "saturation_q75": 0.5355058429430325,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.02677908886990987,
+        "foreground_pixels": 25753
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/drying_rack_hide_try3_raw.png",
+      "sha256": "7d718dd21874a71ba553e94d2b92275775bc10967234097c1c34e8d4697b4467",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.1731744664561202,
+        "saturation_q25": 0.3667687807743833,
+        "saturation_q75": 0.517580927277522,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.012528981584417486,
+        "foreground_pixels": 24698
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/pottery_bench_try1_raw.png",
+      "sha256": "afbf7ae0d2581b14d629b915001dac21ed314b9e419217694bde49e89181da2e",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.25011317338162065,
+        "saturation_q25": 0.5443520995285948,
+        "saturation_q75": 0.7246756424292685,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.013583667323562617,
+        "foreground_pixels": 19065
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/grinding_stone_try1_raw.png",
+      "sha256": "4c19312eb4480c50f0a9a3920b162e14d2c4a57e2bde1c42c82bd46972638068",
+      "family": "buildings",
+      "metrics": {
+        "edge_density": 0.2817235756761941,
+        "saturation_q25": 0.271465187204293,
+        "saturation_q75": 0.39243225466843634,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.010654841159839322,
+        "foreground_pixels": 43060
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/hearth_pots_try1_raw.png",
+      "sha256": "3a9919e95cc526b13650e1a36143b04c173f07beb0786b890ba033a2879d5101",
+      "family": "items",
+      "metrics": {
+        "edge_density": 0.27607927155865025,
+        "saturation_q25": 0.37148105222075667,
+        "saturation_q75": 0.6950633665123456,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.013876370749801453,
+        "foreground_pixels": 48188
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/hearth_unlit_try1_raw.png",
+      "sha256": "fbdc2646eb1566dc135bacfe101e18f9d7b42f17f5ce835d3e5e279ce5e94dad",
+      "family": "items",
+      "metrics": {
+        "edge_density": 0.27595376466299243,
+        "saturation_q25": 0.23996583630945573,
+        "saturation_q75": 0.3608763250068623,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.018546072372900468,
+        "foreground_pixels": 48199
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/claybank_full_try1_raw.png",
+      "sha256": "9dcfbea537cbb6824f1b3f1c2643ced32464d59c56ae2a9250cd6323d0bb50b7",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.27006936388816555,
+        "saturation_q25": 0.7138512754148718,
+        "saturation_q75": 0.7935700441713572,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.008558471889828025,
+        "foreground_pixels": 43697
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/claybank_full_try2_raw.png",
+      "sha256": "585ae7469bcf665e12713474d27abc8a3cad30b10dfb945d943c3273a05e7627",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.25604511960585175,
+        "saturation_q25": 0.3344035358930022,
+        "saturation_q75": 0.4580731892850019,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.007197180214347073,
+        "foreground_pixels": 48081
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/claybank_depleted_try1_raw.png",
+      "sha256": "44d2e9c045b245c504690d44dc6ab1fd435370bce489135e786de1dd38a3b096",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.27737003834725854,
+        "saturation_q25": 0.43078525254543476,
+        "saturation_q75": 0.5483669197236984,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.007849569879751626,
+        "foreground_pixels": 40862
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/ford_try1_raw.png",
+      "sha256": "36dd1c990f2ca53a3a889c70885881b134246db46308a6e191163120c410de19",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.31193310657596374,
+        "saturation_q25": 0.14036034467803238,
+        "saturation_q75": 0.32565137690628404,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.00715064433003762,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/hill_edge_try1_raw.png",
+      "sha256": "9a0960359ef6197d519262b5d7849c93ac0f469f6f812cadcaa148da12b74b4e",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.27521101033005796,
+        "saturation_q25": 0.4327271236398551,
+        "saturation_q75": 0.5164360678312114,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.0062833956563972575,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/dug_face_try1_raw.png",
+      "sha256": "6e0ab1b4a676b9abaa73079f5fc17a3f0b38cfde3e99aadf2c8760dd82bee03a",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.2423469387755102,
+        "saturation_q25": 0.3588570955605222,
+        "saturation_q75": 0.5970515644568054,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.0,
+        "wash_flatness": 0.0030791469964906474,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": false,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/dug_face_try2_raw.png",
+      "sha256": "1adb49cd754feccbbf55002e30b18463600dcacf36eb92942ee0989bab8f0516",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.21439594356261024,
+        "saturation_q25": 0.33689705765329414,
+        "saturation_q75": 0.5359674274406754,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.0,
+        "wash_flatness": 0.003334079482924982,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": false,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/dug_face_try3_raw.png",
+      "sha256": "6d87a34ef11ecb9d4deb07a3caf2f7500b7d07465a10b528889b3905181d6499",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.2701719576719577,
+        "saturation_q25": 0.4327301011794329,
+        "saturation_q75": 0.6375355589672032,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.008562957941830521,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": true,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    },
+    {
+      "candidate": "/Users/rexxa/work/artenv1-data/built/snow_overlay_try1_raw.png",
+      "sha256": "2316e9b9b104240f92e301388804a6efcd0c926fd147e5ec9e415470394f40ee",
+      "family": "ground",
+      "metrics": {
+        "edge_density": 0.22403741752275955,
+        "saturation_q25": 0.06227762845703251,
+        "saturation_q75": 0.35128866011826837,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.0326259571266309,
+        "foreground_pixels": 62478
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    }
+  ]
+}

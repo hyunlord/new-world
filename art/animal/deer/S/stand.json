@@ -1,0 +1,63 @@
+{
+  "species": "deer",
+  "facing": "S",
+  "pose": "stand",
+  "attempt": 1,
+  "image": "art/animal/deer/S/stand.png",
+  "image_sha256": "80ab5eb1d723716286c292e3619d004abb0d85cc28794c825db9761c6d007958",
+  "source_panel": "/Users/rexxa/work/artenv1-data/animals/deer_try1_S_stand.png",
+  "source_panel_sha256": "867b5eccb032ece5cd429745d37e00af19123f64f14171ed7dc05564806e139f",
+  "source_box": [
+    0,
+    19,
+    314,
+    583
+  ],
+  "raw_sha256": "fca0336b664abc7ea73c2f59b91519a8e0a5d211b27f992eb772b3d7568003f5",
+  "prompt_sha256": "8b5ddb4599e5da03e227a7b39af31a4720d72c5989c63cf1fb602aed7d8bfe91",
+  "standing_scale": 0.132890365448505,
+  "scale": 0.132890365448505,
+  "normalization": {
+    "scaled_size": [
+      42,
+      75
+    ],
+    "trim_box": [
+      8,
+      7,
+      32,
+      64
+    ],
+    "placement": [
+      36,
+      16
+    ],
+    "resized_to_canvas_offset": [
+      28,
+      9
+    ],
+    "visible_pixels": 723,
+    "rotation_degrees": 0,
+    "scale": 0.132890365448505,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true
+  },
+  "component_count": 1,
+  "visible_width": 24,
+  "visible_height": 57,
+  "structural_pass": true,
+  "status": "CANDIDATE_NOT_ADOPTED",
+  "species_readability": "READABILITY_PASS",
+  "numeric_negative_control_calibration": "FAIL",
+  "review_report": "docs/v8/artenv1/animal_reviews_round1.json"
+}

@@ -1,0 +1,128 @@
+{
+  "reviewer": "a",
+  "packet_id": "G7842",
+  "answers": [
+    {
+      "image_id": "P52988",
+      "started_at": "2026-10-23T07:26:11Z",
+      "ended_at": "2026-10-23T07:26:32Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          161,
+          595
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": true,
+        "points": [
+          [
+            801,
+            185
+          ],
+          [
+            929,
+            185
+          ]
+        ]
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Raising an axe to chop.",
+        "B": "Carrying a bundle of logs.",
+        "C": "Walking empty-handed."
+      },
+      "confidence": "high",
+      "notes": "A's raised tool suggests chopping, although its target is not visible. C's exact destination is not visible."
+    },
+    {
+      "image_id": "P79356",
+      "started_at": "2026-10-23T07:26:38Z",
+      "ended_at": "2026-10-23T07:26:57Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          1200,
+          393
+        ]
+      },
+      "carriers": 0,
+      "wolves": {
+        "present": false,
+        "points": []
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Standing beside the river.",
+        "B": "Standing beside a shelter.",
+        "C": "Standing beside the fire."
+      },
+      "confidence": "medium",
+      "notes": "Small front-facing person sprites do not reveal distinct hand actions or definite carried cargo. Upper-right partially built enclosure is read as storage; lower-left enclosure contains beds."
+    },
+    {
+      "image_id": "P42953",
+      "started_at": "2026-10-23T07:27:04Z",
+      "ended_at": "2026-10-23T07:27:27Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          481,
+          557
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": true,
+        "points": [
+          [
+            800,
+            347
+          ],
+          [
+            864,
+            347
+          ]
+        ]
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Using an axe.",
+        "B": "Carrying a log.",
+        "C": "Standing empty-handed."
+      },
+      "confidence": "low",
+      "notes": "People are represented by orange dots. A has a tiny axe-like mark and B a small brown cargo mark. Two red triangles are read as wolves, but these markers have no visible animal anatomy, so their species is uncertain. C's movement or work cannot be established from its plain dot."
+    },
+    {
+      "image_id": "P25079",
+      "started_at": "2026-10-23T07:27:34Z",
+      "ended_at": "2026-10-23T07:27:50Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          1490,
+          320
+        ]
+      },
+      "carriers": 1,
+      "wolves": {
+        "present": false,
+        "points": []
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Standing beside the river.",
+        "B": "Standing beside a shelter.",
+        "C": "Standing beside the fire."
+      },
+      "confidence": "medium",
+      "notes": "The rightmost blue-clothed person appears to have an object at their right side. A, B and C have no discernible action beyond their standing poses. Storage is read as the partially visible upper-right enclosure with wall construction."
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "species": "deer",
+  "facing": "E",
+  "pose": "graze",
+  "attempt": 1,
+  "image": "art/animal/deer/E/graze.png",
+  "image_sha256": "c53e5ed09a45eccfcaf45923e9ca29455dcb862a68e574b0c027314495a492c5",
+  "source_panel": "/Users/rexxa/work/artenv1-data/animals/deer_try1_E_graze.png",
+  "source_panel_sha256": "9ea770c4a5c361da72820acb11ba9b280d7bfbc0638621887f3931abfe133951",
+  "source_box": [
+    933,
+    581,
+    1314,
+    1000
+  ],
+  "raw_sha256": "fca0336b664abc7ea73c2f59b91519a8e0a5d211b27f992eb772b3d7568003f5",
+  "prompt_sha256": "8b5ddb4599e5da03e227a7b39af31a4720d72c5989c63cf1fb602aed7d8bfe91",
+  "standing_scale": 0.132890365448505,
+  "scale": 0.132890365448505,
+  "normalization": {
+    "scaled_size": [
+      51,
+      56
+    ],
+    "trim_box": [
+      6,
+      13,
+      42,
+      48
+    ],
+    "placement": [
+      30,
+      38
+    ],
+    "resized_to_canvas_offset": [
+      24,
+      25
+    ],
+    "visible_pixels": 684,
+    "rotation_degrees": 0,
+    "scale": 0.132890365448505,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true
+  },
+  "component_count": 1,
+  "visible_width": 36,
+  "visible_height": 35,
+  "structural_pass": true,
+  "status": "CANDIDATE_NOT_ADOPTED",
+  "species_readability": "READABILITY_PASS",
+  "numeric_negative_control_calibration": "FAIL",
+  "review_report": "docs/v8/artenv1/animal_reviews_round1.json"
+}

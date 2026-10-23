@@ -1,0 +1,149 @@
+{
+  "id": "raw_pot",
+  "path": "art/style05/env1/items/raw_pot.png",
+  "family": "items",
+  "tile_footprint": [
+    1,
+    1
+  ],
+  "canvas_px": [
+    64,
+    64
+  ],
+  "anchor_px": [
+    32,
+    32
+  ],
+  "source": "/Users/rexxa/work/artenv1-data/items/raw_pot_try1_raw.png",
+  "source_sha256": "706aa5ed5df014d0c6d6102373a5d260a5b9d376930f5883d9ee50694efbfa9b",
+  "sha256": "0bc4ef70479fb3614f8038cdce455f11c1e775fbf0819b174d57a4a5eac8119f",
+  "attempts": [
+    {
+      "id": "raw_pot",
+      "attempt": 1,
+      "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE unfired handbuilt clay pot, rounded bowl jar with clearly visible wide open empty mouth, thick irregular rim, cool grey clay body, squat broad form, subtle unfinished finger-coil marks, no handles, no patterns. Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, broad muted two-tone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+      "refs": [
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+      ],
+      "started_at": "2026-10-23T06:23:39.938Z",
+      "completed_at": "2026-10-23T06:28:14.342Z",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-24ac47f7-4030-468b-8c0c-42fc3c257a87.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "tool": "image_gen__imagegen",
+      "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+      "raw": "/Users/rexxa/work/artenv1-data/items/raw_pot_try1_raw.png",
+      "raw_sha256": "706aa5ed5df014d0c6d6102373a5d260a5b9d376930f5883d9ee50694efbfa9b",
+      "references_sha256": {
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+        "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+      },
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/items/raw_pot_try1_raw.png",
+        "sha256": "706aa5ed5df014d0c6d6102373a5d260a5b9d376930f5883d9ee50694efbfa9b",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.1870539522689915,
+          "saturation_q25": 0.3158636170782702,
+          "saturation_q75": 0.4168218864421883,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.016100125287343052,
+          "foreground_pixels": 49489
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      }
+    }
+  ],
+  "numeric": {
+    "candidate": "/Users/rexxa/work/artenv1-data/items/raw_pot_try1_raw.png",
+    "sha256": "706aa5ed5df014d0c6d6102373a5d260a5b9d376930f5883d9ee50694efbfa9b",
+    "family": "items",
+    "metrics": {
+      "edge_density": 0.1870539522689915,
+      "saturation_q25": 0.3158636170782702,
+      "saturation_q75": 0.4168218864421883,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.016100125287343052,
+      "foreground_pixels": 49489
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 4,
+      "palette": 4,
+      "sentence": "Matches the reference ink linework, watercolor wash texture, and material rendering well; very consistent with scene props with only slightly cleaner shading than some reference items."
+    },
+    "model_status": "SAME_FAMILY_VERIFIED",
+    "passed": true
+  },
+  "status": "STYLE_ACCEPTED_SEMANTIC_REVIEWED",
+  "operations": [
+    "generated alpha preserved",
+    "alpha-bounds crop",
+    "proportional Lanczos fit to58px",
+    "center in64px tile"
+  ],
+  "count_buckets": [
+    "art/style05/env1/items/raw_pot_count_1.png",
+    "art/style05/env1/items/raw_pot_count_2_8.png",
+    "art/style05/env1/items/raw_pot_count_9_plus.png"
+  ],
+  "count_bucket_sha256": {
+    "art/style05/env1/items/raw_pot_count_1.png": "0bc4ef70479fb3614f8038cdce455f11c1e775fbf0819b174d57a4a5eac8119f",
+    "art/style05/env1/items/raw_pot_count_2_8.png": "50d8be0ab24724f2941c009cd8d6383b1b5f090ace36d317a1264cb28e693307",
+    "art/style05/env1/items/raw_pot_count_9_plus.png": "43a81687707a52c04e9254aaf2b6119f4268729dc2778727732f984c81b544bf"
+  },
+  "model": {
+    "scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 4,
+      "palette": 4,
+      "sentence": "Matches the reference ink linework, watercolor wash texture, and material rendering well; very consistent with scene props with only slightly cleaner shading than some reference items."
+    },
+    "evidence": "art/style05/env1/items/model_scorecard1.png",
+    "raw_sha256": "884e2f91b66544c5267be7a3f2983ce612aa74c3c1d0e15f3917506b41b81f6e",
+    "mechanism": "built-in image-generation model rendered scorecard; actual printed scores visually transcribed; model version not exposed"
+  },
+  "reading": "손잡이 없는 회색 코일 토기가 구운 주황색 토기와 구별된다.",
+  "style_accepted": true,
+  "readability_status": "EXACT_KIND_CONFUSION",
+  "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+  "readability_review_ids": [
+    "a",
+    "b"
+  ],
+  "exact_kind_scores": [
+    false,
+    false
+  ]
+}

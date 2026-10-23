@@ -1,0 +1,103 @@
+{
+  "instructions_sha256": "0fd4a3ac92eecf91c09b399cb4c287876af3898817118877a20695bebd5bd8e1",
+  "mechanism": "fresh native subagents, actual original-detail view_image, independent per-condition random order; no keys in packet",
+  "repeated_content_limit": "Each reviewer sees both renderers and zooms within one condition, so learning is possible.",
+  "assignments": [
+    {
+      "packet_id": "G8996",
+      "reviewer": "a",
+      "agent": "/root/scene_r0_a",
+      "nickname": "Pauli",
+      "fork_turns": "none",
+      "packet_sha256": {
+        "P44412.png": "87cd5e83f2c4a5055646db23cdc717b7d70b9135a303fef7881b6e2ee36c930f",
+        "P58058.png": "8c45830ba718a6cc79f06feff249e5775df9ee11a098db6a2db1804183a84a6d",
+        "P62328.png": "ecd4977533414f84ce51ed1c3ee8667cc314fd4f63a75bfdbf014ced3a10a50e",
+        "P99373.png": "f4df8b1319e2133b4358860740c88f4f7b10368d42c2d73739fcf988539af1f0",
+        "order.json": "42bb50a8c0b195d0b260acfbce05eebc3d7a5f289ef7dc35f0ef38e6a743d52e"
+      },
+      "instruction_source": "/Users/rexxa/work/artenv1-data/reviews/readability/REVIEWER_INSTRUCTIONS.txt",
+      "output": "/Users/rexxa/work/artenv1-data/reviews/readability/round0/responses/G8996.json"
+    },
+    {
+      "packet_id": "G3913",
+      "reviewer": "b",
+      "agent": "/root/scene_r0_b",
+      "nickname": "Mencius",
+      "fork_turns": "none",
+      "packet_sha256": {
+        "P44412.png": "87cd5e83f2c4a5055646db23cdc717b7d70b9135a303fef7881b6e2ee36c930f",
+        "P58058.png": "8c45830ba718a6cc79f06feff249e5775df9ee11a098db6a2db1804183a84a6d",
+        "P62328.png": "ecd4977533414f84ce51ed1c3ee8667cc314fd4f63a75bfdbf014ced3a10a50e",
+        "P99373.png": "f4df8b1319e2133b4358860740c88f4f7b10368d42c2d73739fcf988539af1f0",
+        "order.json": "d78c56050ff6cebccfffbae7c749cc511b1f96e8f4a2e1175aef7b63876920a0"
+      },
+      "instruction_source": "/Users/rexxa/work/artenv1-data/reviews/readability/REVIEWER_INSTRUCTIONS.txt",
+      "output": "/Users/rexxa/work/artenv1-data/reviews/readability/round0/responses/G3913.json"
+    },
+    {
+      "packet_id": "G7021",
+      "reviewer": "a",
+      "agent": "/root/scene_r0_c",
+      "nickname": "Hegel",
+      "fork_turns": "none",
+      "packet_sha256": {
+        "P53765.png": "9dfc0b0ac6c54f1bba0202661e090090d3541d06bfa1ba14bdd3d9a8f2592f85",
+        "P73793.png": "9204422072b27492dd2f4b692e1aac6464f6b5532960e3eb082133757f6d785f",
+        "P81143.png": "4867e8634fcf4d7f5fe7648315f827ed9567798820f2cc4c0a62dab82d53e54d",
+        "P82562.png": "c9aabc6f9bbb3589b48a4a054f107eea879b133e553674651b6cef545077beee",
+        "order.json": "68c9edef2035171226385894ad662fcdec7b5b3967897e1527de4edaec13f78f"
+      },
+      "instruction_source": "/Users/rexxa/work/artenv1-data/reviews/readability/REVIEWER_INSTRUCTIONS.txt",
+      "output": "/Users/rexxa/work/artenv1-data/reviews/readability/round0/responses/G7021.json"
+    },
+    {
+      "packet_id": "G7049",
+      "reviewer": "b",
+      "agent": "/root/scene_r0_d",
+      "nickname": "Beauvoir",
+      "fork_turns": "none",
+      "packet_sha256": {
+        "P53765.png": "9dfc0b0ac6c54f1bba0202661e090090d3541d06bfa1ba14bdd3d9a8f2592f85",
+        "P73793.png": "9204422072b27492dd2f4b692e1aac6464f6b5532960e3eb082133757f6d785f",
+        "P81143.png": "4867e8634fcf4d7f5fe7648315f827ed9567798820f2cc4c0a62dab82d53e54d",
+        "P82562.png": "c9aabc6f9bbb3589b48a4a054f107eea879b133e553674651b6cef545077beee",
+        "order.json": "043c5b6391c635ae274f2f8d20293ef6d6462eb9d817630342498d608710dda4"
+      },
+      "instruction_source": "/Users/rexxa/work/artenv1-data/reviews/readability/REVIEWER_INSTRUCTIONS.txt",
+      "output": "/Users/rexxa/work/artenv1-data/reviews/readability/round0/responses/G7049.json"
+    },
+    {
+      "packet_id": "G7842",
+      "reviewer": "a",
+      "agent": "/root/scene_r0_e",
+      "nickname": "Epicurus",
+      "fork_turns": "none",
+      "packet_sha256": {
+        "P25079.png": "a2b3655307be8626090e7397e13adc94247a5f073984dc26c4b088784e1c383d",
+        "P42953.png": "97bd154d992a101b5f7621da6f05ed3035d532636e9da9ec7e853d4e306119ae",
+        "P52988.png": "4489665ecfcd024f33c30676f00724433e0ed8aac2b7795023c77060116f9741",
+        "P79356.png": "1d5698f29c2b678dc07da88002335b25a7726bb0a02b17eb4e73b7803d278ddc",
+        "order.json": "46b46b7d3d4b2b86556289e6886d3f807b6fd2b2ddd897458fe8816773693577"
+      },
+      "instruction_source": "/Users/rexxa/work/artenv1-data/reviews/readability/REVIEWER_INSTRUCTIONS.txt",
+      "output": "/Users/rexxa/work/artenv1-data/reviews/readability/round0/responses/G7842.json"
+    },
+    {
+      "packet_id": "G7645",
+      "reviewer": "b",
+      "agent": "/root/scene_r0_f",
+      "nickname": "Mill",
+      "fork_turns": "none",
+      "packet_sha256": {
+        "P25079.png": "a2b3655307be8626090e7397e13adc94247a5f073984dc26c4b088784e1c383d",
+        "P42953.png": "97bd154d992a101b5f7621da6f05ed3035d532636e9da9ec7e853d4e306119ae",
+        "P52988.png": "4489665ecfcd024f33c30676f00724433e0ed8aac2b7795023c77060116f9741",
+        "P79356.png": "1d5698f29c2b678dc07da88002335b25a7726bb0a02b17eb4e73b7803d278ddc",
+        "order.json": "ffe0f2b19e0e042c4ae4e6b3f524cc9e9a3c326b01ae26b65a6dd5ddbee70be7"
+      },
+      "instruction_source": "/Users/rexxa/work/artenv1-data/reviews/readability/REVIEWER_INSTRUCTIONS.txt",
+      "output": "/Users/rexxa/work/artenv1-data/reviews/readability/round0/responses/G7645.json"
+    }
+  ]
+}

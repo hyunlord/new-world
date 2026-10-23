@@ -1,0 +1,97 @@
+{
+  "anchors": [
+    {
+      "name": "wolf_S_stand",
+      "family": "animal",
+      "file": "/Users/rexxa/work/artenv1-data/animals/wolf_try2_S_stand.png",
+      "sha256": "7986bc4977fe42024d7eb8df175bf7497f83d3971f4cd9d37aec0119bd43ea05",
+      "metrics": {
+        "edge_density": 0.27068584569599136,
+        "saturation_q25": 0.3957911779116873,
+        "saturation_q75": 0.5243537065547319,
+        "stroke_q25": 2.0,
+        "stroke_q50": 4.0,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.47213595499958,
+        "wash_flatness": 0.03142421401753009,
+        "foreground_pixels": 23982
+      }
+    },
+    {
+      "name": "deer_S_stand",
+      "family": "animal",
+      "file": "/Users/rexxa/work/artenv1-data/animals/deer_try1_S_stand.png",
+      "sha256": "867b5eccb032ece5cd429745d37e00af19123f64f14171ed7dc05564806e139f",
+      "metrics": {
+        "edge_density": 0.20720904184909886,
+        "saturation_q25": 0.429309417417817,
+        "saturation_q75": 0.5678873623148205,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.8284271247461903,
+        "stroke_q75": 4.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.01775031607887103,
+        "foreground_pixels": 12196
+      }
+    }
+  ],
+  "ranges": [
+    {
+      "family": "animal",
+      "lower": [
+        0.0877353199628263,
+        0.1895160290793112,
+        0.2512934393373438,
+        1.0,
+        0.8284271247461903,
+        2.0,
+        2.25,
+        0.008068325490395921
+      ],
+      "upper": [
+        0.3901595675822639,
+        0.6355845662501931,
+        0.8409476295322086,
+        3.0,
+        6.0,
+        6.0,
+        6.22213595499958,
+        0.0691332708385662
+      ]
+    }
+  ],
+  "leave_one_out": [
+    {
+      "name": "wolf_S_stand",
+      "family": "animal",
+      "passed": true,
+      "checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      }
+    },
+    {
+      "name": "deer_S_stand",
+      "family": "animal",
+      "passed": true,
+      "checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      }
+    }
+  ],
+  "comparison_size": 256,
+  "version": 2
+}

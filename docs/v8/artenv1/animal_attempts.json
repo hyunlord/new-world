@@ -1,0 +1,228 @@
+{
+  "asset_generations": 4,
+  "model_review_generations": 5,
+  "total_imagegen_calls": 9,
+  "caps": {
+    "wolf": 3,
+    "deer": 3
+  },
+  "remaining_asset_attempts": {
+    "wolf": 0,
+    "deer": 2
+  },
+  "records": [
+    {
+      "kind": "asset_generation",
+      "species": "wolf",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16769-adb3-7cc2-8c2f-32fc9ffeb8b4/exec-46afcd89-7344-4a27-8f60-b0be3f185fbd.png",
+      "raw": "/Users/rexxa/work/artenv1-data/animals/wolf_try1.png",
+      "prompt": "/Users/rexxa/work/artenv1-data/animals/wolf_try1.prompt.txt",
+      "selected": false,
+      "reason": "REJECTED_SOURCE_CROP: S/dead opaque muzzle touches raw right border",
+      "raw_sha256": "4410666d269666c3b382aa436636dc62fd86cb337dcc2b1bac302fae6445cd2c",
+      "prompt_sha256": "5aeb4be9fa642cae7b63063c6bbd5a2caf1cc95a9830c0868f7d145ab556364c",
+      "references": [
+        {
+          "path": "art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ]
+    },
+    {
+      "kind": "asset_generation",
+      "species": "wolf",
+      "attempt": 2,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16769-adb3-7cc2-8c2f-32fc9ffeb8b4/exec-fef287b8-b243-4116-bec6-f9e025d1c135.png",
+      "raw": "/Users/rexxa/work/artenv1-data/animals/wolf_try2.png",
+      "prompt": "/Users/rexxa/work/artenv1-data/animals/wolf_try2.prompt.txt",
+      "selected": false,
+      "reason": "ROUND0_SEMANTIC_FAIL_RETAINED: source and exact frames preserved; try3 final retry selected as candidate",
+      "raw_sha256": "29a229c978dc2afaf6b455f2db9f65c85d683f69d8d228b73481ab1a28b69213",
+      "prompt_sha256": "17e618f5870af6a4e8abe4f6c525e96d2fe9769227999409f5955665d9807bc5",
+      "references": [
+        {
+          "path": "art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ]
+    },
+    {
+      "kind": "asset_generation",
+      "species": "deer",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16769-adb3-7cc2-8c2f-32fc9ffeb8b4/exec-2b3aadd5-a45b-4b98-aed2-91a5e36cdda9.png",
+      "raw": "/Users/rexxa/work/artenv1-data/animals/deer_try1.png",
+      "prompt": "/Users/rexxa/work/artenv1-data/animals/deer_try1.prompt.txt",
+      "selected": true,
+      "reason": "CANDIDATE: structural/native numeric pass; negative-controls family calibration FAIL; independent semantic review pending",
+      "raw_sha256": "fca0336b664abc7ea73c2f59b91519a8e0a5d211b27f992eb772b3d7568003f5",
+      "prompt_sha256": "8b5ddb4599e5da03e227a7b39af31a4720d72c5989c63cf1fb602aed7d8bfe91",
+      "references": [
+        {
+          "path": "art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ]
+    },
+    {
+      "kind": "model_style_review_generation",
+      "species": "wolf",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16769-adb3-7cc2-8c2f-32fc9ffeb8b4/exec-a9c8b640-1800-4f78-b97d-795122cdd0ce.png",
+      "raw": "/Users/rexxa/work/artenv1-data/animals/wolf_style_scorecard.png",
+      "prompt": "/Users/rexxa/work/artenv1-data/animals/wolf_style_judge.prompt.txt",
+      "scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 5
+      },
+      "raw_sha256": "f253c635e81aa19c88c5afcb4e6c2c7302e657df8d4b590746825c65f2df5a53",
+      "prompt_sha256": "3b08dd4a5a43477db08df717c99a7f3b0b2e787ea13686c915d5a74005c9510f",
+      "references": [
+        {
+          "path": "art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ]
+    },
+    {
+      "kind": "model_style_review_generation",
+      "species": "deer",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16769-adb3-7cc2-8c2f-32fc9ffeb8b4/exec-939c33f6-4206-4594-b685-b89775809a44.png",
+      "raw": "/Users/rexxa/work/artenv1-data/animals/deer_style_scorecard.png",
+      "prompt": "/Users/rexxa/work/artenv1-data/animals/deer_style_judge.prompt.txt",
+      "scores": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 5
+      },
+      "raw_sha256": "d1d851f1f9ca18cc540ee1a2ac6147e6aec446dd836ec9e3b4e8de6a78df482d",
+      "prompt_sha256": "75db5481c528ba5a62d4efa6a3d5fe1679f7d8dc61ccac60b9407a73cb15ac5f",
+      "references": [
+        {
+          "path": "art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ]
+    },
+    {
+      "kind": "asset_generation",
+      "species": "wolf",
+      "attempt": 3,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16769-adb3-7cc2-8c2f-32fc9ffeb8b4/exec-ea4e2361-e727-4b6e-8fbe-82f9525cc22d.png",
+      "raw": "/Users/rexxa/work/artenv1-data/animals/wolf_try3.png",
+      "prompt": "/Users/rexxa/work/artenv1-data/animals/wolf_try3.prompt.txt",
+      "selected": true,
+      "reason": "FINAL_CANDIDATE: structural/native numeric pass; frozen numeric negative-controls FAIL; round1 blind review pending",
+      "raw_sha256": "d9095e609ee333a7ef46c9d05c0eeafb4e21cd423b98b95153f14ea18228cd58",
+      "prompt_sha256": "9417f5bfb540356fb2fab50cafeb577a4f93652052b5f0800f3152986f1aa2a4",
+      "references": [
+        {
+          "path": "art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ]
+    },
+    {
+      "kind": "model_style_review_generation",
+      "species": "wolf_try3",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16769-adb3-7cc2-8c2f-32fc9ffeb8b4/exec-d9471259-fd45-4f4d-ba4d-64a9298c4a62.png",
+      "raw": "/Users/rexxa/work/artenv1-data/animals/wolf_try3_style_scorecard.png",
+      "prompt": "/Users/rexxa/work/artenv1-data/animals/wolf_try3_style_judge.prompt.txt",
+      "scores": [
+        5,
+        5,
+        5,
+        5
+      ],
+      "raw_sha256": "10e2e55125f8da38c4104a2bbcd9780884e880b441ecf940fb06ad15d028496b",
+      "prompt_sha256": "9a77b0d7ef95fa01cca75f9e397ac64b0e828906606ba38258573417179d6c00",
+      "references": [
+        {
+          "path": "art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ]
+    },
+    {
+      "kind": "model_style_review_generation",
+      "species": "negative_painterly",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16769-adb3-7cc2-8c2f-32fc9ffeb8b4/exec-746386c1-700d-470b-8dcf-aebf98c3dc49.png",
+      "raw": "/Users/rexxa/work/artenv1-data/animals/negative_painterly_style_scorecard.png",
+      "prompt": "/Users/rexxa/work/artenv1-data/animals/negative_painterly_style_judge.prompt.txt",
+      "scores": [
+        2,
+        2,
+        3,
+        3
+      ],
+      "raw_sha256": "e79f55ed581fb682e71751016dee5fe754e510bf75d279d0ba66e45725a1506d",
+      "prompt_sha256": "3f1d2c53cd3f1c77e3c105570d7cc5df8876b365d64e08278183bdee1cb857dc",
+      "references": [
+        {
+          "path": "art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ]
+    },
+    {
+      "kind": "model_style_review_generation",
+      "species": "negative_photo",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16769-adb3-7cc2-8c2f-32fc9ffeb8b4/exec-3146fcd6-f56f-4d8c-9a7f-260c50492c7e.png",
+      "raw": "/Users/rexxa/work/artenv1-data/animals/negative_photo_style_scorecard.png",
+      "prompt": "/Users/rexxa/work/artenv1-data/animals/negative_photo_style_judge.prompt.txt",
+      "scores": [
+        2,
+        3,
+        3,
+        3
+      ],
+      "raw_sha256": "03aacc7df60c55f59c11de12c194214b2b0a6f5e921841d59de880eabaf9bb61",
+      "prompt_sha256": "d4d91d712d7282e5abe5d36d5f7732a925b90836dc6e72bea4075f273bd91d10",
+      "references": [
+        {
+          "path": "art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ]
+    }
+  ]
+}

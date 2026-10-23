@@ -1,0 +1,237 @@
+{
+  "records": [
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/ANIMALS.md",
+      "sha256": "738b472727d9f8f34ae355f121ed8de0488fd55a55348d8c1d142e3f21ec045f"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/animal_attempts.json",
+      "sha256": "dcf0f819fc5a9295d42563deaeef2765d507f6362e5c7ca924d3e4fe9e568fd5"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/animal_judge_calibration.json",
+      "sha256": "e48654cbbf7e63505723d092dd0cd679c0ae4942fc8703494e84ac9d5abf694d"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/animal_reviews.json",
+      "sha256": "146717d6accdf84e66899654b8d16e1bb7c3898e0fd59d5da826c7c2a67328ca"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/animal_style_evidence.json",
+      "sha256": "2abc0676f09e7da89c3ace3cd3483548add45c6883fcadefcc2a8fa815e46ed3"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/boards/blind_frames_1x.png",
+      "sha256": "9d101e40e7003410739cb6f381aad883c643dfa0611c08b2ac9eeeab836d5d82"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/boards/blind_frames_2x.png",
+      "sha256": "a42a4098bb30d5c1118e0af01bb48e9a870a8d3942669b40a3106550227d9e82"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/boards/deer_sheet_1x.png",
+      "sha256": "f739b7b8676ff0afa2c18110a3ee58240783a5e0be8d90bd20ccd7e69de72b44"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/boards/deer_sheet_2x.png",
+      "sha256": "1b860f83d4d9505cacc0ab18f8e059a14a26f6225824085d15094978e787f965"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/boards/deer_style_scorecard.png",
+      "sha256": "0eb73736e30e283ac6854538b6afe021f3059e84b42bc49862b75db1ae83c035"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/boards/wolf_sheet_1x.png",
+      "sha256": "c0361a04546ac6ceead79cf22033eb1ca65f2a980057ffd2dd2fe5a775acee23"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/boards/wolf_sheet_2x.png",
+      "sha256": "824797bed8e774af74c4016c12274698f0ccf4536e1cc63ce2efd19a7af7a7ac"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/boards/wolf_style_scorecard.png",
+      "sha256": "9de7f76712d717706e6b837556bcd2d13fc7791af608d9ccf805a67a96a2f19d"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/deer/E/dead.json",
+      "sha256": "f7730a807d0403c294859b7c823148c3bfe542d637c9d9137b576084d640d0b5"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/deer/E/dead.png",
+      "sha256": "951c5c28b907a666ab8bd8cfeaf03f7d415aca8d800e8ebf35f8e6d5fae1a4d0"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/deer/E/graze.json",
+      "sha256": "fffcb794ef7311598ce989b89ef7cd4973038c60a354fddf3a6d831dc95d1ec7"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/deer/E/graze.png",
+      "sha256": "c53e5ed09a45eccfcaf45923e9ca29455dcb862a68e574b0c027314495a492c5"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/deer/E/run.json",
+      "sha256": "3831d57e09bdb617b404a5565d2d3f5289b712dd89f5b777675dd5f52a39a5ba"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/deer/E/run.png",
+      "sha256": "b27635b1221c308604cc048d652fc288864a7687b7c9ca44bfbcd24625f135af"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/deer/E/stand.json",
+      "sha256": "e577014af6f04dc288036a5c527ab4510268c35053314cff7f3671bd089dc13d"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/deer/E/stand.png",
+      "sha256": "dab6b289eb5a200879b686fe3f1f8d2fa7d0861814face28db266093a6d33e1d"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/deer/E/walk.json",
+      "sha256": "52e02e6aa040316b64bfdbc24d7bceb9330bb766c01cb2375f917cde83963295"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/deer/E/walk.png",
+      "sha256": "c909cb4ae376ff59117048e101c970469200ee5e084cffa950f003a611a98690"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/deer/MANIFEST.json",
+      "sha256": "8980391323d89f77e1615e739afcbe70c9e827689855845abb8e54e65cbfcdb0"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/deer/S/dead.json",
+      "sha256": "2d5034b832a4bb58e724775296818107d9fe4dd5a0c55f60ba4cad611e5f673f"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/deer/S/dead.png",
+      "sha256": "28f134d43b1f61e9f8696bc400e9898de81e165a74f15732de03a69c7055c145"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/deer/S/graze.json",
+      "sha256": "209a570876afb03b5d27b60645a359509ccf37c33863be9e1eb775a50f0c3f3f"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/deer/S/graze.png",
+      "sha256": "d3d991db1746d8f2d24156d7bc87936a7e25b39d3b54adeb5dc288e98c9fe9a7"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/deer/S/run.json",
+      "sha256": "9ee70753fb1dd931bdc99d57029ed292204309896eb7a0210c39c80060905757"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/deer/S/run.png",
+      "sha256": "fc398f03c644521da4235a91acefc0ec3a5b1d8e19edcce24585bacb21e705fc"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/deer/S/stand.json",
+      "sha256": "6459ced4f0a95c82ecc47428dbddccd58e8b0e3609e20777ee7868db9c961561"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/deer/S/stand.png",
+      "sha256": "80ab5eb1d723716286c292e3619d004abb0d85cc28794c825db9761c6d007958"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/deer/S/walk.json",
+      "sha256": "e01b3567672d82f2bbb31863163b5fff8013779ba2bc43929cb85fa5b085722e"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/deer/S/walk.png",
+      "sha256": "d9637cb1009d4618b16c2bc650d04bce160cd6f3fa4835753e637b7738e102e6"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/review_answer_key.json",
+      "sha256": "000792a384077b9ba7c67b47baa6a3e813f055e83fbf63fb9c3034da59735bf6"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/wolf/E/attack.json",
+      "sha256": "7a7d0021e2922b4a9a62e52c4316f4e3c337c3b05762360421196707ffcdd8ad"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/wolf/E/attack.png",
+      "sha256": "5eca849bde95696fd95ebbaf11a717cba91e50fc1e1e7a764c17f1438a94d381"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/wolf/E/dead.json",
+      "sha256": "e0929f90a6296d2e507c83db498ce9591873d3ea6918f4b5050722b1b8b86c86"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/wolf/E/dead.png",
+      "sha256": "a22770249a26b63c6d74404c1229af9e0e8f0475dd39196082d42fab62e771b6"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/wolf/E/run.json",
+      "sha256": "9bffb023d03a43408ca3c432b4fbb46696f7586ccd8820d6728c80867081140e"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/wolf/E/run.png",
+      "sha256": "0d309758ecfe0ee1957585c83e868f1065ba674021bbaf9294215802deccb3fc"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/wolf/E/stand.json",
+      "sha256": "e1673f8ab6dd5f0af1857ccaab083b42b8596af929129f2c58cddd89e2b33817"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/wolf/E/stand.png",
+      "sha256": "0a2379f384a5c527e5da2a2a3827aab05dcd815d1d9c11b6f8006f62511c77be"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/wolf/E/walk.json",
+      "sha256": "d76ce78a2c4d004b47e56806ce6c16329363d7614c3fed36870af30a963720de"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/wolf/E/walk.png",
+      "sha256": "484d2ffef3695554fa0ff195d075ffd3ef151b050e16ac0906fc13f02d6e90c5"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/wolf/MANIFEST.json",
+      "sha256": "aabebd227be5aceacdec832cf98e63b0111ac9a7d50a31e024e0e8a39b2585e5"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/wolf/S/attack.json",
+      "sha256": "615356f6433fed70db3f35a42bf1b7680830f16646c61f1587929577591e5e34"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/wolf/S/attack.png",
+      "sha256": "bc959c1cfe94efc4aa3cc8d7faad414a2f1d2a34ea63c5db4ae985c6c818cbe3"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/wolf/S/dead.json",
+      "sha256": "84d117744c2b3878fed6b91067eb76b38ac1c4bddbd0064cbc762921830ba645"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/wolf/S/dead.png",
+      "sha256": "d85175731ac9dd37a79393859444d762a3ee410c408f2d7458bb13a9d550a789"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/wolf/S/run.json",
+      "sha256": "fe3570cd49ea7ffd9effb8493d524a732f381a0c7d27283b8f9ff925608f74ce"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/wolf/S/run.png",
+      "sha256": "28e2ffb8becd9d0897a6514279c55dc338cd80668a04552e7465075ccd19c3f8"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/wolf/S/stand.json",
+      "sha256": "9650ce9d5c9aea7c79cac1f81d97a5e658616d0a764585c94ec8bde42b2b6045"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/wolf/S/stand.png",
+      "sha256": "beabc36d3aa897dbf6be448b68fc628d581e8b99c48a9d1c1527220b6cb8ae65"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/wolf/S/walk.json",
+      "sha256": "f920c481ad56be306843e9631523764ea69a505656274cad23083ab1ce83de3f"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/wolf/S/walk.png",
+      "sha256": "f0697cc60f33ed42c7ea6e745afcae1908002a3496f672239ab1a5dbb732808a"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/wolf_style_judge.prompt.txt",
+      "sha256": "3b08dd4a5a43477db08df717c99a7f3b0b2e787ea13686c915d5a74005c9510f"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/animals/round0/wolf_style_scorecard.png",
+      "sha256": "f253c635e81aa19c88c5afcb4e6c2c7302e657df8d4b590746825c65f2df5a53"
+    }
+  ],
+  "count": 58
+}

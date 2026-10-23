@@ -1,0 +1,59 @@
+{
+  "id": "wall_stone_09",
+  "path": "art/style05/env1/built/wall_stone_09.png",
+  "width": 64,
+  "height": 64,
+  "footprint": [
+    1,
+    1
+  ],
+  "family": "buildings",
+  "attempts": 0,
+  "status": "SEAM_FAIL_CANDIDATE",
+  "sha256": "aae3e8ff9dc9cb970d90b7aee840b812b9310ca93880af1ec1996c9afe2d3669",
+  "recipe": {
+    "mask": 9,
+    "core": "corner",
+    "clockwise_arm_rotations": [
+      270,
+      180
+    ]
+  },
+  "bits": {
+    "N": 1,
+    "E": 2,
+    "S": 4,
+    "W": 8
+  },
+  "source_ids": [
+    "wall_stone_straight",
+    "wall_stone_corner"
+  ],
+  "source_sha256": [
+    "4e0e101e04916d1efca7e5f267ccb1257194a43b0c7b94d21a7828d96f8eacc7",
+    "fd77749a9a0b295a7b3132f067d5a9fec13d8f04c621cbbfff91fb1d6c2b9710"
+  ],
+  "straight_bounds": [
+    0,
+    524,
+    1254,
+    738
+  ],
+  "corner_crop": [
+    -200,
+    300,
+    1000,
+    1500
+  ],
+  "bytes": 4427,
+  "operations": [
+    "generated straight alpha crop then64x16 resize",
+    "generated2x2 elbow crop then64x64 resize",
+    "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+  ],
+  "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+  "physical_footprint": [
+    1,
+    1
+  ]
+}

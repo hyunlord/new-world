@@ -1,0 +1,564 @@
+{
+  "version": 1,
+  "id": "reuse_current",
+  "type": "image_model_scorecard",
+  "status": "REVIEW_COMPLETE",
+  "reserved_at": "2026-10-23T07:34:48.317248+00:00",
+  "reservation": {
+    "model_calls": 1,
+    "asset_generations": 0,
+    "global_call_number_reserved": 135,
+    "built_lane_call_number": 56,
+    "parent_authorization": "Close promised current reused-family judge gate; exactly one scorecard call; frozen prior outputs remain unchanged."
+  },
+  "calibration": {
+    "path": "docs/v8/arttrial2/JUDGE_V2_CALIBRATION.json",
+    "sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+    "family": "buildings",
+    "range": {
+      "family": "buildings",
+      "lower": [
+        0.12422246676448356,
+        0.12617702596737473,
+        0.2544745181379646,
+        1.0,
+        0.0,
+        0.8284271247461903,
+        2.25,
+        0.0040104335591106205
+      ],
+      "upper": [
+        0.4417498480873831,
+        0.6771399455560541,
+        0.8765250322440128,
+        3.0,
+        6.0,
+        6.0,
+        7.406854249492381,
+        0.023011283254146208
+      ]
+    },
+    "leave_one_out_pass": true
+  },
+  "judge_code": {
+    "path": "art/pipeline2/judge.py",
+    "sha256": "168892b193aed145b6817f7a6cde36aea5f11ae93e018353542135332a44fa95"
+  },
+  "assets": [
+    {
+      "id": "hut",
+      "path": "art/style05/env/buildings/hut.png",
+      "sha256": "8b0f0f2571d73af0581de5574b8ac496538ec03142b100881901c8d30a5abb54",
+      "dimensions": [
+        192,
+        192
+      ],
+      "family": "buildings",
+      "source_metadata": "art/style05/env/buildings/hut.json",
+      "metadata_sha256": "8cc42f5a1de17e3ecc5c91d0b190633f29146a905eaed944531d356d11fde475",
+      "runtime_numeric": {
+        "candidate": "/Users/rexxa/work/new-world-art-prod/art/style05/env/buildings/hut.png",
+        "sha256": "8b0f0f2571d73af0581de5574b8ac496538ec03142b100881901c8d30a5abb54",
+        "family": "buildings",
+        "metrics": {
+          "edge_density": 0.2710584490229021,
+          "saturation_q25": 0.48282288826659925,
+          "saturation_q75": 0.6033691061477411,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.015202326584774039,
+          "foreground_pixels": 58697
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "runtime_numeric_domain": "Exact committed normalized PNG; comparison_size=256, stroke_comparison_size=1024 after foreground crop; never equivalent to the larger raw original.",
+      "production_raw_source": {
+        "path": "/Users/rexxa/work/arttrial2-data/buildings/hut_try1_raw.png",
+        "expected_sha256": "7c9245285c94b2197a37c7197d3a2c6362832281274699f12dab1edc478e349c",
+        "normalization_operations": [
+          {
+            "operation": "chroma_key",
+            "rule": "R>.65 and B>.65 and G<.4 and abs(R-B)<.3; keyed RGBA zeroed"
+          },
+          {
+            "operation": "crop",
+            "bbox": [
+              145,
+              103,
+              1110,
+              1051
+            ]
+          },
+          {
+            "operation": "Lanczos_contain",
+            "resized_size": [
+              188,
+              185
+            ],
+            "target_canvas": [
+              192,
+              192
+            ],
+            "offset": [
+              2,
+              3
+            ],
+            "margin_px": 2
+          }
+        ],
+        "actual_sha256": "7c9245285c94b2197a37c7197d3a2c6362832281274699f12dab1edc478e349c",
+        "source_hash_match": true,
+        "dimensions": [
+          1254,
+          1254
+        ]
+      },
+      "production_raw_numeric": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/buildings/hut_try1_raw.png",
+        "sha256": "7c9245285c94b2197a37c7197d3a2c6362832281274699f12dab1edc478e349c",
+        "family": "buildings",
+        "metrics": {
+          "edge_density": 0.27465064182341853,
+          "saturation_q25": 0.48849678052817014,
+          "saturation_q75": 0.6062514245324893,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.014633916319606114,
+          "foreground_pixels": 58384
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "production_raw_status": "PASS",
+      "model": {
+        "scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Hut matches the reference style with the same ink-and-wash texture, hand-drawn line quality, top-left lighting and warm natural earth palette with no noticeable differences."
+        },
+        "pass": true,
+        "candidate_domain": "Exact runtime PNG shown whole at 2x, 1x, 0.5x; this model result does not claim a direct raw-original review.",
+        "candidate_sha256": "8b0f0f2571d73af0581de5574b8ac496538ec03142b100881901c8d30a5abb54",
+        "mechanism": "Actual builtin image_gen scorecard, manually transcribed after viewing the returned pixels; no historical scores supplied."
+      },
+      "current_one_line_reading": "Four bedrolls around a lit central hearth and a clear south opening remain recognizable at 1x and 0.5x; log walls occupy about 12\u201316 px at 1x, while larger posts punctuate corners.",
+      "production_raw_numeric_plus_runtime_model_pass": true,
+      "runtime_numeric_plus_runtime_model_pass": true,
+      "cross_domain_limitation": "Production raw numeric and runtime-PNG visual model use different representations. They are reported together only with domains explicit; exact-runtime numeric failures remain failures."
+    },
+    {
+      "id": "knapping_spot",
+      "path": "art/style05/env/buildings/knapping_spot.png",
+      "sha256": "4f80d25470aa948a19167c18324f63c0ca70a5405d523be3ea661df2516ebc05",
+      "dimensions": [
+        64,
+        64
+      ],
+      "family": "buildings",
+      "source_metadata": "art/style05/env/buildings/knapping_spot.json",
+      "metadata_sha256": "53ea7b6a3a3ef22476241f850e444cd64a0bb2d3b96f58d95d01d176ac3e76d9",
+      "runtime_numeric": {
+        "candidate": "/Users/rexxa/work/new-world-art-prod/art/style05/env/buildings/knapping_spot.png",
+        "sha256": "4f80d25470aa948a19167c18324f63c0ca70a5405d523be3ea661df2516ebc05",
+        "family": "buildings",
+        "metrics": {
+          "edge_density": 0.1681936984806273,
+          "saturation_q25": 0.29001525521953136,
+          "saturation_q75": 0.4176935885802323,
+          "stroke_q25": 0.0,
+          "stroke_q50": 0.0,
+          "stroke_q75": 0.0,
+          "stroke_q90": 0.0,
+          "wash_flatness": 0.04495253339886415,
+          "foreground_pixels": 36870
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": false,
+          "stroke_q50": true,
+          "stroke_q75": false,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "runtime_numeric_domain": "Exact committed normalized PNG; comparison_size=256, stroke_comparison_size=1024 after foreground crop; never equivalent to the larger raw original.",
+      "production_raw_source": {
+        "path": "/Users/rexxa/work/arttrial2-data/buildings/knapping_spot_try1_raw.png",
+        "expected_sha256": "5366e8a986fef2c7be0265dda2173aa59813c94625f83de53892a7d7353668b6",
+        "normalization_operations": [
+          {
+            "operation": "chroma_key",
+            "rule": "R>.65 and B>.65 and G<.4 and abs(R-B)<.3; keyed RGBA zeroed"
+          },
+          {
+            "operation": "crop",
+            "bbox": [
+              279,
+              255,
+              992,
+              900
+            ]
+          },
+          {
+            "operation": "Lanczos_contain",
+            "resized_size": [
+              60,
+              54
+            ],
+            "target_canvas": [
+              64,
+              64
+            ],
+            "offset": [
+              2,
+              5
+            ],
+            "margin_px": 2
+          }
+        ],
+        "actual_sha256": "5366e8a986fef2c7be0265dda2173aa59813c94625f83de53892a7d7353668b6",
+        "source_hash_match": true,
+        "dimensions": [
+          1254,
+          1254
+        ]
+      },
+      "production_raw_numeric": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/buildings/knapping_spot_try1_raw.png",
+        "sha256": "5366e8a986fef2c7be0265dda2173aa59813c94625f83de53892a7d7353668b6",
+        "family": "buildings",
+        "metrics": {
+          "edge_density": 0.2608929836995039,
+          "saturation_q25": 0.3054772049157167,
+          "saturation_q75": 0.4293607002527029,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.016642975021063162,
+          "foreground_pixels": 37189
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "production_raw_status": "PASS",
+      "model": {
+        "scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Knapping spot (rock and bone) fits the same painterly ink-and-wash style, line treatment, top-left lighting and earthy color range, with only minor simplicity due to smaller subject and fewer materials."
+        },
+        "pass": true,
+        "candidate_domain": "Exact runtime PNG shown whole at 2x, 1x, 0.5x; this model result does not claim a direct raw-original review.",
+        "candidate_sha256": "4f80d25470aa948a19167c18324f63c0ca70a5405d523be3ea661df2516ebc05",
+        "mechanism": "Actual builtin image_gen scorecard, manually transcribed after viewing the returned pixels; no historical scores supplied."
+      },
+      "current_one_line_reading": "A dark flint/hammerstone area nested against pale rock and a curved bone tool reads as a small work spot at 1x; at 0.5x the flint and rock merge and the pale tool carries most of its silhouette.",
+      "production_raw_numeric_plus_runtime_model_pass": true,
+      "runtime_numeric_plus_runtime_model_pass": false,
+      "cross_domain_limitation": "Production raw numeric and runtime-PNG visual model use different representations. They are reported together only with domains explicit; exact-runtime numeric failures remain failures."
+    },
+    {
+      "id": "woodworking_bench",
+      "path": "art/style05/env/buildings/woodworking_bench.png",
+      "sha256": "9368eb1ecbdc8b2a65bf61a61b7163ab9a9e3aa8204131d725fb7f5a3427283b",
+      "dimensions": [
+        128,
+        64
+      ],
+      "family": "buildings",
+      "source_metadata": "art/style05/env/buildings/woodworking_bench.json",
+      "metadata_sha256": "b947b6d271d8b699ecc312b5f6c1b34a4833204fb8bbfcb04cf1422f8c26d1da",
+      "runtime_numeric": {
+        "candidate": "/Users/rexxa/work/new-world-art-prod/art/style05/env/buildings/woodworking_bench.png",
+        "sha256": "9368eb1ecbdc8b2a65bf61a61b7163ab9a9e3aa8204131d725fb7f5a3427283b",
+        "family": "buildings",
+        "metrics": {
+          "edge_density": 0.24022540698483372,
+          "saturation_q25": 0.48181582253073635,
+          "saturation_q75": 0.5612044749431421,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.02909087371129673,
+          "foreground_pixels": 15964
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "runtime_numeric_domain": "Exact committed normalized PNG; comparison_size=256, stroke_comparison_size=1024 after foreground crop; never equivalent to the larger raw original.",
+      "production_raw_source": {
+        "path": "/Users/rexxa/work/arttrial2-data/buildings/woodworking_bench_try1_raw.png",
+        "expected_sha256": "ef89981eecd35eedb7f7346aa0ef74806810837bb4048af7dc12693bc8045c95",
+        "normalization_operations": [
+          {
+            "operation": "chroma_key",
+            "rule": "R>.65 and B>.65 and G<.4 and abs(R-B)<.3; keyed RGBA zeroed"
+          },
+          {
+            "operation": "crop",
+            "bbox": [
+              215,
+              205,
+              1563,
+              736
+            ]
+          },
+          {
+            "operation": "Lanczos_contain",
+            "resized_size": [
+              124,
+              49
+            ],
+            "target_canvas": [
+              128,
+              64
+            ],
+            "offset": [
+              2,
+              7
+            ],
+            "margin_px": 2
+          }
+        ],
+        "actual_sha256": "ef89981eecd35eedb7f7346aa0ef74806810837bb4048af7dc12693bc8045c95",
+        "source_hash_match": true,
+        "dimensions": [
+          1774,
+          887
+        ]
+      },
+      "production_raw_numeric": {
+        "candidate": "/Users/rexxa/work/arttrial2-data/buildings/woodworking_bench_try1_raw.png",
+        "sha256": "ef89981eecd35eedb7f7346aa0ef74806810837bb4048af7dc12693bc8045c95",
+        "family": "buildings",
+        "metrics": {
+          "edge_density": 0.26852756454989535,
+          "saturation_q25": 0.4875970902102365,
+          "saturation_q75": 0.5662215493718525,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.01783511628015899,
+          "foreground_pixels": 15887
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "production_raw_status": "PASS",
+      "model": {
+        "scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Woodworking bench matches the reference style with consistent brushy texture, hand-drawn contours, top-left lighting and natural wood and earth tones, with only minor simplification from its narrow, linear form."
+        },
+        "pass": true,
+        "candidate_domain": "Exact runtime PNG shown whole at 2x, 1x, 0.5x; this model result does not claim a direct raw-original review.",
+        "candidate_sha256": "9368eb1ecbdc8b2a65bf61a61b7163ab9a9e3aa8204131d725fb7f5a3427283b",
+        "mechanism": "Actual builtin image_gen scorecard, manually transcribed after viewing the returned pixels; no historical scores supplied."
+      },
+      "current_one_line_reading": "The long wood slab with four supports, a dark stone tool and pale wood/bone tools reads as a workbench at 1x; at 0.5x the bench silhouette survives while individual tools soften.",
+      "production_raw_numeric_plus_runtime_model_pass": true,
+      "runtime_numeric_plus_runtime_model_pass": false,
+      "cross_domain_limitation": "Production raw numeric and runtime-PNG visual model use different representations. They are reported together only with domains explicit; exact-runtime numeric failures remain failures."
+    }
+  ],
+  "candidate_board": {
+    "path": "/Users/rexxa/work/artenv1-data/built/reuse_current/reuse_current_candidates.png",
+    "sha256": "ab8bed44c6f1bc161b91aceb311e29874acd6e32b58c507e39b13c1b8c90a1b6",
+    "operations": "Whole unchanged geometry composited on neutral paper; 2x nearest, 1x unchanged, 0.5x Lanczos; labels outside objects."
+  },
+  "refs": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/building_hut.png",
+      "sha256": "e98dac4d6e5c3c1010595fbcd9915beb6f1967b153ae666399e81806c28e743e"
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/building_roof.png",
+      "sha256": "abcc7e568094356e5a7fd89478ca87e8ddc932a0b55e19ccbca6675104148c1c"
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+      "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e"
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+      "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+    },
+    {
+      "path": "/Users/rexxa/work/artenv1-data/built/reuse_current/reuse_current_candidates.png",
+      "sha256": "ab8bed44c6f1bc161b91aceb311e29874acd6e32b58c507e39b13c1b8c90a1b6"
+    }
+  ],
+  "prompt": "Use case: infographic-diagram. Act as a fresh independent image-model STYLE judge. Produce ONE clean, highly legible white scorecard, not new artwork. Images 1 and 2 are locked SAME-FAMILY building style crops. Image 3 is the locked original hut anchor and image 4 is the locked original shared-lighting scene. Image 5 alone is a whole-geometry candidate contact sheet of THREE exact existing game PNGs, columns left to right: hut, knapping_spot, woodworking_bench. Each column shows the same candidate at 2x nearest enlargement, actual 1x (64 px per tile), and 0.5x (32 px per tile). The enlargement is only for inspection; do not score labels, background, resampling pixels or the sheet as artwork. Judge the three candidates separately against the ACTUAL reference rendering language, not an idealized brief. Do not score the references, repaint assets, assume an expected outcome or use any historical scores. Use a table with exactly THREE rows and these columns: ID, MEDIUM, LINE, LIGHT, PALETTE, ONE-SENTENCE REASON. Give each candidate four independent integer scores 1 to 5: 1 unrelated, 2 substantially different, 3 mixed/noticeable drift, 4 close match, 5 indistinguishable rendering language. Four scores each at least 4 are required for model PASS; be strict and allow failures. Evaluate ink-and-wash technique, contour-to-detail balance, lighting direction, and natural earth palette. Judge depicted content and camera separately; different subjects or sparse materials alone are not style failures. Each one-sentence reason must identify the candidate content and an actual visual style difference or similarity. Add a final brief scale observation: the candidate hut wall is approximately 12\u201316 px at 1x, compared with the declared 16 px width of the new wall bands (6\u20138 px versus 8 px at 0.5x); state that the new walls are not pictured and this comparison uses declared scale, not direct visual verification. Keep every ID, number, full reason and scale sentence legible. Output only the textual scorecard, without decorative art, candidate redraws, or copied pictures.",
+  "tool": "image_gen.imagegen",
+  "transparent_background": false,
+  "output_raw_reserved": "/Users/rexxa/work/artenv1-data/built/reuse_current/reuse_current_scorecard_raw.png",
+  "output_preview_reserved": "art/style05/env1/built/reuse_current_scorecard.png",
+  "frozen_before": "/Users/rexxa/work/artenv1-data/built/reuse_current/frozen_before.json",
+  "model_scores": {
+    "hut": {
+      "medium": 5,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "sentence": "Hut matches the reference style with the same ink-and-wash texture, hand-drawn line quality, top-left lighting and warm natural earth palette with no noticeable differences."
+    },
+    "knapping_spot": {
+      "medium": 4,
+      "line": 4,
+      "light": 4,
+      "palette": 4,
+      "sentence": "Knapping spot (rock and bone) fits the same painterly ink-and-wash style, line treatment, top-left lighting and earthy color range, with only minor simplicity due to smaller subject and fewer materials."
+    },
+    "woodworking_bench": {
+      "medium": 4,
+      "line": 4,
+      "light": 4,
+      "palette": 4,
+      "sentence": "Woodworking bench matches the reference style with consistent brushy texture, hand-drawn contours, top-left lighting and natural wood and earth tones, with only minor simplification from its narrow, linear form."
+    }
+  },
+  "historical_scores_used": false,
+  "started_at": "2026-10-23T07:35:21.185777+00:00",
+  "inputs_inspected_with_view_image": true,
+  "completed_at": "2026-10-23T07:37:00.130271+00:00",
+  "output": {
+    "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-08c7-7070-b1e2-5305974ed20f/exec-46ad19a6-b6c5-4d23-ad30-5dfebcf84481.png",
+    "raw": "/Users/rexxa/work/artenv1-data/built/reuse_current/reuse_current_scorecard_raw.png",
+    "raw_sha256": "b21e2352dc33efeb3027a8ce7bf9e108809f1b549d05e9b9004c37f6ab585294",
+    "preview": "art/style05/env1/built/reuse_current_scorecard.png",
+    "preview_sha256": "1867003584b60478d16a6322cf20d830f372bd148df5765f0da3bcfd3a057543",
+    "preview_bytes": 1195485,
+    "preview_operation": "Global RGB conversion and aspect-preserving Lanczos thumbnail to maximum 1500 px; no quantization or local edits.",
+    "tool_artifact_id": "exec-46ad19a6-b6c5-4d23-ad30-5dfebcf84481",
+    "model_version": "Not exposed by builtin tool."
+  },
+  "scale_observation_transcription": "The candidate hut wall is approximately 12\u201316 px at 1x, compared with the declared 16 px width of the new wall bands (6\u20138 px versus 8 px at 0.5x); the new walls are not pictured and this comparison uses declared scale, not direct visual verification.",
+  "summary": {
+    "production_raw_numeric_pass": 3,
+    "runtime_png_numeric_pass": 1,
+    "model_pass": 3,
+    "denominator": 3,
+    "generation_calls_added": 1,
+    "asset_generations_added": 0,
+    "built_lane_calls_including_prior_frozen_ledger": 56,
+    "historical_records_or_frozen_acceptance_overridden": false
+  },
+  "normalization_domain_note": "The retained TRIAL2b numeric judgments and the 23 newly generated built sources measure larger original images. Runtime files were chroma-keyed, cropped and Lanczos-contained to 192x192, 64x64 and 128x64. Re-expanding these small rasters to the judge comparison sizes cannot recover their original ink ridges or wash texture; this current diagnostic must not silently replace the raw production domain, nor may raw passes erase its failures.",
+  "current_scale_recheck": {
+    "mechanism": "Executor view_image inspection, non-blind; no additional model call",
+    "board": "art/style05/env1/built/reuse_scale_board.png",
+    "board_sha256": "1944232c4994b8792e54307a7e098bbf8b23f090d28a1ccf2de556bf1791eb24",
+    "hut_wall_band_1x_px": [
+      12,
+      16
+    ],
+    "new_wall_band_1x_px": 16,
+    "hut_wall_band_half_px": [
+      6,
+      8
+    ],
+    "new_wall_band_half_px": 8,
+    "assessment": "Comparable scale; corner posts and texture differ. This does not certify seam continuity."
+  },
+  "completed_at_note": "Local result-recorded timestamp after the tool returned; exact service completion timestamp is not exposed.",
+  "tool_output_metadata": {
+    "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-08c7-7070-b1e2-5305974ed20f as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-08c7-7070-b1e2-5305974ed20f/exec-46ad19a6-b6c5-4d23-ad30-5dfebcf84481.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "image_gen.imagegen",
+    "artifact_id": "exec-46ad19a6-b6c5-4d23-ad30-5dfebcf84481"
+  },
+  "model_same_family_verified": true,
+  "validation": {
+    "checked_at": "2026-10-23T07:39:13.552474+00:00",
+    "previously_frozen_file_count": 137,
+    "previously_frozen_files_unchanged": true,
+    "frozen_manifest_sha256": "c586d83d5178f55d2c9922c3ac757469a0aba4c33b034a592105f16c17231e2b",
+    "input_hashes_unchanged": true,
+    "raw_original_hashes_match_sidecars": true,
+    "scorecard_images_decode": true,
+    "preview_size_cap_pass": true,
+    "all_score_transcriptions_valid": true,
+    "scorecard_preview_visually_inspected": true,
+    "new_document_sha256": "b7d9056ab80b775df35007080abc65b7f6a4604c7f6e6d0f07618efbded1702a"
+  }
+}

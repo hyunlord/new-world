@@ -1,0 +1,22 @@
+[package]
+name = "env1-probe-extract"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1"
+sim-test = { path = "/Users/rexxa/work/artenv1-data/probe-worktree/rust/crates/sim-test" }
+sim-bridge = { path = "/Users/rexxa/work/artenv1-data/probe-worktree/rust/crates/sim-bridge" }
+sim-systems = { path = "/Users/rexxa/work/artenv1-data/probe-worktree/rust/crates/sim-systems" }
+
+[lints.rust]
+unsafe_code = "forbid"
+unused_must_use = "deny"
+
+[lints.clippy]
+all = { level = "deny", priority = -1 }
+unwrap_used = "deny"
+expect_used = "deny"
+panic = "deny"

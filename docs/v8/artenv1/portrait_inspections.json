@@ -1,0 +1,805 @@
+{
+  "coordinate_space": "128x128 canonical, origin top-left; face bbox encloses visible skin/ears only, head bbox includes hair",
+  "fixed_face_oval": {
+    "cx": 64,
+    "cy": 61,
+    "rx": 44,
+    "ry": 52
+  },
+  "minimum_head_margin_px": 2,
+  "inspection_limit": "Manual estimated bounds are review evidence, not an automated segmentation or exact facial identity proof.",
+  "inspections": [
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "attempt": 1,
+      "head_bbox": [
+        25,
+        2,
+        100,
+        91
+      ],
+      "face_bbox": [
+        32,
+        32,
+        90,
+        85
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": true,
+      "identity_note": "Bun and fur cloak match category, but an unreferenced bone pin appears.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "adult_F_fur_cloak_long_tied",
+      "attempt": 1,
+      "head_bbox": [
+        24,
+        0,
+        107,
+        94
+      ],
+      "face_bbox": [
+        29,
+        30,
+        86,
+        85
+      ],
+      "head_uncropped": true,
+      "hair_match": false,
+      "top_match": true,
+      "extra_accessory": true,
+      "identity_note": "Wrong bun/bone-pin copied from anchor instead of tied long hair; rejected and retried.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "adult_F_fur_cloak_short",
+      "attempt": 1,
+      "head_bbox": [
+        27,
+        5,
+        98,
+        75
+      ],
+      "face_bbox": [
+        42,
+        27,
+        93,
+        77
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "adult_F_hide_wrap_bun",
+      "attempt": 1,
+      "head_bbox": [
+        27,
+        1,
+        96,
+        85
+      ],
+      "face_bbox": [
+        39,
+        30,
+        89,
+        79
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "adult_F_hide_wrap_long_tied",
+      "attempt": 1,
+      "head_bbox": [
+        13,
+        5,
+        104,
+        91
+      ],
+      "face_bbox": [
+        44,
+        30,
+        94,
+        79
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "adult_F_hide_wrap_short",
+      "attempt": 1,
+      "head_bbox": [
+        25,
+        5,
+        95,
+        78
+      ],
+      "face_bbox": [
+        39,
+        27,
+        91,
+        78
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "adult_F_loincloth_bun",
+      "attempt": 1,
+      "head_bbox": [
+        29,
+        3,
+        96,
+        85
+      ],
+      "face_bbox": [
+        41,
+        32,
+        93,
+        81
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "adult_F_loincloth_long_tied",
+      "attempt": 1,
+      "head_bbox": [
+        12,
+        3,
+        105,
+        91
+      ],
+      "face_bbox": [
+        45,
+        31,
+        97,
+        80
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "adult_F_loincloth_short",
+      "attempt": 1,
+      "head_bbox": [
+        25,
+        2,
+        98,
+        77
+      ],
+      "face_bbox": [
+        39,
+        27,
+        92,
+        78
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "attempt": 1,
+      "head_bbox": [
+        28,
+        4,
+        94,
+        84
+      ],
+      "face_bbox": [
+        35,
+        28,
+        88,
+        83
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "adult_M_fur_cloak_short",
+      "attempt": 1,
+      "head_bbox": [
+        28,
+        5,
+        98,
+        84
+      ],
+      "face_bbox": [
+        36,
+        29,
+        90,
+        84
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "adult_M_hide_wrap_bun",
+      "attempt": 1,
+      "head_bbox": [
+        27,
+        2,
+        96,
+        86
+      ],
+      "face_bbox": [
+        36,
+        29,
+        90,
+        83
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "adult_M_hide_wrap_short",
+      "attempt": 1,
+      "head_bbox": [
+        25,
+        4,
+        97,
+        84
+      ],
+      "face_bbox": [
+        35,
+        29,
+        90,
+        85
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "adult_M_loincloth_bun",
+      "attempt": 1,
+      "head_bbox": [
+        28,
+        2,
+        97,
+        85
+      ],
+      "face_bbox": [
+        35,
+        30,
+        90,
+        85
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "adult_M_loincloth_long_tied",
+      "attempt": 1,
+      "head_bbox": [
+        15,
+        4,
+        105,
+        87
+      ],
+      "face_bbox": [
+        41,
+        29,
+        94,
+        85
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "adult_M_loincloth_short",
+      "attempt": 1,
+      "head_bbox": [
+        27,
+        4,
+        94,
+        82
+      ],
+      "face_bbox": [
+        35,
+        28,
+        90,
+        85
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "attempt": 1,
+      "head_bbox": [
+        25,
+        2,
+        98,
+        85
+      ],
+      "face_bbox": [
+        37,
+        34,
+        92,
+        85
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "attempt": 1,
+      "head_bbox": [
+        15,
+        3,
+        102,
+        88
+      ],
+      "face_bbox": [
+        41,
+        31,
+        94,
+        83
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "child_F_fur_cloak_short",
+      "attempt": 1,
+      "head_bbox": [
+        22,
+        4,
+        100,
+        84
+      ],
+      "face_bbox": [
+        35,
+        30,
+        92,
+        82
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "child_F_hide_wrap_bun",
+      "attempt": 1,
+      "head_bbox": [
+        27,
+        2,
+        100,
+        86
+      ],
+      "face_bbox": [
+        38,
+        32,
+        94,
+        85
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "child_F_hide_wrap_long_tied",
+      "attempt": 1,
+      "head_bbox": [
+        12,
+        4,
+        104,
+        93
+      ],
+      "face_bbox": [
+        39,
+        32,
+        96,
+        86
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "child_F_hide_wrap_short",
+      "attempt": 1,
+      "head_bbox": [
+        20,
+        3,
+        103,
+        83
+      ],
+      "face_bbox": [
+        36,
+        30,
+        93,
+        82
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "child_F_loincloth_bun",
+      "attempt": 1,
+      "head_bbox": [
+        27,
+        2,
+        98,
+        87
+      ],
+      "face_bbox": [
+        38,
+        34,
+        93,
+        85
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "child_F_loincloth_long_tied",
+      "attempt": 1,
+      "head_bbox": [
+        13,
+        3,
+        105,
+        91
+      ],
+      "face_bbox": [
+        40,
+        32,
+        96,
+        85
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "child_F_loincloth_short",
+      "attempt": 1,
+      "head_bbox": [
+        20,
+        3,
+        102,
+        83
+      ],
+      "face_bbox": [
+        33,
+        29,
+        92,
+        83
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "attempt": 1,
+      "head_bbox": [
+        25,
+        1,
+        99,
+        85
+      ],
+      "face_bbox": [
+        34,
+        31,
+        90,
+        84
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "child_M_fur_cloak_long_tied",
+      "attempt": 1,
+      "head_bbox": [
+        16,
+        4,
+        103,
+        88
+      ],
+      "face_bbox": [
+        41,
+        32,
+        96,
+        85
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "child_M_fur_cloak_short",
+      "attempt": 1,
+      "head_bbox": [
+        22,
+        5,
+        102,
+        83
+      ],
+      "face_bbox": [
+        35,
+        30,
+        93,
+        83
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "child_M_hide_wrap_bun",
+      "attempt": 1,
+      "head_bbox": [
+        25,
+        2,
+        98,
+        87
+      ],
+      "face_bbox": [
+        36,
+        33,
+        93,
+        87
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "child_M_hide_wrap_long_tied",
+      "attempt": 1,
+      "head_bbox": [
+        17,
+        3,
+        106,
+        91
+      ],
+      "face_bbox": [
+        40,
+        32,
+        95,
+        86
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "child_M_hide_wrap_short",
+      "attempt": 1,
+      "head_bbox": [
+        23,
+        4,
+        101,
+        82
+      ],
+      "face_bbox": [
+        34,
+        30,
+        93,
+        83
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "child_M_loincloth_bun",
+      "attempt": 1,
+      "head_bbox": [
+        25,
+        1,
+        104,
+        87
+      ],
+      "face_bbox": [
+        37,
+        33,
+        96,
+        87
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "child_M_loincloth_long_tied",
+      "attempt": 1,
+      "head_bbox": [
+        16,
+        2,
+        103,
+        99
+      ],
+      "face_bbox": [
+        37,
+        32,
+        94,
+        85
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "child_M_loincloth_short",
+      "attempt": 1,
+      "head_bbox": [
+        22,
+        3,
+        100,
+        84
+      ],
+      "face_bbox": [
+        34,
+        30,
+        92,
+        83
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Hair category, dark-brown colour and visible top category agree with the actual S/idle reference.",
+      "inspection_method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+    },
+    {
+      "look": "adult_F_fur_cloak_long_tied",
+      "attempt": 2,
+      "head_bbox": [
+        3,
+        0,
+        106,
+        88
+      ],
+      "face_bbox": [
+        45,
+        26,
+        97,
+        82
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Tied long hair corrected; fur cloak retained. Topmost flyaway hair has less than 2px margin.",
+      "inspection_method": "Manual visual observation of actual portrait; +/-2px estimate, conservative bounds."
+    },
+    {
+      "look": "adult_F_loincloth_bun",
+      "attempt": 2,
+      "head_bbox": [
+        27,
+        2,
+        94,
+        85
+      ],
+      "face_bbox": [
+        38,
+        30,
+        89,
+        79
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Bun and horizontal hide top retained; style retry.",
+      "inspection_method": "Manual visual observation of actual portrait; +/-2px estimate, conservative bounds."
+    }
+  ]
+}

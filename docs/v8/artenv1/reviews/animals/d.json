@@ -1,0 +1,299 @@
+{
+  "reviewer": "d",
+  "boards": [
+    {
+      "scale": "2x",
+      "started_at": "2026-10-23 06:50:26 UTC",
+      "ended_at": "2026-10-23 06:51:23 UTC",
+      "answers": [
+        {
+          "id": "R1-2X-01",
+          "species": "Deer (antlered stag)",
+          "pose": "Walking to the right with one foreleg reaching forward.",
+          "confidence": 0.95,
+          "notes": "Species and walking direction are clear."
+        },
+        {
+          "id": "R1-2X-02",
+          "species": "Deer (antlered stag)",
+          "pose": "Leaping to the right, with the body tucked and forelegs reaching forward.",
+          "confidence": 0.79,
+          "notes": "Primary reading is an airborne leap; the compressed body and bent legs could also be a stumbling pose."
+        },
+        {
+          "id": "R1-2X-03",
+          "species": "Deer (antlered stag)",
+          "pose": "Walking toward the viewer.",
+          "confidence": 0.79,
+          "notes": "Uneven foreleg positions suggest a step; a nearly stationary frontal stance is also plausible."
+        },
+        {
+          "id": "R1-2X-04",
+          "species": "Wolf",
+          "pose": "Bounding diagonally toward the viewer's left, front legs stretched ahead.",
+          "confidence": 0.91,
+          "notes": "Clear forward-running or lunging body shape."
+        },
+        {
+          "id": "R1-2X-05",
+          "species": "Deer (antlered stag)",
+          "pose": "Running to the right in a long, extended bound.",
+          "confidence": 0.97,
+          "notes": "Stretched legs and horizontal body strongly suggest running."
+        },
+        {
+          "id": "R1-2X-06",
+          "species": "Deer (antlered stag)",
+          "pose": "Grazing with its head lowered toward the ground, seen from the side.",
+          "confidence": 0.96,
+          "notes": "Head-down feeding posture is clear."
+        },
+        {
+          "id": "R1-2X-07",
+          "species": "Deer (antlered stag)",
+          "pose": "Grazing with its head down, viewed mostly from the front.",
+          "confidence": 0.96,
+          "notes": "Could be sniffing the ground, but feeding is the primary reading."
+        },
+        {
+          "id": "R1-2X-08",
+          "species": "Deer (antlered stag)",
+          "pose": "Collapsed on its side with its head on the ground and legs extended.",
+          "confidence": 0.89,
+          "notes": "Primary reading is dead or incapacitated, rather than standing or grazing; death itself cannot be confirmed in a still frame."
+        },
+        {
+          "id": "R1-2X-09",
+          "species": "Deer (antlered stag)",
+          "pose": "Standing still and facing the viewer.",
+          "confidence": 0.95,
+          "notes": "Straight forelegs and upright head read as an idle stance."
+        },
+        {
+          "id": "R1-2X-10",
+          "species": "Wolf",
+          "pose": "Sitting upright in profile, looking to the right.",
+          "confidence": 0.98,
+          "notes": "Seated hindquarters and straight forelegs are clear."
+        },
+        {
+          "id": "R1-2X-11",
+          "species": "Wolf",
+          "pose": "Lying collapsed on its side with legs stretched out.",
+          "confidence": 0.72,
+          "notes": "Primary reading is a dead or incapacitated wolf; sleeping or resting is also plausible from this single frame."
+        },
+        {
+          "id": "R1-2X-12",
+          "species": "Wolf",
+          "pose": "Walking to the right with one front paw lifted.",
+          "confidence": 0.94,
+          "notes": "A slow trot is also possible; walking is the primary reading."
+        },
+        {
+          "id": "R1-2X-13",
+          "species": "Wolf",
+          "pose": "Sitting upright, facing mostly toward the viewer.",
+          "confidence": 0.94,
+          "notes": "The tail and haunch position suggest sitting."
+        },
+        {
+          "id": "R1-2X-14",
+          "species": "Wolf",
+          "pose": "Standing on all fours, facing toward the viewer.",
+          "confidence": 0.88,
+          "notes": "A slight forward step is possible; primary reading is an alert standing stance."
+        },
+        {
+          "id": "R1-2X-15",
+          "species": "Wolf",
+          "pose": "Rearing onto its hind legs and striking upward with its forepaws.",
+          "confidence": 0.88,
+          "notes": "Primary reading is an attack or aggressive rear; it looks somewhat anthropomorphic."
+        },
+        {
+          "id": "R1-2X-16",
+          "species": "Deer (antlered stag)",
+          "pose": "Bounding diagonally toward the viewer's right.",
+          "confidence": 0.9,
+          "notes": "Splayed legs and tilted body suggest a running leap."
+        },
+        {
+          "id": "R1-2X-17",
+          "species": "Deer (antlered stag)",
+          "pose": "Standing still in profile, looking right.",
+          "confidence": 0.98,
+          "notes": "Clear idle standing posture."
+        },
+        {
+          "id": "R1-2X-18",
+          "species": "Wolf",
+          "pose": "Lying on its side with its head on the ground and legs stretched out.",
+          "confidence": 0.68,
+          "notes": "Primary reading is resting or sleeping; the pose could equally represent a dead or collapsed wolf."
+        },
+        {
+          "id": "R1-2X-19",
+          "species": "Wolf",
+          "pose": "Running to the right with its body low and legs extended.",
+          "confidence": 0.97,
+          "notes": "Clear fast-running or lunging pose."
+        },
+        {
+          "id": "R1-2X-20",
+          "species": "Wolf",
+          "pose": "Rearing upright toward the viewer with both front paws raised.",
+          "confidence": 0.87,
+          "notes": "Primary reading is an attacking or threatening rear; the upright shape looks somewhat anthropomorphic."
+        }
+      ]
+    },
+    {
+      "scale": "1x",
+      "started_at": "2026-10-23 06:51:23 UTC",
+      "ended_at": "2026-10-23 06:52:23 UTC",
+      "answers": [
+        {
+          "id": "R1-1X-01",
+          "species": "Deer (antlered stag)",
+          "pose": "Standing in profile and looking to the right.",
+          "confidence": 0.95,
+          "notes": "The upright head and four grounded legs read clearly."
+        },
+        {
+          "id": "R1-1X-02",
+          "species": "Wolf",
+          "pose": "Lying on its side, apparently sleeping or resting.",
+          "confidence": 0.62,
+          "notes": "At native size it is difficult to distinguish rest from death or collapse; sleeping/resting is the primary reading."
+        },
+        {
+          "id": "R1-1X-03",
+          "species": "Deer (antlered stag)",
+          "pose": "Running to the right in an extended leap.",
+          "confidence": 0.93,
+          "notes": "Horizontal movement and stretched legs are legible."
+        },
+        {
+          "id": "R1-1X-04",
+          "species": "Wolf",
+          "pose": "Lying collapsed on its side with its legs stretched out.",
+          "confidence": 0.6,
+          "notes": "Primary reading is dead or incapacitated; sleeping is also plausible. This is hard to distinguish from another prone wolf pose at this size."
+        },
+        {
+          "id": "R1-1X-05",
+          "species": "Wolf",
+          "pose": "Rearing up on its hind legs and reaching forward with its forepaws.",
+          "confidence": 0.78,
+          "notes": "Primary reading is an attack or swipe; the upright silhouette could be mistaken for a small humanoid."
+        },
+        {
+          "id": "R1-1X-06",
+          "species": "Deer (antlered stag)",
+          "pose": "Grazing with its head down, seen from the side.",
+          "confidence": 0.92,
+          "notes": "Feeding is the primary reading; sniffing the ground is also possible."
+        },
+        {
+          "id": "R1-1X-07",
+          "species": "Wolf",
+          "pose": "Standing upright on its hind legs, facing the viewer with both forepaws raised.",
+          "confidence": 0.78,
+          "notes": "Primary reading is a threatening rear or attack; the small upright outline is somewhat humanoid."
+        },
+        {
+          "id": "R1-1X-08",
+          "species": "Deer (antlered stag)",
+          "pose": "Walking toward the viewer.",
+          "confidence": 0.71,
+          "notes": "The forelegs appear staggered, but a frontal standing pose is also plausible at this size."
+        },
+        {
+          "id": "R1-1X-09",
+          "species": "Wolf",
+          "pose": "Sitting upright and facing mostly toward the viewer.",
+          "confidence": 0.87,
+          "notes": "The haunches and tail suggest a seated posture."
+        },
+        {
+          "id": "R1-1X-10",
+          "species": "Deer (antlered stag)",
+          "pose": "Standing still and facing the viewer.",
+          "confidence": 0.89,
+          "notes": "Upright, nearly parallel legs read as standing."
+        },
+        {
+          "id": "R1-1X-11",
+          "species": "Wolf",
+          "pose": "Bounding diagonally toward the viewer's left.",
+          "confidence": 0.83,
+          "notes": "Extended forelegs suggest a running bound or lunge."
+        },
+        {
+          "id": "R1-1X-12",
+          "species": "Wolf",
+          "pose": "Sitting in profile, looking to the right.",
+          "confidence": 0.94,
+          "notes": "The seated rear and upright forelegs remain clear at native size."
+        },
+        {
+          "id": "R1-1X-13",
+          "species": "Deer (antlered stag)",
+          "pose": "Walking to the right with a foreleg extended.",
+          "confidence": 0.89,
+          "notes": "A slow trot is possible; walking is the primary reading."
+        },
+        {
+          "id": "R1-1X-14",
+          "species": "Deer (antlered stag)",
+          "pose": "Leaping to the right with its legs tucked under a horizontal body.",
+          "confidence": 0.71,
+          "notes": "Primary reading is an airborne leap; the compact body could also suggest a stumble or fall."
+        },
+        {
+          "id": "R1-1X-15",
+          "species": "Wolf",
+          "pose": "Standing on all fours and looking toward the viewer.",
+          "confidence": 0.8,
+          "notes": "A small forward step is possible; primary reading is an alert standing pose."
+        },
+        {
+          "id": "R1-1X-16",
+          "species": "Deer (antlered stag)",
+          "pose": "Collapsed on its side with its head down and legs extending to the right.",
+          "confidence": 0.84,
+          "notes": "Primary reading is dead or incapacitated, though a still image cannot establish death."
+        },
+        {
+          "id": "R1-1X-17",
+          "species": "Wolf",
+          "pose": "Walking to the right with one front paw raised.",
+          "confidence": 0.89,
+          "notes": "The lifted paw suggests a step; slow trotting is also possible."
+        },
+        {
+          "id": "R1-1X-18",
+          "species": "Wolf",
+          "pose": "Running low to the ground toward the right.",
+          "confidence": 0.92,
+          "notes": "Long body and extended legs read as running or lunging."
+        },
+        {
+          "id": "R1-1X-19",
+          "species": "Deer (antlered stag)",
+          "pose": "Bounding diagonally toward the viewer's right.",
+          "confidence": 0.82,
+          "notes": "The angled body and splayed legs suggest a running leap."
+        },
+        {
+          "id": "R1-1X-20",
+          "species": "Deer (antlered stag)",
+          "pose": "Grazing with its head lowered toward the viewer.",
+          "confidence": 0.9,
+          "notes": "Front-facing head-down feeding posture; sniffing is a secondary possibility."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "round": 1,
+  "common_instructions_sha256": "0fd4a3ac92eecf91c09b399cb4c287876af3898817118877a20695bebd5bd8e1",
+  "instruction_source": "/Users/rexxa/work/artenv1-data/reviews/readability/REVIEWER_INSTRUCTIONS.txt",
+  "task_assignment": "Only own packet/order, common instruction, response file; no source/key/other reviewers; actual clocks; original pixels; no delegation",
+  "reviewers": [
+    {
+      "packet_id": "G5185",
+      "reviewer": "a",
+      "agent": "/root/scene_r1_a",
+      "nickname": "Bacon",
+      "fork_turns": "none",
+      "packet_order_sha256": "46bcc74910b905fbdc770e614f72fed360aa9e9165c86a989d62ac531f0d2fda",
+      "response_sha256": "c5c90611b93291bae9ccb12cca6678cbeb0ebaf330f17b7b83b2beaf8dc1d639"
+    },
+    {
+      "packet_id": "G4995",
+      "reviewer": "b",
+      "agent": "/root/scene_r1_b",
+      "nickname": "Leibniz",
+      "fork_turns": "none",
+      "packet_order_sha256": "ce4b8e84250756fbc455fa78d0cc4e174814086e581a9ca02b7753350050671e",
+      "response_sha256": "6635925864a84838f7bcf1984ad7a93acb08251d6ac2970ede0af13cd82c6695"
+    },
+    {
+      "packet_id": "G7461",
+      "reviewer": "a",
+      "agent": "/root/scene_r1_c",
+      "nickname": "Gauss",
+      "fork_turns": "none",
+      "packet_order_sha256": "429faa2b0b995fd0f11167e1b7a089031f687a612680737a548787141d300f87",
+      "response_sha256": "1c0e0bd585e15cc31a381f58d44eacc175052c1046b893e9f1b4be161db0ed33"
+    },
+    {
+      "packet_id": "G9478",
+      "reviewer": "b",
+      "agent": "/root/scene_r1_d",
+      "nickname": "Copernicus",
+      "fork_turns": "none",
+      "packet_order_sha256": "a6d3b46f7ab65f78979a3a461d83328f6c5f4f4395944cad18b0ab39573ffb35",
+      "response_sha256": "430c482a916f84d853a782ac76678de183598469a0a16f9dedd9646500575f42"
+    },
+    {
+      "packet_id": "G7606",
+      "reviewer": "a",
+      "agent": "/root/scene_r1_e",
+      "nickname": "Aristotle",
+      "fork_turns": "none",
+      "packet_order_sha256": "c260bb131bc803a26926b0280b52ebbe27b9fff329509d80369b0eea09d1b501",
+      "response_sha256": "095e7ed1aa82b3984668cdc2bb036ab95a463548fabe04a169b85e70dd53a899"
+    },
+    {
+      "packet_id": "G3215",
+      "reviewer": "b",
+      "agent": "/root/scene_r1_f",
+      "nickname": "Chandrasekhar",
+      "fork_turns": "none",
+      "packet_order_sha256": "f0669f31d358458003f3f68c1f025a923083c5f867860d0d88678493e635a604",
+      "response_sha256": "0075e3b107162c9e9bdfba60296bb111414398066b1d04d6945e0547f60ceda5"
+    }
+  ]
+}

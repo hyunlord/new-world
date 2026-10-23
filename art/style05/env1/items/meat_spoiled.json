@@ -1,0 +1,21 @@
+{
+  "source": "art/style05/env1/items/meat.png",
+  "source_sha256": "d3a8165f64dccb33577db38b7a0908c32a716c27dcbe34ec0d5e6e757e7f4714",
+  "path": "art/style05/env1/items/meat_spoiled.png",
+  "sha256": "136b78e58bd657a2f3ad231d691f856973b26e7fc27fe352c4289d2e33590350",
+  "srgb_multiplier": [
+    0.55,
+    0.7,
+    0.45
+  ],
+  "rounding": "nearest integer, Python round",
+  "alpha": "byte-identical",
+  "canvas": [
+    64,
+    64
+  ],
+  "method": "code-only whole-sprite RGB lookup table; no palette quantization",
+  "status": "DERIVED_CANDIDATE_NOT_IN_BLIND_ITEM_PACKET",
+  "generation_calls": 0,
+  "note": "Declared art state; native simulation removes expired meat."
+}

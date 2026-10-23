@@ -48,13 +48,35 @@ Measure the standalone art prototype, not historical PROD2 numbers or simulation
 
 Use a conservative decimal file limit of 1,500,000 bytes. Optimize PNG losslessly or resize boards geometrically; mandatory full-resolution renders remain 1600×900 and are never quantized. Verify each final artifact visually and by decode/hash. Publish the Korean report with all failed/deferred/unverified criteria and both owner boards. Explicit staging and a matching `git ls-remote origin refs/heads/v8/art-env1` prove delivery only. The report must not claim the owner's approval or bridge installation.
 
-## Decision backlog requiring evidence, not owner questions
+## D11 — Native bridge layers supplement the text view without replacing it
+
+The pinned probe text/people output does not encode every item kind, structure or activity. A read-only extractor joins the same saved world through the existing bridge collectors, after verifying the native ASCII and people coordinates exactly. `scenes/native_layers.json` preserves actual mixed stockpiles, completed structures, blueprint sites, zones and animals. Declared M3–M5 objects remain a separate overlay; their coordinates must never become gameplay truth. The genuine unfinished walled stockpile and the declared finished storehouse are both valid storage targets in the scene review.
+
+The first winter noon is tick 26160 (day 19); day 30 is spring under the source calendar. Native routines that the current renderer draws as a standing frame are scored as visually awake/idle, with the invisible routine retained separately. The after overlay repositions and changes actions of seven existing people; it does not add population.
+
+## D12 — Freeze calmer ground before the first scene review
+
+The first review uses a stricter implementation cap: mean luminance ≤0.32, luminance standard deviation ≤25% of the person anchor, saturation mean ≤0.22, with a 90% target margin for quantized channel rounding. These are inside the original maxima 0.40 / 60% / 0.30, not replacement acceptance thresholds. Per-tile evidence measures the final transformed pixels. Night retains the prescribed global value factor 0.55 and five-tile hearth restoration radius; winter changes ground only and uses the one generated snow texture at alpha ≤0.60. A snow texture failure remains a candidate failure even when compositing obeys the alpha limit.
+
+## D13 — Preserve failed calibration and bounded semantic results
+
+Wolf try3 exhausts the species budget. Fresh round1 reviewer D scores wolf poses 7/10 at both sizes, below the unchanged 8/10 bar; deer passes all round1 groups. Animal numeric negative controls reject only 1/3 historical negatives. A later model AND screen rejecting all three does not erase that numeric calibration failure. Portrait numeric and model negative controls each reject only 1/3; all 34 portraits remain candidates. Item silhouette confusions at 32px remain explicit, without inventing an aggregate acceptance threshold. No fourth animal attempt, third portrait attempt, second snow generation or painted repair is authorized by these findings.
+
+## Resolved acquisition decisions
 
 | Item | Evidence/action needed | Current state |
 |---|---|---|
-| Exact source ticks/calendar | Probe CLI and source calendar proof; retain day 30 and first winter noon if different | PENDING |
-| Real people metadata availability | Inspect actual `people-json` and existing richer read-only outputs | PENDING; gap reported by probe lane |
-| Baseline comparability | Inspect M5 screenshot crops, labels and source capture provenance | PENDING |
-| Animal anchor provenance and shoulder measurement | Freeze native positive controls and A1 measurement definition | PENDING |
-| Exact source/scene/render output manifest | Join inventory, acquisition and compositor schemas | PENDING |
-| Optional work retention | Use remaining time and ledger after mandatory dependencies are underway | PENDING |
+| Exact source ticks/calendar | `SCENE_SOURCE.md`, source manifest | VERIFIED: 7440 / 6840 / 26160 |
+| Real people metadata availability | Native text/people joined to read-only engine and bridge extraction | VERIFIED; same save, positions and IDs |
+| Baseline comparability | `BASELINE.md`, `READABILITY_PROTOCOL.md` | Real same-save captures; declared content/action mismatch retained |
+| Animal anchor provenance and shoulder measurement | `TEMPLATE_A1.md`, animal calibration and reviews | Frozen; numeric calibration FAIL retained |
+| Exact source/scene/render output manifest | `render_manifest.json`, per-render source/asset evidence | Final freeze required before packets |
+| Optional work retention | Portraits, drought, quarter zoom | Retained within the original time and call budgets |
+
+## D14 — Inventory UI-state deferrals and bounded final repair
+
+The goal permits explicit per-row inventory deferrals. Deferred designations M00–05/M07–08 and room-role labels R00–04 need a coherent UI symbol/label vocabulary; this pass chooses to leave that convention to M-ART2 integration instead of declaring a new one through static art. B15/E17 roof/indoors depend on live visibility/roof clipping policy. E06–08 illness/draft/mood need state-to-cue binding and owner-facing UI treatment; those states are not inferred from portraits or poses. These are chosen scope boundaries, not lack-of-time or technical-impossibility claims. Required built/workshop asset categories and code site wash are delivered separately. Deferred/partial counts and acceptance failures remain unchanged.
+
+Round0 readability regressions triggered the single permitted repair documented in `round1repair/DECISION.md`: larger distinct axe/log marks and declared stump context, with unchanged actors/actions/positions/thresholds and preserved prior evidence. Round1 uses six new reviewers, the same neutral tasks and new opaque IDs. No second repair follows its outcome.
+
+The crowd harness uses a frozen manifest whitelist after an early diagnostic-image preflight failure. Round1 glyph PNGs are exported from the compositor function, whole geometry only. An uncertain window-start overlap is retained as such; the final pair uses `process.wait()` before launching the next visible window. No result is selected for being fastest. See `FPS.md` for every attempt.

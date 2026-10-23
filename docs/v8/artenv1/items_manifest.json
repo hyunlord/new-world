@@ -1,0 +1,3103 @@
+{
+  "version": 1,
+  "family": "items",
+  "generation_calls": 27,
+  "calibration": "docs/v8/arttrial2/JUDGE_V2_CALIBRATION.json",
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "assets": [
+    {
+      "id": "firewood",
+      "path": "art/style05/env1/items/firewood.png",
+      "family": "items",
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "source": "/Users/rexxa/work/artenv1-data/items/firewood_try2_raw.png",
+      "source_sha256": "bcd4378db6a41557ef92cc05a4b0de9520c60f313ea5af88c8697cd7c861d039",
+      "sha256": "d4ba449e03edb569509c14844d27659eda099581488994f5e918b208fc0e9602",
+      "attempts": [
+        {
+          "id": "firewood",
+          "attempt": 1,
+          "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE split firewood billet, short stout tapered chunk with split pale wood face and dark bark edge, diagonal top left to bottom right, clearly SHORTER and more angular than a log. Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, broad muted two-tone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+          "refs": [
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+          ],
+          "started_at": "2026-10-23T06:21:02.293Z",
+          "completed_at": "2026-10-23T06:21:48.771Z",
+          "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-e7a96cef-b079-4440-82f3-af6ec7b8e375.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+          "tool": "image_gen__imagegen",
+          "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+          "raw": "/Users/rexxa/work/artenv1-data/items/firewood_try1_raw.png",
+          "raw_sha256": "6b5a2188a50cf61e3e09266f80e49e90f0e9670f32df3ea552932bbde37c27ab",
+          "references_sha256": {
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+          },
+          "numeric": {
+            "candidate": "/Users/rexxa/work/artenv1-data/items/firewood_try1_raw.png",
+            "sha256": "6b5a2188a50cf61e3e09266f80e49e90f0e9670f32df3ea552932bbde37c27ab",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.29339191564147626,
+              "saturation_q25": 0.3892333755833174,
+              "saturation_q75": 0.6226882916943105,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.8284271247461903,
+              "stroke_q75": 4.0,
+              "stroke_q90": 4.47213595499958,
+              "wash_flatness": 0.03311072651880458,
+              "foreground_pixels": 29695
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": false
+            },
+            "numeric_pass": false,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        },
+        {
+          "id": "firewood",
+          "attempt": 2,
+          "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE split firewood billet, short stout tapered chunk with split pale wood face and dark bark edge, diagonal top left to bottom right, clearly SHORTER and more angular than a log. Use delicate dark hand-ink contours, restrained translucent earthy pigment washes with quieter lower-contrast interiors: no broad black shadow masses, no bright ivory highlights, no high contrast mottling. Keep moderate fine internal marks and a narrow range of mids. Muted taupe, grey-brown, buff palette; any orange or red is greyed and muted. Reference3 props_logs and4 props_hearth are authoritative same-family detail references. . Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, muted closely related midtone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+          "refs": [
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png"
+          ],
+          "started_at": "2026-10-23T06:31:43.469Z",
+          "completed_at": "2026-10-23T06:32:41.337Z",
+          "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-6706dd8c-2322-448f-96ad-f2574e611ad4.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+          "tool": "image_gen__imagegen",
+          "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+          "raw": "/Users/rexxa/work/artenv1-data/items/firewood_try2_raw.png",
+          "raw_sha256": "bcd4378db6a41557ef92cc05a4b0de9520c60f313ea5af88c8697cd7c861d039",
+          "references_sha256": {
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832"
+          },
+          "numeric": {
+            "candidate": "/Users/rexxa/work/artenv1-data/items/firewood_try2_raw.png",
+            "sha256": "bcd4378db6a41557ef92cc05a4b0de9520c60f313ea5af88c8697cd7c861d039",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.28903878583473863,
+              "saturation_q25": 0.4175835969861696,
+              "saturation_q75": 0.5719772873318828,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.8284271247461903,
+              "stroke_q75": 4.0,
+              "stroke_q90": 4.47213595499958,
+              "wash_flatness": 0.019206969766892658,
+              "foreground_pixels": 27910
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        }
+      ],
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/items/firewood_try2_raw.png",
+        "sha256": "bcd4378db6a41557ef92cc05a4b0de9520c60f313ea5af88c8697cd7c861d039",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.28903878583473863,
+          "saturation_q25": 0.4175835969861696,
+          "saturation_q75": 0.5719772873318828,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.019206969766892658,
+          "foreground_pixels": 27910
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Matches the originals with the same hand-inked line work, textured watercolor washes, lighting and earthy palette; indistinguishable style."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": true
+      },
+      "status": "STYLE_ACCEPTED_SEMANTIC_REVIEWED",
+      "operations": [
+        "generated alpha preserved",
+        "alpha-bounds crop",
+        "proportional Lanczos fit to58px",
+        "center in64px tile"
+      ],
+      "count_buckets": [
+        "art/style05/env1/items/firewood_count_1.png",
+        "art/style05/env1/items/firewood_count_2_8.png",
+        "art/style05/env1/items/firewood_count_9_plus.png"
+      ],
+      "count_bucket_sha256": {
+        "art/style05/env1/items/firewood_count_1.png": "d4ba449e03edb569509c14844d27659eda099581488994f5e918b208fc0e9602",
+        "art/style05/env1/items/firewood_count_2_8.png": "12720cc76aa698d70f52d928dcf16ccec75733f469fb6580f57ff712a6c9a572",
+        "art/style05/env1/items/firewood_count_9_plus.png": "8ab689509eca647b05406403eb2123e0f0edb448b8006d96229017234a72cdba"
+      },
+      "model": {
+        "scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Matches the originals with the same hand-inked line work, textured watercolor washes, lighting and earthy palette; indistinguishable style."
+        },
+        "evidence": "art/style05/env1/items/model_scorecard2.png",
+        "raw_sha256": "4cc68a2da81313ee1865bb1dc710094a10cc2e0682a24874485fffeb8cd1eacb",
+        "mechanism": "built-in image-generation model rendered scorecard; actual printed scores visually transcribed; model version not exposed"
+      },
+      "reading": "짧은 쪼갠 나무의 밝은 절단면과 어두운 수피가 통나무 더미와 구별된다.",
+      "style_accepted": true,
+      "readability_status": "EXACT_KIND_CONFUSION",
+      "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+      "readability_review_ids": [
+        "a",
+        "b"
+      ],
+      "exact_kind_scores": [
+        false,
+        false
+      ]
+    },
+    {
+      "id": "ground_axe",
+      "path": "art/style05/env1/items/ground_axe.png",
+      "family": "items",
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "source": "/Users/rexxa/work/artenv1-data/items/ground_axe_try2_raw.png",
+      "source_sha256": "0cdc01b9469c2ff3d494a8f5fd66b27b9bc2ae576f3e4e717776bc38f9afe548",
+      "sha256": "88fc7ca8794a76d34ad0edd400a8eb94d137e904017c15f8a019d8d6ccfb0f18",
+      "attempts": [
+        {
+          "id": "ground_axe",
+          "attempt": 1,
+          "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE polished ground-stone axe: broad smooth rounded olive-grey stone blade with bevel, broad head tied securely across a short dark wooden handle with pale sinew, diagonal, visibly smooth blade unlike chipped flint. Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, broad muted two-tone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+          "refs": [
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+          ],
+          "started_at": "2026-10-23T06:21:02.299Z",
+          "completed_at": "2026-10-23T06:22:36.085Z",
+          "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-473f5b8f-d04b-43d2-8a98-eab2e20d8e67.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+          "tool": "image_gen__imagegen",
+          "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+          "raw": "/Users/rexxa/work/artenv1-data/items/ground_axe_try1_raw.png",
+          "raw_sha256": "4ddb38240d289c593dfb2a1f6b2b597d2965fc475dc6ea06c7664483f1e1a577",
+          "references_sha256": {
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+          },
+          "numeric": {
+            "candidate": "/Users/rexxa/work/artenv1-data/items/ground_axe_try1_raw.png",
+            "sha256": "4ddb38240d289c593dfb2a1f6b2b597d2965fc475dc6ea06c7664483f1e1a577",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.2847073900042717,
+              "saturation_q25": 0.3328907659583523,
+              "saturation_q75": 0.5536192977256171,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 2.8284271247461903,
+              "stroke_q90": 4.0,
+              "wash_flatness": 0.030329610281151206,
+              "foreground_pixels": 20070
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": false
+            },
+            "numeric_pass": false,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        },
+        {
+          "id": "ground_axe",
+          "attempt": 2,
+          "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE polished ground-stone axe: broad smooth rounded olive-grey stone blade with bevel, broad head tied securely across a short dark wooden handle with pale sinew, diagonal, visibly smooth blade unlike chipped flint. Use delicate dark hand-ink contours, restrained translucent earthy pigment washes with quieter lower-contrast interiors: no broad black shadow masses, no bright ivory highlights, no high contrast mottling. Keep moderate fine internal marks and a narrow range of mids. Muted taupe, grey-brown, buff palette; any orange or red is greyed and muted. Reference3 props_logs and4 props_hearth are authoritative same-family detail references. . Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, muted closely related midtone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+          "refs": [
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png"
+          ],
+          "started_at": "2026-10-23T06:31:43.469Z",
+          "completed_at": "2026-10-23T06:33:24.197Z",
+          "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-c7e3e450-9dda-4b27-aabe-5d228243485f.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+          "tool": "image_gen__imagegen",
+          "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+          "raw": "/Users/rexxa/work/artenv1-data/items/ground_axe_try2_raw.png",
+          "raw_sha256": "0cdc01b9469c2ff3d494a8f5fd66b27b9bc2ae576f3e4e717776bc38f9afe548",
+          "references_sha256": {
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832"
+          },
+          "numeric": {
+            "candidate": "/Users/rexxa/work/artenv1-data/items/ground_axe_try2_raw.png",
+            "sha256": "0cdc01b9469c2ff3d494a8f5fd66b27b9bc2ae576f3e4e717776bc38f9afe548",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.2885772619815173,
+              "saturation_q25": 0.33841044255416386,
+              "saturation_q75": 0.5224591552339369,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 2.8284271247461903,
+              "stroke_q90": 4.0,
+              "wash_flatness": 0.018485670056432812,
+              "foreground_pixels": 19985
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        }
+      ],
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/items/ground_axe_try2_raw.png",
+        "sha256": "0cdc01b9469c2ff3d494a8f5fd66b27b9bc2ae576f3e4e717776bc38f9afe548",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.2885772619815173,
+          "saturation_q25": 0.33841044255416386,
+          "saturation_q75": 0.5224591552339369,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.018485670056432812,
+          "foreground_pixels": 19985
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Same hand-drawn ink lines, detailed texture work, and natural watercolor shading and palette as the originals; fully consistent."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": true
+      },
+      "status": "STYLE_ACCEPTED_SEMANTIC_REVIEWED",
+      "operations": [
+        "generated alpha preserved",
+        "alpha-bounds crop",
+        "proportional Lanczos fit to58px",
+        "center in64px tile"
+      ],
+      "count_buckets": [
+        "art/style05/env1/items/ground_axe_count_1.png",
+        "art/style05/env1/items/ground_axe_count_2_8.png",
+        "art/style05/env1/items/ground_axe_count_9_plus.png"
+      ],
+      "count_bucket_sha256": {
+        "art/style05/env1/items/ground_axe_count_1.png": "88fc7ca8794a76d34ad0edd400a8eb94d137e904017c15f8a019d8d6ccfb0f18",
+        "art/style05/env1/items/ground_axe_count_2_8.png": "d419833a891fecf4d8cb85ad83dd5285f9dee9f98eba5301c106f9def6782ba4",
+        "art/style05/env1/items/ground_axe_count_9_plus.png": "ab2b37647f8290003e411497258447b42186accd8eaec58761c7488550f0b0ea"
+      },
+      "model": {
+        "scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Same hand-drawn ink lines, detailed texture work, and natural watercolor shading and palette as the originals; fully consistent."
+        },
+        "evidence": "art/style05/env1/items/model_scorecard2.png",
+        "raw_sha256": "4cc68a2da81313ee1865bb1dc710094a10cc2e0682a24874485fffeb8cd1eacb",
+        "mechanism": "built-in image-generation model rendered scorecard; actual printed scores visually transcribed; model version not exposed"
+      },
+      "reading": "넓고 매끈한 돌날과 짧은 자루가 기존 작은 타제 돌도끼와 구별된다.",
+      "style_accepted": true,
+      "readability_status": "EXACT_KIND_CONFUSION",
+      "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+      "readability_review_ids": [
+        "a",
+        "b"
+      ],
+      "exact_kind_scores": [
+        false,
+        false
+      ]
+    },
+    {
+      "id": "spear",
+      "path": "art/style05/env1/items/spear.png",
+      "family": "items",
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "source": "/Users/rexxa/work/artenv1-data/items/spear_try3_raw.png",
+      "source_sha256": "549bba0926c8d61e88afd0d329817135aa605f1935c922ff4ce210b393a6272b",
+      "sha256": "3f0448a9a2b6c7a07b77a90781b0864d089ca0e363de81f3d761384f5043f77d",
+      "attempts": [
+        {
+          "id": "spear",
+          "attempt": 1,
+          "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE long wooden hunting spear, distinct very long slender straight shaft with large chipped grey triangular stone point and sinew binding, diagonal lower-left to upper-right, entire spear visible. Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, broad muted two-tone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+          "refs": [
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+          ],
+          "started_at": "2026-10-23T06:21:02.299Z",
+          "completed_at": "2026-10-23T06:23:16.236Z",
+          "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-d60788f1-ba60-4c37-ab68-552d03ab5615.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+          "tool": "image_gen__imagegen",
+          "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+          "raw": "/Users/rexxa/work/artenv1-data/items/spear_try1_raw.png",
+          "raw_sha256": "e2bd531c256182cbbfad2b20392ce7c2250f75beac90f6ad54e641ff1373c75a",
+          "references_sha256": {
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+          },
+          "numeric": {
+            "candidate": "/Users/rexxa/work/artenv1-data/items/spear_try1_raw.png",
+            "sha256": "e2bd531c256182cbbfad2b20392ce7c2250f75beac90f6ad54e641ff1373c75a",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.22971842765542236,
+              "saturation_q25": 0.3876225075201636,
+              "saturation_q75": 0.4899175259780293,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 2.8284271247461903,
+              "stroke_q90": 2.8284271247461903,
+              "wash_flatness": 0.03467132650433263,
+              "foreground_pixels": 4710
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": false
+            },
+            "numeric_pass": false,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        },
+        {
+          "id": "spear",
+          "attempt": 2,
+          "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE long wooden hunting spear, distinct very long slender straight shaft with large chipped grey triangular stone point and sinew binding, diagonal lower-left to upper-right, entire spear visible. Use delicate dark hand-ink contours, restrained translucent earthy pigment washes with quieter lower-contrast interiors: no broad black shadow masses, no bright ivory highlights, no high contrast mottling. Keep moderate fine internal marks and a narrow range of mids. Muted taupe, grey-brown, buff palette; any orange or red is greyed and muted. Reference3 props_logs and4 props_hearth are authoritative same-family detail references. . Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, muted closely related midtone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+          "refs": [
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png"
+          ],
+          "started_at": "2026-10-23T06:31:43.469Z",
+          "completed_at": "2026-10-23T06:34:07.136Z",
+          "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-ac27ccd7-7471-4b22-8489-230fcecd4261.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+          "tool": "image_gen__imagegen",
+          "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+          "raw": "/Users/rexxa/work/artenv1-data/items/spear_try2_raw.png",
+          "raw_sha256": "39c00c7a5cc76bfaa2ea0f7e9f5278ae3ac8c2f0d113a7d176dd134ce56d009f",
+          "references_sha256": {
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832"
+          },
+          "numeric": {
+            "candidate": "/Users/rexxa/work/artenv1-data/items/spear_try2_raw.png",
+            "sha256": "39c00c7a5cc76bfaa2ea0f7e9f5278ae3ac8c2f0d113a7d176dd134ce56d009f",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.22503617945007237,
+              "saturation_q25": 0.32611613316685334,
+              "saturation_q75": 0.4347661809896499,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 2.0,
+              "stroke_q90": 2.8284271247461903,
+              "wash_flatness": 0.024933250227182117,
+              "foreground_pixels": 3876
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": false
+            },
+            "numeric_pass": false,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        },
+        {
+          "id": "spear",
+          "attempt": 3,
+          "prompt": "Create exactly ONE isolated stone-age game item sprite: one single stone-age hunting spear with a long slender straight grey-brown wooden shaft and an enlarged triangular chipped flint tip, laid diagonally and fully inside canvas. Keep faint delicate brown ink details. MATTE midtone-only rendering, no white highlight, no black interior shading, quiet translucent muted beige-grey wash with the upper-left light expressed as a very small value difference; the shaft must be a calm continuous midtone... Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, quiet translucent midtone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+          "refs": [
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png"
+          ],
+          "started_at": "2026-10-23T06:38:05.580Z",
+          "completed_at": "2026-10-23T06:38:53.073Z",
+          "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-0a2608a6-359a-40e1-af95-604202b8c3ac.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+          "tool": "image_gen__imagegen",
+          "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+          "raw": "/Users/rexxa/work/artenv1-data/items/spear_try3_raw.png",
+          "raw_sha256": "549bba0926c8d61e88afd0d329817135aa605f1935c922ff4ce210b393a6272b",
+          "references_sha256": {
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832"
+          },
+          "numeric": {
+            "candidate": "/Users/rexxa/work/artenv1-data/items/spear_try3_raw.png",
+            "sha256": "549bba0926c8d61e88afd0d329817135aa605f1935c922ff4ce210b393a6272b",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.25336374002280504,
+              "saturation_q25": 0.3845391818488325,
+              "saturation_q75": 0.5101002859660488,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 2.8284271247461903,
+              "stroke_q90": 4.0,
+              "wash_flatness": 0.025580428251903778,
+              "foreground_pixels": 5510
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": false
+            },
+            "numeric_pass": false,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        }
+      ],
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/items/spear_try3_raw.png",
+        "sha256": "549bba0926c8d61e88afd0d329817135aa605f1935c922ff4ce210b393a6272b",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.25336374002280504,
+          "saturation_q25": 0.3845391818488325,
+          "saturation_q75": 0.5101002859660488,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.025580428251903778,
+          "foreground_pixels": 5510
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 4,
+          "palette": 5,
+          "sentence": "Follows the same inked outlines, watercolor texture, and muted earth-tone palette as the originals, with consistent lighting and detail."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": false
+      },
+      "status": "REJECTED_NUMERIC_RETRY_LIMIT",
+      "operations": [
+        "generated alpha preserved",
+        "alpha-bounds crop",
+        "proportional Lanczos fit to58px",
+        "center in64px tile"
+      ],
+      "count_buckets": [
+        "art/style05/env1/items/spear_count_1.png",
+        "art/style05/env1/items/spear_count_2_8.png",
+        "art/style05/env1/items/spear_count_9_plus.png"
+      ],
+      "count_bucket_sha256": {
+        "art/style05/env1/items/spear_count_1.png": "3f0448a9a2b6c7a07b77a90781b0864d089ca0e363de81f3d761384f5043f77d",
+        "art/style05/env1/items/spear_count_2_8.png": "51d5535cf6f3c8e477db1c3663c7854953424cdb61273f4c20fd18352e7847a5",
+        "art/style05/env1/items/spear_count_9_plus.png": "2d247afc1c481a9dfa96d900b2da1f7f6212193602fa191bfe6180565e8b86cb"
+      },
+      "model": {
+        "scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 4,
+          "palette": 5,
+          "sentence": "Follows the same inked outlines, watercolor texture, and muted earth-tone palette as the originals, with consistent lighting and detail."
+        },
+        "evidence": "art/style05/env1/items/model_scorecard3.png",
+        "raw_sha256": "ce3e64826599487d58e2cb1b0bcbc225f0dc045bf6a03db9386f721e6b51281a",
+        "mechanism": "built-in image-generation model rendered scorecard; actual printed scores visually transcribed; model version not exposed"
+      },
+      "reading": "긴 가는 자루와 삼각 창끝이 읽히지만 담채 분산 수치 초과로 수락하지 않는다.",
+      "style_accepted": false,
+      "readability_status": "EXACT_KIND_RECOGNIZED_BOTH",
+      "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+      "readability_review_ids": [
+        "a",
+        "b"
+      ],
+      "exact_kind_scores": [
+        true,
+        true
+      ]
+    },
+    {
+      "id": "cured_hide",
+      "path": "art/style05/env1/items/cured_hide.png",
+      "family": "items",
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "source": "/Users/rexxa/work/artenv1-data/items/cured_hide_try1_raw.png",
+      "source_sha256": "3df29d0c2dbc20043712b91044ce777f8e70948bdcae8a311b8ab4c787398362",
+      "sha256": "32f5f9b4502c7716cf66e1fe351002c4fd3c83f7b70244cb5ce1d7f128da4720",
+      "attempts": [
+        {
+          "id": "cured_hide",
+          "attempt": 1,
+          "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE cured deer hide laid flat in a recognizable four-lobed skin outline, warm tawny tan leather with rounded neck and short leg lobes, smooth scraped dry hide surface and minimal marks, no fur; visibly a supple whole hide. Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, broad muted two-tone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+          "refs": [
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+          ],
+          "started_at": "2026-10-23T06:23:39.937Z",
+          "completed_at": "2026-10-23T06:24:29.980Z",
+          "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-36e313bd-a96e-4779-977e-79b000683f2d.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+          "tool": "image_gen__imagegen",
+          "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+          "raw": "/Users/rexxa/work/artenv1-data/items/cured_hide_try1_raw.png",
+          "raw_sha256": "3df29d0c2dbc20043712b91044ce777f8e70948bdcae8a311b8ab4c787398362",
+          "references_sha256": {
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+          },
+          "numeric": {
+            "candidate": "/Users/rexxa/work/artenv1-data/items/cured_hide_try1_raw.png",
+            "sha256": "3df29d0c2dbc20043712b91044ce777f8e70948bdcae8a311b8ab4c787398362",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.21281029407934152,
+              "saturation_q25": 0.5103703268402872,
+              "saturation_q75": 0.6487975032883673,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 2.8284271247461903,
+              "stroke_q90": 4.0,
+              "wash_flatness": 0.007523777839337369,
+              "foreground_pixels": 40389
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        }
+      ],
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/items/cured_hide_try1_raw.png",
+        "sha256": "3df29d0c2dbc20043712b91044ce777f8e70948bdcae8a311b8ab4c787398362",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.21281029407934152,
+          "saturation_q25": 0.5103703268402872,
+          "saturation_q75": 0.6487975032883673,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.007523777839337369,
+          "foreground_pixels": 40389
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 4,
+          "palette": 5,
+          "sentence": "Uses the same inked outlines, textured watercolor washes, and earthy limited palette as the references; matches very closely with only minor subject-driven variation."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": true
+      },
+      "status": "STYLE_ACCEPTED_SEMANTIC_REVIEWED",
+      "operations": [
+        "generated alpha preserved",
+        "alpha-bounds crop",
+        "proportional Lanczos fit to58px",
+        "center in64px tile"
+      ],
+      "count_buckets": [
+        "art/style05/env1/items/cured_hide_count_1.png",
+        "art/style05/env1/items/cured_hide_count_2_8.png",
+        "art/style05/env1/items/cured_hide_count_9_plus.png"
+      ],
+      "count_bucket_sha256": {
+        "art/style05/env1/items/cured_hide_count_1.png": "32f5f9b4502c7716cf66e1fe351002c4fd3c83f7b70244cb5ce1d7f128da4720",
+        "art/style05/env1/items/cured_hide_count_2_8.png": "c620f1b3a07c59a4ea2e41973ed8a90d13925e77c9ce0aeaeb5aba4e50673a0b",
+        "art/style05/env1/items/cured_hide_count_9_plus.png": "45529fc460dc0ef4101865717de83bf4e822a8a306156d81871456f5508ccb44"
+      },
+      "model": {
+        "scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 4,
+          "palette": 5,
+          "sentence": "Uses the same inked outlines, textured watercolor washes, and earthy limited palette as the references; matches very closely with only minor subject-driven variation."
+        },
+        "evidence": "art/style05/env1/items/model_scorecard1.png",
+        "raw_sha256": "884e2f91b66544c5267be7a3f2983ce612aa74c3c1d0e15f3917506b41b81f6e",
+        "mechanism": "built-in image-generation model rendered scorecard; actual printed scores visually transcribed; model version not exposed"
+      },
+      "reading": "털이 없는 황갈색 네 갈래 가죽으로 읽히며 생가죽과 색 차이가 작아32px 검토가 필요하다.",
+      "style_accepted": true,
+      "readability_status": "EXACT_KIND_CONFUSION",
+      "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+      "readability_review_ids": [
+        "a",
+        "b"
+      ],
+      "exact_kind_scores": [
+        false,
+        false
+      ]
+    },
+    {
+      "id": "hide_wrap",
+      "path": "art/style05/env1/items/hide_wrap.png",
+      "family": "items",
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "source": "/Users/rexxa/work/artenv1-data/items/hide_wrap_try3_raw.png",
+      "source_sha256": "03568182d581d2459a40c0be1cd29809b78be3d790f43d3aeba7c9580a4eff1e",
+      "sha256": "2db8016a17379e94d4eff7cee5b8a1f58bc0804616048aad69d28b16b3d75b0b",
+      "attempts": [
+        {
+          "id": "hide_wrap",
+          "attempt": 1,
+          "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE finished hide-wrap garment laid flat, clearly wearable sleeveless wrap tunic with large dark round neck opening, two short arm openings and asymmetrical diagonal overlap tied at waist; sandy ochre leather, simple shape; garment not an animal hide. Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, broad muted two-tone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+          "refs": [
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+          ],
+          "started_at": "2026-10-23T06:23:39.938Z",
+          "completed_at": "2026-10-23T06:25:15.255Z",
+          "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-539079c1-8627-4198-ae68-b778b90cc519.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+          "tool": "image_gen__imagegen",
+          "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+          "raw": "/Users/rexxa/work/artenv1-data/items/hide_wrap_try1_raw.png",
+          "raw_sha256": "671627940f62985306f5ce4ac930f827327d23becd5bfca8aa6a79e93facce6b",
+          "references_sha256": {
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+          },
+          "numeric": {
+            "candidate": "/Users/rexxa/work/artenv1-data/items/hide_wrap_try1_raw.png",
+            "sha256": "671627940f62985306f5ce4ac930f827327d23becd5bfca8aa6a79e93facce6b",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.2282343239557233,
+              "saturation_q25": 0.5835887027915022,
+              "saturation_q75": 0.6834508880300705,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 4.0,
+              "stroke_q90": 4.0,
+              "wash_flatness": 0.03624485658254615,
+              "foreground_pixels": 33018
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": false
+            },
+            "numeric_pass": false,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        },
+        {
+          "id": "hide_wrap",
+          "attempt": 2,
+          "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE finished hide-wrap garment laid flat, clearly wearable sleeveless wrap tunic with large dark round neck opening, two short arm openings and asymmetrical diagonal overlap tied at waist; sandy ochre leather, simple shape; garment not an animal hide. Use delicate dark hand-ink contours, restrained translucent earthy pigment washes with quieter lower-contrast interiors: no broad black shadow masses, no bright ivory highlights, no high contrast mottling. Keep moderate fine internal marks and a narrow range of mids. Muted taupe, grey-brown, buff palette; any orange or red is greyed and muted. Reference3 props_logs and4 props_hearth are authoritative same-family detail references. . Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, muted closely related midtone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+          "refs": [
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png"
+          ],
+          "started_at": "2026-10-23T06:31:43.470Z",
+          "completed_at": "2026-10-23T06:35:03.963Z",
+          "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-c047d4c2-eeba-4432-96f8-e5cdb63a0423.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+          "tool": "image_gen__imagegen",
+          "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+          "raw": "/Users/rexxa/work/artenv1-data/items/hide_wrap_try2_raw.png",
+          "raw_sha256": "e2a841f5a168ec1ce88883d61c233cb6850354d946935541c11fa75ba76dca6a",
+          "references_sha256": {
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832"
+          },
+          "numeric": {
+            "candidate": "/Users/rexxa/work/artenv1-data/items/hide_wrap_try2_raw.png",
+            "sha256": "e2a841f5a168ec1ce88883d61c233cb6850354d946935541c11fa75ba76dca6a",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.2303561839985681,
+              "saturation_q25": 0.5073888255108591,
+              "saturation_q75": 0.5785855853235171,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 2.8284271247461903,
+              "stroke_q90": 4.0,
+              "wash_flatness": 0.024666326573696436,
+              "foreground_pixels": 35111
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": false
+            },
+            "numeric_pass": false,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        },
+        {
+          "id": "hide_wrap",
+          "attempt": 3,
+          "prompt": "Create exactly ONE isolated stone-age game item sprite: one single finished sleeveless hide-wrap garment laid flat, visible round neck hole, short arm holes, diagonal front overlap and waist tie. This is a wearable tunic, not spread skin. MATTE greyed tan-brown wash, closely related midtones, soft minimal fold shading with no white highlight patches and no large black shadow masses; thin fine ink folds. Entire silhouette remains clear at32px... Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, quiet translucent midtone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+          "refs": [
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png"
+          ],
+          "started_at": "2026-10-23T06:38:05.580Z",
+          "completed_at": "2026-10-23T06:39:38.026Z",
+          "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-86d0845e-568e-482e-a7aa-87685c587faa.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+          "tool": "image_gen__imagegen",
+          "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+          "raw": "/Users/rexxa/work/artenv1-data/items/hide_wrap_try3_raw.png",
+          "raw_sha256": "03568182d581d2459a40c0be1cd29809b78be3d790f43d3aeba7c9580a4eff1e",
+          "references_sha256": {
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832"
+          },
+          "numeric": {
+            "candidate": "/Users/rexxa/work/artenv1-data/items/hide_wrap_try3_raw.png",
+            "sha256": "03568182d581d2459a40c0be1cd29809b78be3d790f43d3aeba7c9580a4eff1e",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.25817100452883723,
+              "saturation_q25": 0.4875178583784125,
+              "saturation_q75": 0.5722314932940928,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 4.0,
+              "stroke_q90": 4.0,
+              "wash_flatness": 0.015622726515536705,
+              "foreground_pixels": 38285
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        }
+      ],
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/items/hide_wrap_try3_raw.png",
+        "sha256": "03568182d581d2459a40c0be1cd29809b78be3d790f43d3aeba7c9580a4eff1e",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.25817100452883723,
+          "saturation_q25": 0.4875178583784125,
+          "saturation_q75": 0.5722314932940928,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.015622726515536705,
+          "foreground_pixels": 38285
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Uses the same inked contours, textured wash strokes, lighting and earth-tone palette as the originals; indistinguishable style."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": true
+      },
+      "status": "STYLE_ACCEPTED_SEMANTIC_REVIEWED",
+      "operations": [
+        "generated alpha preserved",
+        "alpha-bounds crop",
+        "proportional Lanczos fit to58px",
+        "center in64px tile"
+      ],
+      "count_buckets": [
+        "art/style05/env1/items/hide_wrap_count_1.png",
+        "art/style05/env1/items/hide_wrap_count_2_8.png",
+        "art/style05/env1/items/hide_wrap_count_9_plus.png"
+      ],
+      "count_bucket_sha256": {
+        "art/style05/env1/items/hide_wrap_count_1.png": "2db8016a17379e94d4eff7cee5b8a1f58bc0804616048aad69d28b16b3d75b0b",
+        "art/style05/env1/items/hide_wrap_count_2_8.png": "a524493b7ebb37da8c11b91e3a735e08d1b79d0909c91f4ff5412cbf53a369b0",
+        "art/style05/env1/items/hide_wrap_count_9_plus.png": "b84db3308c7deab5222b6f4270b703bb0b16a639ba24068a1b09ecf271cd4fbb"
+      },
+      "model": {
+        "scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Uses the same inked contours, textured wash strokes, lighting and earth-tone palette as the originals; indistinguishable style."
+        },
+        "evidence": "art/style05/env1/items/model_scorecard2.png",
+        "raw_sha256": "4cc68a2da81313ee1865bb1dc710094a10cc2e0682a24874485fffeb8cd1eacb",
+        "mechanism": "built-in image-generation model rendered scorecard; actual printed scores visually transcribed; model version not exposed"
+      },
+      "reading": "목·팔 구멍과 사선 여밈, 허리끈이 펼친 가죽이 아닌 의복으로 읽힌다.",
+      "style_accepted": true,
+      "readability_status": "EXACT_KIND_CONFUSION",
+      "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+      "readability_review_ids": [
+        "a",
+        "b"
+      ],
+      "exact_kind_scores": [
+        false,
+        false
+      ]
+    },
+    {
+      "id": "fur_cloak",
+      "path": "art/style05/env1/items/fur_cloak.png",
+      "family": "items",
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "source": "/Users/rexxa/work/artenv1-data/items/fur_cloak_try2_raw.png",
+      "source_sha256": "18f808bff09311e736a25784324aa9b6ef81cbfe4e215a3278d8c02ee382d846",
+      "sha256": "c94efe2f756b2ef339b54f1e158c20b5f93eda077406e71da0054fa73f531448",
+      "attempts": [
+        {
+          "id": "fur_cloak",
+          "attempt": 1,
+          "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE finished heavy fur cloak garment laid flat, broad bell-shaped dark warm grey-brown fur cape with a distinct small round collar opening and a central front split, shaggy outside rim, pale fur collar; no head, legs or tail. Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, broad muted two-tone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+          "refs": [
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+          ],
+          "started_at": "2026-10-23T06:23:39.938Z",
+          "completed_at": "2026-10-23T06:26:07.328Z",
+          "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-53be242f-fadd-417c-b9f4-94908f7a5dc2.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+          "tool": "image_gen__imagegen",
+          "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+          "raw": "/Users/rexxa/work/artenv1-data/items/fur_cloak_try1_raw.png",
+          "raw_sha256": "4c478730dcac1b782e0da0da9bb7751896aa13aaafbb778fa0cac14bba57ccfc",
+          "references_sha256": {
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+          },
+          "numeric": {
+            "candidate": "/Users/rexxa/work/artenv1-data/items/fur_cloak_try1_raw.png",
+            "sha256": "4c478730dcac1b782e0da0da9bb7751896aa13aaafbb778fa0cac14bba57ccfc",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.26063829787234044,
+              "saturation_q25": 0.37040777518392465,
+              "saturation_q75": 0.46733249009592215,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 2.8284271247461903,
+              "stroke_q90": 4.0,
+              "wash_flatness": 0.023042830665652006,
+              "foreground_pixels": 34301
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": false
+            },
+            "numeric_pass": false,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        },
+        {
+          "id": "fur_cloak",
+          "attempt": 2,
+          "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE finished heavy fur cloak garment laid flat, broad bell-shaped dark warm grey-brown fur cape with a distinct small round collar opening and a central front split, shaggy outside rim, pale fur collar; no head, legs or tail. Use delicate dark hand-ink contours, restrained translucent earthy pigment washes with quieter lower-contrast interiors: no broad black shadow masses, no bright ivory highlights, no high contrast mottling. Keep moderate fine internal marks and a narrow range of mids. Muted taupe, grey-brown, buff palette; any orange or red is greyed and muted. Reference3 props_logs and4 props_hearth are authoritative same-family detail references. . Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, muted closely related midtone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+          "refs": [
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png"
+          ],
+          "started_at": "2026-10-23T06:31:43.470Z",
+          "completed_at": "2026-10-23T06:35:12.191Z",
+          "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-fa9ac8ef-6bf5-48e6-bcb7-f017e6f2b560.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+          "tool": "image_gen__imagegen",
+          "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+          "raw": "/Users/rexxa/work/artenv1-data/items/fur_cloak_try2_raw.png",
+          "raw_sha256": "18f808bff09311e736a25784324aa9b6ef81cbfe4e215a3278d8c02ee382d846",
+          "references_sha256": {
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832"
+          },
+          "numeric": {
+            "candidate": "/Users/rexxa/work/artenv1-data/items/fur_cloak_try2_raw.png",
+            "sha256": "18f808bff09311e736a25784324aa9b6ef81cbfe4e215a3278d8c02ee382d846",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.2639928757544774,
+              "saturation_q25": 0.3595928953412898,
+              "saturation_q75": 0.4149990712145818,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 2.0,
+              "stroke_q90": 2.8284271247461903,
+              "wash_flatness": 0.013945433722194157,
+              "foreground_pixels": 32005
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        }
+      ],
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/items/fur_cloak_try2_raw.png",
+        "sha256": "18f808bff09311e736a25784324aa9b6ef81cbfe4e215a3278d8c02ee382d846",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.2639928757544774,
+          "saturation_q25": 0.3595928953412898,
+          "saturation_q75": 0.4149990712145818,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.013945433722194157,
+          "foreground_pixels": 32005
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Same hand-inked line quality, textured watercolor rendering, lighting and muted natural palette as the originals; fully consistent."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": true
+      },
+      "status": "STYLE_ACCEPTED_SEMANTIC_REVIEWED",
+      "operations": [
+        "generated alpha preserved",
+        "alpha-bounds crop",
+        "proportional Lanczos fit to58px",
+        "center in64px tile"
+      ],
+      "count_buckets": [
+        "art/style05/env1/items/fur_cloak_count_1.png",
+        "art/style05/env1/items/fur_cloak_count_2_8.png",
+        "art/style05/env1/items/fur_cloak_count_9_plus.png"
+      ],
+      "count_bucket_sha256": {
+        "art/style05/env1/items/fur_cloak_count_1.png": "c94efe2f756b2ef339b54f1e158c20b5f93eda077406e71da0054fa73f531448",
+        "art/style05/env1/items/fur_cloak_count_2_8.png": "e7dfd3c63d299580a9a815938130418b22508c9dba62df5b34fa44022f6779f0",
+        "art/style05/env1/items/fur_cloak_count_9_plus.png": "d568e620c74a011819d1bee5969e2510510fa60e3f9dc949b86874acc1f06c64"
+      },
+      "model": {
+        "scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Same hand-inked line quality, textured watercolor rendering, lighting and muted natural palette as the originals; fully consistent."
+        },
+        "evidence": "art/style05/env1/items/model_scorecard2.png",
+        "raw_sha256": "4cc68a2da81313ee1865bb1dc710094a10cc2e0682a24874485fffeb8cd1eacb",
+        "mechanism": "built-in image-generation model rendered scorecard; actual printed scores visually transcribed; model version not exposed"
+      },
+      "reading": "둥근 목구멍, 밝은 털깃, 넓은 종 모양 외곽이 망토를 만든다.",
+      "style_accepted": true,
+      "readability_status": "EXACT_KIND_CONFUSION",
+      "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+      "readability_review_ids": [
+        "a",
+        "b"
+      ],
+      "exact_kind_scores": [
+        false,
+        false
+      ]
+    },
+    {
+      "id": "wolf_hide",
+      "path": "art/style05/env1/items/wolf_hide.png",
+      "family": "items",
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "source": "/Users/rexxa/work/artenv1-data/items/wolf_hide_try2_raw.png",
+      "source_sha256": "f8933fdaf0ef019d5b165670bcd3daa373b1683d198d9f4ed9e732d859477079",
+      "sha256": "3320a868ecd38ecebedffd2a82de7278c4af1a632592c20049e6e02173720085",
+      "attempts": [
+        {
+          "id": "wolf_hide",
+          "attempt": 1,
+          "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE wolf pelt spread flat, cool grey fur with pointed ears on a flattened narrow muzzle head, four splayed short tapered paw lobes and a long unmistakable tail; dark dorsal stripe, cream edges, visibly a wolf skin not a cloak. Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, broad muted two-tone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+          "refs": [
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+          ],
+          "started_at": "2026-10-23T06:23:39.938Z",
+          "completed_at": "2026-10-23T06:26:53.029Z",
+          "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-3b185959-3a29-48aa-9b59-303531dac308.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+          "tool": "image_gen__imagegen",
+          "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+          "raw": "/Users/rexxa/work/artenv1-data/items/wolf_hide_try1_raw.png",
+          "raw_sha256": "d97e214da7dd7383747422c7faff20f2ca117005d3ac6906b9295b179899b3a5",
+          "references_sha256": {
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+          },
+          "numeric": {
+            "candidate": "/Users/rexxa/work/artenv1-data/items/wolf_hide_try1_raw.png",
+            "sha256": "d97e214da7dd7383747422c7faff20f2ca117005d3ac6906b9295b179899b3a5",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.2410799965105121,
+              "saturation_q25": 0.2518749823254163,
+              "saturation_q75": 0.3214006440148137,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 2.8284271247461903,
+              "stroke_q90": 4.0,
+              "wash_flatness": 0.02719888576759315,
+              "foreground_pixels": 24766
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": false
+            },
+            "numeric_pass": false,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        },
+        {
+          "id": "wolf_hide",
+          "attempt": 2,
+          "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE wolf pelt spread flat, cool grey fur with pointed ears on a flattened narrow muzzle head, four splayed short tapered paw lobes and a long unmistakable tail; dark dorsal stripe, cream edges, visibly a wolf skin not a cloak. Use delicate dark hand-ink contours, restrained translucent earthy pigment washes with quieter lower-contrast interiors: no broad black shadow masses, no bright ivory highlights, no high contrast mottling. Keep moderate fine internal marks and a narrow range of mids. Muted taupe, grey-brown, buff palette; any orange or red is greyed and muted. Reference3 props_logs and4 props_hearth are authoritative same-family detail references. . Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, muted closely related midtone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+          "refs": [
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png"
+          ],
+          "started_at": "2026-10-23T06:31:43.470Z",
+          "completed_at": "2026-10-23T06:36:03.617Z",
+          "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-8d958c76-9330-40a2-9807-f55da4f82397.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+          "tool": "image_gen__imagegen",
+          "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+          "raw": "/Users/rexxa/work/artenv1-data/items/wolf_hide_try2_raw.png",
+          "raw_sha256": "f8933fdaf0ef019d5b165670bcd3daa373b1683d198d9f4ed9e732d859477079",
+          "references_sha256": {
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832"
+          },
+          "numeric": {
+            "candidate": "/Users/rexxa/work/artenv1-data/items/wolf_hide_try2_raw.png",
+            "sha256": "f8933fdaf0ef019d5b165670bcd3daa373b1683d198d9f4ed9e732d859477079",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.25422262503089726,
+              "saturation_q25": 0.2927566347105631,
+              "saturation_q75": 0.35720477737583733,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 2.0,
+              "stroke_q90": 2.8284271247461903,
+              "wash_flatness": 0.015288288993210868,
+              "foreground_pixels": 26244
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        }
+      ],
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/items/wolf_hide_try2_raw.png",
+        "sha256": "f8933fdaf0ef019d5b165670bcd3daa373b1683d198d9f4ed9e732d859477079",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.25422262503089726,
+          "saturation_q25": 0.2927566347105631,
+          "saturation_q75": 0.35720477737583733,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.015288288993210868,
+          "foreground_pixels": 26244
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 4,
+          "palette": 5,
+          "sentence": "Matches the originals' inked linework, textured watercolor washes, and earthy limited palette very closely, with consistent shading and edge treatment."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": true
+      },
+      "status": "STYLE_ACCEPTED_SEMANTIC_REVIEWED",
+      "operations": [
+        "generated alpha preserved",
+        "alpha-bounds crop",
+        "proportional Lanczos fit to58px",
+        "center in64px tile"
+      ],
+      "count_buckets": [
+        "art/style05/env1/items/wolf_hide_count_1.png",
+        "art/style05/env1/items/wolf_hide_count_2_8.png",
+        "art/style05/env1/items/wolf_hide_count_9_plus.png"
+      ],
+      "count_bucket_sha256": {
+        "art/style05/env1/items/wolf_hide_count_1.png": "3320a868ecd38ecebedffd2a82de7278c4af1a632592c20049e6e02173720085",
+        "art/style05/env1/items/wolf_hide_count_2_8.png": "3e447f2f7fdb2bcf5f63da901a44789ad459099277946887cda41dbf1533c388",
+        "art/style05/env1/items/wolf_hide_count_9_plus.png": "823ea06cd230584a51accfb1e2620e475db2b6a5f9467742c415faedd50fbd3f"
+      },
+      "model": {
+        "scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 4,
+          "palette": 5,
+          "sentence": "Matches the originals' inked linework, textured watercolor washes, and earthy limited palette very closely, with consistent shading and edge treatment."
+        },
+        "evidence": "art/style05/env1/items/model_scorecard3.png",
+        "raw_sha256": "ce3e64826599487d58e2cb1b0bcbc225f0dc045bf6a03db9386f721e6b51281a",
+        "mechanism": "built-in image-generation model rendered scorecard; actual printed scores visually transcribed; model version not exposed"
+      },
+      "reading": "긴 꼬리와 네 발, 머리 및 어두운 등줄기가 늑대 가죽을 나타낸다.",
+      "style_accepted": true,
+      "readability_status": "EXACT_KIND_CONFUSION",
+      "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+      "readability_review_ids": [
+        "a",
+        "b"
+      ],
+      "exact_kind_scores": [
+        false,
+        false
+      ]
+    },
+    {
+      "id": "clay",
+      "path": "art/style05/env1/items/clay.png",
+      "family": "items",
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "source": "/Users/rexxa/work/artenv1-data/items/clay_try1_raw.png",
+      "source_sha256": "78129cdf41aeff5acb57307fcfd0d6c534be31d6705eb98f06c7cea7d781053d",
+      "sha256": "f868ba9f89f4a5cb00a4f3348f762fb8e16a10d51d923cfca5968580037304fc",
+      "attempts": [
+        {
+          "id": "clay",
+          "attempt": 1,
+          "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE shapeless lump of wet raw reddish grey brown clay, squat irregular rounded three-lobed mound with one soft thumb impression and a folded moist edge, minimal linework; no stone facets, no pot shape. Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, broad muted two-tone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+          "refs": [
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+          ],
+          "started_at": "2026-10-23T06:23:39.938Z",
+          "completed_at": "2026-10-23T06:27:33.535Z",
+          "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-54e723a7-3fdb-470f-a47e-08630748d050.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+          "tool": "image_gen__imagegen",
+          "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+          "raw": "/Users/rexxa/work/artenv1-data/items/clay_try1_raw.png",
+          "raw_sha256": "78129cdf41aeff5acb57307fcfd0d6c534be31d6705eb98f06c7cea7d781053d",
+          "references_sha256": {
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+          },
+          "numeric": {
+            "candidate": "/Users/rexxa/work/artenv1-data/items/clay_try1_raw.png",
+            "sha256": "78129cdf41aeff5acb57307fcfd0d6c534be31d6705eb98f06c7cea7d781053d",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.15881904398799027,
+              "saturation_q25": 0.5531949314451106,
+              "saturation_q75": 0.6594335342267983,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 2.8284271247461903,
+              "stroke_q90": 4.0,
+              "wash_flatness": 0.00901062991928439,
+              "foreground_pixels": 43396
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        }
+      ],
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/items/clay_try1_raw.png",
+        "sha256": "78129cdf41aeff5acb57307fcfd0d6c534be31d6705eb98f06c7cea7d781053d",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.15881904398799027,
+          "saturation_q25": 0.5531949314451106,
+          "saturation_q75": 0.6594335342267983,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.00901062991928439,
+          "foreground_pixels": 43396
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 5,
+          "sentence": "Follows the same ink-and-wash approach with readable contour lines, mottled brush texture, and earthy tones; slightly smoother surfaces than some references but still close."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": true
+      },
+      "status": "STYLE_ACCEPTED_SEMANTIC_REVIEWED",
+      "operations": [
+        "generated alpha preserved",
+        "alpha-bounds crop",
+        "proportional Lanczos fit to58px",
+        "center in64px tile"
+      ],
+      "count_buckets": [
+        "art/style05/env1/items/clay_count_1.png",
+        "art/style05/env1/items/clay_count_2_8.png",
+        "art/style05/env1/items/clay_count_9_plus.png"
+      ],
+      "count_bucket_sha256": {
+        "art/style05/env1/items/clay_count_1.png": "f868ba9f89f4a5cb00a4f3348f762fb8e16a10d51d923cfca5968580037304fc",
+        "art/style05/env1/items/clay_count_2_8.png": "b5ba0c522acfcc9350d05de2e1a348e6a27526934d6c694f1f4b9cc263984992",
+        "art/style05/env1/items/clay_count_9_plus.png": "dad5192a0ddb5c9829810122e6dbaad1e51931bd00b3f9d8f0e41eb880f5297d"
+      },
+      "model": {
+        "scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 5,
+          "sentence": "Follows the same ink-and-wash approach with readable contour lines, mottled brush texture, and earthy tones; slightly smoother surfaces than some references but still close."
+        },
+        "evidence": "art/style05/env1/items/model_scorecard1.png",
+        "raw_sha256": "884e2f91b66544c5267be7a3f2983ce612aa74c3c1d0e15f3917506b41b81f6e",
+        "mechanism": "built-in image-generation model rendered scorecard; actual printed scores visually transcribed; model version not exposed"
+      },
+      "reading": "부드러운 적갈색 덩어리와 눌린 홈이 돌의 각진 면과 구별된다.",
+      "style_accepted": true,
+      "readability_status": "EXACT_KIND_CONFUSION",
+      "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+      "readability_review_ids": [
+        "a",
+        "b"
+      ],
+      "exact_kind_scores": [
+        true,
+        false
+      ]
+    },
+    {
+      "id": "raw_pot",
+      "path": "art/style05/env1/items/raw_pot.png",
+      "family": "items",
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "source": "/Users/rexxa/work/artenv1-data/items/raw_pot_try1_raw.png",
+      "source_sha256": "706aa5ed5df014d0c6d6102373a5d260a5b9d376930f5883d9ee50694efbfa9b",
+      "sha256": "0bc4ef70479fb3614f8038cdce455f11c1e775fbf0819b174d57a4a5eac8119f",
+      "attempts": [
+        {
+          "id": "raw_pot",
+          "attempt": 1,
+          "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE unfired handbuilt clay pot, rounded bowl jar with clearly visible wide open empty mouth, thick irregular rim, cool grey clay body, squat broad form, subtle unfinished finger-coil marks, no handles, no patterns. Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, broad muted two-tone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+          "refs": [
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+          ],
+          "started_at": "2026-10-23T06:23:39.938Z",
+          "completed_at": "2026-10-23T06:28:14.342Z",
+          "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-24ac47f7-4030-468b-8c0c-42fc3c257a87.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+          "tool": "image_gen__imagegen",
+          "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+          "raw": "/Users/rexxa/work/artenv1-data/items/raw_pot_try1_raw.png",
+          "raw_sha256": "706aa5ed5df014d0c6d6102373a5d260a5b9d376930f5883d9ee50694efbfa9b",
+          "references_sha256": {
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+          },
+          "numeric": {
+            "candidate": "/Users/rexxa/work/artenv1-data/items/raw_pot_try1_raw.png",
+            "sha256": "706aa5ed5df014d0c6d6102373a5d260a5b9d376930f5883d9ee50694efbfa9b",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.1870539522689915,
+              "saturation_q25": 0.3158636170782702,
+              "saturation_q75": 0.4168218864421883,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 4.0,
+              "stroke_q90": 4.47213595499958,
+              "wash_flatness": 0.016100125287343052,
+              "foreground_pixels": 49489
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        }
+      ],
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/items/raw_pot_try1_raw.png",
+        "sha256": "706aa5ed5df014d0c6d6102373a5d260a5b9d376930f5883d9ee50694efbfa9b",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.1870539522689915,
+          "saturation_q25": 0.3158636170782702,
+          "saturation_q75": 0.4168218864421883,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.016100125287343052,
+          "foreground_pixels": 49489
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Matches the reference ink linework, watercolor wash texture, and material rendering well; very consistent with scene props with only slightly cleaner shading than some reference items."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": true
+      },
+      "status": "STYLE_ACCEPTED_SEMANTIC_REVIEWED",
+      "operations": [
+        "generated alpha preserved",
+        "alpha-bounds crop",
+        "proportional Lanczos fit to58px",
+        "center in64px tile"
+      ],
+      "count_buckets": [
+        "art/style05/env1/items/raw_pot_count_1.png",
+        "art/style05/env1/items/raw_pot_count_2_8.png",
+        "art/style05/env1/items/raw_pot_count_9_plus.png"
+      ],
+      "count_bucket_sha256": {
+        "art/style05/env1/items/raw_pot_count_1.png": "0bc4ef70479fb3614f8038cdce455f11c1e775fbf0819b174d57a4a5eac8119f",
+        "art/style05/env1/items/raw_pot_count_2_8.png": "50d8be0ab24724f2941c009cd8d6383b1b5f090ace36d317a1264cb28e693307",
+        "art/style05/env1/items/raw_pot_count_9_plus.png": "43a81687707a52c04e9254aaf2b6119f4268729dc2778727732f984c81b544bf"
+      },
+      "model": {
+        "scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Matches the reference ink linework, watercolor wash texture, and material rendering well; very consistent with scene props with only slightly cleaner shading than some reference items."
+        },
+        "evidence": "art/style05/env1/items/model_scorecard1.png",
+        "raw_sha256": "884e2f91b66544c5267be7a3f2983ce612aa74c3c1d0e15f3917506b41b81f6e",
+        "mechanism": "built-in image-generation model rendered scorecard; actual printed scores visually transcribed; model version not exposed"
+      },
+      "reading": "손잡이 없는 회색 코일 토기가 구운 주황색 토기와 구별된다.",
+      "style_accepted": true,
+      "readability_status": "EXACT_KIND_CONFUSION",
+      "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+      "readability_review_ids": [
+        "a",
+        "b"
+      ],
+      "exact_kind_scores": [
+        false,
+        false
+      ]
+    },
+    {
+      "id": "clay_pot_empty",
+      "path": "art/style05/env1/items/clay_pot_empty.png",
+      "family": "items",
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "source": "/Users/rexxa/work/artenv1-data/items/clay_pot_empty_try2_raw.png",
+      "source_sha256": "02d5fef0269910edac1470d0c562a41d9707106625c7efdee20391f81d94733b",
+      "sha256": "1e0fd136c5b99ad8f4114c9fd0d4b3b518c7c66cf7912812238a7d1b1ba68cd1",
+      "attempts": [
+        {
+          "id": "clay_pot_empty",
+          "attempt": 1,
+          "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE finished fired clay pot, a sturdy terracotta orange-brown round handbuilt jar seen from above with visible oval open mouth showing dark EMPTY interior, thick irregular rim and short side handles; strong round silhouette, no decoration. Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, broad muted two-tone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+          "refs": [
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+          ],
+          "started_at": "2026-10-23T06:26:04.289Z",
+          "completed_at": "2026-10-23T06:26:54.187Z",
+          "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-0d0603f3-ec88-4531-99a6-038cfa4e06c3.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+          "tool": "image_gen__imagegen",
+          "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+          "raw": "/Users/rexxa/work/artenv1-data/items/clay_pot_empty_try1_raw.png",
+          "raw_sha256": "89dd5cd4e5734fdf432152471605fd1c4802b4ea2148fdc77bbd47f864bb42f0",
+          "references_sha256": {
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+          },
+          "numeric": {
+            "candidate": "/Users/rexxa/work/artenv1-data/items/clay_pot_empty_try1_raw.png",
+            "sha256": "89dd5cd4e5734fdf432152471605fd1c4802b4ea2148fdc77bbd47f864bb42f0",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.1511967595433902,
+              "saturation_q25": 0.6920233283448705,
+              "saturation_q75": 0.7634087206989852,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 2.8284271247461903,
+              "stroke_q90": 4.0,
+              "wash_flatness": 0.009298825311667857,
+              "foreground_pixels": 42158
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": false,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": false,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        },
+        {
+          "id": "clay_pot_empty",
+          "attempt": 2,
+          "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE finished fired clay pot, a sturdy terracotta orange-brown round handbuilt jar seen from above with visible oval open mouth showing dark EMPTY interior, thick irregular rim and short side handles; strong round silhouette, no decoration. Use delicate dark hand-ink contours, restrained translucent earthy pigment washes with quieter lower-contrast interiors: no broad black shadow masses, no bright ivory highlights, no high contrast mottling. Keep moderate fine internal marks and a narrow range of mids. Muted taupe, grey-brown, buff palette; any orange or red is greyed and muted. Reference3 props_logs and4 props_hearth are authoritative same-family detail references. . Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, muted closely related midtone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+          "refs": [
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png"
+          ],
+          "started_at": "2026-10-23T06:31:43.470Z",
+          "completed_at": "2026-10-23T06:36:54.727Z",
+          "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-4d826970-8902-4cbc-937a-1de11c7cb524.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+          "tool": "image_gen__imagegen",
+          "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+          "raw": "/Users/rexxa/work/artenv1-data/items/clay_pot_empty_try2_raw.png",
+          "raw_sha256": "02d5fef0269910edac1470d0c562a41d9707106625c7efdee20391f81d94733b",
+          "references_sha256": {
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832"
+          },
+          "numeric": {
+            "candidate": "/Users/rexxa/work/artenv1-data/items/clay_pot_empty_try2_raw.png",
+            "sha256": "02d5fef0269910edac1470d0c562a41d9707106625c7efdee20391f81d94733b",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.1862134875514605,
+              "saturation_q25": 0.6096800232859714,
+              "saturation_q75": 0.6743298971772331,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 2.8284271247461903,
+              "stroke_q90": 4.0,
+              "wash_flatness": 0.007467127153852756,
+              "foreground_pixels": 42302
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        }
+      ],
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/items/clay_pot_empty_try2_raw.png",
+        "sha256": "02d5fef0269910edac1470d0c562a41d9707106625c7efdee20391f81d94733b",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.1862134875514605,
+          "saturation_q25": 0.6096800232859714,
+          "saturation_q75": 0.6743298971772331,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.007467127153852756,
+          "foreground_pixels": 42302
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 4,
+          "palette": 5,
+          "sentence": "Consistent with the originals in ink line quality, watercolor texture, light direction and earthy color range; fits seamlessly."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": true
+      },
+      "status": "STYLE_ACCEPTED_SEMANTIC_REVIEWED",
+      "operations": [
+        "generated alpha preserved",
+        "alpha-bounds crop",
+        "proportional Lanczos fit to58px",
+        "center in64px tile"
+      ],
+      "count_buckets": [
+        "art/style05/env1/items/clay_pot_empty_count_1.png",
+        "art/style05/env1/items/clay_pot_empty_count_2_8.png",
+        "art/style05/env1/items/clay_pot_empty_count_9_plus.png"
+      ],
+      "count_bucket_sha256": {
+        "art/style05/env1/items/clay_pot_empty_count_1.png": "1e0fd136c5b99ad8f4114c9fd0d4b3b518c7c66cf7912812238a7d1b1ba68cd1",
+        "art/style05/env1/items/clay_pot_empty_count_2_8.png": "8d4f40ed3d589bb554d48ebc93b7660dfcba83dc16a50b24867b04e6efa0c707",
+        "art/style05/env1/items/clay_pot_empty_count_9_plus.png": "52eb59fa92969ecd3584de8b08b9b83104471fb5aafb233acee716cbe3dfba7a"
+      },
+      "model": {
+        "scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 4,
+          "palette": 5,
+          "sentence": "Consistent with the originals in ink line quality, watercolor texture, light direction and earthy color range; fits seamlessly."
+        },
+        "evidence": "art/style05/env1/items/model_scorecard3.png",
+        "raw_sha256": "ce3e64826599487d58e2cb1b0bcbc225f0dc045bf6a03db9386f721e6b51281a",
+        "mechanism": "built-in image-generation model rendered scorecard; actual printed scores visually transcribed; model version not exposed"
+      },
+      "reading": "양쪽 작은 손잡이와 어두운 빈 입구가 비어 있는 구운 토기로 읽힌다.",
+      "style_accepted": true,
+      "readability_status": "EXACT_KIND_RECOGNIZED_BOTH",
+      "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+      "readability_review_ids": [
+        "a",
+        "b"
+      ],
+      "exact_kind_scores": [
+        true,
+        true
+      ]
+    },
+    {
+      "id": "clay_pot_filled",
+      "path": "art/style05/env1/items/clay_pot_filled.png",
+      "family": "items",
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "source": "/Users/rexxa/work/artenv1-data/items/clay_pot_filled_try1_raw.png",
+      "source_sha256": "e69febd70249a6a28185f085e7e748ffdb3653351477a771226d501b2f0b34a6",
+      "sha256": "f0e0dad614a9a0d5c394099cdaf00f1af1e40e25234cd76b08af50cd46c5d4b3",
+      "attempts": [
+        {
+          "id": "clay_pot_filled",
+          "attempt": 1,
+          "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE finished fired clay pot, a sturdy terracotta orange-brown round handbuilt jar seen from above with visible oval open mouth filled to rim with calm muted blue-grey WATER and small clear light reflection, thick irregular rim and short side handles; strong round silhouette, no decoration. Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, broad muted two-tone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+          "refs": [
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+          ],
+          "started_at": "2026-10-23T06:26:04.289Z",
+          "completed_at": "2026-10-23T06:27:41.478Z",
+          "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-e6d7a0c8-28dc-4e5e-a8a0-86950f36986b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+          "tool": "image_gen__imagegen",
+          "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+          "raw": "/Users/rexxa/work/artenv1-data/items/clay_pot_filled_try1_raw.png",
+          "raw_sha256": "e69febd70249a6a28185f085e7e748ffdb3653351477a771226d501b2f0b34a6",
+          "references_sha256": {
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+          },
+          "numeric": {
+            "candidate": "/Users/rexxa/work/artenv1-data/items/clay_pot_filled_try1_raw.png",
+            "sha256": "e69febd70249a6a28185f085e7e748ffdb3653351477a771226d501b2f0b34a6",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.17349148301414685,
+              "saturation_q25": 0.5126883891422754,
+              "saturation_q75": 0.7741357466462926,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 2.8284271247461903,
+              "stroke_q90": 4.0,
+              "wash_flatness": 0.01607315717922233,
+              "foreground_pixels": 43028
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        }
+      ],
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/items/clay_pot_filled_try1_raw.png",
+        "sha256": "e69febd70249a6a28185f085e7e748ffdb3653351477a771226d501b2f0b34a6",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.17349148301414685,
+          "saturation_q25": 0.5126883891422754,
+          "saturation_q75": 0.7741357466462926,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.01607315717922233,
+          "foreground_pixels": 43028
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 4,
+          "palette": 5,
+          "sentence": "Fully aligns with the reference visual language: strong ink lines, watercolor washes, subtle texture, and matching earthy palette with blue water rendered in the same style."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": true
+      },
+      "status": "STYLE_ACCEPTED_SEMANTIC_REVIEWED",
+      "operations": [
+        "generated alpha preserved",
+        "alpha-bounds crop",
+        "proportional Lanczos fit to58px",
+        "center in64px tile"
+      ],
+      "count_buckets": [
+        "art/style05/env1/items/clay_pot_filled_count_1.png",
+        "art/style05/env1/items/clay_pot_filled_count_2_8.png",
+        "art/style05/env1/items/clay_pot_filled_count_9_plus.png"
+      ],
+      "count_bucket_sha256": {
+        "art/style05/env1/items/clay_pot_filled_count_1.png": "f0e0dad614a9a0d5c394099cdaf00f1af1e40e25234cd76b08af50cd46c5d4b3",
+        "art/style05/env1/items/clay_pot_filled_count_2_8.png": "b82b18a1a09f942e4c3f96331e0b7e2b53f093919d229f92343b50ba4c3c20bf",
+        "art/style05/env1/items/clay_pot_filled_count_9_plus.png": "3cff102f645204f62197c51df5c4798d3213bde0536e68225ac381b1d25cd776"
+      },
+      "model": {
+        "scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 4,
+          "palette": 5,
+          "sentence": "Fully aligns with the reference visual language: strong ink lines, watercolor washes, subtle texture, and matching earthy palette with blue water rendered in the same style."
+        },
+        "evidence": "art/style05/env1/items/model_scorecard1.png",
+        "raw_sha256": "884e2f91b66544c5267be7a3f2983ce612aa74c3c1d0e15f3917506b41b81f6e",
+        "mechanism": "built-in image-generation model rendered scorecard; actual printed scores visually transcribed; model version not exposed"
+      },
+      "reading": "같은 토기 계열의 푸른 수면이 채워진 상태를 나타낸다.",
+      "style_accepted": true,
+      "readability_status": "EXACT_KIND_RECOGNIZED_BOTH",
+      "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+      "readability_review_ids": [
+        "a",
+        "b"
+      ],
+      "exact_kind_scores": [
+        true,
+        true
+      ]
+    },
+    {
+      "id": "meat",
+      "path": "art/style05/env1/items/meat.png",
+      "family": "items",
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "source": "/Users/rexxa/work/artenv1-data/items/meat_try2_raw.png",
+      "source_sha256": "3170c9d7c9998ab8000b8dea6a2acb067ffb69bd539006deef2407ba31c110c5",
+      "sha256": "d3a8165f64dccb33577db38b7a0908c32a716c27dcbe34ec0d5e6e757e7f4714",
+      "attempts": [
+        {
+          "id": "meat",
+          "attempt": 1,
+          "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE compact cut of fresh raw game meat, chunky irregular warm muted brick-red meat haunch with a short cream bone end sticking from one side and a thin pale fat rim, tasteful small game resource icon, no blood or gore, no plate. Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, broad muted two-tone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+          "refs": [
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png"
+          ],
+          "started_at": "2026-10-23T06:26:04.289Z",
+          "completed_at": "2026-10-23T06:28:27.266Z",
+          "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-03eb1dde-7ac8-41bd-8574-05e40f81262a.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+          "tool": "image_gen__imagegen",
+          "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+          "raw": "/Users/rexxa/work/artenv1-data/items/meat_try1_raw.png",
+          "raw_sha256": "bd56068df9a200bc70e47feda06a556db95e1381eb8a122ff47940ccf915d3c4",
+          "references_sha256": {
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+          },
+          "numeric": {
+            "candidate": "/Users/rexxa/work/artenv1-data/items/meat_try1_raw.png",
+            "sha256": "bd56068df9a200bc70e47feda06a556db95e1381eb8a122ff47940ccf915d3c4",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.23228664997110382,
+              "saturation_q25": 0.608963912803802,
+              "saturation_q75": 0.775691132504007,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 2.8284271247461903,
+              "stroke_q90": 4.0,
+              "wash_flatness": 0.02373917862971819,
+              "foreground_pixels": 27247
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": false
+            },
+            "numeric_pass": false,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        },
+        {
+          "id": "meat",
+          "attempt": 2,
+          "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE compact cut of fresh raw game meat, chunky irregular warm muted brick-red meat haunch with a short cream bone end sticking from one side and a thin pale fat rim, tasteful small game resource icon, no blood or gore, no plate. Use delicate dark hand-ink contours, restrained translucent earthy pigment washes with quieter lower-contrast interiors: no broad black shadow masses, no bright ivory highlights, no high contrast mottling. Keep moderate fine internal marks and a narrow range of mids. Muted taupe, grey-brown, buff palette; any orange or red is greyed and muted. Reference3 props_logs and4 props_hearth are authoritative same-family detail references. . Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, muted closely related midtone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+          "refs": [
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png"
+          ],
+          "started_at": "2026-10-23T06:31:43.470Z",
+          "completed_at": "2026-10-23T06:37:43.737Z",
+          "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-43a11d81-546a-4b90-910f-f321700a4189.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+          "tool": "image_gen__imagegen",
+          "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+          "raw": "/Users/rexxa/work/artenv1-data/items/meat_try2_raw.png",
+          "raw_sha256": "3170c9d7c9998ab8000b8dea6a2acb067ffb69bd539006deef2407ba31c110c5",
+          "references_sha256": {
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832"
+          },
+          "numeric": {
+            "candidate": "/Users/rexxa/work/artenv1-data/items/meat_try2_raw.png",
+            "sha256": "3170c9d7c9998ab8000b8dea6a2acb067ffb69bd539006deef2407ba31c110c5",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.27052246151423287,
+              "saturation_q25": 0.5621872426944664,
+              "saturation_q75": 0.6929020940436876,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 4.0,
+              "stroke_q90": 4.0,
+              "wash_flatness": 0.011280021664964616,
+              "foreground_pixels": 26658
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        }
+      ],
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/items/meat_try2_raw.png",
+        "sha256": "3170c9d7c9998ab8000b8dea6a2acb067ffb69bd539006deef2407ba31c110c5",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.27052246151423287,
+          "saturation_q25": 0.5621872426944664,
+          "saturation_q75": 0.6929020940436876,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.011280021664964616,
+          "foreground_pixels": 26658
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 4,
+          "palette": 5,
+          "sentence": "Matches the hand-drawn ink marks, wash variation, and muted earthy palette of the originals, with the same illustrative rendering."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": true
+      },
+      "status": "STYLE_ACCEPTED_SEMANTIC_REVIEWED",
+      "operations": [
+        "generated alpha preserved",
+        "alpha-bounds crop",
+        "proportional Lanczos fit to58px",
+        "center in64px tile"
+      ],
+      "count_buckets": [
+        "art/style05/env1/items/meat_count_1.png",
+        "art/style05/env1/items/meat_count_2_8.png",
+        "art/style05/env1/items/meat_count_9_plus.png"
+      ],
+      "count_bucket_sha256": {
+        "art/style05/env1/items/meat_count_1.png": "d3a8165f64dccb33577db38b7a0908c32a716c27dcbe34ec0d5e6e757e7f4714",
+        "art/style05/env1/items/meat_count_2_8.png": "03465edc30a76aba75062c6bc0b147482804617a400e7ee9f44f9007c6759432",
+        "art/style05/env1/items/meat_count_9_plus.png": "1a5b74646c6340b4d99b81cf552c2bba6d0be478408b617a7f5c0f866fef7d96"
+      },
+      "model": {
+        "scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 4,
+          "palette": 5,
+          "sentence": "Matches the hand-drawn ink marks, wash variation, and muted earthy palette of the originals, with the same illustrative rendering."
+        },
+        "evidence": "art/style05/env1/items/model_scorecard3.png",
+        "raw_sha256": "ce3e64826599487d58e2cb1b0bcbc225f0dc045bf6a03db9386f721e6b51281a",
+        "mechanism": "built-in image-generation model rendered scorecard; actual printed scores visually transcribed; model version not exposed"
+      },
+      "reading": "탁한 붉은 고기와 한쪽 뼈 돌출부가 작은 고기 자원으로 읽힌다.",
+      "style_accepted": true,
+      "readability_status": "EXACT_KIND_RECOGNIZED_BOTH",
+      "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+      "readability_review_ids": [
+        "a",
+        "b"
+      ],
+      "exact_kind_scores": [
+        true,
+        true
+      ]
+    },
+    {
+      "id": "flint_nodule",
+      "path": "art/style05/env1/items/flint_nodule.png",
+      "family": "items",
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32,
+        32
+      ],
+      "source": "/Users/rexxa/work/artenv1-data/items/flint_nodule_try1_raw.png",
+      "source_sha256": "a60d74046752463ef9bda672d8005288123caf4cac717e93a5e1300b6aed1fb9",
+      "sha256": "759f3326c376830f34e6bb1cb2d12a7402b60ce0a16703ee38ff26c60df31e1e",
+      "attempts": [
+        {
+          "id": "flint_nodule",
+          "attempt": 1,
+          "prompt": "Create exactly ONE isolated stone-age game item sprite: one SINGLE irregular flint nodule, grey-brown rounded rough stone with one chipped angular blue-grey glassy flake facet, slightly elongated triangular pebble silhouette, no pile. Use delicate dark hand-ink contours, muted taupe and grey brown washes, low-contrast textured midtones, no glossy highlights or broad dark masses. Reference3 props_logs and4 props_hearth are frozen same-family details. . Reference input 1 props.png and reference input 2 scene.png are TWO LOCKED ORIGINAL STYLE ANCHORS, not content to copy. Match their observed natural-history ink and restrained warm earth wash. Top-down map view, slight side-face cheat, upper-left light. Crisp thin brown-black outside contour equivalent to 2px at 64px, sparse selective internal marks, muted closely related midtone planes. Strong instantly recognizable silhouette when displayed in a 64x64 tile and at 32x32. Centered object fills 75 percent of square canvas with generous empty margin, all parts uncropped. Completely transparent background; no ground plane, no cast ground shadow, no other objects, no text. No metal, no modern design, no photorealism, no 3D render, no dense crosshatching, no border.",
+          "refs": [
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png"
+          ],
+          "started_at": "2026-10-23T06:34:15.258Z",
+          "completed_at": "2026-10-23T06:38:30.586Z",
+          "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-b7503c49-7113-4b3c-abbd-62dfa00c2933.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+          "tool": "image_gen__imagegen",
+          "timestamp_semantics": "started_at is recorded prompt preparation/pre-call bound; completed_at is observed tool return; internal generation scheduling time is not exposed",
+          "raw": "/Users/rexxa/work/artenv1-data/items/flint_nodule_try1_raw.png",
+          "raw_sha256": "a60d74046752463ef9bda672d8005288123caf4cac717e93a5e1300b6aed1fb9",
+          "references_sha256": {
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+            "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832"
+          },
+          "numeric": {
+            "candidate": "/Users/rexxa/work/artenv1-data/items/flint_nodule_try1_raw.png",
+            "sha256": "a60d74046752463ef9bda672d8005288123caf4cac717e93a5e1300b6aed1fb9",
+            "family": "items",
+            "metrics": {
+              "edge_density": 0.23900066971435227,
+              "saturation_q25": 0.2838683384103994,
+              "saturation_q75": 0.43395788626771237,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.0,
+              "stroke_q75": 4.0,
+              "stroke_q90": 4.0,
+              "wash_flatness": 0.0083785818507956,
+              "foreground_pixels": 35687
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          }
+        }
+      ],
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/items/flint_nodule_try1_raw.png",
+        "sha256": "a60d74046752463ef9bda672d8005288123caf4cac717e93a5e1300b6aed1fb9",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.23900066971435227,
+          "saturation_q25": 0.2838683384103994,
+          "saturation_q75": 0.43395788626771237,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.0083785818507956,
+          "foreground_pixels": 35687
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Indistinguishable from the originals' visual language, with identical ink linework, textured watercolor shading, and natural earthy tones."
+        },
+        "model_status": "SAME_FAMILY_VERIFIED",
+        "passed": true
+      },
+      "status": "STYLE_ACCEPTED_SEMANTIC_REVIEWED",
+      "operations": [
+        "generated alpha preserved",
+        "alpha-bounds crop",
+        "proportional Lanczos fit to58px",
+        "center in64px tile"
+      ],
+      "count_buckets": [
+        "art/style05/env1/items/flint_nodule_count_1.png",
+        "art/style05/env1/items/flint_nodule_count_2_8.png",
+        "art/style05/env1/items/flint_nodule_count_9_plus.png"
+      ],
+      "count_bucket_sha256": {
+        "art/style05/env1/items/flint_nodule_count_1.png": "759f3326c376830f34e6bb1cb2d12a7402b60ce0a16703ee38ff26c60df31e1e",
+        "art/style05/env1/items/flint_nodule_count_2_8.png": "a7069c4effc45fa7345e7347f82d1fee3a25be821a6f5ce76fe29a3d0a8f1017",
+        "art/style05/env1/items/flint_nodule_count_9_plus.png": "e7ad10b955775eeeee32c3a6766806b9f185ac25925dd9c6e3288dba7190d79a"
+      },
+      "model": {
+        "scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Indistinguishable from the originals' visual language, with identical ink linework, textured watercolor shading, and natural earthy tones."
+        },
+        "evidence": "art/style05/env1/items/model_scorecard3.png",
+        "raw_sha256": "ce3e64826599487d58e2cb1b0bcbc225f0dc045bf6a03db9386f721e6b51281a",
+        "mechanism": "built-in image-generation model rendered scorecard; actual printed scores visually transcribed; model version not exposed"
+      },
+      "reading": "한쪽의 푸른 회색 박리면과 둥근 껍질이 단일 부싯돌 덩이를 나타낸다.",
+      "style_accepted": true,
+      "readability_status": "EXACT_KIND_CONFUSION",
+      "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+      "readability_review_ids": [
+        "a",
+        "b"
+      ],
+      "exact_kind_scores": [
+        false,
+        false
+      ]
+    },
+    {
+      "id": "log_pile_small",
+      "path": "art/style05/env/items/log_pile_small.png",
+      "family": "items",
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32.0,
+        32.0
+      ],
+      "sha256": "30ac46278f8abb12040bc8ff40986e5d939ff010a530cd54e37ed620ba685f45",
+      "attempts": [],
+      "status": "REUSED_PRIOR_ACCEPTANCE",
+      "prior_status": "accepted under judge v2, TRIAL2b",
+      "prior_numeric_pass": true,
+      "prior_model": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "The candidate shows the same hand-inked, watercolor-style rendering with textured brush marks, layered bark detail, and earthy tonal palette as the references, differing only by the bright magenta background and a slightly cleaner, more isolated presentation."
+      },
+      "source_metadata": "art/style05/env/items/log_pile_small.json",
+      "count_buckets": [
+        "art/style05/env/items/log_pile_small.png",
+        "art/style05/env/items/log_pile_medium.png",
+        "art/style05/env/items/log_pile_large.png"
+      ],
+      "count_bucket_sha256": {
+        "art/style05/env/items/log_pile_small.png": "30ac46278f8abb12040bc8ff40986e5d939ff010a530cd54e37ed620ba685f45",
+        "art/style05/env/items/log_pile_medium.png": "7e13ab188c634172e59b189ed2a2e0063bf0a3dba5df1fbe3d5792fbbd91df9a",
+        "art/style05/env/items/log_pile_large.png": "09144dfdcd810b4a952bf892271697dba19b6b02a0d2727fecafe9d99018a02d"
+      },
+      "prior_working_sha256_matches": true,
+      "readability_status": "EXACT_KIND_RECOGNIZED_BOTH",
+      "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+      "readability_review_ids": [
+        "a",
+        "b"
+      ],
+      "exact_kind_scores": [
+        true,
+        true
+      ]
+    },
+    {
+      "id": "log_pile_medium",
+      "path": "art/style05/env/items/log_pile_medium.png",
+      "family": "items",
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32.0,
+        32.0
+      ],
+      "sha256": "7e13ab188c634172e59b189ed2a2e0063bf0a3dba5df1fbe3d5792fbbd91df9a",
+      "attempts": [],
+      "status": "REUSED_PRIOR_ACCEPTANCE",
+      "prior_status": "accepted under judge v2, TRIAL2b",
+      "prior_numeric_pass": true,
+      "prior_model": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5,
+        "sentence": "Same fine ink and watercolor-like painted texture, hatching and bark detail as the references; lighting is slightly flatter without cast shadows and ground context, but still very close in overall style."
+      },
+      "source_metadata": "art/style05/env/items/log_pile_medium.json",
+      "count_buckets": [
+        "art/style05/env/items/log_pile_small.png",
+        "art/style05/env/items/log_pile_medium.png",
+        "art/style05/env/items/log_pile_large.png"
+      ],
+      "count_bucket_sha256": {
+        "art/style05/env/items/log_pile_small.png": "30ac46278f8abb12040bc8ff40986e5d939ff010a530cd54e37ed620ba685f45",
+        "art/style05/env/items/log_pile_medium.png": "7e13ab188c634172e59b189ed2a2e0063bf0a3dba5df1fbe3d5792fbbd91df9a",
+        "art/style05/env/items/log_pile_large.png": "09144dfdcd810b4a952bf892271697dba19b6b02a0d2727fecafe9d99018a02d"
+      },
+      "prior_working_sha256_matches": true,
+      "readability_status": "EXACT_KIND_CONFUSION",
+      "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+      "readability_review_ids": [
+        "a",
+        "b"
+      ],
+      "exact_kind_scores": [
+        false,
+        false
+      ]
+    },
+    {
+      "id": "log_pile_large",
+      "path": "art/style05/env/items/log_pile_large.png",
+      "family": "items",
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32.0,
+        32.0
+      ],
+      "sha256": "09144dfdcd810b4a952bf892271697dba19b6b02a0d2727fecafe9d99018a02d",
+      "attempts": [],
+      "status": "REUSED_PRIOR_ACCEPTANCE",
+      "prior_status": "accepted under judge v2, TRIAL2b",
+      "prior_numeric_pass": true,
+      "prior_model": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "The candidate shows the same hand-inked, watercolor-like texture, linework, lighting, and earthy palette as the references, with only a slightly cleaner, more isolated presentation lacking the environmental background and ground texture."
+      },
+      "source_metadata": "art/style05/env/items/log_pile_large.json",
+      "count_buckets": [
+        "art/style05/env/items/log_pile_small.png",
+        "art/style05/env/items/log_pile_medium.png",
+        "art/style05/env/items/log_pile_large.png"
+      ],
+      "count_bucket_sha256": {
+        "art/style05/env/items/log_pile_small.png": "30ac46278f8abb12040bc8ff40986e5d939ff010a530cd54e37ed620ba685f45",
+        "art/style05/env/items/log_pile_medium.png": "7e13ab188c634172e59b189ed2a2e0063bf0a3dba5df1fbe3d5792fbbd91df9a",
+        "art/style05/env/items/log_pile_large.png": "09144dfdcd810b4a952bf892271697dba19b6b02a0d2727fecafe9d99018a02d"
+      },
+      "prior_working_sha256_matches": true,
+      "readability_status": "EXACT_KIND_CONFUSION",
+      "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+      "readability_review_ids": [
+        "a",
+        "b"
+      ],
+      "exact_kind_scores": [
+        false,
+        false
+      ]
+    },
+    {
+      "id": "stone_pile",
+      "path": "art/style05/env/items/stone_pile.png",
+      "family": "items",
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32.0,
+        32.0
+      ],
+      "sha256": "0021fc6202894a18168d406d8865c43f4d91d50de939b66cf790a6cccecda1a7",
+      "attempts": [],
+      "status": "REUSED_PRIOR_ACCEPTANCE",
+      "prior_status": "accepted under judge v2, TRIAL2b",
+      "prior_numeric_pass": true,
+      "prior_model": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Same hand-drawn ink-and-paint look with sturdy outlines, textured brushwork, and mottled earthy colors; lighting differs slightly due to neutral studio-like lighting and no scene context/background."
+      },
+      "source_metadata": "art/style05/env/items/stone_pile.json",
+      "count_buckets": [
+        "art/style05/env1/items/stone_pile_count_1.png",
+        "art/style05/env1/items/stone_pile_count_2_8.png",
+        "art/style05/env1/items/stone_pile_count_9_plus.png"
+      ],
+      "count_bucket_sha256": {
+        "art/style05/env1/items/stone_pile_count_1.png": "4db601f8f590fc9599f6f23d857950412399c9eb1acaa67b2031e7db3c061770",
+        "art/style05/env1/items/stone_pile_count_2_8.png": "55d48d92855f6eb276781d49f8199a1ba2cf1528f4ffc9d06a981ad2df57b1d3",
+        "art/style05/env1/items/stone_pile_count_9_plus.png": "39d5ff98e029d9258ccec48436956b995e7b3d86d60674cf1aec10398e76a7d5"
+      },
+      "prior_working_sha256_matches": true,
+      "readability_status": "EXACT_KIND_RECOGNIZED_BOTH",
+      "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+      "readability_review_ids": [
+        "a",
+        "b"
+      ],
+      "exact_kind_scores": [
+        true,
+        true
+      ]
+    },
+    {
+      "id": "flint_pile",
+      "path": "art/style05/env/items/flint_pile.png",
+      "family": "items",
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32.0,
+        32.0
+      ],
+      "sha256": "c43e24ebfc3f97035bf3b1201ba778188349bc49bdc6201aa42568d817569d2c",
+      "attempts": [],
+      "status": "REUSED_PRIOR_ACCEPTANCE",
+      "prior_status": "accepted under judge v2, TRIAL2b",
+      "prior_numeric_pass": true,
+      "prior_model": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5,
+        "sentence": "Rocks match the references’ inked linework, speckled texture, and earthy tan–gray palette, with only slightly cleaner, more isolated lighting than the more contextual, ground-lit scenes in the references."
+      },
+      "source_metadata": "art/style05/env/items/flint_pile.json",
+      "count_buckets": [
+        "art/style05/env1/items/flint_pile_count_1.png",
+        "art/style05/env1/items/flint_pile_count_2_8.png",
+        "art/style05/env1/items/flint_pile_count_9_plus.png"
+      ],
+      "count_bucket_sha256": {
+        "art/style05/env1/items/flint_pile_count_1.png": "90447225357203b01f8d436cd437c325ef48015d7dfa031504196d1425edd83c",
+        "art/style05/env1/items/flint_pile_count_2_8.png": "2349703b78da397b23afed2a8dac79fa3b84ede17c9024c9b56c46299ee146c6",
+        "art/style05/env1/items/flint_pile_count_9_plus.png": "4a425880b39d7987019e3c2885fdef0f32fe4dd23325932cc5bc4f82c5db9c30"
+      },
+      "prior_working_sha256_matches": true,
+      "readability_status": "EXACT_KIND_CONFUSION",
+      "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+      "readability_review_ids": [
+        "a",
+        "b"
+      ],
+      "exact_kind_scores": [
+        false,
+        false
+      ]
+    },
+    {
+      "id": "flint_blade",
+      "path": "art/style05/env/items/flint_blade.png",
+      "family": "items",
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "canvas_px": [
+        48,
+        48
+      ],
+      "anchor_px": [
+        24.0,
+        24.0
+      ],
+      "sha256": "f152aa1c52f98b5a73259e484ccdcaaa53539f824176da8c62a6795bc8d3ed4d",
+      "attempts": [],
+      "status": "REUSED_PRIOR_ACCEPTANCE",
+      "prior_status": "accepted under judge v2, TRIAL2b",
+      "prior_numeric_pass": true,
+      "prior_model": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Same hand-inked, watercolor-like illustration style with textured brushwork, ink outlines, and earthy tones; the only notable difference is the flat, bright magenta background instead of the natural ground setting."
+      },
+      "source_metadata": "art/style05/env/items/flint_blade.json",
+      "count_buckets": [
+        "art/style05/env1/items/flint_blade_count_1.png",
+        "art/style05/env1/items/flint_blade_count_2_8.png",
+        "art/style05/env1/items/flint_blade_count_9_plus.png"
+      ],
+      "count_bucket_sha256": {
+        "art/style05/env1/items/flint_blade_count_1.png": "b49c8585fa896948b67a5428c001bbc0e3dac2e2d29212e5ac94e54d7b9e947c",
+        "art/style05/env1/items/flint_blade_count_2_8.png": "1cb84392521f47a5bca2206d0944271430580f88fe4c2483cc4ad1b6939c303a",
+        "art/style05/env1/items/flint_blade_count_9_plus.png": "50f7e62b8ee2b11a155ed452e6d5bc2b4f4c847ceaf1f7b6e72bc18216871c63"
+      },
+      "prior_working_sha256_matches": true,
+      "readability_status": "EXACT_KIND_CONFUSION",
+      "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+      "readability_review_ids": [
+        "a",
+        "b"
+      ],
+      "exact_kind_scores": [
+        false,
+        true
+      ]
+    },
+    {
+      "id": "stone_axe",
+      "path": "art/style05/env/items/stone_axe.png",
+      "family": "items",
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "canvas_px": [
+        48,
+        48
+      ],
+      "anchor_px": [
+        24.0,
+        24.0
+      ],
+      "sha256": "31b0d4138f790e8e1379ca23930198809e925452fc50ee3148a5d95592df8dab",
+      "attempts": [],
+      "status": "REUSED_PRIOR_ACCEPTANCE",
+      "prior_status": "accepted under judge v2, TRIAL2b",
+      "prior_numeric_pass": true,
+      "prior_model": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Same hand-painted, inked cartoon look with textured, mottled color blocks, dark outlines and warm earthy palette as the references, with only minor stylistic drift in slightly cleaner, more uniform shading on the stone and wood."
+      },
+      "source_metadata": "art/style05/env/items/stone_axe.json",
+      "count_buckets": [
+        "art/style05/env1/items/stone_axe_count_1.png",
+        "art/style05/env1/items/stone_axe_count_2_8.png",
+        "art/style05/env1/items/stone_axe_count_9_plus.png"
+      ],
+      "count_bucket_sha256": {
+        "art/style05/env1/items/stone_axe_count_1.png": "d9ae415ed30a79b57cb6814cdbb1d3bff4c2e58ab540e86a81badf67246b7002",
+        "art/style05/env1/items/stone_axe_count_2_8.png": "ea3c65f102ac87a44a47cb8c3e9b11777b5297edb5eec4e9b556f7429b27a369",
+        "art/style05/env1/items/stone_axe_count_9_plus.png": "4c8576d38f472588310b63bc92ed16374f3e7c58a463d871c380d0c62ab0fd41"
+      },
+      "prior_working_sha256_matches": true,
+      "readability_status": "EXACT_KIND_RECOGNIZED_BOTH",
+      "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+      "readability_review_ids": [
+        "a",
+        "b"
+      ],
+      "exact_kind_scores": [
+        true,
+        true
+      ]
+    },
+    {
+      "id": "hide",
+      "path": "art/style05/env/items/hide.png",
+      "family": "items",
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32.0,
+        32.0
+      ],
+      "sha256": "86ad39457f8f516e88bbd10b7c8aa6c1e1afeecb3a206b33cdb19e67cbddbf6e",
+      "attempts": [],
+      "status": "REUSED_PRIOR_ACCEPTANCE",
+      "prior_status": "accepted under judge v2, TRIAL2b",
+      "prior_numeric_pass": true,
+      "prior_model": {
+        "medium": 5,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "The hide matches the references’ watercolor-and-ink medium with similar textured washes, hand-drawn linework, soft tonal shading, and earthy brown/ochre palette, with only slight variation in fine detail density."
+      },
+      "source_metadata": "art/style05/env/items/hide.json",
+      "count_buckets": [
+        "art/style05/env1/items/hide_count_1.png",
+        "art/style05/env1/items/hide_count_2_8.png",
+        "art/style05/env1/items/hide_count_9_plus.png"
+      ],
+      "count_bucket_sha256": {
+        "art/style05/env1/items/hide_count_1.png": "1683058c1a18986812d16cb39e5797f39ccf96cf1b74c170047f01ddcb2a6498",
+        "art/style05/env1/items/hide_count_2_8.png": "d43738a221ebca5049e15c9dc068f3c7463d1d93c04863e82c33f2c9ae9b7190",
+        "art/style05/env1/items/hide_count_9_plus.png": "a325ded32d71421ce5959d0aa65fb99293164f90f1de8837b531e516e9f4524f"
+      },
+      "prior_working_sha256_matches": true,
+      "readability_status": "EXACT_KIND_RECOGNIZED_BOTH",
+      "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+      "readability_review_ids": [
+        "a",
+        "b"
+      ],
+      "exact_kind_scores": [
+        true,
+        true
+      ]
+    },
+    {
+      "id": "berry_basket",
+      "path": "art/style05/env/items/berry_basket.png",
+      "family": "items",
+      "tile_footprint": [
+        1,
+        1
+      ],
+      "canvas_px": [
+        64,
+        64
+      ],
+      "anchor_px": [
+        32.0,
+        32.0
+      ],
+      "sha256": "98de3c5733f34b0aa058aac8fd1f0e3de085b43f4eba3b6479bb0826ba04760c",
+      "attempts": [],
+      "status": "REUSED_PRIOR_ACCEPTANCE",
+      "prior_status": "accepted under judge v2, TRIAL2b",
+      "prior_numeric_pass": true,
+      "prior_model": {
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Basket of berries is a different subject but uses the same hand-inked, textured, painterly tone with strong outlines, mottled shading, and earthy natural colors as the references, with only minor differences in light intensity and color saturation."
+      },
+      "source_metadata": "art/style05/env/items/berry_basket.json",
+      "count_buckets": [
+        "art/style05/env1/items/berry_basket_count_1.png",
+        "art/style05/env1/items/berry_basket_count_2_8.png",
+        "art/style05/env1/items/berry_basket_count_9_plus.png"
+      ],
+      "count_bucket_sha256": {
+        "art/style05/env1/items/berry_basket_count_1.png": "96a0d395c5f8849733b6eb03dd301fee57a42084184bff094ab9e47ce78804be",
+        "art/style05/env1/items/berry_basket_count_2_8.png": "4809a5d039e6abf504c5fb876929f01ed72539ef4e4509f7d9d3f1c801dcd43b",
+        "art/style05/env1/items/berry_basket_count_9_plus.png": "a9e667b7e3e35c868113fc91378838ee27d1f20d7cdd0b1df3a2eb62bedbd4b9"
+      },
+      "prior_working_sha256_matches": true,
+      "readability_status": "EXACT_KIND_CONFUSION",
+      "readability_evidence": "docs/v8/artenv1/items_reviews.json",
+      "readability_review_ids": [
+        "a",
+        "b"
+      ],
+      "exact_kind_scores": [
+        true,
+        false
+      ]
+    }
+  ],
+  "blind_order": [
+    "firewood",
+    "ground_axe",
+    "spear",
+    "cured_hide",
+    "hide_wrap",
+    "fur_cloak",
+    "wolf_hide",
+    "clay",
+    "raw_pot",
+    "clay_pot_empty",
+    "clay_pot_filled",
+    "meat",
+    "flint_nodule",
+    "log_pile_small",
+    "log_pile_medium",
+    "log_pile_large",
+    "stone_pile",
+    "flint_pile",
+    "flint_blade",
+    "stone_axe",
+    "hide",
+    "berry_basket"
+  ],
+  "stack_note": "1 / 2-8 /9+ use1/3/9 complete-sprite duplicates; logs reuse original3sizes. Buckets are ordinal quantity icons, not literal unit counts inside old pile artwork.",
+  "item_kinds": [
+    {
+      "sim_kind": "Log",
+      "sim_code": 0,
+      "asset_id": "log_pile_small"
+    },
+    {
+      "sim_kind": "Firewood",
+      "sim_code": 1,
+      "asset_id": "firewood"
+    },
+    {
+      "sim_kind": "Stone",
+      "sim_code": 2,
+      "asset_id": "stone_pile"
+    },
+    {
+      "sim_kind": "Flint",
+      "sim_code": 3,
+      "asset_id": "flint_nodule"
+    },
+    {
+      "sim_kind": "FlintBlade",
+      "sim_code": 4,
+      "asset_id": "flint_blade"
+    },
+    {
+      "sim_kind": "StoneAxe",
+      "sim_code": 5,
+      "asset_id": "stone_axe"
+    },
+    {
+      "sim_kind": "Hide",
+      "sim_code": 6,
+      "asset_id": "hide"
+    },
+    {
+      "sim_kind": "Clay",
+      "sim_code": 7,
+      "asset_id": "clay"
+    },
+    {
+      "sim_kind": "RawPot",
+      "sim_code": 8,
+      "asset_id": "raw_pot"
+    },
+    {
+      "sim_kind": "ClayPot",
+      "sim_code": 9,
+      "asset_id": "clay_pot_empty"
+    },
+    {
+      "sim_kind": "GroundAxe",
+      "sim_code": 10,
+      "asset_id": "ground_axe"
+    },
+    {
+      "sim_kind": "Meat",
+      "sim_code": 11,
+      "asset_id": "meat"
+    },
+    {
+      "sim_kind": "CuredHide",
+      "sim_code": 12,
+      "asset_id": "cured_hide"
+    },
+    {
+      "sim_kind": "HideWrap",
+      "sim_code": 13,
+      "asset_id": "hide_wrap"
+    },
+    {
+      "sim_kind": "FurCloak",
+      "sim_code": 14,
+      "asset_id": "fur_cloak"
+    },
+    {
+      "sim_kind": "Spear",
+      "sim_code": 15,
+      "asset_id": "spear"
+    },
+    {
+      "sim_kind": "WolfHide",
+      "sim_code": 16,
+      "asset_id": "wolf_hide"
+    }
+  ],
+  "state_aliases": {
+    "ClayPot.filled": "clay_pot_filled",
+    "food": "berry_basket"
+  },
+  "spoiled_meat": {
+    "source": "art/style05/env1/items/meat.png",
+    "source_sha256": "d3a8165f64dccb33577db38b7a0908c32a716c27dcbe34ec0d5e6e757e7f4714",
+    "path": "art/style05/env1/items/meat_spoiled.png",
+    "sha256": "136b78e58bd657a2f3ad231d691f856973b26e7fc27fe352c4289d2e33590350",
+    "srgb_multiplier": [
+      0.55,
+      0.7,
+      0.45
+    ],
+    "rounding": "nearest integer, Python round",
+    "alpha": "byte-identical",
+    "canvas": [
+      64,
+      64
+    ],
+    "method": "code-only whole-sprite RGB lookup table; no palette quantization",
+    "status": "DERIVED_CANDIDATE_NOT_IN_BLIND_ITEM_PACKET",
+    "generation_calls": 0,
+    "note": "Declared art state; native simulation removes expired meat."
+  },
+  "sprite_generation_calls": 23,
+  "image_model_scorecard_calls": 3,
+  "failed_tool_calls": [
+    {
+      "reason": "Referenced image paths exceeded5; rejected before generation",
+      "count": 1
+    }
+  ],
+  "owner_approval": "NOT_REQUESTED_NOT_CLAIMED",
+  "semantic_readability_summary": {
+    "raw_answers_preserved": 44,
+    "primary_category_correct": 39,
+    "exact_kind_correct": 19,
+    "denominator": 44,
+    "status": "DISTINCT_KIND_READABILITY_NOT_MET",
+    "reason": "Both miss garments and material/processing distinctions; aggregate category recognition does not establish distinct silhouettes."
+  }
+}

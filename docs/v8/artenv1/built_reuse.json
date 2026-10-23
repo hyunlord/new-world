@@ -1,0 +1,83 @@
+{
+  "assets": [
+    {
+      "id": "hut",
+      "path": "art/style05/env/buildings/hut.png",
+      "sha256": "8b0f0f2571d73af0581de5574b8ac496538ec03142b100881901c8d30a5abb54",
+      "dimensions": [
+        192,
+        192
+      ],
+      "historical_metadata": "art/style05/env/buildings/hut.json",
+      "historical_metadata_sha256": "8cc42f5a1de17e3ecc5c91d0b190633f29146a905eaed944531d356d11fde475",
+      "historical_status": "accepted under judge v2, TRIAL2b",
+      "historical_numeric_pass": true,
+      "historical_model_scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5,
+        "sentence": "Content differs (full hut with interior and campfire vs. close-up fragments), but the candidate uses the same hand-drawn ink-and-watercolor medium, linework, lighting treatment, and earthy natural palette as the references."
+      },
+      "current_visual_scale_recheck": "PASS",
+      "current_recheck_mechanism": "Built executor actual view_image inspection of three originals and reuse_scale_board.png; not blind and not an image-model scorecard.",
+      "current_reading": "The192x192 roofless hut retains four bedrolls and a central hearth with a clear south opening. At64px tiles its wall is approximately12\u201316px thick, comparable to the new16px band; corner posts are larger.",
+      "current_fresh_numeric_or_model_judge": "NOT_RUN; historical TRIAL2b judgment is retained distinctly, not relabeled fresh.",
+      "reuse_status": "REUSE_EXISTING_WITH_VISUAL_SCALE_RECHECK"
+    },
+    {
+      "id": "knapping_spot",
+      "path": "art/style05/env/buildings/knapping_spot.png",
+      "sha256": "4f80d25470aa948a19167c18324f63c0ca70a5405d523be3ea661df2516ebc05",
+      "dimensions": [
+        64,
+        64
+      ],
+      "historical_metadata": "art/style05/env/buildings/knapping_spot.json",
+      "historical_metadata_sha256": "53ea7b6a3a3ef22476241f850e444cd64a0bb2d3b96f58d95d01d176ac3e76d9",
+      "historical_status": "accepted under judge v2, TRIAL2b",
+      "historical_numeric_pass": true,
+      "historical_model_scores": {
+        "medium": 5,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "The rock, flint shards, and antler are rendered with the same hand-drawn inked linework, textured watercolor wash, and earthy tones as the references, though the candidate uses slightly cleaner, higher-contrast shading and marginally crisper outlines."
+      },
+      "current_visual_scale_recheck": "PASS",
+      "current_recheck_mechanism": "Built executor actual view_image inspection of three originals and reuse_scale_board.png; not blind and not an image-model scorecard.",
+      "current_reading": "The64x64 flint-working spot shows a central hammerstone/flint area and adjacent bone or antler tool; readable as a compact work spot at1x.",
+      "current_fresh_numeric_or_model_judge": "NOT_RUN; historical TRIAL2b judgment is retained distinctly, not relabeled fresh.",
+      "reuse_status": "REUSE_EXISTING_WITH_VISUAL_SCALE_RECHECK"
+    },
+    {
+      "id": "woodworking_bench",
+      "path": "art/style05/env/buildings/woodworking_bench.png",
+      "sha256": "9368eb1ecbdc8b2a65bf61a61b7163ab9a9e3aa8204131d725fb7f5a3427283b",
+      "dimensions": [
+        128,
+        64
+      ],
+      "historical_metadata": "art/style05/env/buildings/woodworking_bench.json",
+      "historical_metadata_sha256": "b947b6d271d8b699ecc312b5f6c1b34a4833204fb8bbfcb04cf1422f8c26d1da",
+      "historical_status": "accepted under judge v2, TRIAL2b",
+      "historical_numeric_pass": true,
+      "historical_model_scores": {
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Same hand-drawn ink and watercolor wash style with detailed wood grain, bark texture, ink outlines, and earthy brown-gray palette with consistent shading and tonal transitions."
+      },
+      "current_visual_scale_recheck": "PASS",
+      "current_recheck_mechanism": "Built executor actual view_image inspection of three originals and reuse_scale_board.png; not blind and not an image-model scorecard.",
+      "current_reading": "The128x64 rough wood bench retains a recognizable slab, logs and tool silhouettes at2x1 visualtiles; matches the new pottery-bench scale.",
+      "current_fresh_numeric_or_model_judge": "NOT_RUN; historical TRIAL2b judgment is retained distinctly, not relabeled fresh.",
+      "reuse_status": "REUSE_EXISTING_WITH_VISUAL_SCALE_RECHECK"
+    }
+  ],
+  "board": "art/style05/env1/built/reuse_scale_board.png",
+  "board_sha256": "1944232c4994b8792e54307a7e098bbf8b23f090d28a1ccf2de556bf1791eb24",
+  "new_generations": 0,
+  "limitation": "No fresh numeric/model acceptance is claimed for these reused assets; locked reference presence is not their judgment."
+}

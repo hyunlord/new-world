@@ -1,0 +1,3796 @@
+{
+  "version": 1,
+  "assets": [
+    {
+      "id": "wall_log_straight",
+      "path": "art/style05/env1/built/wall_log_straight.png",
+      "width": 256,
+      "height": 64,
+      "footprint": [
+        4,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 3,
+      "selected_attempt": 3,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "raw": "/Users/rexxa/work/artenv1-data/built/wall_log_straight_try3_raw.png",
+      "raw_sha256": "7f97189eaa78cdae96d0776cd742feaa933d8c05da12cb69448a425981d02a0d",
+      "sha256": "bdec79f2f6e680842e8a8da40edc15484c11a3dab2b5b1bb6defa2a5850c4dea",
+      "metadata": "/Users/rexxa/work/artenv1-data/built/wall_log_straight_try3.json",
+      "metadata_sha256": "428de2b0bd39559b7ba1acab44e4c653c98344ed9abf31bf31b798a925d51de9",
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/built/wall_log_straight_try3_raw.png",
+        "sha256": "7f97189eaa78cdae96d0776cd742feaa933d8c05da12cb69448a425981d02a0d",
+        "family": "buildings",
+        "metrics": {
+          "edge_density": 0.2790174002047083,
+          "saturation_q25": 0.4244345421086264,
+          "saturation_q75": 0.5298873556693223,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.018802394748029645,
+          "foreground_pixels": 5985
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "operations": [
+        "crop alpha>=128 bounds plus2px fringe (0, 558, 1254, 695); no alpha edits",
+        "Lanczos contain (252, 28) offset(2, 18)"
+      ],
+      "tone": null,
+      "seam": null,
+      "bytes": 19612,
+      "model": {
+        "scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Matches the hand-drawn ink-and-wash look, outline weight, wood texture detail, and warm earth palette with the same upper-left lighting and soft shadows as the reference images."
+        },
+        "review_id": "judge_buildings_a",
+        "candidate_raw_sha256": "7f97189eaa78cdae96d0776cd742feaa933d8c05da12cb69448a425981d02a0d",
+        "scorecard_sha256": "46c9b583aea782f0a65ee5b9c85fb814fe5420667c05d3b0bf36def31b85f409"
+      },
+      "physical_footprint": [
+        4,
+        1
+      ],
+      "style_pass": true,
+      "reading": "Continuous lashed bark spine reads as a low log wall; generated end texture does not exactly match.",
+      "semantic_pass": true,
+      "required_wrap_pass": true,
+      "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+    },
+    {
+      "id": "wall_log_corner",
+      "path": "art/style05/env1/built/wall_log_corner.png",
+      "width": 128,
+      "height": 128,
+      "footprint": [
+        2,
+        2
+      ],
+      "family": "buildings",
+      "attempts": 3,
+      "selected_attempt": 3,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "raw": "/Users/rexxa/work/artenv1-data/built/wall_log_corner_try3_raw.png",
+      "raw_sha256": "000cf29e988794fda68a283a2f52d7f5cbef11ab1413be54862c27bb937fa710",
+      "sha256": "e2b4d11ccbefbc9390858960da4a8d85520675e984c94650f3af9fcf9c807f35",
+      "metadata": "/Users/rexxa/work/artenv1-data/built/wall_log_corner_try3.json",
+      "metadata_sha256": "6f7ef59698d0b5c2d09a14e00680f6f2267f5ce3139042dd414e24ff0cc551ac",
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/built/wall_log_corner_try3_raw.png",
+        "sha256": "000cf29e988794fda68a283a2f52d7f5cbef11ab1413be54862c27bb937fa710",
+        "family": "buildings",
+        "metrics": {
+          "edge_density": 0.2961585433551682,
+          "saturation_q25": 0.4262766897366773,
+          "saturation_q75": 0.5684822114932606,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.019220419372873717,
+          "foreground_pixels": 19882
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "operations": [
+        "crop alpha>=128 bounds plus2px fringe (292, 0, 1254, 1018); no alpha edits",
+        "Lanczos contain (117, 124) offset(5, 2)"
+      ],
+      "tone": null,
+      "seam": null,
+      "bytes": 15922,
+      "model": {
+        "scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Matches the same hand-drawn ink and watercolor wash with identical contour style, detail level, upper-left lighting, and earthy color palette as the reference buildings."
+        },
+        "review_id": "judge_buildings_retry",
+        "candidate_raw_sha256": "000cf29e988794fda68a283a2f52d7f5cbef11ab1413be54862c27bb937fa710",
+        "scorecard_sha256": "b82d2f2b5fd2799a8f19cedde31cd4ec407ba24100e5ef16f5373f7e532e8eb0"
+      },
+      "physical_footprint": [
+        2,
+        2
+      ],
+      "style_pass": true,
+      "reading": "Broad continuous bark elbow matches the straight band width more closely; curved join and texture changes remain visible.",
+      "semantic_pass": true,
+      "required_wrap_pass": true,
+      "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+    },
+    {
+      "id": "wall_stone_straight",
+      "path": "art/style05/env1/built/wall_stone_straight.png",
+      "width": 256,
+      "height": 64,
+      "footprint": [
+        4,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 1,
+      "selected_attempt": 1,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "raw": "/Users/rexxa/work/artenv1-data/built/wall_stone_straight_try1_raw.png",
+      "raw_sha256": "4e0e101e04916d1efca7e5f267ccb1257194a43b0c7b94d21a7828d96f8eacc7",
+      "sha256": "2f609525ae87aff9f23d72dcf9417fcd9f3ec0804ffc556df41a74a3c2a3e77a",
+      "metadata": "/Users/rexxa/work/artenv1-data/built/wall_stone_straight_try1.json",
+      "metadata_sha256": "0643cd3522aa965af0bd71d9623aa665722faf2d540fdaac8c338be9f5584154",
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/built/wall_stone_straight_try1_raw.png",
+        "sha256": "4e0e101e04916d1efca7e5f267ccb1257194a43b0c7b94d21a7828d96f8eacc7",
+        "family": "buildings",
+        "metrics": {
+          "edge_density": 0.2798335887891395,
+          "saturation_q25": 0.39394601164871845,
+          "saturation_q75": 0.5036817421903443,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.020756378521189132,
+          "foreground_pixels": 10307
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "operations": [
+        "crop alpha>=128 bounds plus2px fringe (0, 522, 1254, 740); no alpha edits",
+        "Lanczos contain (252, 44) offset(2, 10)"
+      ],
+      "tone": null,
+      "seam": null,
+      "bytes": 32712,
+      "model": {
+        "scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Closely matches the hand-painted ink-and-wash technique, line work, and lighting, with only slightly smoother stone texture and marginally cleaner outlines than the reference crops."
+        },
+        "review_id": "judge_buildings_a",
+        "candidate_raw_sha256": "4e0e101e04916d1efca7e5f267ccb1257194a43b0c7b94d21a7828d96f8eacc7",
+        "scorecard_sha256": "46c9b583aea782f0a65ee5b9c85fb814fe5420667c05d3b0bf36def31b85f409"
+      },
+      "physical_footprint": [
+        4,
+        1
+      ],
+      "style_pass": true,
+      "reading": "Two courses of irregular dry stone read as a wall; yellow lichen differs from the corner material.",
+      "semantic_pass": true,
+      "required_wrap_pass": true,
+      "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+    },
+    {
+      "id": "wall_stone_corner",
+      "path": "art/style05/env1/built/wall_stone_corner.png",
+      "width": 128,
+      "height": 128,
+      "footprint": [
+        2,
+        2
+      ],
+      "family": "buildings",
+      "attempts": 3,
+      "selected_attempt": 3,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "raw": "/Users/rexxa/work/artenv1-data/built/wall_stone_corner_try3_raw.png",
+      "raw_sha256": "fd77749a9a0b295a7b3132f067d5a9fec13d8f04c621cbbfff91fb1d6c2b9710",
+      "sha256": "b78edcc34c34df74f7c9bd13e8ca6efcbbd7165bbfed50bdc630598eb0396414",
+      "metadata": "/Users/rexxa/work/artenv1-data/built/wall_stone_corner_try3.json",
+      "metadata_sha256": "44b4480b5bc5d41944998a3731f3fbd70d6b137076265c9942a3a2070c650822",
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/built/wall_stone_corner_try3_raw.png",
+        "sha256": "fd77749a9a0b295a7b3132f067d5a9fec13d8f04c621cbbfff91fb1d6c2b9710",
+        "family": "buildings",
+        "metrics": {
+          "edge_density": 0.27710138140950596,
+          "saturation_q25": 0.40634211312955915,
+          "saturation_q75": 0.5485978075073518,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.020146842850297147,
+          "foreground_pixels": 27440
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "operations": [
+        "crop alpha>=128 bounds plus2px fringe (242, 0, 1254, 1080); no alpha edits",
+        "Lanczos contain (116, 124) offset(6, 2)"
+      ],
+      "tone": null,
+      "seam": null,
+      "bytes": 23156,
+      "model": {
+        "scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 5,
+          "palette": 4,
+          "sentence": "Uses the same hand-drawn ink/wash technique and lighting, but stone texture has slightly different line density and color balance (a bit more yellow/gray and higher contrast) than the reference buildings."
+        },
+        "review_id": "judge_buildings_retry",
+        "candidate_raw_sha256": "fd77749a9a0b295a7b3132f067d5a9fec13d8f04c621cbbfff91fb1d6c2b9710",
+        "scorecard_sha256": "b82d2f2b5fd2799a8f19cedde31cd4ec407ba24100e5ef16f5373f7e532e8eb0"
+      },
+      "physical_footprint": [
+        2,
+        2
+      ],
+      "style_pass": true,
+      "reading": "Mottled stone elbow now shares the straight strip's material; front-face depth and baked shadow still differ.",
+      "semantic_pass": true,
+      "required_wrap_pass": true,
+      "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+    },
+    {
+      "id": "door_log_closed",
+      "path": "art/style05/env1/built/door_log_closed.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 3,
+      "selected_attempt": 3,
+      "status": "NUMERIC_FAIL_CANDIDATE",
+      "raw": "/Users/rexxa/work/artenv1-data/built/door_log_closed_try3_raw.png",
+      "raw_sha256": "4f509cc26a90d0600dc158cb300d4934eb21f96c382e6f622131d610a1e505e8",
+      "sha256": "bb29977ba9a4d29d9eebd7f1a0505dfde292fc63d3eb192f3e4ef28adf95fb58",
+      "metadata": "/Users/rexxa/work/artenv1-data/built/door_log_closed_try3.json",
+      "metadata_sha256": "894cda8c71e38a28a30c7470713b8518a40d5b38180df2e611dc2022264efb74",
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/built/door_log_closed_try3_raw.png",
+        "sha256": "4f509cc26a90d0600dc158cb300d4934eb21f96c382e6f622131d610a1e505e8",
+        "family": "buildings",
+        "metrics": {
+          "edge_density": 0.1774033696729435,
+          "saturation_q25": 0.52378724509532,
+          "saturation_q75": 0.5767192137343002,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.03331141837830195,
+          "foreground_pixels": 4162
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "operations": [
+        "crop alpha>=128 bounds plus2px fringe (159, 409, 1377, 614); no alpha edits",
+        "Lanczos contain (60, 10) offset(2, 27)"
+      ],
+      "tone": null,
+      "seam": null,
+      "bytes": 1448,
+      "model": {
+        "scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Matches the hand-drawn ink-and-wash medium, line weight and texture, upper-left lighting, and warm earthy palette almost exactly, with the same wood rendering and rope lashings as the reference structures."
+        },
+        "review_id": "judge_buildings_b",
+        "candidate_raw_sha256": "4f509cc26a90d0600dc158cb300d4934eb21f96c382e6f622131d610a1e505e8",
+        "scorecard_sha256": "816a6cb5e5250c66fd574ce78979547ed5f5e150add2f7f453a573ef3bca171a"
+      },
+      "physical_footprint": [
+        1,
+        1
+      ],
+      "style_pass": false,
+      "reading": "Thin horizontal gate bar reads closed, but it is too slight beside16px walls and fails numeric wash.",
+      "semantic_pass": true,
+      "required_wrap_pass": true,
+      "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+    },
+    {
+      "id": "door_log_open",
+      "path": "art/style05/env1/built/door_log_open.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 3,
+      "selected_attempt": 3,
+      "status": "NUMERIC_FAIL_CANDIDATE",
+      "raw": "/Users/rexxa/work/artenv1-data/built/door_log_open_try3_raw.png",
+      "raw_sha256": "92361e1f42a5860fd7ee918fb7f26f8c9c748e1fac760eb65a6e60e07794a8ee",
+      "sha256": "a0708f809e3e606b165a37303940aa3500024a576f820c99cb455f5f958edb30",
+      "metadata": "/Users/rexxa/work/artenv1-data/built/door_log_open_try3.json",
+      "metadata_sha256": "828e2248ef46a466f1729dd6ea8565a05166c16b6516bfc2a31f4794c5d3f850",
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/built/door_log_open_try3_raw.png",
+        "sha256": "92361e1f42a5860fd7ee918fb7f26f8c9c748e1fac760eb65a6e60e07794a8ee",
+        "family": "buildings",
+        "metrics": {
+          "edge_density": 0.2530546623794212,
+          "saturation_q25": 0.561012910049858,
+          "saturation_q75": 0.6529294824468015,
+          "stroke_q25": 2.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 6.0,
+          "wash_flatness": 0.02989376260201524,
+          "foreground_pixels": 10872
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "operations": [
+        "crop alpha>=128 bounds plus2px fringe (290, 247, 985, 924); no alpha edits",
+        "Lanczos contain (60, 58) offset(2, 3)"
+      ],
+      "tone": null,
+      "seam": null,
+      "bytes": 3049,
+      "model": {
+        "scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Indistinguishable in style, using the same inked contours, wood grain detail, lashings, value treatment, and Earth-tone palette as the reference images, consistent with the same lighting and material look."
+        },
+        "review_id": "judge_buildings_b",
+        "candidate_raw_sha256": "92361e1f42a5860fd7ee918fb7f26f8c9c748e1fac760eb65a6e60e07794a8ee",
+        "scorecard_sha256": "816a6cb5e5250c66fd574ce78979547ed5f5e150add2f7f453a573ef3bca171a"
+      },
+      "physical_footprint": [
+        1,
+        1
+      ],
+      "style_pass": false,
+      "reading": "Two post tops and a north-swung panel leave a clear passage; panel is narrow at half scale.",
+      "semantic_pass": true,
+      "required_wrap_pass": true,
+      "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+    },
+    {
+      "id": "door_stone_closed",
+      "path": "art/style05/env1/built/door_stone_closed.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 2,
+      "selected_attempt": 2,
+      "status": "ACCEPTED_ASSET",
+      "raw": "/Users/rexxa/work/artenv1-data/built/door_stone_closed_try2_raw.png",
+      "raw_sha256": "f0c5f70c05a5fa1c82699c044a99d4c96daaf7a8f3a76474a53daf8e5f0ec2a3",
+      "sha256": "22bbc8627ec0530896c3f3d717953a355bf0064b103e1551c21373f3176a6d0a",
+      "metadata": "/Users/rexxa/work/artenv1-data/built/door_stone_closed_try2.json",
+      "metadata_sha256": "9f9c3b47ecaa64a06f3e82f1fbdcaca3ac25b28b0b0bbaf84312d2c2dd9fe20c",
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/built/door_stone_closed_try2_raw.png",
+        "sha256": "f0c5f70c05a5fa1c82699c044a99d4c96daaf7a8f3a76474a53daf8e5f0ec2a3",
+        "family": "buildings",
+        "metrics": {
+          "edge_density": 0.253411306042885,
+          "saturation_q25": 0.3029331693785756,
+          "saturation_q75": 0.5372186855630472,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.006165589792300896,
+          "foreground_pixels": 13002
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "operations": [
+        "crop alpha>=128 bounds plus2px fringe (17, 309, 1520, 665); no alpha edits",
+        "Lanczos contain (60, 14) offset(2, 25)"
+      ],
+      "tone": null,
+      "seam": null,
+      "bytes": 2649,
+      "model": {
+        "scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Very close match with the same ink-and-wash technique, contour style, and lighting, though the stone textures are slightly cleaner and less gritty/detailed than the more textured natural surfaces in the reference crops."
+        },
+        "review_id": "judge_buildings_b",
+        "candidate_raw_sha256": "f0c5f70c05a5fa1c82699c044a99d4c96daaf7a8f3a76474a53daf8e5f0ec2a3",
+        "scorecard_sha256": "816a6cb5e5250c66fd574ce78979547ed5f5e150add2f7f453a573ef3bca171a"
+      },
+      "physical_footprint": [
+        1,
+        1
+      ],
+      "style_pass": true,
+      "reading": "Timber panel between stone jambs reads shut; front-face emphasis exceeds the pure wall plan.",
+      "semantic_pass": true,
+      "required_wrap_pass": true,
+      "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+    },
+    {
+      "id": "door_stone_open",
+      "path": "art/style05/env1/built/door_stone_open.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 2,
+      "selected_attempt": 2,
+      "status": "ACCEPTED_ASSET",
+      "raw": "/Users/rexxa/work/artenv1-data/built/door_stone_open_try2_raw.png",
+      "raw_sha256": "99b6884663a3380791005df4afc8b765de6fac0298d33e9bd6c1fc0c880b3299",
+      "sha256": "80987ddda368f4464bdcec53ade2e7d4ca158bc1155db581c8341ec14070bf5f",
+      "metadata": "/Users/rexxa/work/artenv1-data/built/door_stone_open_try2.json",
+      "metadata_sha256": "d0681c888ac751b31acc3f0077957a8792c1ad818e6700ed6dbd7d647cce076e",
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/built/door_stone_open_try2_raw.png",
+        "sha256": "99b6884663a3380791005df4afc8b765de6fac0298d33e9bd6c1fc0c880b3299",
+        "family": "buildings",
+        "metrics": {
+          "edge_density": 0.26994091580502216,
+          "saturation_q25": 0.28359888729010296,
+          "saturation_q75": 0.3776963162477076,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.01612434329296433,
+          "foreground_pixels": 6634
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "operations": [
+        "crop alpha>=128 bounds plus2px fringe (56, 91, 1825, 706); no alpha edits",
+        "Lanczos contain (60, 21) offset(2, 21)"
+      ],
+      "tone": null,
+      "seam": null,
+      "bytes": 2054,
+      "model": {
+        "scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Close match in overall style, lighting, and earthy palette, with consistent ink line and shading, but the stone work is a bit smoother and less textured than the rougher, more varied stone rendering in the reference images."
+        },
+        "review_id": "judge_buildings_b",
+        "candidate_raw_sha256": "99b6884663a3380791005df4afc8b765de6fac0298d33e9bd6c1fc0c880b3299",
+        "scorecard_sha256": "816a6cb5e5250c66fd574ce78979547ed5f5e150add2f7f453a573ef3bca171a"
+      },
+      "physical_footprint": [
+        1,
+        1
+      ],
+      "style_pass": true,
+      "reading": "Stone jambs and north-swung narrow panel leave an unambiguous opening.",
+      "semantic_pass": true,
+      "required_wrap_pass": true,
+      "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+    },
+    {
+      "id": "floor_packed_earth",
+      "path": "art/style05/env1/built/floor_packed_earth.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "ground",
+      "attempts": 3,
+      "selected_attempt": 3,
+      "status": "NUMERIC_FAIL_CANDIDATE",
+      "raw": "/Users/rexxa/work/artenv1-data/built/floor_packed_earth_try3_raw.png",
+      "raw_sha256": "1c6d4f49775b2dc60998a51c507debdba6184df806cb1ca42b4c3ccf0cb8c866",
+      "sha256": "0b83ab8da396f218fb53749f4bb3f4ddcd88e612b34bbdc898c1c0fdd577c2eb",
+      "metadata": "/Users/rexxa/work/artenv1-data/built/floor_packed_earth_try3.json",
+      "metadata_sha256": "c131b2a472990818f3676ebf3ccc0640c0752dfedf672084c8543454494edf4a",
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/built/floor_packed_earth_try3_raw.png",
+        "sha256": "1c6d4f49775b2dc60998a51c507debdba6184df806cb1ca42b4c3ccf0cb8c866",
+        "family": "ground",
+        "metrics": {
+          "edge_density": 0.19071239606953894,
+          "saturation_q25": 0.6422228601904085,
+          "saturation_q75": 0.6766931304550038,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.0,
+          "wash_flatness": 0.0026259416839050274,
+          "foreground_pixels": 65536
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": false,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "operations": [
+        "full-frame Lanczos resize",
+        "logged global contrast/chroma/value scales; no local edits"
+      ],
+      "tone": {
+        "before_mean": 0.4391329367723652,
+        "before_std": 0.05952599539620942,
+        "before_saturation": 0.658572749081595,
+        "after_mean": 0.39497853649662995,
+        "after_std": 0.053571034153655904,
+        "after_saturation": 0.28809040743863235,
+        "person_std_cap": 0.16719984851327876,
+        "contrast_scale": 1.0,
+        "chroma_scales": [
+          0.4479904770851135,
+          0.8046167016630278
+        ],
+        "value_scale": 0.898899633356836
+      },
+      "seam": {
+        "horizontal_mae": 7.828125,
+        "vertical_mae": 6.1875,
+        "horizontal_ratio": 1.2145065093311103,
+        "vertical_ratio": 0.885078404011258,
+        "passed": true
+      },
+      "bytes": 8474,
+      "model": {
+        "scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 5,
+          "sentence": "Matches the hand-painted ink-and-wash texture, crisp natural contours and speckled watercolor grain seen in the references, with the same warm earth palette and upper-left lighting."
+        },
+        "review_id": "judge_ground_a",
+        "candidate_raw_sha256": "1c6d4f49775b2dc60998a51c507debdba6184df806cb1ca42b4c3ccf0cb8c866",
+        "scorecard_sha256": "34d4df7ec86b5ca3ecfd6028960409d4370841b0eb0d4ba7a65be6939499ac9b"
+      },
+      "physical_footprint": [
+        1,
+        1
+      ],
+      "style_pass": false,
+      "reading": "Quiet ochre cracked-earth repeat is distinct from rock, but raw style metrics fail after three attempts.",
+      "semantic_pass": true,
+      "required_wrap_axes": [
+        "horizontal",
+        "vertical"
+      ],
+      "required_wrap_pass": true,
+      "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+    },
+    {
+      "id": "floor_dug_rock",
+      "path": "art/style05/env1/built/floor_dug_rock.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "ground",
+      "attempts": 3,
+      "selected_attempt": 3,
+      "status": "NUMERIC_FAIL_CANDIDATE",
+      "raw": "/Users/rexxa/work/artenv1-data/built/floor_dug_rock_try3_raw.png",
+      "raw_sha256": "d42563077d99156ba44018056bc54bc5b9a107168b60bef15bb6fc1da2fc4bca",
+      "sha256": "703cc65ecd935228095c25f1814fb989ac97a9e587ae41b3f4d4e336eb8729d3",
+      "metadata": "/Users/rexxa/work/artenv1-data/built/floor_dug_rock_try3.json",
+      "metadata_sha256": "9ca806483c1b922b9bf166fcffa41765425fa82ee4c2476e9466d3249d4f7f2c",
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/built/floor_dug_rock_try3_raw.png",
+        "sha256": "d42563077d99156ba44018056bc54bc5b9a107168b60bef15bb6fc1da2fc4bca",
+        "family": "ground",
+        "metrics": {
+          "edge_density": 0.23707168052406147,
+          "saturation_q25": 0.33243213789774767,
+          "saturation_q75": 0.372079657233557,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.002512073463155339,
+          "foreground_pixels": 65536
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "operations": [
+        "full-frame Lanczos resize",
+        "logged global contrast/chroma/value scales; no local edits"
+      ],
+      "tone": {
+        "before_mean": 0.41877233503753064,
+        "before_std": 0.07485839306477224,
+        "before_saturation": 0.3517153158186261,
+        "after_mean": 0.39498856971890317,
+        "after_std": 0.07068226342576282,
+        "after_saturation": 0.2881291525266113,
+        "person_std_cap": 0.16719984851327876,
+        "contrast_scale": 1.0,
+        "chroma_scales": [
+          0.980462372303009,
+          0.8051190037394789
+        ],
+        "value_scale": 0.9428946671426399
+      },
+      "seam": {
+        "horizontal_mae": 10.354166666666666,
+        "vertical_mae": 9.932291666666666,
+        "horizontal_ratio": 1.0455296769346354,
+        "vertical_ratio": 0.9033905059816977,
+        "passed": true
+      },
+      "bytes": 9985,
+      "model": {
+        "scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Uses the same illustrative brushwork, inked edges and watercolor washes with consistent lighting and a slightly cooler, natural stone palette that still fits the reference style."
+        },
+        "review_id": "judge_ground_a",
+        "candidate_raw_sha256": "d42563077d99156ba44018056bc54bc5b9a107168b60bef15bb6fc1da2fc4bca",
+        "scorecard_sha256": "34d4df7ec86b5ca3ecfd6028960409d4370841b0eb0d4ba7a65be6939499ac9b"
+      },
+      "physical_footprint": [
+        1,
+        1
+      ],
+      "style_pass": false,
+      "reading": "Broad grey excavation slabs remain visible under the tone cap; raw wash metric fails after three attempts.",
+      "semantic_pass": true,
+      "required_wrap_axes": [
+        "horizontal",
+        "vertical"
+      ],
+      "required_wrap_pass": true,
+      "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+    },
+    {
+      "id": "bedroll",
+      "path": "art/style05/env1/built/bedroll.png",
+      "width": 64,
+      "height": 128,
+      "footprint": [
+        1,
+        2
+      ],
+      "family": "items",
+      "attempts": 2,
+      "selected_attempt": 2,
+      "status": "ACCEPTED_ASSET",
+      "raw": "/Users/rexxa/work/artenv1-data/built/bedroll_try2_raw.png",
+      "raw_sha256": "a893c88570fd5307f261c66b060e7792cfda18a85e62e4453abaeb36eb560522",
+      "sha256": "320b0bcd6885847d582ed1aa2bee756c2d49184cce52b1fe4e45e3bfbe022462",
+      "metadata": "/Users/rexxa/work/artenv1-data/built/bedroll_try2.json",
+      "metadata_sha256": "2661705cec809933ac84a45ec8ade10cf4239ed0b33792cfb7361f80618e57db",
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/built/bedroll_try2_raw.png",
+        "sha256": "a893c88570fd5307f261c66b060e7792cfda18a85e62e4453abaeb36eb560522",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.22723129510064566,
+          "saturation_q25": 0.35466952890329173,
+          "saturation_q75": 0.5114421542625155,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.016399780547801782,
+          "foreground_pixels": 27733
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "operations": [
+        "crop alpha>=128 bounds plus2px fringe (134, 226, 761, 1586); no alpha edits",
+        "Lanczos contain (57, 124) offset(3, 2)"
+      ],
+      "tone": null,
+      "seam": null,
+      "bytes": 19754,
+      "model": {
+        "scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Matches the same hand-drawn ink-and-wash medium with textured brushwork, strong dark contours, natural earth tones, and consistent upper-left lighting and shadow treatment as the reference items."
+        },
+        "review_id": "judge_items",
+        "candidate_raw_sha256": "a893c88570fd5307f261c66b060e7792cfda18a85e62e4453abaeb36eb560522",
+        "scorecard_sha256": "25f9e6b1f8c1167574f715f7e5f760d259f7416bcf19ac463d5f109b95f564c4"
+      },
+      "physical_footprint": [
+        1,
+        1
+      ],
+      "style_pass": true,
+      "reading": "Rolled fur pillow and long hide mat read as a sleeping place at1x and half scale.",
+      "semantic_pass": true,
+      "required_wrap_pass": true,
+      "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+    },
+    {
+      "id": "drying_rack_empty",
+      "path": "art/style05/env1/built/drying_rack_empty.png",
+      "width": 128,
+      "height": 64,
+      "footprint": [
+        2,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 3,
+      "selected_attempt": 3,
+      "status": "ACCEPTED_ASSET",
+      "raw": "/Users/rexxa/work/artenv1-data/built/drying_rack_empty_try3_raw.png",
+      "raw_sha256": "3a40a42598220f5c89e935406744b6e0140ba69f719e22ffa900c597fddb46b9",
+      "sha256": "50e32910561dbe492ce8bcd9897824ab7fb31970beeeda40a4c9403c0126d7a9",
+      "metadata": "/Users/rexxa/work/artenv1-data/built/drying_rack_empty_try3.json",
+      "metadata_sha256": "2046863f095c0d6dc4a273ebfdba545d8b11d4f32d3284705d6da8fd2a5a5f6a",
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/built/drying_rack_empty_try3_raw.png",
+        "sha256": "3a40a42598220f5c89e935406744b6e0140ba69f719e22ffa900c597fddb46b9",
+        "family": "buildings",
+        "metrics": {
+          "edge_density": 0.2142129912441458,
+          "saturation_q25": 0.5342407774113103,
+          "saturation_q75": 0.5623953604096625,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.018040821644675954,
+          "foreground_pixels": 8042
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "operations": [
+        "crop alpha>=128 bounds plus2px fringe (104, 113, 1670, 772); no alpha edits",
+        "Lanczos contain (124, 52) offset(2, 6)"
+      ],
+      "tone": null,
+      "seam": null,
+      "bytes": 8896,
+      "model": {
+        "scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Matches the hand-drawn ink linework, textured brush/wash rendering, wood grain detail, and same upper-left sunlight and natural earth tones as the reference buildings."
+        },
+        "review_id": "judge_buildings_c",
+        "candidate_raw_sha256": "3a40a42598220f5c89e935406744b6e0140ba69f719e22ffa900c597fddb46b9",
+        "scorecard_sha256": "dc5934bf68b9cea98d8abe9928c93bec63c708c40e15e9932ea5977b5287d998"
+      },
+      "physical_footprint": [
+        2,
+        1
+      ],
+      "style_pass": true,
+      "reading": "Four poles and thin tension ropes surround an empty center, distinct from the filled rack.",
+      "semantic_pass": true,
+      "required_wrap_pass": true,
+      "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+    },
+    {
+      "id": "drying_rack_hide",
+      "path": "art/style05/env1/built/drying_rack_hide.png",
+      "width": 128,
+      "height": 64,
+      "footprint": [
+        2,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 3,
+      "selected_attempt": 3,
+      "status": "ACCEPTED_ASSET",
+      "raw": "/Users/rexxa/work/artenv1-data/built/drying_rack_hide_try3_raw.png",
+      "raw_sha256": "7d718dd21874a71ba553e94d2b92275775bc10967234097c1c34e8d4697b4467",
+      "sha256": "71d576287f37e881b4f94456546a361c55b6ba7b49721b377a0c4cdac8121dda",
+      "metadata": "/Users/rexxa/work/artenv1-data/built/drying_rack_hide_try3.json",
+      "metadata_sha256": "08bbbeb00b04173b4c980de4089550642f0f6aabe7f0712f70a872ad46fc5c9f",
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/built/drying_rack_hide_try3_raw.png",
+        "sha256": "7d718dd21874a71ba553e94d2b92275775bc10967234097c1c34e8d4697b4467",
+        "family": "buildings",
+        "metrics": {
+          "edge_density": 0.1731744664561202,
+          "saturation_q25": 0.3667687807743833,
+          "saturation_q75": 0.517580927277522,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.012528981584417486,
+          "foreground_pixels": 24698
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "operations": [
+        "crop alpha>=128 bounds plus2px fringe (319, 85, 1465, 793); no alpha edits",
+        "Lanczos contain (97, 60) offset(15, 2)"
+      ],
+      "tone": null,
+      "seam": null,
+      "bytes": 13725,
+      "model": {
+        "scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Uses the identical illustration technique and contour style, with consistent wood and hide textures, shading, and the same muted, earthy color palette and lighting direction."
+        },
+        "review_id": "judge_buildings_c",
+        "candidate_raw_sha256": "7d718dd21874a71ba553e94d2b92275775bc10967234097c1c34e8d4697b4467",
+        "scorecard_sha256": "dc5934bf68b9cea98d8abe9928c93bec63c708c40e15e9932ea5977b5287d998"
+      },
+      "physical_footprint": [
+        2,
+        1
+      ],
+      "style_pass": true,
+      "reading": "A pale stretched hide fills the lashed frame and distinguishes the active rack.",
+      "semantic_pass": true,
+      "required_wrap_pass": true,
+      "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+    },
+    {
+      "id": "pottery_bench",
+      "path": "art/style05/env1/built/pottery_bench.png",
+      "width": 128,
+      "height": 64,
+      "footprint": [
+        2,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 1,
+      "selected_attempt": 1,
+      "status": "ACCEPTED_ASSET",
+      "raw": "/Users/rexxa/work/artenv1-data/built/pottery_bench_try1_raw.png",
+      "raw_sha256": "afbf7ae0d2581b14d629b915001dac21ed314b9e419217694bde49e89181da2e",
+      "sha256": "dfca911c50b63dfab024319d784e42647db327d6f4b83e563bebc809c60e07ff",
+      "metadata": "/Users/rexxa/work/artenv1-data/built/pottery_bench_try1.json",
+      "metadata_sha256": "fbec450714171829f5fd96ea35c3e1d5c9f4f99de480ab3c107d3f4b8b93a375",
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/built/pottery_bench_try1_raw.png",
+        "sha256": "afbf7ae0d2581b14d629b915001dac21ed314b9e419217694bde49e89181da2e",
+        "family": "buildings",
+        "metrics": {
+          "edge_density": 0.25011317338162065,
+          "saturation_q25": 0.5443520995285948,
+          "saturation_q75": 0.7246756424292685,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.013583667323562617,
+          "foreground_pixels": 19065
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "operations": [
+        "crop alpha>=128 bounds plus2px fringe (91, 162, 1684, 748); no alpha edits",
+        "Lanczos contain (124, 46) offset(2, 9)"
+      ],
+      "tone": null,
+      "seam": null,
+      "bytes": 15151,
+      "model": {
+        "scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Very close match in ink-and-wash technique, materials, and lighting, with slightly heavier outlines and marginally warmer, more saturated browns in the pottery and wood giving a mild drift from the reference."
+        },
+        "review_id": "judge_buildings_c",
+        "candidate_raw_sha256": "afbf7ae0d2581b14d629b915001dac21ed314b9e419217694bde49e89181da2e",
+        "scorecard_sha256": "dc5934bf68b9cea98d8abe9928c93bec63c708c40e15e9932ea5977b5287d998"
+      },
+      "physical_footprint": [
+        1,
+        1
+      ],
+      "style_pass": true,
+      "reading": "Two clay pots, clay coil and bone scraper identify a pottery work surface.",
+      "semantic_pass": true,
+      "required_wrap_pass": true,
+      "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+    },
+    {
+      "id": "grinding_stone",
+      "path": "art/style05/env1/built/grinding_stone.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 1,
+      "selected_attempt": 1,
+      "status": "ACCEPTED_ASSET",
+      "raw": "/Users/rexxa/work/artenv1-data/built/grinding_stone_try1_raw.png",
+      "raw_sha256": "4c19312eb4480c50f0a9a3920b162e14d2c4a57e2bde1c42c82bd46972638068",
+      "sha256": "c1a2e6a06b4cc723e780b4a5903716c325740ee86c6712bf91043a31aedc5c85",
+      "metadata": "/Users/rexxa/work/artenv1-data/built/grinding_stone_try1.json",
+      "metadata_sha256": "17bec750d3d5aab893f6cd40a716005c8a09abf250d7ef934d5dfde498a23872",
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/built/grinding_stone_try1_raw.png",
+        "sha256": "4c19312eb4480c50f0a9a3920b162e14d2c4a57e2bde1c42c82bd46972638068",
+        "family": "buildings",
+        "metrics": {
+          "edge_density": 0.2817235756761941,
+          "saturation_q25": 0.271465187204293,
+          "saturation_q75": 0.39243225466843634,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.010654841159839322,
+          "foreground_pixels": 43060
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "operations": [
+        "crop alpha>=128 bounds plus2px fringe (216, 118, 1073, 1142); no alpha edits",
+        "Lanczos contain (50, 60) offset(7, 2)"
+      ],
+      "tone": null,
+      "seam": null,
+      "bytes": 8034,
+      "model": {
+        "scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Consistent hand-drawn linework and watercolor-style rendering with the same rock texture treatment, highlight direction, and natural earth color palette as the reference images."
+        },
+        "review_id": "judge_buildings_c",
+        "candidate_raw_sha256": "4c19312eb4480c50f0a9a3920b162e14d2c4a57e2bde1c42c82bd46972638068",
+        "scorecard_sha256": "dc5934bf68b9cea98d8abe9928c93bec63c708c40e15e9932ea5977b5287d998"
+      },
+      "physical_footprint": [
+        1,
+        1
+      ],
+      "style_pass": true,
+      "reading": "Oval quern basin and oblong hand-stone read as a two-stone grinding work spot.",
+      "semantic_pass": true,
+      "required_wrap_pass": true,
+      "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+    },
+    {
+      "id": "hearth_pots",
+      "path": "art/style05/env1/built/hearth_pots.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "items",
+      "attempts": 1,
+      "selected_attempt": 1,
+      "status": "ACCEPTED_ASSET",
+      "raw": "/Users/rexxa/work/artenv1-data/built/hearth_pots_try1_raw.png",
+      "raw_sha256": "3a9919e95cc526b13650e1a36143b04c173f07beb0786b890ba033a2879d5101",
+      "sha256": "ba81c172deaeda34e27210ee33ec4f935c9d676c08afacbff4a09b43dc69b034",
+      "metadata": "/Users/rexxa/work/artenv1-data/built/hearth_pots_try1.json",
+      "metadata_sha256": "7c6d7e95492a6d808f00f63f61cad784e7b9faa8eab9e68625815978b72144e4",
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/built/hearth_pots_try1_raw.png",
+        "sha256": "3a9919e95cc526b13650e1a36143b04c173f07beb0786b890ba033a2879d5101",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.27607927155865025,
+          "saturation_q25": 0.37148105222075667,
+          "saturation_q75": 0.6950633665123456,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.013876370749801453,
+          "foreground_pixels": 48188
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "operations": [
+        "crop alpha>=128 bounds plus2px fringe (184, 158, 1067, 1071); no alpha edits",
+        "Lanczos contain (58, 60) offset(3, 2)"
+      ],
+      "tone": null,
+      "seam": null,
+      "bytes": 9727,
+      "model": {
+        "scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Very close match with the same illustrative ink-and-wash style, detailed outlines and textures, and consistent upper-left lighting, with only minor differences due to denser glow and warmer oranges from the fire."
+        },
+        "review_id": "judge_items",
+        "candidate_raw_sha256": "3a9919e95cc526b13650e1a36143b04c173f07beb0786b890ba033a2879d5101",
+        "scorecard_sha256": "25f9e6b1f8c1167574f715f7e5f760d259f7416bcf19ac463d5f109b95f564c4"
+      },
+      "physical_footprint": [
+        1,
+        1
+      ],
+      "style_pass": true,
+      "reading": "Orange fire and three clay pots read as a firing hearth; individual pots soften at half scale.",
+      "semantic_pass": true,
+      "required_wrap_pass": true,
+      "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+    },
+    {
+      "id": "hearth_unlit",
+      "path": "art/style05/env1/built/hearth_unlit.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "items",
+      "attempts": 1,
+      "selected_attempt": 1,
+      "status": "ACCEPTED_ASSET",
+      "raw": "/Users/rexxa/work/artenv1-data/built/hearth_unlit_try1_raw.png",
+      "raw_sha256": "fbdc2646eb1566dc135bacfe101e18f9d7b42f17f5ce835d3e5e279ce5e94dad",
+      "sha256": "67b400120acb3d6dbe0d63cf382e50f28bf7d3590aef945a25ca580f8dc795b1",
+      "metadata": "/Users/rexxa/work/artenv1-data/built/hearth_unlit_try1.json",
+      "metadata_sha256": "cf16d74066ddda7e9b365a96d35ad8492980ff9742278b83f3500d68ee5b3b78",
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/built/hearth_unlit_try1_raw.png",
+        "sha256": "fbdc2646eb1566dc135bacfe101e18f9d7b42f17f5ce835d3e5e279ce5e94dad",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.27595376466299243,
+          "saturation_q25": 0.23996583630945573,
+          "saturation_q75": 0.3608763250068623,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.018546072372900468,
+          "foreground_pixels": 48199
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "operations": [
+        "crop alpha>=128 bounds plus2px fringe (75, 67, 1181, 1171); no alpha edits",
+        "Lanczos contain (60, 60) offset(2, 2)"
+      ],
+      "tone": null,
+      "seam": null,
+      "bytes": 9952,
+      "model": {
+        "scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Indistinguishable in style, using the same inked contours, watercolor texture, stone and wood rendering, muted earth palette, and upper-left lighting and shadows as the reference items."
+        },
+        "review_id": "judge_items",
+        "candidate_raw_sha256": "fbdc2646eb1566dc135bacfe101e18f9d7b42f17f5ce835d3e5e279ce5e94dad",
+        "scorecard_sha256": "25f9e6b1f8c1167574f715f7e5f760d259f7416bcf19ac463d5f109b95f564c4"
+      },
+      "physical_footprint": [
+        1,
+        1
+      ],
+      "style_pass": true,
+      "reading": "Cold ash and crossed dark logs read as extinguished, with no flame or warm glow.",
+      "semantic_pass": true,
+      "required_wrap_pass": true,
+      "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+    },
+    {
+      "id": "claybank_full",
+      "path": "art/style05/env1/built/claybank_full.png",
+      "width": 128,
+      "height": 128,
+      "footprint": [
+        2,
+        2
+      ],
+      "family": "ground",
+      "attempts": 2,
+      "selected_attempt": 2,
+      "status": "ACCEPTED_ASSET",
+      "raw": "/Users/rexxa/work/artenv1-data/built/claybank_full_try2_raw.png",
+      "raw_sha256": "585ae7469bcf665e12713474d27abc8a3cad30b10dfb945d943c3273a05e7627",
+      "sha256": "7da5b29b0a26508d87e757dc07e140efa4ea01d61c1a3532b2187034f8aff608",
+      "metadata": "/Users/rexxa/work/artenv1-data/built/claybank_full_try2.json",
+      "metadata_sha256": "1015d94166a1721a1b956c56c90c9f2b65954594bb2bd27cac1c088209ad177b",
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/built/claybank_full_try2_raw.png",
+        "sha256": "585ae7469bcf665e12713474d27abc8a3cad30b10dfb945d943c3273a05e7627",
+        "family": "ground",
+        "metrics": {
+          "edge_density": 0.25604511960585175,
+          "saturation_q25": 0.3344035358930022,
+          "saturation_q75": 0.4580731892850019,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.007197180214347073,
+          "foreground_pixels": 48081
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "operations": [
+        "crop alpha>=128 bounds plus2px fringe (66, 112, 1208, 1187); no alpha edits",
+        "Lanczos contain (124, 117) offset(2, 5)"
+      ],
+      "tone": null,
+      "seam": null,
+      "bytes": 36372,
+      "model": {
+        "scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Matches the same hand-drawn ink and watercolor wash style with similar line weight, textured brushwork, upper-left lighting, and earthy brown-green palette with muted natural tones."
+        },
+        "review_id": "judge_ground_retry",
+        "candidate_raw_sha256": "585ae7469bcf665e12713474d27abc8a3cad30b10dfb945d943c3273a05e7627",
+        "scorecard_sha256": "97170a31baba46d1c7d096f203e9cba9789316711dc33bb3e4b8a874bc56d2f0"
+      },
+      "physical_footprint": [
+        1,
+        1
+      ],
+      "style_pass": true,
+      "reading": "Broad tawny clay exposure reads fuller than the scraped hollow; muted palette reduces state contrast at half scale.",
+      "semantic_pass": true,
+      "required_wrap_pass": true,
+      "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+    },
+    {
+      "id": "claybank_depleted",
+      "path": "art/style05/env1/built/claybank_depleted.png",
+      "width": 128,
+      "height": 128,
+      "footprint": [
+        2,
+        2
+      ],
+      "family": "ground",
+      "attempts": 1,
+      "selected_attempt": 1,
+      "status": "ACCEPTED_ASSET",
+      "raw": "/Users/rexxa/work/artenv1-data/built/claybank_depleted_try1_raw.png",
+      "raw_sha256": "44d2e9c045b245c504690d44dc6ab1fd435370bce489135e786de1dd38a3b096",
+      "sha256": "3439fa091a328e298f07a5e2d638e8d9c460be4b11c58588eea5d6864343ad6e",
+      "metadata": "/Users/rexxa/work/artenv1-data/built/claybank_depleted_try1.json",
+      "metadata_sha256": "af9e7d8894a7e0656b86ca56255fdabf72bba78058dd3fc22d849e0e31b7f3bb",
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/built/claybank_depleted_try1_raw.png",
+        "sha256": "44d2e9c045b245c504690d44dc6ab1fd435370bce489135e786de1dd38a3b096",
+        "family": "ground",
+        "metrics": {
+          "edge_density": 0.27737003834725854,
+          "saturation_q25": 0.43078525254543476,
+          "saturation_q75": 0.5483669197236984,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.007849569879751626,
+          "foreground_pixels": 40862
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "operations": [
+        "crop alpha>=128 bounds plus2px fringe (27, 97, 1226, 1170); no alpha edits",
+        "Lanczos contain (124, 111) offset(2, 8)"
+      ],
+      "tone": null,
+      "seam": null,
+      "bytes": 31102,
+      "model": {
+        "scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Closely matches the ink-and-wash technique, edge treatment and upper-left lighting with natural earth tones, with only slightly stronger line weight and texture detail but still clearly within the same style family."
+        },
+        "review_id": "judge_ground_a",
+        "candidate_raw_sha256": "44d2e9c045b245c504690d44dc6ab1fd435370bce489135e786de1dd38a3b096",
+        "scorecard_sha256": "34d4df7ec86b5ca3ecfd6028960409d4370841b0eb0d4ba7a65be6939499ac9b"
+      },
+      "physical_footprint": [
+        1,
+        1
+      ],
+      "style_pass": true,
+      "reading": "Scraped grey-brown hollow and small clay rim read depleted.",
+      "semantic_pass": true,
+      "required_wrap_pass": true,
+      "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+    },
+    {
+      "id": "ford",
+      "path": "art/style05/env1/built/ford.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "ground",
+      "attempts": 1,
+      "selected_attempt": 1,
+      "status": "ACCEPTED_ASSET",
+      "raw": "/Users/rexxa/work/artenv1-data/built/ford_try1_raw.png",
+      "raw_sha256": "36dd1c990f2ca53a3a889c70885881b134246db46308a6e191163120c410de19",
+      "sha256": "19d8ce773d3e408d75652beb9cb519fd0b4dfd1a0628cef6b690359345d3101a",
+      "metadata": "/Users/rexxa/work/artenv1-data/built/ford_try1.json",
+      "metadata_sha256": "461c801c0831d8b5ee56520bac0a95744aaeb5772b110ca746af06a2df795ca5",
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/built/ford_try1_raw.png",
+        "sha256": "36dd1c990f2ca53a3a889c70885881b134246db46308a6e191163120c410de19",
+        "family": "ground",
+        "metrics": {
+          "edge_density": 0.31193310657596374,
+          "saturation_q25": 0.14036034467803238,
+          "saturation_q75": 0.32565137690628404,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.00715064433003762,
+          "foreground_pixels": 65536
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "operations": [
+        "full-frame Lanczos resize",
+        "logged global contrast/chroma/value scales; no local edits"
+      ],
+      "tone": {
+        "before_mean": 0.4439736154833027,
+        "before_std": 0.08980821978261484,
+        "before_saturation": 0.22233674552463098,
+        "after_mean": 0.3950590712124694,
+        "after_std": 0.07986063724367529,
+        "after_saturation": 0.22218538502174862,
+        "person_std_cap": 0.16719984851327876,
+        "contrast_scale": 1.0,
+        "chroma_scales": [
+          0.9999999403953552,
+          1.0
+        ],
+        "value_scale": 0.8896925092496977
+      },
+      "seam": {
+        "horizontal_mae": 14.770833333333334,
+        "vertical_mae": 16.744791666666668,
+        "horizontal_ratio": 0.9684007414714523,
+        "vertical_ratio": 0.9773875530205425,
+        "passed": true
+      },
+      "bytes": 11289,
+      "model": {
+        "scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Same hand-painted ink-and-wash look with textured watercolor washes, crisp ink contours, pebble detail, and the same warm natural palette and upper-left lighting as the reference."
+        },
+        "review_id": "judge_ground_b",
+        "candidate_raw_sha256": "36dd1c990f2ca53a3a889c70885881b134246db46308a6e191163120c410de19",
+        "scorecard_sha256": "4b84dfd8086a5e08185f6da422ab83f4222561b2ae6d96f57432ccd6c8142413"
+      },
+      "physical_footprint": [
+        1,
+        1
+      ],
+      "style_pass": true,
+      "reading": "Blue shallow water and central gravel crossing read as a ford; repeat check passes along the river.",
+      "semantic_pass": true,
+      "required_wrap_axes": [
+        "vertical"
+      ],
+      "required_wrap_pass": true,
+      "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+    },
+    {
+      "id": "hill_edge",
+      "path": "art/style05/env1/built/hill_edge.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "ground",
+      "attempts": 1,
+      "selected_attempt": 1,
+      "status": "ACCEPTED_ASSET",
+      "raw": "/Users/rexxa/work/artenv1-data/built/hill_edge_try1_raw.png",
+      "raw_sha256": "9a0960359ef6197d519262b5d7849c93ac0f469f6f812cadcaa148da12b74b4e",
+      "sha256": "08d31a907d3eb27fa8440ff491d81252ffa38cee6d4b79155b59886f306dc3cb",
+      "metadata": "/Users/rexxa/work/artenv1-data/built/hill_edge_try1.json",
+      "metadata_sha256": "8a009f3323118baee223c39e753b42aab5436f0962e8eb5697bd95974b6e3f73",
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/built/hill_edge_try1_raw.png",
+        "sha256": "9a0960359ef6197d519262b5d7849c93ac0f469f6f812cadcaa148da12b74b4e",
+        "family": "ground",
+        "metrics": {
+          "edge_density": 0.27521101033005796,
+          "saturation_q25": 0.4327271236398551,
+          "saturation_q75": 0.5164360678312114,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.0062833956563972575,
+          "foreground_pixels": 65536
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "operations": [
+        "full-frame Lanczos resize",
+        "logged global contrast/chroma/value scales; no local edits"
+      ],
+      "tone": {
+        "before_mean": 0.39733458199295346,
+        "before_std": 0.11972158141888639,
+        "before_saturation": 0.45870584841100237,
+        "after_mean": 0.3952171999463848,
+        "after_std": 0.11908569205643754,
+        "after_saturation": 0.2878161812210077,
+        "person_std_cap": 0.16719984851327876,
+        "contrast_scale": 1.0,
+        "chroma_scales": [
+          0.7181071043014526,
+          0.8047682634741863
+        ],
+        "value_scale": 0.9941722830326398
+      },
+      "seam": {
+        "horizontal_mae": 6.78125,
+        "vertical_mae": 51.484375,
+        "horizontal_ratio": 0.559019164190497,
+        "vertical_ratio": 3.972791936461357,
+        "passed": false
+      },
+      "bytes": 10531,
+      "model": {
+        "scores": {
+          "medium": 5,
+          "line": 5,
+          "light": 5,
+          "palette": 5,
+          "sentence": "Virtually identical rendering style, with matching ink line quality, stippled watercolor texture, rock and soil treatment, and the same color range and lighting direction as the reference images."
+        },
+        "review_id": "judge_ground_b",
+        "candidate_raw_sha256": "9a0960359ef6197d519262b5d7849c93ac0f469f6f812cadcaa148da12b74b4e",
+        "scorecard_sha256": "4b84dfd8086a5e08185f6da422ab83f4222561b2ae6d96f57432ccd6c8142413"
+      },
+      "physical_footprint": [
+        1,
+        1
+      ],
+      "style_pass": true,
+      "reading": "A low broken stone ledge separates high and low ground; horizontal repeat passes.",
+      "semantic_pass": true,
+      "required_wrap_axes": [
+        "horizontal"
+      ],
+      "required_wrap_pass": true,
+      "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+    },
+    {
+      "id": "dug_face",
+      "path": "art/style05/env1/built/dug_face.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "ground",
+      "attempts": 3,
+      "selected_attempt": 3,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "raw": "/Users/rexxa/work/artenv1-data/built/dug_face_try3_raw.png",
+      "raw_sha256": "6d87a34ef11ecb9d4deb07a3caf2f7500b7d07465a10b528889b3905181d6499",
+      "sha256": "ce737879a8348e83e5262fba2823dd55187121fdfa06195a58307cfc072fe8bc",
+      "metadata": "/Users/rexxa/work/artenv1-data/built/dug_face_try3.json",
+      "metadata_sha256": "96b372787d1c92c56c7f48174b00eb7cae36fafa42ccd1eece6a55ea384167aa",
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/built/dug_face_try3_raw.png",
+        "sha256": "6d87a34ef11ecb9d4deb07a3caf2f7500b7d07465a10b528889b3905181d6499",
+        "family": "ground",
+        "metrics": {
+          "edge_density": 0.2701719576719577,
+          "saturation_q25": 0.4327301011794329,
+          "saturation_q75": 0.6375355589672032,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.008562957941830521,
+          "foreground_pixels": 65536
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "operations": [
+        "full-frame Lanczos resize",
+        "logged global contrast/chroma/value scales; no local edits"
+      ],
+      "tone": {
+        "before_mean": 0.3632618905101103,
+        "before_std": 0.130938111055168,
+        "before_saturation": 0.5286676173570539,
+        "after_mean": 0.3630405650658701,
+        "after_std": 0.13052019168201623,
+        "after_saturation": 0.28918302340355395,
+        "person_std_cap": 0.16719984851327876,
+        "contrast_scale": 1.0,
+        "chroma_scales": [
+          0.592481791973114,
+          0.8046745407665019
+        ],
+        "value_scale": 1.0
+      },
+      "seam": {
+        "horizontal_mae": 21.697916666666668,
+        "vertical_mae": 54.333333333333336,
+        "horizontal_ratio": 1.8937456707457863,
+        "vertical_ratio": 4.235840057748331,
+        "passed": false
+      },
+      "bytes": 10216,
+      "model": {
+        "scores": {
+          "medium": 4,
+          "line": 4,
+          "light": 4,
+          "palette": 4,
+          "sentence": "Consistent ink-and-wash technique and palette with matching linework and lighting, with only a slightly heavier, chunkier rock texture and broader wash areas but still clearly the same style family."
+        },
+        "review_id": "judge_ground_b",
+        "candidate_raw_sha256": "6d87a34ef11ecb9d4deb07a3caf2f7500b7d07465a10b528889b3905181d6499",
+        "scorecard_sha256": "4b84dfd8086a5e08185f6da422ab83f4222561b2ae6d96f57432ccd6c8142413"
+      },
+      "physical_footprint": [
+        1,
+        1
+      ],
+      "style_pass": true,
+      "reading": "Cut rock face and darker excavated floor are distinct; horizontal boundary exceeds the seam limit.",
+      "semantic_pass": true,
+      "required_wrap_axes": [
+        "horizontal"
+      ],
+      "required_wrap_pass": false,
+      "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+    },
+    {
+      "id": "snow_overlay",
+      "path": "art/style05/env1/built/snow_overlay.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "ground",
+      "attempts": 1,
+      "selected_attempt": 1,
+      "status": "NUMERIC_MODEL_SEMANTIC_SEAM_FAIL_CANDIDATE",
+      "raw": "/Users/rexxa/work/artenv1-data/built/snow_overlay_try1_raw.png",
+      "raw_sha256": "2316e9b9b104240f92e301388804a6efcd0c926fd147e5ec9e415470394f40ee",
+      "sha256": "412e01a22c0520c3d6225bfdef00ff84b37bbb5dc24944bb015a858377426012",
+      "metadata": "/Users/rexxa/work/artenv1-data/built/snow_overlay_try1.json",
+      "metadata_sha256": "9b72af40895e1b8d9ecb110a663b31ada6e44ac6cc10c85c9369ba29259087d3",
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artenv1-data/built/snow_overlay_try1_raw.png",
+        "sha256": "2316e9b9b104240f92e301388804a6efcd0c926fd147e5ec9e415470394f40ee",
+        "family": "ground",
+        "metrics": {
+          "edge_density": 0.22403741752275955,
+          "saturation_q25": 0.06227762845703251,
+          "saturation_q75": 0.35128866011826837,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.0326259571266309,
+          "foreground_pixels": 62478
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "operations": [
+        "full-frame Lanczos resize",
+        "global alpha multiplied by 0.6; maximum153/255"
+      ],
+      "tone": null,
+      "seam": {
+        "horizontal_mae": 32.09375,
+        "vertical_mae": 28.6875,
+        "horizontal_ratio": 1.2415599534342259,
+        "vertical_ratio": 0.9606976744186047,
+        "passed": false
+      },
+      "bytes": 13816,
+      "model": {
+        "scores": {
+          "medium": 3,
+          "line": 3,
+          "light": 4,
+          "palette": 3,
+          "sentence": "Same overall technique and lighting, but snow rendered with brighter, cooler whites and softer, more diffuse treatment that looks less earthy and slightly different in texture and color balance compared to the reference style."
+        },
+        "review_id": "judge_ground_b",
+        "candidate_raw_sha256": "2316e9b9b104240f92e301388804a6efcd0c926fd147e5ec9e415470394f40ee",
+        "scorecard_sha256": "4b84dfd8086a5e08185f6da422ab83f4222561b2ae6d96f57432ccd6c8142413"
+      },
+      "physical_footprint": [
+        1,
+        1
+      ],
+      "style_pass": false,
+      "reading": "Snow patches contain baked soil and vegetation between them instead of clean transparent gaps; overlay semantics fail.",
+      "semantic_pass": false,
+      "required_wrap_axes": [
+        "horizontal",
+        "vertical"
+      ],
+      "required_wrap_pass": false,
+      "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+    },
+    {
+      "id": "wall_log_00",
+      "path": "art/style05/env1/built/wall_log_00.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "0e427d45bdabf959dabda5eb4a7e6bc75ebdf1d00fd09c8b54849f58309aec7e",
+      "recipe": {
+        "mask": 0,
+        "core": "end",
+        "clockwise_arm_rotations": []
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_log_straight",
+        "wall_log_corner"
+      ],
+      "source_sha256": [
+        "7f97189eaa78cdae96d0776cd742feaa933d8c05da12cb69448a425981d02a0d",
+        "000cf29e988794fda68a283a2f52d7f5cbef11ab1413be54862c27bb937fa710"
+      ],
+      "straight_bounds": [
+        0,
+        560,
+        1254,
+        693
+      ],
+      "corner_crop": [
+        0,
+        515,
+        800,
+        1315
+      ],
+      "bytes": 999,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_log_01",
+      "path": "art/style05/env1/built/wall_log_01.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "1af598271c6de889235b6bc51c6ea2fb76e429a7b2f08e3dad1b5d19f57f7b2a",
+      "recipe": {
+        "mask": 1,
+        "core": "end",
+        "clockwise_arm_rotations": [
+          270
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_log_straight",
+        "wall_log_corner"
+      ],
+      "source_sha256": [
+        "7f97189eaa78cdae96d0776cd742feaa933d8c05da12cb69448a425981d02a0d",
+        "000cf29e988794fda68a283a2f52d7f5cbef11ab1413be54862c27bb937fa710"
+      ],
+      "straight_bounds": [
+        0,
+        560,
+        1254,
+        693
+      ],
+      "corner_crop": [
+        0,
+        515,
+        800,
+        1315
+      ],
+      "bytes": 2189,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_log_02",
+      "path": "art/style05/env1/built/wall_log_02.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "c201b3be81b1daac52ece03b27543f57d810841d13646d3e63e5658332da63c1",
+      "recipe": {
+        "mask": 2,
+        "core": "end",
+        "clockwise_arm_rotations": [
+          0
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_log_straight",
+        "wall_log_corner"
+      ],
+      "source_sha256": [
+        "7f97189eaa78cdae96d0776cd742feaa933d8c05da12cb69448a425981d02a0d",
+        "000cf29e988794fda68a283a2f52d7f5cbef11ab1413be54862c27bb937fa710"
+      ],
+      "straight_bounds": [
+        0,
+        560,
+        1254,
+        693
+      ],
+      "corner_crop": [
+        0,
+        515,
+        800,
+        1315
+      ],
+      "bytes": 2126,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_log_03",
+      "path": "art/style05/env1/built/wall_log_03.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "3c6316f2cc97110fe54008d3430d3865202dd54041147ae63a17ae36564fea8f",
+      "recipe": {
+        "mask": 3,
+        "core": "corner",
+        "clockwise_arm_rotations": [
+          270,
+          0
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_log_straight",
+        "wall_log_corner"
+      ],
+      "source_sha256": [
+        "7f97189eaa78cdae96d0776cd742feaa933d8c05da12cb69448a425981d02a0d",
+        "000cf29e988794fda68a283a2f52d7f5cbef11ab1413be54862c27bb937fa710"
+      ],
+      "straight_bounds": [
+        0,
+        560,
+        1254,
+        693
+      ],
+      "corner_crop": [
+        0,
+        515,
+        800,
+        1315
+      ],
+      "bytes": 3750,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_log_04",
+      "path": "art/style05/env1/built/wall_log_04.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "0f76eafb07f8366267b79b07877ddb839601357170860a5e4aa61eee1e1e809b",
+      "recipe": {
+        "mask": 4,
+        "core": "end",
+        "clockwise_arm_rotations": [
+          90
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_log_straight",
+        "wall_log_corner"
+      ],
+      "source_sha256": [
+        "7f97189eaa78cdae96d0776cd742feaa933d8c05da12cb69448a425981d02a0d",
+        "000cf29e988794fda68a283a2f52d7f5cbef11ab1413be54862c27bb937fa710"
+      ],
+      "straight_bounds": [
+        0,
+        560,
+        1254,
+        693
+      ],
+      "corner_crop": [
+        0,
+        515,
+        800,
+        1315
+      ],
+      "bytes": 2202,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_log_05",
+      "path": "art/style05/env1/built/wall_log_05.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "a88aa432fa09a7160c1a841ee25244d33bf8a20c250e82cd9449b2e77bce136c",
+      "recipe": {
+        "mask": 5,
+        "core": "end",
+        "clockwise_arm_rotations": [
+          270,
+          90
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_log_straight",
+        "wall_log_corner"
+      ],
+      "source_sha256": [
+        "7f97189eaa78cdae96d0776cd742feaa933d8c05da12cb69448a425981d02a0d",
+        "000cf29e988794fda68a283a2f52d7f5cbef11ab1413be54862c27bb937fa710"
+      ],
+      "straight_bounds": [
+        0,
+        560,
+        1254,
+        693
+      ],
+      "corner_crop": [
+        0,
+        515,
+        800,
+        1315
+      ],
+      "bytes": 3306,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_log_06",
+      "path": "art/style05/env1/built/wall_log_06.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "dade9be5ca47497b04dbae17a5735ada35b48323ab38cb444f280deb2f3e3fa6",
+      "recipe": {
+        "mask": 6,
+        "core": "corner",
+        "clockwise_arm_rotations": [
+          0,
+          90
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_log_straight",
+        "wall_log_corner"
+      ],
+      "source_sha256": [
+        "7f97189eaa78cdae96d0776cd742feaa933d8c05da12cb69448a425981d02a0d",
+        "000cf29e988794fda68a283a2f52d7f5cbef11ab1413be54862c27bb937fa710"
+      ],
+      "straight_bounds": [
+        0,
+        560,
+        1254,
+        693
+      ],
+      "corner_crop": [
+        0,
+        515,
+        800,
+        1315
+      ],
+      "bytes": 3763,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_log_07",
+      "path": "art/style05/env1/built/wall_log_07.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "66d92cd96831c82ed53b48d241ce01b4de0396b672d0d0da0b850bb5eeb5c34d",
+      "recipe": {
+        "mask": 7,
+        "core": "corner",
+        "clockwise_arm_rotations": [
+          270,
+          0,
+          90
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_log_straight",
+        "wall_log_corner"
+      ],
+      "source_sha256": [
+        "7f97189eaa78cdae96d0776cd742feaa933d8c05da12cb69448a425981d02a0d",
+        "000cf29e988794fda68a283a2f52d7f5cbef11ab1413be54862c27bb937fa710"
+      ],
+      "straight_bounds": [
+        0,
+        560,
+        1254,
+        693
+      ],
+      "corner_crop": [
+        0,
+        515,
+        800,
+        1315
+      ],
+      "bytes": 4967,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_log_08",
+      "path": "art/style05/env1/built/wall_log_08.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "524c9cf6de2264b4d46335e6bb3e04b0d0b02ddfbacb7e19cee017e5b4dd7a79",
+      "recipe": {
+        "mask": 8,
+        "core": "end",
+        "clockwise_arm_rotations": [
+          180
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_log_straight",
+        "wall_log_corner"
+      ],
+      "source_sha256": [
+        "7f97189eaa78cdae96d0776cd742feaa933d8c05da12cb69448a425981d02a0d",
+        "000cf29e988794fda68a283a2f52d7f5cbef11ab1413be54862c27bb937fa710"
+      ],
+      "straight_bounds": [
+        0,
+        560,
+        1254,
+        693
+      ],
+      "corner_crop": [
+        0,
+        515,
+        800,
+        1315
+      ],
+      "bytes": 2137,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_log_09",
+      "path": "art/style05/env1/built/wall_log_09.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "468ea2feb01d05825684c651c66f2256df9259602d031889acbddff9c1d5721b",
+      "recipe": {
+        "mask": 9,
+        "core": "corner",
+        "clockwise_arm_rotations": [
+          270,
+          180
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_log_straight",
+        "wall_log_corner"
+      ],
+      "source_sha256": [
+        "7f97189eaa78cdae96d0776cd742feaa933d8c05da12cb69448a425981d02a0d",
+        "000cf29e988794fda68a283a2f52d7f5cbef11ab1413be54862c27bb937fa710"
+      ],
+      "straight_bounds": [
+        0,
+        560,
+        1254,
+        693
+      ],
+      "corner_crop": [
+        0,
+        515,
+        800,
+        1315
+      ],
+      "bytes": 3781,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_log_10",
+      "path": "art/style05/env1/built/wall_log_10.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "e57bb8fda9b5e8e23ab22bf5ff34932913c3ce82ad6db133aaebc7dc07c9f2ea",
+      "recipe": {
+        "mask": 10,
+        "core": "end",
+        "clockwise_arm_rotations": [
+          0,
+          180
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_log_straight",
+        "wall_log_corner"
+      ],
+      "source_sha256": [
+        "7f97189eaa78cdae96d0776cd742feaa933d8c05da12cb69448a425981d02a0d",
+        "000cf29e988794fda68a283a2f52d7f5cbef11ab1413be54862c27bb937fa710"
+      ],
+      "straight_bounds": [
+        0,
+        560,
+        1254,
+        693
+      ],
+      "corner_crop": [
+        0,
+        515,
+        800,
+        1315
+      ],
+      "bytes": 3200,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_log_11",
+      "path": "art/style05/env1/built/wall_log_11.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "19e0ddb666a58f34622efa1684ece8c07204959d8e83e66983a6fcc77edeba38",
+      "recipe": {
+        "mask": 11,
+        "core": "corner",
+        "clockwise_arm_rotations": [
+          270,
+          0,
+          180
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_log_straight",
+        "wall_log_corner"
+      ],
+      "source_sha256": [
+        "7f97189eaa78cdae96d0776cd742feaa933d8c05da12cb69448a425981d02a0d",
+        "000cf29e988794fda68a283a2f52d7f5cbef11ab1413be54862c27bb937fa710"
+      ],
+      "straight_bounds": [
+        0,
+        560,
+        1254,
+        693
+      ],
+      "corner_crop": [
+        0,
+        515,
+        800,
+        1315
+      ],
+      "bytes": 4895,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_log_12",
+      "path": "art/style05/env1/built/wall_log_12.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "b5a7f4084b8ddcebdef41b2c06edb424be665ae3bb5c00b0136f27f4220bc68d",
+      "recipe": {
+        "mask": 12,
+        "core": "corner",
+        "clockwise_arm_rotations": [
+          90,
+          180
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_log_straight",
+        "wall_log_corner"
+      ],
+      "source_sha256": [
+        "7f97189eaa78cdae96d0776cd742feaa933d8c05da12cb69448a425981d02a0d",
+        "000cf29e988794fda68a283a2f52d7f5cbef11ab1413be54862c27bb937fa710"
+      ],
+      "straight_bounds": [
+        0,
+        560,
+        1254,
+        693
+      ],
+      "corner_crop": [
+        0,
+        515,
+        800,
+        1315
+      ],
+      "bytes": 3804,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_log_13",
+      "path": "art/style05/env1/built/wall_log_13.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "4de1b46cfeddf3e7f539a54c69b2a8452c2a6a8833a99b113313650762f7d1ef",
+      "recipe": {
+        "mask": 13,
+        "core": "corner",
+        "clockwise_arm_rotations": [
+          270,
+          90,
+          180
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_log_straight",
+        "wall_log_corner"
+      ],
+      "source_sha256": [
+        "7f97189eaa78cdae96d0776cd742feaa933d8c05da12cb69448a425981d02a0d",
+        "000cf29e988794fda68a283a2f52d7f5cbef11ab1413be54862c27bb937fa710"
+      ],
+      "straight_bounds": [
+        0,
+        560,
+        1254,
+        693
+      ],
+      "corner_crop": [
+        0,
+        515,
+        800,
+        1315
+      ],
+      "bytes": 4976,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_log_14",
+      "path": "art/style05/env1/built/wall_log_14.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "6ded90c1a9258effb80c867e607cf27f383cb7e92d57bda90fa17e2e7a7ede3d",
+      "recipe": {
+        "mask": 14,
+        "core": "corner",
+        "clockwise_arm_rotations": [
+          0,
+          90,
+          180
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_log_straight",
+        "wall_log_corner"
+      ],
+      "source_sha256": [
+        "7f97189eaa78cdae96d0776cd742feaa933d8c05da12cb69448a425981d02a0d",
+        "000cf29e988794fda68a283a2f52d7f5cbef11ab1413be54862c27bb937fa710"
+      ],
+      "straight_bounds": [
+        0,
+        560,
+        1254,
+        693
+      ],
+      "corner_crop": [
+        0,
+        515,
+        800,
+        1315
+      ],
+      "bytes": 4894,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_log_15",
+      "path": "art/style05/env1/built/wall_log_15.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "e54cb9b05be0dc8c03ca3ae32fd7eb3033f8f0d1920eee890219edf76fe39e90",
+      "recipe": {
+        "mask": 15,
+        "core": "corner",
+        "clockwise_arm_rotations": [
+          270,
+          0,
+          90,
+          180
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_log_straight",
+        "wall_log_corner"
+      ],
+      "source_sha256": [
+        "7f97189eaa78cdae96d0776cd742feaa933d8c05da12cb69448a425981d02a0d",
+        "000cf29e988794fda68a283a2f52d7f5cbef11ab1413be54862c27bb937fa710"
+      ],
+      "straight_bounds": [
+        0,
+        560,
+        1254,
+        693
+      ],
+      "corner_crop": [
+        0,
+        515,
+        800,
+        1315
+      ],
+      "bytes": 6111,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_stone_00",
+      "path": "art/style05/env1/built/wall_stone_00.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "2581c289b8110e1695a0539c83f0b227a11a7f25ba2ab3dd477007496d5098e5",
+      "recipe": {
+        "mask": 0,
+        "core": "end",
+        "clockwise_arm_rotations": []
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_stone_straight",
+        "wall_stone_corner"
+      ],
+      "source_sha256": [
+        "4e0e101e04916d1efca7e5f267ccb1257194a43b0c7b94d21a7828d96f8eacc7",
+        "fd77749a9a0b295a7b3132f067d5a9fec13d8f04c621cbbfff91fb1d6c2b9710"
+      ],
+      "straight_bounds": [
+        0,
+        524,
+        1254,
+        738
+      ],
+      "corner_crop": [
+        -200,
+        300,
+        1000,
+        1500
+      ],
+      "bytes": 1114,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_stone_01",
+      "path": "art/style05/env1/built/wall_stone_01.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "86c2cb6ba028c9a25366c4ba9ade95553a071430d461a3a9f2b02a0fce965424",
+      "recipe": {
+        "mask": 1,
+        "core": "end",
+        "clockwise_arm_rotations": [
+          270
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_stone_straight",
+        "wall_stone_corner"
+      ],
+      "source_sha256": [
+        "4e0e101e04916d1efca7e5f267ccb1257194a43b0c7b94d21a7828d96f8eacc7",
+        "fd77749a9a0b295a7b3132f067d5a9fec13d8f04c621cbbfff91fb1d6c2b9710"
+      ],
+      "straight_bounds": [
+        0,
+        524,
+        1254,
+        738
+      ],
+      "corner_crop": [
+        -200,
+        300,
+        1000,
+        1500
+      ],
+      "bytes": 2483,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_stone_02",
+      "path": "art/style05/env1/built/wall_stone_02.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "a0e387cf5bee0e0d28d0ba72b2ce9104b47fc68f7a32a1733a519c1b9c481e65",
+      "recipe": {
+        "mask": 2,
+        "core": "end",
+        "clockwise_arm_rotations": [
+          0
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_stone_straight",
+        "wall_stone_corner"
+      ],
+      "source_sha256": [
+        "4e0e101e04916d1efca7e5f267ccb1257194a43b0c7b94d21a7828d96f8eacc7",
+        "fd77749a9a0b295a7b3132f067d5a9fec13d8f04c621cbbfff91fb1d6c2b9710"
+      ],
+      "straight_bounds": [
+        0,
+        524,
+        1254,
+        738
+      ],
+      "corner_crop": [
+        -200,
+        300,
+        1000,
+        1500
+      ],
+      "bytes": 2388,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_stone_03",
+      "path": "art/style05/env1/built/wall_stone_03.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "b014d73b933d42031ffa82aa6dc1cee497ae8ce671e64e0e63ed8ec44c7fda6c",
+      "recipe": {
+        "mask": 3,
+        "core": "corner",
+        "clockwise_arm_rotations": [
+          270,
+          0
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_stone_straight",
+        "wall_stone_corner"
+      ],
+      "source_sha256": [
+        "4e0e101e04916d1efca7e5f267ccb1257194a43b0c7b94d21a7828d96f8eacc7",
+        "fd77749a9a0b295a7b3132f067d5a9fec13d8f04c621cbbfff91fb1d6c2b9710"
+      ],
+      "straight_bounds": [
+        0,
+        524,
+        1254,
+        738
+      ],
+      "corner_crop": [
+        -200,
+        300,
+        1000,
+        1500
+      ],
+      "bytes": 4407,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_stone_04",
+      "path": "art/style05/env1/built/wall_stone_04.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "37c8219ec68f0ce9c264e321b56a62de59440a30d5a7d2bb9cad9502bf3d06aa",
+      "recipe": {
+        "mask": 4,
+        "core": "end",
+        "clockwise_arm_rotations": [
+          90
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_stone_straight",
+        "wall_stone_corner"
+      ],
+      "source_sha256": [
+        "4e0e101e04916d1efca7e5f267ccb1257194a43b0c7b94d21a7828d96f8eacc7",
+        "fd77749a9a0b295a7b3132f067d5a9fec13d8f04c621cbbfff91fb1d6c2b9710"
+      ],
+      "straight_bounds": [
+        0,
+        524,
+        1254,
+        738
+      ],
+      "corner_crop": [
+        -200,
+        300,
+        1000,
+        1500
+      ],
+      "bytes": 2476,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_stone_05",
+      "path": "art/style05/env1/built/wall_stone_05.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "e2e29bc1c4b0eb49b2badb03627ead70cad73e2e1a7a53b8de128eb0949c2bb3",
+      "recipe": {
+        "mask": 5,
+        "core": "end",
+        "clockwise_arm_rotations": [
+          270,
+          90
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_stone_straight",
+        "wall_stone_corner"
+      ],
+      "source_sha256": [
+        "4e0e101e04916d1efca7e5f267ccb1257194a43b0c7b94d21a7828d96f8eacc7",
+        "fd77749a9a0b295a7b3132f067d5a9fec13d8f04c621cbbfff91fb1d6c2b9710"
+      ],
+      "straight_bounds": [
+        0,
+        524,
+        1254,
+        738
+      ],
+      "corner_crop": [
+        -200,
+        300,
+        1000,
+        1500
+      ],
+      "bytes": 3783,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_stone_06",
+      "path": "art/style05/env1/built/wall_stone_06.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "f4f64ef572de973b12822b2e1f0072f93c4e890dfb268befc931e5966ff63be4",
+      "recipe": {
+        "mask": 6,
+        "core": "corner",
+        "clockwise_arm_rotations": [
+          0,
+          90
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_stone_straight",
+        "wall_stone_corner"
+      ],
+      "source_sha256": [
+        "4e0e101e04916d1efca7e5f267ccb1257194a43b0c7b94d21a7828d96f8eacc7",
+        "fd77749a9a0b295a7b3132f067d5a9fec13d8f04c621cbbfff91fb1d6c2b9710"
+      ],
+      "straight_bounds": [
+        0,
+        524,
+        1254,
+        738
+      ],
+      "corner_crop": [
+        -200,
+        300,
+        1000,
+        1500
+      ],
+      "bytes": 4425,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_stone_07",
+      "path": "art/style05/env1/built/wall_stone_07.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "bfd8e9f880817aedece66964221f87c6cfde741bead6dd1ccd56187be7a55f46",
+      "recipe": {
+        "mask": 7,
+        "core": "corner",
+        "clockwise_arm_rotations": [
+          270,
+          0,
+          90
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_stone_straight",
+        "wall_stone_corner"
+      ],
+      "source_sha256": [
+        "4e0e101e04916d1efca7e5f267ccb1257194a43b0c7b94d21a7828d96f8eacc7",
+        "fd77749a9a0b295a7b3132f067d5a9fec13d8f04c621cbbfff91fb1d6c2b9710"
+      ],
+      "straight_bounds": [
+        0,
+        524,
+        1254,
+        738
+      ],
+      "corner_crop": [
+        -200,
+        300,
+        1000,
+        1500
+      ],
+      "bytes": 5714,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_stone_08",
+      "path": "art/style05/env1/built/wall_stone_08.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "4811ee03a0210d058a909e79e2b9f4544546652aea0f90429c2ff10fa2374bed",
+      "recipe": {
+        "mask": 8,
+        "core": "end",
+        "clockwise_arm_rotations": [
+          180
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_stone_straight",
+        "wall_stone_corner"
+      ],
+      "source_sha256": [
+        "4e0e101e04916d1efca7e5f267ccb1257194a43b0c7b94d21a7828d96f8eacc7",
+        "fd77749a9a0b295a7b3132f067d5a9fec13d8f04c621cbbfff91fb1d6c2b9710"
+      ],
+      "straight_bounds": [
+        0,
+        524,
+        1254,
+        738
+      ],
+      "corner_crop": [
+        -200,
+        300,
+        1000,
+        1500
+      ],
+      "bytes": 2410,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_stone_09",
+      "path": "art/style05/env1/built/wall_stone_09.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "aae3e8ff9dc9cb970d90b7aee840b812b9310ca93880af1ec1996c9afe2d3669",
+      "recipe": {
+        "mask": 9,
+        "core": "corner",
+        "clockwise_arm_rotations": [
+          270,
+          180
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_stone_straight",
+        "wall_stone_corner"
+      ],
+      "source_sha256": [
+        "4e0e101e04916d1efca7e5f267ccb1257194a43b0c7b94d21a7828d96f8eacc7",
+        "fd77749a9a0b295a7b3132f067d5a9fec13d8f04c621cbbfff91fb1d6c2b9710"
+      ],
+      "straight_bounds": [
+        0,
+        524,
+        1254,
+        738
+      ],
+      "corner_crop": [
+        -200,
+        300,
+        1000,
+        1500
+      ],
+      "bytes": 4427,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_stone_10",
+      "path": "art/style05/env1/built/wall_stone_10.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "6f5569025f99493eafa979fae07d900883291d683d4131c3a5fd929587067790",
+      "recipe": {
+        "mask": 10,
+        "core": "end",
+        "clockwise_arm_rotations": [
+          0,
+          180
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_stone_straight",
+        "wall_stone_corner"
+      ],
+      "source_sha256": [
+        "4e0e101e04916d1efca7e5f267ccb1257194a43b0c7b94d21a7828d96f8eacc7",
+        "fd77749a9a0b295a7b3132f067d5a9fec13d8f04c621cbbfff91fb1d6c2b9710"
+      ],
+      "straight_bounds": [
+        0,
+        524,
+        1254,
+        738
+      ],
+      "corner_crop": [
+        -200,
+        300,
+        1000,
+        1500
+      ],
+      "bytes": 3580,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_stone_11",
+      "path": "art/style05/env1/built/wall_stone_11.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "6d70eed879e7cd0f479864c5388cc2ba0515bd22bd1a2d49224a132276739c0d",
+      "recipe": {
+        "mask": 11,
+        "core": "corner",
+        "clockwise_arm_rotations": [
+          270,
+          0,
+          180
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_stone_straight",
+        "wall_stone_corner"
+      ],
+      "source_sha256": [
+        "4e0e101e04916d1efca7e5f267ccb1257194a43b0c7b94d21a7828d96f8eacc7",
+        "fd77749a9a0b295a7b3132f067d5a9fec13d8f04c621cbbfff91fb1d6c2b9710"
+      ],
+      "straight_bounds": [
+        0,
+        524,
+        1254,
+        738
+      ],
+      "corner_crop": [
+        -200,
+        300,
+        1000,
+        1500
+      ],
+      "bytes": 5610,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_stone_12",
+      "path": "art/style05/env1/built/wall_stone_12.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "69b7a97f737ba1bb99e6d1dcb304e734460cf64d2e3738fd50ed8791766ea3bd",
+      "recipe": {
+        "mask": 12,
+        "core": "corner",
+        "clockwise_arm_rotations": [
+          90,
+          180
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_stone_straight",
+        "wall_stone_corner"
+      ],
+      "source_sha256": [
+        "4e0e101e04916d1efca7e5f267ccb1257194a43b0c7b94d21a7828d96f8eacc7",
+        "fd77749a9a0b295a7b3132f067d5a9fec13d8f04c621cbbfff91fb1d6c2b9710"
+      ],
+      "straight_bounds": [
+        0,
+        524,
+        1254,
+        738
+      ],
+      "corner_crop": [
+        -200,
+        300,
+        1000,
+        1500
+      ],
+      "bytes": 4454,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_stone_13",
+      "path": "art/style05/env1/built/wall_stone_13.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "448a3ea2730877d9c422a403c69fb7fa5e9e2f5dce7ef16f8c814be8dcbca719",
+      "recipe": {
+        "mask": 13,
+        "core": "corner",
+        "clockwise_arm_rotations": [
+          270,
+          90,
+          180
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_stone_straight",
+        "wall_stone_corner"
+      ],
+      "source_sha256": [
+        "4e0e101e04916d1efca7e5f267ccb1257194a43b0c7b94d21a7828d96f8eacc7",
+        "fd77749a9a0b295a7b3132f067d5a9fec13d8f04c621cbbfff91fb1d6c2b9710"
+      ],
+      "straight_bounds": [
+        0,
+        524,
+        1254,
+        738
+      ],
+      "corner_crop": [
+        -200,
+        300,
+        1000,
+        1500
+      ],
+      "bytes": 5720,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_stone_14",
+      "path": "art/style05/env1/built/wall_stone_14.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "2f4c1e194c97282cb8c165f22bc0dfd9dcc4c517410d4be52b68e1eb9208d4b2",
+      "recipe": {
+        "mask": 14,
+        "core": "corner",
+        "clockwise_arm_rotations": [
+          0,
+          90,
+          180
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_stone_straight",
+        "wall_stone_corner"
+      ],
+      "source_sha256": [
+        "4e0e101e04916d1efca7e5f267ccb1257194a43b0c7b94d21a7828d96f8eacc7",
+        "fd77749a9a0b295a7b3132f067d5a9fec13d8f04c621cbbfff91fb1d6c2b9710"
+      ],
+      "straight_bounds": [
+        0,
+        524,
+        1254,
+        738
+      ],
+      "corner_crop": [
+        -200,
+        300,
+        1000,
+        1500
+      ],
+      "bytes": 5564,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "wall_stone_15",
+      "path": "art/style05/env1/built/wall_stone_15.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1,
+        1
+      ],
+      "family": "buildings",
+      "attempts": 0,
+      "status": "SEAM_FAIL_CANDIDATE",
+      "sha256": "e81ee9b3bdcc2745695253ef6a384166de67a1abf906a004af8f641dafbfbcf6",
+      "recipe": {
+        "mask": 15,
+        "core": "corner",
+        "clockwise_arm_rotations": [
+          270,
+          0,
+          90,
+          180
+        ]
+      },
+      "bits": {
+        "N": 1,
+        "E": 2,
+        "S": 4,
+        "W": 8
+      },
+      "source_ids": [
+        "wall_stone_straight",
+        "wall_stone_corner"
+      ],
+      "source_sha256": [
+        "4e0e101e04916d1efca7e5f267ccb1257194a43b0c7b94d21a7828d96f8eacc7",
+        "fd77749a9a0b295a7b3132f067d5a9fec13d8f04c621cbbfff91fb1d6c2b9710"
+      ],
+      "straight_bounds": [
+        0,
+        524,
+        1254,
+        738
+      ],
+      "corner_crop": [
+        -200,
+        300,
+        1000,
+        1500
+      ],
+      "bytes": 6900,
+      "operations": [
+        "generated straight alpha crop then64x16 resize",
+        "generated2x2 elbow crop then64x64 resize",
+        "quarter rotations; generated-arm overlays for terminals/T/X; no mirror-blend"
+      ],
+      "limitation": "Quarter rotations rotate baked lighting; junction appearance requires visual review.",
+      "physical_footprint": [
+        1,
+        1
+      ]
+    }
+  ],
+  "freeze": {
+    "raster_paths_final": true,
+    "owner_approval": false,
+    "asset_generations": 47,
+    "judge_generations": 8,
+    "generation_calls_total": 55
+  }
+}

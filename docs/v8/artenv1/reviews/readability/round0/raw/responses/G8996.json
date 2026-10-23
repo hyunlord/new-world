@@ -1,0 +1,128 @@
+{
+  "reviewer": "a",
+  "packet_id": "G8996",
+  "answers": [
+    {
+      "image_id": "P44412",
+      "started_at": "2026-10-23T07:24:03Z",
+      "ended_at": "2026-10-23T07:24:22Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          159,
+          602
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": true,
+        "points": [
+          [
+            800,
+            185
+          ],
+          [
+            928,
+            185
+          ]
+        ]
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Swinging a raised hand tool",
+        "B": "Carrying a bundle of logs on the shoulders",
+        "C": "Standing idle"
+      },
+      "confidence": "medium",
+      "notes": "A has a raised tool, but its target is not visible. The top-center shoulder carrier is read as one person."
+    },
+    {
+      "image_id": "P99373",
+      "started_at": "2026-10-23T07:24:27Z",
+      "ended_at": "2026-10-23T07:24:46Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          1200,
+          397
+        ]
+      },
+      "carriers": 0,
+      "wolves": {
+        "present": false,
+        "points": []
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Standing beside a workbench",
+        "B": "Standing beside a small outlined ground plot",
+        "C": "Standing near the campfire"
+      },
+      "confidence": "low",
+      "notes": "The small upright figures show little distinct motion or carried-object detail. The upper-right crate-filled enclosure is read as the storage construction site."
+    },
+    {
+      "image_id": "P62328",
+      "started_at": "2026-10-23T07:24:51Z",
+      "ended_at": "2026-10-23T07:25:07Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          479,
+          553
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": true,
+        "points": [
+          [
+            800,
+            346
+          ],
+          [
+            864,
+            346
+          ]
+        ]
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Using a hand tool",
+        "B": "Carrying a small load",
+        "C": "Standing idle"
+      },
+      "confidence": "low",
+      "notes": "People and animals are tiny geometric markers. Two circles have short adjacent load-like bars; the two red triangles are read as wolves. A has a small diagonal tool-like mark, so the exact work is unclear."
+    },
+    {
+      "image_id": "P58058",
+      "started_at": "2026-10-23T07:25:11Z",
+      "ended_at": "2026-10-23T07:25:27Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          1514,
+          324
+        ]
+      },
+      "carriers": 0,
+      "wolves": {
+        "present": false,
+        "points": []
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Standing beside a workbench",
+        "B": "Standing on an outlined ground square",
+        "C": "Standing near the campfire"
+      },
+      "confidence": "low",
+      "notes": "All people appear upright with similar body poses; no distinct carrying prop or work motion is visible. The partly cropped upper-right enclosure with stacked goods is read as storage."
+    }
+  ]
+}

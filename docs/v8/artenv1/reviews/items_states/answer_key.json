@@ -1,0 +1,2309 @@
+{
+  "schema_version": 1,
+  "manifest_sha256": "40255673dbc2c6521b319f4de1ec5e8c5a929cb7dc2a0fbea69061aadaadccb4",
+  "board_sha256": "826490bc76ececac96404ac16cd809e6e8175d5ef2850db6098cde1a62abaf97",
+  "entries": [
+    {
+      "asset_id": "fur_cloak",
+      "expected_kind": "FurCloak",
+      "expected_state": "not_applicable",
+      "expected_bucket": "2–8",
+      "source_path": "art/style05/env1/items/fur_cloak_count_2_8.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "e7dfd3c63d299580a9a815938130418b22508c9dba62df5b34fa44022f6779f0",
+      "source_bytes": 5300,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "0d684d6f643b84f542833b9be5fd46821831cbd8a8dcf489700595201e3aba8e",
+      "opaque_id": "QC680AB",
+      "display_geometry": {
+        "opaque_id": "QC680AB",
+        "row": 0,
+        "column": 0,
+        "cell_box": [
+          0,
+          28,
+          100,
+          116
+        ],
+        "sprite_box": [
+          34,
+          40,
+          66,
+          72
+        ]
+      },
+      "display_rgba_sha256": "8bde6bb26755dab0ac9b0536ebb6f76f440bfd55a80105c2111822234c6a50c4"
+    },
+    {
+      "asset_id": "clay",
+      "expected_kind": "Clay",
+      "expected_state": "not_applicable",
+      "expected_bucket": "1",
+      "source_path": "art/style05/env1/items/clay_count_1.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "f868ba9f89f4a5cb00a4f3348f762fb8e16a10d51d923cfca5968580037304fc",
+      "source_bytes": 3470,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "efa20a02dd785bcf4028d3df67140b6c421b5dcbff77bf555e076743e97ac472",
+      "opaque_id": "QB7397A",
+      "display_geometry": {
+        "opaque_id": "QB7397A",
+        "row": 0,
+        "column": 1,
+        "cell_box": [
+          100,
+          28,
+          200,
+          116
+        ],
+        "sprite_box": [
+          134,
+          40,
+          166,
+          72
+        ]
+      },
+      "display_rgba_sha256": "4e0c16f861d0dc2b5392c7eafba265a6dc9ba24e8c7309dc3c81908b3fdacc99"
+    },
+    {
+      "asset_id": "hide_wrap",
+      "expected_kind": "HideWrap",
+      "expected_state": "not_applicable",
+      "expected_bucket": "2–8",
+      "source_path": "art/style05/env1/items/hide_wrap_count_2_8.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "a524493b7ebb37da8c11b91e3a735e08d1b79d0909c91f4ff5412cbf53a369b0",
+      "source_bytes": 4870,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "02fc96cd5c489683a96585196229393eec8748ed20762ca24e76d87076929479",
+      "opaque_id": "QD7A1CD",
+      "display_geometry": {
+        "opaque_id": "QD7A1CD",
+        "row": 0,
+        "column": 2,
+        "cell_box": [
+          200,
+          28,
+          300,
+          116
+        ],
+        "sprite_box": [
+          234,
+          40,
+          266,
+          72
+        ]
+      },
+      "display_rgba_sha256": "d3a6f8d5f28e669f609fe57706819e85d1d7d1b2e358fd464bc94d140212989b"
+    },
+    {
+      "asset_id": "stone_axe",
+      "expected_kind": "StoneAxe",
+      "expected_state": "not_applicable",
+      "expected_bucket": "2–8",
+      "source_path": "art/style05/env1/items/stone_axe_count_2_8.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "ea3c65f102ac87a44a47cb8c3e9b11777b5297edb5eec4e9b556f7429b27a369",
+      "source_bytes": 3207,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "90f0cc9d9109d6e4bee8bf2d951d4f0b271aabce219bd66dee114001ca827eb9",
+      "opaque_id": "QB23905",
+      "display_geometry": {
+        "opaque_id": "QB23905",
+        "row": 0,
+        "column": 3,
+        "cell_box": [
+          300,
+          28,
+          400,
+          116
+        ],
+        "sprite_box": [
+          334,
+          40,
+          366,
+          72
+        ]
+      },
+      "display_rgba_sha256": "ea2629fe493646afa94f46f68d0e92705f26d30ceeb14ba9d26a4c569ca864f9"
+    },
+    {
+      "asset_id": "meat",
+      "expected_kind": "Meat",
+      "expected_state": "fresh",
+      "expected_bucket": "9+",
+      "source_path": "art/style05/env1/items/meat_count_9_plus.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "1a5b74646c6340b4d99b81cf552c2bba6d0be478408b617a7f5c0f866fef7d96",
+      "source_bytes": 4965,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "cc5c0c144b93db6f562ad420c02fc567a8212e2a9ab28dd15a9b709189451755",
+      "opaque_id": "QAC3D78",
+      "display_geometry": {
+        "opaque_id": "QAC3D78",
+        "row": 0,
+        "column": 4,
+        "cell_box": [
+          400,
+          28,
+          500,
+          116
+        ],
+        "sprite_box": [
+          434,
+          40,
+          466,
+          72
+        ]
+      },
+      "display_rgba_sha256": "5e948360d7e4c5c78eecc246dfacfe311e06e761b639294e054de1471b4d69e6"
+    },
+    {
+      "asset_id": "hide",
+      "expected_kind": "Hide",
+      "expected_state": "untreated",
+      "expected_bucket": "9+",
+      "source_path": "art/style05/env1/items/hide_count_9_plus.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "a325ded32d71421ce5959d0aa65fb99293164f90f1de8837b531e516e9f4524f",
+      "source_bytes": 7853,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "0816434a84668d809acd30d8d676a2126b7e1eef9c73b14ba493f9ad5e5822d9",
+      "opaque_id": "Q8C2889",
+      "display_geometry": {
+        "opaque_id": "Q8C2889",
+        "row": 0,
+        "column": 5,
+        "cell_box": [
+          500,
+          28,
+          600,
+          116
+        ],
+        "sprite_box": [
+          534,
+          40,
+          566,
+          72
+        ]
+      },
+      "display_rgba_sha256": "39e6340032d3ce9209b798893de598fb0caf6f1f32bbd44128681fb8d7006a8d"
+    },
+    {
+      "asset_id": "stone_pile",
+      "expected_kind": "Stone",
+      "expected_state": "not_applicable",
+      "expected_bucket": "2–8",
+      "source_path": "art/style05/env1/items/stone_pile_count_2_8.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "55d48d92855f6eb276781d49f8199a1ba2cf1528f4ffc9d06a981ad2df57b1d3",
+      "source_bytes": 5552,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "70eb37a4a053067d4581c7b88a2dcea42afbd3471c751c90ee66bceb46662f13",
+      "opaque_id": "Q319404",
+      "display_geometry": {
+        "opaque_id": "Q319404",
+        "row": 0,
+        "column": 6,
+        "cell_box": [
+          600,
+          28,
+          700,
+          116
+        ],
+        "sprite_box": [
+          634,
+          40,
+          666,
+          72
+        ]
+      },
+      "display_rgba_sha256": "e4fbc283c493c2b39d697d32db170d4fd2efac233069102b6c855603e3be69bc"
+    },
+    {
+      "asset_id": "fur_cloak",
+      "expected_kind": "FurCloak",
+      "expected_state": "not_applicable",
+      "expected_bucket": "1",
+      "source_path": "art/style05/env1/items/fur_cloak_count_1.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "c94efe2f756b2ef339b54f1e158c20b5f93eda077406e71da0054fa73f531448",
+      "source_bytes": 5813,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "42dc2755421570b32ca96260c97dda4da818843cceb4e992ea0b8c612931bd5e",
+      "opaque_id": "QE4505F",
+      "display_geometry": {
+        "opaque_id": "QE4505F",
+        "row": 0,
+        "column": 7,
+        "cell_box": [
+          700,
+          28,
+          800,
+          116
+        ],
+        "sprite_box": [
+          734,
+          40,
+          766,
+          72
+        ]
+      },
+      "display_rgba_sha256": "6f5705c11bfe4912a67fd16dd06621bc35219af68cef37913341c7621ba517bc"
+    },
+    {
+      "asset_id": "log_pile_large",
+      "expected_kind": "Log",
+      "expected_state": "not_applicable",
+      "expected_bucket": "2–8",
+      "source_path": "art/style05/env/items/log_pile_medium.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "7e13ab188c634172e59b189ed2a2e0063bf0a3dba5df1fbe3d5792fbbd91df9a",
+      "source_bytes": 6707,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "e35dc0d7a36743b9e2435cbec07265ea5f98e6997e17d2dd55733e6f10f978b2",
+      "opaque_id": "Q4B9C66",
+      "display_geometry": {
+        "opaque_id": "Q4B9C66",
+        "row": 1,
+        "column": 0,
+        "cell_box": [
+          0,
+          116,
+          100,
+          204
+        ],
+        "sprite_box": [
+          34,
+          128,
+          66,
+          160
+        ]
+      },
+      "display_rgba_sha256": "96ce38de06f26ea62cbf6b136b572068c4a514302ca6aa044f0929586c1c909d"
+    },
+    {
+      "asset_id": "stone_pile",
+      "expected_kind": "Stone",
+      "expected_state": "not_applicable",
+      "expected_bucket": "9+",
+      "source_path": "art/style05/env1/items/stone_pile_count_9_plus.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "39d5ff98e029d9258ccec48436956b995e7b3d86d60674cf1aec10398e76a7d5",
+      "source_bytes": 6136,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "f6d78a31ab32ab7c50cfd4c3c7884acc39f5a603dac18ad2fe3604804c70d072",
+      "opaque_id": "QC628A8",
+      "display_geometry": {
+        "opaque_id": "QC628A8",
+        "row": 1,
+        "column": 1,
+        "cell_box": [
+          100,
+          116,
+          200,
+          204
+        ],
+        "sprite_box": [
+          134,
+          128,
+          166,
+          160
+        ]
+      },
+      "display_rgba_sha256": "5f5cae433406feb0113a460b2d3207fe0f64f4a14d5285658ea057ef6d4aa9e6"
+    },
+    {
+      "asset_id": "berry_basket",
+      "expected_kind": "LegacyFood",
+      "expected_state": "not_applicable",
+      "expected_bucket": "1",
+      "source_path": "art/style05/env1/items/berry_basket_count_1.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "96a0d395c5f8849733b6eb03dd301fee57a42084184bff094ab9e47ce78804be",
+      "source_bytes": 9158,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "4e91df4f97b7c57c1ab4992bca5b3a9d94f189be35771b5512ed1ae104a333cf",
+      "opaque_id": "Q45E0C7",
+      "display_geometry": {
+        "opaque_id": "Q45E0C7",
+        "row": 1,
+        "column": 2,
+        "cell_box": [
+          200,
+          116,
+          300,
+          204
+        ],
+        "sprite_box": [
+          234,
+          128,
+          266,
+          160
+        ]
+      },
+      "display_rgba_sha256": "ec5845e8711f74c29a726f3326a17ebc0ebc0e472255e5da176b91a93d43b88c"
+    },
+    {
+      "asset_id": "ground_axe",
+      "expected_kind": "GroundAxe",
+      "expected_state": "not_applicable",
+      "expected_bucket": "9+",
+      "source_path": "art/style05/env1/items/ground_axe_count_9_plus.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "ab2b37647f8290003e411497258447b42186accd8eaec58761c7488550f0b0ea",
+      "source_bytes": 4782,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "868a0683d0266b5a0e2286171ae6f12d4b1103aaa0fb57e48890e6f7607dd444",
+      "opaque_id": "QFA02D7",
+      "display_geometry": {
+        "opaque_id": "QFA02D7",
+        "row": 1,
+        "column": 3,
+        "cell_box": [
+          300,
+          116,
+          400,
+          204
+        ],
+        "sprite_box": [
+          334,
+          128,
+          366,
+          160
+        ]
+      },
+      "display_rgba_sha256": "fdf296c4fcd3a1832ce620a2fa451fdc939369d4b04b431303d0456196dd29eb"
+    },
+    {
+      "asset_id": "raw_pot",
+      "expected_kind": "RawPot",
+      "expected_state": "unfired",
+      "expected_bucket": "9+",
+      "source_path": "art/style05/env1/items/raw_pot_count_9_plus.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "43a81687707a52c04e9254aaf2b6119f4268729dc2778727732f984c81b544bf",
+      "source_bytes": 5185,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "512d03ccea89275bf0e2584cec0dc6ce425d6b3524868d87f7b5a2ec041d709c",
+      "opaque_id": "Q4B4287",
+      "display_geometry": {
+        "opaque_id": "Q4B4287",
+        "row": 1,
+        "column": 4,
+        "cell_box": [
+          400,
+          116,
+          500,
+          204
+        ],
+        "sprite_box": [
+          434,
+          128,
+          466,
+          160
+        ]
+      },
+      "display_rgba_sha256": "26eff21c8eb7922ff743646ce6f41b3b787e961b998f32e5e22ec65322a35a61"
+    },
+    {
+      "asset_id": "cured_hide",
+      "expected_kind": "CuredHide",
+      "expected_state": "cured",
+      "expected_bucket": "2–8",
+      "source_path": "art/style05/env1/items/cured_hide_count_2_8.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "c620f1b3a07c59a4ea2e41973ed8a90d13925e77c9ce0aeaeb5aba4e50673a0b",
+      "source_bytes": 5679,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "ed785e486d2c37a288b5336e26e80304641d296ce6905050199317c034a273b4",
+      "opaque_id": "QEC2086",
+      "display_geometry": {
+        "opaque_id": "QEC2086",
+        "row": 1,
+        "column": 5,
+        "cell_box": [
+          500,
+          116,
+          600,
+          204
+        ],
+        "sprite_box": [
+          534,
+          128,
+          566,
+          160
+        ]
+      },
+      "display_rgba_sha256": "cf4f28ccf7e827a9ef99b9a8a4434a67f5c2ecdca5699ab8647c1e7107c291d2"
+    },
+    {
+      "asset_id": "log_pile_large",
+      "expected_kind": "Log",
+      "expected_state": "not_applicable",
+      "expected_bucket": "9+",
+      "source_path": "art/style05/env/items/log_pile_large.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "09144dfdcd810b4a952bf892271697dba19b6b02a0d2727fecafe9d99018a02d",
+      "source_bytes": 10182,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "7da25aa02054a3f5828f299b8da18cf567007669395ebbd2bf9a0c7916a91abe",
+      "opaque_id": "QA24C7A",
+      "display_geometry": {
+        "opaque_id": "QA24C7A",
+        "row": 1,
+        "column": 6,
+        "cell_box": [
+          600,
+          116,
+          700,
+          204
+        ],
+        "sprite_box": [
+          634,
+          128,
+          666,
+          160
+        ]
+      },
+      "display_rgba_sha256": "ec737cb35dbcc62649531afa5b373571de71e86996d77d9dd1c5fd49a57443fa"
+    },
+    {
+      "asset_id": "hide_wrap",
+      "expected_kind": "HideWrap",
+      "expected_state": "not_applicable",
+      "expected_bucket": "1",
+      "source_path": "art/style05/env1/items/hide_wrap_count_1.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "2db8016a17379e94d4eff7cee5b8a1f58bc0804616048aad69d28b16b3d75b0b",
+      "source_bytes": 5287,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "27d20dbce696ae03f4111ea358ae0cbc41dce6ce93378b6cbb6ebe92ecae794f",
+      "opaque_id": "Q2A053E",
+      "display_geometry": {
+        "opaque_id": "Q2A053E",
+        "row": 1,
+        "column": 7,
+        "cell_box": [
+          700,
+          116,
+          800,
+          204
+        ],
+        "sprite_box": [
+          734,
+          128,
+          766,
+          160
+        ]
+      },
+      "display_rgba_sha256": "19ae305744d0c59a814252c46320845e82c7ca120aa7e8586fc0e51a417bf55e"
+    },
+    {
+      "asset_id": "flint_pile",
+      "expected_kind": "Flint",
+      "expected_state": "not_applicable",
+      "expected_bucket": "1",
+      "source_path": "art/style05/env1/items/flint_pile_count_1.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "90447225357203b01f8d436cd437c325ef48015d7dfa031504196d1425edd83c",
+      "source_bytes": 8396,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "fa4aa53a3885f0d4e93107e50504714a3a1c5806ced7f356202536d2df75045d",
+      "opaque_id": "Q266EBB",
+      "display_geometry": {
+        "opaque_id": "Q266EBB",
+        "row": 2,
+        "column": 0,
+        "cell_box": [
+          0,
+          204,
+          100,
+          292
+        ],
+        "sprite_box": [
+          34,
+          216,
+          66,
+          248
+        ]
+      },
+      "display_rgba_sha256": "cd9dc740da2332ff19b78b0408819acb3a2ae98183352af53f33a18d72ce4519"
+    },
+    {
+      "asset_id": "wolf_hide",
+      "expected_kind": "WolfHide",
+      "expected_state": "not_applicable",
+      "expected_bucket": "1",
+      "source_path": "art/style05/env1/items/wolf_hide_count_1.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "3320a868ecd38ecebedffd2a82de7278c4af1a632592c20049e6e02173720085",
+      "source_bytes": 5628,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "27ed14f0f749547f6b9fbb33e8c0f2cbc5e5e1e6b0d15972854ecb6210bb64b7",
+      "opaque_id": "QF44A5A",
+      "display_geometry": {
+        "opaque_id": "QF44A5A",
+        "row": 2,
+        "column": 1,
+        "cell_box": [
+          100,
+          204,
+          200,
+          292
+        ],
+        "sprite_box": [
+          134,
+          216,
+          166,
+          248
+        ]
+      },
+      "display_rgba_sha256": "bf2b3dc1bd3b48bae777b5da1326f36c07239cc8755b8b53c7e0b70d13fe11a3"
+    },
+    {
+      "asset_id": "clay_pot_filled",
+      "expected_kind": "ClayPot",
+      "expected_state": "fired_filled",
+      "expected_bucket": "1",
+      "source_path": "art/style05/env1/items/clay_pot_filled_count_1.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "f0e0dad614a9a0d5c394099cdaf00f1af1e40e25234cd76b08af50cd46c5d4b3",
+      "source_bytes": 5472,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "1165991c17d7199a923a704410b243bdbf81933690a0ecfd68ac9812df286169",
+      "opaque_id": "QEFFD57",
+      "display_geometry": {
+        "opaque_id": "QEFFD57",
+        "row": 2,
+        "column": 2,
+        "cell_box": [
+          200,
+          204,
+          300,
+          292
+        ],
+        "sprite_box": [
+          234,
+          216,
+          266,
+          248
+        ]
+      },
+      "display_rgba_sha256": "e8da184a07c25f407c091a9fd499f1316e8c8b1a6234b159fbfc257b6b422bfc"
+    },
+    {
+      "asset_id": "firewood",
+      "expected_kind": "Firewood",
+      "expected_state": "not_applicable",
+      "expected_bucket": "2–8",
+      "source_path": "art/style05/env1/items/firewood_count_2_8.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "12720cc76aa698d70f52d928dcf16ccec75733f469fb6580f57ff712a6c9a572",
+      "source_bytes": 2982,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "542eecfb2bccbf33e53900384764664e518807c023735e4fa6230c483246ec63",
+      "opaque_id": "Q925061",
+      "display_geometry": {
+        "opaque_id": "Q925061",
+        "row": 2,
+        "column": 3,
+        "cell_box": [
+          300,
+          204,
+          400,
+          292
+        ],
+        "sprite_box": [
+          334,
+          216,
+          366,
+          248
+        ]
+      },
+      "display_rgba_sha256": "c29ad986e25ae386c707952732b8e01b8897a08ed749431e82efe915e74a034a"
+    },
+    {
+      "asset_id": "spear",
+      "expected_kind": "Spear",
+      "expected_state": "not_applicable",
+      "expected_bucket": "9+",
+      "source_path": "art/style05/env1/items/spear_count_9_plus.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "2d247afc1c481a9dfa96d900b2da1f7f6212193602fa191bfe6180565e8b86cb",
+      "source_bytes": 2428,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "f1454590be64a028cbe4cdbd583ba9320588d92ec75e3e95cc26d5ba49e7ae8f",
+      "opaque_id": "Q820D6F",
+      "display_geometry": {
+        "opaque_id": "Q820D6F",
+        "row": 2,
+        "column": 4,
+        "cell_box": [
+          400,
+          204,
+          500,
+          292
+        ],
+        "sprite_box": [
+          434,
+          216,
+          466,
+          248
+        ]
+      },
+      "display_rgba_sha256": "732e330e72e8d917c9dc0084939d7644aa250e908446f5c0b8891a0604b70535"
+    },
+    {
+      "asset_id": "stone_pile",
+      "expected_kind": "Stone",
+      "expected_state": "not_applicable",
+      "expected_bucket": "1",
+      "source_path": "art/style05/env1/items/stone_pile_count_1.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "4db601f8f590fc9599f6f23d857950412399c9eb1acaa67b2031e7db3c061770",
+      "source_bytes": 6653,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "30dbee2c19b2225d9ef6b001fbc9e9661630b29240326b4bf97033374efa2c7c",
+      "opaque_id": "Q27F923",
+      "display_geometry": {
+        "opaque_id": "Q27F923",
+        "row": 2,
+        "column": 5,
+        "cell_box": [
+          500,
+          204,
+          600,
+          292
+        ],
+        "sprite_box": [
+          534,
+          216,
+          566,
+          248
+        ]
+      },
+      "display_rgba_sha256": "95f609870e696cf961b9143b61e6ba7c6d300c40bd49bc09a69d2ee6478798a4"
+    },
+    {
+      "asset_id": "flint_blade",
+      "expected_kind": "FlintBlade",
+      "expected_state": "not_applicable",
+      "expected_bucket": "2–8",
+      "source_path": "art/style05/env1/items/flint_blade_count_2_8.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "1cb84392521f47a5bca2206d0944271430580f88fe4c2483cc4ad1b6939c303a",
+      "source_bytes": 2621,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "fa9caf255b1cbf116e3738152e694a708054bb988d95e5078c3140435a3c7dbc",
+      "opaque_id": "QD6C554",
+      "display_geometry": {
+        "opaque_id": "QD6C554",
+        "row": 2,
+        "column": 6,
+        "cell_box": [
+          600,
+          204,
+          700,
+          292
+        ],
+        "sprite_box": [
+          634,
+          216,
+          666,
+          248
+        ]
+      },
+      "display_rgba_sha256": "de8a19a86a6f32120c86f469aa8dd7ba70953bf77c11768f81df43a24558b6d3"
+    },
+    {
+      "asset_id": "clay",
+      "expected_kind": "Clay",
+      "expected_state": "not_applicable",
+      "expected_bucket": "2–8",
+      "source_path": "art/style05/env1/items/clay_count_2_8.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "b5ba0c522acfcc9350d05de2e1a348e6a27526934d6c694f1f4b9cc263984992",
+      "source_bytes": 3655,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "90919bc99c5d68c702e076be04b85347b073a114052e1bd1c2cf372550fa64a0",
+      "opaque_id": "QE26D0E",
+      "display_geometry": {
+        "opaque_id": "QE26D0E",
+        "row": 2,
+        "column": 7,
+        "cell_box": [
+          700,
+          204,
+          800,
+          292
+        ],
+        "sprite_box": [
+          734,
+          216,
+          766,
+          248
+        ]
+      },
+      "display_rgba_sha256": "b8db20d59cbd320e98f6b7f0271c5489b88c809cef0d30fa41fedbdad0a9478a"
+    },
+    {
+      "asset_id": "ground_axe",
+      "expected_kind": "GroundAxe",
+      "expected_state": "not_applicable",
+      "expected_bucket": "1",
+      "source_path": "art/style05/env1/items/ground_axe_count_1.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "88fc7ca8794a76d34ad0edd400a8eb94d137e904017c15f8a019d8d6ccfb0f18",
+      "source_bytes": 3909,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "38470813e96903a61ac0a776ebc69076370cfd97ef5af9085bc5753568adc1f2",
+      "opaque_id": "Q33AA8C",
+      "display_geometry": {
+        "opaque_id": "Q33AA8C",
+        "row": 3,
+        "column": 0,
+        "cell_box": [
+          0,
+          292,
+          100,
+          380
+        ],
+        "sprite_box": [
+          34,
+          304,
+          66,
+          336
+        ]
+      },
+      "display_rgba_sha256": "86c7a0adb4c29ad1d938594b3004fbb3aee48f88c954bd4f1a61510ea9f6cff4"
+    },
+    {
+      "asset_id": "clay_pot_empty",
+      "expected_kind": "ClayPot",
+      "expected_state": "fired_empty",
+      "expected_bucket": "1",
+      "source_path": "art/style05/env1/items/clay_pot_empty_count_1.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "1e0fd136c5b99ad8f4114c9fd0d4b3b518c7c66cf7912812238a7d1b1ba68cd1",
+      "source_bytes": 5459,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "818f16e42e8985073171e01cb367ea56fefb58fb29377588081808b0229fe2cd",
+      "opaque_id": "QC0C489",
+      "display_geometry": {
+        "opaque_id": "QC0C489",
+        "row": 3,
+        "column": 1,
+        "cell_box": [
+          100,
+          292,
+          200,
+          380
+        ],
+        "sprite_box": [
+          134,
+          304,
+          166,
+          336
+        ]
+      },
+      "display_rgba_sha256": "54cbd11dc64e2268cc17859f820d85b3a49f5f26ce94ba4e4ef7091df787a437"
+    },
+    {
+      "asset_id": "hide",
+      "expected_kind": "Hide",
+      "expected_state": "untreated",
+      "expected_bucket": "2–8",
+      "source_path": "art/style05/env1/items/hide_count_2_8.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "d43738a221ebca5049e15c9dc068f3c7463d1d93c04863e82c33f2c9ae9b7190",
+      "source_bytes": 6928,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "2e727812e5195f7d2a52cc7dbf2480c9a51e1b2cc01cc77646f3cd9d8d464589",
+      "opaque_id": "Q19AB72",
+      "display_geometry": {
+        "opaque_id": "Q19AB72",
+        "row": 3,
+        "column": 2,
+        "cell_box": [
+          200,
+          292,
+          300,
+          380
+        ],
+        "sprite_box": [
+          234,
+          304,
+          266,
+          336
+        ]
+      },
+      "display_rgba_sha256": "f2f2a15f34493331aee753e6428d12ee9f722450c57a83bc46408129358740a5"
+    },
+    {
+      "asset_id": "flint_nodule",
+      "expected_kind": "Flint",
+      "expected_state": "not_applicable",
+      "expected_bucket": "9+",
+      "source_path": "art/style05/env1/items/flint_nodule_count_9_plus.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "e7ad10b955775eeeee32c3a6766806b9f185ac25925dd9c6e3288dba7190d79a",
+      "source_bytes": 4471,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "d5feae971bb6b53e863f993e31e37cc154393250a089ce20858db64223506efa",
+      "opaque_id": "QB7836B",
+      "display_geometry": {
+        "opaque_id": "QB7836B",
+        "row": 3,
+        "column": 3,
+        "cell_box": [
+          300,
+          292,
+          400,
+          380
+        ],
+        "sprite_box": [
+          334,
+          304,
+          366,
+          336
+        ]
+      },
+      "display_rgba_sha256": "48b0235e712fb1e4449efee2dc9351b3d598450e08af5676eddc23fa8ee8f083"
+    },
+    {
+      "asset_id": "raw_pot",
+      "expected_kind": "RawPot",
+      "expected_state": "unfired",
+      "expected_bucket": "1",
+      "source_path": "art/style05/env1/items/raw_pot_count_1.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "0bc4ef70479fb3614f8038cdce455f11c1e775fbf0819b174d57a4a5eac8119f",
+      "source_bytes": 4335,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "50724aad8618116197a82de169dc58f5054fa1f13d81b7d46cec0df7b5dfd22b",
+      "opaque_id": "Q0AEFBF",
+      "display_geometry": {
+        "opaque_id": "Q0AEFBF",
+        "row": 3,
+        "column": 4,
+        "cell_box": [
+          400,
+          292,
+          500,
+          380
+        ],
+        "sprite_box": [
+          434,
+          304,
+          466,
+          336
+        ]
+      },
+      "display_rgba_sha256": "6d95c61fb2216b8d7618e64bdc38b58748ca4b747b48ee8e2375d0055289f60e"
+    },
+    {
+      "asset_id": "clay_pot_empty",
+      "expected_kind": "ClayPot",
+      "expected_state": "fired_empty",
+      "expected_bucket": "9+",
+      "source_path": "art/style05/env1/items/clay_pot_empty_count_9_plus.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "52eb59fa92969ecd3584de8b08b9b83104471fb5aafb233acee716cbe3dfba7a",
+      "source_bytes": 5947,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "09d65a9a887580b44d872f3fb5e86a2722628fadb19d39d20ac10c84a14b1aa6",
+      "opaque_id": "QC12CE3",
+      "display_geometry": {
+        "opaque_id": "QC12CE3",
+        "row": 3,
+        "column": 5,
+        "cell_box": [
+          500,
+          292,
+          600,
+          380
+        ],
+        "sprite_box": [
+          534,
+          304,
+          566,
+          336
+        ]
+      },
+      "display_rgba_sha256": "1fcba45953a1fab65784574f595f89f2e6ade318192f5fe911a8f65eb7317faf"
+    },
+    {
+      "asset_id": "ground_axe",
+      "expected_kind": "GroundAxe",
+      "expected_state": "not_applicable",
+      "expected_bucket": "2–8",
+      "source_path": "art/style05/env1/items/ground_axe_count_2_8.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "d419833a891fecf4d8cb85ad83dd5285f9dee9f98eba5301c106f9def6782ba4",
+      "source_bytes": 4270,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "14bff74afd1334c28ff85051dda99d68bfcb0cf1e85ef2fa101d87f8d8534365",
+      "opaque_id": "Q13F1EF",
+      "display_geometry": {
+        "opaque_id": "Q13F1EF",
+        "row": 3,
+        "column": 6,
+        "cell_box": [
+          600,
+          292,
+          700,
+          380
+        ],
+        "sprite_box": [
+          634,
+          304,
+          666,
+          336
+        ]
+      },
+      "display_rgba_sha256": "0f8141170bbd87b86aa701d9008b619459d37100d7c142ed4ae5cdf904dda21c"
+    },
+    {
+      "asset_id": "flint_nodule",
+      "expected_kind": "Flint",
+      "expected_state": "not_applicable",
+      "expected_bucket": "2–8",
+      "source_path": "art/style05/env1/items/flint_nodule_count_2_8.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "a7069c4effc45fa7345e7347f82d1fee3a25be821a6f5ce76fe29a3d0a8f1017",
+      "source_bytes": 4088,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "5067e14f2aca0b8ac68a5847a91c511fa3cb79228608022f9f1e8e7eafd0367d",
+      "opaque_id": "Q3D4EF6",
+      "display_geometry": {
+        "opaque_id": "Q3D4EF6",
+        "row": 3,
+        "column": 7,
+        "cell_box": [
+          700,
+          292,
+          800,
+          380
+        ],
+        "sprite_box": [
+          734,
+          304,
+          766,
+          336
+        ]
+      },
+      "display_rgba_sha256": "d46d77a50f6891b930dc64ebdeb1b0a17ec80b1dbc2dfea5da031f2ddfc6ed54"
+    },
+    {
+      "asset_id": "hide",
+      "expected_kind": "Hide",
+      "expected_state": "untreated",
+      "expected_bucket": "1",
+      "source_path": "art/style05/env1/items/hide_count_1.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "1683058c1a18986812d16cb39e5797f39ccf96cf1b74c170047f01ddcb2a6498",
+      "source_bytes": 8081,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "cc17f6f1b9689506de5d01ed3dcba45cfe9912d0cdbbdcb3e312b09ca0bee959",
+      "opaque_id": "Q210699",
+      "display_geometry": {
+        "opaque_id": "Q210699",
+        "row": 4,
+        "column": 0,
+        "cell_box": [
+          0,
+          380,
+          100,
+          468
+        ],
+        "sprite_box": [
+          34,
+          392,
+          66,
+          424
+        ]
+      },
+      "display_rgba_sha256": "b8a832a06875a907dbb3d33ebc4c5f9040f91dd1b32513c188add3f561c418f5"
+    },
+    {
+      "asset_id": "firewood",
+      "expected_kind": "Firewood",
+      "expected_state": "not_applicable",
+      "expected_bucket": "1",
+      "source_path": "art/style05/env1/items/firewood_count_1.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "d4ba449e03edb569509c14844d27659eda099581488994f5e918b208fc0e9602",
+      "source_bytes": 3106,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "55b7a84c63beadd67c30666f597a3b409e84d2fac9622d1c5ba3a0b4b5f5c5a4",
+      "opaque_id": "QE4A74C",
+      "display_geometry": {
+        "opaque_id": "QE4A74C",
+        "row": 4,
+        "column": 1,
+        "cell_box": [
+          100,
+          380,
+          200,
+          468
+        ],
+        "sprite_box": [
+          134,
+          392,
+          166,
+          424
+        ]
+      },
+      "display_rgba_sha256": "18458c2003ed6fb77996a54918ba58480638773037bab6158bbb9b2c4266a48c"
+    },
+    {
+      "asset_id": "spear",
+      "expected_kind": "Spear",
+      "expected_state": "not_applicable",
+      "expected_bucket": "2–8",
+      "source_path": "art/style05/env1/items/spear_count_2_8.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "51d5535cf6f3c8e477db1c3663c7854953424cdb61273f4c20fd18352e7847a5",
+      "source_bytes": 2226,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "dee39a59cf16088d32970110e65a115f74def341aa76fd81fb8c30bcfed24189",
+      "opaque_id": "Q85E074",
+      "display_geometry": {
+        "opaque_id": "Q85E074",
+        "row": 4,
+        "column": 2,
+        "cell_box": [
+          200,
+          380,
+          300,
+          468
+        ],
+        "sprite_box": [
+          234,
+          392,
+          266,
+          424
+        ]
+      },
+      "display_rgba_sha256": "4a1485bd4b29b429732cbe67f809af859ec9e4b09b7558269cbc72016dad5268"
+    },
+    {
+      "asset_id": "flint_pile",
+      "expected_kind": "Flint",
+      "expected_state": "not_applicable",
+      "expected_bucket": "9+",
+      "source_path": "art/style05/env1/items/flint_pile_count_9_plus.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "4a425880b39d7987019e3c2885fdef0f32fe4dd23325932cc5bc4f82c5db9c30",
+      "source_bytes": 7395,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "c882ac9670bcea8266af2cc09d7619a61e82cd77b4f2e3939d0fdec5c54cae1e",
+      "opaque_id": "Q5ED247",
+      "display_geometry": {
+        "opaque_id": "Q5ED247",
+        "row": 4,
+        "column": 3,
+        "cell_box": [
+          300,
+          380,
+          400,
+          468
+        ],
+        "sprite_box": [
+          334,
+          392,
+          366,
+          424
+        ]
+      },
+      "display_rgba_sha256": "80ccd8ffaaf554ee3675d26079ff5a1331a61eec0df64bfa8cfa3d59c76c37c1"
+    },
+    {
+      "asset_id": "clay_pot_filled",
+      "expected_kind": "ClayPot",
+      "expected_state": "fired_filled",
+      "expected_bucket": "2–8",
+      "source_path": "art/style05/env1/items/clay_pot_filled_count_2_8.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "b82b18a1a09f942e4c3f96331e0b7e2b53f093919d229f92343b50ba4c3c20bf",
+      "source_bytes": 5268,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "d7e4ba4e14d84d232023d3a9250086a2cd4f639dfb69e9a8a56f3ef6fea24a2f",
+      "opaque_id": "QFAE10D",
+      "display_geometry": {
+        "opaque_id": "QFAE10D",
+        "row": 4,
+        "column": 4,
+        "cell_box": [
+          400,
+          380,
+          500,
+          468
+        ],
+        "sprite_box": [
+          434,
+          392,
+          466,
+          424
+        ]
+      },
+      "display_rgba_sha256": "297f7f1546c249f91384183094af0d333c5aa0b54ec37a7d9f866e50569a4466"
+    },
+    {
+      "asset_id": "spear",
+      "expected_kind": "Spear",
+      "expected_state": "not_applicable",
+      "expected_bucket": "1",
+      "source_path": "art/style05/env1/items/spear_count_1.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "3f0448a9a2b6c7a07b77a90781b0864d089ca0e363de81f3d761384f5043f77d",
+      "source_bytes": 2025,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "c11114c045651af7523095b12f5f787b56eb6a08d05e7a85099f80346a52aab9",
+      "opaque_id": "Q83A561",
+      "display_geometry": {
+        "opaque_id": "Q83A561",
+        "row": 4,
+        "column": 5,
+        "cell_box": [
+          500,
+          380,
+          600,
+          468
+        ],
+        "sprite_box": [
+          534,
+          392,
+          566,
+          424
+        ]
+      },
+      "display_rgba_sha256": "25f1cf46cc8b2a93167f46b7d39a6918936eaabce30aa030b6ca8b15f3010e74"
+    },
+    {
+      "asset_id": "flint_nodule",
+      "expected_kind": "Flint",
+      "expected_state": "not_applicable",
+      "expected_bucket": "1",
+      "source_path": "art/style05/env1/items/flint_nodule_count_1.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "759f3326c376830f34e6bb1cb2d12a7402b60ce0a16703ee38ff26c60df31e1e",
+      "source_bytes": 4000,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "5d541b1d87e8bb3ca01396144ea3325a045b2468bf924fee46f2571b5a8f58cd",
+      "opaque_id": "Q68350B",
+      "display_geometry": {
+        "opaque_id": "Q68350B",
+        "row": 4,
+        "column": 6,
+        "cell_box": [
+          600,
+          380,
+          700,
+          468
+        ],
+        "sprite_box": [
+          634,
+          392,
+          666,
+          424
+        ]
+      },
+      "display_rgba_sha256": "342f215f76c9e0d579cc7db40d15133eca374a1cd1787aa5cf5b6fe430464d5a"
+    },
+    {
+      "asset_id": "berry_basket",
+      "expected_kind": "LegacyFood",
+      "expected_state": "not_applicable",
+      "expected_bucket": "9+",
+      "source_path": "art/style05/env1/items/berry_basket_count_9_plus.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "a9e667b7e3e35c868113fc91378838ee27d1f20d7cdd0b1df3a2eb62bedbd4b9",
+      "source_bytes": 6739,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "395766c96f1083460d3b1d034b32fb9b8934414e22ddb5e2652f49d3492c72e1",
+      "opaque_id": "QE077F5",
+      "display_geometry": {
+        "opaque_id": "QE077F5",
+        "row": 4,
+        "column": 7,
+        "cell_box": [
+          700,
+          380,
+          800,
+          468
+        ],
+        "sprite_box": [
+          734,
+          392,
+          766,
+          424
+        ]
+      },
+      "display_rgba_sha256": "943aa494828ba8437de5b4852c5c3612f30972eabb690b1cd5234aaa1fabcb5c"
+    },
+    {
+      "asset_id": "clay_pot_empty",
+      "expected_kind": "ClayPot",
+      "expected_state": "fired_empty",
+      "expected_bucket": "2–8",
+      "source_path": "art/style05/env1/items/clay_pot_empty_count_2_8.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "8d4f40ed3d589bb554d48ebc93b7660dfcba83dc16a50b24867b04e6efa0c707",
+      "source_bytes": 5001,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "4bc2b24d4470d36b974975ca36a801a10df71ac9861102b75ca76f687249a72d",
+      "opaque_id": "Q3FB343",
+      "display_geometry": {
+        "opaque_id": "Q3FB343",
+        "row": 5,
+        "column": 0,
+        "cell_box": [
+          0,
+          468,
+          100,
+          556
+        ],
+        "sprite_box": [
+          34,
+          480,
+          66,
+          512
+        ]
+      },
+      "display_rgba_sha256": "f8d6e5516fb1cb1953a66246819afb5ca5f7a107472806dab13f17a841ee5607"
+    },
+    {
+      "asset_id": "fur_cloak",
+      "expected_kind": "FurCloak",
+      "expected_state": "not_applicable",
+      "expected_bucket": "9+",
+      "source_path": "art/style05/env1/items/fur_cloak_count_9_plus.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "d568e620c74a011819d1bee5969e2510510fa60e3f9dc949b86874acc1f06c64",
+      "source_bytes": 5900,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "8d6bbc735d2a0a4bd6c3c6d24ef8c46b793aa0f0d10a4bd9fefebc7dfc272d26",
+      "opaque_id": "QDC2B9D",
+      "display_geometry": {
+        "opaque_id": "QDC2B9D",
+        "row": 5,
+        "column": 1,
+        "cell_box": [
+          100,
+          468,
+          200,
+          556
+        ],
+        "sprite_box": [
+          134,
+          480,
+          166,
+          512
+        ]
+      },
+      "display_rgba_sha256": "0ecfaacba80ae8537ae009263c936e639858816ea254ccd4f7d581a8e0e79f21"
+    },
+    {
+      "asset_id": "clay_pot_filled",
+      "expected_kind": "ClayPot",
+      "expected_state": "fired_filled",
+      "expected_bucket": "9+",
+      "source_path": "art/style05/env1/items/clay_pot_filled_count_9_plus.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "3cff102f645204f62197c51df5c4798d3213bde0536e68225ac381b1d25cd776",
+      "source_bytes": 6051,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "2d03f28fba64b95704f6a61114d655c9a750a4596adfefa16af3cfc2754ecb6b",
+      "opaque_id": "Q16F831",
+      "display_geometry": {
+        "opaque_id": "Q16F831",
+        "row": 5,
+        "column": 2,
+        "cell_box": [
+          200,
+          468,
+          300,
+          556
+        ],
+        "sprite_box": [
+          234,
+          480,
+          266,
+          512
+        ]
+      },
+      "display_rgba_sha256": "960a0fc75ae6748baa92ffd1a0b1f50f2cafc3cc834edcaade7132491939f1c8"
+    },
+    {
+      "asset_id": "stone_axe",
+      "expected_kind": "StoneAxe",
+      "expected_state": "not_applicable",
+      "expected_bucket": "9+",
+      "source_path": "art/style05/env1/items/stone_axe_count_9_plus.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "4c8576d38f472588310b63bc92ed16374f3e7c58a463d871c380d0c62ab0fd41",
+      "source_bytes": 3648,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "7b31aa3fd371244157f9dee691dcf0bf2adf828e1bd23bc18149b8de902889c3",
+      "opaque_id": "QC65A70",
+      "display_geometry": {
+        "opaque_id": "QC65A70",
+        "row": 5,
+        "column": 3,
+        "cell_box": [
+          300,
+          468,
+          400,
+          556
+        ],
+        "sprite_box": [
+          334,
+          480,
+          366,
+          512
+        ]
+      },
+      "display_rgba_sha256": "adaf6f0f0ca6253312e23dc84bc0bc0da09d8c3e552acdf9ab82a92f1bfa9cc9"
+    },
+    {
+      "asset_id": "flint_blade",
+      "expected_kind": "FlintBlade",
+      "expected_state": "not_applicable",
+      "expected_bucket": "1",
+      "source_path": "art/style05/env1/items/flint_blade_count_1.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "b49c8585fa896948b67a5428c001bbc0e3dac2e2d29212e5ac94e54d7b9e947c",
+      "source_bytes": 2452,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "560b79e772c56625a66616412d3dc9d450dced2992d3f916a4d06db9d0d30984",
+      "opaque_id": "QCEC34F",
+      "display_geometry": {
+        "opaque_id": "QCEC34F",
+        "row": 5,
+        "column": 4,
+        "cell_box": [
+          400,
+          468,
+          500,
+          556
+        ],
+        "sprite_box": [
+          434,
+          480,
+          466,
+          512
+        ]
+      },
+      "display_rgba_sha256": "e7a3784b5ea983c4e3fa3c400225b8a1cbe664371f47a1e16e10d41be1be71a7"
+    },
+    {
+      "asset_id": "meat",
+      "expected_kind": "Meat",
+      "expected_state": "fresh",
+      "expected_bucket": "1",
+      "source_path": "art/style05/env1/items/meat_count_1.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "d3a8165f64dccb33577db38b7a0908c32a716c27dcbe34ec0d5e6e757e7f4714",
+      "source_bytes": 4334,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "b3b8b4db07eb8db4bf2644b114ef7a7dc684917716e8d4ea15900cabd8957e3d",
+      "opaque_id": "Q44C1CF",
+      "display_geometry": {
+        "opaque_id": "Q44C1CF",
+        "row": 5,
+        "column": 5,
+        "cell_box": [
+          500,
+          468,
+          600,
+          556
+        ],
+        "sprite_box": [
+          534,
+          480,
+          566,
+          512
+        ]
+      },
+      "display_rgba_sha256": "54d94cc5d614400bea75300ebe0013d3b049c26eff1b547f16ad81b98c642c95"
+    },
+    {
+      "asset_id": "flint_pile",
+      "expected_kind": "Flint",
+      "expected_state": "not_applicable",
+      "expected_bucket": "2–8",
+      "source_path": "art/style05/env1/items/flint_pile_count_2_8.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "2349703b78da397b23afed2a8dac79fa3b84ede17c9024c9b56c46299ee146c6",
+      "source_bytes": 7045,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "48bea7394351cb1f1e0c178a64136b3cd08aeeafd04fe565228726e6f6049234",
+      "opaque_id": "Q19ACB6",
+      "display_geometry": {
+        "opaque_id": "Q19ACB6",
+        "row": 5,
+        "column": 6,
+        "cell_box": [
+          600,
+          468,
+          700,
+          556
+        ],
+        "sprite_box": [
+          634,
+          480,
+          666,
+          512
+        ]
+      },
+      "display_rgba_sha256": "8c3ca26bd10842f9737828fe90a63e4f5a1f7f4152a771c89b3b446b9ed414de"
+    },
+    {
+      "asset_id": "wolf_hide",
+      "expected_kind": "WolfHide",
+      "expected_state": "not_applicable",
+      "expected_bucket": "2–8",
+      "source_path": "art/style05/env1/items/wolf_hide_count_2_8.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "3e447f2f7fdb2bcf5f63da901a44789ad459099277946887cda41dbf1533c388",
+      "source_bytes": 5235,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "4eb9329b4266812c85b2c39d4936cc085f85f64a6d44a21f9288065d5e61bc3a",
+      "opaque_id": "QFE65EB",
+      "display_geometry": {
+        "opaque_id": "QFE65EB",
+        "row": 5,
+        "column": 7,
+        "cell_box": [
+          700,
+          468,
+          800,
+          556
+        ],
+        "sprite_box": [
+          734,
+          480,
+          766,
+          512
+        ]
+      },
+      "display_rgba_sha256": "7506b2396de97c6561fec3858740f42a2c959a9dbca04f1c6cd20f6f92eded5f"
+    },
+    {
+      "asset_id": "raw_pot",
+      "expected_kind": "RawPot",
+      "expected_state": "unfired",
+      "expected_bucket": "2–8",
+      "source_path": "art/style05/env1/items/raw_pot_count_2_8.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "50d8be0ab24724f2941c009cd8d6383b1b5f090ace36d317a1264cb28e693307",
+      "source_bytes": 4314,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "a570f1262b7dfaa0ae82edb8cbbcf3e08e21effe965c7cfcf703e5df1ae31489",
+      "opaque_id": "QEE0C04",
+      "display_geometry": {
+        "opaque_id": "QEE0C04",
+        "row": 6,
+        "column": 0,
+        "cell_box": [
+          0,
+          556,
+          100,
+          644
+        ],
+        "sprite_box": [
+          34,
+          568,
+          66,
+          600
+        ]
+      },
+      "display_rgba_sha256": "9cd67ad94afd7bd2f84f73d6cf5dea4264e70c64df4127d9b9d2efd23af830bc"
+    },
+    {
+      "asset_id": "flint_blade",
+      "expected_kind": "FlintBlade",
+      "expected_state": "not_applicable",
+      "expected_bucket": "9+",
+      "source_path": "art/style05/env1/items/flint_blade_count_9_plus.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "50f7e62b8ee2b11a155ed452e6d5bc2b4f4c847ceaf1f7b6e72bc18216871c63",
+      "source_bytes": 2737,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "77290411d7b080bce2129e9a1af56e3d94815dca35e3acd5d25bc1fecc8b4da0",
+      "opaque_id": "Q18411A",
+      "display_geometry": {
+        "opaque_id": "Q18411A",
+        "row": 6,
+        "column": 1,
+        "cell_box": [
+          100,
+          556,
+          200,
+          644
+        ],
+        "sprite_box": [
+          134,
+          568,
+          166,
+          600
+        ]
+      },
+      "display_rgba_sha256": "dd816398e6da18e69136840345832b92a73876fdac0aeae8a0bc59e102779e7b"
+    },
+    {
+      "asset_id": "stone_axe",
+      "expected_kind": "StoneAxe",
+      "expected_state": "not_applicable",
+      "expected_bucket": "1",
+      "source_path": "art/style05/env1/items/stone_axe_count_1.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "d9ae415ed30a79b57cb6814cdbb1d3bff4c2e58ab540e86a81badf67246b7002",
+      "source_bytes": 2824,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "a81f522e66e632c0b4e72ea2efc69f1027bce72ec4fcc79fb0a401c64c277338",
+      "opaque_id": "Q73BE1D",
+      "display_geometry": {
+        "opaque_id": "Q73BE1D",
+        "row": 6,
+        "column": 2,
+        "cell_box": [
+          200,
+          556,
+          300,
+          644
+        ],
+        "sprite_box": [
+          234,
+          568,
+          266,
+          600
+        ]
+      },
+      "display_rgba_sha256": "ff64360dbf957a058db898dcd779122f1cbf69afaacd9aaac3e6ac56627c2c6a"
+    },
+    {
+      "asset_id": "wolf_hide",
+      "expected_kind": "WolfHide",
+      "expected_state": "not_applicable",
+      "expected_bucket": "9+",
+      "source_path": "art/style05/env1/items/wolf_hide_count_9_plus.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "823ea06cd230584a51accfb1e2620e475db2b6a5f9467742c415faedd50fbd3f",
+      "source_bytes": 6556,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "b6fd91ca8a2ed7dd9e5ff2a4c1b0cc9e004011deaa0b7eae497363efaa6ce238",
+      "opaque_id": "QCE752A",
+      "display_geometry": {
+        "opaque_id": "QCE752A",
+        "row": 6,
+        "column": 3,
+        "cell_box": [
+          300,
+          556,
+          400,
+          644
+        ],
+        "sprite_box": [
+          334,
+          568,
+          366,
+          600
+        ]
+      },
+      "display_rgba_sha256": "82d7cf03bb5a49a227f357ad264254ef3c1ef6e3a93af5d63d236d127586e9f9"
+    },
+    {
+      "asset_id": "log_pile_medium",
+      "expected_kind": "Log",
+      "expected_state": "not_applicable",
+      "expected_bucket": "1",
+      "source_path": "art/style05/env/items/log_pile_small.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "30ac46278f8abb12040bc8ff40986e5d939ff010a530cd54e37ed620ba685f45",
+      "source_bytes": 7784,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "b8f4d4f3dc6bfccf34f72e2c0e5a95ad1d36739073c6b3d4e8f903e6675352c4",
+      "opaque_id": "Q79A013",
+      "display_geometry": {
+        "opaque_id": "Q79A013",
+        "row": 6,
+        "column": 4,
+        "cell_box": [
+          400,
+          556,
+          500,
+          644
+        ],
+        "sprite_box": [
+          434,
+          568,
+          466,
+          600
+        ]
+      },
+      "display_rgba_sha256": "dd697c11460be1402a4dd6434f09beb4bf394b03ea95243c8b738ef700979be9"
+    },
+    {
+      "asset_id": "log_pile_medium",
+      "expected_kind": "Log",
+      "expected_state": "not_applicable",
+      "expected_bucket": "2–8",
+      "source_path": "art/style05/env/items/log_pile_medium.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "7e13ab188c634172e59b189ed2a2e0063bf0a3dba5df1fbe3d5792fbbd91df9a",
+      "source_bytes": 6707,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "e35dc0d7a36743b9e2435cbec07265ea5f98e6997e17d2dd55733e6f10f978b2",
+      "opaque_id": "QF778E9",
+      "display_geometry": {
+        "opaque_id": "QF778E9",
+        "row": 6,
+        "column": 5,
+        "cell_box": [
+          500,
+          556,
+          600,
+          644
+        ],
+        "sprite_box": [
+          534,
+          568,
+          566,
+          600
+        ]
+      },
+      "display_rgba_sha256": "96ce38de06f26ea62cbf6b136b572068c4a514302ca6aa044f0929586c1c909d"
+    },
+    {
+      "asset_id": "log_pile_small",
+      "expected_kind": "Log",
+      "expected_state": "not_applicable",
+      "expected_bucket": "2–8",
+      "source_path": "art/style05/env/items/log_pile_medium.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "7e13ab188c634172e59b189ed2a2e0063bf0a3dba5df1fbe3d5792fbbd91df9a",
+      "source_bytes": 6707,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "e35dc0d7a36743b9e2435cbec07265ea5f98e6997e17d2dd55733e6f10f978b2",
+      "opaque_id": "QCF96A6",
+      "display_geometry": {
+        "opaque_id": "QCF96A6",
+        "row": 6,
+        "column": 6,
+        "cell_box": [
+          600,
+          556,
+          700,
+          644
+        ],
+        "sprite_box": [
+          634,
+          568,
+          666,
+          600
+        ]
+      },
+      "display_rgba_sha256": "96ce38de06f26ea62cbf6b136b572068c4a514302ca6aa044f0929586c1c909d"
+    },
+    {
+      "asset_id": "cured_hide",
+      "expected_kind": "CuredHide",
+      "expected_state": "cured",
+      "expected_bucket": "1",
+      "source_path": "art/style05/env1/items/cured_hide_count_1.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "32f5f9b4502c7716cf66e1fe351002c4fd3c83f7b70244cb5ce1d7f128da4720",
+      "source_bytes": 5839,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "2fbebe2fef123c15dce177816a36c669a3252bff791d2f5cfe35bad671f29841",
+      "opaque_id": "QBC258F",
+      "display_geometry": {
+        "opaque_id": "QBC258F",
+        "row": 6,
+        "column": 7,
+        "cell_box": [
+          700,
+          556,
+          800,
+          644
+        ],
+        "sprite_box": [
+          734,
+          568,
+          766,
+          600
+        ]
+      },
+      "display_rgba_sha256": "cc3b8a5e2d753dd73bb9316edb7619c91038bdc0e814e6d8261a0dc61c601a40"
+    },
+    {
+      "asset_id": "meat",
+      "expected_kind": "Meat",
+      "expected_state": "fresh",
+      "expected_bucket": "2–8",
+      "source_path": "art/style05/env1/items/meat_count_2_8.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "03465edc30a76aba75062c6bc0b147482804617a400e7ee9f44f9007c6759432",
+      "source_bytes": 4240,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "fd3aaa8ef99489e3a83fb8e4389334ce48db8fed28219cfb52eae59e44084b13",
+      "opaque_id": "QBFF808",
+      "display_geometry": {
+        "opaque_id": "QBFF808",
+        "row": 7,
+        "column": 0,
+        "cell_box": [
+          0,
+          644,
+          100,
+          732
+        ],
+        "sprite_box": [
+          34,
+          656,
+          66,
+          688
+        ]
+      },
+      "display_rgba_sha256": "8e1f9bbe251d07ecd29e3b205545a0124f0959571439076b43f9593badcda40c"
+    },
+    {
+      "asset_id": "log_pile_small",
+      "expected_kind": "Log",
+      "expected_state": "not_applicable",
+      "expected_bucket": "1",
+      "source_path": "art/style05/env/items/log_pile_small.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "30ac46278f8abb12040bc8ff40986e5d939ff010a530cd54e37ed620ba685f45",
+      "source_bytes": 7784,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "b8f4d4f3dc6bfccf34f72e2c0e5a95ad1d36739073c6b3d4e8f903e6675352c4",
+      "opaque_id": "Q57B2BA",
+      "display_geometry": {
+        "opaque_id": "Q57B2BA",
+        "row": 7,
+        "column": 1,
+        "cell_box": [
+          100,
+          644,
+          200,
+          732
+        ],
+        "sprite_box": [
+          134,
+          656,
+          166,
+          688
+        ]
+      },
+      "display_rgba_sha256": "dd697c11460be1402a4dd6434f09beb4bf394b03ea95243c8b738ef700979be9"
+    },
+    {
+      "asset_id": "log_pile_small",
+      "expected_kind": "Log",
+      "expected_state": "not_applicable",
+      "expected_bucket": "9+",
+      "source_path": "art/style05/env/items/log_pile_large.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "09144dfdcd810b4a952bf892271697dba19b6b02a0d2727fecafe9d99018a02d",
+      "source_bytes": 10182,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "7da25aa02054a3f5828f299b8da18cf567007669395ebbd2bf9a0c7916a91abe",
+      "opaque_id": "Q9C5022",
+      "display_geometry": {
+        "opaque_id": "Q9C5022",
+        "row": 7,
+        "column": 2,
+        "cell_box": [
+          200,
+          644,
+          300,
+          732
+        ],
+        "sprite_box": [
+          234,
+          656,
+          266,
+          688
+        ]
+      },
+      "display_rgba_sha256": "ec737cb35dbcc62649531afa5b373571de71e86996d77d9dd1c5fd49a57443fa"
+    },
+    {
+      "asset_id": "firewood",
+      "expected_kind": "Firewood",
+      "expected_state": "not_applicable",
+      "expected_bucket": "9+",
+      "source_path": "art/style05/env1/items/firewood_count_9_plus.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "8ab689509eca647b05406403eb2123e0f0edb448b8006d96229017234a72cdba",
+      "source_bytes": 3215,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "a47c996c25f48a9a64497cda00e64593b1ae615a6b46cd1ac37449726be07c58",
+      "opaque_id": "Q9FE716",
+      "display_geometry": {
+        "opaque_id": "Q9FE716",
+        "row": 7,
+        "column": 3,
+        "cell_box": [
+          300,
+          644,
+          400,
+          732
+        ],
+        "sprite_box": [
+          334,
+          656,
+          366,
+          688
+        ]
+      },
+      "display_rgba_sha256": "60a1bbb165aa1e0888831abec643e35643e5b7611792ec7d7b95baf1dc7b39a3"
+    },
+    {
+      "asset_id": "log_pile_large",
+      "expected_kind": "Log",
+      "expected_state": "not_applicable",
+      "expected_bucket": "1",
+      "source_path": "art/style05/env/items/log_pile_small.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "30ac46278f8abb12040bc8ff40986e5d939ff010a530cd54e37ed620ba685f45",
+      "source_bytes": 7784,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "b8f4d4f3dc6bfccf34f72e2c0e5a95ad1d36739073c6b3d4e8f903e6675352c4",
+      "opaque_id": "Q821449",
+      "display_geometry": {
+        "opaque_id": "Q821449",
+        "row": 7,
+        "column": 4,
+        "cell_box": [
+          400,
+          644,
+          500,
+          732
+        ],
+        "sprite_box": [
+          434,
+          656,
+          466,
+          688
+        ]
+      },
+      "display_rgba_sha256": "dd697c11460be1402a4dd6434f09beb4bf394b03ea95243c8b738ef700979be9"
+    },
+    {
+      "asset_id": "log_pile_medium",
+      "expected_kind": "Log",
+      "expected_state": "not_applicable",
+      "expected_bucket": "9+",
+      "source_path": "art/style05/env/items/log_pile_large.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "09144dfdcd810b4a952bf892271697dba19b6b02a0d2727fecafe9d99018a02d",
+      "source_bytes": 10182,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "7da25aa02054a3f5828f299b8da18cf567007669395ebbd2bf9a0c7916a91abe",
+      "opaque_id": "Q999806",
+      "display_geometry": {
+        "opaque_id": "Q999806",
+        "row": 7,
+        "column": 5,
+        "cell_box": [
+          500,
+          644,
+          600,
+          732
+        ],
+        "sprite_box": [
+          534,
+          656,
+          566,
+          688
+        ]
+      },
+      "display_rgba_sha256": "ec737cb35dbcc62649531afa5b373571de71e86996d77d9dd1c5fd49a57443fa"
+    },
+    {
+      "asset_id": "hide_wrap",
+      "expected_kind": "HideWrap",
+      "expected_state": "not_applicable",
+      "expected_bucket": "9+",
+      "source_path": "art/style05/env1/items/hide_wrap_count_9_plus.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "b84db3308c7deab5222b6f4270b703bb0b16a639ba24068a1b09ecf271cd4fbb",
+      "source_bytes": 5739,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "e8ec7aebe0a2c5dd4d429f733bf78d86031fac474ce1c15937d76d1666f843fe",
+      "opaque_id": "Q8D6CEF",
+      "display_geometry": {
+        "opaque_id": "Q8D6CEF",
+        "row": 7,
+        "column": 6,
+        "cell_box": [
+          600,
+          644,
+          700,
+          732
+        ],
+        "sprite_box": [
+          634,
+          656,
+          666,
+          688
+        ]
+      },
+      "display_rgba_sha256": "9bd5d9412da3ee41cac88fd9a7c398309a27588863ba908ce89a33e20303136d"
+    },
+    {
+      "asset_id": "meat_spoiled",
+      "expected_kind": "Meat",
+      "expected_state": "spoiled",
+      "expected_bucket": "1",
+      "source_path": "art/style05/env1/items/meat_spoiled.png",
+      "entry_role": "derived_state",
+      "source_sha256": "136b78e58bd657a2f3ad231d691f856973b26e7fc27fe352c4289d2e33590350",
+      "source_bytes": 4057,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "0408fb146aff50d8f37a156a99ff96ae0d560eb20884860bbe77b11617ad2d89",
+      "opaque_id": "QEA2A35",
+      "display_geometry": {
+        "opaque_id": "QEA2A35",
+        "row": 7,
+        "column": 7,
+        "cell_box": [
+          700,
+          644,
+          800,
+          732
+        ],
+        "sprite_box": [
+          734,
+          656,
+          766,
+          688
+        ]
+      },
+      "display_rgba_sha256": "09761af377ec451e81fc7bb2f94079e129d4d4cde2c0970cd417da6820c551e5"
+    },
+    {
+      "asset_id": "berry_basket",
+      "expected_kind": "LegacyFood",
+      "expected_state": "not_applicable",
+      "expected_bucket": "2–8",
+      "source_path": "art/style05/env1/items/berry_basket_count_2_8.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "4809a5d039e6abf504c5fb876929f01ed72539ef4e4509f7d9d3f1c801dcd43b",
+      "source_bytes": 7191,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "84a47d46e1d355e56a8513acbb90493822ee626fdf3682cb7cef1ad905e34bf4",
+      "opaque_id": "QBD20C6",
+      "display_geometry": {
+        "opaque_id": "QBD20C6",
+        "row": 8,
+        "column": 0,
+        "cell_box": [
+          0,
+          732,
+          100,
+          820
+        ],
+        "sprite_box": [
+          34,
+          744,
+          66,
+          776
+        ]
+      },
+      "display_rgba_sha256": "4f5bf9c1e3aa5ec3ce527259b07f4e770a6a29e9df24232b9296291eab17807d"
+    },
+    {
+      "asset_id": "cured_hide",
+      "expected_kind": "CuredHide",
+      "expected_state": "cured",
+      "expected_bucket": "9+",
+      "source_path": "art/style05/env1/items/cured_hide_count_9_plus.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "45529fc460dc0ef4101865717de83bf4e822a8a306156d81871456f5508ccb44",
+      "source_bytes": 6472,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "b597df6e2d20c1a6369cb894b259fc7e043e2c3a3c2d9c7f8650991fc3d5f4a5",
+      "opaque_id": "Q6D58A1",
+      "display_geometry": {
+        "opaque_id": "Q6D58A1",
+        "row": 8,
+        "column": 1,
+        "cell_box": [
+          100,
+          732,
+          200,
+          820
+        ],
+        "sprite_box": [
+          134,
+          744,
+          166,
+          776
+        ]
+      },
+      "display_rgba_sha256": "0f97308f757e3d4be32ef33813d5a3edde892405781d949fb9bce5d4971141d4"
+    },
+    {
+      "asset_id": "clay",
+      "expected_kind": "Clay",
+      "expected_state": "not_applicable",
+      "expected_bucket": "9+",
+      "source_path": "art/style05/env1/items/clay_count_9_plus.png",
+      "entry_role": "existing_count_variant",
+      "source_sha256": "dad5192a0ddb5c9829810122e6dbaad1e51931bd00b3f9d8f0e41eb880f5297d",
+      "source_bytes": 4170,
+      "source_canvas": [
+        64,
+        64
+      ],
+      "source_rgba_sha256": "12bf8ff24a1a30f58151ca3531be4b64d03cc42aaf942bd1cc30842ad53aea87",
+      "opaque_id": "Q2929F2",
+      "display_geometry": {
+        "opaque_id": "Q2929F2",
+        "row": 8,
+        "column": 2,
+        "cell_box": [
+          200,
+          732,
+          300,
+          820
+        ],
+        "sprite_box": [
+          234,
+          744,
+          266,
+          776
+        ]
+      },
+      "display_rgba_sha256": "c2d2ec3e736121851fca9cd9b60520df813c4937ad578cf11f4d24cf855089b6"
+    }
+  ],
+  "count_by_bucket": {
+    "2–8": 22,
+    "1": 23,
+    "9+": 22
+  },
+  "duplicate_pixel_groups": {
+    "e35dc0d7a36743b9e2435cbec07265ea5f98e6997e17d2dd55733e6f10f978b2": [
+      "Q4B9C66",
+      "QF778E9",
+      "QCF96A6"
+    ],
+    "7da25aa02054a3f5828f299b8da18cf567007669395ebbd2bf9a0c7916a91abe": [
+      "QA24C7A",
+      "Q9C5022",
+      "Q999806"
+    ],
+    "b8f4d4f3dc6bfccf34f72e2c0e5a95ad1d36739073c6b3d4e8f903e6675352c4": [
+      "Q79A013",
+      "Q57B2BA",
+      "Q821449"
+    ]
+  },
+  "duplicate_policy": "All 66 existing entry/bucket combinations remain, including reused identical log buckets; one derived spoiled-meat state is additional.",
+  "scoring": "Record kind, quantity bucket and applicable visible state separately; no invented acceptance threshold or asset-verdict mutation."
+}

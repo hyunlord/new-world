@@ -1,0 +1,71 @@
+{
+  "checked_at": "2026-10-23T08:01:33.374848+00:00",
+  "technical_scope": "standalone ENV1 art/tools only; no game behavior or integration gate claimed",
+  "technical_status": "PASS",
+  "art_acceptance": "PARTIAL_FAIL",
+  "scene_readability": "ROUND0_FAIL_ROUND1_FAIL",
+  "controlled_noninferiority": "NOT_VERIFIED",
+  "owner_approval": "NOT_CLAIMED",
+  "checks": {
+    "pytest": {
+      "passed": 44,
+      "raw_path": "/Users/rexxa/work/artenv1-data/final-tests-clean.txt",
+      "sha256": "4aea82abd056663023599cdde926c8ca9476743e8bf7241c347bd6674aadd0c8"
+    },
+    "ruff": {
+      "diagnostics": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "basedpyright": {
+      "filesAnalyzed": 35,
+      "errorCount": 0,
+      "warningCount": 0,
+      "informationCount": 0,
+      "timeInSec": 1.541,
+      "sha256": "98c31a58d19a8500b55283ce59ed4da318ace0df7f2e4a58649ed06808874835"
+    },
+    "godot": "final imported/check-only scene and two visible60s runs exit0; process/runtime/input/capture evidence in fps/results.json",
+    "file_audit": {
+      "files_before_summary": 610,
+      "pngs_decoded": 335,
+      "jsons_parsed": 195,
+      "maximum_bytes": 1483844,
+      "cap": 1500000,
+      "source": "/Users/rexxa/work/artenv1-data/final-file-audit.json",
+      "sha256": "81398ad251005e74e6dcc22b0aa93019082e4b635a43ce98ed541897de13b501"
+    },
+    "immutable_pngs": {
+      "production": 375,
+      "additional_historical": 2,
+      "all_byte_equal_to_base": true
+    },
+    "generation": {
+      "attempts": 135,
+      "limit": 260,
+      "output_pairs_verified": 134,
+      "recorded_reference_hashes_verified": 398,
+      "source_manifests_verified": 8,
+      "provenance": "PARTIAL; gaps unchanged"
+    }
+  },
+  "verification_corrections": [
+    "Initial all-tree PNG audit expected375 but includes two historical TRIAL2 PNGs; verified377 total and375 production subset.",
+    "Failed item preflight has null references by design; audit preserves missing event and verifies398 recorded references, not invented inputs.",
+    "First broad typecheck omitted pytest; corrected environment then removed remaining Any/unused-return diagnostics without changing frozen artifacts."
+  ],
+  "scope": {
+    "allowed": [
+      "art/**",
+      "docs/v8/artenv1/**"
+    ],
+    "unrelated_preserved": [
+      ".gitignore",
+      ".ignore",
+      "docs/art/",
+      ".omo/"
+    ],
+    "game_code_changed": false,
+    "merge_performed": false
+  },
+  "publication": "Final staged-byte audit and exact remote SHA receipt saved externally after commit; see final response pinned links."
+}

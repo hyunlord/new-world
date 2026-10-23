@@ -1,0 +1,299 @@
+{
+  "reviewer": "c",
+  "boards": [
+    {
+      "scale": "1x",
+      "started_at": "2026-10-23 06:50:20 UTC",
+      "ended_at": "2026-10-23 06:51:08 UTC",
+      "answers": [
+        {
+          "id": "R1-1X-01",
+          "species": "Deer (antlered stag)",
+          "pose": "Standing in side view, head raised and facing right.",
+          "confidence": "high",
+          "notes": "The antlers and long legs read clearly."
+        },
+        {
+          "id": "R1-1X-02",
+          "species": "Wolf",
+          "pose": "Lying collapsed on its side, head toward the left and legs stretched out.",
+          "confidence": "medium",
+          "notes": "The very low silhouette could also be a stretched running frame; my primary reading is a prone or fallen animal."
+        },
+        {
+          "id": "R1-1X-03",
+          "species": "Deer (antlered stag)",
+          "pose": "Leaping or running toward the right with its legs spread.",
+          "confidence": "high",
+          "notes": "The extended legs make the motion clear."
+        },
+        {
+          "id": "R1-1X-04",
+          "species": "Wolf",
+          "pose": "Lying on its side with the body and legs extended horizontally.",
+          "confidence": "medium",
+          "notes": "A flattened leap is an alternative reading, but the head and body seem down on the ground."
+        },
+        {
+          "id": "R1-1X-05",
+          "species": "Wolf",
+          "pose": "Rearing up on its hind legs with the front paws lifted, as if attacking.",
+          "confidence": "medium",
+          "notes": "The upright silhouette is clear; the exact attack or recoil action is uncertain."
+        },
+        {
+          "id": "R1-1X-06",
+          "species": "Deer (antlered stag)",
+          "pose": "Grazing with its head lowered to the ground.",
+          "confidence": "high",
+          "notes": ""
+        },
+        {
+          "id": "R1-1X-07",
+          "species": "Wolf",
+          "pose": "Upright and facing forward, hind legs apart and forepaws raised.",
+          "confidence": "medium",
+          "notes": "Reads as a rearing attack pose, though it could be a frontal jump."
+        },
+        {
+          "id": "R1-1X-08",
+          "species": "Deer (antlered stag)",
+          "pose": "Standing and looking straight toward the viewer.",
+          "confidence": "high",
+          "notes": ""
+        },
+        {
+          "id": "R1-1X-09",
+          "species": "Wolf",
+          "pose": "Standing on all fours in a three-quarter view, looking toward the left.",
+          "confidence": "high",
+          "notes": ""
+        },
+        {
+          "id": "R1-1X-10",
+          "species": "Deer (antlered stag)",
+          "pose": "Standing front-on with its head raised.",
+          "confidence": "high",
+          "notes": ""
+        },
+        {
+          "id": "R1-1X-11",
+          "species": "Wolf",
+          "pose": "Crouching and lunging toward the lower left, with its front legs extended.",
+          "confidence": "medium",
+          "notes": "Could be a running stride or an attack; the primary impression is a forward pounce."
+        },
+        {
+          "id": "R1-1X-12",
+          "species": "Wolf",
+          "pose": "Standing alert in a three-quarter side view with its head facing right.",
+          "confidence": "high",
+          "notes": ""
+        },
+        {
+          "id": "R1-1X-13",
+          "species": "Deer (antlered stag)",
+          "pose": "Taking a slow step toward the right with its head raised.",
+          "confidence": "medium",
+          "notes": "The lifted foreleg suggests walking, though it may be a standing stance."
+        },
+        {
+          "id": "R1-1X-14",
+          "species": "Deer (antlered stag)",
+          "pose": "Lying fallen on its side with its legs extended toward the right.",
+          "confidence": "high",
+          "notes": "Appears collapsed or dead rather than sitting upright."
+        },
+        {
+          "id": "R1-1X-15",
+          "species": "Wolf",
+          "pose": "Standing alert, mostly facing the viewer with a slight turn to the left.",
+          "confidence": "high",
+          "notes": ""
+        },
+        {
+          "id": "R1-1X-16",
+          "species": "Deer (antlered stag)",
+          "pose": "Collapsed on its side, head and antlers down toward the left.",
+          "confidence": "high",
+          "notes": ""
+        },
+        {
+          "id": "R1-1X-17",
+          "species": "Wolf",
+          "pose": "Walking toward the right in side view.",
+          "confidence": "high",
+          "notes": ""
+        },
+        {
+          "id": "R1-1X-18",
+          "species": "Wolf",
+          "pose": "Running or leaping quickly toward the right with its body stretched low.",
+          "confidence": "high",
+          "notes": ""
+        },
+        {
+          "id": "R1-1X-19",
+          "species": "Deer (antlered stag)",
+          "pose": "Running toward the viewer at an angle, with its forelegs spread.",
+          "confidence": "high",
+          "notes": ""
+        },
+        {
+          "id": "R1-1X-20",
+          "species": "Deer",
+          "pose": "Grazing with its rump toward the viewer and its head lowered on the right.",
+          "confidence": "high",
+          "notes": "Antlers are less obvious in this view."
+        }
+      ]
+    },
+    {
+      "scale": "2x",
+      "started_at": "2026-10-23 06:51:08 UTC",
+      "ended_at": "2026-10-23 06:52:07 UTC",
+      "answers": [
+        {
+          "id": "R1-2X-01",
+          "species": "Deer (antlered stag)",
+          "pose": "Walking toward the right with one foreleg lifted.",
+          "confidence": "high",
+          "notes": ""
+        },
+        {
+          "id": "R1-2X-02",
+          "species": "Deer (antlered stag)",
+          "pose": "Fallen or falling onto its side, with its legs stretched toward the right.",
+          "confidence": "medium",
+          "notes": "Its head is still raised, so this may be a collapse in progress rather than a fully resting carcass."
+        },
+        {
+          "id": "R1-2X-03",
+          "species": "Deer (antlered stag)",
+          "pose": "Facing the viewer and taking a small forward step.",
+          "confidence": "medium",
+          "notes": "One leg appears offset; a stationary front-facing stance is also plausible."
+        },
+        {
+          "id": "R1-2X-04",
+          "species": "Wolf",
+          "pose": "Pouncing forward and toward the left, with both forelegs reaching out.",
+          "confidence": "high",
+          "notes": "Could be an attack or a low running bound."
+        },
+        {
+          "id": "R1-2X-05",
+          "species": "Deer (antlered stag)",
+          "pose": "Running toward the right in an extended midair stride.",
+          "confidence": "high",
+          "notes": ""
+        },
+        {
+          "id": "R1-2X-06",
+          "species": "Deer (antlered stag)",
+          "pose": "Grazing in side view with its head lowered toward the right.",
+          "confidence": "high",
+          "notes": ""
+        },
+        {
+          "id": "R1-2X-07",
+          "species": "Deer (antlered stag)",
+          "pose": "Grazing while angled away from the viewer, head down on the right.",
+          "confidence": "high",
+          "notes": ""
+        },
+        {
+          "id": "R1-2X-08",
+          "species": "Deer (antlered stag)",
+          "pose": "Lying collapsed on its side with its head and antlers resting toward the left.",
+          "confidence": "high",
+          "notes": "Reads as dead or incapacitated."
+        },
+        {
+          "id": "R1-2X-09",
+          "species": "Deer (antlered stag)",
+          "pose": "Standing still and facing the viewer.",
+          "confidence": "high",
+          "notes": ""
+        },
+        {
+          "id": "R1-2X-10",
+          "species": "Wolf",
+          "pose": "Standing alert in a three-quarter view and looking right.",
+          "confidence": "high",
+          "notes": ""
+        },
+        {
+          "id": "R1-2X-11",
+          "species": "Wolf",
+          "pose": "Lying limp on its side, facing left with the legs extended.",
+          "confidence": "high",
+          "notes": "Reads as dead or incapacitated rather than sleeping in a curl."
+        },
+        {
+          "id": "R1-2X-12",
+          "species": "Wolf",
+          "pose": "Walking right with a forepaw raised.",
+          "confidence": "high",
+          "notes": ""
+        },
+        {
+          "id": "R1-2X-13",
+          "species": "Wolf",
+          "pose": "Standing on all fours in three-quarter view, head turned toward the left.",
+          "confidence": "high",
+          "notes": ""
+        },
+        {
+          "id": "R1-2X-14",
+          "species": "Wolf",
+          "pose": "Standing alert and facing almost directly toward the viewer.",
+          "confidence": "high",
+          "notes": ""
+        },
+        {
+          "id": "R1-2X-15",
+          "species": "Wolf",
+          "pose": "Rearing onto its hind legs with both front paws raised, as if striking.",
+          "confidence": "medium",
+          "notes": "The pose is strongly upright and somewhat human-like; an attack, recoil, or backward jump could explain it."
+        },
+        {
+          "id": "R1-2X-16",
+          "species": "Deer (antlered stag)",
+          "pose": "Bounding diagonally toward the viewer and the right.",
+          "confidence": "high",
+          "notes": ""
+        },
+        {
+          "id": "R1-2X-17",
+          "species": "Deer (antlered stag)",
+          "pose": "Standing in profile facing right, head held high.",
+          "confidence": "high",
+          "notes": ""
+        },
+        {
+          "id": "R1-2X-18",
+          "species": "Wolf",
+          "pose": "Lying collapsed on its side with the head left and legs stretched right.",
+          "confidence": "high",
+          "notes": "Reads as a fallen or dead animal."
+        },
+        {
+          "id": "R1-2X-19",
+          "species": "Wolf",
+          "pose": "Running or leaping toward the right in a low extended stride.",
+          "confidence": "high",
+          "notes": ""
+        },
+        {
+          "id": "R1-2X-20",
+          "species": "Wolf",
+          "pose": "Facing forward while reared up, with its forepaws bent near its chest.",
+          "confidence": "medium",
+          "notes": "My primary reading is an upright attack pose; a frontal jump or recoil is also possible."
+        }
+      ]
+    }
+  ]
+}

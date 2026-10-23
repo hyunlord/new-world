@@ -1,0 +1,100 @@
+{
+  "id": "hill_edge",
+  "path": "art/style05/env1/built/hill_edge.png",
+  "width": 64,
+  "height": 64,
+  "footprint": [
+    1,
+    1
+  ],
+  "family": "ground",
+  "attempts": 1,
+  "selected_attempt": 1,
+  "status": "ACCEPTED_ASSET",
+  "raw": "/Users/rexxa/work/artenv1-data/built/hill_edge_try1_raw.png",
+  "raw_sha256": "9a0960359ef6197d519262b5d7849c93ac0f469f6f812cadcaa148da12b74b4e",
+  "sha256": "08d31a907d3eb27fa8440ff491d81252ffa38cee6d4b79155b59886f306dc3cb",
+  "metadata": "/Users/rexxa/work/artenv1-data/built/hill_edge_try1.json",
+  "metadata_sha256": "8a009f3323118baee223c39e753b42aab5436f0962e8eb5697bd95974b6e3f73",
+  "numeric": {
+    "candidate": "/Users/rexxa/work/artenv1-data/built/hill_edge_try1_raw.png",
+    "sha256": "9a0960359ef6197d519262b5d7849c93ac0f469f6f812cadcaa148da12b74b4e",
+    "family": "ground",
+    "metrics": {
+      "edge_density": 0.27521101033005796,
+      "saturation_q25": 0.4327271236398551,
+      "saturation_q75": 0.5164360678312114,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.0,
+      "stroke_q90": 2.8284271247461903,
+      "wash_flatness": 0.0062833956563972575,
+      "foreground_pixels": 65536
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "operations": [
+    "full-frame Lanczos resize",
+    "logged global contrast/chroma/value scales; no local edits"
+  ],
+  "tone": {
+    "before_mean": 0.39733458199295346,
+    "before_std": 0.11972158141888639,
+    "before_saturation": 0.45870584841100237,
+    "after_mean": 0.3952171999463848,
+    "after_std": 0.11908569205643754,
+    "after_saturation": 0.2878161812210077,
+    "person_std_cap": 0.16719984851327876,
+    "contrast_scale": 1.0,
+    "chroma_scales": [
+      0.7181071043014526,
+      0.8047682634741863
+    ],
+    "value_scale": 0.9941722830326398
+  },
+  "seam": {
+    "horizontal_mae": 6.78125,
+    "vertical_mae": 51.484375,
+    "horizontal_ratio": 0.559019164190497,
+    "vertical_ratio": 3.972791936461357,
+    "passed": false
+  },
+  "bytes": 10531,
+  "model": {
+    "scores": {
+      "medium": 5,
+      "line": 5,
+      "light": 5,
+      "palette": 5,
+      "sentence": "Virtually identical rendering style, with matching ink line quality, stippled watercolor texture, rock and soil treatment, and the same color range and lighting direction as the reference images."
+    },
+    "review_id": "judge_ground_b",
+    "candidate_raw_sha256": "9a0960359ef6197d519262b5d7849c93ac0f469f6f812cadcaa148da12b74b4e",
+    "scorecard_sha256": "4b84dfd8086a5e08185f6da422ab83f4222561b2ae6d96f57432ccd6c8142413"
+  },
+  "physical_footprint": [
+    1,
+    1
+  ],
+  "style_pass": true,
+  "reading": "A low broken stone ledge separates high and low ground; horizontal repeat passes.",
+  "semantic_pass": true,
+  "required_wrap_axes": [
+    "horizontal"
+  ],
+  "required_wrap_pass": true,
+  "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+}

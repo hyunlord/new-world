@@ -1,0 +1,77 @@
+{
+  "id": "wall_stone_corner",
+  "path": "art/style05/env1/built/wall_stone_corner.png",
+  "width": 128,
+  "height": 128,
+  "footprint": [
+    2,
+    2
+  ],
+  "family": "buildings",
+  "attempts": 3,
+  "selected_attempt": 3,
+  "status": "SEAM_FAIL_CANDIDATE",
+  "raw": "/Users/rexxa/work/artenv1-data/built/wall_stone_corner_try3_raw.png",
+  "raw_sha256": "fd77749a9a0b295a7b3132f067d5a9fec13d8f04c621cbbfff91fb1d6c2b9710",
+  "sha256": "b78edcc34c34df74f7c9bd13e8ca6efcbbd7165bbfed50bdc630598eb0396414",
+  "metadata": "/Users/rexxa/work/artenv1-data/built/wall_stone_corner_try3.json",
+  "metadata_sha256": "44b4480b5bc5d41944998a3731f3fbd70d6b137076265c9942a3a2070c650822",
+  "numeric": {
+    "candidate": "/Users/rexxa/work/artenv1-data/built/wall_stone_corner_try3_raw.png",
+    "sha256": "fd77749a9a0b295a7b3132f067d5a9fec13d8f04c621cbbfff91fb1d6c2b9710",
+    "family": "buildings",
+    "metrics": {
+      "edge_density": 0.27710138140950596,
+      "saturation_q25": 0.40634211312955915,
+      "saturation_q75": 0.5485978075073518,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 2.8284271247461903,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.020146842850297147,
+      "foreground_pixels": 27440
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "operations": [
+    "crop alpha>=128 bounds plus2px fringe (242, 0, 1254, 1080); no alpha edits",
+    "Lanczos contain (116, 124) offset(6, 2)"
+  ],
+  "tone": null,
+  "seam": null,
+  "bytes": 23156,
+  "model": {
+    "scores": {
+      "medium": 4,
+      "line": 4,
+      "light": 5,
+      "palette": 4,
+      "sentence": "Uses the same hand-drawn ink/wash technique and lighting, but stone texture has slightly different line density and color balance (a bit more yellow/gray and higher contrast) than the reference buildings."
+    },
+    "review_id": "judge_buildings_retry",
+    "candidate_raw_sha256": "fd77749a9a0b295a7b3132f067d5a9fec13d8f04c621cbbfff91fb1d6c2b9710",
+    "scorecard_sha256": "b82d2f2b5fd2799a8f19cedde31cd4ec407ba24100e5ef16f5373f7e532e8eb0"
+  },
+  "physical_footprint": [
+    2,
+    2
+  ],
+  "style_pass": true,
+  "reading": "Mottled stone elbow now shares the straight strip's material; front-face depth and baked shadow still differ.",
+  "semantic_pass": true,
+  "required_wrap_pass": true,
+  "acceptance_scope": "Local asset gates only; no scene readability or owner approval claim."
+}

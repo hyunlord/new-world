@@ -1,0 +1,281 @@
+[
+  {
+    "id": "items_style_card1",
+    "prompt": "Create a plain readable white scorecard evaluating ONLY the four candidates within image5 against reference images1-4. Images1 props original and2 scene original are locked style originals; image3 props_logs and4 props_hearth are frozen same-family item anchors. Candidate image5 is a labeled 2x2 contact sheet: top-left cured_hide; top-right clay; bottom-left raw_pot; bottom-right clay_pot_filled. For EACH candidate separately print its exact name, four integer scores1to5: MEDIUM,LINE,LIGHT,PALETTE, and one concise sentence describing actual rendering style and relative match/drift. Score1 unrelated,2 substantially different,3 mixed/noticeable drift,4 close match,5 indistinguishable visual language. Judge actual reference ink marks and wash variation, not an idealized brief. Different subject does not count as style mismatch. All four>=4 is stylePASS otherwise FAIL; print actual verdict. Do not assume expected scores. Do not repaint candidate or reference. No artwork; only a legible scorecard for all4items in four sections.",
+    "refs": [
+      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png",
+      "/Users/rexxa/work/artenv1-data/items/style_candidates1.png"
+    ],
+    "started_at": "2026-10-23T06:31:44.098Z",
+    "failed_call": {
+      "reason": "referenced_image_paths maximum5; returned before generation",
+      "at": "2026-10-23T06:31:44.098Z"
+    },
+    "completed_at": "2026-10-23T06:35:33.728Z",
+    "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-fd53f439-c3d6-4f1c-9cbf-b84f1e44f29c.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "transcription": [
+      {
+        "id": "cured_hide",
+        "attempt": 1,
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5,
+        "sentence": "Uses the same inked outlines, textured watercolor washes, and earthy limited palette as the references; matches very closely with only minor subject-driven variation."
+      },
+      {
+        "id": "clay",
+        "attempt": 1,
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 5,
+        "sentence": "Follows the same ink-and-wash approach with readable contour lines, mottled brush texture, and earthy tones; slightly smoother surfaces than some references but still close."
+      },
+      {
+        "id": "raw_pot",
+        "attempt": 1,
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Matches the reference ink linework, watercolor wash texture, and material rendering well; very consistent with scene props with only slightly cleaner shading than some reference items."
+      },
+      {
+        "id": "clay_pot_filled",
+        "attempt": 1,
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5,
+        "sentence": "Fully aligns with the reference visual language: strong ink lines, watercolor washes, subtle texture, and matching earthy palette with blue water rendered in the same style."
+      }
+    ],
+    "mechanism": "built-in image-generation model rendered scorecard; actual printed scores visually transcribed; model version not exposed",
+    "format_deviation": "Illustrated candidate repetition despite no-artwork request; scores and reasons legible.",
+    "raw_scorecard": "/Users/rexxa/work/artenv1-data/items/model_scorecard1_raw.png",
+    "raw_scorecard_sha256": "884e2f91b66544c5267be7a3f2983ce612aa74c3c1d0e15f3917506b41b81f6e",
+    "display_scorecard": "art/style05/env1/items/model_scorecard1.png",
+    "display_scorecard_sha256": "32c3651bf698785c4a30d1053fa07daf70018d63c9a6729d2ce4b2a05388185c",
+    "reference_hashes": {
+      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+      "/Users/rexxa/work/artenv1-data/items/style_candidates1.png": "6b24b1eac07f850d40a19366628c0de1ded8a762ae804b3364d0d43c2b4a7587"
+    },
+    "candidate_sources": [
+      {
+        "id": "cured_hide",
+        "source": "/Users/rexxa/work/artenv1-data/items/cured_hide_try1_raw.png",
+        "sha256": "3df29d0c2dbc20043712b91044ce777f8e70948bdcae8a311b8ab4c787398362"
+      },
+      {
+        "id": "clay",
+        "source": "/Users/rexxa/work/artenv1-data/items/clay_try1_raw.png",
+        "sha256": "78129cdf41aeff5acb57307fcfd0d6c534be31d6705eb98f06c7cea7d781053d"
+      },
+      {
+        "id": "raw_pot",
+        "source": "/Users/rexxa/work/artenv1-data/items/raw_pot_try1_raw.png",
+        "sha256": "706aa5ed5df014d0c6d6102373a5d260a5b9d376930f5883d9ee50694efbfa9b"
+      },
+      {
+        "id": "clay_pot_filled",
+        "source": "/Users/rexxa/work/artenv1-data/items/clay_pot_filled_try1_raw.png",
+        "sha256": "e69febd70249a6a28185f085e7e748ffdb3653351477a771226d501b2f0b34a6"
+      }
+    ]
+  },
+  {
+    "id": "items_style_card2",
+    "prompt": "Create a plain readable white scorecard evaluating ONLY the 4 labeled candidates within image5. Images1 props original and2 scene original are locked style originals; image3 props_logs and4 props_hearth are frozen same-family item anchors. Image5 is a contact sheet ordered left-to-right then top-to-bottom: firewood, ground_axe, hide_wrap, fur_cloak. For EACH candidate separately print exact name and four integer scores1to5: MEDIUM,LINE,LIGHT,PALETTE, plus one concise sentence describing actual rendering style and relative match or drift. Score1 unrelated,2 substantially different,3 mixed or noticeable drift,4 close match,5 indistinguishable visual language. Judge actual reference ink marks and wash variation, not an idealized brief. Different subject does not count as style mismatch. Four scores>=4 is stylePASS otherwise FAIL; print actual verdict. Do not assume expected scores. Do not repaint candidate or reference. No artwork; only a legible scorecard in 4sections.",
+    "refs": [
+      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png",
+      "/Users/rexxa/work/artenv1-data/items/style_candidates2.png"
+    ],
+    "started_at": "2026-10-23T06:41:14.250Z",
+    "completed_at": "2026-10-23T06:42:02.990Z",
+    "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-debfb8f8-1f8f-4eb6-9a00-a3bf3fb68413.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "transcription": [
+      {
+        "id": "firewood",
+        "attempt": 2,
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Matches the originals with the same hand-inked line work, textured watercolor washes, lighting and earthy palette; indistinguishable style."
+      },
+      {
+        "id": "ground_axe",
+        "attempt": 2,
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Same hand-drawn ink lines, detailed texture work, and natural watercolor shading and palette as the originals; fully consistent."
+      },
+      {
+        "id": "hide_wrap",
+        "attempt": 3,
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Uses the same inked contours, textured wash strokes, lighting and earth-tone palette as the originals; indistinguishable style."
+      },
+      {
+        "id": "fur_cloak",
+        "attempt": 2,
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Same hand-inked line quality, textured watercolor rendering, lighting and muted natural palette as the originals; fully consistent."
+      }
+    ],
+    "mechanism": "built-in image-generation model rendered scorecard; actual printed scores visually transcribed; model version not exposed",
+    "format_deviation": "Illustrated candidate repetition despite no-artwork request; scores and reasons legible.",
+    "raw_scorecard": "/Users/rexxa/work/artenv1-data/items/model_scorecard2_raw.png",
+    "raw_scorecard_sha256": "4cc68a2da81313ee1865bb1dc710094a10cc2e0682a24874485fffeb8cd1eacb",
+    "display_scorecard": "art/style05/env1/items/model_scorecard2.png",
+    "display_scorecard_sha256": "d4bd7242ef44f985e18310426833d3e9ad9bc17218ac6afafcd7675c91120803",
+    "reference_hashes": {
+      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+      "/Users/rexxa/work/artenv1-data/items/style_candidates2.png": "974f21bc76b84b1b2a18b7519644792b3461344f972df38335d43820d740d2fc"
+    },
+    "candidate_sources": [
+      {
+        "id": "firewood",
+        "source": "/Users/rexxa/work/artenv1-data/items/firewood_try2_raw.png",
+        "sha256": "bcd4378db6a41557ef92cc05a4b0de9520c60f313ea5af88c8697cd7c861d039"
+      },
+      {
+        "id": "ground_axe",
+        "source": "/Users/rexxa/work/artenv1-data/items/ground_axe_try2_raw.png",
+        "sha256": "0cdc01b9469c2ff3d494a8f5fd66b27b9bc2ae576f3e4e717776bc38f9afe548"
+      },
+      {
+        "id": "hide_wrap",
+        "source": "/Users/rexxa/work/artenv1-data/items/hide_wrap_try3_raw.png",
+        "sha256": "03568182d581d2459a40c0be1cd29809b78be3d790f43d3aeba7c9580a4eff1e"
+      },
+      {
+        "id": "fur_cloak",
+        "source": "/Users/rexxa/work/artenv1-data/items/fur_cloak_try2_raw.png",
+        "sha256": "18f808bff09311e736a25784324aa9b6ef81cbfe4e215a3278d8c02ee382d846"
+      }
+    ]
+  },
+  {
+    "id": "items_style_card3",
+    "prompt": "Create a plain readable white scorecard evaluating ONLY the 5 labeled candidates within image5. Images1 props original and2 scene original are locked style originals; image3 props_logs and4 props_hearth are frozen same-family item anchors. Image5 is a contact sheet ordered left-to-right then top-to-bottom: wolf_hide, clay_pot_empty, meat, flint_nodule, spear. For EACH candidate separately print exact name and four integer scores1to5: MEDIUM,LINE,LIGHT,PALETTE, plus one concise sentence describing actual rendering style and relative match or drift. Score1 unrelated,2 substantially different,3 mixed or noticeable drift,4 close match,5 indistinguishable visual language. Judge actual reference ink marks and wash variation, not an idealized brief. Different subject does not count as style mismatch. Four scores>=4 is stylePASS otherwise FAIL; print actual verdict. Do not assume expected scores. Do not repaint candidate or reference. No artwork; only a legible scorecard in 5sections.",
+    "refs": [
+      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png",
+      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png",
+      "/Users/rexxa/work/artenv1-data/items/style_candidates3.png"
+    ],
+    "started_at": "2026-10-23T06:41:14.250Z",
+    "completed_at": "2026-10-23T06:42:42.318Z",
+    "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1676a-8a98-7ac0-8134-bc41e3aadd58/exec-5ce9a608-1503-470e-8a68-5bbcfc1142d1.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "transcription": [
+      {
+        "id": "wolf_hide",
+        "attempt": 2,
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5,
+        "sentence": "Matches the originals' inked linework, textured watercolor washes, and earthy limited palette very closely, with consistent shading and edge treatment."
+      },
+      {
+        "id": "clay_pot_empty",
+        "attempt": 2,
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5,
+        "sentence": "Consistent with the originals in ink line quality, watercolor texture, light direction and earthy color range; fits seamlessly."
+      },
+      {
+        "id": "meat",
+        "attempt": 2,
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5,
+        "sentence": "Matches the hand-drawn ink marks, wash variation, and muted earthy palette of the originals, with the same illustrative rendering."
+      },
+      {
+        "id": "flint_nodule",
+        "attempt": 1,
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Indistinguishable from the originals' visual language, with identical ink linework, textured watercolor shading, and natural earthy tones."
+      },
+      {
+        "id": "spear",
+        "attempt": 3,
+        "medium": 5,
+        "line": 5,
+        "light": 4,
+        "palette": 5,
+        "sentence": "Follows the same inked outlines, watercolor texture, and muted earth-tone palette as the originals, with consistent lighting and detail."
+      }
+    ],
+    "mechanism": "built-in image-generation model rendered scorecard; actual printed scores visually transcribed; model version not exposed",
+    "format_deviation": "Illustrated candidate repetition despite no-artwork request; scores and reasons legible.",
+    "raw_scorecard": "/Users/rexxa/work/artenv1-data/items/model_scorecard3_raw.png",
+    "raw_scorecard_sha256": "ce3e64826599487d58e2cb1b0bcbc225f0dc045bf6a03db9386f721e6b51281a",
+    "display_scorecard": "art/style05/env1/items/model_scorecard3.png",
+    "display_scorecard_sha256": "4671a7960ebc29b09fd3967d6aa76d11e9a8bac70f583725211a104655ff2f6e",
+    "reference_hashes": {
+      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8",
+      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458",
+      "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832",
+      "/Users/rexxa/work/artenv1-data/items/style_candidates3.png": "712531b6ff9babb14b7ed8185cd071e499953443553f74be0673017f8d336a87"
+    },
+    "candidate_sources": [
+      {
+        "id": "wolf_hide",
+        "source": "/Users/rexxa/work/artenv1-data/items/wolf_hide_try2_raw.png",
+        "sha256": "f8933fdaf0ef019d5b165670bcd3daa373b1683d198d9f4ed9e732d859477079"
+      },
+      {
+        "id": "clay_pot_empty",
+        "source": "/Users/rexxa/work/artenv1-data/items/clay_pot_empty_try2_raw.png",
+        "sha256": "02d5fef0269910edac1470d0c562a41d9707106625c7efdee20391f81d94733b"
+      },
+      {
+        "id": "meat",
+        "source": "/Users/rexxa/work/artenv1-data/items/meat_try2_raw.png",
+        "sha256": "3170c9d7c9998ab8000b8dea6a2acb067ffb69bd539006deef2407ba31c110c5"
+      },
+      {
+        "id": "flint_nodule",
+        "source": "/Users/rexxa/work/artenv1-data/items/flint_nodule_try1_raw.png",
+        "sha256": "a60d74046752463ef9bda672d8005288123caf4cac717e93a5e1300b6aed1fb9"
+      },
+      {
+        "id": "spear",
+        "source": "/Users/rexxa/work/artenv1-data/items/spear_try3_raw.png",
+        "sha256": "549bba0926c8d61e88afd0d329817135aa605f1935c922ff4ce210b393a6272b"
+      }
+    ]
+  }
+]

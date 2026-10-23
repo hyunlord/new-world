@@ -1,0 +1,22 @@
+{
+  "source": "art/style05/env/ground/dark_grass.png",
+  "limit": {
+    "person_luminance_std": 0.1706134334943827,
+    "mean_max": 0.32,
+    "std_ratio": 0.25,
+    "saturation_max": 0.22
+  },
+  "before": {
+    "luminance_mean": 0.3372459853707108,
+    "luminance_std": 0.07709693364364135,
+    "saturation_mean": 0.6558206585627984
+  },
+  "after": {
+    "luminance_mean": 0.28799065410539215,
+    "luminance_std": 0.038403172985936436,
+    "saturation_mean": 0.19793458812584883
+  },
+  "contrast_factor": 0.497918927796452,
+  "chroma_factor": 0.4835363030433655,
+  "passed": true
+}

@@ -1,0 +1,63 @@
+{
+  "species": "deer",
+  "facing": "E",
+  "pose": "walk",
+  "attempt": 1,
+  "image": "art/animal/deer/E/walk.png",
+  "image_sha256": "c909cb4ae376ff59117048e101c970469200ee5e084cffa950f003a611a98690",
+  "source_panel": "/Users/rexxa/work/artenv1-data/animals/deer_try1_E_walk.png",
+  "source_panel_sha256": "4fda5b48d9c20b12667f8fc865035c536cf253f5fc7dabf9f5af8a0d042371f3",
+  "source_box": [
+    255,
+    483,
+    778,
+    1024
+  ],
+  "raw_sha256": "fca0336b664abc7ea73c2f59b91519a8e0a5d211b27f992eb772b3d7568003f5",
+  "prompt_sha256": "8b5ddb4599e5da03e227a7b39af31a4720d72c5989c63cf1fb602aed7d8bfe91",
+  "standing_scale": 0.132890365448505,
+  "scale": 0.132890365448505,
+  "normalization": {
+    "scaled_size": [
+      70,
+      72
+    ],
+    "trim_box": [
+      4,
+      12,
+      52,
+      59
+    ],
+    "placement": [
+      24,
+      26
+    ],
+    "resized_to_canvas_offset": [
+      20,
+      14
+    ],
+    "visible_pixels": 843,
+    "rotation_degrees": 0,
+    "scale": 0.132890365448505,
+    "discarded_pixels": 14,
+    "discarded_max_alpha": 1,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true
+  },
+  "component_count": 1,
+  "visible_width": 48,
+  "visible_height": 47,
+  "structural_pass": true,
+  "status": "CANDIDATE_NOT_ADOPTED",
+  "species_readability": "READABILITY_PASS",
+  "numeric_negative_control_calibration": "FAIL",
+  "review_report": "docs/v8/artenv1/animal_reviews_round1.json"
+}

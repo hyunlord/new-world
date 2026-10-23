@@ -1,0 +1,403 @@
+{
+  "kind": "animal_blind_review_index",
+  "current_round": 1,
+  "verdict": "FAIL",
+  "canonical_accept_status": "CANDIDATE_NOT_ADOPTED",
+  "species_verdicts": {
+    "wolf": "FAIL",
+    "deer": "PASS"
+  },
+  "gates": {
+    "independent_semantics": {
+      "wolf": "FAIL",
+      "deer": "PASS"
+    },
+    "numeric_negative_control_calibration": "FAIL",
+    "supplemental_numeric_AND_model_negative_controls": "PASS_3_OF_3_WITH_CROSSFAMILY_LIMIT",
+    "adoption": "NOT_ADOPTED"
+  },
+  "rounds": [
+    {
+      "round": 0,
+      "path": "docs/v8/artenv1/animal_reviews_round0.json",
+      "sha256": "7ef80d0fa764a893ae87e93101fb114fb58e8dbdedc7205b89493c6b405dec06",
+      "verdict": "FAIL",
+      "candidate_versions": {
+        "wolf": 2,
+        "deer": 1
+      },
+      "scoring_method": "Historical strict lexical scores plus separately preserved qualified-species sensitivity.",
+      "groups": [
+        {
+          "reviewer": "animal_a",
+          "species": "wolf",
+          "scale": 1,
+          "denominator": 10,
+          "species_correct": 0,
+          "pose_correct": 4,
+          "species_minimum": 9,
+          "pose_minimum": 8,
+          "species_pass": false,
+          "pose_pass": false,
+          "passed": false,
+          "species_failed_ids": [
+            "1X-05",
+            "1X-06",
+            "1X-07",
+            "1X-09",
+            "1X-14",
+            "1X-15",
+            "1X-16",
+            "1X-17",
+            "1X-18",
+            "1X-19"
+          ],
+          "pose_failed_ids": [
+            "1X-07",
+            "1X-09",
+            "1X-14",
+            "1X-15",
+            "1X-16",
+            "1X-18"
+          ]
+        },
+        {
+          "reviewer": "animal_a",
+          "species": "deer",
+          "scale": 1,
+          "denominator": 10,
+          "species_correct": 10,
+          "pose_correct": 8,
+          "species_minimum": 9,
+          "pose_minimum": 8,
+          "species_pass": true,
+          "pose_pass": true,
+          "passed": true,
+          "species_failed_ids": [],
+          "pose_failed_ids": [
+            "1X-02",
+            "1X-04"
+          ]
+        },
+        {
+          "reviewer": "animal_a",
+          "species": "wolf",
+          "scale": 2,
+          "denominator": 10,
+          "species_correct": 10,
+          "pose_correct": 7,
+          "species_minimum": 9,
+          "pose_minimum": 8,
+          "species_pass": true,
+          "pose_pass": false,
+          "passed": false,
+          "species_failed_ids": [],
+          "pose_failed_ids": [
+            "2X-05",
+            "2X-07",
+            "2X-11"
+          ]
+        },
+        {
+          "reviewer": "animal_a",
+          "species": "deer",
+          "scale": 2,
+          "denominator": 10,
+          "species_correct": 10,
+          "pose_correct": 9,
+          "species_minimum": 9,
+          "pose_minimum": 8,
+          "species_pass": true,
+          "pose_pass": true,
+          "passed": true,
+          "species_failed_ids": [],
+          "pose_failed_ids": [
+            "2X-03"
+          ]
+        },
+        {
+          "reviewer": "animal_b",
+          "species": "wolf",
+          "scale": 2,
+          "denominator": 10,
+          "species_correct": 10,
+          "pose_correct": 6,
+          "species_minimum": 9,
+          "pose_minimum": 8,
+          "species_pass": true,
+          "pose_pass": false,
+          "passed": false,
+          "species_failed_ids": [],
+          "pose_failed_ids": [
+            "2X-02",
+            "2X-04",
+            "2X-05",
+            "2X-07"
+          ]
+        },
+        {
+          "reviewer": "animal_b",
+          "species": "deer",
+          "scale": 2,
+          "denominator": 10,
+          "species_correct": 10,
+          "pose_correct": 10,
+          "species_minimum": 9,
+          "pose_minimum": 8,
+          "species_pass": true,
+          "pose_pass": true,
+          "passed": true,
+          "species_failed_ids": [],
+          "pose_failed_ids": []
+        },
+        {
+          "reviewer": "animal_b",
+          "species": "wolf",
+          "scale": 1,
+          "denominator": 10,
+          "species_correct": 10,
+          "pose_correct": 5,
+          "species_minimum": 9,
+          "pose_minimum": 8,
+          "species_pass": true,
+          "pose_pass": false,
+          "passed": false,
+          "species_failed_ids": [],
+          "pose_failed_ids": [
+            "1X-07",
+            "1X-14",
+            "1X-15",
+            "1X-17",
+            "1X-18"
+          ]
+        },
+        {
+          "reviewer": "animal_b",
+          "species": "deer",
+          "scale": 1,
+          "denominator": 10,
+          "species_correct": 10,
+          "pose_correct": 10,
+          "species_minimum": 9,
+          "pose_minimum": 8,
+          "species_pass": true,
+          "pose_pass": true,
+          "passed": true,
+          "species_failed_ids": [],
+          "pose_failed_ids": []
+        }
+      ],
+      "qualified_species_sensitivity": {
+        "rule": "Treat first species phrase Wolf-like canid as qualified recognition of intended wolf; retain qualification and dog ambiguity. This supplementary reading does not replace strict frozen scoring.",
+        "animal_a_1x_wolf": {
+          "strict_species_correct": 0,
+          "qualified_species_correct": 10,
+          "denominator": 10,
+          "strict_pose_correct": 4,
+          "semantic_group_pass": false
+        },
+        "conclusion": "Species is qualified wolf recognition, not total species unrecognizability. Pose FAIL remains."
+      }
+    },
+    {
+      "round": 1,
+      "path": "docs/v8/artenv1/animal_reviews_round1.json",
+      "sha256": "5887fdb9036cbe00e252486d6e228143f5d2ff7dabd33aae96194a4731b09d45",
+      "verdict": "FAIL",
+      "candidate_versions": {
+        "wolf": 3,
+        "deer": 1
+      },
+      "scoring_method": {
+        "name": "Frozen semantic classes, ordinary-meaning primary answer",
+        "thresholds_unchanged": true,
+        "first_primary_observation_preserved": true,
+        "closed_lexical_whitelist": false,
+        "notes_usage": "Notes may clarify the stated primary action, including raised-paw attacking rears. They never replace an explicit contrary primary answer with a secondary alternative.",
+        "run_semantics": "Directional bounding and running leaps are locomotion in ordinary meaning; pouncing/lunging identified as the primary action remains attack.",
+        "dead_semantics": "Sideways lying is explicitly allowed by the frozen dead (lying) rule, including primary resting/sleeping interpretations; death certainty is not claimed.",
+        "round0_caveat": "Round0 historical strict lexical scores and qualified-species sensitivity remain frozen. Round1 uses ordinary meaning as directed; differences are not a controlled numerical improvement estimate."
+      },
+      "groups": [
+        {
+          "reviewer": "animal_c",
+          "species": "deer",
+          "scale": 1,
+          "denominator": 10,
+          "species_correct": 10,
+          "pose_correct": 9,
+          "species_minimum": 9,
+          "pose_minimum": 8,
+          "species_pass": true,
+          "pose_pass": true,
+          "passed": true,
+          "species_failed_ids": [],
+          "pose_failed_ids": [
+            "R1-1X-08"
+          ]
+        },
+        {
+          "reviewer": "animal_c",
+          "species": "deer",
+          "scale": 2,
+          "denominator": 10,
+          "species_correct": 10,
+          "pose_correct": 10,
+          "species_minimum": 9,
+          "pose_minimum": 8,
+          "species_pass": true,
+          "pose_pass": true,
+          "passed": true,
+          "species_failed_ids": [],
+          "pose_failed_ids": []
+        },
+        {
+          "reviewer": "animal_c",
+          "species": "wolf",
+          "scale": 1,
+          "denominator": 10,
+          "species_correct": 10,
+          "pose_correct": 8,
+          "species_minimum": 9,
+          "pose_minimum": 8,
+          "species_pass": true,
+          "pose_pass": true,
+          "passed": true,
+          "species_failed_ids": [],
+          "pose_failed_ids": [
+            "R1-1X-11",
+            "R1-1X-15"
+          ]
+        },
+        {
+          "reviewer": "animal_c",
+          "species": "wolf",
+          "scale": 2,
+          "denominator": 10,
+          "species_correct": 10,
+          "pose_correct": 8,
+          "species_minimum": 9,
+          "pose_minimum": 8,
+          "species_pass": true,
+          "pose_pass": true,
+          "passed": true,
+          "species_failed_ids": [],
+          "pose_failed_ids": [
+            "R1-2X-04",
+            "R1-2X-14"
+          ]
+        },
+        {
+          "reviewer": "animal_d",
+          "species": "deer",
+          "scale": 1,
+          "denominator": 10,
+          "species_correct": 10,
+          "pose_correct": 9,
+          "species_minimum": 9,
+          "pose_minimum": 8,
+          "species_pass": true,
+          "pose_pass": true,
+          "passed": true,
+          "species_failed_ids": [],
+          "pose_failed_ids": [
+            "R1-1X-14"
+          ]
+        },
+        {
+          "reviewer": "animal_d",
+          "species": "deer",
+          "scale": 2,
+          "denominator": 10,
+          "species_correct": 10,
+          "pose_correct": 9,
+          "species_minimum": 9,
+          "pose_minimum": 8,
+          "species_pass": true,
+          "pose_pass": true,
+          "passed": true,
+          "species_failed_ids": [],
+          "pose_failed_ids": [
+            "R1-2X-02"
+          ]
+        },
+        {
+          "reviewer": "animal_d",
+          "species": "wolf",
+          "scale": 1,
+          "denominator": 10,
+          "species_correct": 10,
+          "pose_correct": 7,
+          "species_minimum": 9,
+          "pose_minimum": 8,
+          "species_pass": true,
+          "pose_pass": false,
+          "passed": false,
+          "species_failed_ids": [],
+          "pose_failed_ids": [
+            "R1-1X-09",
+            "R1-1X-12",
+            "R1-1X-15"
+          ]
+        },
+        {
+          "reviewer": "animal_d",
+          "species": "wolf",
+          "scale": 2,
+          "denominator": 10,
+          "species_correct": 10,
+          "pose_correct": 7,
+          "species_minimum": 9,
+          "pose_minimum": 8,
+          "species_pass": true,
+          "pose_pass": false,
+          "passed": false,
+          "species_failed_ids": [],
+          "pose_failed_ids": [
+            "R1-2X-10",
+            "R1-2X-13",
+            "R1-2X-14"
+          ]
+        }
+      ],
+      "species_verdicts": {
+        "wolf": "FAIL",
+        "deer": "PASS"
+      }
+    }
+  ],
+  "numeric_calibration_evidence": "docs/v8/artenv1/animal_style_evidence.json",
+  "supplemental_model_negative_evidence": "docs/v8/artenv1/animal_negative_model_review.json",
+  "remaining_retry_budget": {
+    "wolf": 0,
+    "deer": 2
+  },
+  "decision_notes": [
+    "Species recognition is 10/10 in every group. Wolf pose fails reviewer D at both scales (7/10); C reaches 8/10 at both scales. No averaging overrides either failed group.",
+    "D reads wolf S/stand and E/stand as sitting, and S/walk as standing, at both scales. C reads S/run as pouncing and S/walk as standing at both scales.",
+    "Both reviewers read the raised-paw rear as attack, with anthropomorphic/recoil/jump ambiguity preserved. Sideways dead posture is readable but rest/sleep versus death remains unresolved.",
+    "Deer passes every round1 group. D reads E/dead as an airborne leap at both scales; C reads S/walk as stand at 1x. Deer assets were unchanged.",
+    "Wolf generation cap is exhausted (3/3), deer remains 1/3. No further generation or pixel repair was performed for scoring.",
+    "Animal numeric negative-control calibration FAIL remains separate. Supplemental actual model scorecards reject painterly/photo and combined controls reject 3/3, but do not replace or withdraw the numeric calibration failure.",
+    "Canonical wolf and deer are CANDIDATE_NOT_ADOPTED; deer semantic PASS alone is not full adoption."
+  ],
+  "canonical_manifests": [
+    {
+      "species": "wolf",
+      "path": "art/animal/wolf/MANIFEST.json",
+      "sha256": "7f8f1feb24956f1841062197f632c4554a8995c45ff0a94cd53ddad06e1e8189",
+      "status": "CANDIDATE_NOT_ADOPTED",
+      "readability": "READABILITY_FAIL",
+      "image_hashes_unchanged": true
+    },
+    {
+      "species": "deer",
+      "path": "art/animal/deer/MANIFEST.json",
+      "sha256": "5026df441fb3eca6f1ed001ec88c0f7affbb748f8bcae02076336f9d86206f40",
+      "status": "CANDIDATE_NOT_ADOPTED",
+      "readability": "READABILITY_PASS",
+      "image_hashes_unchanged": true
+    }
+  ],
+  "metadata_finalization": "Final acceptance metadata supersedes pending-review labels; all 20 canonical PNG hashes still match the frozen round1 answer key. Deer source and image bytes are unchanged; only final acceptance metadata changed."
+}

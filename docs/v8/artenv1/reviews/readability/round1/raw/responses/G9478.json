@@ -1,0 +1,128 @@
+{
+  "reviewer": "b",
+  "packet_id": "G9478",
+  "answers": [
+    {
+      "image_id": "P34553",
+      "started_at": "2026-10-23T07:47:20Z",
+      "ended_at": "2026-10-23T07:47:42Z",
+      "people_count": 7,
+      "storage": {
+        "present": true,
+        "point": [
+          164,
+          598
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": true,
+        "points": [
+          [
+            802,
+            185
+          ],
+          [
+            929,
+            185
+          ]
+        ]
+      },
+      "time_class": "night",
+      "activities": {
+        "A": "Chopping wood at a stump with a raised axe",
+        "B": "Carrying a bundle of logs",
+        "C": "Walking empty-handed"
+      },
+      "confidence": "medium",
+      "notes": "C has a walking-like pose but no clear destination or work action. The northern carrier has overlapping limbs that make its silhouette less clear."
+    },
+    {
+      "image_id": "P39774",
+      "started_at": "2026-10-23T07:47:48Z",
+      "ended_at": "2026-10-23T07:48:25Z",
+      "people_count": 9,
+      "storage": {
+        "present": true,
+        "point": [
+          1203,
+          393
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": false,
+        "points": []
+      },
+      "time_class": "night",
+      "activities": {
+        "A": "Sleeping in the shelter",
+        "B": "Carrying a wood bundle",
+        "C": "Standing beside the workbench"
+      },
+      "confidence": "low",
+      "notes": "Pixel figures overlap. I read five sleeping people and four outside, including two at C, but the C stack and carried bundles make the count uncertain. C has no clearly legible tool action."
+    },
+    {
+      "image_id": "P23321",
+      "started_at": "2026-10-23T07:48:30Z",
+      "ended_at": "2026-10-23T07:48:50Z",
+      "people_count": 10,
+      "storage": {
+        "present": true,
+        "point": [
+          1492,
+          328
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": false,
+        "points": []
+      },
+      "time_class": "night",
+      "activities": {
+        "A": "Sleeping in the shelter",
+        "B": "Carrying a wood bundle",
+        "C": "Standing beside the workbench"
+      },
+      "confidence": "medium",
+      "notes": "The three vertically overlapping figures near C have distinct colored faces or clothing. C is beside a workbench, but a specific work motion is not visible. The storage construction extends beyond the right edge."
+    },
+    {
+      "image_id": "P81008",
+      "started_at": "2026-10-23T07:48:56Z",
+      "ended_at": "2026-10-23T07:49:16Z",
+      "people_count": 9,
+      "storage": {
+        "present": true,
+        "point": [
+          482,
+          553
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": true,
+        "points": [
+          [
+            800,
+            347
+          ],
+          [
+            864,
+            347
+          ]
+        ]
+      },
+      "time_class": "night",
+      "activities": {
+        "A": "Chopping wood with an axe",
+        "B": "Carrying logs",
+        "C": "Standing empty-handed"
+      },
+      "confidence": "medium",
+      "notes": "People and animals are tiny symbolic markers: seven standing dots and two dots with sleep marks. I read the two red triangles as wolves, with limited visual species detail. C has no legible movement cue."
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "reviewer": "a",
+  "packet_id": "G7606",
+  "answers": [
+    {
+      "image_id": "P75918",
+      "started_at": "2026-10-23T07:48:51Z",
+      "ended_at": "2026-10-23T07:49:12Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          158,
+          591
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": true,
+        "points": [
+          [
+            802,
+            185
+          ],
+          [
+            930,
+            185
+          ]
+        ]
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Chopping wood at a stump",
+        "B": "Carrying logs on the shoulders",
+        "C": "Walking"
+      },
+      "confidence": "high",
+      "notes": "C has a walking posture without another clear activity. End timestamp includes correction of a wolf-coordinate transcription omission before the next image was opened."
+    },
+    {
+      "image_id": "P35624",
+      "started_at": "2026-10-23T07:49:12Z",
+      "ended_at": "2026-10-23T07:49:28Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          1464,
+          359
+        ]
+      },
+      "carriers": 1,
+      "wolves": {
+        "present": false,
+        "points": []
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Standing beside the river",
+        "B": "Standing beside a shelter",
+        "C": "Standing beside the campfire"
+      },
+      "confidence": "low",
+      "notes": "The labels do not show clearly distinguishable actions. The blue person on the right appears to have objects beside their hands; carrying is uncertain. The upper-right outlined construction is my storage reading."
+    },
+    {
+      "image_id": "P10413",
+      "started_at": "2026-10-23T07:49:35Z",
+      "ended_at": "2026-10-23T07:49:47Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          1199,
+          394
+        ]
+      },
+      "carriers": 1,
+      "wolves": {
+        "present": false,
+        "points": []
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Standing beside the river",
+        "B": "Standing beside a shelter",
+        "C": "Standing beside the campfire"
+      },
+      "confidence": "low",
+      "notes": "Small people have no clearly readable activity beyond location. The rightmost blue person appears to carry objects at the sides, but the shapes are ambiguous. The upper-right wall construction enclosing resources is my storage reading."
+    },
+    {
+      "image_id": "P52533",
+      "started_at": "2026-10-23T07:49:54Z",
+      "ended_at": "2026-10-23T07:50:10Z",
+      "people_count": 8,
+      "storage": {
+        "present": true,
+        "point": [
+          479,
+          552
+        ]
+      },
+      "carriers": 2,
+      "wolves": {
+        "present": true,
+        "points": [
+          [
+            800,
+            347
+          ],
+          [
+            864,
+            347
+          ]
+        ]
+      },
+      "time_class": "day",
+      "activities": {
+        "A": "Chopping with an axe",
+        "B": "Carrying wood",
+        "C": "Standing"
+      },
+      "confidence": "low",
+      "notes": "People are circular markers with tiny adjoining symbols. I read the axe as chopping and the wood symbols as carrying; C has no discernible action. The two red triangles are my wolf reading, but no animal silhouettes are visible."
+    }
+  ]
+}

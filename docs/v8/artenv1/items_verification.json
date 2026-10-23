@@ -1,0 +1,33 @@
+{
+  "verified_at": "2026-10-23T06:55:37.947486+00:00",
+  "asset_count": 22,
+  "item_kinds": 17,
+  "style_accepted_new": 12,
+  "numeric_rejected_new": 1,
+  "reused_bytes_verified": 9,
+  "sprite_attempts": 23,
+  "max_attempts_per_asset": 3,
+  "total_image_tool_calls": 27,
+  "raw_review_answers_preserved": 44,
+  "primary_coarse_category_recognized": 39,
+  "exact_kind_recognized": 19,
+  "semantic_status": "DISTINCT_KIND_READABILITY_NOT_MET",
+  "count_semantics_status": "NOT_VERIFIED",
+  "file_cap_bytes": 1500000,
+  "largest_file_bytes": 1381053,
+  "files_checked": 97,
+  "checks": [
+    "all artifact SHA identities",
+    "all raw attempt SHA identities and reference SHA identities",
+    "3 count bucket paths per asset",
+    "RGBA buckets",
+    "17 ItemKind codes",
+    "two raw reviews byte-identical",
+    "blind board identity unchanged",
+    "all scoped files below1.5MB",
+    "Python py_compile passed",
+    "git diff --check passed"
+  ],
+  "lsp": "NOT_VERIFIED: basedpyright not installed, existing user installation refusal returned by LSP tool",
+  "owner_approval": "NOT_REQUESTED_NOT_CLAIMED"
+}

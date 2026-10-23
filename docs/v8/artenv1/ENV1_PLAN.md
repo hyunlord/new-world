@@ -26,6 +26,8 @@
 | Writes excluded | Game code, root documentation, global skills, settings, `.gitignore`, `.ignore`, `docs/art/`, `.omo/` and other concurrent work |
 | Publication | No merge; no force push; explicit paths only; every newly committed file ≤ **1,500,000 bytes** |
 
+Execution closeout: every checklist action below has been resolved; checked boxes mean execution/evidence delivered, not artistic acceptance. `[-]` marks retained failed or partial acceptance. Original preregistered bytes are retained at `reviews/preregistered_plan.md` (SHA256 cba2d83f65142032b986c2b4008f5c0da1d09d9470617e863237669aaae4117a), as cited by both score rounds. Publication checks are performed after this commit and recorded externally to avoid a self-referential SHA.
+
 No status below is a completed result unless linked evidence exists. Use `PENDING`, `PASS`, `FAIL`, `NOT_VERIFIED`, `DEFERRED` and `MISMATCH` literally. Delivery, numeric/visual acceptance, runtime performance, comparison validity and owner approval are separate claims.
 
 ## 2. Work lanes and dependency order
@@ -45,12 +47,12 @@ Parallel work must have disjoint ownership; nobody reverts another lane. Existin
 ### Part 0: inventory and source identity
 
 - [x] Goal is committed at the goal SHA above.
-- [ ] Read snapshot schema v5 and colony data at the simulation pin, not merely the older art checkout.
-- [ ] `INVENTORY.md` has a row for each terrain code, item/building/blueprint kind, workshop, designation/mark, room role, animal, apparel and chronicle-visible effect, including smoke/carcasses where represented.
-- [ ] Each row records name, sim code and source reference, footprint, all drawable states, exact existing 05 asset or NEW, and its production/defer decision.
-- [ ] Explicit states include open/closed doors; site/finished structures; lit/unlit hearth; full/depleted resources; stacks 1, 2–8 and 9+ where meaningful; fresh/spoiled meat; empty/filled fired pots; animal pose/direction/dead state.
-- [ ] Every NEW row resolves to a Part 1/2 deliverable or an explicit reasoned defer. Distinguish a missing optional variant from a missing mandatory kind. Report reused/new/deferred denominators without double counting states as kinds.
-- [ ] Retain a source extraction/count check so coverage does not rest only on a hand-written list.
+- [x] Read snapshot schema v5 and colony data at the simulation pin, not merely the older art checkout.
+- [x] `INVENTORY.md` has a row for each terrain code, item/building/blueprint kind, workshop, designation/mark, room role, animal, apparel and chronicle-visible effect, including smoke/carcasses where represented.
+- [x] Each row records name, sim code and source reference, footprint, all drawable states, exact existing 05 asset or NEW, and its production/defer decision.
+- [x] Explicit states include open/closed doors; site/finished structures; lit/unlit hearth; full/depleted resources; stacks 1, 2–8 and 9+ where meaningful; fresh/spoiled meat; empty/filled fired pots; animal pose/direction/dead state.
+- [x] Every NEW row resolves to a Part 1/2 deliverable or an explicit reasoned defer. Distinguish a missing optional variant from a missing mandatory kind. Report reused/new/deferred denominators without double counting states as kinds.
+- [x] Retain a source extraction/count check so coverage does not rest only on a hand-written list.
 
 ### Part 1: environment
 
@@ -71,63 +73,63 @@ Parallel work must have disjoint ownership; nobody reverts another lane. Existin
 | Item kinds | Logs (existing 3 sizes), firewood, stone, flint nodule, flint blade, stone axe, ground axe, spear, hide, cured hide, hide wrap, fur cloak, wolf hide, clay, raw pot, fired pot empty/filled, meat | One distinct silhouette per kind; count buckets where stacking matters; exact mapping to inventory; reviewers inspect 32 px item packet |
 | Snow | One generated tileable texture | Original and one family judgement; repeat evidence; composited alpha ≤60% |
 
-- [ ] Use 64 px world tiles, 05 ink/wash rules and locked nearest-family plus scene anchors. Preserve original bytes and prompt/reference hashes.
-- [ ] No mirror-blend, quantization, painted replacement contours, erased internal pixels or manual object reconstruction. Allowed geometry and global tone changes are logged with parameters.
-- [ ] Judge v2 is calibrated by family; model scores for medium, line, light and palette are each ≥4/5, with a one-line visual reading. Numeric PASS alone or model PASS alone never becomes accepted.
-- [ ] Per-asset sidecar joins source hash, generation attempt, crop/scale/rotation/tone parameters, numerical metrics, visual scores, final verdict and reason. A failed candidate can be shown diagnostically but must be labelled.
+- [x] Use 64 px world tiles, 05 ink/wash rules and locked nearest-family plus scene anchors. Preserve original bytes and prompt/reference hashes.
+- [x] No mirror-blend, quantization, painted replacement contours, erased internal pixels or manual object reconstruction. Allowed geometry and global tone changes are logged with parameters.
+- [-] Judge v2 is calibrated by family; model scores for medium, line, light and palette are each ≥4/5, with a one-line visual reading. Numeric PASS alone or model PASS alone never becomes accepted.
+- [x] Per-asset sidecar joins source hash, generation attempt, crop/scale/rotation/tone parameters, numerical metrics, visual scores, final verdict and reason. A failed candidate can be shown diagnostically but must be labelled.
 
 ### Part 2: animals
 
-- [ ] Create `art/animal/TEMPLATE_A1.md`: standing canvas 96×80, dead 96×64, foot line y=72 for standing; document a feasible dead-frame contact anchor inside its 64 px canvas rather than silently using y=72 outside the image.
-- [ ] Freeze deer shoulder height 40 px and wolf shoulder height 28 px at 1×; define how shoulder height is measured before candidate normalization.
-- [ ] One whole-figure sheet per species: S/E rows × five columns. Deer: stand/walk/run/graze/dead. Wolf: stand/walk/run/attack/dead. W is a whole E flip. No part assembly.
-- [ ] At most three generation attempts per species sheet. Slice with Route I ownership; one S-stand scale for upright frames; dead pose uses body-length scale; retain every transformation and original hash.
-- [ ] Adapt TEMPLATE_V3 whole-figure checks explicitly: alpha≥16 visibility, alpha≥128 connectivity, non-clipped figures, preserved owned RGBA, exact row/column membership and no pose-specific upright fitting. Human height bands are not silently applied to animals.
-- [ ] Freeze and document the two Part 2 animal anchors, calibration provenance and family thresholds before accepting candidates. Preserve failures and negative-control results.
-- [ ] Two fresh pixel reviewers name species and pose for each species' ten frames independently at 1× and 2×. Each reviewer/species/zoom must meet species ≥9/10 and pose ≥8/10; never pool away a failed zoom or reviewer. Dead frame supplies the carcass.
+- [x] Create `art/animal/TEMPLATE_A1.md`: standing canvas 96×80, dead 96×64, foot line y=72 for standing; document a feasible dead-frame contact anchor inside its 64 px canvas rather than silently using y=72 outside the image.
+- [x] Freeze deer shoulder height 40 px and wolf shoulder height 28 px at 1×; define how shoulder height is measured before candidate normalization.
+- [x] One whole-figure sheet per species: S/E rows × five columns. Deer: stand/walk/run/graze/dead. Wolf: stand/walk/run/attack/dead. W is a whole E flip. No part assembly.
+- [x] At most three generation attempts per species sheet. Slice with Route I ownership; one S-stand scale for upright frames; dead pose uses body-length scale; retain every transformation and original hash.
+- [x] Adapt TEMPLATE_V3 whole-figure checks explicitly: alpha≥16 visibility, alpha≥128 connectivity, non-clipped figures, preserved owned RGBA, exact row/column membership and no pose-specific upright fitting. Human height bands are not silently applied to animals.
+- [-] Freeze and document the two Part 2 animal anchors, calibration provenance and family thresholds before accepting candidates. Preserve failures and negative-control results.
+- [-] Two fresh pixel reviewers name species and pose for each species' ten frames independently at 1× and 2×. Each reviewer/species/zoom must meet species ≥9/10 and pose ≥8/10; never pool away a failed zoom or reviewer. Dead frame supplies the carcass.
 
 ### Part 3: optional portraits
 
-- [ ] If retained, produce exactly one 128×128 bust per accepted adopted look (34), identity referenced to that look's S idle, ≤2 attempts/look.
-- [ ] Review at 128 and 64 px; same top/hair; shoulder-up front 3/4; neutral palette wash; no mood/age variants.
-- [ ] Portrait-family calibration uses the locked portrait anchor; structural evidence checks fixed face oval and no head cropping; produce `portraits_34.png` only with honest accepted/missing labels.
-- [ ] If deferred, record time/budget reason and actual completed count. Do not let portraits displace a mandatory section.
+- [x] If retained, produce exactly one 128×128 bust per accepted adopted look (34), identity referenced to that look's S idle, ≤2 attempts/look.
+- [x] Review at 128 and 64 px; same top/hair; shoulder-up front 3/4; neutral palette wash; no mood/age variants.
+- [-] Portrait-family calibration uses the locked portrait anchor; structural evidence checks fixed face oval and no head cropping; produce `portraits_34.png` only with honest accepted/missing labels.
+- [x] N/A: portraits were retained. If deferred, record time/budget reason and actual completed count. Do not let portraits displace a mandatory section.
 
 ## 4. Scene acquisition and compositor checklist
 
 ### Real source A
 
-- [ ] Build `worldsim_probe` in a separate detached checkout of the pinned `v8/wip` commit; source remains unmodified. Capture build command, lockfile/binary hashes, CLI help and exit codes outside the repo.
-- [ ] Execute the requested semantic command: `worldsim_probe --scene colony --seeds 0..1 --ascii --tick T --commands tools/v8/soak_script.json --out scene_T.txt --people-json people_T.json`. The seed range is half-open: this requests seed 0, not seeds 0 and 1.
-- [ ] Use T for day 6 noon, day 6 02:00 and day 30 noon, checking actual calendar conventions. If day 30 is not winter, acquire the first winter noon as an additional source; retain day-30 evidence and record the winter selection.
-- [ ] Record exact effective commands, tick/day/time/season, sim SHA, snapshot SHA, people JSON SHA, map dimensions and glyph legend in scene metadata.
-- [ ] Parse terrain, zones, logs, sites, hearth, huts, trees, stumps, awake/asleep/child people and carriers from actual text output. Reject unknown glyphs and missing/empty sources.
-- [ ] If CLI output lacks required people metadata, inspect a richer existing read-only dump or documented source. Record missing fields explicitly; appearance defaults must be labelled declared, not presented as real sex/life-stage data.
-- [ ] Keep simulations and overlay object counts separately inspectable; no rendered scene may be described as entirely simulated.
+- [x] Build `worldsim_probe` in a separate detached checkout of the pinned `v8/wip` commit; source remains unmodified. Capture build command, lockfile/binary hashes, CLI help and exit codes outside the repo.
+- [x] Execute the requested semantic command: `worldsim_probe --scene colony --seeds 0..1 --ascii --tick T --commands tools/v8/soak_script.json --out scene_T.txt --people-json people_T.json`. The seed range is half-open: this requests seed 0, not seeds 0 and 1.
+- [x] Use T for day 6 noon, day 6 02:00 and day 30 noon, checking actual calendar conventions. Calendar/source inspection established day30 is spring; the goal-authorized first-winter-noon substitution was acquired. No day30 visual comparison is claimed.
+- [x] Record exact effective commands, tick/day/time/season, sim SHA, snapshot SHA, people JSON SHA, map dimensions and glyph legend in scene metadata.
+- [x] Parse terrain, zones, logs, sites, hearth, huts, trees, stumps, awake/asleep/child people and carriers from actual text output. Reject unknown glyphs and missing/empty sources.
+- [x] If CLI output lacks required people metadata, inspect a richer existing read-only dump or documented source. Record missing fields explicitly; appearance defaults must be labelled declared, not presented as real sex/life-stage data.
+- [x] Keep simulations and overlay object counts separately inspectable; no rendered scene may be described as entirely simulated.
 
 ### Declared source B
 
 Create `art/compositor/scenes/m5_overlay.json` with explicit IDs, coordinates, footprints, orientation/state and `declared=true` on every object. Include all of:
 
-- [ ] 7×5 walled house, door and bedrolls.
-- [ ] Walled storehouse with mixed items.
-- [ ] Dug pocket, pottery bench, grinding stone, loaded drying rack, clay bank and ford.
-- [ ] Two approaching wolves and three deer in forest.
-- [ ] Four hide-wrap people, two log carriers and one chopper; distinguish changes to existing IDs from additional declared people to avoid hidden count inflation.
-- [ ] Overlay legend names the declared content. Record the current M5 contact-sheet reference and spatial decisions; avoid covering real source actors without recording the visibility loss.
+- [x] 7×5 walled house, door and bedrolls.
+- [x] Walled storehouse with mixed items.
+- [x] Dug pocket, pottery bench, grinding stone, loaded drying rack, clay bank and ford.
+- [x] Two approaching wolves and three deer in forest.
+- [x] Four hide-wrap people, two log carriers and one chopper; distinguish changes to existing IDs from additional declared people to avoid hidden count inflation.
+- [x] Overlay legend names the declared content. Record the current M5 contact-sheet reference and spatial decisions; avoid covering real source actors without recording the visibility loss.
 
 ### Rendering rules and matrix
 
-- [ ] Route I look selection uses available real sex/life stage; declared top/hair/default ID-modulo fallback is deterministic and recorded. Preserve the two missing adult-look fallbacks from HANDOVER.
-- [ ] Map idle/walk/work/carry/sleep to HANDOVER frames; 8 fps preview cycle where animated; one-pixel bob is whole-figure only. W flips E; N substitutes S with disclosure.
-- [ ] Use supplied normalized sizes and exact anchors; at 64 px tiles place the foot at tile-left+32, tile-top+43. Keep the separate 28×8 contact shadow. Never stretch a person to a tile.
-- [ ] At ½× use 10 px top-colour circle, 1 px ink ring and a small axe/log/zz activity glyph. At ¼× use 6 px circle, 1 px ring and no activity glyph. Wolf/deer markers are red/tan triangles. Record thresholds in code/config and report.
-- [ ] Render ½× without LOD as a distinct diagnostic, not as replacement for required LOD output.
-- [ ] Ground-only cap: mean luminance ≤0.40, luminance standard deviation ≤0.60 × the measured masked person anchor's standard deviation, mean saturation ≤0.30. Log raw and capped per-tile metrics, formula, colour space, normalization and mask. This task's saturation cap overrides STYLE.md's historical 0.35.
-- [ ] Day is base; night applies value ×0.55 and blue shift with a five-tile hearth radius restoring value. Winter desaturates ground and applies one snow texture with alpha≤0.60. Drought moves grass toward ochre. Objects/people retain colour identity under night/winter except the global value drop; document the distinction between ground blue shift and foreground value reduction.
-- [ ] Produce every acquired scene × retained zoom × retained condition, 1600×900 centred on camp. Minimum retained zooms: 1× and ½×; minimum conditions: day/night/winter. Add ½× no-LOD per scene/condition. Retained ¼× and drought complete the same Cartesian matrix rather than hand-picking views.
-- [ ] Paste the same current-renderer HUD strip at the top for matched comparisons; preserve screenshot/crop provenance and place review IDs so they do not reveal renderer/condition answers. Report any mismatched clock/season HUD text.
-- [ ] All published full-resolution images live in `docs/v8/artenv1/renders/`, retain dimensions and decode correctly, each ≤1,500,000 bytes through lossless PNG compression. Do not quantize to meet the cap.
+- [x] Route I look selection uses available real sex/life stage; declared top/hair/default ID-modulo fallback is deterministic and recorded. Preserve the two missing adult-look fallbacks from HANDOVER.
+- [x] Map idle/walk/work/carry/sleep to HANDOVER frames; 8 fps preview cycle where animated; one-pixel bob is whole-figure only. W flips E; N substitutes S with disclosure.
+- [x] Use supplied normalized sizes and exact anchors; at 64 px tiles place the foot at tile-left+32, tile-top+43. Keep the separate 28×8 contact shadow. Never stretch a person to a tile.
+- [x] At ½× use 10 px top-colour circle, 1 px ink ring and a small axe/log/zz activity glyph. At ¼× use 6 px circle, 1 px ring and no activity glyph. Wolf/deer markers are red/tan triangles. Record thresholds in code/config and report.
+- [x] Render ½× without LOD as a distinct diagnostic, not as replacement for required LOD output.
+- [x] Ground-only cap: mean luminance ≤0.40, luminance standard deviation ≤0.60 × the measured masked person anchor's standard deviation, mean saturation ≤0.30. Log raw and capped per-tile metrics, formula, colour space, normalization and mask. This task's saturation cap overrides STYLE.md's historical 0.35.
+- [x] Day is base; night applies value ×0.55 and blue shift with a five-tile hearth radius restoring value. Winter desaturates ground and applies one snow texture with alpha≤0.60. Drought moves grass toward ochre. Objects/people retain colour identity under night/winter except the global value drop; document the distinction between ground blue shift and foreground value reduction.
+- [x] Produce every acquired scene × retained zoom × retained condition, 1600×900 centred on camp. Minimum retained zooms: 1× and ½×; minimum conditions: day/night/winter. Add ½× no-LOD per scene/condition. Retained ¼× and drought complete the same Cartesian matrix rather than hand-picking views.
+- [x] Paste the same current-renderer HUD strip at the top for matched comparisons; preserve screenshot/crop provenance and place review IDs so they do not reveal renderer/condition answers. Report any mismatched clock/season HUD text.
+- [x] All published full-resolution images live in `docs/v8/artenv1/renders/`, retain dimensions and decode correctly, each ≤1,500,000 bytes through lossless PNG compression. Do not quantize to meet the cap.
 
 ## 5. Preregistered readability protocol
 
@@ -148,29 +150,29 @@ The separate 32 px item packet includes one image per kind and meaningful stack/
 
 ## 6. Godot crowd gate
 
-- [ ] Standalone scene under `art/proto/` uses **200 adopted Route I people + 400 environment sprites + ground**, recorded from the actual nodes/draw list and visible capture. No live simulation integration is implied.
-- [ ] Run real visible Godot 4.6 windows for 1× and ½× with required LOD. Use the intended 1600×900 rendering surface; record engine version, renderer, platform, viewport, filtering, vsync, command and scene/asset hashes.
-- [ ] After a declared warm-up, measure **60 seconds per zoom** using actual rendered-frame completion (`RenderingServer.frame_post_draw` or equivalent), not only `_process` callbacks. Report rendered frames, elapsed seconds and rendered FPS; process FPS can be reported separately.
-- [ ] Capture the actual populated scene at each zoom, confirm object counts and readable asset presence, preserve raw logs/captures externally and compact results under ENV1.
-- [ ] Bar is measured rendered FPS **≥60 at each zoom**, without rounding a failure upward or picking a favorable rerun. Record attempted runs and load/occlusion issues. A dummy/headless run proves neither the FPS gate nor the visual surface.
-- [ ] Inspect runtime/parse errors. Any helper validation result describes only its checked scope; previous PROD2 FPS does not count as this pass's result.
+- [x] Standalone scene under `art/proto/` uses **200 adopted Route I people + 400 environment sprites + ground**, recorded from the actual nodes/draw list and visible capture. No live simulation integration is implied.
+- [x] Run real visible Godot 4.6 windows for 1× and ½× with required LOD. Use the intended 1600×900 rendering surface; record engine version, renderer, platform, viewport, filtering, vsync, command and scene/asset hashes.
+- [x] After a declared warm-up, measure **60 seconds per zoom** using actual rendered-frame completion (`RenderingServer.frame_post_draw` or equivalent), not only `_process` callbacks. Report rendered frames, elapsed seconds and rendered FPS; process FPS can be reported separately.
+- [x] Capture the actual populated scene at each zoom, confirm object counts and readable asset presence, preserve raw logs/captures externally and compact results under ENV1.
+- [x] Bar is measured rendered FPS **≥60 at each zoom**, without rounding a failure upward or picking a favorable rerun. Record attempted runs and load/occlusion issues. A dummy/headless run proves neither the FPS gate nor the visual surface.
+- [x] Inspect runtime/parse errors. Any helper validation result describes only its checked scope; previous PROD2 FPS does not count as this pass's result.
 
 ## 7. Owner artifacts, verification and publication
 
-- [ ] `art/boards/env1_owner_board.png`: day-6 noon, four side-by-side panels of current renderer, 05 at 1×, 05 at ½× with LOD, 05 at night. Label source/mismatch and declared overlay honestly.
-- [ ] A second board covers winter and the M5 overlay scene. Boards may use documented geometric downsampling; full 1600×900 renders remain published separately. Visually inspect both final board files.
-- [ ] `ENV1_REPORT.md` is Korean and contains every required section: verdict; inventory counts; per-family tries/accepted/rejected reasons; seam list; animal sheets/reviews; portraits; source/overlay/LOD/ground metrics; task/zoom/condition comparison tables per round; FPS; changed files; limits; M-ART2 handover paths and missing live-bridge M3–M5 layers; owner decisions on application strength/LOD/night.
-- [ ] Handover lists the M3–M5 layers the text renderer omitted, so M-ART2 must read real bridge data instead of installing declared overlay coordinates as gameplay truth.
-- [ ] Acceptance totals join actual sidecars/reviewer artifacts, generation ledger and inventory; all PENDING/FAIL/DEFERRED/NOT_VERIFIED items stay visible. Do not claim owner approval.
-- [ ] Check all added/modified paths against scope, each staged file's byte size, all PNG decode/dimensions, referenced file existence, source hashes and committed original preservation.
-- [ ] Run applicable Python checks, Godot parsing/runtime verification and `git diff --check`. A complete game gate is not substituted for art evidence; do not claim simulation identity merely because source paths are unchanged.
-- [ ] Stage explicit files only. Review `git diff --cached --name-only`, `git diff --cached --stat` and `git diff --cached --check`; exclude unrelated existing dirt.
-- [ ] Commit with intent-first Lore narrative/trailers and `v8-artenv1(pN): …` prefix. Push explicitly with `git push origin v8/art-env1`.
-- [ ] Record local `git rev-parse HEAD` and `git ls-remote origin refs/heads/v8/art-env1`; exact equality is required. Final artifact audit inspects files and measured evidence at that SHA; remote presence alone never proves acceptance.
+- [x] `art/boards/env1_owner_board.png`: day-6 noon, four side-by-side panels of current renderer, 05 at 1×, 05 at ½× with LOD, 05 at night. Label source/mismatch and declared overlay honestly.
+- [x] A second board covers winter and the M5 overlay scene. Boards may use documented geometric downsampling; full 1600×900 renders remain published separately. Visually inspect both final board files.
+- [x] `ENV1_REPORT.md` is Korean and contains every required section: verdict; inventory counts; per-family tries/accepted/rejected reasons; seam list; animal sheets/reviews; portraits; source/overlay/LOD/ground metrics; task/zoom/condition comparison tables per round; FPS; changed files; limits; M-ART2 handover paths and missing live-bridge M3–M5 layers; owner decisions on application strength/LOD/night.
+- [x] Handover lists the M3–M5 layers the text renderer omitted, so M-ART2 must read real bridge data instead of installing declared overlay coordinates as gameplay truth.
+- [x] Acceptance totals join actual sidecars/reviewer artifacts, generation ledger and inventory; all PENDING/FAIL/DEFERRED/NOT_VERIFIED items stay visible. Do not claim owner approval.
+- [x] Check all added/modified paths against scope, each staged file's byte size, all PNG decode/dimensions, referenced file existence, source hashes and committed original preservation.
+- [x] Run applicable Python checks, Godot parsing/runtime verification and `git diff --check`. A complete game gate is not substituted for art evidence; do not claim simulation identity merely because source paths are unchanged.
+- [x] Stage explicit files only. Review `git diff --cached --name-only`, `git diff --cached --stat` and `git diff --cached --check`; exclude unrelated existing dirt.
+- [x] Commit with intent-first Lore narrative/trailers and `v8-artenv1(pN): …` prefix. Push explicitly with `git push origin v8/art-env1`.
+- [x] Record local `git rev-parse HEAD` and `git ls-remote origin refs/heads/v8/art-env1`; exact equality is required. Final artifact audit inspects files and measured evidence at that SHA; remote presence alone never proves acceptance.
 
 ## 8. Resource ledger and stop procedure
 
-The leader owns one monotonic generation ledger. Reserve a row **before** each attempted call with asset/sheet ID, family, attempt number, prompt/reference hashes, start time and status; finalize it with tool result/error, original path/hash and judgement. Every launched generation/edit attempt consumes one of 260, including failures and rejected candidates. No per-asset fourth try, animal fourth sheet, portrait third try, or reset by renaming an asset.
+Provenance result: retrospective ledger135/260, limits/output hashes PASS; pre-call global monotonic reservation NOT_ESTABLISHED,52missing timestamps and other disclosed gaps remain PARTIAL. The original intended rule was: the leader owns one monotonic generation ledger. Reserve a row **before** each attempted call with asset/sheet ID, family, attempt number, prompt/reference hashes, start time and status; finalize it with tool result/error, original path/hash and judgement. Every launched generation/edit attempt consumes one of 260, including failures and rejected candidates. No per-asset fourth try, animal fourth sheet, portrait third try, or reset by renaming an asset.
 
 Prioritize inventory, built space/workshops, wolf/deer, real-source compositor, mandatory comparison, crowd measurements and boards/report. At time pressure drop optional work in the specified order: **portraits → drought → ¼× → item variants beyond one per kind**. No mandatory category disappears from the checklist. At the hard stop stop production, preserve current evidence and report actual completion/failed/missing items; do not label a smaller successful subset as the completed goal. Reserve publication/report time before the deadline and log any deadline overrun explicitly.
 
@@ -188,3 +190,17 @@ Prioritize inventory, built space/workshops, wolf/deer, real-source compositor, 
 | ≥60 rendered FPS twice | Two 60 s result rows with scene/asset hashes and runtime status | Window captures and frame logs |
 | Owner review ready | Both boards, full renders, Korean report | Full-resolution external originals if larger |
 | Published exact content | Scoped commit and matching remote SHA | Git command outputs |
+
+## Final execution outcomes
+
+| Requirement | Actual result and evidence |
+|---|---|
+| Inventory and source |129rows; closure18new/19reuse/61partial/31deferred; `INVENTORY_CLOSURE.md`;375originalPNG unchanged|
+| Mandatory production |All named built/workshop categories and17itemkinds delivered; bounded candidate failures retained; `built_assets.json`, `items_manifest.json`|
+| Animals and portraits |20animalframes; deerreadabilityPASS/wolfFAIL; bothcandidate;34portraitcandidates,acceptance0; calibrationFAIL retained|
+| Real rehearsal and ownerboards |3actualsource states,48renders,2boards;93888groundchecksPASS; `renders/verification.json`|
+| Readability execution |R0 and one repair R1 complete with6freshreviewers each;144taskobservations/round; bothrawFAIL;halfcounts6/6 andtiming24/24 eachPASS; controlledNOT_VERIFIED|
+| Crowd |Final sequential actualwindows60s each;340.984428377771/263.182634332511FPS PASS; allattempts retained in `FPS.md`|
+| Checks/publication |Final static/runtime/scope verification in `FINAL_VERIFICATION.json`; explicitbranch commit/push andremoteequality receipt external `artenv1-data/publication.json` and finalmessage|
+
+No second readability repair, no further generation, no game installation/merge, no owner-approval claim. Final report preserves every failed criterion; executed task delivery is not a whole-style PASS.

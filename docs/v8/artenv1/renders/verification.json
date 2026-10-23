@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "status": "FROZEN",
+  "frozen_at_utc": "2026-10-23T07:45:54.312898+00:00",
+  "scope": "Compositor artifact verification only; asset quality/readability/performance/owner approval remain separate.",
+  "matrix_images": 48,
+  "matrix_dimensions": [
+    1600,
+    900
+  ],
+  "mode": "RGB lossless PNG",
+  "max_render_bytes": 1246505,
+  "file_cap_bytes": 1500000,
+  "paired_image_and_raw_evidence_hashes_verified": 48,
+  "authentic_hud_pixel_equal": 48,
+  "ground_tile_crops": 93888,
+  "ground_registered_pass": 93888,
+  "ground_strict_initial_pass": 93888,
+  "ground_maxima": {
+    "luminance_mean": 0.29436117647058824,
+    "luminance_std": 0.04130795511027067,
+    "saturation_mean": 0.21322438333172045
+  },
+  "person_luminance_std": 0.1706134334943827,
+  "selected_truth_sha256": "8d8986820816a777b68103bab774610d78e9aa0e85e11f2cab5e7d106d9360f5",
+  "render_manifest_sha256": "a4e98dd3af6c2d44286a69083358bcaf2e1cae39c91df76f770c55e4e96b3b98",
+  "source_manifest_sha256": {
+    "docs/v8/artenv1/built_assets.json": "c586d83d5178f55d2c9922c3ac757469a0aba4c33b034a592105f16c17231e2b",
+    "docs/v8/artenv1/items_manifest.json": "40255673dbc2c6521b319f4de1ec5e8c5a929cb7dc2a0fbea69061aadaadccb4",
+    "art/animal/wolf/MANIFEST.json": "7f8f1feb24956f1841062197f632c4554a8995c45ff0a94cd53ddad06e1e8189",
+    "art/animal/deer/MANIFEST.json": "5026df441fb3eca6f1ed001ec88c0f7affbb748f8bcae02076336f9d86206f40"
+  },
+  "object_status_occurrences": {
+    "CODE_ZONE_OUTLINE": 3384,
+    "SEAM_FAIL_CANDIDATE": 3720,
+    "accepted under judge v2, TRIAL2b": 29100,
+    "REUSED_PRIOR_ACCEPTANCE": 144,
+    "STYLE_ACCEPTED_SEMANTIC_REVIEWED": 756,
+    "ACCEPTED_ASSET": 672,
+    "CANDIDATE_NOT_ADOPTED": 292,
+    "NUMERIC_FAIL_CANDIDATE": 144
+  },
+  "ground_source_status_occurrences": {
+    "accepted under judge v2, TRIAL2b": 180,
+    "NUMERIC_FAIL_CANDIDATE": 96,
+    "ACCEPTED_ASSET": 48
+  },
+  "boards": [
+    {
+      "path": "art/boards/env1_owner_board.png",
+      "sha256": "6f2575dc96722b2e86ce89b8e129014936f3379e9959360066d4091f43fbee3b",
+      "bytes": 1061593,
+      "sidecar_sha256": "4fee944d18342006d9ede23d068d7f0c0364e6695373b5112422bb2064f73623"
+    },
+    {
+      "path": "art/boards/env1_winter_overlay_board.png",
+      "sha256": "98e196c07363129f1392b1049ef2ac04f61a939b25530c0bfa3376269dd9ea4f",
+      "bytes": 948370,
+      "sidecar_sha256": "0ae390f302085b7d278103cb2fc915099a59860c31378adefecedddb02a71094"
+    }
+  ],
+  "pytest": "14 passed",
+  "ruff_diagnostics": 0,
+  "basedpyright": {
+    "filesAnalyzed": 13,
+    "errorCount": 0,
+    "warningCount": 0,
+    "informationCount": 0,
+    "timeInSec": 1.488
+  },
+  "checks_evidence": {
+    "/Users/rexxa/work/artenv1-data/compositor-tests.txt": "ac3c0c064f943d1cd0a7205ed51cd07be50d1135b870ca3ce299f824d3234db0",
+    "/Users/rexxa/work/artenv1-data/compositor-ruff.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "/Users/rexxa/work/artenv1-data/compositor-types.json": "9d1e1a24ab069d3d5119a7ce229c3a767f7848e49271fa681b5178edc1aef929"
+  },
+  "visual_inspection": {
+    "method": "Direct view_image at original pixels for all six selected Round1 windows and both regenerated boards by compositor finalizer; not a blind reviewer.",
+    "image_sha256": [
+      "abe826694acfc6a54aa1e5581cc849ffaa61a7063e49d91dac9de94128a04129",
+      "1e0df4b75a8a1905b4997fd2eecf5fb0f529e5eb350e9b46ba162b74bbb07b05",
+      "0519e5a57927b3203652d5b69c501e7c6755da553af1d5fd81cd42ac75b1f3e6",
+      "fd4a83e9e0efca7c914b35e854b78d525ee7da6f0b042203650f768b5c49bddc",
+      "b409b61c15eeeac0302e064368418e578c4d80e72983f1959c9e9ade4dd0f73c",
+      "8225ab76fa6c103a8f4d0c7e3030ebeece8fea0b077d3374e0df0f13a00f05ea",
+      "6f2575dc96722b2e86ce89b8e129014936f3379e9959360066d4091f43fbee3b",
+      "98e196c07363129f1392b1049ef2ac04f61a939b25530c0bfa3376269dd9ea4f"
+    ],
+    "findings": "The broad pale axe/diagonal handle differs from cylindrical cargo logs, and the unchanged raised-axe figure has declared stump context. HUD, A/B/C labels and native/declaration separation remain intact. Winter texture is repetitive; night sleeper circles and zz glyphs remain close. This is an implementation observation, not a readability or owner approval claim."
+  },
+  "readability_repair_round": 1,
+  "round0_archive_sha256": "9fdee5b20747df94cfa41b57b01ed5122928b420379c800f592bd4576b54bc81",
+  "round0_archive_files_verified": 161,
+  "round1_hash_audit_sha256": "c23d6adc54579d1c8f8bdc9d5dbf75977fd11db4368e380eab81d538b1c3efee",
+  "check_invocation_diagnostic": {
+    "path": "/Users/rexxa/work/artenv1-data/compositor/round1_pytest_invocation_error.txt",
+    "sha256": "f578072258073561c958af42020bce961f1febb05d68a81ead6c0e0148e52406",
+    "reason": "Direct pytest entrypoint omitted project from sys.path; python -m pytest then passed all14 tests with unchanged code."
+  }
+}

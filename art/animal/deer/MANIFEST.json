@@ -1,0 +1,743 @@
+{
+  "species": "deer",
+  "attempt": 1,
+  "raw": "/Users/rexxa/work/artenv1-data/animals/deer_try1.png",
+  "raw_sha256": "fca0336b664abc7ea73c2f59b91519a8e0a5d211b27f992eb772b3d7568003f5",
+  "prompt": "/Users/rexxa/work/artenv1-data/animals/deer_try1.prompt.txt",
+  "prompt_sha256": "8b5ddb4599e5da03e227a7b39af31a4720d72c5989c63cf1fb602aed7d8bfe91",
+  "shoulder_landmarks": {
+    "species": "deer",
+    "attempt": 1,
+    "shoulder_y": 194,
+    "hoof_y": 495,
+    "shoulder_target": 40,
+    "dead_length": 64,
+    "special_pose": "graze"
+  },
+  "standing_scale": 0.132890365448505,
+  "normalization": "route I ownership; one S-stand shoulder scale; dead body-length scale",
+  "ownership": {
+    "source_rgba_sha256": "304595f1875fa6019e08c876d9df71c848bd56581f0e638cbaf07874777b4db0",
+    "ownership_sha256": "1613837167282ea7bf448029c284565dca41bace56cdeedb20f13236d1b12f7a",
+    "visible_pixels": 484663,
+    "tied_visible_pixels": 3,
+    "reconstructed_exactly": true,
+    "foreign_major_pixels": 0,
+    "fragments": []
+  },
+  "major_components": 10,
+  "source_opaque_border_pixels": 0,
+  "structural_pass": true,
+  "frames": [
+    {
+      "species": "deer",
+      "facing": "S",
+      "pose": "stand",
+      "attempt": 1,
+      "image": "art/animal/deer/S/stand.png",
+      "image_sha256": "80ab5eb1d723716286c292e3619d004abb0d85cc28794c825db9761c6d007958",
+      "source_panel": "/Users/rexxa/work/artenv1-data/animals/deer_try1_S_stand.png",
+      "source_panel_sha256": "867b5eccb032ece5cd429745d37e00af19123f64f14171ed7dc05564806e139f",
+      "source_box": [
+        0,
+        19,
+        314,
+        583
+      ],
+      "raw_sha256": "fca0336b664abc7ea73c2f59b91519a8e0a5d211b27f992eb772b3d7568003f5",
+      "prompt_sha256": "8b5ddb4599e5da03e227a7b39af31a4720d72c5989c63cf1fb602aed7d8bfe91",
+      "standing_scale": 0.132890365448505,
+      "scale": 0.132890365448505,
+      "normalization": {
+        "scaled_size": [
+          42,
+          75
+        ],
+        "trim_box": [
+          8,
+          7,
+          32,
+          64
+        ],
+        "placement": [
+          36,
+          16
+        ],
+        "resized_to_canvas_offset": [
+          28,
+          9
+        ],
+        "visible_pixels": 723,
+        "rotation_degrees": 0,
+        "scale": 0.132890365448505,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true
+      },
+      "component_count": 1,
+      "visible_width": 24,
+      "visible_height": 57,
+      "structural_pass": true,
+      "status": "CANDIDATE_NOT_ADOPTED",
+      "species_readability": "READABILITY_PASS",
+      "numeric_negative_control_calibration": "FAIL",
+      "review_report": "docs/v8/artenv1/animal_reviews_round1.json"
+    },
+    {
+      "species": "deer",
+      "facing": "S",
+      "pose": "walk",
+      "attempt": 1,
+      "image": "art/animal/deer/S/walk.png",
+      "image_sha256": "d9637cb1009d4618b16c2bc650d04bce160cd6f3fa4835753e637b7738e102e6",
+      "source_panel": "/Users/rexxa/work/artenv1-data/animals/deer_try1_S_walk.png",
+      "source_panel_sha256": "e4adbe9e4af04f704ccf9a86d3dbe28a4766dcb6adca482e11c84ee84efef785",
+      "source_box": [
+        277,
+        20,
+        600,
+        597
+      ],
+      "raw_sha256": "fca0336b664abc7ea73c2f59b91519a8e0a5d211b27f992eb772b3d7568003f5",
+      "prompt_sha256": "8b5ddb4599e5da03e227a7b39af31a4720d72c5989c63cf1fb602aed7d8bfe91",
+      "standing_scale": 0.132890365448505,
+      "scale": 0.132890365448505,
+      "normalization": {
+        "scaled_size": [
+          43,
+          77
+        ],
+        "trim_box": [
+          11,
+          9,
+          32,
+          64
+        ],
+        "placement": [
+          37,
+          18
+        ],
+        "resized_to_canvas_offset": [
+          26,
+          9
+        ],
+        "visible_pixels": 666,
+        "rotation_degrees": 0,
+        "scale": 0.132890365448505,
+        "discarded_pixels": 1,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true
+      },
+      "component_count": 1,
+      "visible_width": 21,
+      "visible_height": 55,
+      "structural_pass": true,
+      "status": "CANDIDATE_NOT_ADOPTED",
+      "species_readability": "READABILITY_PASS",
+      "numeric_negative_control_calibration": "FAIL",
+      "review_report": "docs/v8/artenv1/animal_reviews_round1.json"
+    },
+    {
+      "species": "deer",
+      "facing": "S",
+      "pose": "run",
+      "attempt": 1,
+      "image": "art/animal/deer/S/run.png",
+      "image_sha256": "fc398f03c644521da4235a91acefc0ec3a5b1d8e19edcce24585bacb21e705fc",
+      "source_panel": "/Users/rexxa/work/artenv1-data/animals/deer_try1_S_run.png",
+      "source_panel_sha256": "85a414522f6283de8ee52e44835cee297eb0fa46cf1c76623f29f8228fa4af5a",
+      "source_box": [
+        545,
+        3,
+        922,
+        536
+      ],
+      "raw_sha256": "fca0336b664abc7ea73c2f59b91519a8e0a5d211b27f992eb772b3d7568003f5",
+      "prompt_sha256": "8b5ddb4599e5da03e227a7b39af31a4720d72c5989c63cf1fb602aed7d8bfe91",
+      "standing_scale": 0.132890365448505,
+      "scale": 0.132890365448505,
+      "normalization": {
+        "scaled_size": [
+          50,
+          71
+        ],
+        "trim_box": [
+          6,
+          16,
+          46,
+          63
+        ],
+        "placement": [
+          28,
+          26
+        ],
+        "resized_to_canvas_offset": [
+          22,
+          10
+        ],
+        "visible_pixels": 747,
+        "rotation_degrees": 0,
+        "scale": 0.132890365448505,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true
+      },
+      "component_count": 1,
+      "visible_width": 40,
+      "visible_height": 47,
+      "structural_pass": true,
+      "status": "CANDIDATE_NOT_ADOPTED",
+      "species_readability": "READABILITY_PASS",
+      "numeric_negative_control_calibration": "FAIL",
+      "review_report": "docs/v8/artenv1/animal_reviews_round1.json"
+    },
+    {
+      "species": "deer",
+      "facing": "S",
+      "pose": "graze",
+      "attempt": 1,
+      "image": "art/animal/deer/S/graze.png",
+      "image_sha256": "d3d991db1746d8f2d24156d7bc87936a7e25b39d3b54adeb5dc288e98c9fe9a7",
+      "source_panel": "/Users/rexxa/work/artenv1-data/animals/deer_try1_S_graze.png",
+      "source_panel_sha256": "c455d08d184907e24780d52ce441af0fa6d4d7948a9ad0b525474586a20ffbaa",
+      "source_box": [
+        888,
+        3,
+        1236,
+        592
+      ],
+      "raw_sha256": "fca0336b664abc7ea73c2f59b91519a8e0a5d211b27f992eb772b3d7568003f5",
+      "prompt_sha256": "8b5ddb4599e5da03e227a7b39af31a4720d72c5989c63cf1fb602aed7d8bfe91",
+      "standing_scale": 0.132890365448505,
+      "scale": 0.132890365448505,
+      "normalization": {
+        "scaled_size": [
+          46,
+          78
+        ],
+        "trim_box": [
+          7,
+          22,
+          36,
+          66
+        ],
+        "placement": [
+          33,
+          29
+        ],
+        "resized_to_canvas_offset": [
+          26,
+          7
+        ],
+        "visible_pixels": 701,
+        "rotation_degrees": 0,
+        "scale": 0.132890365448505,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true
+      },
+      "component_count": 1,
+      "visible_width": 29,
+      "visible_height": 44,
+      "structural_pass": true,
+      "status": "CANDIDATE_NOT_ADOPTED",
+      "species_readability": "READABILITY_PASS",
+      "numeric_negative_control_calibration": "FAIL",
+      "review_report": "docs/v8/artenv1/animal_reviews_round1.json"
+    },
+    {
+      "species": "deer",
+      "facing": "S",
+      "pose": "dead",
+      "attempt": 1,
+      "image": "art/animal/deer/S/dead.png",
+      "image_sha256": "28f134d43b1f61e9f8696bc400e9898de81e165a74f15732de03a69c7055c145",
+      "source_panel": "/Users/rexxa/work/artenv1-data/animals/deer_try1_S_dead.png",
+      "source_panel_sha256": "21e991b33480c6ece61e6cbe2cdd7e518b3499d01d0b2665761db8aec16514e1",
+      "source_box": [
+        1153,
+        55,
+        1527,
+        637
+      ],
+      "raw_sha256": "fca0336b664abc7ea73c2f59b91519a8e0a5d211b27f992eb772b3d7568003f5",
+      "prompt_sha256": "8b5ddb4599e5da03e227a7b39af31a4720d72c5989c63cf1fb602aed7d8bfe91",
+      "standing_scale": 0.132890365448505,
+      "scale": 0.18285714285714286,
+      "normalization": {
+        "scaled_size": [
+          68,
+          106
+        ],
+        "trim_box": [
+          3,
+          50,
+          67,
+          80
+        ],
+        "placement": [
+          16,
+          27
+        ],
+        "resized_to_canvas_offset": [
+          13,
+          -23
+        ],
+        "visible_pixels": 984,
+        "rotation_degrees": 0,
+        "scale": 0.18285714285714286,
+        "discarded_pixels": 16,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true
+      },
+      "component_count": 1,
+      "visible_width": 64,
+      "visible_height": 30,
+      "structural_pass": true,
+      "status": "CANDIDATE_NOT_ADOPTED",
+      "species_readability": "READABILITY_PASS",
+      "numeric_negative_control_calibration": "FAIL",
+      "review_report": "docs/v8/artenv1/animal_reviews_round1.json"
+    },
+    {
+      "species": "deer",
+      "facing": "E",
+      "pose": "stand",
+      "attempt": 1,
+      "image": "art/animal/deer/E/stand.png",
+      "image_sha256": "dab6b289eb5a200879b686fe3f1f8d2fa7d0861814face28db266093a6d33e1d",
+      "source_panel": "/Users/rexxa/work/artenv1-data/animals/deer_try1_E_stand.png",
+      "source_panel_sha256": "7257a5b880d8b52340891889b5fbc47432680ae43ddeff0b2472e2a5b968b1c4",
+      "source_box": [
+        0,
+        503,
+        378,
+        998
+      ],
+      "raw_sha256": "fca0336b664abc7ea73c2f59b91519a8e0a5d211b27f992eb772b3d7568003f5",
+      "prompt_sha256": "8b5ddb4599e5da03e227a7b39af31a4720d72c5989c63cf1fb602aed7d8bfe91",
+      "standing_scale": 0.132890365448505,
+      "scale": 0.132890365448505,
+      "normalization": {
+        "scaled_size": [
+          50,
+          66
+        ],
+        "trim_box": [
+          3,
+          7,
+          41,
+          59
+        ],
+        "placement": [
+          29,
+          21
+        ],
+        "resized_to_canvas_offset": [
+          26,
+          14
+        ],
+        "visible_pixels": 853,
+        "rotation_degrees": 0,
+        "scale": 0.132890365448505,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true
+      },
+      "component_count": 1,
+      "visible_width": 38,
+      "visible_height": 52,
+      "structural_pass": true,
+      "status": "CANDIDATE_NOT_ADOPTED",
+      "species_readability": "READABILITY_PASS",
+      "numeric_negative_control_calibration": "FAIL",
+      "review_report": "docs/v8/artenv1/animal_reviews_round1.json"
+    },
+    {
+      "species": "deer",
+      "facing": "E",
+      "pose": "walk",
+      "attempt": 1,
+      "image": "art/animal/deer/E/walk.png",
+      "image_sha256": "c909cb4ae376ff59117048e101c970469200ee5e084cffa950f003a611a98690",
+      "source_panel": "/Users/rexxa/work/artenv1-data/animals/deer_try1_E_walk.png",
+      "source_panel_sha256": "4fda5b48d9c20b12667f8fc865035c536cf253f5fc7dabf9f5af8a0d042371f3",
+      "source_box": [
+        255,
+        483,
+        778,
+        1024
+      ],
+      "raw_sha256": "fca0336b664abc7ea73c2f59b91519a8e0a5d211b27f992eb772b3d7568003f5",
+      "prompt_sha256": "8b5ddb4599e5da03e227a7b39af31a4720d72c5989c63cf1fb602aed7d8bfe91",
+      "standing_scale": 0.132890365448505,
+      "scale": 0.132890365448505,
+      "normalization": {
+        "scaled_size": [
+          70,
+          72
+        ],
+        "trim_box": [
+          4,
+          12,
+          52,
+          59
+        ],
+        "placement": [
+          24,
+          26
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          14
+        ],
+        "visible_pixels": 843,
+        "rotation_degrees": 0,
+        "scale": 0.132890365448505,
+        "discarded_pixels": 14,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true
+      },
+      "component_count": 1,
+      "visible_width": 48,
+      "visible_height": 47,
+      "structural_pass": true,
+      "status": "CANDIDATE_NOT_ADOPTED",
+      "species_readability": "READABILITY_PASS",
+      "numeric_negative_control_calibration": "FAIL",
+      "review_report": "docs/v8/artenv1/animal_reviews_round1.json"
+    },
+    {
+      "species": "deer",
+      "facing": "E",
+      "pose": "run",
+      "attempt": 1,
+      "image": "art/animal/deer/E/run.png",
+      "image_sha256": "b27635b1221c308604cc048d652fc288864a7687b7c9ca44bfbcd24625f135af",
+      "source_panel": "/Users/rexxa/work/artenv1-data/animals/deer_try1_E_run.png",
+      "source_panel_sha256": "f9a87f66ce3ed4f87392749ce9b759edcf82318b50763269425f43a184af8c76",
+      "source_box": [
+        588,
+        530,
+        987,
+        1014
+      ],
+      "raw_sha256": "fca0336b664abc7ea73c2f59b91519a8e0a5d211b27f992eb772b3d7568003f5",
+      "prompt_sha256": "8b5ddb4599e5da03e227a7b39af31a4720d72c5989c63cf1fb602aed7d8bfe91",
+      "standing_scale": 0.132890365448505,
+      "scale": 0.132890365448505,
+      "normalization": {
+        "scaled_size": [
+          53,
+          64
+        ],
+        "trim_box": [
+          2,
+          8,
+          51,
+          48
+        ],
+        "placement": [
+          23,
+          33
+        ],
+        "resized_to_canvas_offset": [
+          21,
+          25
+        ],
+        "visible_pixels": 723,
+        "rotation_degrees": 0,
+        "scale": 0.132890365448505,
+        "discarded_pixels": 26,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true
+      },
+      "component_count": 1,
+      "visible_width": 49,
+      "visible_height": 40,
+      "structural_pass": true,
+      "status": "CANDIDATE_NOT_ADOPTED",
+      "species_readability": "READABILITY_PASS",
+      "numeric_negative_control_calibration": "FAIL",
+      "review_report": "docs/v8/artenv1/animal_reviews_round1.json"
+    },
+    {
+      "species": "deer",
+      "facing": "E",
+      "pose": "graze",
+      "attempt": 1,
+      "image": "art/animal/deer/E/graze.png",
+      "image_sha256": "c53e5ed09a45eccfcaf45923e9ca29455dcb862a68e574b0c027314495a492c5",
+      "source_panel": "/Users/rexxa/work/artenv1-data/animals/deer_try1_E_graze.png",
+      "source_panel_sha256": "9ea770c4a5c361da72820acb11ba9b280d7bfbc0638621887f3931abfe133951",
+      "source_box": [
+        933,
+        581,
+        1314,
+        1000
+      ],
+      "raw_sha256": "fca0336b664abc7ea73c2f59b91519a8e0a5d211b27f992eb772b3d7568003f5",
+      "prompt_sha256": "8b5ddb4599e5da03e227a7b39af31a4720d72c5989c63cf1fb602aed7d8bfe91",
+      "standing_scale": 0.132890365448505,
+      "scale": 0.132890365448505,
+      "normalization": {
+        "scaled_size": [
+          51,
+          56
+        ],
+        "trim_box": [
+          6,
+          13,
+          42,
+          48
+        ],
+        "placement": [
+          30,
+          38
+        ],
+        "resized_to_canvas_offset": [
+          24,
+          25
+        ],
+        "visible_pixels": 684,
+        "rotation_degrees": 0,
+        "scale": 0.132890365448505,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true
+      },
+      "component_count": 1,
+      "visible_width": 36,
+      "visible_height": 35,
+      "structural_pass": true,
+      "status": "CANDIDATE_NOT_ADOPTED",
+      "species_readability": "READABILITY_PASS",
+      "numeric_negative_control_calibration": "FAIL",
+      "review_report": "docs/v8/artenv1/animal_reviews_round1.json"
+    },
+    {
+      "species": "deer",
+      "facing": "E",
+      "pose": "dead",
+      "attempt": 1,
+      "image": "art/animal/deer/E/dead.png",
+      "image_sha256": "951c5c28b907a666ab8bd8cfeaf03f7d415aca8d800e8ebf35f8e6d5fae1a4d0",
+      "source_panel": "/Users/rexxa/work/artenv1-data/animals/deer_try1_E_dead.png",
+      "source_panel_sha256": "1eed47409e0e0391565cf702b253552d7885bcf72e607e149c09b251826a938b",
+      "source_box": [
+        1245,
+        629,
+        1536,
+        998
+      ],
+      "raw_sha256": "fca0336b664abc7ea73c2f59b91519a8e0a5d211b27f992eb772b3d7568003f5",
+      "prompt_sha256": "8b5ddb4599e5da03e227a7b39af31a4720d72c5989c63cf1fb602aed7d8bfe91",
+      "standing_scale": 0.132890365448505,
+      "scale": 0.2318840579710145,
+      "normalization": {
+        "scaled_size": [
+          67,
+          86
+        ],
+        "trim_box": [
+          1,
+          32,
+          66,
+          74
+        ],
+        "placement": [
+          15,
+          15
+        ],
+        "resized_to_canvas_offset": [
+          14,
+          -17
+        ],
+        "visible_pixels": 1319,
+        "rotation_degrees": 0,
+        "scale": 0.2318840579710145,
+        "discarded_pixels": 41,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true
+      },
+      "component_count": 1,
+      "visible_width": 65,
+      "visible_height": 42,
+      "structural_pass": true,
+      "status": "CANDIDATE_NOT_ADOPTED",
+      "species_readability": "READABILITY_PASS",
+      "numeric_negative_control_calibration": "FAIL",
+      "review_report": "docs/v8/artenv1/animal_reviews_round1.json"
+    }
+  ],
+  "status": "CANDIDATE_NOT_ADOPTED",
+  "acceptance": {
+    "status": "CANDIDATE_NOT_ADOPTED",
+    "readability": "READABILITY_PASS",
+    "numeric_negative_control_calibration": "FAIL",
+    "review_round": 1,
+    "review_report": "docs/v8/artenv1/animal_reviews_round1.json",
+    "review_report_sha256": "5887fdb9036cbe00e252486d6e228143f5d2ff7dabd33aae96194a4731b09d45",
+    "generation_attempts_used": 1,
+    "generation_attempts_cap": 3,
+    "generation_attempts_remaining": 2,
+    "groups": [
+      {
+        "reviewer": "animal_c",
+        "species": "deer",
+        "scale": 1,
+        "denominator": 10,
+        "species_correct": 10,
+        "pose_correct": 9,
+        "species_minimum": 9,
+        "pose_minimum": 8,
+        "species_pass": true,
+        "pose_pass": true,
+        "passed": true,
+        "species_failed_ids": [],
+        "pose_failed_ids": [
+          "R1-1X-08"
+        ]
+      },
+      {
+        "reviewer": "animal_c",
+        "species": "deer",
+        "scale": 2,
+        "denominator": 10,
+        "species_correct": 10,
+        "pose_correct": 10,
+        "species_minimum": 9,
+        "pose_minimum": 8,
+        "species_pass": true,
+        "pose_pass": true,
+        "passed": true,
+        "species_failed_ids": [],
+        "pose_failed_ids": []
+      },
+      {
+        "reviewer": "animal_d",
+        "species": "deer",
+        "scale": 1,
+        "denominator": 10,
+        "species_correct": 10,
+        "pose_correct": 9,
+        "species_minimum": 9,
+        "pose_minimum": 8,
+        "species_pass": true,
+        "pose_pass": true,
+        "passed": true,
+        "species_failed_ids": [],
+        "pose_failed_ids": [
+          "R1-1X-14"
+        ]
+      },
+      {
+        "reviewer": "animal_d",
+        "species": "deer",
+        "scale": 2,
+        "denominator": 10,
+        "species_correct": 10,
+        "pose_correct": 9,
+        "species_minimum": 9,
+        "pose_minimum": 8,
+        "species_pass": true,
+        "pose_pass": true,
+        "passed": true,
+        "species_failed_ids": [],
+        "pose_failed_ids": [
+          "R1-2X-02"
+        ]
+      }
+    ]
+  }
+}
