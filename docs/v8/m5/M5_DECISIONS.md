@@ -358,3 +358,13 @@ reading of "tick means ≤ +10 %" (one scene ×1.105) and passing on every other
 re-measured on `53be405d` (`$DATA/eval_final2`, never used to tune): F4 27, F5 19, F6b 3, F7 25 — the slicing moved
 who meets whom when, and these bars sit near their lines.
 
+
+## D19 — The memory ceilings judge the allocator counter
+
+The C3 ceilings `bytes_per_agent_le_4096` and `bytes_per_tile_le_96` were computed from RSS slopes. RSS is bimodal on
+macOS (M4 D23, M5 D4): across the M5 bench sessions the same M5 binary read 83.0–117.5 B per tile and M4's own base
+read 84.5–100.5 (it missed the 96 ceiling once, `$DATA/bench5/round4_slices`), while the allocator counter read 63.1 B
+per tile and 1,871 B per agent for both binaries in every session. D4 already moved the memory regression rule to the
+allocator number; the ceilings now follow it: `worldsim_perf bench` judges both ceilings on the allocator slopes when
+the run has them and on RSS otherwise (`memory_ceiling_source` in the summary says which; unit tests cover both). The
+first gate run on `03115c93` was stopped after three steps to make this change rather than let step 25 fail on noise.

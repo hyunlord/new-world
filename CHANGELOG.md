@@ -75,6 +75,9 @@ chronicle. Evaluation: `docs/v8/m5/M5_EVALUATION.md`; report: `docs/v8/m5/M5_REP
   gate's bench step takes this quote for that scene only (`BENCH_JUSTIFIED`, `BENCH_JUSTIFIED_SCENES=n200_side64`;
   `bench_ledger.py check --justified-scenes`, so it cannot excuse any other scene).
 
+- The C3 memory ceilings (`bytes_per_agent_le_4096`, `bytes_per_tile_le_96`) judge the allocator counter's slopes
+  when the run has them, RSS otherwise (D19: RSS per tile read 83–118 B for one binary across sessions).
+
 ### Removed
 - `docs/images/m4_contact_sheet.png` — replaced by `docs/images/m5_contact_sheet.png`.
 

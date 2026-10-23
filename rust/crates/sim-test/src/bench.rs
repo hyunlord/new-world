@@ -369,6 +369,12 @@ pub fn summarise(runs: &std::collections::BTreeMap<String, Vec<Value>>, commit: 
     let alloc_per_tile = get("n200", "alloc_bytes_after_build")
         .zip(get("n200_side64", "alloc_bytes_after_build"))
         .map(|(a, b)| (a - b) / f64::from(192 * 192 - 64 * 64));
+    // M5 DECISIONS D19: the memory ceilings judge the allocator slopes when the run has them (RSS is
+    // bimodal on macOS: the same binary read 83–118 B per tile across sessions), else RSS as before.
+    let (ceiling_agent, ceiling_tile, memory_source) = match (alloc_per_agent, alloc_per_tile) {
+        (Some(a), Some(t)) => (Some(a), Some(t), "alloc"),
+        _ => (per_agent, per_tile, "rss"),
+    };
     let verdict = |ok: Option<bool>| match ok {
         Some(true) => "PASS",
         Some(false) => "MISS",
@@ -382,9 +388,10 @@ pub fn summarise(runs: &std::collections::BTreeMap<String, Vec<Value>>, commit: 
         "ceilings": {
             "n1000_mean_le_5ms": verdict(get("n1000", "tick_mean_us").map(|v| v <= 5_000.0)),
             "n2000_mean_le_10ms": verdict(get("n2000", "tick_mean_us").map(|v| v <= 10_000.0)),
-            "bytes_per_agent_le_4096": verdict(per_agent.map(|v| v <= 4096.0)),
-            "bytes_per_tile_le_96": verdict(per_tile.map(|v| v <= 96.0)),
+            "bytes_per_agent_le_4096": verdict(ceiling_agent.map(|v| v <= 4096.0)),
+            "bytes_per_tile_le_96": verdict(ceiling_tile.map(|v| v <= 96.0)),
         },
+        "memory_ceiling_source": memory_source,
         "machine": crate::perf::machine_facts(),
     })
 }
@@ -620,7 +627,10 @@ mod tests {
         assert!((s["alloc_per_agent"].as_f64().unwrap_or(0.0) - 2_000_000.0 / 1800.0).abs() < 1e-9);
         assert!((s["alloc_per_tile"].as_f64().unwrap_or(0.0) - 200_000.0 / 32_768.0).abs() < 1e-9);
         assert_eq!(s["ceilings"]["n1000_mean_le_5ms"], "PASS");
-        assert_eq!(s["ceilings"]["bytes_per_agent_le_4096"], "MISS");
+        // D19: with the allocator counter the memory ceilings judge its slopes (1,111 B per agent
+        // passes although RSS reads 11,378 B), and say so.
+        assert_eq!(s["ceilings"]["bytes_per_agent_le_4096"], "PASS");
+        assert_eq!(s["memory_ceiling_source"], "alloc");
     }
 
     #[test]
@@ -640,6 +650,8 @@ mod tests {
         assert!(s["alloc_per_agent"].is_null());
         assert!(s["alloc_per_tile"].is_null());
         assert!(s["bytes_per_agent"].is_number());
+        // Without the counter the memory ceilings judge RSS, as before M5.
+        assert_eq!(s["memory_ceiling_source"], "rss");
         // The unit-test binary does not install the counter.
         assert_eq!(alloc_bytes(), None);
     }
