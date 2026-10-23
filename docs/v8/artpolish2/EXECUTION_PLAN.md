@@ -11,7 +11,7 @@ hard stop eight hours from task start. Raw data: `/Users/rexxa/work/artpolish2-d
 | 2 | Generated texture sets, seam/projection evidence, data-only new-era commit (`d6a539b0`; 2 seam FAIL retained) | completed |
 | 3 | Frozen six-variant plan, masks, baked frames, transforms and person selector (literal coverage FAIL / hair NOT_VERIFIABLE retained) | completed |
 | 4 | Variant portraits, structure checks, both independent blind tests (round0 and round1 FAIL retained) | completed |
-| 5 | Three boards, Korean report, scoped verification and remote SHA equality | in_progress |
+| 5 | Three boards, Korean report, scoped verification and remote SHA equality | completed |
 
 Parallel ownership: materials executor owns schema/resolver/walls; texture
 executor owns generated sets and prompt templates; sprite executor owns face
@@ -181,3 +181,18 @@ Godot runtime integration or owner approval.
 - Full face sheet exceeds the file limit at1,826,470 bytes. Both exact-scale
   adult/child sheets are rendered and root-viewed; D17 records the packaging
   deviation and preserves the full external sheet. Final audit/publication remain.
+
+## Delivery closure — 2026-10-23 22:15:49 UTC
+
+- Independent final delta audit found no new implementation/provenance/reporting
+  blocker. It reverified all 281 full-frame normalizations, 2,585 generation
+  references, both actual blind scores, all 192 face panels and file/scope caps.
+  Art stays PARTIAL_FAIL; owner acceptance stays NOT_CLAIMED.
+- Published all artifacts, Korean report and audit to `v8/art-polish2` at
+  `bbda34c3d713b96b7329c23ef78e8aba820c221b`. A fresh `git ls-remote origin
+  refs/heads/v8/art-polish2` returned that exact local HEAD. No mainline merge.
+- All six ledger steps are complete. Only closing documentation is updated
+  after that verified artifact publication; the final closing HEAD is checked
+  again and recorded in external `/Users/rexxa/work/artpolish2-data/publication.json`.
+- No required execution work is deferred to the owner. The requested wall
+  a/b/c and face-adoption decisions remain owner choices, not agent approval.
