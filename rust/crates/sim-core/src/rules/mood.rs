@@ -50,6 +50,14 @@ pub struct MoodRule {
     pub relation_drift: i16,
     /// Non-kin pairs' base relation lies in −chemistry..=chemistry, keyed per pair (DECISIONS D11: 300).
     pub chemistry: i16,
+    /// Most partners a person checks a run: the nearest within `quarrel_tiles`, by (distance, id)
+    /// (DECISIONS D18: 8 — a crowd of 279 on one tile made the check O(N²), goal §4 and C3).
+    #[serde(default = "partners_max")]
+    pub quarrel_partners_max: u32,
+}
+
+const fn partners_max() -> u32 {
+    8
 }
 
 impl MoodRule {
@@ -78,5 +86,6 @@ impl MoodRule {
         fight_damage: 4,
         relation_drift: 10,
         chemistry: 300,
+        quarrel_partners_max: 8,
     };
 }

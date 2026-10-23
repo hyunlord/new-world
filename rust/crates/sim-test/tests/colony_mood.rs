@@ -361,3 +361,66 @@ fn chronicle_causes_survive_a_save() {
     );
     let _ = TargetKind::Job;
 }
+
+/// Quarrel pairs chronicled in 20 quarrel runs of a crowd of 40 on one tile, as gaps in `AgentId` rank.
+fn crowd_gaps(cap: u32) -> Vec<usize> {
+    use sim_core::rules::WorldRules;
+    use sim_systems::worldgen::{build_world_with, WorldGenConfig};
+    let mut engine = build_world_with(
+        &WorldGenConfig::colony_stress(7, 40, 192),
+        WorldRules::colony(7),
+    );
+    engine.tick();
+    engine.resources.current_tick = 60;
+    MoodSystem.tick(&mut engine.world, &mut engine.resources);
+    if let Some(mood) = engine
+        .resources
+        .rules
+        .colony
+        .as_mut()
+        .and_then(|c| c.mood.as_mut())
+    {
+        mood.quarrel_partners_max = cap;
+    }
+    let mut ids: Vec<(u64, hecs::Entity)> = engine
+        .world
+        .query::<(&Agent, &Mood)>()
+        .iter()
+        .map(|(e, (a, _))| (a.id, e))
+        .collect();
+    ids.sort_unstable();
+    assert!(ids.len() >= 30, "a crowd of {}", ids.len());
+    for (_, e) in &ids {
+        place(&mut engine, *e, (60, 60));
+        set_mood(&mut engine, *e, 0);
+        let _ = engine.world.insert_one(*e, AgentState::Idle);
+    }
+    let rank = |id: u64| ids.iter().position(|(i, _)| *i == id).expect("ranked");
+    let before = engine.resources.chronicle.len();
+    for k in 1..=20u64 {
+        engine.resources.current_tick = 60 + 30 * k;
+        QuarrelSystem.tick(&mut engine.world, &mut engine.resources);
+        for (_, e) in &ids {
+            set_mood(&mut engine, *e, 0);
+        }
+    }
+    engine.resources.chronicle.entries()[before..]
+        .iter()
+        .filter(|e| e.kind == ChronicleKind::Quarrel)
+        .map(|e| {
+            let (a, b) = (rank(e.subject.expect("a")), rank(e.other.expect("b")));
+            a.abs_diff(b)
+        })
+        .collect()
+}
+
+#[test]
+fn in_a_crowd_each_person_checks_only_the_nearest_eight_later_ids() {
+    // DECISIONS D18: on one tile the nearest are the next ids, so every quarrel spans at most 8 ranks.
+    let capped = crowd_gaps(8);
+    assert!(capped.len() >= 10, "quarrels in the crowd: {}", capped.len());
+    assert!(capped.iter().all(|g| *g <= 8), "gaps {capped:?}");
+    // Without the cap some pair is farther apart in rank (the test can fail).
+    let open = crowd_gaps(u32::MAX);
+    assert!(open.iter().any(|g| *g > 8), "uncapped gaps {open:?}");
+}

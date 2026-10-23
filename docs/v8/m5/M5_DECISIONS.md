@@ -314,3 +314,19 @@ These change behaviour, so the held-out seeds are measured once more on the fixe
 
 The numbers review (`$DATA/review/numbers_review.md`) matched every recomputed count and seed list; its findings on
 the measurement and the text are applied to `M5_EVALUATION.md` and the probe (the pack window; `m5.rs`).
+
+## D18 — The quarrel check's cost (goal §4, C3; found by the F11 bench)
+
+The first F11 session (`$DATA/bench5`, 14:02–14:06, quiet: 1-minute load 3.4–5.4) put the tick mean within +10 % of
+"M4 re-measure" on every scene (largest ×1.043, N = 2,000) and the M5 systems at 91 µs/tick at N = 1,000, but p99
+rose ×1.22 (N = 200), ×1.38 (N = 1,000), ×1.63 (N = 2,000), ×1.40 (64²) — the ledger rule fails on p99. The cause is
+`QuarrelSystem`: 205 µs a run at N = 200, 2.4 ms at N = 1,000, 8.1 ms at N = 2,000, every 30 ticks (so in the p99), and
+80 µs/tick at N = 1,000 against the goal's 40. The benchmark camp is a crowd (at N = 1,000, 279 people on one tile and
+84,230 pairs within 2 tiles); gathering every person's neighbours from 3×3-tile cells was O(N²) there.
+Choice: each person checks at most `MoodRule::quarrel_partners_max` = 8 partners a run — the nearest later ids
+within `quarrel_tiles`, by (distance, id), found ring by ring (own tile, then distance 1, then 2) and stopping at 8;
+they are then checked in id order as before. Where 8 or fewer are near, the checked pairs and their order are
+exactly the old ones; only crowds change. A run costs 136 µs at N = 200 and 767 µs at N = 1,000 (a timing probe on
+the bench world, 60 runs). Test `in_a_crowd_each_person_checks_only_the_nearest_eight_later_ids` (40 people on one
+tile: every quarrel spans ≤ 8 id ranks; without the cap some span more). This changes behaviour, so the held-out
+seeds are measured once more ("final" in `M5_EVALUATION.md`).

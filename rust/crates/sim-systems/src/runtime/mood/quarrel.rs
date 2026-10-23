@@ -8,7 +8,8 @@
 //! M5 (ADR 0030). The V7 `SocialInteractionSystem` has no quarrel and is left
 //! alone; this system checks pairs every 30 ticks. Candidates: people with a
 //! mood who are not asleep, not working (`Consuming { Job }`) and not drafted.
-//! For each pair within `quarrel_tiles` (lower id first, pairs in id order),
+//! For each pair within `quarrel_tiles` (lower id first, pairs in id order; each person
+//! checks at most the `quarrel_partners_max` nearest of the later ids, DECISIONS D18),
 //! not kin-close (kin base ≥ `kin_base_min`), whose relation is below 0 or
 //! one of whom is below `low`: the chance per check is
 //! `base + max(0, low − min mood) / 25 + max(0, −relation) / 100` ‰, ×3 under
@@ -158,28 +159,40 @@ impl RuntimeSystem for QuarrelSystem {
             return;
         }
         folk.sort_by_key(|row| row.0);
-        // Candidates by chunk of `quarrel_tiles` + 1, for the near pairs.
+        // Candidates by tile (indices ascending = `AgentId` ascending), for the near pairs.
         let reach = rule.quarrel_tiles;
-        let cell = reach.max(1) + 1;
-        let mut grid: std::collections::BTreeMap<(u32, u32), Vec<usize>> =
+        let most = rule.quarrel_partners_max as usize;
+        let mut tiles: std::collections::BTreeMap<(u32, u32), Vec<usize>> =
             std::collections::BTreeMap::new();
         for (i, row) in folk.iter().enumerate() {
-            grid.entry((row.2 .0 / cell, row.2 .1 / cell))
-                .or_default()
-                .push(i);
+            tiles.entry(row.2).or_default().push(i);
         }
         let day = super::today(res);
         let tick = res.current_tick;
         let mut quarrelled: std::collections::BTreeSet<AgentId> = std::collections::BTreeSet::new();
         for i in 0..folk.len() {
             let a = folk[i];
-            let (cx, cy) = (a.2 .0 / cell, a.2 .1 / cell);
+            // The nearest `quarrel_partners_max` later ids within reach, by (distance, id), ring by ring
+            // (D18); with fewer near, all of them. Then checked in id order.
             let mut near: Vec<usize> = Vec::new();
-            for gy in cy.saturating_sub(1)..=cy + 1 {
-                for gx in cx.saturating_sub(1)..=cx + 1 {
-                    if let Some(list) = grid.get(&(gx, gy)) {
-                        near.extend(list.iter().copied().filter(|&j| j > i));
+            for d in 0..=reach {
+                let mut ring: Vec<usize> = Vec::new();
+                let (x0, y0) = (a.2 .0.saturating_sub(d), a.2 .1.saturating_sub(d));
+                for y in y0..=a.2 .1 + d {
+                    for x in x0..=a.2 .0 + d {
+                        if sim_core::nav::chebyshev(a.2, (x, y)) != d {
+                            continue;
+                        }
+                        if let Some(list) = tiles.get(&(x, y)) {
+                            let from = list.partition_point(|&j| j <= i);
+                            ring.extend(list[from..].iter().take(most).copied());
+                        }
                     }
+                }
+                ring.sort_unstable();
+                near.extend(ring.into_iter().take(most - near.len()));
+                if near.len() >= most {
+                    break;
                 }
             }
             near.sort_unstable();
