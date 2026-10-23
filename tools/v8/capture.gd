@@ -73,15 +73,31 @@
 #   Extra bridge methods: get_story, get_animals, get_drafted, get_agent_m5, get_agent_economy, get_chronicle_since,
 #   get_chronicle_why, get_person_chronicle (direct or via the panels); D, right clicks and the panels send cmd_draft,
 #   cmd_draft_attack.
+# --m55-set [<abs dir>] takes the M5.5 set (docs/v8/m5_5, goal §9 and §11 12.3) on the live default world (the
+#   directory may follow the flag or come as --out): the clock is stopped and the OS cursor parked; a 3×3 stockpile
+#   near the hearth and chop marks on the ten nearest trees give the colony stock; the clock is advanced 240 ticks at
+#   a time (≤ 30 days) to the first caravan trading and the first wave waiting at the hearth. m55_02 a click on the
+#   caravan opens the trade dialog; the cheapest unknown artifact (else the cheapest goods) is picked and logs given
+#   through the rows' + buttons until the traders would accept: the two columns and the balance bar; then 거래 is
+#   clicked (this changes the world: one cmd_trade) so the colony holds a clue. m55_01 the migrant dialog that opened
+#   by itself (camp at 2× behind it); then 받아들이기 is clicked (one cmd_accept_migrants). m55_03 N shows the
+#   neighbours panel. m55_06 T opens the tech map on a rumoured node ("이웃 ○○가 앎 (소문)"; a clue node's ★ shows on
+#   its card). m55_04 the clock is advanced to the first wolves, then 30 ticks at a time (≤ 2 days) to an undrafted
+#   person fleeing (snapshot `fleeing`): framed at 3× with the "!" and clicked, the inspector showing "도망 중: 늑대".
+#   m55_05 the clock is advanced (≤ day 60) to a Eureka chronicle entry (kind 44; else the newest M5.5 entry, noted)
+#   and C shows the chronicle filtered to 지식. m55_set.json records each shot's tick and what it shows.
+#   Extra bridge methods: get_neighbours, get_wave, get_caravan, get_story, get_trees, get_chronicle_since (direct); the
+#   dialogs send cmd_trade and cmd_accept_migrants; cmd_add_stockpile, cmd_designate_chop_tiles via SimReads.
 # usage: Godot --path . --rendering-driver opengl3 --resolution 1920x1080 \
 #          --script res://tools/v8/capture.gd -- --out <abs dir> [--tick 1440] [--panels] [--zoom 2] [--m1-set]
 #          [--m3-set --load <abs save file>] [--m4-set --load <abs save file>]
-#          [--m5-set --load <abs save file> [--m5-shots 1,2,3,4,5,6,7,8]]
+#          [--m5-set --load <abs save file> [--m5-shots 1,2,3,4,5,6,7,8]] [--m55-set [<abs dir>]]
 extends SceneTree
 
 const TILE: float = 16.0
 const OverlaySuffix = preload("res://scripts/world/colony/overlay_layer.gd")
 const ChronicleText = preload("res://scripts/ui/chronicle_text.gd")
+const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
 
 var _out: String = ""
 var _tick: int = 1440
@@ -91,6 +107,7 @@ var _m1_set: bool = false
 var _m3_set: bool = false
 var _m4_set: bool = false
 var _m5_set: bool = false
+var _m55_set: bool = false
 var _m5_shots: PackedStringArray = PackedStringArray(["1", "2", "3", "4", "5", "6", "7", "8"])
 var _load: String = ""
 var _record: Dictionary = {}
@@ -115,6 +132,10 @@ func _init() -> void:
 			_m4_set = true
 		elif args[i] == "--m5-set":
 			_m5_set = true
+		elif args[i] == "--m55-set":
+			_m55_set = true
+			if i + 1 < args.size() and not args[i + 1].begins_with("--"):
+				_out = args[i + 1]
 		elif args[i] == "--m5-shots" and i + 1 < args.size():
 			_m5_shots = args[i + 1].split(",")
 		elif args[i] == "--load" and i + 1 < args.size():
@@ -150,6 +171,9 @@ func _run() -> void:
 		return
 	if _m5_set:
 		await _m5_shots_run(main, world, camera)
+		return
+	if _m55_set:
+		await _m55_shots(main, world, camera)
 		return
 	var now: int = int((world.call("get_time_snapshot") as Dictionary).get("tick", 0))
 	if _tick > now:
@@ -1690,3 +1714,241 @@ func _m5_wrap(main: Node, world: Node, camera: Camera2D, inspector: Node, notes:
 	await _save_m1("m5_08_hide_wrap_inspector.png", world)
 	inspector.call("close")
 
+
+
+# --- --m55-set (M5.5, goal §9) -------------------------------------------------------------------------------
+
+## The shot's note: the tick, the display day and `extra`.
+func _m55_note(notes: Dictionary, shot: String, world: Node, extra: Dictionary) -> void:
+	var note: Dictionary = extra.duplicate()
+	note["tick"] = _now(world)
+	note["clock_minute"] = _minute_of_day(world)
+	note["display_day"] = floori(float(_now(world) + int((world.call("get_world_info") as Dictionary).get("clock_offset_ticks", 0))) / 1440.0) + 1
+	notes[shot] = note
+
+
+func _m55_shots(main: Node, world: Node, camera: Camera2D) -> void:
+	var reads: Node = main.get_node_or_null("SimReads")
+	var migrants: Node = main.get_node_or_null("UI/MigrantPanel")
+	var trade: Node = main.get_node_or_null("UI/TradePanel")
+	var neighbours: Node = main.get_node_or_null("UI/NeighboursPanel")
+	var tech: Node = main.get_node_or_null("UI/TechPanel")
+	var chronicle: Node = main.get_node_or_null("UI/ChroniclePanel")
+	var inspector: Node = main.get_node_or_null("UI/AgentInspectorPanel")
+	var visitors: Node = main.get_node_or_null("ColonyView/VisitorLayer")
+	if reads == null or migrants == null or trade == null or neighbours == null or tech == null or chronicle == null or inspector == null or visitors == null:
+		push_error("capture: --m55-set needs Main/SimReads, the M5.5 panels, the chronicle, the inspector and ColonyView/VisitorLayer")
+		quit(1)
+		return
+	camera.set_process(false)
+	Input.warp_mouse(Vector2(1919, 1079))
+	var notes: Dictionary = {}
+	var hearth: Vector2i = _hearth(world)
+	_m55_stock(world, reads, hearth, notes)
+	var traded: bool = false
+	var answered: bool = false
+	var spent: int = 0
+	while spent < 30 * 1440 and not (traded and answered):
+		world.call("advance_ticks", 240)
+		spent += 240
+		await _wait(3)
+		if not traded:
+			for caravan: Dictionary in NeighbourText.caravans(world.call("get_neighbours")):
+				if int(caravan["state"]) == NeighbourText.WAITING and not traded:
+					traded = true
+					await _m55_trade(world, camera, visitors, trade, caravan, notes)
+		if not answered and (migrants as Control).visible:
+			answered = true
+			await _m55_migrants(world, camera, migrants, hearth, notes)
+	if not traded:
+		push_error("capture: m55_02 no caravan within 30 days")
+	if not answered:
+		push_error("capture: m55_01 no migrant wave within 30 days")
+	await _m55_neighbours(world, camera, neighbours, hearth, notes)
+	await _m55_tech(world, tech, notes)
+	await _m55_flee(main, world, camera, inspector, notes)
+	await _m55_eureka(world, camera, chronicle, hearth, notes)
+	_record["notes"] = notes
+	var file: FileAccess = FileAccess.open(_out.path_join("m55_set.json"), FileAccess.WRITE)
+	if file != null:
+		file.store_string(JSON.stringify(_record, "  ", true))
+		file.close()
+	print("CAPTURE_M55_SET_DONE ", JSON.stringify({"notes": notes.keys()}))
+	quit(0)
+
+
+## A 3×3 stockpile near the hearth (no water, mountain or building) and chop marks on the ten nearest trees.
+func _m55_stock(world: Node, reads: Node, hearth: Vector2i, notes: Dictionary) -> void:
+	var terrain: Dictionary = world.call("get_terrain_snapshot")
+	var blocked: Dictionary = {}
+	var b: Dictionary = world.call("get_building_snapshot")
+	var bxs: PackedInt32Array = b.get("xs", PackedInt32Array())
+	var bys: PackedInt32Array = b.get("ys", PackedInt32Array())
+	for i: int in mini(bxs.size(), bys.size()):
+		blocked[Vector2i(bxs[i], bys[i])] = true
+	var start: Vector2i = hearth + Vector2i(3, 0)
+	var corner: Vector2i = Vector2i(-1, -1)
+	for ring: int in 30:
+		for y: int in range(start.y - ring, start.y + ring + 1):
+			for x: int in range(start.x - ring, start.x + ring + 1):
+				if corner.x >= 0 or x < 0 or y < 0 or _cheb(Vector2i(x, y), start) != ring:
+					continue
+				var ok: bool = true
+				for dy: int in 3:
+					for dx: int in 3:
+						ok = ok and _zoneable(Vector2i(x + dx, y + dy), terrain, blocked)
+				if ok:
+					corner = Vector2i(x, y)
+	var zone: Variant = reads.call("mutate_raw", "cmd_add_stockpile", [corner.x, corner.y, corner.x + 2, corner.y + 2])
+	var trees: Dictionary = world.call("get_trees")
+	var txs: PackedInt32Array = trees.get("xs", PackedInt32Array())
+	var tys: PackedInt32Array = trees.get("ys", PackedInt32Array())
+	var ranked: Array[Vector3i] = []
+	for i: int in mini(txs.size(), tys.size()):
+		ranked.append(Vector3i(_cheb(Vector2i(txs[i], tys[i]), hearth), tys[i], txs[i]))
+	ranked.sort()
+	var cxs: PackedInt32Array = PackedInt32Array()
+	var cys: PackedInt32Array = PackedInt32Array()
+	for k: int in mini(10, ranked.size()):
+		cxs.append(ranked[k].z)
+		cys.append(ranked[k].y)
+	var chop: Variant = reads.call("mutate_raw", "cmd_designate_chop_tiles", [cxs, cys])
+	notes["orders"] = {"stockpile": [corner.x, corner.y, corner.x + 2, corner.y + 2], "stockpile_result": zone, "chop_result": chop}
+
+
+func _m55_trade(world: Node, camera: Camera2D, visitors: Node, trade: Node, caravan: Dictionary, notes: Dictionary) -> void:
+	var id: int = int(caravan["id"])
+	await _near(camera, caravan["tile"], 2.0)
+	var rect: Rect2 = visitors.call("drawn_rect", "caravan", id)
+	await _click(root.get_canvas_transform() * rect.get_center())
+	await _wait(5)
+	if not (trade as Control).visible:
+		push_error("capture: m55_02 the click on the caravan did not open the trade dialog")
+		trade.call("open_caravan", id)
+		await _wait(5)
+	var goods: Array[Dictionary] = trade.call("goods_rows")
+	var stock: Array[Dictionary] = trade.call("stock_rows")
+	var read: Dictionary = world.call("get_caravan", id)
+	var dialog: Control = trade as Control
+	if not goods.is_empty() and not stock.is_empty():
+		var pick: Dictionary = goods[0]
+		for g: Dictionary in goods:
+			if (bool(g["unknown"]) and not bool(pick["unknown"])) or (bool(g["unknown"]) == bool(pick["unknown"]) and int(g["value"]) < int(pick["value"])):
+				pick = g
+		(dialog.find_child("Take_%d" % int(pick["index"]), true, false).find_child("Plus", true, false) as Button).pressed.emit()
+		var need: int = int(pick["value"]) * int(read.get("sell_permille", 1200))
+		var given: int = 0
+		for i: int in stock.size():
+			var plus: Button = dialog.find_child("Give_%d" % i, true, false).find_child("Plus", true, false) as Button
+			for _n: int in int(stock[i]["count"]):
+				if given * int(read.get("buy_permille", 800)) >= need:
+					break
+				plus.pressed.emit()
+				given += int(stock[i]["value"])
+	await _wait(10)
+	_m55_note(notes, "m55_02_trade_dialog.png", world, {"caravan": id, "texts": trade.call("texts"), "balance": trade.call("balance")})
+	await _save("m55_02_trade_dialog.png")
+	var button: Button = dialog.find_child("Trade", true, false) as Button
+	if button != null and not button.disabled:
+		await _click(button.get_global_rect().get_center())
+		await _wait(5)
+		notes["m55_02_trade_dialog.png"]["result"] = trade.call("texts")["status"]
+	trade.call("close")
+	await _wait(3)
+
+
+func _m55_migrants(world: Node, camera: Camera2D, migrants: Node, hearth: Vector2i, notes: Dictionary) -> void:
+	var id: int = int(migrants.call("shown_wave"))
+	await _near(camera, hearth, 2.0)
+	migrants.call("open_wave", id)
+	await _wait(10)
+	_m55_note(notes, "m55_01_migrant_dialog.png", world, {"wave": id, "texts": migrants.call("texts"),
+		"agents": Array((world.call("get_wave", id) as Dictionary).get("agents", PackedInt64Array()))})
+	await _save("m55_01_migrant_dialog.png")
+	var accept: Button = (migrants as Control).find_child("Accept", true, false) as Button
+	if accept != null:
+		await _click(accept.get_global_rect().get_center())
+		await _wait(5)
+	notes["m55_01_migrant_dialog.png"]["accepted_people"] = ((world.call("get_agent_snapshot") as Dictionary).get("ids", PackedInt64Array()) as PackedInt64Array).size()
+
+
+func _m55_neighbours(world: Node, camera: Camera2D, neighbours: Node, hearth: Vector2i, notes: Dictionary) -> void:
+	await _near(camera, hearth, 2.0)
+	await _key(KEY_N)
+	await _wait(10)
+	_m55_note(notes, "m55_03_neighbours_panel.png", world, {"texts": neighbours.call("texts")})
+	await _save("m55_03_neighbours_panel.png")
+	await _key(KEY_N)
+
+
+func _m55_tech(world: Node, tech: Node, notes: Dictionary) -> void:
+	var nb: Dictionary = world.call("get_neighbours")
+	var node: int = -1
+	var clues: PackedInt32Array = nb.get("clue_nodes", PackedInt32Array())
+	for row: Dictionary in NeighbourText.neighbours(nb):
+		for n: int in NeighbourText.rumoured_nodes(int(row["rumoured"])):
+			if node < 0 or (clues.has(n) and not clues.has(node)):
+				node = n
+	await _key(KEY_T)
+	await _wait(5)
+	if node >= 0:
+		tech.call("select_node", node)
+	await _wait(10)
+	_m55_note(notes, "m55_06_tech_rumour.png", world, {"node": node, "lines": tech.call("neighbour_lines"), "clue_nodes": Array(clues)})
+	await _save("m55_06_tech_rumour.png")
+	await _key(KEY_T)
+
+
+func _m55_flee(main: Node, world: Node, camera: Camera2D, inspector: Node, notes: Dictionary) -> void:
+	var wolves: Callable = func() -> bool: return int((world.call("get_story") as Dictionary).get("wolves", 0)) > 0
+	if not await _advance_until(world, wolves, 240, 40 * 1440):
+		push_error("capture: m55_04 no wolves within 40 days")
+		return
+	var fleeing: Array[int] = []
+	var someone: Callable = func() -> bool:
+		var snap: Dictionary = world.call("get_agent_snapshot")
+		var flags: PackedByteArray = snap.get("fleeing", PackedByteArray())
+		var ids: PackedInt64Array = snap.get("agent_ids", PackedInt64Array())
+		var states: PackedByteArray = snap.get("states", PackedByteArray())
+		var targets: PackedByteArray = snap.get("target_kinds", PackedByteArray())
+		for i: int in mini(flags.size(), ids.size()):
+			var asleep: bool = i < states.size() and i < targets.size() and states[i] == 3 and targets[i] == 3
+			if flags[i] != 0 and not asleep:
+				fleeing.append(ids[i])
+				return true
+		return false
+	if not await _advance_until(world, someone, 30, 2 * 1440):
+		push_error("capture: m55_04 nobody fled within 2 days of the first wolves")
+		return
+	if not await _click_person(main, world, camera, fleeing[0], 3.0):
+		push_error("capture: m55_04 could not select the fleeing person")
+	await _wait(10)
+	var flee_label: Label = inspector.get("_flee_label") as Label
+	var scroll: ScrollContainer = inspector.get("_scroll") as ScrollContainer
+	if flee_label != null and scroll != null:
+		scroll.scroll_vertical = maxi(0, int(flee_label.position.y) - 200)
+		await _wait(10)
+	_m55_note(notes, "m55_04_fleeing.png", world, {"agent": fleeing[0], "lines": inspector.call("m5_lines"), "wolves": _wolves(world).size()})
+	await _save("m55_04_fleeing.png")
+	inspector.call("close")
+
+
+func _m55_eureka(world: Node, camera: Camera2D, chronicle: Node, hearth: Vector2i, notes: Dictionary) -> void:
+	var found: Array[Dictionary] = []
+	var eureka: Callable = func() -> bool:
+		for row: Dictionary in ChronicleText.rows(world.call("get_chronicle_since", 0, 4096)):
+			if int(row["kind"]) == 44:
+				found.append(row)
+				return true
+		return false
+	var seen: bool = await _advance_until(world, eureka, 1440, maxi(0, 60 * 1440 - _now(world)))
+	await _near(camera, hearth, 2.0)
+	if not (chronicle as Control).visible:
+		await _key(KEY_C)
+	chronicle.call("set_filter", 4 if seen else 0)
+	await _wait(10)
+	_m55_note(notes, "m55_05_eureka_chronicle.png", world, {"eureka": seen, "entry": found[0] if seen else {}, "feed": str(chronicle.call("plain_text")).substr(0, 600)})
+	if not seen:
+		push_error("capture: m55_05 no Eureka entry by day 60; the shot shows the whole feed")
+	await _save("m55_05_eureka_chronicle.png")
+	await _key(KEY_C)

@@ -33,6 +33,7 @@
 #   once per tick for the selected person; the animal named from get_animals via SimReads). Job codes 15 hunt,
 #   16 equip. A third tab 이야기 lists every chronicle line of the person (get_person_chronicle, newest first), each
 #   with "→ 왜?" when it has a cause; a click opens the chain (UI/ChroniclePanel open_why → UI/WhyPanel).
+# M5.5 (goal §9): under the draft line, "도망 중: 늑대" while the person flees (get_agent_m5 `fleeing`).
 extends Control
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
@@ -57,6 +58,7 @@ var _story_key: int = 0
 var _mood_label: Label
 var _top_label: Label
 var _draft_label: Label
+var _flee_label: Label
 var _sick_label: Label
 var _hp_label: Label
 var _m5: Dictionary = {}
@@ -236,12 +238,15 @@ func _ready() -> void:
 	_draft_label = _make_label("")
 	_draft_label.name = "Draft"
 	_draft_label.add_theme_color_override("font_color", Color("f07060"))
+	_flee_label = _make_label("")
+	_flee_label.name = "Flee"
+	_flee_label.add_theme_color_override("font_color", Color("f0c040"))
 	_sick_label = _make_label("")
 	_sick_label.name = "Sick"
 	_sick_label.add_theme_color_override("font_color", Color("a8d888"))
 	_hp_label = _make_label("")
 	_hp_label.name = "Hp"
-	for label: Label in [_mood_label, _top_label, _draft_label, _sick_label, _hp_label]:
+	for label: Label in [_mood_label, _top_label, _draft_label, _flee_label, _sick_label, _hp_label]:
 		label.hide()
 	_skills_heading = _make_label("")
 	_skills_heading.theme_type_variation = &"Heading"
@@ -556,7 +561,7 @@ func story_text() -> String:
 ## M5: the mood, apparel, draft, illness and hp lines from get_agent_m5 (read again only when the tick or the person
 ## changes).
 func _refresh_m5(agent_id: int) -> void:
-	var labels: Array[Label] = [_mood_label, _top_label, _draft_label, _sick_label, _hp_label]
+	var labels: Array[Label] = [_mood_label, _top_label, _draft_label, _flee_label, _sick_label, _hp_label]
 	if _world_sim == null or not _world_sim.has_method("get_agent_m5"):
 		for label: Label in labels:
 			label.hide()
@@ -582,6 +587,8 @@ func _refresh_m5(agent_id: int) -> void:
 	_top_label.show()
 	_draft_label.text = StoryText.draft_line(_locale, _m5, SimReads.read(_world_sim, "get_animals"))
 	_draft_label.visible = _draft_label.text != ""
+	_flee_label.text = StoryText.flee_line(_locale, _m5)
+	_flee_label.visible = _flee_label.text != ""
 	var info: Dictionary = _world_info()
 	@warning_ignore("integer_division")
 	var per_hour: int = maxi(1, int(info.get("ticks_per_day", 1440)) / 24)
@@ -592,10 +599,11 @@ func _refresh_m5(agent_id: int) -> void:
 	_hp_label.visible = hp < 100
 
 
-## M5: the mood, apparel, draft and illness lines shown (for tests): {mood, apparel, draft, sick, hp}, "" when hidden.
+## M5: the mood, apparel, draft and illness lines shown (for tests): {mood, apparel, draft, flee, sick, hp}, "" when hidden.
 func m5_lines() -> Dictionary:
 	var out: Dictionary = {}
-	for pair: Array in [["mood", _mood_label], ["apparel", _top_label], ["draft", _draft_label], ["sick", _sick_label], ["hp", _hp_label]]:
+	for pair: Array in [["mood", _mood_label], ["apparel", _top_label], ["draft", _draft_label], ["flee", _flee_label], ["sick", _sick_label],
+			["hp", _hp_label]]:
 		var label: Label = pair[1]
 		out[pair[0]] = label.text if label.visible else ""
 	return out

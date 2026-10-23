@@ -21,6 +21,8 @@
 #   under the yellow selection one), a sick person (`sick`) a small green badge above the head (`badge_sick`); M
 #   toggles the mood overlay, which tints each person by `mood_bands` (StoryText.band_tint: 우울 blue, 보통 none,
 #   흡족 yellow, 무너짐 red; it replaces the night's warm light while shown).
+# M5.5 (goal §9): a fleeing person (snapshot `fleeing`) shows a small code-drawn "!" above the head (yellow on a dark
+#   backing, FleeMark); the drafted outline is unchanged.
 # Bridge methods: get_agent_family (direct, per person on a slow refresh); via SimReads get_agent_snapshot,
 #   get_world_info, get_society_snapshot, get_settlement_snapshot, get_time_snapshot, get_building_snapshot; signal
 #   world_reset.
@@ -48,6 +50,8 @@ const StoryText = preload("res://scripts/ui/story_text.gd")
 const MOOD_KEY: Key = KEY_M
 const DRAFT_TINT: Color = Color(1.0, 0.22, 0.2)
 const BADGE_OFFSET: Vector2 = Vector2(5, -6)
+## M5.5: where the fleeing "!" stands (top-left of its 5×11 backing, relative to the person's cell).
+const FLEE_OFFSET: Vector2 = Vector2(6, -14)
 
 signal mood_toggled(on: bool)
 
@@ -91,7 +95,20 @@ class Person:
 	var select: Sprite2D
 	var draft: Sprite2D
 	var badge: Sprite2D
+	var flee: FleeMark
 	var layers: Dictionary = {}
+
+
+## M5.5: the fleeing person's "!": a 5×11 dark box with a 3-px yellow bar and dot (code-drawn, whole pixels).
+class FleeMark:
+	extends Node2D
+	const BACK: Color = Color(0.078, 0.071, 0.063, 0.95)
+	const MARK: Color = Color(0.94, 0.75, 0.25)
+
+	func _draw() -> void:
+		draw_rect(Rect2(0, 0, 5, 11), BACK)
+		draw_rect(Rect2(1, 1, 3, 6), MARK)
+		draw_rect(Rect2(1, 8, 3, 2), MARK)
 
 
 func _ready() -> void:
@@ -150,6 +167,10 @@ func _make_person(bits: int, agent_id: int, tile: Vector2i) -> Person:
 	person.select = _sprite(person, "select")
 	person.badge = _sprite(person, "badge_sick")
 	person.badge.position = BADGE_OFFSET
+	person.flee = FleeMark.new()
+	person.flee.position = FLEE_OFFSET
+	person.flee.visible = false
+	person.add_child(person.flee)
 	(person.layers["skin"] as Sprite2D).modulate = _skin
 	(person.layers["halo"] as Sprite2D).modulate = _halo
 	add_child(person)
@@ -197,6 +218,7 @@ func _process(delta: float) -> void:
 	var drafted: PackedByteArray = snap.get("drafted", PackedByteArray())
 	var sick: PackedByteArray = snap.get("sick", PackedByteArray())
 	var bands: PackedByteArray = snap.get("mood_bands", PackedByteArray())
+	var fleeing: PackedByteArray = snap.get("fleeing", PackedByteArray())
 	var n: int = mini(mini(bits.size(), ids.size()), mini(xs.size(), ys.size()))
 	_family_frame -= 1
 	if _family_frame <= 0:
@@ -248,6 +270,7 @@ func _process(delta: float) -> void:
 		person.select.visible = key == _selected_bits
 		person.draft.visible = i < drafted.size() and drafted[i] != 0
 		person.badge.visible = i < sick.size() and sick[i] != 0
+		person.flee.visible = not asleep and i < fleeing.size() and fleeing[i] != 0
 		var warm: bool = night > 0.0 and _is_warm(tile)
 		person.modulate = Color.WHITE.lerp(WARM, night) if warm else Color.WHITE
 		if _mood_shown:
@@ -406,12 +429,12 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
-## M5: the drafted outline, sick badge and tint of the person with entity bits `bits` (for tools), or {}.
+## M5: the drafted outline, sick badge, M5.5 fleeing "!" and tint of the person with entity bits `bits` (for tools), or {}.
 func person_marks(bits: int) -> Dictionary:
 	var person: Person = _persons.get(bits)
 	if person == null:
 		return {}
-	return {"drafted": person.draft.visible, "sick": person.badge.visible, "tint": person.modulate}
+	return {"drafted": person.draft.visible, "sick": person.badge.visible, "fleeing": person.flee.visible, "tint": person.modulate}
 
 
 ## How many people are drawn.

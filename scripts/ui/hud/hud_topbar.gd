@@ -10,6 +10,8 @@
 #   (UI/TeachPanel, teach_panel.gd) beside itself.
 # M5 (goal 3.5): this node also creates the story banner (UI/StoryBanner, story_banner.gd: pressure and wolf banners,
 #   the wolves' pulse, the mood legend and the drafted list) beside itself.
+# M5.5 (goal §9): it also creates the neighbours panel (UI/NeighboursPanel, N), the migrant dialog (UI/MigrantPanel)
+#   and the trade dialog (UI/TradePanel) beside itself, after the story banner so the dialogs draw over it.
 # Read-only, localized counters from authoritative simulation snapshots.
 # Bridge methods: via SimReads get_agent_snapshot, get_settlement_snapshot, get_construction_snapshot,
 #   get_building_snapshot, get_time_snapshot (day_index, time_of_day, season, day_of_season, days_per_season,
@@ -22,6 +24,9 @@ const Names = preload("res://scripts/ui/person_names.gd")
 const TechPanel = preload("res://scripts/ui/panels/tech_panel.gd")
 const TeachPanel = preload("res://scripts/ui/panels/teach_panel.gd")
 const StoryBanner = preload("res://scripts/ui/hud/story_banner.gd")
+const NeighboursPanel = preload("res://scripts/ui/panels/neighbours_panel.gd")
+const MigrantPanel = preload("res://scripts/ui/panels/migrant_panel.gd")
+const TradePanel = preload("res://scripts/ui/panels/trade_panel.gd")
 const RISK_COLOR: Color = Color("e05a48")
 const QUIET_COLOR: Color = Color("c8b89a")
 
@@ -146,7 +151,8 @@ func _ready() -> void:
 	_speed_label = ArtUI.pair(lower, 15)
 
 
-	for entry: Array in [["TechPanel", TechPanel], ["TeachPanel", TeachPanel], ["StoryBanner", StoryBanner]]:
+	for entry: Array in [["TechPanel", TechPanel], ["TeachPanel", TeachPanel], ["StoryBanner", StoryBanner], ["NeighboursPanel", NeighboursPanel],
+			["MigrantPanel", MigrantPanel], ["TradePanel", TradePanel]]:
 		if get_parent() != null and get_parent().get_node_or_null(str(entry[0])) == null:
 			var panel_node: Control = (entry[1] as GDScript).new()
 			panel_node.name = str(entry[0])

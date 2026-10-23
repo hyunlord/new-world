@@ -13,6 +13,12 @@
 #   cause ≥ 1 = 1 + the quarrel cause) "Fox가 Mia와 다퉜다 — 배고파서". An entry with `link` ≥ 0 ends in a "→ 왜?" link
 #   (`why:<index>`) when the caller asks for it; why_lines() renders a get_chronicle_why chain (entries as their text,
 #   modifiers by name, 100 as "사이가 나빠서", pressures by name); self_undraft_plain() is the toast.
+#   M5.5 (goal §9): kinds 38 MigrantsArrived (cause neighbour, value wave << 8 | count) "붉은바위에서 이주민 3명이 왔다",
+#   39 MigrantsJoined (subject the first person, cause neighbour, value wave << 8 | count), 40 MigrantsDeclined (value
+#   reason << 24 | wave << 8 | count; reason 0 declined, 1 unanswered), 41 TraderArrived, 42 Traded (value give << 16 |
+#   take; take 0 = a gift), 43 TraderLeft (cause neighbour) and 44 Eureka (subject discoverer, cause the artifact's item
+#   code, value node) "카토가 토기 보고 토기 빚기를 발견했다! (단서)"; neighbours are named through NeighbourText (the last
+#   get_neighbours read its callers observed).
 # Bridge methods: none (formats chronicle rows and world info its callers read: ticks_per_day, ticks_per_year,
 #   clock_offset_ticks from get_world_info).
 extends RefCounted
@@ -22,8 +28,9 @@ const Selection = preload("res://scripts/core/settlement_selection.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
-## The last chronicle kind this text knows (M5: 37 Recovered).
-const LAST_KIND: int = 37
+const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
+## The last chronicle kind this text knows (M5.5: 44 Eureka).
+const LAST_KIND: int = 44
 ## M5 adds `index` (the entry's chronicle index) and its "→" link columns (absent in older reads: -1).
 const COLUMNS: Array[String] = ["tick", "kind", "subject", "other", "third", "settlement", "settlement2", "cause", "value",
 	"index", "link", "link_entry", "link_code"]
@@ -141,6 +148,7 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 		23: return room_formed(row, locale)
 		24, 25, 26, 27, 28: return knowledge_sentence(row, locale)
 		29, 30, 31, 32, 33, 34, 35, 36, 37: return story_sentence(row, locale)
+		38, 39, 40, 41, 42, 43, 44: return neighbour_sentence(row, locale)
 	return ""
 
 
@@ -192,6 +200,40 @@ static func story_sentence(row: Dictionary, locale: Node) -> String:
 			return LocaleScript.format_text(loc(locale, "M5_CHRON_SICK_FMT"), {"person": who})
 		37:
 			return LocaleScript.format_text(loc(locale, "M5_CHRON_RECOVERED_FMT"), {"person": who})
+	return ""
+
+
+## M5.5 kinds 38–44 (migrants, traders, eureka) as BBCode sentences with person links.
+static func neighbour_sentence(row: Dictionary, locale: Node) -> String:
+	var kind: int = int(row.get("kind", -1))
+	var subject: int = int(row.get("subject", -1))
+	var cause: int = int(row.get("cause", -1))
+	var value: int = int(row.get("value", 0))
+	var neighbour: String = "[b]%s[/b]" % NeighbourText.name_of(locale, cause)
+	var count: int = value & 0xff
+	match kind:
+		38:
+			return LocaleScript.format_text(loc(locale, "M55_CHRON_MIGRANTS_ARRIVED_FMT"), {"neighbour": neighbour, "count": count})
+		39:
+			var joined_key: String = "M55_CHRON_MIGRANT_JOINED_ONE_FMT" if count <= 1 else "M55_CHRON_MIGRANTS_JOINED_FMT"
+			return LocaleScript.format_text(loc(locale, joined_key), {"neighbour": neighbour, "count": count, "person": person(subject, locale)})
+		40:
+			var declined_key: String = "M55_CHRON_MIGRANTS_UNANSWERED_FMT" if (value >> 24) & 0xff == 1 else "M55_CHRON_MIGRANTS_DECLINED_FMT"
+			return LocaleScript.format_text(loc(locale, declined_key), {"neighbour": neighbour, "count": count})
+		41:
+			return LocaleScript.format_text(loc(locale, "M55_CHRON_TRADER_ARRIVED_FMT"), {"neighbour": neighbour})
+		42:
+			var give: int = (value >> 16) & 0xffff
+			var take: int = value & 0xffff
+			if take == 0:
+				return LocaleScript.format_text(loc(locale, "M55_CHRON_GIFT_FMT"), {"neighbour": neighbour, "give": give})
+			return LocaleScript.format_text(loc(locale, "M55_CHRON_TRADED_FMT"), {"neighbour": neighbour, "give": give, "take": take})
+		43:
+			return LocaleScript.format_text(loc(locale, "M55_CHRON_TRADER_LEFT_FMT"), {"neighbour": neighbour})
+		44:
+			var item: String = KnowledgeText.with_object(locale, EconomyText.item(locale, cause))
+			var node: String = "[b]%s[/b]" % KnowledgeText.with_object(locale, KnowledgeText.node_name(locale, value))
+			return LocaleScript.format_text(loc(locale, "M55_CHRON_EUREKA_FMT"), {"person": person(subject, locale), "item": item, "node": node})
 	return ""
 
 
@@ -288,7 +330,7 @@ static func line(row: Dictionary, viewed: int, locale: Node, info: Dictionary, w
 		return ""
 	var prefix: String = loc(locale, "CHRONICLE_DAY_FMT") % day(int(row.get("tick", 0)), info)
 	var kind: int = int(row.get("kind", -1))
-	var named: bool = kind in [20, 21, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37] or (kind == 19 and int(row.get("cause", 0)) >= 1)
+	var named: bool = kind in [20, 21, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44] or (kind == 19 and int(row.get("cause", 0)) >= 1)
 	if world_feed and int(row.get("subject", -1)) >= 0 and int(row.get("porter_count", 0)) == 0 and not named:
 		text = person(int(row["subject"]), locale) + " — " + text
 	var why: String = why_link(row, locale) if with_why else ""

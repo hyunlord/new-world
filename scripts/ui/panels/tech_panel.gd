@@ -10,14 +10,23 @@
 #   가르치기 button that opens the teach dialog (UI/TeachPanel) on this node. The cards are rebuilt only when the
 #   statuses or counts change; the detail is read again when the selection, the tech read or the hour changes.
 #   Esc, 닫기 or a world reset closes it.
+# M5.5 (goal §9.4): a card whose node an artifact the colony holds hints at (get_neighbours `clue_nodes`) carries the
+#   eureka glyph ★ (legend "★ 단서 (유레카)"); the detail adds "★ 단서: 토기 — 발견 확률 ×3" (`clue_items`) and one line
+#   "이웃 붉은바위가 앎 (소문)" per neighbour whose `rumoured` bits hold the node.
 # Bridge methods: get_tech_node (direct, for the selected node); via SimReads get_tech, get_knowledge_waits,
-#   get_time_snapshot; signal world_reset.
+#   get_time_snapshot, get_neighbours; signal world_reset.
 extends Control
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
+const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
+const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const TOGGLE_KEY: Key = KEY_T
+## M5.5: the eureka glyph and its colour; the rumour lines' colour.
+const EUREKA_GLYPH: String = "★"
+const EUREKA: Color = Color("f0c040")
+const RUMOUR: Color = Color("a8c8f0")
 const PANEL_RECT: Rect2 = Rect2(12, 124, 1896, 830)
 const CARD_SIZE: Vector2 = Vector2(196, 64)
 const CARDS_PER_ROW: int = 3
@@ -50,6 +59,8 @@ var _detail: VBoxContainer
 var _detail_key: Array = []
 var _detail_read: Dictionary = {}
 var _teach: Button
+## M5.5: the rumour and clue lines of the detail shown (for tests and tools).
+var _neighbour_lines: Array[String] = []
 
 
 func _ready() -> void:
@@ -91,6 +102,10 @@ func _ready() -> void:
 	var marker: Label = Label.new()
 	marker.add_theme_color_override("font_color", Color("e8c46e"))
 	_legend.add_child(marker)
+	var eureka: Label = Label.new()
+	eureka.name = "EurekaLegend"
+	eureka.add_theme_color_override("font_color", EUREKA)
+	_legend.add_child(eureka)
 	var body: HBoxContainer = HBoxContainer.new()
 	body.add_theme_constant_override("separation", 16)
 	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -173,8 +188,10 @@ func _refresh() -> void:
 	if _world_sim == null:
 		return
 	var tech: Dictionary = SimReads.read(_world_sim, "get_tech")
+	var neighbours: Dictionary = _neighbours()
 	var key: int = hash([tech.get("statuses", PackedInt64Array()), tech.get("practitioners", PackedInt64Array()),
-		tech.get("holders", PackedInt64Array()), KnowledgeText.language(_locale)])
+		tech.get("holders", PackedInt64Array()), KnowledgeText.language(_locale), neighbours.get("clue_nodes", PackedInt32Array()),
+		neighbours.get("rumoured", PackedInt64Array())])
 	if key != _key:
 		_key = key
 		_rebuild(tech)
@@ -195,6 +212,7 @@ func _rebuild(tech: Dictionary) -> void:
 		var swatch: Label = _legend.get_child(code) as Label
 		swatch.text = ("□ " if code == 4 else "■ ") + KnowledgeText.status(_locale, code)
 	(_legend.get_child(KnowledgeText.STATUS_KEYS.size()) as Label).text = "◆ " + _loc("M4_TECH_MARKER_LEGEND")
+	(_legend.get_child(KnowledgeText.STATUS_KEYS.size() + 1) as Label).text = EUREKA_GLYPH + " " + _loc("M55_TECH_EUREKA_LEGEND")
 	for child: Node in _grid.get_children():
 		_grid.remove_child(child)
 		child.queue_free()
@@ -281,11 +299,22 @@ func _card(row: Dictionary, tech: Dictionary) -> Button:
 	var sub: String = KnowledgeText.trf(_locale, "M4_TECH_PRACTITIONERS_FMT", {"count": int(row["practitioners"])})
 	if int(row["marker"]) > 0:
 		sub += "  ◆%d" % int(row["marker"])
+	var clue: bool = NeighbourText.clue_item(_neighbours(), id) >= 0
+	if clue:
+		sub += "  " + EUREKA_GLYPH
+	card.set_meta("eureka", clue)
 	var count_label: Label = _cell_label(sub)
 	count_label.name = "Count"
 	count_label.add_theme_color_override("font_color", colour if code != 4 else MUTED)
 	lines.add_child(count_label)
 	return card
+
+
+## M5.5: the get_neighbours read ({} without the bridge read).
+func _neighbours() -> Dictionary:
+	if _world_sim == null or not _world_sim.has_method("get_neighbours"):
+		return {}
+	return SimReads.read(_world_sim, "get_neighbours")
 
 
 ## Prerequisite lines between card centres, under the cards.
@@ -332,6 +361,7 @@ func _fill_detail(tech: Dictionary) -> void:
 			_detail.remove_child(child)
 			child.queue_free()
 	_teach.visible = false
+	_neighbour_lines.clear()
 	if _selected < 0:
 		_detail_read = {}
 		_add_line(_loc("M4_TECH_SELECT_HINT"), MUTED)
@@ -354,6 +384,7 @@ func _fill_detail(tech: Dictionary) -> void:
 	if int(_detail_read.get("marker_weight", 0)) > 0:
 		lane_era += " · " + KnowledgeText.trf(_locale, "M4_TECH_MARKER_FMT", {"weight": int(_detail_read.get("marker_weight", 0))})
 	_add_line(lane_era, MUTED)
+	_neighbour_info()
 	_holders(tech)
 	_learners()
 	_conditions()
@@ -366,6 +397,26 @@ func _fill_detail(tech: Dictionary) -> void:
 		_add_line(KnowledgeText.trf(_locale, "M4_TECH_WAITING_FMT", {"count": waiting}), KnowledgeText.status_color(1))
 	_detail.move_child(_teach, -1)
 	_teach.visible = true
+
+
+## M5.5: the clue line (an artifact the colony holds hints at this node) and one rumour line per neighbour knowing it.
+func _neighbour_info() -> void:
+	_neighbour_lines.clear()
+	var read: Dictionary = _neighbours()
+	var item: int = NeighbourText.clue_item(read, _selected)
+	if item >= 0:
+		var clue: Label = _add_line(KnowledgeText.trf(_locale, "M55_TECH_EUREKA_FMT", {"item": EconomyText.item(_locale, item)}), EUREKA)
+		clue.name = "Eureka"
+		_neighbour_lines.append(clue.text)
+	for id: int in NeighbourText.rumour_holders(read, _selected):
+		var line: Label = _add_line(NeighbourText.rumour_line(_locale, read, id), RUMOUR)
+		line.name = "Rumour_%d" % id
+		_neighbour_lines.append(line.text)
+
+
+## M5.5: the detail's rumour and clue lines (for tests and tools).
+func neighbour_lines() -> Array[String]:
+	return _neighbour_lines
 
 
 func _add_line(text: String, colour: Color) -> Label:

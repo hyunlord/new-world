@@ -17,6 +17,7 @@
 # M5 (goal 3.2–3.3): item kinds 11 meat, 12 cured hide, 13 hide wrap, 14 fur cloak, 15 spear, 16 wolf hide (ground
 #   sprites: meat lies as the `carcass`, the others as their item_* sprite); recipes 7 haft_spear, 8 scrape_hide,
 #   9 make_hide_wrap, 10 make_fur_cloak; work type `hunt`, skill `hunting`; reason not_drafted.
+# M5.5 (goal §9): reasons no_visitor (the wave or caravan is gone) and unbalanced (the traders refuse the values).
 # Bridge methods called: none (callers pass the dictionaries they read).
 extends RefCounted
 
@@ -95,6 +96,8 @@ const REASON_KEYS: Dictionary = {
 	"no_practitioner": "UI_REJECT_NO_PRACTITIONER",
 	"too_young": "UI_REJECT_TOO_YOUNG",
 	"not_drafted": "M5_REJECT_NOT_DRAFTED",
+	"no_visitor": "M55_REJECT_NO_VISITOR",
+	"unbalanced": "M55_REJECT_UNBALANCED",
 }
 
 

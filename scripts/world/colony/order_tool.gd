@@ -22,6 +22,8 @@
 #   gives the draft order — to the inspector's person when drafted, else to every drafted person: on an animal
 #   `cmd_draft_attack`, on another person `cmd_draft_attack_person`, elsewhere `cmd_draft_move` to the tile (the toast
 #   "3명 이동" / "3명 공격: 늑대"). A right click with nobody drafted does nothing.
+# M5.5 (goal §9): with no mode, a click on a caravan drawn by ColonyView/VisitorLayer opens the trade dialog
+#   (UI/TradePanel), on a migrant wave the migrant dialog (UI/MigrantPanel), before the person/workshop/tile clicks.
 # Bridge methods: can_place_blueprint, get_place_preview, get_agent_detail, get_tile_causal_history (direct); via
 #   SimReads get_workshops, get_agent_snapshot, get_animals, get_drafted; via SimReads.mutate cmd_designate_chop,
 #   cmd_cancel_area, cmd_add_stockpile, cmd_remove_zone_area, cmd_place_blueprint, cmd_designate_quarry,
@@ -538,6 +540,18 @@ func _click(tile: Vector2i) -> void:
 
 ## The no-mode click at world position `world_pos` on `tile` (also used by tools).
 func click_world(world_pos: Vector2, tile: Vector2i) -> void:
+	var visitors: Node = get_node_or_null("../VisitorLayer")
+	if visitors != null:
+		var caravan: int = int(visitors.call("caravan_at", world_pos))
+		var trade: Node = get_node_or_null("/root/Main/UI/TradePanel")
+		if caravan >= 0 and trade != null and trade.has_method("open_caravan"):
+			trade.call("open_caravan", caravan)
+			return
+		var wave: int = int(visitors.call("wave_at", world_pos))
+		var migrants: Node = get_node_or_null("/root/Main/UI/MigrantPanel")
+		if wave >= 0 and migrants != null and migrants.has_method("open_wave"):
+			migrants.call("open_wave", wave)
+			return
 	var agents: Node = get_node_or_null("../AgentLayer")
 	var bits: int = int(agents.call("entity_at", world_pos)) if agents != null else -1
 	if bits >= 0:

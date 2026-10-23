@@ -7,8 +7,12 @@
 #   mood overlay's legend while M shows it ("기분: 파랑 우울 · 노랑 흡족 · 빨강 무너짐"), then the drafted list
 #   (get_drafted: "카토 · 몸 92 · 늑대 공격 · 창", the order named from get_agent_m5) with "모두 해제"
 #   (cmd_undraft_all). Rebuilt only when the read or the language changes.
+# M5.5 (goal §9.1–9.2): above the banners, one button per visitor of get_neighbours: a waiting wave "이주민 3명이
+#   모닥불에서 기다린다 · 14시간 남음" (the countdown to `wave_deadline`; a click reopens the migrant dialog,
+#   UI/MigrantPanel), a wave walking in "붉은바위에서 이주민 3명이 오고 있다", a trading caravan "붉은바위 교역 무리 · 9시간
+#   뒤 떠남 — 눌러서 거래" (a click opens the trade dialog, UI/TradePanel) and one walking in.
 # Bridge methods: get_agent_m5 (direct, per drafted person when the list changes); via SimReads get_story, get_drafted,
-#   get_animals; via SimReads.mutate cmd_undraft_all; signal world_reset.
+#   get_animals, get_neighbours, get_world_info; via SimReads.mutate cmd_undraft_all; signal world_reset.
 extends Control
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
@@ -16,6 +20,8 @@ const StoryText = preload("res://scripts/ui/story_text.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
 const View = preload("res://scripts/world/colony/view.gd")
+const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
+const VISITOR: Color = Color("f0c040")
 const COLUMN: Rect2 = Rect2(648, 124, 880, 0)
 const EDGE: float = 40.0
 const PULSE_SPEED: float = 4.0
@@ -24,6 +30,9 @@ const WOLF_RED: Color = Color("f07060")
 var _world_sim: Node = null
 var _locale: Node = null
 var _column: VBoxContainer
+var _visitors: VBoxContainer
+var _visitor_key: int = 0
+var _visitor_texts: Array[String] = []
 var _banners: VBoxContainer
 var _legend: Label
 var _draft_panel: PanelContainer
@@ -54,6 +63,11 @@ func _ready() -> void:
 	_column.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_column.add_theme_constant_override("separation", 6)
 	add_child(_column)
+	_visitors = VBoxContainer.new()
+	_visitors.name = "Visitors"
+	_visitors.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_visitors.add_theme_constant_override("separation", 6)
+	_column.add_child(_visitors)
 	_banners = VBoxContainer.new()
 	_banners.name = "Banners"
 	_banners.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -99,6 +113,7 @@ func _ready() -> void:
 func _on_world_reset() -> void:
 	_banner_key = 0
 	_draft_key = 0
+	_visitor_key = 0
 
 
 func _process(delta: float) -> void:
@@ -107,6 +122,7 @@ func _process(delta: float) -> void:
 	_time += delta
 	var story: Dictionary = SimReads.read(_world_sim, "get_story")
 	var language: String = StoryText.language(_locale)
+	_refresh_visitors(language)
 	var key: int = hash([story, language])
 	if key != _banner_key:
 		_banner_key = key
@@ -119,6 +135,68 @@ func _process(delta: float) -> void:
 		_draft_key = draft_key
 		_fill_drafted(drafted)
 	queue_redraw()
+
+
+## M5.5: the visitor buttons (rebuilt when the waves, caravans, countdown hours or the language change).
+func _refresh_visitors(language: String) -> void:
+	if not _world_sim.has_method("get_neighbours"):
+		return
+	var read: Dictionary = SimReads.read(_world_sim, "get_neighbours")
+	var info: Dictionary = SimReads.read(_world_sim, "get_world_info")
+	var now: int = int(read.get("now", 0))
+	var rows: Array[Dictionary] = []
+	for wave: Dictionary in NeighbourText.waves(read):
+		var state: int = int(wave["state"])
+		if state == NeighbourText.WALKING or (state == NeighbourText.WAITING and int(wave["answer"]) == NeighbourText.ANSWER_NONE):
+			rows.append({"kind": "wave", "id": int(wave["id"]), "state": state, "neighbour": int(wave["neighbour"]), "count": int(wave["size"]),
+				"hours": NeighbourText.hours_left(int(wave["deadline"]), now, info)})
+	for caravan: Dictionary in NeighbourText.caravans(read):
+		var state: int = int(caravan["state"])
+		if state == NeighbourText.WALKING or state == NeighbourText.WAITING:
+			rows.append({"kind": "caravan", "id": int(caravan["id"]), "state": state, "neighbour": int(caravan["neighbour"]), "count": 2,
+				"hours": NeighbourText.hours_left(int(caravan["leaves"]), now, info)})
+	var key: int = hash([rows, language, read.get("name_keys", [])])
+	if key == _visitor_key:
+		return
+	_visitor_key = key
+	for child: Node in _visitors.get_children():
+		_visitors.remove_child(child)
+		child.queue_free()
+	_visitor_texts.clear()
+	NeighbourText.observe(read)
+	for row: Dictionary in rows:
+		var neighbour: String = NeighbourText.name_of(_locale, int(row["neighbour"]))
+		var waiting: bool = int(row["state"]) == NeighbourText.WAITING
+		var text: String
+		if str(row["kind"]) == "wave":
+			text = NeighbourText.trf(_locale, "M55_BANNER_WAVE_FMT", {"count": int(row["count"]), "hours": maxi(0, int(row["hours"]))}) if waiting \
+				else NeighbourText.trf(_locale, "M55_BANNER_WAVE_WALKING_FMT", {"count": int(row["count"]), "neighbour": neighbour})
+		else:
+			text = NeighbourText.trf(_locale, "M55_BANNER_CARAVAN_FMT", {"neighbour": neighbour, "hours": maxi(0, int(row["hours"]))}) if waiting \
+				else NeighbourText.trf(_locale, "M55_BANNER_CARAVAN_WALKING_FMT", {"neighbour": neighbour})
+		var button: Button = Button.new()
+		button.name = ("Wave_%d" if str(row["kind"]) == "wave" else "Caravan_%d") % int(row["id"])
+		button.text = text
+		button.focus_mode = Control.FOCUS_NONE
+		button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		for state_name: String in ["font_color", "font_hover_color", "font_pressed_color"]:
+			button.add_theme_color_override(state_name, VISITOR if waiting else Color("c8b89a"))
+		button.disabled = not waiting
+		if waiting:
+			button.pressed.connect(_open_visitor.bind(str(row["kind"]), int(row["id"])))
+		_visitors.add_child(button)
+		_visitor_texts.append(text)
+
+
+func _open_visitor(kind: String, id: int) -> void:
+	var panel: Node = get_node_or_null("../MigrantPanel" if kind == "wave" else "../TradePanel")
+	if panel != null:
+		panel.call("open_wave" if kind == "wave" else "open_caravan", id)
+
+
+## M5.5: the visitor buttons' texts (for tests and tools).
+func visitor_texts() -> Array[String]:
+	return _visitor_texts
 
 
 func _fill_banners(story: Dictionary) -> void:

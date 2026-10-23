@@ -4,7 +4,8 @@
 #   order_bar.gd shows the hint); bounds = the map plus a 4-tile margin. Keys 1–4 set
 #   the speed 1×–4× (12/24/36/48 ticks per second, ADR 0004); Space (or Pause) pauses by disabling the WorldSim
 #   node (M2: P opens the work-priority table, priority_panel.gd). M5: while the inspector shows a living person, D
-#   drafts them (order_tool.gd), so D does not pan then (the arrow keys still do).
+#   drafts them (order_tool.gd), so D does not pan then (the arrow keys still do). M5.5: set_paused() lets the
+#   migrant dialog pause the clock when a wave arrives (only at 1×, migrant_panel.gd).
 # Bridge methods: set_sim_speed (direct); via SimReads get_world_info, get_building_snapshot; signal world_reset.
 extends Camera2D
 
@@ -103,6 +104,12 @@ func step_zoom(direction: int) -> void:
 	index = clampi(index + direction, 0, ZOOM_STEPS.size() - 1)
 	zoom = Vector2.ONE * ZOOM_STEPS[index]
 	_clamp_position()
+
+
+## Pause (`on`) or resume the simulation (as Space does).
+func set_paused(on: bool) -> void:
+	if on != _paused:
+		_toggle_pause()
 
 
 func _toggle_pause() -> void:

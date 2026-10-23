@@ -9,18 +9,23 @@
 #   title: the kind group (전체 / 압력 / 사냥·늑대 / 다툼·기분 / 지식 / 삶) and "고른 사람만" (the inspector's person).
 #   Once a year is over, a header line sums it up (get_year_summary of the last complete year: births, deaths,
 #   pressures, discoveries, quarrels, deer and wolves).
-# Bridge methods: get_chronicle_since, get_year_summary (direct); via SimReads get_time_snapshot, get_world_info;
-#   signal world_reset.
+# M5.5 (goal §9): NOTABLE adds 38–44 (migrants arrived, joined, declined; traders arrived, traded, left; eureka; the
+#   eureka in the 지식 filter); neighbours are named from get_neighbours (NeighbourText.observe before each refresh);
+#   the year line adds migrants joined, trades and eurekas.
+# Bridge methods: get_chronicle_since, get_year_summary (direct); via SimReads get_time_snapshot, get_world_info,
+#   get_neighbours; signal world_reset.
 extends Control
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
 const WhyPanel = preload("res://scripts/ui/panels/why_panel.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
-const NOTABLE: Array[int] = [0, 2, 11, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37]
+const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
+const NOTABLE: Array[int] = [0, 2, 11, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37,
+	38, 39, 40, 41, 42, 43, 44]
 ## M5: the kind groups of the filter (0 = all): 압력, 사냥·늑대, 다툼·기분, 지식, 삶 (every other notable kind).
 const FILTER_KEYS: Array[String] = ["M5_FILTER_ALL", "M5_FILTER_PRESSURE", "M5_FILTER_HUNT", "M5_FILTER_MOOD", "M5_FILTER_KNOWLEDGE", "M5_FILTER_LIFE"]
-const FILTER_KINDS: Array = [[], [29, 30, 36, 37], [31, 34, 35], [19, 32, 33], [24, 25, 26, 27, 28], []]
+const FILTER_KINDS: Array = [[], [29, 30, 36, 37], [31, 34, 35], [19, 32, 33], [24, 25, 26, 27, 28, 44], []]
 ## M5: the Drafted kind and its "left the draft at a critical need" cause.
 const DRAFTED_KIND: int = 34
 const SELF_UNDRAFT: int = 2
@@ -158,6 +163,8 @@ func _toast_text(text: String) -> void:
 
 func _refresh() -> void:
 	_language = Chronicle.language(_locale)
+	if _world != null and _world.has_method("get_neighbours"):
+		NeighbourText.observe(SimReads.read(_world, "get_neighbours"))
 	_title.text = Chronicle.loc(_locale, "UI_CHRONICLE_TITLE")
 	_refresh_filters()
 	_refresh_year()

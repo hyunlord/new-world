@@ -7,11 +7,14 @@
 #   fill. Under the mouse an animal shows "사슴 · 돌아다님 · 30" (kind, state, hit points) on a dark backing box. A
 #   carcass is not an animal: the kill's meat and hide lie as ground stacks (OverlayLayer).
 # The drawn rect is the click target (`animal_at`): the order tool's hunt click (F7-3) and the draft's right-click attack.
+# M5.5: this node creates the visitor layer (ColonyView/VisitorLayer, visitor_layer.gd: migrant waves and caravans)
+#   beside itself.
 # Bridge methods: via SimReads get_animals, get_world_info; signal world_reset.
 extends Node2D
 
 const View = preload("res://scripts/world/colony/view.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
+const VisitorLayer = preload("res://scripts/world/colony/visitor_layer.gd")
 const SPRITES: Array[String] = ["animal_wolf", "animal_deer"]
 const FONT_PATH: String = "res://assets/fonts/galmuri/Galmuri11.ttf"
 const FONT_SIZE: int = 12
@@ -60,6 +63,10 @@ func _ready() -> void:
 	_world_sim = get_node_or_null("/root/Main/WorldSim")
 	if _world_sim != null:
 		_world_sim.connect("world_reset", _on_world_reset)
+	if get_parent() != null and get_parent().get_node_or_null("VisitorLayer") == null:
+		var visitors: Node2D = VisitorLayer.new()
+		visitors.name = "VisitorLayer"
+		get_parent().add_child.call_deferred(visitors)
 
 
 func _on_world_reset() -> void:

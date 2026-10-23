@@ -404,6 +404,9 @@ func _draft_orders(hearth: Vector2i) -> void:
 
 ## M: the mood overlay; the inspector's mood and apparel lines; the 이야기 tab.
 func _mood_and_inspector() -> void:
+	# MoodSystem runs at minute 7 of each hour (M5 DECISIONS D18): give it its first run before reading moods.
+	SimReads.mutate(_world, "advance_ticks", [10])
+	await _frames(2)
 	await _key(KEY_M)
 	await _frames(2)
 	var snap: Dictionary = SimReads.read(_world, "get_agent_snapshot")
@@ -501,7 +504,7 @@ func _chronicle_texts() -> void:
 	var all_kinds: bool = true
 	for k: int in range(29, 38):
 		all_kinds = all_kinds and notable.has(k)
-	_check("chronicle_notable_m5", all_kinds and Chronicle.LAST_KIND == 37, str(notable))
+	_check("chronicle_notable_m5", all_kinds and Chronicle.LAST_KIND >= 37, str(notable))
 
 
 ## Advance a day at a time to the first wolf pack and the first cold snap; check the banners, the pulse, the sick

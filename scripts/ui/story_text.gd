@@ -9,6 +9,8 @@
 #   5 retreat). Unknown codes fall back to UI_UNKNOWN.
 # Mood overlay tints (M): 우울 blue, 보통 none, 흡족 yellow, 무너짐 (a breakdown) a stronger red — the one state that
 #   refuses work, so it must not read as "a little sadder than blue".
+# M5.5 (goal §9): the inspector's "도망 중: 늑대" (get_agent_m5 `fleeing`); the year line appends migrants joined, trades
+#   and eurekas when the summary has them (`migrants_joined`, `trades`, `eurekas`).
 # Bridge methods called: none (callers pass the dictionaries they read: get_story, get_agent_m5, get_drafted,
 #   get_animals, get_year_summary).
 extends RefCounted
@@ -177,6 +179,11 @@ static func sick_line(locale: Node, m5: Dictionary, ticks_per_hour: int) -> Stri
 	return trf(locale, "M5_INSPECT_SICK_FMT", {"hours": hours})
 
 
+## M5.5: "도망 중: 늑대" from a get_agent_m5 read; "" when not fleeing (only wolves make people flee).
+static func flee_line(locale: Node, m5: Dictionary) -> String:
+	return ltr(locale, "M55_INSPECT_FLEE") if bool(m5.get("fleeing", false)) else ""
+
+
 ## The banner lines of a get_story read, in order: wolves (while any are on the map), then one per pressure in force
 ## (cold snap with the firewood line, drought, illness; beasts only through the wolves line). Each is
 ## {text, kind, color}.
@@ -203,7 +210,7 @@ static func banners(locale: Node, story: Dictionary) -> Array[Dictionary]:
 	return out
 
 
-## "정리: 1년 차 · 출생 2 · 사망 1 · …" from a get_year_summary read (`year` 0-based).
+## "정리: 1년 차 · 출생 2 · 사망 1 · …" from a get_year_summary read (`year` 0-based); M5.5 appends " · 이주 n · 거래 n · 단서 n".
 static func year_line(locale: Node, summary: Dictionary) -> String:
 	var deaths: int = 0
 	for n: int in summary.get("deaths", PackedInt32Array()):
@@ -211,6 +218,10 @@ static func year_line(locale: Node, summary: Dictionary) -> String:
 	var pressures: int = 0
 	for n: int in summary.get("pressures", PackedInt32Array()):
 		pressures += n
-	return trf(locale, "M5_YEAR_LINE_FMT", {"year": int(summary.get("year", 0)) + 1, "births": int(summary.get("births", 0)), "deaths": deaths,
+	var text: String = trf(locale, "M5_YEAR_LINE_FMT", {"year": int(summary.get("year", 0)) + 1, "births": int(summary.get("births", 0)), "deaths": deaths,
 		"pressures": pressures, "discoveries": int(summary.get("discoveries", 0)), "quarrels": int(summary.get("quarrels", 0)),
 		"hunted": int(summary.get("hunted", 0)), "wolves": int(summary.get("wolves_killed", 0))})
+	if summary.has("migrants_joined"):
+		text += trf(locale, "M55_YEAR_EXTRA_FMT", {"migrants": int(summary.get("migrants_joined", 0)), "trades": int(summary.get("trades", 0)),
+			"eurekas": int(summary.get("eurekas", 0))})
+	return text
