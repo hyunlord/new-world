@@ -7,7 +7,8 @@ DECISIONS D14), then the simulation was frozen. The bars and their reading were 
 (`docs/v8/m5/m5_score.py`, DECISIONS D13) before the first held-out run; F4's "hides ≥ 6" was added to the scorer after
 calibration and before that run (D13). Raw outputs (outside the repository): `$DATA` = `/Users/rexxa/work/m5-data/`.
 
-**Result of record: `$DATA/eval/`, the probe built from `6f1713b4`; final: `$DATA/eval_review/` after the review fixes** (the Part 4 head; the working tree's other
+Final: `$DATA/eval_final/` at `3a8d0759` (after the reviews and D18; see Bars). **Result of record: `$DATA/eval/`, the probe built
+from `6f1713b4`** (the Part 4 head; the working tree's other
 changes were the bridge, documents and gate scripts — `$DATA/eval/dirty.txt` — none in the simulation crates).
 Runs took 546 s (load 2.7 at the start; the UI agent and these runs loaded the host to 29 by the end; timings are not
 used).
@@ -25,11 +26,12 @@ used).
 ## Bars
 
 Two measurements on the same held-out seeds: **of record** (`$DATA/eval/`, `6f1713b4`) and **after the reviews**
-(`$DATA/eval_review/`, the code review's fixes D17 — the final simulation; the pressure run re-scored with the probe's
-corrected pack window, `pressure_probefix`, whose `m5` blocks equal the first run's outside the pack rows). Neither
-was tuned on these seeds.
+(`$DATA/eval_review/`, the code review's fixes D17, and `$DATA/eval_final/` at `3a8d0759`, the final simulation with
+the quarrel cap D18 and the probe's corrected pack window). `eval_final`'s summaries equal `eval_review`'s on every
+seed of all four runs outside the pack rows (the cap never binds in a 10–13-person colony), and its scores are the
+column below. Neither was tuned on these seeds.
 
-| # | bar | pass | of record (`6f1713b4`) | after the reviews (final) |
+| # | bar | pass | of record (`6f1713b4`) | after the reviews (final, `3a8d0759`) |
 |---|---|---|---|---|
 | F1 | ≥ 1 ColdSnap and ≥ 1 Beasts in two years; mercy and gaps hold | 32/32 | **32/32 PASS** (snaps 1–2 a world, packs 2–4, droughts on 18, illness on 32) | **32/32 PASS** (same counts) |
 | F2 | firewood below one day's need during a snap in ≥ 24/32 **and** cold deaths ≤ 1 in ≥ 28/32 | both | **PASS**: F2a 26/32 (803, 805, 810, 822, 829, 830 kept enough wood; at the same hour 25/32 — 815 flips, numbers review); F2b 30/32 (804: 9 exposure deaths, 814: 8 — 8 and 7 in the first snap, days 21–24, with an illness at the same time and usable wood at 0; one more each on day 48, in the second snap) | **PASS**: F2a 26/32 (803, 805, 818, 820, 822, 830); F2b 30/32 (804: 9, 814: 6; 806: 1) |
