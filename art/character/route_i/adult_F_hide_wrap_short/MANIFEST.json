@@ -4,12 +4,17 @@
   "sex": "F",
   "top": "hide_wrap",
   "hair": "short",
-  "raw": "/Users/rexxa/work/artprod1-data/production/adult_F_hide_wrap_short/try2/raw.png",
-  "diagnostics": "/Users/rexxa/work/artprod1-data/production/adult_F_hide_wrap_short/try2",
+  "raw": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_F_hide_wrap_short/try2/raw.png",
+  "diagnostics": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_F_hide_wrap_short/try2",
   "sheet_try": 2,
   "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
   "attempt": 2,
   "scale": 0.13176470588235295,
+  "standing_scale": 0.13176470588235295,
+  "sleep_scales": {
+    "S": 0.1362530413625304,
+    "E": 0.13114754098360656
+  },
   "raw_sha256": "a1853b99345e53a5c1eb50ab91d80db1c93ed309bca10f0ef94c94ba8a35f83c",
   "prompt_sha256": "2cfcfa1d75b67987abbb16ca5d53603dac8ff59f2df3372b9fd378ee48ee0bee",
   "rotations": {
@@ -25,26 +30,26 @@
     "E/sleep": 0
   },
   "files": {
-    "S/idle.png": "82dad3be8991569ef565dacf8b06b02e432e66174fc04aee74c04f9a58514536",
-    "S/idle.json": "359af82f0f259e957548f8d4163f261ce28a81f85bc1bda369fca3344b351772",
+    "S/idle.png": "08cf7a69d6342d83667b1ffb402d41d9be47e0fbc7bd96d8b13996ac8af72e1c",
+    "S/idle.json": "f56c2ed9477568bfba179c7a46d4b4eef0b7636bd32f07a03feca23acc1ec7e1",
     "S/walk_a.png": "859ef587d7b4220409cf6ca007f3c2a556e6721ce2c756ba9c7836131a02f153",
-    "S/walk_a.json": "be9c9fb546d142631c7b2cbc1f59b980fabe88f080d8628cbed0be7d07759b92",
+    "S/walk_a.json": "46b221f50644c75d40b66e02741842f186cd7ae38efe312046ac8ab220d57aa3",
     "S/work_a.png": "2eefbcddfd0e31c3a8dc001ddb31a611b7413c6c5dab62f1b3b9187bdad9761f",
-    "S/work_a.json": "4af0aa90508854ac584abdf46eca2e44083847c4961a9973d085fff7fbb7114e",
+    "S/work_a.json": "dc69b9ffa08230711816600806f781f4e2a794aa6389c94baadf094a416fdaa9",
     "S/carry.png": "bc96f85b0aa42c756f8de4905528c23e58da567f46a6992b7dd9b8740d8f8d60",
-    "S/carry.json": "ecea5db7b3b9d40b9b52e211fee0ba4f522d49b53be8acd9cd70b9786c5e21a0",
-    "S/sleep.png": "3fd0ec0d02e411efebde572c18a73a0ed959c8fa45b7e135fcb5111531409cd3",
-    "S/sleep.json": "458ddc67c1712d8d0879f5865cef1a6d6bb04024ff47382c31c6164c06924e27",
-    "E/idle.png": "695c4156b450e8b2659ed3f91703f62d774cf72c912d88e50130948592360954",
-    "E/idle.json": "f27cfdc6548427dc5f1e2069ec2f740fa253f3149fae783a20aa4e706a5e6495",
+    "S/carry.json": "725e18b30465d4d6591efa93b78da92cb8d5dbf4a963c2a66b4a21af0327cffa",
+    "S/sleep.png": "7d1f8b21459802e19e334fbd0a8e307ad0385af2a36ac95ffb49e08323276fd0",
+    "S/sleep.json": "b37a4935333b0e7162181f00deb1c26abfcf5586679deed5e60030eb3175950a",
+    "E/idle.png": "eb458c820be92bf2dcf353ec235088290c5e88b718476ea95f9c332efb5d5963",
+    "E/idle.json": "3756cdaecba07f8d320b197bb407eb208bcbcb660d0f2448dff9df4c47c177af",
     "E/walk_a.png": "e733d940855d567b49fab206eb0925699e7d0c70b513c892b1d043ebb8054c1f",
-    "E/walk_a.json": "b7479a7abe57c2256cf0ab0987e970843d8787961b488f611c5fe38405a088e4",
+    "E/walk_a.json": "1b1494a3449d50c9f0c9b16ea70bc39a36c045a0a965ff59cac1d103b8e13ec6",
     "E/work_a.png": "abcffee026f5301dbb3fc76e72f01bba21969421e2ed8a61704e6447f26019b1",
-    "E/work_a.json": "b557bb3c46962d169766c0031acb15ffbbc9a0a972825adb5f634b29ff53b271",
+    "E/work_a.json": "1787bb62e7e76482a09b482453b72b6679203cfaa68347422dfa0f99520c24cb",
     "E/carry.png": "e29aad319f34415d8e6faca9a30871f81324bc57154d6d709e1f1c74376ac14f",
-    "E/carry.json": "842b6638a13af5ebefdbd2a025878342ceeb31049df0ae7907c7b0c5d2e52d2c",
+    "E/carry.json": "31209fe808021f9999efcf052f8ec1600678b2aacaa7405c57dd762813d83800",
     "E/sleep.png": "ba9cbdb7f95fe80cc4027f45e7e0aec303b9e93d9e5a08a12a90fc43fee01ff9",
-    "E/sleep.json": "fbadef7fb22c9b14abd207e99ad8882c560fa7713c9168815ef483a8322e2dac"
+    "E/sleep.json": "6c746311cf4c40dd3812da7e81d7eb04ebef35d05fd4f3d536f089af2f2d5a7d"
   },
   "frames": [
     {
@@ -61,23 +66,23 @@
         "sleep_axis_ok": true,
         "opaque_height": 56,
         "opaque_width": 23,
-        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
         "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
       },
       "judge": {
-        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_F_hide_wrap_short/try2/judge/panel_00.png",
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_F_hide_wrap_short/try2/judge/panel_00.png",
         "sha256": "d94199c9c3b49a295f8b10f4f4082f81eb168cbce9791e4def62479c96fec349",
         "family": "person",
         "metrics": {
-          "edge_density": 0.1815441529081318,
-          "saturation_q25": 0.5632149019804977,
-          "saturation_q75": 0.6560484952413366,
+          "edge_density": 0.18402849119923292,
+          "saturation_q25": 0.5632745812906104,
+          "saturation_q75": 0.6537980564678797,
           "stroke_q25": 2.8284271247461903,
           "stroke_q50": 4.0,
           "stroke_q75": 4.0,
           "stroke_q90": 4.47213595499958,
-          "wash_flatness": 0.023054865390599893,
-          "foreground_pixels": 16241
+          "wash_flatness": 0.021924826381271197,
+          "foreground_pixels": 16243
         },
         "numeric_checks": {
           "edge_density": true,
@@ -110,11 +115,11 @@
         "sleep_axis_ok": true,
         "opaque_height": 56,
         "opaque_width": 29,
-        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
         "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
       },
       "judge": {
-        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_F_hide_wrap_short/try2/judge/panel_01.png",
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_F_hide_wrap_short/try2/judge/panel_01.png",
         "sha256": "8ec01652ddeaf1c9d225f46665f01591e3d19e8abc2a3e0ef1cf0609673c386e",
         "family": "person",
         "metrics": {
@@ -159,11 +164,11 @@
         "sleep_axis_ok": true,
         "opaque_height": 67,
         "opaque_width": 35,
-        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
         "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
       },
       "judge": {
-        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_F_hide_wrap_short/try2/judge/panel_02.png",
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_F_hide_wrap_short/try2/judge/panel_02.png",
         "sha256": "852a1c33c7b11dfd64e25fe0489a76db8b149f51fc9e8ccfe9d657cc82eabecc",
         "family": "person",
         "metrics": {
@@ -208,11 +213,11 @@
         "sleep_axis_ok": true,
         "opaque_height": 52,
         "opaque_width": 41,
-        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
         "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
       },
       "judge": {
-        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_F_hide_wrap_short/try2/judge/panel_03.png",
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_F_hide_wrap_short/try2/judge/panel_03.png",
         "sha256": "3039bf96b95d6163ffbc1fcd6dcd7125d0ed2fae48e75a044a59ccb08fb69039",
         "family": "person",
         "metrics": {
@@ -250,18 +255,18 @@
       "checks": {
         "passed": true,
         "findings": [],
-        "coverage": 0.05959821428571429,
+        "coverage": 0.06339285714285714,
         "component_count": 1,
         "largest_hole": 0,
         "contact_ok": true,
         "sleep_axis_ok": true,
-        "opaque_height": 14,
-        "opaque_width": 54,
-        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "opaque_height": 15,
+        "opaque_width": 55,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
         "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
       },
       "judge": {
-        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_F_hide_wrap_short/try2/judge/panel_04.png",
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_F_hide_wrap_short/try2/judge/panel_04.png",
         "sha256": "6705d04c26cbb37ab98a4c3f6cc8f35c46ef9516e6481c33c0c1eefbaf3bac00",
         "family": "person",
         "metrics": {
@@ -306,23 +311,23 @@
         "sleep_axis_ok": true,
         "opaque_height": 57,
         "opaque_width": 16,
-        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
         "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
       },
       "judge": {
-        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_F_hide_wrap_short/try2/judge/panel_05.png",
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_F_hide_wrap_short/try2/judge/panel_05.png",
         "sha256": "c705845e7eb982a2dc2b1f4082ff671f1d49824fce981defb81bc2715a0a2cc6",
         "family": "person",
         "metrics": {
-          "edge_density": 0.17081914321563005,
-          "saturation_q25": 0.5932274373069641,
-          "saturation_q75": 0.6575848686639452,
+          "edge_density": 0.17171536117583797,
+          "saturation_q25": 0.5948131924725326,
+          "saturation_q75": 0.6568910617287077,
           "stroke_q25": 2.8284271247461903,
           "stroke_q50": 4.0,
           "stroke_q75": 4.47213595499958,
           "stroke_q90": 5.656854249492381,
-          "wash_flatness": 0.014752198070744868,
-          "foreground_pixels": 12469
+          "wash_flatness": 0.01494378959360244,
+          "foreground_pixels": 12468
         },
         "numeric_checks": {
           "edge_density": true,
@@ -355,11 +360,11 @@
         "sleep_axis_ok": true,
         "opaque_height": 55,
         "opaque_width": 32,
-        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
         "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
       },
       "judge": {
-        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_F_hide_wrap_short/try2/judge/panel_06.png",
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_F_hide_wrap_short/try2/judge/panel_06.png",
         "sha256": "02612fa8d4906d93c1d7571d304523f5bf5dcd315022f3ef4eae4eb270029136",
         "family": "person",
         "metrics": {
@@ -404,11 +409,11 @@
         "sleep_axis_ok": true,
         "opaque_height": 65,
         "opaque_width": 34,
-        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
         "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
       },
       "judge": {
-        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_F_hide_wrap_short/try2/judge/panel_07.png",
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_F_hide_wrap_short/try2/judge/panel_07.png",
         "sha256": "efe71ac2463d8d59e0c84f1441f59c6a02ff54f345411855cc4c573b3493a74c",
         "family": "person",
         "metrics": {
@@ -453,11 +458,11 @@
         "sleep_axis_ok": true,
         "opaque_height": 53,
         "opaque_width": 37,
-        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
         "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
       },
       "judge": {
-        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_F_hide_wrap_short/try2/judge/panel_08.png",
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_F_hide_wrap_short/try2/judge/panel_08.png",
         "sha256": "07e6ca590137da4cd2112253bb5196d39add7673de7e55758ca97874351afdf4",
         "family": "person",
         "metrics": {
@@ -502,11 +507,11 @@
         "sleep_axis_ok": true,
         "opaque_height": 14,
         "opaque_width": 56,
-        "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
         "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
       },
       "judge": {
-        "candidate": "/Users/rexxa/work/artprod1-data/production/adult_F_hide_wrap_short/try2/judge/panel_09.png",
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_F_hide_wrap_short/try2/judge/panel_09.png",
         "sha256": "e83328b90c4ba0d71307fe73862ef715a1c0c006c1c7a1fea14046bcc65b2ca0",
         "family": "person",
         "metrics": {

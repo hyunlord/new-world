@@ -7,8 +7,8 @@
   "raw_sha256": "44ae049e76581857eed663f455ce093818f6e7af14f743739433d5ef0671c67f",
   "prompt_sha256": "0047387544788d07e5f14e14ffd3b8aec1b0080b442f0d675db37471ea601532",
   "image_sha256": "f2b4ea7c7ab12d94e94d60f317bedabef1fb2ef3ae8807c87097ae1898d71a04",
-  "raw": "/Users/rexxa/work/artprod1-data/production/adult_M_hide_wrap_bun/try1/raw.png",
-  "diagnostics": "/Users/rexxa/work/artprod1-data/production/adult_M_hide_wrap_bun/try1",
+  "raw": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_M_hide_wrap_bun/try1/raw.png",
+  "diagnostics": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_M_hide_wrap_bun/try1",
   "panel_index": 7,
   "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
   "scale": 0.12933025404157045,
@@ -39,7 +39,8 @@
       43
     ],
     "visible_pixels": 1220,
-    "rotation_degrees": 0
+    "rotation_degrees": 0,
+    "scale": 0.12933025404157045
   },
   "checks": {
     "passed": true,
@@ -51,11 +52,11 @@
     "sleep_axis_ok": true,
     "opaque_height": 60,
     "opaque_width": 33,
-    "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
     "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
   },
   "judge": {
-    "candidate": "/Users/rexxa/work/artprod1-data/production/adult_M_hide_wrap_bun/try1/judge/panel_07.png",
+    "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_M_hide_wrap_bun/try1/judge/panel_07.png",
     "sha256": "00913c6f02cc37982d834fc681a21b25c5ce7a445d076b028e48ca87bcc7061c",
     "family": "person",
     "metrics": {
@@ -84,5 +85,7 @@
     "model_status": "MISSING",
     "passed": false
   },
+  "standing_scale": 0.12933025404157045,
+  "sleep_scale": 0.1275626423690205,
   "template_version": 3
 }

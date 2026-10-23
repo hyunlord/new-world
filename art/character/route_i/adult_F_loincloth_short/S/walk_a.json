@@ -7,8 +7,8 @@
   "raw_sha256": "af4a0ed98625e54b52e22b382128a262b47983f03da6e448b024bfd9c7eacc1c",
   "prompt_sha256": "162c802af48bceaee5aec9e5d1e9d25371ede194c8783d65ac66513bc9d125ef",
   "image_sha256": "d28072cd6f576001c7520d162da1bac03b13aee36085e43a89504f983681aabe",
-  "raw": "/Users/rexxa/work/artprod1-data/production/adult_F_loincloth_short/try2/raw.png",
-  "diagnostics": "/Users/rexxa/work/artprod1-data/production/adult_F_loincloth_short/try2",
+  "raw": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_F_loincloth_short/try2/raw.png",
+  "diagnostics": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_F_loincloth_short/try2",
   "panel_index": 1,
   "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
   "scale": 0.13053613053613053,
@@ -39,7 +39,8 @@
       40
     ],
     "visible_pixels": 1059,
-    "rotation_degrees": 0
+    "rotation_degrees": 0,
+    "scale": 0.13053613053613053
   },
   "checks": {
     "passed": true,
@@ -51,11 +52,11 @@
     "sleep_axis_ok": true,
     "opaque_height": 54,
     "opaque_width": 28,
-    "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
     "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
   },
   "judge": {
-    "candidate": "/Users/rexxa/work/artprod1-data/production/adult_F_loincloth_short/try2/judge/panel_01.png",
+    "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_F_loincloth_short/try2/judge/panel_01.png",
     "sha256": "89f69ce26baa2ec874f6e1d8d8e906313e9c323ffe8b67bafd234b772d6d157c",
     "family": "person",
     "metrics": {
@@ -84,5 +85,7 @@
     "model_status": "MISSING",
     "passed": false
   },
+  "standing_scale": 0.13053613053613053,
+  "sleep_scale": 0.1375921375921376,
   "template_version": 3
 }

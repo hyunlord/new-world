@@ -1,0 +1,546 @@
+{
+  "look": "child_M_fur_cloak_long_tied",
+  "age": "child",
+  "sex": "M",
+  "top": "fur_cloak",
+  "hair": "long_tied",
+  "raw": "/Users/rexxa/work/artprod2-data/reslice-run1/child_M_fur_cloak_long_tied/try2/raw.png",
+  "diagnostics": "/Users/rexxa/work/artprod2-data/reslice-run1/child_M_fur_cloak_long_tied/try2",
+  "sheet_try": 2,
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "attempt": 2,
+  "scale": 0.09615384615384616,
+  "standing_scale": 0.09615384615384616,
+  "sleep_scales": {
+    "S": 0.10178117048346055,
+    "E": 0.10204081632653061
+  },
+  "raw_sha256": "a39c5ba583e7a4cec7642219bcf595e4a9d9fcfca81bdcace0f86edab968a4a0",
+  "prompt_sha256": "ef661daa47bb5e10daac2f918421002950ad3feaa8ee49c250576936f952e501",
+  "rotations": {
+    "S/idle": 0,
+    "S/walk_a": 0,
+    "S/work_a": 0,
+    "S/carry": 0,
+    "S/sleep": 0,
+    "E/idle": 0,
+    "E/walk_a": 0,
+    "E/work_a": 0,
+    "E/carry": 0,
+    "E/sleep": 0
+  },
+  "files": {
+    "S/idle.png": "c86a67a0cec5e0edaf9d3e590285247d4622f23453078b8491b4e71ae43697d4",
+    "S/idle.json": "b21d9381c1307846172304a724306265bfe04a5cc6c9edb8f86e4adadf89fde7",
+    "S/walk_a.png": "e0291f767202062f771544f74e4243a07b25ce649220687c1067f03273a47882",
+    "S/walk_a.json": "0b8a6486df794aa33655b094cd3f514c325001b11d47eba129a8167b18aba99e",
+    "S/work_a.png": "87b7458117d761515c9f01580b1a83bf2c117cdbb40483e5d04a26a1a12d6ecf",
+    "S/work_a.json": "58ee6b38889a9917907cea976f8307bcd4e1dae302e8461183d56e1e2c5a6e4b",
+    "S/carry.png": "6c21e36259b4105f7fd8fc0cafad9336576c0f4384e8d7434ca54e9e14d7bfbb",
+    "S/carry.json": "278aff58bacc3f0f268d2ff6e9180632b3f1688387a27f7860f42edab8748bc5",
+    "S/sleep.png": "9b33c0eefa39f1d37549aef476c8841db1a0158771dd7012b7b57ddc19ba571c",
+    "S/sleep.json": "009be9938376b21bb87a12eb544ecae98a982013667e5fda983afc4aaa249e6c",
+    "E/idle.png": "51fdd20b749fc9613a9f402a35390e4d4b00ef801ad26b4bf71432d58594add0",
+    "E/idle.json": "edc94131068c9b61c3dbe061baade0df7e18cbb0f96a75c4ac39c9bf0ffbeb00",
+    "E/walk_a.png": "cecceb90d8db4390bc19e2c3217f95d56ebf65b7e0a9de09cde7c8c56aad3305",
+    "E/walk_a.json": "6684a11bb185b0596a3cd78f9ae79c20b028f9a385b1d134ae416faac4875028",
+    "E/work_a.png": "64a913f8a5ada5a6f4375d56e5a22c579c32ce466250fb879301288e2ff045bf",
+    "E/work_a.json": "11d3396104474a829a34d6defc52ffe6249859fc22460f135cda7337c22d8064",
+    "E/carry.png": "e5fbf65da64f4063fd46f75f804ee3007106632d138894741d1e4a967fbb7015",
+    "E/carry.json": "fa830bb81b41713880506005e396f1e02fa30de03a7fc6b38389815eea8125ff",
+    "E/sleep.png": "0dce0f057945ac2a3fb368c99660e16ab4c78304bb6f0df679e32bf07e9899cb",
+    "E/sleep.json": "536fe752cb41c8838eb90c6520006910ebb8a553d098a57e7b4a4a271f588c4c"
+  },
+  "frames": [
+    {
+      "facing": "S",
+      "frame": "idle",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.05970982142857143,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 39,
+        "opaque_width": 22,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_M_fur_cloak_long_tied/try2/judge/panel_00.png",
+        "sha256": "e20dc1ee426152746d758261674be9a60a6613ea3e7c5504fee2d271f5c6237e",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.21360900029606236,
+          "saturation_q25": 0.5304607648835222,
+          "saturation_q75": 0.622646569077539,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.47213595499958,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.048854362848660446,
+          "foreground_pixels": 22093
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "S",
+      "frame": "walk_a",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.060267857142857144,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 40,
+        "opaque_width": 23,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_M_fur_cloak_long_tied/try2/judge/panel_01.png",
+        "sha256": "3c2b8e156e45490b59768c968079044ae7b1d11dfc2fa24caeb92ca0cf01d2f1",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.2070565013570195,
+          "saturation_q25": 0.5318057198581851,
+          "saturation_q75": 0.6194413493945503,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.47213595499958,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.04961024267308695,
+          "foreground_pixels": 22025
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "S",
+      "frame": "work_a",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.07165178571428571,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 47,
+        "opaque_width": 26,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_M_fur_cloak_long_tied/try2/judge/panel_02.png",
+        "sha256": "4b53c3b97407a872ed8a0d0554c9d007b833e8ea724493bfa5adc4f8ba7550e4",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.21233909312304303,
+          "saturation_q25": 0.5215927341250696,
+          "saturation_q75": 0.6235572056357891,
+          "stroke_q25": 2.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.044484595750220665,
+          "foreground_pixels": 19249
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "S",
+      "frame": "carry",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.07901785714285714,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 39,
+        "opaque_width": 33,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_M_fur_cloak_long_tied/try2/judge/panel_03.png",
+        "sha256": "59f3be9279a663ef45e8bcc92a5cf57d185de5d8ee4c56703ed9743b8a3af19d",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.2335664847841213,
+          "saturation_q25": 0.5498603347773624,
+          "saturation_q75": 0.6700636644007584,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.032918537386183055,
+          "foreground_pixels": 29311
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "S",
+      "frame": "sleep",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.04196428571428571,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 14,
+        "opaque_width": 40,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_M_fur_cloak_long_tied/try2/judge/panel_04.png",
+        "sha256": "4e5ac4a608009b40d0d6713f2c2fa016c7a40a55eabb6076cd6e1b1e9d0725b5",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.21707179197286602,
+          "saturation_q25": 0.534786340530399,
+          "saturation_q75": 0.6261844941393321,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.47213595499958,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.04320414125511961,
+          "foreground_pixels": 15460
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "E",
+      "frame": "idle",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.05613839285714286,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 40,
+        "opaque_width": 18,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_M_fur_cloak_long_tied/try2/judge/panel_05.png",
+        "sha256": "fab037f2038e26cf1d9e25d91a6309b38454555079928caa0ae71ccd0f553444",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.2137208693375229,
+          "saturation_q25": 0.5319925074374695,
+          "saturation_q75": 0.6068395486273941,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.47213595499958,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.04695004846982066,
+          "foreground_pixels": 20946
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "E",
+      "frame": "walk_a",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.06049107142857143,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 40,
+        "opaque_width": 25,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_M_fur_cloak_long_tied/try2/judge/panel_06.png",
+        "sha256": "bf258846d54ae4591526d702f669527b73d2a7a725f8a617b269d22d94a97e88",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.203373306034903,
+          "saturation_q25": 0.5328910886321028,
+          "saturation_q75": 0.6085541662787295,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.47213595499958,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.04787254499498372,
+          "foreground_pixels": 22521
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "E",
+      "frame": "work_a",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.06953125,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 46,
+        "opaque_width": 25,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_M_fur_cloak_long_tied/try2/judge/panel_07.png",
+        "sha256": "46ed95e9cd6ea9562f36e99be0642265b0fe003fd502cf89b17df9ef4d473342",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.21464945523448603,
+          "saturation_q25": 0.5266150802960191,
+          "saturation_q75": 0.6216363997323557,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.47213595499958,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.053823033367788355,
+          "foreground_pixels": 18743
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "E",
+      "frame": "carry",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.07020089285714286,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 40,
+        "opaque_width": 28,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_M_fur_cloak_long_tied/try2/judge/panel_08.png",
+        "sha256": "4d6df6532c5927148cf6fe7dba4da7a7477513fe87e04656bc7ca522b43e5516",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.214125788723794,
+          "saturation_q25": 0.5489399224094269,
+          "saturation_q75": 0.6589823661541915,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.033372039410554076,
+          "foreground_pixels": 26576
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "E",
+      "frame": "sleep",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.0421875,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 13,
+        "opaque_width": 40,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_M_fur_cloak_long_tied/try2/judge/panel_09.png",
+        "sha256": "14666b0da1cfcfdb6cde3997b1adafebfbc24470ac682ea4cfa9000debe829e9",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.21303013392857142,
+          "saturation_q25": 0.5338453986041336,
+          "saturation_q75": 0.6199008610957695,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.47213595499958,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.040379826845564806,
+          "foreground_pixels": 15619
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    }
+  ]
+}

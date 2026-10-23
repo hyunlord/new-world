@@ -1,0 +1,204 @@
+{
+  "passed": true,
+  "original_source_count": 96,
+  "new_source_count": 27,
+  "total_source_count": 123,
+  "original_evidence": "/Users/rexxa/work/artprod2-data/DETERMINISM.json",
+  "new_evidence": "/Users/rexxa/work/artprod2-data/d1-new/round0/DETERMINISM.json",
+  "new_passing_sources": 4,
+  "new_failing_sources": 23,
+  "new_runs_each": 27,
+  "input_and_first_evidence_unchanged": true,
+  "method": "PNG exact bytes; JSON root paths canonicalized only",
+  "outcomes": [
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "attempt": 1,
+      "passed": false,
+      "passing_panels": 9,
+      "original_outcome_matches": true
+    },
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "attempt": 2,
+      "passed": true,
+      "passing_panels": 10,
+      "original_outcome_matches": true
+    },
+    {
+      "look": "adult_F_hide_wrap_bun",
+      "attempt": 1,
+      "passed": false,
+      "passing_panels": 9,
+      "original_outcome_matches": true
+    },
+    {
+      "look": "adult_F_hide_wrap_bun",
+      "attempt": 2,
+      "passed": false,
+      "passing_panels": 9,
+      "original_outcome_matches": true
+    },
+    {
+      "look": "adult_F_loincloth_long_tied",
+      "attempt": 1,
+      "passed": true,
+      "passing_panels": 10,
+      "original_outcome_matches": true
+    },
+    {
+      "look": "adult_M_fur_cloak_long_tied",
+      "attempt": 1,
+      "passed": false,
+      "passing_panels": 9,
+      "original_outcome_matches": true
+    },
+    {
+      "look": "adult_M_fur_cloak_long_tied",
+      "attempt": 2,
+      "passed": false,
+      "passing_panels": 9,
+      "original_outcome_matches": true
+    },
+    {
+      "look": "adult_M_fur_cloak_short",
+      "attempt": 1,
+      "passed": false,
+      "passing_panels": 8,
+      "original_outcome_matches": true
+    },
+    {
+      "look": "adult_M_fur_cloak_short",
+      "attempt": 2,
+      "passed": false,
+      "passing_panels": 9,
+      "original_outcome_matches": true
+    },
+    {
+      "look": "adult_M_hide_wrap_long_tied",
+      "attempt": 1,
+      "passed": false,
+      "passing_panels": 8,
+      "original_outcome_matches": true
+    },
+    {
+      "look": "adult_M_hide_wrap_long_tied",
+      "attempt": 2,
+      "passed": false,
+      "passing_panels": 9,
+      "original_outcome_matches": true
+    },
+    {
+      "look": "adult_M_loincloth_bun",
+      "attempt": 1,
+      "passed": false,
+      "passing_panels": 8,
+      "original_outcome_matches": true
+    },
+    {
+      "look": "adult_M_loincloth_bun",
+      "attempt": 2,
+      "passed": false,
+      "passing_panels": 8,
+      "original_outcome_matches": true
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "attempt": 1,
+      "passed": false,
+      "passing_panels": 9,
+      "original_outcome_matches": true
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "attempt": 2,
+      "passed": false,
+      "passing_panels": 9,
+      "original_outcome_matches": true
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "attempt": 1,
+      "passed": false,
+      "passing_panels": 9,
+      "original_outcome_matches": true
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "attempt": 2,
+      "passed": true,
+      "passing_panels": 10,
+      "original_outcome_matches": true
+    },
+    {
+      "look": "child_F_fur_cloak_short",
+      "attempt": 1,
+      "passed": false,
+      "passing_panels": 9,
+      "original_outcome_matches": true
+    },
+    {
+      "look": "child_F_fur_cloak_short",
+      "attempt": 2,
+      "passed": false,
+      "passing_panels": 9,
+      "original_outcome_matches": true
+    },
+    {
+      "look": "child_F_loincloth_bun",
+      "attempt": 1,
+      "passed": false,
+      "passing_panels": 9,
+      "original_outcome_matches": true
+    },
+    {
+      "look": "child_F_loincloth_bun",
+      "attempt": 2,
+      "passed": false,
+      "passing_panels": 9,
+      "original_outcome_matches": true
+    },
+    {
+      "look": "child_F_loincloth_long_tied",
+      "attempt": 1,
+      "passed": false,
+      "passing_panels": 9,
+      "original_outcome_matches": true
+    },
+    {
+      "look": "child_F_loincloth_long_tied",
+      "attempt": 2,
+      "passed": false,
+      "passing_panels": 9,
+      "original_outcome_matches": true
+    },
+    {
+      "look": "child_F_loincloth_short",
+      "attempt": 1,
+      "passed": false,
+      "passing_panels": 9,
+      "original_outcome_matches": true
+    },
+    {
+      "look": "child_F_loincloth_short",
+      "attempt": 2,
+      "passed": false,
+      "passing_panels": 9,
+      "original_outcome_matches": true
+    },
+    {
+      "look": "child_M_loincloth_long_tied",
+      "attempt": 1,
+      "passed": false,
+      "passing_panels": 9,
+      "original_outcome_matches": true
+    },
+    {
+      "look": "child_M_loincloth_long_tied",
+      "attempt": 2,
+      "passed": true,
+      "passing_panels": 10,
+      "original_outcome_matches": true
+    }
+  ]
+}

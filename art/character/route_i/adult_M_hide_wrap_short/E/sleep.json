@@ -6,12 +6,12 @@
   "attempt": 2,
   "raw_sha256": "5514c6e300330f830697b6ec136f470ac11da10e4333ff55fa4e2c9c4aa71eb2",
   "prompt_sha256": "a6d53d612b8a56a0a0c92ddb23352bafd4084e1dffa2f2a67e2fe3986ffcfb9a",
-  "image_sha256": "1d9f5f99b9bbbd80c02c335d62ed10896940a9242fae4eeeeb0b2fa860a4f70c",
-  "raw": "/Users/rexxa/work/artprod1-data/production/adult_M_hide_wrap_short/try2/raw.png",
-  "diagnostics": "/Users/rexxa/work/artprod1-data/production/adult_M_hide_wrap_short/try2",
+  "image_sha256": "a3bbf846309ab0b299ec9877d1032a17b31a46325f13ff14afddfa0bdeaeb3cf",
+  "raw": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_M_hide_wrap_short/try2/raw.png",
+  "diagnostics": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_M_hide_wrap_short/try2",
   "panel_index": 9,
   "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
-  "scale": 0.1414141414141414,
+  "scale": 0.14470284237726097,
   "rotation": 0,
   "source_box": [
     1119,
@@ -21,41 +21,42 @@
   ],
   "normalization": {
     "scaled_size": [
-      57,
-      42
+      58,
+      43
     ],
     "trim_box": [
       0,
-      11,
-      57,
-      42
+      22,
+      58,
+      43
     ],
     "placement": [
       27,
-      44
+      54
     ],
     "resized_to_canvas_offset": [
       27,
-      33
+      32
     ],
-    "visible_pixels": 814,
-    "rotation_degrees": 0
+    "visible_pixels": 852,
+    "rotation_degrees": 0,
+    "scale": 0.14470284237726097
   },
   "checks": {
     "passed": true,
     "findings": [],
-    "coverage": 0.07064732142857143,
+    "coverage": 0.07321428571428572,
     "component_count": 1,
     "largest_hole": 0,
     "contact_ok": true,
     "sleep_axis_ok": true,
     "opaque_height": 16,
-    "opaque_width": 55,
-    "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+    "opaque_width": 56,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
     "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
   },
   "judge": {
-    "candidate": "/Users/rexxa/work/artprod1-data/production/adult_M_hide_wrap_short/try2/judge/panel_09.png",
+    "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_M_hide_wrap_short/try2/judge/panel_09.png",
     "sha256": "ff6c5c3c368cb7d1eff9041c56afc9194675f2b0dba77e40be85ae6c109bf669",
     "family": "person",
     "metrics": {
@@ -84,5 +85,7 @@
     "model_status": "MISSING",
     "passed": false
   },
+  "standing_scale": 0.1414141414141414,
+  "sleep_scale": 0.14470284237726097,
   "template_version": 3
 }

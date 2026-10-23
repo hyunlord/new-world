@@ -6,9 +6,9 @@
   "attempt": 3,
   "raw_sha256": "639f5c1a69c0308b24234f554d530da758b4dfef83640a689252b89037c54438",
   "prompt_sha256": "4187e537a848a7983e47f16890e6f3b493f7d471caf4b3724f2b03d32398fec5",
-  "image_sha256": "6a703b8e66199c3ff3b7d6099d5767c038f3767a7d849128e601302dae78a657",
-  "raw": "/Users/rexxa/work/artprod1-data/production/adult_F_loincloth_bun/try3/raw.png",
-  "diagnostics": "/Users/rexxa/work/artprod1-data/production/adult_F_loincloth_bun/try3",
+  "image_sha256": "22465fb470e1aa61afecac3e506596fa75e389fdc79076c0323f6fb1ed2dce30",
+  "raw": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_F_loincloth_bun/try3/raw.png",
+  "diagnostics": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_F_loincloth_bun/try3",
   "panel_index": 0,
   "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
   "scale": 0.13023255813953488,
@@ -38,36 +38,37 @@
       25,
       44
     ],
-    "visible_pixels": 1122,
-    "rotation_degrees": 0
+    "visible_pixels": 1103,
+    "rotation_degrees": 0,
+    "scale": 0.13023255813953488
   },
   "checks": {
     "passed": true,
     "findings": [],
-    "coverage": 0.09084821428571428,
+    "coverage": 0.09095982142857142,
     "component_count": 1,
     "largest_hole": 0,
     "contact_ok": true,
     "sleep_axis_ok": true,
     "opaque_height": 55,
     "opaque_width": 26,
-    "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
     "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
   },
   "judge": {
-    "candidate": "/Users/rexxa/work/artprod1-data/production/adult_F_loincloth_bun/try3/judge/panel_00.png",
+    "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_F_loincloth_bun/try3/judge/panel_00.png",
     "sha256": "38dbbe52638492c59450f9d6165eb8a21db94ff906a313ddfc02758d25763f19",
     "family": "person",
     "metrics": {
-      "edge_density": 0.16922771227977215,
-      "saturation_q25": 0.5757966529613063,
-      "saturation_q75": 0.6832475941681058,
+      "edge_density": 0.170859261220707,
+      "saturation_q25": 0.575460519071987,
+      "saturation_q75": 0.683102769625089,
       "stroke_q25": 2.8284271247461903,
       "stroke_q50": 4.0,
       "stroke_q75": 4.0,
       "stroke_q90": 4.47213595499958,
-      "wash_flatness": 0.024299409764682266,
-      "foreground_pixels": 16996
+      "wash_flatness": 0.024507395513072357,
+      "foreground_pixels": 17002
     },
     "numeric_checks": {
       "edge_density": true,
@@ -84,5 +85,7 @@
     "model_status": "MISSING",
     "passed": false
   },
+  "standing_scale": 0.13023255813953488,
+  "sleep_scale": 0.13559322033898305,
   "template_version": 3
 }

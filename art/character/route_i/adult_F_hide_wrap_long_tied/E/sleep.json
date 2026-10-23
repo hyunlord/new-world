@@ -6,12 +6,12 @@
   "attempt": 2,
   "raw_sha256": "1db4d1746348ada9b6d2866dba058c835483793ad7b03dd75e771801fcd99884",
   "prompt_sha256": "c8e36c6c7013f48c4506e78cc3267a4068aeeb3e024e56831fb56a4eec9d9594",
-  "image_sha256": "8528275260e9f497eefadbf6bb9d6c82be2fb4195a0c119da66d4b7ba53932e6",
-  "raw": "/Users/rexxa/work/artprod1-data/production/adult_F_hide_wrap_long_tied/try2/raw.png",
-  "diagnostics": "/Users/rexxa/work/artprod1-data/production/adult_F_hide_wrap_long_tied/try2",
+  "image_sha256": "72cfe62346f6d3ebba6adb37720af66bbba9e66d5a4dfe937a4350842e591ac8",
+  "raw": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_F_hide_wrap_long_tied/try2/raw.png",
+  "diagnostics": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_F_hide_wrap_long_tied/try2",
   "panel_index": 9,
   "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
-  "scale": 0.1278538812785388,
+  "scale": 0.12556053811659193,
   "rotation": 0,
   "source_box": [
     1057,
@@ -21,41 +21,42 @@
   ],
   "normalization": {
     "scaled_size": [
-      59,
+      58,
       39
     ],
     "trim_box": [
       0,
       0,
-      59,
+      58,
       38
     ],
     "placement": [
-      26,
+      27,
       38
     ],
     "resized_to_canvas_offset": [
-      26,
+      27,
       38
     ],
-    "visible_pixels": 760,
-    "rotation_degrees": 0
+    "visible_pixels": 749,
+    "rotation_degrees": 0,
+    "scale": 0.12556053811659193
   },
   "checks": {
     "passed": true,
     "findings": [],
-    "coverage": 0.061160714285714284,
+    "coverage": 0.06060267857142857,
     "component_count": 1,
     "largest_hole": 0,
     "contact_ok": true,
     "sleep_axis_ok": true,
     "opaque_height": 15,
-    "opaque_width": 56,
-    "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+    "opaque_width": 55,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
     "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
   },
   "judge": {
-    "candidate": "/Users/rexxa/work/artprod1-data/production/adult_F_hide_wrap_long_tied/try2/judge/panel_09.png",
+    "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_F_hide_wrap_long_tied/try2/judge/panel_09.png",
     "sha256": "6728940cc8dd3c4e092c9dff789d1ed0a0bd172b0fb96162b4f320d126dfa9eb",
     "family": "person",
     "metrics": {
@@ -84,5 +85,7 @@
     "model_status": "MISSING",
     "passed": false
   },
+  "standing_scale": 0.1278538812785388,
+  "sleep_scale": 0.12556053811659193,
   "template_version": 3
 }

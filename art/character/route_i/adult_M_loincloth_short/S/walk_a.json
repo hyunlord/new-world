@@ -6,9 +6,9 @@
   "attempt": 3,
   "raw_sha256": "c2a60715e466d8d42e36851c604d96b67ddcd80f3201763675d4c436ea0e0d97",
   "prompt_sha256": "0e5970558843e847d30cd028b014208b313bbc77c7e337b68dcfa7fdc3476ad7",
-  "image_sha256": "ecdc25cf0485fe0ff210221dfab87cd759b94bb8ff3d787933712d8b142f5bea",
-  "raw": "/Users/rexxa/work/artprod1-data/production/adult_M_loincloth_short/try3/raw.png",
-  "diagnostics": "/Users/rexxa/work/artprod1-data/production/adult_M_loincloth_short/try3",
+  "image_sha256": "68492b70185b534f704a80279667ebedcc934f12dfaa2baeb7d9cbe6ac059edf",
+  "raw": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_M_loincloth_short/try3/raw.png",
+  "diagnostics": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_M_loincloth_short/try3",
   "panel_index": 1,
   "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
   "scale": 0.1407035175879397,
@@ -38,24 +38,25 @@
       23,
       35
     ],
-    "visible_pixels": 1182,
-    "rotation_degrees": 0
+    "visible_pixels": 1157,
+    "rotation_degrees": 0,
+    "scale": 0.1407035175879397
   },
   "checks": {
     "passed": true,
     "findings": [],
-    "coverage": 0.10055803571428572,
+    "coverage": 0.10044642857142858,
     "component_count": 1,
     "largest_hole": 0,
     "contact_ok": true,
     "sleep_axis_ok": true,
     "opaque_height": 57,
     "opaque_width": 33,
-    "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
     "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
   },
   "judge": {
-    "candidate": "/Users/rexxa/work/artprod1-data/production/adult_M_loincloth_short/try3/judge/panel_01.png",
+    "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_M_loincloth_short/try3/judge/panel_01.png",
     "sha256": "2f68294a9e7ce84b83049c12fdcd7d576a5e51735e83f63bf3d56d6ff99d4796",
     "family": "person",
     "metrics": {
@@ -84,5 +85,7 @@
     "model_status": "MISSING",
     "passed": false
   },
+  "standing_scale": 0.1407035175879397,
+  "sleep_scale": 0.1509433962264151,
   "template_version": 3
 }

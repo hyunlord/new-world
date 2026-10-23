@@ -1,0 +1,546 @@
+{
+  "look": "child_F_hide_wrap_long_tied",
+  "age": "child",
+  "sex": "F",
+  "top": "hide_wrap",
+  "hair": "long_tied",
+  "raw": "/Users/rexxa/work/artprod2-data/reslice-run1/child_F_hide_wrap_long_tied/try2/raw.png",
+  "diagnostics": "/Users/rexxa/work/artprod2-data/reslice-run1/child_F_hide_wrap_long_tied/try2",
+  "sheet_try": 2,
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "attempt": 2,
+  "scale": 0.09029345372460497,
+  "standing_scale": 0.09029345372460497,
+  "sleep_scales": {
+    "S": 0.08791208791208792,
+    "E": 0.0894854586129754
+  },
+  "raw_sha256": "28cdb68d3ba630323fe8747b33a93f3ddd17f209d68026461980eb376a80d298",
+  "prompt_sha256": "76e639c94fe89a221b0192f75619f7812e43d14b863e3a82840ef9497955a395",
+  "rotations": {
+    "S/idle": 0,
+    "S/walk_a": 0,
+    "S/work_a": 0,
+    "S/carry": 0,
+    "S/sleep": 0,
+    "E/idle": 0,
+    "E/walk_a": 0,
+    "E/work_a": 0,
+    "E/carry": 0,
+    "E/sleep": 0
+  },
+  "files": {
+    "S/idle.png": "e8913e557c1526c24c71602856e0d52f3a8b5d47e1d505378811aa798629b513",
+    "S/idle.json": "d45712c4a897702a49e5e8993fa9b8cef889341689ed5eada6b079a30eb317e6",
+    "S/walk_a.png": "84854c3db0a0da955f220b5153a755b2c56e72c7d2cf227c729c37bb74145206",
+    "S/walk_a.json": "05661f72796c2854cd23d46ccc52e7794d027b6d8699a2d58e57f05eeb7547c6",
+    "S/work_a.png": "b737c9a4737089fe4d18337f14b400e180f9d371ee090d203e3ecf708860844a",
+    "S/work_a.json": "35042f7ca382cfa85bcbc46801bcb98ce89547dd7ce89c59782d3ae9d63bec91",
+    "S/carry.png": "147981f696d642a6fbc819dac4ae834b54ccae8f3cf476d7396443e83d7437fd",
+    "S/carry.json": "66f8c5283ae0de51355e57f0e0772d23c56ae02f08a9ab88a90759b30205cbdc",
+    "S/sleep.png": "d82437c6f3df82e8365e07944ac0545cf4d5b98aafa43fa402129d1c49535998",
+    "S/sleep.json": "6bb5461f4162c6dd8a064612ce4f4690ca8fbce4a99faca557f3898a6b0238d6",
+    "E/idle.png": "21b8e6a57b767595d9d5c787696c9f16fcbef279f9416920fa7943cedabef64f",
+    "E/idle.json": "4da0846d80339c2185feae1da6e318dcc526e73bc7a156dce4e211f9c021aa6c",
+    "E/walk_a.png": "acb0799c3f7e0dddf3e63ad8d15c0a27e00f83b3f47648b1720bae64d66352bb",
+    "E/walk_a.json": "72cadfbb3f10269a2576d51e1a5dd342de28a83da879d760a1de8d7ee0c55b84",
+    "E/work_a.png": "b38ebf50769086b745a551f3a095eada29b0cf6156affd527f4693e8a97f801f",
+    "E/work_a.json": "b3d25c2b2790cfc5cce558c357e17b0bd408d18494936f0143cb81189e044124",
+    "E/carry.png": "fdadac08abd7e23e43d21a76f086ca2863946129834b6580e830d4d6269bd580",
+    "E/carry.json": "ad8dfc7dca8964a98dea5527991fb561279c0c6810381ef82f76e58df1a24a14",
+    "E/sleep.png": "ec83c1d335109f9abea535aa1e097f1b1ca0db09d9f66dd4bbd3a39224546166",
+    "E/sleep.json": "94e6eaaa3ad44e82ccfe69237b24f5a02107f5fd1cd44d0ee3338592752105df"
+  },
+  "frames": [
+    {
+      "facing": "S",
+      "frame": "idle",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.05267857142857143,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 41,
+        "opaque_width": 19,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_F_hide_wrap_long_tied/try2/judge/panel_00.png",
+        "sha256": "2495865c73d5e4a8b477f99951725517d88675e6b78eccc3adf756ce970d9edb",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.21057814853435292,
+          "saturation_q25": 0.6233124982423255,
+          "saturation_q75": 0.6989167877302823,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.04826387720665732,
+          "foreground_pixels": 19245
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "S",
+      "frame": "walk_a",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.05223214285714286,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 40,
+        "opaque_width": 22,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_F_hide_wrap_long_tied/try2/judge/panel_01.png",
+        "sha256": "6153fbda5b46bb99d31a0029c978459e9b9367165b8b469894717a626dd5654c",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.21650620577659205,
+          "saturation_q25": 0.625025921841596,
+          "saturation_q75": 0.7076571331016055,
+          "stroke_q25": 2.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.04516660443089399,
+          "foreground_pixels": 19352
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "S",
+      "frame": "work_a",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.05625,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 47,
+        "opaque_width": 23,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_F_hide_wrap_long_tied/try2/judge/panel_02.png",
+        "sha256": "703fec7d6d8d2e713aab481db93fe2db20e224b6869d024ae54142d33869029f",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.22157283420877413,
+          "saturation_q25": 0.6099468311685844,
+          "saturation_q75": 0.7135170317740235,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.032609736787063776,
+          "foreground_pixels": 15259
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "S",
+      "frame": "carry",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.05803571428571429,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 38,
+        "opaque_width": 31,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_F_hide_wrap_long_tied/try2/judge/panel_03.png",
+        "sha256": "aab355f58da70df8e6b4c41418db29654277a077672a1d652e420cf31f16f6f3",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.23463281958295557,
+          "saturation_q25": 0.6289122757899878,
+          "saturation_q75": 0.7274304744331521,
+          "stroke_q25": 2.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.05329952592525602,
+          "foreground_pixels": 23903
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "S",
+      "frame": "sleep",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.03504464285714286,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 11,
+        "opaque_width": 40,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_F_hide_wrap_long_tied/try2/judge/panel_04.png",
+        "sha256": "b124e811a91bb61bf7673a174ecb8b98b3d922f3fcee4aad72c6a7f1b6542a2a",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.21465106198526224,
+          "saturation_q25": 0.6200317523896066,
+          "saturation_q75": 0.7040732206976592,
+          "stroke_q25": 2.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.05369710783174357,
+          "foreground_pixels": 12775
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "E",
+      "frame": "idle",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.04107142857142857,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 38,
+        "opaque_width": 18,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_F_hide_wrap_long_tied/try2/judge/panel_05.png",
+        "sha256": "5c55d508820a5eefcfa928351ba8ebad5bbc91ff0efc707d41888f5643d25187",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.21407068062827225,
+          "saturation_q25": 0.6239314092368915,
+          "saturation_q75": 0.7075320658787749,
+          "stroke_q25": 2.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.049483023635235365,
+          "foreground_pixels": 17006
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "E",
+      "frame": "walk_a",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.047098214285714285,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 37,
+        "opaque_width": 22,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_F_hide_wrap_long_tied/try2/judge/panel_06.png",
+        "sha256": "0b212390183f7e3013ba9c4088d9fbbce7df140cfa769707eb23844c2a843e28",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.19773727916179012,
+          "saturation_q25": 0.6281071416741411,
+          "saturation_q75": 0.707962788228321,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.04061311802623054,
+          "foreground_pixels": 20085
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "E",
+      "frame": "work_a",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.04888392857142857,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 42,
+        "opaque_width": 20,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_F_hide_wrap_long_tied/try2/judge/panel_07.png",
+        "sha256": "aac58c6bcf4af9f9d14daa56e9e3a7495990e7da407a797c3e4f848d4951b170",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.2121190130624093,
+          "saturation_q25": 0.6117991111056205,
+          "saturation_q75": 0.7023686230181634,
+          "stroke_q25": 2.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.04669336731833478,
+          "foreground_pixels": 15761
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "E",
+      "frame": "carry",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.05133928571428571,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 36,
+        "opaque_width": 25,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_F_hide_wrap_long_tied/try2/judge/panel_08.png",
+        "sha256": "c898f2a41a47de181de270f394bc32c4928bdd06c012bcbcd388a9e1248de5f9",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.22185817926515328,
+          "saturation_q25": 0.6327990710225609,
+          "saturation_q75": 0.7335158376156515,
+          "stroke_q25": 2.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.04335462664915542,
+          "foreground_pixels": 23244
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "E",
+      "frame": "sleep",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.036383928571428574,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 13,
+        "opaque_width": 40,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_F_hide_wrap_long_tied/try2/judge/panel_09.png",
+        "sha256": "a95bce634fd21c5ca15cfc63badaa32ae26df423398d024a0979ce166e0b6e0c",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.21748153067153647,
+          "saturation_q25": 0.6168906938445216,
+          "saturation_q75": 0.7042044318208638,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.05376235140188539,
+          "foreground_pixels": 13288
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    }
+  ]
+}

@@ -6,12 +6,12 @@
   "attempt": 3,
   "raw_sha256": "c2a60715e466d8d42e36851c604d96b67ddcd80f3201763675d4c436ea0e0d97",
   "prompt_sha256": "0e5970558843e847d30cd028b014208b313bbc77c7e337b68dcfa7fdc3476ad7",
-  "image_sha256": "440d61a9ea1c44a2051e2b0b4065be010274caeac8bcf7ac7477f54025fe1731",
-  "raw": "/Users/rexxa/work/artprod1-data/production/adult_M_loincloth_short/try3/raw.png",
-  "diagnostics": "/Users/rexxa/work/artprod1-data/production/adult_M_loincloth_short/try3",
+  "image_sha256": "be3351f0845f16dba0d6632ae42ca79733f3bb43b97a00e6938fd324924445cc",
+  "raw": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_M_loincloth_short/try3/raw.png",
+  "diagnostics": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_M_loincloth_short/try3",
   "panel_index": 9,
   "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
-  "scale": 0.1407035175879397,
+  "scale": 0.15135135135135136,
   "rotation": 0,
   "source_box": [
     1132,
@@ -21,41 +21,42 @@
   ],
   "normalization": {
     "scaled_size": [
-      54,
-      40
+      58,
+      43
     ],
     "trim_box": [
       0,
-      21,
-      54,
-      40
+      23,
+      58,
+      43
     ],
     "placement": [
-      29,
+      27,
       55
     ],
     "resized_to_canvas_offset": [
-      29,
-      34
+      27,
+      32
     ],
-    "visible_pixels": 740,
-    "rotation_degrees": 0
+    "visible_pixels": 842,
+    "rotation_degrees": 0,
+    "scale": 0.15135135135135136
   },
   "checks": {
     "passed": true,
     "findings": [],
-    "coverage": 0.06417410714285714,
+    "coverage": 0.07410714285714286,
     "component_count": 1,
     "largest_hole": 0,
     "contact_ok": true,
     "sleep_axis_ok": true,
     "opaque_height": 15,
-    "opaque_width": 52,
-    "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+    "opaque_width": 55,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
     "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
   },
   "judge": {
-    "candidate": "/Users/rexxa/work/artprod1-data/production/adult_M_loincloth_short/try3/judge/panel_09.png",
+    "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_M_loincloth_short/try3/judge/panel_09.png",
     "sha256": "b1ef631879e6162ab69cc35c4378e2c93fdc2c79c06c1a564f54564f52b0a315",
     "family": "person",
     "metrics": {
@@ -84,5 +85,7 @@
     "model_status": "MISSING",
     "passed": false
   },
+  "standing_scale": 0.1407035175879397,
+  "sleep_scale": 0.15135135135135136,
   "template_version": 3
 }

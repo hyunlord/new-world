@@ -1,0 +1,2022 @@
+{
+  "reserved_calls": 27,
+  "maximum_calls": 40,
+  "maximum_per_look": 2,
+  "attempts": [
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "attempt": 1,
+      "phase": "gap",
+      "reason": "S sleep previously had low-alpha watercolor dust extending beyond body and E idle was too tall. Require actual transparent zero-alpha outside all contours: no ground shadow, haze, dust, glow, background wash, or floor. Ink watercolor texture stays INSIDE body only. Exactly same upright body height in both facing rows. Natural straight lying sleeping body, head left, no detached marks. Exact 1536x1024 2 rows by 5 columns.",
+      "status": "rejected",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: adult female, visible waist and hips, no beard, opaque garment covering chest; wide fur collar and hood shape, cloak hanging past hips, clearly darker than skin and distinct in tone and contour from hair, chest covered; high compact bun on TOP of head, clearly above the head outline, not a ponytail. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. Top-right sleep cell has compact horizontal silhouette, cloak tightly against body, head-left, legs fully extended. Completely alpha-zero space above and around sleeper, no stray marks, shadows or pigment haze. All ten poses preserve same woman and high bun. Top-right cell's upper half is entirely alpha-zero. Keep sleeping person on a slim horizontal silhouette band at the row groundline. Do not place even faint detached pigment above her. Generous completely transparent gaps separate all figures.\nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: S sleep previously had low-alpha watercolor dust extending beyond body and E idle was too tall. Require actual transparent zero-alpha outside all contours: no ground shadow, haze, dust, glow, background wash, or floor. Ink watercolor texture stays INSIDE body only. Exactly same upright body height in both facing rows. Natural straight lying sleeping body, head left, no detached marks. Exact 1536x1024 2 rows by 5 columns.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/adult_F_fur_cloak_bun/try1/prompt.txt",
+      "prompt_sha256": "b3d6021da2c5f3da5dd477565f6eded74957e47330e4c2b9f4c5f0701a4d7a78",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/adult_F_fur_cloak_bun/try1/raw.png",
+      "raw_sha256": "021f93ae0dd5898113c0cdfa08261eb5d037ac40010065f7acf2d0f40c0f00c3",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-8e4c-7040-8c2a-003ea88dc7a0 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-8e4c-7040-8c2a-003ea88dc7a0/exec-eb926ec1-0184-4983-a6a5-b1d4f09d8a0e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 9,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/adult_F_fur_cloak_bun/try1",
+      "error": null,
+      "failures": [
+        {
+          "facing": "S",
+          "frame": "sleep",
+          "passed": false,
+          "checks": {
+            "passed": false,
+            "findings": [
+              "normalization: visible extent (59, 48) offset (26, 54) would clip canvas (112, 80); scaled_size=(63, 77), trim_box=(4, 25, 63, 73)"
+            ],
+            "coverage": 0,
+            "component_count": 0,
+            "largest_hole": 0,
+            "contact_ok": false,
+            "sleep_axis_ok": true,
+            "opaque_height": 0,
+            "opaque_width": 0,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/adult_F_fur_cloak_bun/try1/judge/panel_04.png",
+            "sha256": "b845012bc7822edb72ca812b2143563408dc17d899e21d03e82975328c83d435",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.2001399580125962,
+              "saturation_q25": 0.6117689730649856,
+              "saturation_q75": 0.6641130061360485,
+              "stroke_q25": 2.0,
+              "stroke_q50": 4.0,
+              "stroke_q75": 4.0,
+              "stroke_q90": 5.656854249492381,
+              "wash_flatness": 0.030410991706773947,
+              "foreground_pixels": 13999
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": "normalization: visible extent (59, 48) offset (26, 54) would clip canvas (112, 80); scaled_size=(63, 77), trim_box=(4, 25, 63, 73)"
+        }
+      ]
+    },
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "attempt": 2,
+      "phase": "gap",
+      "reason": "FINAL correction: Top-right S sleep rejected because faint alpha extends73 pixels vertically though actual sleeper is thin. Completely erase NOTHING after generation: generate clean transparency originally. No low-opacity brown cloud, no soft fade outside contours, no ground shadow, no backdrop. Tight opaque ink cutout edges, absolutely zero alpha everywhere outside silhouette. Top-right cell is entirely EMPTY except narrow horizontal sleeping body at bottom. Exact1536x1024 2 rows 5columns. Equal upright height both facings, fur cloak and high bun.",
+      "status": "accepted",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: adult female, visible waist and hips, no beard, opaque garment covering chest; wide fur collar and hood shape, cloak hanging past hips, clearly darker than skin and distinct in tone and contour from hair, chest covered; high compact bun on TOP of head, clearly above the head outline, not a ponytail. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. Top-right sleep cell has compact horizontal silhouette, cloak tightly against body, head-left, legs fully extended. Completely alpha-zero space above and around sleeper, no stray marks, shadows or pigment haze. All ten poses preserve same woman and high bun. Top-right cell's upper half is entirely alpha-zero. Keep sleeping person on a slim horizontal silhouette band at the row groundline. Do not place even faint detached pigment above her. Generous completely transparent gaps separate all figures.\nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: FINAL correction: Top-right S sleep rejected because faint alpha extends73 pixels vertically though actual sleeper is thin. Completely erase NOTHING after generation: generate clean transparency originally. No low-opacity brown cloud, no soft fade outside contours, no ground shadow, no backdrop. Tight opaque ink cutout edges, absolutely zero alpha everywhere outside silhouette. Top-right cell is entirely EMPTY except narrow horizontal sleeping body at bottom. Exact1536x1024 2 rows 5columns. Equal upright height both facings, fur cloak and high bun.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/adult_F_fur_cloak_bun/try2/prompt.txt",
+      "prompt_sha256": "aff7b90d3f2de92c1f1dc561b23df0a0d9082160524e16e3d218f101eb4b85d4",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/adult_F_fur_cloak_bun/try2/raw.png",
+      "raw_sha256": "790a458ae4efb6c713442d732c29378ae3f92346c1cc2d440081517c8baf1e63",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-8e4c-7040-8c2a-003ea88dc7a0 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-8e4c-7040-8c2a-003ea88dc7a0/exec-bf0c346c-ccb3-46ce-ada1-990182229ed7.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 10,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/adult_F_fur_cloak_bun/try2",
+      "error": null,
+      "failures": []
+    },
+    {
+      "look": "adult_F_hide_wrap_bun",
+      "attempt": 1,
+      "phase": "gap",
+      "reason": "Sleeping cells previously contained low-alpha watercolor dust outside silhouette. Require actual transparent ZERO alpha outside all body contours, no groundshadow, haze, dust, backgroundwash or detached marks. Watercolor stays strictly inside ink contours. Natural horizontal sleeping figure head left. Equal upright body height both facing rows. Exact 1536x1024 2 rows 5 columns.",
+      "status": "rejected",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: adult female, visible waist and hips, no beard, opaque garment covering chest; one-shoulder asymmetric hide wrap with one visible bare shoulder, chest securely covered; high compact bun on TOP of head, clearly above the head outline, not a ponytail. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. Preserve the improved compact sleeping silhouette. E sleeping figure needs fine clean controlled ink linework matching the standing woman's line thickness; avoid excessively thick overlapping outline at limbs or facial details. No dense hatching. Both sleeping figures compact and horizontal with fully transparent surroundings.\nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: Sleeping cells previously contained low-alpha watercolor dust outside silhouette. Require actual transparent ZERO alpha outside all body contours, no groundshadow, haze, dust, backgroundwash or detached marks. Watercolor stays strictly inside ink contours. Natural horizontal sleeping figure head left. Equal upright body height both facing rows. Exact 1536x1024 2 rows 5 columns.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/adult_F_hide_wrap_bun/try1/prompt.txt",
+      "prompt_sha256": "177f0d9e5eb7307c41a44a306194d77b0a255efdcce46c28505d1732d4dfe2da",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/adult_F_hide_wrap_bun/try1/raw.png",
+      "raw_sha256": "217235e25ce72e20afbb80391662e09f409823d27d9b02e92ba0101333bfb918",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-8e4c-7040-8c2a-003ea88dc7a0 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-8e4c-7040-8c2a-003ea88dc7a0/exec-ef2b5f8e-b300-4c0d-9f3d-ba04fb9e2b67.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 9,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/adult_F_hide_wrap_bun/try1",
+      "error": null,
+      "failures": [
+        {
+          "facing": "S",
+          "frame": "sleep",
+          "passed": false,
+          "checks": {
+            "passed": false,
+            "findings": [
+              "normalization: visible extent (59, 73) offset (26, 30) would clip canvas (112, 80); scaled_size=(62, 85), trim_box=(3, 10, 62, 83)"
+            ],
+            "coverage": 0,
+            "component_count": 0,
+            "largest_hole": 0,
+            "contact_ok": false,
+            "sleep_axis_ok": true,
+            "opaque_height": 0,
+            "opaque_width": 0,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/adult_F_hide_wrap_bun/try1/judge/panel_04.png",
+            "sha256": "edbbb76e0f624d880ccac09ff45186839d1f5468d076741709f127856ab3cd7f",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.20247549545682192,
+              "saturation_q25": 0.6342531855550193,
+              "saturation_q75": 0.713075675365157,
+              "stroke_q25": 2.0,
+              "stroke_q50": 4.0,
+              "stroke_q75": 4.0,
+              "stroke_q90": 4.47213595499958,
+              "wash_flatness": 0.03679494480002849,
+              "foreground_pixels": 15184
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": "normalization: visible extent (59, 73) offset (26, 30) would clip canvas (112, 80); scaled_size=(62, 85), trim_box=(3, 10, 62, 83)"
+        }
+      ]
+    },
+    {
+      "look": "adult_F_hide_wrap_bun",
+      "attempt": 2,
+      "phase": "gap",
+      "reason": "FINAL correction: S sleep still fails from faint alpha above lying body. All watercolor pigment must remain INSIDE opaque body outline. No atmospheric brown background gradient, no residual partial-alpha haze. Exactly zero alpha throughout empty cell area. Top right sleeping figure confined to narrow horizontal strip at bottom of its cell with empty top. Same adult woman high bun and asymmetric hide wrap all10 poses. Exact1536x1024 2 rows5 columns; equal upright heights.",
+      "status": "rejected",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: adult female, visible waist and hips, no beard, opaque garment covering chest; one-shoulder asymmetric hide wrap with one visible bare shoulder, chest securely covered; high compact bun on TOP of head, clearly above the head outline, not a ponytail. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. Preserve the improved compact sleeping silhouette. E sleeping figure needs fine clean controlled ink linework matching the standing woman's line thickness; avoid excessively thick overlapping outline at limbs or facial details. No dense hatching. Both sleeping figures compact and horizontal with fully transparent surroundings.\nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: FINAL correction: S sleep still fails from faint alpha above lying body. All watercolor pigment must remain INSIDE opaque body outline. No atmospheric brown background gradient, no residual partial-alpha haze. Exactly zero alpha throughout empty cell area. Top right sleeping figure confined to narrow horizontal strip at bottom of its cell with empty top. Same adult woman high bun and asymmetric hide wrap all10 poses. Exact1536x1024 2 rows5 columns; equal upright heights.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/adult_F_hide_wrap_bun/try2/prompt.txt",
+      "prompt_sha256": "56650acd666fd1d6f6dc25bd1b3f488947ab6bc9008442239749af45865b0c6d",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/adult_F_hide_wrap_bun/try2/raw.png",
+      "raw_sha256": "d8e0a20dd1a9914fc224eddba16411ee1a9924c38c8a3d2809c63032433b8600",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-8e4c-7040-8c2a-003ea88dc7a0 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-8e4c-7040-8c2a-003ea88dc7a0/exec-72b627b7-84a5-4d19-847b-64141467f43b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 9,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/adult_F_hide_wrap_bun/try2",
+      "error": null,
+      "failures": [
+        {
+          "facing": "S",
+          "frame": "sleep",
+          "passed": false,
+          "checks": {
+            "passed": false,
+            "findings": [
+              "normalization: visible extent (62, 85) offset (25, 22) would clip canvas (112, 80); scaled_size=(67, 86), trim_box=(5, 1, 67, 86)"
+            ],
+            "coverage": 0,
+            "component_count": 0,
+            "largest_hole": 0,
+            "contact_ok": false,
+            "sleep_axis_ok": true,
+            "opaque_height": 0,
+            "opaque_width": 0,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/adult_F_hide_wrap_bun/try2/judge/panel_04.png",
+            "sha256": "94d238024c697b18520e66fdf75989db0711da70ae767c0a4f37912c36db50e3",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.190431654676259,
+              "saturation_q25": 0.6061174829608273,
+              "saturation_q75": 0.6797020429076153,
+              "stroke_q25": 2.8284271247461903,
+              "stroke_q50": 4.0,
+              "stroke_q75": 4.47213595499958,
+              "stroke_q90": 5.656854249492381,
+              "wash_flatness": 0.022445768487564816,
+              "foreground_pixels": 15094
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": "normalization: visible extent (62, 85) offset (25, 22) would clip canvas (112, 80); scaled_size=(67, 86), trim_box=(5, 1, 67, 86)"
+        }
+      ]
+    },
+    {
+      "look": "adult_F_loincloth_long_tied",
+      "attempt": 1,
+      "phase": "gap",
+      "reason": "S sleep had faint background pigment beyond body. Require truly zero-alpha surroundings, no brown gradient backdrop, no haze, no dust, no groundshadow. Strict clean cutout silhouettes with watercolor only INSIDE body. Sleep head left, horizontal natural straight body. Long tied hair in every pose, adult female chest securely covered. Equal upright height facing rows. Exact1536x1024 2 rows 5 columns.",
+      "status": "accepted",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: adult female, visible waist and hips, no beard, opaque garment covering chest; opaque loincloth and bare upper torso for adult male; adult female wears opaque chest band plus skirt; child wears opaque chest band plus skirt; high ponytail standing clearly away from head outline, distinct from cloak. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. Keep sleep figure completely horizontal, compact vertical extent, head left, legs extended, surrounded on every side by a large fully transparent clear gap. No loose pigment, residual shadow, detached marks or haze around sleeping figure. Preserve woman, chest band, skirt, ponytail, identical scale and ten poses.\nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: S sleep had faint background pigment beyond body. Require truly zero-alpha surroundings, no brown gradient backdrop, no haze, no dust, no groundshadow. Strict clean cutout silhouettes with watercolor only INSIDE body. Sleep head left, horizontal natural straight body. Long tied hair in every pose, adult female chest securely covered. Equal upright height facing rows. Exact1536x1024 2 rows 5 columns.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/adult_F_loincloth_long_tied/try1/prompt.txt",
+      "prompt_sha256": "969f05c29a538e7fddc1eddd965cf53f69809be652a1916e4dbc77f3b3ab70b1",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/adult_F_loincloth_long_tied/try1/raw.png",
+      "raw_sha256": "b440a0d0c20c350fc3e99583d20ac739abb95dd7b3c189d9f5c910fa2d9fc0b6",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-8e4c-7040-8c2a-003ea88dc7a0 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-8e4c-7040-8c2a-003ea88dc7a0/exec-3ca73ebe-b967-4c3d-b993-1b64465357ee.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 10,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/adult_F_loincloth_long_tied/try1",
+      "error": null,
+      "failures": []
+    },
+    {
+      "look": "adult_M_fur_cloak_long_tied",
+      "attempt": 1,
+      "phase": "gap",
+      "reason": "Use controlled fine ink lines, never thick dark axe or hand blobs in E work_a. Long tied ponytail clearly distinct from fur cloak in both facings. Strictly transparent zero alpha outside crisp body contours in all panels especially sleep: no ground shadow, watercolor haze, dust, detached specks or wash. Exact 1536x1024 canvas, two rows by five columns.",
+      "status": "rejected",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: adult male, full beard, broad shoulders, flat chest; wide fur collar and hood shape, cloak hanging past hips, clearly darker than skin and distinct in tone and contour from hair, chest covered; high ponytail standing clearly away from head outline, distinct from cloak. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. Reference I-1 is visual style only: do not copy its garment or hair when the requested look differs. E axe swing needs slightly stronger coherent outer ink contours matching other poses. Final correction: every pixel outside the solid silhouette must have alpha0, no atmospheric wash or translucent tails anywhere; preserve full horizontal sleeping figure with legs extended. Targeted correction from previous candidate: [{\"facing\": \"E\", \"frame\": \"work_a\", \"findings\": [], \"judge_failed\": [\"stroke_q90\"]}]. Maintain same reference style and identity; remove ALL faint halos, glows, background wash and stray marks; gutters must be exactly alpha zero. Sleep lies fully horizontal, not diagonal, both heads left. \nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: Use controlled fine ink lines, never thick dark axe or hand blobs in E work_a. Long tied ponytail clearly distinct from fur cloak in both facings. Strictly transparent zero alpha outside crisp body contours in all panels especially sleep: no ground shadow, watercolor haze, dust, detached specks or wash. Exact 1536x1024 canvas, two rows by five columns.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/adult_M_fur_cloak_long_tied/try1/prompt.txt",
+      "prompt_sha256": "1faa92b5e7aa26dfdf15f4e4d525ab65d87f85631e1688df42a600dc8e22cb7f",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/adult_M_fur_cloak_long_tied/try1/raw.png",
+      "raw_sha256": "982d0e350194c71f1ddc5e52d0a1bcda730c5705e3733a5612ca45c5ad6dad92",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-b1a4-7d03-a4ca-3d24a1ce24ca as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-b1a4-7d03-a4ca-3d24a1ce24ca/exec-da777e3e-0e31-4e6c-b780-e373d4853627.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 9,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/adult_M_fur_cloak_long_tied/try1",
+      "error": null,
+      "failures": [
+        {
+          "facing": "E",
+          "frame": "idle",
+          "passed": false,
+          "checks": {
+            "passed": false,
+            "findings": [
+              "coverage: idle opaque height 60 outside [52,58]"
+            ],
+            "coverage": 0.11986607142857143,
+            "component_count": 1,
+            "largest_hole": 0,
+            "contact_ok": true,
+            "sleep_axis_ok": true,
+            "opaque_height": 60,
+            "opaque_width": 28,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/adult_M_fur_cloak_long_tied/try1/judge/panel_05.png",
+            "sha256": "ec8e58606fd5658d90c36924926563f86fa58721528ee1d541b91cd1e75d0bda",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.20332403914493466,
+              "saturation_q25": 0.5345566734115621,
+              "saturation_q75": 0.6298916239343155,
+              "stroke_q25": 2.8284271247461903,
+              "stroke_q50": 4.0,
+              "stroke_q75": 4.0,
+              "stroke_q90": 4.47213595499958,
+              "wash_flatness": 0.0391099993602286,
+              "foreground_pixels": 20068
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_M_fur_cloak_long_tied",
+      "attempt": 2,
+      "phase": "gap",
+      "reason": "Critical correction: S and E idle figures MUST have exactly equal overall pixel height from topmost ponytail hair to bottommost toes. Prior E idle was 7 percent too tall: reduce E standing by 7 percent relative to that tendency. Align both idle bodies to same head and foot guide heights within their rows. Match bearded male fur cloak ponytail identity; crisp transparent silhouettes zero outside alpha no dust shadows or haze. Exact1536x1024 two rows five columns.",
+      "status": "rejected",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: adult male, full beard, broad shoulders, flat chest; wide fur collar and hood shape, cloak hanging past hips, clearly darker than skin and distinct in tone and contour from hair, chest covered; high ponytail standing clearly away from head outline, distinct from cloak. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. Reference I-1 is visual style only: do not copy its garment or hair when the requested look differs. E axe swing needs slightly stronger coherent outer ink contours matching other poses. Final correction: every pixel outside the solid silhouette must have alpha0, no atmospheric wash or translucent tails anywhere; preserve full horizontal sleeping figure with legs extended. Targeted correction from previous candidate: [{\"facing\": \"E\", \"frame\": \"work_a\", \"findings\": [], \"judge_failed\": [\"stroke_q90\"]}]. Maintain same reference style and identity; remove ALL faint halos, glows, background wash and stray marks; gutters must be exactly alpha zero. Sleep lies fully horizontal, not diagonal, both heads left. \nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: Critical correction: S and E idle figures MUST have exactly equal overall pixel height from topmost ponytail hair to bottommost toes. Prior E idle was 7 percent too tall: reduce E standing by 7 percent relative to that tendency. Align both idle bodies to same head and foot guide heights within their rows. Match bearded male fur cloak ponytail identity; crisp transparent silhouettes zero outside alpha no dust shadows or haze. Exact1536x1024 two rows five columns.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/adult_M_fur_cloak_long_tied/try2/prompt.txt",
+      "prompt_sha256": "7fecdd56346fc95072d1bde15c373cd796ecad485256d845ef751fc65e00c444",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/adult_M_fur_cloak_long_tied/try2/raw.png",
+      "raw_sha256": "d241d3027ee3d858226248ee6d4a07738db3b2602399ef542d30e880a03854c7",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-b1a4-7d03-a4ca-3d24a1ce24ca as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-b1a4-7d03-a4ca-3d24a1ce24ca/exec-d02bf747-5180-4d67-9c7b-66ddca1d82e7.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 9,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/adult_M_fur_cloak_long_tied/try2",
+      "error": null,
+      "failures": [
+        {
+          "facing": "S",
+          "frame": "sleep",
+          "passed": false,
+          "checks": {
+            "passed": false,
+            "findings": [
+              "normalization: visible extent (59, 71) offset (26, 35) would clip canvas (112, 80); scaled_size=(59, 75), trim_box=(0, 4, 59, 75)"
+            ],
+            "coverage": 0,
+            "component_count": 0,
+            "largest_hole": 0,
+            "contact_ok": false,
+            "sleep_axis_ok": true,
+            "opaque_height": 0,
+            "opaque_width": 0,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/adult_M_fur_cloak_long_tied/try2/judge/panel_04.png",
+            "sha256": "77d009c68000529dc0e58f1b3c0fdea77b677e84e94c4b33cc656bfd6a92674b",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.2092000251366807,
+              "saturation_q25": 0.6086999666958353,
+              "saturation_q75": 0.6797074636681688,
+              "stroke_q25": 2.0,
+              "stroke_q50": 4.0,
+              "stroke_q75": 4.0,
+              "stroke_q90": 4.47213595499958,
+              "wash_flatness": 0.04898501802093555,
+              "foreground_pixels": 17147
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": "normalization: visible extent (59, 71) offset (26, 35) would clip canvas (112, 80); scaled_size=(59, 75), trim_box=(0, 4, 59, 75)"
+        }
+      ]
+    },
+    {
+      "look": "adult_M_fur_cloak_short",
+      "attempt": 1,
+      "phase": "gap",
+      "reason": "Keep short hair above ears, distinct from large fur collar and cloak, adult masculine beard broad shoulders. Strictly zero alpha outside clean body contour: no haze, dust, ground shadow or watercolor wash beneath sleeping bodies. Exact 1536x1024 two rows five columns.",
+      "status": "rejected",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: adult male, full beard, broad shoulders, flat chest; wide fur collar and hood shape, cloak hanging past hips, clearly darker than skin and distinct in tone and contour from hair, chest covered; hair cropped close to skull, clean rounded silhouette. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. Reference I-1 is visual style only: do not copy its garment or hair when the requested look differs. Final correction: every pixel outside the solid silhouette must have alpha0, no atmospheric wash or translucent tails anywhere; preserve full horizontal sleeping figure with legs extended. Targeted correction from previous candidate: [{\"facing\": \"S\", \"frame\": \"sleep\", \"findings\": [\"normalization: visible extent (62, 74) offset (25, 27) would clip canvas (112, 80); scaled_size=(67, 92), trim_box=(5, 18, 67, 92)\"], \"judge_failed\": []}]. Maintain same reference style and identity; remove ALL faint halos, glows, background wash and stray marks; gutters must be exactly alpha zero. Sleep lies fully horizontal, not diagonal, both heads left. \nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: Keep short hair above ears, distinct from large fur collar and cloak, adult masculine beard broad shoulders. Strictly zero alpha outside clean body contour: no haze, dust, ground shadow or watercolor wash beneath sleeping bodies. Exact 1536x1024 two rows five columns.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/adult_M_fur_cloak_short/try1/prompt.txt",
+      "prompt_sha256": "a9c4edd9cb0d3f7e239b055a88437119484869d9b24bd7b3a9003306c3d2a95e",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/adult_M_fur_cloak_short/try1/raw.png",
+      "raw_sha256": "98c50652ec449dee43d65c687f15c84f89099d4cd4be04283a9473019a27a5eb",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-b1a4-7d03-a4ca-3d24a1ce24ca as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-b1a4-7d03-a4ca-3d24a1ce24ca/exec-f5a6404e-a113-4819-91cc-5b28680f16c5.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 8,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/adult_M_fur_cloak_short/try1",
+      "error": null,
+      "failures": [
+        {
+          "facing": "S",
+          "frame": "sleep",
+          "passed": false,
+          "checks": {
+            "passed": false,
+            "findings": [
+              "normalization: visible extent (59, 70) offset (26, 34) would clip canvas (112, 80); scaled_size=(59, 79), trim_box=(0, 6, 59, 76)"
+            ],
+            "coverage": 0,
+            "component_count": 0,
+            "largest_hole": 0,
+            "contact_ok": false,
+            "sleep_axis_ok": true,
+            "opaque_height": 0,
+            "opaque_width": 0,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/adult_M_fur_cloak_short/try1/judge/panel_04.png",
+            "sha256": "34a74a87695cc03f77eb15aa2637ceb4242e3af6d28edad864f5ff6b50303225",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.1884248123041038,
+              "saturation_q25": 0.6104102006727727,
+              "saturation_q75": 0.6732419266187988,
+              "stroke_q25": 2.0,
+              "stroke_q50": 4.0,
+              "stroke_q75": 4.0,
+              "stroke_q90": 4.47213595499958,
+              "wash_flatness": 0.04050186048341316,
+              "foreground_pixels": 14848
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": "normalization: visible extent (59, 70) offset (26, 34) would clip canvas (112, 80); scaled_size=(59, 79), trim_box=(0, 6, 59, 76)"
+        },
+        {
+          "facing": "E",
+          "frame": "work_a",
+          "passed": false,
+          "checks": {
+            "passed": true,
+            "findings": [],
+            "coverage": 0.11729910714285714,
+            "component_count": 1,
+            "largest_hole": 0,
+            "contact_ok": true,
+            "sleep_axis_ok": true,
+            "opaque_height": 64,
+            "opaque_width": 33,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/adult_M_fur_cloak_short/try1/judge/panel_07.png",
+            "sha256": "a29756197acc4c56eec9bf0e65278ff5d4a96746bf28fd732e611e7c977af4c1",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.1861030454453373,
+              "saturation_q25": 0.6138372262385168,
+              "saturation_q75": 0.6744864747596842,
+              "stroke_q25": 2.0,
+              "stroke_q50": 2.8284271247461903,
+              "stroke_q75": 4.0,
+              "stroke_q90": 4.0,
+              "wash_flatness": 0.040495782089545664,
+              "foreground_pixels": 16558
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": false,
+              "wash_flatness": true
+            },
+            "numeric_pass": false,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_M_fur_cloak_short",
+      "attempt": 2,
+      "phase": "gap",
+      "reason": "Sleep is an isolated fully opaque horizontal figure centered in rightmost cell with absolutely zero alpha beyond a tight contour. No faint vertical trail above or below sleeping body, no dust or shadows. Restrict washes INSIDE body only. E axe swing needs stronger coherent outer ink contours matching I-1, not a pale thin sketch. All standing idle total pixel heights equal. Exact1536x1024 two rows five columns.",
+      "status": "rejected",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: adult male, full beard, broad shoulders, flat chest; wide fur collar and hood shape, cloak hanging past hips, clearly darker than skin and distinct in tone and contour from hair, chest covered; hair cropped close to skull, clean rounded silhouette. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. Reference I-1 is visual style only: do not copy its garment or hair when the requested look differs. Final correction: every pixel outside the solid silhouette must have alpha0, no atmospheric wash or translucent tails anywhere; preserve full horizontal sleeping figure with legs extended. Targeted correction from previous candidate: [{\"facing\": \"S\", \"frame\": \"sleep\", \"findings\": [\"normalization: visible extent (62, 74) offset (25, 27) would clip canvas (112, 80); scaled_size=(67, 92), trim_box=(5, 18, 67, 92)\"], \"judge_failed\": []}]. Maintain same reference style and identity; remove ALL faint halos, glows, background wash and stray marks; gutters must be exactly alpha zero. Sleep lies fully horizontal, not diagonal, both heads left. \nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: Sleep is an isolated fully opaque horizontal figure centered in rightmost cell with absolutely zero alpha beyond a tight contour. No faint vertical trail above or below sleeping body, no dust or shadows. Restrict washes INSIDE body only. E axe swing needs stronger coherent outer ink contours matching I-1, not a pale thin sketch. All standing idle total pixel heights equal. Exact1536x1024 two rows five columns.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/adult_M_fur_cloak_short/try2/prompt.txt",
+      "prompt_sha256": "eae8858c990d0659eac03d9e63e861fd98a96c74f13c9f695bbd0da2d7a61212",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/adult_M_fur_cloak_short/try2/raw.png",
+      "raw_sha256": "939e7af1e658ea745610b4b0e05108b365fbe8f1fdd5b0ab3a620a2a736e6439",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-b1a4-7d03-a4ca-3d24a1ce24ca as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-b1a4-7d03-a4ca-3d24a1ce24ca/exec-22570d98-46d9-4ceb-837b-7c6d8e3c9389.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 9,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/adult_M_fur_cloak_short/try2",
+      "error": null,
+      "failures": [
+        {
+          "facing": "S",
+          "frame": "sleep",
+          "passed": false,
+          "checks": {
+            "passed": false,
+            "findings": [
+              "normalization: visible extent (58, 70) offset (27, 29) would clip canvas (112, 80); scaled_size=(58, 76), trim_box=(0, 1, 58, 71)"
+            ],
+            "coverage": 0,
+            "component_count": 0,
+            "largest_hole": 0,
+            "contact_ok": false,
+            "sleep_axis_ok": true,
+            "opaque_height": 0,
+            "opaque_width": 0,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/adult_M_fur_cloak_short/try2/judge/panel_04.png",
+            "sha256": "eedc9e5499d60bf9fdf09ea3ed6c58aaa8ab172a862827f007c19046b31e7a2c",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.18896278296457347,
+              "saturation_q25": 0.5400206690135211,
+              "saturation_q75": 0.624794367994444,
+              "stroke_q25": 2.8284271247461903,
+              "stroke_q50": 4.0,
+              "stroke_q75": 4.0,
+              "stroke_q90": 5.656854249492381,
+              "wash_flatness": 0.05158971775297293,
+              "foreground_pixels": 16821
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": "normalization: visible extent (58, 70) offset (27, 29) would clip canvas (112, 80); scaled_size=(58, 76), trim_box=(0, 1, 58, 71)"
+        }
+      ]
+    },
+    {
+      "look": "adult_M_hide_wrap_long_tied",
+      "attempt": 1,
+      "phase": "gap",
+      "reason": "Clearly readable male beard flat chest wide shoulders, one shoulder hide wrap, long tied ponytail distinct from garment. Strict alpha zero outside opaque silhouette including lying sleepers: no watercolor haze dust specks ground shadow background. Exact 1536x1024 two rows five columns with isolated figures.",
+      "status": "rejected",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: adult male, full beard, broad shoulders, flat chest; one-shoulder asymmetric hide wrap with one visible bare shoulder, chest securely covered; high ponytail standing clearly away from head outline, distinct from cloak. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. Reference I-1 is visual style only: do not copy its garment or hair when the requested look differs.\nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: Clearly readable male beard flat chest wide shoulders, one shoulder hide wrap, long tied ponytail distinct from garment. Strict alpha zero outside opaque silhouette including lying sleepers: no watercolor haze dust specks ground shadow background. Exact 1536x1024 two rows five columns with isolated figures.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/adult_M_hide_wrap_long_tied/try1/prompt.txt",
+      "prompt_sha256": "a2b511895a0c04a383ab0637d5e487a7571f94eb88ee8630d15a9e46e231060b",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/adult_M_hide_wrap_long_tied/try1/raw.png",
+      "raw_sha256": "055cb60b4cb0cca3e78ed7cbe6f2480ec0146e6a869a013d7f3fd24eebdd14d3",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-b1a4-7d03-a4ca-3d24a1ce24ca as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-b1a4-7d03-a4ca-3d24a1ce24ca/exec-8528d39b-fe5b-4011-b623-f77bcc27f163.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 8,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/adult_M_hide_wrap_long_tied/try1",
+      "error": null,
+      "failures": [
+        {
+          "facing": "S",
+          "frame": "sleep",
+          "passed": false,
+          "checks": {
+            "passed": false,
+            "findings": [
+              "normalization: visible extent (59, 56) offset (26, 49) would clip canvas (112, 80); scaled_size=(59, 72), trim_box=(0, 16, 59, 72)"
+            ],
+            "coverage": 0,
+            "component_count": 0,
+            "largest_hole": 0,
+            "contact_ok": false,
+            "sleep_axis_ok": true,
+            "opaque_height": 0,
+            "opaque_width": 0,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/adult_M_hide_wrap_long_tied/try1/judge/panel_04.png",
+            "sha256": "444999338678091aad1896ec051f5cf9a3494fd8433b9e87dbeefa2fd1e88f60",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.18320114419451305,
+              "saturation_q25": 0.6282222731828192,
+              "saturation_q75": 0.708086041724127,
+              "stroke_q25": 2.8284271247461903,
+              "stroke_q50": 4.0,
+              "stroke_q75": 4.47213595499958,
+              "stroke_q90": 5.656854249492381,
+              "wash_flatness": 0.026531853368011123,
+              "foreground_pixels": 16644
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": "normalization: visible extent (59, 56) offset (26, 49) would clip canvas (112, 80); scaled_size=(59, 72), trim_box=(0, 16, 59, 72)"
+        },
+        {
+          "facing": "E",
+          "frame": "idle",
+          "passed": false,
+          "checks": {
+            "passed": false,
+            "findings": [
+              "coverage: idle opaque height 59 outside [52,58]"
+            ],
+            "coverage": 0.09676339285714286,
+            "component_count": 1,
+            "largest_hole": 0,
+            "contact_ok": true,
+            "sleep_axis_ok": true,
+            "opaque_height": 59,
+            "opaque_width": 23,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/adult_M_hide_wrap_long_tied/try1/judge/panel_05.png",
+            "sha256": "4ff3ddbf63807afdd0d0a4670592785d45139768ddc78d4defdfd3b288432b8a",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.18090418353576249,
+              "saturation_q25": 0.6257275345601137,
+              "saturation_q75": 0.6997742269132903,
+              "stroke_q25": 2.8284271247461903,
+              "stroke_q50": 4.0,
+              "stroke_q75": 4.0,
+              "stroke_q90": 4.47213595499958,
+              "wash_flatness": 0.030200307581221185,
+              "foreground_pixels": 16549
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_M_hide_wrap_long_tied",
+      "attempt": 2,
+      "phase": "gap",
+      "reason": "Fix prior E idle 59px: E idle top-hair to toes must match S idle exactly, not taller. Long tied hair distinct from one shoulder hide wrap. Sleeping body horizontal, head left, full extended legs. Hard clean silhouette with all watercolor color INSIDE opaque body only; ZERO alpha in the entire remainder of sleep panel, absolutely no stray marks above below or alongside it. No shadow. Exact1536x1024 two rows five columns.",
+      "status": "rejected",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: adult male, full beard, broad shoulders, flat chest; one-shoulder asymmetric hide wrap with one visible bare shoulder, chest securely covered; high ponytail standing clearly away from head outline, distinct from cloak. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. Reference I-1 is visual style only: do not copy its garment or hair when the requested look differs.\nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: Fix prior E idle 59px: E idle top-hair to toes must match S idle exactly, not taller. Long tied hair distinct from one shoulder hide wrap. Sleeping body horizontal, head left, full extended legs. Hard clean silhouette with all watercolor color INSIDE opaque body only; ZERO alpha in the entire remainder of sleep panel, absolutely no stray marks above below or alongside it. No shadow. Exact1536x1024 two rows five columns.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/adult_M_hide_wrap_long_tied/try2/prompt.txt",
+      "prompt_sha256": "8721df706b830cb9981369ce58be11b0fb99d7140ef6046629488d9bcd11d62b",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/adult_M_hide_wrap_long_tied/try2/raw.png",
+      "raw_sha256": "436bdc2b4bfea2231bef6162804e20263b27e00f7a2141fe4f31d3683c24526b",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-b1a4-7d03-a4ca-3d24a1ce24ca as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-b1a4-7d03-a4ca-3d24a1ce24ca/exec-5d2243d1-b986-4fc2-bc5c-e915c310e9e6.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 9,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/adult_M_hide_wrap_long_tied/try2",
+      "error": null,
+      "failures": [
+        {
+          "facing": "S",
+          "frame": "sleep",
+          "passed": false,
+          "checks": {
+            "passed": false,
+            "findings": [
+              "normalization: visible extent (58, 47) offset (27, 52) would clip canvas (112, 80); scaled_size=(58, 78), trim_box=(0, 27, 58, 74)"
+            ],
+            "coverage": 0,
+            "component_count": 0,
+            "largest_hole": 0,
+            "contact_ok": false,
+            "sleep_axis_ok": true,
+            "opaque_height": 0,
+            "opaque_width": 0,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/adult_M_hide_wrap_long_tied/try2/judge/panel_04.png",
+            "sha256": "5af171018a63fec3e0669aade08e54320e711a89a06fb01fd3129dfd8728c46d",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.20278016623674405,
+              "saturation_q25": 0.6324341342974293,
+              "saturation_q75": 0.6999113194048591,
+              "stroke_q25": 2.8284271247461903,
+              "stroke_q50": 4.0,
+              "stroke_q75": 4.47213595499958,
+              "stroke_q90": 5.656854249492381,
+              "wash_flatness": 0.02861806529149742,
+              "foreground_pixels": 15206
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": "normalization: visible extent (58, 47) offset (27, 52) would clip canvas (112, 80); scaled_size=(58, 78), trim_box=(0, 27, 58, 74)"
+        }
+      ]
+    },
+    {
+      "look": "adult_M_loincloth_bun",
+      "attempt": 1,
+      "phase": "gap",
+      "reason": "Bearded adult male broad bare torso loincloth and prominent round hair bun. Identical total head-to-foot idle height in S and E. Sleep head left body perfectly horizontal with ZERO alpha outside sharp contour: no dust haze ground shadow wash or detached pixels. Exact 1536x1024 two rows by five columns.",
+      "status": "rejected",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: adult male, full beard, broad shoulders, flat chest; opaque loincloth only, completely bare chest and shoulders, no shoulder wrap; high compact bun on TOP of head, clearly above the head outline, not a ponytail. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. Reference I-1 is visual style only: do not copy its garment or hair when the requested look differs. Targeted correction from previous candidate: [{\"facing\": \"S\", \"frame\": \"sleep\", \"findings\": [\"normalization: visible extent (60, 68) offset (26, 34) would clip canvas (112, 80); scaled_size=(65, 74), trim_box=(5, 6, 65, 74)\"], \"judge_failed\": []}]. Maintain same reference style and identity; remove ALL faint halos, glows, background wash and stray marks; gutters must be exactly alpha zero. Sleep lies fully horizontal, not diagonal, both heads left. Adult MALE wears ONLY a loincloth, absolutely bare chest and shoulders, NO shoulder strap or wrap. \nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: Bearded adult male broad bare torso loincloth and prominent round hair bun. Identical total head-to-foot idle height in S and E. Sleep head left body perfectly horizontal with ZERO alpha outside sharp contour: no dust haze ground shadow wash or detached pixels. Exact 1536x1024 two rows by five columns.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/adult_M_loincloth_bun/try1/prompt.txt",
+      "prompt_sha256": "9b266029f9f9ef6706ec95048386f70eeab9beb430ad7ed757e7a963a0f81b00",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/adult_M_loincloth_bun/try1/raw.png",
+      "raw_sha256": "f53cc5c602cc24afd358c9cbbf75d3a57c531c11cce235ebd2a15768530b6a10",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-b1a4-7d03-a4ca-3d24a1ce24ca as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-b1a4-7d03-a4ca-3d24a1ce24ca/exec-db02da80-6267-446f-ab86-1c2da3e9cbc3.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 8,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/adult_M_loincloth_bun/try1",
+      "error": null,
+      "failures": [
+        {
+          "facing": "S",
+          "frame": "sleep",
+          "passed": false,
+          "checks": {
+            "passed": false,
+            "findings": [
+              "normalization: visible extent (59, 55) offset (26, 42) would clip canvas (112, 80); scaled_size=(60, 86), trim_box=(1, 24, 60, 79)"
+            ],
+            "coverage": 0,
+            "component_count": 0,
+            "largest_hole": 0,
+            "contact_ok": false,
+            "sleep_axis_ok": true,
+            "opaque_height": 0,
+            "opaque_width": 0,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/adult_M_loincloth_bun/try1/judge/panel_04.png",
+            "sha256": "5cfdd24937a995e8c6f00db19e0e43e74d6d1bb9673fcdf7d7792333499169a1",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.18005432673651534,
+              "saturation_q25": 0.6158358640299236,
+              "saturation_q75": 0.6770215572210772,
+              "stroke_q25": 2.8284271247461903,
+              "stroke_q50": 4.0,
+              "stroke_q75": 4.47213595499958,
+              "stroke_q90": 5.656854249492381,
+              "wash_flatness": 0.03344493597956446,
+              "foreground_pixels": 14035
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": "normalization: visible extent (59, 55) offset (26, 42) would clip canvas (112, 80); scaled_size=(60, 86), trim_box=(1, 24, 60, 79)"
+        },
+        {
+          "facing": "E",
+          "frame": "idle",
+          "passed": false,
+          "checks": {
+            "passed": false,
+            "findings": [
+              "coverage: idle opaque height 59 outside [52,58]"
+            ],
+            "coverage": 0.06986607142857143,
+            "component_count": 1,
+            "largest_hole": 0,
+            "contact_ok": true,
+            "sleep_axis_ok": true,
+            "opaque_height": 59,
+            "opaque_width": 14,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/adult_M_loincloth_bun/try1/judge/panel_05.png",
+            "sha256": "fa554b0cbb8ae098d0e8538def08ca114828f9fd4dd73453d339cc7f3250f212",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.16238656111218383,
+              "saturation_q25": 0.6127864525308108,
+              "saturation_q75": 0.6682205435750476,
+              "stroke_q25": 2.8284271247461903,
+              "stroke_q50": 4.0,
+              "stroke_q75": 4.0,
+              "stroke_q90": 4.47213595499958,
+              "wash_flatness": 0.027411256063481878,
+              "foreground_pixels": 11670
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "adult_M_loincloth_bun",
+      "attempt": 2,
+      "phase": "gap",
+      "reason": "Critical: E idle same total top-bun to foot pixel height as S idle, never larger. Bare torso male with loincloth only. Horizontal fully extended sleeping body head left, no wash or translucency outside tight body contour. Entire background pixel alpha exactly ZERO, especially everything above and below sleeper. Restrained watercolor ONLY INSIDE fully opaque figure. No ground shadow or diffuse dust. Exact1536x1024 two rows five columns.",
+      "status": "rejected",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: adult male, full beard, broad shoulders, flat chest; opaque loincloth only, completely bare chest and shoulders, no shoulder wrap; high compact bun on TOP of head, clearly above the head outline, not a ponytail. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. Reference I-1 is visual style only: do not copy its garment or hair when the requested look differs. Targeted correction from previous candidate: [{\"facing\": \"S\", \"frame\": \"sleep\", \"findings\": [\"normalization: visible extent (60, 68) offset (26, 34) would clip canvas (112, 80); scaled_size=(65, 74), trim_box=(5, 6, 65, 74)\"], \"judge_failed\": []}]. Maintain same reference style and identity; remove ALL faint halos, glows, background wash and stray marks; gutters must be exactly alpha zero. Sleep lies fully horizontal, not diagonal, both heads left. Adult MALE wears ONLY a loincloth, absolutely bare chest and shoulders, NO shoulder strap or wrap. \nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: Critical: E idle same total top-bun to foot pixel height as S idle, never larger. Bare torso male with loincloth only. Horizontal fully extended sleeping body head left, no wash or translucency outside tight body contour. Entire background pixel alpha exactly ZERO, especially everything above and below sleeper. Restrained watercolor ONLY INSIDE fully opaque figure. No ground shadow or diffuse dust. Exact1536x1024 two rows five columns.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/adult_M_loincloth_bun/try2/prompt.txt",
+      "prompt_sha256": "27af5e6b8a86f1e0f96f914bbe896ec5076a7b422985abba982fb5be4c2aaaaf",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/adult_M_loincloth_bun/try2/raw.png",
+      "raw_sha256": "9a0b0132caedac904157fea71ccafcd6d05d3b724b5d6e5fee2e9732f0e2d060",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-b1a4-7d03-a4ca-3d24a1ce24ca as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-b1a4-7d03-a4ca-3d24a1ce24ca/exec-69a644b4-4408-4d1d-8f44-4623c7d6db3d.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 8,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/adult_M_loincloth_bun/try2",
+      "error": null,
+      "failures": [
+        {
+          "facing": "S",
+          "frame": "sleep",
+          "passed": false,
+          "checks": {
+            "passed": false,
+            "findings": [
+              "normalization: visible extent (59, 52) offset (26, 54) would clip canvas (112, 80); scaled_size=(60, 81), trim_box=(0, 28, 59, 80)"
+            ],
+            "coverage": 0,
+            "component_count": 0,
+            "largest_hole": 0,
+            "contact_ok": false,
+            "sleep_axis_ok": true,
+            "opaque_height": 0,
+            "opaque_width": 0,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/adult_M_loincloth_bun/try2/judge/panel_04.png",
+            "sha256": "e2e5b47d07131c32f431de504a5f31eb4d6e891c8e8690138a8c0dde63b28fe1",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.1789924973204716,
+              "saturation_q25": 0.6191089108128031,
+              "saturation_q75": 0.6835909787714955,
+              "stroke_q25": 2.8284271247461903,
+              "stroke_q50": 4.0,
+              "stroke_q75": 4.47213595499958,
+              "stroke_q90": 5.656854249492381,
+              "wash_flatness": 0.02171129012061582,
+              "foreground_pixels": 14242
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": "normalization: visible extent (59, 52) offset (26, 54) would clip canvas (112, 80); scaled_size=(60, 81), trim_box=(0, 28, 59, 80)"
+        },
+        {
+          "facing": "E",
+          "frame": "idle",
+          "passed": false,
+          "checks": {
+            "passed": true,
+            "findings": [],
+            "coverage": 0.07165178571428571,
+            "component_count": 1,
+            "largest_hole": 0,
+            "contact_ok": true,
+            "sleep_axis_ok": true,
+            "opaque_height": 55,
+            "opaque_width": 16,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/adult_M_loincloth_bun/try2/judge/panel_05.png",
+            "sha256": "0b4e5e896bd821ea71708bb2a54420d3836bc29b7806dc6291f87119f232906f",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.15510204081632653,
+              "saturation_q25": 0.6147171505601422,
+              "saturation_q75": 0.6738511500800095,
+              "stroke_q25": 4.0,
+              "stroke_q50": 4.0,
+              "stroke_q75": 4.47213595499958,
+              "stroke_q90": 5.656854249492381,
+              "wash_flatness": 0.017445495287709913,
+              "foreground_pixels": 13656
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": false,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": false,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "attempt": 1,
+      "phase": "gap",
+      "reason": "Previous sheet failed grid components because detached axe. Make axe blade handle hands and body visibly touching as one connected opaque figure. Every cell contains exactly one connected figure with generous transparent gaps. Fully clothed child age proportions and high bun. Sleep entirely horizontal head left, zero alpha outside silhouette no shadows haze or speckles.",
+      "status": "rejected",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: young girl, round face, no beard, large head about 32% of height, simple opaque tunic or chest wrap; wide fur collar and hood shape, cloak hanging past hips, clearly darker than skin and distinct in tone and contour from hair, chest covered; high compact bun on TOP of head, clearly above the head outline, not a ponytail. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. The subject is a fully clothed young girl with opaque clothing covering her chest and hips in ALL poses, no nudity. I-1 supplies ink and watercolor style only. Children have large heads 32% of height. Same clothing in both rows. Arms must connect continuously to shoulders. No curled sleep or hands folded under head. TARGETED RETRY: preserve previous sheet style and correct these measured failures: []. Sleeping arms must stretch BEYOND HEAD leftward adding 25 percent extra silhouette length.\nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: Previous sheet failed grid components because detached axe. Make axe blade handle hands and body visibly touching as one connected opaque figure. Every cell contains exactly one connected figure with generous transparent gaps. Fully clothed child age proportions and high bun. Sleep entirely horizontal head left, zero alpha outside silhouette no shadows haze or speckles.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/child_F_fur_cloak_bun/try1/prompt.txt",
+      "prompt_sha256": "34275e585fe5fe1703590b84ad5d000232fe8f794ab1f956052c9531f9e61ad2",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/child_F_fur_cloak_bun/try1/raw.png",
+      "raw_sha256": "46e582eac5b86dd852bf68743563f1c01cbd824148c77c7db19f61bd7ee9e576",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-d626-7822-830c-0b1cd28f4b6b as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-d626-7822-830c-0b1cd28f4b6b/exec-1d48781f-1c63-42e3-ab3a-589d90a60adf.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 9,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/child_F_fur_cloak_bun/try1",
+      "error": null,
+      "failures": [
+        {
+          "facing": "S",
+          "frame": "sleep",
+          "passed": false,
+          "checks": {
+            "passed": false,
+            "findings": [
+              "normalization: visible extent (45, 39) offset (33, 53) would clip canvas (112, 80); scaled_size=(45, 64), trim_box=(0, 22, 45, 61)"
+            ],
+            "coverage": 0,
+            "component_count": 0,
+            "largest_hole": 0,
+            "contact_ok": false,
+            "sleep_axis_ok": true,
+            "opaque_height": 0,
+            "opaque_width": 0,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/child_F_fur_cloak_bun/try1/judge/panel_04.png",
+            "sha256": "2eba024aa272b038c926ad6371fb573bb07db446b72b80ae77ecc8430f8d5cc1",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.2128844756599661,
+              "saturation_q25": 0.6228926252154986,
+              "saturation_q75": 0.6852137394818711,
+              "stroke_q25": 2.8284271247461903,
+              "stroke_q50": 4.0,
+              "stroke_q75": 4.47213595499958,
+              "stroke_q90": 5.656854249492381,
+              "wash_flatness": 0.031688629615779014,
+              "foreground_pixels": 17911
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": "normalization: visible extent (45, 39) offset (33, 53) would clip canvas (112, 80); scaled_size=(45, 64), trim_box=(0, 22, 45, 61)"
+        }
+      ]
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "attempt": 2,
+      "phase": "gap",
+      "reason": "Last attempt failed sleep due to huge invisible alpha haze. All background pixels MUST have alpha exactly zero including between rows and above sleeping bodies. NO brown gradients, glows, ground, drop shadow, translucent wash outside ink silhouette. Sleep is a clean cutout only, straight horizontal body head LEFT with hands alongside chest, compact top bun. Keep all ten figures within cells with 60px transparent margins; sleep width230 height90. Preserve fully clothed child and connected axe.",
+      "status": "rejected",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: young girl, round face, no beard, large head about 32% of height, simple opaque tunic or chest wrap; wide fur collar and hood shape, cloak hanging past hips, clearly darker than skin and distinct in tone and contour from hair, chest covered; high compact bun on TOP of head, clearly above the head outline, not a ponytail. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. The subject is a fully clothed young girl with opaque clothing covering her chest and hips in ALL poses, no nudity. I-1 supplies ink and watercolor style only. Children have large heads 32% of height. Same clothing in both rows. Arms must connect continuously to shoulders. No curled sleep or hands folded under head. TARGETED RETRY: preserve previous sheet style and correct these measured failures: [].\nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: Last attempt failed sleep due to huge invisible alpha haze. All background pixels MUST have alpha exactly zero including between rows and above sleeping bodies. NO brown gradients, glows, ground, drop shadow, translucent wash outside ink silhouette. Sleep is a clean cutout only, straight horizontal body head LEFT with hands alongside chest, compact top bun. Keep all ten figures within cells with 60px transparent margins; sleep width230 height90. Preserve fully clothed child and connected axe.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/child_F_fur_cloak_bun/try2/prompt.txt",
+      "prompt_sha256": "182f10388cfb5716edd826e977a12bd7453ff87c7c7f912ad93850c97d715ba9",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/child_F_fur_cloak_bun/try2/raw.png",
+      "raw_sha256": "91d7e41f4a7f6eb1bf4eeb36c392b9cb88d521b8b57eb2275389a135f6d3b13b",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-d626-7822-830c-0b1cd28f4b6b as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-d626-7822-830c-0b1cd28f4b6b/exec-aecff506-4584-45f6-a0d4-b0b3e3f29afa.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 9,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/child_F_fur_cloak_bun/try2",
+      "error": null,
+      "failures": [
+        {
+          "facing": "S",
+          "frame": "sleep",
+          "passed": false,
+          "checks": {
+            "passed": false,
+            "findings": [
+              "normalization: visible extent (44, 53) offset (34, 42) would clip canvas (112, 80); scaled_size=(47, 73), trim_box=(3, 20, 47, 73)"
+            ],
+            "coverage": 0,
+            "component_count": 0,
+            "largest_hole": 0,
+            "contact_ok": false,
+            "sleep_axis_ok": true,
+            "opaque_height": 0,
+            "opaque_width": 0,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/child_F_fur_cloak_bun/try2/judge/panel_04.png",
+            "sha256": "5ba32f0da8294bf68ed424cc140db403630c6e1bed75bb1784eb28af86404446",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.22127780138829864,
+              "saturation_q25": 0.5944917053646601,
+              "saturation_q75": 0.658369655273563,
+              "stroke_q25": 2.8284271247461903,
+              "stroke_q50": 4.0,
+              "stroke_q75": 4.0,
+              "stroke_q90": 5.656854249492381,
+              "wash_flatness": 0.0387513786049778,
+              "foreground_pixels": 15348
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": "normalization: visible extent (44, 53) offset (34, 42) would clip canvas (112, 80); scaled_size=(47, 73), trim_box=(3, 20, 47, 73)"
+        }
+      ]
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "attempt": 1,
+      "phase": "gap",
+      "reason": "Prevent watercolor speckles and alpha clipping. Exactly zero alpha outside each crisp continuous silhouette; no ground shadows haze or diffuse watercolor. Sleep horizontal head left and straight with arms close to body. Fully clothed child with big head32percent and long tied hair. All props connected to hands and body; 10 figures in equal separated cells.",
+      "status": "rejected",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: young girl, round face, no beard, large head about 32% of height, simple opaque tunic or chest wrap; wide fur collar and hood shape, cloak hanging past hips, clearly darker than skin and distinct in tone and contour from hair, chest covered; high ponytail standing clearly away from head outline, distinct from cloak. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. The subject is a fully clothed young girl with opaque clothing covering her chest and hips in ALL poses, no nudity. I-1 supplies ink and watercolor style only. Children have large heads 32% of height. Same clothing in both rows. Arms must connect continuously to shoulders. No curled sleep or hands folded under head. TARGETED RETRY: preserve previous sheet style and correct these measured failures: ['coverage: sleep opaque width 41 outside [48,60]'].\nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: Prevent watercolor speckles and alpha clipping. Exactly zero alpha outside each crisp continuous silhouette; no ground shadows haze or diffuse watercolor. Sleep horizontal head left and straight with arms close to body. Fully clothed child with big head32percent and long tied hair. All props connected to hands and body; 10 figures in equal separated cells.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/child_F_fur_cloak_long_tied/try1/prompt.txt",
+      "prompt_sha256": "1fbeab5a2600369bbde759df13596da736aa5f114f2385c584fe6292c930147f",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/child_F_fur_cloak_long_tied/try1/raw.png",
+      "raw_sha256": "597ba17c7cd65b5d3dbb1d411b421ef982674e4725642c3f9f38bd8dd9d7c631",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-d626-7822-830c-0b1cd28f4b6b as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-d626-7822-830c-0b1cd28f4b6b/exec-325619cb-6d92-4745-9a36-b9bcd860e825.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 9,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/child_F_fur_cloak_long_tied/try1",
+      "error": null,
+      "failures": [
+        {
+          "facing": "S",
+          "frame": "sleep",
+          "passed": false,
+          "checks": {
+            "passed": false,
+            "findings": [
+              "normalization: visible extent (43, 52) offset (34, 42) would clip canvas (112, 80); scaled_size=(43, 74), trim_box=(0, 21, 43, 73)"
+            ],
+            "coverage": 0,
+            "component_count": 0,
+            "largest_hole": 0,
+            "contact_ok": false,
+            "sleep_axis_ok": true,
+            "opaque_height": 0,
+            "opaque_width": 0,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/child_F_fur_cloak_long_tied/try1/judge/panel_04.png",
+            "sha256": "9c52925a3f182ed5101c1a0257cac5eb9877844bee566fa5954e23c5f3108c6c",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.21049183907418528,
+              "saturation_q25": 0.5892346083589426,
+              "saturation_q75": 0.6698964518802722,
+              "stroke_q25": 2.8284271247461903,
+              "stroke_q50": 4.0,
+              "stroke_q75": 4.47213595499958,
+              "stroke_q90": 5.656854249492381,
+              "wash_flatness": 0.04113014770478999,
+              "foreground_pixels": 19630
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": "normalization: visible extent (43, 52) offset (34, 42) would clip canvas (112, 80); scaled_size=(43, 74), trim_box=(0, 21, 43, 73)"
+        }
+      ]
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "attempt": 2,
+      "phase": "gap",
+      "reason": "Last attempt failed sleep due to invisible alpha haze. Mandatory pure alpha0 transparent void outside each figure. No diffuse brown ground or shadow gradient. Ink and watercolor confined inside silhouette only. Sleep fully horizontal headleft with arms alongside torso and legs straight. At least70px empty transparent margin above and below sleeping figure. Ponytail clearly tied and child fully clothed. Ten disconnected figures, every tool touching hands.",
+      "status": "accepted",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: young girl, round face, no beard, large head about 32% of height, simple opaque tunic or chest wrap; wide fur collar and hood shape, cloak hanging past hips, clearly darker than skin and distinct in tone and contour from hair, chest covered; high ponytail standing clearly away from head outline, distinct from cloak. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. The subject is a fully clothed young girl with opaque clothing covering her chest and hips in ALL poses, no nudity. I-1 supplies ink and watercolor style only. Children have large heads 32% of height. Same clothing in both rows. Arms must connect continuously to shoulders. No curled sleep or hands folded under head. TARGETED RETRY: preserve previous sheet style and correct these measured failures: ['coverage: sleep opaque width 41 outside [48,60]'].\nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: Last attempt failed sleep due to invisible alpha haze. Mandatory pure alpha0 transparent void outside each figure. No diffuse brown ground or shadow gradient. Ink and watercolor confined inside silhouette only. Sleep fully horizontal headleft with arms alongside torso and legs straight. At least70px empty transparent margin above and below sleeping figure. Ponytail clearly tied and child fully clothed. Ten disconnected figures, every tool touching hands.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/child_F_fur_cloak_long_tied/try2/prompt.txt",
+      "prompt_sha256": "57b5ec2602b20c6f51a4a433872dd13b1835cdb71194ccc7403354c7b5d6aa26",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/child_F_fur_cloak_long_tied/try2/raw.png",
+      "raw_sha256": "753b02817f1ab2ed085480e178a60ddfc8e8fd08c8b661acc6b661a085af59f7",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-d626-7822-830c-0b1cd28f4b6b as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-d626-7822-830c-0b1cd28f4b6b/exec-07dde0f5-0da1-475b-b57b-f968f3df69da.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 10,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/child_F_fur_cloak_long_tied/try2",
+      "error": null,
+      "failures": []
+    },
+    {
+      "look": "child_F_fur_cloak_short",
+      "attempt": 1,
+      "phase": "gap",
+      "reason": "Critical: each cell must have completely empty transparent background alpha0. No diffuse brown ground or shadow or haze of any kind. Clean hard ink edge. Sleep figures fully horizontal HEAD LEFT at centers x1382 y256 and y768, each only 230px long 90px tall; keep all 10 figures separate well inside equal 307x512px cells. Fully clothed bigheaded child short cropped hair distinct from fur collar.",
+      "status": "rejected",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: young girl, round face, no beard, large head about 32% of height, simple opaque tunic or chest wrap; wide fur collar and hood shape, cloak hanging past hips, clearly darker than skin and distinct in tone and contour from hair, chest covered; hair cropped close to skull, clean rounded silhouette. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. The subject is a fully clothed young girl with opaque clothing covering her chest and hips in ALL poses, no nudity. I-1 supplies ink and watercolor style only. Children have large heads 32% of height. Same clothing in both rows. Arms must connect continuously to shoulders. No curled sleep or hands folded under head. TARGETED RETRY: preserve previous sheet style and correct these measured failures: [].\nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: Critical: each cell must have completely empty transparent background alpha0. No diffuse brown ground or shadow or haze of any kind. Clean hard ink edge. Sleep figures fully horizontal HEAD LEFT at centers x1382 y256 and y768, each only 230px long 90px tall; keep all 10 figures separate well inside equal 307x512px cells. Fully clothed bigheaded child short cropped hair distinct from fur collar.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/child_F_fur_cloak_short/try1/prompt.txt",
+      "prompt_sha256": "ed05951bc7c3c711b0f06b9d79bcd7865c7751b25764f887f6595379b2416310",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/child_F_fur_cloak_short/try1/raw.png",
+      "raw_sha256": "275f76f70b4f5c6e7495291680f11fd499b16fd22acacb4a233fe786ca8d6018",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-d626-7822-830c-0b1cd28f4b6b as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-d626-7822-830c-0b1cd28f4b6b/exec-e056b84b-e193-4301-a2e6-a1a73f6ddade.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 9,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/child_F_fur_cloak_short/try1",
+      "error": null,
+      "failures": [
+        {
+          "facing": "S",
+          "frame": "sleep",
+          "passed": false,
+          "checks": {
+            "passed": false,
+            "findings": [
+              "normalization: visible extent (43, 56) offset (34, 40) would clip canvas (112, 80); scaled_size=(43, 72), trim_box=(0, 16, 43, 72)"
+            ],
+            "coverage": 0,
+            "component_count": 0,
+            "largest_hole": 0,
+            "contact_ok": false,
+            "sleep_axis_ok": true,
+            "opaque_height": 0,
+            "opaque_width": 0,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/child_F_fur_cloak_short/try1/judge/panel_04.png",
+            "sha256": "57de99633d522ac83c4b7103f1b060402daecafc147a827abf34991cab102a5a",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.20698805838124723,
+              "saturation_q25": 0.6070428824610808,
+              "saturation_q75": 0.6915883466334976,
+              "stroke_q25": 2.8284271247461903,
+              "stroke_q50": 4.0,
+              "stroke_q75": 4.0,
+              "stroke_q90": 5.656854249492381,
+              "wash_flatness": 0.04403536769259823,
+              "foreground_pixels": 16994
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": "normalization: visible extent (43, 56) offset (34, 40) would clip canvas (112, 80); scaled_size=(43, 72), trim_box=(0, 16, 43, 72)"
+        }
+      ]
+    },
+    {
+      "look": "child_F_fur_cloak_short",
+      "attempt": 2,
+      "phase": "gap",
+      "reason": "Sleep normalization failed because alpha haze outside figure. Mandatory background alpha exactly0 everywhere, no brown gradient, drop shadow, ground, translucent watercolor bleed, speckles. Transparent sprite cutouts only. Sleep horizontal headleft straight with hands against chest; short cropped hair; all figures fully clothed children. Every panel separate with 60px transparent margin. All props continuously connected.",
+      "status": "rejected",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: young girl, round face, no beard, large head about 32% of height, simple opaque tunic or chest wrap; wide fur collar and hood shape, cloak hanging past hips, clearly darker than skin and distinct in tone and contour from hair, chest covered; hair cropped close to skull, clean rounded silhouette. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. The subject is a fully clothed young girl with opaque clothing covering her chest and hips in ALL poses, no nudity. I-1 supplies ink and watercolor style only. Children have large heads 32% of height. Same clothing in both rows. Arms must connect continuously to shoulders. No curled sleep or hands folded under head. TARGETED RETRY: preserve previous sheet style and correct these measured failures: [].\nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: Sleep normalization failed because alpha haze outside figure. Mandatory background alpha exactly0 everywhere, no brown gradient, drop shadow, ground, translucent watercolor bleed, speckles. Transparent sprite cutouts only. Sleep horizontal headleft straight with hands against chest; short cropped hair; all figures fully clothed children. Every panel separate with 60px transparent margin. All props continuously connected.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/child_F_fur_cloak_short/try2/prompt.txt",
+      "prompt_sha256": "362041b0e64c6f78041f8d1aff287352f2cfbb75c1882b4556501380ef9b9da5",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/child_F_fur_cloak_short/try2/raw.png",
+      "raw_sha256": "eb890d203ea602d40ac0c54d25b4eac488d5760b9e96480bf25a5951e8523928",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-d626-7822-830c-0b1cd28f4b6b as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-d626-7822-830c-0b1cd28f4b6b/exec-d98160a5-ccf0-4794-b3c9-7dbefd808ae5.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 9,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/child_F_fur_cloak_short/try2",
+      "error": null,
+      "failures": [
+        {
+          "facing": "S",
+          "frame": "sleep",
+          "passed": false,
+          "checks": {
+            "passed": false,
+            "findings": [
+              "normalization: visible extent (43, 38) offset (34, 58) would clip canvas (112, 80); scaled_size=(43, 69), trim_box=(0, 31, 43, 69)"
+            ],
+            "coverage": 0,
+            "component_count": 0,
+            "largest_hole": 0,
+            "contact_ok": false,
+            "sleep_axis_ok": true,
+            "opaque_height": 0,
+            "opaque_width": 0,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/child_F_fur_cloak_short/try2/judge/panel_04.png",
+            "sha256": "0052e307558b4ea4702dcd57e5cbbf6dd63e23235aa5581ccd2834aa060ea787",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.21338120104438643,
+              "saturation_q25": 0.5488287243056402,
+              "saturation_q75": 0.6354294986318176,
+              "stroke_q25": 2.8284271247461903,
+              "stroke_q50": 4.0,
+              "stroke_q75": 4.0,
+              "stroke_q90": 5.656854249492381,
+              "wash_flatness": 0.04804363887045015,
+              "foreground_pixels": 16546
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": "normalization: visible extent (43, 38) offset (34, 58) would clip canvas (112, 80); scaled_size=(43, 69), trim_box=(0, 31, 43, 69)"
+        }
+      ]
+    },
+    {
+      "look": "child_F_loincloth_bun",
+      "attempt": 1,
+      "phase": "gap",
+      "reason": "Make genuinely zero-alpha outside every silhouette. No shadows, haze, scattered watercolor speckles or ground marks. Sleep perfectly horizontal, head left, compact natural limbs. Fully clothed child with opaque chestband and skirt, no nudity; youthful big head and bun. Controlled thin but visible ink contour. Exact 1536x1024 sheet, two rows and five columns.",
+      "status": "rejected",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: young girl, round face, no beard, large head about 32% of height, simple opaque tunic or chest wrap; opaque loincloth and bare upper torso for adult male; adult female wears opaque chest band plus skirt; child wears opaque chest band plus skirt; high compact bun on TOP of head, clearly above the head outline, not a ponytail. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. The subject is a fully clothed young girl with opaque clothing covering her chest and hips in ALL poses, no nudity. I-1 supplies ink and watercolor style only. Children have large heads 32% of height. Same clothing in both rows. Arms must connect continuously to shoulders. No curled sleep or hands folded under head. TARGETED RETRY: preserve previous sheet style and correct these measured failures: ['coverage: sleep opaque width 41 outside [48,60]']. Sleeping arms must stretch BEYOND HEAD leftward adding 25 percent extra silhouette length.\nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: Make genuinely zero-alpha outside every silhouette. No shadows, haze, scattered watercolor speckles or ground marks. Sleep perfectly horizontal, head left, compact natural limbs. Fully clothed child with opaque chestband and skirt, no nudity; youthful big head and bun. Controlled thin but visible ink contour. Exact 1536x1024 sheet, two rows and five columns.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/child_F_loincloth_bun/try1/prompt.txt",
+      "prompt_sha256": "b6ae144a632387b554ed3878cfed022bcbea78e0f8a92b761038145813c78528",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/child_F_loincloth_bun/try1/raw.png",
+      "raw_sha256": "43b948a7912ca62eb080859ae09b100118b4becfb7ef4bd6dde612f18f34b8bd",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-f68e-73e3-8713-0e15c8d89836 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-f68e-73e3-8713-0e15c8d89836/exec-b09b9cbf-9971-405c-a76e-fb723a6fc56d.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 9,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/child_F_loincloth_bun/try1",
+      "error": null,
+      "failures": [
+        {
+          "facing": "E",
+          "frame": "idle",
+          "passed": false,
+          "checks": {
+            "passed": true,
+            "findings": [],
+            "coverage": 0.040736607142857144,
+            "component_count": 1,
+            "largest_hole": 0,
+            "contact_ok": true,
+            "sleep_axis_ok": true,
+            "opaque_height": 40,
+            "opaque_width": 14,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/child_F_loincloth_bun/try1/judge/panel_05.png",
+            "sha256": "7024ff5034f3352c35f845a9d56d356083260c281f55d1f935f623b61d45731e",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.18705467636690917,
+              "saturation_q25": 0.5805371566843825,
+              "saturation_q75": 0.6560758267457903,
+              "stroke_q25": 4.0,
+              "stroke_q50": 4.0,
+              "stroke_q75": 4.47213595499958,
+              "stroke_q90": 5.656854249492381,
+              "wash_flatness": 0.046711479536835236,
+              "foreground_pixels": 14958
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": false,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": false,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": null
+        }
+      ]
+    },
+    {
+      "look": "child_F_loincloth_bun",
+      "attempt": 2,
+      "phase": "gap",
+      "reason": "Prior E idle alone failed stroke_q25 at 4.0: use finer clean brown-black ink contour, especially right-facing standing idle, without heavy thick outline. Preserve clean transparent cutouts. No haze shadow speckles. Natural horizontal sleep head left, arms beside body. Child fully clothed opaque chestband and skirt; youthful big head and high compact bun. Exact 1536x1024 two rows five columns.",
+      "status": "rejected",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: young girl, round face, no beard, large head about 32% of height, simple opaque tunic or chest wrap; opaque loincloth and bare upper torso for adult male; adult female wears opaque chest band plus skirt; child wears opaque chest band plus skirt; high compact bun on TOP of head, clearly above the head outline, not a ponytail. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. The subject is a fully clothed young girl with opaque clothing covering her chest and hips in ALL poses, no nudity. I-1 supplies ink and watercolor style only. Children have large heads 32% of height. Same clothing in both rows. Arms must connect continuously to shoulders. No curled sleep or hands folded under head. TARGETED RETRY: preserve previous sheet style and correct these measured failures: ['coverage: sleep opaque width 41 outside [48,60]'].\nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: Prior E idle alone failed stroke_q25 at 4.0: use finer clean brown-black ink contour, especially right-facing standing idle, without heavy thick outline. Preserve clean transparent cutouts. No haze shadow speckles. Natural horizontal sleep head left, arms beside body. Child fully clothed opaque chestband and skirt; youthful big head and high compact bun. Exact 1536x1024 two rows five columns.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/child_F_loincloth_bun/try2/prompt.txt",
+      "prompt_sha256": "7853353ebb1950bf5b14381fc844bcecd06c30f355115b91b27942f1cca78193",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/child_F_loincloth_bun/try2/raw.png",
+      "raw_sha256": "695d562e719ba5586a54f9376531be856076b69b1cd704edd9381e13511af52c",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-f68e-73e3-8713-0e15c8d89836 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-f68e-73e3-8713-0e15c8d89836/exec-8cf3f92e-73f3-4d34-96b0-a60a35cb5738.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 9,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/child_F_loincloth_bun/try2",
+      "error": null,
+      "failures": [
+        {
+          "facing": "S",
+          "frame": "sleep",
+          "passed": false,
+          "checks": {
+            "passed": false,
+            "findings": [
+              "normalization: visible extent (43, 49) offset (34, 47) would clip canvas (112, 80); scaled_size=(46, 68), trim_box=(3, 19, 46, 68)"
+            ],
+            "coverage": 0,
+            "component_count": 0,
+            "largest_hole": 0,
+            "contact_ok": false,
+            "sleep_axis_ok": true,
+            "opaque_height": 0,
+            "opaque_width": 0,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/child_F_loincloth_bun/try2/judge/panel_04.png",
+            "sha256": "626b4352485391c1428ee4f6ce3474b6030fc168f5f85c0d9dec1e1827f973d1",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.19669006151979898,
+              "saturation_q25": 0.5700013975339024,
+              "saturation_q75": 0.6415769357541712,
+              "stroke_q25": 2.8284271247461903,
+              "stroke_q50": 4.0,
+              "stroke_q75": 4.47213595499958,
+              "stroke_q90": 5.656854249492381,
+              "wash_flatness": 0.040391416566339995,
+              "foreground_pixels": 12708
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": "normalization: visible extent (43, 49) offset (34, 47) would clip canvas (112, 80); scaled_size=(46, 68), trim_box=(3, 19, 46, 68)"
+        }
+      ]
+    },
+    {
+      "look": "child_F_loincloth_long_tied",
+      "attempt": 1,
+      "phase": "gap",
+      "reason": "Genuinely zero alpha outside every silhouette, no shadow haze speckles. Sleep horizontal head left, arms naturally beside body. Fully clothed child opaque chestband and skirt, youthful big head, clearly visible long tied hair. Fine controlled ink outlines without thick heavy stroke. Exact 1536x1024 two rows five columns.",
+      "status": "rejected",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: young girl, round face, no beard, large head about 32% of height, simple opaque tunic or chest wrap; opaque loincloth and bare upper torso for adult male; adult female wears opaque chest band plus skirt; child wears opaque chest band plus skirt; high ponytail standing clearly away from head outline, distinct from cloak. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. The subject is a fully clothed young girl with opaque clothing covering her chest and hips in ALL poses, no nudity. I-1 supplies ink and watercolor style only. Children have large heads 32% of height. Same clothing in both rows. Arms must connect continuously to shoulders. No curled sleep or hands folded under head. TARGETED RETRY: preserve previous sheet style and correct these measured failures: ['coverage: sleep opaque width 35 outside [48,60]'].\nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: Genuinely zero alpha outside every silhouette, no shadow haze speckles. Sleep horizontal head left, arms naturally beside body. Fully clothed child opaque chestband and skirt, youthful big head, clearly visible long tied hair. Fine controlled ink outlines without thick heavy stroke. Exact 1536x1024 two rows five columns.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/child_F_loincloth_long_tied/try1/prompt.txt",
+      "prompt_sha256": "f6e38d7d7cdee898438139129638200e03a7fe0649ca588a90a035ac50173cd8",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/child_F_loincloth_long_tied/try1/raw.png",
+      "raw_sha256": "d588f75733efa5303cf587b5e23553b8844d0021ba0880697f0f2a2201454c5e",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-f68e-73e3-8713-0e15c8d89836 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-f68e-73e3-8713-0e15c8d89836/exec-ec1c79a3-9b70-407a-b10e-47422f31024a.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 9,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/child_F_loincloth_long_tied/try1",
+      "error": null,
+      "failures": [
+        {
+          "facing": "S",
+          "frame": "sleep",
+          "passed": false,
+          "checks": {
+            "passed": false,
+            "findings": [
+              "normalization: visible extent (42, 48) offset (35, 48) would clip canvas (112, 80); scaled_size=(42, 57), trim_box=(0, 8, 42, 56)"
+            ],
+            "coverage": 0,
+            "component_count": 0,
+            "largest_hole": 0,
+            "contact_ok": false,
+            "sleep_axis_ok": true,
+            "opaque_height": 0,
+            "opaque_width": 0,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/child_F_loincloth_long_tied/try1/judge/panel_04.png",
+            "sha256": "469ebc360c72271034fec1afe5631afa65611514edf5d90ab040e9daf2a269ea",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.21139260932709375,
+              "saturation_q25": 0.6162877078743357,
+              "saturation_q75": 0.6950422831950605,
+              "stroke_q25": 2.8284271247461903,
+              "stroke_q50": 4.0,
+              "stroke_q75": 4.0,
+              "stroke_q90": 4.47213595499958,
+              "wash_flatness": 0.03442952672887133,
+              "foreground_pixels": 13678
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": "normalization: visible extent (42, 48) offset (35, 48) would clip canvas (112, 80); scaled_size=(42, 57), trim_box=(0, 8, 42, 56)"
+        }
+      ]
+    },
+    {
+      "look": "child_F_loincloth_long_tied",
+      "attempt": 2,
+      "phase": "gap",
+      "reason": "Critical previous failure: S sleep had faint alpha outside its body making tall bbox. Make both sleep panels a completely clean compact horizontal cutout with ABSOLUTELY ZERO alpha outside silhouette. No grain/speckles/halos/shadows/background wash. Watercolor texture only INSIDE opaque body. Sleep head left feet right arms close beside body, not stretched. All figures fully clothed young child chestband and skirt, large head, long tied hair. Exact 1536x1024 two rows five columns.",
+      "status": "rejected",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: young girl, round face, no beard, large head about 32% of height, simple opaque tunic or chest wrap; opaque loincloth and bare upper torso for adult male; adult female wears opaque chest band plus skirt; child wears opaque chest band plus skirt; high ponytail standing clearly away from head outline, distinct from cloak. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. The subject is a fully clothed young girl with opaque clothing covering her chest and hips in ALL poses, no nudity. I-1 supplies ink and watercolor style only. Children have large heads 32% of height. Same clothing in both rows. Arms must connect continuously to shoulders. No curled sleep or hands folded under head. TARGETED RETRY: preserve previous sheet style and correct these measured failures: ['coverage: sleep opaque width 35 outside [48,60]'].\nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: Critical previous failure: S sleep had faint alpha outside its body making tall bbox. Make both sleep panels a completely clean compact horizontal cutout with ABSOLUTELY ZERO alpha outside silhouette. No grain/speckles/halos/shadows/background wash. Watercolor texture only INSIDE opaque body. Sleep head left feet right arms close beside body, not stretched. All figures fully clothed young child chestband and skirt, large head, long tied hair. Exact 1536x1024 two rows five columns.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/child_F_loincloth_long_tied/try2/prompt.txt",
+      "prompt_sha256": "398c6050da35503ff784b378304e2441a1b59c2efe1d0fca036a70312517c2b9",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/child_F_loincloth_long_tied/try2/raw.png",
+      "raw_sha256": "9631e4be783e1943f2bb973526c85bacf925d7cd6017559441ec9d4838bb7cd2",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-f68e-73e3-8713-0e15c8d89836 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-f68e-73e3-8713-0e15c8d89836/exec-85ae7597-4d62-4b84-b676-09374da63769.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 9,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/child_F_loincloth_long_tied/try2",
+      "error": null,
+      "failures": [
+        {
+          "facing": "S",
+          "frame": "sleep",
+          "passed": false,
+          "checks": {
+            "passed": false,
+            "findings": [
+              "normalization: visible extent (43, 43) offset (34, 53) would clip canvas (112, 80); scaled_size=(43, 60), trim_box=(0, 17, 43, 60)"
+            ],
+            "coverage": 0,
+            "component_count": 0,
+            "largest_hole": 0,
+            "contact_ok": false,
+            "sleep_axis_ok": true,
+            "opaque_height": 0,
+            "opaque_width": 0,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/child_F_loincloth_long_tied/try2/judge/panel_04.png",
+            "sha256": "0e44fd704879adffd9275cd1847501893aa061ebb0f7a4fdff09149bf5fde19d",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.20632362058276504,
+              "saturation_q25": 0.62908875012439,
+              "saturation_q75": 0.6965249694990996,
+              "stroke_q25": 2.8284271247461903,
+              "stroke_q50": 4.0,
+              "stroke_q75": 4.47213595499958,
+              "stroke_q90": 5.656854249492381,
+              "wash_flatness": 0.04328186835298692,
+              "foreground_pixels": 17582
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": "normalization: visible extent (43, 43) offset (34, 53) would clip canvas (112, 80); scaled_size=(43, 60), trim_box=(0, 17, 43, 60)"
+        }
+      ]
+    },
+    {
+      "look": "child_F_loincloth_short",
+      "attempt": 1,
+      "phase": "gap",
+      "reason": "Critical clean-alpha requirement: ABSOLUTELY ZERO alpha outside silhouette, including both horizontal head-left sleep panels. No grain speckles halos shadows or background wash. Watercolor only INSIDE opaque body. Sleep straight side-lying, arms close to body. Young fully clothed child opaque chestband and skirt, large head, short hair. Fine controlled ink not thick outlines. Exact 1536x1024 two rows five columns.",
+      "status": "rejected",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: young girl, round face, no beard, large head about 32% of height, simple opaque tunic or chest wrap; opaque loincloth and bare upper torso for adult male; adult female wears opaque chest band plus skirt; child wears opaque chest band plus skirt; hair cropped close to skull, clean rounded silhouette. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. The subject is a fully clothed young girl with opaque clothing covering her chest and hips in ALL poses, no nudity. I-1 supplies ink and watercolor style only. Children have large heads 32% of height. Same clothing in both rows. Arms must connect continuously to shoulders. No curled sleep or hands folded under head. TARGETED RETRY: preserve previous sheet style and correct these measured failures: ['coverage: sleep opaque width 47 outside [48,60]', 'coverage: sleep opaque width 46 outside [48,60]'].\nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: Critical clean-alpha requirement: ABSOLUTELY ZERO alpha outside silhouette, including both horizontal head-left sleep panels. No grain speckles halos shadows or background wash. Watercolor only INSIDE opaque body. Sleep straight side-lying, arms close to body. Young fully clothed child opaque chestband and skirt, large head, short hair. Fine controlled ink not thick outlines. Exact 1536x1024 two rows five columns.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/child_F_loincloth_short/try1/prompt.txt",
+      "prompt_sha256": "a2e9b0e19d115eb0709558b2c91cf8163217c3b399bb939177c2a89a7fbadd4e",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/child_F_loincloth_short/try1/raw.png",
+      "raw_sha256": "7064bdbb538e513227373ba576cefe33bbed88fa6029f3aa83614c509c7f935d",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-f68e-73e3-8713-0e15c8d89836 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-f68e-73e3-8713-0e15c8d89836/exec-17719a56-df5b-4ad2-8925-b0af82aa301d.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 9,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/child_F_loincloth_short/try1",
+      "error": null,
+      "failures": [
+        {
+          "facing": "S",
+          "frame": "sleep",
+          "passed": false,
+          "checks": {
+            "passed": false,
+            "findings": [
+              "normalization: visible extent (43, 44) offset (34, 49) would clip canvas (112, 80); scaled_size=(47, 60), trim_box=(4, 14, 47, 58)"
+            ],
+            "coverage": 0,
+            "component_count": 0,
+            "largest_hole": 0,
+            "contact_ok": false,
+            "sleep_axis_ok": true,
+            "opaque_height": 0,
+            "opaque_width": 0,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/child_F_loincloth_short/try1/judge/panel_04.png",
+            "sha256": "3b0a55bbcf3d40964110fe9657ad4fd30b259b5b00c49f3a9b0cdfaf0dbcc879",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.2014555077737347,
+              "saturation_q25": 0.6380207240584165,
+              "saturation_q75": 0.7129229375829871,
+              "stroke_q25": 2.8284271247461903,
+              "stroke_q50": 4.0,
+              "stroke_q75": 4.0,
+              "stroke_q90": 4.47213595499958,
+              "wash_flatness": 0.029963729408964714,
+              "foreground_pixels": 13250
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": "normalization: visible extent (43, 44) offset (34, 49) would clip canvas (112, 80); scaled_size=(47, 60), trim_box=(4, 14, 47, 58)"
+        }
+      ]
+    },
+    {
+      "look": "child_F_loincloth_short",
+      "attempt": 2,
+      "phase": "gap",
+      "reason": "Previous output incorrectly added brown glowing gradient across background. Entire canvas outside the ten figures must be EMPTY TRANSPARENT pixels, including no brown glow or atmospheric watercolor wash. Style reference supplies only figure pigment; discard ALL its surrounding shadow. Natural sleeping child horizontal head left, compact arms. Fully clothed chestband skirt. Exact 1536x1024 TWO rows FIVE columns. No background colors, no vignette, no lighting glow, no haze.",
+      "status": "rejected",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: young girl, round face, no beard, large head about 32% of height, simple opaque tunic or chest wrap; opaque loincloth and bare upper torso for adult male; adult female wears opaque chest band plus skirt; child wears opaque chest band plus skirt; hair cropped close to skull, clean rounded silhouette. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. The subject is a fully clothed young girl with opaque clothing covering her chest and hips in ALL poses, no nudity. I-1 supplies ink and watercolor style only. Children have large heads 32% of height. Same clothing in both rows. Arms must connect continuously to shoulders. No curled sleep or hands folded under head. TARGETED RETRY: preserve previous sheet style and correct these measured failures: ['coverage: sleep opaque width 47 outside [48,60]', 'coverage: sleep opaque width 46 outside [48,60]'].\nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: Previous output incorrectly added brown glowing gradient across background. Entire canvas outside the ten figures must be EMPTY TRANSPARENT pixels, including no brown glow or atmospheric watercolor wash. Style reference supplies only figure pigment; discard ALL its surrounding shadow. Natural sleeping child horizontal head left, compact arms. Fully clothed chestband skirt. Exact 1536x1024 TWO rows FIVE columns. No background colors, no vignette, no lighting glow, no haze.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/child_F_loincloth_short/try2/prompt.txt",
+      "prompt_sha256": "fd92e5440294844886d09d87181f68f27d26186745a9dc9600b2b484d87305d3",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/child_F_loincloth_short/try2/raw.png",
+      "raw_sha256": "ff4baedbda5a6016e1d884621e7d7b5be16a5e706d14ec78bc20755adc6b26b8",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-f68e-73e3-8713-0e15c8d89836 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-f68e-73e3-8713-0e15c8d89836/exec-fbc8a7b8-14ba-431a-9902-e0a3d995ece5.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 9,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/child_F_loincloth_short/try2",
+      "error": null,
+      "failures": [
+        {
+          "facing": "S",
+          "frame": "sleep",
+          "passed": false,
+          "checks": {
+            "passed": false,
+            "findings": [
+              "normalization: visible extent (43, 38) offset (34, 57) would clip canvas (112, 80); scaled_size=(48, 58), trim_box=(5, 19, 48, 57)"
+            ],
+            "coverage": 0,
+            "component_count": 0,
+            "largest_hole": 0,
+            "contact_ok": false,
+            "sleep_axis_ok": true,
+            "opaque_height": 0,
+            "opaque_width": 0,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/child_F_loincloth_short/try2/judge/panel_04.png",
+            "sha256": "5e67deaa39b945306e7c1d126ca2df29928dfb045358affa1cc64d62f746927a",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.19762875138940347,
+              "saturation_q25": 0.6494011069891674,
+              "saturation_q75": 0.710658899132717,
+              "stroke_q25": 2.8284271247461903,
+              "stroke_q50": 4.0,
+              "stroke_q75": 4.47213595499958,
+              "stroke_q90": 6.0,
+              "wash_flatness": 0.036377088477653315,
+              "foreground_pixels": 14688
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": "normalization: visible extent (43, 38) offset (34, 57) would clip canvas (112, 80); scaled_size=(48, 58), trim_box=(5, 19, 48, 57)"
+        }
+      ]
+    },
+    {
+      "look": "child_M_loincloth_long_tied",
+      "attempt": 1,
+      "phase": "gap",
+      "reason": "Controlled consistent fine but visible ink contour, particularly E idle; avoid heavy thick contours. Entire canvas outside ten figures EMPTY TRANSPARENT pixels. No brown gradient, glow, haze, shadows or speckles. Reference only pigment style. Fully clothed young child wears opaque chestband and skirt in ALL poses; large head and long tied hair. Sleep horizontal head left with arms beside body. Exact 1536x1024 TWO rows FIVE columns.",
+      "status": "rejected",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: young boy, round face, no beard, large head about 32% of height, simple opaque tunic or chest wrap; opaque modest chest band plus knee-length skirt securely covers the child's chest and hips; high ponytail standing clearly away from head outline, distinct from cloak. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. Targeted correction from failed previous sheet: [[\"S\",\"sleep\",[\"coverage: sleep opaque width 39 outside [48,60]\"],null,{\"edge_density\":true,\"saturation_q25\":true,\"saturation_q75\":true,\"stroke_q25\":true,\"stroke_q50\":true,\"stroke_q75\":true,\"stroke_q90\":true,\"wash_flatness\":true}],[\"E\",\"idle\",[],null,{\"edge_density\":true,\"saturation_q25\":true,\"saturation_q75\":true,\"stroke_q25\":false,\"stroke_q50\":true,\"stroke_q75\":true,\"stroke_q90\":true,\"wash_flatness\":true}],[\"E\",\"sleep\",[\"coverage: sleep opaque width 38 outside [48,60]\"],null,{\"edge_density\":true,\"saturation_q25\":true,\"saturation_q75\":true,\"stroke_q25\":true,\"stroke_q50\":true,\"stroke_q75\":true,\"stroke_q90\":true,\"wash_flatness\":true}]]. No beard; child proportions essential. Keep clear cell separation. First image style reference; second previous layout reference only.\nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: Controlled consistent fine but visible ink contour, particularly E idle; avoid heavy thick contours. Entire canvas outside ten figures EMPTY TRANSPARENT pixels. No brown gradient, glow, haze, shadows or speckles. Reference only pigment style. Fully clothed young child wears opaque chestband and skirt in ALL poses; large head and long tied hair. Sleep horizontal head left with arms beside body. Exact 1536x1024 TWO rows FIVE columns.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/child_M_loincloth_long_tied/try1/prompt.txt",
+      "prompt_sha256": "a48f2d12cb437f54d1723897400a073ccf611cdbce3b0ae7a8e7bfe065c44e2d",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/child_M_loincloth_long_tied/try1/raw.png",
+      "raw_sha256": "859ab463b958dd356d0decef50d1af30697b481f462b2bffc9df374725aea582",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-f68e-73e3-8713-0e15c8d89836 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-f68e-73e3-8713-0e15c8d89836/exec-61fe085c-b84d-43c8-8582-d141d8f48bb4.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 9,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/child_M_loincloth_long_tied/try1",
+      "error": null,
+      "failures": [
+        {
+          "facing": "S",
+          "frame": "sleep",
+          "passed": false,
+          "checks": {
+            "passed": false,
+            "findings": [
+              "normalization: visible extent (43, 45) offset (34, 45) would clip canvas (112, 80); scaled_size=(44, 54), trim_box=(1, 2, 44, 47)"
+            ],
+            "coverage": 0,
+            "component_count": 0,
+            "largest_hole": 0,
+            "contact_ok": false,
+            "sleep_axis_ok": true,
+            "opaque_height": 0,
+            "opaque_width": 0,
+            "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+            "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+          },
+          "judge": {
+            "candidate": "/Users/rexxa/work/artprod2-data/new-production/child_M_loincloth_long_tied/try1/judge/panel_04.png",
+            "sha256": "660c02b037084a54846ff9c62f688b0f5e28802e67d7c5dd650014946b7b937e",
+            "family": "person",
+            "metrics": {
+              "edge_density": 0.20987218416778475,
+              "saturation_q25": 0.5872368913736731,
+              "saturation_q75": 0.6855231115003397,
+              "stroke_q25": 2.8284271247461903,
+              "stroke_q50": 4.0,
+              "stroke_q75": 4.47213595499958,
+              "stroke_q90": 5.656854249492381,
+              "wash_flatness": 0.04167418240499959,
+              "foreground_pixels": 15423
+            },
+            "numeric_checks": {
+              "edge_density": true,
+              "saturation_q25": true,
+              "saturation_q75": true,
+              "stroke_q25": true,
+              "stroke_q50": true,
+              "stroke_q75": true,
+              "stroke_q90": true,
+              "wash_flatness": true
+            },
+            "numeric_pass": true,
+            "model_scores": null,
+            "model_status": "MISSING",
+            "passed": false
+          },
+          "error": "normalization: visible extent (43, 45) offset (34, 45) would clip canvas (112, 80); scaled_size=(44, 54), trim_box=(1, 2, 44, 47)"
+        }
+      ]
+    },
+    {
+      "look": "child_M_loincloth_long_tied",
+      "attempt": 2,
+      "phase": "gap",
+      "reason": "Last output failed S sleep because background haze inflated alpha bounds. Make isolated sticker-like cutouts with perfectly clean transparent emptiness. NO ambient brown glow, NO faint tint, NO vignette, NO semitransparent backdrop, NO drop shadow. Only figure interiors have watercolor texture. All ten poses fully clothed child chestband and skirt, big head, long tied hair; fine visible ink. Both sleepers strictly horizontal head left, limbs compact. Exact 1536x1024 two rows five columns.",
+      "status": "accepted",
+      "prompt": "Create one 1536x1024 truly transparent RGBA character sprite sheet. Exactly TEN separate whole figures in TWO rows of FIVE, equal cell spacing, generous transparent gaps. Reference I-1 is the visual style and character proportion reference: fine controlled brown-black ink, stronger outer contour, restrained warm earth watercolor washes, upper-left light, simple readable forms. No text, borders, ground plane, backdrop, cast shadow, detached objects, pixel art, 3D render, dense hatching or extra figures. Subject in all ten cells: young boy, round face, no beard, large head about 32% of height, simple opaque tunic or chest wrap; opaque modest chest band plus knee-length skirt securely covers the child's chest and hips; high ponytail standing clearly away from head outline, distinct from cloak. Both rows depict exactly the SAME person, same garments and hair and build. Row 1 faces S(front three-quarter seen 20 degrees above); row 2 faces E(the SAME person turned 90 degrees to viewer right). Columns in EACH row:1 standing idle,2 mid-stride walking,3 two-hand stone axe raised in a swing,4 log bundle across shoulders,5 lying asleep on side HEAD LEFT. Axe head as big as person head; log bundle wider than shoulders. Props must touch hands/body, connected silhouette. Entire raised axe and logs fit within their cells. Strong readable hair, clothing and sex/age silhouettes at 56px adult or 40px child standing height. Fully visible head and toes, no overlap between people. Targeted correction from failed previous sheet: [[\"S\",\"sleep\",[\"coverage: sleep opaque width 39 outside [48,60]\"],null,{\"edge_density\":true,\"saturation_q25\":true,\"saturation_q75\":true,\"stroke_q25\":true,\"stroke_q50\":true,\"stroke_q75\":true,\"stroke_q90\":true,\"wash_flatness\":true}],[\"E\",\"idle\",[],null,{\"edge_density\":true,\"saturation_q25\":true,\"saturation_q75\":true,\"stroke_q25\":false,\"stroke_q50\":true,\"stroke_q75\":true,\"stroke_q90\":true,\"wash_flatness\":true}],[\"E\",\"sleep\",[\"coverage: sleep opaque width 38 outside [48,60]\"],null,{\"edge_density\":true,\"saturation_q25\":true,\"saturation_q75\":true,\"stroke_q25\":true,\"stroke_q50\":true,\"stroke_q75\":true,\"stroke_q90\":true,\"wash_flatness\":true}]]. No beard; child proportions essential. Keep clear cell separation. First image style reference; second previous layout reference only.\nPROD2 correction: retain a natural straight lying body, head left, no exaggerated arm stretching. Sleep has its own uniform scale: opaque bbox long axis becomes 56px adult or 40px child. Adult sleep length52-60 height<=36; child length37-43 height<=28. Idle/walk/work/carry retain the common S-idle scale. Both facings must show the same identity, apparel and hair. I-1 supplies ink/watercolor style only. Targeted correction: Last output failed S sleep because background haze inflated alpha bounds. Make isolated sticker-like cutouts with perfectly clean transparent emptiness. NO ambient brown glow, NO faint tint, NO vignette, NO semitransparent backdrop, NO drop shadow. Only figure interiors have watercolor texture. All ten poses fully clothed child chestband and skirt, big head, long tied hair; fine visible ink. Both sleepers strictly horizontal head left, limbs compact. Exact 1536x1024 two rows five columns.\n",
+      "prompt_path": "/Users/rexxa/work/artprod2-data/generation/child_M_loincloth_long_tied/try2/prompt.txt",
+      "prompt_sha256": "d650534635c9159430422335816b22af787adde028b0157464b8da0f8ff0dde7",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/candidates/I-1.png",
+          "sha256": "e49180d144b97732d1e8e8ebfcc5a8ac7cff7c8f7f102afaaeec8af9a76974cc"
+        }
+      ],
+      "raw": "/Users/rexxa/work/artprod2-data/generation/child_M_loincloth_long_tied/try2/raw.png",
+      "raw_sha256": "46488a125dea77312bb70ee2bef9e116b677d05414cdaff3d0e351eb7a0ed785",
+      "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-f68e-73e3-8713-0e15c8d89836 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16602-f68e-73e3-8713-0e15c8d89836/exec-c2f91b4b-5b0a-41a4-98aa-e62f56f72b22.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+      "passing_panels": 10,
+      "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/child_M_loincloth_long_tied/try2",
+      "error": null,
+      "failures": []
+    }
+  ]
+}

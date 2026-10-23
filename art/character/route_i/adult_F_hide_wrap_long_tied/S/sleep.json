@@ -6,12 +6,12 @@
   "attempt": 2,
   "raw_sha256": "1db4d1746348ada9b6d2866dba058c835483793ad7b03dd75e771801fcd99884",
   "prompt_sha256": "c8e36c6c7013f48c4506e78cc3267a4068aeeb3e024e56831fb56a4eec9d9594",
-  "image_sha256": "9b5c5d9107aa5b8461be595e7ad54d68035e6990eecf5b0231609564389054b2",
-  "raw": "/Users/rexxa/work/artprod1-data/production/adult_F_hide_wrap_long_tied/try2/raw.png",
-  "diagnostics": "/Users/rexxa/work/artprod1-data/production/adult_F_hide_wrap_long_tied/try2",
+  "image_sha256": "71acf961beeace88bd05ff239043cc526e6ca8aa9ec4066080fb6063453ac429",
+  "raw": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_F_hide_wrap_long_tied/try2/raw.png",
+  "diagnostics": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_F_hide_wrap_long_tied/try2",
   "panel_index": 4,
   "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
-  "scale": 0.1278538812785388,
+  "scale": 0.12527964205816555,
   "rotation": 0,
   "source_box": [
     1057,
@@ -21,41 +21,42 @@
   ],
   "normalization": {
     "scaled_size": [
-      59,
-      55
+      58,
+      54
     ],
     "trim_box": [
       0,
-      9,
-      59,
+      10,
+      58,
       31
     ],
     "placement": [
-      26,
-      53
+      27,
+      55
     ],
     "resized_to_canvas_offset": [
-      26,
-      44
+      27,
+      45
     ],
-    "visible_pixels": 764,
-    "rotation_degrees": 0
+    "visible_pixels": 736,
+    "rotation_degrees": 0,
+    "scale": 0.12527964205816555
   },
   "checks": {
     "passed": true,
     "findings": [],
-    "coverage": 0.06060267857142857,
+    "coverage": 0.058816964285714285,
     "component_count": 1,
     "largest_hole": 0,
     "contact_ok": true,
     "sleep_axis_ok": true,
-    "opaque_height": 16,
-    "opaque_width": 56,
-    "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+    "opaque_height": 15,
+    "opaque_width": 55,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
     "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
   },
   "judge": {
-    "candidate": "/Users/rexxa/work/artprod1-data/production/adult_F_hide_wrap_long_tied/try2/judge/panel_04.png",
+    "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_F_hide_wrap_long_tied/try2/judge/panel_04.png",
     "sha256": "4804aac221b7804a42048ecc262e35ecf17503c05fb29198d36799910a3f2737",
     "family": "person",
     "metrics": {
@@ -84,5 +85,7 @@
     "model_status": "MISSING",
     "passed": false
   },
+  "standing_scale": 0.1278538812785388,
+  "sleep_scale": 0.12527964205816555,
   "template_version": 3
 }

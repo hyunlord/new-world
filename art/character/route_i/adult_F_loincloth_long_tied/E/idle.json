@@ -3,71 +3,72 @@
   "age": "adult",
   "facing": "E",
   "frame": "idle",
-  "attempt": 2,
-  "raw_sha256": "cc604248278ed5f714c1915af5b488db2fe0fb9273d17fc5b7b3813f003f0ad0",
-  "prompt_sha256": "9afb88086f0c59353441bd9d5d3c1c4ea014de112e3d7e8c6b04fca2ddf31d45",
-  "image_sha256": "1af5bd6e5de58bc50cbb0176854df1726e354276ee3b0d6c2b67c4ec46c99706",
-  "raw": "/Users/rexxa/work/artprod1-data/production/adult_F_loincloth_long_tied/try2/raw.png",
-  "diagnostics": "/Users/rexxa/work/artprod1-data/production/adult_F_loincloth_long_tied/try2",
+  "attempt": 1,
+  "raw_sha256": "b440a0d0c20c350fc3e99583d20ac739abb95dd7b3c189d9f5c910fa2d9fc0b6",
+  "prompt_sha256": "969f05c29a538e7fddc1eddd965cf53f69809be652a1916e4dbc77f3b3ab70b1",
+  "image_sha256": "3281df64e19d02b670ed04461100fa1e775110fe3d134bb5bb3822777a44ef73",
+  "raw": "/Users/rexxa/work/artprod2-data/new-production/adult_F_loincloth_long_tied/try1/raw.png",
+  "diagnostics": "/Users/rexxa/work/artprod2-data/new-production/adult_F_loincloth_long_tied/try1",
   "panel_index": 5,
   "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
-  "scale": 0.12698412698412698,
+  "scale": 0.13145539906103287,
   "rotation": 0,
   "source_box": [
-    41,
-    545,
-    286,
-    998
+    75,
+    559,
+    292,
+    999
   ],
   "normalization": {
     "scaled_size": [
-      31,
+      29,
       58
     ],
     "trim_box": [
       0,
       0,
-      26,
+      23,
       58
     ],
     "placement": [
-      27,
+      28,
       48
     ],
     "resized_to_canvas_offset": [
-      27,
+      28,
       48
     ],
-    "visible_pixels": 926,
-    "rotation_degrees": 0
+    "visible_pixels": 882,
+    "rotation_degrees": 0,
+    "scale": 0.13145539906103287
   },
   "checks": {
     "passed": true,
     "findings": [],
-    "coverage": 0.07421875,
+    "coverage": 0.07176339285714285,
     "component_count": 1,
     "largest_hole": 0,
     "contact_ok": true,
     "sleep_axis_ok": true,
     "opaque_height": 56,
-    "opaque_width": 20,
-    "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+    "opaque_width": 19,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
     "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
   },
   "judge": {
-    "candidate": "/Users/rexxa/work/artprod1-data/production/adult_F_loincloth_long_tied/try2/judge/panel_05.png",
-    "sha256": "081f95efd54d746cea76feb36b22b82b8be73fdca2430e4fc181fbe6fcdffc58",
+    "candidate": "/Users/rexxa/work/artprod2-data/new-production/adult_F_loincloth_long_tied/try1/judge/panel_05.png",
+    "sha256": "c15c28408253326f317429f6a51ea67f89b074f4e892dec427c52201d78f3108",
     "family": "person",
     "metrics": {
-      "edge_density": 0.17615793470007593,
-      "saturation_q25": 0.6474773363194575,
-      "saturation_q75": 0.7076341489713348,
+      "edge_density": 0.17647058823529413,
+      "saturation_q25": 0.6179398459832044,
+      "saturation_q75": 0.6783109463667465,
       "stroke_q25": 2.8284271247461903,
       "stroke_q50": 4.0,
       "stroke_q75": 4.0,
-      "stroke_q90": 5.656854249492381,
-      "wash_flatness": 0.034538572581952275,
-      "foreground_pixels": 13567
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.027160208172615802,
+      "foreground_pixels": 13309
     },
     "numeric_checks": {
       "edge_density": true,
@@ -84,5 +85,7 @@
     "model_status": "MISSING",
     "passed": false
   },
+  "standing_scale": 0.13145539906103287,
+  "sleep_scale": 0.15774647887323945,
   "template_version": 3
 }

@@ -7,8 +7,8 @@
   "raw_sha256": "44ae049e76581857eed663f455ce093818f6e7af14f743739433d5ef0671c67f",
   "prompt_sha256": "0047387544788d07e5f14e14ffd3b8aec1b0080b442f0d675db37471ea601532",
   "image_sha256": "17911a86e5172869d1cc7ad20fd40ef38ce32aacaa6efbe2c7bcd43b1e043594",
-  "raw": "/Users/rexxa/work/artprod1-data/production/adult_M_hide_wrap_bun/try1/raw.png",
-  "diagnostics": "/Users/rexxa/work/artprod1-data/production/adult_M_hide_wrap_bun/try1",
+  "raw": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_M_hide_wrap_bun/try1/raw.png",
+  "diagnostics": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_M_hide_wrap_bun/try1",
   "panel_index": 5,
   "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
   "scale": 0.12933025404157045,
@@ -39,7 +39,8 @@
       49
     ],
     "visible_pixels": 924,
-    "rotation_degrees": 0
+    "rotation_degrees": 0,
+    "scale": 0.12933025404157045
   },
   "checks": {
     "passed": true,
@@ -51,23 +52,23 @@
     "sleep_axis_ok": true,
     "opaque_height": 55,
     "opaque_width": 16,
-    "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
     "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
   },
   "judge": {
-    "candidate": "/Users/rexxa/work/artprod1-data/production/adult_M_hide_wrap_bun/try1/judge/panel_05.png",
+    "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_M_hide_wrap_bun/try1/judge/panel_05.png",
     "sha256": "151275686218472b7fe7190b7cf0e2b6afc0adab2ad0b46e09e47e090a597fe9",
     "family": "person",
     "metrics": {
-      "edge_density": 0.17145957677699403,
-      "saturation_q25": 0.6311770016955487,
-      "saturation_q75": 0.6863905479728898,
+      "edge_density": 0.17069767441860464,
+      "saturation_q25": 0.6304983098727495,
+      "saturation_q75": 0.6863866735644742,
       "stroke_q25": 2.8284271247461903,
       "stroke_q50": 4.0,
       "stroke_q75": 4.0,
       "stroke_q90": 4.47213595499958,
-      "wash_flatness": 0.027898490388300726,
-      "foreground_pixels": 14376
+      "wash_flatness": 0.027488352530957105,
+      "foreground_pixels": 14375
     },
     "numeric_checks": {
       "edge_density": true,
@@ -84,5 +85,7 @@
     "model_status": "MISSING",
     "passed": false
   },
+  "standing_scale": 0.12933025404157045,
+  "sleep_scale": 0.1275626423690205,
   "template_version": 3
 }

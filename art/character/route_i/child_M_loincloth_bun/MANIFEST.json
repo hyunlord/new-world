@@ -1,0 +1,546 @@
+{
+  "look": "child_M_loincloth_bun",
+  "age": "child",
+  "sex": "M",
+  "top": "loincloth",
+  "hair": "bun",
+  "raw": "/Users/rexxa/work/artprod2-data/reslice-run1/child_M_loincloth_bun/try1/raw.png",
+  "diagnostics": "/Users/rexxa/work/artprod2-data/reslice-run1/child_M_loincloth_bun/try1",
+  "sheet_try": 1,
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "attempt": 1,
+  "scale": 0.09216589861751152,
+  "standing_scale": 0.09216589861751152,
+  "sleep_scales": {
+    "S": 0.11331444759206799,
+    "E": 0.11428571428571428
+  },
+  "raw_sha256": "3b128fb534dadf8d97be58cd1e7af83681cc2adb03749fb407205d1d80855653",
+  "prompt_sha256": "a160b4b5b5f117b3e99094192770e8a4d1712af0fb88caca6771cc73830eeb6d",
+  "rotations": {
+    "S/idle": 0,
+    "S/walk_a": 0,
+    "S/work_a": 0,
+    "S/carry": 0,
+    "S/sleep": 0,
+    "E/idle": 0,
+    "E/walk_a": 0,
+    "E/work_a": 0,
+    "E/carry": 0,
+    "E/sleep": 0
+  },
+  "files": {
+    "S/idle.png": "8bafb28e58849f6c55662dac964be6c7b0c1a209fb123ea76bcdd5b1636e6a55",
+    "S/idle.json": "972f4ce29621db57130321706df9b0e188f6145e4113be264c6258277eb85fcd",
+    "S/walk_a.png": "ecc3eef99dd878eb0a64977b54f3e3c5238dfe79f0b55cd095dc40d1f347d0f0",
+    "S/walk_a.json": "6df4aad7b2416a398e7245955535042ae3ecca62a7c19804995a706091f16d7b",
+    "S/work_a.png": "af9913457bd0ebc697798cc80699365d9bb2a1412614a4b3ec8cf4b66b33633d",
+    "S/work_a.json": "1cd6819e1a4d663d945e8dbbdd24fdaa1c9d3de89084545183a7e40027d4ccc5",
+    "S/carry.png": "7e3f8be65b8ed2ab68f69d419243e56bde118b6c1a41b2d017c54811c31f2b96",
+    "S/carry.json": "57b24ff6d0f7578cdac5f5dae537dba73f5036f1b6f6536914166c766fd3703c",
+    "S/sleep.png": "5deaba154c52b70d7391ef270ca203a2bd949315b930484b0b39212469dd1eb5",
+    "S/sleep.json": "fcb36db6d6b03528d34f356d7fa2e2bbee3c490f5e5e6407a175dc4bde9f5161",
+    "E/idle.png": "73f3e9ad72d926a4d480c6b37a92f182859dec35c25d71ebbdaf0f481f5f8867",
+    "E/idle.json": "e65319bb100b9cd451e4b38c900b3071900a3079a0f63276d8bca40ae00fe651",
+    "E/walk_a.png": "82508a513f3f2f746f11b9532f1d00f746fc01764e3e05d9d8e8f4ac549b0b6f",
+    "E/walk_a.json": "6262b61be271f1ea3b070d3edba829856c2fe99d2868ccac3a4992a2ababaacb",
+    "E/work_a.png": "965d61524a2d0c21efc2f5263a1f85e661c02a0de84974928f982d05a6470918",
+    "E/work_a.json": "5ac017269f4735a35a922882bdb5db56589525906c40286b98f98bb19117e578",
+    "E/carry.png": "80a97ac04c25756c01b329fba70daa272b7472caf2f876102d64087644c610f2",
+    "E/carry.json": "c930f51a79194e96969ec20f912ac6a0f17bb9fcd202a50f1db292c5e8ee4d88",
+    "E/sleep.png": "eb9fe3b0811890a8651124c803929764004bedd44ce452c5a516a30f3a5d7db1",
+    "E/sleep.json": "670d479bdf18b5886fff2dedf720de3b37fd85384c596d2ea35f0724f3890f8f"
+  },
+  "frames": [
+    {
+      "facing": "S",
+      "frame": "idle",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.0484375,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 40,
+        "opaque_width": 18,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_M_loincloth_bun/try1/judge/panel_00.png",
+        "sha256": "737bba0410178d8b62d6cec310d26bd7357bc78620e796028c05b4b4d56e9fab",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.18629604066009914,
+          "saturation_q25": 0.6049118509854706,
+          "saturation_q75": 0.6694894969182807,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.47213595499958,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.03804593401825738,
+          "foreground_pixels": 17679
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "S",
+      "frame": "walk_a",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.04453125,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 39,
+        "opaque_width": 20,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_M_loincloth_bun/try1/judge/panel_01.png",
+        "sha256": "2400715cbab9cb37b72e96ffb2ac4e0e4f5e6115f4d17ca77ad07ba20adb2507",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.18158407135230198,
+          "saturation_q25": 0.6068505434731079,
+          "saturation_q75": 0.6762724731762321,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.47213595499958,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.03865118528403334,
+          "foreground_pixels": 17762
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "S",
+      "frame": "work_a",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.054017857142857145,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 46,
+        "opaque_width": 23,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_M_loincloth_bun/try1/judge/panel_02.png",
+        "sha256": "1f3acf8ed290afaa0baf26ffd34570fb7558fa56ef5ba8b489d2a24b24c98c63",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.20992028343666963,
+          "saturation_q25": 0.5668721141140186,
+          "saturation_q75": 0.6714307178893844,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.47213595499958,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.035859133311581685,
+          "foreground_pixels": 15233
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "S",
+      "frame": "carry",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.05770089285714286,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 37,
+        "opaque_width": 30,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_M_loincloth_bun/try1/judge/panel_03.png",
+        "sha256": "4fcf8eecf072104fce42b50248df7e30472a02414227b32548bde956dd4ae640",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.21846033334783932,
+          "saturation_q25": 0.6165318908077484,
+          "saturation_q75": 0.6955833673054254,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.03442076770862393,
+          "foreground_pixels": 24945
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "S",
+      "frame": "sleep",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.03872767857142857,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 13,
+        "opaque_width": 40,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_M_loincloth_bun/try1/judge/panel_04.png",
+        "sha256": "b72fc1add8337219d48283181ae2885bf6ad1c9f01f0f571d8e85f4bb545dbdf",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.20603481624758221,
+          "saturation_q25": 0.629713878735161,
+          "saturation_q75": 0.689172700732725,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.47213595499958,
+          "stroke_q90": 6.0,
+          "wash_flatness": 0.045222984335534844,
+          "foreground_pixels": 14099
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "E",
+      "frame": "idle",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.03560267857142857,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 38,
+        "opaque_width": 13,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_M_loincloth_bun/try1/judge/panel_05.png",
+        "sha256": "858cbaad2445d7bb3f33bb78f471b34254688aa15f1335c84871444c0e524f1d",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.1955120739187825,
+          "saturation_q25": 0.6070940680539613,
+          "saturation_q75": 0.6695590941826326,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.47213595499958,
+          "stroke_q90": 6.0,
+          "wash_flatness": 0.03911526484900604,
+          "foreground_pixels": 14300
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "E",
+      "frame": "walk_a",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.04330357142857143,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 38,
+        "opaque_width": 20,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_M_loincloth_bun/try1/judge/panel_06.png",
+        "sha256": "5bc0d0e5c4a2a90323ddbc71b865b7649ac3373b6c89f2add04c1cc95f5a739c",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.1807541439959509,
+          "saturation_q25": 0.6020660798575035,
+          "saturation_q75": 0.6685548267755166,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.47213595499958,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.03783002151446444,
+          "foreground_pixels": 17666
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "E",
+      "frame": "work_a",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.04720982142857143,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 42,
+        "opaque_width": 21,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_M_loincloth_bun/try1/judge/panel_07.png",
+        "sha256": "e55d08c3581d13d94b036abd11da345f1465969b6264cfe3205c7b261429127c",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.20020693222969477,
+          "saturation_q25": 0.5374235918840085,
+          "saturation_q75": 0.6750168483566228,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.47213595499958,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.03148331000159139,
+          "foreground_pixels": 15221
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "E",
+      "frame": "carry",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.053013392857142856,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 35,
+        "opaque_width": 28,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_M_loincloth_bun/try1/judge/panel_08.png",
+        "sha256": "f8824052c887da6cbbe3290901bc3bea02b2b11647a15b73deceef2b8c8aa372",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.2152136065354225,
+          "saturation_q25": 0.6174861895209891,
+          "saturation_q75": 0.6972377372297341,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.03231243592202239,
+          "foreground_pixels": 24368
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    },
+    {
+      "facing": "E",
+      "frame": "sleep",
+      "passed": true,
+      "checks": {
+        "passed": true,
+        "findings": [],
+        "coverage": 0.03861607142857143,
+        "component_count": 1,
+        "largest_hole": 0,
+        "contact_ok": true,
+        "sleep_axis_ok": true,
+        "opaque_height": 13,
+        "opaque_width": 40,
+        "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+        "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
+      },
+      "judge": {
+        "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/child_M_loincloth_bun/try1/judge/panel_09.png",
+        "sha256": "a548ff92e23150a1f916b066a413f3e06cfbce90058dfa6910ce82ff866c6c8b",
+        "family": "person",
+        "metrics": {
+          "edge_density": 0.20171576070452474,
+          "saturation_q25": 0.6308576438695082,
+          "saturation_q75": 0.6927233374401134,
+          "stroke_q25": 2.8284271247461903,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.47213595499958,
+          "stroke_q90": 6.0,
+          "wash_flatness": 0.036246481737601005,
+          "foreground_pixels": 14358
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "error": null
+    }
+  ]
+}

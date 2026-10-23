@@ -6,12 +6,12 @@
   "attempt": 1,
   "raw_sha256": "b21334bacdb277158286c10a48b973ed23940e3cde70b9b427e44d42bfd8cd6d",
   "prompt_sha256": "17a90aa08500c0785617093adfd31a60e8865040d7224ac1ef749e677ee6dc3d",
-  "image_sha256": "883033725de38f3876dfd2f34c4a417bb03148174d5b3a7065013d80f71b10dc",
-  "raw": "/Users/rexxa/work/artprod1-data/production/adult_M_loincloth_long_tied/try1/raw.png",
-  "diagnostics": "/Users/rexxa/work/artprod1-data/production/adult_M_loincloth_long_tied/try1",
+  "image_sha256": "2da8964e8bc9a475109b26bf973ea6e99f7c00ec151ce70b623275df8ac86fc5",
+  "raw": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_M_loincloth_long_tied/try1/raw.png",
+  "diagnostics": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_M_loincloth_long_tied/try1",
   "panel_index": 9,
   "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
-  "scale": 0.13176470588235295,
+  "scale": 0.1414141414141414,
   "rotation": 0,
   "source_box": [
     1102,
@@ -21,41 +21,42 @@
   ],
   "normalization": {
     "scaled_size": [
-      54,
-      42
+      58,
+      45
     ],
     "trim_box": [
       0,
       2,
-      54,
-      42
+      58,
+      45
     ],
     "placement": [
-      29,
-      36
+      27,
+      33
     ],
     "resized_to_canvas_offset": [
-      29,
-      34
+      27,
+      31
     ],
-    "visible_pixels": 806,
-    "rotation_degrees": 0
+    "visible_pixels": 916,
+    "rotation_degrees": 0,
+    "scale": 0.1414141414141414
   },
   "checks": {
     "passed": true,
     "findings": [],
-    "coverage": 0.06830357142857142,
+    "coverage": 0.07890625,
     "component_count": 1,
     "largest_hole": 0,
     "contact_ok": true,
     "sleep_axis_ok": true,
-    "opaque_height": 16,
-    "opaque_width": 51,
-    "coverage_rule": "idle height only; sleep width; posed extent constrained by canvas",
+    "opaque_height": 17,
+    "opaque_width": 55,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
     "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks"
   },
   "judge": {
-    "candidate": "/Users/rexxa/work/artprod1-data/production/adult_M_loincloth_long_tied/try1/judge/panel_09.png",
+    "candidate": "/Users/rexxa/work/artprod2-data/reslice-run1/adult_M_loincloth_long_tied/try1/judge/panel_09.png",
     "sha256": "7f28e5efbe9611e9c36f4e0f3aa24028167b33e2e5ab15d3e9b016003129ba8f",
     "family": "person",
     "metrics": {
@@ -84,5 +85,7 @@
     "model_status": "MISSING",
     "passed": false
   },
+  "standing_scale": 0.13176470588235295,
+  "sleep_scale": 0.1414141414141414,
   "template_version": 3
 }
