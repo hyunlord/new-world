@@ -40,6 +40,17 @@ owner": every open question is decided here.
   rows in the report step, after its gate. Tests in `tools/v8/test_bench_ledger.py`.
 - Built by a subagent in an isolated worktree (files listed in its report `$DATA/part0_tooling_report.md`), reviewed
   and brought in by the lead.
+- **M4 re-checked against M3** (goal 5.3): quiet session 12:01–12:06 KST (1-minute load 2.4–3.6 before every
+  repeat; `$DATA/bench_session.sh`, `$DATA/bench/`): M3 `bf16de16`, M4 `941410fc` and M4 with the allocator counter,
+  interleaved, 3 rounds of `bench --repeats 1`. True M3 → M4 tick mean: n200 ×1.220, n1000 ×1.054, n2000 ×1.034,
+  n200_script ×1.157, n200_side64 ×1.013; p99 n1000 ×1.064 (M4's ×1.106 is not reproduced in a quiet interleaved
+  session); RSS per agent 2,021 → 2,175 B (×1.076). The counter costs ×1.000–×1.022 on the tick mean.
+- **The n1000 p99 look** (per system at N = 1,000, medians of the three rounds, `$DATA/bench/p99_look.txt`):
+  `AgentMovementSystem` is the system: +22 µs a tick (88 → 110) and its worst tick 2,268 → 7,221 µs — path
+  planning across M4's fords (the far forest became reachable, so A* searches cross the river); the decision
+  system +64 µs (the gather selectors, M4 D23). Nothing else moved more than 5 µs.
+- Ledger rows appended with `--re-measure`: pass "base M3" and pass "M4 re-measure" (with alloc/agent 1,871 B) — M5's
+  comparison base; `check --pass M5` compares with "M4 re-measure" and decides memory on alloc/agent.
 
 ## D4 — The allocator byte counter (goal §4, §5.4)
 
