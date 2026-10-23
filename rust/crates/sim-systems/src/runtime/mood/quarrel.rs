@@ -282,9 +282,13 @@ fn quarrel(
         .filter(|e| *e != u32::MAX);
     let (code, cause_ref) = match mods.first() {
         // M5.5: the cause is a concrete record — a need sample, the death, the pressure (ADR 0030 amendment).
-        Some((m, _)) => (
+        Some((m, _)) if rule.cause_records => (
             m.quarrel_cause(),
             Some(super::cause_record(world, res, init.1, init.0, *m, &facts)),
+        ),
+        Some((m, _)) => (
+            m.quarrel_cause(),
+            Some(super::cause_of(res, *m, facts.mood)),
         ),
         // Bad blood: the relation itself, pointing at the pair's previous quarrel.
         None => (

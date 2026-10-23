@@ -18,12 +18,14 @@
 //! draw (`STREAM_KNOWLEDGE`, subject = the lineage key, slot 0x2_0000 + id)
 //! succeeds with odds 1 in `discovery_odds[difficulty − 1]`.
 //!
-//! M5.5 (ADR 0032, eureka): while the colony holds an artifact whose
-//! producing node no living colonist practises (`neighbours::trade::clues`),
-//! that node's stockpile conditions count as met and its draw succeeds on
-//! `eureka_permille` / 1,000 of the odds (×3) — the same keyed draw, so a
-//! clue only widens it; the discovery is also chronicled `Eureka` (the
-//! artifact and the node).
+//! M5.5 (ADR 0032, eureka; only under `ColonyRule::neighbours`): while the
+//! colony holds an artifact whose producing node no living colonist practises
+//! (`neighbours::trade::clues`), that node's stockpile conditions count as met
+//! and its draw succeeds on `eureka_permille` / 1,000 of the odds (×3) — the
+//! same keyed draw, so a clue only widens it. A discovery the clue decided (the
+//! plain draw would have lost, or the node's conditions were met only through
+//! the clue) is also chronicled `Eureka` (the artifact and the node) and
+//! counted in `neighbours.tallies.eurekas`.
 use hecs::World;
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
 use sim_core::colony::knowledge::{bit, defs, Cond, Knowledge, Source};
@@ -139,15 +141,25 @@ impl RuntimeSystem for DiscoverySystem {
         if candidates.is_empty() {
             return;
         }
-        // M5.5 (ADR 0032): artifacts that hint at a node no one practises.
-        let clues = crate::runtime::neighbours::trade::clues(world, resources);
+        // M5.5 (ADR 0032): artifacts that hint at a node no one practises — only under the neighbour rule (review F2).
+        let neighbours = crate::runtime::neighbours::rule(resources);
+        let clues = if neighbours.is_some() {
+            crate::runtime::neighbours::trade::clues(world, resources)
+        } else {
+            std::collections::BTreeMap::new()
+        };
         let clue_mask = clues.keys().fold(0, |m, id| m | bit(*id));
-        let eureka =
-            crate::runtime::neighbours::rule(resources).map_or(1000, |r| r.eureka_permille);
+        let eureka = neighbours.map_or(1000, |r| r.eureka_permille);
         let open = conditions_with(world, resources, clue_mask);
         if open == 0 {
             return;
         }
+        // The nodes open without the clues: a clue node's discovery is a eureka only when the clue decided it.
+        let plain = if clue_mask == 0 {
+            open
+        } else {
+            conditions_with(world, resources, 0)
+        };
         let d = defs();
         for p in candidates {
             let mut k = knowledge_of(world, p.entity);
@@ -171,7 +183,9 @@ impl RuntimeSystem for DiscoverySystem {
                 );
                 if draw * 1000 < wins {
                     k.raise_to(node.id, rule.discovery_gain, Source::Discovered, tick);
-                    found.push((node.id, clue));
+                    // Without the clue it would have needed both its conditions and the plain draw (review F5).
+                    let decided = clue && (draw > 0 || plain & bit(node.id) == 0);
+                    found.push((node.id, decided));
                 }
             }
             if found.is_empty() {

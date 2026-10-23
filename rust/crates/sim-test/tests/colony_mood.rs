@@ -516,3 +516,114 @@ fn the_morning_hand_over_runs_once_a_day_across_a_save_at_0830() {
         "nothing handed over again after the load on day 2"
     );
 }
+
+/// Review F4: a cause resolves only when its record fits it — the relation must point at the same pair's earlier
+/// quarrel and grief at a death (the old check accepted a quarrel with a third person and a pressure for grief).
+#[test]
+fn a_quarrels_cause_must_point_at_a_fitting_record() {
+    use sim_core::chronicle::{Chronicle, ChronicleEntry};
+    use sim_core::colony::people::RELATION_CAUSE;
+    let day = 1_440;
+    let window = 2 * day;
+    let mut c = Chronicle::new();
+    let quarrel = |c: &mut Chronicle, tick: u64, who: u64, other: u64, cause: CauseRef| {
+        c.push_caused(
+            ChronicleEntry::new(tick, ChronicleKind::Quarrel)
+                .subject(who)
+                .other(Some(other))
+                .cause(1),
+            Some(cause),
+        )
+    };
+    let none = CauseRef::Modifier {
+        code: 0,
+        entry: None,
+    };
+    let with_third = quarrel(&mut c, 9 * day, 1, 3, none);
+    let with_two = quarrel(&mut c, 9 * day, 2, 1, none);
+    let relation = |entry| CauseRef::Modifier {
+        code: RELATION_CAUSE,
+        entry: Some(entry),
+    };
+    let wrong_pair = quarrel(&mut c, 10 * day, 1, 2, relation(with_third));
+    let right_pair = quarrel(&mut c, 10 * day, 1, 2, relation(with_two));
+    assert_eq!(
+        mood::check_cause(&c, wrong_pair, window),
+        Err("the record does not fit the cause")
+    );
+    assert_eq!(mood::check_cause(&c, right_pair, window), Ok(()));
+    let began = c.push_caused(
+        ChronicleEntry::new(9 * day, ChronicleKind::PressureBegan).cause(0),
+        None,
+    );
+    let grief = quarrel(
+        &mut c,
+        10 * day,
+        1,
+        2,
+        CauseRef::Modifier {
+            code: Modifier::Grief.code(),
+            entry: Some(began),
+        },
+    );
+    assert_eq!(
+        mood::check_cause(&c, grief, window),
+        Err("the record does not fit the cause")
+    );
+    // Cold (a cold snap, code 0) fits that pressure; sickness (an illness) does not.
+    let cold = quarrel(
+        &mut c,
+        10 * day,
+        1,
+        2,
+        CauseRef::Modifier {
+            code: Modifier::Cold.code(),
+            entry: Some(began),
+        },
+    );
+    let sick = quarrel(
+        &mut c,
+        10 * day,
+        1,
+        2,
+        CauseRef::Modifier {
+            code: Modifier::Sick.code(),
+            entry: Some(began),
+        },
+    );
+    assert_eq!(mood::check_cause(&c, cold, window), Ok(()));
+    assert_eq!(
+        mood::check_cause(&c, sick, window),
+        Err("the record does not fit the cause")
+    );
+}
+
+/// Review F6: under the M5 mood rule a quarrel's cause is M5's modifier reference, not an M5.5 need sample.
+#[test]
+fn the_m5_mood_rule_keeps_m5_cause_references() {
+    let mut engine = mood_world(2);
+    if let Some(c) = engine.resources.rules.colony.as_mut() {
+        c.mood = Some(MoodRule::M5);
+    }
+    let ((ia, a), (ib, b)) = strangers(&engine);
+    isolate(&mut engine, a, b, (60, 60));
+    for e in [a, b] {
+        hungry(&mut engine, e);
+        set_mood(&mut engine, e, 200);
+    }
+    engine.resources.colony.bonds.insert(
+        (ia.min(ib), ia.max(ib)),
+        Bond {
+            value: -400,
+            day: 0,
+            last_quarrel: u32::MAX,
+        },
+    );
+    let index = quarrel_until(&mut engine, 400).expect("a quarrel within 400 checks");
+    let cause = engine.resources.chronicle.cause_of(index);
+    assert!(
+        matches!(cause, Some(CauseRef::Modifier { code, .. }) if code == Modifier::Hungry.code()),
+        "M5's reference: {cause:?}"
+    );
+    assert!(engine.resources.chronicle.sample(0).is_none(), "no samples");
+}

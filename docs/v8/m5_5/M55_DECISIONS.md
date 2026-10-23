@@ -258,8 +258,8 @@ What the rounds showed:
   keyed 0–3, the second one of the other three; names from 12 locale keys (`NEIGHBOUR_NAME_0` … `_11`), different;
   distance 2–5 days, population 20–60, attitude 40–60; known = every Paleolithic node and the first k of a keyed
   shuffle of the 7 Neolithic nodes (k = 2–4; no prerequisite closure — a neighbour knows what it knows, and gating
-  reads only the node itself); when neither knows a pottery-lane node (clay prep, pot forming, pot firing), the first
-  is given pot forming. `distance_days` is shown, not simulated (visitors walk from the map edge).
+  reads only the node itself); when neither knows pot firing, the first neighbour's last-drawn Neolithic node is
+  replaced by pot firing (D23; Part 2 first gave pot forming when neither knew a pottery-lane node). `distance_days` is shown, not simulated (visitors walk from the map edge).
 - `NeighbourSystem` (174, daily) drifts each population by −1, 0 or +1 % (keyed per neighbour and day; at least one
   person a step, never below 1) and does nothing else to them.
 
@@ -363,3 +363,62 @@ rounds). Readings the goal leaves open:
   (`NeighbourTallies::unknown_bought`).
 - F10a reads a fifth run, "quiet" (story off and neighbours off), pooled births per woman-year; F10b every run's
   ledger and reservation violation ticks.
+
+## D24 — The held-out failures of the record run: causes, found without tuning on them (goal §0, §10)
+
+The evaluation of record (`$DATA/eval/record`, commit c727cd45, 2026-10-24 00:24–00:36 KST) failed F1c, F3, F5a,
+F7b, F8b and F9. Each failing seed was read, but nothing was tuned on the held-out seeds; where a cause needed a
+mechanism check, the check ran on calibration seeds 0–7 or on the M5 base build.
+- **Seed 906 (F1c, F5a 8 breakdowns, F7b, F6a 2 quarrels):** 13 of 16 people die, 11 of exposure. The story-off and
+  no-neighbours controls collapse the same way (exposure 11 and 9), and so does **the M5 base build (cb58a801) with
+  the story off** (exposure 9, 1 left; `$DATA/diag/base906`). A cold world that M5's colony already could not keep;
+  not caused by M5.5. Recorded as a limit; the next pass's world review should look at it.
+- **F3 (meat spoiled afield on 903, 904, 906, 908, 926, 927, 929):** the hunter's haul (D11) finds no stockpile cell
+  with room. Traced on calibration seed 7 (a temporary trace, not committed): every failed `haul_home` happened with
+  0 free cells of the script's 72 — 1,138 logs on the ground by day 48 (the script keeps felling) and 40 unused hides
+  fill them from about day 31. The goal's rule is "the nearest stockpile cell that accepts food"; with none the meat
+  waits for a haul like any loose stack and rots afield. A limit of the scripted player's stockpile, not a fault of the
+  haul; the code is unchanged.
+- **F8b (no unknown artifact bought on 905, 911, 912, 926, 927, 928):** on calibration seed 0 (a temporary trace of
+  `send_caravan`) the colony practised 23 of 24 nodes at the first caravan and **all 24** from the second on: the
+  accepted migrants bring every node their neighbour knows (F7c), so by the second caravan nothing a neighbour can
+  sell is unknown; the first caravan's draw (weight 3 against 5 staples) brought no pot. F7c and F8b pull against each
+  other under "accept every wave"; reported, not tuned.
+- **F9 (quality gain < 8 on 9 seeds):** the goal's arithmetic assumed knapping level ~1 in days 1–12 (quality ~35.5);
+  the numbers reviewer found the top knapper at level ≥ 6 by day 2–10 in 28/32 worlds, so the early blades are already
+  of quality ~43–49 and the gain cannot reach 8 (903 crafted no blade in days 37–48: its flint ran out). The bar's
+  premise does not hold for the M5 skill rates; reported.
+- **F5a (903: 6, 906: 8 breakdowns > 3):** both worlds are collapsing (906 above; 903 runs out of flint and food);
+  breakdowns follow the losses. F7b (920, 922, 928 at 15 people, one under the bar): small colonies, not a mechanism.
+
+## D25 — Review fixes (code review `$DATA/review/code_review.md`; each with a test that fails without it)
+
+- **F1 (major) — owed items could be given twice.** An owed item now leaves the caravan's `owed` list when a hauler
+  **picks it up** (`execute.rs`, `trade::take_owed(tile, kind, n)`), not when the haul is assigned; until then the
+  stack's owed items are not free (`values_of`). Test `given_items_stay_owed_until_picked_up_and_cannot_be_given_twice`
+  (old code: the second gift accepted). Still a limit (as D19): a load cancelled after the pickup is forgiven, other
+  jobs may still use owed items, and the attitude is granted when the trade is made.
+- **F8 — owed entries by tile.** The Trade assignment skips an entry whose stack now holds another kind, and
+  `take_owed` matches the kind. Test `an_owed_entry_of_another_kind_does_not_block_the_tile`.
+- **F2 (major) — eureka ungated.** `DiscoverySystem` builds the clue mask only under `ColonyRule::neighbours`; with
+  the rule off a held artifact changes nothing. Test `eureka_needs_the_neighbour_rule`. D20's evidence is re-done
+  (D26), and `a_clue_triples_the_discovery_draw` now checks the ×3 through `DiscoverySystem` itself.
+- **F5 — eureka over-counted.** A clue node's discovery is chronicled `Eureka` and counted only when the clue decided
+  it: the plain draw would have lost (`draw > 0`) or the node's conditions were met only through the clue. Test
+  `a_eureka_is_counted_only_when_the_clue_decided_it`.
+- **F3 — a wave accepted on its way joined at the map edge.** The answer is noted and the wave keeps walking; it joins
+  on reaching the hearth (`VisitorSystem`). Test `a_wave_accepted_on_its_way_joins_at_the_hearth`.
+- **F7 — visitors froze without a meeting tile.** An arriving group with no meeting tile (or no path) waits where it
+  stands, so waits time out and caravans leave. Test `visitors_without_a_meeting_tile_still_wait_and_leave`.
+- **F4 — `check_cause` too lenient.** The record must fit the cause: grief → a death, sick → an illness, cold or an
+  outdoor night → a cold snap, hunger or thirst → a drought, a pressure or drafting → a pressure, the relation → the
+  same pair's earlier quarrel. Test `a_quarrels_cause_must_point_at_a_fitting_record`. Limit kept: a partner is known
+  only through the dead's recorded partner (the chronicle keeps no partner of the living).
+- **F6 — M5.5 records under the M5 mood rule.** `MoodRule::cause_records` (false in M5, true in M5.5) gates the need
+  samples; the M5 rule writes M5's modifier references. Test `the_m5_mood_rule_keeps_m5_cause_references`.
+- **F9 — a shifted caravan comes on the major's end + 1.** Kept: the goal says "shift to its end + 1 day"; read as one
+  quiet day between a major and the traders. No change.
+- **F10 (nits).** `FleeSystem` and `BillSystem` share priority 123; their order is registration order (deterministic;
+  noted in ARCHITECTURE). D17 and a test comment now say pot firing. A wave with no edge tile is dropped without a
+  tally (cannot happen on the colony maps: every edge has passable tiles). The 40-person cap is checked when a wave
+  sets out, as the goal says; accepting can pass it (an owner question).

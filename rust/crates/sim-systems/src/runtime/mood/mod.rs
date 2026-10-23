@@ -381,10 +381,45 @@ pub fn cause_record(
     }
 }
 
+/// What record a cause must point at (review F4: the record must fit the cause, not only exist).
+#[derive(Clone, Copy)]
+enum Expect {
+    /// Any record kind the checker knows.
+    Any,
+    /// A death (grief).
+    Died,
+    /// A `PressureBegan`, of this `PressureKind` code when given.
+    Pressure(Option<u8>),
+    /// An earlier quarrel of the same pair (the relation).
+    PairQuarrel,
+}
+
+/// The record modifier code `code` must point at.
+fn expect_of(code: u8) -> Expect {
+    if code == sim_core::colony::people::RELATION_CAUSE {
+        return Expect::PairQuarrel;
+    }
+    match Modifier::from_code(code) {
+        Some(Modifier::Grief) => Expect::Died,
+        Some(Modifier::Sick) => Expect::Pressure(Some(PressureKind::Illness.code())),
+        Some(Modifier::Cold | Modifier::SleptOutside) => {
+            Expect::Pressure(Some(PressureKind::ColdSnap.code()))
+        }
+        Some(Modifier::Hungry | Modifier::Thirsty) => {
+            Expect::Pressure(Some(PressureKind::Drought.code()))
+        }
+        Some(Modifier::Pressure | Modifier::Drafted) => Expect::Pressure(None),
+        _ => Expect::Any,
+    }
+}
+
 /// M5.5 (ADR 0030 amendment, goal §3.1.7): whether the cause of quarrel entry `index` resolves — its record exists,
-/// belongs to the initiator (the entry's subject; the world for a pressure) and lies within `window` ticks before the
-/// quarrel (a state — a pressure — lies within it when it was in force at some tick of it). A need sample must also
-/// show the need (hunger or thirst at its seek threshold, the night's cold or outdoor sleep). `Err` says why not.
+/// fits the cause (grief → a death, sickness → an illness, cold → a cold snap, hunger or thirst → a drought, a
+/// pressure or drafting → a pressure, the relation → the same pair's earlier quarrel), belongs to the initiator (the
+/// entry's subject; the world for a pressure) and lies within `window` ticks before the quarrel (a state — a pressure
+/// — lies within it when it was in force at some tick of it). A need sample must also show the need (hunger or
+/// thirst at its seek threshold, the night's cold or outdoor sleep). `Err` says why not. A partner is recognised
+/// through the dead's recorded partner (`Died.other`) only: the chronicle keeps no partner of the living.
 pub fn check_cause(
     chronicle: &sim_core::chronicle::Chronicle,
     index: u32,
@@ -396,10 +431,37 @@ pub fn check_cause(
         return Err("not a quarrel");
     }
     let who = q.subject.ok_or("no initiator")?;
+    let pair = {
+        let (a, b) = (Some(who), q.other);
+        if a <= b {
+            (a, b)
+        } else {
+            (b, a)
+        }
+    };
     let from = q.tick.saturating_sub(window);
     let within = |t: u64| (from..=q.tick).contains(&t);
-    let entry_ok = |e: u32| -> Result<(), &'static str> {
+    let entry_ok = |e: u32, expect: Expect| -> Result<(), &'static str> {
         let rec = chronicle.entry(e).ok_or("record missing")?;
+        let fits = match (expect, rec.kind) {
+            (Expect::Any, _) => true,
+            (Expect::Died, ChronicleKind::Died) => true,
+            (Expect::Pressure(kind), ChronicleKind::PressureBegan) => {
+                kind.is_none_or(|k| rec.cause == k)
+            }
+            (Expect::PairQuarrel, ChronicleKind::Quarrel) => {
+                let p = if rec.subject <= rec.other {
+                    (rec.subject, rec.other)
+                } else {
+                    (rec.other, rec.subject)
+                };
+                p == pair
+            }
+            _ => false,
+        };
+        if !fits {
+            return Err("the record does not fit the cause");
+        }
         match rec.kind {
             ChronicleKind::PressureBegan => {
                 if rec.tick > q.tick {
@@ -444,10 +506,16 @@ pub fn check_cause(
     };
     match chronicle.cause_of(index) {
         None => Err("no cause"),
-        Some(CauseRef::Entry(e)) => entry_ok(e),
-        Some(CauseRef::Modifier { entry: Some(e), .. }) => entry_ok(e),
+        Some(CauseRef::Entry(e)) => entry_ok(e, Expect::Any),
+        Some(CauseRef::Modifier {
+            code,
+            entry: Some(e),
+        }) => entry_ok(e, expect_of(code)),
         Some(CauseRef::Modifier { entry: None, .. }) => Err("no record behind the modifier"),
-        Some(CauseRef::Pressure { entry: Some(e), .. }) => entry_ok(e),
+        Some(CauseRef::Pressure {
+            kind,
+            entry: Some(e),
+        }) => entry_ok(e, Expect::Pressure(Some(kind))),
         Some(CauseRef::Pressure { entry: None, .. }) => Err("no record behind the pressure"),
         Some(CauseRef::Sample { code, sample }) => {
             let s = chronicle.sample(sample).ok_or("sample missing")?;

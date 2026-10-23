@@ -606,21 +606,20 @@ fn pick_work(
             // M5.5 (ADR 0032): items owed to a trading caravan first, carried to its spot.
             if let Some(c) = colony.neighbours.trading_caravan() {
                 let spot = c.spot.unwrap_or(c.pos);
+                // An entry whose stack now holds another kind is skipped, so it cannot hide a later entry on that tile.
                 let owed = c
                     .owed
                     .iter()
-                    .filter(|(t, _, n)| {
-                        *n > 0 && chebyshev(pos, *t) <= radius && stack_of(*t, None, Some(true))
+                    .filter(|(t, kind, n)| {
+                        *n > 0
+                            && chebyshev(pos, *t) <= radius
+                            && stack_of(*t, None, Some(true))
+                            && colony.ground_items.get(t).is_some_and(|s| s.kind == *kind)
                     })
                     .min_by_key(|(t, ..)| (chebyshev(pos, *t), t.1, t.0));
                 if let Some(&(from, kind, n)) = owed {
                     let amount = rule.carry(kind).min(n).min(count(from));
-                    if amount > 0
-                        && colony
-                            .ground_items
-                            .get(&from)
-                            .is_some_and(|s| s.kind == kind)
-                    {
+                    if amount > 0 {
                         return Some((JobKind::Trade { from, to: spot }, amount, kind));
                     }
                 }
@@ -1213,10 +1212,6 @@ impl RuntimeSystem for JobAssignSystem {
                     }
                     JobKind::Supply { workshop, .. } => {
                         *supply.entry((workshop, item)).or_insert(0) += amount;
-                    }
-                    // M5.5: the owed items this haul carries are no longer owed (an undelivered load is forgiven).
-                    JobKind::Trade { from, .. } => {
-                        crate::runtime::neighbours::trade::take_owed(resources, from, amount);
                     }
                     JobKind::Gather { .. } => {
                         let carry = u32::from(rule.carry(ItemKind::Firewood));

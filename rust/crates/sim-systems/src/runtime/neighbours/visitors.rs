@@ -2,14 +2,16 @@
 //!
 //! Priority: 175 (`VISITOR_PRIORITY`). Interval: 3 ticks, offset 1. Gate: `ColonyRule::neighbours`.
 //! Reads: `SimResources.colony.neighbours`, `nav`, `building_kinds` (the hearth), `rules`
-//! Writes: `SimResources.colony.neighbours` (waves, caravans: position, path, state, answer; neighbours' attitude and last contact; tallies, version), `chronicle`
+//! Writes: ECS people (a wave accepted on its way joins on arrival, `join::accept`); `SimResources.colony.neighbours` (waves, caravans: position, path, state, answer; neighbours' attitude and last contact; tallies, version), `chronicle`
 //! Events: chronicle `MigrantsArrived`, `MigrantsDeclined` (unanswered), `TraderArrived`, `TraderLeft`
 //!
 //! M5.5 (ADR 0031, 0032). Visitors are not ECS entities (M5.5 DECISIONS
 //! D16): a wave or a caravan is one group on one tile that moves one tile a
 //! step (every 3 ticks: a person's pace) along a nav path. Arriving, it
-//! walks to the meeting tile by the hearth ([`super::meeting_tile`]); there
-//! it waits (`VisitState::Waiting`): a wave for the player's answer — after
+//! walks to the meeting tile by the hearth ([`super::meeting_tile`]; with none,
+//! or no path there, it waits where it is); there it waits
+//! (`VisitState::Waiting`): a wave accepted on its way joins on arrival, else
+//! it waits for the player's answer — after
 //! `wait_days` unanswered it leaves and its neighbour's attitude drops by
 //! `decline_attitude` — and a caravan for `caravan_stay_days`, trading, then
 //! it leaves (owed items still undelivered are forgiven). Leaving, it walks
@@ -116,7 +118,7 @@ impl RuntimeSystem for VisitorSystem {
         1
     }
 
-    fn tick(&mut self, _world: &mut World, res: &mut SimResources) {
+    fn tick(&mut self, world: &mut World, res: &mut SimResources) {
         let Some(rule) = super::rule(res) else {
             return;
         };
@@ -136,9 +138,9 @@ impl RuntimeSystem for VisitorSystem {
             return;
         }
         crate::runtime::nav::ensure(res);
-        let Some(meet) = super::meeting_tile(res) else {
-            return;
-        };
+        // With no meeting tile (no hearth, or none free near it) an arriving group waits where it is, so waits still
+        // time out and caravans still leave (review F7).
+        let meet = super::meeting_tile(res);
         let now = res.current_tick;
         let day_ticks = res.rules.calendar.days_to_ticks(1);
         let day = super::today(res);
@@ -148,11 +150,11 @@ impl RuntimeSystem for VisitorSystem {
             match w.state {
                 VisitState::Arriving => {
                     // A group with no way to the hearth stops where it is and waits there.
-                    let (pos, path, stuck) = match step(res, w.pos, meet, w.path) {
+                    let (pos, path, stuck) = match meet.and_then(|m| step(res, w.pos, m, w.path)) {
                         Some((pos, path)) => (pos, path, false),
                         None => (w.pos, Vec::new(), true),
                     };
-                    let arrived = stuck || chebyshev(pos, meet) <= 1;
+                    let arrived = stuck || meet.is_some_and(|m| chebyshev(pos, m) <= 1);
                     let wave = &mut res.colony.neighbours.waves[i];
                     wave.pos = pos;
                     wave.path = path;
@@ -174,6 +176,10 @@ impl RuntimeSystem for VisitorSystem {
                                 .cause(w.neighbour)
                                 .value((i64::from(w.id) << 8) | count),
                         );
+                        // Accepted on the way (review F3): they join now, at the hearth.
+                        if w.answer == Some(WaveAnswer::Accepted) {
+                            super::join::accept(world, res, w.id);
+                        }
                     }
                     res.colony.neighbours.version += 1;
                 }
@@ -207,21 +213,21 @@ impl RuntimeSystem for VisitorSystem {
             let c = res.colony.neighbours.caravans[i].clone();
             match c.state {
                 VisitState::Arriving => {
-                    let (pos, path, stuck) = match step(res, c.pos, meet, c.path) {
+                    let (pos, path, stuck) = match meet.and_then(|m| step(res, c.pos, m, c.path)) {
                         Some((pos, path)) => (pos, path, false),
                         None => (c.pos, Vec::new(), true),
                     };
-                    let arrived = stuck || chebyshev(pos, meet) <= 1;
-                    let spot = arrived
-                        .then(|| super::trade::trade_spot(res, meet))
-                        .flatten();
+                    let arrived = stuck || meet.is_some_and(|m| chebyshev(pos, m) <= 1);
+                    let spot = meet
+                        .filter(|_| arrived)
+                        .and_then(|m| super::trade::trade_spot(res, m));
                     let caravan = &mut res.colony.neighbours.caravans[i];
                     caravan.pos = pos;
                     caravan.path = path;
                     if arrived {
                         caravan.state = VisitState::Waiting { since: now };
                         caravan.path.clear();
-                        caravan.spot = spot.or(Some(meet));
+                        caravan.spot = spot.or(meet).or(Some(pos));
                         if let Some(n) = res
                             .colony
                             .neighbours

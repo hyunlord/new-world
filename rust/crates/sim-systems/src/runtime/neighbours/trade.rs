@@ -8,7 +8,8 @@
 //! - Values come from `data/colony/values.ron` (`colony::values::value`). A `Trade` is accepted iff
 //!   value(give) × `buy_permille` ≥ value(take) × `sell_permille`. Taken goods are put at the caravan's spot by the
 //!   hearth (ledger `traded_in`) and hauled to the stockpiles as any loose stack; given stacks become the caravan's
-//!   `owed` list, which haulers carry to the spot (`JobKind::Trade`, ledger `traded_out` on arrival). A trade raises
+//!   `owed` list, which haulers carry to the spot (`JobKind::Trade`, ledger `traded_out` on arrival); an owed item
+//!   stays owed — and cannot be given again — until a hauler picks it up ([`take_owed`]). A trade raises
 //!   the neighbour's attitude by `trade_attitude`; a gift (give without take) by one per `gift_value_per_attitude` of
 //!   value. Chronicle `Traded`.
 //! - Eureka: an artifact the colony holds (anywhere: ground, hands, shelves) whose producing node no living colonist
@@ -240,8 +241,10 @@ pub fn send_caravan(world: &World, res: &mut SimResources, rule: &NeighbourRule)
     nb.version += 1;
 }
 
-/// `amount` owed items of the stack at `from` are on their way to the trading caravan: they leave its `owed` list.
-pub fn take_owed(res: &mut SimResources, from: (u32, u32), amount: u16) {
+/// `amount` owed items of `kind` were picked up from the stack at `from` for the trading caravan: they leave its
+/// `owed` list (until then the stack's owed items cannot be given again, `values_of`; a load cancelled after the
+/// pickup is forgiven, DECISIONS D19).
+pub fn take_owed(res: &mut SimResources, from: (u32, u32), kind: ItemKind, amount: u16) {
     let Some(c) = res
         .colony
         .neighbours
@@ -252,7 +255,7 @@ pub fn take_owed(res: &mut SimResources, from: (u32, u32), amount: u16) {
         return;
     };
     let mut left = amount;
-    for entry in c.owed.iter_mut().filter(|e| e.0 == from) {
+    for entry in c.owed.iter_mut().filter(|e| e.0 == from && e.1 == kind) {
         let take = entry.2.min(left);
         entry.2 -= take;
         left -= take;

@@ -350,6 +350,10 @@ fn step(
                         cancel(world, res, entity, CancelReason::TargetGone);
                         return;
                     }
+                    // M5.5: owed items stay owed until they leave the stack (review F1: never sold twice).
+                    if matches!(job.kind, JobKind::Trade { .. }) {
+                        crate::runtime::neighbours::trade::take_owed(res, from, spec.kind, taken);
+                    }
                     job.amount = taken;
                     job.stage = JobStage::ToDest;
                     let dest = job.kind.dest().unwrap_or(pos);

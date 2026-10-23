@@ -158,12 +158,19 @@ fn spawn(
 }
 
 /// Accept wave `wave` (its number): every person joins; returns how many, or `None` when no wave of that number
-/// waits at the hearth (or is still on its way).
+/// waits at the hearth or is on its way. A wave still on its way keeps walking with the answer noted and joins when it
+/// reaches the hearth (`VisitorSystem`; review F3: never at the map edge).
 pub fn accept(world: &mut World, res: &mut SimResources, wave: u32) -> Option<u32> {
     let index = res.colony.neighbours.waves.iter().position(|w| {
         w.id == wave && matches!(w.state, VisitState::Waiting { .. } | VisitState::Arriving)
     })?;
     let w = res.colony.neighbours.waves[index].clone();
+    if w.state == VisitState::Arriving {
+        let nb = &mut res.colony.neighbours;
+        nb.waves[index].answer = Some(WaveAnswer::Accepted);
+        nb.version += 1;
+        return Some(w.people.len() as u32);
+    }
     let tiles = free_tiles(res, w.pos, w.people.len());
     let mut ids = Vec::new();
     for (i, spec) in w.people.iter().enumerate() {

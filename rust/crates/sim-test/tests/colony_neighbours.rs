@@ -55,7 +55,7 @@ fn two_neighbours_on_different_edges_are_drawn_from_the_seed() {
                 .iter()
                 .filter(|id| n.known & knowledge::bit(**id) != 0)
                 .count();
-            // 2–4 drawn, plus pot forming when neither had a pottery node.
+            // 2–4 drawn (pot firing replaces the last one when neither drew it, D23).
             assert!((2..=5).contains(&k), "seed {seed}: {k} Neolithic nodes");
         }
         assert!(
@@ -603,4 +603,383 @@ fn a_save_with_a_wave_on_its_way_loads_to_the_same_world() {
     let x = sim_systems::save::save(&mut a).expect("save a");
     let y = sim_systems::save::save(&mut loaded).expect("save loaded");
     assert!(x == y, "full state equal after a day");
+}
+
+/// Twelve blades on a fresh stockpile cell of a trading world: `(engine, the caravan's number, the stack's tile)`.
+fn blades_for_trade(seed: u64, blades: u16) -> (SimEngine, u32, (u32, u32)) {
+    let mut engine = trading_world(seed);
+    let caravan = engine
+        .resources
+        .colony
+        .neighbours
+        .trading_caravan()
+        .map(|c| c.id)
+        .expect("a caravan trades");
+    let at = open_area(&engine, 3, 3);
+    let zoned = submit(
+        &mut engine,
+        Command::AddStockpile {
+            x0: at.0,
+            y0: at.1,
+            x1: at.0 + 2,
+            y1: at.1 + 2,
+        },
+    );
+    assert!(zoned.accepted);
+    engine
+        .resources
+        .colony
+        .item_ledger
+        .create(ItemKind::FlintBlade, u64::from(blades));
+    sim_systems::runtime::jobs::items::put_items(
+        &mut engine.resources,
+        at,
+        ItemSpec::raw(ItemKind::FlintBlade, None),
+        blades,
+    );
+    (engine, caravan, at)
+}
+
+fn trade_job(engine: &SimEngine) -> Option<sim_core::colony::Job> {
+    engine
+        .world
+        .query::<&sim_core::colony::Job>()
+        .iter()
+        .map(|(_, j)| *j)
+        .find(|j| matches!(j.kind, sim_core::colony::JobKind::Trade { .. }))
+}
+
+fn owed_total(engine: &SimEngine) -> u32 {
+    engine
+        .resources
+        .colony
+        .neighbours
+        .trading_caravan()
+        .map_or(0, |c| c.owed.iter().map(|o| u32::from(o.2)).sum())
+}
+
+/// Review F1: items given to a caravan stay owed until a hauler picks them up, so they cannot be given again while
+/// they still lie on the stack (the old code dropped them from `owed` when the haul was assigned, and a second gift
+/// of 10 of the same 12 blades was accepted).
+#[test]
+fn given_items_stay_owed_until_picked_up_and_cannot_be_given_twice() {
+    let (mut engine, caravan, tile) = blades_for_trade(0, 12);
+    let gift = submit(
+        &mut engine,
+        Command::Trade {
+            caravan,
+            give: vec![(tile.0, tile.1, 12)],
+            take: vec![],
+        },
+    );
+    assert!(gift.accepted, "{gift:?}");
+    assert_eq!(owed_total(&engine), 12);
+    // A hauler takes the Trade haul; until the pickup the blades are on the stack and all still owed.
+    let mut assigned = false;
+    for _ in 0..DAY / 2 {
+        tick_checked(&mut engine);
+        if trade_job(&engine).is_some() {
+            assigned = true;
+            break;
+        }
+    }
+    assert!(assigned, "a trade haul was assigned");
+    let on_stack = engine
+        .resources
+        .colony
+        .ground_items
+        .get(&tile)
+        .map_or(0, |s| u32::from(s.count));
+    assert_eq!(on_stack, 12, "not picked up yet");
+    assert_eq!(owed_total(&engine), 12, "owed until picked up");
+    let again = submit(
+        &mut engine,
+        Command::Trade {
+            caravan,
+            give: vec![(tile.0, tile.1, 1)],
+            take: vec![],
+        },
+    );
+    assert!(!again.accepted, "an owed blade cannot be given again");
+    assert_eq!(again.reason, Some(RejectReason::Unknown));
+    // After the pickup the carried blades leave `owed`; the rest stays owed.
+    let mut carried = 0;
+    for _ in 0..DAY / 2 {
+        tick_checked(&mut engine);
+        let c = engine
+            .world
+            .query::<(&sim_core::colony::Job, &sim_core::colony::Carry)>()
+            .iter()
+            .find(|(_, (j, _))| matches!(j.kind, sim_core::colony::JobKind::Trade { .. }))
+            .map(|(_, (_, c))| u32::from(c.count));
+        if let Some(n) = c {
+            carried = n;
+            break;
+        }
+    }
+    assert!(carried > 0, "a hauler carries blades");
+    assert_eq!(owed_total(&engine), 12 - carried);
+    let l = ledger_of(&engine.world, &engine.resources, ItemKind::FlintBlade);
+    assert!(l.traded_out <= 12 && engine.resources.colony.neighbours.tallies.gifts == 1);
+}
+
+/// Review F8: an owed entry whose stack now holds another kind does not hide a later entry on the same tile (the old
+/// assignment took the first entry by tile, failed its kind check and offered nothing).
+#[test]
+fn an_owed_entry_of_another_kind_does_not_block_the_tile() {
+    let (mut engine, _, tile) = blades_for_trade(0, 6);
+    if let Some(c) = engine
+        .resources
+        .colony
+        .neighbours
+        .caravans
+        .iter_mut()
+        .find(|c| matches!(c.state, VisitState::Waiting { .. }))
+    {
+        c.owed = vec![(tile, ItemKind::Hide, 2), (tile, ItemKind::FlintBlade, 4)];
+    }
+    let mut job = None;
+    for _ in 0..DAY / 2 {
+        tick_checked(&mut engine);
+        job = trade_job(&engine);
+        if job.is_some() {
+            break;
+        }
+    }
+    let job = job.expect("the blades are hauled");
+    assert_eq!(job.item, ItemKind::FlintBlade);
+    assert_eq!(job.amount, 4, "the owed four, not the stack's six");
+    // The pickup takes only the blade entry down.
+    for _ in 0..DAY / 2 {
+        tick_checked(&mut engine);
+        if owed_total(&engine) < 6 {
+            break;
+        }
+    }
+    let owed = engine
+        .resources
+        .colony
+        .neighbours
+        .trading_caravan()
+        .map(|c| c.owed.clone())
+        .expect("still trading");
+    assert_eq!(owed, vec![(tile, ItemKind::Hide, 2)]);
+}
+
+/// One `DiscoverySystem` run on colony seed 4 where every person practises clay digging and nobody clay preparation:
+/// `(discoverers of clay preparation, eurekas)`. `neighbours`: the rule on (with `eureka_permille`) or off; `pot`: a
+/// clay pot lies on the ground (a clue for clay preparation); `clay`: 4 clay stockpiled (its own condition met).
+fn clay_prep_discoveries(
+    neighbours: Option<u32>,
+    pot: bool,
+    clay: bool,
+    odds: u32,
+) -> (usize, u64) {
+    let mut engine = sim_test::colony_engine(4);
+    if let Some(c) = engine.resources.rules.colony.as_mut() {
+        c.neighbours = neighbours.map(|eureka| NeighbourRule {
+            eureka_permille: eureka,
+            ..NeighbourRule::M5_5
+        });
+        if let Some(k) = c.knowledge.as_mut() {
+            k.discovery_odds = [odds; 3];
+        }
+    }
+    tick_checked(&mut engine);
+    let clay_prep = knowledge::id("clay_prep").expect("node");
+    let clay_digging = knowledge::id("clay_digging").expect("node");
+    let all: Vec<_> = engine
+        .world
+        .query::<&Agent>()
+        .iter()
+        .map(|(e, _)| e)
+        .collect();
+    for e in all {
+        if let Ok(mut k) = engine.world.get::<&mut Knowledge>(e) {
+            k.set(clay_digging, 800, Source::Seeded, 0);
+            assert!(!k.practises(clay_prep), "nobody practises clay preparation");
+        }
+    }
+    if pot {
+        engine
+            .resources
+            .colony
+            .item_ledger
+            .create(ItemKind::ClayPot, 1);
+        let at = open_area(&engine, 1, 1);
+        sim_systems::runtime::jobs::items::put_items(
+            &mut engine.resources,
+            at,
+            ItemSpec::raw(ItemKind::ClayPot, None),
+            1,
+        );
+    }
+    if clay {
+        let at = open_area(&engine, 2, 2);
+        let zoned = submit(
+            &mut engine,
+            Command::AddStockpile {
+                x0: at.0,
+                y0: at.1,
+                x1: at.0 + 1,
+                y1: at.1 + 1,
+            },
+        );
+        assert!(zoned.accepted);
+        engine
+            .resources
+            .colony
+            .item_ledger
+            .create(ItemKind::Clay, 4);
+        sim_systems::runtime::jobs::items::put_items(
+            &mut engine.resources,
+            at,
+            ItemSpec::raw(ItemKind::Clay, None),
+            4,
+        );
+    }
+    let stocked =
+        sim_systems::runtime::knowledge::discover::stockpiled(&engine.resources, ItemKind::Clay);
+    assert_eq!(
+        stocked >= 4,
+        clay,
+        "clay stockpiled only when asked: {stocked}"
+    );
+    let before = engine.resources.colony.neighbours.tallies.eurekas;
+    sim_systems::runtime::knowledge::DiscoverySystem.tick(&mut engine.world, &mut engine.resources);
+    let found = engine
+        .world
+        .query::<&Knowledge>()
+        .iter()
+        .filter(|(_, k)| k.practises(clay_prep))
+        .count();
+    (
+        found,
+        engine.resources.colony.neighbours.tallies.eurekas - before,
+    )
+}
+
+/// Review F2: eureka acts only under the neighbour rule — with the rule off a held pot neither opens clay
+/// preparation's stockpile condition nor widens its draw (the old code opened the condition for every rule).
+#[test]
+fn eureka_needs_the_neighbour_rule() {
+    let (off, off_eurekas) = clay_prep_discoveries(None, true, false, 1);
+    assert_eq!((off, off_eurekas), (0, 0), "rule off: the pot is no clue");
+    let (on, on_eurekas) = clay_prep_discoveries(Some(3_000), true, false, 1);
+    assert!(
+        on >= 2,
+        "rule on: the pot opens the condition ({on} discoverers)"
+    );
+    assert_eq!(
+        on_eurekas as usize, on,
+        "every one of them decided by the clue"
+    );
+}
+
+/// The ×3 through `DiscoverySystem` itself (DECISIONS D20 re-done after review F2): at odds 1 in 3 a clue wins every
+/// draw (draws 0–2 × 1,000 < 3,000), so as many candidates discover as at odds 1 in 1; with `eureka_permille` 1,000
+/// (no ×3) only those whose draw is 0 do.
+#[test]
+fn a_clue_triples_the_discovery_draw() {
+    let (sure, _) = clay_prep_discoveries(Some(3_000), true, false, 1);
+    let (tripled, _) = clay_prep_discoveries(Some(3_000), true, false, 3);
+    let (plain, _) = clay_prep_discoveries(Some(1_000), true, false, 3);
+    assert!(sure >= 2, "{sure} candidates");
+    assert_eq!(tripled, sure, "×3 at odds 3 wins every draw");
+    assert!(plain < sure, "without ×3 fewer win: {plain} of {sure}");
+}
+
+/// Review F5: a clue node's discovery counts as a eureka only when the clue decided it — with the node's condition
+/// met by its own clay and the draw a sure win (odds 1), nobody needed the pot.
+#[test]
+fn a_eureka_is_counted_only_when_the_clue_decided_it() {
+    let (found, eurekas) = clay_prep_discoveries(Some(3_000), true, true, 1);
+    assert!(found >= 2, "{found} discoverers");
+    assert_eq!(eurekas, 0, "the clay alone opened it and the draw was sure");
+}
+
+/// The first wave of colony seed 3 while it is still walking in.
+fn wave_on_its_way(seed: u64) -> (SimEngine, u32) {
+    let mut engine = sim_test::colony_engine(seed);
+    while !engine
+        .resources
+        .colony
+        .neighbours
+        .waves
+        .iter()
+        .any(|w| w.state == VisitState::Arriving)
+        && engine.current_tick() < 13 * DAY
+    {
+        tick_checked(&mut engine);
+    }
+    let id = engine
+        .resources
+        .colony
+        .neighbours
+        .waves
+        .iter()
+        .find(|w| w.state == VisitState::Arriving)
+        .map(|w| w.id)
+        .expect("a wave walks in");
+    (engine, id)
+}
+
+/// Review F3: a wave accepted while still walking in keeps walking and joins on reaching the hearth (the old code
+/// spawned its people where the group stood — 72 tiles from the hearth on seed 3).
+#[test]
+fn a_wave_accepted_on_its_way_joins_at_the_hearth() {
+    let (mut engine, id) = wave_on_its_way(3);
+    let size = engine.resources.colony.neighbours.waves[(id - 1) as usize]
+        .people
+        .len();
+    let before = people(&engine);
+    let r = submit(&mut engine, Command::AcceptMigrants { wave: id });
+    assert!(r.accepted && r.count as usize == size);
+    let w = engine.resources.colony.neighbours.waves[(id - 1) as usize].clone();
+    assert_eq!(w.state, VisitState::Arriving, "still walking");
+    assert_eq!(w.answer, Some(WaveAnswer::Accepted));
+    assert_eq!(people(&engine), before, "nobody joined on the way");
+    for _ in 0..2 * DAY {
+        tick_checked(&mut engine);
+        if engine.resources.colony.neighbours.waves[(id - 1) as usize].state == VisitState::Gone {
+            break;
+        }
+    }
+    let w = engine.resources.colony.neighbours.waves[(id - 1) as usize].clone();
+    assert_eq!(w.state, VisitState::Gone);
+    assert_eq!(w.joined.len(), size, "all of them joined");
+    assert_eq!(engine.resources.colony.neighbours.tallies.accepted, 1);
+    let hearth = sim_systems::worldgen::colony::hearth(&engine.resources).expect("hearth");
+    let far = engine
+        .world
+        .query::<(&Agent, &sim_core::components::Position)>()
+        .iter()
+        .filter(|(_, (a, _))| w.joined.contains(&a.id))
+        .map(|(_, (_, p))| p.x.abs_diff(hearth.0).max(p.y.abs_diff(hearth.1)))
+        .max()
+        .expect("the joined people");
+    assert!(far <= 14, "they joined by the hearth: {far} tiles");
+}
+
+/// Review F7: with no meeting tile (here: no hearth) a wave still stops, waits and times out instead of freezing.
+#[test]
+fn visitors_without_a_meeting_tile_still_wait_and_leave() {
+    let (mut engine, id) = wave_on_its_way(3);
+    engine
+        .resources
+        .building_kinds
+        .retain(|_, k| *k != sim_core::components::BuildingKind::Hearth);
+    assert!(sim_systems::worldgen::colony::hearth(&engine.resources).is_none());
+    let start = engine.resources.current_tick;
+    for k in 1..=(2 * DAY / 3) {
+        engine.resources.current_tick = start + 3 * k;
+        neighbours::VisitorSystem.tick(&mut engine.world, &mut engine.resources);
+    }
+    let w = &engine.resources.colony.neighbours.waves[(id - 1) as usize];
+    assert_eq!(
+        w.answer,
+        Some(WaveAnswer::Unanswered),
+        "it waited and timed out"
+    );
+    assert!(matches!(w.state, VisitState::Leaving | VisitState::Gone));
 }

@@ -81,6 +81,10 @@ pub struct MoodRule {
     /// See [`Self::quarrel_mood_divisor`].
     #[serde(default = "low_factor")]
     pub quarrel_low_factor: i32,
+    /// M5.5 (ADR 0030 amendment): a quarrel's cause is a concrete record (`mood::cause_record`: a need sample, the
+    /// death, the pressure); `false` keeps M5's modifier references (review F6: the M5 rule writes M5's records).
+    #[serde(default)]
+    pub cause_records: bool,
 }
 
 const fn partners_max() -> u32 {
@@ -154,6 +158,7 @@ impl MoodRule {
         quarrel_mood_divisor: 25,
         quarrel_relation_divisor: 100,
         quarrel_low_factor: 3,
+        cause_records: false,
     };
 
     /// The M5.5 values: [`Self::M5`] as calibrated on seeds 0–7 (goal M5.5 §3.1.6; M5.5 DECISIONS, calibration rounds).
@@ -166,6 +171,7 @@ impl MoodRule {
         pressure_weight: -80,
         sick_weight: -160,
         breakdown: 105,
+        cause_records: true,
         ..Self::M5
     };
 }
