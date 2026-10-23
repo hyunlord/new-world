@@ -63,6 +63,9 @@ pub struct ColonyRule {
     /// apparel. `None` = M4 (no animals).
     #[serde(default)]
     pub wildlife: Option<super::WildlifeRule>,
+    /// M5 (ADR 0030): mood and quarrels. `None` = M4 (no mood).
+    #[serde(default)]
+    pub mood: Option<super::MoodRule>,
 }
 
 /// M3's tunables (goal 3.2–3.3; `ColonyRule::space`).
@@ -183,6 +186,7 @@ impl ColonyRule {
         knowledge: None,
         story: None,
         wildlife: None,
+        mood: None,
     };
 
     /// The M1.5 colony values: [`Self::M1`] with the job-churn remedies
@@ -216,6 +220,7 @@ impl ColonyRule {
     pub const M5: Self = Self {
         story: Some(super::StoryRule::M5),
         wildlife: Some(super::WildlifeRule::M5),
+        mood: Some(super::MoodRule::M5),
         ..Self::M4
     };
 

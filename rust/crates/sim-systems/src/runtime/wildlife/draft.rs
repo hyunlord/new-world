@@ -21,7 +21,7 @@ use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
 use sim_core::colony::people::{DraftOrder, Drafted};
 use sim_core::colony::story::PressureKind;
 use sim_core::colony::wildlife::{Fight, Fighter};
-use sim_core::colony::{CancelReason, ItemKind, ReserveKey, Tool};
+use sim_core::colony::{CancelReason, ItemKind, Tool};
 use sim_core::components::{
     Agent, AgentId, AgentState, Hunger, Position, SeekTarget, TargetKind, Thirst,
 };
@@ -71,7 +71,9 @@ pub fn armed(world: &World, entity: Entity) -> bool {
 }
 
 /// Draft `entity` (`id`): its job is cancelled, it holds where it stands, and an
-/// unarmed person first fetches the nearest spear or axe within `arm_reach`.
+/// unarmed person first fetches the nearest spear or axe within `arm_reach`
+/// (not reserved: a person without a job holds no reservation; if someone else
+/// takes it first, the drafted person goes on unarmed).
 pub fn draft(world: &mut World, res: &mut SimResources, entity: Entity, id: AgentId) {
     let Some(rule) = super::rule(res) else {
         return;
@@ -95,9 +97,6 @@ pub fn draft(world: &mut World, res: &mut SimResources, entity: Entity, id: Agen
             )
         })
         .flatten();
-    if let Some(tile) = arming {
-        crate::runtime::jobs::cancel::reserve(res, ReserveKey::Stack(tile), id);
-    }
     let _ = world.insert_one(
         entity,
         Drafted {
@@ -121,9 +120,7 @@ pub fn undraft(world: &mut World, res: &mut SimResources, entity: Entity, id: Ag
     let Ok(d) = world.remove_one::<Drafted>(entity) else {
         return;
     };
-    if let Some(tile) = d.arming {
-        res.colony.reservations.remove(&ReserveKey::Stack(tile));
-    }
+    let _ = d;
     super::fight::drop_fights_of_attacker(res, Fighter::Person(id));
     let _ = world.remove_one::<SeekTarget>(entity);
     set_state(world, entity, AgentState::Idle);
@@ -230,11 +227,8 @@ impl RuntimeSystem for DraftSystem {
                 }) {
                     seek(world, entity, tile);
                     continue;
-                } else {
-                    res.colony.reservations.remove(&ReserveKey::Stack(tile));
-                    if let Ok(mut held) = world.get::<&mut Drafted>(entity) {
-                        held.arming = None;
-                    }
+                } else if let Ok(mut held) = world.get::<&mut Drafted>(entity) {
+                    held.arming = None;
                 }
             }
             match d.order {

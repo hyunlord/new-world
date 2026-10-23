@@ -152,6 +152,13 @@ impl RuntimeSystem for DiscoverySystem {
                 continue;
             }
             store(world, p.entity, k);
+            // M5 (ADR 0030): a discovery cheers for days.
+            crate::runtime::mood::note(
+                world,
+                resources,
+                p.entity,
+                crate::runtime::mood::Fact::Discovered,
+            );
             for id in found {
                 resources.colony.tallies.discoveries += 1;
                 resources.chronicle.push(

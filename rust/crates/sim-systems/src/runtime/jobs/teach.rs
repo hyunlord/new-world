@@ -373,6 +373,9 @@ fn session_done(
         order.sessions_today = order.sessions_today.saturating_add(1);
     }
     res.colony.tallies.teach_sessions += 1;
+    // M5 (ADR 0030): teaching and learning cheer both.
+    crate::runtime::mood::note(world, res, t, crate::runtime::mood::Fact::Learned);
+    crate::runtime::mood::note(world, res, l, crate::runtime::mood::Fact::Learned);
     if learned {
         res.chronicle.push(
             ChronicleEntry::new(tick, ChronicleKind::KnowledgeLearned)

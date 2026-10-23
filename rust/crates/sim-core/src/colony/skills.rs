@@ -335,9 +335,9 @@ mod tests {
                 WorkType::Haul,
                 WorkType::Craft,
                 WorkType::Build,
+                WorkType::Hunt,
                 WorkType::Quarry,
                 WorkType::Mine,
-                WorkType::Hunt,
                 WorkType::Split
             ]
         );

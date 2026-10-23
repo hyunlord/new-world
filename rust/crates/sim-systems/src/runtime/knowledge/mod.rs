@@ -119,6 +119,8 @@ pub fn used(world: &mut World, res: &SimResources, entity: Entity, mask: u32) {
     if let Ok(mut k) = world.get::<&mut Knowledge>(entity) {
         k.use_mask(mask, rule.use_gain, res.current_tick);
     }
+    // M5 (ADR 0030): working a gated craft as its practitioner cheers.
+    crate::runtime::mood::note(world, res, entity, crate::runtime::mood::Fact::Crafted);
 }
 
 /// The lowest proficiency among the nodes of `mask` the worker holds (the

@@ -20,6 +20,7 @@ pub(crate) mod fission_settlements;
 /// M3 built space and rooms in a colony run (`m3` summary block).
 pub mod knowledge;
 mod long_run;
+pub mod m5;
 pub(crate) mod meals_firewood;
 pub(crate) mod metrics;
 pub(crate) mod night_burn;

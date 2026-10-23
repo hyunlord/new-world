@@ -134,6 +134,23 @@ owner": every open question is decided here.
   a piece every hour (`meat_eaten` counts it there); the larder then feeds people as V7's stockpile does. Spoilage
   works on lots by kill day (a lot's meat spoils from the ground stacks in tile order; meat in someone's hands waits
   for the next day).
+- Added while testing (`colony_wildlife.rs`) and calibrating (D14 has the rounds):
+  - Wolves spread their targets: each step a wolf picks the nearest person no other wolf of the step has picked, else
+    the nearest (round 0: two or three wolves on one drafted fighter killed them).
+  - A hunter picks a wounded deer first, then the nearest (`hunt::pick`: `(hp, distance, y, x, id)`), so a hunt that
+    lost its first target finishes the herd's wounded deer instead of starting over.
+  - `tracking` is used (practice and mood note) once per attack, not once per hunt.
+  - A hunter holding a flint blade swaps it for a spear on the way when one is stocked within reach (`hunting_fetch`).
+  - `WorkType::Hunt` comes right after Build in the work order (craft, build, hunt, quarry, mine, chop, split,
+    haul): placed after Mine it rarely ran, since quarrying and mining always had work (round 2: hunts were rare
+    on every world). The tests pinned to the order were updated in the same commit.
+  - Deer live as a herd: the first deer are placed within `deer_home_tiles` (16) of one keyed centre, and a new deer
+    is born near the home of a living one, so a hunt zone over the herd keeps its deer (round 3: random respawns
+    over the whole forest emptied the zone). The centre lies within `deer_herd_max_tiles` (48) of the hearth when
+    the forest allows (round 4: seed 6's herd sat in a map corner 110 tiles out, beyond the 96-tile job radius, and
+    no deer was ever hunted).
+  - Arming a drafted person takes a spear or blade from a stockpile without a reservation (the drafted person holds
+    no job, and the reservation invariant allows reservations only to job holders; seed 5 of round 0 failed F10).
 
 ## D9 — Hunting and hides are gated
 
@@ -151,7 +168,99 @@ owner": every open question is decided here.
 - Butchering wears a flint blade only when the hunter holds one as the tool; a hunter without a tool fetches a spear
   first, a blade only when no spear is stocked (so most kills give 2 meat once spears exist; F4 counts meat eaten).
 - Dressing: hourly, while the order is on; tops on stockpile cells warmest first; the neediest adult (highest
-  `Hardiness` permille, i.e. the lowest cold tolerance, then `AgentId`) who wears something colder gets it; when that
-  person is busy the top waits for them. Children are not dressed (children take no jobs); recorded as a limit.
+  `Hardiness` permille, i.e. the lowest cold tolerance, then `AgentId`) among the adults free at that pass who wear
+  something colder gets it. The first version let the top wait for the neediest person while they were busy; a pass
+  runs hourly and a busy person is rarely free at that minute, so wraps lay on the stockpile for days (round 5,
+  seed 5: 3 of 6 wraps unworn at day 48); now a busy person is served at a later pass. Children are not dressed
+  (children take no jobs); recorded as a limit.
 - A worn top is counted as held by the ledger (`ledger_of` adds worn tops to `held`); at a death it is left on the
   ground like a held tool. Tops never wear out in M5.
+
+## D11 — Mood and quarrels: the numbers the goal leaves open
+
+- Kin base: parent and child, siblings (a shared known parent) and partners have base relation `kin_base` = 500, so
+  they never quarrel (goal 3.4: kin base ≥ 300). Non-kin pairs have a keyed base in −300..=300 (`chemistry`,
+  `STREAM_QUARREL`, the pair's lineage keys); a relation drifts back to its base by `relation_drift` = 10 a day.
+  Without a negative base no pair of strangers ever quarrelled on a fed colony (round 0: 0 quarrels on 6 of 8 worlds).
+- The night window for the sleep and cold facts is the colony's sleep hours, 20:00–06:00; "last night" is read from
+  08:00. A breakdown lasts `breakdown_days` = 1: the person keeps no job for the rest of that day and the next.
+- A quarrel's cause is the initiator's largest negative modifier among hunger, cold, sleep, grief and pressure.
+  When there is none, or the pair already quarrelled that day, the cause is the relation: cause code
+  `RELATION_CAUSE` = 100 with a cause link to the pair's previous quarrel (`Bond::last_quarrel`), so every
+  relation quarrel's "why?" chain has at least two links: the quarrel and the relation, then the previous quarrel
+  and its cause when there was one. A pair of strangers with a negative base can quarrel over the relation before
+  any modifier exists (calibration r7, seed 2: a quarrel at tick 0); its chain is the quarrel and the relation.
+- Hostility lives in V7's `relationships` (permille of the 0–1 scale); the M5 bond (`colony.bonds`) holds the
+  relation, its day and the last quarrel's chronicle index.
+
+## D12 — The M5-U script, as resolved
+
+`tools/v8/m5_u_script.json` is M4-U's economy (stockpiles, chop, quarry, mine, workshops, knap and axe bills, house,
+storehouse, the teach order) with the goal's M5 entries, which the goal gives by day; the script places them by tick
+so the colony has the workshop each needs:
+- `Maintain 2 StoneAxe` (M4-U's) and `Maintain 6 FlintBlade` (M4-U's knap bill moved from 10 to 6, the goal's count);
+- tick 1,800 (day 1, 06:00 after the workshop): `Make 4 Spear` (`haft_spear`, the hafting gate);
+- tick 3,240 (day 2): a Hunt zone 33 × 33 (half 16) centred on the home of the deer nearest the hearth
+  (`deer_forest` resolver);
+- tick 4,680 (day 3): a drying rack, a standing `scrape_hide` bill (make 12) and `Make 6 HideWrap`;
+- every day after a pack comes: draft four healthy adults (armed first, then nearest the hearth) and send them at the
+  wolves (`draft_party`); when no wolf is left, undraft everyone (`drafted_all`, condition `no_wolves`);
+- the dressing order on from the start (the default).
+`tools/v8/m5_u_nodraft_script.json` is the same without the draft entries (F3b). The control is the same script with
+`--story off` (no storyteller; wildlife, hunting and mood stay on).
+
+## D13 — Scorer registration (`docs/v8/m5/m5_score.py`)
+
+The bars as the scorer reads them are registered in its docstring before the first held-out run; changes after the
+calibration rounds started:
+- F9a is pooled (Σ births / Σ woman-years over the control's worlds), not per world: a world has 0–4 births in two
+  years, so a per-world rate in 0.20–0.30 is noise (M1.5 D1 measured it pooled as well). The bar holds for all
+  worlds or none.
+- F2a uses the hearth's usable firewood (the settlements' wood plus feedable firewood items), sampled hourly during
+  each cold snap, against one day's burn at the snap's rate.
+- F3a counts a pack beaten when no wolf of it is left on the map and at least half of it was killed, with no death
+  while any pack was on the map.
+
+## D14 — Calibration rounds (seeds 0–7, 48 days; ≤ 8 rounds)
+
+Each round: pressure (M5-U), control (`--story off`) and no-draft runs, `$DATA/cal/<round>/`, scored by
+`m5_score.py`. Bars scaled to 8 worlds.
+
+| round | change before it | F1 | F2a | F2b | F3a | F3b | F4 | F5 | F6a | F6b | F7 | F8 | F9a pooled | F10 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| r0 | first draft | 8 | 8 | 8 | 2 | 8 | 0 | 0 | 8 | 4 | 1 | 0 | 0.291 | 7 |
+| r1 | draft arming without a reservation; wolf target spreading | 8 | 8 | 7 | 7 | 8 | 0 | 0 | 8 | 0 | 1 | 0 | 0.313 | 8 |
+| r2 | chemistry ±150 → ±300; relation quarrels linked to the previous quarrel; a hunter swaps a held blade for a spear | 8 | 8 | 8 | 8 | 8 | 0 | 0 | 8 | 0 | 5 | 0 | 0.338 | 8 |
+| r3 | Hunt right after Build in the work order | 8 | 8 | 8 | 8 | 8 | 0 | 0 | 8 | 0 | 7 | 0 | 0.364 | 8 |
+| r4 | deer as a herd, births near the herd | 8 | 7 | 7 | 7 | 8 | 6 | 5 | 8 | 2 | 8 | 0 | 0.443 | 8 |
+| r5 | the herd's centre within 48 tiles of the hearth | 8 | 8 | 8 | 8 | 8 | 8 | 6 | 8 | 1 | 8 | 0 | 0.327 | 8 |
+| r6 | dressing serves the neediest free person | 8 | 8 | 7 | 6 | 8 | 8 | 5 | 8 | 3 | 7 | 0 | 0.322 | 8 |
+| r7 | a worn top spares cold hours (D15) | 8 | 8 | 7 | 6 | 8 | 8 | 5 | 8 | 3 | 6 | 0 | 0.322 | 8 |
+
+Bars at 8 worlds: F1, F9a, F10 8; F2b, F4, F6a, F7 7; F2a, F3a, F3b, F5, F8 6; F6b 2. Each round's scorer output is
+`$DATA/cal/<round>/score.txt` (re-scored with the final scorer), the per-seed appendix `appendix.json`.
+
+Calibration ends with r7 (8 rounds, the goal's limit); the held-out evaluation runs the r7 code. At r7 the bars
+below their 8-world scale are F5 (5/8), F7 (6/8), F8 (0/8) and F9a (pooled 0.322 against 0.20–0.30); F2b, F3a are at
+the bar. M4 under its own M4-U script, measured the same way: 0.336.
+
+Round 4 seed by seed: seed 6 never hunted (the herd 110 tiles out; fixed for r5 by `deer_herd_max_tiles`); seed 4
+lost all ten people to exposure (5 in the control), with meat never reaching the larder — under investigation for r5.
+F8 (≥ 10 knives used up by day 48) is 0/8 in every round: a world makes 12–15 knife uses in 48 days (scrape_hide
+and butchering), one or two knives' worth at 8 uses a knife; the goal's numbers allow ~2 knives, not 10, without a
+larger hide sink than six wraps. Not tuned away (recorded as a limit). F9a: M4's colony under the M4-U script,
+measured the same way on seeds 0–7 (`$DATA/cal/m4base`), is 16 births / 47.6 woman-years = 0.336, already above the
+0.20–0.30 band at 8 worlds; the held-out 32 decide, and the report compares with M4's rate.
+
+## D15 — What a worn top does against the cold
+
+The goal gives the hide wrap "exposure cold ×700 ‰" (fur cloak ×500 ‰), and F5 measures cold *events* by group. The
+first version scaled only the exposure damage; the `Cold` marker comes from the hearth being out, the same for
+everyone of the settlement, so clothed and unclothed people had the same cold hours by construction (round 6, seed
+3: 8 vs 12 cold hours of 600). Now the factor acts on the cold hour itself: when the fire is out, a wearer is cold
+that hour with chance `Top::cold_permille` (one keyed roll an hour, `STREAM_APPAREL`, subject = the lineage key),
+and a cold hour bites as for anyone. Cold hours, the mood's "cold last night" and exposure damage all scale by the
+factor on average (`colony_hides.rs`: 678 and 481 ‰ of 1,920 cold hours on seed 2). Consequence for F5's second
+half (clothed rate ≤ half the unclothed rate): at 700 ‰ the expected ratio is 0.7, so a world passes that half when
+its fires stay lit through every winter night (both rates 0) or by chance; this follows from the goal's own factor
+and is reported, not tuned.

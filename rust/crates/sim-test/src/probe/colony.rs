@@ -73,6 +73,9 @@ pub struct ColonyArgs {
     pub save_at: Option<u64>,
     /// Where `save_at` writes the save bytes.
     pub save_out: Option<PathBuf>,
+    /// M5: `--story on|off|no-beasts` — the storyteller on (the default), off (the
+    /// no-pressure control), or without beasts (the soak: wolves off).
+    pub story: String,
 }
 
 impl ColonyArgs {
@@ -89,6 +92,7 @@ impl ColonyArgs {
             chronicle_out: None,
             save_at: None,
             save_out: None,
+            story: "on".into(),
         };
         let mut args = args.into_iter();
         while let Some(flag) = args.next() {
@@ -118,6 +122,9 @@ impl ColonyArgs {
                     parsed.save_at = Some(value.parse().map_err(|_| "invalid save tick")?)
                 }
                 "--save-out" => parsed.save_out = Some(value.into()),
+                "--story" if matches!(value.as_str(), "on" | "off" | "no-beasts") => {
+                    parsed.story = value
+                }
                 _ => return Err(format!("unknown colony probe argument {flag} {value}")),
             }
         }
@@ -695,6 +702,17 @@ pub fn entry_ready(engine: &SimEngine, spec: &Value) -> bool {
     match spec["after"].as_str() {
         None => true,
         Some("pocket_dug") => pocket_mouth(engine).is_some(),
+        // M5: a wolf pack is on the map; none is and someone is still drafted.
+        Some("wolves") => engine.resources.colony.wildlife.wolves().next().is_some(),
+        Some("no_wolves") => {
+            engine.resources.colony.wildlife.wolves().next().is_none()
+                && engine
+                    .world
+                    .query::<&sim_core::colony::people::Drafted>()
+                    .iter()
+                    .next()
+                    .is_some()
+        }
         Some(cond) => match (cond.strip_prefix("workshop:"), cond.strip_prefix("knows:")) {
             (Some(kind), _) => BlueprintKind::from_name(kind)
                 .and_then(|k| workshop_of(engine, k))
@@ -950,6 +968,99 @@ pub fn resolve(
                 })
                 .collect()
         }
+        // M5: a hunt zone over the deer nearest the hearth (its home ground).
+        ("add_hunt_zone", Some("deer_forest")) => {
+            let Some(h) = hearth(&engine.resources) else {
+                return Ok(Vec::new());
+            };
+            let reach = spec["half"].as_u64().unwrap_or(16) as u32;
+            let deer = engine
+                .resources
+                .colony
+                .wildlife
+                .deer()
+                .min_by_key(|a| (chebyshev(a.pos, h), a.id))
+                .map(|a| a.home.unwrap_or(a.pos));
+            let (w, ht) = (
+                engine.resources.tile_grid.width,
+                engine.resources.tile_grid.height,
+            );
+            deer.map_or_else(Vec::new, |c| {
+                vec![Command::AddHuntZone {
+                    x0: c.0.saturating_sub(reach),
+                    y0: c.1.saturating_sub(reach),
+                    x1: (c.0 + reach).min(w - 1),
+                    y1: (c.1 + reach).min(ht - 1),
+                }]
+            })
+        }
+        // M5: draft `count` adults nearest the hearth and send them at the wolves.
+        ("set_drafted", Some("draft_party")) => {
+            let Some(h) = hearth(&engine.resources) else {
+                return Ok(Vec::new());
+            };
+            let count = spec["count"].as_u64().unwrap_or(4) as usize;
+            // Healthy (hunger and thirst below 60) and armed people first, then the nearest (D12).
+            let mut folk: Vec<(bool, bool, u32, u64)> = engine
+                .world
+                .query::<(
+                    &Agent,
+                    &Position,
+                    Option<&sim_core::components::Hunger>,
+                    Option<&sim_core::components::Thirst>,
+                    Option<&sim_core::colony::Tool>,
+                )>()
+                .without::<&Child>()
+                .without::<&Elder>()
+                .iter()
+                .map(|(_, (a, p, hu, th, tool))| {
+                    let needy =
+                        hu.is_some_and(|h| h.value >= 60.0) || th.is_some_and(|t| t.value >= 60.0);
+                    let armed = tool.is_some_and(|t| {
+                        matches!(
+                            t.item.kind,
+                            ItemKind::Spear | ItemKind::StoneAxe | ItemKind::GroundAxe
+                        )
+                    });
+                    (needy, !armed, chebyshev((p.x, p.y), h), a.id)
+                })
+                .collect();
+            folk.sort_unstable();
+            let mut wolves: Vec<(u32, u32)> = engine
+                .resources
+                .colony
+                .wildlife
+                .wolves()
+                .map(|a| (chebyshev(a.pos, h), a.id))
+                .collect();
+            wolves.sort_unstable();
+            let mut out = Vec::new();
+            for (i, (_, _, _, agent)) in folk.into_iter().take(count).enumerate() {
+                out.push(Command::SetDrafted {
+                    agent,
+                    drafted: true,
+                });
+                if !wolves.is_empty() {
+                    out.push(Command::DraftAttack {
+                        agent,
+                        animal: wolves[i % wolves.len()].1,
+                    });
+                }
+            }
+            out
+        }
+        ("set_drafted", Some("drafted_all")) => engine
+            .world
+            .query::<(&Agent, &sim_core::colony::people::Drafted)>()
+            .iter()
+            .map(|(_, (a, _))| a.id)
+            .collect::<std::collections::BTreeSet<u64>>()
+            .into_iter()
+            .map(|agent| Command::SetDrafted {
+                agent,
+                drafted: false,
+            })
+            .collect(),
         (_, Some(other)) => return Err(format!("unknown resolve {other}")),
         ("designate_quarry", None) => {
             let (x0, y0, x1, y1) = rect(spec)?;
@@ -1098,6 +1209,14 @@ pub fn resolve(
             agent: spec["agent"].as_u64().ok_or("draft_attack needs agent")?,
             animal: field(spec, "animal")?,
         }],
+        ("draft_attack_person", None) => vec![Command::DraftAttackPerson {
+            agent: spec["agent"]
+                .as_u64()
+                .ok_or("draft_attack_person needs agent")?,
+            target: spec["target"]
+                .as_u64()
+                .ok_or("draft_attack_person needs target")?,
+        }],
         ("designate_hunt", None) => vec![Command::DesignateHunt {
             animal: field(spec, "animal")?,
         }],
@@ -1140,6 +1259,7 @@ pub fn command_json(tick: u64, cmd: &Command) -> Value {
         }
         Command::DraftMove { agent, x, y } => json!({"agent": agent, "x": x, "y": y}),
         Command::DraftAttack { agent, animal } => json!({"agent": agent, "animal": animal}),
+        Command::DraftAttackPerson { agent, target } => json!({"agent": agent, "target": target}),
         Command::DesignateHunt { animal } => json!({"animal": animal}),
         Command::SetDressOrder { on } => json!({"on": on}),
         Command::DesignateChopTiles { tiles } => {
@@ -1302,11 +1422,28 @@ fn deaths(engine: &SimEngine) -> Value {
     })
 }
 
-fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<SeedRun, String> {
+/// The colony world of `seed` with the probe's `--story` choice applied (M5).
+fn probe_world(seed: u64, story: &str) -> SimEngine {
     let mut engine = crate::scenes::colony_scene(seed);
+    if let Some(rule) = engine.resources.rules.colony.as_mut() {
+        match story {
+            "off" => rule.story = None,
+            "no-beasts" => {
+                if let Some(s) = rule.story.as_mut() {
+                    s.beasts = false;
+                }
+            }
+            _ => {}
+        }
+    }
+    engine
+}
+
+fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<SeedRun, String> {
+    let mut engine = probe_world(seed, &args.story);
     let mut twin = args
         .check_determinism
-        .then(|| crate::scenes::colony_scene(seed));
+        .then(|| probe_world(seed, &args.story));
     let total = args.days * DAY;
     let mut next = 0usize;
     let mut placed_tick: Option<u64> = None;
@@ -1322,6 +1459,7 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
     let mut economy = super::economy::Economy::new();
     let mut space = super::space::SpaceWatch::new();
     let mut knowledge = super::knowledge::KnowledgeWatch::new();
+    let mut m5 = super::m5::M5Watch::new();
     let mut waiting: Vec<usize> = Vec::new();
     // `"every_days"` entries: (tick of the next application, entry), M3.
     let mut repeats: Vec<(u64, usize)> = Vec::new();
@@ -1389,6 +1527,7 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
         economy.after_tick(&engine);
         space.after_tick(&engine);
         knowledge.after_tick(&engine);
+        m5.after_tick(&engine);
         if let Some(t) = twin.as_mut() {
             t.tick();
         }
@@ -1508,6 +1647,7 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
         "m3": space.report(&engine),
     });
     summary["m4"] = knowledge.report(&engine);
+    summary["m5"] = m5.report(&engine);
     let mut sorted = tick_ns.clone();
     sorted.sort_unstable();
     let mean = tick_ns.iter().sum::<u64>() as f64 / tick_ns.len().max(1) as f64 / 1e6;
@@ -1681,6 +1821,7 @@ mod tests {
             chronicle_out: None,
             save_at: None,
             save_out: None,
+            story: "on".into(),
         };
         run(&first).expect("scripted run");
         let replay = ColonyArgs {
@@ -1720,6 +1861,7 @@ mod tests {
             chronicle_out: None,
             save_at: None,
             save_out: None,
+            story: "on".into(),
         };
         run(&first).expect("scripted run");
         let replay = ColonyArgs {

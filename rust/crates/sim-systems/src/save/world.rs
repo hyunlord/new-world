@@ -117,6 +117,7 @@ pub fn registry() -> Vec<ComponentCodec> {
         codec::<Lineage>("Lineage"),
         codec::<MaterialNeeds>("MaterialNeeds"),
         codec::<Memory>("Memory"),
+        codec::<sim_core::colony::people::Mood>("Mood"),
         codec::<MovementRng>("MovementRng"),
         codec::<PorterTrip>("PorterTrip"),
         codec::<Position>("Position"),

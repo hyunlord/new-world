@@ -90,6 +90,7 @@ impl RuntimeSystem for OralTransmissionSystem {
         let mut after = before.clone();
         let mut told = 0u64;
         let mut learned = 0u64;
+        let mut listeners: Vec<hecs::Entity> = Vec::new();
         let mut rehearsed = 0u64;
         for (li, listener) in here.iter().enumerate() {
             if !listener.adult && listener.years < rule.learner_min_years {
@@ -183,6 +184,7 @@ impl RuntimeSystem for OralTransmissionSystem {
                 if roll < u64::from(chance) && d.get(node).is_some() {
                     after[li].raise_to(node, rule.oral_gain, Source::Oral, tick);
                     learned += 1;
+                    listeners.push(here[li].entity);
                     break;
                 }
             }
@@ -199,6 +201,10 @@ impl RuntimeSystem for OralTransmissionSystem {
             if *b != a {
                 store(world, p.entity, a);
             }
+        }
+        // M5 (ADR 0030): learning at the fire cheers.
+        for e in listeners {
+            crate::runtime::mood::note(world, resources, e, crate::runtime::mood::Fact::Learned);
         }
         let t = &mut resources.colony.tallies;
         t.oral_tellings += told;

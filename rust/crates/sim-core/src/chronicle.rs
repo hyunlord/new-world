@@ -471,6 +471,11 @@ impl Chronicle {
         self.by_agent.get(&id).map_or(&[], |v| v.as_slice())
     }
 
+    /// The indices of the entries naming settlement `id`, in append order.
+    pub fn indices_of_settlement(&self, id: SettlementId) -> &[u32] {
+        self.by_settlement.get(&id).map_or(&[], |v| v.as_slice())
+    }
+
     /// M5: every recorded cause, by entry index.
     pub fn causes(&self) -> impl Iterator<Item = (u32, CauseRef)> + '_ {
         self.causes.iter().map(|(i, c)| (*i, *c))

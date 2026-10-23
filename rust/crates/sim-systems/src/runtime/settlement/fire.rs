@@ -1,7 +1,7 @@
 //! FireSystem: burns stockpile wood in each hearth at night and marks members `Cold` (with exposure damage) when the fire is out on a winter night.
 //!
 //! Priority: 147 · Interval: 60 ticks · Gate: `WorldRules.society.firewood`
-//! Reads: `Agent`, `Founding`, `PorterTrip`, `Child`, `Elder`, `Hardiness`, `Hunger`, `Position`, `AgentState`, `Apparel` (M5); `SimResources.settlements`, `rules`, `colony.rooms` (M3), `colony.story` (M5)
+//! Reads: `Agent`, `Founding`, `PorterTrip`, `Child`, `Elder`, `Hardiness`, `Hunger`, `Position`, `AgentState`, `Apparel`, `Lineage` (M5); `SimResources.settlements`, `rules`, `world_seed`, `colony.rooms` (M3), `colony.story` (M5)
 //! Writes: `Cold`, `ExposureClock`, `BodyHealth`; `SimResources.fires`, `settlements` (stockpile wood), `tallies`, `colony.story` (snap cost, touched), `causal_log` (M5); deaths via `despawn_agent`
 //! Events: tally `cold_member_hours`; on death `CausalEvent::AgentDied`, chronicle `Died`/`Widowed`, tally `deaths_exposure`
 //!
@@ -52,7 +52,8 @@
 //! when the fire is out (only a roof with the hearth lit keeps them warm), a
 //! cold person outside a roofed room takes ×`snap_exposure_permille` damage, and
 //! each cold person gets one `PressureCause` event per snap. A worn hide wrap or
-//! fur cloak scales the damage (ADR 0029, `story::apparel_cold_permille`).
+//! fur cloak spares its wearer a cold hour with chance 1,000 − its
+//! `Top::cold_permille` (one keyed roll an hour, `STREAM_APPAREL`; ADR 0029).
 //!
 //! (The rain rule acted only on intervention rain, removed in V8-0 with its
 //! `rain_wet_burn` field; `rain_soak_permille` remains in the rules data.)
@@ -63,8 +64,9 @@ use hecs::World;
 use sim_core::causal::event::DeathReason;
 use sim_core::components::{
     Agent, AgentId, BodyHealth, Child, Cold, Elder, ExposureClock, Founding, Hardiness, Hunger,
-    PorterTrip, Position, ResourceKind, SettlementId,
+    Lineage, PorterTrip, Position, ResourceKind, SettlementId,
 };
+use sim_core::rng::{keyed_below, STREAM_APPAREL};
 use sim_core::rules::ExposureRule;
 use sim_engine::{FireState, RuntimeSystem, SimResources};
 
@@ -191,6 +193,29 @@ impl RuntimeSystem for FireSystem {
                 }
             }
         }
+        // M5 (ADR 0029): a worn top keeps its wearer warm some cold hours — they
+        // are cold with chance `Top::cold_permille` (hide wrap 700 ‰, fur cloak
+        // 500 ‰), one keyed roll an hour (`STREAM_APPAREL`, the lineage key), so
+        // cold hours, the mood's cold night and exposure damage all scale by it.
+        if !cold.is_empty() {
+            let seed = resources.world_seed;
+            let warm: Vec<AgentId> = world
+                .query::<(&Agent, &sim_core::colony::people::Apparel, Option<&Lineage>)>()
+                .iter()
+                .filter(|(_, (agent, apparel, _))| {
+                    apparel.top.cold_permille() < 1000 && cold.contains(&agent.id)
+                })
+                .filter(|(_, (agent, apparel, lineage))| {
+                    let key = lineage.map_or(agent.id, |l| l.key);
+                    keyed_below(seed, STREAM_APPAREL, key, now, 0, 0, 1000)
+                        >= u64::from(apparel.top.cold_permille())
+                })
+                .map(|(_, (agent, ..))| agent.id)
+                .collect();
+            for id in warm {
+                cold.remove(&id);
+            }
+        }
         let mut agents: Vec<(AgentId, hecs::Entity, bool)> = world
             .query::<(&Agent, Option<&Cold>)>()
             .iter()
@@ -268,8 +293,7 @@ fn expose(
             .map(|h| f64::from(h.value))
             .unwrap_or(0.0);
         let mut damage = exposure_damage(rule, stage, hardiness, hunger);
-        // M5: a cold snap doubles the damage outside a roofed room (ADR 0027),
-        // and a hide wrap or fur cloak cuts it (ADR 0029).
+        // M5: a cold snap doubles the damage outside a roofed room (ADR 0027).
         let pos = world
             .get::<&Position>(entity)
             .map_or((0, 0), |p| (p.x, p.y));
@@ -284,11 +308,6 @@ fn expose(
                 sim_core::colony::story::PressureKind::ColdSnap,
                 0,
             );
-        }
-        // Only a factor other than 1,000 ‰ touches the float (the baseline's damage stays bit-identical).
-        let worn = crate::runtime::story::apparel_cold_permille(world, resources, entity);
-        if worn != 1000 {
-            damage = damage * f64::from(worn) / 1000.0;
         }
         let dead = match world.get::<&mut BodyHealth>(entity) {
             Ok(mut health) => {

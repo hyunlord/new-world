@@ -322,11 +322,14 @@ pub fn register_default_runtime_systems(engine: &mut SimEngine) {
 
 /// Register M5's pressure and story systems (ADR 0027–0030), all no-ops outside
 /// the M5 colony: `DraftSystem` (121, every tick), `StorytellerSystem` (170,
-/// daily) and `AnimalSystem` (171, every 3 ticks).
+/// daily), `AnimalSystem` (171, every 3 ticks), `MoodSystem` (172, every 60)
+/// and `QuarrelSystem` (173, every 30).
 pub fn register_story_systems(engine: &mut SimEngine) {
     engine.register_system(Box::new(runtime::wildlife::DraftSystem));
     engine.register_system(Box::new(runtime::story::StorytellerSystem));
     engine.register_system(Box::new(runtime::wildlife::AnimalSystem));
+    engine.register_system(Box::new(runtime::mood::MoodSystem));
+    engine.register_system(Box::new(runtime::mood::QuarrelSystem));
 }
 
 /// Register the M1 job layer (`runtime::jobs`): `BillSystem` (123, every 60

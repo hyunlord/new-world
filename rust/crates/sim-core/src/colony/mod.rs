@@ -245,6 +245,12 @@ pub struct ColonyState {
     /// M5 (ADR 0028): animals, hunt marks and zones, meat lots.
     #[serde(default)]
     pub wildlife: wildlife::Wildlife,
+    /// M5 (ADR 0030): quarrels, fights and breakdowns so far.
+    #[serde(default)]
+    pub mood_tallies: people::MoodTallies,
+    /// M5 (ADR 0030): person-pair relations by `(lower id, higher id)`; a missing pair stands at its kin base.
+    #[serde(default)]
+    pub bonds: BTreeMap<(AgentId, AgentId), people::Bond>,
     /// M5 (ADR 0029): uses of each workshop's knife (the flint blade on its shelf) so far.
     #[serde(default)]
     pub knife_wear: BTreeMap<WorkshopId, u32>,

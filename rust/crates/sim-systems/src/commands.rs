@@ -343,6 +343,7 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
         Command::SetDrafted { .. }
         | Command::DraftMove { .. }
         | Command::DraftAttack { .. }
+        | Command::DraftAttackPerson { .. }
         | Command::DesignateHunt { .. }
         | Command::AddHuntZone { .. }
         | Command::CancelHunt { .. }
@@ -371,6 +372,18 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
                 agent,
                 sim_core::colony::people::DraftOrder::Attack(
                     sim_core::colony::wildlife::Fighter::Animal(animal),
+                ),
+            )
+        }
+        Command::DraftAttackPerson { agent, target } => {
+            if agent == target || person(world, target).is_none() {
+                return CommandResult::rejected(RejectReason::Unknown);
+            }
+            draft_order(
+                world,
+                agent,
+                sim_core::colony::people::DraftOrder::Attack(
+                    sim_core::colony::wildlife::Fighter::Person(target),
                 ),
             )
         }

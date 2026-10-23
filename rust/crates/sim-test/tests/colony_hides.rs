@@ -1,7 +1,7 @@
 //! M5 Part 3: hides, apparel and knife wear (ADR 0029) — scraping cures a hide
 //! with the drying rack's knife, the knife breaks after 8 uses (ledger
 //! consumed), hide wraps and fur cloaks are made and worn by the least
-//! cold-tolerant first, a worn top cuts cold exposure to 700 ‰,
+//! cold-tolerant first, a worn top spares its wearer cold hours (cold 700 ‰ of them),
 //! and meat spoils six days after the kill.
 
 mod colony_support;
@@ -136,22 +136,16 @@ fn hide_wraps_and_fur_cloaks_are_made_and_worn_by_the_least_cold_tolerant_first(
 }
 
 #[test]
-fn a_worn_top_cuts_cold_exposure_to_its_permille() {
+fn a_worn_top_spares_its_wearer_cold_hours_at_its_permille() {
     let mut engine = sim_test::colony_engine(2);
     for _ in 0..10 {
         engine.tick();
     }
     let rule = engine.resources.rules.society.firewood.expect("firewood");
-    let night = (0..64u64)
-        .map(|k| 960 + k * 1_440)
-        .find(|t| {
-            engine.resources.current_tick = *t;
-            sim_systems::runtime::settlement::firewood::night_season(&engine.resources, &rule) == 3
-        })
-        .expect("winter night");
     let ids: Vec<_> = engine.resources.settlements.keys().copied().collect();
     let (_, e) = colony_support::adults(&engine)[0];
-    let loss = |engine: &mut SimEngine, top: Option<Top>| {
+    // One hour of FireSystem at `tick` with the hearth empty: (cold?, hp lost).
+    let hour = |engine: &mut SimEngine, top: Option<Top>, tick: u64| {
         for sid in &ids {
             if let Some(s) = engine.resources.settlements.get_mut(sid) {
                 s.withdraw(sim_core::components::ResourceKind::Wood, u32::MAX);
@@ -164,27 +158,54 @@ fn a_worn_top_cuts_cold_exposure_to_its_permille() {
         if let Ok(mut h) = engine.world.get::<&mut sim_core::components::BodyHealth>(e) {
             h.hp = 100.0;
         }
-        engine.resources.current_tick = night;
+        engine.resources.current_tick = tick;
         sim_systems::runtime::settlement::FireSystem::new()
             .tick(&mut engine.world, &mut engine.resources);
-        100.0
+        let cold = engine.world.get::<&sim_core::components::Cold>(e).is_ok();
+        let lost = 100.0
             - engine
                 .world
                 .get::<&sim_core::components::BodyHealth>(e)
-                .map_or(100.0, |h| h.hp)
+                .map_or(100.0, |h| h.hp);
+        (cold, lost)
     };
-    let bare = loss(&mut engine, None);
-    let wrap = loss(&mut engine, Some(Top::HideWrap));
-    let cloak = loss(&mut engine, Some(Top::FurCloak));
-    assert!(bare > 0.0, "the cold bites a bare person");
-    assert!(
-        (wrap - bare * 0.7).abs() < 1e-9,
-        "wrap {wrap} vs bare {bare}"
-    );
-    assert!(
-        (cloak - bare * 0.5).abs() < 1e-9,
-        "cloak {cloak} vs bare {bare}"
-    );
+    // Every hour of every winter night in 40 years in which a bare person is cold.
+    let mut hours = Vec::new();
+    for t in (0..40 * 24 * 1_440u64).step_by(60) {
+        engine.resources.current_tick = t;
+        if sim_systems::runtime::settlement::firewood::night_season(&engine.resources, &rule) == 3
+            && hour(&mut engine, None, t).0
+        {
+            hours.push(t);
+        }
+    }
+    let n = hours.len() as u64;
+    assert!(n >= 400, "{n} cold hours to sample");
+    let (_, bare_loss) = hour(&mut engine, None, hours[0]);
+    assert!(bare_loss > 0.0, "the cold bites a bare person");
+    for (top, permille) in [(Top::HideWrap, 700u64), (Top::FurCloak, 500)] {
+        let mut cold = 0u64;
+        for &t in &hours {
+            let (c, lost) = hour(&mut engine, Some(top), t);
+            if c {
+                cold += 1;
+                // A cold hour bites a wearer like anyone else; the top acts through the roll.
+                assert!(
+                    (lost - bare_loss).abs() < 1e-9,
+                    "{top:?} at {t}: {lost} vs {bare_loss}"
+                );
+            } else {
+                assert!(lost == 0.0, "a spared hour does no damage");
+            }
+        }
+        // Binomial: sd = sqrt(p(1-p)/n) <= 25 per mille at n >= 400; 4 sd = 100 (seed 2: 678 and 481 of 1,920).
+        let got = cold * 1000 / n;
+        println!("{top:?}: {got} per mille of {n} cold hours");
+        assert!(
+            got.abs_diff(permille) <= 100,
+            "{top:?}: {got} per mille of {n} hours cold, want {permille}"
+        );
+    }
 }
 
 #[test]

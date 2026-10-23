@@ -22,6 +22,9 @@ pub struct WildlifeRule {
     pub deer_flee: bool,
     /// A deer wanders within this distance of its home ground (DECISIONS D8).
     pub deer_home_tiles: u32,
+    /// The herd's centre lies within this many tiles of the hearth when the forest allows (a hunt stays within the job
+    /// scan radius; DECISIONS D8: 48).
+    pub deer_herd_max_tiles: u32,
     /// A deer's hit points (goal 3.2: 30).
     pub deer_hp: u16,
     /// A wolf's hit points (goal 3.2: 40).
@@ -78,6 +81,7 @@ impl WildlifeRule {
         deer_rest_steps: 40,
         deer_flee: true,
         deer_home_tiles: 16,
+        deer_herd_max_tiles: 48,
         deer_hp: 30,
         wolf_hp: 40,
         wolf_sight: 24,

@@ -7,10 +7,12 @@
 //!
 //! M5 (ADR 0028). Animals live in `ColonyState::wildlife` (not ECS entities,
 //! DECISIONS D6), at most 12 deer and 4 wolves.
-//! - **Deer**: on the first step 6–12 are placed (keyed, `STREAM_WILDLIFE`) on
-//!   forest tiles at least `deer_min_hearth_distance` from the hearth that the
-//!   camp can reach; one more is born every `deer_respawn_days` up to that
-//!   number. A deer wanders (a keyed step a third of the time, onto forest or
+//! - **Deer**: on the first step 6–12 are placed (keyed, `STREAM_WILDLIFE`) as a
+//!   herd — on forest tiles at least `deer_min_hearth_distance` from the hearth
+//!   that the camp can reach, within `deer_home_tiles` of a keyed centre (itself
+//!   within `deer_herd_max_tiles` of the hearth when the forest allows); one
+//!   more is born every `deer_respawn_days` up to that number, near the home of a
+//!   living deer (the herd keeps its forest; DECISIONS D8). A deer wanders (a keyed step a third of the time, onto forest or
 //!   plain at least that far from the hearth); with `deer_flee` a person
 //!   within `deer_flee_tiles` makes it flee `deer_flee_speed` tiles a step away
 //!   from the nearest person for `deer_flee_steps` steps, then it rests in
@@ -19,7 +21,8 @@
 //! - **Wolves**: when a Beasts pressure is active and its pack has not come, the
 //!   pack (its intensity in wolves) appears at the reachable map-edge tile
 //!   nearest the centroid of the camp region's forest. Each step a wolf picks
-//!   the nearest person outside a roofed room within `wolf_sight`; adjacent, it
+//!   the nearest person outside a roofed room within `wolf_sight` that no other
+//!   wolf of the step has picked (else the nearest; DECISIONS D8); adjacent, it
 //!   bites (a fight `Animal → Person`, resolved by `CombatSystem`) and the
 //!   person strikes back with what they hold (unless drafted: the draft decides);
 //!   otherwise it walks a nav path toward the person, or toward the hearth. When
@@ -143,21 +146,52 @@ pub fn spawn_deer(res: &mut SimResources, at: (u32, u32)) -> Option<u32> {
     Some(new_animal(res, AnimalKind::Deer, rule.deer_hp, at, None))
 }
 
-/// Place the first deer (once), and a new one every `deer_respawn_days` below the cap.
+/// The deer's places near `centre`: those within `deer_home_tiles` of it, else all (a herd keeps its forest).
+fn near_herd(places: &[(u32, u32)], centre: Option<(u32, u32)>, reach: u32) -> Vec<(u32, u32)> {
+    match centre {
+        Some(c) => {
+            let near: Vec<(u32, u32)> = places
+                .iter()
+                .copied()
+                .filter(|p| chebyshev(*p, c) <= reach)
+                .collect();
+            if near.is_empty() {
+                places.to_vec()
+            } else {
+                near
+            }
+        }
+        None => places.to_vec(),
+    }
+}
+
+/// Place the first deer (once) as a herd around a keyed centre, and a new one every
+/// `deer_respawn_days` below the cap, near the home of a living deer (DECISIONS D8).
 fn deer_births(res: &mut SimResources, rule: &WildlifeRule, hearth: (u32, u32)) {
     let day = u32::try_from(crate::runtime::resource_regen::day_index(res)).unwrap_or(u32::MAX);
     let seed = res.world_seed;
+    let reach = rule.deer_home_tiles;
     if !res.colony.wildlife.seeded {
         res.colony.wildlife.seeded = true;
         res.colony.wildlife.last_deer_day = day;
         let (lo, hi) = rule.deer;
         let n = lo + keyed_below(seed, STREAM_WILDLIFE, 0, 0, 0, 0, u64::from(hi - lo + 1)) as u32;
         res.colony.wildlife.deer_cap = n;
-        let places = deer_places(res, rule, hearth);
+        let all = deer_places(res, rule, hearth);
+        if all.is_empty() {
+            return;
+        }
+        // The centre: a place within `deer_herd_max_tiles` of the hearth when there is one.
+        let close: Vec<(u32, u32)> = all
+            .iter()
+            .copied()
+            .filter(|p| chebyshev(*p, hearth) <= rule.deer_herd_max_tiles)
+            .collect();
+        let pool = if close.is_empty() { &all } else { &close };
+        let centre =
+            pool[keyed_below(seed, STREAM_WILDLIFE, 0, 0, 0x200, 0, pool.len() as u64) as usize];
+        let places = near_herd(&all, Some(centre), reach);
         for i in 0..n {
-            if places.is_empty() {
-                break;
-            }
             let at = places
                 [keyed_below(seed, STREAM_WILDLIFE, 0, 0, 1 + i, 0, places.len() as u64) as usize];
             new_animal(res, AnimalKind::Deer, rule.deer_hp, at, None);
@@ -168,8 +202,22 @@ fn deer_births(res: &mut SimResources, rule: &WildlifeRule, hearth: (u32, u32)) 
     let deer = res.colony.wildlife.deer().count() as u32;
     if deer < cap && day >= res.colony.wildlife.last_deer_day + rule.deer_respawn_days {
         res.colony.wildlife.last_deer_day = day;
-        let places = deer_places(res, rule, hearth);
-        if !places.is_empty() {
+        let all = deer_places(res, rule, hearth);
+        if !all.is_empty() {
+            let homes: Vec<(u32, u32)> =
+                res.colony.wildlife.deer().filter_map(|a| a.home).collect();
+            let centre = (!homes.is_empty()).then(|| {
+                homes[keyed_below(
+                    seed,
+                    STREAM_WILDLIFE,
+                    0,
+                    u64::from(day),
+                    0x101,
+                    0,
+                    homes.len() as u64,
+                ) as usize]
+            });
+            let places = near_herd(&all, centre, reach);
             let at = places[keyed_below(
                 seed,
                 STREAM_WILDLIFE,
@@ -425,6 +473,8 @@ fn wolf_steps(
     let routed = alive * 2 <= size;
     let edge = wolf_edge(res, hearth);
     let story_days = crate::runtime::story::rule(res).map_or(2, |s| s.beasts_max_days);
+    // The pack spreads over its prey: a wolf takes the nearest person no other wolf has this step.
+    let mut taken: std::collections::BTreeSet<AgentId> = std::collections::BTreeSet::new();
     for id in wolves {
         let Some(a) = res.colony.wildlife.animals.get(&id).cloned() else {
             continue;
@@ -446,11 +496,23 @@ fn wolf_steps(
             }
             continue;
         }
+        let seen = |(_, p, roofed): &&(AgentId, (u32, u32), bool)| {
+            !roofed && chebyshev(*p, a.pos) <= rule.wolf_sight
+        };
         let target = folk
             .iter()
-            .filter(|(_, p, roofed)| !roofed && chebyshev(*p, a.pos) <= rule.wolf_sight)
+            .filter(seen)
+            .filter(|(pid, ..)| !taken.contains(pid))
             .min_by_key(|(pid, p, _)| (chebyshev(*p, a.pos), *pid))
+            .or_else(|| {
+                folk.iter()
+                    .filter(seen)
+                    .min_by_key(|(pid, p, _)| (chebyshev(*p, a.pos), *pid))
+            })
             .copied();
+        if let Some((pid, ..)) = target {
+            taken.insert(pid);
+        }
         match target {
             Some((pid, p, _)) if chebyshev(p, a.pos) <= 1 => {
                 if let Some(w) = res.colony.wildlife.animals.get_mut(&id) {

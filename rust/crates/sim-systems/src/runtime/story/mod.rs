@@ -51,18 +51,36 @@ pub fn active(res: &SimResources, kind: PressureKind) -> Option<StoryRule> {
     rule(res).filter(|_| res.colony.story.is_active(kind))
 }
 
+/// Firewood the hearth can burn now: the settlements' wood plus feedable firewood items
+/// (the pressure banner's "장작 N" and F2).
+pub fn firewood_have(res: &SimResources) -> u64 {
+    u64::from(crate::runtime::jobs::hearth::settlement_wood(res))
+        + u64::from(crate::runtime::jobs::hearth::feedable_firewood(res))
+}
+
+/// One night's burn at a cold snap's rate (the banner's "하루 N 필요" and F2): the burn
+/// window's whole hours × tonight's hourly rate × the hearths × `snap_burn_permille`
+/// (1,000 outside the M5 colony). 0 without the firewood rule.
+pub fn firewood_day_need(res: &SimResources) -> u64 {
+    let Some(fw) = res.rules.society.firewood else {
+        return 0;
+    };
+    let factor = rule(res).map_or(1000, |s| s.snap_burn_permille);
+    let (s, e) = (fw.burn_start_minute, fw.burn_end_minute);
+    let span = if e > s { e - s } else { 1440 - s + e };
+    let hours = u64::from(span) / 60;
+    let day = res.current_tick / res.ticks_per_day.max(1);
+    let midnight = day * res.ticks_per_day.max(1) + 960;
+    let per_hour = u64::from(crate::runtime::settlement::firewood::night_rate(
+        res, &fw, midnight,
+    ));
+    let hearths = res.settlements.len().max(1) as u64;
+    hours * per_hour * hearths * u64::from(factor) / 1000
+}
+
 /// Whether any pressure is in force (mood's "pressure active").
 pub fn any_active(res: &SimResources) -> bool {
     rule(res).is_some() && !res.colony.story.active.is_empty()
-}
-
-/// Cold exposure damage of `entity`, ‰ of the unclothed damage: its worn top
-/// (ADR 0029: hide wrap 700, fur cloak 500), else 1,000. Only M5 worlds give
-/// anyone an `Apparel`, so the baseline always reads 1,000.
-pub fn apparel_cold_permille(world: &World, _res: &SimResources, entity: Entity) -> u32 {
-    world
-        .get::<&sim_core::colony::people::Apparel>(entity)
-        .map_or(1000, |a| a.top.cold_permille())
 }
 
 /// The work-speed factor of `entity` working at `tile`, ‰ of its normal work
@@ -295,13 +313,16 @@ pub fn plan_season(
         keyed_below(seed, STREAM_STORY, u64::from(slot.index), 0, slot_no, 0, n)
     };
     let mut kind = drawn_kind(slot.season, draw(1, 1000));
-    if !rule.illness && kind == Some(PressureKind::Illness) {
+    if (!rule.illness && kind == Some(PressureKind::Illness))
+        || (!rule.beasts && kind == Some(PressureKind::Beasts))
+    {
         kind = None;
     }
     // A due kind replaces the draw where its season allows it (ColdSnap only in winter).
     if slot.season == WINTER && due(rule, story, slot, PressureKind::ColdSnap) {
         kind = Some(PressureKind::ColdSnap);
-    } else if due(rule, story, slot, PressureKind::Beasts)
+    } else if rule.beasts
+        && due(rule, story, slot, PressureKind::Beasts)
         && window(rule, story, slot, PressureKind::Beasts).is_some()
     {
         kind = Some(PressureKind::Beasts);

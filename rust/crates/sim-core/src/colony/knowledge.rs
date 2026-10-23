@@ -726,7 +726,10 @@ impl Knowledge {
     }
 
     /// Raise node `id` to at least `proficiency` from `source` (a lower or equal
-    /// value changes nothing); returns whether it rose.
+    /// value changes nothing); returns whether it rose. M5 (the owner's M4
+    /// decision, M5 DECISIONS D5): an entry the person still holds keeps the
+    /// source it was first held by — and so its forgetting floor — when it is
+    /// learned again; `source` labels only a new entry.
     pub fn raise_to(
         &mut self,
         id: KnowledgeId,
@@ -737,6 +740,7 @@ impl Knowledge {
         if self.proficiency(id) >= proficiency && self.get(id).is_some() {
             return false;
         }
+        let source = self.get(id).map_or(source, |e| e.source());
         self.set(id, proficiency, source, tick);
         true
     }

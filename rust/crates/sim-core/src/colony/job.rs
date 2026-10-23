@@ -31,13 +31,13 @@ pub enum WorkType {
 impl WorkType {
     /// Every work type in tie-break order (M3: mining after quarrying; its
     /// code, 6, comes last so M2's codes and saved priorities keep their places;
-    /// M5: hunting after mining, code 7).
+    /// M5: hunting — food — right after building, code 7; DECISIONS D8).
     pub const ALL: [Self; 8] = [
         Self::Craft,
         Self::Build,
+        Self::Hunt,
         Self::Quarry,
         Self::Mine,
-        Self::Hunt,
         Self::Chop,
         Self::Split,
         Self::Haul,

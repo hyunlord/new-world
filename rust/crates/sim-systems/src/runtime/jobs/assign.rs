@@ -962,6 +962,8 @@ impl RuntimeSystem for JobAssignSystem {
             .without::<&PorterTrip>()
             .iter()
             .filter(|(entity, _)| !needy(*entity))
+            // M5 (ADR 0030): a person in a breakdown refuses jobs.
+            .filter(|(entity, _)| !crate::runtime::mood::broken(world, resources, *entity))
             .filter(|(_, (agent, _, state, _, _, _, _, _))| {
                 matches!(
                     state,
@@ -1123,8 +1125,9 @@ impl RuntimeSystem for JobAssignSystem {
                     (JobKind::Chop { .. }, Some(e)) if !has_tool => {
                         best_axe(resources, pos, e.axe_reach)
                     }
-                    (JobKind::Hunt { .. }, Some(e)) if !has_tool => {
-                        super::hunt::hunting_fetch(resources, pos, e.axe_reach)
+                    (JobKind::Hunt { .. }, Some(e)) => {
+                        let held = world.get::<&Tool>(entity).ok().map(|t| t.item.kind);
+                        super::hunt::hunting_fetch(resources, pos, e.axe_reach, held)
                     }
                     _ => None,
                 };

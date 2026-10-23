@@ -54,6 +54,13 @@ pub struct StoryRule {
     pub beasts_due_days: u32,
     /// Whether illness is part of the pass (droppable 6.4; on in M5).
     pub illness: bool,
+    /// Whether beasts come at all (on in M5; the soak turns them off).
+    #[serde(default = "yes")]
+    pub beasts: bool,
+}
+
+const fn yes() -> bool {
+    true
 }
 
 impl StoryRule {
@@ -84,5 +91,6 @@ impl StoryRule {
         cold_due_days: 24,
         beasts_due_days: 18,
         illness: true,
+        beasts: true,
     };
 }

@@ -245,6 +245,13 @@ pub enum Command {
         /// The animal (`AnimalId`).
         animal: u32,
     },
+    /// Order a drafted person to attack the person `target` (M5; goal 3.5 right-click on a person).
+    DraftAttackPerson {
+        /// The drafted person.
+        agent: AgentId,
+        /// The person attacked (`AgentId`; not `agent`).
+        target: AgentId,
+    },
     /// Mark the deer `animal` to be hunted (M5).
     DesignateHunt {
         /// The deer (`AnimalId`).
@@ -308,6 +315,7 @@ impl Command {
             Self::DebugKill { .. } => "debug_kill",
             Self::DraftMove { .. } => "draft_move",
             Self::DraftAttack { .. } => "draft_attack",
+            Self::DraftAttackPerson { .. } => "draft_attack_person",
             Self::DesignateHunt { .. } => "designate_hunt",
             Self::AddHuntZone { .. } => "add_hunt_zone",
             Self::CancelHunt { .. } => "cancel_hunt",

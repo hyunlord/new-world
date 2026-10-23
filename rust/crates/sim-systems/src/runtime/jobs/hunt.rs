@@ -54,8 +54,9 @@ fn put_job(world: &mut World, entity: Entity, job: Job) {
     }
 }
 
-/// The nearest deer `practice` may hunt from `pos` in nav region `region`
-/// within `radius`, not reserved: `(animal, its tile)`.
+/// The deer `practice` may hunt from `pos` in nav region `region` within
+/// `radius`, not reserved — the most wounded first, then the nearest:
+/// `(animal, its tile)`.
 pub fn pick(
     res: &SimResources,
     practice: u32,
@@ -76,7 +77,8 @@ pub fn pick(
                 .contains_key(&ReserveKey::Animal(a.id))
         })
         .filter(|a| chebyshev(pos, a.pos) <= radius && res.nav.reaches(region, a.pos))
-        .min_by_key(|a| (chebyshev(pos, a.pos), a.pos.1, a.pos.0, a.id))
+        // A wounded deer first (finish what was started; DECISIONS D8), then the nearest.
+        .min_by_key(|a| (a.hp, chebyshev(pos, a.pos), a.pos.1, a.pos.0, a.id))
         .map(|a| (a.id, a.pos))
 }
 
@@ -109,19 +111,29 @@ pub fn nearest_stack(
     })
 }
 
-/// The tool a hunter without one fetches: a spear, else a knife (a flint blade).
-pub fn hunting_fetch(res: &SimResources, pos: (u32, u32), reach: u32) -> Option<(u32, u32)> {
-    nearest_stack(
-        res,
-        pos,
-        reach,
-        &[ItemKind::Spear, ItemKind::FlintBlade],
-        true,
-    )
+/// The tool a hunter fetches (`held` = the kind it holds): a stocked spear unless it
+/// holds one (swapping any other tool); with no tool and no spear, a knife.
+pub fn hunting_fetch(
+    res: &SimResources,
+    pos: (u32, u32),
+    reach: u32,
+    held: Option<ItemKind>,
+) -> Option<(u32, u32)> {
+    match held {
+        Some(ItemKind::Spear) => None,
+        Some(_) => nearest_stack(res, pos, reach, &[ItemKind::Spear], true),
+        None => nearest_stack(
+            res,
+            pos,
+            reach,
+            &[ItemKind::Spear, ItemKind::FlintBlade],
+            true,
+        ),
+    }
 }
 
-/// Take one item of the stack at `tile` as `entity`'s held tool (if it holds none;
-/// else it is put back on the worker's tile).
+/// Take one item of the stack at `tile` as `entity`'s held tool; a tool already
+/// held is left on the worker's tile (a hunter swapping an axe for a spear).
 pub fn pick_up_tool(
     world: &mut World,
     res: &mut SimResources,
@@ -135,7 +147,10 @@ pub fn pick_up_tool(
         return;
     };
     let (taken, spec) = take_items(res, tile, kind, 1);
-    if taken == 1 && world.get::<&Tool>(entity).is_err() {
+    if taken == 1 {
+        if let Ok(old) = world.get::<&Tool>(entity).map(|t| t.item) {
+            put_items(res, pos, old, 1);
+        }
         let _ = world.insert_one(
             entity,
             Tool {
@@ -143,8 +158,6 @@ pub fn pick_up_tool(
                 uses: 0,
             },
         );
-    } else if taken == 1 {
-        put_items(res, pos, spec, 1);
     }
 }
 
@@ -301,6 +314,8 @@ fn attack(
     let chance = hit_permille(rule, level, spear);
     let key = world.get::<&Lineage>(entity).map_or(id, |l| l.key);
     res.colony.wildlife.tallies.hunt_attacks += 1;
+    // Every attack, hit or miss, is tracking used (it fades after 6 unused days).
+    crate::runtime::knowledge::used(world, res, entity, gates().designation(Designation::Hunt));
     let roll = keyed_below(
         res.world_seed,
         STREAM_WILDLIFE,
@@ -442,9 +457,9 @@ const fn warmth(top: Option<Top>) -> u8 {
 /// The dressing pass (ADR 0029; `JobAssignSystem`, every 60 ticks while the
 /// standing order is on): each free top on a stockpile cell, warmest first,
 /// goes to the person who most needs one — highest `Hardiness` (the lowest
-/// cold tolerance), then `AgentId` — among adults wearing something colder. When
-/// that person is not free this tick the top waits for them (nobody less needy
-/// takes it). One `Equip` job a stack a pass (the stack is reserved).
+/// cold tolerance), then `AgentId` — among the adults free this pass who wear
+/// something colder and can reach it (a busy person is served at a later pass;
+/// DECISIONS D10). One `Equip` job a stack a pass (the stack is reserved).
 pub fn dress(
     world: &World,
     res: &mut SimResources,
@@ -490,19 +505,18 @@ pub fn dress(
     let mut served: std::collections::BTreeSet<AgentId> = std::collections::BTreeSet::new();
     for (_, y, x, top) in tops {
         let from = (x, y);
-        let Some(&(_, id, _)) = wearers
-            .iter()
-            .find(|(_, id, now)| *now < warmth(Some(top)) && !served.contains(id))
-        else {
+        let Some((id, entity, pos)) = wearers.iter().find_map(|&(_, id, now)| {
+            if now >= warmth(Some(top)) || served.contains(&id) || assigned.contains(&id) {
+                return None;
+            }
+            let &(_, entity, pos) = available.iter().find(|row| row.0 == id)?;
+            res.nav
+                .reaches(res.nav.region_of(pos), from)
+                .then_some((id, entity, pos))
+        }) else {
             continue;
         };
         served.insert(id);
-        let Some(&(_, entity, pos)) = available.iter().find(|row| row.0 == id) else {
-            continue;
-        };
-        if assigned.contains(&id) || !res.nav.reaches(res.nav.region_of(pos), from) {
-            continue;
-        }
         let job = Job {
             kind: JobKind::Equip { from },
             stage: JobStage::ToSource,

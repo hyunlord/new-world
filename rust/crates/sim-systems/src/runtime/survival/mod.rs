@@ -82,6 +82,11 @@ pub fn despawn_agent(
         .get::<&sim_core::components::Life>(entity)
         .ok()
         .map_or(-1, |life| life.age_ticks(tick));
+    // M5 (ADR 0030): the dead's kin grieve; read before the despawn.
+    let kin = world
+        .get::<&sim_core::components::Kin>(entity)
+        .ok()
+        .map(|k| *k);
     // M1: a dying worker's load stays where it fell; its reservations free up.
     crate::runtime::jobs::on_death(world, resources, entity);
     let _ = world.despawn(entity);
@@ -158,6 +163,7 @@ pub fn despawn_agent(
     resources
         .chronicle
         .close_person(agent_id, tick, reason.as_u8(), || person);
+    let died_entry = resources.chronicle.len() as u32;
     crate::runtime::chronicle_log::record(
         world,
         resources,
@@ -168,6 +174,7 @@ pub fn despawn_agent(
             .cause(reason.as_u8())
             .value(age),
     );
+    crate::runtime::mood::kin_died(world, resources, agent_id, kin, died_entry);
     if let Some(partner) = partner {
         if crate::runtime::chronicle_log::alive_entity(world, partner).is_some() {
             crate::runtime::chronicle_log::record(
