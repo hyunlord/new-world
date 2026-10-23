@@ -254,3 +254,15 @@ and the18-file programming audit pass. The30 original requests and raws remain
 byte-identical to their preserved copies. Red/green logs:
 `portraits/protocol_review/red_linked_envelope_guard.txt` and
 `portraits/protocol_review/green_linked_envelope_guard.txt` outside the repo.
+
+Actual final-image observation found that some male variants copied a full
+source beard despite the frozen clean-shaven brief. For unstarted male requests
+only, the prompt now opens with the explicit full/short/clean requirement and
+describes a planned identity variant instead of the exact source person.
+Clean means a bare chin, jaw and upper lip without stubble; short means closely
+cropped facial hair without a bulky hanging beard. The six-variant plan, source
+references, female/child prompts and all started requests remain unchanged.
+Observed failures on exhausted second attempts are retained; this clarification
+does not authorize a third attempt or imply the model followed the new prompt.
+Verification: 138 prepared female/child prompts were byte-identical; all36
+portrait/blind tests, Ruff and strict typing(0errors/0warnings) passed.

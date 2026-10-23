@@ -35,8 +35,20 @@ from art.pipeline_polish2.portrait_models import (
 
 def prompt_for(look: LookVariants, variant: Variant, appearance: SourceAppearance) -> str:
     """Describe intentional identity axes while preserving sprite outfit/hair shape."""
-    return (
+    facial_hair = {
+        "full": "Facial hair: a clearly full, substantial beard covering the chin and jaw. ",
+        "short": "Facial hair: a very short, close-cropped beard following the jaw; no bulky or hanging beard. ",
+        "clean": "Facial hair: completely clean shaven, with bare visible chin, jaw and upper lip; no beard, moustache or stubble. ",
+        "none": "",
+    }[variant.beard]
+    introduction = (
+        "Create ONE square inspector portrait, shoulders-up bust, for the planned identity variant of reference 1. "
+        + facial_hair
+        + "Facial hair is an intentional change: do not copy any beard from either sprite or style reference. "
+        if facial_hair else
         "Create ONE square inspector portrait, shoulders-up bust, for the exact person in reference 1. "
+    )
+    return introduction + (
         "Reference 1 is that person's actual Route I S/idle sprite tinted to the planned skin and hair "
         "colours. Reference 2 is portrait.png, STYLE ONLY; do not copy its man's identity. "
         "Reference 3 is an exact 4x nearest-neighbor enlargement of reference 1; use it to read "
