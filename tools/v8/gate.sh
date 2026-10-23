@@ -36,7 +36,10 @@
 #                        seed 100, U-script, tick 900 (C2)
 #   24 save_roundtrip    tools/v8/save_roundtrip.sh: save -> load -> tick equals tick, colony seeds 0-7 (C1)
 #   25 bench             tools/v8/bench.sh: the standing colony benchmark against docs/perf/PERF_LEDGER.md
-#                        (> +10 % on tick mean, p99 or RSS/agent fails; since M2 a C3 ceiling miss fails)
+#                        (> +10 % on tick mean, p99 or RSS/agent fails; since M2 a C3 ceiling miss fails; since M5 a
+#                        justification quoted from CHANGELOG.md comes through BENCH_JUSTIFIED and is limited to
+#                        the scenes in BENCH_JUSTIFIED_SCENES — the M5 gate: BENCH_PASS=M5,
+#                        BENCH_JUSTIFIED_SCENES=n200_side64)
 #   26 soak              tools/v8/soak.sh: the economy soak fixture (M3 goal 3.4), seeds 0..4, 20 days,
 #                        tools/v8/soak_script.json: ledger and reservations exact, 0 deaths, determinism
 #   27 nav_bench         worldsim_perf nav-bench: N = 1,000 with the soak script, movement + nav µs per tick

@@ -62,6 +62,19 @@ chronicle. Evaluation: `docs/v8/m5/M5_EVALUATION.md`; report: `docs/v8/m5/M5_REP
   the hit; a drafted person holding a non-weapon arms; the pack's map edge is found once; knife wear resets with the
   blade.
 
+- Benchmark against "M4 re-measure" (`docs/perf/PERF_LEDGER.md`; the quiet interleaved session of `53be405d`,
+  15:39–15:43, 1-minute load 5.8–7.6, `$DATA/bench5`): tick mean ×0.997–×1.082 and p99 ×0.972–×1.065 on n200, n1000,
+  n2000 and n200_script; M5 systems 11 / 47 / 87 µs per tick at N = 200 / 1,000 / 2,000 (budget 120 at N = 1,000);
+  alloc/agent 1,871 → 1,871 B. **Justified: n200_side64 is above +10 % (mean 241.1 → 266.5 µs ×1.105, p99 490 → 540 µs
+  ×1.102) because 200 people on 64² are 9× denser than on 192², so the 2-tile quarrel neighbourhood costs more only
+  there.** That scene's p99 tick (540 µs, round 3) by system: AgentDecisionSystem 208.5, AgentMovementSystem 89.7,
+  JobAssignSystem 79.7, QuarrelSystem 74.9, SettlementSystem 23.6, StockpileConsumeSystem 19.0, MemorySystem 13.3,
+  AnimalSystem 7.5 µs; the mean of its 29 tail ticks (at or above p99): AgentMovementSystem 256.0,
+  AgentDecisionSystem 199.7, JobAssignSystem 70.3, QuarrelSystem 55.2, SettlementSystem 24.3, MemorySystem 15.2,
+  AnimalSystem 7.4 µs (rounds 1 and 2: QuarrelSystem 0 in the p99 tick itself, 86 and 59 µs in the tail mean). The
+  gate's bench step takes this quote for that scene only (`BENCH_JUSTIFIED`, `BENCH_JUSTIFIED_SCENES=n200_side64`;
+  `bench_ledger.py check --justified-scenes`, so it cannot excuse any other scene).
+
 ### Removed
 - `docs/images/m4_contact_sheet.png` — replaced by `docs/images/m5_contact_sheet.png`.
 

@@ -23,6 +23,10 @@ cd "$ROOT"
 LOG="${1:?usage: bench.sh <log_dir> [--justified TEXT]}"
 JUSTIFIED=()
 [[ "${2:-}" == --justified ]] && JUSTIFIED=(--justified "$3")
+# M5: the gate passes a pass's justification through BENCH_JUSTIFIED (a CHANGELOG quote) and limits it to the
+# scenes named in BENCH_JUSTIFIED_SCENES (comma-separated labels).
+[[ -n "${BENCH_JUSTIFIED:-}" ]] && JUSTIFIED=(--justified "$BENCH_JUSTIFIED")
+[[ -n "${BENCH_JUSTIFIED_SCENES:-}" ]] && JUSTIFIED+=(--justified-scenes "$BENCH_JUSTIFIED_SCENES")
 mkdir -p "$LOG"
 export CARGO_BUILD_JOBS="${CARGO_BUILD_JOBS:-8}"
 (cd rust && cargo build --release -p sim-test --bin worldsim_perf) || exit 2

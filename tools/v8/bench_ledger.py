@@ -5,14 +5,16 @@ usage: bench_ledger.py rows   BENCH_JSON --pass NAME [--note TEXT] [--date YYYY-
        bench_ledger.py append BENCH_JSON LEDGER --pass NAME (--gate-log GATE_TXT | --re-measure TEXT)
                               [--note TEXT] [--date YYYY-MM-DD]
        bench_ledger.py check  BENCH_JSON LEDGER --pass NAME [--base COMMIT]
-                              [--justified TEXT] [--changelog CHANGELOG.md]
+                              [--justified TEXT [--justified-scenes LABEL,…]] [--changelog CHANGELOG.md]
 
 `worldsim_perf bench` writes BENCH_JSON. `rows` prints the ledger rows of a
 run, `append` adds them to LEDGER. `check` compares the run with the ledger's
 latest quiet pass: any scene whose tick mean or p99, or the run's memory per
 agent, is more than 10 % above that pass fails, unless `--justified TEXT` is
 given and TEXT appears verbatim in the CHANGELOG (the pass's justification,
-quoted). Since M2 the C3 ceilings are hard: a MISS (or a run without
+quoted). Since M5, `--justified-scenes LABEL,…` limits the justification to failures in those scenes: a failure
+in any other scene (or in memory per agent) still fails, so a justification for one scene cannot hide another's
+regression. Since M2 the C3 ceilings are hard: a MISS (or a run without
 ceilings) fails, and no justification excuses it. Exit 0 = pass, 1 =
 regression or ceiling miss, 2 = usage or a refused append.
 
@@ -277,7 +279,7 @@ def main(argv):
             return 2
         ledger, rest = Path(rest[0]), rest[1:]
     opts = {"--pass": None, "--note": "", "--date": "", "--justified": None, "--changelog": "CHANGELOG.md",
-            "--base": None, "--gate-log": None, "--re-measure": None}
+            "--base": None, "--gate-log": None, "--re-measure": None, "--justified-scenes": None}
     while rest:
         if rest[0] not in opts or len(rest) < 2:
             print(f"bad argument {rest[0]}", file=sys.stderr)
@@ -351,6 +353,13 @@ def main(argv):
         return 1
     if failures:
         quote = opts["--justified"]
+        scenes = opts["--justified-scenes"]
+        if quote and scenes is not None:
+            allowed = {s.strip() for s in scenes.split(",") if s.strip()}
+            other = [f for f in failures if f.split(" ")[0] not in allowed]
+            if other:
+                print(f"bench: FAIL (> +10 % outside the justified scenes {sorted(allowed)}: {', '.join(other)})")
+                return 1
         if quote and quote in Path(opts["--changelog"]).read_text():
             print(f"JUSTIFIED by the CHANGELOG: {quote!r} ({', '.join(failures)})")
             return 0

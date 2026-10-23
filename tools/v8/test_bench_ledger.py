@@ -115,6 +115,17 @@ class LedgerTest(unittest.TestCase):
                                        "the index costs 12 % at N = 200 on purpose",
                                        "--changelog", str(self.changelog)), 0)
 
+    def test_a_justification_limited_to_scenes_never_excuses_another_scene(self):
+        self.append(self.write(bench()), str(self.ledger), "--pass", "base")
+        slow = bench()
+        slow["scenes"][0]["tick_p99_us"] = 2300.0  # n200 p99 +15 %
+        path = self.write(slow)
+        quote = "the index costs 12 % at N = 200 on purpose"
+        self.assertEqual(self.check(path, str(self.ledger), "--justified", quote,
+                                    "--justified-scenes", "n200", "--changelog", str(self.changelog)), 0)
+        self.assertEqual(self.check(path, str(self.ledger), "--justified", quote,
+                                    "--justified-scenes", "n1000", "--changelog", str(self.changelog)), 1)
+
     def test_a_contended_run_needs_a_note_and_is_never_a_base(self):
         self.append(self.write(bench(mean=1000.0)), str(self.ledger), "--pass", "quiet")
         busy = bench(mean=2000.0)

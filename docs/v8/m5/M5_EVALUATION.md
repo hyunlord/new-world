@@ -7,7 +7,7 @@ DECISIONS D14), then the simulation was frozen. The bars and their reading were 
 (`docs/v8/m5/m5_score.py`, DECISIONS D13) before the first held-out run; F4's "hides ≥ 6" was added to the scorer after
 calibration and before that run (D13). Raw outputs (outside the repository): `$DATA` = `/Users/rexxa/work/m5-data/`.
 
-Final: `$DATA/eval_final/` at `3a8d0759` (after the reviews and D18; see Bars). **Result of record: `$DATA/eval/`, the probe built
+Final: `$DATA/eval_final2/` at `53be405d` (after the reviews and D18; see Bars). **Result of record: `$DATA/eval/`, the probe built
 from `6f1713b4`** (the Part 4 head; the working tree's other
 changes were the bridge, documents and gate scripts — `$DATA/eval/dirty.txt` — none in the simulation crates).
 Runs took 546 s (load 2.7 at the start; the UI agent and these runs loaded the host to 29 by the end; timings are not
@@ -25,29 +25,30 @@ used).
 
 ## Bars
 
-Two measurements on the same held-out seeds: **of record** (`$DATA/eval/`, `6f1713b4`) and **after the reviews**
-(`$DATA/eval_review/`, the code review's fixes D17, and `$DATA/eval_final/` at `3a8d0759`, the final simulation with
-the quarrel cap D18 and the probe's corrected pack window). `eval_final`'s summaries equal `eval_review`'s on every
-seed of all four runs outside the pack rows (the cap never binds in a 10–13-person colony), and its scores are the
-column below. Neither was tuned on these seeds.
+Measurements on the same held-out seeds, none used to tune: **of record** (`$DATA/eval/`, `6f1713b4`); after the
+code review's fixes D17 (`$DATA/eval_review/`) and the quarrel cap D18 (`$DATA/eval_final/`, `3a8d0759`, equal to
+`eval_review` outside the pack rows); and **final** (`$DATA/eval_final2/`, `53be405d`: the quarrel check in five
+slices and MoodSystem at minute 7, D18 continued; the probe's corrected pack window). The final column is the last.
 
-| # | bar | pass | of record (`6f1713b4`) | after the reviews (final, `3a8d0759`) |
+| # | bar | pass | of record (`6f1713b4`) | final (`53be405d`) |
 |---|---|---|---|---|
 | F1 | ≥ 1 ColdSnap and ≥ 1 Beasts in two years; mercy and gaps hold | 32/32 | **32/32 PASS** (snaps 1–2 a world, packs 2–4, droughts on 18, illness on 32) | **32/32 PASS** (same counts) |
-| F2 | firewood below one day's need during a snap in ≥ 24/32 **and** cold deaths ≤ 1 in ≥ 28/32 | both | **PASS**: F2a 26/32 (803, 805, 810, 822, 829, 830 kept enough wood; at the same hour 25/32 — 815 flips, numbers review); F2b 30/32 (804: 9 exposure deaths, 814: 8 — 8 and 7 in the first snap, days 21–24, with an illness at the same time and usable wood at 0; one more each on day 48, in the second snap) | **PASS**: F2a 26/32 (803, 805, 818, 820, 822, 830); F2b 30/32 (804: 9, 814: 6; 806: 1) |
-| F3 | the scripted draft kills the pack with 0 deaths in ≥ 24/32; without the draft ≥ 1 injury in ≥ 24/32 | both | **PASS**: F3a 30/32 (100 packs, all beaten; 804 and 814 fail on deaths booked to a gone pack — see the note); F3b 32/32 (6–20 person-packs bitten a world) | **PASS**: F3a 32/32 (corrected window: all 100 packs beaten — none left on the map, half or more killed — with 0 deaths while they were there); F3b 32/32 (6–20) |
-| F4 | ≥ 6 deer killed by day 48, meat eaten ≥ 12, hides ≥ 6 | ≥ 28/32 | **25/32 FAIL**: deer 6–18 (median 13.5), hides = deer; meat eaten < 12 on 804, 805, 806, 809, 814, 823, 829 | **26/32 FAIL**: deer 4–21 (median 14); meat eaten < 12 on 800, 804, 805, 814, 823 (eaten 0–10, spoiled 22–31); 829 killed 4 deer |
-| F5 | ≥ 4 wear a hide wrap by day 30; their winter-night cold rate ≤ half the unclothed | ≥ 24/32 | **20/32 FAIL**: wraps at day 30 0–6 (median 4), fewer than 4 on 12 worlds; the rate half trivially met on the 28 worlds without a winter-night cold hour, failed on 804 (0.202 vs 0.184) and 812 (0.0169 vs 0.0331) | **23/32 FAIL**: fewer than 4 wraps on 9 worlds (800, 804, 806, 814, 819, 823, 827, 828, 829); the rate half holds where cold hours exist (806: 0.029 vs 0.242) |
-| F6 | control: breakdowns ≤ 1 in ≥ 28/32; pressure: ≥ 1 world in 4 has a breakdown | both | **FAIL**: F6a 32/32; F6b 2/32 | **FAIL**: F6a 32/32 (no breakdown in the control); F6b 7/32 (804, 806, 811, 814, 816, 818, 819), one short of 8 |
-| F7 | ≥ 2 quarrels a world-year (≥ 4) with a resolvable chain; fights ≤ quarrels/4; 0 quarrel deaths | ≥ 28/32 | **25/32 FAIL**: quarrels 0–14 (median 6.5), below 4 on 803, 804, 807, 808, 812, 814, 820; every chain ≥ 2 links (by construction; 35 of 210 reach a chronicle entry beyond the quarrel); 0 fights; 0 combat deaths | **27/32 FAIL**: quarrels 1–17 (median 7), below 4 on 804, 807, 814, 818, 820; 31 of 218 chains reach a further entry; 0 fights; 0 combat deaths |
-| F8 | ≥ 10 blades used up by knives by day 48; top knapper ≥ 6; quality days 37–48 − days 1–12 ≥ 8 | ≥ 24/32 | **0/32 FAIL**: 7–22 knife uses, 0–1 knives used up; top knapper 6–12; no blade knapped after day 36 on 28 worlds | **0/32 FAIL**: 5–22 uses, 0–1 used up; top knapper 6–9; a late blade on 2 worlds |
-| F9 | control births / woman-year 0.20–0.30; the 3-year no-orders run ≥ 30/32 without a cold death | all | **PASS**: F9a pooled 0.277 (38 / 137.3; M4 measured the same way on seeds 0–7: 0.336); F9b 32/32 (0 deaths; 99 births / 337.5 woman-years = 0.293) | **PASS**: F9a 0.284 (39 / 137.3); F9b 32/32 (0 deaths; 99 / 337.5) |
-| F10 | ledger per kind exact; reservations exact; soak green (knowledge, wolves off) | all | **PASS**: 0 / 0 violation ticks in 128 runs; SOAK PASS | **PASS**: 0 / 0 in 128 runs; soak in the gate |
-| F11 | M5 systems ≤ 120 µs/tick at N = 1,000; alloc/agent ≤ M4 + 40 B; C3; ≤ +10 % vs M4's quiet rows; identity; replay | all | identity PASS, replay PASS; bench PENDING | identity, replay PASS (DETERMINISM PASS on the pressure run); bench PENDING (`$DATA/bench5`) |
+| F2 | firewood below one day's need during a snap in ≥ 24/32 **and** cold deaths ≤ 1 in ≥ 28/32 | both | **PASS**: F2a 26/32 (803, 805, 810, 822, 829, 830 kept enough wood; at the same hour 25/32 — 815 flips, numbers review); F2b 30/32 (804: 9 exposure deaths, 814: 8 — 8 and 7 in the first snap, days 21–24, with an illness at the same time and usable wood at 0; one more each on day 48, in the second snap) | **PASS**: F2a 26/32 (803, 818, 822, 827, 829, 830); F2b 30/32 (804: 9, 814: 6) |
+| F3 | the scripted draft kills the pack with 0 deaths in ≥ 24/32; without the draft ≥ 1 injury in ≥ 24/32 | both | **PASS**: F3a 30/32 (100 packs, all beaten; 804 and 814 fail on deaths booked to a gone pack — see the note); F3b 32/32 (6–20 person-packs bitten a world) | **PASS**: F3a 32/32 (all 100 packs beaten with 0 deaths while they were there); F3b 32/32 |
+| F4 | ≥ 6 deer killed by day 48, meat eaten ≥ 12, hides ≥ 6 | ≥ 28/32 | **25/32 FAIL**: deer 6–18 (median 13.5), hides = deer; meat eaten < 12 on 804, 805, 806, 809, 814, 823, 829 | **27/32 FAIL**: deer 4–20 (median 14); meat eaten < 12 on 800, 804, 814, 823 (eaten 0–8, spoiled 22–32); 829 killed 4 deer |
+| F5 | ≥ 4 wear a hide wrap by day 30; their winter-night cold rate ≤ half the unclothed | ≥ 24/32 | **20/32 FAIL**: wraps at day 30 0–6 (median 4), fewer than 4 on 12 worlds; the rate half trivially met on the 28 worlds without a winter-night cold hour, failed on 804 (0.202 vs 0.184) and 812 (0.0169 vs 0.0331) | **19/32 FAIL**: fewer than 4 wraps by day 30 on 12 worlds; the rate half fails on 819 (0.017 vs 0.011) |
+| F6 | control: breakdowns ≤ 1 in ≥ 28/32; pressure: ≥ 1 world in 4 has a breakdown | both | **FAIL**: F6a 32/32; F6b 2/32 | **FAIL**: F6a 32/32 (no breakdown in the control); F6b 3/32 (804, 806, 814) |
+| F7 | ≥ 2 quarrels a world-year (≥ 4) with a resolvable chain; fights ≤ quarrels/4; 0 quarrel deaths | ≥ 28/32 | **25/32 FAIL**: quarrels 0–14 (median 6.5), below 4 on 803, 804, 807, 808, 812, 814, 820; every chain ≥ 2 links (by construction; 35 of 210 reach a chronicle entry beyond the quarrel); 0 fights; 0 combat deaths | **25/32 FAIL**: quarrels 0–13 (median 6), below 4 on 804, 806, 810, 811, 812, 814, 824; 32 of 197 chains reach a further entry; 0 fights; 0 combat deaths |
+| F8 | ≥ 10 blades used up by knives by day 48; top knapper ≥ 6; quality days 37–48 − days 1–12 ≥ 8 | ≥ 24/32 | **0/32 FAIL**: 7–22 knife uses, 0–1 knives used up; top knapper 6–12; no blade knapped after day 36 on 28 worlds | **0/32 FAIL**: 6–22 knife uses, 0–1 used up; top knapper 5–11; a late blade on 1 world |
+| F9 | control births / woman-year 0.20–0.30; the 3-year no-orders run ≥ 30/32 without a cold death | all | **PASS**: F9a pooled 0.277 (38 / 137.3; M4 measured the same way on seeds 0–7: 0.336); F9b 32/32 (0 deaths; 99 births / 337.5 woman-years = 0.293) | **PASS**: F9a 0.284 (39 / 137.3); F9b 32/32 (0 deaths; 99 births / 338.3 woman-years = 0.293) |
+| F10 | ledger per kind exact; reservations exact; soak green (knowledge, wolves off) | all | **PASS**: 0 / 0 violation ticks in 128 runs; SOAK PASS | **PASS**: 0 / 0 violation ticks in 128 runs; soak in the gate |
+| F11 | M5 systems ≤ 120 µs/tick at N = 1,000; alloc/agent ≤ M4 + 40 B; C3; ≤ +10 % vs M4's quiet rows; identity; replay | all | identity PASS, replay PASS; bench PENDING | replay PASS, identity in the gate; bench (`$DATA/bench5`, `53be405d`, quiet): means ×0.997–×1.082 and p99 ×0.972–×1.065 on four scenes, n200_side64 mean ×1.105 and p99 ×1.102 (justified in the CHANGELOG: density); M5 systems 47 µs/tick at N = 1,000; alloc/agent 1,871 → 1,871 B — **FAIL** on the strict reading of the means (one scene ×1.105), PASS on every other part |
 
-Summary (final): F1, F2, F3, F9, F10 pass; F4, F5, F6 (F6b), F7, F8 fail; F11 pending the bench. Against the record
-the fixes moved F3a 30 → 32 (the probe's window), F4 25 → 26, F5 20 → 23, F6b 2 → 7, F7 25 → 27; per-seed values
-changed on most worlds (the hunt and fight fixes change who is where), so the failing seed lists differ.
+Summary (final, `53be405d`): F1, F2, F3, F9, F10 pass; F4, F5, F6 (F6b), F7, F8 fail; F11 fails on the strict
+reading (n200_side64 mean ×1.105, justified in the CHANGELOG by density) and passes on every other part. Against
+the record: F3a 30 → 32 (the probe's window), F4 25 → 27, F5 20 → 19, F6b 2 → 3, F7 25 → 25; the intermediate
+`3a8d0759` read F4 26, F5 23, F6b 7, F7 27 — the slicing moved who meets whom when, and these bars sit near their
+lines, so per-seed results move between builds.
 
 ## Control against pressure (same seeds, same script; of record)
 

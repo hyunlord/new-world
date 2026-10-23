@@ -37,8 +37,8 @@ one of three tops (loincloth, hide wrap, fur cloak); the simulation never decide
   an hour, `STREAM_APPAREL`, the lineage key); a cold hour bites as for anyone. Cold hours, the mood's cold night and
   exposure damage all scale by the factor on average. Scaling only the damage (the draft) left cold events equal
   between clothed and unclothed people by construction.
-- Held-out result, final: F5 23/32 (wraps arrive too slowly on nine worlds: hides come one a kill and a wrap takes
-  two), F8 0/32 (a world uses a knife 5–22 times in 48 days: one or two knives, not ten — the goal's sink is too small for
+- Held-out result, final: F5 19/32 (wraps arrive too slowly on twelve worlds: hides come one a kill and a wrap takes
+  two), F8 0/32 (a world uses a knife 6–22 times in 48 days: one or two knives, not ten — the goal's sink is too small for
   its bar).
 
 ## Date

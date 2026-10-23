@@ -52,7 +52,7 @@ M4), so the knowledge node `tracking` was lore only and hides had no source.
   reservation (a drafted person holds no job).
 - `decision/system.rs` is unchanged (+0); the seam (`jobs/seam.rs`, +10 −2) keeps drafted people inert.
 - Held-out result, final: F3a 32/32 (the scripted draft beats every pack with no death), F3b 32/32 (without it the
-  pack bites), F4 26/32 (deer are killed on every world, but on five the meat spoils before it reaches the larder).
+  pack bites), F4 27/32 (deer are killed on every world, but on four the meat spoils before it reaches the larder).
   Undrafted colonies beat the packs too (people strike back), so drafting changes little (`M5_EVALUATION.md`).
 
 ## Date

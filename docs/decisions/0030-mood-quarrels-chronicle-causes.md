@@ -48,9 +48,9 @@ can be followed.
 - A quarrel with no negative modifier (or a second quarrel of the day) is over the relation: cause code 100
   (`RELATION_CAUSE`) linked to the pair's previous quarrel, so every quarrel's chain has at least two links.
 - The bridge's chronicle rows carry each entry's index and its "→" link; `get_chronicle_why(index)` returns the chain.
-- Held-out result, final: F6a 32/32 (the control is calm), F6b 7/32 (breakdowns under pressure, one world short of
-  one in four), F7 27/32 (five worlds have fewer than four quarrels in two years; no fight killed anyone). Every chain
-  has two links by construction, but 187 of 218 stop at a mood modifier with no chronicle entry behind it: a modifier
+- Held-out result, final: F6a 32/32 (the control is calm), F6b 3/32 (breakdowns under pressure are rarer than one
+  world in four), F7 25/32 (seven worlds have fewer than four quarrels in two years; no fight killed anyone). Every
+  chain has two links by construction, but 165 of 197 stop at a mood modifier with no chronicle entry behind it: a modifier
   cause names the feeling, not the event that caused it (a later pass could link hunger and cold to their entries).
 
 ## Date

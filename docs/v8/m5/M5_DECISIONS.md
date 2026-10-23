@@ -347,3 +347,14 @@ session on the sliced check alone (`round4_slices`, 15:07–15:10, load 5–6) p
 p99 except 64² (mean ×1.079, p99 ×1.137); a session at 15:12–15:24 was contended (load 8–14 in rounds 2–3) and is
 discarded (`round5_contended`). The rule for periodic systems is in the architecture skill.
 
+D18 closed. The final session (`$DATA/bench5`, `53be405d`, 15:39–15:43, 1-minute load 5.8–7.6, admitted quiet):
+tick mean ×0.997–×1.082 and p99 ×0.972–×1.065 on n200, n1000, n2000, n200_script; n200_side64 mean ×1.105, p99
+×1.102; M5 systems 11 / 47 / 87 µs per tick at N = 200 / 1,000 / 2,000; alloc/agent unchanged. The owner's direction
+(2026-10-23): no further optimisation; n200_side64 is justified in the CHANGELOG by density (200 people on 64² are 9×
+denser than on 192², so the 2-tile quarrel neighbourhood costs more only there), with that scene's p99 tick broken down
+by system. The justification is limited to that scene (`bench_ledger.py check --justified-scenes`, the gate's
+`BENCH_JUSTIFIED_SCENES`), so it cannot excuse a regression elsewhere. F11 is reported as failing on the strict
+reading of "tick means ≤ +10 %" (one scene ×1.105) and passing on every other part. The held-out seeds were
+re-measured on `53be405d` (`$DATA/eval_final2`, never used to tune): F4 27, F5 19, F6b 3, F7 25 — the slicing moved
+who meets whom when, and these bars sit near their lines.
+
