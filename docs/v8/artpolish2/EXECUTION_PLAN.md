@@ -95,3 +95,21 @@ Godot runtime integration or owner approval.
   coordinated eligible repair round. No variant may exceed two attempts.
 - Integrated scoped verification:207tests passed. Later protocol edits require
   their own verification before use and one final scoped verification.
+
+## Checkpoint: 2026-10-23 20:48 UTC
+
+- 148/204 candidates are generated and actually observed. All96 adults are
+  observed: geometry94, coarse hair96, garment89; three beard contradictions
+  remain separate. Child52: geometry50, coarse hair52, garment30.
+- Four ordinary first-attempt child pilots tested exact fourth-reference detail,
+  leading height/angle instructions and a concise prompt. All four retain
+  garment FAIL: the last repaired chest coverage but invented a round collar.
+  Their literal observations and raw inputs remain immutable.
+- The remaining56 first attempts are now in generation, using concise frozen
+  identity/source-hair instructions and three actual source-garment forms.
+  No extra pilot or retry loop is active. Completed calls:178portrait+39texture
+  =217 before this dispatch; planned full base pool remains273total.
+- Code atd26a80e8:222 scoped tests pass; Ruff and strict typing pass all66
+  changed Python files. A small explicit full-prompt option for the later
+  immutable retry creation is undergoing independent review and will be checked
+  before use. Blind rounds have not begun.

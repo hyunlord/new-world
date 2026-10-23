@@ -393,3 +393,57 @@ The optional retry expansion was explicitly authorized by the root during this
 review. This verdict establishes the preparation/processing safeguards and
 synthetic compatibility only; production generation, portrait visual quality,
 blind acceptance and owner adoption remain outside its claims.
+
+### Eligible retry full-prompt override review — 2026-10-24 KST
+
+**Disposition: PASS for the bounded override review; no remaining blocker found.**
+The override changes the prompt of a newly created eligible attempt2 request.
+It does not permit rewriting a sealed retry or increase the attempt allowance.
+All earlier findings and original failure evidence remain preserved above.
+
+`prepare_retry()` rejects explicit blank overrides before writes
+(`portrait_prepare.py:171`) and preserves the exact nonblank string as the
+request and queue prompt, with no generated prefix or suffix (`:214`). The
+observed correction remains separately recorded. Fresh tests preserve the
+previous default prompt and serialized request bytes when the override is
+omitted or `None`.
+
+Independent temporary integration checks verified:
+
+- Both three- and four-reference paths retained Unicode, CRLF, leading spaces
+  and trailing whitespace exactly. First request/raw, native/source, envelope
+  and frozen-plan bytes stayed unchanged. Valid attempt2 processing retained
+  `Candidate.sprite == references[0]`; identical repeats changed no files.
+- A different override rejected before mutation for both reference modes with
+  the old third reference present, deleted or corrupted: **6/6 cases**, with
+  the entire temporary file inventory and all file hashes unchanged. Separate
+  cases also rejected a changed override combined with a changed detail option.
+  Existing retry checks precede `build_request()` (`:193`–`:213`).
+- Empty and Unicode-whitespace-only overrides, changed frozen plan, changed
+  original source, changed envelope, forged detail crop and orphaned retry queue
+  all rejected with the entire temporary workspace unchanged. The orphaned
+  queue guard runs before reference creation (`:190`).
+- The actual Typer CLI was invoked with only its preparation root redirected
+  to a temporary fixture. `--prompt-file` produced request/queue UTF-8 bytes
+  exactly equal to the input file, including CRLF and whitespace. Supplying
+  that option without `--retry-request` rejected without writes (`:226`–`:231`).
+
+Pre/post function-source hashes are identical for `prompt_for()`,
+`build_request()`, `bust_pixels()`, `verify_bust_detail()`,
+`verified_appearance()` and `process()`. Thus the existing source, appearance,
+frozen-reference derivation and processing guards were not replaced by the
+override. The existing first-attempt prerequisite, same-plan check and maximum
+attempt2 remain in force (`portrait_prepare.py:174`–`:187`).
+
+Fresh six-module suite: **60 passed in 4.99s**. Independent evidence is external
+under `/Users/rexxa/work/artpolish2-data/portraits/protocol_review/`:
+
+- `retry_prompt_prepatch_guard_hashes.json`
+- `retry_prompt_override_independent_recheck.json`
+- `retry_prompt_override_final_suite.txt`
+
+Implementation red evidence remains in `red_retry_prompt_override.txt` and
+`red_retry_override_orphan_queue.txt`; this review does not replace those
+records with the passing result. No production request, asset or portrait
+content was inspected or changed by this review, and no generation was run.
+This is tooling verification only, with no new attempts or acceptance claimed.

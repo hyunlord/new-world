@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "owner_approval": "PENDING",
+  "style_scores_report_only": true,
+  "rounds": [
+    {
+      "stage": "four_reference_unstarted_pilot",
+      "look": "child_M_hide_wrap_bun",
+      "variant": "v1",
+      "attempt": 1,
+      "generated_screenshot": "/Users/rexxa/work/artpolish2-data/portraits/generation/child_M_hide_wrap_bun/v1/try1/canonical.png",
+      "generated_sha256": "4df9d6de5abcc5ac8d8b3053c5b8295eb3305b147bb24315f99b4221a7210056",
+      "request": {
+        "path": "/Users/rexxa/work/artpolish2-data/portraits/generation/child_M_hide_wrap_bun/v1/request.json",
+        "sha256": "a0e6425608245b2d467c370294b659799c7571b5a2e71b7c24461ef00f3fc360"
+      },
+      "reference_images": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/child_M_hide_wrap_bun/v1/S/idle.png",
+          "sha256": "dda5876e667f347639910902b550edd9473e43613f4a3576cd4541bfa1ec0a40"
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/portrait.png",
+          "sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/portraits/generation/child_M_hide_wrap_bun/v1/references/dda5876e667f347639910902b550edd9473e43613f4a3576cd4541bfa1ec0a40.4x.png",
+          "sha256": "ed21981a9aec66d7480df9ce487a9e54af512dad87ff725142f6cd4fd660c030"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/portraits/generation/child_M_hide_wrap_bun/v1/references/dda5876e667f347639910902b550edd9473e43613f4a3576cd4541bfa1ec0a40.upper3of4.12x.png",
+          "sha256": "bf1772a1ecbd575f26db184749d24a5c5d8a2ccb6cd1fd833404364a1ee9102a"
+        }
+      ],
+      "score": 70,
+      "verdict": "revise",
+      "category_match": true,
+      "differences": [
+        "The bun and uncropped head correspond to the source, with a visible top margin.",
+        "The diagonal cream garment edge drops below the source clavicle/base-neck position and exposes a large additional upper-chest triangle."
+      ],
+      "suggestions": [
+        "Preserve this failed first attempt. Put the exact high-chest garment requirement at the front of one further unstarted pilot request before bulk dispatch."
+      ],
+      "reasoning": "Root inspected the native128 image and exact12x source crop, then their diagnostic comparison. Independent actual observation agrees: geometry and coarse hair pass, garment-height correspondence fails. The additional reference alone did not resolve the drift.",
+      "independent_observation": {
+        "path": "/Users/rexxa/work/artpolish2-data/portraits/inspection/observed/final_child/ready-013.json",
+        "sha256": "9975095b9c592ac40850ebfcca88ce982f99b66b0fd5d6cc9d05308101dfd851"
+      }
+    },
+    {
+      "stage": "leading_high_chest_requirement_pilot",
+      "look": "child_M_hide_wrap_bun",
+      "variant": "v2",
+      "attempt": 1,
+      "generated_screenshot": "/Users/rexxa/work/artpolish2-data/portraits/generation/child_M_hide_wrap_bun/v2/try1/canonical.png",
+      "generated_sha256": "11839c4e42d14cd3d97300e9c7e921426a83fcffb03d41474b45e6b9d4d08e1d",
+      "request": {
+        "path": "/Users/rexxa/work/artpolish2-data/portraits/generation/child_M_hide_wrap_bun/v2/request.json",
+        "sha256": "0a438e9b867ec16367c5e48aed4ee66893a568de8f3e199dfb7c40066433ff0d"
+      },
+      "reference_images": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/child_M_hide_wrap_bun/v2/S/idle.png",
+          "sha256": "a05a8355fa1894b677f5605cd7227657f59392b7b5c3c25faa31d6bffb97a698"
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/portrait.png",
+          "sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/portraits/generation/child_M_hide_wrap_bun/v2/references/a05a8355fa1894b677f5605cd7227657f59392b7b5c3c25faa31d6bffb97a698.4x.png",
+          "sha256": "b5d10018102efd989ac454e88ba99a9e8ccbace628e2e5ab4aa6dab02ffa7112"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/portraits/generation/child_M_hide_wrap_bun/v2/references/a05a8355fa1894b677f5605cd7227657f59392b7b5c3c25faa31d6bffb97a698.upper3of4.12x.png",
+          "sha256": "2699b1a21906f9e0476157cc379c611bfd3ec960726677fbb4a76f397a842e7b"
+        }
+      ],
+      "score": 78,
+      "verdict": "revise",
+      "category_match": true,
+      "differences": [
+        "Garment is higher and covers more chest than v1; covered right shoulder and bare opposite shoulder correspond.",
+        "The upper edge still slopes too low relative to the source high clavicle/base-neck line, leaving extra exposed inner upper chest. Source-boundary observation carries approximately one source-pixel uncertainty."
+      ],
+      "suggestions": [
+        "Preserve this failed first attempt. Try one further unstarted variant with the high edge and its shallow slope stated explicitly."
+      ],
+      "reasoning": "Root viewed native128 and exact source/portrait comparison. Independent source comparison retains garment failure despite improvement; geometry and coarse hair pass. No threshold or source pixel changed.",
+      "independent_observation": {
+        "path": "/Users/rexxa/work/artpolish2-data/portraits/inspection/observed/final_child/ready-014.json",
+        "sha256": "e6ae10f2d9e651178efb7c1946d24c0e016dc88092dec2786e20f5551534012b"
+      }
+    },
+    {
+      "stage": "leading_shallow_angle_requirement_pilot",
+      "look": "child_M_hide_wrap_bun",
+      "variant": "v3",
+      "attempt": 1,
+      "generated_screenshot": "/Users/rexxa/work/artpolish2-data/portraits/generation/child_M_hide_wrap_bun/v3/try1/canonical.png",
+      "generated_sha256": "5a9629b4f5ef89875f945eac2bfbca458014096b2752c7736d107bc52cc72baa",
+      "request": {
+        "path": "/Users/rexxa/work/artpolish2-data/portraits/generation/child_M_hide_wrap_bun/v3/request.json",
+        "sha256": "2b7188002cd9573c881def561c5788b23c8e8ba13519defcea020a9d36f2fe46"
+      },
+      "reference_images": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/child_M_hide_wrap_bun/v3/S/idle.png",
+          "sha256": "3d5fb089e3ca00c83f84e96b8b26f6371a4a61c795511b936b24822502a51c08"
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/portrait.png",
+          "sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/portraits/generation/child_M_hide_wrap_bun/v3/references/3d5fb089e3ca00c83f84e96b8b26f6371a4a61c795511b936b24822502a51c08.4x.png",
+          "sha256": "4940080bb0931de2875c4c284bc622c45d4387474f8ddd4c7c3458e0ae38b7d2"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/portraits/generation/child_M_hide_wrap_bun/v3/references/3d5fb089e3ca00c83f84e96b8b26f6371a4a61c795511b936b24822502a51c08.upper3of4.12x.png",
+          "sha256": "c80aa7be8df90d44176459c07f48424e09e446f93bfdb8def59c6138ccd3c41b"
+        }
+      ],
+      "score": 80,
+      "verdict": "revise",
+      "category_match": true,
+      "differences": [
+        "The cream upper edge is shallower and the covered shoulder improves relative to earlier pilots.",
+        "The inner upper chest still has a bare region below the neck where the source has high fabric coverage."
+      ],
+      "suggestions": [
+        "Preserve the failed first attempt. Perform one last unstarted pilot with a concise high-neck source description, then finish the remaining pool with bounded input improvements and report unresolved failures."
+      ],
+      "reasoning": "Root inspected native128. Independent comparison with exact saved source4 retains a garment-height failure; observed geometry and coarse copper bun pass. Prompt iteration does not authorize a new attempt or weaker criteria.",
+      "independent_observation": {
+        "path": "/Users/rexxa/work/artpolish2-data/portraits/inspection/observed/final_child/ready-015.json",
+        "sha256": "7fddfa117665370d62cce35889fa7c94d76b525035d759aabc4561cc293e96ce"
+      }
+    },
+    {
+      "stage": "concise_high_coverage_pilot",
+      "look": "child_M_hide_wrap_bun",
+      "variant": "v4",
+      "attempt": 1,
+      "generated_screenshot": "/Users/rexxa/work/artpolish2-data/portraits/generation/child_M_hide_wrap_bun/v4/try1/canonical.png",
+      "generated_sha256": "bbbc538613124150b93e8da399801baae69f8d31f97f2b5dcfa498fae572961c",
+      "request": {
+        "path": "/Users/rexxa/work/artpolish2-data/portraits/generation/child_M_hide_wrap_bun/v4/request.json",
+        "sha256": "19dba5ef2ab2d862b5cda4b3cf9628c4eff30ecd3d8e84d605537791a212eda1"
+      },
+      "reference_images": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/child_M_hide_wrap_bun/v4/S/idle.png",
+          "sha256": "e30d698da3b9e496dd1ba64f6af5bd53424cdcc93ad975f9c1ecd58c13bef35a"
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/portrait.png",
+          "sha256": "0697e196dd4927557f8b2a138cb8de1d8e6124f495e9f40288acd42ba8db044c"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/portraits/generation/child_M_hide_wrap_bun/v4/references/e30d698da3b9e496dd1ba64f6af5bd53424cdcc93ad975f9c1ecd58c13bef35a.4x.png",
+          "sha256": "9664c916307e9c7ef39d92a10349b9021fefbd6a853cb55bef237bdd0a0783eb"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/portraits/generation/child_M_hide_wrap_bun/v4/references/e30d698da3b9e496dd1ba64f6af5bd53424cdcc93ad975f9c1ecd58c13bef35a.upper3of4.12x.png",
+          "sha256": "f5fbc83d0fc928cfa84c7d107cf317c0fcbaad6ff0783ed0dc60c66428b88e21"
+        }
+      ],
+      "score": 82,
+      "verdict": "revise",
+      "category_match": true,
+      "differences": [
+        "Inner upper-chest coverage now matches, with the source-covered right shoulder and source-bare outer left shoulder preserved.",
+        "The output introduces a continuous raised round neck collar and bound armhole instead of the source flat shallow wrap edge. Full garment correspondence still fails."
+      ],
+      "suggestions": [
+        "Complete the remaining pool using concise source-specific instructions with a flat shallow edge and no added collar or armhole binding. Preserve all four pilot failures and defer eligible retries to the single coordinated repair round."
+      ],
+      "reasoning": "Root inspected actual native128. Independent source comparison confirms improved coverage but a new construction mismatch. Geometry passes at observed8px margin; coarse hair passes. This is a bounded input choice, not a full visual PASS or owner approval.",
+      "independent_observation": {
+        "path": "/Users/rexxa/work/artpolish2-data/portraits/inspection/observed/final_child/ready-016.json",
+        "sha256": "fcf4d5c20524d5dc1fc23b0ba3e5846c64fb46614226b489cadce407b7f2b345"
+      }
+    }
+  ]
+}

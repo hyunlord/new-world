@@ -174,3 +174,36 @@ in the single coordinated repair round after the first blind results.
 Separately, unstarted requests ask for an empty top15% band after observed1px
 hair margins. The structure instrument still requires the original minimum2px;
 no generated image is reframed or painted to pass it.
+
+The first four-reference pilot (`child_M_hide_wrap_bun/v1`, first attempt)
+still lowered the garment edge. Root and the independent child observer viewed
+the actual128px image and exact source detail; geometry and coarse hair passed,
+garment correspondence failed. `PORTRAIT_PILOT_VISUAL_VERDICTS.json` retains the
+literal result. A second unstarted variant puts the concrete high-chest garment
+requirement at the front of its prompt, preserving the prior request bytes and
+all other fields in an external `prompt_revisions` record. This is an ordinary
+first attempt within the204 pool; the failed v1 is not retried before the
+coordinated post-blind repair.
+
+The third pilot narrowed the edge angle but still exposed excess inner chest.
+The fourth replaced the long prompt with a concise source description: chest
+coverage improved, but a raised round collar and bound armhole replaced the
+source flat wrap edge. All four are retained as first-attempt garment failures;
+their geometry and coarse hair checks are separate. The remaining56 first
+attempts use concise, source-specific descriptions: flat high shallow wraps,
+horizontal bodices, or the observed closed fur collar. Prompt revisions archive
+the old and actual new request bytes; the generic preparation template alone
+does not reproduce every actual production prompt. No source annotation or
+frozen identity plan changes. Further repair waits for the first blind round.
+
+## D15 — Keep the single repair round within the remaining call budget
+
+Completing204 candidates after the30 already-consumed replacements uses273
+calls including39 textures, leaving at most47. Select only variants that have
+used one attempt. Prioritize eligible blind-miss targets, then geometry defects,
+then explicit planned-identity contradictions, then source-garment defects;
+deduplicate the union and sort look/variant keys within each priority. If the
+union exceeds the available budget, preserve the unselected failures and report
+that no retry was available. Never exceed320, give a third attempt, replace the
+original failed score, or treat a budget limit as a waiver. After the coordinated
+repair use two new isolated reviewers against the newly frozen final pool.

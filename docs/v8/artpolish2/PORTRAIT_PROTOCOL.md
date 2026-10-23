@@ -333,3 +333,33 @@ its upper-trim direction and its chest coverage. This adds no look-name inferenc
 and changes neither the source-appearance manifest nor the frozen face plan.
 Existing failed first attempts remain candidates for the single coordinated
 repair phase within the original attempt and call limits.
+
+Eligible second attempts may now provide an explicit complete prompt at first
+creation via `prepare_retry(..., prompt_override=full_text)`. This text becomes
+the exact immutable `Request.prompt` and queue prompt, with no generated prefix
+or suffix. `correction` separately records the actual observed repair reason.
+Omitting the override or passing `None` retains the previous default prompt and
+serialized request bytes. Blank/whitespace-only overrides reject.
+
+CLI usage accepts the full UTF-8 text, preserving line endings and whitespace:
+
+```sh
+python3 -m art.pipeline_polish2.portrait_prepare --retry-request ORIGINAL_REQUEST_JSON --correction 'Actual observed failure' --prompt-file COMPLETE_PROMPT.txt --include-bust-detail
+```
+
+`--prompt-file` is valid only for retry preparation. Optional fourth-reference
+derivation, native/source/appearance hashes and the same frozen face plan are
+still verified. Existing second requests/queues are checked before reference
+creation or recovery: different prompt/correction/detail selection, changed or
+missing references, inconsistent queue evidence, and an orphaned queue all
+reject without rewriting history. An identical repeat remains safe. This adds
+no generation calls, attempt allowance or source-plan changes.
+
+Full-prompt override verification:60 tests passed; Ruff, strict typing
+(0errors/0warnings) and the19-file programming audit passed. Regressions cover
+exact Unicode/CRLF/spacing, both reference modes, blank rejection, default-byte
+compatibility, and complete temporary-workspace preservation on conflicts.
+External records: `portraits/protocol_review/red_retry_prompt_override.txt`,
+`red_retry_override_orphan_queue.txt`, and `green_retry_prompt_override.txt`.
+No production request preparation, generation or portrait editing was performed
+by this tooling followup.

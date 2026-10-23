@@ -20,6 +20,7 @@ from art.pipeline_polish2.portrait_models import (
     AssetRef,
     BustDetail,
     Request,
+    ToolRequest,
     write_evidence,
 )
 
@@ -216,3 +217,74 @@ def test_retry_detail_requires_explicit_opt_in_and_keeps_history(workspace: Work
     with pytest.raises(ValueError, match="Conflicting frozen evidence"):
         _ = portrait_prepare.prepare_retry(path, "Preserve the observed high collar.", workspace.root)
     assert retry_path.read_bytes() == retry_bytes
+
+
+@pytest.fixture
+def completed_request(workspace: Workspace) -> Request:
+    _ = compile_appearance(workspace.root, (workspace.envelope,))
+    look = FacePlan.read(workspace.root / "art/character/FACE_VARIANTS.json").looks[0]
+    request = portrait_prepare.build_request(workspace.root, workspace.data / "generation" / look.look / "v1",
+        (look, look.variants[0]), include_bust_detail=False)
+    write_evidence(request.raw_directory / "request.json", request)
+    _ = (request.raw_directory / "try1.png").write_bytes(b"SYNTHETIC preserved first raw")
+    return request
+
+
+@pytest.mark.parametrize("include_detail", [False, True])
+def test_retry_full_prompt_override_is_exact(completed_request: Request, workspace: Workspace, include_detail: bool) -> None:
+    # Given: an eligible first attempt and a complete prompt with intentional Unicode/newlines/spacing.
+    first = completed_request
+    path = first.raw_directory / "request.json"
+    before = path.read_bytes()
+    raw_before = (first.raw_directory / "try1.png").read_bytes()
+    override = "  Complete concise prompt.\r\n목선과 어깨를 보존.\n "
+    # When: first-create the second request using the explicit full prompt.
+    retry = portrait_prepare.prepare_retry(path, "Observed neckline was too low.", workspace.root,
+        include_bust_detail=include_detail, prompt_override=override)
+    # Then: the request and queue carry exactly that text while original provenance remains unchanged.
+    queue = ToolRequest.model_validate_json((first.raw_directory / "try2.queue.json").read_bytes())
+    assert retry.prompt == queue.prompt == override and retry.correction == "Observed neckline was too low."
+    assert retry.references[:3] == first.references and retry.face_plan == first.face_plan
+    assert path.read_bytes() == before and (first.raw_directory / "try1.png").read_bytes() == raw_before
+
+
+@pytest.mark.parametrize("override", ["", " \t\r\n"])
+def test_retry_rejects_blank_full_prompt(completed_request: Request, workspace: Workspace, override: str) -> None:
+    # Given: eligible inputs but an explicitly empty replacement prompt.
+    path = completed_request.raw_directory / "request.json"
+    # When/Then: reject before creating retry evidence.
+    with pytest.raises(ValueError, match="nonblank full prompt"):
+        _ = portrait_prepare.prepare_retry(path, "Actual observed reason.", workspace.root, prompt_override=override)
+    assert not (completed_request.raw_directory / "try2.request.json").exists()
+
+
+def test_retry_none_override_keeps_default_bytes(completed_request: Request, workspace: Workspace) -> None:
+    # Given: the normal generated correction prefix and unchanged full prompt.
+    path = completed_request.raw_directory / "request.json"
+    retry = portrait_prepare.prepare_retry(path, "Observed reason.", workspace.root)
+    retry_path = completed_request.raw_directory / "try2.request.json"
+    before = retry_path.read_bytes()
+    # When: repeat with the explicit default None.
+    repeated = portrait_prepare.prepare_retry(path, "Observed reason.", workspace.root, prompt_override=None)
+    # Then: the established default prompt and sealed bytes are unchanged.
+    assert repeated == retry and retry_path.read_bytes() == before
+    assert retry.prompt == f"Second and final attempt. Explicit correction: Observed reason.\n{completed_request.prompt}"
+
+
+@pytest.mark.parametrize("reference_state", ["present", "missing", "changed", "orphan_queue"])
+def test_override_conflict_leaves_entire_workspace_unchanged(completed_request: Request, workspace: Workspace, reference_state: str) -> None:
+    # Given: a sealed default three-reference retry, optionally with a missing/changed old reference.
+    path = completed_request.raw_directory / "request.json"
+    retry = portrait_prepare.prepare_retry(path, "Observed reason.", workspace.root)
+    if reference_state == "missing":
+        retry.references[2].path.unlink()
+    if reference_state == "changed":
+        _ = retry.references[2].path.write_bytes(b"changed synthetic reference")
+    if reference_state == "orphan_queue":
+        (retry.raw_directory / "try2.request.json").unlink()
+    before = {str(p): p.read_bytes() for p in workspace.root.parent.rglob("*") if p.is_file()}
+    # When/Then: a different prompt plus newly requested detail rejects before any file recovery/creation.
+    with pytest.raises(ValueError):
+        _ = portrait_prepare.prepare_retry(path, "Observed reason.", workspace.root,
+            include_bust_detail=True, prompt_override="Different complete prompt.")
+    assert {str(p): p.read_bytes() for p in workspace.root.parent.rglob("*") if p.is_file()} == before
