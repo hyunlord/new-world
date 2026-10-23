@@ -127,7 +127,7 @@ That probe error was not an implementation failure.
   does not demonstrate visible grey hair, children, elders, actual numeric
   ages or a 60-person crowd. The current report states these limits.
 
-## Pending work and review boundaries
+## Historical pending work and review boundaries at the initial audit
 
 At assignment the leader reported 73/204 portraits with generation active.
 This audit did not treat that live count as a frozen completion result. The
@@ -144,3 +144,154 @@ integration, runtime/performance claims, a mainline merge or owner approval.
 
 Only `docs/v8/artpolish2/CONTRACT_REVIEW.md` was written. No implementation
 simplification was made because this was a review task.
+
+## Final delivery delta audit — 2026-10-24 KST
+
+**Result: no new blocking implementation, provenance or reporting discrepancy
+found in the completed final portrait, blind-test and face-board evidence.
+This is delivery-evidence closure, not art acceptance. Overall art remains
+PARTIAL_FAIL; owner approval is NOT_CLAIMED. Publication and remote equality
+remain the leader's pending verification.**
+
+This bounded review extends the earlier material/sprite/wall/crowd audit above;
+it does not erase its historical findings, failed gates or original pending
+checkpoint. The 204 observations, both actual blind rounds and final face
+boards are now completed evidence. The audited committed HEAD is
+`9049e3e3088eee5c9ef8ad1417df408617214c5d`, on `v8/art-polish2`.
+The leader subsequently added only the historical replay clarification to
+`POLISH2_REPORT.md`; that reviewed working-copy snapshot is SHA-256
+`1422c620d8148c0000c6ecadfbee540a31bb5a4de77b41c585cedaa9b488b958`.
+Later publication wording or commits are outside this snapshot.
+
+### Generation, immutable history and final selection
+
+- Rehashed all **2,585 unique path/hash references** in the final generation
+  manifest (3,604 bindings), with no mismatch or missing file. Independently
+  checked all **281 tool-original/raw pairs** and **967 attached-reference
+  snapshots**. Historical references are verified against their saved bytes,
+  not substituted with a later live sprite at the same original path.
+- The call inventory contains **281 distinct portrait calls**: 204 attempt1
+  and 77 attempt2, all COMPLETED, maximum two attempts per variant. The
+  texture ledger has exactly 39 requested/completed pairs, maximum three
+  attempts per texture; all 39 saved sources match their tool originals.
+  Total is **320/320** with no uncounted retry or failed tool call in these
+  ledgers. The preserved round0 call inventory still matches SHA-256
+  `dd2318dfad489453a103796b6295521573068711d88540865c923d17f410f8a3`.
+- Independently reproduced **all 281 canonical attempt images** by full-frame
+  RGB conversion and Lanczos resize to 128x128; decoded pixels match exactly.
+  This proves the recorded normalization, not regeneration of identical AI
+  output. The immutable actual request is authoritative where manual prompt
+  revisions or retry overrides differ from a generic prepare command.
+- Comparing the two frozen 204-candidate indexes yields **45 changed
+  portraits and 204 unchanged sprite references**. The fixed repair47
+  selection resulted in 45 attempt2 selections and two retained attempt1
+  images: `child_F_loincloth_bun/v4` retains its 2px baseline head margin over
+  the retry's approximately 1px geometry failure; `child_M_hide_wrap_bun/v1`
+  retains its baseline because the retry adds a source-inconsistent sleeve.
+  Both consumed retries and their failed observations remain recorded.
+- Final selection is 129 attempt1 + 75 attempt2. Independent arithmetic on
+  the actual observed boxes reproduces **geometry 201/204** under the unchanged
+  ellipse and 2px-margin rule. Selected observation files reproduce **hair
+  204/204, garment 170/204, extra accessory 0**. Geometry is 95/96 adults and
+  106/108 children; garment is 96/96 adults and 74/108 children. The adult
+  review and report retain the two exhausted beard contradictions at
+  `adult_M_fur_cloak_bun/v1,v6`. These are observed quality limits, not new
+  acceptance supplied by this contract reviewer.
+
+### Actual blind rounds and the unchanged-sample boundary
+
+The final audit was explicitly authorized to inspect completed score bindings,
+keys and responses after both rounds ended. It did not contact any blind
+reviewer or alter any packet, answer, key, receipt or score. Each round uses
+its own two isolated agent tasks; all four receipt identities are distinct.
+For each reviewer, all 75 score/key artifact bindings match. Direct comparison
+of each answer with its key independently reproduces the recorded counts and
+failed variant lists; correct option letters also resolve to the stated target
+variants. Per-reviewer and per-look thresholds are applied without averaging.
+
+| Round | Identity A | Identity B | Distinctness failure | Other look/directions |
+|---|---|---|---|---|
+| 0 | 35/36 PASS | 35/36 PASS | A: `child_F_fur_cloak_bun` 4/6, targets v2/v5 | 6/6 each |
+| 1 | 32/36 PASS | 31/36 FAIL | A: `adult_M_fur_cloak_bun` 4/6, targets v1/v2 | 6/6 each |
+
+Both rounds remain overall **FAIL**. All 36 identity targets are byte-identical
+between rounds. The original failed child v2/v5 images are also unchanged and
+were already exhausted; neither was in repair47. Of the owner48 sample,
+only `adult_M_fur_cloak_short/v1` changed. Round1 is an independent retest by
+new reviewers, not proof that unchanged samples improved through regeneration.
+
+Each round's saved source snapshot, frozen candidate index, source/frozen plan
+and all 408 frozen portrait/sprite references pass their hash checks: **412
+bindings per round**. Round1's full live-source validation also passes for all
+204 candidates. Round0's original `load_round()` live-source guard now correctly
+rejects the advanced `portraits/candidates.json`; its historical score is
+reproduced from preserved responses/keys and its verified frozen snapshot.
+This is an explicit replay boundary, not permission to overwrite the old
+manifest or to claim that the current-index round0 guard passes.
+
+### Face-board fidelity and documented packaging deviation
+
+- `faces_owner.index.json` covers **eight looks x six variants = 48 unique
+  pairs**, with each of the 96 full-sheet panel indexes and each published
+  part's 48 indexes used exactly once. Original-size visual inspection
+  confirms both parts, labels and candidate/owner-pending footers.
+- Independent integer alpha compositing against RGB (242,236,219), followed
+  by integer pixel repetition for 2x sprites, matches **all 96 published
+  panels and all 96 external full-sheet panels exactly**. No panel is reduced
+  to meet the file cap. All **408 current portrait/sprite files** for the
+  complete 204-pair pool also match their Git blobs at
+  `04fa0d1c93c5a4a960238dad82a56508d661dca0`.
+- The unsplit full sheet is **1,826,470 bytes**, above the 1,500,000-byte
+  committed-file limit. The committed adult and child sheets are respectively
+  **928,406 and 910,823 bytes**. D17 and the Korean report explicitly call
+  this a packaging deviation from one 8x6 `faces_owner.png`, not literal
+  satisfaction of the single-file requirement or an owner-approved waiver.
+  The full sheet remains externally archived with its hash and index.
+- All five earlier wall/crowd PNGs still match both their recorded hashes and
+  the initial audit's `e991e08ab692c1c40b96525d27988caa3e644933` Git blobs.
+  The face board's own geometry remains **45/48**. Pixel fidelity does not
+  erase geometry, beard, garment, seam, coverage or blind-test failures.
+
+### Scope, report and verification claims
+
+The supplied base is an ancestor of the audited HEAD. All **3,143 changed
+committed paths** are within `art/**` or `docs/v8/artpolish2/**`, and none
+exceeds **1,500,000 bytes**. The largest is the 1,291,755-byte portrait
+generation manifest. Unrelated local dirt remains untouched.
+
+There is no production-code change after `a164b924`: the intervening diff
+contains final selected PNGs, JSON evidence and Markdown records. The retained
+final-code logs say **252 passed in 23.02s**, Ruff **All checks passed**, and
+basedpyright **0 errors, 0 warnings, 0 notes**. The base-to-code-commit diff
+contains the reported **68 Python files**. These are verified existing log
+claims at that code commit, not a newly rerun full suite or game-runtime gate.
+The fresh commands in this delta audit were bounded read-only arithmetic,
+hash, Git-object, normalization and pixel-comparison checks.
+
+The latest Korean report covers every required report subject in goal section4,
+including the data-only material proof, direction rules, fixed plan, failures,
+both real blind rounds, boards, changed paths, limitations, M-ART2 formats and
+selection/tint rules, and outstanding owner decisions. Its seven Markdown
+board links resolve. Referenced final manifest/archive files and frozen
+evidence resolve and hash-match. The report preserves the initial idle replay
+limitation, original coverage FAIL, hair NOT_VERIFIABLE, actual visible crowd
+IDs/life-stage limits, final blind FAIL and the unchanged-sample caveat.
+
+Key reviewed evidence SHA-256 values:
+
+| File | SHA-256 |
+|---|---|
+| `art/portrait/polish2/GENERATION_MANIFEST.json` | `6053b121cf4d09965b99970ea0fab5989dce0035b0c68c68ea277dd7610bb3fa` |
+| `FINAL_PORTRAIT_POOL_CHECK.json` | `1bcde77dae3e373e4189905726a13652446442adad0b9b55a00e1b36ccc16047` |
+| `blind_scores_round0.json` | `d8d00ce8263148bd93e32347cc3a021afa2fa4cad01acdbcc7d86d26d13b1b1d` |
+| `blind_scores_round1.json` | `3e7f830aa6e21ec08830131d4d38167195bd7928b02b564b30f0ec378bb6380b` |
+| `FINAL_FACE_BOARD_EVIDENCE.json` | `5a83049091086f76117e0ad057706a653f7d643393cc0596864fe228fce909b9` |
+| `art/boards/faces_owner.index.json` | `7d096a7198d09d132c941615729dfd6b6554769f1500cf489bf69633cbb29714` |
+
+No additional corrective edit is required by this final evidence audit.
+The leader still owns publication, explicit remote-SHA equality and any final
+publication wording. Source-only review, mechanical reproduction, independent
+portrait observations, blind gates and owner approval remain separate. This
+review authorizes no extra generation, limit change, runtime integration or
+mainline merge. Only this audit document was edited; nothing was staged or
+committed by the reviewer.
