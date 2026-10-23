@@ -1,0 +1,55 @@
+{
+  "raw_tool_pairs": 44,
+  "references_checked": true,
+  "frozen_packets": [
+    {
+      "round": 0,
+      "ground": "art/style05/ground_v2/meadow.png",
+      "ground_sha256": "fd738face2ed4ca91327c53ee6106052f892fca977f8dfec695ebc1cd27c9b60",
+      "boards": [
+        {
+          "size": 32,
+          "path": "/Users/rexxa/work/artpolish-data/items/round0/items_32px.png",
+          "sha256": "f9e6aac611fff4950687cdc518c6744a7f46884b81c3396789e55bcf4fb95cfd"
+        },
+        {
+          "size": 64,
+          "path": "/Users/rexxa/work/artpolish-data/items/round0/items_64px.png",
+          "sha256": "fbe48af650196f0788343bb1b70e80f90060e6043e5125a6241ed858006edd3e"
+        }
+      ],
+      "answer_key_sha256": "f032bc7ca726dcaa3359069a6ed8eb49de5fb7a4ab874420c5b1547bfde56629"
+    },
+    {
+      "round": 1,
+      "ground": "art/style05/ground_v2/meadow.png",
+      "ground_sha256": "fd738face2ed4ca91327c53ee6106052f892fca977f8dfec695ebc1cd27c9b60",
+      "boards": [
+        {
+          "size": 32,
+          "path": "/Users/rexxa/work/artpolish-data/items/round1/items_32px.png",
+          "sha256": "525b6a14e6396ad797f41c9aeb6d7b01a08a903f1072a44db3f760d6fd654cb5"
+        },
+        {
+          "size": 64,
+          "path": "/Users/rexxa/work/artpolish-data/items/round1/items_64px.png",
+          "sha256": "1371b04a2a68b798271fd4530a7615bd4fb04f8c06b97037eea420c08e7d02c2"
+        }
+      ],
+      "answer_key_sha256": "a4c86dc64ca26f51c85350fa2ff7daade887f799bcd5097b067d0d7cd19dbf2d"
+    }
+  ],
+  "retained_byte_identity": [
+    "spear",
+    "clay_pot_empty",
+    "clay_pot_filled",
+    "meat",
+    "stone_pile",
+    "hide"
+  ],
+  "max_artifact_bytes": 1085460,
+  "oversized": [],
+  "selected_asset_count": 22,
+  "owner_board": "art/boards/items_owner.png",
+  "owner_board_sha256": "693948d14818b7f12caa16937b0cff3ab575d0fcf6268c92c4ae4a66e676b9ac"
+}

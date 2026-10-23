@@ -1,0 +1,55 @@
+{
+  "method": "Alpha>=128 span at64px; spear total/axe ratios below2 prove shaft requirement failure.",
+  "results": [
+    {
+      "id": "ground_axe",
+      "path": "art/style05/polish/items/ground_axe_try3.png",
+      "sha256": "dcf4c2afb47e86e24d848127a91b959ac1acdfcf2eb70dcc55315e1ee1981d29",
+      "whole_object_span_px": 54.62600113499065,
+      "spear_total_to_item_ratio": 1.2815717980115064
+    },
+    {
+      "id": "spear",
+      "path": "art/style05/env1/items/spear.png",
+      "sha256": "3f0448a9a2b6c7a07b77a90781b0864d089ca0e363de81f3d761384f5043f77d",
+      "whole_object_span_px": 70.00714249274856,
+      "spear_total_to_item_ratio": 1.0
+    },
+    {
+      "id": "stone_axe",
+      "path": "art/style05/polish/items/stone_axe_try1.png",
+      "sha256": "128e62930b1b4ca7de86f19dc74d1d834bf87ccc281dd28c02ef2f6fe9a32600",
+      "whole_object_span_px": 59.81638571495272,
+      "spear_total_to_item_ratio": 1.170367310829487
+    }
+  ],
+  "requirement_pass": false,
+  "round0": {
+    "method": "Maximum Euclidean span between pixel centers with generated alpha >=128 in 64px selected sprite. Spear total span is an upper bound on its shaft length; ratio below2 therefore fails shaft>=2x axe whole-length requirement. No pixel editing.",
+    "results": [
+      {
+        "id": "ground_axe",
+        "path": "art/style05/polish/items/ground_axe_try2.png",
+        "sha256": "90b2040c41c4350dbf03d2fee3aaac8e0b5416449dcb86e35a29754e10ce396c",
+        "silhouette_diameter_px_64": 57.8013840664737,
+        "spear_total_to_item_diameter_ratio": 1.2111672345464564
+      },
+      {
+        "id": "spear",
+        "path": "art/style05/env1/items/spear.png",
+        "sha256": "3f0448a9a2b6c7a07b77a90781b0864d089ca0e363de81f3d761384f5043f77d",
+        "silhouette_diameter_px_64": 70.00714249274856,
+        "spear_total_to_item_diameter_ratio": 1.0
+      },
+      {
+        "id": "stone_axe",
+        "path": "art/style05/env/items/stone_axe.png",
+        "sha256": "31b0d4138f790e8e1379ca23930198809e925452fc50ee3148a5d95592df8dab",
+        "silhouette_diameter_px_64": 48.60041152089147,
+        "spear_total_to_item_diameter_ratio": 1.4404639858379624
+      }
+    ],
+    "requirement_pass": false,
+    "scope": "Retained spear and stone axe unchanged under explicit regenerate-only list; ground axe will be remeasured on final selection."
+  }
+}

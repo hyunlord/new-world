@@ -1,0 +1,1880 @@
+{
+  "status": "OWNER_DECISION_PENDING",
+  "base": "b6baa73f1f64983fee6aea08ed783a038ba2a4ce",
+  "audited_head_before_delivery_commit": "9b7156e40307035226b96b9b93c839d6726dec82",
+  "verified_at_utc": "2026-10-23T16:37:16.028162+00:00",
+  "generation_budget": 100,
+  "generation_calls": 60,
+  "family_counts": {
+    "animals": {
+      "calls": 6,
+      "allocated_cap": 9,
+      "by_kind": {
+        "asset_generation": 4,
+        "model_style_scorecard": 2
+      },
+      "by_status": {
+        "COMPLETED": 6
+      }
+    },
+    "portraits": {
+      "calls": 10,
+      "allocated_cap": 22,
+      "by_kind": {
+        "asset_generation": 9,
+        "model_style_review_generation": 1
+      },
+      "by_status": {
+        "COMPLETED": 10
+      }
+    },
+    "items": {
+      "calls": 44,
+      "allocated_cap": 45,
+      "by_kind": {
+        "asset": 37,
+        "model_scorecard": 7
+      },
+      "by_status": {
+        "COMPLETED": 44
+      }
+    }
+  },
+  "reference_hash_checks": 214,
+  "calls": [
+    {
+      "family": "animals",
+      "index": 1,
+      "kind": "asset_generation",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23T15:41:16.348778+00:00",
+      "completed_at": "2026-10-23T15:42:12.750584+00:00",
+      "raw": "/Users/rexxa/work/artpolish-data/animals/wolf_try1.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-061d-78f3-885e-daa152838af3/exec-260d8896-eb1a-4b0c-bb2d-8d85d843a6a2.png",
+      "sha256": "5d477d6cc4bd39bbf43fd1b2c21d37eee26081cd0b5e2131f20869e947e2ed9b"
+    },
+    {
+      "family": "animals",
+      "index": 2,
+      "kind": "asset_generation",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23T15:42:48.149650+00:00",
+      "completed_at": "2026-10-23T15:44:00.575609+00:00",
+      "raw": "/Users/rexxa/work/artpolish-data/animals/deer_try1.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-061d-78f3-885e-daa152838af3/exec-aec3009f-7925-4766-96ed-a64be1c55ab1.png",
+      "sha256": "caf81505de4923616885a5d47734a25c0e6a75f324457230669b12964571fca8"
+    },
+    {
+      "family": "animals",
+      "index": 3,
+      "kind": "model_style_scorecard",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23T15:48:29.369518+00:00",
+      "completed_at": "2026-10-23T15:49:26.477091+00:00",
+      "raw": "/Users/rexxa/work/artpolish-data/animals/style_round0.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-061d-78f3-885e-daa152838af3/exec-f845dcae-041f-4afd-9ff2-21f60aff3477.png",
+      "sha256": "0a0016f7d45af0d2863247c4c7eb7f6fb0893f1f220f225efde7a0ca0b382db2"
+    },
+    {
+      "family": "animals",
+      "index": 4,
+      "kind": "asset_generation",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23T15:54:18.313309+00:00",
+      "completed_at": "2026-10-23T15:55:16.274371+00:00",
+      "raw": "/Users/rexxa/work/artpolish-data/animals/wolf_try2.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-061d-78f3-885e-daa152838af3/exec-70a581c0-5534-44d0-94f4-157840ef3c7f.png",
+      "sha256": "2cc76e3cae682279695d0f9cda12d434a139f19899e21a7915f0f0ed50d7854c"
+    },
+    {
+      "family": "animals",
+      "index": 5,
+      "kind": "asset_generation",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23T15:54:18.317827+00:00",
+      "completed_at": "2026-10-23T15:56:28.390406+00:00",
+      "raw": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-061d-78f3-885e-daa152838af3/exec-3e75f818-346d-4513-8e70-075b33cb0796.png",
+      "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+    },
+    {
+      "family": "animals",
+      "index": 6,
+      "kind": "model_style_scorecard",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23T15:57:30.391457+00:00",
+      "completed_at": "2026-10-23T15:58:51.261099+00:00",
+      "raw": "/Users/rexxa/work/artpolish-data/animals/style_round1.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-061d-78f3-885e-daa152838af3/exec-c8cbab8b-82e2-4d0d-8a98-3a05647d06d1.png",
+      "sha256": "a352bb8b30efb03c02330e2feb628a5d9a4f01d093ba76d90057d63e49723755"
+    },
+    {
+      "family": "portraits",
+      "index": 1,
+      "kind": "asset_generation",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23T15:42:22.625394+00:00",
+      "completed_at": "2026-10-23T15:43:56.663796+00:00",
+      "raw": "/Users/rexxa/work/artpolish-data/portraits/adult_F_fur_cloak_long_tied_try1.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-4476-7031-88bc-8177a51a93b1/exec-37f0bdd4-f6e4-4bfb-9c96-161f39ab45d3.png",
+      "sha256": "ad889576fe7b8d870f2acf17f19e3e9ae9302da585e960b6493b7a7819cfb53c"
+    },
+    {
+      "family": "portraits",
+      "index": 2,
+      "kind": "asset_generation",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23T15:42:22.625572+00:00",
+      "completed_at": "2026-10-23T15:43:56.668146+00:00",
+      "raw": "/Users/rexxa/work/artpolish-data/portraits/adult_F_hide_wrap_bun_try1.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-4476-7031-88bc-8177a51a93b1/exec-fc5eed94-71a7-4d34-991b-487bf39f09e6.png",
+      "sha256": "402b689b9972751c176267267155409de2a57b045240bb62d6da1561d16e10d4"
+    },
+    {
+      "family": "portraits",
+      "index": 3,
+      "kind": "asset_generation",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23T15:42:22.625577+00:00",
+      "completed_at": "2026-10-23T15:43:56.671418+00:00",
+      "raw": "/Users/rexxa/work/artpolish-data/portraits/child_M_fur_cloak_bun_try1.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-4476-7031-88bc-8177a51a93b1/exec-c3766544-a213-4196-b36f-19f9767199a4.png",
+      "sha256": "bd2310a0f8d29a586b1e589b7711311d06332d0b160ae4afdd7e3de4ad385b0c"
+    },
+    {
+      "family": "portraits",
+      "index": 4,
+      "kind": "asset_generation",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23T15:43:56.672265+00:00",
+      "completed_at": "2026-10-23T15:46:15.408938+00:00",
+      "raw": "/Users/rexxa/work/artpolish-data/portraits/child_M_loincloth_bun_try1.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-4476-7031-88bc-8177a51a93b1/exec-82bd48ea-9f72-4904-9099-7f4a6cd3f52e.png",
+      "sha256": "c372bb381dda3b5755ef6f1bd9eda12daaf487357a09199ea7a19d815016e9d5"
+    },
+    {
+      "family": "portraits",
+      "index": 5,
+      "kind": "asset_generation",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23T15:43:56.672354+00:00",
+      "completed_at": "2026-10-23T15:46:15.416846+00:00",
+      "raw": "/Users/rexxa/work/artpolish-data/portraits/adult_F_fur_cloak_bun_try1.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-4476-7031-88bc-8177a51a93b1/exec-9f8ce32e-0deb-42e4-a1a7-6eb21d2a0292.png",
+      "sha256": "def7a1eb6a6ffcfcdacd494c9e30b6a3a0cab1a85b19b0e3a8d7ac6b05ed96dd"
+    },
+    {
+      "family": "portraits",
+      "index": 6,
+      "kind": "asset_generation",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23T15:43:56.672421+00:00",
+      "completed_at": "2026-10-23T15:46:15.420615+00:00",
+      "raw": "/Users/rexxa/work/artpolish-data/portraits/child_F_hide_wrap_bun_try1.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-4476-7031-88bc-8177a51a93b1/exec-2551375d-e458-419c-8dea-36e19de6ecee.png",
+      "sha256": "1dd45112b9453f1258911452d49e2eccf2a873c325ae6802bb40f3cff5e42753"
+    },
+    {
+      "family": "portraits",
+      "index": 7,
+      "kind": "asset_generation",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23T15:46:15.421120+00:00",
+      "completed_at": "2026-10-23T15:47:51.621949+00:00",
+      "raw": "/Users/rexxa/work/artpolish-data/portraits/child_F_loincloth_long_tied_try1.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-4476-7031-88bc-8177a51a93b1/exec-b1b64206-416d-4b3b-8be9-4f0d04acb848.png",
+      "sha256": "7490374e329d0eea9f3c5780404282559d268300112f3bd5360821d7b55fabfa"
+    },
+    {
+      "family": "portraits",
+      "index": 8,
+      "kind": "asset_generation",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23T15:46:15.421242+00:00",
+      "completed_at": "2026-10-23T15:47:51.629125+00:00",
+      "raw": "/Users/rexxa/work/artpolish-data/portraits/child_M_hide_wrap_bun_try1.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-4476-7031-88bc-8177a51a93b1/exec-879185fa-40e1-48b6-aab5-748bcfc400b6.png",
+      "sha256": "d20379d42400628d01726133c45cf006041a8fde00bd9d8348b3c105469bc359"
+    },
+    {
+      "family": "portraits",
+      "index": 9,
+      "kind": "asset_generation",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23T15:46:15.421331+00:00",
+      "completed_at": "2026-10-23T15:47:51.632184+00:00",
+      "raw": "/Users/rexxa/work/artpolish-data/portraits/child_M_hide_wrap_short_try1.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-4476-7031-88bc-8177a51a93b1/exec-96630979-2fbb-42a7-acc2-993505dcd25a.png",
+      "sha256": "61ebaf78f48ccab76905e1980074f75d7409b0c3a862a8eebf680865bc90eb57"
+    },
+    {
+      "family": "portraits",
+      "index": 10,
+      "kind": "model_style_review_generation",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23T15:50:36.142876+00:00",
+      "completed_at": "2026-10-23T15:52:07.478948+00:00",
+      "raw": "/Users/rexxa/work/artpolish-data/portraits/style_scorecard_1.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-4476-7031-88bc-8177a51a93b1/exec-0b66dd4b-51c5-48e9-a722-cf94b8e53d42.png",
+      "sha256": "03fa54e86826744fc6281761ce89ce8bd2dfcedac1eba8d79edba540239be4dd"
+    },
+    {
+      "family": "items",
+      "index": 1,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 15:43:26 UTC",
+      "completed_at": "2026-10-23 15:45:46 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/firewood_try1_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-6b560337-bb3b-438e-b39e-f5337c4b66fe.png",
+      "sha256": "bf3b252ba4c84341b7ba103ce74e010d14a016d94b04afc8a6562aac9ed0e5f9"
+    },
+    {
+      "family": "items",
+      "index": 2,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 15:43:26 UTC",
+      "completed_at": "2026-10-23 15:46:39 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/ground_axe_try1_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-bbd6b8c4-5e3a-4c76-af76-769252e1a1eb.png",
+      "sha256": "bf1566354b38ab8d98973939b1f21fe75b04f7448a98a15cf294d0bee8664d0d"
+    },
+    {
+      "family": "items",
+      "index": 3,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 15:43:26 UTC",
+      "completed_at": "2026-10-23 15:46:39 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/cured_hide_try1_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-e91cd284-7b50-4757-91af-eab5402c9e6a.png",
+      "sha256": "5659598cdc48c751a6cabd0161196b3ede35cf1de35aa5fb4a276537ce12f428"
+    },
+    {
+      "family": "items",
+      "index": 4,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 15:43:26 UTC",
+      "completed_at": "2026-10-23 15:46:39 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/hide_wrap_try1_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-55cc8a85-8dfc-43aa-b240-a0dd9c151d2f.png",
+      "sha256": "9210b9f0c6377df842c590b984dad63bad3e7f2be034b9417a02875540fb3637"
+    },
+    {
+      "family": "items",
+      "index": 5,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 15:47:07 UTC",
+      "completed_at": "2026-10-23 15:54:24 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/fur_cloak_try1_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-18b5f882-74e9-45ea-8a95-099fc4c6c670.png",
+      "sha256": "560dea562c8dea1b6046df335605136f28ce2f254461f197fabe398b6a7f9ec4"
+    },
+    {
+      "family": "items",
+      "index": 6,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 15:47:07 UTC",
+      "completed_at": "2026-10-23 15:51:12 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/wolf_hide_try1_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-25d2ac8f-dd74-450d-815c-0059df46927a.png",
+      "sha256": "eeb84cb98907dcfb256e05468ea2109aad682dc462f822da478d024a226ec64d"
+    },
+    {
+      "family": "items",
+      "index": 7,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 15:47:07 UTC",
+      "completed_at": "2026-10-23 15:54:24 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/raw_pot_try1_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-436aa572-ded1-4c73-99ce-101142fc12bb.png",
+      "sha256": "3da7f8ddbe2a7366cb18542648d22323d81c20c6aa8f03673e28dec3762c67e0"
+    },
+    {
+      "family": "items",
+      "index": 8,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 15:47:07 UTC",
+      "completed_at": "2026-10-23 15:53:34 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/flint_nodule_try1_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-cc0ea28b-0e61-47d1-ab6c-4f5b102f9373.png",
+      "sha256": "5c07c96f4c525f26254232f99e526c75cedb59007a36c9f91f1c3afaa9205535"
+    },
+    {
+      "family": "items",
+      "index": 9,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 15:47:07 UTC",
+      "completed_at": "2026-10-23 15:50:26 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/flint_pile_try1_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-b2af46a1-b155-4655-aea9-e8eec972b34e.png",
+      "sha256": "0c32b175060c5f1effd6ee2aacae44fea547f9735df68b051cfaf7d0258da125"
+    },
+    {
+      "family": "items",
+      "index": 10,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 15:47:07 UTC",
+      "completed_at": "2026-10-23 15:49:34 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/log_pile_medium_try1_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-12160c53-caf0-4d04-961d-8b367c17b103.png",
+      "sha256": "9f553a0b4ad8b776b4f70cb19cff95f6c0aa7d2ad054a5b878dd63390612d6a9"
+    },
+    {
+      "family": "items",
+      "index": 11,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 15:47:07 UTC",
+      "completed_at": "2026-10-23 15:54:24 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/log_pile_large_try1_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-545419e3-ac9a-4d82-b4d7-803dbc9dcc9e.png",
+      "sha256": "dcfe104b2c53dfb3abf255b0f95896a3cd3a89f159fd3199b2beae422e96f24e"
+    },
+    {
+      "family": "items",
+      "index": 12,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 15:47:07 UTC",
+      "completed_at": "2026-10-23 15:52:46 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/flint_blade_try1_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-d7514b78-a570-4dd0-9e9e-cd66096a0851.png",
+      "sha256": "771706308f32e14ce6707eaffd80c3fb574148c95721e9f2ed4c99320f6045dd"
+    },
+    {
+      "family": "items",
+      "index": 13,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 15:47:07 UTC",
+      "completed_at": "2026-10-23 15:51:57 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/clay_try1_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-ed0eb41c-eab9-4b72-8293-8137c68f8bad.png",
+      "sha256": "ad39b2a06cf06ea83af98bd6f9d246e25930ddc3f1db88bac8a38724644363c3"
+    },
+    {
+      "family": "items",
+      "index": 14,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 15:55:41 UTC",
+      "completed_at": "2026-10-23 16:01:08 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/firewood_try2_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-7cb9d94f-2410-48b2-b2d2-259c46f4ed1e.png",
+      "sha256": "1e99d983699e7a170c8b8f3c7e45bca55f8825c9f8b58e9ca512993679be6f97"
+    },
+    {
+      "family": "items",
+      "index": 15,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 15:55:41 UTC",
+      "completed_at": "2026-10-23 16:01:08 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/ground_axe_try2_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-007911ea-8f87-45c8-82a0-2c5ab292b975.png",
+      "sha256": "99fd511d8230fcde02e851216dd9d67286156aae0a7910997d951877db81ecb8"
+    },
+    {
+      "family": "items",
+      "index": 16,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 15:55:41 UTC",
+      "completed_at": "2026-10-23 16:01:08 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/flint_nodule_try2_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-b07526dc-9ed5-44d9-979d-3b517ff42055.png",
+      "sha256": "545711c921980e1bb5cfa4885d2f88a3f8454bdde14cc61ca02cc7296ddd1c2f"
+    },
+    {
+      "family": "items",
+      "index": 17,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 15:55:41 UTC",
+      "completed_at": "2026-10-23 15:58:30 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/flint_pile_try2_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-95477f49-81d1-4a43-922a-fbc3766c1639.png",
+      "sha256": "9a319e0b4384ca1976527175f09c6c911c520edca63e3667c3af44b5d0a1166e"
+    },
+    {
+      "family": "items",
+      "index": 18,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 15:55:41 UTC",
+      "completed_at": "2026-10-23 16:00:19 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/log_pile_medium_try2_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-974c368c-dbe3-4838-b33d-ada5bc7319b4.png",
+      "sha256": "4339baa0dfac7d96170b43e57b3a0c293a97e0f3a3dfc78d010e03e18d6554e4"
+    },
+    {
+      "family": "items",
+      "index": 19,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 15:55:41 UTC",
+      "completed_at": "2026-10-23 15:57:57 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/log_pile_large_try2_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-e0461b6e-ba4a-4930-a1a5-1ad3965aa8a3.png",
+      "sha256": "e7b3eda5288d87ceb2b1805d4756ed432cc753195361ab820f8aa87be3ec7ce4"
+    },
+    {
+      "family": "items",
+      "index": 20,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 15:55:41 UTC",
+      "completed_at": "2026-10-23 15:59:07 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/flint_blade_try2_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-ac9d498e-504d-4f01-a802-72f96695295a.png",
+      "sha256": "84c0b5117512d6db1eeb9cb0c05fcf6df3c7ab94c654b9bc20c3e05c32c7de8e"
+    },
+    {
+      "family": "items",
+      "index": 21,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 15:55:41 UTC",
+      "completed_at": "2026-10-23 15:59:38 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/clay_try2_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-dc964540-b94b-44d9-a030-b686164ae1d4.png",
+      "sha256": "84cf44ceef1f163d0c58eae92ecddd16f87b858ba32289ede03f0dad1c35696f"
+    },
+    {
+      "family": "items",
+      "index": 22,
+      "kind": "model_scorecard",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 16:03:09 UTC",
+      "completed_at": "2026-10-23 16:04:10 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/model_card_1_try1_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-4d65ba81-9951-42ad-9aba-eaabcf9975a3.png",
+      "sha256": "d6913c783b7dbe0273d9028b3039a6e25b7894fe6f2d39ddf9b8f7f558c46cb9"
+    },
+    {
+      "family": "items",
+      "index": 23,
+      "kind": "model_scorecard",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 16:03:09 UTC",
+      "completed_at": "2026-10-23 16:04:10 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/model_card_2_try1_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-d7181b6e-d8f4-4b01-be8e-525c8bde2f70.png",
+      "sha256": "d025356ee357638d8fbe3cb8df72c5c42d664a144f6181568c9e72c6e61e1858"
+    },
+    {
+      "family": "items",
+      "index": 24,
+      "kind": "model_scorecard",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 16:03:09 UTC",
+      "completed_at": "2026-10-23 16:04:10 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/model_card_3_try1_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-b86820d0-cb51-4468-96d6-536ef3293a22.png",
+      "sha256": "3746a352e3bec5ed276eab58f5c656594024d2c8c2a8bfa3a3ea48f164a7626f"
+    },
+    {
+      "family": "items",
+      "index": 25,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 16:13:26 UTC",
+      "completed_at": "2026-10-23 16:24:15 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/firewood_try3_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-f2ad9520-14f0-4fda-a71f-5ab5e6728e66.png",
+      "sha256": "336d774e7a7d15cb0be1488b2fed1b9466db8ac4069d7d51cd7d3387f725a223"
+    },
+    {
+      "family": "items",
+      "index": 26,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 16:13:26 UTC",
+      "completed_at": "2026-10-23 16:24:15 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/ground_axe_try3_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-e88080fe-2856-4e21-ab30-ae1a42a489dd.png",
+      "sha256": "f28aab18cc01f3dbceccd21f20a8e6e74df28537255d4ac79e542ecffabe5f6c"
+    },
+    {
+      "family": "items",
+      "index": 27,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 16:13:26 UTC",
+      "completed_at": "2026-10-23 16:24:15 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/cured_hide_try2_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-f02662e0-16ba-49ab-b586-abe88ca33893.png",
+      "sha256": "fd431221e71f33c84046fdbf3d5be13cfe012e18e8beb8ee8f04c213c35c886d"
+    },
+    {
+      "family": "items",
+      "index": 28,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 16:13:26 UTC",
+      "completed_at": "2026-10-23 16:19:31 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/hide_wrap_try2_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-5d98021e-dc9a-4a18-90e3-c91661794e41.png",
+      "sha256": "430742dedc002261bf704a82b7ac2215f0804f17843c4c343d9b13282f9f8f0d"
+    },
+    {
+      "family": "items",
+      "index": 29,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 16:13:26 UTC",
+      "completed_at": "2026-10-23 16:15:52 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/fur_cloak_try2_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-f16f7fba-6a66-4c3e-8d0d-fca4b28a4566.png",
+      "sha256": "f9c1206396bf20981f66679abe21b254fb964076b6005ed335155449705762fa"
+    },
+    {
+      "family": "items",
+      "index": 30,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 16:13:26 UTC",
+      "completed_at": "2026-10-23 16:16:38 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/wolf_hide_try2_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-bbb919eb-7345-4327-b994-d0eb79dfc7bc.png",
+      "sha256": "4e75d3f9be5e309d2c75ebff3666c0b778729d18cf12b5bebd3b2d74cd3372cc"
+    },
+    {
+      "family": "items",
+      "index": 31,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 16:13:26 UTC",
+      "completed_at": "2026-10-23 16:17:27 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/raw_pot_try2_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-9bde1134-993a-4f58-bdc1-c2aa47c69a53.png",
+      "sha256": "140134e68f1b42d7108218934fbd404aa394d43bbfa20f06e6b305fa31cbf231"
+    },
+    {
+      "family": "items",
+      "index": 32,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 16:13:26 UTC",
+      "completed_at": "2026-10-23 16:19:31 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/flint_nodule_try3_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-3397356c-9582-49bd-90ac-4f916ffafe74.png",
+      "sha256": "454b88f58dd98cbc01f16408fedd7eee3a61ee3c64eaca22c36203ef06cb1418"
+    },
+    {
+      "family": "items",
+      "index": 33,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 16:17:56 UTC",
+      "completed_at": "2026-10-23 16:21:53 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/flint_pile_try3_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-2d6c030a-fce4-4d14-bde1-959b70de907e.png",
+      "sha256": "1cc5fa9f9d66094b7be50f32a7c818c8af30e5fd3cc0383c154436906c991f88"
+    },
+    {
+      "family": "items",
+      "index": 34,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 16:17:56 UTC",
+      "completed_at": "2026-10-23 16:24:15 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/log_pile_medium_try3_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-b962a658-5fc4-4025-ad61-7f02683d8978.png",
+      "sha256": "33914eb52bbf9b44f04de614cebfbfd9ce8622d0eed17e533151954bb9a46fa4"
+    },
+    {
+      "family": "items",
+      "index": 35,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 16:17:56 UTC",
+      "completed_at": "2026-10-23 16:23:29 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/log_pile_large_try3_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-8c9a8b2c-07a7-4b7b-ab30-7c659fb1106a.png",
+      "sha256": "0e8d41c3af3d89d8380073e0cdbb1b45cf2a6f00f910718f1991cf4020da7f82"
+    },
+    {
+      "family": "items",
+      "index": 36,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 16:17:56 UTC",
+      "completed_at": "2026-10-23 16:22:40 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/flint_blade_try3_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-e57de953-5c7e-4b83-b03d-5dae9536abc5.png",
+      "sha256": "975c235b902b3e5a129e24c99341eed8081b27f12231672e153152e4d5fb65cc"
+    },
+    {
+      "family": "items",
+      "index": 37,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 16:17:56 UTC",
+      "completed_at": "2026-10-23 16:24:15 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/clay_try3_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-7c04bdbc-bbf5-437c-9ce2-664ae3f3a1fb.png",
+      "sha256": "068485005289f27d988b38ccc9beb8b7bd49358121b0a71667824b7b15d9f8be"
+    },
+    {
+      "family": "items",
+      "index": 38,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 16:17:56 UTC",
+      "completed_at": "2026-10-23 16:24:15 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/berry_basket_try1_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-ae352e24-6c9f-4707-81a8-135078fe3551.png",
+      "sha256": "cae935b818390a2de99a4ee9164c35cb2c4d1f8c2bab576356c98873a82580a0"
+    },
+    {
+      "family": "items",
+      "index": 39,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 16:17:56 UTC",
+      "completed_at": "2026-10-23 16:20:34 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/log_pile_small_try1_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-c1a94dfd-3723-48cb-85dd-ea9a8fe299a8.png",
+      "sha256": "5ca526eda43cb54099361d0815fd13e1f4bf6b57be697783486eb034175a511f"
+    },
+    {
+      "family": "items",
+      "index": 40,
+      "kind": "asset",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 16:17:56 UTC",
+      "completed_at": "2026-10-23 16:21:16 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/stone_axe_try1_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-fe296ae9-3149-4b6c-8124-3a087bb1ea37.png",
+      "sha256": "0e4dc3b4298f670f0f018b85250d35c093d754b1a7355ab0792a5ff6a0a96e07"
+    },
+    {
+      "family": "items",
+      "index": 41,
+      "kind": "model_scorecard",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 16:25:32 UTC",
+      "completed_at": "2026-10-23 16:27:08 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/model_final_card_1_try1_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-1e928ace-ff73-41ec-bd80-a3db678b8a13.png",
+      "sha256": "5ce18e7263382f5742e447184966d3945a6a1b62303aaf4b578a10da24673a51"
+    },
+    {
+      "family": "items",
+      "index": 42,
+      "kind": "model_scorecard",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 16:25:32 UTC",
+      "completed_at": "2026-10-23 16:27:08 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/model_final_card_2_try1_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-f853b0fc-080b-43a4-a678-77098ea3601d.png",
+      "sha256": "8b8534733def37e4f3b0340139c9f6222ccfbfbe5c63a9c6870cc51305c96ccb"
+    },
+    {
+      "family": "items",
+      "index": 43,
+      "kind": "model_scorecard",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 16:25:32 UTC",
+      "completed_at": "2026-10-23 16:27:08 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/model_final_card_3_try1_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-3ac67497-fe3b-44be-a05e-189ec5fdbfd6.png",
+      "sha256": "0208c18337cb993a6cf8fa715b64976b0733864c170a12ddbff4232bb58f37eb"
+    },
+    {
+      "family": "items",
+      "index": 44,
+      "kind": "model_scorecard",
+      "status": "COMPLETED",
+      "started_at": "2026-10-23 16:25:32 UTC",
+      "completed_at": "2026-10-23 16:27:08 UTC",
+      "raw": "/Users/rexxa/work/artpolish-data/items/model_final_card_4_try1_raw.png",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-a21d2c5d-a776-4ee3-b8ae-da23ad4ae691.png",
+      "sha256": "8c457cedd9e6f2230d16bde93213e6bec857254e54dce6dc200a5911eca7c4bc"
+    }
+  ],
+  "boards": [
+    {
+      "path": "art/boards/animals_owner.png",
+      "bytes": 624109,
+      "sha256": "cbe1d1e520bea549c2b89bf95aa2eadab65ac8476d7aa27ccc4a4f0106ef0bc8"
+    },
+    {
+      "path": "art/boards/items_owner.png",
+      "bytes": 252641,
+      "sha256": "693948d14818b7f12caa16937b0cff3ab575d0fcf6268c92c4ae4a66e676b9ac"
+    },
+    {
+      "path": "art/boards/polish_cap_darkness_strip.png",
+      "bytes": 327567,
+      "sha256": "a67e6c4ec590b5ecf582dcee23bd2bf0c55b8afcf782f32bfb562980a225ccef"
+    },
+    {
+      "path": "art/boards/polish_closeups_2x.png",
+      "bytes": 682353,
+      "sha256": "3983962606dd764d2d35b37594fb25e51e3a3c80d5fb17b37b0ed5fb3704b4c4"
+    },
+    {
+      "path": "art/boards/polish_walls_owner.dark_1x.png",
+      "bytes": 599086,
+      "sha256": "1eca3b0c2216aa953941336ffa198a06913d706df3843222c4e75dd34b5a3c7e"
+    },
+    {
+      "path": "art/boards/polish_walls_owner.dark_2x.png",
+      "bytes": 775176,
+      "sha256": "fa6aa50753c06b3078246e2551a372885e3c80035d39d3e6c69a9796d1fb3c18"
+    },
+    {
+      "path": "art/boards/polish_walls_owner.png",
+      "bytes": 652022,
+      "sha256": "e0720bd4e5cfc660a3118092d5a060095ee929b4dce7bac5cce21388493bfa71"
+    },
+    {
+      "path": "art/boards/polish_walls_owner.struct_1x.png",
+      "bytes": 680566,
+      "sha256": "32fdfd0fdcbc2ed97d6df65bbefda062b29ed3fc9a168d98d81e06526de7d743"
+    },
+    {
+      "path": "art/boards/polish_walls_owner.struct_2x.png",
+      "bytes": 870350,
+      "sha256": "3eb5218bf750eb3729d39a3beb5331ff23f1d1005c7ec7e7c4ca9e590e1ca32f"
+    },
+    {
+      "path": "art/boards/portraits_owner.png",
+      "bytes": 1472492,
+      "sha256": "30ed02b12c0ae5961f575f749055a00c5bc2c6ffc808fc5504688c1d4df599b7"
+    }
+  ],
+  "changed_files": [
+    {
+      "path": "art/animal/polish/boards/style_round0.png",
+      "bytes": 575713,
+      "sha256": "41cec589c30aab6786b5322e2d2e3713492872681c7f025de8866ec9df212a6f"
+    },
+    {
+      "path": "art/animal/polish/boards/style_round1.png",
+      "bytes": 582385,
+      "sha256": "20a456ada37bf8c75b16468f7643d3271cd588dfa8eb82f50f28fd69c8c19e32"
+    },
+    {
+      "path": "art/animal/polish/deer/try1/E/dead.json",
+      "bytes": 2411,
+      "sha256": "e7ea6cc92704b428a93ff5e7b96f04975f10f08e246a71743bbbd1373e245f69"
+    },
+    {
+      "path": "art/animal/polish/deer/try1/E/dead.png",
+      "bytes": 4472,
+      "sha256": "834bec0c8addbeac715365aacecd6fc26c4b73371a2c0fdcd508806651e60016"
+    },
+    {
+      "path": "art/animal/polish/deer/try1/E/graze.json",
+      "bytes": 2412,
+      "sha256": "7245ca32a7dd976cf3e83d0166c0428e16d2358976097c9f0f2b5456880ae1bb"
+    },
+    {
+      "path": "art/animal/polish/deer/try1/E/graze.png",
+      "bytes": 4990,
+      "sha256": "308b01f32a524a9dee92a9f98e3897650901c56f72f28b79fa67b1e712578f99"
+    },
+    {
+      "path": "art/animal/polish/deer/try1/E/run.json",
+      "bytes": 2392,
+      "sha256": "5dc6e007340b299f7938f68e9b4352a996f68440d413e5474634fcde9b95e790"
+    },
+    {
+      "path": "art/animal/polish/deer/try1/E/run.png",
+      "bytes": 5498,
+      "sha256": "2608cc56f4748faa52cd34524b430615b66f8532264758468e5ce0113e66d7fc"
+    },
+    {
+      "path": "art/animal/polish/deer/try1/E/stand.json",
+      "bytes": 2381,
+      "sha256": "ff08c12172a52cb5355ea2672c99b40af289af33d82466faad57d550b352d88d"
+    },
+    {
+      "path": "art/animal/polish/deer/try1/E/stand.png",
+      "bytes": 5717,
+      "sha256": "86fc4f43badf23837a13b0ac4d569377fd40fadd3048deb0ca4232c48f3b91eb"
+    },
+    {
+      "path": "art/animal/polish/deer/try1/E/walk.json",
+      "bytes": 2381,
+      "sha256": "8be9a17474a225e93b5b9a626cb75fe29cdc253ffd739aea3980639be1d5152f"
+    },
+    {
+      "path": "art/animal/polish/deer/try1/E/walk.png",
+      "bytes": 5867,
+      "sha256": "3aa9ef0edbfd11cb3a0260434a6ec485ab2fa7b87834d568fe17e95992f2e837"
+    },
+    {
+      "path": "art/animal/polish/deer/try1/MANIFEST.json",
+      "bytes": 29201,
+      "sha256": "4038799a9ab06f36465472d99089de49c56bda0f1365c093f923bcd6f2a66190"
+    },
+    {
+      "path": "art/animal/polish/deer/try1/S/dead.json",
+      "bytes": 2411,
+      "sha256": "cfca9f486bf86673052d817f2fe91c47388c1f409df7acab21cb6a669cdc5085"
+    },
+    {
+      "path": "art/animal/polish/deer/try1/S/dead.png",
+      "bytes": 4223,
+      "sha256": "8f84d08b94953706db64ed56ef3858d8a4c2b43b8a48fe48e3dda77e226b78f0"
+    },
+    {
+      "path": "art/animal/polish/deer/try1/S/graze.json",
+      "bytes": 2412,
+      "sha256": "77633cd3ce9bea3bbdec2ad933014276d2c6df430340e24490354b29b2399c24"
+    },
+    {
+      "path": "art/animal/polish/deer/try1/S/graze.png",
+      "bytes": 5084,
+      "sha256": "4ab72362da6e53bd6dea7ca9bf1b20b76dfcd53ce82c38d8b36b8954e1d5d0ad"
+    },
+    {
+      "path": "art/animal/polish/deer/try1/S/run.json",
+      "bytes": 2386,
+      "sha256": "fd577f23fef0b641762db8029d82f0d424389214bed8bcd3967c79a48903b97d"
+    },
+    {
+      "path": "art/animal/polish/deer/try1/S/run.png",
+      "bytes": 6089,
+      "sha256": "29ed0f18524d28219014c8342c27ba33ab7100648bc2295c908b8d0d95555a23"
+    },
+    {
+      "path": "art/animal/polish/deer/try1/S/stand.json",
+      "bytes": 2380,
+      "sha256": "18d98e4df9e33bdb772255a3429ac0b493336c8f9ad773e0a426be7f974dccf9"
+    },
+    {
+      "path": "art/animal/polish/deer/try1/S/stand.png",
+      "bytes": 6037,
+      "sha256": "287c68a4fee6850c43baa181160d3ca21af52a27b26d0530869492ec51400211"
+    },
+    {
+      "path": "art/animal/polish/deer/try1/S/walk.json",
+      "bytes": 2378,
+      "sha256": "a93182c2f9b6f9d29f2a4a843cb839e90588b0ea70cafc1db51a5234d3aa8ab0"
+    },
+    {
+      "path": "art/animal/polish/deer/try1/S/walk.png",
+      "bytes": 6104,
+      "sha256": "7c28c6bf8c7a045343ad665d3d9dfa528a8fab1a39017dfc7bd5438c17a1d259"
+    },
+    {
+      "path": "art/animal/polish/deer/try2/E/dead.json",
+      "bytes": 2403,
+      "sha256": "74891ca68b3d616f2ee9b97ea519df76f4f12ec3c7989aca8ba5153e9b9fe673"
+    },
+    {
+      "path": "art/animal/polish/deer/try2/E/dead.png",
+      "bytes": 4865,
+      "sha256": "0077b790b819c5f023055792036b64536e946d3e1ebba97c107858593fb0fe16"
+    },
+    {
+      "path": "art/animal/polish/deer/try2/E/graze.json",
+      "bytes": 2405,
+      "sha256": "b327a59a281a2f64555a8a58fadc9815e972e0bc97fa0844ed045cc3e7945f41"
+    },
+    {
+      "path": "art/animal/polish/deer/try2/E/graze.png",
+      "bytes": 4956,
+      "sha256": "5e2ff684f838c326111ae62669c891294f1896d70b853f49d9b06db1cfc60f7a"
+    },
+    {
+      "path": "art/animal/polish/deer/try2/E/run.json",
+      "bytes": 2399,
+      "sha256": "cef42e1d051ce65c480986d28f6aafafe438b8f78503d4ab7224f829218e8383"
+    },
+    {
+      "path": "art/animal/polish/deer/try2/E/run.png",
+      "bytes": 5072,
+      "sha256": "bee267aa102094e2b935b2ce5b20b2e8cf2150acf03a7a94b2484cf1f9aa4da6"
+    },
+    {
+      "path": "art/animal/polish/deer/try2/E/stand.json",
+      "bytes": 2403,
+      "sha256": "96c3cacabbe973156fe1b3e69b8457e172649b17ad497521c4edca273e6ca9f1"
+    },
+    {
+      "path": "art/animal/polish/deer/try2/E/stand.png",
+      "bytes": 5673,
+      "sha256": "df21582d5f2a68d778b8f8117740c3b155df74fcc316a2acda997e2f9eece702"
+    },
+    {
+      "path": "art/animal/polish/deer/try2/E/walk.json",
+      "bytes": 2397,
+      "sha256": "6cdbcf2994fb064e92a76bb7edca7c4f6f24b9be361504284b4d81a669162ca3"
+    },
+    {
+      "path": "art/animal/polish/deer/try2/E/walk.png",
+      "bytes": 5940,
+      "sha256": "238b45f140b6f9a06c0cc97491f3364685d2e8b85f77af4f24d565ecbac7b171"
+    },
+    {
+      "path": "art/animal/polish/deer/try2/MANIFEST.json",
+      "bytes": 29509,
+      "sha256": "f912189b7a82c3145d52a50825e47a48df7a8ba5dbc1c8f43808fea67489a1c6"
+    },
+    {
+      "path": "art/animal/polish/deer/try2/S/dead.json",
+      "bytes": 2404,
+      "sha256": "fa4a60491b6653f594d26dc3d17f68e1fa39adf5845e4c2627986ad227ce73a3"
+    },
+    {
+      "path": "art/animal/polish/deer/try2/S/dead.png",
+      "bytes": 5008,
+      "sha256": "ef30c3f4ce82329d85f1f5ada8300369f2090c0599f85c5bad74da71771cb59e"
+    },
+    {
+      "path": "art/animal/polish/deer/try2/S/graze.json",
+      "bytes": 2406,
+      "sha256": "511908db80731ee036367d1de90e853a854b3caa64f465b18db9f7f3ddc5b6a1"
+    },
+    {
+      "path": "art/animal/polish/deer/try2/S/graze.png",
+      "bytes": 4915,
+      "sha256": "6ffb257785bd84796015651646c175da385461912a86f6a7b1fffcb812d93587"
+    },
+    {
+      "path": "art/animal/polish/deer/try2/S/run.json",
+      "bytes": 2395,
+      "sha256": "a3258c17e6100975d6250c0213bce76b7d2dbcefc2f1280f359a11b6539ef696"
+    },
+    {
+      "path": "art/animal/polish/deer/try2/S/run.png",
+      "bytes": 5984,
+      "sha256": "f9623fab1c4676961052c9ee2520fe2f6bd379c66af500b2bf5c114d192a9191"
+    },
+    {
+      "path": "art/animal/polish/deer/try2/S/stand.json",
+      "bytes": 2388,
+      "sha256": "04b7b7a06545eb6b8abd2abad73e46aa85f80661d424e5bdb5db6ce9051d697f"
+    },
+    {
+      "path": "art/animal/polish/deer/try2/S/stand.png",
+      "bytes": 5796,
+      "sha256": "de486ce9f8ac709dd38680f5f93b651ef4a4288ef7fd298ce3b1817e9cfba3e4"
+    },
+    {
+      "path": "art/animal/polish/deer/try2/S/walk.json",
+      "bytes": 2400,
+      "sha256": "25419704fc35dbc44d3e70a6db5f0a0ca5e678055b754fe5222d28cfaa8529c0"
+    },
+    {
+      "path": "art/animal/polish/deer/try2/S/walk.png",
+      "bytes": 5822,
+      "sha256": "0d4407847048aa3823b2da5ad8ba5b380c79ab415d2856436b82be807218c8a6"
+    },
+    {
+      "path": "art/animal/polish/wolf/try1/E/attack.json",
+      "bytes": 2420,
+      "sha256": "0cf869634be17ca6bb75d283261c924964e00dc5242e52021c4dec3f4297b52f"
+    },
+    {
+      "path": "art/animal/polish/wolf/try1/E/attack.png",
+      "bytes": 3092,
+      "sha256": "ce80587c4a9e5f7d0a733c892501659f2c59c4193487242d71404e34916617b4"
+    },
+    {
+      "path": "art/animal/polish/wolf/try1/E/dead.json",
+      "bytes": 2398,
+      "sha256": "0f4e2a0f8077dd09f99353b83ee60251cdb0b3d32ba6bb23e3ccce2d175f5096"
+    },
+    {
+      "path": "art/animal/polish/wolf/try1/E/dead.png",
+      "bytes": 3975,
+      "sha256": "70d3f40db6442a8ff66588d24f10ad666396a7a1414717e7fab4990bd37353aa"
+    },
+    {
+      "path": "art/animal/polish/wolf/try1/E/run.json",
+      "bytes": 2405,
+      "sha256": "91ee06afc220488970be8a57c272fe8acd6fd109c0c1830c2cb6851cbdf93766"
+    },
+    {
+      "path": "art/animal/polish/wolf/try1/E/run.png",
+      "bytes": 3314,
+      "sha256": "59fba0c459e12396aac0d5349bc853ce67c4b4a5cbce20d5bd60219588fd605d"
+    },
+    {
+      "path": "art/animal/polish/wolf/try1/E/stand.json",
+      "bytes": 2412,
+      "sha256": "2a0360d3e9272fd2e970e825556855db8073374e2e8fabf52b3e874e9f720bda"
+    },
+    {
+      "path": "art/animal/polish/wolf/try1/E/stand.png",
+      "bytes": 3539,
+      "sha256": "531fbee48cfb9d09d359d058bd92cead4ea897fd476243c5ce99851fd453c0b1"
+    },
+    {
+      "path": "art/animal/polish/wolf/try1/E/walk.json",
+      "bytes": 2411,
+      "sha256": "22ef9a23bbdc3e86422d6d63295eb13fbccbecac96d22eca481ed6eecefad0a5"
+    },
+    {
+      "path": "art/animal/polish/wolf/try1/E/walk.png",
+      "bytes": 3397,
+      "sha256": "25ccee7a043c4946a45e5d12874fefb8068673d95364acd21a860ce041ea77ea"
+    },
+    {
+      "path": "art/animal/polish/wolf/try1/MANIFEST.json",
+      "bytes": 29595,
+      "sha256": "1ef5f431432c612b48b7c340a0a7c8f7922d5b041148ff47b58c770256696121"
+    },
+    {
+      "path": "art/animal/polish/wolf/try1/S/attack.json",
+      "bytes": 2419,
+      "sha256": "b03a3387ebc1eb4a7d72cfe6e6bcff7bae9e48d9bf9326c495815f0e027d0b64"
+    },
+    {
+      "path": "art/animal/polish/wolf/try1/S/attack.png",
+      "bytes": 3199,
+      "sha256": "555d66c833716886e6759c78c124cf1367ce7b7f52849af6761bd3fab93d66d6"
+    },
+    {
+      "path": "art/animal/polish/wolf/try1/S/dead.json",
+      "bytes": 2394,
+      "sha256": "2e063b458888605554bf0a7921c0912d147f07e2c8dd23abcd3820cd3b2f0bd3"
+    },
+    {
+      "path": "art/animal/polish/wolf/try1/S/dead.png",
+      "bytes": 3756,
+      "sha256": "21c3064218abdf8f36ba04e862b1ab30e10e11415eb08562396e3d340af01e26"
+    },
+    {
+      "path": "art/animal/polish/wolf/try1/S/run.json",
+      "bytes": 2406,
+      "sha256": "130aeb07ed871da4cb346f7003725d67601c99a288e6e33c6812ac36f8f3e131"
+    },
+    {
+      "path": "art/animal/polish/wolf/try1/S/run.png",
+      "bytes": 3486,
+      "sha256": "a466c9aa118cea0fe630536469dba891428b24b8812357a5f7a252911b864711"
+    },
+    {
+      "path": "art/animal/polish/wolf/try1/S/stand.json",
+      "bytes": 2414,
+      "sha256": "996e8261304db481772e2077df74938b3cedb91214c8f8bbc88a6483a90b7069"
+    },
+    {
+      "path": "art/animal/polish/wolf/try1/S/stand.png",
+      "bytes": 3503,
+      "sha256": "e61314aa84091e9b6152b62bd903006ebc817633f5aae139c5a69ff48f073d91"
+    },
+    {
+      "path": "art/animal/polish/wolf/try1/S/walk.json",
+      "bytes": 2408,
+      "sha256": "f62c3a8586c959f20c3702c6a4fe814674ae5d5f6c51533316870dbe4e688775"
+    },
+    {
+      "path": "art/animal/polish/wolf/try1/S/walk.png",
+      "bytes": 3559,
+      "sha256": "cd4a0de08b09a521d9c13a9ce58a350050927a5ce58e3ba19264767b5f5d4ab3"
+    },
+    {
+      "path": "art/animal/polish/wolf/try2/E/attack.json",
+      "bytes": 2408,
+      "sha256": "fee1950c185be9f68cf4ef7b84d11a3d9e0742b123ac940085f0f389b145f2ef"
+    },
+    {
+      "path": "art/animal/polish/wolf/try2/E/attack.png",
+      "bytes": 3609,
+      "sha256": "9e55587872e7c896fe843dce8bef278db799a5f4739fe3f769353de63a3ef97e"
+    },
+    {
+      "path": "art/animal/polish/wolf/try2/E/dead.json",
+      "bytes": 2386,
+      "sha256": "98669404fd9e533ef952716229513ab09361935efc94a022ae45bc4bff9f037c"
+    },
+    {
+      "path": "art/animal/polish/wolf/try2/E/dead.png",
+      "bytes": 3195,
+      "sha256": "285dca9606b4b92e3ac2c6fdb6877390cc5283bde02186f54b0c84649ac2bbd5"
+    },
+    {
+      "path": "art/animal/polish/wolf/try2/E/run.json",
+      "bytes": 2394,
+      "sha256": "cc5c5fca5259fbbca5a7fcee67e600ec16319d9db7f1a42657b990deeaeec671"
+    },
+    {
+      "path": "art/animal/polish/wolf/try2/E/run.png",
+      "bytes": 3176,
+      "sha256": "4815d1a3c066d77a0abe008b6f44ecad1e5ce6c4b7bc4f3f8d94f5df1b24cf19"
+    },
+    {
+      "path": "art/animal/polish/wolf/try2/E/stand.json",
+      "bytes": 2403,
+      "sha256": "fad3ab93266f77c699935d31ab7b9126104bb4386bd87b18e79916267e2723ec"
+    },
+    {
+      "path": "art/animal/polish/wolf/try2/E/stand.png",
+      "bytes": 3592,
+      "sha256": "bdf09c6d3d1d066847f7fadbd101dacf60a88de1751749ca48121ff35c3028de"
+    },
+    {
+      "path": "art/animal/polish/wolf/try2/E/walk.json",
+      "bytes": 2402,
+      "sha256": "8e11401272a6a00701f3f4494e132bc38a61c753eaf53afea80b112b22a03ae8"
+    },
+    {
+      "path": "art/animal/polish/wolf/try2/E/walk.png",
+      "bytes": 3585,
+      "sha256": "8b745c94e54c397221a4b1e0233b593051e39a0bca53e61bf76f05e3a7ce2280"
+    },
+    {
+      "path": "art/animal/polish/wolf/try2/MANIFEST.json",
+      "bytes": 29233,
+      "sha256": "5859bcc5d5970cb490ec33148a7c80269b38cf2c7c014d19d9382c87f04bd075"
+    },
+    {
+      "path": "art/animal/polish/wolf/try2/S/attack.json",
+      "bytes": 2405,
+      "sha256": "a28780bbec1402aedabf9dba49defd2803d6aa2f7bd78b3862630610cacfa0c9"
+    },
+    {
+      "path": "art/animal/polish/wolf/try2/S/attack.png",
+      "bytes": 3375,
+      "sha256": "d1d04453cfd6c048b82e88583f7636163cbe84ccbaa3051450c8f053de8eb5ea"
+    },
+    {
+      "path": "art/animal/polish/wolf/try2/S/dead.json",
+      "bytes": 2398,
+      "sha256": "55caf56fa2fcec432df505ca76967e05250f67bf85a9590e69f95fc86b0cdb5b"
+    },
+    {
+      "path": "art/animal/polish/wolf/try2/S/dead.png",
+      "bytes": 3666,
+      "sha256": "133255d7b9fb3eb745e713f1525c54fb4fa99733b5284c573e2ce8b1a413f0b2"
+    },
+    {
+      "path": "art/animal/polish/wolf/try2/S/run.json",
+      "bytes": 2396,
+      "sha256": "f9a4ea0d73842591e30e877a9c1ac3cf5625f12af20dc71919affb4f57e091ee"
+    },
+    {
+      "path": "art/animal/polish/wolf/try2/S/run.png",
+      "bytes": 3387,
+      "sha256": "2b6053a9eab0887a04c72d9c35cfe65b99641d87332a93cf818422c9d8a64590"
+    },
+    {
+      "path": "art/animal/polish/wolf/try2/S/stand.json",
+      "bytes": 2400,
+      "sha256": "d66365afc888365c532cbe6c26f075f3172f56f2e21d9264002ad8b486e3ac96"
+    },
+    {
+      "path": "art/animal/polish/wolf/try2/S/stand.png",
+      "bytes": 3729,
+      "sha256": "ae15a6109060e0d439704e8ea263dd9b41a550ead0992962d48377fd35e8f33b"
+    },
+    {
+      "path": "art/animal/polish/wolf/try2/S/walk.json",
+      "bytes": 2383,
+      "sha256": "0bf2026a8d5c7122518465f1fd31819a4ff56b4f17e6fd96ba794cc0df25a6f9"
+    },
+    {
+      "path": "art/animal/polish/wolf/try2/S/walk.png",
+      "bytes": 3303,
+      "sha256": "c52461c32cd91a6e7fc4aecd181bca58e7666a0a21e88b603a1256938bbb4a5c"
+    },
+    {
+      "path": "art/boards/animals_owner.json",
+      "bytes": 10044,
+      "sha256": "bdb5fe55855f341382f1d4658aa0b885bafb98142f92377b49b0a15ef8e1a757"
+    },
+    {
+      "path": "art/boards/animals_owner.png",
+      "bytes": 624109,
+      "sha256": "cbe1d1e520bea549c2b89bf95aa2eadab65ac8476d7aa27ccc4a4f0106ef0bc8"
+    },
+    {
+      "path": "art/boards/items_owner.png",
+      "bytes": 252641,
+      "sha256": "693948d14818b7f12caa16937b0cff3ab575d0fcf6268c92c4ae4a66e676b9ac"
+    },
+    {
+      "path": "art/boards/polish_cap_darkness_strip.json",
+      "bytes": 1283,
+      "sha256": "65ac06eb06ae53ac97c58b05fed23ab391711fb1a1cfa8027bfbb52c071346cc"
+    },
+    {
+      "path": "art/boards/polish_cap_darkness_strip.png",
+      "bytes": 327567,
+      "sha256": "a67e6c4ec590b5ecf582dcee23bd2bf0c55b8afcf782f32bfb562980a225ccef"
+    },
+    {
+      "path": "art/boards/polish_closeups_2x.json",
+      "bytes": 2311,
+      "sha256": "8a2f2a04ccf3f8ba271a10ce27ee2dc2dbc5d3efbcb6758f25ca24245d2d73be"
+    },
+    {
+      "path": "art/boards/polish_closeups_2x.png",
+      "bytes": 682353,
+      "sha256": "3983962606dd764d2d35b37594fb25e51e3a3c80d5fb17b37b0ed5fb3704b4c4"
+    },
+    {
+      "path": "art/boards/polish_walls_owner.dark_1x.json",
+      "bytes": 576,
+      "sha256": "1a3876ffbe6323664db75aa5989bf9cc1cbbdfbd270f000101fbc8891f14891d"
+    },
+    {
+      "path": "art/boards/polish_walls_owner.dark_1x.png",
+      "bytes": 599086,
+      "sha256": "1eca3b0c2216aa953941336ffa198a06913d706df3843222c4e75dd34b5a3c7e"
+    },
+    {
+      "path": "art/boards/polish_walls_owner.dark_2x.json",
+      "bytes": 576,
+      "sha256": "61893040161ec07dcaa586f931116ee2c107ce2bed3b42af4a596c1de5f46afd"
+    },
+    {
+      "path": "art/boards/polish_walls_owner.dark_2x.png",
+      "bytes": 775176,
+      "sha256": "fa6aa50753c06b3078246e2551a372885e3c80035d39d3e6c69a9796d1fb3c18"
+    },
+    {
+      "path": "art/boards/polish_walls_owner.json",
+      "bytes": 1632,
+      "sha256": "9e1c81899d90b4e5857cd263308d083279b0726dcf41d3522ac83b9390c75304"
+    },
+    {
+      "path": "art/boards/polish_walls_owner.png",
+      "bytes": 652022,
+      "sha256": "e0720bd4e5cfc660a3118092d5a060095ee929b4dce7bac5cce21388493bfa71"
+    },
+    {
+      "path": "art/boards/polish_walls_owner.struct_1x.json",
+      "bytes": 574,
+      "sha256": "62157c0bd6dae96196feb4d68435ab3ed5b3c4189ed8d9e60710f216a06c609f"
+    },
+    {
+      "path": "art/boards/polish_walls_owner.struct_1x.png",
+      "bytes": 680566,
+      "sha256": "32fdfd0fdcbc2ed97d6df65bbefda062b29ed3fc9a168d98d81e06526de7d743"
+    },
+    {
+      "path": "art/boards/polish_walls_owner.struct_2x.json",
+      "bytes": 574,
+      "sha256": "82da92ffaedc5384e1da0a7170da28d8cd22b8ee784e18b1a17d0540f3829ef3"
+    },
+    {
+      "path": "art/boards/polish_walls_owner.struct_2x.png",
+      "bytes": 870350,
+      "sha256": "3eb5218bf750eb3729d39a3beb5331ff23f1d1005c7ec7e7c4ca9e590e1ca32f"
+    },
+    {
+      "path": "art/boards/portraits_owner.png",
+      "bytes": 1472492,
+      "sha256": "30ed02b12c0ae5961f575f749055a00c5bc2c6ffc808fc5504688c1d4df599b7"
+    },
+    {
+      "path": "art/compositor/edges.py",
+      "bytes": 9052,
+      "sha256": "c0a85c6122fc0400a73332eb8c7964c678048f4295824751a11e13daa5010859"
+    },
+    {
+      "path": "art/compositor/polish_boards.py",
+      "bytes": 5374,
+      "sha256": "491478501256c263fcdf948197a32a80f796c1000b3e9f9fe007403625169cb4"
+    },
+    {
+      "path": "art/compositor/struct_boards.py",
+      "bytes": 10958,
+      "sha256": "b06ef9f4d1cb427acb442b62174be3643b0495deef150286d8c2739e8befb71b"
+    },
+    {
+      "path": "art/compositor/struct_ground.py",
+      "bytes": 7917,
+      "sha256": "4b9d285d4d7ffa82bc548efd0b606b1ea4d98fda4acf2ca38fa9bdb912aa9464"
+    },
+    {
+      "path": "art/compositor/struct_layers.py",
+      "bytes": 8472,
+      "sha256": "07a5c6698f4e3c2e3c8672cd3b276aefd59910255912bce4251515f1f6aa9105"
+    },
+    {
+      "path": "art/compositor/struct_render.py",
+      "bytes": 11705,
+      "sha256": "ea589e41f6d5b25f43b4ed9bb80d4a2b006763e8a4f035b776619581f1bbd54e"
+    },
+    {
+      "path": "art/compositor/test_polish_walls.py",
+      "bytes": 8938,
+      "sha256": "16c6a2fcf110dabfc2e1a490fa225bdbdb00e3146a943bd3645916a3eef2a441"
+    },
+    {
+      "path": "art/compositor/test_walls.py",
+      "bytes": 9623,
+      "sha256": "7bea7d3886dc35a64dd129ed05eb8d1fe2b75f0c85cf31bfce2339e24df05adc"
+    },
+    {
+      "path": "art/compositor/wall_params.json",
+      "bytes": 481,
+      "sha256": "a3c6bdaf165fc58dc0b0ee9cfbf829f322c53b34ab6a8f1462c84dea1fe19e04"
+    },
+    {
+      "path": "art/compositor/wall_style.py",
+      "bytes": 4304,
+      "sha256": "8096602cef54e77b0f26485747e07bb2a2a0b425fc8d3385620e1ec72e46e882"
+    },
+    {
+      "path": "art/compositor/walls.py",
+      "bytes": 7564,
+      "sha256": "ea520ffe96a1292610f17d3f4a3272765709c8a5811add58b4bdc9e1d730f45d"
+    },
+    {
+      "path": "art/pipeline_polish/animal_boards.py",
+      "bytes": 5762,
+      "sha256": "55a4fb4025d79c437a5bf9c1b6eccf48368175b001a7edf6f21428f8b2615a4a"
+    },
+    {
+      "path": "art/pipeline_polish/animal_process.py",
+      "bytes": 6692,
+      "sha256": "59de86c6c8e3fa9375214d6e3dbe69f876cb99daf97ab7d1d55d990ac83189e1"
+    },
+    {
+      "path": "art/pipeline_polish/animal_tests.py",
+      "bytes": 2276,
+      "sha256": "001fb3b74472d3b73e382d12a678b6a65c571896cd494b0ec5b4871c71131292"
+    },
+    {
+      "path": "art/pipeline_polish/blind_score.py",
+      "bytes": 4691,
+      "sha256": "b6563097c3dc35ad1e783f6ac3a04850db9e8de2f249efcb23974b543aac3e0d"
+    },
+    {
+      "path": "art/pipeline_polish/item_build.py",
+      "bytes": 10840,
+      "sha256": "0a50358132a4beb03fff09b3a5a10a8eb048adb3ce0cc744240b230afd72618b"
+    },
+    {
+      "path": "art/pipeline_polish/item_evidence.py",
+      "bytes": 8016,
+      "sha256": "222dc4a8a13fb34f6536feadea72d7507948a803ed1dbccd3de290a1fe587716"
+    },
+    {
+      "path": "art/pipeline_polish/item_test.py",
+      "bytes": 3303,
+      "sha256": "9d0e82b80cfbed14e6c05fe089202f8ab7e8722be6d08f3e21e5db90c21153fc"
+    },
+    {
+      "path": "art/pipeline_polish/portrait_finalize.py",
+      "bytes": 10011,
+      "sha256": "1333728b08874c77bcebb64a8506e07341a99db7ec5e2df4accc999eed1781b6"
+    },
+    {
+      "path": "art/pipeline_polish/portrait_packets.py",
+      "bytes": 5982,
+      "sha256": "99c5a72319fdfe3164e6b73c44e158a5fd2dd721e831a80fe540ca04bad081a0"
+    },
+    {
+      "path": "art/pipeline_polish/portrait_prepare.py",
+      "bytes": 4910,
+      "sha256": "fb8f4005245d759e7bb8fc83d33abd30aa65fe24ff32026295bfbbc8be78004e"
+    },
+    {
+      "path": "art/pipeline_polish/portrait_test.py",
+      "bytes": 4527,
+      "sha256": "87c70914b2888d4157a63dca6528f1c0a80da11fe49aa89cfa7f7111a7f26d98"
+    },
+    {
+      "path": "art/pipeline_polish/test_blind_score.py",
+      "bytes": 3990,
+      "sha256": "60bd4466e66bfbddfb50902e14397862508715bad9461a6e49de311b7600150c"
+    },
+    {
+      "path": "art/portrait/polish/adult_F_fur_cloak_bun_try1.png",
+      "bytes": 34505,
+      "sha256": "a5bac1055cc7092f9b0139b982e741f687a0999cc558a62c420e42dd14f17829"
+    },
+    {
+      "path": "art/portrait/polish/adult_F_fur_cloak_long_tied_try1.png",
+      "bytes": 34597,
+      "sha256": "ffd97cb0a3e0f089567fb28504d591818d44750548f58e9568ede984641dedeb"
+    },
+    {
+      "path": "art/portrait/polish/adult_F_hide_wrap_bun_try1.png",
+      "bytes": 32058,
+      "sha256": "fc69220936a117eec8f3323455005abc8311ed11f03621be6c786a8f0fcae157"
+    },
+    {
+      "path": "art/portrait/polish/child_F_hide_wrap_bun_try1.png",
+      "bytes": 32471,
+      "sha256": "ae43e7ab7cc2e5e9624cf04b2642706eb7d299e835a6d190ab524eaa6352e8e9"
+    },
+    {
+      "path": "art/portrait/polish/child_F_loincloth_long_tied_try1.png",
+      "bytes": 31955,
+      "sha256": "9647b0176c879fe1eb3f253f5ce02d40e4dab5cf9c8c8e9126a41a587a94da08"
+    },
+    {
+      "path": "art/portrait/polish/child_M_fur_cloak_bun_try1.png",
+      "bytes": 32908,
+      "sha256": "85849d058e0d50eafb40ab15832a2d064d4b91c941a61786bd9e12ed68cc84a4"
+    },
+    {
+      "path": "art/portrait/polish/child_M_hide_wrap_bun_try1.png",
+      "bytes": 33160,
+      "sha256": "3c1476881ccabaaf3ea3bcd86feb0a52227e6373caf48d028395f29b3b79b461"
+    },
+    {
+      "path": "art/portrait/polish/child_M_hide_wrap_short_try1.png",
+      "bytes": 32584,
+      "sha256": "2c47e660a1065078573e8fe2df9d7cc09a211dffee81f9f5fc8352e59aa282c6"
+    },
+    {
+      "path": "art/portrait/polish/child_M_loincloth_bun_try1.png",
+      "bytes": 31530,
+      "sha256": "2f4012be67b446e281d110177475906f10301f6b49536a66a32a9951d9d66d2f"
+    },
+    {
+      "path": "art/style05/ITEMS.md",
+      "bytes": 4711,
+      "sha256": "4cef1e35e1ae6e941c5b43ff9df2e18d62044c10912a69c6b01c72baf3c3eaf9"
+    },
+    {
+      "path": "art/style05/polish/items/berry_basket_try1.png",
+      "bytes": 6388,
+      "sha256": "4fe5d8d7d964ef649f1423bc2f92f6c80e615f07bd6ce73ebd1bb7a2fa1348ee"
+    },
+    {
+      "path": "art/style05/polish/items/clay_try1.png",
+      "bytes": 4482,
+      "sha256": "957cd33957978362d93facc612160f2b46a6445adb1bb2d1fef7a44d8e0a9c93"
+    },
+    {
+      "path": "art/style05/polish/items/clay_try2.png",
+      "bytes": 4795,
+      "sha256": "a5a6a7553a9a816901aa0b2fc84e96e9e6c83cafa66806d52654fc8b8767c603"
+    },
+    {
+      "path": "art/style05/polish/items/clay_try3.png",
+      "bytes": 6446,
+      "sha256": "31c518a4272368573fcef3f1c2e25aeccb1ae1c83fa6c55cda9b8711c0b57edb"
+    },
+    {
+      "path": "art/style05/polish/items/cured_hide_try1.png",
+      "bytes": 6708,
+      "sha256": "defb692629c076d88d6a7e625870a436b9d93c6ae5de264b8dbfeb278833e45d"
+    },
+    {
+      "path": "art/style05/polish/items/cured_hide_try2.png",
+      "bytes": 7100,
+      "sha256": "fafe250ef4bdb83308042d857e28b9604aea377c899d8f1d7699b57f74143997"
+    },
+    {
+      "path": "art/style05/polish/items/firewood_try1.png",
+      "bytes": 5814,
+      "sha256": "48b7e4c0057b72207fe9c3b99da35678cc146df8e3d94025598708425ef68185"
+    },
+    {
+      "path": "art/style05/polish/items/firewood_try2.png",
+      "bytes": 6255,
+      "sha256": "1de07fafa85a86fc8ddbb98aa5abeb02d9e3c09c468b1d44307723574b63f49b"
+    },
+    {
+      "path": "art/style05/polish/items/firewood_try3.png",
+      "bytes": 5864,
+      "sha256": "ef9ba8786b98697b4814f15e04d8ce1cde705a20715886b3667275ef5fff3441"
+    },
+    {
+      "path": "art/style05/polish/items/flint_blade_try1.png",
+      "bytes": 3735,
+      "sha256": "d45de744807b0bce1f5546a2cb28c9179e9f6bd01b77fa40d6c959973afd5043"
+    },
+    {
+      "path": "art/style05/polish/items/flint_blade_try2.png",
+      "bytes": 3789,
+      "sha256": "1ee126bdaa4f2e4508a286b909d1d0ccbc717bbeeb54113e637a2aba70c593e4"
+    },
+    {
+      "path": "art/style05/polish/items/flint_blade_try3.png",
+      "bytes": 4761,
+      "sha256": "1e823cd640c0ec151862f996a9c74fb2d3d885a2e311ef25d69009c04661541b"
+    },
+    {
+      "path": "art/style05/polish/items/flint_nodule_try1.png",
+      "bytes": 5762,
+      "sha256": "13e15d03bc35a45b6e842427cb693954be0d8f0aac1a4b958e03ced8c98f9653"
+    },
+    {
+      "path": "art/style05/polish/items/flint_nodule_try2.png",
+      "bytes": 4934,
+      "sha256": "4e50fd1ffbe1c6d0b885e883b86c8bc5d97129114f46ae05577b085245f6ee55"
+    },
+    {
+      "path": "art/style05/polish/items/flint_nodule_try3.png",
+      "bytes": 6074,
+      "sha256": "4cf207b449e320eba43af0b5ed46bd9cabc5cda2f159a297e870edd5d89978f5"
+    },
+    {
+      "path": "art/style05/polish/items/flint_pile_try1.png",
+      "bytes": 6568,
+      "sha256": "7c9249c7f951bd60a42b30ff0bd9a82be9b60f59773cc4dc071b991df12e8228"
+    },
+    {
+      "path": "art/style05/polish/items/flint_pile_try2.png",
+      "bytes": 5822,
+      "sha256": "4e5c7f92a5afef29454831448eb9962e01581992f2aac05d0466523017ade3d9"
+    },
+    {
+      "path": "art/style05/polish/items/flint_pile_try3.png",
+      "bytes": 6113,
+      "sha256": "0b41ca263a7051adec77161c236098c07abe835a267ad2bd2913be5cbda51cce"
+    },
+    {
+      "path": "art/style05/polish/items/fur_cloak_try1.png",
+      "bytes": 6998,
+      "sha256": "c4ded33d24cd9e7e2ae0a4611e0c5b9d784e21cce6e86e126d25f02230b7c03d"
+    },
+    {
+      "path": "art/style05/polish/items/fur_cloak_try2.png",
+      "bytes": 7430,
+      "sha256": "2d9596bbb28055df880265db643c3526c69e126d9efd0983847f0e4c089b8c32"
+    },
+    {
+      "path": "art/style05/polish/items/ground_axe_try1.png",
+      "bytes": 3699,
+      "sha256": "c4aa055fb5d41f6c2ede96c3103f37e24558f1baa3a228910517f048ac99ad4f"
+    },
+    {
+      "path": "art/style05/polish/items/ground_axe_try2.png",
+      "bytes": 3389,
+      "sha256": "90b2040c41c4350dbf03d2fee3aaac8e0b5416449dcb86e35a29754e10ce396c"
+    },
+    {
+      "path": "art/style05/polish/items/ground_axe_try3.png",
+      "bytes": 4997,
+      "sha256": "dcf4c2afb47e86e24d848127a91b959ac1acdfcf2eb70dcc55315e1ee1981d29"
+    },
+    {
+      "path": "art/style05/polish/items/hide_wrap_try1.png",
+      "bytes": 5744,
+      "sha256": "73539c39ceb01178e7c9934e180a11fae2890eb825a9e3c47256f77c9659e09d"
+    },
+    {
+      "path": "art/style05/polish/items/hide_wrap_try2.png",
+      "bytes": 4961,
+      "sha256": "f18a82e2c9f253a071ba5d1c65cbf07d79e44defc1f42509fbe18c96a500f1cb"
+    },
+    {
+      "path": "art/style05/polish/items/log_pile_large_try1.png",
+      "bytes": 6372,
+      "sha256": "69da7e398aa308b50c66268952aede1fa75d0ebdca2063cf8c4d120885b688c6"
+    },
+    {
+      "path": "art/style05/polish/items/log_pile_large_try2.png",
+      "bytes": 6599,
+      "sha256": "5d412451b809fa0dd38c9069a29968442c93dd3f84d8b402e510b9597c1041b1"
+    },
+    {
+      "path": "art/style05/polish/items/log_pile_large_try3.png",
+      "bytes": 6908,
+      "sha256": "5f2d74c324e08b13abde27e2793803b896581f5849aca5694e8ac4ce83f40a9e"
+    },
+    {
+      "path": "art/style05/polish/items/log_pile_medium_try1.png",
+      "bytes": 5682,
+      "sha256": "3d81b33fec24294227ed1d5aaaba2b078657a1b508aedca60178ad7043221920"
+    },
+    {
+      "path": "art/style05/polish/items/log_pile_medium_try2.png",
+      "bytes": 5773,
+      "sha256": "4cb74064762dd2bd38847c89a05a6e7d7221d4b9b02a05999d1e98c03f3900b3"
+    },
+    {
+      "path": "art/style05/polish/items/log_pile_medium_try3.png",
+      "bytes": 6405,
+      "sha256": "f507830bf46e4e8cbeb898da8b044ea4ec85df44b82c131a016d109e94ff1021"
+    },
+    {
+      "path": "art/style05/polish/items/log_pile_small_try1.png",
+      "bytes": 5983,
+      "sha256": "450b767cfe8b8c73a6a418a061e46096e684305df7918d6b88bcdb380b5409f4"
+    },
+    {
+      "path": "art/style05/polish/items/model_final_scorecard1.png",
+      "bytes": 996765,
+      "sha256": "2590e9102302028870b5778d7b7e47c250f284f4b4ce43eabe482e037b11464b"
+    },
+    {
+      "path": "art/style05/polish/items/model_final_scorecard2.png",
+      "bytes": 1085460,
+      "sha256": "8d83bef58a5e7af502e3513f443c18fc997bc59c0f205c5410c4f3fa6292aca4"
+    },
+    {
+      "path": "art/style05/polish/items/model_final_scorecard3.png",
+      "bytes": 1036472,
+      "sha256": "ee1ff48b6aaad8cb1798f2b7f3b90676b4c672620f24169ab830adf6fc5c7bcd"
+    },
+    {
+      "path": "art/style05/polish/items/model_final_scorecard4.png",
+      "bytes": 1003602,
+      "sha256": "78a6cb0e16dc57d9d2494217db12248a433ae421313bf16f5ad8588266b956f5"
+    },
+    {
+      "path": "art/style05/polish/items/model_scorecard1.png",
+      "bytes": 1048555,
+      "sha256": "26e582f1d92861299638ab163a25c6a868ad11a462bc2678e1f361bc7882f7c7"
+    },
+    {
+      "path": "art/style05/polish/items/model_scorecard2.png",
+      "bytes": 1045783,
+      "sha256": "1e58c12c1aba824cc927c70f9da0391b85d14d1e0d35b0e630f9ed4d82156341"
+    },
+    {
+      "path": "art/style05/polish/items/model_scorecard3.png",
+      "bytes": 987757,
+      "sha256": "13b103e9128c3fd981b4daf31020a337801852299165914a4e81609e7cc01ada"
+    },
+    {
+      "path": "art/style05/polish/items/raw_pot_try1.png",
+      "bytes": 6213,
+      "sha256": "7338e841d0ac6a75a624f6d52ccb926d9782cf687c021066a5cc0bebb02faac0"
+    },
+    {
+      "path": "art/style05/polish/items/raw_pot_try2.png",
+      "bytes": 5598,
+      "sha256": "ce555aa1ddf41c7e1521b626b3dc4228a9572dbbe0427a5fd332f5563b7a5691"
+    },
+    {
+      "path": "art/style05/polish/items/stone_axe_try1.png",
+      "bytes": 4781,
+      "sha256": "128e62930b1b4ca7de86f19dc74d1d834bf87ccc281dd28c02ef2f6fe9a32600"
+    },
+    {
+      "path": "art/style05/polish/items/wolf_hide_try1.png",
+      "bytes": 6168,
+      "sha256": "a9009ad8c8a77a189f24862691f4226e213f7721cc04592e3661829e69f71cd8"
+    },
+    {
+      "path": "art/style05/polish/items/wolf_hide_try2.png",
+      "bytes": 6616,
+      "sha256": "9b7e00166bbb51a9a206c8abb732ff5c4a5e1196bf297944fd4353f362bd8e66"
+    },
+    {
+      "path": "docs/v8/artpolish/ANIMALS.md",
+      "bytes": 6874,
+      "sha256": "76e40761165fe463b8d2ceac47ab4fd9534435451867709dd2415fa4d46154f3"
+    },
+    {
+      "path": "docs/v8/artpolish/ANIMAL_PROTOCOL.md",
+      "bytes": 3014,
+      "sha256": "a054e82aaadf07346c40ed7fc0907b9b6db5aedc108fc839464657f8878f6e35"
+    },
+    {
+      "path": "docs/v8/artpolish/BLIND_PROTOCOL.md",
+      "bytes": 3227,
+      "sha256": "9e4708e2aa588edd530688fe6b1772cbfff38458cfd7cef7e78054219ec40894"
+    },
+    {
+      "path": "docs/v8/artpolish/FINAL_VERIFICATION.md",
+      "bytes": 2712,
+      "sha256": "39694e1c63ec55f0063eb48bdbc50b55a757d81e9e4496b53c3bf92f17c6ca97"
+    },
+    {
+      "path": "docs/v8/artpolish/HANDOFF_PATHS.json",
+      "bytes": 37868,
+      "sha256": "9760d9f48ff3e7004d0a0aad18f2c275c591e01a89f72a98e10ad66ae1bacb58"
+    },
+    {
+      "path": "docs/v8/artpolish/HANDOFF_PATHS.md",
+      "bytes": 13863,
+      "sha256": "33824543610571a9d1f84252f5de536976149f05c4c98580449a465dfa168394"
+    },
+    {
+      "path": "docs/v8/artpolish/INDEPENDENT_REVIEW.md",
+      "bytes": 4230,
+      "sha256": "96b019f52ee7b3a193ce81a85792ea060459100111fa4c834e985c02b11e7e47"
+    },
+    {
+      "path": "docs/v8/artpolish/ITEMS.md",
+      "bytes": 5220,
+      "sha256": "545815695e955990ec93c718480c33b845a2a40aa430bf2026680abcb7661db0"
+    },
+    {
+      "path": "docs/v8/artpolish/ITEM_VERIFICATION.md",
+      "bytes": 2921,
+      "sha256": "e2f714312257a344a8acc641e78e59c34c9565dccc063705d340e781248faef1"
+    },
+    {
+      "path": "docs/v8/artpolish/POLISH_DECISIONS.md",
+      "bytes": 6238,
+      "sha256": "5debcc3858f03e8b41e529497a055864e768749c98a6a9ac8629a786a4ff2317"
+    },
+    {
+      "path": "docs/v8/artpolish/POLISH_GOAL.md",
+      "bytes": 9232,
+      "sha256": "3d94c617dad6bb997a1c4b9f6261cfa4465195c89f147b7a1f7d8e921f8ba173"
+    },
+    {
+      "path": "docs/v8/artpolish/POLISH_PLAN.md",
+      "bytes": 2254,
+      "sha256": "9e02b73d456556be40f4168129d137d3613d32735e631242fba608869ded8c56"
+    },
+    {
+      "path": "docs/v8/artpolish/POLISH_REPORT.md",
+      "bytes": 14534,
+      "sha256": "01f14f14b36bdf6fd123fb2a47b3ec84abb5991d2d3a00ca7930522515a94755"
+    },
+    {
+      "path": "docs/v8/artpolish/PORTRAITS.md",
+      "bytes": 7266,
+      "sha256": "8498a01c5fa5c55f53adccc34c8d1480e7d8f838ceef07ee1de3d83657f6152e"
+    },
+    {
+      "path": "docs/v8/artpolish/SCORER_VERIFICATION.md",
+      "bytes": 1195,
+      "sha256": "a8d4f794b2db99556482848a271c78e9b053313eac958a8e438f05ecaa0e165a"
+    },
+    {
+      "path": "docs/v8/artpolish/WALL_BOARDS.json",
+      "bytes": 3480,
+      "sha256": "1628722eeaa7a2ba4dd8e2f65bf56f59c30d3477a3c1f278f52284181ffc001f"
+    },
+    {
+      "path": "docs/v8/artpolish/WALL_VERIFICATION.json",
+      "bytes": 1227,
+      "sha256": "5616501b8bda2f9d1965696a5758971596ecc0e9706955a5945974cbcf2c71d1"
+    },
+    {
+      "path": "docs/v8/artpolish/WALL_VERIFICATION.md",
+      "bytes": 6366,
+      "sha256": "f5a5cfd473a69a419e609bdaa8337b204ed06bd36be59bec1ee41481abadc0b1"
+    },
+    {
+      "path": "docs/v8/artpolish/animal_deer_try1.json",
+      "bytes": 29201,
+      "sha256": "4038799a9ab06f36465472d99089de49c56bda0f1365c093f923bcd6f2a66190"
+    },
+    {
+      "path": "docs/v8/artpolish/animal_deer_try2.json",
+      "bytes": 29509,
+      "sha256": "f912189b7a82c3145d52a50825e47a48df7a8ba5dbc1c8f43808fea67489a1c6"
+    },
+    {
+      "path": "docs/v8/artpolish/animal_generation_ledger.json",
+      "bytes": 25306,
+      "sha256": "262c50808edd554f504ce91f2fc88784e93297a83fbefbb81bfce0a32e47cf0d"
+    },
+    {
+      "path": "docs/v8/artpolish/animal_integrity.json",
+      "bytes": 7092,
+      "sha256": "3eecdc752842b403403145e9ee4f52dbe6d5135d274310711864733608e96e8a"
+    },
+    {
+      "path": "docs/v8/artpolish/animal_manifest.json",
+      "bytes": 10908,
+      "sha256": "0417c081df5cfd68af103eec1fb67393b2674f897e1d9b4a4f64d0ec44e5a9cc"
+    },
+    {
+      "path": "docs/v8/artpolish/animal_wolf_try1.json",
+      "bytes": 29595,
+      "sha256": "1ef5f431432c612b48b7c340a0a7c8f7922d5b041148ff47b58c770256696121"
+    },
+    {
+      "path": "docs/v8/artpolish/animal_wolf_try2.json",
+      "bytes": 29233,
+      "sha256": "5859bcc5d5970cb490ec33148a7c80269b38cf2c7c014d19d9382c87f04bd075"
+    },
+    {
+      "path": "docs/v8/artpolish/blind_animals_round0.json",
+      "bytes": 64284,
+      "sha256": "8dda1951a6bbf783e6e6d920dec44a84d4a7420133a0b3fb0bb02e47f431c609"
+    },
+    {
+      "path": "docs/v8/artpolish/blind_animals_round1.json",
+      "bytes": 64352,
+      "sha256": "e9f56004871c1abf586ec9f62c951ad24caf6da840338f46b82c8057995a1f4f"
+    },
+    {
+      "path": "docs/v8/artpolish/blind_items_round0.json",
+      "bytes": 69071,
+      "sha256": "49426870739201c4a5ffcac4541810dff599892f21f2b5bbe421c6d1842e4904"
+    },
+    {
+      "path": "docs/v8/artpolish/blind_items_round1.json",
+      "bytes": 72499,
+      "sha256": "52ce6aa32c31337b0dc968e6b6f330355c623aba93922eb5ddb0ee8fc7046c5b"
+    },
+    {
+      "path": "docs/v8/artpolish/blind_portraits.json",
+      "bytes": 51480,
+      "sha256": "e82911f265bf78005b1bb66ed7a9aff815adadddbc6674eb1e52bfe662e9808c"
+    },
+    {
+      "path": "docs/v8/artpolish/items_generation_ledger.json",
+      "bytes": 210161,
+      "sha256": "5d9276af4efe33d516e0d5053fe98c3bda99646d480cd441d51c677baa461fa6"
+    },
+    {
+      "path": "docs/v8/artpolish/items_integrity.json",
+      "bytes": 1874,
+      "sha256": "de57d03b7171265abb55a77f5e6bd3fa25167930b55a6c95285c49d9817b3bff"
+    },
+    {
+      "path": "docs/v8/artpolish/items_length_check.json",
+      "bytes": 2358,
+      "sha256": "b1402dd297af67042f43ca00cfbcc5d03616a0e584545cecdbcf80e7d59b84c7"
+    },
+    {
+      "path": "docs/v8/artpolish/items_manifest.json",
+      "bytes": 226453,
+      "sha256": "36a861010b72bee6acbf2ae16ef9c1d12c494db3d63e72c07536c8ca5ca30944"
+    },
+    {
+      "path": "docs/v8/artpolish/items_model_reviews.json",
+      "bytes": 36260,
+      "sha256": "beaf397af42e787ea50f517f3596d190787c7d36cec9b87d601434362c3ecc13"
+    },
+    {
+      "path": "docs/v8/artpolish/portrait_generation_ledger.json",
+      "bytes": 33671,
+      "sha256": "c8b2ab06a6dbf2e4c83d8c606c665f5457e94b5af8f02ee0ed656568cae0bcc6"
+    },
+    {
+      "path": "docs/v8/artpolish/portrait_inspections.json",
+      "bytes": 6349,
+      "sha256": "b8b3e7f0805e38828eeeb18546d054aaf57793729cf864ffe8ec554b81e83fe3"
+    },
+    {
+      "path": "docs/v8/artpolish/portrait_manifest.json",
+      "bytes": 83584,
+      "sha256": "942ef52943f86684ac0a96fbf47f3138a0775257e780fe7e00d535dfadc5ec8c"
+    },
+    {
+      "path": "docs/v8/artpolish/portrait_model_scores.json",
+      "bytes": 3887,
+      "sha256": "fb6ec26498da4c9b24d016e505016d1b07044472d03e490197c1bb3963b068ed"
+    },
+    {
+      "path": "docs/v8/artpolish/portrait_numeric.json",
+      "bytes": 9379,
+      "sha256": "be5aac8b76456f645168b1b95e434c5a9023297ba44a0b09b1085149abe5d375"
+    },
+    {
+      "path": "docs/v8/artpolish/portrait_visual_verdict.json",
+      "bytes": 826,
+      "sha256": "ca85307c53362238478221e42e6f211d545330d5201b541d85eb05a4dab273e1"
+    },
+    {
+      "path": "docs/v8/artpolish/walls_visual_verdict.json",
+      "bytes": 877,
+      "sha256": "08b6ee2c0b997ef6aa23dc59638723734d6aefb1bd242de3dd53b9cce9c1eab1"
+    }
+  ],
+  "scope_pass": true,
+  "file_cap_bytes": 1500000,
+  "inventory_note": "This audit JSON is excluded from its own hash inventory; final committed blobs are checked separately.",
+  "runtime_installed": false,
+  "owner_adopted": false
+}

@@ -1,0 +1,693 @@
+[
+  {
+    "call_index": 22,
+    "kind": "model_scorecard",
+    "id": "model_card_1",
+    "attempt": 1,
+    "status": "COMPLETED",
+    "prompt": "Act as a critical visual STYLE judge, not the artist. References1 and2 are locked same-family original item/prop style details. Reference3 contains 5 labelled candidate item paintings, already created. Compare the actual visual medium, line, upper-left light, and palette handling of EACH labelled candidate against the two originals. Judge drawing style only, not whether subject material is the same; a grey stone or green polished axe may differ in hue from logs. Score medium, line, light, palette each integer1 to5. 5 exact close match,4 close,3 meaningful deviation,2 strong mismatch,1 wrong medium. Do not assume candidates passed; make independent critical scores from images. Output ONE clean legible scorecard image, a table on white with rows for I01 firewood, I02 ground_axe, I03 cured_hide, I04 hide_wrap, I05 fur_cloak. Columns ID, medium, line, light, palette, one short reason. Include all rows exactly once. No replacement artwork, no invented input, no decorative pictures.",
+    "refs": [
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+        "sha256": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458"
+      },
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png",
+        "sha256": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832"
+      },
+      {
+        "path": "/Users/rexxa/work/artpolish-data/items/model_candidates1.png",
+        "sha256": "77fd66d76e671c669acdc8b86a3c3cd946b6db4abe1ac75f38af6c29dfd74849"
+      }
+    ],
+    "candidates": [
+      {
+        "label": "I01",
+        "id": "firewood",
+        "raw": "/Users/rexxa/work/artpolish-data/items/firewood_try2_raw.png",
+        "raw_sha256": "1e99d983699e7a170c8b8f3c7e45bca55f8825c9f8b58e9ca512993679be6f97"
+      },
+      {
+        "label": "I02",
+        "id": "ground_axe",
+        "raw": "/Users/rexxa/work/artpolish-data/items/ground_axe_try2_raw.png",
+        "raw_sha256": "99fd511d8230fcde02e851216dd9d67286156aae0a7910997d951877db81ecb8"
+      },
+      {
+        "label": "I03",
+        "id": "cured_hide",
+        "raw": "/Users/rexxa/work/artpolish-data/items/cured_hide_try1_raw.png",
+        "raw_sha256": "5659598cdc48c751a6cabd0161196b3ede35cf1de35aa5fb4a276537ce12f428"
+      },
+      {
+        "label": "I04",
+        "id": "hide_wrap",
+        "raw": "/Users/rexxa/work/artpolish-data/items/hide_wrap_try1_raw.png",
+        "raw_sha256": "9210b9f0c6377df842c590b984dad63bad3e7f2be034b9417a02875540fb3637"
+      },
+      {
+        "label": "I05",
+        "id": "fur_cloak",
+        "raw": "/Users/rexxa/work/artpolish-data/items/fur_cloak_try1_raw.png",
+        "raw_sha256": "560dea562c8dea1b6046df335605136f28ce2f254461f197fabe398b6a7f9ec4"
+      }
+    ],
+    "reserved_at": "2026-10-23T16:02:55.862940+00:00",
+    "started_at": "2026-10-23 16:03:09 UTC",
+    "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-4d65ba81-9951-42ad-9aba-eaabcf9975a3.png",
+    "raw": "/Users/rexxa/work/artpolish-data/items/model_card_1_try1_raw.png",
+    "raw_sha256": "d6913c783b7dbe0273d9028b3039a6e25b7894fe6f2d39ddf9b8f7f558c46cb9",
+    "tool_sha256": "d6913c783b7dbe0273d9028b3039a6e25b7894fe6f2d39ddf9b8f7f558c46cb9",
+    "completed_at": "2026-10-23 16:04:10 UTC",
+    "display": "art/style05/polish/items/model_scorecard1.png",
+    "display_sha256": "26e582f1d92861299638ab163a25c6a868ad11a462bc2678e1f361bc7882f7c7",
+    "transcription": [
+      {
+        "id": "firewood",
+        "raw_sha256": "1e99d983699e7a170c8b8f3c7e45bca55f8825c9f8b58e9ca512993679be6f97",
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Matches originals very closely in painterly medium, ink line style, upper-left lighting, and earthy wood/ground palette."
+      },
+      {
+        "id": "ground_axe",
+        "raw_sha256": "99fd511d8230fcde02e851216dd9d67286156aae0a7910997d951877db81ecb8",
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 4,
+        "sentence": "Same illustrative medium and line quality; lighting consistent from upper-left; slightly cleaner, smoother surfaces and a bit less textured, but palette fits the set."
+      },
+      {
+        "id": "cured_hide",
+        "raw_sha256": "5659598cdc48c751a6cabd0161196b3ede35cf1de35aa5fb4a276537ce12f428",
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 4,
+        "sentence": "Uses same watercolor/ink medium and outline style; upper-left light consistent; colors are a bit lighter and cleaner than the rugged originals, but still within the same earthy palette."
+      },
+      {
+        "id": "hide_wrap",
+        "raw_sha256": "9210b9f0c6377df842c590b984dad63bad3e7f2be034b9417a02875540fb3637",
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 4,
+        "sentence": "Consistent medium and hand-drawn ink lines; lighting from upper-left matches; palette and texture align well, slightly cleaner and less rough than the originals."
+      },
+      {
+        "id": "fur_cloak",
+        "raw_sha256": "560dea562c8dea1b6046df335605136f28ce2f254461f197fabe398b6a7f9ec4",
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 4,
+        "sentence": "Same illustrative medium, line quality, and lighting; earthy brown palette fits, with a touch more contrast and detail, but still clearly in the same visual style."
+      }
+    ],
+    "mechanism": "actual built-in image_gen scorecard, visually transcribed"
+  },
+  {
+    "call_index": 23,
+    "kind": "model_scorecard",
+    "id": "model_card_2",
+    "attempt": 1,
+    "status": "COMPLETED",
+    "prompt": "Act as a critical visual STYLE judge, not the artist. References1 and2 are locked same-family original item/prop style details. Reference3 contains 5 labelled candidate item paintings, already created. Compare the actual visual medium, line, upper-left light, and palette handling of EACH labelled candidate against the two originals. Judge drawing style only, not whether subject material is the same; a grey stone or green polished axe may differ in hue from logs. Score medium, line, light, palette each integer1 to5. 5 exact close match,4 close,3 meaningful deviation,2 strong mismatch,1 wrong medium. Do not assume candidates passed; make independent critical scores from images. Output ONE clean legible scorecard image, a table on white with rows for I06 wolf_hide, I07 clay, I08 raw_pot, I09 flint_nodule, I10 log_pile_medium. Columns ID, medium, line, light, palette, one short reason. Include all rows exactly once. No replacement artwork, no invented input, no decorative pictures.",
+    "refs": [
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+        "sha256": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458"
+      },
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png",
+        "sha256": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832"
+      },
+      {
+        "path": "/Users/rexxa/work/artpolish-data/items/model_candidates2.png",
+        "sha256": "a74c3e943e64e56ba5b8079151110e2f58b3fd9c3127ea872b9fbbcfc313e7d0"
+      }
+    ],
+    "candidates": [
+      {
+        "label": "I06",
+        "id": "wolf_hide",
+        "raw": "/Users/rexxa/work/artpolish-data/items/wolf_hide_try1_raw.png",
+        "raw_sha256": "eeb84cb98907dcfb256e05468ea2109aad682dc462f822da478d024a226ec64d"
+      },
+      {
+        "label": "I07",
+        "id": "clay",
+        "raw": "/Users/rexxa/work/artpolish-data/items/clay_try2_raw.png",
+        "raw_sha256": "84cf44ceef1f163d0c58eae92ecddd16f87b858ba32289ede03f0dad1c35696f"
+      },
+      {
+        "label": "I08",
+        "id": "raw_pot",
+        "raw": "/Users/rexxa/work/artpolish-data/items/raw_pot_try1_raw.png",
+        "raw_sha256": "3da7f8ddbe2a7366cb18542648d22323d81c20c6aa8f03673e28dec3762c67e0"
+      },
+      {
+        "label": "I09",
+        "id": "flint_nodule",
+        "raw": "/Users/rexxa/work/artpolish-data/items/flint_nodule_try2_raw.png",
+        "raw_sha256": "545711c921980e1bb5cfa4885d2f88a3f8454bdde14cc61ca02cc7296ddd1c2f"
+      },
+      {
+        "label": "I10",
+        "id": "log_pile_medium",
+        "raw": "/Users/rexxa/work/artpolish-data/items/log_pile_medium_try2_raw.png",
+        "raw_sha256": "4339baa0dfac7d96170b43e57b3a0c293a97e0f3a3dfc78d010e03e18d6554e4"
+      }
+    ],
+    "reserved_at": "2026-10-23T16:02:55.991051+00:00",
+    "started_at": "2026-10-23 16:03:09 UTC",
+    "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-d7181b6e-d8f4-4b01-be8e-525c8bde2f70.png",
+    "raw": "/Users/rexxa/work/artpolish-data/items/model_card_2_try1_raw.png",
+    "raw_sha256": "d025356ee357638d8fbe3cb8df72c5c42d664a144f6181568c9e72c6e61e1858",
+    "tool_sha256": "d025356ee357638d8fbe3cb8df72c5c42d664a144f6181568c9e72c6e61e1858",
+    "completed_at": "2026-10-23 16:04:10 UTC",
+    "display": "art/style05/polish/items/model_scorecard2.png",
+    "display_sha256": "1e58c12c1aba824cc927c70f9da0391b85d14d1e0d35b0e630f9ed4d82156341",
+    "transcription": [
+      {
+        "id": "wolf_hide",
+        "raw_sha256": "eeb84cb98907dcfb256e05468ea2109aad682dc462f822da478d024a226ec64d",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Same hand-painted look and inked outlines; slightly finer fur detail than originals but well matched."
+      },
+      {
+        "id": "clay",
+        "raw_sha256": "84cf44ceef1f163d0c58eae92ecddd16f87b858ba32289ede03f0dad1c35696f",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Matches painterly brushwork, clear ink lines and upper-left highlights; warm earthy palette consistent."
+      },
+      {
+        "id": "raw_pot",
+        "raw_sha256": "3da7f8ddbe2a7366cb18542648d22323d81c20c6aa8f03673e28dec3762c67e0",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Same textured brushwork and inked contour; lighting and muted earth tones align with originals."
+      },
+      {
+        "id": "flint_nodule",
+        "raw_sha256": "545711c921980e1bb5cfa4885d2f88a3f8454bdde14cc61ca02cc7296ddd1c2f",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Consistent painted strokes, defined ink lines and upper-left light; grey/beige stone palette fits the set."
+      },
+      {
+        "id": "log_pile_medium",
+        "raw_sha256": "4339baa0dfac7d96170b43e57b3a0c293a97e0f3a3dfc78d010e03e18d6554e4",
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Almost identical style to log reference: same brush texture, ink line weight, upper-left lighting and earthy palette."
+      }
+    ],
+    "mechanism": "actual built-in image_gen scorecard, visually transcribed"
+  },
+  {
+    "call_index": 24,
+    "kind": "model_scorecard",
+    "id": "model_card_3",
+    "attempt": 1,
+    "status": "COMPLETED",
+    "prompt": "Act as a critical visual STYLE judge, not the artist. References1 and2 are locked same-family original item/prop style details. Reference3 contains 3 labelled candidate item paintings, already created. Compare the actual visual medium, line, upper-left light, and palette handling of EACH labelled candidate against the two originals. Judge drawing style only, not whether subject material is the same; a grey stone or green polished axe may differ in hue from logs. Score medium, line, light, palette each integer1 to5. 5 exact close match,4 close,3 meaningful deviation,2 strong mismatch,1 wrong medium. Do not assume candidates passed; make independent critical scores from images. Output ONE clean legible scorecard image, a table on white with rows for I11 log_pile_large, I12 flint_pile, I13 flint_blade. Columns ID, medium, line, light, palette, one short reason. Include all rows exactly once. No replacement artwork, no invented input, no decorative pictures.",
+    "refs": [
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+        "sha256": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458"
+      },
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png",
+        "sha256": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832"
+      },
+      {
+        "path": "/Users/rexxa/work/artpolish-data/items/model_candidates3.png",
+        "sha256": "df960f3eeb4454a3185c239444e9b1ccea0f80e043690a5f2000f0650bf87e88"
+      }
+    ],
+    "candidates": [
+      {
+        "label": "I11",
+        "id": "log_pile_large",
+        "raw": "/Users/rexxa/work/artpolish-data/items/log_pile_large_try2_raw.png",
+        "raw_sha256": "e7b3eda5288d87ceb2b1805d4756ed432cc753195361ab820f8aa87be3ec7ce4"
+      },
+      {
+        "label": "I12",
+        "id": "flint_pile",
+        "raw": "/Users/rexxa/work/artpolish-data/items/flint_pile_try2_raw.png",
+        "raw_sha256": "9a319e0b4384ca1976527175f09c6c911c520edca63e3667c3af44b5d0a1166e"
+      },
+      {
+        "label": "I13",
+        "id": "flint_blade",
+        "raw": "/Users/rexxa/work/artpolish-data/items/flint_blade_try2_raw.png",
+        "raw_sha256": "84c0b5117512d6db1eeb9cb0c05fcf6df3c7ab94c654b9bc20c3e05c32c7de8e"
+      }
+    ],
+    "reserved_at": "2026-10-23T16:02:56.065138+00:00",
+    "started_at": "2026-10-23 16:03:09 UTC",
+    "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-b86820d0-cb51-4468-96d6-536ef3293a22.png",
+    "raw": "/Users/rexxa/work/artpolish-data/items/model_card_3_try1_raw.png",
+    "raw_sha256": "3746a352e3bec5ed276eab58f5c656594024d2c8c2a8bfa3a3ea48f164a7626f",
+    "tool_sha256": "3746a352e3bec5ed276eab58f5c656594024d2c8c2a8bfa3a3ea48f164a7626f",
+    "completed_at": "2026-10-23 16:04:10 UTC",
+    "display": "art/style05/polish/items/model_scorecard3.png",
+    "display_sha256": "13b103e9128c3fd981b4daf31020a337801852299165914a4e81609e7cc01ada",
+    "transcription": [
+      {
+        "id": "log_pile_large",
+        "raw_sha256": "e7b3eda5288d87ceb2b1805d4756ed432cc753195361ab820f8aa87be3ec7ce4",
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Same hand-painted digital look with textured brushwork, clear ink-like outlines, upper-left lighting and earthy brown/green palette that matches the originals exactly."
+      },
+      {
+        "id": "flint_pile",
+        "raw_sha256": "9a319e0b4384ca1976527175f09c6c911c520edca63e3667c3af44b5d0a1166e",
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 4,
+        "sentence": "Matches the same painted medium, line treatment and upper-left lighting; palette is very close with natural earthy tones, slightly cooler/greyer than the warm browns of the originals."
+      },
+      {
+        "id": "flint_blade",
+        "raw_sha256": "84c0b5117512d6db1eeb9cb0c05fcf6df3c7ab94c654b9bc20c3e05c32c7de8e",
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 4,
+        "sentence": "Same painted, hand-drawn look with consistent outlines and upper-left lighting; palette fits the stone materials but is a bit cooler and less warm/earthy than the original logs and fire."
+      }
+    ],
+    "mechanism": "actual built-in image_gen scorecard, visually transcribed"
+  },
+  {
+    "call_index": 41,
+    "kind": "model_scorecard",
+    "id": "model_final_card_1",
+    "attempt": 1,
+    "round": 1,
+    "status": "COMPLETED",
+    "prompt": "Act as a critical visual STYLE judge, not the artist. References1 and2 are locked same-family original item/prop style details. Reference3 contains FOUR labelled candidate item paintings, already created. Compare actual visual medium, line, upper-left light, and palette handling of EACH labelled candidate against both originals. Judge drawing style rather than material hue: grey stone, green polished axe, red clay can differ in hue from logs. Score medium,line,light,palette each integer1to5. 5 exact close match,4 close,3 meaningful deviation,2 strong mismatch,1 wrong medium. Do not assume candidates passed; make independent critical scores from images. Output ONE clean legible scorecard image, a table on white with exactly four rows for F01 firewood, F02 ground_axe, F03 cured_hide, F04 hide_wrap. Columns ID,medium,line,light,palette,one short reason. Include every row exactly once. No replacement artwork, no invented input, no decorative pictures.",
+    "refs": [
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+        "sha256": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458"
+      },
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png",
+        "sha256": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832"
+      },
+      {
+        "path": "/Users/rexxa/work/artpolish-data/items/model_final_candidates1.png",
+        "sha256": "f18187219b5b66dfd7b4530d173ed445948d6ebe93cfdbdfbeb90baab936aef7"
+      }
+    ],
+    "candidates": [
+      {
+        "label": "F01",
+        "id": "firewood",
+        "raw": "/Users/rexxa/work/artpolish-data/items/firewood_try3_raw.png",
+        "raw_sha256": "336d774e7a7d15cb0be1488b2fed1b9466db8ac4069d7d51cd7d3387f725a223"
+      },
+      {
+        "label": "F02",
+        "id": "ground_axe",
+        "raw": "/Users/rexxa/work/artpolish-data/items/ground_axe_try3_raw.png",
+        "raw_sha256": "f28aab18cc01f3dbceccd21f20a8e6e74df28537255d4ac79e542ecffabe5f6c"
+      },
+      {
+        "label": "F03",
+        "id": "cured_hide",
+        "raw": "/Users/rexxa/work/artpolish-data/items/cured_hide_try2_raw.png",
+        "raw_sha256": "fd431221e71f33c84046fdbf3d5be13cfe012e18e8beb8ee8f04c213c35c886d"
+      },
+      {
+        "label": "F04",
+        "id": "hide_wrap",
+        "raw": "/Users/rexxa/work/artpolish-data/items/hide_wrap_try2_raw.png",
+        "raw_sha256": "430742dedc002261bf704a82b7ac2215f0804f17843c4c343d9b13282f9f8f0d"
+      }
+    ],
+    "reserved_at": "2026-10-23T16:25:16.114988+00:00",
+    "started_at": "2026-10-23 16:25:32 UTC",
+    "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-1e928ace-ff73-41ec-bd80-a3db678b8a13.png",
+    "completed_at": "2026-10-23 16:27:08 UTC",
+    "raw": "/Users/rexxa/work/artpolish-data/items/model_final_card_1_try1_raw.png",
+    "raw_sha256": "5ce18e7263382f5742e447184966d3945a6a1b62303aaf4b578a10da24673a51",
+    "tool_sha256": "5ce18e7263382f5742e447184966d3945a6a1b62303aaf4b578a10da24673a51",
+    "transcription": [
+      {
+        "id": "firewood",
+        "raw_sha256": "336d774e7a7d15cb0be1488b2fed1b9466db8ac4069d7d51cd7d3387f725a223",
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Matches originals closely in painterly medium, ink line, upper-left lighting and earthy palette."
+      },
+      {
+        "id": "ground_axe",
+        "raw_sha256": "f28aab18cc01f3dbceccd21f20a8e6e74df28537255d4ac79e542ecffabe5f6c",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Same hand-painted, textured style and lighting; slightly smoother surface but still consistent with originals."
+      },
+      {
+        "id": "cured_hide",
+        "raw_sha256": "fd431221e71f33c84046fdbf3d5be13cfe012e18e8beb8ee8f04c213c35c886d",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Fits the same painted/inked style with consistent lighting and earthy palette; minor softness vs originals."
+      },
+      {
+        "id": "hide_wrap",
+        "raw_sha256": "430742dedc002261bf704a82b7ac2215f0804f17843c4c343d9b13282f9f8f0d",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Consistent medium, line and lighting; slightly cleaner edges but still within the same visual family."
+      }
+    ],
+    "mechanism": "actual built-in image_gen scorecard, visually transcribed",
+    "display": "art/style05/polish/items/model_final_scorecard1.png",
+    "display_sha256": "2590e9102302028870b5778d7b7e47c250f284f4b4ce43eabe482e037b11464b"
+  },
+  {
+    "call_index": 42,
+    "kind": "model_scorecard",
+    "id": "model_final_card_2",
+    "attempt": 1,
+    "round": 1,
+    "status": "COMPLETED",
+    "prompt": "Act as a critical visual STYLE judge, not the artist. References1 and2 are locked same-family original item/prop style details. Reference3 contains FOUR labelled candidate item paintings, already created. Compare actual visual medium, line, upper-left light, and palette handling of EACH labelled candidate against both originals. Judge drawing style rather than material hue: grey stone, green polished axe, red clay can differ in hue from logs. Score medium,line,light,palette each integer1to5. 5 exact close match,4 close,3 meaningful deviation,2 strong mismatch,1 wrong medium. Do not assume candidates passed; make independent critical scores from images. Output ONE clean legible scorecard image, a table on white with exactly four rows for F05 fur_cloak, F06 wolf_hide, F07 raw_pot, F08 flint_nodule. Columns ID,medium,line,light,palette,one short reason. Include every row exactly once. No replacement artwork, no invented input, no decorative pictures.",
+    "refs": [
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+        "sha256": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458"
+      },
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png",
+        "sha256": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832"
+      },
+      {
+        "path": "/Users/rexxa/work/artpolish-data/items/model_final_candidates2.png",
+        "sha256": "5227e6b028f2f6760e970c5577d7cc95a355b245325ec5fc84bd8763e1f6d618"
+      }
+    ],
+    "candidates": [
+      {
+        "label": "F05",
+        "id": "fur_cloak",
+        "raw": "/Users/rexxa/work/artpolish-data/items/fur_cloak_try2_raw.png",
+        "raw_sha256": "f9c1206396bf20981f66679abe21b254fb964076b6005ed335155449705762fa"
+      },
+      {
+        "label": "F06",
+        "id": "wolf_hide",
+        "raw": "/Users/rexxa/work/artpolish-data/items/wolf_hide_try2_raw.png",
+        "raw_sha256": "4e75d3f9be5e309d2c75ebff3666c0b778729d18cf12b5bebd3b2d74cd3372cc"
+      },
+      {
+        "label": "F07",
+        "id": "raw_pot",
+        "raw": "/Users/rexxa/work/artpolish-data/items/raw_pot_try2_raw.png",
+        "raw_sha256": "140134e68f1b42d7108218934fbd404aa394d43bbfa20f06e6b305fa31cbf231"
+      },
+      {
+        "label": "F08",
+        "id": "flint_nodule",
+        "raw": "/Users/rexxa/work/artpolish-data/items/flint_nodule_try3_raw.png",
+        "raw_sha256": "454b88f58dd98cbc01f16408fedd7eee3a61ee3c64eaca22c36203ef06cb1418"
+      }
+    ],
+    "reserved_at": "2026-10-23T16:25:16.271267+00:00",
+    "started_at": "2026-10-23 16:25:32 UTC",
+    "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-f853b0fc-080b-43a4-a678-77098ea3601d.png",
+    "completed_at": "2026-10-23 16:27:08 UTC",
+    "raw": "/Users/rexxa/work/artpolish-data/items/model_final_card_2_try1_raw.png",
+    "raw_sha256": "8b8534733def37e4f3b0340139c9f6222ccfbfbe5c63a9c6870cc51305c96ccb",
+    "tool_sha256": "8b8534733def37e4f3b0340139c9f6222ccfbfbe5c63a9c6870cc51305c96ccb",
+    "transcription": [
+      {
+        "id": "fur_cloak",
+        "raw_sha256": "f9c1206396bf20981f66679abe21b254fb964076b6005ed335155449705762fa",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Matches painterly hand-drawn look, inked contours, top-left light and earthy palette well; slightly cleaner rendering than originals."
+      },
+      {
+        "id": "wolf_hide",
+        "raw_sha256": "4e75d3f9be5e309d2c75ebff3666c0b778729d18cf12b5bebd3b2d74cd3372cc",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Consistent medium and line work with clear inked edges, correct top-left lighting and muted natural palette; minor cleanliness vs originals."
+      },
+      {
+        "id": "raw_pot",
+        "raw_sha256": "140134e68f1b42d7108218934fbd404aa394d43bbfa20f06e6b305fa31cbf231",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Painterly texture and inked outline match originals, with top-left light and earthy tones; slightly smoother detail than original props."
+      },
+      {
+        "id": "flint_nodule",
+        "raw_sha256": "454b88f58dd98cbc01f16408fedd7eee3a61ee3c64eaca22c36203ef06cb1418",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Same hand-painted medium and inked line, top-left lighting and natural earthy palette; minor polish compared to original prop textures."
+      }
+    ],
+    "mechanism": "actual built-in image_gen scorecard, visually transcribed",
+    "display": "art/style05/polish/items/model_final_scorecard2.png",
+    "display_sha256": "8d83bef58a5e7af502e3513f443c18fc997bc59c0f205c5410c4f3fa6292aca4"
+  },
+  {
+    "call_index": 43,
+    "kind": "model_scorecard",
+    "id": "model_final_card_3",
+    "attempt": 1,
+    "round": 1,
+    "status": "COMPLETED",
+    "prompt": "Act as a critical visual STYLE judge, not the artist. References1 and2 are locked same-family original item/prop style details. Reference3 contains FOUR labelled candidate item paintings, already created. Compare actual visual medium, line, upper-left light, and palette handling of EACH labelled candidate against both originals. Judge drawing style rather than material hue: grey stone, green polished axe, red clay can differ in hue from logs. Score medium,line,light,palette each integer1to5. 5 exact close match,4 close,3 meaningful deviation,2 strong mismatch,1 wrong medium. Do not assume candidates passed; make independent critical scores from images. Output ONE clean legible scorecard image, a table on white with exactly four rows for F09 flint_pile, F10 log_pile_medium, F11 log_pile_large, F12 flint_blade. Columns ID,medium,line,light,palette,one short reason. Include every row exactly once. No replacement artwork, no invented input, no decorative pictures.",
+    "refs": [
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+        "sha256": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458"
+      },
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png",
+        "sha256": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832"
+      },
+      {
+        "path": "/Users/rexxa/work/artpolish-data/items/model_final_candidates3.png",
+        "sha256": "7a6f2b335996b127449fd4763cf93a10c4dd4e2fd8d78979c7daa04453effc03"
+      }
+    ],
+    "candidates": [
+      {
+        "label": "F09",
+        "id": "flint_pile",
+        "raw": "/Users/rexxa/work/artpolish-data/items/flint_pile_try3_raw.png",
+        "raw_sha256": "1cc5fa9f9d66094b7be50f32a7c818c8af30e5fd3cc0383c154436906c991f88"
+      },
+      {
+        "label": "F10",
+        "id": "log_pile_medium",
+        "raw": "/Users/rexxa/work/artpolish-data/items/log_pile_medium_try3_raw.png",
+        "raw_sha256": "33914eb52bbf9b44f04de614cebfbfd9ce8622d0eed17e533151954bb9a46fa4"
+      },
+      {
+        "label": "F11",
+        "id": "log_pile_large",
+        "raw": "/Users/rexxa/work/artpolish-data/items/log_pile_large_try3_raw.png",
+        "raw_sha256": "0e8d41c3af3d89d8380073e0cdbb1b45cf2a6f00f910718f1991cf4020da7f82"
+      },
+      {
+        "label": "F12",
+        "id": "flint_blade",
+        "raw": "/Users/rexxa/work/artpolish-data/items/flint_blade_try3_raw.png",
+        "raw_sha256": "975c235b902b3e5a129e24c99341eed8081b27f12231672e153152e4d5fb65cc"
+      }
+    ],
+    "reserved_at": "2026-10-23T16:25:16.416795+00:00",
+    "started_at": "2026-10-23 16:25:32 UTC",
+    "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-3ac67497-fe3b-44be-a05e-189ec5fdbfd6.png",
+    "completed_at": "2026-10-23 16:27:08 UTC",
+    "raw": "/Users/rexxa/work/artpolish-data/items/model_final_card_3_try1_raw.png",
+    "raw_sha256": "0208c18337cb993a6cf8fa715b64976b0733864c170a12ddbff4232bb58f37eb",
+    "tool_sha256": "0208c18337cb993a6cf8fa715b64976b0733864c170a12ddbff4232bb58f37eb",
+    "transcription": [
+      {
+        "id": "flint_pile",
+        "raw_sha256": "1cc5fa9f9d66094b7be50f32a7c818c8af30e5fd3cc0383c154436906c991f88",
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 4,
+        "sentence": "Matches painterly textured medium and inked outlines; same upper-left lighting and earthy palette, minor detail simplification."
+      },
+      {
+        "id": "log_pile_medium",
+        "raw_sha256": "33914eb52bbf9b44f04de614cebfbfd9ce8622d0eed17e533151954bb9a46fa4",
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Very close match to original log pile style in brush texture, ink lines, lighting, and warm natural palette."
+      },
+      {
+        "id": "log_pile_large",
+        "raw_sha256": "0e8d41c3af3d89d8380073e0cdbb1b45cf2a6f00f910718f1991cf4020da7f82",
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Same style as F10; consistent painterly wood texture, inked linework, upper-left lighting, and earthy palette, just a larger stack."
+      },
+      {
+        "id": "flint_blade",
+        "raw_sha256": "975c235b902b3e5a129e24c99341eed8081b27f12231672e153152e4d5fb65cc",
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 4,
+        "sentence": "Consistent painted texture and inked edges with correct lighting and palette; slightly smoother rendering than originals but still in the same style family."
+      }
+    ],
+    "mechanism": "actual built-in image_gen scorecard, visually transcribed",
+    "display": "art/style05/polish/items/model_final_scorecard3.png",
+    "display_sha256": "ee1ff48b6aaad8cb1798f2b7f3b90676b4c672620f24169ab830adf6fc5c7bcd"
+  },
+  {
+    "call_index": 44,
+    "kind": "model_scorecard",
+    "id": "model_final_card_4",
+    "attempt": 1,
+    "round": 1,
+    "status": "COMPLETED",
+    "prompt": "Act as a critical visual STYLE judge, not the artist. References1 and2 are locked same-family original item/prop style details. Reference3 contains FOUR labelled candidate item paintings, already created. Compare actual visual medium, line, upper-left light, and palette handling of EACH labelled candidate against both originals. Judge drawing style rather than material hue: grey stone, green polished axe, red clay can differ in hue from logs. Score medium,line,light,palette each integer1to5. 5 exact close match,4 close,3 meaningful deviation,2 strong mismatch,1 wrong medium. Do not assume candidates passed; make independent critical scores from images. Output ONE clean legible scorecard image, a table on white with exactly four rows for F13 clay, F14 berry_basket, F15 log_pile_small, F16 stone_axe. Columns ID,medium,line,light,palette,one short reason. Include every row exactly once. No replacement artwork, no invented input, no decorative pictures.",
+    "refs": [
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
+        "sha256": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458"
+      },
+      {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_hearth.png",
+        "sha256": "15f9ddf6c1f8c1847fa4fe9ff1bfcf152b00d202690326febffeda71cca54832"
+      },
+      {
+        "path": "/Users/rexxa/work/artpolish-data/items/model_final_candidates4.png",
+        "sha256": "fe85dc925d7d2adf3f2934847795d3993e88b54fc96e4c2e7e46c1cb2754a809"
+      }
+    ],
+    "candidates": [
+      {
+        "label": "F13",
+        "id": "clay",
+        "raw": "/Users/rexxa/work/artpolish-data/items/clay_try3_raw.png",
+        "raw_sha256": "068485005289f27d988b38ccc9beb8b7bd49358121b0a71667824b7b15d9f8be"
+      },
+      {
+        "label": "F14",
+        "id": "berry_basket",
+        "raw": "/Users/rexxa/work/artpolish-data/items/berry_basket_try1_raw.png",
+        "raw_sha256": "cae935b818390a2de99a4ee9164c35cb2c4d1f8c2bab576356c98873a82580a0"
+      },
+      {
+        "label": "F15",
+        "id": "log_pile_small",
+        "raw": "/Users/rexxa/work/artpolish-data/items/log_pile_small_try1_raw.png",
+        "raw_sha256": "5ca526eda43cb54099361d0815fd13e1f4bf6b57be697783486eb034175a511f"
+      },
+      {
+        "label": "F16",
+        "id": "stone_axe",
+        "raw": "/Users/rexxa/work/artpolish-data/items/stone_axe_try1_raw.png",
+        "raw_sha256": "0e4dc3b4298f670f0f018b85250d35c093d754b1a7355ab0792a5ff6a0a96e07"
+      }
+    ],
+    "reserved_at": "2026-10-23T16:25:16.563662+00:00",
+    "started_at": "2026-10-23 16:25:32 UTC",
+    "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-7a36-7cf1-b13a-9a1db5e68169/exec-a21d2c5d-a776-4ee3-b8ae-da23ad4ae691.png",
+    "completed_at": "2026-10-23 16:27:08 UTC",
+    "raw": "/Users/rexxa/work/artpolish-data/items/model_final_card_4_try1_raw.png",
+    "raw_sha256": "8c457cedd9e6f2230d16bde93213e6bec857254e54dce6dc200a5911eca7c4bc",
+    "tool_sha256": "8c457cedd9e6f2230d16bde93213e6bec857254e54dce6dc200a5911eca7c4bc",
+    "transcription": [
+      {
+        "id": "clay",
+        "raw_sha256": "068485005289f27d988b38ccc9beb8b7bd49358121b0a71667824b7b15d9f8be",
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 4,
+        "sentence": "Matches painterly, textured brushwork and inked line with correct upper-left lighting and earthy palette."
+      },
+      {
+        "id": "berry_basket",
+        "raw_sha256": "cae935b818390a2de99a4ee9164c35cb2c4d1f8c2bab576356c98873a82580a0",
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 4,
+        "sentence": "Consistent hand-painted lines, textured strokes, upper-left light and natural earthy colors."
+      },
+      {
+        "id": "log_pile_small",
+        "raw_sha256": "5ca526eda43cb54099361d0815fd13e1f4bf6b57be697783486eb034175a511f",
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "sentence": "Near identical to original log style in brushwork, line quality, lighting and earthy palette."
+      },
+      {
+        "id": "stone_axe",
+        "raw_sha256": "0e4dc3b4298f670f0f018b85250d35c093d754b1a7355ab0792a5ff6a0a96e07",
+        "medium": 4,
+        "line": 4,
+        "light": 5,
+        "palette": 4,
+        "sentence": "Same hand-painted medium and outline style with upper-left light; slight simplification but still close in palette and rendering."
+      }
+    ],
+    "mechanism": "actual built-in image_gen scorecard, visually transcribed",
+    "display": "art/style05/polish/items/model_final_scorecard4.png",
+    "display_sha256": "78a6cb0e16dc57d9d2494217db12248a433ae421313bf16f5ad8588266b956f5"
+  }
+]

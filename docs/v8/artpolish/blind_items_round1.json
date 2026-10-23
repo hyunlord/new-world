@@ -1,0 +1,2415 @@
+{
+  "round": 1,
+  "protocol": "docs/v8/artpolish/BLIND_PROTOCOL.md",
+  "protocol_sha256": "9e4708e2aa588edd530688fe6b1772cbfff38458cfd7cef7e78054219ec40894",
+  "answer_key": "/Users/rexxa/work/artpolish-data/items/round1/answer_key.json",
+  "answer_key_sha256": "a4c86dc64ca26f51c85350fa2ff7daade887f799bcd5097b067d0d7cd19dbf2d",
+  "sources": [
+    {
+      "path": "/Users/rexxa/work/artpolish-data/items/round1/response_a.json",
+      "sha256": "d3dc8ff4ae6957a65e9693e5d6ee5ca00b1cd3af7e9f9090002d1ddb5a1be0c1",
+      "small_answers": "/Users/rexxa/work/artpolish-data/items/round1/response_a_32.json",
+      "small_answers_sha256": "a34b251579a2f42821aa12d548b621c098284e2f05c24c47c9715e8d04d098fb",
+      "correction_path": "/Users/rexxa/work/artpolish-data/items/round1/response_a_id_corrections.json",
+      "correction_sha256": "95a5dd6058dc5461015a85720b791ff091264bed50742240a38251177beb14f3",
+      "id_corrections": [
+        {
+          "original_id": "Q6482",
+          "corrected_id": "Q8482",
+          "reason": "The printed ID at row 3, column 2 of the original 64px sheet reads Q8482."
+        },
+        {
+          "original_id": "Q8193",
+          "corrected_id": "Q1893",
+          "reason": "The printed ID at row 2, column 5 of the original 64px sheet reads Q1893."
+        }
+      ]
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish-data/items/round1/response_b.json",
+      "sha256": "48eea4a8f4eec775a8b6852567baf89c702d97d43e8b9208eea3479fb0ac93a3",
+      "small_answers": "/Users/rexxa/work/artpolish-data/items/round1/response_b_32.json",
+      "small_answers_sha256": "87296dfece37cfe02c99e76f12883b6b2a9f1dbc211d6549bbe847f02dad912e",
+      "correction_path": "/Users/rexxa/work/artpolish-data/items/round1/response_b_id_corrections.json",
+      "correction_sha256": "f28fea7306dc2514b84cd6d6171268403d1231b672614ce3d0e6b36b5fb2710e",
+      "id_corrections": [
+        {
+          "original_id": "Q5482",
+          "corrected_id": "Q8482",
+          "reason": "The printed ID above the third-row, second-column image in the original 64px sheet is Q8482; the first digit was transcribed incorrectly."
+        }
+      ]
+    }
+  ],
+  "summaries": [
+    {
+      "reviewer": "a",
+      "agent": "/root/item_blind_a1",
+      "groups": [
+        {
+          "size": 32,
+          "exact_correct": 9,
+          "count_pass": false
+        },
+        {
+          "size": 64,
+          "exact_correct": 11,
+          "count_pass": false
+        }
+      ],
+      "failed_pairs": [
+        "log/firewood",
+        "stone/ground axe",
+        "raw/fired pot",
+        "wrap/cloak garments"
+      ],
+      "pairs_pass": false,
+      "passed": false
+    },
+    {
+      "reviewer": "b",
+      "agent": "/root/item_blind_b1",
+      "groups": [
+        {
+          "size": 32,
+          "exact_correct": 9,
+          "count_pass": false
+        },
+        {
+          "size": 64,
+          "exact_correct": 12,
+          "count_pass": false
+        }
+      ],
+      "failed_pairs": [
+        "stone/ground axe",
+        "hide/cured hide",
+        "raw/fired pot",
+        "wrap/cloak garments"
+      ],
+      "pairs_pass": false,
+      "passed": false
+    }
+  ],
+  "passed": false,
+  "records": [
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q9811",
+        "size": 32,
+        "asset": "hide_wrap",
+        "path": "art/style05/polish/items/hide_wrap_try2.png",
+        "sha256": "f18a82e2c9f253a071ba5d1c65cbf07d79e44defc1f42509fbe18c96a500f1cb"
+      },
+      "raw": {
+        "id": "Q9811",
+        "first_name": "animal hide",
+        "confidence": 0.82,
+        "notes": "A small narrow tan skin with projecting corners."
+      },
+      "normalized_kind": "Hide",
+      "mapping_rationale": "Generic hide does not identify wolf or cured subtype.",
+      "id": "Q9811",
+      "asset": "hide_wrap",
+      "size": 32,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q2704",
+        "size": 32,
+        "asset": "log_pile_medium",
+        "path": "art/style05/polish/items/log_pile_medium_try3.png",
+        "sha256": "f507830bf46e4e8cbeb898da8b044ea4ec85df44b82c131a016d109e94ff1021"
+      },
+      "raw": {
+        "id": "Q2704",
+        "first_name": "coin pile",
+        "confidence": 0.57,
+        "notes": "A triangular pile of gold-colored round disks; material is uncertain at this size."
+      },
+      "normalized_kind": "Coins",
+      "mapping_rationale": "Coins are not logs, stones or flint.",
+      "id": "Q2704",
+      "asset": "log_pile_medium",
+      "size": 32,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q7049",
+        "size": 32,
+        "asset": "cured_hide",
+        "path": "art/style05/polish/items/cured_hide_try2.png",
+        "sha256": "fafe250ef4bdb83308042d857e28b9604aea377c899d8f1d7699b57f74143997"
+      },
+      "raw": {
+        "id": "Q7049",
+        "first_name": "leather patch",
+        "confidence": 0.84,
+        "notes": "A square tan patch with a stitched-looking edge."
+      },
+      "normalized_kind": "CuredHide",
+      "mapping_rationale": "Leather names processed hide; patch names the sheet material rather than raw hide.",
+      "id": "Q7049",
+      "asset": "cured_hide",
+      "size": 32,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q2556",
+        "size": 32,
+        "asset": "flint_pile",
+        "path": "art/style05/polish/items/flint_pile_try3.png",
+        "sha256": "0b41ca263a7051adec77161c236098c07abe835a267ad2bd2913be5cbda51cce"
+      },
+      "raw": {
+        "id": "Q2556",
+        "first_name": "stone pile",
+        "confidence": 0.68,
+        "notes": "Several light gray pieces around a dark center."
+      },
+      "normalized_kind": "Stone",
+      "mapping_rationale": "Explicit stone pile.",
+      "id": "Q2556",
+      "asset": "flint_pile",
+      "size": 32,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q6488",
+        "size": 32,
+        "asset": "hide",
+        "path": "art/style05/env/items/hide.png",
+        "sha256": "86ad39457f8f516e88bbd10b7c8aa6c1e1afeecb3a206b33cdb19e67cbddbf6e"
+      },
+      "raw": {
+        "id": "Q6488",
+        "first_name": "animal hide",
+        "confidence": 0.92,
+        "notes": "A spread tan pelt with limb-like extensions."
+      },
+      "normalized_kind": "Hide",
+      "mapping_rationale": "Generic hide does not identify wolf or cured subtype.",
+      "id": "Q6488",
+      "asset": "hide",
+      "size": 32,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q8686",
+        "size": 32,
+        "asset": "fur_cloak",
+        "path": "art/style05/polish/items/fur_cloak_try2.png",
+        "sha256": "2d9596bbb28055df880265db643c3526c69e126d9efd0983847f0e4c089b8c32"
+      },
+      "raw": {
+        "id": "Q8686",
+        "first_name": "fur coat",
+        "confidence": 0.71,
+        "notes": "A dark brown hanging garment-like shape with pale edging."
+      },
+      "normalized_kind": "FurCoat",
+      "mapping_rationale": "Recognised as garment, but coat is not exact cloak/cape kind.",
+      "id": "Q8686",
+      "asset": "fur_cloak",
+      "size": 32,
+      "exact": false,
+      "garment": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q6817",
+        "size": 32,
+        "asset": "clay_pot_filled",
+        "path": "art/style05/env1/items/clay_pot_filled.png",
+        "sha256": "f0e0dad614a9a0d5c394099cdaf00f1af1e40e25234cd76b08af50cd46c5d4b3"
+      },
+      "raw": {
+        "id": "Q6817",
+        "first_name": "water pot",
+        "confidence": 0.96,
+        "notes": "An orange vessel with a blue visible opening."
+      },
+      "normalized_kind": "ClayPot",
+      "mapping_rationale": "Primary pot/container name; water state distinguishes filled variant but not a separate kind.",
+      "id": "Q6817",
+      "asset": "clay_pot_filled",
+      "size": 32,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q5907",
+        "size": 32,
+        "asset": "flint_nodule",
+        "path": "art/style05/polish/items/flint_nodule_try3.png",
+        "sha256": "4cf207b449e320eba43af0b5ed46bd9cabc5cda2f159a297e870edd5d89978f5"
+      },
+      "raw": {
+        "id": "Q5907",
+        "first_name": "ore",
+        "confidence": 0.74,
+        "notes": "A small dark rock with a pale rough edge."
+      },
+      "normalized_kind": "Ore",
+      "mapping_rationale": "Generic ore does not identify flint.",
+      "id": "Q5907",
+      "asset": "flint_nodule",
+      "size": 32,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q1570",
+        "size": 32,
+        "asset": "clay_pot_empty",
+        "path": "art/style05/env1/items/clay_pot_empty.png",
+        "sha256": "1e0fd136c5b99ad8f4114c9fd0d4b3b518c7c66cf7912812238a7d1b1ba68cd1"
+      },
+      "raw": {
+        "id": "Q1570",
+        "first_name": "clay pot",
+        "confidence": 0.95,
+        "notes": "A brown round vessel with a dark opening."
+      },
+      "normalized_kind": "ClayPot",
+      "mapping_rationale": "Ordinary clay-pot name denotes fired pottery; unfired state requires an explicit raw/unfired answer.",
+      "id": "Q1570",
+      "asset": "clay_pot_empty",
+      "size": 32,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q5004",
+        "size": 32,
+        "asset": "wolf_hide",
+        "path": "art/style05/polish/items/wolf_hide_try2.png",
+        "sha256": "9b7e00166bbb51a9a206c8abb732ff5c4a5e1196bf297944fd4353f362bd8e66"
+      },
+      "raw": {
+        "id": "Q5004",
+        "first_name": "animal hide",
+        "confidence": 0.58,
+        "notes": "A pale narrow center with several splayed projections; the contour is difficult to read."
+      },
+      "normalized_kind": "Hide",
+      "mapping_rationale": "Generic hide does not identify wolf or cured subtype.",
+      "id": "Q5004",
+      "asset": "wolf_hide",
+      "size": 32,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q4101",
+        "size": 32,
+        "asset": "stone_axe",
+        "path": "art/style05/polish/items/stone_axe_try1.png",
+        "sha256": "128e62930b1b4ca7de86f19dc74d1d834bf87ccc281dd28c02ef2f6fe9a32600"
+      },
+      "raw": {
+        "id": "Q4101",
+        "first_name": "axe",
+        "confidence": 0.94,
+        "notes": "A gray head on a short brown handle."
+      },
+      "normalized_kind": "UnknownAxe",
+      "mapping_rationale": "Material and ground/polished subtype not stated.",
+      "id": "Q4101",
+      "asset": "stone_axe",
+      "size": 32,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q4358",
+        "size": 32,
+        "asset": "ground_axe",
+        "path": "art/style05/polish/items/ground_axe_try3.png",
+        "sha256": "dcf4c2afb47e86e24d848127a91b959ac1acdfcf2eb70dcc55315e1ee1981d29"
+      },
+      "raw": {
+        "id": "Q4358",
+        "first_name": "hoe",
+        "confidence": 0.64,
+        "notes": "A green rectangular blade hangs from a short bent-looking brown handle."
+      },
+      "normalized_kind": "Hoe",
+      "mapping_rationale": "Hoe is not an axe.",
+      "id": "Q4358",
+      "asset": "ground_axe",
+      "size": 32,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q9100",
+        "size": 32,
+        "asset": "clay",
+        "path": "art/style05/polish/items/clay_try3.png",
+        "sha256": "31c518a4272368573fcef3f1c2e25aeccb1ae1c83fa6c55cda9b8711c0b57edb"
+      },
+      "raw": {
+        "id": "Q9100",
+        "first_name": "steak",
+        "confidence": 0.82,
+        "notes": "A reddish oval piece with dark parallel marks."
+      },
+      "normalized_kind": "Meat",
+      "mapping_rationale": "Steak is a cut of meat.",
+      "id": "Q9100",
+      "asset": "clay",
+      "size": 32,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q8223",
+        "size": 32,
+        "asset": "raw_pot",
+        "path": "art/style05/polish/items/raw_pot_try2.png",
+        "sha256": "ce555aa1ddf41c7e1521b626b3dc4228a9572dbbe0427a5fd332f5563b7a5691"
+      },
+      "raw": {
+        "id": "Q8223",
+        "first_name": "bowl",
+        "confidence": 0.87,
+        "notes": "A shallow tan round container with layered side lines."
+      },
+      "normalized_kind": "Bowl",
+      "mapping_rationale": "A bowl does not name a pot or its unfired subtype.",
+      "id": "Q8223",
+      "asset": "raw_pot",
+      "size": 32,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q9339",
+        "size": 32,
+        "asset": "spear",
+        "path": "art/style05/env1/items/spear.png",
+        "sha256": "3f0448a9a2b6c7a07b77a90781b0864d089ca0e363de81f3d761384f5043f77d"
+      },
+      "raw": {
+        "id": "Q9339",
+        "first_name": "spear",
+        "confidence": 0.91,
+        "notes": "A long thin shaft with a pointed gray tip."
+      },
+      "normalized_kind": "Spear",
+      "mapping_rationale": "Explicit spear.",
+      "id": "Q9339",
+      "asset": "spear",
+      "size": 32,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q1690",
+        "size": 32,
+        "asset": "log_pile_large",
+        "path": "art/style05/polish/items/log_pile_large_try3.png",
+        "sha256": "5f2d74c324e08b13abde27e2793803b896581f5849aca5694e8ac4ce83f40a9e"
+      },
+      "raw": {
+        "id": "Q1690",
+        "first_name": "coin pile",
+        "confidence": 0.58,
+        "notes": "Many golden circles stacked into a triangular mound; material is uncertain."
+      },
+      "normalized_kind": "Coins",
+      "mapping_rationale": "Coins are not logs, stones or flint.",
+      "id": "Q1690",
+      "asset": "log_pile_large",
+      "size": 32,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q2336",
+        "size": 32,
+        "asset": "meat",
+        "path": "art/style05/env1/items/meat.png",
+        "sha256": "d3a8165f64dccb33577db38b7a0908c32a716c27dcbe34ec0d5e6e757e7f4714"
+      },
+      "raw": {
+        "id": "Q2336",
+        "first_name": "meat",
+        "confidence": 0.93,
+        "notes": "A red cut with a small pale projection at the right."
+      },
+      "normalized_kind": "Meat",
+      "mapping_rationale": "Explicit meat kind.",
+      "id": "Q2336",
+      "asset": "meat",
+      "size": 32,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q7630",
+        "size": 32,
+        "asset": "berry_basket",
+        "path": "art/style05/polish/items/berry_basket_try1.png",
+        "sha256": "4fe5d8d7d964ef649f1423bc2f92f6c80e615f07bd6ce73ebd1bb7a2fa1348ee"
+      },
+      "raw": {
+        "id": "Q7630",
+        "first_name": "basket",
+        "confidence": 0.96,
+        "notes": "A woven container with an arched handle and red contents."
+      },
+      "normalized_kind": "Basket",
+      "mapping_rationale": "Bare basket identifies the container but not berries/food. ENV1 exactness required berries in a basket; notes or image cannot supply omitted primary-name content.",
+      "id": "Q7630",
+      "asset": "berry_basket",
+      "size": 32,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q7692",
+        "size": 32,
+        "asset": "stone_pile",
+        "path": "art/style05/env/items/stone_pile.png",
+        "sha256": "0021fc6202894a18168d406d8865c43f4d91d50de939b66cf790a6cccecda1a7"
+      },
+      "raw": {
+        "id": "Q7692",
+        "first_name": "stone pile",
+        "confidence": 0.94,
+        "notes": "Several rounded brown-gray rocks."
+      },
+      "normalized_kind": "Stone",
+      "mapping_rationale": "Explicit stone pile.",
+      "id": "Q7692",
+      "asset": "stone_pile",
+      "size": 32,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q5610",
+        "size": 32,
+        "asset": "flint_blade",
+        "path": "art/style05/polish/items/flint_blade_try3.png",
+        "sha256": "1e823cd640c0ec151862f996a9c74fb2d3d885a2e311ef25d69009c04661541b"
+      },
+      "raw": {
+        "id": "Q5610",
+        "first_name": "stone blade",
+        "confidence": 0.9,
+        "notes": "A dark elongated chipped point."
+      },
+      "normalized_kind": "StoneBlade",
+      "mapping_rationale": "Blade material is not specifically flint.",
+      "id": "Q5610",
+      "asset": "flint_blade",
+      "size": 32,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q2449",
+        "size": 32,
+        "asset": "firewood",
+        "path": "art/style05/polish/items/firewood_try3.png",
+        "sha256": "ef9ba8786b98697b4814f15e04d8ce1cde705a20715886b3667275ef5fff3441"
+      },
+      "raw": {
+        "id": "Q2449",
+        "first_name": "firewood",
+        "confidence": 0.93,
+        "notes": "Crossed angular tan wood pieces."
+      },
+      "normalized_kind": "Firewood",
+      "mapping_rationale": "Explicit firewood kind.",
+      "id": "Q2449",
+      "asset": "firewood",
+      "size": 32,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q1556",
+        "size": 32,
+        "asset": "log_pile_small",
+        "path": "art/style05/polish/items/log_pile_small_try1.png",
+        "sha256": "450b767cfe8b8c73a6a418a061e46096e684305df7918d6b88bcdb380b5409f4"
+      },
+      "raw": {
+        "id": "Q1556",
+        "first_name": "logs",
+        "confidence": 0.98,
+        "notes": "A short bundle of cylindrical wood with round cut ends."
+      },
+      "normalized_kind": "Log",
+      "mapping_rationale": "Explicit logs; quantity is not scored.",
+      "id": "Q1556",
+      "asset": "log_pile_small",
+      "size": 32,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q6639",
+        "size": 64,
+        "asset": "cured_hide",
+        "path": "art/style05/polish/items/cured_hide_try2.png",
+        "sha256": "fafe250ef4bdb83308042d857e28b9604aea377c899d8f1d7699b57f74143997"
+      },
+      "raw": {
+        "id": "Q6639",
+        "first_name": "leather patch",
+        "confidence": 0.98,
+        "notes": "A square tan sheet with stitches around the perimeter."
+      },
+      "normalized_kind": "CuredHide",
+      "mapping_rationale": "Leather names processed hide; patch names the sheet material rather than raw hide.",
+      "id": "Q6639",
+      "asset": "cured_hide",
+      "size": 64,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q1422",
+        "size": 64,
+        "asset": "raw_pot",
+        "path": "art/style05/polish/items/raw_pot_try2.png",
+        "sha256": "ce555aa1ddf41c7e1521b626b3dc4228a9572dbbe0427a5fd332f5563b7a5691"
+      },
+      "raw": {
+        "id": "Q1422",
+        "first_name": "bowl",
+        "confidence": 0.89,
+        "notes": "A wide gray-brown vessel with a thick rim and horizontal bands."
+      },
+      "normalized_kind": "Bowl",
+      "mapping_rationale": "A bowl does not name a pot or its unfired subtype.",
+      "id": "Q1422",
+      "asset": "raw_pot",
+      "size": 64,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q6602",
+        "size": 64,
+        "asset": "log_pile_small",
+        "path": "art/style05/polish/items/log_pile_small_try1.png",
+        "sha256": "450b767cfe8b8c73a6a418a061e46096e684305df7918d6b88bcdb380b5409f4"
+      },
+      "raw": {
+        "id": "Q6602",
+        "first_name": "logs",
+        "confidence": 0.99,
+        "notes": "Three short bark-covered logs with circular cut ends."
+      },
+      "normalized_kind": "Log",
+      "mapping_rationale": "Explicit logs; quantity is not scored.",
+      "id": "Q6602",
+      "asset": "log_pile_small",
+      "size": 64,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q8816",
+        "size": 64,
+        "asset": "flint_blade",
+        "path": "art/style05/polish/items/flint_blade_try3.png",
+        "sha256": "1e823cd640c0ec151862f996a9c74fb2d3d885a2e311ef25d69009c04661541b"
+      },
+      "raw": {
+        "id": "Q8816",
+        "first_name": "stone blade",
+        "confidence": 0.99,
+        "notes": "A long dark flaked stone point."
+      },
+      "normalized_kind": "StoneBlade",
+      "mapping_rationale": "Blade material is not specifically flint.",
+      "id": "Q8816",
+      "asset": "flint_blade",
+      "size": 64,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q6325",
+        "size": 64,
+        "asset": "stone_pile",
+        "path": "art/style05/env/items/stone_pile.png",
+        "sha256": "0021fc6202894a18168d406d8865c43f4d91d50de939b66cf790a6cccecda1a7"
+      },
+      "raw": {
+        "id": "Q6325",
+        "first_name": "stone pile",
+        "confidence": 0.99,
+        "notes": "A cluster of rounded rocks."
+      },
+      "normalized_kind": "Stone",
+      "mapping_rationale": "Explicit stone pile.",
+      "id": "Q6325",
+      "asset": "stone_pile",
+      "size": 64,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q3064",
+        "size": 64,
+        "asset": "flint_nodule",
+        "path": "art/style05/polish/items/flint_nodule_try3.png",
+        "sha256": "4cf207b449e320eba43af0b5ed46bd9cabc5cda2f159a297e870edd5d89978f5"
+      },
+      "raw": {
+        "id": "Q3064",
+        "first_name": "ore",
+        "confidence": 0.79,
+        "notes": "A black angular mineral lump with a pale crust; exact mineral is unclear."
+      },
+      "normalized_kind": "Ore",
+      "mapping_rationale": "Generic ore does not identify flint.",
+      "id": "Q3064",
+      "asset": "flint_nodule",
+      "size": 64,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q7402",
+        "size": 64,
+        "asset": "flint_pile",
+        "path": "art/style05/polish/items/flint_pile_try3.png",
+        "sha256": "0b41ca263a7051adec77161c236098c07abe835a267ad2bd2913be5cbda51cce"
+      },
+      "raw": {
+        "id": "Q7402",
+        "first_name": "ore",
+        "confidence": 0.75,
+        "notes": "A gray rock cluster with substantial dark fractured areas; exact material is unclear."
+      },
+      "normalized_kind": "Ore",
+      "mapping_rationale": "Generic ore does not identify flint.",
+      "id": "Q7402",
+      "asset": "flint_pile",
+      "size": 64,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q8060",
+        "size": 64,
+        "asset": "log_pile_large",
+        "path": "art/style05/polish/items/log_pile_large_try3.png",
+        "sha256": "5f2d74c324e08b13abde27e2793803b896581f5849aca5694e8ac4ce83f40a9e"
+      },
+      "raw": {
+        "id": "Q8060",
+        "first_name": "log pile",
+        "confidence": 0.98,
+        "notes": "Stacked wood cylinders with clearly visible round cut ends."
+      },
+      "normalized_kind": "Log",
+      "mapping_rationale": "Explicit logs; quantity is not scored.",
+      "id": "Q8060",
+      "asset": "log_pile_large",
+      "size": 64,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q6141",
+        "size": 64,
+        "asset": "clay_pot_empty",
+        "path": "art/style05/env1/items/clay_pot_empty.png",
+        "sha256": "1e0fd136c5b99ad8f4114c9fd0d4b3b518c7c66cf7912812238a7d1b1ba68cd1"
+      },
+      "raw": {
+        "id": "Q6141",
+        "first_name": "clay pot",
+        "confidence": 0.99,
+        "notes": "A round terracotta vessel with two small side handles."
+      },
+      "normalized_kind": "ClayPot",
+      "mapping_rationale": "Ordinary clay-pot name denotes fired pottery; unfired state requires an explicit raw/unfired answer.",
+      "id": "Q6141",
+      "asset": "clay_pot_empty",
+      "size": 64,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q5973",
+        "size": 64,
+        "asset": "spear",
+        "path": "art/style05/env1/items/spear.png",
+        "sha256": "3f0448a9a2b6c7a07b77a90781b0864d089ca0e363de81f3d761384f5043f77d"
+      },
+      "raw": {
+        "id": "Q5973",
+        "first_name": "spear",
+        "confidence": 0.99,
+        "notes": "A stone point attached to a long wooden shaft."
+      },
+      "normalized_kind": "Spear",
+      "mapping_rationale": "Explicit spear.",
+      "id": "Q5973",
+      "asset": "spear",
+      "size": 64,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q1893",
+        "size": 64,
+        "asset": "ground_axe",
+        "path": "art/style05/polish/items/ground_axe_try3.png",
+        "sha256": "dcf4c2afb47e86e24d848127a91b959ac1acdfcf2eb70dcc55315e1ee1981d29"
+      },
+      "raw": {
+        "id": "Q8193",
+        "first_name": "hoe",
+        "confidence": 0.87,
+        "notes": "A broad green-gray blade attached at a right angle to a wooden handle."
+      },
+      "normalized_kind": "Hoe",
+      "mapping_rationale": "Hoe is not an axe.",
+      "id": "Q1893",
+      "asset": "ground_axe",
+      "size": 64,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q9668",
+        "size": 64,
+        "asset": "berry_basket",
+        "path": "art/style05/polish/items/berry_basket_try1.png",
+        "sha256": "4fe5d8d7d964ef649f1423bc2f92f6c80e615f07bd6ce73ebd1bb7a2fa1348ee"
+      },
+      "raw": {
+        "id": "Q9668",
+        "first_name": "basket",
+        "confidence": 0.99,
+        "notes": "A woven handled basket filled with small red contents."
+      },
+      "normalized_kind": "Basket",
+      "mapping_rationale": "Bare basket identifies the container but not berries/food. ENV1 exactness required berries in a basket; notes or image cannot supply omitted primary-name content.",
+      "id": "Q9668",
+      "asset": "berry_basket",
+      "size": 64,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q6025",
+        "size": 64,
+        "asset": "stone_axe",
+        "path": "art/style05/polish/items/stone_axe_try1.png",
+        "sha256": "128e62930b1b4ca7de86f19dc74d1d834bf87ccc281dd28c02ef2f6fe9a32600"
+      },
+      "raw": {
+        "id": "Q6025",
+        "first_name": "axe",
+        "confidence": 0.99,
+        "notes": "A chipped gray head bound to a short wooden handle."
+      },
+      "normalized_kind": "UnknownAxe",
+      "mapping_rationale": "Material and ground/polished subtype not stated.",
+      "id": "Q6025",
+      "asset": "stone_axe",
+      "size": 64,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q8482",
+        "size": 64,
+        "asset": "hide_wrap",
+        "path": "art/style05/polish/items/hide_wrap_try2.png",
+        "sha256": "f18a82e2c9f253a071ba5d1c65cbf07d79e44defc1f42509fbe18c96a500f1cb"
+      },
+      "raw": {
+        "id": "Q6482",
+        "first_name": "animal hide",
+        "confidence": 0.97,
+        "notes": "A narrow tan pelt with short projecting limbs and pale edging."
+      },
+      "normalized_kind": "Hide",
+      "mapping_rationale": "Generic hide does not identify wolf or cured subtype.",
+      "id": "Q8482",
+      "asset": "hide_wrap",
+      "size": 64,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q6271",
+        "size": 64,
+        "asset": "meat",
+        "path": "art/style05/env1/items/meat.png",
+        "sha256": "d3a8165f64dccb33577db38b7a0908c32a716c27dcbe34ec0d5e6e757e7f4714"
+      },
+      "raw": {
+        "id": "Q6271",
+        "first_name": "meat",
+        "confidence": 0.99,
+        "notes": "A red cut of meat with a protruding bone."
+      },
+      "normalized_kind": "Meat",
+      "mapping_rationale": "Explicit meat kind.",
+      "id": "Q6271",
+      "asset": "meat",
+      "size": 64,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q7833",
+        "size": 64,
+        "asset": "clay_pot_filled",
+        "path": "art/style05/env1/items/clay_pot_filled.png",
+        "sha256": "f0e0dad614a9a0d5c394099cdaf00f1af1e40e25234cd76b08af50cd46c5d4b3"
+      },
+      "raw": {
+        "id": "Q7833",
+        "first_name": "water pot",
+        "confidence": 0.99,
+        "notes": "A handled terracotta vessel containing blue water."
+      },
+      "normalized_kind": "ClayPot",
+      "mapping_rationale": "Primary pot/container name; water state distinguishes filled variant but not a separate kind.",
+      "id": "Q7833",
+      "asset": "clay_pot_filled",
+      "size": 64,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q9345",
+        "size": 64,
+        "asset": "hide",
+        "path": "art/style05/env/items/hide.png",
+        "sha256": "86ad39457f8f516e88bbd10b7c8aa6c1e1afeecb3a206b33cdb19e67cbddbf6e"
+      },
+      "raw": {
+        "id": "Q9345",
+        "first_name": "animal hide",
+        "confidence": 0.99,
+        "notes": "A broad tan pelt spread flat with projecting legs."
+      },
+      "normalized_kind": "Hide",
+      "mapping_rationale": "Generic hide does not identify wolf or cured subtype.",
+      "id": "Q9345",
+      "asset": "hide",
+      "size": 64,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q5063",
+        "size": 64,
+        "asset": "fur_cloak",
+        "path": "art/style05/polish/items/fur_cloak_try2.png",
+        "sha256": "2d9596bbb28055df880265db643c3526c69e126d9efd0983847f0e4c089b8c32"
+      },
+      "raw": {
+        "id": "Q5063",
+        "first_name": "fur coat",
+        "confidence": 0.94,
+        "notes": "A brown sleeved garment with pale fur trim and an open front."
+      },
+      "normalized_kind": "FurCoat",
+      "mapping_rationale": "Recognised as garment, but coat is not exact cloak/cape kind.",
+      "id": "Q5063",
+      "asset": "fur_cloak",
+      "size": 64,
+      "exact": false,
+      "garment": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q5465",
+        "size": 64,
+        "asset": "wolf_hide",
+        "path": "art/style05/polish/items/wolf_hide_try2.png",
+        "sha256": "9b7e00166bbb51a9a206c8abb732ff5c4a5e1196bf297944fd4353f362bd8e66"
+      },
+      "raw": {
+        "id": "Q5465",
+        "first_name": "animal hide",
+        "confidence": 0.95,
+        "notes": "A gray-brown spread pelt with pale fur edging and narrow limbs."
+      },
+      "normalized_kind": "Hide",
+      "mapping_rationale": "Generic hide does not identify wolf or cured subtype.",
+      "id": "Q5465",
+      "asset": "wolf_hide",
+      "size": 64,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q7943",
+        "size": 64,
+        "asset": "clay",
+        "path": "art/style05/polish/items/clay_try3.png",
+        "sha256": "31c518a4272368573fcef3f1c2e25aeccb1ae1c83fa6c55cda9b8711c0b57edb"
+      },
+      "raw": {
+        "id": "Q7943",
+        "first_name": "steak",
+        "confidence": 0.99,
+        "notes": "A browned cut of meat with dark grill-like stripes."
+      },
+      "normalized_kind": "Meat",
+      "mapping_rationale": "Steak is a cut of meat.",
+      "id": "Q7943",
+      "asset": "clay",
+      "size": 64,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q3033",
+        "size": 64,
+        "asset": "firewood",
+        "path": "art/style05/polish/items/firewood_try3.png",
+        "sha256": "ef9ba8786b98697b4814f15e04d8ce1cde705a20715886b3667275ef5fff3441"
+      },
+      "raw": {
+        "id": "Q3033",
+        "first_name": "firewood",
+        "confidence": 0.99,
+        "notes": "Crossed split pieces of wood with pale cut faces and darker bark."
+      },
+      "normalized_kind": "Firewood",
+      "mapping_rationale": "Explicit firewood kind.",
+      "id": "Q3033",
+      "asset": "firewood",
+      "size": 64,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "Q6332",
+        "size": 64,
+        "asset": "log_pile_medium",
+        "path": "art/style05/polish/items/log_pile_medium_try3.png",
+        "sha256": "f507830bf46e4e8cbeb898da8b044ea4ec85df44b82c131a016d109e94ff1021"
+      },
+      "raw": {
+        "id": "Q6332",
+        "first_name": "log pile",
+        "confidence": 0.93,
+        "notes": "A pyramid of round wood ends with faint growth-ring details."
+      },
+      "normalized_kind": "Log",
+      "mapping_rationale": "Explicit logs; quantity is not scored.",
+      "id": "Q6332",
+      "asset": "log_pile_medium",
+      "size": 64,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q9811",
+        "size": 32,
+        "asset": "hide_wrap",
+        "path": "art/style05/polish/items/hide_wrap_try2.png",
+        "sha256": "f18a82e2c9f253a071ba5d1c65cbf07d79e44defc1f42509fbe18c96a500f1cb"
+      },
+      "raw": {
+        "id": "Q9811",
+        "first_name": "animal hide",
+        "confidence": 0.74,
+        "notes": "Narrow tan pelt silhouette."
+      },
+      "normalized_kind": "Hide",
+      "mapping_rationale": "Generic hide does not identify wolf or cured subtype.",
+      "id": "Q9811",
+      "asset": "hide_wrap",
+      "size": 32,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q2704",
+        "size": 32,
+        "asset": "log_pile_medium",
+        "path": "art/style05/polish/items/log_pile_medium_try3.png",
+        "sha256": "f507830bf46e4e8cbeb898da8b044ea4ec85df44b82c131a016d109e94ff1021"
+      },
+      "raw": {
+        "id": "Q2704",
+        "first_name": "log pile",
+        "confidence": 0.84,
+        "notes": "Several round golden cut ends in a small stack."
+      },
+      "normalized_kind": "Log",
+      "mapping_rationale": "Explicit logs; quantity is not scored.",
+      "id": "Q2704",
+      "asset": "log_pile_medium",
+      "size": 32,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q7049",
+        "size": 32,
+        "asset": "cured_hide",
+        "path": "art/style05/polish/items/cured_hide_try2.png",
+        "sha256": "fafe250ef4bdb83308042d857e28b9604aea377c899d8f1d7699b57f74143997"
+      },
+      "raw": {
+        "id": "Q7049",
+        "first_name": "cloth square",
+        "confidence": 0.69,
+        "notes": "Pale square with a textured or stitched edge."
+      },
+      "normalized_kind": "Cloth",
+      "mapping_rationale": "Cloth is not cured leather.",
+      "id": "Q7049",
+      "asset": "cured_hide",
+      "size": 32,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q2556",
+        "size": 32,
+        "asset": "flint_pile",
+        "path": "art/style05/polish/items/flint_pile_try3.png",
+        "sha256": "0b41ca263a7051adec77161c236098c07abe835a267ad2bd2913be5cbda51cce"
+      },
+      "raw": {
+        "id": "Q2556",
+        "first_name": "stone pile",
+        "confidence": 0.55,
+        "notes": "Small cluster of dark and pale angular pieces."
+      },
+      "normalized_kind": "Stone",
+      "mapping_rationale": "Explicit stone pile.",
+      "id": "Q2556",
+      "asset": "flint_pile",
+      "size": 32,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q6488",
+        "size": 32,
+        "asset": "hide",
+        "path": "art/style05/env/items/hide.png",
+        "sha256": "86ad39457f8f516e88bbd10b7c8aa6c1e1afeecb3a206b33cdb19e67cbddbf6e"
+      },
+      "raw": {
+        "id": "Q6488",
+        "first_name": "animal hide",
+        "confidence": 0.89,
+        "notes": "Spread tan pelt with projecting limbs."
+      },
+      "normalized_kind": "Hide",
+      "mapping_rationale": "Generic hide does not identify wolf or cured subtype.",
+      "id": "Q6488",
+      "asset": "hide",
+      "size": 32,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q8686",
+        "size": 32,
+        "asset": "fur_cloak",
+        "path": "art/style05/polish/items/fur_cloak_try2.png",
+        "sha256": "2d9596bbb28055df880265db643c3526c69e126d9efd0983847f0e4c089b8c32"
+      },
+      "raw": {
+        "id": "Q8686",
+        "first_name": "tunic",
+        "confidence": 0.79,
+        "notes": "Brown sleeveless garment shape with an open neck."
+      },
+      "normalized_kind": "Tunic",
+      "mapping_rationale": "Garment recognised, but tunic is neither the exact wrap nor cloak kind.",
+      "id": "Q8686",
+      "asset": "fur_cloak",
+      "size": 32,
+      "exact": false,
+      "garment": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q6817",
+        "size": 32,
+        "asset": "clay_pot_filled",
+        "path": "art/style05/env1/items/clay_pot_filled.png",
+        "sha256": "f0e0dad614a9a0d5c394099cdaf00f1af1e40e25234cd76b08af50cd46c5d4b3"
+      },
+      "raw": {
+        "id": "Q6817",
+        "first_name": "bucket",
+        "confidence": 0.96,
+        "notes": "Brown vessel with blue contents and a curved handle."
+      },
+      "normalized_kind": "Bucket",
+      "mapping_rationale": "Bucket is not a pot.",
+      "id": "Q6817",
+      "asset": "clay_pot_filled",
+      "size": 32,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q5907",
+        "size": 32,
+        "asset": "flint_nodule",
+        "path": "art/style05/polish/items/flint_nodule_try3.png",
+        "sha256": "4cf207b449e320eba43af0b5ed46bd9cabc5cda2f159a297e870edd5d89978f5"
+      },
+      "raw": {
+        "id": "Q5907",
+        "first_name": "ore rock",
+        "confidence": 0.65,
+        "notes": "Dark rounded angular lump with a pale patch."
+      },
+      "normalized_kind": "Ore",
+      "mapping_rationale": "Ore rock does not specifically identify flint.",
+      "id": "Q5907",
+      "asset": "flint_nodule",
+      "size": 32,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q1570",
+        "size": 32,
+        "asset": "clay_pot_empty",
+        "path": "art/style05/env1/items/clay_pot_empty.png",
+        "sha256": "1e0fd136c5b99ad8f4114c9fd0d4b3b518c7c66cf7912812238a7d1b1ba68cd1"
+      },
+      "raw": {
+        "id": "Q1570",
+        "first_name": "pot",
+        "confidence": 0.98,
+        "notes": "Round brown open vessel."
+      },
+      "normalized_kind": "ClayPot",
+      "mapping_rationale": "Ordinary pot name identifies pottery; raw/unfired subtype requires explicit identification under frozen protocol.",
+      "id": "Q1570",
+      "asset": "clay_pot_empty",
+      "size": 32,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q5004",
+        "size": 32,
+        "asset": "wolf_hide",
+        "path": "art/style05/polish/items/wolf_hide_try2.png",
+        "sha256": "9b7e00166bbb51a9a206c8abb732ff5c4a5e1196bf297944fd4353f362bd8e66"
+      },
+      "raw": {
+        "id": "Q5004",
+        "first_name": "animal hide",
+        "confidence": 0.63,
+        "notes": "Pale splayed shape with thin limb-like points."
+      },
+      "normalized_kind": "Hide",
+      "mapping_rationale": "Generic hide does not identify wolf or cured subtype.",
+      "id": "Q5004",
+      "asset": "wolf_hide",
+      "size": 32,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q4101",
+        "size": 32,
+        "asset": "stone_axe",
+        "path": "art/style05/polish/items/stone_axe_try1.png",
+        "sha256": "128e62930b1b4ca7de86f19dc74d1d834bf87ccc281dd28c02ef2f6fe9a32600"
+      },
+      "raw": {
+        "id": "Q4101",
+        "first_name": "axe",
+        "confidence": 0.97,
+        "notes": "Gray head on an angled brown handle."
+      },
+      "normalized_kind": "UnknownAxe",
+      "mapping_rationale": "Material and ground/polished subtype not stated.",
+      "id": "Q4101",
+      "asset": "stone_axe",
+      "size": 32,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q4358",
+        "size": 32,
+        "asset": "ground_axe",
+        "path": "art/style05/polish/items/ground_axe_try3.png",
+        "sha256": "dcf4c2afb47e86e24d848127a91b959ac1acdfcf2eb70dcc55315e1ee1981d29"
+      },
+      "raw": {
+        "id": "Q4358",
+        "first_name": "cleaver",
+        "confidence": 0.63,
+        "notes": "Broad green-gray blade with a short brown side handle."
+      },
+      "normalized_kind": "Cleaver",
+      "mapping_rationale": "Cleaver does not name a flint blade or axe subtype.",
+      "id": "Q4358",
+      "asset": "ground_axe",
+      "size": 32,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q9100",
+        "size": 32,
+        "asset": "clay",
+        "path": "art/style05/polish/items/clay_try3.png",
+        "sha256": "31c518a4272368573fcef3f1c2e25aeccb1ae1c83fa6c55cda9b8711c0b57edb"
+      },
+      "raw": {
+        "id": "Q9100",
+        "first_name": "steak",
+        "confidence": 0.88,
+        "notes": "Brown-red oval with dark parallel grill-like stripes."
+      },
+      "normalized_kind": "Meat",
+      "mapping_rationale": "Steak is a cut of meat.",
+      "id": "Q9100",
+      "asset": "clay",
+      "size": 32,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q8223",
+        "size": 32,
+        "asset": "raw_pot",
+        "path": "art/style05/polish/items/raw_pot_try2.png",
+        "sha256": "ce555aa1ddf41c7e1521b626b3dc4228a9572dbbe0427a5fd332f5563b7a5691"
+      },
+      "raw": {
+        "id": "Q8223",
+        "first_name": "bowl",
+        "confidence": 0.93,
+        "notes": "Shallow round ribbed open vessel."
+      },
+      "normalized_kind": "Bowl",
+      "mapping_rationale": "A bowl does not name a pot or its unfired subtype.",
+      "id": "Q8223",
+      "asset": "raw_pot",
+      "size": 32,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q9339",
+        "size": 32,
+        "asset": "spear",
+        "path": "art/style05/env1/items/spear.png",
+        "sha256": "3f0448a9a2b6c7a07b77a90781b0864d089ca0e363de81f3d761384f5043f77d"
+      },
+      "raw": {
+        "id": "Q9339",
+        "first_name": "spear",
+        "confidence": 0.86,
+        "notes": "Thin wooden shaft with a small pointed head."
+      },
+      "normalized_kind": "Spear",
+      "mapping_rationale": "Explicit spear.",
+      "id": "Q9339",
+      "asset": "spear",
+      "size": 32,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q1690",
+        "size": 32,
+        "asset": "log_pile_large",
+        "path": "art/style05/polish/items/log_pile_large_try3.png",
+        "sha256": "5f2d74c324e08b13abde27e2793803b896581f5849aca5694e8ac4ce83f40a9e"
+      },
+      "raw": {
+        "id": "Q1690",
+        "first_name": "log pile",
+        "confidence": 0.78,
+        "notes": "Triangular stack of small yellow-brown circular ends."
+      },
+      "normalized_kind": "Log",
+      "mapping_rationale": "Explicit logs; quantity is not scored.",
+      "id": "Q1690",
+      "asset": "log_pile_large",
+      "size": 32,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q2336",
+        "size": 32,
+        "asset": "meat",
+        "path": "art/style05/env1/items/meat.png",
+        "sha256": "d3a8165f64dccb33577db38b7a0908c32a716c27dcbe34ec0d5e6e757e7f4714"
+      },
+      "raw": {
+        "id": "Q2336",
+        "first_name": "meat",
+        "confidence": 0.94,
+        "notes": "Red chunk with a small pale bone at one end."
+      },
+      "normalized_kind": "Meat",
+      "mapping_rationale": "Explicit meat kind.",
+      "id": "Q2336",
+      "asset": "meat",
+      "size": 32,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q7630",
+        "size": 32,
+        "asset": "berry_basket",
+        "path": "art/style05/polish/items/berry_basket_try1.png",
+        "sha256": "4fe5d8d7d964ef649f1423bc2f92f6c80e615f07bd6ce73ebd1bb7a2fa1348ee"
+      },
+      "raw": {
+        "id": "Q7630",
+        "first_name": "basket",
+        "confidence": 0.98,
+        "notes": "Woven brown container with an arched handle and red contents."
+      },
+      "normalized_kind": "Basket",
+      "mapping_rationale": "Bare basket identifies the container but not berries/food. ENV1 exactness required berries in a basket; notes or image cannot supply omitted primary-name content.",
+      "id": "Q7630",
+      "asset": "berry_basket",
+      "size": 32,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q7692",
+        "size": 32,
+        "asset": "stone_pile",
+        "path": "art/style05/env/items/stone_pile.png",
+        "sha256": "0021fc6202894a18168d406d8865c43f4d91d50de939b66cf790a6cccecda1a7"
+      },
+      "raw": {
+        "id": "Q7692",
+        "first_name": "stone pile",
+        "confidence": 0.97,
+        "notes": "Several tan rounded rocks."
+      },
+      "normalized_kind": "Stone",
+      "mapping_rationale": "Explicit stone pile.",
+      "id": "Q7692",
+      "asset": "stone_pile",
+      "size": 32,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q5610",
+        "size": 32,
+        "asset": "flint_blade",
+        "path": "art/style05/polish/items/flint_blade_try3.png",
+        "sha256": "1e823cd640c0ec151862f996a9c74fb2d3d885a2e311ef25d69009c04661541b"
+      },
+      "raw": {
+        "id": "Q5610",
+        "first_name": "spearhead",
+        "confidence": 0.83,
+        "notes": "Long dark pointed chipped shape."
+      },
+      "normalized_kind": "Spearhead",
+      "mapping_rationale": "A detached spearhead is neither a full spear nor an explicitly identified flint blade.",
+      "id": "Q5610",
+      "asset": "flint_blade",
+      "size": 32,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q2449",
+        "size": 32,
+        "asset": "firewood",
+        "path": "art/style05/polish/items/firewood_try3.png",
+        "sha256": "ef9ba8786b98697b4814f15e04d8ce1cde705a20715886b3667275ef5fff3441"
+      },
+      "raw": {
+        "id": "Q2449",
+        "first_name": "firewood",
+        "confidence": 0.92,
+        "notes": "Several crossed split wooden pieces."
+      },
+      "normalized_kind": "Firewood",
+      "mapping_rationale": "Explicit firewood kind.",
+      "id": "Q2449",
+      "asset": "firewood",
+      "size": 32,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q1556",
+        "size": 32,
+        "asset": "log_pile_small",
+        "path": "art/style05/polish/items/log_pile_small_try1.png",
+        "sha256": "450b767cfe8b8c73a6a418a061e46096e684305df7918d6b88bcdb380b5409f4"
+      },
+      "raw": {
+        "id": "Q1556",
+        "first_name": "logs",
+        "confidence": 0.97,
+        "notes": "Short bundle of brown logs with visible cut ends."
+      },
+      "normalized_kind": "Log",
+      "mapping_rationale": "Explicit logs; quantity is not scored.",
+      "id": "Q1556",
+      "asset": "log_pile_small",
+      "size": 32,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q6639",
+        "size": 64,
+        "asset": "cured_hide",
+        "path": "art/style05/polish/items/cured_hide_try2.png",
+        "sha256": "fafe250ef4bdb83308042d857e28b9604aea377c899d8f1d7699b57f74143997"
+      },
+      "raw": {
+        "id": "Q6639",
+        "first_name": "leather sheet",
+        "confidence": 0.87,
+        "notes": "Pale tan square with stitched edges and a curled corner."
+      },
+      "normalized_kind": "CuredHide",
+      "mapping_rationale": "Leather explicitly denotes processed hide; sheet corresponds to cured hide material.",
+      "id": "Q6639",
+      "asset": "cured_hide",
+      "size": 64,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q1422",
+        "size": 64,
+        "asset": "raw_pot",
+        "path": "art/style05/polish/items/raw_pot_try2.png",
+        "sha256": "ce555aa1ddf41c7e1521b626b3dc4228a9572dbbe0427a5fd332f5563b7a5691"
+      },
+      "raw": {
+        "id": "Q1422",
+        "first_name": "bowl",
+        "confidence": 0.96,
+        "notes": "Round gray-brown open vessel with thick coiled sides."
+      },
+      "normalized_kind": "Bowl",
+      "mapping_rationale": "A bowl does not name a pot or its unfired subtype.",
+      "id": "Q1422",
+      "asset": "raw_pot",
+      "size": 64,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q6602",
+        "size": 64,
+        "asset": "log_pile_small",
+        "path": "art/style05/polish/items/log_pile_small_try1.png",
+        "sha256": "450b767cfe8b8c73a6a418a061e46096e684305df7918d6b88bcdb380b5409f4"
+      },
+      "raw": {
+        "id": "Q6602",
+        "first_name": "logs",
+        "confidence": 0.99,
+        "notes": "Three bark-covered cut logs."
+      },
+      "normalized_kind": "Log",
+      "mapping_rationale": "Explicit logs; quantity is not scored.",
+      "id": "Q6602",
+      "asset": "log_pile_small",
+      "size": 64,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q8816",
+        "size": 64,
+        "asset": "flint_blade",
+        "path": "art/style05/polish/items/flint_blade_try3.png",
+        "sha256": "1e823cd640c0ec151862f996a9c74fb2d3d885a2e311ef25d69009c04661541b"
+      },
+      "raw": {
+        "id": "Q8816",
+        "first_name": "stone blade",
+        "confidence": 0.96,
+        "notes": "Long dark flaked blade with a pointed end."
+      },
+      "normalized_kind": "StoneBlade",
+      "mapping_rationale": "Blade material is not specifically flint.",
+      "id": "Q8816",
+      "asset": "flint_blade",
+      "size": 64,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q6325",
+        "size": 64,
+        "asset": "stone_pile",
+        "path": "art/style05/env/items/stone_pile.png",
+        "sha256": "0021fc6202894a18168d406d8865c43f4d91d50de939b66cf790a6cccecda1a7"
+      },
+      "raw": {
+        "id": "Q6325",
+        "first_name": "stone pile",
+        "confidence": 0.99,
+        "notes": "Five rounded tan-gray rocks."
+      },
+      "normalized_kind": "Stone",
+      "mapping_rationale": "Explicit stone pile.",
+      "id": "Q6325",
+      "asset": "stone_pile",
+      "size": 64,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q3064",
+        "size": 64,
+        "asset": "flint_nodule",
+        "path": "art/style05/polish/items/flint_nodule_try3.png",
+        "sha256": "4cf207b449e320eba43af0b5ed46bd9cabc5cda2f159a297e870edd5d89978f5"
+      },
+      "raw": {
+        "id": "Q3064",
+        "first_name": "flint",
+        "confidence": 0.88,
+        "notes": "Black chipped rock with a pale rough outer rind."
+      },
+      "normalized_kind": "Flint",
+      "mapping_rationale": "Explicit flint material; nodule and pile are one kind.",
+      "id": "Q3064",
+      "asset": "flint_nodule",
+      "size": 64,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q7402",
+        "size": 64,
+        "asset": "flint_pile",
+        "path": "art/style05/polish/items/flint_pile_try3.png",
+        "sha256": "0b41ca263a7051adec77161c236098c07abe835a267ad2bd2913be5cbda51cce"
+      },
+      "raw": {
+        "id": "Q7402",
+        "first_name": "ore rock",
+        "confidence": 0.72,
+        "notes": "Irregular pale rock pieces with broad black mineral patches."
+      },
+      "normalized_kind": "Ore",
+      "mapping_rationale": "Ore rock does not specifically identify flint.",
+      "id": "Q7402",
+      "asset": "flint_pile",
+      "size": 64,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q8060",
+        "size": 64,
+        "asset": "log_pile_large",
+        "path": "art/style05/polish/items/log_pile_large_try3.png",
+        "sha256": "5f2d74c324e08b13abde27e2793803b896581f5849aca5694e8ac4ce83f40a9e"
+      },
+      "raw": {
+        "id": "Q8060",
+        "first_name": "log pile",
+        "confidence": 0.99,
+        "notes": "Large triangular stack of logs with circular cut ends facing forward."
+      },
+      "normalized_kind": "Log",
+      "mapping_rationale": "Explicit logs; quantity is not scored.",
+      "id": "Q8060",
+      "asset": "log_pile_large",
+      "size": 64,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q6141",
+        "size": 64,
+        "asset": "clay_pot_empty",
+        "path": "art/style05/env1/items/clay_pot_empty.png",
+        "sha256": "1e0fd136c5b99ad8f4114c9fd0d4b3b518c7c66cf7912812238a7d1b1ba68cd1"
+      },
+      "raw": {
+        "id": "Q6141",
+        "first_name": "pot",
+        "confidence": 0.99,
+        "notes": "Brown round open clay pot with two small side handles."
+      },
+      "normalized_kind": "ClayPot",
+      "mapping_rationale": "Ordinary pot name identifies pottery; raw/unfired subtype requires explicit identification under frozen protocol.",
+      "id": "Q6141",
+      "asset": "clay_pot_empty",
+      "size": 64,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q5973",
+        "size": 64,
+        "asset": "spear",
+        "path": "art/style05/env1/items/spear.png",
+        "sha256": "3f0448a9a2b6c7a07b77a90781b0864d089ca0e363de81f3d761384f5043f77d"
+      },
+      "raw": {
+        "id": "Q5973",
+        "first_name": "spear",
+        "confidence": 0.99,
+        "notes": "Long wooden shaft with a pointed gray head."
+      },
+      "normalized_kind": "Spear",
+      "mapping_rationale": "Explicit spear.",
+      "id": "Q5973",
+      "asset": "spear",
+      "size": 64,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q1893",
+        "size": 64,
+        "asset": "ground_axe",
+        "path": "art/style05/polish/items/ground_axe_try3.png",
+        "sha256": "dcf4c2afb47e86e24d848127a91b959ac1acdfcf2eb70dcc55315e1ee1981d29"
+      },
+      "raw": {
+        "id": "Q1893",
+        "first_name": "axe",
+        "confidence": 0.93,
+        "notes": "Broad green metal blade on a short wooden handle."
+      },
+      "normalized_kind": "UnknownAxe",
+      "mapping_rationale": "Material and ground/polished subtype not stated.",
+      "id": "Q1893",
+      "asset": "ground_axe",
+      "size": 64,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q9668",
+        "size": 64,
+        "asset": "berry_basket",
+        "path": "art/style05/polish/items/berry_basket_try1.png",
+        "sha256": "4fe5d8d7d964ef649f1423bc2f92f6c80e615f07bd6ce73ebd1bb7a2fa1348ee"
+      },
+      "raw": {
+        "id": "Q9668",
+        "first_name": "basket",
+        "confidence": 0.99,
+        "notes": "Woven handled basket filled with red berries."
+      },
+      "normalized_kind": "Basket",
+      "mapping_rationale": "Bare basket identifies the container but not berries/food. ENV1 exactness required berries in a basket; notes or image cannot supply omitted primary-name content.",
+      "id": "Q9668",
+      "asset": "berry_basket",
+      "size": 64,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q6025",
+        "size": 64,
+        "asset": "stone_axe",
+        "path": "art/style05/polish/items/stone_axe_try1.png",
+        "sha256": "128e62930b1b4ca7de86f19dc74d1d834bf87ccc281dd28c02ef2f6fe9a32600"
+      },
+      "raw": {
+        "id": "Q6025",
+        "first_name": "axe",
+        "confidence": 0.99,
+        "notes": "Chipped gray stone axe head tied to a wooden handle."
+      },
+      "normalized_kind": "UnknownAxe",
+      "mapping_rationale": "Material and ground/polished subtype not stated.",
+      "id": "Q6025",
+      "asset": "stone_axe",
+      "size": 64,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q8482",
+        "size": 64,
+        "asset": "hide_wrap",
+        "path": "art/style05/polish/items/hide_wrap_try2.png",
+        "sha256": "f18a82e2c9f253a071ba5d1c65cbf07d79e44defc1f42509fbe18c96a500f1cb"
+      },
+      "raw": {
+        "id": "Q5482",
+        "first_name": "animal hide",
+        "confidence": 0.97,
+        "notes": "Long narrow tan hide with leg projections."
+      },
+      "normalized_kind": "Hide",
+      "mapping_rationale": "Generic hide does not identify wolf or cured subtype.",
+      "id": "Q8482",
+      "asset": "hide_wrap",
+      "size": 64,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q6271",
+        "size": 64,
+        "asset": "meat",
+        "path": "art/style05/env1/items/meat.png",
+        "sha256": "d3a8165f64dccb33577db38b7a0908c32a716c27dcbe34ec0d5e6e757e7f4714"
+      },
+      "raw": {
+        "id": "Q6271",
+        "first_name": "meat",
+        "confidence": 0.99,
+        "notes": "Red cut of meat attached to a short pale bone."
+      },
+      "normalized_kind": "Meat",
+      "mapping_rationale": "Explicit meat kind.",
+      "id": "Q6271",
+      "asset": "meat",
+      "size": 64,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q7833",
+        "size": 64,
+        "asset": "clay_pot_filled",
+        "path": "art/style05/env1/items/clay_pot_filled.png",
+        "sha256": "f0e0dad614a9a0d5c394099cdaf00f1af1e40e25234cd76b08af50cd46c5d4b3"
+      },
+      "raw": {
+        "id": "Q7833",
+        "first_name": "water pot",
+        "confidence": 0.98,
+        "notes": "Round orange pot with blue water and two small side handles."
+      },
+      "normalized_kind": "ClayPot",
+      "mapping_rationale": "Primary pot/container name; water state distinguishes filled variant but not a separate kind.",
+      "id": "Q7833",
+      "asset": "clay_pot_filled",
+      "size": 64,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q9345",
+        "size": 64,
+        "asset": "hide",
+        "path": "art/style05/env/items/hide.png",
+        "sha256": "86ad39457f8f516e88bbd10b7c8aa6c1e1afeecb3a206b33cdb19e67cbddbf6e"
+      },
+      "raw": {
+        "id": "Q9345",
+        "first_name": "animal hide",
+        "confidence": 0.99,
+        "notes": "Large spread tan hide with ragged edges and limb projections."
+      },
+      "normalized_kind": "Hide",
+      "mapping_rationale": "Generic hide does not identify wolf or cured subtype.",
+      "id": "Q9345",
+      "asset": "hide",
+      "size": 64,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q5063",
+        "size": 64,
+        "asset": "fur_cloak",
+        "path": "art/style05/polish/items/fur_cloak_try2.png",
+        "sha256": "2d9596bbb28055df880265db643c3526c69e126d9efd0983847f0e4c089b8c32"
+      },
+      "raw": {
+        "id": "Q5063",
+        "first_name": "tunic",
+        "confidence": 0.96,
+        "notes": "Brown fur garment with a neck opening and short sleeves."
+      },
+      "normalized_kind": "Tunic",
+      "mapping_rationale": "Garment recognised, but tunic is neither the exact wrap nor cloak kind.",
+      "id": "Q5063",
+      "asset": "fur_cloak",
+      "size": 64,
+      "exact": false,
+      "garment": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q5465",
+        "size": 64,
+        "asset": "wolf_hide",
+        "path": "art/style05/polish/items/wolf_hide_try2.png",
+        "sha256": "9b7e00166bbb51a9a206c8abb732ff5c4a5e1196bf297944fd4353f362bd8e66"
+      },
+      "raw": {
+        "id": "Q5465",
+        "first_name": "animal hide",
+        "confidence": 0.97,
+        "notes": "Small spread gray hide with pale edging."
+      },
+      "normalized_kind": "Hide",
+      "mapping_rationale": "Generic hide does not identify wolf or cured subtype.",
+      "id": "Q5465",
+      "asset": "wolf_hide",
+      "size": 64,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q7943",
+        "size": 64,
+        "asset": "clay",
+        "path": "art/style05/polish/items/clay_try3.png",
+        "sha256": "31c518a4272368573fcef3f1c2e25aeccb1ae1c83fa6c55cda9b8711c0b57edb"
+      },
+      "raw": {
+        "id": "Q7943",
+        "first_name": "steak",
+        "confidence": 0.99,
+        "notes": "Brown cooked meat with parallel dark grill marks."
+      },
+      "normalized_kind": "Meat",
+      "mapping_rationale": "Steak is a cut of meat.",
+      "id": "Q7943",
+      "asset": "clay",
+      "size": 64,
+      "exact": false,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q3033",
+        "size": 64,
+        "asset": "firewood",
+        "path": "art/style05/polish/items/firewood_try3.png",
+        "sha256": "ef9ba8786b98697b4814f15e04d8ce1cde705a20715886b3667275ef5fff3441"
+      },
+      "raw": {
+        "id": "Q3033",
+        "first_name": "firewood",
+        "confidence": 0.99,
+        "notes": "Crossed pieces of split wood with pale cut faces."
+      },
+      "normalized_kind": "Firewood",
+      "mapping_rationale": "Explicit firewood kind.",
+      "id": "Q3033",
+      "asset": "firewood",
+      "size": 64,
+      "exact": true,
+      "garment": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "Q6332",
+        "size": 64,
+        "asset": "log_pile_medium",
+        "path": "art/style05/polish/items/log_pile_medium_try3.png",
+        "sha256": "f507830bf46e4e8cbeb898da8b044ea4ec85df44b82c131a016d109e94ff1021"
+      },
+      "raw": {
+        "id": "Q6332",
+        "first_name": "log pile",
+        "confidence": 0.99,
+        "notes": "Small triangular stack of round cut logs."
+      },
+      "normalized_kind": "Log",
+      "mapping_rationale": "Explicit logs; quantity is not scored.",
+      "id": "Q6332",
+      "asset": "log_pile_medium",
+      "size": 64,
+      "exact": true,
+      "garment": false
+    }
+  ],
+  "semantic_map": {
+    "clay pot": {
+      "kind": "ClayPot",
+      "garment": false,
+      "rationale": "Ordinary clay-pot name denotes fired pottery; unfired state requires an explicit raw/unfired answer."
+    },
+    "water-filled clay pot": {
+      "kind": "ClayPot",
+      "garment": false,
+      "rationale": "Explicit clay vessel; water state retained but kind scored."
+    },
+    "water pot": {
+      "kind": "ClayPot",
+      "garment": false,
+      "rationale": "Primary pot/container name; water state distinguishes filled variant but not a separate kind."
+    },
+    "stone axe": {
+      "kind": "StoneAxe",
+      "garment": false,
+      "rationale": "Generic stone axe does not identify polished/ground axe."
+    },
+    "axe": {
+      "kind": "UnknownAxe",
+      "garment": false,
+      "rationale": "Material and ground/polished subtype not stated."
+    },
+    "meat drumstick": {
+      "kind": "Meat",
+      "garment": false,
+      "rationale": "Meat with bone."
+    },
+    "meat on a bone": {
+      "kind": "Meat",
+      "garment": false,
+      "rationale": "Meat with bone."
+    },
+    "square hide": {
+      "kind": "Hide",
+      "garment": false,
+      "rationale": "Shape alone does not identify curing or tanning."
+    },
+    "parchment sheet": {
+      "kind": "Parchment",
+      "garment": false,
+      "rationale": "Primary parchment is a different kind from cured leather."
+    },
+    "leather sheet": {
+      "kind": "CuredHide",
+      "garment": false,
+      "rationale": "Leather explicitly denotes processed hide; sheet corresponds to cured hide material."
+    },
+    "folded leather": {
+      "kind": "FoldedLeather",
+      "garment": false,
+      "rationale": "Not clay, and not an explicitly named garment."
+    },
+    "stack of logs": {
+      "kind": "Log",
+      "garment": false,
+      "rationale": "Explicit log kind; pile size is not scored."
+    },
+    "bundle of firewood": {
+      "kind": "Firewood",
+      "garment": false,
+      "rationale": "Explicit firewood kind, not log."
+    },
+    "pile of kindling": {
+      "kind": "Firewood",
+      "garment": false,
+      "rationale": "Kindling is split fuel wood/firewood."
+    },
+    "pile of wooden sticks": {
+      "kind": "Sticks",
+      "garment": false,
+      "rationale": "Generic sticks do not explicitly identify split fuel wood."
+    },
+    "wooden sticks": {
+      "kind": "Sticks",
+      "garment": false,
+      "rationale": "Generic sticks do not explicitly identify split fuel wood."
+    },
+    "stone blade": {
+      "kind": "StoneBlade",
+      "garment": false,
+      "rationale": "Blade material is not specifically flint."
+    },
+    "flint blade": {
+      "kind": "FlintBlade",
+      "garment": false,
+      "rationale": "Explicit flint blade."
+    },
+    "animal hide": {
+      "kind": "Hide",
+      "garment": false,
+      "rationale": "Generic hide does not identify wolf or cured subtype."
+    },
+    "animal pelt": {
+      "kind": "Hide",
+      "garment": false,
+      "rationale": "Generic pelt does not identify wolf species."
+    },
+    "bowl of berries": {
+      "kind": "BerryBowl",
+      "garment": false,
+      "rationale": "Bowl is not a basket."
+    },
+    "basket of berries": {
+      "kind": "BerryBasket",
+      "garment": false,
+      "rationale": "Explicit berry basket."
+    },
+    "pile of rocks": {
+      "kind": "Stone",
+      "garment": false,
+      "rationale": "Generic stone pile."
+    },
+    "pile of stones": {
+      "kind": "Stone",
+      "garment": false,
+      "rationale": "Generic stone pile."
+    },
+    "pile of dark rocks": {
+      "kind": "Stone",
+      "garment": false,
+      "rationale": "Dark rocks do not specifically name flint."
+    },
+    "dark rock": {
+      "kind": "Stone",
+      "garment": false,
+      "rationale": "Dark rock does not specifically name flint."
+    },
+    "flint rock": {
+      "kind": "Flint",
+      "garment": false,
+      "rationale": "Explicit flint nodule/rock."
+    },
+    "pile of flint rocks": {
+      "kind": "Flint",
+      "garment": false,
+      "rationale": "Explicit flint pile."
+    },
+    "stone pot": {
+      "kind": "StonePot",
+      "garment": false,
+      "rationale": "Stone vessel is not identified as unfired clay."
+    },
+    "stone bowl": {
+      "kind": "StonePot",
+      "garment": false,
+      "rationale": "Stone vessel is not identified as unfired clay."
+    },
+    "stone hammer": {
+      "kind": "StoneHammer",
+      "garment": false,
+      "rationale": "Hammer is not an axe."
+    },
+    "spear": {
+      "kind": "Spear",
+      "garment": false,
+      "rationale": "Explicit spear."
+    },
+    "leather pouch": {
+      "kind": "Pouch",
+      "garment": false,
+      "rationale": "Pouch is not a wrap garment."
+    },
+    "tied leather bundle": {
+      "kind": "Bundle",
+      "garment": false,
+      "rationale": "Bundle is not an explicit garment."
+    },
+    "tree stump": {
+      "kind": "Stump",
+      "garment": false,
+      "rationale": "Stump is not a cloak."
+    },
+    "fur coat": {
+      "kind": "FurCoat",
+      "garment": true,
+      "rationale": "Recognised as garment, but coat is not exact cloak/cape kind."
+    },
+    "lump of clay": {
+      "kind": "Clay",
+      "garment": false,
+      "rationale": "Explicit clay."
+    },
+    "basket": {
+      "kind": "Basket",
+      "garment": false,
+      "rationale": "Bare basket identifies the container but not berries/food. ENV1 exactness required berries in a basket; notes or image cannot supply omitted primary-name content."
+    },
+    "bowl": {
+      "kind": "Bowl",
+      "garment": false,
+      "rationale": "A bowl does not name a pot or its unfired subtype."
+    },
+    "coin pile": {
+      "kind": "Coins",
+      "garment": false,
+      "rationale": "Coins are not logs, stones or flint."
+    },
+    "firewood": {
+      "kind": "Firewood",
+      "garment": false,
+      "rationale": "Explicit firewood kind."
+    },
+    "hoe": {
+      "kind": "Hoe",
+      "garment": false,
+      "rationale": "Hoe is not an axe."
+    },
+    "leather patch": {
+      "kind": "CuredHide",
+      "garment": false,
+      "rationale": "Leather names processed hide; patch names the sheet material rather than raw hide."
+    },
+    "log pile": {
+      "kind": "Log",
+      "garment": false,
+      "rationale": "Explicit logs; quantity is not scored."
+    },
+    "logs": {
+      "kind": "Log",
+      "garment": false,
+      "rationale": "Explicit logs; quantity is not scored."
+    },
+    "meat": {
+      "kind": "Meat",
+      "garment": false,
+      "rationale": "Explicit meat kind."
+    },
+    "ore": {
+      "kind": "Ore",
+      "garment": false,
+      "rationale": "Generic ore does not identify flint."
+    },
+    "steak": {
+      "kind": "Meat",
+      "garment": false,
+      "rationale": "Steak is a cut of meat."
+    },
+    "stone pile": {
+      "kind": "Stone",
+      "garment": false,
+      "rationale": "Explicit stone pile."
+    },
+    "bucket": {
+      "kind": "Bucket",
+      "garment": false,
+      "rationale": "Bucket is not a pot."
+    },
+    "cleaver": {
+      "kind": "Cleaver",
+      "garment": false,
+      "rationale": "Cleaver does not name a flint blade or axe subtype."
+    },
+    "cloth square": {
+      "kind": "Cloth",
+      "garment": false,
+      "rationale": "Cloth is not cured leather."
+    },
+    "flint": {
+      "kind": "Flint",
+      "garment": false,
+      "rationale": "Explicit flint material; nodule and pile are one kind."
+    },
+    "ore rock": {
+      "kind": "Ore",
+      "garment": false,
+      "rationale": "Ore rock does not specifically identify flint."
+    },
+    "pot": {
+      "kind": "ClayPot",
+      "garment": false,
+      "rationale": "Ordinary pot name identifies pottery; raw/unfired subtype requires explicit identification under frozen protocol."
+    },
+    "spearhead": {
+      "kind": "Spearhead",
+      "garment": false,
+      "rationale": "A detached spearhead is neither a full spear nor an explicitly identified flint blade."
+    },
+    "tunic": {
+      "kind": "Tunic",
+      "garment": true,
+      "rationale": "Garment recognised, but tunic is neither the exact wrap nor cloak kind."
+    }
+  },
+  "limitations": [
+    "Independent model reviewers, not humans.",
+    "32px answers frozen before viewing 64px.",
+    "First primary name only; secondary notes cannot rescue a wrong kind.",
+    "One permitted repair round exhausted; remaining failures stay failures.",
+    "Owner decision pending; no runtime installation."
+  ]
+}
