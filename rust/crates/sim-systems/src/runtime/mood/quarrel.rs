@@ -1,12 +1,13 @@
 //! QuarrelSystem: two unhappy or estranged people standing close may quarrel; a hostile pair in a black mood may come to blows.
 //!
-//! Priority: 173 (`QUARREL_PRIORITY`). Interval: 30 ticks. Gate: `ColonyRule::mood`.
+//! Priority: 173 (`QUARREL_PRIORITY`). Interval: 6 ticks, offset 3 (the 30-tick check in five slices). Gate: `ColonyRule::mood`.
 //! Reads: `Agent`, `Position`, `AgentState`, `Mood`, `Kin`, `Lineage`, `Temperament`, `Drafted`; `SimResources.colony` (bonds, story), `relationships` (hostility), `rules`, `world_seed`
 //! Writes: `Mood` (value, quarrel day); `SimResources.colony` (bonds, fights), `relationships` (hostility), `chronicle`
 //! Events: chronicle `Quarrel` (19; cause 1 + the M5 cause code; the cause table → the initiator's largest negative modifier), `Fight` (cause → the quarrel)
 //!
 //! M5 (ADR 0030). The V7 `SocialInteractionSystem` has no quarrel and is left
-//! alone; this system checks pairs every 30 ticks. Candidates: people with a
+//! alone; this system checks pairs every 30 ticks, in five slices of initiators (`AgentId % 5`) six ticks apart
+//! (DECISIONS D18). Candidates: people with a
 //! mood who are not asleep, not working (`Consuming { Job }`) and not drafted.
 //! For each pair within `quarrel_tiles` (lower id first, pairs in id order; each person
 //! checks at most the `quarrel_partners_max` nearest of the later ids, DECISIONS D18),
@@ -35,6 +36,12 @@ use sim_engine::{RuntimeSystem, SimResources};
 
 /// Priority of [`QuarrelSystem`].
 pub const QUARREL_PRIORITY: u32 = 173;
+
+/// The 30-tick check is done in `SLICES` slices, one every `SLICE_TICKS` (DECISIONS D18): a run takes as initiators
+/// only the people whose `AgentId % SLICES` is the slice's, so each person starts a check once every 30 ticks.
+const SLICES: u64 = 5;
+/// See [`SLICES`].
+const SLICE_TICKS: u64 = 6;
 
 /// Whether two people are kin-close: parent and child, siblings (a shared known parent), or partners.
 pub fn kin_close(a: AgentId, ka: Option<&Kin>, b: AgentId, kb: Option<&Kin>) -> bool {
@@ -116,7 +123,12 @@ impl RuntimeSystem for QuarrelSystem {
     }
 
     fn tick_interval(&self) -> u64 {
-        30
+        SLICE_TICKS
+    }
+
+    /// Off the hour-aligned ticks where the 60-, 120- and 240-tick systems run (DECISIONS D18).
+    fn tick_offset(&self, _resources: &SimResources) -> u64 {
+        3
     }
 
     fn tick(&mut self, world: &mut World, res: &mut SimResources) {
@@ -170,8 +182,12 @@ impl RuntimeSystem for QuarrelSystem {
         let day = super::today(res);
         let tick = res.current_tick;
         let mut quarrelled: std::collections::BTreeSet<AgentId> = std::collections::BTreeSet::new();
+        let slice = (tick / SLICE_TICKS) % SLICES;
         for i in 0..folk.len() {
             let a = folk[i];
+            if a.0 % SLICES != slice {
+                continue;
+            }
             // The nearest `quarrel_partners_max` later ids within reach, by (distance, id), ring by ring
             // (D18); with fewer near, all of them. Then checked in id order.
             let mut near: Vec<usize> = Vec::new();

@@ -17,7 +17,8 @@ chronicle. Evaluation: `docs/v8/m5/M5_EVALUATION.md`; report: `docs/v8/m5/M5_REP
   knife wear), ADR 0030 (mood, quarrels, chronicle causes).
 - Rules `StoryRule::M5`, `WildlifeRule::M5`, `MoodRule::M5` in `ColonyRule::M5` (`WorldRules::colony` uses it).
 - Systems: `DraftSystem` (121), `StorytellerSystem` (170, daily), `AnimalSystem` (171, every 3), `MoodSystem` (172,
-  every 60), `QuarrelSystem` (173, every 30); person–animal fights in `ColonyState::fights`, resolved by
+  every 60 at minute 7), `QuarrelSystem` (173, every 30 ticks in five slices of initiators, one every 6; the nearest
+  8 partners within 2 tiles, D18); person–animal fights in `ColonyState::fights`, resolved by
   `CombatSystem`.
 - Pressure effects where the behaviour lives: cold snap (burn ×2, exposure ×2 outside a room, roofed sleepers warm only
   by a lit hearth, outdoor work ×1,300 ‰), drought (forage ×400 ‰, thirst ×1,200 ‰), illness (`Sick`, keyed spread in a

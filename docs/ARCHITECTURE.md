@@ -209,7 +209,7 @@ Reads/writes come from each file's `//!` header.
 | 40 | `StorytellerSystem` | 170 | 1440 | `rust/crates/sim-systems/src/runtime/story/mod.rs` | `Agent`, `Child`, `Sick`, `Lineage`; `SimResources.colony` (story, ground items, zones, rooms, beds), `bed_of`, `tallies` (deaths), `rules` (story, calendar, seasons), `world_seed` | `Sick` (inserted, removed); `SimResources.colony.story` (planned, active, history, version), `chronicle`, `causal_log` |
 | 41 | `AnimalSystem` | 171 | 3 | `rust/crates/sim-systems/src/runtime/wildlife/mod.rs` | `Agent`, `Position`, `Drafted`, `Tool`; `SimResources.colony` (wildlife, story, rooms, zones, ground items), `nav`, `tile_grid`, `settlements`, `building_kinds`, `rules`, `world_seed` | `SimResources.colony` (wildlife: animals, meat lots, tallies; fights; ground items, item ledger; story via `story::end_pressure`), `settlements` (food), `spatial.agents` |
 | 42 | `MoodSystem` | 172 | 60 | `rust/crates/sim-systems/src/runtime/mood/mod.rs` | `Agent`, `Child`, `Life`, `AgentState`, `Position`, `Cold`, `Hunger`, `Thirst`, `Sick`, `Drafted`, `Temperament`; `SimResources.colony` (rooms, story), `rules` (mood, calendar, clock offset) | `Mood` (inserted for adults and children of 10 years or more; value, nights, breakdown), `Job` (cancelled at a breakdown); `SimResources.colony` (reservations), `chronicle` |
-| 43 | `QuarrelSystem` | 173 | 30 | `rust/crates/sim-systems/src/runtime/mood/quarrel.rs` | `Agent`, `Position`, `AgentState`, `Mood`, `Kin`, `Lineage`, `Temperament`, `Drafted`; `SimResources.colony` (bonds, story), `relationships` (hostility), `rules`, `world_seed` | `Mood` (value, quarrel day); `SimResources.colony` (bonds, fights), `relationships` (hostility), `chronicle` |
+| 43 | `QuarrelSystem` | 173 | 6 | `rust/crates/sim-systems/src/runtime/mood/quarrel.rs` | `Agent`, `Position`, `AgentState`, `Mood`, `Kin`, `Lineage`, `Temperament`, `Drafted`; `SimResources.colony` (bonds, story), `relationships` (hostility), `rules`, `world_seed` | `Mood` (value, quarrel day); `SimResources.colony` (bonds, fights), `relationships` (hostility), `chronicle` |
 | 44 | `InfluenceVisualizationSystem` | 1000 | 6 | `rust/crates/sim-systems/src/runtime/influence/visualization.rs` | `SimResources.influence_grid` (current Warmth and Danger buffers), `current_tick` | its own `VisualizationDigest` (no world or resource state) |
 
 <!-- system-table:end -->
@@ -482,10 +482,10 @@ job layer: WorkType::Hunt (tracking practitioners; JobKind::Hunt: fetch a spear,
    │  make_fur_cloak · the hourly dressing pass (JobKind::Equip, the least cold-tolerant free adult first) →
    │  Apparel (a worn top spares cold hours at its ‰, STREAM_APPAREL)
    ▼
-MoodSystem 172 (every 60): Mood toward 500 + Σ modifiers (the other systems note facts through mood::note) —
+MoodSystem 172 (every 60, minute 7): Mood toward 500 + Σ modifiers (the other systems note facts through mood::note) —
    │  < 250 tantrum risk (work ×1,200 ‰), < 100 a breakdown (chronicle), ≥ 750 content (work ×900 ‰)
    ▼
-QuarrelSystem 173 (every 30): pairs within 2 tiles, not kin-close; keyed (STREAM_QUARREL) quarrel → relation
+QuarrelSystem 173 (every 30 ticks in five slices, one every 6): pairs within 2 tiles, the nearest 8, not kin-close; keyed (STREAM_QUARREL) quarrel → relation
    │  (ColonyState.bonds), hostility, mood; a fight of one hit at hostility 0.6 → chronicle Quarrel / Fight
    ▼
 chronicle cause side table (Chronicle::causes: CauseRef entry / pressure / modifier; saved, format v5)

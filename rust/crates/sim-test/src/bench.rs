@@ -187,10 +187,13 @@ pub fn run_one(scene: &Scene, script_path: Option<&Path>) -> Result<Value, Strin
     }
     let alive_after_warmup = crate::perf::alive(&engine);
     let mut profile = engine.new_tick_profile();
+    // Each measured tick's per-system ns (M5 D18: the p99 tick's breakdown).
+    let mut tick_ns: Vec<Vec<u64>> = Vec::with_capacity(MEASURED_TICKS as usize);
     let run_started = Instant::now();
     for _ in 0..MEASURED_TICKS {
         apply(&mut engine);
         engine.tick_profiled(&mut profile);
+        tick_ns.push(profile.last_tick_ns.clone());
         gift(&mut engine);
     }
     let run_seconds = run_started.elapsed().as_secs_f64();
@@ -237,6 +240,7 @@ pub fn run_one(scene: &Scene, script_path: Option<&Path>) -> Result<Value, Strin
         "TechAggregateSystem",
     ]);
     let job_assign_us = per_tick(&["JobAssignSystem"]);
+    let tail = tail_breakdown(&profile, &tick_ns);
     // M5 (goal §4, F11): the storyteller, animals, drafting, mood and quarrels together.
     let m5_us = per_tick(&[
         "StorytellerSystem",
@@ -248,6 +252,7 @@ pub fn run_one(scene: &Scene, script_path: Option<&Path>) -> Result<Value, Strin
     Ok(json!({
         "knowledge_us_per_tick": knowledge_us,
         "m5_us_per_tick": m5_us,
+        "p99_tick": tail,
         "job_assign_us_per_tick": job_assign_us,
         "label": scene.label, "agents": scene.agents, "side": scene.side, "script": scene.script,
         "seed": BENCH_SEED, "warmup_ticks": WARMUP, "measured_ticks": MEASURED_TICKS,
@@ -527,6 +532,42 @@ pub fn main(args: &[String]) -> Result<(), String> {
         }
         _ => Err("usage: worldsim_perf bench --out DIR [--commands FILE] [--repeats 3] [--commit SHA]\n       worldsim_perf bench-one --scene-label LABEL --out FILE [--commands FILE]\n       worldsim_perf bench-summarise --runs DIR --out FILE [--commit SHA]".into()),
     }
+}
+
+/// The p99 tick and the tail (every tick at or above p99), broken down by system: the p99 tick's
+/// own per-system µs and the tail's mean per-system µs, each the eight largest (M5 D18).
+fn tail_breakdown(profile: &sim_engine::TickProfile, tick_ns: &[Vec<u64>]) -> Value {
+    let mut order: Vec<usize> = (0..profile.tick_us.len()).collect();
+    order.sort_by_key(|&i| (profile.tick_us[i], i));
+    if order.is_empty() {
+        return Value::Null;
+    }
+    let at = (order.len() * 99 / 100).min(order.len() - 1);
+    let tail = &order[at..];
+    let top = |ns: &dyn Fn(usize) -> f64| -> Vec<Value> {
+        let mut rows: Vec<(f64, &str)> = profile
+            .systems
+            .iter()
+            .enumerate()
+            .map(|(s, sys)| (ns(s), sys.name.as_str()))
+            .filter(|(v, _)| *v > 0.0)
+            .collect();
+        rows.sort_by(|a, b| b.0.total_cmp(&a.0));
+        rows.into_iter()
+            .take(8)
+            .map(|(v, n)| json!({"system": n, "us": (v / 100.0).round() / 10.0}))
+            .collect()
+    };
+    let p99 = order[at];
+    let own = top(&|s| tick_ns[p99].get(s).copied().unwrap_or(0) as f64);
+    let mean = top(&|s| {
+        tail.iter()
+            .map(|&i| tick_ns[i].get(s).copied().unwrap_or(0) as f64)
+            .sum::<f64>()
+            / tail.len() as f64
+    });
+    json!({"tick_index": p99, "tick_us": profile.tick_us[p99], "tail_ticks": tail.len(),
+           "systems": own, "tail_mean": mean})
 }
 
 #[cfg(test)]

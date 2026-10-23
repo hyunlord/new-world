@@ -1,14 +1,14 @@
 //! MoodSystem: moves each person's mood toward the target its modifiers set, notes the night's sleep and cold, and starts breakdowns.
 //!
-//! Priority: 172 (`MOOD_PRIORITY`). Interval: 60 ticks. Gate: `ColonyRule::mood`.
+//! Priority: 172 (`MOOD_PRIORITY`). Interval: 60 ticks, offset 7. Gate: `ColonyRule::mood`.
 //! Reads: `Agent`, `Child`, `Life`, `AgentState`, `Position`, `Cold`, `Hunger`, `Thirst`, `Sick`, `Drafted`, `Temperament`; `SimResources.colony` (rooms, story), `rules` (mood, calendar, clock offset)
 //! Writes: `Mood` (inserted for adults and children of 10 years or more; value, nights, breakdown), `Job` (cancelled at a breakdown); `SimResources.colony` (reservations), `chronicle`
 //! Events: chronicle `Breakdown` (the three largest negative modifiers; cause table → the largest)
 //!
 //! M5 (ADR 0030). Each interval, in `AgentId` order: during the night window
 //! (the colony's sleep hours, 20:00–06:00) a sleeper in a roofed bedroom, a
-//! sleeper outside a roofed room and a cold person are noted for tonight; at
-//! 08:00 tonight becomes last night. The target is `base` + Σ modifiers
+//! sleeper outside a roofed room and a cold person are noted for tonight; in
+//! the 8 o'clock hour tonight becomes last night (the system runs at minute 7). The target is `base` + Σ modifiers
 //! ([`modifiers`]; harm avoidance scales the negative ones ×(800 + ha/5) ‰,
 //! reward dependence the social ones), clamped to 0–1,000, and the value moves
 //! 1/`step_divisor` of the gap toward it (at least 1 while there is a gap). A
@@ -361,6 +361,12 @@ impl RuntimeSystem for MoodSystem {
         60
     }
 
+    /// Minute 7 of each hour: off the hour-aligned ticks where the 60-, 120- and 240-tick systems run
+    /// (DECISIONS D18).
+    fn tick_offset(&self, _resources: &SimResources) -> u64 {
+        7
+    }
+
     fn tick(&mut self, world: &mut World, res: &mut SimResources) {
         let Some(rule) = rule(res) else {
             return;
@@ -391,7 +397,8 @@ impl RuntimeSystem for MoodSystem {
             );
         }
         let minute = tick.saturating_add(res.rules.clock_offset_ticks) % res.ticks_per_day.max(1);
-        let morning = minute == 480;
+        // The run in the 8 o'clock hour (one a day; the system runs at minute 7 of each hour, D18).
+        let morning = minute / 60 == 8;
         let is_night = night(res);
         let day = today(res);
         let mut rows: Vec<(AgentId, Entity)> = world

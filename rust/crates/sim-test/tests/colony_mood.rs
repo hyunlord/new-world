@@ -141,13 +141,14 @@ fn a_breakdown_refuses_jobs_for_a_day_and_names_three_modifiers() {
     assert!(others, "others do take jobs");
 }
 
-/// Run only the quarrel system until a quarrel is chronicled (or `checks` checks); the
-/// index of the first quarrel entry made during these checks (earlier ones do not count).
+/// Run only the quarrel system until a quarrel is chronicled (or `checks` 30-tick rounds, each
+/// five slices six ticks apart, D18); the index of the first quarrel entry made during these
+/// checks (earlier ones do not count).
 fn quarrel_until(engine: &mut SimEngine, checks: u64) -> Option<u32> {
     let start = engine.resources.current_tick;
     let before = engine.resources.chronicle.len();
-    for k in 1..=checks {
-        engine.resources.current_tick = start + 30 * k;
+    for k in 1..=checks * 5 {
+        engine.resources.current_tick = start + 6 * k;
         QuarrelSystem.tick(&mut engine.world, &mut engine.resources);
         let found = engine.resources.chronicle.entries()[before..]
             .iter()
@@ -397,8 +398,8 @@ fn crowd_gaps(cap: u32) -> Vec<usize> {
     }
     let rank = |id: u64| ids.iter().position(|(i, _)| *i == id).expect("ranked");
     let before = engine.resources.chronicle.len();
-    for k in 1..=20u64 {
-        engine.resources.current_tick = 60 + 30 * k;
+    for k in 1..=100u64 {
+        engine.resources.current_tick = 60 + 6 * k;
         QuarrelSystem.tick(&mut engine.world, &mut engine.resources);
         for (_, e) in &ids {
             set_mood(&mut engine, *e, 0);
@@ -418,9 +419,87 @@ fn crowd_gaps(cap: u32) -> Vec<usize> {
 fn in_a_crowd_each_person_checks_only_the_nearest_eight_later_ids() {
     // DECISIONS D18: on one tile the nearest are the next ids, so every quarrel spans at most 8 ranks.
     let capped = crowd_gaps(8);
-    assert!(capped.len() >= 10, "quarrels in the crowd: {}", capped.len());
+    assert!(
+        capped.len() >= 10,
+        "quarrels in the crowd: {}",
+        capped.len()
+    );
     assert!(capped.iter().all(|g| *g <= 8), "gaps {capped:?}");
     // Without the cap some pair is farther apart in rank (the test can fail).
     let open = crowd_gaps(u32::MAX);
     assert!(open.iter().any(|g| *g > 8), "uncapped gaps {open:?}");
+}
+
+/// Each person's mood nights by `AgentId`.
+fn nights(engine: &SimEngine) -> std::collections::BTreeMap<u64, u8> {
+    engine
+        .world
+        .query::<(&Agent, &Mood)>()
+        .iter()
+        .map(|(_, (a, m))| (a.id, m.nights))
+        .collect()
+}
+
+/// Run `engine` from its tick to `end`, counting each person's morning hand-overs by display day: a
+/// hand-over moves tonight's facts (bits 3–5) to last night's (bits 0–2) and clears tonight.
+fn hand_overs(
+    engine: &mut SimEngine,
+    end: u64,
+    counts: &mut std::collections::BTreeMap<(u64, u64), u32>,
+) {
+    let offset = engine.resources.rules.clock_offset_ticks;
+    let mut before = nights(engine);
+    while engine.resources.current_tick < end {
+        engine.tick();
+        let after = nights(engine);
+        let day = (engine.resources.current_tick + offset) / 1_440;
+        for (id, new) in &after {
+            let Some(old) = before.get(id) else { continue };
+            let moved = new & 7 == old >> 3 && new >> 3 == 0;
+            if moved && (old >> 3 != 0 || old & 7 != 0) {
+                *counts.entry((day, *id)).or_default() += 1;
+            }
+        }
+        before = after;
+    }
+}
+
+#[test]
+fn the_morning_hand_over_runs_once_a_day_across_a_save_at_0830() {
+    // MoodSystem runs at minute 7 of each hour; the morning hand-over is the 8 o'clock run (D18).
+    let mut continuous = sim_test::colony_engine(3);
+    let offset = continuous.resources.rules.clock_offset_ticks;
+    let day = continuous.resources.ticks_per_day;
+    // 08:30 of display day 2: (tick + offset) % day == 510.
+    let save_at = 2 * day + 510 - offset;
+    let end = 5 * day + 600 - offset;
+    let mut before_save = std::collections::BTreeMap::new();
+    hand_overs(&mut continuous, save_at, &mut before_save);
+    let bytes = sim_systems::save::save(&mut continuous).expect("save");
+    let mut loaded = sim_systems::save::load(&bytes).expect("load");
+    let (mut a, mut b) = (before_save.clone(), before_save.clone());
+    hand_overs(&mut continuous, end, &mut a);
+    hand_overs(&mut loaded, end, &mut b);
+    assert_eq!(
+        a, b,
+        "the loaded copy hands over exactly as the continuous run"
+    );
+    assert_eq!(nights(&continuous), nights(&loaded));
+    // Every hand-over is in the 8 o'clock hour's run: one a person a day, and every person with a mood
+    // is handed over on each full day (seed 3: 10 of 10 on days 2, 3 and 4; a second run in the 9
+    // o'clock hour makes every count 2 and fails the first assert).
+    assert!(a.values().all(|n| *n == 1), "one a day: {a:?}");
+    let people = nights(&continuous).len() as u64;
+    assert!(people >= 8, "{people} people with a mood");
+    for d in 2..=4u64 {
+        let on_day = a.keys().filter(|(day, _)| *day == d).count() as u64;
+        assert_eq!(on_day, people, "day {d}: {on_day} of {people} handed over");
+    }
+    // No hand-over after the save on day 2 (08:30 is after the 08:07 run).
+    let after_save_day2 = b.keys().filter(|(d, _)| *d == 2).count();
+    let before_save_day2 = before_save.keys().filter(|(d, _)| *d == 2).count();
+    assert_eq!(
+        after_save_day2, before_save_day2,
+        "nothing handed over again after the load on day 2"
+    );
 }

@@ -330,3 +330,20 @@ exactly the old ones; only crowds change. A run costs 136 µs at N = 200 and 767
 the bench world, 60 runs). Test `in_a_crowd_each_person_checks_only_the_nearest_eight_later_ids` (40 people on one
 tile: every quarrel spans ≤ 8 id ranks; without the cap some span more). This changes behaviour, so the held-out
 seeds are measured once more ("final" in `M5_EVALUATION.md`).
+
+D18 continued — the cadence. The cap alone left p99 above +10 % (second session `$DATA/bench5/round2_3a8d0759`,
+14:56–15:00, 1-minute load 7.0 → 2.8: means ×1.014–×1.054, p99 n200 ×1.114, n1000 ×1.106, n200_script ×1.164, 64²
+×1.386): a run still cost 120 µs at N = 200 (about 100 of it the pair checks), and every run landed on the
+hour-aligned ticks where the 60-, 120- and 240-tick systems run (offset 0). Moving it to offset 15 helped
+(`round3_offset15`: p99 at N = 1,000 and 2,000 within, 64² ×1.261). The check is now split into five slices one
+every 6 ticks (offset 3): a run takes as initiators only the people whose `AgentId % 5` is the slice's, so each
+person still starts a check once every 30 ticks (the goal's cadence) and partners are anyone near; a person may now
+quarrel in two different slices of one 30-tick round. `MoodSystem` runs at minute 7 of each hour instead of the whole
+hour; its morning hand-over tests the 8 o'clock hour (`minute / 60 == 8`) instead of `minute == 480`, still once a
+day (test `the_morning_hand_over_runs_once_a_day_across_a_save_at_0830`: a save at 08:30 of day 2, the loaded copy
+hands over exactly as the continuous run, 10 of 10 people once on each of days 2–4; a second run in the 9 o'clock
+hour fails it). The bench records each scene's p99 tick broken down by system (`p99_tick` in the run files). A
+session on the sliced check alone (`round4_slices`, 15:07–15:10, load 5–6) put every scene within +10 % on mean and
+p99 except 64² (mean ×1.079, p99 ×1.137); a session at 15:12–15:24 was contended (load 8–14 in rounds 2–3) and is
+discarded (`round5_contended`). The rule for periodic systems is in the architecture skill.
+

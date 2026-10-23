@@ -121,7 +121,10 @@ fn wolves_show_in_the_story_and_the_animals_with_their_mean_tile() {
 #[test]
 fn a_draft_shows_in_the_columns_the_person_and_the_drafted_list() {
     let mut engine = sim_test::colony_engine(4);
-    engine.tick();
+    // Past the first MoodSystem run (minute 7 of the hour, D18), so every adult has a mood.
+    for _ in 0..8 {
+        engine.tick();
+    }
     let folk = adults(&engine);
     let (a, b) = (folk[0] as i64, folk[1] as i64);
     assert!(submit_story(&mut engine, StoryCommand::Draft(a, true)).accepted);
