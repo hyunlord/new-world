@@ -29,7 +29,7 @@ Each of C1–C5 names the gate step that checks it (after this pass: identity, r
 |---|---|
 | C1 | `identity` (baseline never changes), `determinism`, `colony_determinism`, `replay`, `save_roundtrip` |
 | C2 | `renderer_agreement` (text renderer = GUI positions), `schema_docs` (`docs/v8/snapshot_schema.md` against the bridge), `bridge_api` |
-| C3 | `bench` (standing benchmark + `docs/perf/PERF_LEDGER.md`; > +10 % against the previous ledger line fails; ceilings reported PASS/MISS) |
+| C3 | `bench` (standing benchmark + `docs/perf/PERF_LEDGER.md`; > +10 % against the previous ledger line fails; ceilings reported PASS/MISS; since M5.5 the memory ceilings on the allocator counter and the RSS outer bound, median of 5 build-only repeats) |
 | C4 | `forbidden_math`, `identity`/`determinism` (keyed draws, key order) |
 | C5 | `docs` (system table generated from headers), the pass report's size table |
 
@@ -52,8 +52,25 @@ The final mapping, including any step a pass had to drop, is recorded in the pas
   (`worldsim_probe --ascii`) is the standing second consumer.
 - A saved game is part of the contract once it exists; a format change bumps its version.
 
+
+## Amendment M5.5 — the memory instrument (2026-10-24; M5.5 goal §3.4, DECISIONS D3)
+- **The C3 per-agent and per-tile memory ceilings (4 KiB, 96 B) are judged on the allocator counter**
+  (`sim_test::alloc::Counting`, live heap bytes after the build; deterministic) when the run has it, and on RSS
+  otherwise. Reason (M5 D19): RSS on macOS is bimodal — one M5 binary read 83.0–117.5 B per tile across sessions and
+  the M4 base missed its own 96 B ceiling once — while the allocator read 63.1 B per tile and 1,871 B per agent for
+  both binaries in every session.
+- **RSS keeps an outer bound**, because fragmentation and allocator overhead are real memory: every `bench` run also
+  builds N = 200, N = 2,000 and the 64² scene in `RSS_REPEATS` = 5 separate processes, pairs them by repeat, and the
+  median of the 5 RSS slopes must be ≤ 5,120 B per agent and ≤ 128 B per tile (`rss_outer` in `bench.json`, ceilings
+  `rss_per_agent_le_5120` and `rss_per_tile_le_128`). It is reported every pass (`bench_ledger.py check` prints it,
+  the gate summary carries it) and a MISS fails the gate like any C3 ceiling.
+- **Gates never change their instruments mid-run.** M5 moved the ceilings to the allocator by stopping a running gate
+  (D19); the change was defensible but the contract did not say it. A gate that finds an instrument wrong is stopped,
+  the finding recorded in the pass's DECISIONS, the instrument changed in its own commit, and the gate started again
+  from step 1.
+
 ## Date
 2026-10-21
 
 ## Source
-docs/v8/m1_5/M1_5_GOAL.md §3 (the contract text, verbatim above), §6.1, §7, §8.1; docs/decisions/0012-orders-as-recorded-commands.md; docs/decisions/0014-two-worlds-baseline-and-colony.md
+docs/v8/m1_5/M1_5_GOAL.md §3 (the contract text, verbatim above), §6.1, §7, §8.1; docs/v8/m5_5/M55_GOAL.md §3.4 and docs/v8/m5_5/M55_DECISIONS.md D3 (the M5.5 amendment); docs/decisions/0012-orders-as-recorded-commands.md; docs/decisions/0014-two-worlds-baseline-and-colony.md

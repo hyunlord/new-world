@@ -341,6 +341,11 @@ def main(argv):
     failures, lines = compare(bench, previous)
     print(f"candidate pass {opts['--pass']!r}; compared with pass {previous[0]['pass']} ({previous[0]['commit']})")
     print("\n".join(lines))
+    # M5.5 (ADR 0016 amendment): the RSS outer bound, reported every pass (its ceilings fail below).
+    outer = bench.get("rss_outer") or {}
+    print(f"rss outer bound: per agent {outer.get('per_agent_median')} B (<= {outer.get('agent_bound', 5120)}), "
+          f"per tile {outer.get('per_tile_median')} B (<= {outer.get('tile_bound', 128)}), "
+          f"median of {outer.get('repeats', 0)} build-only repeats")
     ceilings = sorted(bench.get("ceilings", {}).items())
     missed = [name for name, verdict in ceilings if verdict != "PASS"]
     for name, verdict in ceilings:

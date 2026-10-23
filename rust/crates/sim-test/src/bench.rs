@@ -31,6 +31,17 @@
 //! `alloc_per_agent` (the slope after the build between N = 200 and
 //! N = 2,000, bytes) and `alloc_per_tile` (192² against 64² at N = 200). From
 //! M5 on the regression rule uses `alloc_per_agent`; RSS stays as information.
+//!
+//! M5.5 (goal §3.4, ADR 0016 amendment): the C3 per-agent and per-tile ceilings
+//! judge the allocator slopes (M5 D19), and **RSS keeps an outer bound**: after
+//! the timed repeats `bench` runs [`RSS_REPEATS`] build-only processes of
+//! N = 200, N = 2,000 and the 64² scene (`bench-one --build-only`: build the
+//! world, read RSS and the allocator, exit), pairs them by repeat and reports
+//! the median of the per-repeat RSS slopes as `rss_outer`; the ceilings
+//! `rss_per_agent_le_5120` and `rss_per_tile_le_128` judge those medians
+//! (fragmentation is real memory, so the allocator counter alone is not the
+//! whole bound). A summary without build-only runs reports them `n/a`, which the
+//! ledger check fails (absence is a failure).
 use serde_json::{json, Value};
 use sim_core::rules::WorldRules;
 use sim_engine::SimEngine;
@@ -46,6 +57,14 @@ pub const WARMUP: u64 = 1_440;
 pub const MEASURED_TICKS: u64 = 2_880;
 /// Systems kept in the per-system table.
 pub const TOP_SYSTEMS: usize = 10;
+/// Build-only repeats behind the RSS outer bound (M5.5 goal §3.4: the median of 5).
+pub const RSS_REPEATS: u32 = 5;
+/// The scenes the RSS outer bound builds (the per-agent and per-tile slopes).
+pub const RSS_SCENES: [&str; 3] = ["n200", "n2000", "n200_side64"];
+/// RSS outer bound per agent, bytes (M5.5 goal §3.4).
+pub const RSS_AGENT_BOUND: f64 = 5_120.0;
+/// RSS outer bound per tile, bytes (M5.5 goal §3.4).
+pub const RSS_TILE_BOUND: f64 = 128.0;
 
 /// One benchmark scene.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -133,6 +152,60 @@ fn deaths(engine: &SimEngine) -> Value {
         "starvation": t.deaths_starvation, "dehydration": t.deaths_dehydration,
         "exposure": t.deaths_exposure, "combat": t.deaths_combat, "old_age": t.deaths_old_age,
     })
+}
+
+/// Build one scene's world in this process and read its memory (the RSS outer bound's
+/// build-only run, M5.5): `{label, build_only, repeat, rss_kib.after_build, alloc_bytes.after_build}`.
+pub fn build_one(scene: &Scene, repeat: u32) -> Value {
+    let rss_before = rss_kib();
+    let alloc_before = alloc_bytes();
+    let engine = build_world_with(
+        &WorldGenConfig::colony_stress(BENCH_SEED, scene.agents, scene.side),
+        WorldRules::colony(BENCH_SEED),
+    );
+    let rss_built = rss_kib();
+    let alloc_built = alloc_bytes();
+    let alive = crate::perf::alive(&engine);
+    drop(engine);
+    json!({"label": scene.label, "build_only": true, "repeat": repeat, "agents": scene.agents, "side": scene.side,
+           "alive": alive, "load_before": load_average(),
+           "rss_kib": {"before_build": rss_before, "after_build": rss_built},
+           "alloc_bytes": {"before_build": alloc_before, "after_build": alloc_built}})
+}
+
+/// The RSS outer bound from build-only runs (`label` → runs): the k-th runs of the three
+/// scenes make one repeat's slopes; the medians are judged against the bounds.
+fn rss_outer(build_runs: &std::collections::BTreeMap<String, Vec<Value>>) -> Value {
+    let rss = |label: &str| -> Vec<(u64, f64)> {
+        let mut v: Vec<(u64, f64)> = build_runs
+            .get(label)
+            .map(|list| {
+                list.iter()
+                    .filter_map(|r| {
+                        Some((r["repeat"].as_u64()?, r["rss_kib"]["after_build"].as_f64()?))
+                    })
+                    .collect()
+            })
+            .unwrap_or_default();
+        v.sort_by(|a, b| a.0.cmp(&b.0).then(a.1.total_cmp(&b.1)));
+        v
+    };
+    let (small, big, side64) = (rss("n200"), rss("n2000"), rss("n200_side64"));
+    let mut per_agent = Vec::new();
+    let mut per_tile = Vec::new();
+    for (k, (_, a)) in small.iter().enumerate() {
+        if let Some((_, b)) = big.get(k) {
+            per_agent.push((b - a) * 1024.0 / 1800.0);
+        }
+        if let Some((_, c)) = side64.get(k) {
+            per_tile.push((a - c) * 1024.0 / f64::from(192 * 192 - 64 * 64));
+        }
+    }
+    let agent = (!per_agent.is_empty()).then(|| median(per_agent.clone()));
+    let tile = (!per_tile.is_empty()).then(|| median(per_tile.clone()));
+    json!({"repeats": per_agent.len().min(per_tile.len()), "per_agent": per_agent, "per_tile": per_tile,
+           "per_agent_median": agent, "per_tile_median": tile,
+           "agent_bound": RSS_AGENT_BOUND, "tile_bound": RSS_TILE_BOUND})
 }
 
 /// Run one scene in this process and return its JSON (see the module header).
@@ -327,7 +400,21 @@ fn median_run(runs: &[Value]) -> Value {
 }
 
 /// Reduce the per-repeat runs (`runs[scene label]`) to the bench summary.
-pub fn summarise(runs: &std::collections::BTreeMap<String, Vec<Value>>, commit: &str) -> Value {
+pub fn summarise(all_runs: &std::collections::BTreeMap<String, Vec<Value>>, commit: &str) -> Value {
+    // Timed runs and the RSS outer bound's build-only runs (M5.5).
+    let mut runs: std::collections::BTreeMap<String, Vec<Value>> = Default::default();
+    let mut build_runs: std::collections::BTreeMap<String, Vec<Value>> = Default::default();
+    for (label, list) in all_runs {
+        for run in list {
+            let to = if run["build_only"].as_bool() == Some(true) {
+                &mut build_runs
+            } else {
+                &mut runs
+            };
+            to.entry(label.clone()).or_default().push(run.clone());
+        }
+    }
+    let outer = rss_outer(&build_runs);
     let scene_rows: Vec<Value> = SCENES
         .iter()
         .filter_map(|scene| {
@@ -390,7 +477,10 @@ pub fn summarise(runs: &std::collections::BTreeMap<String, Vec<Value>>, commit: 
             "n2000_mean_le_10ms": verdict(get("n2000", "tick_mean_us").map(|v| v <= 10_000.0)),
             "bytes_per_agent_le_4096": verdict(ceiling_agent.map(|v| v <= 4096.0)),
             "bytes_per_tile_le_96": verdict(ceiling_tile.map(|v| v <= 96.0)),
+            "rss_per_agent_le_5120": verdict(outer["per_agent_median"].as_f64().map(|v| v <= RSS_AGENT_BOUND)),
+            "rss_per_tile_le_128": verdict(outer["per_tile_median"].as_f64().map(|v| v <= RSS_TILE_BOUND)),
         },
+        "rss_outer": outer,
         "memory_ceiling_source": memory_source,
         "machine": crate::perf::machine_facts(),
     })
@@ -443,7 +533,39 @@ pub fn run_all(
             runs.entry(scene.label.to_string()).or_default().push(run);
         }
     }
+    // The RSS outer bound (M5.5): build-only processes, interleaved by repeat.
+    for repeat in 1..=RSS_REPEATS {
+        for label in RSS_SCENES {
+            let file = runs_dir.join(format!("rss_{label}_r{repeat}.json"));
+            let status = std::process::Command::new(exe)
+                .args([
+                    "bench-one",
+                    "--build-only",
+                    &repeat.to_string(),
+                    "--scene-label",
+                    label,
+                    "--out",
+                    &file.display().to_string(),
+                ])
+                .status()
+                .map_err(|e| format!("{}: {e}", exe.display()))?;
+            if !status.success() {
+                return Err(format!(
+                    "bench-one --build-only {label} repeat {repeat} failed"
+                ));
+            }
+            let text = std::fs::read_to_string(&file).map_err(|e| e.to_string())?;
+            let run: Value = serde_json::from_str(&text).map_err(|e| e.to_string())?;
+            runs.entry(label.to_string()).or_default().push(run);
+        }
+    }
     let summary = summarise(&runs, commit);
+    eprintln!(
+        "bench RSS outer bound: per agent {} B (≤ {RSS_AGENT_BOUND}), per tile {} B (≤ {RSS_TILE_BOUND}), median of {}",
+        summary["rss_outer"]["per_agent_median"],
+        summary["rss_outer"]["per_tile_median"],
+        summary["rss_outer"]["repeats"]
+    );
     std::fs::write(
         out.join("bench.json"),
         serde_json::to_string_pretty(&summary).map_err(|e| e.to_string())? + "\n",
@@ -460,6 +582,7 @@ pub fn main(args: &[String]) -> Result<(), String> {
     let mut label: Option<String> = None;
     let mut repeats = 3u32;
     let mut runs: Option<PathBuf> = None;
+    let mut build_only: Option<u32> = None;
     let mut commit = std::env::var("WORLDSIM_GIT_SHA").unwrap_or_else(|_| "unknown".into());
     let mut i = 1;
     while i < args.len() {
@@ -473,6 +596,9 @@ pub fn main(args: &[String]) -> Result<(), String> {
             "--repeats" => repeats = value.parse().map_err(|_| "invalid --repeats")?,
             "--commit" => commit = value.clone(),
             "--runs" => runs = Some(PathBuf::from(value)),
+            "--build-only" => {
+                build_only = Some(value.parse().map_err(|_| "invalid --build-only repeat")?)
+            }
             other => return Err(format!("unknown bench flag {other}")),
         }
         i += 2;
@@ -485,7 +611,10 @@ pub fn main(args: &[String]) -> Result<(), String> {
                 .iter()
                 .find(|s| s.label == label)
                 .ok_or_else(|| format!("unknown scene {label}"))?;
-            let run = run_one(scene, commands.as_deref())?;
+            let run = match build_only {
+                Some(repeat) => build_one(scene, repeat),
+                None => run_one(scene, commands.as_deref())?,
+            };
             if let Some(dir) = out.parent() {
                 std::fs::create_dir_all(dir).map_err(|e| e.to_string())?;
             }
@@ -507,6 +636,7 @@ pub fn main(args: &[String]) -> Result<(), String> {
                     "bytes_per_tile": summary["bytes_per_tile"],
                     "alloc_per_agent": summary["alloc_per_agent"],
                     "alloc_per_tile": summary["alloc_per_tile"],
+                    "rss_outer": summary["rss_outer"],
                 }))
                 .map_err(|e| e.to_string())?
             );
@@ -537,7 +667,7 @@ pub fn main(args: &[String]) -> Result<(), String> {
             std::fs::write(&out, serde_json::to_string_pretty(&summary).map_err(|e| e.to_string())? + "\n")
                 .map_err(|e| e.to_string())
         }
-        _ => Err("usage: worldsim_perf bench --out DIR [--commands FILE] [--repeats 3] [--commit SHA]\n       worldsim_perf bench-one --scene-label LABEL --out FILE [--commands FILE]\n       worldsim_perf bench-summarise --runs DIR --out FILE [--commit SHA]".into()),
+        _ => Err("usage: worldsim_perf bench --out DIR [--commands FILE] [--repeats 3] [--commit SHA]\n       worldsim_perf bench-one --scene-label LABEL --out FILE [--commands FILE] [--build-only REPEAT]\n       worldsim_perf bench-summarise --runs DIR --out FILE [--commit SHA]".into()),
     }
 }
 
@@ -654,6 +784,57 @@ mod tests {
         assert_eq!(s["memory_ceiling_source"], "rss");
         // The unit-test binary does not install the counter.
         assert_eq!(alloc_bytes(), None);
+    }
+
+    #[test]
+    fn the_rss_outer_bound_is_the_median_of_the_paired_build_only_repeats() {
+        let build = |label: &str, repeat: u64, rss: f64| {
+            json!({"label": label, "build_only": true, "repeat": repeat,
+                   "rss_kib": {"before_build": 1000.0, "after_build": rss}, "alloc_bytes": {"after_build": null}})
+        };
+        let timed = |label: &str| {
+            json!({"label": label, "tick_mean_us": 100.0, "tick_p99_us": 200.0, "tick_max_us": 300.0,
+                   "rss_kib": {"before_build": 1000.0, "after_build": 2000.0, "after_run": 2010.0},
+                   "alloc_bytes": {"after_build": null}, "systems": []})
+        };
+        let mut runs: std::collections::BTreeMap<String, Vec<Value>> = Default::default();
+        // Five repeats; n2000 − n200 = 9,000 KiB except repeat 3 (an outlier, 20,000 KiB): the
+        // median keeps 9,000 × 1,024 / 1,800 = 5,120 B per agent exactly (at the bound: PASS).
+        for k in 1..=5u64 {
+            let big = if k == 3 { 30_000.0 } else { 19_000.0 };
+            runs.entry("n200".into())
+                .or_default()
+                .push(build("n200", k, 10_000.0));
+            runs.entry("n2000".into())
+                .or_default()
+                .push(build("n2000", k, big));
+            // n200 − side64 = 4,128 KiB → 4,128 × 1,024 / 32,768 = 129 B per tile: over 128, a MISS.
+            runs.entry("n200_side64".into())
+                .or_default()
+                .push(build("n200_side64", k, 5_872.0));
+        }
+        for label in ["n200", "n1000", "n2000", "n200_side64"] {
+            runs.entry(label.into()).or_default().push(timed(label));
+        }
+        let s = summarise(&runs, "abc");
+        assert_eq!(s["rss_outer"]["repeats"], json!(5));
+        assert_eq!(s["rss_outer"]["per_agent_median"], json!(5_120.0));
+        assert_eq!(s["rss_outer"]["per_tile_median"], json!(129.0));
+        assert_eq!(s["ceilings"]["rss_per_agent_le_5120"], "PASS");
+        assert_eq!(s["ceilings"]["rss_per_tile_le_128"], "MISS");
+        // The build-only runs never enter the timed medians (every timed run says 2,000 KiB).
+        assert_eq!(s["scenes"][0]["rss_kib_after_build"], json!(2000.0));
+        assert_eq!(s["scenes"][0]["repeats"], json!(1));
+        // Without build-only runs the bound is not judged: n/a, which the ledger check fails.
+        let timed_only: std::collections::BTreeMap<String, Vec<Value>> =
+            ["n200", "n1000", "n2000", "n200_side64"]
+                .iter()
+                .map(|l| (l.to_string(), vec![timed(l)]))
+                .collect();
+        assert_eq!(
+            summarise(&timed_only, "abc")["ceilings"]["rss_per_tile_le_128"],
+            "n/a"
+        );
     }
 
     #[test]

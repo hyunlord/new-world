@@ -54,6 +54,15 @@ winter severity draw (`firewood::winter_severity`, mild / normal / harsh burn pe
   (the snap bites), F2b 30/32 (two worlds lost most of their people in their first snap, with illness at the same
   time).
 
+## Amendment M5.5 — no stacked pressure (draft; M5.5 goal §3.1.1, DECISIONS M5.5)
+- A minor pressure (illness) never begins while a major is active or within 2 days after a major ended: a planned
+  illness whose day falls in that window waits for the first day out of it inside its season, else it is dropped
+  (`Storyteller::skipped`).
+- A major never begins while 2 or more people are sick: it waits day by day inside its season's window (the mercy
+  and gap rules still apply), else it is dropped.
+- Reason: M5's held-out seeds 804 and 814 lost 9 and 6 people when a cold snap met an illness on zero firewood; the
+  owner decided pressures do not stack.
+
 ## Date
 2026-10-23
 

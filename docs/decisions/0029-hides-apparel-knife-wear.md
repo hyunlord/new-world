@@ -41,6 +41,12 @@ one of three tops (loincloth, hide wrap, fur cloak); the simulation never decide
   two), F8 0/32 (a world uses a knife 6–22 times in 48 days: one or two knives, not ten — the goal's sink is too small for
   its bar).
 
+## Amendment M5.5 — one hide a wrap, four uses a knife (draft; M5.5 goal §3.1.4–5)
+- `make_hide_wrap` takes **1** cured hide (the fur cloak keeps 2 wolf hides): 4 wraps need 4 kills, which 30 days of
+  hunting give (M5: ~1 kill in 7 days at first, faster later).
+- `knife_uses` 8 → **4**: with traders buying blades (ADR 0032) the knife and the trade are the blade sinks.
+- Reason: M5's F5 (wraps) and F8 (knives) bars could not be met by the M5 numbers; the arithmetic is in the M5.5 goal.
+
 ## Date
 2026-10-23
 

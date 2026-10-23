@@ -55,6 +55,17 @@ M4), so the knowledge node `tracking` was lore only and hides had no source.
   pack bites), F4 27/32 (deer are killed on every world, but on four the meat spoils before it reaches the larder).
   Undrafted colonies beat the packs too (people strike back), so drafting changes little (`M5_EVALUATION.md`).
 
+## Amendment M5.5 — the undrafted flee, the hunter carries the meat home (draft; M5.5 goal §3.1.2–3)
+- `FleeSystem` (priority 123, every 3 ticks): an undrafted person outside a roofed room within 8 tiles of a hunting or
+  attacking wolf gets `Fleeing { until }` (30 ticks, renewed while a wolf is within 8): the job is cancelled and the
+  person walks toward the nearest roofed room, else the hearth, else away from the wolf. The decision seam treats a
+  fleeing person as it treats a drafted one (skips the decision; `decision/system.rs` unchanged). A wolf next to a
+  fleeing person bites; the person strikes back at ×500 ‰ damage. Drafted people fight as in M5.
+- A successful hunt turns into a `Haul` of the meat (up to 3) by the hunter to the nearest stockpile cell that
+  takes it, before any other job; the hide and any meat left over are hauled by others before other loose stacks.
+- Reason: M5's undrafted worlds beat all 100 packs with 3 deaths (drafting barely mattered), and meat rotted where it
+  fell waiting for haulers (F4 27/32).
+
 ## Date
 2026-10-23
 

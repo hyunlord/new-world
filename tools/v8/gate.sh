@@ -111,7 +111,7 @@ grep -q '^RENDERER_AGREEMENT PASS' "$LOG/renderer_agreement.log" || { echo "   r
 step 24 save_roundtrip bash tools/v8/save_roundtrip.sh
 grep -q '^SAVE_ROUNDTRIP PASS' "$LOG/save_roundtrip.log" || { echo "   save_roundtrip: no PASS line" >> "$SUMMARY"; status=1; }
 step 25 bench bash tools/v8/bench.sh "$LOG/bench"
-grep -E 'admission|ceiling|bench: |x[0-9]' "$LOG/bench.log" | sed 's/^/   /' >> "$SUMMARY"
+grep -E 'admission|ceiling|rss outer|bench: |x[0-9]' "$LOG/bench.log" | sed 's/^/   /' >> "$SUMMARY"
 # M3 (goal 3.4): the economy soak fixture, every pass from now on.
 step 26 soak bash tools/v8/soak.sh "$LOG/soak" rust/target/release/worldsim_probe
 grep -E '^SOAK' "$LOG/soak.log" | sed 's/^/   /' >> "$SUMMARY"

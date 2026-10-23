@@ -53,6 +53,16 @@ can be followed.
   chain has two links by construction, but 165 of 197 stop at a mood modifier with no chronicle entry behind it: a modifier
   cause names the feeling, not the event that caused it (a later pass could link hunger and cold to their entries).
 
+## Amendment M5.5 — mood felt, causes that can fail (draft; M5.5 goal §3.1.6–7)
+- Calibration on seeds 0–7 only may scale the pressure-related modifiers (cold night, hungry, sick, pressure active,
+  kin died) up to ×2, raise the breakdown threshold to at most 150 and the tantrum threshold to at most 300, and change
+  the quarrel formula's constants; every change is declared with its round (M5.5 DECISIONS). Target: with the
+  storyteller 0.5–1.5 breakdowns a world in 2 years and 3–8 quarrels a world-year; without it ≤ 0.25 breakdowns a world.
+- Every quarrel stores its cause as a reference to a concrete record: a chronicle entry, a pressure record, or a
+  need-state sample taken at the quarrel tick (hunger, thirst, last night's cold). The evaluation checks that the
+  record exists, belongs to the initiator (or the world, for a pressure) and lies within the 2 days before the quarrel,
+  so the bar can fail.
+
 ## Date
 2026-10-23
 

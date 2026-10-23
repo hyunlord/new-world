@@ -116,6 +116,13 @@
     `MANIFEST.json` the asset source; the two missing `adult_M_*_long_tied` looks fall back to the bun of the same age,
     sex and top. Installing it in the game is M-ART2 (not merged here).
 
+  - **Record (M5.5 Part 0, 2026-10-24; M5.5 DECISIONS D2).** ART-ENV1 (`v8/art-env1` `429a1800`,
+    `docs/v8/artenv1/ENV1_REPORT.md` there) ended **PARTIAL**: item style 12/13, deer readability passed and wolves
+    failed (neither adopted), built pieces 13/23 accepted locally with seams 246/256 failing, scene readability failed
+    after its one allowed revision; FPS passed (341 / 263 at 1× / ½×). The owner's verdict: the structures look
+    unnatural — the projection is mixed. **ART-STRUCT** runs on `v8/art-struct` (not yet pushed when this was
+    written): one projection, walls and edges drawn by code. Route I stays the people standard (ART-PROD3). This
+    line does not merge or touch any art branch.
 ## Date
 2026-10-22
 
