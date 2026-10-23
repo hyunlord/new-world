@@ -12,7 +12,11 @@
 //! - `quarrels`: each quarrel `{tick, a, b, cause, resolved, reason}` checked by `mood::check_cause` with a 2-day
 //!   window (F6), at the end of the run;
 //! - `overlap`: minor pressures that began during a major or within 2 days after one ended (F1);
-//! - `population`: people at the start and at the end, the most at once and the fewest after day 1 (F1, F7).
+//! - `population`: people at the start and at the end, the most at once and the fewest after day 1 (F1, F7);
+//! - `neighbours`: the two neighbours at the end, every wave `{id, neighbour, day, arrived, size, answer, joined,
+//!   neolithic_practitioners}` (a migrant who brought a Neolithic node at or above its threshold, F7), every caravan
+//!   `{id, neighbour, day, arrived, trades, goods_left}`, the neighbours' tallies, and the eureka discoveries
+//!   (chronicle `Eureka`: day, node, artifact; F8).
 use serde_json::{json, Value};
 use sim_core::chronicle::ChronicleKind;
 use sim_core::colony::people::Drafted;
@@ -39,6 +43,8 @@ pub struct M55Watch {
     start_people: Option<u64>,
     most_people: u64,
     fewest_people: Option<u64>,
+    wave_arrived: BTreeMap<u32, u64>,
+    caravan_arrived: BTreeMap<u32, u64>,
 }
 
 fn cheb(a: (u32, u32), b: (u32, u32)) -> u32 {
@@ -63,6 +69,22 @@ impl M55Watch {
         self.most_people = self.most_people.max(people);
         if tick >= 1_440 {
             self.fewest_people = Some(self.fewest_people.map_or(people, |f| f.min(people)));
+        }
+        for w in &res.colony.neighbours.waves {
+            if matches!(
+                w.state,
+                sim_core::colony::neighbours::VisitState::Waiting { .. }
+            ) {
+                self.wave_arrived.entry(w.id).or_insert(tick);
+            }
+        }
+        for c in &res.colony.neighbours.caravans {
+            if matches!(
+                c.state,
+                sim_core::colony::neighbours::VisitState::Waiting { .. }
+            ) {
+                self.caravan_arrived.entry(c.id).or_insert(tick);
+            }
         }
         let Some(rule) = sim_systems::runtime::wildlife::rule(res) else {
             return;
@@ -170,7 +192,57 @@ impl M55Watch {
             .map(|p| json!({"kind": p.kind.name(), "start_day": p.start_day}))
             .collect();
         let people = engine.world.query::<&Agent>().iter().count() as u64;
+        let nb = &res.colony.neighbours;
+        let defs = sim_core::colony::knowledge::defs();
+        let waves: Vec<Value> = nb
+            .waves
+            .iter()
+            .map(|w| {
+                let practitioners = w
+                    .people
+                    .iter()
+                    .flat_map(|p| p.knowledge.iter())
+                    .filter(|(id, pm)| {
+                        defs.get(*id).is_some_and(|d| {
+                            d.era == sim_core::colony::knowledge::Era::Neolithic && *pm >= d.threshold
+                        })
+                    })
+                    .count();
+                json!({"id": w.id, "neighbour": w.neighbour, "day": w.day, "arrived": self.wave_arrived.get(&w.id),
+                    "size": w.people.len(), "answer": w.answer.map(|a| format!("{a:?}")), "joined": w.joined.len(),
+                    "neolithic_practitioners": practitioners})
+            })
+            .collect();
+        let caravans: Vec<Value> = nb
+            .caravans
+            .iter()
+            .map(|c| {
+                json!({"id": c.id, "neighbour": c.neighbour, "day": c.day, "arrived": self.caravan_arrived.get(&c.id),
+                    "trades": c.trades, "goods_left": c.goods.iter().map(|g| u64::from(g.count)).sum::<u64>(),
+                    "goods": c.goods.iter().map(|g| json!([g.kind.name(), g.count, g.quality])).collect::<Vec<_>>()})
+            })
+            .collect();
+        let eurekas: Vec<Value> = (0..chronicle.len() as u32)
+            .filter_map(|i| chronicle.entry(i))
+            .filter(|e| e.kind == ChronicleKind::Eureka)
+            .map(|e| json!({"tick": e.tick, "node": e.value, "artifact": e.cause}))
+            .collect();
+        let discoveries: Vec<Value> = (0..chronicle.len() as u32)
+            .filter_map(|i| chronicle.entry(i))
+            .filter(|e| e.kind == ChronicleKind::KnowledgeDiscovered)
+            .map(|e| json!({"tick": e.tick, "node": e.value}))
+            .collect();
         json!({
+            "neighbours": {
+                "list": nb.list.iter().map(|n| json!({"id": n.id, "edge": n.edge.name(), "distance_days": n.distance_days,
+                    "population": n.population, "attitude": n.attitude, "known": n.known,
+                    "last_contact_day": n.last_contact_day})).collect::<Vec<_>>(),
+                "waves": waves, "caravans": caravans,
+                "tallies": serde_json::to_value(nb.tallies).unwrap_or(Value::Null),
+                "eurekas": eurekas, "discoveries": discoveries,
+                "traded_in": res.colony.item_ledger.traded_in.iter().map(|(k, n)| (k.name().to_string(), json!(n))).collect::<serde_json::Map<String, Value>>(),
+                "traded_out": res.colony.item_ledger.traded_out.iter().map(|(k, n)| (k.name().to_string(), json!(n))).collect::<serde_json::Map<String, Value>>(),
+            },
             "flight": {"episodes": self.episodes, "moved_away": self.moved_away,
                 "open_at_end": self.open.len()},
             "min_hp": self.min_hp,

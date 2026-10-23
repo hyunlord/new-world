@@ -222,6 +222,18 @@ pub enum Command {
         /// The person.
         agent: AgentId,
     },
+    /// Test and probe only (M5.5, the eureka fixture; never reachable from the game bridge): `count` items of `kind`
+    /// at quality 50 appear on tile `(x, y)` (ledger created).
+    DebugGive {
+        /// The item kind.
+        kind: super::ItemKind,
+        /// How many.
+        count: u16,
+        /// The tile.
+        x: u32,
+        /// See [`Self::DebugGive::x`].
+        y: u32,
+    },
     /// Draft or release a person (M5, ADR 0028; rejected before M5).
     SetDrafted {
         /// The person.
@@ -333,6 +345,7 @@ impl Command {
             Self::OrderTeach { .. } => "order_teach",
             Self::CancelTeach { .. } => "cancel_teach",
             Self::DebugKill { .. } => "debug_kill",
+            Self::DebugGive { .. } => "debug_give",
             Self::DraftMove { .. } => "draft_move",
             Self::DraftAttack { .. } => "draft_attack",
             Self::DraftAttackPerson { .. } => "draft_attack_person",

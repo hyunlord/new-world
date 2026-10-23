@@ -46,12 +46,13 @@ pub const STAPLES: [ItemKind; 5] = [
     ItemKind::Firewood,
 ];
 
-/// The knowledge nodes that make `kind` (an artifact's clue): a clay pot both pot forming and firing, a raw pot pot
-/// forming, a ground axe stone grinding, a spear or a stone axe hafting, hide goods hide scraping; empty otherwise.
+/// The knowledge nodes that make `kind` (an artifact's clue): a clay pot the pottery chain that makes it (clay
+/// preparation, pot forming, pot firing), a raw pot clay preparation and pot forming, a ground axe stone grinding, a
+/// spear or a stone axe hafting, hide goods hide scraping; empty otherwise (M5.5 DECISIONS).
 pub fn producing_nodes(kind: ItemKind) -> Vec<u8> {
     let names: &[&str] = match kind {
-        ItemKind::ClayPot => &["pot_forming", "pot_firing"],
-        ItemKind::RawPot => &["pot_forming"],
+        ItemKind::ClayPot => &["clay_prep", "pot_forming", "pot_firing"],
+        ItemKind::RawPot => &["clay_prep", "pot_forming"],
         ItemKind::GroundAxe => &["stone_grinding"],
         ItemKind::Spear | ItemKind::StoneAxe => &["hafting"],
         ItemKind::CuredHide | ItemKind::HideWrap | ItemKind::FurCloak => &["hide_scraping"],
@@ -412,14 +413,12 @@ mod tests {
     }
 
     #[test]
-    fn a_clay_pot_hints_at_pot_forming_and_firing() {
+    fn a_clay_pot_hints_at_the_pottery_chain() {
         let nodes = producing_nodes(ItemKind::ClayPot);
+        let id = |n: &str| sim_core::colony::knowledge::id(n).expect("node");
         assert_eq!(
             nodes,
-            vec![
-                sim_core::colony::knowledge::id("pot_forming").expect("node"),
-                sim_core::colony::knowledge::id("pot_firing").expect("node")
-            ]
+            vec![id("clay_prep"), id("pot_forming"), id("pot_firing")]
         );
         assert!(producing_nodes(ItemKind::Log).is_empty());
     }

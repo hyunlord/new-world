@@ -234,7 +234,7 @@ impl ColonyRule {
         story: Some(super::StoryRule::M5_5),
         wildlife: Some(super::WildlifeRule::M5_5),
         mood: Some(super::MoodRule::M5_5),
-        neighbours: None,
+        neighbours: Some(super::NeighbourRule::M5_5),
         ..Self::M5
     };
 

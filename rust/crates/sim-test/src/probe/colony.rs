@@ -76,6 +76,8 @@ pub struct ColonyArgs {
     /// M5: `--story on|off|no-beasts` — the storyteller on (the default), off (the
     /// no-pressure control), or without beasts (the soak: wolves off).
     pub story: String,
+    /// M5.5: `--neighbours on|off` — the neighbours, migrants and caravans on (the default) or off (the control).
+    pub neighbours: String,
 }
 
 impl ColonyArgs {
@@ -93,6 +95,7 @@ impl ColonyArgs {
             save_at: None,
             save_out: None,
             story: "on".into(),
+            neighbours: "on".into(),
         };
         let mut args = args.into_iter();
         while let Some(flag) = args.next() {
@@ -124,6 +127,9 @@ impl ColonyArgs {
                 "--save-out" => parsed.save_out = Some(value.into()),
                 "--story" if matches!(value.as_str(), "on" | "off" | "no-beasts") => {
                     parsed.story = value
+                }
+                "--neighbours" if matches!(value.as_str(), "on" | "off") => {
+                    parsed.neighbours = value
                 }
                 _ => return Err(format!("unknown colony probe argument {flag} {value}")),
             }
@@ -704,6 +710,14 @@ pub fn entry_ready(engine: &SimEngine, spec: &Value) -> bool {
         Some("pocket_dug") => pocket_mouth(engine).is_some(),
         // M5: a wolf pack is on the map; none is and someone is still drafted.
         Some("wolves") => engine.resources.colony.wildlife.wolves().next().is_some(),
+        // M5.5: a wave waits at the hearth; a caravan trades there and has not traded yet.
+        Some("migrants_waiting") => engine.resources.colony.neighbours.waiting_wave().is_some(),
+        Some("caravan_trading") => engine
+            .resources
+            .colony
+            .neighbours
+            .trading_caravan()
+            .is_some_and(|c| c.trades == 0),
         Some("no_wolves") => {
             engine.resources.colony.wildlife.wolves().next().is_none()
                 && engine
@@ -737,6 +751,82 @@ fn bill_mode(spec: &Value) -> Result<BillMode, String> {
         "maintain" => Ok(BillMode::Maintain(n)),
         other => Err(format!("unknown bill mode {other}")),
     }
+}
+
+/// The M55-U trade (goal §10): with the trading caravan that has not traded yet, give every flint blade on the
+/// stockpile cells above `keep` (stacks in tile order) and take the goods the balance allows — the colony's unknown
+/// artifacts first, then by unit value (highest first), then the goods order — as many of each as still fit.
+pub fn sell_blades(engine: &SimEngine, keep: u16) -> Option<Command> {
+    use sim_core::colony::values::value;
+    use sim_systems::runtime::neighbours::trade;
+    let res = &engine.resources;
+    let c = res
+        .colony
+        .neighbours
+        .trading_caravan()
+        .filter(|c| c.trades == 0)?;
+    let rule = sim_systems::runtime::neighbours::rule(res)?;
+    let blades: Vec<((u32, u32), u16, u8)> = res
+        .colony
+        .ground_items
+        .iter()
+        .filter(|(t, s)| s.kind == ItemKind::FlintBlade && res.colony.zone_of_tile.contains_key(*t))
+        .map(|(t, s)| (*t, s.count, s.quality))
+        .collect();
+    let total: u16 = blades.iter().map(|b| b.1).sum();
+    let mut sell = total.saturating_sub(keep);
+    if sell == 0 {
+        return None;
+    }
+    let mut give = Vec::new();
+    let mut give_value = 0u64;
+    for (t, n, q) in blades {
+        if sell == 0 {
+            break;
+        }
+        let k = n.min(sell);
+        sell -= k;
+        give.push((t.0, t.1, k));
+        give_value += u64::from(value(ItemKind::FlintBlade, q)) * u64::from(k);
+    }
+    // The take budget at 100 %: take × sell ≤ give × buy.
+    let mut budget =
+        give_value * u64::from(rule.buy_permille) / u64::from(rule.sell_permille.max(1));
+    let practice = trade::colony_practice(&engine.world);
+    let unknown = |kind: ItemKind| {
+        let nodes = trade::producing_nodes(kind);
+        !nodes.is_empty()
+            && nodes
+                .iter()
+                .any(|n| practice & sim_core::colony::knowledge::bit(*n) == 0)
+    };
+    let mut order: Vec<(bool, std::cmp::Reverse<u32>, usize)> = c
+        .goods
+        .iter()
+        .enumerate()
+        .map(|(i, g)| {
+            (
+                !unknown(g.kind),
+                std::cmp::Reverse(value(g.kind, g.quality)),
+                i,
+            )
+        })
+        .collect();
+    order.sort_unstable();
+    let mut take = Vec::new();
+    for (_, std::cmp::Reverse(unit), i) in order {
+        let g = c.goods[i];
+        let n = (budget / u64::from(unit.max(1))).min(u64::from(g.count)) as u16;
+        if n > 0 {
+            take.push((i as u16, n));
+            budget -= u64::from(unit) * u64::from(n);
+        }
+    }
+    Some(Command::Trade {
+        caravan: c.id,
+        give,
+        take,
+    })
 }
 
 /// The U-script (goal 10.1) resolved for `engine` (state at tick 360).
@@ -846,6 +936,23 @@ pub fn resolve(
             ids.sort_unstable();
             ids.into_iter()
                 .map(|agent| Command::DebugKill { agent })
+                .collect()
+        }
+        // M5.5 (the eureka fixture): items on the first stockpile cell (tile order).
+        ("debug_give", Some("first_stockpile")) => {
+            let kind = spec["item"]
+                .as_str()
+                .and_then(ItemKind::from_name)
+                .ok_or("debug_give needs an item")?;
+            let count = spec["count"].as_u64().unwrap_or(1) as u16;
+            engine
+                .resources
+                .colony
+                .zone_of_tile
+                .keys()
+                .next()
+                .map(|&(x, y)| Command::DebugGive { kind, count, x, y })
+                .into_iter()
                 .collect()
         }
         ("designate_clay", Some("clay_banks_near")) => {
@@ -1061,6 +1168,27 @@ pub fn resolve(
                 drafted: false,
             })
             .collect(),
+        // M5.5 (goal §10, the M55-U script): accept every wave waiting at the hearth.
+        ("accept_migrants", Some("waiting_waves")) => engine
+            .resources
+            .colony
+            .neighbours
+            .waves
+            .iter()
+            .filter(|w| {
+                matches!(
+                    w.state,
+                    sim_core::colony::neighbours::VisitState::Waiting { .. }
+                )
+            })
+            .map(|w| Command::AcceptMigrants { wave: w.id })
+            .collect(),
+        // M5.5: at a caravan (once each), sell every stockpiled flint blade above `keep` and take the most valuable
+        // goods the balance allows, the colony's unknown artifacts first.
+        ("trade", Some("sell_blades")) => {
+            let keep = spec["keep"].as_u64().unwrap_or(4) as u16;
+            sell_blades(engine, keep).into_iter().collect()
+        }
         (_, Some(other)) => return Err(format!("unknown resolve {other}")),
         ("designate_quarry", None) => {
             let (x0, y0, x1, y1) = rect(spec)?;
@@ -1195,6 +1323,15 @@ pub fn resolve(
         }],
         ("cancel_teach", None) => vec![Command::CancelTeach {
             order: field(spec, "order")?,
+        }],
+        ("debug_give", None) => vec![Command::DebugGive {
+            kind: spec["item"]
+                .as_str()
+                .and_then(ItemKind::from_name)
+                .ok_or("debug_give needs an item")?,
+            count: spec["count"].as_u64().unwrap_or(1) as u16,
+            x: field(spec, "x")?,
+            y: field(spec, "y")?,
         }],
         ("debug_kill", None) => vec![Command::DebugKill {
             agent: spec["agent"].as_u64().ok_or("debug_kill needs agent")?,
@@ -1357,6 +1494,9 @@ pub fn command_json(tick: u64, cmd: &Command) -> Value {
         } => json!({"teacher": teacher, "learner": learner, "knowledge": knowledge}),
         Command::CancelTeach { order } => json!({"order": order}),
         Command::DebugKill { agent } => json!({"agent": agent}),
+        Command::DebugGive { kind, count, x, y } => {
+            json!({"item": kind.name(), "count": count, "x": x, "y": y})
+        }
     };
     v["tick"] = json!(tick);
     v["cmd"] = json!(cmd.name());
@@ -1400,7 +1540,7 @@ pub fn colony_fingerprint(engine: &SimEngine) -> String {
         .collect();
     jobs.sort_by_key(|row| row.0);
     let text = format!(
-        "{:?}|{:?}|{:?}|{:?}|{:?}|{:?}|{:?}|{:?}|{:?}|{:?}|{}|{:?}|{:?}",
+        "{:?}|{:?}|{:?}|{:?}|{:?}|{:?}|{:?}|{:?}|{:?}|{:?}|{}|{:?}|{:?}|{:?}",
         c.trees.keys().collect::<Vec<_>>(),
         c.designations,
         c.ground_items,
@@ -1414,6 +1554,8 @@ pub fn colony_fingerprint(engine: &SimEngine) -> String {
         engine.resources.bed_of.len(),
         c.nodes,
         c.workshops,
+        // M5.5: the neighbours and their visitors.
+        c.neighbours,
     );
     format!("{}-{:016x}", super::fingerprint(engine), fnv(&text))
 }
@@ -1460,9 +1602,12 @@ fn deaths(engine: &SimEngine) -> Value {
 }
 
 /// The colony world of `seed` with the probe's `--story` choice applied (M5).
-fn probe_world(seed: u64, story: &str) -> SimEngine {
+fn probe_world(seed: u64, story: &str, neighbours: &str) -> SimEngine {
     let mut engine = crate::scenes::colony_scene(seed);
     if let Some(rule) = engine.resources.rules.colony.as_mut() {
+        if neighbours == "off" {
+            rule.neighbours = None;
+        }
         match story {
             "off" => rule.story = None,
             "no-beasts" => {
@@ -1477,10 +1622,10 @@ fn probe_world(seed: u64, story: &str) -> SimEngine {
 }
 
 fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<SeedRun, String> {
-    let mut engine = probe_world(seed, &args.story);
+    let mut engine = probe_world(seed, &args.story, &args.neighbours);
     let mut twin = args
         .check_determinism
-        .then(|| probe_world(seed, &args.story));
+        .then(|| probe_world(seed, &args.story, &args.neighbours));
     let total = args.days * DAY;
     let mut next = 0usize;
     let mut placed_tick: Option<u64> = None;
@@ -1862,6 +2007,7 @@ mod tests {
             save_at: None,
             save_out: None,
             story: "on".into(),
+            neighbours: "on".into(),
         };
         run(&first).expect("scripted run");
         let replay = ColonyArgs {
@@ -1902,6 +2048,7 @@ mod tests {
             save_at: None,
             save_out: None,
             story: "on".into(),
+            neighbours: "on".into(),
         };
         run(&first).expect("scripted run");
         let replay = ColonyArgs {

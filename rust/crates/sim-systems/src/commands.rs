@@ -501,6 +501,23 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
             crate::runtime::jobs::teach::cancel_order(world, res, order)
         }
         Command::DebugKill { agent } => debug_kill(world, res, agent),
+        Command::DebugGive { kind, count, x, y } => {
+            if x >= res.tile_grid.width || y >= res.tile_grid.height {
+                return CommandResult::rejected(RejectReason::OutOfMap);
+            }
+            if count == 0 {
+                return CommandResult::rejected(RejectReason::Nothing);
+            }
+            res.colony.item_ledger.create(kind, u64::from(count));
+            crate::runtime::jobs::items::put_items(
+                res,
+                (x, y),
+                sim_core::colony::ItemSpec::raw(kind, None),
+                count,
+            );
+            res.colony.touch(false);
+            CommandResult::ok(u32::from(count))
+        }
     }
 }
 

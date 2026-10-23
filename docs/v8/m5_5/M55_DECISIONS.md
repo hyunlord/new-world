@@ -206,3 +206,119 @@ Recorded with the calibration commit (after Part 3): the M55-U script needs cara
   (`$DATA/p1_identity.log`: summary 228,748 values, chronicle 64 files, raw samples, determinism), the whole workspace
   in release 1,979 passed / 0 failed (`$DATA/p1_test_release.log`) before the Part 2 code; after it, with the rule
   off, the sim-core and sim-systems unit tests and the colony test files pass and clippy is clean.
+
+## D17 — The neighbours, as built (goal §3.2, ADR 0031)
+
+- Where: `ColonyState::neighbours` (`sim_core::colony::neighbours::Neighbours`, saved with the colony), not a new
+  `SimResources` field: every colony fact lives in `ColonyState`, so the save, the fingerprint (`colony_fingerprint`
+  now includes it) and the rule gate follow for free. The goal's `SimResources.neighbours` is read as "in the
+  simulation's resources".
+- Generation (`neighbours::generate`, `STREAM_NEIGHBOURS`, subject 0x4E, on the first daily run): the first edge
+  keyed 0–3, the second one of the other three; names from 12 locale keys (`NEIGHBOUR_NAME_0` … `_11`), different;
+  distance 2–5 days, population 20–60, attitude 40–60; known = every Paleolithic node and the first k of a keyed
+  shuffle of the 7 Neolithic nodes (k = 2–4; no prerequisite closure — a neighbour knows what it knows, and gating
+  reads only the node itself); when neither knows a pottery-lane node (clay prep, pot forming, pot firing), the first
+  is given pot forming. `distance_days` is shown, not simulated (visitors walk from the map edge).
+- `NeighbourSystem` (174, daily) drifts each population by −1, 0 or +1 % (keyed per neighbour and day; at least one
+  person a step, never below 1) and does nothing else to them.
+
+## D18 — Migrant waves, as built (goal §3.2)
+
+- Dates: wave 1 on a keyed day 8–12 with 2–4 people, wave 2 on a keyed day 20–26 with 2–6 (`first_waves`); then one
+  roll a season, on a keyed day 2–5 of each season that **starts after day 26** (so after wave 2 whatever its day:
+  seasons 5–7 in two years, days 30–47). A roll's chance ‰ = min(800, 50 · food-surplus days + stockpile value / 50 +
+  attitude · 2) with food-surplus days = the settlements' stored food / (adults × 3 units; a person eats about three
+  1-unit meals a day, `STOCKPILE_RELIEF_FOOD_PER_MEAL`) and stockpile value = Σ value × count on stockpile cells
+  (`values.ron`); won, 1–4 people. The cap counts adults and children (40); a wave or roll at the cap is not sent
+  (`tallies.capped`). The wave comes from the neighbour with the higher attitude (ties: the lower id).
+- The walk: from the reachable passable tile of the neighbour's edge nearest the edge's middle to the meeting tile
+  (the nearest passable tile by the hearth without a building), one tile every 3 ticks (a person's pace); about 100
+  tiles, so a wave arrives the day it sets out (F7 "in their windows" reads the arrival day). It waits one day.
+- Answers: `AcceptMigrants` is accepted while the wave waits **or is still walking in** (the player may answer as soon
+  as the dialog shows it); `DeclineMigrants` likewise. Declined or unanswered: the wave walks back to its edge and its
+  neighbour's attitude falls by 5 (7.5 kept; it is not dropped).
+- The people (`neighbours::migrants`, pure in seed, wave and place): lineage key keyed on (wave, place); sex from it
+  (`Sex::from_lineage`); age = the founders' keyed age (16–40 years) counted back from the day they join; knowledge per
+  §3.2 (Paleolithic 450–700 ‰, each Neolithic node with chance ½ at 420–650 ‰ — every Neolithic threshold is ≤ 400,
+  so every Neolithic node a migrant brings makes them a practitioner); a hide wrap with chance ½ (ledger created and
+  worn, so counted as held).
+- Joining (`neighbours::join::accept`): each person spawns on the free tiles nearest the wave with the founders'
+  component set (`worldgen::camp`), needs at 20 (they walked), `Lineage`, hardiness, temperament, `Sex`, empty `Kin`,
+  `Life`, `Knowledge` (source `Migrant`, which fades and floors as apprenticed: `Source::table_index`), apparel when
+  the spec says; they are added to the colony's settlement (the lowest id). Households form through the normal
+  pairing (a wave brings no families: goal §12); beds come from `BedAssignmentSystem` at 20:00 when free beds exist;
+  work priorities are the defaults (no component); skills start empty (made on first use, as for founders).
+
+## D19 — Caravans and barter, as built (goal §3.3, ADR 0032)
+
+- Dates: one candidate a season on a keyed day 2–5 (`STREAM_NEIGHBOURS`, subject 0x53); before day 6 it is skipped
+  (the first spring's); during a major pressure it moves to the major's end + 1 day if that stays in the season, else
+  it is skipped (`caravans_skipped`). The sender: attitude ≥ 30, the higher (ties: lower id); when both qualify, not the
+  last sender. Two traders walk as one group (one tile), stay one day at the meeting tile and leave. Their **spot** is the
+  nearest free tile by the meeting tile that can hold items and is not a stockpile cell.
+- Goods (`trade::goods`, `STREAM_TRADE`, pure in seed, caravan, the neighbour's nodes and the colony's practice):
+  6–10 stacks; each drawn from the weighted table — the goal's six artifacts at weight 3 when the neighbour knows the
+  node that makes them and no living colonist practises it, the five staples at weight 1; an artifact stack holds 1–2,
+  a staple stack 2–6 (the goal gives no counts); quality 30–70.
+- `Trade { caravan, give: [(x, y, count)], take: [(goods index, count)] }`: `give` names stacks on stockpile cells (an
+  item already owed from that stack cannot be given twice); accepted iff Σ value(give) × 800 ≥ Σ value(take) × 1,200
+  (integer, at 100 % values; `trade::balanced`). Refusals: `NoVisitor` (no caravan of that number trading), `Unknown`
+  (an item that is not there), `Nothing` (empty), `Unbalanced`. On acceptance the taken goods are put on the spot at
+  once (ledger `traded_in`; then hauled to the stockpiles as any loose stack) and the given stacks join the caravan's
+  `owed` list. The **haul**: a new job kind `JobKind::Trade { from, to }` (work type Haul; code 17), offered before any
+  other haul, carries an owed load to the spot, where it leaves the ledger (`traded_out`). The owed amount is taken off
+  the list when the haul is assigned; a load not delivered before the caravan leaves (or whose job is cancelled) is
+  forgiven — the colony keeps it and the trade stands (recorded as a limit).
+- Ledger identity (`invariants::LedgerTerms::balanced`): created + traded_in = ground + carried + held + delivered +
+  shelved + consumed + traded_out, per kind, every tick.
+- Attitude: +3 a trade, a gift +1 per 10 of its value at the traders' 80 %, capped at 100 (8.4 kept). Chronicle
+  `Traded` value = give value at 80 % << 16 | take value at 120 %.
+
+## D20 — Eureka, as built (goal §3.3, ADR 0032)
+
+- A **clue** (`trade::clues`): an item kind the colony holds anywhere (ledger created + traded in − consumed − traded
+  out > 0: ground, hands, shelves, worn) whose producing node no living colonist practises. Producing nodes
+  (`trade::producing_nodes`): a clay pot → the pottery chain that makes it (clay preparation, pot forming, pot
+  firing — clay preparation is included because its stockpile condition is what a pot stands in for), a raw pot →
+  clay preparation and pot forming, a ground axe → stone grinding, a spear or stone axe → hafting, cured hide, wrap,
+  cloak → hide scraping. Nodes without discovery conditions (hafting, hide scraping) are never discovered (M4), so
+  their clue changes nothing.
+- `DiscoverySystem`: a clue node's `Stockpile` conditions count as met (`discover::conditions_with`); its draw wins on
+  `draw × 1,000 < eureka_permille` (3,000: draws 0, 1, 2 of `odds`) — the same keyed draw, so without a clue nothing
+  changes (draw 0 only). The candidate must still practise the prerequisites. A clue discovery is chronicled
+  `Eureka` (cause the artifact's code, value the node) after its `KnowledgeDiscovered`.
+- Evidence (probe, seeds 0–7, 48 days, M55-U script with `--neighbours off`; `$DATA/eureka/`): with a clay pot given
+  on day 2 (`DebugGive`, a probe-only command like M4's `DebugKill`) the first pot-forming discovery came on day
+  6.7, 22.7, 10.2, 16.7, 21.8, 11.0, 6.7, 13.3 — **median 12.2** — against 9.0, 22.7, 10.2, 16.7, 21.8, 36.8, 10.8,
+  13.3 — **median 15.0** — without; clay preparation median 9.5 against 11.0. Unit test: a clay pot no one can make is a
+  clue for pot forming; once someone practises it, it is not; the draw wins 3 of 40 instead of 1.
+
+## D21 — The M55-U script and the controls (goal §10)
+
+- `tools/v8/m55_u_script.json` = M5-U (`tools/v8/m5_u_script.json`) with the knap bill's maintain count 6 → **12**,
+  plus: accept every waiting wave (`accept_migrants` / `waiting_waves`, after `migrants_waiting`, every day) and, once
+  per caravan, sell every stockpiled flint blade above 4 and take the most valuable goods the balance allows, the
+  colony's unknown artifacts first (`trade` / `sell_blades`, `keep` 4, after `caravan_trading`, every day). The draft
+  entries are M5's (four adults with spears at every pack; undraft when none is left).
+- Controls on the same seeds: **no-draft** `tools/v8/m55_u_nodraft_script.json` (the same without the draft entries),
+  **story-off** (`--story off`), **no-neighbours** (`--neighbours off`, the probe's new switch: `rule.neighbours = None`).
+
+## D22 — Scorer registration (`docs/v8/m5_5/m55_score.py`)
+
+The bars as the scorer reads them are written in its docstring before any held-out run (and before the calibration
+rounds). Readings the goal leaves open:
+- F1b "non-wolf pressure deaths": the deaths booked to pressures other than beasts (Σ `PressureCost::deaths`), per
+  world. F1c "no world loses ≥ 50 % of its people": total deaths × 2 < the most people alive at once.
+- F2b reads the no-draft control; F2c pools the episodes of the pressure and no-draft runs (the draft run has few
+  undrafted people near a wolf). An episode and "moved away" as in D10.
+- F3 "meat spoiled before reaching a stockpile" = `meat_spoiled_afield` (spoiled off the stockpile cells).
+- F4 counts wearers of any top (hide wrap or fur cloak), migrants' wraps included, at the end of day 30 and day 48;
+  the cold ratio is the M5 probe's winter-night cold person-hours over person-hours, clothed against unclothed.
+- F5a reads the pressure run, F5b the story-off control.
+- F6a per world (≥ 4 quarrels, fights ≤ quarrels / 4, no combat death outside the wolves); F6b pooled over the worlds.
+- F7a reads the arrival (the day the wave reached the hearth); F7c counts the Neolithic entries at or above threshold
+  of accepted waves.
+- F8b counts the items taken whose producing node no living colonist practised at the moment of the trade
+  (`NeighbourTallies::unknown_bought`).
+- F10a reads a fifth run, "quiet" (story off and neighbours off), pooled births per woman-year; F10b every run's
+  ledger and reservation violation ticks.

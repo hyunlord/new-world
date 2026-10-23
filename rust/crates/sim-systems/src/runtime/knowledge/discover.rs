@@ -1,9 +1,9 @@
 //! DiscoverySystem: curious adults who hold every prerequisite may discover a node whose settlement conditions hold.
 //!
 //! Priority: 163 (`DISCOVERY_PRIORITY`). Interval: 240 ticks (fixed; `KnowledgeRule::discovery_interval` must match — a test checks). Gate: `ColonyRule::knowledge`.
-//! Reads: `Agent`, `Child`, `Lineage`, `Temperament`, `Knowledge`, `Skills`; `SimResources.colony` (ground items, zones, resource nodes), `settlements` (hearths), `world_seed`
-//! Writes: `Knowledge` (a discovered node at `discovery_gain` ‰, `Source::Discovered`); `SimResources.colony.tallies` (discoveries), `chronicle`
-//! Events: chronicle `KnowledgeDiscovered` (subject the discoverer, value the node id)
+//! Reads: `Agent`, `Child`, `Lineage`, `Temperament`, `Knowledge`, `Skills`; `SimResources.colony` (ground items, zones, resource nodes, item ledger), `settlements` (hearths), `rules` (neighbours: eureka), `world_seed`
+//! Writes: `Knowledge` (a discovered node at `discovery_gain` ‰, `Source::Discovered`); `SimResources.colony.tallies` (discoveries), `colony.neighbours.tallies` (eurekas), `chronicle`
+//! Events: chronicle `KnowledgeDiscovered` (subject the discoverer, value the node id), M5.5 `Eureka` (cause the artifact, value the node)
 //!
 //! M4 goal 3.3 (ADR 0025). Each check first evaluates every node's discovery
 //! conditions once for the settlement ([`conditions`]): stockpile counts are
@@ -17,6 +17,13 @@
 //! practise, and whose prerequisites the candidate all practises, one keyed
 //! draw (`STREAM_KNOWLEDGE`, subject = the lineage key, slot 0x2_0000 + id)
 //! succeeds with odds 1 in `discovery_odds[difficulty − 1]`.
+//!
+//! M5.5 (ADR 0032, eureka): while the colony holds an artifact whose
+//! producing node no living colonist practises (`neighbours::trade::clues`),
+//! that node's stockpile conditions count as met and its draw succeeds on
+//! `eureka_permille` / 1,000 of the odds (×3) — the same keyed draw, so a
+//! clue only widens it; the discovery is also chronicled `Eureka` (the
+//! artifact and the node).
 use hecs::World;
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
 use sim_core::colony::knowledge::{bit, defs, Cond, Knowledge, Source};
@@ -73,10 +80,21 @@ pub fn holds(world: &World, res: &SimResources, cond: Cond) -> bool {
 /// The nodes whose discovery conditions all hold now (bit `i` = node `i`;
 /// a node without conditions is never set: it is not discovered).
 pub fn conditions(world: &World, res: &SimResources) -> u32 {
+    conditions_with(world, res, 0)
+}
+
+/// [`conditions`] where the nodes of `clues` (M5.5 eureka) count their stockpile conditions as met.
+pub fn conditions_with(world: &World, res: &SimResources, clues: u32) -> u32 {
     defs()
         .nodes
         .iter()
-        .filter(|n| !n.discover.is_empty() && n.discover.iter().all(|c| holds(world, res, *c)))
+        .filter(|n| {
+            !n.discover.is_empty()
+                && n.discover.iter().all(|c| {
+                    (clues & bit(n.id) != 0 && matches!(c, Cond::Stockpile(..)))
+                        || holds(world, res, *c)
+                })
+        })
         .fold(0, |m, n| m | bit(n.id))
 }
 
@@ -121,7 +139,12 @@ impl RuntimeSystem for DiscoverySystem {
         if candidates.is_empty() {
             return;
         }
-        let open = conditions(world, resources);
+        // M5.5 (ADR 0032): artifacts that hint at a node no one practises.
+        let clues = crate::runtime::neighbours::trade::clues(world, resources);
+        let clue_mask = clues.keys().fold(0, |m, id| m | bit(*id));
+        let eureka =
+            crate::runtime::neighbours::rule(resources).map_or(1000, |r| r.eureka_permille);
+        let open = conditions_with(world, resources, clue_mask);
         if open == 0 {
             return;
         }
@@ -134,6 +157,9 @@ impl RuntimeSystem for DiscoverySystem {
                     continue;
                 }
                 let odds = rule.discovery_odds[usize::from(node.difficulty.clamp(1, 3) - 1)].max(1);
+                // One in `odds`, or (a clue) `eureka` ‰ of one in `odds`: wins below `wins` of `odds × 1,000`.
+                let clue = clue_mask & bit(node.id) != 0;
+                let wins = if clue { u64::from(eureka) } else { 1000 };
                 let draw = keyed_below(
                     seed,
                     STREAM_KNOWLEDGE,
@@ -143,9 +169,9 @@ impl RuntimeSystem for DiscoverySystem {
                     0,
                     u64::from(odds),
                 );
-                if draw == 0 {
+                if draw * 1000 < wins {
                     k.raise_to(node.id, rule.discovery_gain, Source::Discovered, tick);
-                    found.push(node.id);
+                    found.push((node.id, clue));
                 }
             }
             if found.is_empty() {
@@ -159,13 +185,22 @@ impl RuntimeSystem for DiscoverySystem {
                 p.entity,
                 crate::runtime::mood::Fact::Discovered,
             );
-            for id in found {
+            for (id, clue) in found {
                 resources.colony.tallies.discoveries += 1;
                 resources.chronicle.push(
                     ChronicleEntry::new(tick, ChronicleKind::KnowledgeDiscovered)
                         .subject(p.id)
                         .value(i64::from(id)),
                 );
+                if let Some(artifact) = clues.get(&id).filter(|_| clue) {
+                    resources.colony.neighbours.tallies.eurekas += 1;
+                    resources.chronicle.push(
+                        ChronicleEntry::new(tick, ChronicleKind::Eureka)
+                            .subject(p.id)
+                            .cause(artifact.code())
+                            .value(i64::from(id)),
+                    );
+                }
             }
         }
     }
