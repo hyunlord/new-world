@@ -1,0 +1,29 @@
+{
+  "path": "art/boards/walls_material_strip.c_2x.png",
+  "sha256": "950e3a91ba823215ab10f2508d8449ebb10c769f90a0cd0fcf805c9efa2ba6c9",
+  "bytes": 373370,
+  "dimensions": [
+    920,
+    1240
+  ],
+  "title": "c / material along run / width44 / complete matched house and storehouse / 2x",
+  "panels": [
+    {
+      "path": "/Users/rexxa/work/artpolish2-data/boards/walls_c.png",
+      "sha256": "c402dd300bbe89244687bc04a20a297c2e76593f082cfcbf7a988752e5faeb63",
+      "crop": [
+        0,
+        138,
+        448,
+        716
+      ],
+      "origin": [
+        12,
+        56
+      ],
+      "label": "Full 2x; same crop as main 1x",
+      "integer_scale": 2
+    }
+  ],
+  "owner_approval": "PENDING"
+}

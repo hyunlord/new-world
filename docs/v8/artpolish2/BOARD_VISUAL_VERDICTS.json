@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "owner_approval": "PENDING",
+  "rounds": [
+    {
+      "stage": "diagnostic_1",
+      "generated_screenshot": "/Users/rexxa/work/artpolish2-data/boards/diagnostic_1/walls_b.png",
+      "reference_images": [
+        "/Users/rexxa/work/artpolish2-data/boards/diagnostic_1/walls_a.png"
+      ],
+      "score": 68,
+      "verdict": "revise",
+      "category_match": true,
+      "differences": [
+        "New material face ends display opaque white rectangular gutters.",
+        "The stone face also retains a white lower margin.",
+        "North-south surface grain is now vertical, but these white borders prevent acceptance."
+      ],
+      "suggestions": [
+        "Texture owner must inspect and regenerate failing source pieces within the registered try limit.",
+        "Preserve generated source alpha; do not repair white gutters with pixel surgery."
+      ],
+      "reasoning": "The real compositor exposes source-background contamination that unit geometry checks cannot detect. This diagnostic is not a final visual pass."
+    },
+    {
+      "stage": "diagnostic_1",
+      "generated_screenshot": "/Users/rexxa/work/artpolish2-data/boards/diagnostic_1/walls_c.png",
+      "reference_images": [
+        "/Users/rexxa/work/artpolish2-data/boards/diagnostic_1/walls_a.png"
+      ],
+      "score": 60,
+      "verdict": "revise",
+      "category_match": true,
+      "differences": [
+        "White face/end gutters remain.",
+        "A thin light vertical rectangle extends below the right-side isolated narrow top.",
+        "Narrow north-south tops leave the intended side clearance, but the rectangle artifact must be diagnosed."
+      ],
+      "suggestions": [
+        "Inspect the narrow-width alpha/edge assembly and its source texture boundaries.",
+        "Re-render identical world coordinates after texture and assembly repair."
+      ],
+      "reasoning": "Candidate c cannot pass visual review while the isolated run retains stray vertical edges. Root and owning executors were notified."
+    },
+    {
+      "stage": "final_texture_topology_diagnostic",
+      "generated_screenshot": "/Users/rexxa/work/artpolish2-data/boards/final_wall_topology_diagnostic/walls_material_strip.b_2x.png",
+      "generated_sha256": "7b2ddabe80a975d394a9b431373fe68a2c3cf8326643d49e3b15e006959e7f49",
+      "reference_images": [
+        "/Users/rexxa/work/artpolish2-data/boards/final_wall_topology_diagnostic/walls_material_strip.a_2x.png"
+      ],
+      "score": 78,
+      "verdict": "revise",
+      "category_match": true,
+      "differences": [
+        "The storehouse north edge has only a top where its south is open: cells (80,101), (81,101), and (82,101) have north/east/west neighbours and incorrectly lack the 44px face.",
+        "House south faces disappear where the adjacent stone room occupies the south cell; this is intentional global occupancy and differs from the frozen legacy comparison."
+      ],
+      "suggestions": [
+        "Remove the degree-based front-face suppression only from the material renderer, retaining the south-neighbour and door checks.",
+        "Re-render identical source coordinates after the tested repair; retain global mixed-material occupancy."
+      ],
+      "reasoning": "The frozen texture set has no former white gutters, but final-scene inspection exposed a real face-selection error. Parent owns the narrow renderer repair; the original diagnostic is preserved."
+    },
+    {
+      "stage": "final_texture_topology_diagnostic",
+      "generated_screenshot": "/Users/rexxa/work/artpolish2-data/boards/final_wall_topology_diagnostic/walls_material_strip.c_2x.png",
+      "generated_sha256": "3f64f76507200032758d2367a2c6f89da849c39f06b7ddc589515a20ae427fe8",
+      "reference_images": [
+        "/Users/rexxa/work/artpolish2-data/boards/final_wall_topology_diagnostic/walls_material_strip.a_2x.png"
+      ],
+      "score": 74,
+      "verdict": "revise",
+      "category_match": true,
+      "differences": [
+        "The same south-exposed T junctions incorrectly lack their front face.",
+        "Width44 leaves repeated narrow ground slots along the dense touching house/store junction row; this geometry remains an owner comparison caveat even if the exposed-face bug is repaired."
+      ],
+      "suggestions": [
+        "Remove the degree-based front-face suppression only from the material renderer, retaining the south-neighbour and door checks.",
+        "Re-render identical source coordinates after the tested repair; retain global mixed-material occupancy."
+      ],
+      "reasoning": "The frozen texture set has no former white gutters, but final-scene inspection exposed a real face-selection error. Parent owns the narrow renderer repair; the original diagnostic is preserved."
+    },
+    {
+      "stage": "final_wall_inputs_after_south_face_fix",
+      "generated_screenshot": "art/boards/walls_material_strip.b_2x.png",
+      "generated_sha256": "01f0134231a8a7199dcc06a504a8983816456e3dade31296ba2faa2fb0f6e3ed",
+      "reference_images": [
+        "art/boards/walls_material_strip.a_2x.png"
+      ],
+      "score": 92,
+      "verdict": "pass",
+      "category_match": true,
+      "differences": [
+        "Material tops retain visible along-run grain instead of the legacy near-black band.",
+        "Shared log/stone adjacency now follows global topology; the house south row therefore differs from legacy a."
+      ],
+      "suggestions": [
+        "Owner must choose the preferred top treatment.",
+        "Keep log/top_ew and mud_brick/top_ns marked failed numeric seams; visual readability is not a seam waiver."
+      ],
+      "reasoning": "The restored storehouse front face and opaque source boundaries read coherently at native and exact2x. This is a surface-readability verdict, not owner acceptance or an override of failed texture gates."
+    },
+    {
+      "stage": "final_wall_inputs_after_south_face_fix",
+      "generated_screenshot": "art/boards/walls_material_strip.c_2x.png",
+      "generated_sha256": "950e3a91ba823215ab10f2508d8449ebb10c769f90a0cd0fcf805c9efa2ba6c9",
+      "reference_images": [
+        "art/boards/walls_material_strip.a_2x.png"
+      ],
+      "score": 84,
+      "verdict": "revise",
+      "category_match": true,
+      "differences": [
+        "Repeated rectangular ground slots between44px junction arms remain conspicuous along the adjoining house/store row and store south edge.",
+        "The slimmer north/south wall band reduces visual mass, but these dense adjacent-junction cutouts read as a comb pattern at2x."
+      ],
+      "suggestions": [
+        "Present this limitation with a/b/c for owner choice.",
+        "Any future width44 refinement should address contiguous multi-row junction geometry through the renderer; do not paint over the board or change source pixels."
+      ],
+      "reasoning": "The real face-selection bug is fixed, and the remaining slots come from the requested centred-width directional masks. This candidate remains visually weaker on the dense frozen layout; no additional unapproved geometry redesign is made in this board lane."
+    },
+    {
+      "stage": "final_crowd_bf237fd9",
+      "generated_screenshot": "art/boards/crowd_faces.png",
+      "generated_sha256": "80d336e7d4c52799ab37d7f2d77eb994e5a990ddda3471db7360891b737a51ae",
+      "reference_images": [
+        "/Users/rexxa/work/artpolish2-data/boards/final_crowd/untinted_scene.png",
+        "/Users/rexxa/work/artpolish2-data/boards/final_crowd/native_people_comparison.png"
+      ],
+      "score": 92,
+      "verdict": "pass",
+      "category_match": true,
+      "differences": [
+        "At native1x, ID0/v1 reads visibly lighter and IDs3/v6,4/v3,5/v6 read deeper than the shared untinted orange skin.",
+        "Hair/skin hue variation is visible, but small faces do not make portrait-level features or every identity separately readable.",
+        "Deep-tone figures have lower contrast against brown ground; silhouettes, clothing and held objects remain intact."
+      ],
+      "suggestions": [
+        "Present this as final tint integration evidence with the actual10-source/8-visible counts.",
+        "Judge portrait distinctness and portrait-to-sprite identity with the separate blind results; do not infer them from this scene."
+      ],
+      "reasoning": "The actual compositor selects committed baked frames by real agent ID before ordinary depth composition. Native full-scene and exact1x person comparisons show palette variety without halos, scene movement or changes outside the figure regions."
+    }
+  ],
+  "diagnostic_dispositions": [
+    {
+      "finding": "Thin light vertical rectangle on c at the right-hand isolated top",
+      "disposition": "Explained by existing construction-site outline semantics in drawing.site_overlay. Narrow width exposes alpha boundaries inside the tile; it is not uninitialized RGB. Preserve site status and explain it; no geometry repair required."
+    },
+    {
+      "finding": "White face/end gutters",
+      "disposition": "Texture executor confirmed generated source contamination and is regenerating the affected pieces. Pending new visual check."
+    },
+    {
+      "finding": "Opaque white face/end gutters",
+      "disposition": "Final selected source replacement removed visible white gutters at 1x and exact2x. This observation does not override the two remaining numeric seam failures."
+    },
+    {
+      "finding": "Missing south-facing surfaces at N/E/W T junctions",
+      "disposition": "Parent removed the degree-based face suppression in the material renderer only. Re-rendered boards restore exposed faces at (80,101),(81,101),(82,101),(82,105),(83,105); global material occupancy and frozen legacy a are retained."
+    }
+  ],
+  "board_layout_verdict": {
+    "score": 96,
+    "verdict": "pass",
+    "category_match": true,
+    "differences": [
+      "Full2x scenes are separated into named a/b/c supplements because the combined lossless sheet exceeded1.5MB."
+    ],
+    "suggestions": [
+      "Review the main native strip with the three full2x supplements."
+    ],
+    "reasoning": "The required main board contains matched full1x scenes, exact2x house/store details and all six material rooms. All18 panel crops match source pixels exactly at1x or nearest2x."
+  },
+  "scope_boundary": "Owner approval remains PENDING. Rendering/board fidelity is distinct from candidate c visual revision and the two failed numeric texture seams. Verdict stored here because the assigned write scope excludes .omx/state."
+}

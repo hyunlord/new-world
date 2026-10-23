@@ -20,8 +20,10 @@ from pydantic import JsonValue
 
 from art.compositor.assets import REPO, Catalog, load_catalog
 from art.compositor.drawing import ForegroundPainter, site_overlay
+from art.compositor.face_variants import FacePlan
 from art.compositor.geometry import HUD_HEIGHT, WINDOW, Viewport
 from art.compositor.ground import GroundPainter
+from art.compositor.material_layers import MaterialScene, material_tiles
 from art.compositor.models import Overlay, Scene
 from art.compositor.native_layers import DESTINATION
 from art.compositor.placements import RenderPerson, Sprite, render_people
@@ -67,7 +69,8 @@ def paint_structure(painter: ForegroundPainter, row: StructureTile) -> dict[str,
 
 
 def compose(inputs: RenderInputs, settings: RenderSettings, *, cap_style: CapStyle = "dark",
-            wall_params: WallParameters | None = None) -> RenderProduct:
+            wall_params: WallParameters | None = None, face_plan: FacePlan | None = None,
+            materials: MaterialScene | None = None) -> RenderProduct:
     """Re-compose, retaining original scene coordinates and declared actor identities."""
     scene, catalog = inputs.scene, inputs.catalog
     viewport = Viewport(scene.camp, settings.zoom)
@@ -75,10 +78,12 @@ def compose(inputs: RenderInputs, settings: RenderSettings, *, cap_style: CapSty
     ground = paint_ground(scene, layout, GroundPainter(catalog, viewport, settings.condition), wall_params)
     image = ground.image
     coverage = Image.new("L", WINDOW)
-    painter = ForegroundPainter(image, viewport, catalog, settings.lod, coverage)
+    painter = ForegroundPainter(image, viewport, catalog, settings.lod, coverage, face_plan)
     actors = render_people(scene, inputs.overlay)
     labels = {actor.person.id: index + 1 for index, actor in enumerate(actors)}
     walls = structural_tiles(layout, catalog, (scene.width, scene.height), cap_style=cap_style, params=wall_params)
+    if materials is not None:
+        walls = (*material_tiles(layout, materials), *(row for row in walls if row.source == "hill_face"))
     layers: list[Sprite | RenderPerson | StructureTile] = [*layout.sprites, *actors, *walls]
     objects: list[dict[str, JsonValue]] = []
     people: list[dict[str, JsonValue]] = []
@@ -123,7 +128,8 @@ def compose(inputs: RenderInputs, settings: RenderSettings, *, cap_style: CapSty
     draw.rectangle((0, WINDOW[1] - 23, WINDOW[0], WINDOW[1]), fill=(25, 28, 26, 255))
     supplemental = settings.zoom < .5 or settings.condition is Condition.DROUGHT
     label = "SUPPLEMENTAL" if supplemental else "CANONICAL"
-    draw.text((10, WINDOW[1] - 19), f"STRUCT {label} CANDIDATE | Frozen ENV1 real scene + same DECLARED overlay | Code walls/edges; owner verdict pending", font=FONT, fill=(211, 211, 197))
+    pass_label = "POLISH2 tinted faces" if face_plan is not None else "STRUCT"
+    draw.text((10, WINDOW[1] - 19), f"{pass_label} {label} CANDIDATE | Frozen ENV1 real scene + same DECLARED overlay | Code walls/edges; owner verdict pending", font=FONT, fill=(211, 211, 197))
     evidence: dict[str, JsonValue] = {
         "scene_id": scene.scene_id, "tick": scene.tick, "source_display_day": scene.display_day,
         "source_clock_minute": scene.clock_minute, "source_season": scene.season,
@@ -141,13 +147,21 @@ def compose(inputs: RenderInputs, settings: RenderSettings, *, cap_style: CapSty
         "roof": "not drawn", "native_hut_count": sum(room.id.startswith("real_hut_") for room in layout.rooms),
         "cap_style": cap_style, "wall_parameters": (wall_params or WallParameters.read()).model_dump(mode="json"),
     }
+    if materials is not None:
+        evidence["material_scene"] = materials.choices.model_dump(mode="json")
+        evidence["material_top"] = materials.top.model_dump(mode="json") if materials.top is not None else None
+        evidence["material_input_sha256"] = {str(path.relative_to(REPO)): sha256(path) for path in materials.input_paths()}
+    if face_plan is not None:
+        evidence["face_variant_rule"] = face_plan.rule
+        evidence["face_plan_sha256"] = sha256(REPO / "art/character/FACE_VARIANTS.json")
     return RenderProduct(image.convert("RGB"), evidence)
 
 
-def save_lossless(image: Image.Image, path: Path, enforce_cap: bool = True) -> None:
+def save_lossless(image: Image.Image, path: Path, enforce_cap: bool = True, *,
+                  optimize_oversize: bool = False) -> None:
     """Try installed lossless PNG filters; verify decoded pixels before replacement."""
     image.save(path, optimize=True, compress_level=9)
-    if enforce_cap and path.stat().st_size > 1_500_000:
+    if (enforce_cap or optimize_oversize) and path.stat().st_size > 1_500_000:
         EXTERNAL.mkdir(parents=True, exist_ok=True)
         with tempfile.TemporaryDirectory(prefix="png-lossless-", dir=EXTERNAL) as temporary:
             compressed = Path(temporary) / "compressed.png"

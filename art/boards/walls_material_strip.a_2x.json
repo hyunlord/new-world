@@ -1,0 +1,29 @@
+{
+  "path": "art/boards/walls_material_strip.a_2x.png",
+  "sha256": "93546ba77dbd1c46a4865b8ecf2bc9bea15fbce56b4edec54b38fe6f2a7637df",
+  "bytes": 373556,
+  "dimensions": [
+    920,
+    1240
+  ],
+  "title": "a / POLISH dark top x0.45 / complete matched house and storehouse / 2x",
+  "panels": [
+    {
+      "path": "/Users/rexxa/work/artpolish2-data/boards/walls_a.png",
+      "sha256": "f244ac4c3f97eb61bc56d17f29d66e283cb87b5613096d9f09ad8622873629da",
+      "crop": [
+        0,
+        138,
+        448,
+        716
+      ],
+      "origin": [
+        12,
+        56
+      ],
+      "label": "Full 2x; same crop as main 1x",
+      "integer_scale": 2
+    }
+  ],
+  "owner_approval": "PENDING"
+}

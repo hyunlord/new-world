@@ -1,0 +1,25 @@
+{
+  "path": "art/boards/crowd_faces.png",
+  "sha256": "80d336e7d4c52799ab37d7f2d77eb994e5a990ddda3471db7360891b737a51ae",
+  "bytes": 1100451,
+  "dimensions": [
+    1600,
+    900
+  ],
+  "title": "Frozen ENV1 noon scene; real-id variants; existing declared overlay",
+  "panels": [],
+  "owner_approval": "PENDING",
+  "render_evidence": "/Users/rexxa/work/artpolish2-data/boards/crowd_faces.json",
+  "render_evidence_sha256": "a282af9df68356fdcbdfab2214e233838e1b061bad296e8520eb9e88a0f910a8",
+  "face_plan_sha256": "310a6de08234571c74df9845dc20d2f7c5377bb8aa2d0f861529d555f10f25b1",
+  "variant_transforms_sha256": "3e7344a5a368581f7384be029ca85f61ca30245620a4c2e21e02d64d0546cc33",
+  "source_scene_sha256": "7b33293b070f15dddb5f7fc36f4e3762f7ecc0cac066cf67c3f2563ff7c5f346",
+  "age_limitation": "Frozen scene records life stage, not numerical age; representative 10/30/50 only selects the appropriate variant pool.",
+  "variant_reference_freeze_sha256": "9cd4f807a1b42b1b021e143e85b357b1b3e058c6c2cf037b55b30b068d44d89a",
+  "sprite_asset_commit": "bf237fd9720c40a8e8b3a088143e9a158c79896c",
+  "all_source_ids_evidence": "docs/v8/artpolish2/FINAL_CROWD_BOARD_EVIDENCE.json",
+  "all_source_ids_evidence_sha256": "c72f79d9a044915c7aad705843a2b742217b6bee3bb269270ac07cb8f94f0220",
+  "source_population": 10,
+  "pixel_visible_population": 8,
+  "native_visual_verdict": "PASS92: tint integration only; owner and portrait-blind judgments separate"
+}

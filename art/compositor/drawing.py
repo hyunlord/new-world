@@ -6,25 +6,41 @@
 """Native figure anchoring, true-colour LOD marks and geometric blueprint overlay."""
 from __future__ import annotations
 
+import hashlib
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Final, assert_never
 
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 from pydantic import JsonValue
 
 from art.compositor.assets import (
+    REPO,
     Catalog,
     choose_look,
     frame_path,
     read_image,
     top_colour,
 )
+from art.compositor.face_variants import FacePlan, Variant, choose_variant
 from art.compositor.geometry import HUD_HEIGHT, WINDOW, Viewport
-from art.compositor.models import Activity
+from art.compositor.models import Activity, Person
 from art.compositor.placements import RenderPerson, Sprite
 
 INK: Final = (35, 29, 23, 255)
 FONT: Final = ImageFont.truetype("/System/Library/Fonts/Supplemental/Arial.ttf", 14)
+
+
+def variant_selection_age(person: Person) -> int:
+    """Map captured life-stage classes to selector pools without inventing ages."""
+    match person.life_stage:
+        case "child":
+            return 10
+        case "adult":
+            return 30
+        case "elder":
+            return 50
+    assert_never(person.life_stage)
 
 
 def activity_frame(activity: Activity) -> str:
@@ -78,6 +94,7 @@ class ForegroundPainter:
     catalog: Catalog
     lod: bool
     coverage: Image.Image | None = None
+    face_plan: FacePlan | None = None
 
     def chopping_context(self, actor: RenderPerson, foot: tuple[int, int]) -> dict[str, JsonValue] | None:
         if not actor.declared or actor.activity is not Activity.CHOP:
@@ -147,10 +164,16 @@ class ForegroundPainter:
         if not (0 <= px < WINDOW[0] and HUD_HEIGHT <= py < WINDOW[1]):
             return None
         look = choose_look(actor.person, actor.top)
+        variant: Variant | None = None
+        selection_age = 0
+        if self.face_plan is not None:
+            selection_age = variant_selection_age(actor.person)
+            variant = choose_variant(actor.person.id, selection_age, self.face_plan.for_look(look))
         colour = top_colour(look)
         draw = ImageDraw.Draw(self.image)
         foot_y = py + round(11 * self.viewport.zoom)
         context: dict[str, JsonValue] | None = None
+        source_path: Path | None = None
         if self.lod and self.viewport.zoom <= .5:
             size = 10 if self.viewport.zoom == .5 else 6
             bbox = [px - size // 2, foot_y - size // 2,
@@ -163,7 +186,10 @@ class ForegroundPainter:
             foreground_bbox = bbox
         else:
             frame = activity_frame(actor.activity)
-            source = read_image(frame_path(look, frame))
+            path = (REPO / "art/character/route_i" / look / variant.id / "S" / f"{frame}.png"
+                    if variant is not None else frame_path(look, frame))
+            source = read_image(path)
+            source_path = path
             scaled = source.resize((round(source.width * self.viewport.zoom), round(source.height * self.viewport.zoom)),
                                    Image.Resampling.NEAREST)
             anchor_x, anchor_y = (56, 72) if frame == "sleep" else (40, 104)
@@ -194,6 +220,14 @@ class ForegroundPainter:
                 "source_carry_kind": actor.person.carry_kind, "source_carry_count": actor.person.carry_count,
                 "mark": actor.mark, "source": actor.person.source}
         result["foreground_bbox"] = [value for value in foreground_bbox]
+        if variant is not None:
+            result["variant"] = variant.id
+            result["variant_selection_age"] = selection_age
+            result["variant_age_basis"] = "life_stage_representative_not_captured_age"
+            result["variant_description"] = variant.description
+            if source_path is not None:
+                result["variant_frame"] = str(source_path.relative_to(REPO))
+                result["variant_frame_sha256"] = hashlib.sha256(source_path.read_bytes()).hexdigest()
         result["mark_anchor"] = [value for value in mark_anchor] if actor.mark else None
         result["declared_visual_context"] = context
         if self.coverage is not None:

@@ -1,0 +1,1390 @@
+{
+  "schema_version": 1,
+  "status": "FINAL_CROWD_CANDIDATE_OWNER_PENDING",
+  "owner_approval": "PENDING",
+  "board": {
+    "path": "art/boards/crowd_faces.png",
+    "sha256": "80d336e7d4c52799ab37d7f2d77eb994e5a990ddda3471db7360891b737a51ae",
+    "bytes": 1100451,
+    "dimensions": [
+      1600,
+      900
+    ],
+    "title": "Frozen ENV1 noon scene; real-id variants; existing declared overlay",
+    "panels": [],
+    "owner_approval": "PENDING"
+  },
+  "sprite_asset_commit": "bf237fd9720c40a8e8b3a088143e9a158c79896c",
+  "face_plan_sha256": "310a6de08234571c74df9845dc20d2f7c5377bb8aa2d0f861529d555f10f25b1",
+  "variant_reference_freeze_sha256": "9cd4f807a1b42b1b021e143e85b357b1b3e058c6c2cf037b55b30b068d44d89a",
+  "variant_transforms_sha256": "3e7344a5a368581f7384be029ca85f61ca30245620a4c2e21e02d64d0546cc33",
+  "source_scene": {
+    "path": "art/compositor/scenes/scene_day6_noon.json",
+    "sha256": "7b33293b070f15dddb5f7fc36f4e3762f7ecc0cac066cf67c3f2563ff7c5f346"
+  },
+  "untinted_reference": {
+    "path": "/Users/rexxa/work/artpolish2-data/boards/final_crowd/untinted_scene.png",
+    "sha256": "f244ac4c3f97eb61bc56d17f29d66e283cb87b5613096d9f09ad8622873629da",
+    "matches_legacy_wall_a_source": true
+  },
+  "render_evidence": {
+    "path": "/Users/rexxa/work/artpolish2-data/boards/crowd_faces.json",
+    "sha256": "a282af9df68356fdcbdfab2214e233838e1b061bad296e8520eb9e88a0f910a8"
+  },
+  "render_inputs_sha256": {
+    "art/character/FACE_VARIANTS.json": "310a6de08234571c74df9845dc20d2f7c5377bb8aa2d0f861529d555f10f25b1",
+    "art/character/route_i/adult_F_fur_cloak_bun/S/carry.png": "2fbf05d0ec72534df4ec34df06d80015f9a249d7a3f7a729346db234425bd661",
+    "art/character/route_i/adult_F_fur_cloak_bun/v2/S/carry.png": "da76a06f266607ebd24cf569c134f42c331326b07c21f7b25e22b7d791723216",
+    "art/character/route_i/adult_F_hide_wrap_long_tied/S/idle.png": "25cdf72bf5b64b4d02e2d4ca34d78a76de58a174211ab8338f9d3a8c5cd6446a",
+    "art/character/route_i/adult_F_hide_wrap_long_tied/v2/S/idle.png": "7f152fd25edef8bf7449dc2b9377c3413a4e1476cc825c5c947846a78cf57ab6",
+    "art/character/route_i/adult_F_hide_wrap_short/S/idle.png": "08cf7a69d6342d83667b1ffb402d41d9be47e0fbc7bd96d8b13996ac8af72e1c",
+    "art/character/route_i/adult_F_hide_wrap_short/v5/S/idle.png": "13ccc40a005a6ab9f0a8a3b229c3e6a40a5c1b4d92b03c06c826cfea615c86c2",
+    "art/character/route_i/adult_F_loincloth_bun/S/idle.png": "22465fb470e1aa61afecac3e506596fa75e389fdc79076c0323f6fb1ed2dce30",
+    "art/character/route_i/adult_F_loincloth_bun/S/work_a.png": "eb1b8b7d8aa32022fc3be1af5d1eaec368d594819694231c262c045f68797f4b",
+    "art/character/route_i/adult_F_loincloth_bun/v1/S/idle.png": "317201f9f162d3c40112eb4b59bb344372b49553a99b55b3dc4ac269f99a14bc",
+    "art/character/route_i/adult_F_loincloth_bun/v6/S/work_a.png": "22fd8645f83af980a063027abbcfdbb2de4ba067a60f53d915f5ca419d1824aa",
+    "art/character/route_i/adult_F_loincloth_long_tied/S/idle.png": "752163930586413cdaf3ddfd76f22f08d2960bbc9868c5073cb7bbf8dd75a2cb",
+    "art/character/route_i/adult_F_loincloth_long_tied/v4/S/idle.png": "82f43a5d4db8d098444172005e54ff68cf0c052c0861d4f6b1382fda4697448f",
+    "art/character/route_i/adult_F_loincloth_short/S/carry.png": "be7cf4b6d930651cafbf57da0e861540fd643f0f04424be19d696a92c34e0065",
+    "art/character/route_i/adult_F_loincloth_short/v6/S/carry.png": "4a15273eb9f84102bfb479aa25c3c1cb236c50d63ef0026cb352f8e7bc0aa8ea",
+    "art/character/route_i/adult_M_fur_cloak_bun/S/idle.png": "a98c1b8271c9373c1ad7ad2a9f1d3f48fb4f37f2fd27a32c4d6c535ffda90208",
+    "art/character/route_i/adult_M_fur_cloak_bun/v1/S/idle.png": "b1bb3cdaf73af0f0b3df8350d94c2c892b286d2e7cb7021056c4b2f35dbbdf95",
+    "art/character/route_i/adult_M_hide_wrap_bun/S/idle.png": "d72ae163db9da2a64b523157ff197c7b602f14baf264d418c5ff354f3c1d8f46",
+    "art/character/route_i/adult_M_hide_wrap_bun/v3/S/idle.png": "db268ce61dcb38579e98b74632553daa9e12db990ad959cf5006865f260d35a9",
+    "art/character/route_i/adult_M_hide_wrap_bun/v5/S/idle.png": "25bc4ec5510e2039f130378e6ba457322d72d1defcc82e55a32eb5193a139af8",
+    "art/character/variant_reference_freeze.json": "9cd4f807a1b42b1b021e143e85b357b1b3e058c6c2cf037b55b30b068d44d89a",
+    "art/character/variant_transforms.json": "3e7344a5a368581f7384be029ca85f61ca30245620a4c2e21e02d64d0546cc33",
+    "art/compositor/assets.py": "9da3cd9f0dbf62e228023ecb8da35d14bdbc8e1e21892386c5e5252107383d7d",
+    "art/compositor/boards.py": "146c16912266a43c4cfc5f7661947cdcce8a427868d17d079d4a3b81e8cc8a7e",
+    "art/compositor/drawing.py": "8653a1172ac6bd00d3cd5f78d7c26452245e970fe4291b735455e5bf03159191",
+    "art/compositor/edges.py": "c0a85c6122fc0400a73332eb8c7964c678048f4295824751a11e13daa5010859",
+    "art/compositor/face_variants.py": "5a77be8f186c3ac63d3a3b3598fb643c7d8240592b1e765de23c45beec0c8da1",
+    "art/compositor/geometry.py": "f9eb3b3419c531fe84df057fa992efdb92d5348321a17fb02cfb1ddb45a44bb8",
+    "art/compositor/ground.py": "dbf11ae8e413d26da5adc2a792ba33dd04b77299105ec2aaac50886900e8b97f",
+    "art/compositor/legacy_walls.py": "67afc163df5b7e71bb78fefc10114a16504435c02e4e756bc207b54a78c2e88a",
+    "art/compositor/material_layers.py": "17898d47f7c22a18b6a4a9f7ddc42838acaa2237badf2882c031a29f124a2e8c",
+    "art/compositor/measurements.py": "6943238ed12faf25e0759840216c689114216fa0f2c8fe18ed0cf1c98fdc42e5",
+    "art/compositor/models.py": "e7ae7c0defc68b4bf8948a9580705d8dce45c4d8b70bf684d4b2d1b4953f120c",
+    "art/compositor/native_layers.py": "eaf895ded720c2d4a35b375c9bc70eb1d4d075c6589df07ea1722e22c4168cb3",
+    "art/compositor/native_models.py": "4e9032d333d4b949f99512c7fd1bfccb52f178fe062ef8d1edd3259ad8ef1197",
+    "art/compositor/placements.py": "7faecef5c91562ba9b3ab7ae0c992b128cda4a9b1ee627d54cbf0f72f92ad16a",
+    "art/compositor/polish2_boards.py": "9511e5e50d2b7d0350b4806a1694ccb6c74ed1a9252fdc3bdc5e7d7c263216b6",
+    "art/compositor/polish2_faces.py": "00af3bc80d02215c5f30aee31fa75ea39fd94057c35e8aad6709be5ddab28bca",
+    "art/compositor/polish2_layout.py": "511794bffaacb5e5caae312cbced556b05f1c39275e021e7b4bbc51765ad199a",
+    "art/compositor/polish2_scene_materials.json": "a87d9e628e3500a3890b51e975625f3dc19b2f9274c5fdcb4ea3b83c2532d097",
+    "art/compositor/polish2_walls.py": "ea5691217db0d93364d2dc186c5cfd1ca01cadf47e9d7d78727697d6355c6fc2",
+    "art/compositor/polish_boards.py": "491478501256c263fcdf948197a32a80f796c1000b3e9f9fe007403625169cb4",
+    "art/compositor/projection_check.py": "b9349291c14a96440a835929f8f710c3049a7bed8940f4fa97135de20e025d4b",
+    "art/compositor/render.py": "f34875255f9579559900591d664e2f0fb15d9871bb391fcd4000acc71a0a1790",
+    "art/compositor/scenes/m5_overlay.json": "7632324050843df7ad4e4c1213fd4e54c656052a100669a4e959f1852335b317",
+    "art/compositor/scenes/native_layers.json": "25fe3c959ea05e5de0f0a80fe842be85e0e380623934e669024d249c5ee851b7",
+    "art/compositor/scenes/scene_day6_night.json": "4b9b6a24cf96f5c44c7b27b6e4becc0ac7bb8bd692a7aa0a5dbf567f67fd624f",
+    "art/compositor/scenes/scene_day6_noon.json": "7b33293b070f15dddb5f7fc36f4e3762f7ecc0cac066cf67c3f2563ff7c5f346",
+    "art/compositor/scenes/scene_winter_noon.json": "243ace38a652ffcb4a02708b8fac6a298968c871629fa85288b3302081eaf139",
+    "art/compositor/source_scene.py": "e198cf8f75d8599458049a6cb8753c72d1cd3ad9a95a525d778dbaa4a1fb3867",
+    "art/compositor/struct_boards.py": "b06ef9f4d1cb427acb442b62174be3643b0495deef150286d8c2739e8befb71b",
+    "art/compositor/struct_ground.py": "4b9d285d4d7ffa82bc548efd0b606b1ea4d98fda4acf2ca38fa9bdb912aa9464",
+    "art/compositor/struct_layers.py": "07a5c6698f4e3c2e3c8672cd3b276aefd59910255912bce4251515f1f6aa9105",
+    "art/compositor/struct_render.py": "3b22c9c2031ea41176fada5ff5e5fa08213c0e896dc7c5e286c41a8c6e0a0851",
+    "art/compositor/tone.py": "330c8c3b7c0ac83e4536080b7fb9a85cc79c69693130117c7694f63d8c5722f3",
+    "art/compositor/top_colours.json": "7276251637b93a92853a09856f1731c78a31b9113fedcbb6f3e8a283c0f857eb",
+    "art/compositor/wall_metrics.py": "afa5b3097f8d5d294035710d5e00942110afe8684c8ea4efa14b66940fb261fb",
+    "art/compositor/wall_params.json": "a3c6bdaf165fc58dc0b0ee9cfbf829f322c53b34ab6a8f1462c84dea1fe19e04",
+    "art/compositor/wall_style.py": "8096602cef54e77b0f26485747e07bb2a2a0b425fc8d3385620e1ec72e46e882",
+    "art/compositor/walls.py": "1ae47c570dcc4dcef83e2e82bd68ed146277a59ec9a8b1d22dd91e2a6c0e135f",
+    "art/materials/category_defaults.json": "c0f763cdc93cdbd1ba6f42891fb39fb0f45fcbcea2c790af3345446a7f19eaae",
+    "art/materials/category_defaults.schema.json": "4c9cf238dc28ebea40ca495f20ee95e852fb29e4c30709cd404fd49db9a9164a",
+    "art/materials/construction_styles.json": "c45dcd1c613fed5ed1c44e209afc188b2e06af2c1c8fa2ad911a224b6e8a671f",
+    "art/materials/construction_styles.schema.json": "5cb62f03449c7cb736c81f87a131ddf9667cc16ee64450c79b18df9307d06be3",
+    "art/materials/material_looks.json": "a2aa8b157fcc65a795b3f35c106cd01bb07ee65c037cfe64b1cf0599741b486f",
+    "art/materials/material_looks.schema.json": "94b931fc613b27f03b40b4cb1f98267d551c904a034d04331bb57c615e9de464",
+    "art/materials/textures/GENERATION_MANIFEST.json": "be7bfb7fa009aaee24b228b2135c1e984332598fcdf38fbd65e7f0aa94fcac1b",
+    "art/materials/textures/drystone/door_closed.png": "5758040c4a94f9ad1f143e5f708f8f04c0941d4cb087c8dba108773791b61644",
+    "art/materials/textures/drystone/door_open.png": "feb3d8a4b9471e041a9d9df593c57acb8380049e078e97472f57812f8381952a",
+    "art/materials/textures/drystone/end.png": "e650e43d754dd224e0a7fe071c4cd4509085bda1ec5c1d85e093532a27223736",
+    "art/materials/textures/drystone/face.png": "517c4f431303d3ae01362fb451a6757f77cc18797875760c0eabae945c73c682",
+    "art/materials/textures/drystone/junction.png": "7f23847290dc8f0540c32acf456bdfee845e6aa5515ff900a135ac607f44d832",
+    "art/materials/textures/drystone/top_ew.png": "da69983a6b11042dd1bfb6f492636f194b4142b78d9b2523c030f636234efd20",
+    "art/materials/textures/drystone/top_ns.png": "31ba8122524c41166e55514cd62b7025b85ee975dbaa03c52379fa085b21758e",
+    "art/materials/textures/fired_brick/door_closed.png": "3f4d999ecd53c868462a13dfb0833829da0a5a706103e31052b7f37faa0f3b81",
+    "art/materials/textures/fired_brick/door_open.png": "4559d039d0d5e980ef70c633d830f2cffd7a9341453054956bfadd8894e92dac",
+    "art/materials/textures/fired_brick/end.png": "9adef41bdd1e24a6d37d0d9bc6bf24a9ed88329adde2c72d5809628b303d804a",
+    "art/materials/textures/fired_brick/face.png": "77686d330384f994bd79a959ec4f243d53041687c76a811ea4cd6862a46d3683",
+    "art/materials/textures/fired_brick/junction.png": "7ffe232f4979e6af79dd63f3fa6c388a7c36685e66c62372c4b29d755c9738b3",
+    "art/materials/textures/fired_brick/top_ew.png": "df47bf04ee758ce51f0ec8f91506f29bcdf6abcaedbac878ab594153747d4faa",
+    "art/materials/textures/fired_brick/top_ns.png": "6fe819321f7ea4a793f278b09f5b0f037b4c2722f1b243008b435ee230a661bf",
+    "art/materials/textures/log/door_closed.png": "b02d7a683b528d15361ff498121aea489d58aa3e055e23ade24a69ea322c14b2",
+    "art/materials/textures/log/door_open.png": "e52c8d34c1443a50103bb06f880fecedf5a00cf1173e21500b2d90d12b69857c",
+    "art/materials/textures/log/end.png": "2b0524ffb511c3f3ce20cc90fe4d9a123bc5669f15347703093c7fd9688653a3",
+    "art/materials/textures/log/face.png": "3ed372b6c9cd7a9500c881178cc0302daf36522c6a8045925b6285933d2a30be",
+    "art/materials/textures/log/junction.png": "de583b4b0fd6c30c074e9e7c2de14cd2d01c7cf0d0633aff0da9aa400fa3c728",
+    "art/materials/textures/log/top_ew.png": "261deab20efa34dea6a8e917a51fb83dbb95a8c208b1600e6b9f09c8450c48b5",
+    "art/materials/textures/log/top_ns.png": "00f92664cacf52828bb5afa665a5936576adf5b063764508a10d8c2dfe2cfbe3",
+    "art/materials/textures/mud_brick/door_closed.png": "49af5bd8dc6e17cc6ca45c04b8fa9a3c7d52b7db569989ccd6066a01a4d20aff",
+    "art/materials/textures/mud_brick/door_open.png": "2b29cf83fc38c7b05b02db3181d6dc1c21d1eb9cb3da10a79057f52d6338eb50",
+    "art/materials/textures/mud_brick/end.png": "120bbbd936b5fe120a862293faf0a42a8f184ab1a50767b42f942810571b420b",
+    "art/materials/textures/mud_brick/face.png": "a74ddf28cf41cddc2e71ad1ef7fc97f5fb5519d1399ca0c165da643791c5a464",
+    "art/materials/textures/mud_brick/junction.png": "94c90a7896230612bc719faf02c10b47ef1f1cac21a22dadfcc1f4e1d1b58953",
+    "art/materials/textures/mud_brick/top_ew.png": "17e520a1822ea3f7128579042ef8115540c539c0e08360755e8000f0827cfd72",
+    "art/materials/textures/mud_brick/top_ns.png": "fa263dccd94860c3809e3371f35f55b272ece29140e8444cd32c7c2155c7878e",
+    "art/materials/textures/packed_earth/floor.png": "c4cef172345fbbdb287c3ba7c83b6116e00c1b77effc44995593d9905d1693c1"
+  },
+  "inputs_unchanged": true,
+  "all_source_people": [
+    {
+      "id": 0,
+      "look": "adult_M_fur_cloak_bun",
+      "resolved_look": "adult_M_fur_cloak_bun",
+      "variant": "v1",
+      "pose": "idle",
+      "facing": "S",
+      "life_stage": "adult",
+      "selection_age": 30,
+      "age_basis": "life_stage_representative_not_captured_age",
+      "source_position": [
+        100.0,
+        102.0
+      ],
+      "render_position": [
+        100.0,
+        102.0
+      ],
+      "source_activity": "awake",
+      "render_activity": "awake",
+      "declared_overlay": false,
+      "original_frame": "art/character/route_i/adult_M_fur_cloak_bun/S/idle.png",
+      "original_frame_sha256": "a98c1b8271c9373c1ad7ad2a9f1d3f48fb4f37f2fd27a32c4d6c535ffda90208",
+      "baked_frame": "art/character/route_i/adult_M_fur_cloak_bun/v1/S/idle.png",
+      "baked_frame_sha256": "b1bb3cdaf73af0f0b3df8350d94c2c892b286d2e7cb7021056c4b2f35dbbdf95",
+      "sprite_commit": "bf237fd9720c40a8e8b3a088143e9a158c79896c",
+      "projected_center": [
+        1376,
+        570
+      ],
+      "rendered": true,
+      "pixel_visible": true,
+      "selection_status": "actual_frame_drawn",
+      "render_evidence": {
+        "id": 0,
+        "source_position": [
+          100.0,
+          102.0
+        ],
+        "position": [
+          100.0,
+          102.0
+        ],
+        "screen_foot": [
+          1376,
+          581
+        ],
+        "bbox": [
+          1336,
+          477,
+          1416,
+          589
+        ],
+        "look": "adult_M_fur_cloak_bun",
+        "top_colour": [
+          139,
+          88,
+          43
+        ],
+        "activity": "awake",
+        "source_activity": "awake",
+        "declared": false,
+        "source_female": false,
+        "source_life_stage": "adult",
+        "source_carry_kind": -1,
+        "source_carry_count": 0,
+        "mark": "",
+        "source": "native_ascii_verified_bridge_collectors",
+        "foreground_bbox": [
+          1359,
+          525,
+          1389,
+          582
+        ],
+        "variant": "v1",
+        "variant_selection_age": 30,
+        "variant_age_basis": "life_stage_representative_not_captured_age",
+        "variant_description": "young man; light warm skin; dark brown hair; narrow face, freckles; clean shaven",
+        "variant_frame": "art/character/route_i/adult_M_fur_cloak_bun/v1/S/idle.png",
+        "variant_frame_sha256": "b1bb3cdaf73af0f0b3df8350d94c2c892b286d2e7cb7021056c4b2f35dbbdf95",
+        "mark_anchor": null,
+        "declared_visual_context": null,
+        "opaque_pixels_when_drawn": 1039,
+        "visible_opaque_pixels": 1039,
+        "pixel_visible": true
+      },
+      "scene_changed_pixels": 370,
+      "skin_mask": {
+        "path": "art/character/variant_masks/adult_M_fur_cloak_bun/S/idle_skin.png",
+        "sha256": "3f53462f7d51b395a5116eb5bff8a437c6dbfc722aee7eb5fd71f61f2ab85276"
+      },
+      "hair_mask": {
+        "path": "art/character/variant_masks/adult_M_fur_cloak_bun/S/idle_hair.png",
+        "sha256": "5a522b24f85877d6a55fba5aa1be5d34fab8a5d508985bb260e158c4c8573fef"
+      },
+      "frame_pixel_checks": {
+        "alpha_equal": true,
+        "changed_rgb_pixels": 370,
+        "changed_outside_skin_or_hair_masks": 0
+      }
+    },
+    {
+      "id": 1,
+      "look": "adult_F_hide_wrap_long_tied",
+      "resolved_look": "adult_F_hide_wrap_long_tied",
+      "variant": "v2",
+      "pose": "idle",
+      "facing": "S",
+      "life_stage": "adult",
+      "selection_age": 30,
+      "age_basis": "life_stage_representative_not_captured_age",
+      "source_position": [
+        92.0,
+        102.0
+      ],
+      "render_position": [
+        87.0,
+        101.0
+      ],
+      "source_activity": "awake",
+      "render_activity": "awake",
+      "declared_overlay": true,
+      "original_frame": "art/character/route_i/adult_F_hide_wrap_long_tied/S/idle.png",
+      "original_frame_sha256": "25cdf72bf5b64b4d02e2d4ca34d78a76de58a174211ab8338f9d3a8c5cd6446a",
+      "baked_frame": "art/character/route_i/adult_F_hide_wrap_long_tied/v2/S/idle.png",
+      "baked_frame_sha256": "7f152fd25edef8bf7449dc2b9377c3413a4e1476cc825c5c947846a78cf57ab6",
+      "sprite_commit": "bf237fd9720c40a8e8b3a088143e9a158c79896c",
+      "projected_center": [
+        544,
+        506
+      ],
+      "rendered": true,
+      "pixel_visible": true,
+      "selection_status": "actual_frame_drawn",
+      "render_evidence": {
+        "id": 1,
+        "source_position": [
+          92.0,
+          102.0
+        ],
+        "position": [
+          87.0,
+          101.0
+        ],
+        "screen_foot": [
+          544,
+          517
+        ],
+        "bbox": [
+          504,
+          413,
+          584,
+          525
+        ],
+        "look": "adult_F_hide_wrap_long_tied",
+        "top_colour": [
+          160,
+          105,
+          53
+        ],
+        "activity": "awake",
+        "source_activity": "awake",
+        "declared": true,
+        "source_female": true,
+        "source_life_stage": "adult",
+        "source_carry_kind": -1,
+        "source_carry_count": 0,
+        "mark": "C",
+        "source": "native_ascii_verified_bridge_collectors",
+        "foreground_bbox": [
+          531,
+          461,
+          556,
+          518
+        ],
+        "variant": "v2",
+        "variant_selection_age": 30,
+        "variant_age_basis": "life_stage_representative_not_captured_age",
+        "variant_description": "adult woman; mid warm brown skin; black hair; broad nose, heavy brows",
+        "variant_frame": "art/character/route_i/adult_F_hide_wrap_long_tied/v2/S/idle.png",
+        "variant_frame_sha256": "7f152fd25edef8bf7449dc2b9377c3413a4e1476cc825c5c947846a78cf57ab6",
+        "mark_anchor": [
+          539,
+          443
+        ],
+        "declared_visual_context": null,
+        "opaque_pixels_when_drawn": 844,
+        "visible_opaque_pixels": 844,
+        "pixel_visible": true
+      },
+      "scene_changed_pixels": 413,
+      "skin_mask": {
+        "path": "art/character/variant_masks/adult_F_hide_wrap_long_tied/S/idle_skin.png",
+        "sha256": "250073bce43b8a29b07709b7084a27057d3f713e245aea880e06141f4fa68aa5"
+      },
+      "hair_mask": {
+        "path": "art/character/variant_masks/adult_F_hide_wrap_long_tied/S/idle_hair.png",
+        "sha256": "91cd3dec5c94c79ffc324873e9444d388f29c973825abfeb18ec0c2518c4c618"
+      },
+      "frame_pixel_checks": {
+        "alpha_equal": true,
+        "changed_rgb_pixels": 413,
+        "changed_outside_skin_or_hair_masks": 0
+      }
+    },
+    {
+      "id": 2,
+      "look": "adult_F_hide_wrap_short",
+      "resolved_look": "adult_F_hide_wrap_short",
+      "variant": "v5",
+      "pose": "idle",
+      "facing": "S",
+      "life_stage": "adult",
+      "selection_age": 30,
+      "age_basis": "life_stage_representative_not_captured_age",
+      "source_position": [
+        93.0,
+        102.0
+      ],
+      "render_position": [
+        92.0,
+        102.0
+      ],
+      "source_activity": "awake",
+      "render_activity": "awake",
+      "declared_overlay": true,
+      "original_frame": "art/character/route_i/adult_F_hide_wrap_short/S/idle.png",
+      "original_frame_sha256": "08cf7a69d6342d83667b1ffb402d41d9be47e0fbc7bd96d8b13996ac8af72e1c",
+      "baked_frame": "art/character/route_i/adult_F_hide_wrap_short/v5/S/idle.png",
+      "baked_frame_sha256": "13ccc40a005a6ab9f0a8a3b229c3e6a40a5c1b4d92b03c06c826cfea615c86c2",
+      "sprite_commit": "bf237fd9720c40a8e8b3a088143e9a158c79896c",
+      "projected_center": [
+        864,
+        570
+      ],
+      "rendered": true,
+      "pixel_visible": true,
+      "selection_status": "actual_frame_drawn",
+      "render_evidence": {
+        "id": 2,
+        "source_position": [
+          93.0,
+          102.0
+        ],
+        "position": [
+          92.0,
+          102.0
+        ],
+        "screen_foot": [
+          864,
+          581
+        ],
+        "bbox": [
+          824,
+          477,
+          904,
+          589
+        ],
+        "look": "adult_F_hide_wrap_short",
+        "top_colour": [
+          166,
+          110,
+          56
+        ],
+        "activity": "awake",
+        "source_activity": "awake",
+        "declared": true,
+        "source_female": true,
+        "source_life_stage": "adult",
+        "source_carry_kind": -1,
+        "source_carry_count": 0,
+        "mark": "",
+        "source": "native_ascii_verified_bridge_collectors",
+        "foreground_bbox": [
+          851,
+          525,
+          874,
+          583
+        ],
+        "variant": "v5",
+        "variant_selection_age": 30,
+        "variant_age_basis": "life_stage_representative_not_captured_age",
+        "variant_description": "older woman; mid warm brown skin; auburn hair; broad nose, a scar; clearly aged 55-70, visible facial age lines",
+        "variant_frame": "art/character/route_i/adult_F_hide_wrap_short/v5/S/idle.png",
+        "variant_frame_sha256": "13ccc40a005a6ab9f0a8a3b229c3e6a40a5c1b4d92b03c06c826cfea615c86c2",
+        "mark_anchor": null,
+        "declared_visual_context": null,
+        "opaque_pixels_when_drawn": 778,
+        "visible_opaque_pixels": 778,
+        "pixel_visible": true
+      },
+      "scene_changed_pixels": 382,
+      "skin_mask": {
+        "path": "art/character/variant_masks/adult_F_hide_wrap_short/S/idle_skin.png",
+        "sha256": "78a544c83baae03a813f49481d1a91374cb50a941491b72b504f8d8cb7f40f9b"
+      },
+      "hair_mask": {
+        "path": "art/character/variant_masks/adult_F_hide_wrap_short/S/idle_hair.png",
+        "sha256": "ea094b57624dba88c6cb914326a4a057b125aed59fe0406b40234e3cbd32e5f9"
+      },
+      "frame_pixel_checks": {
+        "alpha_equal": true,
+        "changed_rgb_pixels": 382,
+        "changed_outside_skin_or_hair_masks": 0
+      }
+    },
+    {
+      "id": 3,
+      "look": "adult_F_loincloth_bun",
+      "resolved_look": "adult_F_loincloth_bun",
+      "variant": "v6",
+      "pose": "work_a",
+      "facing": "S",
+      "life_stage": "adult",
+      "selection_age": 30,
+      "age_basis": "life_stage_representative_not_captured_age",
+      "source_position": [
+        88.0,
+        101.0
+      ],
+      "render_position": [
+        86.0,
+        104.0
+      ],
+      "source_activity": "awake",
+      "render_activity": "chop",
+      "declared_overlay": true,
+      "original_frame": "art/character/route_i/adult_F_loincloth_bun/S/work_a.png",
+      "original_frame_sha256": "eb1b8b7d8aa32022fc3be1af5d1eaec368d594819694231c262c045f68797f4b",
+      "baked_frame": "art/character/route_i/adult_F_loincloth_bun/v6/S/work_a.png",
+      "baked_frame_sha256": "22fd8645f83af980a063027abbcfdbb2de4ba067a60f53d915f5ca419d1824aa",
+      "sprite_commit": "bf237fd9720c40a8e8b3a088143e9a158c79896c",
+      "projected_center": [
+        480,
+        698
+      ],
+      "rendered": true,
+      "pixel_visible": true,
+      "selection_status": "actual_frame_drawn",
+      "render_evidence": {
+        "id": 3,
+        "source_position": [
+          88.0,
+          101.0
+        ],
+        "position": [
+          86.0,
+          104.0
+        ],
+        "screen_foot": [
+          480,
+          709
+        ],
+        "bbox": [
+          440,
+          605,
+          520,
+          717
+        ],
+        "look": "adult_F_loincloth_bun",
+        "top_colour": [
+          158,
+          109,
+          54
+        ],
+        "activity": "chop",
+        "source_activity": "awake",
+        "declared": true,
+        "source_female": true,
+        "source_life_stage": "adult",
+        "source_carry_kind": -1,
+        "source_carry_count": 0,
+        "mark": "A",
+        "source": "native_ascii_verified_bridge_collectors",
+        "foreground_bbox": [
+          466,
+          646,
+          496,
+          711
+        ],
+        "variant": "v6",
+        "variant_selection_age": 30,
+        "variant_age_basis": "life_stage_representative_not_captured_age",
+        "variant_description": "young woman; deep brown skin; dark brown hair; round face, heavy brows",
+        "variant_frame": "art/character/route_i/adult_F_loincloth_bun/v6/S/work_a.png",
+        "variant_frame_sha256": "22fd8645f83af980a063027abbcfdbb2de4ba067a60f53d915f5ca419d1824aa",
+        "mark_anchor": [
+          475,
+          628
+        ],
+        "declared_visual_context": {
+          "asset": "stump",
+          "declared": true,
+          "source": "declared_activity_context",
+          "scale": 0.5,
+          "status": "NUMERIC_READY_READABLE_OWNER_PENDING: \uc904\uae30 \uaecd\uc9c8 \uc804\uba74\uacfc \ud0c0\uc6d0\ud615 \uc808\ub2e8\uba74\uc774 \ubd84\ub9ac\ub428.",
+          "bbox": [
+            494,
+            698,
+            510,
+            712
+          ]
+        },
+        "opaque_pixels_when_drawn": 821,
+        "visible_opaque_pixels": 821,
+        "pixel_visible": true
+      },
+      "scene_changed_pixels": 353,
+      "skin_mask": {
+        "path": "art/character/variant_masks/adult_F_loincloth_bun/S/work_a_skin.png",
+        "sha256": "8a91bd73c608de6a5adbe0ccb424a22307fe26134fefaafc1ecdb660e3ea8e0e"
+      },
+      "hair_mask": {
+        "path": "art/character/variant_masks/adult_F_loincloth_bun/S/work_a_hair.png",
+        "sha256": "2589308506373cab3d6b7cb986597b143d07c64fca23e36f29bfca4ed6438e5c"
+      },
+      "frame_pixel_checks": {
+        "alpha_equal": true,
+        "changed_rgb_pixels": 353,
+        "changed_outside_skin_or_hair_masks": 0
+      }
+    },
+    {
+      "id": 4,
+      "look": "adult_M_hide_wrap_bun",
+      "resolved_look": "adult_M_hide_wrap_bun",
+      "variant": "v3",
+      "pose": "idle",
+      "facing": "S",
+      "life_stage": "adult",
+      "selection_age": 30,
+      "age_basis": "life_stage_representative_not_captured_age",
+      "source_position": [
+        91.0,
+        99.0
+      ],
+      "render_position": [
+        91.0,
+        100.0
+      ],
+      "source_activity": "awake",
+      "render_activity": "awake",
+      "declared_overlay": true,
+      "original_frame": "art/character/route_i/adult_M_hide_wrap_bun/S/idle.png",
+      "original_frame_sha256": "d72ae163db9da2a64b523157ff197c7b602f14baf264d418c5ff354f3c1d8f46",
+      "baked_frame": "art/character/route_i/adult_M_hide_wrap_bun/v3/S/idle.png",
+      "baked_frame_sha256": "db268ce61dcb38579e98b74632553daa9e12db990ad959cf5006865f260d35a9",
+      "sprite_commit": "bf237fd9720c40a8e8b3a088143e9a158c79896c",
+      "projected_center": [
+        800,
+        442
+      ],
+      "rendered": true,
+      "pixel_visible": true,
+      "selection_status": "actual_frame_drawn",
+      "render_evidence": {
+        "id": 4,
+        "source_position": [
+          91.0,
+          99.0
+        ],
+        "position": [
+          91.0,
+          100.0
+        ],
+        "screen_foot": [
+          800,
+          453
+        ],
+        "bbox": [
+          760,
+          349,
+          840,
+          461
+        ],
+        "look": "adult_M_hide_wrap_bun",
+        "top_colour": [
+          156,
+          103,
+          48
+        ],
+        "activity": "awake",
+        "source_activity": "awake",
+        "declared": true,
+        "source_female": false,
+        "source_life_stage": "adult",
+        "source_carry_kind": -1,
+        "source_carry_count": 0,
+        "mark": "",
+        "source": "native_ascii_verified_bridge_collectors",
+        "foreground_bbox": [
+          785,
+          397,
+          813,
+          455
+        ],
+        "variant": "v3",
+        "variant_selection_age": 30,
+        "variant_age_basis": "life_stage_representative_not_captured_age",
+        "variant_description": "adult man; deep brown skin; auburn hair; narrow face, a scar; short beard",
+        "variant_frame": "art/character/route_i/adult_M_hide_wrap_bun/v3/S/idle.png",
+        "variant_frame_sha256": "db268ce61dcb38579e98b74632553daa9e12db990ad959cf5006865f260d35a9",
+        "mark_anchor": null,
+        "declared_visual_context": null,
+        "opaque_pixels_when_drawn": 899,
+        "visible_opaque_pixels": 899,
+        "pixel_visible": true
+      },
+      "scene_changed_pixels": 396,
+      "skin_mask": {
+        "path": "art/character/variant_masks/adult_M_hide_wrap_bun/S/idle_skin.png",
+        "sha256": "5db9bf58319fcdb72f07eab5bb4ad1a14fe6e92ce638bdc1016cdc8a93c29797"
+      },
+      "hair_mask": {
+        "path": "art/character/variant_masks/adult_M_hide_wrap_bun/S/idle_hair.png",
+        "sha256": "56bb600065c7f1d559e599f2f7cd9dd662100df8e9ba7de07911d92d5a59ffff"
+      },
+      "frame_pixel_checks": {
+        "alpha_equal": true,
+        "changed_rgb_pixels": 396,
+        "changed_outside_skin_or_hair_masks": 0
+      }
+    },
+    {
+      "id": 5,
+      "look": "adult_F_loincloth_short",
+      "resolved_look": "adult_F_loincloth_short",
+      "variant": "v6",
+      "pose": "carry",
+      "facing": "S",
+      "life_stage": "adult",
+      "selection_age": 30,
+      "age_basis": "life_stage_representative_not_captured_age",
+      "source_position": [
+        89.0,
+        103.0
+      ],
+      "render_position": [
+        93.0,
+        103.0
+      ],
+      "source_activity": "awake",
+      "render_activity": "carry",
+      "declared_overlay": true,
+      "original_frame": "art/character/route_i/adult_F_loincloth_short/S/carry.png",
+      "original_frame_sha256": "be7cf4b6d930651cafbf57da0e861540fd643f0f04424be19d696a92c34e0065",
+      "baked_frame": "art/character/route_i/adult_F_loincloth_short/v6/S/carry.png",
+      "baked_frame_sha256": "4a15273eb9f84102bfb479aa25c3c1cb236c50d63ef0026cb352f8e7bc0aa8ea",
+      "sprite_commit": "bf237fd9720c40a8e8b3a088143e9a158c79896c",
+      "projected_center": [
+        928,
+        634
+      ],
+      "rendered": true,
+      "pixel_visible": true,
+      "selection_status": "actual_frame_drawn",
+      "render_evidence": {
+        "id": 5,
+        "source_position": [
+          89.0,
+          103.0
+        ],
+        "position": [
+          93.0,
+          103.0
+        ],
+        "screen_foot": [
+          928,
+          645
+        ],
+        "bbox": [
+          888,
+          541,
+          968,
+          653
+        ],
+        "look": "adult_F_loincloth_short",
+        "top_colour": [
+          158,
+          105,
+          51
+        ],
+        "activity": "carry",
+        "source_activity": "awake",
+        "declared": true,
+        "source_female": true,
+        "source_life_stage": "adult",
+        "source_carry_kind": -1,
+        "source_carry_count": 0,
+        "mark": "B",
+        "source": "native_ascii_verified_bridge_collectors",
+        "foreground_bbox": [
+          905,
+          592,
+          948,
+          646
+        ],
+        "variant": "v6",
+        "variant_selection_age": 30,
+        "variant_age_basis": "life_stage_representative_not_captured_age",
+        "variant_description": "young woman; deep brown skin; dark brown hair; round face, heavy brows",
+        "variant_frame": "art/character/route_i/adult_F_loincloth_short/v6/S/carry.png",
+        "variant_frame_sha256": "4a15273eb9f84102bfb479aa25c3c1cb236c50d63ef0026cb352f8e7bc0aa8ea",
+        "mark_anchor": [
+          923,
+          574
+        ],
+        "declared_visual_context": null,
+        "opaque_pixels_when_drawn": 984,
+        "visible_opaque_pixels": 984,
+        "pixel_visible": true
+      },
+      "scene_changed_pixels": 359,
+      "skin_mask": {
+        "path": "art/character/variant_masks/adult_F_loincloth_short/S/carry_skin.png",
+        "sha256": "071e19a7cd418c9ce686d68cfd71d76598fd8f83ec281754e93c2f73984b79b6"
+      },
+      "hair_mask": {
+        "path": "art/character/variant_masks/adult_F_loincloth_short/S/carry_hair.png",
+        "sha256": "03f4dedf0d250d4d8a8473c77d49de7c12de82a19736757ff80b4b1e83c1048c"
+      },
+      "frame_pixel_checks": {
+        "alpha_equal": true,
+        "changed_rgb_pixels": 359,
+        "changed_outside_skin_or_hair_masks": 0
+      }
+    },
+    {
+      "id": 6,
+      "look": "adult_F_loincloth_bun",
+      "resolved_look": "adult_F_loincloth_bun",
+      "variant": "v1",
+      "pose": "idle",
+      "facing": "S",
+      "life_stage": "adult",
+      "selection_age": 30,
+      "age_basis": "life_stage_representative_not_captured_age",
+      "source_position": [
+        78.0,
+        87.0
+      ],
+      "render_position": [
+        78.0,
+        87.0
+      ],
+      "source_activity": "awake",
+      "render_activity": "awake",
+      "declared_overlay": false,
+      "original_frame": "art/character/route_i/adult_F_loincloth_bun/S/idle.png",
+      "original_frame_sha256": "22465fb470e1aa61afecac3e506596fa75e389fdc79076c0323f6fb1ed2dce30",
+      "baked_frame": "art/character/route_i/adult_F_loincloth_bun/v1/S/idle.png",
+      "baked_frame_sha256": "317201f9f162d3c40112eb4b59bb344372b49553a99b55b3dc4ac269f99a14bc",
+      "sprite_commit": "bf237fd9720c40a8e8b3a088143e9a158c79896c",
+      "projected_center": [
+        -32,
+        -390
+      ],
+      "rendered": false,
+      "pixel_visible": false,
+      "selection_status": "offscreen_selection_not_drawn",
+      "scene_changed_pixels": 0,
+      "skin_mask": {
+        "path": "art/character/variant_masks/adult_F_loincloth_bun/S/idle_skin.png",
+        "sha256": "0c253a9f5a4c5b5de6b23d55c99bc926ff0e3b6fb5b2908c37a4edd511cac687"
+      },
+      "hair_mask": {
+        "path": "art/character/variant_masks/adult_F_loincloth_bun/S/idle_hair.png",
+        "sha256": "053028a700b1fc478f586f3a3ed8fa558aca316353369a191218d0170130eb6c"
+      },
+      "frame_pixel_checks": {
+        "alpha_equal": true,
+        "changed_rgb_pixels": 447,
+        "changed_outside_skin_or_hair_masks": 0
+      }
+    },
+    {
+      "id": 7,
+      "look": "adult_F_loincloth_long_tied",
+      "resolved_look": "adult_F_loincloth_long_tied",
+      "variant": "v4",
+      "pose": "idle",
+      "facing": "S",
+      "life_stage": "adult",
+      "selection_age": 30,
+      "age_basis": "life_stage_representative_not_captured_age",
+      "source_position": [
+        77.0,
+        87.0
+      ],
+      "render_position": [
+        77.0,
+        87.0
+      ],
+      "source_activity": "awake",
+      "render_activity": "awake",
+      "declared_overlay": false,
+      "original_frame": "art/character/route_i/adult_F_loincloth_long_tied/S/idle.png",
+      "original_frame_sha256": "752163930586413cdaf3ddfd76f22f08d2960bbc9868c5073cb7bbf8dd75a2cb",
+      "baked_frame": "art/character/route_i/adult_F_loincloth_long_tied/v4/S/idle.png",
+      "baked_frame_sha256": "82f43a5d4db8d098444172005e54ff68cf0c052c0861d4f6b1382fda4697448f",
+      "sprite_commit": "bf237fd9720c40a8e8b3a088143e9a158c79896c",
+      "projected_center": [
+        -96,
+        -390
+      ],
+      "rendered": false,
+      "pixel_visible": false,
+      "selection_status": "offscreen_selection_not_drawn",
+      "scene_changed_pixels": 0,
+      "skin_mask": {
+        "path": "art/character/variant_masks/adult_F_loincloth_long_tied/S/idle_skin.png",
+        "sha256": "58855d2771d1641de5a8a57bee260c809e2835823ec936283a6d623c6b1dffb9"
+      },
+      "hair_mask": {
+        "path": "art/character/variant_masks/adult_F_loincloth_long_tied/S/idle_hair.png",
+        "sha256": "50ce79bbb61bff4868f04cb9eb4551b208455044c4db1cec7c0b3816cdcd3117"
+      },
+      "frame_pixel_checks": {
+        "alpha_equal": true,
+        "changed_rgb_pixels": 375,
+        "changed_outside_skin_or_hair_masks": 0
+      }
+    },
+    {
+      "id": 8,
+      "look": "adult_M_hide_wrap_bun",
+      "resolved_look": "adult_M_hide_wrap_bun",
+      "variant": "v5",
+      "pose": "idle",
+      "facing": "S",
+      "life_stage": "adult",
+      "selection_age": 30,
+      "age_basis": "life_stage_representative_not_captured_age",
+      "source_position": [
+        92.0,
+        99.0
+      ],
+      "render_position": [
+        89.0,
+        102.0
+      ],
+      "source_activity": "awake",
+      "render_activity": "awake",
+      "declared_overlay": true,
+      "original_frame": "art/character/route_i/adult_M_hide_wrap_bun/S/idle.png",
+      "original_frame_sha256": "d72ae163db9da2a64b523157ff197c7b602f14baf264d418c5ff354f3c1d8f46",
+      "baked_frame": "art/character/route_i/adult_M_hide_wrap_bun/v5/S/idle.png",
+      "baked_frame_sha256": "25bc4ec5510e2039f130378e6ba457322d72d1defcc82e55a32eb5193a139af8",
+      "sprite_commit": "bf237fd9720c40a8e8b3a088143e9a158c79896c",
+      "projected_center": [
+        672,
+        570
+      ],
+      "rendered": true,
+      "pixel_visible": true,
+      "selection_status": "actual_frame_drawn",
+      "render_evidence": {
+        "id": 8,
+        "source_position": [
+          92.0,
+          99.0
+        ],
+        "position": [
+          89.0,
+          102.0
+        ],
+        "screen_foot": [
+          672,
+          581
+        ],
+        "bbox": [
+          632,
+          477,
+          712,
+          589
+        ],
+        "look": "adult_M_hide_wrap_bun",
+        "top_colour": [
+          156,
+          103,
+          48
+        ],
+        "activity": "awake",
+        "source_activity": "awake",
+        "declared": true,
+        "source_female": false,
+        "source_life_stage": "adult",
+        "source_carry_kind": -1,
+        "source_carry_count": 0,
+        "mark": "",
+        "source": "native_ascii_verified_bridge_collectors",
+        "foreground_bbox": [
+          657,
+          525,
+          685,
+          583
+        ],
+        "variant": "v5",
+        "variant_selection_age": 30,
+        "variant_age_basis": "life_stage_representative_not_captured_age",
+        "variant_description": "older man; mid warm brown skin; auburn hair; broad nose, a scar; clearly aged 55-70, visible facial age lines; short beard",
+        "variant_frame": "art/character/route_i/adult_M_hide_wrap_bun/v5/S/idle.png",
+        "variant_frame_sha256": "25bc4ec5510e2039f130378e6ba457322d72d1defcc82e55a32eb5193a139af8",
+        "mark_anchor": null,
+        "declared_visual_context": null,
+        "opaque_pixels_when_drawn": 899,
+        "visible_opaque_pixels": 899,
+        "pixel_visible": true
+      },
+      "scene_changed_pixels": 396,
+      "skin_mask": {
+        "path": "art/character/variant_masks/adult_M_hide_wrap_bun/S/idle_skin.png",
+        "sha256": "5db9bf58319fcdb72f07eab5bb4ad1a14fe6e92ce638bdc1016cdc8a93c29797"
+      },
+      "hair_mask": {
+        "path": "art/character/variant_masks/adult_M_hide_wrap_bun/S/idle_hair.png",
+        "sha256": "56bb600065c7f1d559e599f2f7cd9dd662100df8e9ba7de07911d92d5a59ffff"
+      },
+      "frame_pixel_checks": {
+        "alpha_equal": true,
+        "changed_rgb_pixels": 396,
+        "changed_outside_skin_or_hair_masks": 0
+      }
+    },
+    {
+      "id": 9,
+      "look": "adult_F_fur_cloak_bun",
+      "resolved_look": "adult_F_fur_cloak_bun",
+      "variant": "v2",
+      "pose": "carry",
+      "facing": "S",
+      "life_stage": "adult",
+      "selection_age": 30,
+      "age_basis": "life_stage_representative_not_captured_age",
+      "source_position": [
+        89.0,
+        99.0
+      ],
+      "render_position": [
+        93.0,
+        98.0
+      ],
+      "source_activity": "awake",
+      "render_activity": "carry",
+      "declared_overlay": true,
+      "original_frame": "art/character/route_i/adult_F_fur_cloak_bun/S/carry.png",
+      "original_frame_sha256": "2fbf05d0ec72534df4ec34df06d80015f9a249d7a3f7a729346db234425bd661",
+      "baked_frame": "art/character/route_i/adult_F_fur_cloak_bun/v2/S/carry.png",
+      "baked_frame_sha256": "da76a06f266607ebd24cf569c134f42c331326b07c21f7b25e22b7d791723216",
+      "sprite_commit": "bf237fd9720c40a8e8b3a088143e9a158c79896c",
+      "projected_center": [
+        928,
+        314
+      ],
+      "rendered": true,
+      "pixel_visible": true,
+      "selection_status": "actual_frame_drawn",
+      "render_evidence": {
+        "id": 9,
+        "source_position": [
+          89.0,
+          99.0
+        ],
+        "position": [
+          93.0,
+          98.0
+        ],
+        "screen_foot": [
+          928,
+          325
+        ],
+        "bbox": [
+          888,
+          221,
+          968,
+          333
+        ],
+        "look": "adult_F_fur_cloak_bun",
+        "top_colour": [
+          130,
+          86,
+          46
+        ],
+        "activity": "carry",
+        "source_activity": "awake",
+        "declared": true,
+        "source_female": true,
+        "source_life_stage": "adult",
+        "source_carry_kind": -1,
+        "source_carry_count": 0,
+        "mark": "",
+        "source": "native_ascii_verified_bridge_collectors",
+        "foreground_bbox": [
+          909,
+          274,
+          948,
+          326
+        ],
+        "variant": "v2",
+        "variant_selection_age": 30,
+        "variant_age_basis": "life_stage_representative_not_captured_age",
+        "variant_description": "adult woman; mid warm brown skin; black hair; broad nose, heavy brows",
+        "variant_frame": "art/character/route_i/adult_F_fur_cloak_bun/v2/S/carry.png",
+        "variant_frame_sha256": "da76a06f266607ebd24cf569c134f42c331326b07c21f7b25e22b7d791723216",
+        "mark_anchor": null,
+        "declared_visual_context": null,
+        "opaque_pixels_when_drawn": 1146,
+        "visible_opaque_pixels": 1146,
+        "pixel_visible": true
+      },
+      "scene_changed_pixels": 201,
+      "skin_mask": {
+        "path": "art/character/variant_masks/adult_F_fur_cloak_bun/S/carry_skin.png",
+        "sha256": "39ef9b30cb75f3342c8c5803be6f53faf01951cd0fd6cad7a966b64db6075797"
+      },
+      "hair_mask": {
+        "path": "art/character/variant_masks/adult_F_fur_cloak_bun/S/carry_hair.png",
+        "sha256": "49db91dd99724218f647ee2964d8dcb6575b5ca6a1fd8fe91675d45b4d45e15b"
+      },
+      "frame_pixel_checks": {
+        "alpha_equal": true,
+        "changed_rgb_pixels": 201,
+        "changed_outside_skin_or_hair_masks": 0
+      }
+    }
+  ],
+  "native_difference_checks": {
+    "dimensions": [
+      1600,
+      900
+    ],
+    "zoom": 1,
+    "source_population": 10,
+    "source_ids": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "visible_ids": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      8,
+      9
+    ],
+    "offscreen_ids": [
+      6,
+      7
+    ],
+    "changed_scene_pixels_excluding_footer": 2870,
+    "changed_pixels_outside_person_boxes_and_footer": 0,
+    "footer_difference": "Renderer changes footer from STRUCT to POLISH2 tinted faces; excluded from person-only difference assertion.",
+    "frame_alpha_equal_count": 10,
+    "outside_mask_changes_total": 0,
+    "native_comparison": {
+      "path": "/Users/rexxa/work/artpolish2-data/boards/final_crowd/native_people_comparison.png",
+      "sha256": "2b6c9a1f2546e554c7c870ec5bb6ccffe420ff0477d4bc21ef032842be8da60f",
+      "bytes": 181396,
+      "dimensions": [
+        320,
+        1268
+      ],
+      "title": "NATIVE1x / original | final tinted",
+      "panels": [
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/boards/final_crowd/untinted_scene.png",
+          "sha256": "f244ac4c3f97eb61bc56d17f29d66e283cb87b5613096d9f09ad8622873629da",
+          "crop": [
+            1336,
+            477,
+            1416,
+            589
+          ],
+          "origin": [
+            12,
+            56
+          ],
+          "label": "ID0 original",
+          "integer_scale": 1
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/boards/crowd_faces.png",
+          "sha256": "80d336e7d4c52799ab37d7f2d77eb994e5a990ddda3471db7360891b737a51ae",
+          "crop": [
+            1336,
+            477,
+            1416,
+            589
+          ],
+          "origin": [
+            112,
+            56
+          ],
+          "label": "ID0 v1 idle",
+          "integer_scale": 1
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/boards/final_crowd/untinted_scene.png",
+          "sha256": "f244ac4c3f97eb61bc56d17f29d66e283cb87b5613096d9f09ad8622873629da",
+          "crop": [
+            504,
+            413,
+            584,
+            525
+          ],
+          "origin": [
+            12,
+            204
+          ],
+          "label": "ID1 original",
+          "integer_scale": 1
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/boards/crowd_faces.png",
+          "sha256": "80d336e7d4c52799ab37d7f2d77eb994e5a990ddda3471db7360891b737a51ae",
+          "crop": [
+            504,
+            413,
+            584,
+            525
+          ],
+          "origin": [
+            112,
+            204
+          ],
+          "label": "ID1 v2 idle",
+          "integer_scale": 1
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/boards/final_crowd/untinted_scene.png",
+          "sha256": "f244ac4c3f97eb61bc56d17f29d66e283cb87b5613096d9f09ad8622873629da",
+          "crop": [
+            824,
+            477,
+            904,
+            589
+          ],
+          "origin": [
+            12,
+            352
+          ],
+          "label": "ID2 original",
+          "integer_scale": 1
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/boards/crowd_faces.png",
+          "sha256": "80d336e7d4c52799ab37d7f2d77eb994e5a990ddda3471db7360891b737a51ae",
+          "crop": [
+            824,
+            477,
+            904,
+            589
+          ],
+          "origin": [
+            112,
+            352
+          ],
+          "label": "ID2 v5 idle",
+          "integer_scale": 1
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/boards/final_crowd/untinted_scene.png",
+          "sha256": "f244ac4c3f97eb61bc56d17f29d66e283cb87b5613096d9f09ad8622873629da",
+          "crop": [
+            440,
+            605,
+            520,
+            717
+          ],
+          "origin": [
+            12,
+            500
+          ],
+          "label": "ID3 original",
+          "integer_scale": 1
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/boards/crowd_faces.png",
+          "sha256": "80d336e7d4c52799ab37d7f2d77eb994e5a990ddda3471db7360891b737a51ae",
+          "crop": [
+            440,
+            605,
+            520,
+            717
+          ],
+          "origin": [
+            112,
+            500
+          ],
+          "label": "ID3 v6 work_a",
+          "integer_scale": 1
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/boards/final_crowd/untinted_scene.png",
+          "sha256": "f244ac4c3f97eb61bc56d17f29d66e283cb87b5613096d9f09ad8622873629da",
+          "crop": [
+            760,
+            349,
+            840,
+            461
+          ],
+          "origin": [
+            12,
+            648
+          ],
+          "label": "ID4 original",
+          "integer_scale": 1
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/boards/crowd_faces.png",
+          "sha256": "80d336e7d4c52799ab37d7f2d77eb994e5a990ddda3471db7360891b737a51ae",
+          "crop": [
+            760,
+            349,
+            840,
+            461
+          ],
+          "origin": [
+            112,
+            648
+          ],
+          "label": "ID4 v3 idle",
+          "integer_scale": 1
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/boards/final_crowd/untinted_scene.png",
+          "sha256": "f244ac4c3f97eb61bc56d17f29d66e283cb87b5613096d9f09ad8622873629da",
+          "crop": [
+            888,
+            541,
+            968,
+            653
+          ],
+          "origin": [
+            12,
+            796
+          ],
+          "label": "ID5 original",
+          "integer_scale": 1
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/boards/crowd_faces.png",
+          "sha256": "80d336e7d4c52799ab37d7f2d77eb994e5a990ddda3471db7360891b737a51ae",
+          "crop": [
+            888,
+            541,
+            968,
+            653
+          ],
+          "origin": [
+            112,
+            796
+          ],
+          "label": "ID5 v6 carry",
+          "integer_scale": 1
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/boards/final_crowd/untinted_scene.png",
+          "sha256": "f244ac4c3f97eb61bc56d17f29d66e283cb87b5613096d9f09ad8622873629da",
+          "crop": [
+            632,
+            477,
+            712,
+            589
+          ],
+          "origin": [
+            12,
+            944
+          ],
+          "label": "ID8 original",
+          "integer_scale": 1
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/boards/crowd_faces.png",
+          "sha256": "80d336e7d4c52799ab37d7f2d77eb994e5a990ddda3471db7360891b737a51ae",
+          "crop": [
+            632,
+            477,
+            712,
+            589
+          ],
+          "origin": [
+            112,
+            944
+          ],
+          "label": "ID8 v5 idle",
+          "integer_scale": 1
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/boards/final_crowd/untinted_scene.png",
+          "sha256": "f244ac4c3f97eb61bc56d17f29d66e283cb87b5613096d9f09ad8622873629da",
+          "crop": [
+            888,
+            221,
+            968,
+            333
+          ],
+          "origin": [
+            12,
+            1092
+          ],
+          "label": "ID9 original",
+          "integer_scale": 1
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/boards/crowd_faces.png",
+          "sha256": "80d336e7d4c52799ab37d7f2d77eb994e5a990ddda3471db7360891b737a51ae",
+          "crop": [
+            888,
+            221,
+            968,
+            333
+          ],
+          "origin": [
+            112,
+            1092
+          ],
+          "label": "ID9 v2 carry",
+          "integer_scale": 1
+        }
+      ],
+      "owner_approval": "PENDING"
+    }
+  },
+  "native_visual_verdict": {
+    "score": 92,
+    "verdict": "pass",
+    "category_match": true,
+    "differences": [
+      "At native1x, ID0/v1 reads visibly lighter and IDs3/v6,4/v3,5/v6 read deeper than the shared untinted orange skin.",
+      "Hair/skin hue variation is visible, but small faces do not make portrait-level features or every identity separately readable.",
+      "Deep-tone figures have lower contrast against brown ground; silhouettes, clothing and held objects remain intact."
+    ],
+    "suggestions": [
+      "Present this as final tint integration evidence with the actual10-source/8-visible counts.",
+      "Judge portrait distinctness and portrait-to-sprite identity with the separate blind results; do not infer them from this scene."
+    ],
+    "reasoning": "The actual compositor selects committed baked frames by real agent ID before ordinary depth composition. Native full-scene and exact1x person comparisons show palette variety without halos, scene movement or changes outside the figure regions."
+  },
+  "limitations": [
+    "The frozen scene has10 source IDs and8 visible people, not60. IDs6and7 are offscreen and were selected/hashed but not drawn.",
+    "All10 captured people in this scene are classified adult. The representative selector age is30 here;10/50 remain class-to-pool mappings, not captured numerical ages.",
+    "Visible variants arev1,v2,v3,v5,v6. Grey-hairv4 belongs to offscreen ID7, so this scene does not demonstrate visible grey hair or child/elder selection.",
+    "The fixed ENV1 declared overlays retain their existing positions, activities and top overrides; actual person IDs are preserved.",
+    "No face pixels were recoloured in a completed screenshot. No game runtime,3D,owner approval,portrait distinctness or blind-identity pass is claimed."
+  ]
+}

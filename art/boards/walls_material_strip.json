@@ -1,0 +1,253 @@
+{
+  "path": "art/boards/walls_material_strip.png",
+  "sha256": "c72ae85e41f7eaf0c1fca94ac56e6b50cf7119b7a6dd394fcfb047028690682f",
+  "bytes": 912446,
+  "dimensions": [
+    1644,
+    1236
+  ],
+  "title": "WALL MATERIALS / full1x + exact2x details / full2x in named a-b-c supplements",
+  "panels": [
+    {
+      "path": "/Users/rexxa/work/artpolish2-data/boards/walls_a.png",
+      "sha256": "f244ac4c3f97eb61bc56d17f29d66e283cb87b5613096d9f09ad8622873629da",
+      "crop": [
+        0,
+        138,
+        448,
+        716
+      ],
+      "origin": [
+        12,
+        56
+      ],
+      "label": "a / POLISH dark top x0.45 / full scene 1x",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish2-data/boards/walls_a.png",
+      "sha256": "f244ac4c3f97eb61bc56d17f29d66e283cb87b5613096d9f09ad8622873629da",
+      "crop": [
+        0,
+        138,
+        128,
+        266
+      ],
+      "origin": [
+        12,
+        678
+      ],
+      "label": "House top/corner / exact 2x",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish2-data/boards/walls_a.png",
+      "sha256": "f244ac4c3f97eb61bc56d17f29d66e283cb87b5613096d9f09ad8622873629da",
+      "crop": [
+        0,
+        458,
+        128,
+        586
+      ],
+      "origin": [
+        276,
+        678
+      ],
+      "label": "Store top/corner / exact 2x",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish2-data/boards/walls_b.png",
+      "sha256": "ff8871d6a3b5a56e04bf0394679cd13147c0e88e97a3f6c391a7fb1ddd8fc26c",
+      "crop": [
+        0,
+        138,
+        448,
+        716
+      ],
+      "origin": [
+        552,
+        56
+      ],
+      "label": "b / material along run / width64 / full scene 1x",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish2-data/boards/walls_b.png",
+      "sha256": "ff8871d6a3b5a56e04bf0394679cd13147c0e88e97a3f6c391a7fb1ddd8fc26c",
+      "crop": [
+        0,
+        138,
+        128,
+        266
+      ],
+      "origin": [
+        552,
+        678
+      ],
+      "label": "House top/corner / exact 2x",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish2-data/boards/walls_b.png",
+      "sha256": "ff8871d6a3b5a56e04bf0394679cd13147c0e88e97a3f6c391a7fb1ddd8fc26c",
+      "crop": [
+        0,
+        458,
+        128,
+        586
+      ],
+      "origin": [
+        816,
+        678
+      ],
+      "label": "Store top/corner / exact 2x",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish2-data/boards/walls_c.png",
+      "sha256": "c402dd300bbe89244687bc04a20a297c2e76593f082cfcbf7a988752e5faeb63",
+      "crop": [
+        0,
+        138,
+        448,
+        716
+      ],
+      "origin": [
+        1092,
+        56
+      ],
+      "label": "c / material along run / width44 / full scene 1x",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish2-data/boards/walls_c.png",
+      "sha256": "c402dd300bbe89244687bc04a20a297c2e76593f082cfcbf7a988752e5faeb63",
+      "crop": [
+        0,
+        138,
+        128,
+        266
+      ],
+      "origin": [
+        1092,
+        678
+      ],
+      "label": "House top/corner / exact 2x",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish2-data/boards/walls_c.png",
+      "sha256": "c402dd300bbe89244687bc04a20a297c2e76593f082cfcbf7a988752e5faeb63",
+      "crop": [
+        0,
+        458,
+        128,
+        586
+      ],
+      "origin": [
+        1356,
+        678
+      ],
+      "label": "Store top/corner / exact 2x",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish2-data/boards/room_log_oak.png",
+      "sha256": "cf730fbc8b164d1ba69b4d66a293f850080e2fd0bee87b11d22a4add8ed2d910",
+      "crop": [
+        0,
+        0,
+        224,
+        224
+      ],
+      "origin": [
+        12,
+        978
+      ],
+      "label": "log / oak",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish2-data/boards/room_log_pine.png",
+      "sha256": "1aaebde85e07f534939040981b43112cb63bf41508d0a70066384a4f1813d6c1",
+      "crop": [
+        0,
+        0,
+        224,
+        224
+      ],
+      "origin": [
+        244,
+        978
+      ],
+      "label": "log / pine",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish2-data/boards/room_drystone_granite.png",
+      "sha256": "90f999d8810a7576648b5a1e4c57d69d558a567f72ff697c669c6e5c7279503a",
+      "crop": [
+        0,
+        0,
+        224,
+        224
+      ],
+      "origin": [
+        476,
+        978
+      ],
+      "label": "drystone / granite",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish2-data/boards/room_drystone_sandstone.png",
+      "sha256": "5dc66662673043186da41c1b970c65deec3a2c39182aa781612e857ff8fcb188",
+      "crop": [
+        0,
+        0,
+        224,
+        224
+      ],
+      "origin": [
+        708,
+        978
+      ],
+      "label": "drystone / sandstone",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish2-data/boards/room_mud_brick_clay.png",
+      "sha256": "e7faca4cd30df187c6e9f948d875c84879b1ee62141490c37fd5565d8a30192e",
+      "crop": [
+        0,
+        0,
+        224,
+        224
+      ],
+      "origin": [
+        940,
+        978
+      ],
+      "label": "mud_brick / clay",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish2-data/boards/room_fired_brick_clay.png",
+      "sha256": "9181030b816a118047830d8649f6c7a49f82d4246fdb7f081b418f26acf3dabc",
+      "crop": [
+        0,
+        0,
+        224,
+        224
+      ],
+      "origin": [
+        1172,
+        978
+      ],
+      "label": "fired_brick / clay",
+      "integer_scale": 1
+    }
+  ],
+  "owner_approval": "PENDING"
+}
