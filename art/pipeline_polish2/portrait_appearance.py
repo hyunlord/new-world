@@ -6,6 +6,7 @@
 """Import source-observed appearance and preserve exact enlarged sprite references."""
 from __future__ import annotations
 
+from hashlib import sha256
 from io import BytesIO
 from pathlib import Path
 from typing import ClassVar, Literal, Self
@@ -15,10 +16,11 @@ from PIL import Image
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from art.compositor.face_variants import FacePlan
-from art.pipeline_polish2.blind_round import seal
+from art.pipeline_polish2.blind_round import seal, seal_model
 from art.pipeline_polish2.portrait_models import (
     ROOT,
     AssetRef,
+    BustDetail,
     Evidence,
     SourceAppearance,
     write_evidence,
@@ -102,6 +104,60 @@ def enlarge_reference(source: AssetRef, directory: Path) -> AssetRef:
     with Image.open(source.path) as native, BytesIO() as encoded:
         native.resize((native.width * 4, native.height * 4), Image.Resampling.NEAREST).save(encoded, format="PNG")
         return seal(directory / f"{source.sha256}.4x.png", encoded.getvalue())
+
+
+def bust_pixels(native: Image.Image) -> tuple[tuple[int, int, int, int], tuple[int, int, int, int], Image.Image]:
+    """Crop the full visible width and ceil(3/4 visible height), then replicate pixels."""
+    if native.mode != "RGBA":
+        message = "Bust detail requires the native RGBA source without conversion"
+        raise ValueError(message)
+    visible = native.getchannel("A").getbbox()
+    if visible is None:
+        message = "Bust detail requires nonempty visible alpha"
+        raise ValueError(message)
+    left, top, right, bottom = visible
+    crop = (left, top, right, top + (3 * (bottom - top) + 3) // 4)
+    with native.crop(crop) as cropped:
+        expanded = cropped.resize((cropped.width * 12, cropped.height * 12), Image.Resampling.NEAREST)
+    return visible, crop, expanded
+
+
+def verify_bust_detail(binding: AssetRef, source: AssetRef, image: AssetRef) -> BustDetail:
+    """Verify provenance and recompute every RGBA pixel, rejecting rehashed retouching."""
+    binding.verify()
+    detail = BustDetail.model_validate_json(binding.path.read_bytes())
+    if detail.source != source or detail.image != image:
+        message = "Bust detail must bind native reference1 and displayed reference4 exactly"
+        raise ValueError(message)
+    source.verify()
+    image.verify()
+    with Image.open(source.path) as native, Image.open(image.path) as actual:
+        visible, crop, expected = bust_pixels(native)
+        with expected:
+            if (detail.visible_bbox != visible or detail.crop_bbox != crop or actual.mode != "RGBA"
+                    or actual.size != expected.size or actual.tobytes() != expected.tobytes()):
+                message = "Bust detail differs from its deterministic source crop and exact12x pixels"
+                raise ValueError(message)
+    return detail
+
+
+def create_bust_detail(source: AssetRef, directory: Path) -> AssetRef:
+    """Seal a source-hash-named crop and sidecar; existing derivations must verify before reuse."""
+    source.verify()
+    with Image.open(source.path) as native:
+        visible, crop, expanded = bust_pixels(native)
+        with expanded, BytesIO() as encoded:
+            expanded.save(encoded, format="PNG")
+            payload = encoded.getvalue()
+    stem = f"{source.sha256}.upper3of4.12x"
+    image = AssetRef(path=(directory / f"{stem}.png").resolve(), sha256=sha256(payload).hexdigest())
+    metadata = directory / f"{stem}.json"
+    if metadata.exists():
+        binding = AssetRef.of(metadata)
+        _ = verify_bust_detail(binding, source, image)
+        return binding
+    _ = seal(image.path, payload)
+    return seal_model(metadata, BustDetail(source=source, image=image, visible_bbox=visible, crop_bbox=crop))
 
 
 def main(root: Path = ROOT) -> None:

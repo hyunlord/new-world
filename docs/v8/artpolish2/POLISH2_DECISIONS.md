@@ -152,3 +152,25 @@ and call the result a planned identity variant. The frozen plan does not change;
 female/child prompts remain byte-identical. Started request files, raw outputs,
 observations and attempt counts stay immutable. Exhausted second-attempt
 failures remain failures, including the observed 1px head-margin failure.
+
+## D14 — Show exact upper-body geometry before further child generation
+
+All eighteen generated female hide-wrap portraits lowered the source garment's
+upper edge, even after the unstarted-request text explicitly preserved garment
+height and trim direction. They remain observed failures. New child dispatch is
+held while a fourth reference is independently verified: the native sprite's
+visible-alpha bounding box, cropped to its upper ceil(3/4 height), enlarged12x
+with nearest-neighbour sampling. Native RGBA pixels are copied exactly; source,
+crop coordinates, scale, output and metadata hashes are bound and checked.
+
+The original native tinted sprite, style anchor and exact4x full sprite stay in
+their original reference positions. Started requests, images and observations
+are immutable; a new reference cannot retroactively change their provenance.
+One unstarted child pilot is observed before releasing the remaining queue.
+Adding detail improves the input evidence but does not establish that generated
+clothing follows it. Eligible failures may use only their final second attempt
+in the single coordinated repair round after the first blind results.
+
+Separately, unstarted requests ask for an empty top15% band after observed1px
+hair margins. The structure instrument still requires the original minimum2px;
+no generated image is reframed or painted to pass it.

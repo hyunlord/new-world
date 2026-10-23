@@ -67,23 +67,41 @@ class SourceAppearance(Evidence):
     appearance_brief: str = Field(min_length=1)
 
 
+class BustDetail(Evidence):
+    source: AssetRef
+    image: AssetRef
+    visible_bbox: tuple[int, int, int, int]
+    crop_bbox: tuple[int, int, int, int]
+    scale: Literal[12] = 12
+    crop_rule: Literal["visible_alpha_upper_three_quarters_ceil"] = "visible_alpha_upper_three_quarters_ceil"
+    coordinate_rule: Literal["left_top_inclusive_right_bottom_exclusive"] = "left_top_inclusive_right_bottom_exclusive"
+
+
 class Request(Evidence):
     schema_version: Literal[1] = 1
     look: str
     variant: PortraitVariant
     description: str
     prompt: str
-    references: tuple[AssetRef, ...] = Field(min_length=2, max_length=3)
+    references: tuple[AssetRef, ...] = Field(min_length=2, max_length=4)
     face_plan: AssetRef
     attempt: Literal[1, 2] = 1
     appearance_manifest: AssetRef | None = None
     source_appearance: SourceAppearance | None = None
+    bust_detail: AssetRef | None = None
     previous_request: AssetRef | None = None
     correction: str | None = None
     canonical_path: Path
     raw_directory: Path
     attempt_limit: Literal[2] = 2
     transparent_background: Literal[False] = False
+
+    @model_validator(mode="after")
+    def detail_binding(self) -> Self:
+        if (len(self.references) == 4) != (self.bust_detail is not None):
+            message = "Four references require a bound bust detail; legacy references have no detail"
+            raise ValueError(message)
+        return self
 
 
 class Requests(Evidence):
@@ -102,8 +120,9 @@ class ToolRequest(Evidence):
     variant: PortraitVariant
     attempt: Literal[1, 2] = 1
     prompt: str
-    referenced_image_paths: tuple[str, ...] = Field(min_length=2, max_length=3)
-    references: tuple[AssetRef, ...] = Field(min_length=2, max_length=3)
+    referenced_image_paths: tuple[str, ...] = Field(min_length=2, max_length=4)
+    references: tuple[AssetRef, ...] = Field(min_length=2, max_length=4)
+    bust_detail: AssetRef | None = None
     request_path: Path | None = None
     canonical_path: Path
     raw_directory: Path

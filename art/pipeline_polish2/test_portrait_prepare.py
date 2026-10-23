@@ -16,7 +16,12 @@ from PIL import Image
 from art.compositor.face_variants import FacePlan
 from art.pipeline_polish2 import portrait_prepare
 from art.pipeline_polish2.portrait_appearance import compile_appearance
-from art.pipeline_polish2.portrait_models import AssetRef, Request, write_evidence
+from art.pipeline_polish2.portrait_models import (
+    AssetRef,
+    BustDetail,
+    Request,
+    write_evidence,
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -66,7 +71,8 @@ def test_preparation_carries_observation_and_exact_fourfold_pixels(workspace: Wo
     request = prepared.requests[0]
     assert workspace.brief in request.prompt and request.source_appearance is not None
     assert request.source_appearance.appearance_brief == workspace.brief
-    assert request.references[0].path == workspace.sprite and len(request.references) == 3
+    assert request.references[0].path == workspace.sprite and len(request.references) == 4
+    assert request.bust_detail is not None
     assert workspace.sprite.read_bytes() == original
     with Image.open(workspace.sprite) as native, Image.open(request.references[2].path) as enlarged:
         assert enlarged.mode == native.mode and enlarged.size == (12, 8)
@@ -87,7 +93,7 @@ def test_retry_preserves_original_request_and_attempt(workspace: Workspace) -> N
     # Given: a completed legacy two-reference request and preserved first raw.
     _ = compile_appearance(workspace.root, (workspace.envelope,))
     first = portrait_prepare.prepare(workspace.root, workspace.data, available_only=True).requests[0]
-    first = first.model_copy(update={"references": first.references[:2], "prompt": "Original immutable prompt"})
+    first = first.model_copy(update={"references": first.references[:2], "bust_detail": None, "prompt": "Original immutable prompt"})
     path = first.raw_directory / "request.json"
     write_evidence(path, first)
     raw = first.raw_directory / "try1.png"
@@ -155,3 +161,58 @@ def test_prepare_rejects_changed_envelope_before_writes(workspace: Workspace, ch
     with pytest.raises(ValueError, match="changed after request"):
         _ = portrait_prepare.prepare(workspace.root, workspace.data, available_only=True)
     assert not workspace.data.exists()
+
+
+def test_unstarted_upgrade_preserves_first_three_references(workspace: Workspace) -> None:
+    # Given: an unstarted three-reference request already has frozen native/style/exact4x references.
+    _ = compile_appearance(workspace.root, (workspace.envelope,))
+    first = portrait_prepare.prepare(workspace.root, workspace.data, available_only=True).requests[0]
+    old = first.model_copy(update={"references": first.references[:3], "bust_detail": None})
+    write_evidence(first.raw_directory / "request.json", old)
+    before = tuple(ref.path.read_bytes() for ref in old.references)
+    # When: upgrade only the unstarted queue to the four-reference format.
+    current = portrait_prepare.prepare(workspace.root, workspace.data, available_only=True, unstarted_only=True).requests[0]
+    # Then: the original three references are unchanged, with one separately bound detail appended.
+    assert current.references[:3] == old.references and len(current.references) == 4
+    assert tuple(ref.path.read_bytes() for ref in current.references[:3]) == before
+    assert current.bust_detail is not None
+
+
+def test_bad_detail_blocks_preparation_before_reference_writes(workspace: Workspace) -> None:
+    # Given: a stored detail has forged crop metadata and an unrelated reference file needs rebuilding.
+    _ = compile_appearance(workspace.root, (workspace.envelope,))
+    first = portrait_prepare.prepare(workspace.root, workspace.data, available_only=True).requests[0]
+    assert first.bust_detail is not None
+    detail = BustDetail.model_validate_json(first.bust_detail.path.read_bytes())
+    write_evidence(first.bust_detail.path, detail.model_copy(update={"crop_bbox": (0, 0, 1, 1)}))
+    first.references[2].path.unlink()
+    path = first.raw_directory / "request.json"
+    before = path.read_bytes()
+    # When/Then: reject the invalid detail before recreating any reference or replacing the request.
+    with pytest.raises(ValueError):
+        _ = portrait_prepare.prepare(workspace.root, workspace.data, available_only=True, unstarted_only=True)
+    assert not first.references[2].path.exists() and path.read_bytes() == before
+
+
+@pytest.mark.parametrize("legacy_count", [2, 3])
+def test_retry_detail_requires_explicit_opt_in_and_keeps_history(workspace: Workspace, legacy_count: int) -> None:
+    # Given: a completed legacy request and raw evidence remain unchanged at their original paths.
+    _ = compile_appearance(workspace.root, (workspace.envelope,))
+    first = portrait_prepare.prepare(workspace.root, workspace.data, available_only=True).requests[0]
+    legacy = first.model_copy(update={"references": first.references[:legacy_count], "bust_detail": None})
+    path = first.raw_directory / "request.json"
+    write_evidence(path, legacy)
+    raw = first.raw_directory / "try1.png"
+    _ = raw.write_bytes(b"SYNTHETIC original first-attempt evidence")
+    before, raw_before = path.read_bytes(), raw.read_bytes()
+    # When: explicitly request additional source detail for the one eligible second attempt.
+    retry = portrait_prepare.prepare_retry(path, "Preserve the observed high collar.", workspace.root, include_bust_detail=True)
+    # Then: the separate second request is bound to four references without modifying the first history.
+    assert retry.attempt == 2 and len(retry.references) == 4 and retry.bust_detail is not None
+    assert retry.references[0] == legacy.references[0] and retry.face_plan == legacy.face_plan
+    assert path.read_bytes() == before and raw.read_bytes() == raw_before
+    retry_path = first.raw_directory / "try2.request.json"
+    retry_bytes = retry_path.read_bytes()
+    with pytest.raises(ValueError, match="Conflicting frozen evidence"):
+        _ = portrait_prepare.prepare_retry(path, "Preserve the observed high collar.", workspace.root)
+    assert retry_path.read_bytes() == retry_bytes

@@ -17,7 +17,10 @@ from pydantic import Field, JsonValue
 
 from art.pipeline2.judge import judge, load_calibration
 from art.pipeline_env1.portrait_finalize import Inspection, geometry
-from art.pipeline_polish2.portrait_appearance import verified_appearance
+from art.pipeline_polish2.portrait_appearance import (
+    verified_appearance,
+    verify_bust_detail,
+)
 from art.pipeline_polish2.portrait_evidence import preserve_input, record_revision
 from art.pipeline_polish2.portrait_models import (
     DATA,
@@ -66,6 +69,8 @@ def process(spec: ProcessInput) -> Processed:
         _ = verified_appearance(request.appearance_manifest)
     if request.source_appearance is not None:
         request.source_appearance.source.verify()
+    if request.bust_detail is not None:
+        _ = verify_bust_detail(request.bust_detail, request.references[0], request.references[3])
     attempt_dir = request.raw_directory / f"try{spec.attempt}"
     raw_path = attempt_dir / "raw.png"
     with Image.open(spec.raw_path) as raw:

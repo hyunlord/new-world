@@ -19,12 +19,18 @@ from art.compositor.face_variants import (
     baked_frame,
 )
 from art.pipeline_polish2.blind_round import seal_model
-from art.pipeline_polish2.portrait_appearance import appearance_for, enlarge_reference
+from art.pipeline_polish2.portrait_appearance import (
+    appearance_for,
+    create_bust_detail,
+    enlarge_reference,
+    verify_bust_detail,
+)
 from art.pipeline_polish2.portrait_models import (
     ANCHOR,
     DATA,
     ROOT,
     AssetRef,
+    BustDetail,
     Request,
     Requests,
     SourceAppearance,
@@ -80,14 +86,34 @@ def prompt_for(look: LookVariants, variant: Variant, appearance: SourceAppearanc
     )
 
 
-def build_request(root: Path, raw_directory: Path, identity: tuple[LookVariants, Variant]) -> Request:
+def build_request(root: Path, raw_directory: Path, identity: tuple[LookVariants, Variant],
+                  include_bust_detail: bool | None = None) -> Request:
     look, variant = identity
     appearance_ref, appearance = appearance_for(root, look.look)
     sprite = AssetRef.of(baked_frame(root, look, variant))
+    binding = None
+    detail_image = None
+    want_detail = not started(raw_directory) if include_bust_detail is None else include_bust_detail
+    if want_detail:
+        binding = create_bust_detail(sprite, raw_directory / "references")
+        detail = BustDetail.model_validate_json(binding.path.read_bytes())
+        _ = verify_bust_detail(binding, sprite, detail.image)
+        detail_image = detail.image
     enlarged = enlarge_reference(sprite, raw_directory / "references")
+    references: tuple[AssetRef, ...] = (sprite, AssetRef.of(root / ANCHOR.relative_to(ROOT)), enlarged)
+    prompt = prompt_for(look, variant, appearance)
+    if detail_image is not None:
+        references = (*references, detail_image)
+        prompt += (
+            " Reference 4 is a source-derived bust detail: the upper three quarters of reference 1's "
+            "visible alpha bounds, enlarged exactly12x with nearest-neighbor pixels and unchanged alpha. "
+            "Read the actual neckline and upper trim here. Retain any high clavicle-level garment edge "
+            "at that exact height; do not drop it to the low chest or add exposed skin. Preserve the "
+            "observed horizontal or diagonal trim direction and exact shoulder coverage. "
+            "This is the same source, not another design or a portrait framing template."
+        )
     return Request(look=look.look, variant=variant.id, description=variant.description,
-                   prompt=prompt_for(look, variant, appearance),
-                   references=(sprite, AssetRef.of(root / ANCHOR.relative_to(ROOT)), enlarged),
+                   prompt=prompt, references=references, bust_detail=binding,
                    face_plan=AssetRef.of(root / PLAN_PATH.relative_to(ROOT)),
                    appearance_manifest=appearance_ref, source_appearance=appearance,
                    canonical_path=root / "art/portrait/polish2" / look.look / f"{variant.id}.png",
@@ -98,7 +124,7 @@ def tool_request(row: Request, request_path: Path) -> ToolRequest:
     return ToolRequest(id=f"{row.look}/{row.variant}", look=row.look, variant=row.variant, attempt=row.attempt,
                        prompt=row.prompt, referenced_image_paths=tuple(str(ref.path) for ref in row.references),
                        references=row.references, canonical_path=row.canonical_path,
-                       raw_directory=row.raw_directory, request_path=request_path)
+                       raw_directory=row.raw_directory, request_path=request_path, bust_detail=row.bust_detail)
 
 
 def started(directory: Path) -> bool:
@@ -137,7 +163,7 @@ def prepare(root: Path = ROOT, output: Path = DATA, available_only: bool = False
     return result
 
 
-def prepare_retry(request_path: Path, correction: str, root: Path = ROOT) -> Request:
+def prepare_retry(request_path: Path, correction: str, root: Path = ROOT, *, include_bust_detail: bool = False) -> Request:
     """Create a separate immutable second-attempt request without rewriting first-attempt evidence."""
     previous = Request.model_validate_json(request_path.read_bytes())
     if previous.attempt != 1:
@@ -156,7 +182,7 @@ def prepare_retry(request_path: Path, correction: str, root: Path = ROOT) -> Req
         raise ValueError(message)
     look = FacePlan.read(current_plan).for_look(previous.look)
     variant = next(row for row in look.variants if row.id == previous.variant)
-    fresh = build_request(root, previous.raw_directory, (look, variant))
+    fresh = build_request(root, previous.raw_directory, (look, variant), include_bust_detail=include_bust_detail)
     retry = fresh.model_copy(update={"attempt": 2, "previous_request": AssetRef.of(request_path),
         "correction": correction, "prompt": f"Second and final attempt. Explicit correction: {correction}\n{fresh.prompt}"})
     destination = previous.raw_directory / "try2.request.json"
@@ -166,9 +192,9 @@ def prepare_retry(request_path: Path, correction: str, root: Path = ROOT) -> Req
 
 
 def main(available_only: bool = False, unstarted_only: bool = False,
-         retry_request: Path | None = None, correction: str = "") -> None:
+         retry_request: Path | None = None, correction: str = "", include_bust_detail: bool = False) -> None:
     if retry_request is not None:
-        result = prepare_retry(retry_request, correction)
+        result = prepare_retry(retry_request, correction, include_bust_detail=include_bust_detail)
         print(f"Prepared attempt2 only: {result.raw_directory / 'try2.queue.json'}")
         return
     result = prepare(available_only=available_only, unstarted_only=unstarted_only)

@@ -75,3 +75,23 @@ Godot runtime integration or owner approval.
   male beard-brief mismatches are separately recorded. New unstarted requests
   receive clearer beard and head-spacing instructions, without changing the
   frozen plan or evaluation thresholds. Blind rounds have not started.
+
+## Checkpoint: 2026-10-23 20:20 UTC
+
+- Wall and crowd boards are final candidates. The crowd uses ten captured
+  adult IDs, eight visible; no child/elder or sixty-person runtime claim.
+- 121/204 final portrait candidates are generated (73adult/48child), with
+  151 portrait calls plus39 texture calls =190 completed calls. The remaining
+  23 adult first attempts are in flight; sixty unstarted child calls are held.
+- Actual observation: adult geometry71/73, hair73/73, top/trim72/73;
+  child geometry46/48, hair48/48, garment30/48. All eighteen female hide-wrap
+  variants lowered the source garment edge, despite the strengthened text.
+- An exact, hash-bound upper-body source crop is being added as a fourth
+  reference for unstarted child requests. Native pixels, frozen references,
+  started requests, failed observations and the original thresholds stay fixed.
+  One unstarted child pilot will be inspected before the remaining dispatch.
+- Blind rounds remain unstarted. Planned total after the204 base candidates
+  and the30 already-consumed replacements is273, reserving47 calls for one
+  coordinated eligible repair round. No variant may exceed two attempts.
+- Integrated scoped verification:207tests passed. Later protocol edits require
+  their own verification before use and one final scoped verification.

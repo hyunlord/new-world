@@ -255,6 +255,56 @@ byte-identical to their preserved copies. Red/green logs:
 `portraits/protocol_review/red_linked_envelope_guard.txt` and
 `portraits/protocol_review/green_linked_envelope_guard.txt` outside the repo.
 
+Fourth-reference extension, after observed garment-height failures: newly
+prepared unstarted requests now append a source-derived bust detail. The
+native tinted S/idle, style anchor and exact4× reference remain references1–3.
+Reference4 is derived from the **native tinted RGBA source**, using its nonzero
+alpha bounding box, the full width of that box and the upper
+`ceil(visible_height * 3 / 4)` rows, followed by exact12× nearest-neighbor
+replication. Every retained RGBA value, including RGB behind zero alpha, is
+unchanged. No painting, mask edits or source annotation changes are involved.
+
+Immutable external reference files use
+`<native_sha256>.upper3of4.12x.{png,json}`. The JSON records native source and
+output file hashes, visible bbox, crop bbox, scale12 and explicit half-open
+coordinates (left/top inclusive, right/bottom exclusive). `Request.bust_detail`
+and `ToolRequest.bust_detail` hash-bind that sidecar. Four-reference requests
+require it; historical two/three-reference requests remain valid without it.
+Preparation checks existing detail provenance before writing other references;
+processing checks it before raw/canonical/result writes. Both recompute the
+native-alpha crop and exact RGBA pixels, rejecting painted outputs or changed
+crop/scale metadata even if their hashes have been refreshed. `Candidate.sprite`
+continues to reference the native first image, with blind packets unchanged.
+
+The existing beard, top15% blank margin and garment-height prompt instructions
+remain in `prompt_for()`. A separate fourth-reference clause is appended by
+`build_request()` only when the detail exists, directing the generator to
+retain the observed clavicle-level edge, trim direction and shoulder coverage.
+The detail does not replace the portrait composition or create a new design.
+
+An explicitly authorized later retry may opt into the same additional evidence:
+
+```sh
+python3 -m art.pipeline_polish2.portrait_prepare --retry-request ORIGINAL_REQUEST_JSON --correction 'Concrete observed correction' --include-bust-detail
+```
+
+Python: `prepare_retry(path, correction, root, include_bust_detail=True)`.
+The default remains three references. Opt-in creates only separate
+`try2.request.json` / `try2.queue.json`; original requests/raws remain intact,
+and differing rewrites of an already sealed retry still reject. The maximum
+attempt2 and root-owned image-call budget are unchanged. No actual production
+request preparation or generation was performed by this tooling extension.
+
+Fourth-reference tooling verification:51 tests passed. New tests compare every
+synthetic output pixel with independently indexed native pixels; reject stale
+sources, rehashed painted output and changed bbox/scale metadata; verify rejection
+before reference/output writes; preserve failed processing history; exercise
+legacy2/3 references and explicit retry opt-in. Ruff and the19-file programming
+audit passed; basedpyright reported0errors/0warnings. External logs retain the
+red cases and final green record under `portraits/protocol_review/` as
+`red_bust_detail.txt`, `red_bust_detail_prepare.txt`,
+`red_bust_detail_retry_optin.txt` and `green_bust_detail.txt`.
+
 Actual final-image observation found that some male variants copied a full
 source beard despite the frozen clean-shaven brief. For unstarted male requests
 only, the prompt now opens with the explicit full/short/clean requirement and

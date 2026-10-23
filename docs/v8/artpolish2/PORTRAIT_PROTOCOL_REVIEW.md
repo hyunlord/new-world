@@ -343,3 +343,53 @@ Independent evidence under external `portraits/protocol_review/`:
 The intentionally provisional production manifest still requires compilation
 after the source-review freeze. This review establishes the rejection guard
 and valid synthetic path, not source-review readiness or portrait acceptance.
+
+### Fourth-reference and optional retry review — 2026-10-24 KST
+
+**Disposition: PASS for the bounded tooling review; no remaining blocker found.**
+All earlier findings and their original failure evidence remain preserved above.
+This review used source inspection, existing regression tests and temporary
+synthetic fixtures. It did not inspect production portrait content or prepare,
+generate, process or replace any production request or asset.
+
+| Required boundary | Independently verified evidence |
+|---|---|
+| Native crop geometry | `portrait_appearance.py:109` computes the nonzero-alpha bbox, keeps its full width and takes exactly `ceil(3 * visible_height / 4)` rows from its top. Independent fixtures covered every visible height from 1 through 12, using a separately calculated expected row count. All 12 cases passed. |
+| Exact RGBA replication | Every output pixel in those fixtures matched the corresponding native pixel indexed by integer division by 12. Dimensions, RGBA mode, partial alpha and RGB behind zero alpha were retained; native bytes were unchanged. |
+| Bound provenance | `BustDetail` (`portrait_models.py:70`) records source/output hashes, visible/crop bboxes, literal scale12 and half-open coordinate rules. The request and tool queue bind the sidecar hash. `verify_bust_detail()` (`portrait_appearance.py:125`) verifies both files and recomputes their exact source-derived geometry and RGBA bytes. |
+| Tamper rejection before publication | Fresh tests rejected a stale source, painted output with refreshed hashes, altered visible/crop bbox and altered scale. Preparation validates an existing detail before rebuilding even a missing third reference (`portrait_prepare.py:98`; regression `test_portrait_prepare.py:181`). Processing checks before attempt/raw/canonical/result writes (`portrait_process.py:72`); its regression preserves a prior processed FAIL and all its evidence bytes. |
+| UNSTARTED preparation | Automatic detail inclusion checks `not started(raw_directory)` (`portrait_prepare.py:96`). The unstarted-only regression keeps the started request byte-identical and queues only the unstarted variant (`test_portrait_prepare.py:118`). Upgrading an unstarted request preserves all first-three references and their bytes (`:166`). |
+| Existing two/three references | Both historical request shapes still parse without synthetic detail metadata. Independent integration fixtures exercised each legacy shape through default and explicitly opted-in attempt2 preparation, JSON parsing and actual synthetic processing. |
+| Explicit eligible attempt2 | `prepare_retry(..., include_bust_detail=True)` adds the fourth reference; the default remains three (`portrait_prepare.py:166`). CLI help exposes the option. Both legacy shapes passed both paths; all resulting requests and processed candidates explicitly identify attempt2. The existing attempt ceiling and retry-from-attempt2 rejection remain covered. |
+| Immutable previous attempts | All four independent retry cases preserved the original native, face plan, first request and first raw bytes. Changing the detail option after sealing a retry rejected, retaining both `try2.request.json` and `try2.queue.json` bytes. No existing retry was upgraded in place. |
+| Opt-in retry tampering | For both legacy inputs, an independently forged attempt2 request with painted fourth-reference pixels and refreshed image/sidecar/request bindings rejected during processing. Previously processed attempt2 records remained unchanged. |
+| Native blind identity source | Valid first-attempt and retry processing retained `Candidate.sprite == request.references[0]` (`portrait_process.py:106`). The additional detail does not replace the native sprite used by blind packets. |
+
+The exact `prompt_for()` function source equals the pinned pre-patch version in
+commit `6892fbec32047c577d447873a069ed0bb2623bd2`. Both function-source hashes are
+`fef5768eedf67a7dbc08acd9f675413eaad61df4cb5e2770bd4d15c6c4d0914c`.
+This directly preserves the root's beard, top15% blank margin and garment-height
+instructions. The fourth-reference clause is appended separately in
+`build_request()`. The Git comparison supersedes the earlier interim evidence
+file's statement that a pre-patch snapshot had not yet been verified.
+
+Fresh final verification: **51 passed in 5.11s**, covering
+`test_blind_packets.py`, `test_blind_round.py`, `test_blind_score.py`,
+`test_portrait_prepare.py`, `test_portrait_process.py` and
+`test_portrait_detail.py`. CLI help exited successfully. No dependencies were
+added by this review. Implementation-lane lint/typecheck reports are recorded
+in `PORTRAIT_PROTOCOL.md`; this independent verdict rests on the source and
+fresh executable checks above.
+
+Independent evidence under
+`/Users/rexxa/work/artpolish2-data/portraits/protocol_review/`:
+
+- `fourth_reference_geometry_recheck.json`
+- `fourth_reference_prompt_git_comparison.json`
+- `fourth_reference_retry_compatibility.json`
+- `fourth_reference_final_suite.txt`
+
+The optional retry expansion was explicitly authorized by the root during this
+review. This verdict establishes the preparation/processing safeguards and
+synthetic compatibility only; production generation, portrait visual quality,
+blind acceptance and owner adoption remain outside its claims.
