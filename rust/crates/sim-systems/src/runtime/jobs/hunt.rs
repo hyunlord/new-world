@@ -486,14 +486,10 @@ fn haul_home(
     from: (u32, u32),
     pos: (u32, u32),
 ) -> bool {
-    let Some(stack) = res
-        .colony
-        .ground_items
-        .get(&from)
-        .filter(|s| s.kind == ItemKind::Meat && s.count > 0)
-    else {
+    let Some(stack) = res.colony.ground_items.get(&from).filter(|s| s.count > 0) else {
         return false;
     };
+    // The stack the kill dropped there (`drop_carcass` returns the tiles its meat went to).
     let (spec, count) = (stack.spec(), stack.count);
     let region = res.nav.region_of(pos);
     let Some(to) = res
@@ -514,7 +510,7 @@ fn haul_home(
         .hunter_meat
         .min(count)
         .min(super::items::room_on(res, to, spec))
-        .min(ItemKind::Meat.default_carry().max(1));
+        .min(spec.kind.default_carry().max(1));
     if amount == 0 {
         return false;
     }
@@ -526,7 +522,7 @@ fn haul_home(
         stage: JobStage::ToSource,
         taken_at: now,
         amount,
-        item: ItemKind::Meat,
+        item: spec.kind,
         material: None,
         fetch: None,
         best_distance: chebyshev(pos, from),

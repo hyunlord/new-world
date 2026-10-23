@@ -53,6 +53,8 @@ fn the_neighbour_reads_follow_the_world() {
         let best = spec.knowledge.iter().map(|k| k.1).max().unwrap_or(0);
         assert_eq!(p.4[0].1, i32::from(best), "the first slot is the best");
         assert!(p.4[0].1 >= p.4[1].1 && p.4[1].1 >= p.4[2].1, "ordered by ‰");
+        // The worn top comes from the data's `migrant_top` (a hide wrap, code 1) for those who arrive in one.
+        assert_eq!(p.5, if spec.wrap { 1 } else { 0 }, "the top code");
         for (node, pm, practice) in p.4 {
             if node >= 0 {
                 assert_eq!(practice, pm as u16 >= d.threshold(node as u8));

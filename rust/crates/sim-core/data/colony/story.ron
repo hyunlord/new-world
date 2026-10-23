@@ -1,0 +1,37 @@
+// M5.5 storyteller: the pressure parameters of the colony (M5 goal 3.1, M5 DECISIONS D7; M5.5 goal §3.1.1, ADR 0027
+// and its amendment; owner directive 2026-10-24: content lives in data). Loaded by sim_core::rules::story::m5_5_data()
+// (embedded, parsed once; a unit test parses it). Field docs: rust/crates/sim-core/src/rules/story.rs (StoryRule).
+(
+    schema_version: 1,
+    rule: (
+        cold_snap_days: (2, 4),
+        drought_days: (4, 6),
+        sick_days: 3,
+        beasts_max_days: 2,
+        mercy_day: 12,
+        illness_day: 18,
+        first_winter_mercy_days: 2,
+        beasts_gap_days: 6,
+        winter_end_mercy_days: 2,
+        major_gap_days: 6,
+        big_colony_adults: 20,
+        snap_burn_permille: 2000,
+        snap_exposure_permille: 2000,
+        snap_outdoor_work_permille: 1300,
+        drought_regen_permille: 400,
+        drought_thirst_permille: 1200,
+        sick_work_permille: 1500,
+        sick_sleep_permille: 1500,
+        sick_spread_permille: 200,
+        wolves_base: 2,
+        wolves_per_items: 150,
+        wolves_max: 4,
+        cold_due_days: 24,
+        beasts_due_days: 18,
+        illness: true,
+        beasts: true,
+        no_stack: true,
+        stack_gap_days: 2,
+        major_wait_sick: 2,
+    ),
+)

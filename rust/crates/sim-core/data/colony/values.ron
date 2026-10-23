@@ -1,26 +1,33 @@
-// M5.5 value table (docs/v8/m5_5/M55_GOAL.md §3.3, ADR 0032). Loaded by sim_core::colony::values::base_value()
-// (embedded with include_str!, parsed once). A stack's value = base × (500 + 5 × quality) / 1000, rounded, at least 1.
-// Traders buy any item at 80 % of its value and sell at 120 % (NeighbourRule::buy_permille, sell_permille).
-// Every ItemKind must be listed (a unit test checks it).
+// Item data (M5.5 value table, docs/v8/m5_5/M55_GOAL.md §3.3, ADR 0032; owner directive 2026-10-24: content lives in
+// data). Loaded by sim_core::colony::values (embedded with include_str!, parsed once). Every ItemKind must be listed
+// (a unit test checks it). Per item:
+// - value: a stack's value = value × (500 + 5 × quality) / 1000, rounded, at least 1; traders buy at 80 % and sell at
+//   120 % (NeighbourRule::buy_permille, sell_permille);
+// - made_by: the knowledge node whose practice makes the item (a caravan brings it as a "lacked" good when the
+//   neighbour knows this node and no colonist practises it; neighbours.ron);
+// - clue_nodes: the nodes the item hints at while no colonist practises them (eureka, ADR 0032) — a clay pot hints at
+//   the pottery chain that makes it, clay preparation included (its stockpile condition is what a pot stands in for);
+// - tags: categories code matches instead of item names — "carcass": what a kill leaves on the ground (hauled before
+//   other loose stacks while it lies off the stockpiles, M5.5 DECISIONS D11).
 (
-    schema_version: 1,
-    values: [
-        ("log", 2),
-        ("firewood", 1),
-        ("stone", 1),
-        ("flint", 3),
-        ("flint_blade", 6),
-        ("stone_axe", 14),
-        ("ground_axe", 24),
-        ("spear", 16),
-        ("hide", 5),
-        ("cured_hide", 9),
-        ("hide_wrap", 14),
-        ("fur_cloak", 30),
-        ("wolf_hide", 8),
-        ("clay", 2),
-        ("raw_pot", 5),
-        ("clay_pot", 12),
-        ("meat", 3),
+    schema_version: 2,
+    items: [
+        (name: "log", value: 2),
+        (name: "firewood", value: 1),
+        (name: "stone", value: 1),
+        (name: "flint", value: 3),
+        (name: "flint_blade", value: 6),
+        (name: "stone_axe", value: 14, clue_nodes: ["hafting"]),
+        (name: "ground_axe", value: 24, made_by: Some("stone_grinding"), clue_nodes: ["stone_grinding"]),
+        (name: "spear", value: 16, made_by: Some("hafting"), clue_nodes: ["hafting"]),
+        (name: "hide", value: 5, tags: ["carcass"]),
+        (name: "cured_hide", value: 9, made_by: Some("hide_scraping"), clue_nodes: ["hide_scraping"]),
+        (name: "hide_wrap", value: 14, made_by: Some("hide_scraping"), clue_nodes: ["hide_scraping"]),
+        (name: "fur_cloak", value: 30, made_by: Some("hide_scraping"), clue_nodes: ["hide_scraping"]),
+        (name: "wolf_hide", value: 8, tags: ["carcass"]),
+        (name: "clay", value: 2),
+        (name: "raw_pot", value: 5, clue_nodes: ["clay_prep", "pot_forming"]),
+        (name: "clay_pot", value: 12, made_by: Some("pot_firing"), clue_nodes: ["clay_prep", "pot_forming", "pot_firing"]),
+        (name: "meat", value: 3, tags: ["carcass"]),
     ],
 )

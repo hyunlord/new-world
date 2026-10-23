@@ -264,6 +264,7 @@ A new modifier: append it to `Modifier::ALL` (codes are chronicle and bridge con
   identity is created + traded_in = ground + carried + held + delivered + shelved + consumed + traded_out per kind
   (`invariants::LedgerTerms::balanced`). *Reason:* a trade that creates or consumes silently is a ledger hole the
   per-tick check cannot tell from a bug.
+- **Do** put content and tunables in data (RON under `sim-core/data/colony/`, embedded with `include_str!`, parsed once, a malformed file turning the feature off rather than panicking, a unit test parsing the embedded file) and match kinds by a tag or category from that data, never by a literal name; add no new closed enum for content (an unavoidable one goes into the pass's DECISIONS as M-EXT debt). *Reason:* owner directive 2026-10-24 (standing; ADR 0033 to come in M-ART2 Part 0): every structure must be extensible; M5.5 moved its neighbour, goods, story, wildlife and mood tables to data with the evaluation byte-identical (M5.5 D28).
 - **Do** settle a debt of items (a caravan's `owed`) when the items move — the pickup — not when a job is assigned
   for them. *Reason:* M5.5 review F1: owed blades left the list at assignment while still on the stack, so the same 12
   blades were given twice and the ledger (which books only deliveries) could not see it.

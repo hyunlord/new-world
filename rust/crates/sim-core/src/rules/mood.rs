@@ -1,5 +1,6 @@
 //! M5 (ADR 0030): mood and quarrels. `None` outside the M5 colony.
 use serde::{Deserialize, Serialize};
+use std::sync::OnceLock;
 
 /// Tunables of mood and quarrels (`ColonyRule::mood`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -161,17 +162,53 @@ impl MoodRule {
         cause_records: false,
     };
 
-    /// The M5.5 values: [`Self::M5`] as calibrated on seeds 0–7 (goal M5.5 §3.1.6; M5.5 DECISIONS, calibration rounds).
-    pub const M5_5: Self = Self {
-        // Calibration (M5.5 DECISIONS D15): r1 fewer quarrels between strangers, the pressure felt more; r2 a
-        // breakdown a little rarer, a low mood less quarrelsome.
-        quarrel_base_permille: 1,
-        quarrel_relation_divisor: 200,
-        quarrel_mood_divisor: 40,
-        pressure_weight: -80,
-        sick_weight: -160,
-        breakdown: 105,
-        cause_records: true,
-        ..Self::M5
-    };
+    /// The M5.5 values: [`Self::M5`] as calibrated on seeds 0–7 (goal M5.5 §3.1.6; M5.5 DECISIONS D15). Read from `data/colony/mood.ron` (owner directive 2026-10-24: tunables live in data).
+    pub fn m5_5() -> Option<Self> {
+        static DATA: OnceLock<Option<MoodRule>> = OnceLock::new();
+        *DATA.get_or_init(|| parse_m5_5(DATA_RON))
+    }
+}
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct DataFile {
+    schema_version: u32,
+    rule: MoodRule,
+}
+
+const DATA_RON: &str = include_str!("../../data/colony/mood.ron");
+
+/// Parse a `mood.ron`-shaped file; `None` when malformed, of another schema or naming an unknown field.
+pub fn parse_m5_5(text: &str) -> Option<MoodRule> {
+    let f = ron::from_str::<DataFile>(text).ok()?;
+    (f.schema_version == 1 && super::data::rule_fields_known(text, &f.rule)).then_some(f.rule)
+}
+
+#[cfg(test)]
+mod data_tests {
+    use super::*;
+
+    #[test]
+    fn the_data_file_is_m5_with_the_m5_5_changes() {
+        let r = MoodRule::m5_5().expect("mood.ron parses");
+        assert_eq!(
+            r,
+            MoodRule {
+                // Calibration (M5.5 DECISIONS D15).
+                quarrel_base_permille: 1,
+                quarrel_relation_divisor: 200,
+                quarrel_mood_divisor: 40,
+                pressure_weight: -80,
+                sick_weight: -160,
+                breakdown: 105,
+                cause_records: true,
+                ..MoodRule::M5
+            }
+        );
+        assert!(parse_m5_5("(schema_version: 1)").is_none());
+        let typo = DATA_RON.replacen("quarrel_mood_divisor:", "quarrel_mood_divisorx:", 1);
+        assert!(parse_m5_5(&typo).is_none(), "a misspelt field is refused");
+        let other = DATA_RON.replace("schema_version: 1", "schema_version: 99");
+        assert!(parse_m5_5(&other).is_none(), "another schema is refused");
+    }
 }

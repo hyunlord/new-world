@@ -141,20 +141,22 @@ fn spawn(
             },
         );
     }
-    if spec.wrap {
-        res.colony.item_ledger.create(ItemKind::HideWrap, 1);
+    if let Some((kind, top)) = migrant_top().filter(|_| spec.wrap) {
+        res.colony.item_ledger.create(kind, 1);
         let since_day =
             crate::runtime::resource_regen::day_index(res).min(u64::from(u16::MAX)) as u16;
-        let _ = world.insert_one(
-            entity,
-            Apparel {
-                top: Top::HideWrap,
-                since_day,
-            },
-        );
+        let _ = world.insert_one(entity, Apparel { top, since_day });
     }
     crate::runtime::chronicle_log::ensure_entity(world, res, id, entity);
     (id, entity)
+}
+
+/// The top a migrant may arrive wearing: `migrant_top` of `data/colony/neighbours.ron` (an apparel item), if any.
+pub fn migrant_top() -> Option<(ItemKind, Top)> {
+    sim_core::rules::neighbour_data()
+        .and_then(|d| d.migrant_top.as_deref())
+        .and_then(ItemKind::from_name)
+        .and_then(|kind| Top::of_item(kind).map(|top| (kind, top)))
 }
 
 /// Accept wave `wave` (its number): every person joins; returns how many, or `None` when no wave of that number

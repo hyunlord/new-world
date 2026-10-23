@@ -121,11 +121,15 @@ fn the_live_storyteller_begins_what_the_schedule_plans_and_chronicles_it() {
     let mut begun_sorted = begun.clone();
     begun_sorted.sort_by_key(|(k, d)| (*d, *k));
     // The colony runs the M5.5 rule (no stacked pressure); nobody falls ill twice here (no bedrooms), so no major waits.
-    let planned: Vec<(PressureKind, u32)> =
-        simulate_schedule(engine.resources.world_seed, &StoryRule::M5_5, DAYS, 6)
-            .iter()
-            .map(|p| (p.kind, p.start_day))
-            .collect();
+    let planned: Vec<(PressureKind, u32)> = simulate_schedule(
+        engine.resources.world_seed,
+        &StoryRule::m5_5().expect("story.ron"),
+        DAYS,
+        6,
+    )
+    .iter()
+    .map(|p| (p.kind, p.start_day))
+    .collect();
     assert_eq!(begun_sorted, planned, "the live run follows the schedule");
     let chronicle = &engine.resources.chronicle;
     let began: Vec<u32> = (0..chronicle.len() as u32)
@@ -532,7 +536,7 @@ fn no_illness_begins_during_or_within_two_days_after_a_major() {
             .count()
     };
     for seed in 0..8u64 {
-        let plan = simulate_schedule(seed, &StoryRule::M5_5, DAYS, 6);
+        let plan = simulate_schedule(seed, &StoryRule::m5_5().expect("story.ron"), DAYS, 6);
         assert_eq!(overlaps(&plan), 0, "seed {seed}: {plan:?}");
         illnesses += plan
             .iter()

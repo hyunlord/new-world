@@ -248,7 +248,7 @@ fn meat_spoils_six_days_after_the_kill() {
 fn an_m55_knife_breaks_after_4_uses_and_a_wrap_takes_one_cured_hide() {
     let (mut engine, shop) = hide_world();
     if let Some(c) = engine.resources.rules.colony.as_mut() {
-        c.wildlife = Some(WildlifeRule::M5_5);
+        c.wildlife = WildlifeRule::m5_5();
     }
     drop_items(&mut engine, (20, 20), raw(ItemKind::Hide), 5);
     drop_items(&mut engine, (21, 20), raw(ItemKind::FlintBlade), 2);

@@ -1,4 +1,5 @@
-//! M5.5 (ADR 0032): what items are worth to a trader — the value table `data/colony/values.ron`.
+//! M5.5 (ADR 0032): item data — what items are worth to a trader, the node that makes each and the nodes it hints at —
+//! from `data/colony/values.ron` (owner directive 2026-10-24: content lives in data files, not in code).
 use serde::Deserialize;
 use std::collections::BTreeMap;
 use std::sync::OnceLock;
@@ -8,30 +9,89 @@ use super::ItemKind;
 const VALUES_RON: &str = include_str!("../../data/colony/values.ron");
 
 #[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
 struct ValuesFile {
-    #[allow(dead_code)]
     schema_version: u32,
-    values: Vec<(String, u32)>,
+    items: Vec<ItemEntry>,
 }
 
-/// Parse a value table; `None` when the text is malformed or names an unknown item.
-pub fn parse_values(text: &str) -> Option<BTreeMap<ItemKind, u32>> {
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct ItemEntry {
+    name: String,
+    value: u32,
+    #[serde(default)]
+    made_by: Option<String>,
+    #[serde(default)]
+    clue_nodes: Vec<String>,
+    #[serde(default)]
+    tags: Vec<String>,
+}
+
+/// One item's data (`values.ron`).
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct ItemData {
+    /// Base trade value.
+    pub value: u32,
+    /// The knowledge node whose practice makes the item (a caravan's "lacked" good), if any.
+    pub made_by: Option<String>,
+    /// The knowledge nodes the item hints at while no colonist practises them (eureka).
+    pub clue_nodes: Vec<String>,
+    /// Categories the code matches instead of item names (`carcass`).
+    pub tags: Vec<String>,
+}
+
+/// Parse an item table; `None` when the text is malformed, of another schema, names an unknown item or field, or
+/// leaves an item out.
+pub fn parse_values(text: &str) -> Option<BTreeMap<ItemKind, ItemData>> {
     let file: ValuesFile = ron::from_str(text).ok()?;
-    let mut out = BTreeMap::new();
-    for (name, value) in file.values {
-        out.insert(ItemKind::from_name(&name)?, value);
+    if file.schema_version != 2 {
+        return None;
     }
-    Some(out)
+    let mut out = BTreeMap::new();
+    for e in file.items {
+        out.insert(
+            ItemKind::from_name(&e.name)?,
+            ItemData {
+                value: e.value,
+                made_by: e.made_by,
+                clue_nodes: e.clue_nodes,
+                tags: e.tags,
+            },
+        );
+    }
+    (out.len() == ItemKind::ALL.len()).then_some(out)
 }
 
-fn table() -> &'static BTreeMap<ItemKind, u32> {
-    static TABLE: OnceLock<BTreeMap<ItemKind, u32>> = OnceLock::new();
-    TABLE.get_or_init(|| parse_values(VALUES_RON).unwrap_or_default())
+fn parsed() -> &'static Option<BTreeMap<ItemKind, ItemData>> {
+    static TABLE: OnceLock<Option<BTreeMap<ItemKind, ItemData>>> = OnceLock::new();
+    TABLE.get_or_init(|| parse_values(VALUES_RON))
+}
+
+fn table() -> &'static BTreeMap<ItemKind, ItemData> {
+    static EMPTY: BTreeMap<ItemKind, ItemData> = BTreeMap::new();
+    parsed().as_ref().unwrap_or(&EMPTY)
+}
+
+/// Whether the item table loaded. The neighbours need it (values, goods, clues): `ColonyRule::m5_5` leaves them
+/// off when it did not.
+pub fn loaded() -> bool {
+    parsed().is_some()
+}
+
+/// The data of `kind` (`None` when the table lacks it; the unit test requires every kind).
+pub fn item_data(kind: ItemKind) -> Option<&'static ItemData> {
+    table().get(&kind)
+}
+
+/// Whether `kind` carries category `tag` in `values.ron`.
+pub fn has_tag(kind: ItemKind, tag: &str) -> bool {
+    item_data(kind).is_some_and(|d| d.tags.iter().any(|t| t == tag))
 }
 
 /// The base value of `kind` (0 when the table lacks it; the unit test requires every kind).
 pub fn base_value(kind: ItemKind) -> u32 {
-    table().get(&kind).copied().unwrap_or(0)
+    item_data(kind).map_or(0, |d| d.value)
 }
 
 /// The value of one item of `kind` at `quality` (goal §3.3): base × (500 + 5 × quality) / 1,000, rounded, at least 1.
@@ -57,6 +117,31 @@ mod tests {
         assert_eq!(value(ItemKind::FurCloak, 70), 26);
         // Never below 1 (firewood 1 at quality 0: 0.5 → 1).
         assert_eq!(value(ItemKind::Firewood, 0), 1);
-        assert!(parse_values("(schema_version: 1, values: [(\"no_such_item\", 3)])").is_none());
+        assert!(
+            parse_values("(schema_version: 2, items: [(name: \"no_such_item\", value: 3)])")
+                .is_none()
+        );
+        assert!(loaded());
+        let v1 = VALUES_RON.replace("schema_version: 2", "schema_version: 1");
+        assert!(parse_values(&v1).is_none(), "another schema");
+        let typo = VALUES_RON.replacen("value: 2)", "valu: 2)", 1);
+        assert!(parse_values(&typo).is_none(), "a misspelt field");
+        let short = VALUES_RON.replacen("(name: \"log\", value: 2),", "", 1);
+        assert!(parse_values(&short).is_none(), "an item left out");
+        // The clue data (values.ron): a clay pot is made by pot firing and hints at the pottery chain; a log at nothing.
+        let pot = item_data(ItemKind::ClayPot).expect("clay pot");
+        assert_eq!(pot.made_by.as_deref(), Some("pot_firing"));
+        assert_eq!(pot.clue_nodes, ["clay_prep", "pot_forming", "pot_firing"]);
+        let log = item_data(ItemKind::Log).expect("log");
+        assert!(log.made_by.is_none() && log.clue_nodes.is_empty());
+        // What a kill leaves is tagged "carcass": meat, hide and a wolf's hide, nothing else.
+        let carcass: Vec<ItemKind> = ItemKind::ALL
+            .into_iter()
+            .filter(|k| has_tag(*k, "carcass"))
+            .collect();
+        assert_eq!(
+            carcass,
+            [ItemKind::Hide, ItemKind::Meat, ItemKind::WolfHide]
+        );
     }
 }

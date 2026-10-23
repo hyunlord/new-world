@@ -54,6 +54,13 @@ checked; ADR 0016 is amended for the memory instrument. Report: `docs/v8/m5_5/M5
 - A quarrel's cause is a concrete record (a need sample, a death, a pressure, an earlier quarrel), checked by
   `mood::check_cause`.
 - Save format 6.
+- Content lives in data (owner directive 2026-10-24, M5.5 DECISIONS D28): `sim-core/data/colony/neighbours.ron` (the
+  neighbour rule, name keys, the goods table with `lacked` / `staple` tags, the guaranteed node, the migrants' top),
+  `story.ron`, `wildlife.ron`, `mood.ron` (the M5.5 tunables), `values.ron` schema 2 (`made_by`, `clue_nodes`,
+  `tags`); `ColonyRule::m5_5()` replaces the `M5_5` constants; `get_neighbours`' `name_keys` are locale key strings
+  and `get_wave` adds `tops`. The files are read strictly (schema version, unknown fields; `rules::data`), every name
+  in them must resolve (a test), and a broken file leaves its feature off. Behaviour unchanged (held-out evaluation
+  compared equal, five runs × 32 worlds). M-EXT debt listed in M5.5 DECISIONS D29.
 - Review fixes (M5.5 DECISIONS D25): items given to a caravan stay owed until a hauler picks them up and cannot be
   given twice; owed entries are matched by kind; eureka acts only under the neighbour rule and is counted only when
   the clue decided the discovery; a wave accepted on its way joins at the hearth; visitors with no meeting tile still

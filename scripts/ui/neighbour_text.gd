@@ -1,6 +1,7 @@
 # neighbour_text.gd: the M5.5 neighbour codes as player text (static helpers shared by the neighbours panel (N), the
 #   migrant and trade dialogs, the visitor banner and the visitor layer, the tech map's rumour line and the chronicle).
-# Maps the bridge's codes to localization keys: neighbour names (`name_keys` n → NEIGHBOUR_NAME_<n>, 12 names),
+# Maps the bridge's codes to localization keys: neighbour names (`name_keys`: the locale key itself, from the sim's
+#   data file sim-core/data/colony/neighbours.ron),
 #   edges (0 north, 1 east, 2 south, 3 west → 북/동/남/서), visit states (0 walking in, 1 waiting at the hearth,
 #   2 leaving, 3 gone), attitude words by 20s (0 적대 … 4 친밀), sexes, the countdown in hours from a deadline tick,
 #   the rumoured Neolithic nodes of a `rumoured` bitmask (node id = bit index) and the trade balance (Σ give value ×
@@ -14,8 +15,6 @@ extends RefCounted
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
 
-## Neighbour names in the locale files (NEIGHBOUR_NAME_0 … _11).
-const NAME_COUNT: int = 12
 const DIR_KEYS: Array[String] = ["M55_DIR_NORTH", "M55_DIR_EAST", "M55_DIR_SOUTH", "M55_DIR_WEST"]
 const ATTITUDE_KEYS: Array[String] = ["M55_ATT_0", "M55_ATT_1", "M55_ATT_2", "M55_ATT_3", "M55_ATT_4"]
 const ATTITUDE_COLORS: Array[Color] = [Color("e05a48"), Color("d8a050"), Color("c8b89a"), Color("a8d888"), Color("8ee07a")]
@@ -30,7 +29,7 @@ const ANSWER_ACCEPTED: int = 0
 const ANSWER_DECLINED: int = 1
 const ANSWER_UNANSWERED: int = 2
 
-## Neighbour id → name key index, from the last get_neighbours read observed (chronicle rows carry only the id).
+## Neighbour id → name locale key, from the last get_neighbours read observed (chronicle rows carry only the id).
 static var _names: Dictionary = {}
 
 
@@ -49,21 +48,21 @@ static func language(locale: Node) -> String:
 ## Remember the neighbours' names of a get_neighbours read (for rows that name a neighbour by id).
 static func observe(read: Dictionary) -> void:
 	var ids: PackedInt32Array = read.get("ids", PackedInt32Array())
-	var keys: PackedInt32Array = read.get("name_keys", PackedInt32Array())
+	var keys: PackedStringArray = read.get("name_keys", PackedStringArray())
 	for i: int in mini(ids.size(), keys.size()):
-		_names[int(ids[i])] = int(keys[i])
+		_names[int(ids[i])] = String(keys[i])
 
 
-## The name of name key index `n` (NEIGHBOUR_NAME_<n>).
-static func name_of_key(locale: Node, n: int) -> String:
-	if n < 0 or n >= NAME_COUNT:
+## The name behind locale key `key` (a neighbour's `name_keys` entry); "이웃" for an empty key.
+static func name_of_key(locale: Node, key: String) -> String:
+	if key.is_empty():
 		return ltr(locale, "M55_NB_SOMEONE")
-	return ltr(locale, "NEIGHBOUR_NAME_%d" % n)
+	return ltr(locale, key)
 
 
 ## The name of neighbour `id` from the observed read; "이웃" when it was never seen.
 static func name_of(locale: Node, id: int) -> String:
-	return name_of_key(locale, int(_names[id])) if _names.has(id) else ltr(locale, "M55_NB_SOMEONE")
+	return name_of_key(locale, String(_names[id])) if _names.has(id) else ltr(locale, "M55_NB_SOMEONE")
 
 
 ## The name of neighbour `id` in a get_neighbours read (observes the read first).
@@ -132,7 +131,7 @@ static func rumour_line(locale: Node, read: Dictionary, id: int) -> String:
 static func neighbours(read: Dictionary) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	var ids: PackedInt32Array = read.get("ids", PackedInt32Array())
-	var keys: PackedInt32Array = read.get("name_keys", PackedInt32Array())
+	var keys: PackedStringArray = read.get("name_keys", PackedStringArray())
 	var edges: PackedInt32Array = read.get("edges", PackedInt32Array())
 	var days: PackedInt32Array = read.get("distance_days", PackedInt32Array())
 	var pops: PackedInt32Array = read.get("populations", PackedInt32Array())
@@ -142,7 +141,7 @@ static func neighbours(read: Dictionary) -> Array[Dictionary]:
 	var n: int = mini(mini(ids.size(), keys.size()), mini(edges.size(), days.size()))
 	n = mini(n, mini(mini(pops.size(), atts.size()), mini(contacts.size(), masks.size())))
 	for i: int in n:
-		out.append({"id": int(ids[i]), "name_key": int(keys[i]), "edge": int(edges[i]), "days": int(days[i]), "population": int(pops[i]),
+		out.append({"id": int(ids[i]), "name_key": String(keys[i]), "edge": int(edges[i]), "days": int(days[i]), "population": int(pops[i]),
 			"attitude": int(atts[i]), "last_contact": int(contacts[i]), "rumoured": int(masks[i])})
 	return out
 
@@ -192,24 +191,25 @@ static func clue_item(read: Dictionary, node: int) -> int:
 	return int(items[i]) if i >= 0 and i < items.size() else -1
 
 
-## People of a get_wave read: [{agent, female, age, wrap, know: [{node, permille, practice}]}] (know without pads).
+## People of a get_wave read: [{agent, female, age, top, know: [{node, permille, practice}]}] (know without pads; top =
+## the worn top's code from `tops`, 0 none).
 static func wave_people(wave: Dictionary) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	var agents: PackedInt64Array = wave.get("agents", PackedInt64Array())
 	var female: PackedInt32Array = wave.get("female", PackedInt32Array())
 	var ages: PackedInt32Array = wave.get("age_years", PackedInt32Array())
-	var wraps: PackedInt32Array = wave.get("wrap", PackedInt32Array())
+	var tops: PackedInt32Array = wave.get("tops", PackedInt32Array())
 	var nodes: PackedInt32Array = wave.get("know_nodes", PackedInt32Array())
 	var permille: PackedInt32Array = wave.get("know_permille", PackedInt32Array())
 	var practice: PackedInt32Array = wave.get("know_practice", PackedInt32Array())
-	for i: int in mini(mini(agents.size(), female.size()), mini(ages.size(), wraps.size())):
+	for i: int in mini(mini(agents.size(), female.size()), mini(ages.size(), tops.size())):
 		var know: Array[Dictionary] = []
 		for k: int in 3:
 			var j: int = i * 3 + k
 			if j < nodes.size() and int(nodes[j]) >= 0:
 				know.append({"node": int(nodes[j]), "permille": int(permille[j]) if j < permille.size() else 0,
 					"practice": j < practice.size() and practice[j] != 0})
-		out.append({"agent": int(agents[i]), "female": female[i] != 0, "age": int(ages[i]), "wrap": wraps[i] != 0, "know": know})
+		out.append({"agent": int(agents[i]), "female": female[i] != 0, "age": int(ages[i]), "top": int(tops[i]), "know": know})
 	return out
 
 

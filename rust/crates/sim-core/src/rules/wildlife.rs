@@ -1,5 +1,6 @@
 //! M5 (ADR 0028, 0029): animals, hunting, fights, drafting, hides and apparel. `None` outside the M5 colony.
 use serde::{Deserialize, Serialize};
+use std::sync::OnceLock;
 
 /// Tunables of the animals and of what people do about them (`ColonyRule::wildlife`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -154,12 +155,49 @@ impl WildlifeRule {
         hunter_meat: 3,
     };
 
-    /// The M5.5 values (goal M5.5 §3.1.2–5): the undrafted flee, the hunter carries the meat home, a knife lasts 4 uses.
-    pub const M5_5: Self = Self {
-        knife_uses: 4,
-        flee: true,
-        wolf_chase_tiles: 2,
-        hunter_hauls: true,
-        ..Self::M5
-    };
+    /// The M5.5 values (goal M5.5 §3.1.2–5): the undrafted flee, the hunter carries the meat home, a knife lasts 4 uses. Read from `data/colony/wildlife.ron` (owner directive 2026-10-24: tunables live in data).
+    pub fn m5_5() -> Option<Self> {
+        static DATA: OnceLock<Option<WildlifeRule>> = OnceLock::new();
+        *DATA.get_or_init(|| parse_m5_5(DATA_RON))
+    }
+}
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct DataFile {
+    schema_version: u32,
+    rule: WildlifeRule,
+}
+
+const DATA_RON: &str = include_str!("../../data/colony/wildlife.ron");
+
+/// Parse a `wildlife.ron`-shaped file; `None` when malformed, of another schema or naming an unknown field.
+pub fn parse_m5_5(text: &str) -> Option<WildlifeRule> {
+    let f = ron::from_str::<DataFile>(text).ok()?;
+    (f.schema_version == 1 && super::data::rule_fields_known(text, &f.rule)).then_some(f.rule)
+}
+
+#[cfg(test)]
+mod data_tests {
+    use super::*;
+
+    #[test]
+    fn the_data_file_is_m5_with_the_m5_5_changes() {
+        let r = WildlifeRule::m5_5().expect("wildlife.ron parses");
+        assert_eq!(
+            r,
+            WildlifeRule {
+                knife_uses: 4,
+                flee: true,
+                wolf_chase_tiles: 2,
+                hunter_hauls: true,
+                ..WildlifeRule::M5
+            }
+        );
+        assert!(parse_m5_5("(schema_version: 1)").is_none());
+        let typo = DATA_RON.replacen("flee_tiles:", "flee_tilesx:", 1);
+        assert!(parse_m5_5(&typo).is_none(), "a misspelt field is refused");
+        let other = DATA_RON.replace("schema_version: 1", "schema_version: 99");
+        assert!(parse_m5_5(&other).is_none(), "another schema is refused");
+    }
 }

@@ -51,6 +51,9 @@ off-screen neighbour (M5.5 DECISIONS).
   the colony's settlement; households form through pairing.
 - At least one neighbour knows pot firing (the end of the pottery chain): when neither drew it, the first neighbour's
   last-drawn Neolithic node is replaced by it (calibration r1, D23).
+- Content lives in data (owner directive 2026-10-24, D28): the rule, the neighbour name keys, the goods table (item +
+  tag `lacked` / `staple`), the guaranteed node and the migrants' top are in `sim-core/data/colony/neighbours.ron`;
+  an item's `made_by` and `clue_nodes` in `values.ron`.
 - A wave accepted while still walking in keeps walking and joins on reaching the hearth; a group with no meeting tile
   waits where it stands, so its wait still times out (code review, D25).
 

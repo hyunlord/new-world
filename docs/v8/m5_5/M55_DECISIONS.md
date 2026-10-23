@@ -448,3 +448,87 @@ The goal: "다음 → M-ART2 when ART-STRUCT is approved by the owner, else M6 p
 branch, read, not merged) says "오너 판단 대기" and records the log-wall cap seam failing all three attempts. No owner
 approval exists, so "다음" is M6 preparation, with M-ART2 named as the step after the owner approves. The art branch
 was not merged or touched.
+
+## D28 — The owner's extensibility directive (2026-10-24, standing): content lives in data
+
+- The directive (received 2026-10-24 ~02:30 KST, during the first gate run): every code and design structure must be
+  extensible; for M5.5, neighbour names, trade goods tables, item values, migrant knowledge rules and pressure
+  parameters live in RON data under `sim-core/data/colony/`; new kinds are matched by tags or categories, not by name;
+  no new closed enums for content (an unavoidable one is listed here as debt for M-EXT); the Part 6 review checks "no
+  new hard-coded content names or content enums". ADR 0033 (extensibility contract) is written in M-ART2's Part 0.
+- **The first gate was stopped** (`$DATA/gate1/gate.txt`: steps 1–9 green on `64cff209`, stopped during step 10) —
+  the directive changes code, so that gate could not be the pass's final gate; per the rule, stop, record, change,
+  and run the whole gate again.
+- What moved (each loaded with `include_str!` and parsed once; a malformed file leaves that rule `None` — the feature
+  off — never a panic; a unit test parses each embedded file and checks its values):
+  - `neighbours.ron`: the whole `NeighbourRule` (wave windows and sizes, the seasonal roll, the migrants' knowledge
+    rules, caravans, the barter rates, eureka ×3), the **name list** (locale keys; the bridge's `get_neighbours`
+    `name_keys` now sends the key string, as `get_tech` does, and the UI no longer builds `NEIGHBOUR_NAME_<n>` or knows
+    a count), `one_neighbour_knows` (D23's pot firing), the **goods table** (item name + category tag `lacked` or
+    `staple`, in draw order — order matters for the keyed draw and is documented in the file), `migrant_top` (the
+    wrap migrants may wear);
+  - `story.ron`: the M5.5 pressure parameters (`StoryRule`); `wildlife.ron` and `mood.ron`: the M5.5 animal, flight,
+    hunting and mood/quarrel tunables (`WildlifeRule`, `MoodRule`); the M5 constants stay in code as the M5 record
+    (tests pinned to M5 use them);
+  - `values.ron` schema 2: per item `value`, `made_by` (the node that makes it: a "lacked" good), `clue_nodes` (what it
+    hints at: eureka) and `tags` (`carcass`: what a kill leaves, hauled first). `trade::producing_nodes`, the goods
+    table and the carcass cleanup read these instead of `ARTIFACTS`, `STAPLES` and item-name matches (all removed);
+    the hunter's haul carries the kind the kill dropped instead of naming meat.
+- `ColonyRule::M5_5` (a const) became `ColonyRule::m5_5()` and `WorldRules::colony` a plain `fn` (values parsed from
+  data cannot be consts).
+- **Behaviour unchanged, proven:** the held-out evaluation re-run with the data-driven build compares equal to the
+  `32948f2d` run in all five runs × 32 worlds (`compare_summaries.py`, 0 differences and 0 one-sided paths in each:
+  pressure 196,975 shared values, no-draft 197,466, story-off 193,929, no-neighbours 181,046, quiet 178,360) — after
+  the neighbour/story step (`$DATA/eval/data/`), after the wildlife/mood/tag step (`$DATA/eval/data2/`) and after the
+  review fixes of D29 (`$DATA/eval/data3/`, recorded in D29).
+
+## D29 — Extensibility review (the directive's Part 6 check) and the M-EXT debt list
+
+A fresh reviewer checked the M5.5 code against the directive (`$DATA/review/extensibility_review.md`): the four rule
+structs and the goods, clue, carcass, name, guaranteed-node and migrant-top data are read only from the RON files,
+`ARTIFACTS`/`STAPLES` and every `M5_5` constant are gone, GDScript no longer knows a name count, and no malformed file
+panics. Its must-fix findings, all fixed (the test named after each):
+1. this debt list (below);
+2. goods stack sizes were literals → `count: (lo, hi)` per goods row in `neighbours.ron` (same keyed draw:
+   `lo + draw(hi − lo + 1)` is the old `1 + draw(2)` and `2 + draw(5)`);
+3. the migrant dialog said "hide wrap" whatever the data said → `collect_wave` gives each person the `Top::code` of the
+   data's `migrant_top` when they arrive in one, `get_wave` sends it as `tops` (`wrap` kept), the dialog reads it
+   (`engine_neighbours_ffi`: the code per person; `m55_ui_test` 35/35);
+4. a misspelt field or another `schema_version` was silently accepted → every data file is read strictly: the file and
+   row structs `deny_unknown_fields`, the schema version is checked, and the `rule` table's field names must be fields of
+   the rule (`rules::data::rule_fields_known`, so the rule structs themselves — which the save carries — keep their
+   serde behaviour); tests per file (a misspelt field that has a serde default, so only the key check can catch it;
+   schema 99; an unknown goods field) and `rules::data` (`a_misspelt_field_is_caught`);
+5. names that do not resolve were dropped silently → `every_name_in_the_data_resolves` (goods items, `made_by`,
+   `clue_nodes`, `one_neighbour_knows`, `migrant_top`, and every name key present in `localization/{ko,en}/ui.json`);
+6. a broken `values.ron` degraded (every value 1, no clues) instead of switching off → `values::loaded()`; the item
+   table must list every item (`every_item_has_a_value_and_quality_scales_it`: another schema, a misspelt field and a
+   missing item are refused); `ColonyRule::m5_5()` leaves the neighbours off without it;
+7. `pottery_mask()` (test-only, matched the pottery lane by name) removed; the test computes it.
+Behaviour unchanged after these fixes too: the held-out evaluation at this build (`$DATA/eval/data3/`) compares equal
+to the `32948f2d` run in all five runs (0 differences, 0 one-sided paths; the same shared-value counts as D28).
+Also fixed: `one_neighbour_knows` with more than one missing node now replaces one more drawn node per missing node, so
+the first neighbour keeps 2–4 Neolithic nodes; the files document that list order is part of the keyed draws.
+
+**M-EXT debt (structure still in code, for the coming M-EXT pass; ADR 0033 in M-ART2's Part 0):**
+- Exactly two neighbours (`generate`'s `0..2`) and exactly two scripted waves (`wave1_*`, `wave2_*` rule fields).
+- Migrant knowledge and the "rumoured" nodes are keyed on Paleolithic vs Neolithic in code (the numbers are data, the
+  era structure is not); knowledge `Source::Migrant` is a closed enum variant (borderline content) with its decay row
+  chosen by a hard-coded index (`table_index`, Migrant → apprenticed).
+- The goods tags `lacked` / `staple` have fixed meanings and named weight fields (`lack_weight`, `staple_weight`); a new
+  tag needs code.
+- Mood: data weights exist only for five named modifiers; the modifier → pressure map (`mood::expect_of`, the cause
+  check) is code; `Modifier` is a closed enum (M5).
+- Story: the beasts window rule matches `PressureKind::Beasts`; `simulate_schedule` assumes 4 seasons a year; people
+  flee only from wolves (`AnimalKind`, M5).
+- Serde default functions repeat the data's values (they only serve older saves); migrants' arrival needs are copied
+  from the camp's; `MigrantSpec.wrap` allows one garment.
+- The data files are embedded with `include_str!`: there is no override path for a mod yet.
+- GDScript mirrors codes the bridge sends (chronicle kinds 38–44, item codes); the trade dialog falls back to 800 /
+  1,200 when a read lacks the rates and re-implements the balance for display.
+- Structural enums M5.5 added (acceptable, not content): `Edge`, `VisitState`, `WaveAnswer`, `TradeRefusal`, the
+  bridge's `NeighbourCommand`, the private `Expect`, `Command::{AcceptMigrants, DeclineMigrants, Trade, DebugGive}`,
+  `RejectReason::{NoVisitor, Unbalanced}`, `JobKind::Trade`, `CauseRef::Sample`, chronicle kinds 38–44.
+- Older debt M5.5 leans on: the closed `ItemKind` (data cannot add an item), `Top::of_item` matching items by name,
+  `AnimalKind`, `PressureKind`, `Lane`/`Era` and the 32-node bitset, M5's meat/hide code (`ItemKind::Meat` in hunting
+  and spoilage), the M5 and earlier rule constants kept in code.

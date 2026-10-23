@@ -47,6 +47,9 @@ clues to their technologies, and traders buy the colony's surplus.
   chronicled `Eureka` and counted only when the clue decided it (the plain draw would have lost, or the conditions were
   met only through the clue). Probe (seeds 0–7, neighbours on in both arms, D26): a clay pot on day 2 brought the first
   pot-forming discovery to a median of day 11.4 against 13.5, pot firing 15.2 against 22.0.
+- Content lives in data (owner directive 2026-10-24, D28): the rule, the neighbour name keys, the goods table (item +
+  tag `lacked` / `staple`), the guaranteed node and the migrants' top are in `sim-core/data/colony/neighbours.ron`;
+  an item's `made_by` and `clue_nodes` in `values.ron`.
 - Items given in a trade stay owed until a hauler picks them up and cannot be given again (code review, D25).
 - `NeighbourTallies::unknown_bought` counts items taken whose producing node no colonist practised at the trade (F8).
 

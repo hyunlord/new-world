@@ -1,0 +1,74 @@
+// M5.5 neighbours (docs/v8/m5_5/M55_GOAL.md §3.2–3.3, ADR 0031, 0032; owner directive 2026-10-24: content lives in
+// data). Loaded by sim_core::rules::neighbours::data() (embedded with include_str!, parsed once; a unit test parses it).
+// - rule: every number of the neighbours, their migrant waves (and the migrants' knowledge) and their caravans
+//   (NeighbourRule; field docs in rust/crates/sim-core/src/rules/neighbours.rs).
+// - names: the locale keys a neighbour's name is drawn from (two different ones per world); add a key here and in
+//   localization/{ko,en}/ui.json to add a name.
+// - one_neighbour_knows: knowledge nodes (ids of knowledge.ron) that at least one neighbour knows; when neither drew
+//   one, it replaces the first neighbour's last-drawn Neolithic node (M5.5 DECISIONS D23).
+// - goods: the caravans' draw table, in draw order (the order is part of the keyed draw: reordering changes which
+//   goods a world's caravans bring). `item` is an item name (values.ron); `tag` its category: "lacked" — drawn with
+//   rule.lack_weight when the neighbour knows the item's `made_by` node (values.ron) and no colonist practises it;
+//   "staple" — always drawn with rule.staple_weight; unknown tags are ignored. `count`: items in one drawn stack.
+// - names order: a world draws its two names by index into this list, so reordering or inserting renames worlds.
+// The file is read strictly: another schema_version or a misspelt field refuses the file (the neighbours stay off).
+(
+    schema_version: 1,
+    rule: (
+        distance_days: (2, 5),
+        population: (20, 60),
+        attitude_start: (40, 60),
+        neolithic_known: (2, 4),
+        wave1_days: (8, 12),
+        wave1_size: (2, 4),
+        wave2_days: (20, 26),
+        wave2_size: (2, 6),
+        roll_size: (1, 4),
+        roll_max_permille: 800,
+        surplus_permille: 50,
+        value_divisor: 50,
+        attitude_permille: 2,
+        food_per_adult_day: 3,
+        population_cap: 40,
+        wait_days: 1,
+        decline_attitude: 5,
+        paleo_permille: (450, 700),
+        neo_chance_permille: 500,
+        neo_permille: (420, 650),
+        wrap_permille: 500,
+        caravans: true,
+        caravan_attitude: 30,
+        caravan_first_day: 6,
+        caravan_stay_days: 1,
+        goods_stacks: (6, 10),
+        goods_quality: (30, 70),
+        lack_weight: 3,
+        staple_weight: 1,
+        buy_permille: 800,
+        sell_permille: 1200,
+        trade_attitude: 3,
+        gift_value_per_attitude: 10,
+        eureka_permille: 3000,
+    ),
+    names: [
+        "NEIGHBOUR_NAME_0", "NEIGHBOUR_NAME_1", "NEIGHBOUR_NAME_2", "NEIGHBOUR_NAME_3",
+        "NEIGHBOUR_NAME_4", "NEIGHBOUR_NAME_5", "NEIGHBOUR_NAME_6", "NEIGHBOUR_NAME_7",
+        "NEIGHBOUR_NAME_8", "NEIGHBOUR_NAME_9", "NEIGHBOUR_NAME_10", "NEIGHBOUR_NAME_11",
+    ],
+    one_neighbour_knows: ["pot_firing"],
+    // The top a migrant may arrive wearing (rule.wrap_permille), an apparel item of values.ron.
+    migrant_top: Some("hide_wrap"),
+    goods: [
+        (item: "clay_pot", tag: "lacked", count: (1, 2)),
+        (item: "ground_axe", tag: "lacked", count: (1, 2)),
+        (item: "cured_hide", tag: "lacked", count: (1, 2)),
+        (item: "spear", tag: "lacked", count: (1, 2)),
+        (item: "hide_wrap", tag: "lacked", count: (1, 2)),
+        (item: "fur_cloak", tag: "lacked", count: (1, 2)),
+        (item: "meat", tag: "staple", count: (2, 6)),
+        (item: "flint", tag: "staple", count: (2, 6)),
+        (item: "clay", tag: "staple", count: (2, 6)),
+        (item: "hide", tag: "staple", count: (2, 6)),
+        (item: "firewood", tag: "staple", count: (2, 6)),
+    ],
+)

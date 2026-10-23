@@ -25,8 +25,9 @@ pub type NeighbourRow = (u8, u8, u8, u8, u16, u8, i64, i64);
 pub type WaveRow = (u32, u8, u8, u32, u32, u32, i64, i32);
 /// One caravan row: (id, neighbour, state code, x, y, leaving tick or −1, trades).
 pub type CaravanRow = (u32, u8, u8, u32, u32, i64, u32);
-/// One migrant: (the `AgentId` they will have, female, age in years, a wrap, top 3 knowledge `(node, ‰, practitioner)`).
-pub type MigrantRow = (u64, bool, u16, bool, [(i32, i32, bool); 3]);
+/// One migrant: (the `AgentId` they will have, female, age in years, arrives wearing a top, top 3 knowledge
+/// `(node, ‰, practitioner)`, the worn top's `Top::code` (0 none; the data's `migrant_top`)).
+pub type MigrantRow = (u64, bool, u16, bool, [(i32, i32, bool); 3], u8);
 /// One goods row: (item code, count, quality, unit value at 100 %, unknown to the colony).
 pub type GoodsRow = (u8, u16, u8, u32, bool);
 /// One stock row: (x, y, item code, count, quality, unit value at 100 %).
@@ -152,7 +153,13 @@ pub(super) fn neighbours_to_dict(v: &NeighboursView) -> VarDictionary {
     };
     let n = v.neighbours.len();
     d.set("ids", i32s(&|i| i32::from(v.neighbours[i].0), n));
-    d.set("name_keys", i32s(&|i| i32::from(v.neighbours[i].1), n));
+    // The locale key of each neighbour's name (`data/colony/neighbours.ron`), as `get_tech`'s `name_keys`.
+    let keys: Vec<GString> = v
+        .neighbours
+        .iter()
+        .map(|r| GString::from(neighbours::name_key(r.1)))
+        .collect();
+    d.set("name_keys", PackedStringArray::from(keys.as_slice()));
     d.set("edges", i32s(&|i| i32::from(v.neighbours[i].2), n));
     d.set("distance_days", i32s(&|i| i32::from(v.neighbours[i].3), n));
     d.set("populations", i32s(&|i| i32::from(v.neighbours[i].4), n));
@@ -225,6 +232,9 @@ pub fn collect_wave(res: &SimResources, id: i64) -> WaveView {
         return WaveView::default();
     };
     let d = defs();
+    // The worn top's `Top::code` (0 none): the data's `migrant_top` for those who arrive in one.
+    let top_code =
+        sim_systems::runtime::neighbours::join::migrant_top().map_or(0, |(_, top)| top.code());
     WaveView {
         found: true,
         id: w.id,
@@ -241,7 +251,8 @@ pub fn collect_wave(res: &SimResources, id: i64) -> WaveView {
                 for (slot, (node, pm)) in top.iter_mut().zip(k.iter()) {
                     *slot = (i32::from(*node), i32::from(*pm), *pm >= d.threshold(*node));
                 }
-                (p.agent, p.female, p.age_years, p.wrap, top)
+                let worn = if p.wrap { top_code } else { 0 };
+                (p.agent, p.female, p.age_years, p.wrap, top, worn)
             })
             .collect(),
     }
@@ -267,6 +278,8 @@ pub(super) fn wave_to_dict(v: &WaveView) -> VarDictionary {
     d.set("female", flag(&|p| i32::from(p.1)));
     d.set("age_years", flag(&|p| i32::from(p.2)));
     d.set("wrap", flag(&|p| i32::from(p.3)));
+    // The worn top's `Top::code` per person (0 none): the data's `migrant_top` for those who arrive in one.
+    d.set("tops", flag(&|p| i32::from(p.5)));
     let flat = |f: &dyn Fn(&(i32, i32, bool)) -> i32| {
         PackedInt32Array::from(
             v.people

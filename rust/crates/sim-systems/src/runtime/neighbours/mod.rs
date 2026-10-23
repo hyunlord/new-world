@@ -8,7 +8,7 @@
 //! M5.5 (ADR 0031, 0032). On the first day the two neighbours are drawn from
 //! the seed (`STREAM_NEIGHBOURS`, [`generate`]): different map edges, 2–5
 //! days away, 20–60 people, attitude 40–60, every Paleolithic node and 2–4
-//! Neolithic ones (at least one of the pottery chain between them); waves 1
+//! Neolithic ones (the nodes of `one_neighbour_knows` in `data/colony/neighbours.ron` known by one of them); waves 1
 //! and 2 are planned on keyed days of their windows. On each season's first
 //! day a caravan date (its day 2–5) and, after wave 2, a wave roll (its day
 //! 2–5) are planned. Each day, in this order: the populations drift ±1 %;
@@ -40,8 +40,18 @@ pub use visitors::{VisitorSystem, VISITOR_PRIORITY};
 /// Priority of [`NeighbourSystem`].
 pub const NEIGHBOUR_PRIORITY: u32 = 174;
 
-/// Neighbour names in the locale (`NEIGHBOUR_NAME_<n>`, n < this).
-pub const NAMES: u8 = 12;
+/// How many names a neighbour can draw from (`data/colony/neighbours.ron`'s `names`; at least 2).
+pub fn name_count() -> u8 {
+    sim_core::rules::neighbour_data()
+        .map_or(2, |d| d.names.len().clamp(2, usize::from(u8::MAX)) as u8)
+}
+
+/// The locale key of name index `index` (`data/colony/neighbours.ron`), or an empty string.
+pub fn name_key(index: u8) -> &'static str {
+    sim_core::rules::neighbour_data()
+        .and_then(|d| d.names.get(usize::from(index)))
+        .map_or("", String::as_str)
+}
 
 /// The neighbour rule in force (`None` outside the M5.5 colony).
 pub fn rule(res: &SimResources) -> Option<NeighbourRule> {
@@ -85,23 +95,15 @@ pub fn paleolithic_mask() -> u32 {
         .fold(0, |m, n| m | bit(n.id))
 }
 
-/// The pottery chain (a migrant or a caravan may bring it): the nodes of the pottery lane.
-pub fn pottery_mask() -> u32 {
-    defs()
-        .nodes
-        .iter()
-        .filter(|n| n.lane == sim_core::colony::knowledge::Lane::Pottery)
-        .fold(0, |m, n| m | bit(n.id))
-}
-
 /// The two neighbours of world `seed` (pure in `(seed, rule)`; see the module header). Subject 0x4E = the
 /// neighbours' generation, slot = the neighbour × 16 + the field.
 pub fn generate(seed: u64, rule: &NeighbourRule) -> Vec<Neighbour> {
     let draw = |slot: u32, range: (u64, u64)| span(seed, 0x4E, 0, slot, range);
     let first = draw(0, (0, 3)) as u8;
     let second = (first + 1 + draw(1, (0, 2)) as u8) % 4;
-    let name0 = draw(2, (0, u64::from(NAMES) - 1)) as u8;
-    let name1 = (name0 + 1 + draw(3, (0, u64::from(NAMES) - 2)) as u8) % NAMES;
+    let names = name_count();
+    let name0 = draw(2, (0, u64::from(names) - 1)) as u8;
+    let name1 = (name0 + 1 + draw(3, (0, u64::from(names) - 2)) as u8) % names;
     let neo = neolithic();
     let mut list: Vec<Neighbour> = (0..2u8)
         .map(|id| {
@@ -145,11 +147,18 @@ pub fn generate(seed: u64, rule: &NeighbourRule) -> Vec<Neighbour> {
             }
         })
         .collect();
-    // At least one neighbour knows the pottery chain's end, pot firing (goal §3.2: "at least one of the pottery chain";
-    // M5.5 DECISIONS D23 — the one that makes a clay pot, the goal's first artifact): when neither drew it, the first
-    // neighbour's last-drawn Neolithic node is replaced by it (it keeps 2–4).
-    if let Some(firing) = sim_core::colony::knowledge::id("pot_firing") {
-        if list.iter().all(|n| n.known & bit(firing) == 0) {
+    // Every node of `one_neighbour_knows` (`data/colony/neighbours.ron`; M5.5 DECISIONS D23: pot firing, the node
+    // that makes a clay pot, the goal's first artifact) is known by at least one neighbour: when neither drew it, the
+    // first neighbour's last-drawn Neolithic node is replaced by it (it keeps 2–4).
+    let required =
+        sim_core::rules::neighbour_data().map_or(&[][..], |d| d.one_neighbour_knows.as_slice());
+    // Each missing node replaces one more of the first neighbour's drawn nodes, from the last, so its count stays 2–4.
+    let mut replaced = 0usize;
+    for node in required
+        .iter()
+        .filter_map(|n| sim_core::colony::knowledge::id(n))
+    {
+        if list.iter().all(|n| n.known & bit(node) == 0) {
             let mut order = neo.clone();
             for i in (1..order.len()).rev() {
                 let j = draw(16 + 5 + i as u32, (0, i as u64)) as usize;
@@ -157,10 +166,12 @@ pub fn generate(seed: u64, rule: &NeighbourRule) -> Vec<Neighbour> {
             }
             let (lo, hi) = rule.neolithic_known;
             let k = draw(16 + 4, (u64::from(lo), u64::from(hi))) as usize;
-            if let Some(last) = order.get(k.min(order.len()).saturating_sub(1)) {
+            let drawn = k.min(order.len());
+            if let Some(last) = drawn.checked_sub(1 + replaced).and_then(|i| order.get(i)) {
                 list[0].known &= !bit(*last);
             }
-            list[0].known |= bit(firing);
+            replaced += 1;
+            list[0].known |= bit(node);
         }
     }
     list
@@ -586,7 +597,7 @@ mod tests {
 
     #[test]
     fn the_roll_chance_follows_the_goal_formula() {
-        let rule = NeighbourRule::M5_5;
+        let rule = NeighbourRule::m5_5().expect("neighbours.ron");
         // 50 × 4 + 1,000 / 50 + 50 × 2 = 200 + 20 + 100.
         assert_eq!(roll_permille(&rule, 4, 1_000, 50), 320);
         assert_eq!(roll_permille(&rule, 40, 100_000, 100), 800, "capped");

@@ -1,10 +1,10 @@
 //! M5.5 (ADR 0032): caravans, their goods, barter and the clue an artifact gives (eureka).
 //!
 //! - A caravan sets out from a neighbour with attitude ≥ `caravan_attitude` (the higher one; when both qualify they
-//!   alternate) with 6–10 stacks of goods drawn from a weighted table (`STREAM_TRADE`): items of a node the neighbour
-//!   knows and no colonist practises weigh `lack_weight` (3) — clay pot, ground axe, cured hide, spear, hide wrap, fur
-//!   cloak — and staples `staple_weight` (1) — meat, flint, clay, hide, firewood; an artifact stack holds 1–2 items,
-//!   a staple stack 2–6, at quality 30–70.
+//!   alternate) with 6–10 stacks of goods drawn from the weighted table of `data/colony/neighbours.ron`
+//!   (`STREAM_TRADE`): an item tagged `lacked` whose `made_by` node (`values.ron`) the neighbour knows and no colonist
+//!   practises weighs `lack_weight` (3), an item tagged `staple` `staple_weight` (1); an artifact stack holds 1–2
+//!   items, a staple stack 2–6, at quality 30–70.
 //! - Values come from `data/colony/values.ron` (`colony::values::value`). A `Trade` is accepted iff
 //!   value(give) × `buy_permille` ≥ value(take) × `sell_permille`. Taken goods are put at the caravan's spot by the
 //!   hearth (ledger `traded_in`) and hauled to the stockpiles as any loose stack; given stacks become the caravan's
@@ -12,8 +12,8 @@
 //!   stays owed — and cannot be given again — until a hauler picks it up ([`take_owed`]). A trade raises
 //!   the neighbour's attitude by `trade_attitude`; a gift (give without take) by one per `gift_value_per_attitude` of
 //!   value. Chronicle `Traded`.
-//! - Eureka: an artifact the colony holds (anywhere: ground, hands, shelves) whose producing node no living colonist
-//!   practises makes that node a clue ([`clues`]): `DiscoverySystem` counts its stockpile conditions as met and
+//! - Eureka: an artifact the colony holds (anywhere: ground, hands, shelves) whose `clue_nodes` (`values.ron`) no
+//!   living colonist practises makes those nodes clues ([`clues`]): `DiscoverySystem` counts its stockpile conditions as met and
 //!   multiplies its chance by `eureka_permille` / 1,000 for adults who practise its prerequisites.
 use hecs::World;
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
@@ -28,41 +28,22 @@ use std::collections::BTreeMap;
 
 use crate::runtime::jobs::items::chebyshev;
 
-/// The artifacts that weigh as "lacked" goods (goal §3.3) with the node that makes each.
-pub const ARTIFACTS: [(ItemKind, &str); 6] = [
-    (ItemKind::ClayPot, "pot_firing"),
-    (ItemKind::GroundAxe, "stone_grinding"),
-    (ItemKind::CuredHide, "hide_scraping"),
-    (ItemKind::Spear, "hafting"),
-    (ItemKind::HideWrap, "hide_scraping"),
-    (ItemKind::FurCloak, "hide_scraping"),
-];
-
-/// The staples every caravan may bring (goal §3.3).
-pub const STAPLES: [ItemKind; 5] = [
-    ItemKind::Meat,
-    ItemKind::Flint,
-    ItemKind::Clay,
-    ItemKind::Hide,
-    ItemKind::Firewood,
-];
-
-/// The knowledge nodes that make `kind` (an artifact's clue): a clay pot the pottery chain that makes it (clay
-/// preparation, pot forming, pot firing), a raw pot clay preparation and pot forming, a ground axe stone grinding, a
-/// spear or a stone axe hafting, hide goods hide scraping; empty otherwise (M5.5 DECISIONS).
+/// The knowledge nodes `kind` hints at while no colonist practises them (an artifact's clue): the item's
+/// `clue_nodes` in `data/colony/values.ron` (a clay pot: the pottery chain that makes it; empty for most items).
 pub fn producing_nodes(kind: ItemKind) -> Vec<u8> {
-    let names: &[&str] = match kind {
-        ItemKind::ClayPot => &["clay_prep", "pot_forming", "pot_firing"],
-        ItemKind::RawPot => &["clay_prep", "pot_forming"],
-        ItemKind::GroundAxe => &["stone_grinding"],
-        ItemKind::Spear | ItemKind::StoneAxe => &["hafting"],
-        ItemKind::CuredHide | ItemKind::HideWrap | ItemKind::FurCloak => &["hide_scraping"],
-        _ => &[],
-    };
-    names
-        .iter()
-        .filter_map(|n| sim_core::colony::knowledge::id(n))
-        .collect()
+    sim_core::colony::values::item_data(kind).map_or_else(Vec::new, |d| {
+        d.clue_nodes
+            .iter()
+            .filter_map(|n| sim_core::colony::knowledge::id(n))
+            .collect()
+    })
+}
+
+/// The node whose practice makes `kind` (`made_by` in `values.ron`), if any.
+fn made_by(kind: ItemKind) -> Option<u8> {
+    sim_core::colony::values::item_data(kind)
+        .and_then(|d| d.made_by.as_deref())
+        .and_then(sim_core::colony::knowledge::id)
 }
 
 /// The nodes some living colonist practises (bit `i` = node `i`).
@@ -142,18 +123,23 @@ pub fn trade_spot(res: &SimResources, meet: (u32, u32)) -> Option<(u32, u32)> {
 pub fn goods(seed: u64, rule: &NeighbourRule, id: u32, known: u32, practice: u32) -> Vec<Goods> {
     let draw =
         |slot: u32, n: u64| keyed_below(seed, STREAM_TRADE, u64::from(id), 0, slot, 0, n.max(1));
-    // The weighted table: artifacts the neighbour can make and the colony cannot, then the staples.
-    let mut table: Vec<(ItemKind, u32, bool)> = Vec::new();
-    for (kind, node) in ARTIFACTS {
-        let Some(n) = sim_core::colony::knowledge::id(node) else {
+    // The weighted table from `data/colony/neighbours.ron`, in its order: a "lacked" item when the neighbour knows the
+    // node that makes it and no colonist practises that node, a "staple" always (other tags are ignored).
+    let mut table: Vec<(ItemKind, u32, (u16, u16))> = Vec::new();
+    let entries = sim_core::rules::neighbour_data().map_or(&[][..], |d| d.goods.as_slice());
+    for entry in entries {
+        let Some(kind) = ItemKind::from_name(&entry.item) else {
             continue;
         };
-        if known & bit(n) != 0 && practice & bit(n) == 0 {
-            table.push((kind, rule.lack_weight, true));
+        match entry.tag.as_str() {
+            "lacked" => {
+                if made_by(kind).is_some_and(|n| known & bit(n) != 0 && practice & bit(n) == 0) {
+                    table.push((kind, rule.lack_weight, entry.count));
+                }
+            }
+            "staple" => table.push((kind, rule.staple_weight, entry.count)),
+            _ => {}
         }
-    }
-    for kind in STAPLES {
-        table.push((kind, rule.staple_weight, false));
     }
     let total: u64 = table.iter().map(|t| u64::from(t.1)).sum();
     let (lo, hi) = rule.goods_stacks;
@@ -162,7 +148,7 @@ pub fn goods(seed: u64, rule: &NeighbourRule, id: u32, known: u32, practice: u32
     let mut out: Vec<Goods> = Vec::new();
     for i in 0..stacks {
         let mut pick = draw(0x10 + i, total);
-        let Some(&(kind, _, artifact)) = table.iter().find(|t| {
+        let Some(&(kind, _, (clo, chi))) = table.iter().find(|t| {
             if pick < u64::from(t.1) {
                 true
             } else {
@@ -172,11 +158,8 @@ pub fn goods(seed: u64, rule: &NeighbourRule, id: u32, known: u32, practice: u32
         }) else {
             continue;
         };
-        let count = if artifact {
-            1 + draw(0x40 + i, 2) as u16
-        } else {
-            2 + draw(0x40 + i, 5) as u16
-        };
+        // The stack's size from the goods row (`count`, lo..=hi).
+        let count = clo + draw(0x40 + i, u64::from(chi.saturating_sub(clo)) + 1) as u16;
         let quality = qlo + draw(0x80 + i, u64::from(qhi.saturating_sub(qlo)) + 1) as u8;
         out.push(Goods {
             kind,
@@ -414,7 +397,7 @@ mod tests {
 
     #[test]
     fn the_balance_rule_is_eighty_against_one_hundred_twenty() {
-        let rule = NeighbourRule::M5_5;
+        let rule = NeighbourRule::m5_5().expect("neighbours.ron");
         // Give 30 for take 20: 30 × 800 = 24,000 ≥ 20 × 1,200 = 24,000 (accepted at the line).
         assert!(balanced(&rule, 30, 20));
         assert!(!balanced(&rule, 29, 20));

@@ -29,7 +29,13 @@ fn people(engine: &SimEngine) -> usize {
 
 #[test]
 fn two_neighbours_on_different_edges_are_drawn_from_the_seed() {
-    let rule = NeighbourRule::M5_5;
+    // The pottery lane's nodes (knowledge.ron), for the "one of them knows the pottery chain" check.
+    let pottery = defs()
+        .nodes
+        .iter()
+        .filter(|n| n.lane == sim_core::colony::knowledge::Lane::Pottery)
+        .fold(0u32, |m, n| m | knowledge::bit(n.id));
+    let rule = NeighbourRule::m5_5().expect("neighbours.ron");
     let neo: Vec<u8> = neighbours::neolithic();
     let mut pottery_worlds = 0;
     for seed in 0..8u64 {
@@ -59,8 +65,7 @@ fn two_neighbours_on_different_edges_are_drawn_from_the_seed() {
             assert!((2..=5).contains(&k), "seed {seed}: {k} Neolithic nodes");
         }
         assert!(
-            list.iter()
-                .any(|n| n.known & neighbours::pottery_mask() != 0),
+            list.iter().any(|n| n.known & pottery != 0),
             "seed {seed}: one of them knows the pottery chain"
         );
         pottery_worlds += 1;
@@ -317,7 +322,7 @@ fn the_population_cap_holds_a_wave_back() {
             .world
             .insert_one(e, sim_core::components::AgentState::Idle);
     }
-    let rule = NeighbourRule::M5_5;
+    let rule = NeighbourRule::m5_5().expect("neighbours.ron");
     let first = neighbours::first_waves(engine.resources.world_seed, &rule)[0].0;
     let mut system = NeighbourSystem;
     for day in 0..=first {
@@ -779,7 +784,7 @@ fn clay_prep_discoveries(
     if let Some(c) = engine.resources.rules.colony.as_mut() {
         c.neighbours = neighbours.map(|eureka| NeighbourRule {
             eureka_permille: eureka,
-            ..NeighbourRule::M5_5
+            ..NeighbourRule::m5_5().expect("neighbours.ron")
         });
         if let Some(k) = c.knowledge.as_mut() {
             k.discovery_odds = [odds; 3];

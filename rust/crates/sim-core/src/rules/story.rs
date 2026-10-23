@@ -1,5 +1,6 @@
 //! M5 (ADR 0027): the storyteller's rule — when pressure comes and what it does. `None` outside the M5 colony.
 use serde::{Deserialize, Serialize};
+use std::sync::OnceLock;
 
 /// Tunables of the storyteller and of the four pressure kinds (`ColonyRule::story`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -112,9 +113,47 @@ impl StoryRule {
         major_wait_sick: 2,
     };
 
-    /// The M5.5 values: [`Self::M5`] with no stacked pressure (goal M5.5 §3.1.1, ADR 0027 amendment).
-    pub const M5_5: Self = Self {
-        no_stack: true,
-        ..Self::M5
-    };
+    /// The M5.5 values — [`Self::M5`] with no stacked pressure (goal M5.5 §3.1.1, ADR 0027 amendment) — read from
+    /// `data/colony/story.ron` (owner directive 2026-10-24: the pressure parameters live in data).
+    pub fn m5_5() -> Option<Self> {
+        static DATA: OnceLock<Option<StoryRule>> = OnceLock::new();
+        *DATA.get_or_init(|| parse_story(STORY_RON))
+    }
+}
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct StoryFile {
+    schema_version: u32,
+    rule: StoryRule,
+}
+
+const STORY_RON: &str = include_str!("../../data/colony/story.ron");
+
+/// Parse a storyteller data file; `None` when malformed, of another schema or naming an unknown field.
+pub fn parse_story(text: &str) -> Option<StoryRule> {
+    let f = ron::from_str::<StoryFile>(text).ok()?;
+    (f.schema_version == 1 && super::data::rule_fields_known(text, &f.rule)).then_some(f.rule)
+}
+
+#[cfg(test)]
+mod data_tests {
+    use super::*;
+
+    #[test]
+    fn the_story_file_is_m5_without_stacked_pressure() {
+        let r = StoryRule::m5_5().expect("story.ron parses");
+        assert_eq!(
+            r,
+            StoryRule {
+                no_stack: true,
+                ..StoryRule::M5
+            }
+        );
+        assert!(parse_story("(schema_version: 1)").is_none());
+        let typo = STORY_RON.replace("stack_gap_days:", "stack_gap_dayz:");
+        assert!(parse_story(&typo).is_none(), "a misspelt field is refused");
+        let other = STORY_RON.replace("schema_version: 1", "schema_version: 99");
+        assert!(parse_story(&other).is_none(), "another schema is refused");
+    }
 }

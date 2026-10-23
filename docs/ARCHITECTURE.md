@@ -551,7 +551,12 @@ bridge ffi/neighbours.rs (get_neighbours, get_wave, get_caravan, cmd_accept_migr
   quarrel constants are rule fields; a quarrel's cause is a concrete record (`chronicle::NeedSample` behind
   `CauseRef::Sample`, a death, a pressure, an earlier quarrel) checked by `mood::check_cause`.
 - **Ledger**: per kind, created + traded_in = ground + carried + held + delivered + shelved + consumed + traded_out.
-- **Items and values**: `sim-core/data/colony/values.ron` (`colony::values::value`: base × (500 + 5 q) / 1,000).
+- **Items and values**: `sim-core/data/colony/values.ron` (`colony::values::value`: base × (500 + 5 q) / 1,000; per
+  item `made_by`, `clue_nodes`, `tags`).
+- **Data, not code** (owner directive 2026-10-24, DECISIONS D28): the M5.5 rules and content are RON files under
+  `sim-core/data/colony/` — `neighbours.ron` (rule, name keys, goods table by tag, guaranteed node, migrants' top),
+  `story.ron`, `wildlife.ron`, `mood.ron`, `values.ron` — embedded and parsed once (`ColonyRule::m5_5()`); code
+  matches items by tag (`lacked`, `staple`, `carcass`), never by name.
 - **Keyed draws**: `STREAM_NEIGHBOURS`, `STREAM_TRADE`; 38 streams.
 - **Save**: `FORMAT_VERSION` 6 (`Fleeing`, neighbours, waves, caravans, the ledger's traded terms, need samples, the
   knowledge source `Migrant`, chronicle kinds 38–44).

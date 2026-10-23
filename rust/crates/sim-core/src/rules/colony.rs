@@ -230,13 +230,18 @@ impl ColonyRule {
 
     /// The M5.5 colony values (ADR 0027–0030 amendments, 0031, 0032): [`Self::M5`] without stacked pressure, with
     /// flight, the hunter's meat haul, a 4-use knife and the calibrated mood.
-    pub const M5_5: Self = Self {
-        story: Some(super::StoryRule::M5_5),
-        wildlife: Some(super::WildlifeRule::M5_5),
-        mood: Some(super::MoodRule::M5_5),
-        neighbours: Some(super::NeighbourRule::M5_5),
-        ..Self::M5
-    };
+    /// The story, wildlife, mood and neighbour values come from `data/colony/story.ron`, `wildlife.ron`, `mood.ron`
+    /// and `neighbours.ron` (owner directive 2026-10-24); a malformed file would leave that part off (unit tests
+    /// parse each).
+    pub fn m5_5() -> Self {
+        Self {
+            story: super::StoryRule::m5_5(),
+            wildlife: super::WildlifeRule::m5_5(),
+            mood: super::MoodRule::m5_5(),
+            neighbours: super::NeighbourRule::m5_5().filter(|_| crate::colony::values::loaded()),
+            ..Self::M5
+        }
+    }
 
     /// Items of `kind` one tile holds (logs: `stack_max_logs`; goal 3.1 for the rest).
     pub const fn stack_max(&self, kind: crate::colony::ItemKind) -> u16 {
@@ -264,41 +269,29 @@ impl super::WorldRules {
     /// since M1.5 the colony calendar (6-day seasons, a 24-day year), ages in
     /// years ([`COLONY_AGING`], [`COLONY_LIFE_STAGE`]) and births by a
     /// fertility rate ([`COLONY_BIRTH`]) instead of the settlement provision.
-    pub const fn colony(seed: u64) -> Self {
+    pub fn colony(seed: u64) -> Self {
         let base = Self::baseline(seed);
-        let seasons = match base.seasons {
-            Some(rule) => Some(super::SeasonRule {
-                days_per_season: COLONY_CALENDAR.days_per_season,
-                ..rule
-            }),
-            None => None,
-        };
-        let life_stage = match base.society.life_stage {
-            Some(rule) => Some(super::LifeStageRule {
-                child_ticks: COLONY_LIFE_STAGE.0,
-                infant_ticks: Some(COLONY_LIFE_STAGE.1),
-                ..rule
-            }),
-            None => None,
-        };
+        let seasons = base.seasons.map(|rule| super::SeasonRule {
+            days_per_season: COLONY_CALENDAR.days_per_season,
+            ..rule
+        });
+        let life_stage = base.society.life_stage.map(|rule| super::LifeStageRule {
+            child_ticks: COLONY_LIFE_STAGE.0,
+            infant_ticks: Some(COLONY_LIFE_STAGE.1),
+            ..rule
+        });
         // M1.5 calibration (DECISIONS D9): autumn stores a whole colony winter
         // of burn (`None` = the calendar's days per season, 6) instead of the
         // baseline's 4 days of its 7-day winter.
-        let firewood = match base.society.firewood {
-            Some(rule) => Some(super::FirewoodRule {
-                winter_prep_days: None,
-                ..rule
-            }),
-            None => None,
-        };
-        let aging = match base.society.aging {
-            Some(rule) => Some(super::AgingRule {
-                elder_tether_radius: rule.elder_tether_radius,
-                elder_evening_tether: rule.elder_evening_tether,
-                ..COLONY_AGING
-            }),
-            None => None,
-        };
+        let firewood = base.society.firewood.map(|rule| super::FirewoodRule {
+            winter_prep_days: None,
+            ..rule
+        });
+        let aging = base.society.aging.map(|rule| super::AgingRule {
+            elder_tether_radius: rule.elder_tether_radius,
+            elder_evening_tether: rule.elder_evening_tether,
+            ..COLONY_AGING
+        });
         Self {
             agent: super::AgentRules {
                 move_interval_ticks: 3,
@@ -313,7 +306,7 @@ impl super::WorldRules {
                 firewood,
                 ..base.society
             },
-            colony: Some(ColonyRule::M5_5),
+            colony: Some(ColonyRule::m5_5()),
             seasons,
             calendar: COLONY_CALENDAR,
             ..base

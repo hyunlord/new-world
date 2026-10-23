@@ -470,7 +470,7 @@ func _neighbours_panel() -> void:
 	var rows: Array[Dictionary] = NeighbourText.neighbours(_nb())
 	for i: int in mini(rows.size(), cards.size()):
 		var card: String = str(cards[i])
-		ok = ok and card.contains(NeighbourText.direction(_locale, int(rows[i]["edge"]))) and card.contains(NeighbourText.name_of_key(_locale, int(rows[i]["name_key"])))
+		ok = ok and card.contains(NeighbourText.direction(_locale, int(rows[i]["edge"]))) and card.contains(NeighbourText.name_of_key(_locale, String(rows[i]["name_key"])))
 		for node: int in NeighbourText.rumoured_nodes(int(rows[i]["rumoured"])):
 			ok = ok and card.contains(KnowledgeText.node_name(_locale, node))
 	_check("n_panel", ok, " || ".join(cards) + " || " + str(texts["tally"]))

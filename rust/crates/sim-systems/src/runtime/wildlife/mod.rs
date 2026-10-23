@@ -746,7 +746,8 @@ impl RuntimeSystem for AnimalSystem {
         wolf_steps(world, res, &rule, hearth, &folk);
         if tick.is_multiple_of(60) {
             feed_larder(res, &rule);
-            // M5.5: a carcass tile leaves the list once nothing of the kill lies there off the stockpiles.
+            // M5.5: a carcass tile leaves the list once nothing of the kill (items tagged `carcass` in values.ron) lies
+            // there off the stockpiles.
             if !res.colony.wildlife.carcasses.is_empty() {
                 let colony = &res.colony;
                 let keep: std::collections::BTreeSet<(u32, u32)> = colony
@@ -757,10 +758,7 @@ impl RuntimeSystem for AnimalSystem {
                     .filter(|t| {
                         !colony.zone_of_tile.contains_key(t)
                             && colony.ground_items.get(t).is_some_and(|s| {
-                                matches!(
-                                    s.kind,
-                                    ItemKind::Meat | ItemKind::Hide | ItemKind::WolfHide
-                                )
+                                sim_core::colony::values::has_tag(s.kind, "carcass")
                             })
                     })
                     .collect();

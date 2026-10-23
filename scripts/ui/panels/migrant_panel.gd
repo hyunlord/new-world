@@ -203,7 +203,7 @@ func _add_person(person: Dictionary, language: String) -> void:
 	var knowledge: Label = _label(box, SKILLED if skilled else MUTED)
 	knowledge.text = NeighbourText.know_text(_locale, know)
 	var apparel: Label = _label(box, MUTED)
-	apparel.text = NeighbourText.trf(_locale, "M55_MIGRANT_APPAREL_FMT", {"top": StoryText.top(_locale, 1 if bool(person["wrap"]) else 0)})
+	apparel.text = NeighbourText.trf(_locale, "M55_MIGRANT_APPAREL_FMT", {"top": StoryText.top(_locale, int(person["top"]))})
 	_person_texts.append(" / ".join([head.text, knowledge.text, apparel.text]))
 
 

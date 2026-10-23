@@ -142,7 +142,7 @@ func _card(row: Dictionary, waves: Array[Dictionary], caravans: Array[Dictionary
 	box.add_theme_constant_override("separation", 4)
 	card.add_child(box)
 	var lines: Array[String] = []
-	var heading: Label = _line(box, NeighbourText.name_of_key(_locale, int(row["name_key"])), ACCENT, lines)
+	var heading: Label = _line(box, NeighbourText.name_of_key(_locale, String(row["name_key"])), ACCENT, lines)
 	heading.theme_type_variation = &"Heading"
 	_line(box, NeighbourText.trf(_locale, "M55_NB_DIR_FMT", {"dir": NeighbourText.direction(_locale, int(row["edge"])), "days": int(row["days"])}), TEXT, lines)
 	_line(box, NeighbourText.trf(_locale, "M55_NB_POP_FMT", {"count": int(row["population"])}), TEXT, lines)

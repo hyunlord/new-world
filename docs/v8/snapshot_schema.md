@@ -995,7 +995,7 @@ caravans by number (the gone ones stay), clues by node id. In `SimReads.GETTERS`
 | `version` | int | `Neighbours::version` (bumped when anything shown changes) |
 | `now` | int | the current tick |
 | `ids` | PackedInt32Array | neighbour id (0, 1) |
-| `name_keys` | PackedInt32Array | n of the locale key `NEIGHBOUR_NAME_<n>` |
+| `name_keys` | PackedStringArray | locale key of the neighbour's name (`sim-core/data/colony/neighbours.ron` `names`) |
 | `edges` | PackedInt32Array | 0 north, 1 east, 2 south, 3 west |
 | `distance_days` | PackedInt32Array | days of travel (2–5) |
 | `populations` | PackedInt32Array | its people |
@@ -1038,7 +1038,8 @@ three knowledge slots per person (their best by ‰, then node id), padded with 
 | `agents` | PackedInt64Array | the `AgentId` each will have when the wave joins (reserved when it set out; names) |
 | `female` | PackedInt32Array | 1 a woman |
 | `age_years` | PackedInt32Array | age in years |
-| `wrap` | PackedInt32Array | 1 arrives in a hide wrap |
+| `wrap` | PackedInt32Array | 1 arrives wearing a top |
+| `tops` | PackedInt32Array | the top they arrive wearing, `Top::code` (0 none; the data's `migrant_top`, `sim-core/data/colony/neighbours.ron`) |
 | `know_nodes` | PackedInt32Array | three per person: `KnowledgeId`, -1 none |
 | `know_permille` | PackedInt32Array | three per person: proficiency ‰ |
 | `know_practice` | PackedInt32Array | three per person: 1 at or above the node's threshold (숙련) |
