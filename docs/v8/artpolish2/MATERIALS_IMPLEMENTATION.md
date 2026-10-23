@@ -1,6 +1,8 @@
 # Material implementation plan
 
-Status: IN_PROGRESS. Scope: `art/materials/**`, generic compositor integration and tests only.
+Status: IMPLEMENTATION_COMPLETE; actual data-only commit proofs PASS. Two texture
+seam gates remain FAIL and owner acceptance remains pending. Scope:
+`art/materials/**`, generic compositor integration and tests only.
 
 1. Freeze existing wall geometry with its existing tests and record their result.
 2. Parse versioned style/material/category JSON once into frozen typed values; resolve purely with material → category → style tint fallback, kind-aware blueprint/default style selection, and optional per-style texture overrides.
@@ -10,7 +12,7 @@ Status: IN_PROGRESS. Scope: `art/materials/**`, generic compositor integration a
 
 No new dependency, game edit, source pixel surgery, or source rotation. Generation belongs to the image lane. The old rendering comparison is intentionally kept byte-compatible for owner variant (a).
 
-## Implementation evidence (2026-10-24)
+## Implementation evidence (2026-10-24, historical pre-data-commit checkpoint)
 
 Generic implementation is ready for the parent to commit before the data-only era
 addition. This is not a claim that generated-texture gates or owner review passed.
@@ -163,10 +165,23 @@ rejected**. Reproduction and detailed results live outside the repository at
 The fixtures cover omitted/null required textures for all three kinds, invalid
 paths, null wall aliases, unsupported version, and extra document fields.
 
-Final aggregate command `python3 -m pytest art/materials art/compositor -q`:
+At the agent handoff before the isolated style commit, the aggregate command
+`python3 -m pytest art/materials art/compositor -q` reported:
 **151 passed, 1 skipped**, recorded in `material-review-final-tests.txt` under the
 external data root. The skip remains the pending actual data-only style-commit
 proof. The review regression module contributes **37 passed**. Scoped
 basedpyright remains **0 errors, 0 warnings, 0 notes**; Ruff and the 14-file
 no-excuse check pass. No production implementation changed during this final
 test-dependency cleanup.
+
+## Current closure after the actual style commit
+
+The generic implementation was committed as `174dd0e6`, followed by the isolated
+mud/fired style commit `d6a539b0f6c0460ca79b8b5450128fa7a1b4db8a` with no `.py`
+changes. `DATA_ONLY_PROOF.json` and `FIRED_BRICK_DATA_ONLY_PROOF.json` now verify
+the real Git file list and texture objects. The historical skipped checkpoint
+above remains preserved; it is no longer the current proof status. The later
+integrated material/compositor/POLISH2 suite passed **207 tests with no skips**
+(`scoped-tests-integrated.txt` in the external data root). Final wall panels and
+their unchanged pixel hashes are recorded in `FINAL_WALL_BOARD_EVIDENCE.json`.
+The two exhausted texture seam failures are retained without an owner waiver.

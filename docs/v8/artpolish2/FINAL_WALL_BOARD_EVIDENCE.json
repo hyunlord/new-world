@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "scope": "final wall board artifacts only; faces and crowd deferred until their frozen inputs",
+  "scope": "final wall board artifacts only; crowd is separately final in FINAL_CROWD_BOARD_EVIDENCE.json; faces await final selected portraits",
   "owner_approval": "PENDING",
   "board_fidelity": "PASS: 18 panels equal source crops at declared integer scales",
   "art_gate_status": "PARTIAL_FAIL: two texture seam gates remain failed; width44 junction appearance requires owner choice",
