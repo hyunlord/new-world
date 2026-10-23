@@ -49,6 +49,8 @@ def prompt_for(look: LookVariants, variant: Variant, appearance: SourceAppearanc
         "Create ONE square inspector portrait, shoulders-up bust, for the exact person in reference 1. "
     )
     return introduction + (
+        "Use a slightly looser bust framing with a visibly wide empty parchment gap above the hair. "
+        "The top fifteen percent of the square must remain blank parchment, with no hair tips or flyaway lines. "
         "Reference 1 is that person's actual Route I S/idle sprite tinted to the planned skin and hair "
         "colours. Reference 2 is portrait.png, STYLE ONLY; do not copy its man's identity. "
         "Reference 3 is an exact 4x nearest-neighbor enlargement of reference 1; use it to read "
@@ -67,7 +69,7 @@ def prompt_for(look: LookVariants, variant: Variant, appearance: SourceAppearanc
         "washes, natural-history illustration, warm parchment palette, upper-left lighting. "
         "Use broad lit and shaded planes and selective hair lines, not dense all-over hatching. "
         "No photography or 3D. Composition must survive full-frame downsampling to 128x128 and 64x64. "
-        "Entire head, ears, hairstyle and flyaways must fit within x=14..114, y=10..104 in final "
+        "Entire head, ears, hairstyle and flyaways must fit within x=14..114, y=20..104 in final "
         "128px coordinates. Keep face skin inside fixed ellipse center(64,61), radii(44,52). "
         "Shoulders may meet the bottom edge, hair must not meet any edge. Quiet plain warm parchment "
         "background. No text, labels, border, watermark, landscape, jewellery or head ornaments. "

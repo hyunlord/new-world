@@ -266,3 +266,12 @@ Observed failures on exhausted second attempts are retained; this clarification
 does not authorize a third attempt or imply the model followed the new prompt.
 Verification: 138 prepared female/child prompts were byte-identical; all36
 portrait/blind tests, Ruff and strict typing(0errors/0warnings) passed.
+
+The first49 final candidates include three exhausted second attempts whose
+highest hair tips have a conservatively observed1px top margin. The unchanged
+structure threshold remains2px. Unstarted requests now ask for a visibly empty
+top15% parchment band and head bounds y20..104 to provide a wider generation
+margin. Started prompts and images are not reframed or patched. This is an
+input clarification, not a changed evaluation rule or an extra attempt.
+The full36 protocol tests, Ruff and strict typing again pass after this edit;
+actual framing adherence remains subject to observed-image review.
