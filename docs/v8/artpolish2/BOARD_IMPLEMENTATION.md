@@ -19,8 +19,9 @@
 ## Status
 
 Wall boards are rendered from the final selected 29-texture manifest, with all
-six material rooms. The final crowd now uses the committed frozen sprite
-variants; the face sheet remains pending selected portrait/blind-test inputs.
+six material rooms. The final crowd uses the committed frozen sprite variants.
+The final48 face pairs are now delivered in the authorized adult/child split
+from the frozen selected portrait pool; owner acceptance remains pending.
 `python3 -m art.compositor.polish2_walls` rebuilds the
 wall set only. The aggregate `polish2_boards` command also renders faces/crowd;
 do not run it before those owners signal frozen inputs.
@@ -262,3 +263,50 @@ to external `boards/wall_metadata_before_bf237fd9720c/` (the exact archive path
 and its index hash are authoritative in the refreshed evidence). This refresh
 does not alter the retained two seam failures, candidate-c visual caveat or
 pending owner judgment. No game runtime,3D or owner approval is claimed.
+
+## Final face-board delivery
+
+The face-only command `python3 -m art.compositor.polish2_faces` rendered the
+released frozen204-candidate index
+`dff7f5b5dc87d22744f58466f60684217fa5106c5f01e195420c36ea5120284b`.
+All204 selected portraits and matching sprite files, plus the generation
+manifest, match their Git blobs at source commit
+`04fa0d1c93c5a4a960238dad82a56508d661dca0`. No code, portrait, candidate-index,
+wall PNG or crowd PNG was changed by this delivery.
+
+The actual complete1848×2274 sheet measures **1,826,470 bytes** after the
+existing lossless optimization, exceeding1,500,000. The conditional fallback
+therefore publishes both required companion parts:
+
+| PNG | Contents | Dimensions | Bytes |
+| --- | --- | --- | ---: |
+| `art/boards/faces_owner.png` | Four adult looks × six variants | 1848×1170 | 928,406 |
+| `art/boards/faces_owner.children.png` | Four child looks × six variants | 1848×1170 | 910,823 |
+
+The complete sheet is preserved externally at
+`/Users/rexxa/work/artpolish2-data/boards/faces_owner.full.8ad918b25990b6ca7a63cad7e3635e40ad912c42d34a15c75b0628a06f161eb4.png`.
+This is a two-PNG owner board with a preserved full original; the named adult
+PNG alone does not contain all48 pairs. Both part headers say what they contain
+and name their companion. `art/boards/faces_owner.index.json` maps every one of
+the48 unique look/variant pairs to the full-sheet and published-sheet panels.
+
+`FINAL_FACE_BOARD_EVIDENCE.json` binds all48 portrait/sprite source pairs,
+selected attempts, source commit, exact panel rectangles, board/index hashes,
+actual sizes, visual observations and all96 panel comparisons. Independent
+integer-array repetition and alpha composition verified every published panel
+and every full-sheet panel: **96/96 exact in each**, zero different pixels.
+Every portrait remains the complete128×128 source at1×; every sprite remains
+the complete80×112 frame at exact2× (160×224). No palette quantization,
+downsampling, retouching or post-hoc recolouring was used. All four wall PNGs
+and the crowd PNG remain byte-identical to their pre-render hashes.
+
+Both published sheets were viewed at original dimensions. All eight rows,
+48 pairs, variant labels, part headers and companion filenames are visible,
+with no panel overlap or board-introduced clipping. Board fidelity is
+**PASS96**. This does not approve portrait semantics or blind identity.
+The frozen full pool retains geometry201/204, hair204/204 and garment170/204.
+Within the owner48, geometry is45/48, hair48/48 and garment48/48; the exhausted
+head-margin failures are `adult_M_fur_cloak_bun/v1` and
+`child_M_fur_cloak_bun/v3,v5`. Adult male fur-cloak bun v1/v6 visibly retain full
+beards despite the clean-shaven plan. Those source issues are not hidden or
+regraded by board fidelity. Owner selection remains **PENDING**.

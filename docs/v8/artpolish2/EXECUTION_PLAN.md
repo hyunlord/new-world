@@ -10,8 +10,8 @@ hard stop eight hours from task start. Raw data: `/Users/rexxa/work/artpolish2-d
 | 1 | Validated material data, pure resolver, directional assembly, tests (`174dd0e6`) | completed |
 | 2 | Generated texture sets, seam/projection evidence, data-only new-era commit (`d6a539b0`; 2 seam FAIL retained) | completed |
 | 3 | Frozen six-variant plan, masks, baked frames, transforms and person selector (literal coverage FAIL / hair NOT_VERIFIABLE retained) | completed |
-| 4 | Variant portraits, structure checks, both independent blind tests | in_progress |
-| 5 | Three boards, Korean report, scoped verification and remote SHA equality | pending |
+| 4 | Variant portraits, structure checks, both independent blind tests (round0 and round1 FAIL retained) | completed |
+| 5 | Three boards, Korean report, scoped verification and remote SHA equality | in_progress |
 
 Parallel ownership: materials executor owns schema/resolver/walls; texture
 executor owns generated sets and prompt templates; sprite executor owns face
@@ -167,3 +167,17 @@ Godot runtime integration or owner approval.
 - New isolated reviewers /root/blind_a1 and /root/blind_b1 received only their
   own description/identity packet directories. No pool/index writes may occur
   during this round. Final face-board rendering reads the same frozen assets.
+
+## Round1 complete
+
+- Both new reviewers actually viewed 8 description sheets, 36 identity sheets
+  and 8 exchanged-description matching sheets. Receipts and all response hashes
+  are bound by `blind_scores_round1.json`.
+- A: identity32/36 PASS; adult_M_fur_cloak_bun distinctness4/6 FAIL, every
+  other look6/6. B: identity31/36 FAIL; every distinctness look6/6. OverallFAIL.
+- The failed adult-bun portraits and all identity36 images are unchanged from
+  round0. Both rounds remain recorded; score changes are independent retesting,
+  not effects of repairing those images. No further generation is permitted.
+- Full face sheet exceeds the file limit at1,826,470 bytes. Both exact-scale
+  adult/child sheets are rendered and root-viewed; D17 records the packaging
+  deviation and preserves the full external sheet. Final audit/publication remain.

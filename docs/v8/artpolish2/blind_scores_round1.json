@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "round": 1,
+  "reviewers": [
+    {
+      "reviewer": "A",
+      "agent": {
+        "agent_task": "/root/blind_a1",
+        "session_id": null,
+        "isolated_context": true,
+        "spawn_receipt": {
+          "path": "/Users/rexxa/work/artpolish2-data/portraits/blind/round1/launch_receipts/A.json",
+          "sha256": "67605a1d10ba2559c0eedea7c931110f1219dbc39bf429331d719bcfa0d215c5"
+        }
+      },
+      "round_manifest": {
+        "path": "/Users/rexxa/work/artpolish2-data/portraits/blind/round1/private/round.json",
+        "sha256": "6c3d5ef52f57eb4dfa744669e6b28dcefe012303ae760ff5628edb95b47d884c"
+      },
+      "round": 1,
+      "identity_correct": 32,
+      "identity_total": 36,
+      "identity_passed": true,
+      "identity_failed_variants": [
+        "child_F_fur_cloak_bun/v5",
+        "adult_M_fur_cloak_bun/v1",
+        "child_M_fur_cloak_bun/v5",
+        "child_M_fur_cloak_long_tied/v5"
+      ],
+      "distinctness": [
+        {
+          "look": "adult_F_fur_cloak_bun",
+          "correct": 6,
+          "total": 6,
+          "passed": true,
+          "failed_variants": []
+        },
+        {
+          "look": "adult_F_fur_cloak_long_tied",
+          "correct": 6,
+          "total": 6,
+          "passed": true,
+          "failed_variants": []
+        },
+        {
+          "look": "adult_M_fur_cloak_bun",
+          "correct": 4,
+          "total": 6,
+          "passed": false,
+          "failed_variants": [
+            "adult_M_fur_cloak_bun/v2",
+            "adult_M_fur_cloak_bun/v1"
+          ]
+        },
+        {
+          "look": "adult_M_fur_cloak_short",
+          "correct": 6,
+          "total": 6,
+          "passed": true,
+          "failed_variants": []
+        },
+        {
+          "look": "child_F_fur_cloak_bun",
+          "correct": 6,
+          "total": 6,
+          "passed": true,
+          "failed_variants": []
+        },
+        {
+          "look": "child_F_fur_cloak_long_tied",
+          "correct": 6,
+          "total": 6,
+          "passed": true,
+          "failed_variants": []
+        },
+        {
+          "look": "child_M_fur_cloak_bun",
+          "correct": 6,
+          "total": 6,
+          "passed": true,
+          "failed_variants": []
+        },
+        {
+          "look": "child_M_fur_cloak_long_tied",
+          "correct": 6,
+          "total": 6,
+          "passed": true,
+          "failed_variants": []
+        }
+      ],
+      "distinctness_passed": false,
+      "answer_key": {
+        "path": "/Users/rexxa/work/artpolish2-data/portraits/blind/round1/private/keys/dbb7b7252c3c9f3825cea24bff2b77a5afbf72054b213b3d7e4250df5a7ae83c.json",
+        "sha256": "dbb7b7252c3c9f3825cea24bff2b77a5afbf72054b213b3d7e4250df5a7ae83c"
+      },
+      "identity_response": {
+        "path": "/Users/rexxa/work/artpolish2-data/portraits/blind/round1/private/responses/identity/5e6f46bbc886d2a0683f2532208b094ea83dffb976a3c1388d4e88cea42bec6e.json",
+        "sha256": "5e6f46bbc886d2a0683f2532208b094ea83dffb976a3c1388d4e88cea42bec6e"
+      },
+      "matching_response": {
+        "path": "/Users/rexxa/work/artpolish2-data/portraits/blind/round1/private/responses/matching/980520eff2b719ab8926c6c6e82b4f58e23b1299422a68b86d0a1be09d590d44.json",
+        "sha256": "980520eff2b719ab8926c6c6e82b4f58e23b1299422a68b86d0a1be09d590d44"
+      }
+    },
+    {
+      "reviewer": "B",
+      "agent": {
+        "agent_task": "/root/blind_b1",
+        "session_id": null,
+        "isolated_context": true,
+        "spawn_receipt": {
+          "path": "/Users/rexxa/work/artpolish2-data/portraits/blind/round1/launch_receipts/B.json",
+          "sha256": "5f8b107a64823394d8d1af5c18390dddca38df1ae7380f812c507f776c1bf91b"
+        }
+      },
+      "round_manifest": {
+        "path": "/Users/rexxa/work/artpolish2-data/portraits/blind/round1/private/round.json",
+        "sha256": "6c3d5ef52f57eb4dfa744669e6b28dcefe012303ae760ff5628edb95b47d884c"
+      },
+      "round": 1,
+      "identity_correct": 31,
+      "identity_total": 36,
+      "identity_passed": false,
+      "identity_failed_variants": [
+        "child_M_fur_cloak_long_tied/v5",
+        "child_M_fur_cloak_bun/v5",
+        "child_M_fur_cloak_bun/v4",
+        "adult_M_fur_cloak_bun/v1",
+        "child_F_fur_cloak_bun/v5"
+      ],
+      "distinctness": [
+        {
+          "look": "adult_F_fur_cloak_bun",
+          "correct": 6,
+          "total": 6,
+          "passed": true,
+          "failed_variants": []
+        },
+        {
+          "look": "adult_F_fur_cloak_long_tied",
+          "correct": 6,
+          "total": 6,
+          "passed": true,
+          "failed_variants": []
+        },
+        {
+          "look": "adult_M_fur_cloak_bun",
+          "correct": 6,
+          "total": 6,
+          "passed": true,
+          "failed_variants": []
+        },
+        {
+          "look": "adult_M_fur_cloak_short",
+          "correct": 6,
+          "total": 6,
+          "passed": true,
+          "failed_variants": []
+        },
+        {
+          "look": "child_F_fur_cloak_bun",
+          "correct": 6,
+          "total": 6,
+          "passed": true,
+          "failed_variants": []
+        },
+        {
+          "look": "child_F_fur_cloak_long_tied",
+          "correct": 6,
+          "total": 6,
+          "passed": true,
+          "failed_variants": []
+        },
+        {
+          "look": "child_M_fur_cloak_bun",
+          "correct": 6,
+          "total": 6,
+          "passed": true,
+          "failed_variants": []
+        },
+        {
+          "look": "child_M_fur_cloak_long_tied",
+          "correct": 6,
+          "total": 6,
+          "passed": true,
+          "failed_variants": []
+        }
+      ],
+      "distinctness_passed": true,
+      "answer_key": {
+        "path": "/Users/rexxa/work/artpolish2-data/portraits/blind/round1/private/keys/7205fc55960df82495341da70141d3b91137a4cf03b8c0e22a38842ab417c3b7.json",
+        "sha256": "7205fc55960df82495341da70141d3b91137a4cf03b8c0e22a38842ab417c3b7"
+      },
+      "identity_response": {
+        "path": "/Users/rexxa/work/artpolish2-data/portraits/blind/round1/private/responses/identity/8f5cf543950c09c689872108097c08c8d8404064fdb266aba7756966f9c90bd3.json",
+        "sha256": "8f5cf543950c09c689872108097c08c8d8404064fdb266aba7756966f9c90bd3"
+      },
+      "matching_response": {
+        "path": "/Users/rexxa/work/artpolish2-data/portraits/blind/round1/private/responses/matching/1cb2e5fc86ba8dce17c9ce0c46cdcce26dc4a926bbfa96283d722d1e947e4894.json",
+        "sha256": "1cb2e5fc86ba8dce17c9ce0c46cdcce26dc4a926bbfa96283d722d1e947e4894"
+      }
+    }
+  ],
+  "passed": false,
+  "failed_variants": [
+    "adult_M_fur_cloak_bun/v1",
+    "adult_M_fur_cloak_bun/v2",
+    "child_F_fur_cloak_bun/v5",
+    "child_M_fur_cloak_bun/v4",
+    "child_M_fur_cloak_bun/v5",
+    "child_M_fur_cloak_long_tied/v5"
+  ],
+  "owner_adopted": false
+}

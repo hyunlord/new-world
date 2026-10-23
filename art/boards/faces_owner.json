@@ -1,0 +1,781 @@
+{
+  "path": "art/boards/faces_owner.png",
+  "sha256": "8cdc9b2eddab0081297772f7ed73f2eb4c71c29baa93c719feb065b2a3e7d183",
+  "bytes": 928406,
+  "dimensions": [
+    1848,
+    1170
+  ],
+  "title": "FACE VARIANTS / part1of2: adult4x6 / portrait128 + sprite2x / companion: faces_owner.children.png",
+  "panels": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/portrait/polish2/adult_F_fur_cloak_bun/v1.png",
+      "sha256": "454379bfbc5791766100d88b0307ce4e15f26b5b441f274e3f9e9ba12e5201ce",
+      "crop": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "origin": [
+        12,
+        66
+      ],
+      "label": "adult_F_fur_cloak_bun / v1 / S1 H2",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_F_fur_cloak_bun/v1/S/idle.png",
+      "sha256": "02f55eabb00e3a7f4212bc46c03c03dd1b529263671a61c81e307f7424dd0420",
+      "crop": [
+        0,
+        0,
+        80,
+        112
+      ],
+      "origin": [
+        148,
+        66
+      ],
+      "label": "",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/portrait/polish2/adult_F_fur_cloak_bun/v2.png",
+      "sha256": "c28803d1f1b4ec3d84fe41ef9c96b97a4d590b172ef9629bfee15328ed1c55be",
+      "crop": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "origin": [
+        316,
+        66
+      ],
+      "label": "adult_F_fur_cloak_bun / v2 / S2 H1",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_F_fur_cloak_bun/v2/S/idle.png",
+      "sha256": "9cfaeaa2a8df9dd6fffeeeac021fc2c724b5dcc09d4183159bccdba78735591c",
+      "crop": [
+        0,
+        0,
+        80,
+        112
+      ],
+      "origin": [
+        452,
+        66
+      ],
+      "label": "",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/portrait/polish2/adult_F_fur_cloak_bun/v3.png",
+      "sha256": "cc1354c1e56b801e824aa06e916d61a4c1a41bdae9c55af3173db74ef0cc13af",
+      "crop": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "origin": [
+        620,
+        66
+      ],
+      "label": "adult_F_fur_cloak_bun / v3 / S3 H3",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_F_fur_cloak_bun/v3/S/idle.png",
+      "sha256": "49249e459702611cb2d2f037131601eb5754e06d62281919e6b0adc158319863",
+      "crop": [
+        0,
+        0,
+        80,
+        112
+      ],
+      "origin": [
+        756,
+        66
+      ],
+      "label": "",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/portrait/polish2/adult_F_fur_cloak_bun/v4.png",
+      "sha256": "6f6e46e57c2349668c3bb09a8bf95cdeb2d3ac4e3910dac7d779299947bbb78d",
+      "crop": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "origin": [
+        924,
+        66
+      ],
+      "label": "adult_F_fur_cloak_bun / v4 / S1 H4",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_F_fur_cloak_bun/v4/S/idle.png",
+      "sha256": "7c2aa6e32d3f938d21432cfb8016aa232b27e22a2fe1be8eea43db04af3a6700",
+      "crop": [
+        0,
+        0,
+        80,
+        112
+      ],
+      "origin": [
+        1060,
+        66
+      ],
+      "label": "",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/portrait/polish2/adult_F_fur_cloak_bun/v5.png",
+      "sha256": "ca8a51b716758e7343d3598be0c9e6225ea673ac19f7ca734443a71e292ea671",
+      "crop": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "origin": [
+        1228,
+        66
+      ],
+      "label": "adult_F_fur_cloak_bun / v5 / S2 H3",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_F_fur_cloak_bun/v5/S/idle.png",
+      "sha256": "aeb9e4b797121a9fb60ebfd1fec840dd1b5b91e95ed22dc7125bfb5b5c7c34ff",
+      "crop": [
+        0,
+        0,
+        80,
+        112
+      ],
+      "origin": [
+        1364,
+        66
+      ],
+      "label": "",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/portrait/polish2/adult_F_fur_cloak_bun/v6.png",
+      "sha256": "72160595b97ca02fda03b43062cea6b405ac6ca2f0ce90865cc67a6ea28bd322",
+      "crop": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "origin": [
+        1532,
+        66
+      ],
+      "label": "adult_F_fur_cloak_bun / v6 / S3 H2",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_F_fur_cloak_bun/v6/S/idle.png",
+      "sha256": "e4a4c04b9e58461ed414f8a6e9cd4963d4c92086a64efd1114abc944133f194e",
+      "crop": [
+        0,
+        0,
+        80,
+        112
+      ],
+      "origin": [
+        1668,
+        66
+      ],
+      "label": "",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/portrait/polish2/adult_F_fur_cloak_long_tied/v1.png",
+      "sha256": "ab4749a2e26c0f043fd06bf3cab460d6f08cca4e1dd9ed7c7581e1b085a5c9c9",
+      "crop": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "origin": [
+        12,
+        342
+      ],
+      "label": "adult_F_fur_cloak_long_tied / v1 / S1 H2",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_F_fur_cloak_long_tied/v1/S/idle.png",
+      "sha256": "8a0577da8048a1d01371834e874195a93697e044b689c2efba2cf6cd964db7ce",
+      "crop": [
+        0,
+        0,
+        80,
+        112
+      ],
+      "origin": [
+        148,
+        342
+      ],
+      "label": "",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/portrait/polish2/adult_F_fur_cloak_long_tied/v2.png",
+      "sha256": "f739680e4a21f71c5a6bb9f224e4ef1d698d117dc8d6c0b699c0402ffc271787",
+      "crop": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "origin": [
+        316,
+        342
+      ],
+      "label": "adult_F_fur_cloak_long_tied / v2 / S2 H1",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_F_fur_cloak_long_tied/v2/S/idle.png",
+      "sha256": "65e1dd858e7130c466f1b09a36396ba0fb3a6220195f0927eb0e26ed3e16a4c3",
+      "crop": [
+        0,
+        0,
+        80,
+        112
+      ],
+      "origin": [
+        452,
+        342
+      ],
+      "label": "",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/portrait/polish2/adult_F_fur_cloak_long_tied/v3.png",
+      "sha256": "2d06e1f1b1449ba90c3742f0dd7c11f30cbd9975d893eb8a3b400eb01782ca8a",
+      "crop": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "origin": [
+        620,
+        342
+      ],
+      "label": "adult_F_fur_cloak_long_tied / v3 / S3 H3",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_F_fur_cloak_long_tied/v3/S/idle.png",
+      "sha256": "c132b4c54acd4ec87823aef93f5d749b28170a2f6fbcbed8177537fb097ecd20",
+      "crop": [
+        0,
+        0,
+        80,
+        112
+      ],
+      "origin": [
+        756,
+        342
+      ],
+      "label": "",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/portrait/polish2/adult_F_fur_cloak_long_tied/v4.png",
+      "sha256": "f3f22756726a7fc4f6be5d23bf56125ba46aeabdbb047d7965e85acc4f57165f",
+      "crop": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "origin": [
+        924,
+        342
+      ],
+      "label": "adult_F_fur_cloak_long_tied / v4 / S1 H4",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_F_fur_cloak_long_tied/v4/S/idle.png",
+      "sha256": "2e4b550ebf5d910ea29c2a9056f1867c5c62df405dbfec8e988ea0b5bcff8d8c",
+      "crop": [
+        0,
+        0,
+        80,
+        112
+      ],
+      "origin": [
+        1060,
+        342
+      ],
+      "label": "",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/portrait/polish2/adult_F_fur_cloak_long_tied/v5.png",
+      "sha256": "35c58c7e404e243b7e401a892b0e12afe7b557c4bcc8cd55dbb8c9860fdd25b5",
+      "crop": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "origin": [
+        1228,
+        342
+      ],
+      "label": "adult_F_fur_cloak_long_tied / v5 / S2 H3",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_F_fur_cloak_long_tied/v5/S/idle.png",
+      "sha256": "0b694f2246d3d66934226ec326e88e319ac950db5662131c83c7e19092ec9061",
+      "crop": [
+        0,
+        0,
+        80,
+        112
+      ],
+      "origin": [
+        1364,
+        342
+      ],
+      "label": "",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/portrait/polish2/adult_F_fur_cloak_long_tied/v6.png",
+      "sha256": "1b008a145edbc7ef0577d822026d26c2bbc177dd10e71711683e4117d3c92c60",
+      "crop": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "origin": [
+        1532,
+        342
+      ],
+      "label": "adult_F_fur_cloak_long_tied / v6 / S3 H2",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_F_fur_cloak_long_tied/v6/S/idle.png",
+      "sha256": "eb6250ac6d79043d4446d45791921396edd322394fc96cc463b4aab67b886700",
+      "crop": [
+        0,
+        0,
+        80,
+        112
+      ],
+      "origin": [
+        1668,
+        342
+      ],
+      "label": "",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/portrait/polish2/adult_M_fur_cloak_bun/v1.png",
+      "sha256": "70acf3e81c39690f3434a2a82392f06f93eb3d74fd32860dfd0fc31f9357c0d4",
+      "crop": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "origin": [
+        12,
+        618
+      ],
+      "label": "adult_M_fur_cloak_bun / v1 / S1 H2",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_M_fur_cloak_bun/v1/S/idle.png",
+      "sha256": "b1bb3cdaf73af0f0b3df8350d94c2c892b286d2e7cb7021056c4b2f35dbbdf95",
+      "crop": [
+        0,
+        0,
+        80,
+        112
+      ],
+      "origin": [
+        148,
+        618
+      ],
+      "label": "",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/portrait/polish2/adult_M_fur_cloak_bun/v2.png",
+      "sha256": "92369035fbee93483b4f62d3c79ef2c72c8f93c78480dfe9cbcddc8c96f9c110",
+      "crop": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "origin": [
+        316,
+        618
+      ],
+      "label": "adult_M_fur_cloak_bun / v2 / S2 H1",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_M_fur_cloak_bun/v2/S/idle.png",
+      "sha256": "dd3e33d5d3608590491d71b8a30f270f1dea582bbc47f87e324857404633fdcc",
+      "crop": [
+        0,
+        0,
+        80,
+        112
+      ],
+      "origin": [
+        452,
+        618
+      ],
+      "label": "",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/portrait/polish2/adult_M_fur_cloak_bun/v3.png",
+      "sha256": "fbdc6b3fb3570cce9e8ccc39283cd8ca2cd915beea28f29d29f2fc7c78a4ec12",
+      "crop": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "origin": [
+        620,
+        618
+      ],
+      "label": "adult_M_fur_cloak_bun / v3 / S3 H3",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_M_fur_cloak_bun/v3/S/idle.png",
+      "sha256": "d5da8882e7d33943d436c9fd72a7d713ae90aa647a905e53e782ae0dcbbf1c45",
+      "crop": [
+        0,
+        0,
+        80,
+        112
+      ],
+      "origin": [
+        756,
+        618
+      ],
+      "label": "",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/portrait/polish2/adult_M_fur_cloak_bun/v4.png",
+      "sha256": "ad8a18b557a7641abcc3b3f8fca82c3315448eb0efbe9f72bc50e13f01a2f972",
+      "crop": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "origin": [
+        924,
+        618
+      ],
+      "label": "adult_M_fur_cloak_bun / v4 / S1 H4",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_M_fur_cloak_bun/v4/S/idle.png",
+      "sha256": "a037d60466e3e3ce53df620186eca32b8d5fdaf9f73652be7743581df7d5c3a0",
+      "crop": [
+        0,
+        0,
+        80,
+        112
+      ],
+      "origin": [
+        1060,
+        618
+      ],
+      "label": "",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/portrait/polish2/adult_M_fur_cloak_bun/v5.png",
+      "sha256": "d9bfad9a1c07601e47b9158d495db6095965526883adc5beda23528a8b570e94",
+      "crop": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "origin": [
+        1228,
+        618
+      ],
+      "label": "adult_M_fur_cloak_bun / v5 / S2 H3",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_M_fur_cloak_bun/v5/S/idle.png",
+      "sha256": "a786c919905329ee25d0d18734d94a815ec384b318c6737280fd9718d0bbcf94",
+      "crop": [
+        0,
+        0,
+        80,
+        112
+      ],
+      "origin": [
+        1364,
+        618
+      ],
+      "label": "",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/portrait/polish2/adult_M_fur_cloak_bun/v6.png",
+      "sha256": "ad40a1a9b3d8892b847384e8761d5cbd989377a0781985ca11552283770004e0",
+      "crop": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "origin": [
+        1532,
+        618
+      ],
+      "label": "adult_M_fur_cloak_bun / v6 / S3 H2",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_M_fur_cloak_bun/v6/S/idle.png",
+      "sha256": "8663f04bbc7092cfe91058c94241541071fcdb59efe267105820206cc6c38119",
+      "crop": [
+        0,
+        0,
+        80,
+        112
+      ],
+      "origin": [
+        1668,
+        618
+      ],
+      "label": "",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/portrait/polish2/adult_M_fur_cloak_short/v1.png",
+      "sha256": "3dffb3dfa96d3612697948250339bf3b794edaee2424ad1b3ad2f17482e191c4",
+      "crop": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "origin": [
+        12,
+        894
+      ],
+      "label": "adult_M_fur_cloak_short / v1 / S1 H2",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_M_fur_cloak_short/v1/S/idle.png",
+      "sha256": "9b08b626e565850275aa55f8752dc20700622be702493bebc3863498b9440033",
+      "crop": [
+        0,
+        0,
+        80,
+        112
+      ],
+      "origin": [
+        148,
+        894
+      ],
+      "label": "",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/portrait/polish2/adult_M_fur_cloak_short/v2.png",
+      "sha256": "096567995575b7f7204ba525d0610dbc205dd6d546c105cdc38fcfd1c75daf2d",
+      "crop": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "origin": [
+        316,
+        894
+      ],
+      "label": "adult_M_fur_cloak_short / v2 / S2 H1",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_M_fur_cloak_short/v2/S/idle.png",
+      "sha256": "9009a3a9efe2e03f8a165bf31cc883c72afb8f64dc906b686877fe25d3d9d76b",
+      "crop": [
+        0,
+        0,
+        80,
+        112
+      ],
+      "origin": [
+        452,
+        894
+      ],
+      "label": "",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/portrait/polish2/adult_M_fur_cloak_short/v3.png",
+      "sha256": "a34602a2d763a3acef6913441781a624e8f324412457541b19141c738ab0bd37",
+      "crop": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "origin": [
+        620,
+        894
+      ],
+      "label": "adult_M_fur_cloak_short / v3 / S3 H3",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_M_fur_cloak_short/v3/S/idle.png",
+      "sha256": "afb9d60608965abf4dee85db16f24fa7c71b38edbad83e51422b1749f9a12deb",
+      "crop": [
+        0,
+        0,
+        80,
+        112
+      ],
+      "origin": [
+        756,
+        894
+      ],
+      "label": "",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/portrait/polish2/adult_M_fur_cloak_short/v4.png",
+      "sha256": "d6626a1d9822f6fad008942a6da51b50484d295321512fd56b6985ddf8fded92",
+      "crop": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "origin": [
+        924,
+        894
+      ],
+      "label": "adult_M_fur_cloak_short / v4 / S1 H4",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_M_fur_cloak_short/v4/S/idle.png",
+      "sha256": "57495fc5777ccd2f772087bdda6afbbb4443512c926c7bc14e8f16034544a534",
+      "crop": [
+        0,
+        0,
+        80,
+        112
+      ],
+      "origin": [
+        1060,
+        894
+      ],
+      "label": "",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/portrait/polish2/adult_M_fur_cloak_short/v5.png",
+      "sha256": "90b8f272d853474a798e6e0c153f0689b0d473986e347fb1a7a920201798e52a",
+      "crop": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "origin": [
+        1228,
+        894
+      ],
+      "label": "adult_M_fur_cloak_short / v5 / S2 H3",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_M_fur_cloak_short/v5/S/idle.png",
+      "sha256": "d42f262e29a0d6561e199f8426990e9eead6237247e528f9ca3777a33c79001b",
+      "crop": [
+        0,
+        0,
+        80,
+        112
+      ],
+      "origin": [
+        1364,
+        894
+      ],
+      "label": "",
+      "integer_scale": 2
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/portrait/polish2/adult_M_fur_cloak_short/v6.png",
+      "sha256": "d68892071b9f390040101986a96214bd56d7de77b428ce8d0fc70fd848dbde98",
+      "crop": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "origin": [
+        1532,
+        894
+      ],
+      "label": "adult_M_fur_cloak_short / v6 / S3 H2",
+      "integer_scale": 1
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_M_fur_cloak_short/v6/S/idle.png",
+      "sha256": "32463a5c2276f773501207485a0afcd7f1a6ae99c33df03e8fed404e6adb5c07",
+      "crop": [
+        0,
+        0,
+        80,
+        112
+      ],
+      "origin": [
+        1668,
+        894
+      ],
+      "label": "",
+      "integer_scale": 2
+    }
+  ],
+  "owner_approval": "PENDING"
+}

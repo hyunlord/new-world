@@ -227,3 +227,21 @@ writes, retain native reference0 for identity packets, and reject any conflict
 with an already sealed retry. Legacy requests keep their existing2/3/4-reference
 behavior. Independent integrity verification is required before real use;
 successful input validation does not imply that an image edit will succeed.
+
+## D17 — Keep all 48 face pairs at native scale under the per-file limit
+
+The actual final 8×6 sheet is 1848×2274 and 1,826,470 bytes after lossless
+optimization. Its SHA256 is
+`8ad918b25990b6ca7a63cad7e3635e40ad912c42d34a15c75b0628a06f161eb4`.
+It exceeds the unchanged 1,500,000-byte committed-file limit. Preserve this
+full sheet externally and commit two complementary 4×6 sheets instead:
+`faces_owner.png` for adults (928,406 bytes) and `faces_owner.children.png`
+for children (910,823 bytes), both 1848×1170. This is an explicit packaging
+deviation from the single-file 8×6 target, not a waiver of pixel scale or size.
+
+Every portrait remains exactly128px and every sprite is nearest-neighbour2x.
+No downscaling, lossy quantization, face selection change or portrait repair
+is allowed to obtain a smaller board. `faces_owner.index.json` maps all48
+look/variant pairs to both committed sheets and the hash-named full sheet.
+The full source pixels and actual exhausted portrait failures remain visible;
+board fidelity is separate from portrait acceptance and owner adoption.
