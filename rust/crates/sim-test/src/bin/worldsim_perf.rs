@@ -1,5 +1,14 @@
 //! Revitalize Pass 15 benchmark: per-system tick timings of the natural game
 //! world and of the stress world (`sim_test::perf`).
+//!
+//! M5 (goal §4): this binary, and only this binary, installs the counting
+//! allocator `sim_test::alloc::Counting`, so `bench-one` can record live heap
+//! bytes beside the RSS (`sim_test::bench`). Measurement only.
+
+/// The allocator byte counter (forwards to `System`; see `sim_test::alloc`).
+#[global_allocator]
+static ALLOC: sim_test::alloc::Counting = sim_test::alloc::Counting;
+
 fn main() -> std::process::ExitCode {
     let args: Vec<String> = std::env::args().skip(1).collect();
     if args.is_empty() || args.iter().any(|arg| arg == "--help" || arg == "-h") {

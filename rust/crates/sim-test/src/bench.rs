@@ -22,6 +22,15 @@
 //! between N = 200 and N = 2,000) and bytes per tile (192² against 64² at
 //! N = 200), the C3 ceilings as PASS/MISS, and the host load around every
 //! run. Measurement only: nothing here feeds the simulation.
+//!
+//! M5 (goal §4): beside each RSS reading the run records the live heap bytes
+//! of the counting allocator (`sim_test::alloc::Counting`, the global
+//! allocator of `worldsim_perf` only) as `alloc_bytes`; null when the counter
+//! is not installed (unit tests). The summary adds each scene's median
+//! `alloc_bytes_after_build` and the allocator column of the ledger,
+//! `alloc_per_agent` (the slope after the build between N = 200 and
+//! N = 2,000, bytes) and `alloc_per_tile` (192² against 64² at N = 200). From
+//! M5 on the regression rule uses `alloc_per_agent`; RSS stays as information.
 use serde_json::{json, Value};
 use sim_core::rules::WorldRules;
 use sim_engine::SimEngine;
@@ -98,6 +107,13 @@ pub fn rss_kib() -> Option<u64> {
     String::from_utf8_lossy(&out.stdout).trim().parse().ok()
 }
 
+/// Live heap bytes of the counting allocator (`None` when this process does
+/// not install `sim_test::alloc::Counting`, so the counter stays 0).
+pub fn alloc_bytes() -> Option<u64> {
+    let bytes = crate::alloc::live_bytes();
+    (bytes > 0).then_some(bytes)
+}
+
 /// The 1-minute load average from `uptime` (text after "load averages:").
 pub fn load_average() -> String {
     std::process::Command::new("uptime")
@@ -128,6 +144,7 @@ pub fn run_one(scene: &Scene, script_path: Option<&Path>) -> Result<Value, Strin
     };
     let load_before = load_average();
     let rss_before = rss_kib();
+    let alloc_before = alloc_bytes();
     let started = Instant::now();
     let mut engine = build_world_with(
         &WorldGenConfig::colony_stress(BENCH_SEED, scene.agents, scene.side),
@@ -135,6 +152,7 @@ pub fn run_one(scene: &Scene, script_path: Option<&Path>) -> Result<Value, Strin
     );
     let build_seconds = started.elapsed().as_secs_f64();
     let rss_built = rss_kib();
+    let alloc_built = alloc_bytes();
     let founders = crate::perf::alive(&engine);
     let mut next = 0usize;
     let mut gifts = 0u64;
@@ -177,6 +195,7 @@ pub fn run_one(scene: &Scene, script_path: Option<&Path>) -> Result<Value, Strin
     }
     let run_seconds = run_started.elapsed().as_secs_f64();
     let rss_after = rss_kib();
+    let alloc_after = alloc_bytes();
     let mut sorted = profile.tick_us.clone();
     sorted.sort_unstable();
     let total_us: u64 = sorted.iter().map(|&v| u64::from(v)).sum();
@@ -228,6 +247,7 @@ pub fn run_one(scene: &Scene, script_path: Option<&Path>) -> Result<Value, Strin
         "tick_max_us": sorted.last().copied().unwrap_or(0),
         "systems": systems,
         "rss_kib": {"before_build": rss_before, "after_build": rss_built, "after_run": rss_after},
+        "alloc_bytes": {"before_build": alloc_before, "after_build": alloc_built, "after_run": alloc_after},
         "founders": founders, "alive_after_warmup": alive_after_warmup, "alive_end": crate::perf::alive(&engine),
         "births": engine.resources.tallies.births, "deaths": deaths(&engine), "gifts": gifts,
         "jobs_taken": colony.jobs_taken, "jobs_done": colony.jobs_done,
@@ -259,6 +279,22 @@ fn median_of(runs: &[Value], path: &[&str]) -> f64 {
             })
             .collect(),
     )
+}
+
+/// Median of a numeric field over `runs`, `None` when no run has it (the
+/// allocator counter was not installed).
+fn median_opt(runs: &[Value], path: &[&str]) -> Option<f64> {
+    let values: Vec<f64> = runs
+        .iter()
+        .filter_map(|run| {
+            let mut v = run;
+            for key in path {
+                v = &v[*key];
+            }
+            v.as_f64()
+        })
+        .collect();
+    (!values.is_empty()).then(|| median(values))
 }
 
 /// The median run of `runs` by tick mean (its system table is reported).
@@ -293,6 +329,7 @@ pub fn summarise(runs: &std::collections::BTreeMap<String, Vec<Value>>, commit: 
                 "rss_kib_after_build": median_of(list, &["rss_kib", "after_build"]),
                 "rss_kib_before_build": median_of(list, &["rss_kib", "before_build"]),
                 "rss_kib_after_run": median_of(list, &["rss_kib", "after_run"]),
+                "alloc_bytes_after_build": median_opt(list, &["alloc_bytes", "after_build"]),
                 "top_systems": mid["systems"].as_array().map(|s| s.iter().take(TOP_SYSTEMS).cloned().collect::<Vec<_>>()),
                 "founders": mid["founders"], "alive_end": mid["alive_end"], "deaths": mid["deaths"],
                 "births": mid["births"], "jobs_taken": mid["jobs_taken"], "jobs_done": mid["jobs_done"],
@@ -311,6 +348,13 @@ pub fn summarise(runs: &std::collections::BTreeMap<String, Vec<Value>>, commit: 
     let per_tile = get("n200", "rss_kib_after_build")
         .zip(get("n200_side64", "rss_kib_after_build"))
         .map(|(a, b)| (a - b) * 1024.0 / f64::from(192 * 192 - 64 * 64));
+    // M5: the same slopes from the allocator counter (bytes, not KiB).
+    let alloc_per_agent = get("n2000", "alloc_bytes_after_build")
+        .zip(get("n200", "alloc_bytes_after_build"))
+        .map(|(a, b)| (a - b) / 1800.0);
+    let alloc_per_tile = get("n200", "alloc_bytes_after_build")
+        .zip(get("n200_side64", "alloc_bytes_after_build"))
+        .map(|(a, b)| (a - b) / f64::from(192 * 192 - 64 * 64));
     let verdict = |ok: Option<bool>| match ok {
         Some(true) => "PASS",
         Some(false) => "MISS",
@@ -320,6 +364,7 @@ pub fn summarise(runs: &std::collections::BTreeMap<String, Vec<Value>>, commit: 
         "commit": commit, "seed": BENCH_SEED, "warmup_ticks": WARMUP, "measured_ticks": MEASURED_TICKS,
         "scenes": scene_rows,
         "bytes_per_agent": per_agent, "bytes_per_tile": per_tile,
+        "alloc_per_agent": alloc_per_agent, "alloc_per_tile": alloc_per_tile,
         "ceilings": {
             "n1000_mean_le_5ms": verdict(get("n1000", "tick_mean_us").map(|v| v <= 5_000.0)),
             "n2000_mean_le_10ms": verdict(get("n2000", "tick_mean_us").map(|v| v <= 10_000.0)),
@@ -365,13 +410,14 @@ pub fn run_all(
             let text = std::fs::read_to_string(&file).map_err(|e| e.to_string())?;
             let run: Value = serde_json::from_str(&text).map_err(|e| e.to_string())?;
             eprintln!(
-                "bench r{repeat} {}: mean {:.1} µs p99 {} µs max {} µs alive {} rss {} KiB",
+                "bench r{repeat} {}: mean {:.1} µs p99 {} µs max {} µs alive {} rss {} KiB alloc {} B",
                 scene.label,
                 run["tick_mean_us"].as_f64().unwrap_or(0.0),
                 run["tick_p99_us"],
                 run["tick_max_us"],
                 run["alive_end"],
-                run["rss_kib"]["after_build"]
+                run["rss_kib"]["after_build"],
+                run["alloc_bytes"]["after_build"]
             );
             runs.entry(scene.label.to_string()).or_default().push(run);
         }
@@ -438,6 +484,8 @@ pub fn main(args: &[String]) -> Result<(), String> {
                     "ceilings": summary["ceilings"],
                     "bytes_per_agent": summary["bytes_per_agent"],
                     "bytes_per_tile": summary["bytes_per_tile"],
+                    "alloc_per_agent": summary["alloc_per_agent"],
+                    "alloc_per_tile": summary["alloc_per_tile"],
                 }))
                 .map_err(|e| e.to_string())?
             );
@@ -478,9 +526,12 @@ mod tests {
 
     #[test]
     fn summary_takes_medians_and_derives_memory_slopes() {
+        // The allocator bytes after the build: RSS KiB × 100 + the mean, so
+        // the median repeat (mean 200) is the one the slope must use.
         let run = |label: &str, mean: f64, rss: f64| {
             json!({"label": label, "tick_mean_us": mean, "tick_p99_us": mean * 2.0, "tick_max_us": mean * 3.0,
                    "rss_kib": {"before_build": 1000.0, "after_build": rss, "after_run": rss + 10.0},
+                   "alloc_bytes": {"before_build": 5000.0, "after_build": rss * 100.0 + mean, "after_run": rss * 100.0 + 7.0},
                    "systems": [{"name": "A", "share": 0.7}, {"name": "B", "share": 0.3}]})
         };
         let mut runs = std::collections::BTreeMap::new();
@@ -513,8 +564,34 @@ mod tests {
             (s["bytes_per_tile"].as_f64().unwrap_or(0.0) - 2_000.0 * 1024.0 / 32_768.0).abs()
                 < 1e-9
         );
+        // Allocator slopes: (4,000,200 − 2,000,200) B / 1,800 agents and
+        // (2,000,200 − 1,800,200) B / (192² − 64²) tiles.
+        assert_eq!(n200["alloc_bytes_after_build"], json!(2_000_200.0));
+        assert!((s["alloc_per_agent"].as_f64().unwrap_or(0.0) - 2_000_000.0 / 1800.0).abs() < 1e-9);
+        assert!((s["alloc_per_tile"].as_f64().unwrap_or(0.0) - 200_000.0 / 32_768.0).abs() < 1e-9);
         assert_eq!(s["ceilings"]["n1000_mean_le_5ms"], "PASS");
         assert_eq!(s["ceilings"]["bytes_per_agent_le_4096"], "MISS");
+    }
+
+    #[test]
+    fn summary_without_the_allocator_counter_writes_null() {
+        let run = |label: &str| {
+            json!({"label": label, "tick_mean_us": 100.0, "tick_p99_us": 200.0, "tick_max_us": 300.0,
+                   "rss_kib": {"before_build": 1000.0, "after_build": 2000.0, "after_run": 2010.0},
+                   "alloc_bytes": {"before_build": null, "after_build": null, "after_run": null},
+                   "systems": []})
+        };
+        let mut runs = std::collections::BTreeMap::new();
+        for label in ["n200", "n1000", "n2000", "n200_side64"] {
+            runs.insert(label.to_string(), vec![run(label)]);
+        }
+        let s = summarise(&runs, "abc");
+        assert!(s["scenes"][0]["alloc_bytes_after_build"].is_null());
+        assert!(s["alloc_per_agent"].is_null());
+        assert!(s["alloc_per_tile"].is_null());
+        assert!(s["bytes_per_agent"].is_number());
+        // The unit-test binary does not install the counter.
+        assert_eq!(alloc_bytes(), None);
     }
 
     #[test]

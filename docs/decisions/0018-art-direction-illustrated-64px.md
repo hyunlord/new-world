@@ -99,6 +99,15 @@
     whole-figure sheets generated for the owner to pick a look before any production; Part 0 delivered five
     candidates on equal-scale boards and stopped for the owner's pick. Its final state is recorded at the end of
     M4 (Part 6).
+  - ART-TRIAL5 ended failed (`v8/art-trial5` `9122b9b1`): the owner picked the whole-figure look I-1; 144 sheet
+    generations accepted 0 sheets (`stroke_q90` failed on every original).
+  - **Correction (M5 Part 0, 2026-10-23): people art is no longer parked.** ART-PROD1 (`v8/art-prod1` `eb428ce2`,
+    `docs/v8/artprod1/PROD1_REPORT.md` there) produced people by **route I** (whole-figure sheets, `TEMPLATE_V3`):
+    13 of 18 adult looks accepted (130 frames), 0 of 18 child looks — the children failed only on the sleep frame
+    (canvas normalisation and sleep width), not on what they show; the trial's own verdict was FAIL (S1, R1, P1:
+    59.3 FPS at 200 people) and route I was not yet adopted as the standard. ART-PROD2 runs on the same branch to fix
+    the sleep rule and adopt route I; its final state is recorded at the end of M5 (Part 7). The M3/M4 wording "사람
+    그림 보류" is withdrawn: people are route I, pending ART-PROD2; `route_p` pawns stay in the game until it lands.
 
 ## Date
 2026-10-22

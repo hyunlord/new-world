@@ -5,6 +5,8 @@
 //!
 //! V7 reset 0.7.0 — Phase 0 v0.1.3 patch Section 4.4.
 
+/// M5: the allocator byte counter of `worldsim_perf` (measurement only).
+pub mod alloc;
 /// M1.5: the standing colony benchmark (`worldsim_perf bench`, ADR 0016 C3).
 pub mod bench;
 /// M3 pathfinding benchmark (`worldsim_perf nav-bench`).
