@@ -1,0 +1,345 @@
+# ART-POLISH2 portrait protocol review
+
+Reviewed 2026-10-24 KST; evidence snapshot ended 2026-10-23 18:10:25 UTC.
+Scope: read-only review of the portrait preparation, processing, packet and
+scoring pipeline. Only this report was changed. No production portrait image
+was viewed, no blind reviewer role was performed, and no owner approval is
+claimed. All reproduction images were synthetic temporary fixtures.
+
+**Initial disposition: CHANGES_REQUIRED for evidence integrity.** The numeric
+thresholds, current fixed sample and ordinary shuffle/response paths are
+correct, but the initial pipeline cannot establish immutable cross-phase
+candidate identity, fresh retry reviewers, or preservation of prior scores and
+observations. These findings were handed to the portrait-pipeline executor;
+any later correction requires a separate verification entry below. They are
+not retrospective claims about misconduct or a production blind result.
+
+## Findings
+
+### P1 — Matching can use portraits different from those described
+
+- Location: `art/pipeline_polish2/blind_matching.py:54`, `:59`, `:70`, `:75`;
+  `art/pipeline_polish2/blind_models.py:57`.
+- The builder verifies the old description **panel** hash, then loads the
+  current `candidates.json` and resolves the semantic variant keys to current
+  portrait references. The private key does not bind a frozen candidate-set
+  or face-plan reference. A normal candidate update between the two phases
+  therefore changes the pictures without invalidating the descriptions.
+- Reproduction: create synthetic A/B packets, save B's six descriptions for
+  each row, replace the source portrait and update its valid `AssetRef` in
+  `candidates.json`, then call `build_matching(base, a, b_descriptions)`.
+  All eight matching rows were accepted. The old description panel's portrait
+  pixel was `[170,136,102]`; the matching panel's was `[32,32,32]`. Every old
+  description-panel hash still verified.
+- Source hashes changed from
+  `870145bf456b0c62bb5804e9831f386b1d014ae5a7b19f2e488d6cdbb0e91a0c` to
+  `13a171fc38f58f1e70f21f0a9ab0adf143c0a5db23c2d618eb3e7d98feeaeba7`.
+- Required closure: bind the exact candidate sources and sample plan for the
+  entire round, including both reviewers, description, matching and scoring;
+  reject a changed source instead of silently following the new selection.
+
+### P1 — Two NEW reviewers in round1 are not evidenced
+
+- Location: `art/pipeline_polish2/blind_models.py:15`, `:57`;
+  `art/pipeline_polish2/blind_packets.py:121`;
+  `art/pipeline_polish2/blind_score.py:111`.
+- The model records only role `A`/`B`, round and random seed. There is no actual
+  agent/session/person identity, no distinctness check between the two roles,
+  and no comparison with round0. A different seed demonstrates a new shuffle,
+  not a new reviewer. `score_reviewer()` also does not compare the key's round
+  to the requested scoring round.
+- Required closure: preserve reviewer/session evidence; require two distinct
+  identities per round and identities disjoint from round0 for round1. The
+  execution record must establish that those reviewers received only their
+  assigned packets, with no inherited production context. A/B labels alone
+  cannot establish this claim. No real retry review had occurred at snapshot.
+
+### P1 — Reprocessing can erase a prior structural failure
+
+- Location: `art/pipeline_polish2/portrait_process.py:76`, `:90`, `:91`;
+  `art/pipeline_polish2/portrait_models.py:104`.
+- Different raw bytes under an existing attempt are correctly rejected, but
+  rerunning the same raw with a different inspection overwrites
+  `tryN/processed.json` and `selected.json`. The original inspection file is
+  neither copied nor hash-bound into `Processed` (`portrait_process.py:32`).
+- Reproduction: process synthetic attempt1 with an uncropped-head observation
+  set to false and a zero margin, obtaining `FAIL`; replace only the inspection
+  with an in-canvas head and rerun the same raw/attempt. The same historical
+  `processed.json` was overwritten with `PASS`. Its output contains no
+  inspection source reference. The raw bytes remain unchanged, so the existing
+  historical-raw overwrite test does not cover this case.
+- The geometry summary also drops the supplied `hair_match`, `top_match`,
+  `extra_accessory` and `identity_note` observations. These are not additional
+  numeric geometry gates, but their original evidence should remain available.
+- Required closure: preserve the original observation bytes and their hash,
+  and reject conflicting writes or retain explicit immutable revisions with
+  the old failed result. A pending observation may be completed without
+  deleting any previous observed result.
+
+### P1 — Same-round scoring can replace previous failures
+
+- Location: `art/pipeline_polish2/blind_score.py:120`, `:121`;
+  `art/pipeline_polish2/portrait_models.py:104`.
+- Static evidence: the scorer unconditionally writes both `scores.json` and
+  `blind_scores_roundN.json`; `write_evidence()` overwrites existing files.
+  Response references hash the supplied file at scoring time, but the scorer
+  does not preserve a copy or reject a different submission at the same path.
+  A rerun with changed answers replaces the old result and its original hash.
+- Required closure: seal submitted response bytes and preserve the first
+  scored result, or use an append-only revision record that retains failures.
+  Round0 and round1 filenames are separate, which prevents cross-round
+  replacement but does not protect repeated runs within one round.
+
+## Checks that passed
+
+| Requirement | Verified evidence |
+|---|---|
+| Fixed eight looks | Current `FACE_VARIANTS.json` equals the first two lexical accepted looks in each adult-F/adult-M/child-F/child-M cohort. `blind_sample.py:25` checks eight unique looks and cohort counts. |
+| Fixed 36 identity cases | Current list equals all six variants of owner-sample indices `0,1,2,4,6,7`, exactly 36 unique cases. Covered skins S1–S3, hairs H1–H4, adult/child/older/young, clean/full/short/none beard values, and all six named feature classes. |
+| Two description directions | `blind_matching.py:96` sends B descriptions to A and A descriptions to B; `:51` rejects self matching. Synthetic description-transfer test passed. |
+| Independent shuffles | Separate per-reviewer seeds (`blind_packets.py:128`); shuffled row and option orders (`:83`, `:88`, `:94`, `:99`); matching independently shuffles picture order and line order (`blind_matching.py:71`, `:73`). |
+| Exact image scale | Independent patterned synthetic image comparison found all four 80×112 sprites equal to their exact 160×224 nearest-neighbour image, and the portrait equal to its native 128×128 pixels. Panel was 900×276 with no clipping. |
+| No ordinary packet answer leaks | Existing real-file synthetic packet test verifies opaque names and empty PNG metadata. Production builders create new panels and expose instructions/images only; keys are under separate `private/`. Matching line text is reviewer-supplied. Actual reviewer confinement still requires execution evidence. |
+| Every look at least 5/6 | `blind_score.py:89`–`:90` allows exactly one miss, rejects 4/6, and `:107` requires all eight looks. Existing tests confirm 46/48 aggregate cannot rescue a 4/6 look. Repeated image labels permit a true 5/6 result. |
+| Every reviewer at least 32/36 | `blind_score.py:105` permits at most four misses; `:118` ANDs both reviewers' identity and distinctness results. Five misses are retained by the test. |
+| Response completeness | Duplicate/missing question IDs and missing line IDs are rejected; typed literals reject invalid labels. Extra model fields are forbidden. |
+| Raw preservation | Existing processing tests confirm byte-preserved raw, exact full-frame resize, pending structure without observations, changed-reference rejection and different-raw rejection within one attempt. |
+
+## Processing geometry and evidence paths
+
+`portrait_process.py:19` imports the unchanged ENV1/POLISH `geometry()`.
+That instrument checks all face-box corners against the ellipse centred at
+`(64,61)` with radii `(44,52)`, an observed uncropped head, and a minimum 2px
+canvas margin (`art/pipeline_env1/portrait_finalize.py:95`). It uses actual
+supplied boxes, not prompt bounds. Without inspection, status remains
+`PENDING_OBSERVATION`. Inspection sheets put the native image above a 2×
+coordinate-labelled image and ellipse (`portrait_inspect.py:30`–`:37`).
+Sheet and inspection provenance is not yet sealed by the initial implementation.
+
+Expected external paths under `/Users/rexxa/work/artpolish2-data/portraits/`:
+
+- `generation/<look>/<variant>/request.json`: prompt and input references.
+- `generation/<look>/<variant>/tryN/{raw.png,canonical.png,processed.json}`:
+  attempt outputs; `selected.json` selects a current candidate.
+- `candidates.json`: selected candidate set; `inspection/packets/`: observation
+  sheets. The inspection JSON path is supplied by the caller, not standardized.
+- `blind/roundN/private/{A,B}.json`: keys;
+  `blind/roundN/packets/{A,B}/{describe,identity,match}/`: reviewer packets;
+  `blind/roundN/scores.json`: score output.
+
+Metadata-only inventory during review: **204 requests, 0 selected records,
+0 processed records, no `candidates.json`, no production inspection JSON and no
+production blind keys/scores**. Existing `pipeline_validation/` files are
+synthetic tests and are excluded. Generation and review may progress after
+this snapshot. No production geometry, distinctness or identity result is
+claimed by this report.
+
+## Commands and reproduction evidence
+
+System Python ran the eight packet/scoring tests successfully. Adding the
+processing module initially failed collection because system Python lacks
+`skimage`. The complete suite then ran in an already-cached environment; no
+dependencies were added:
+
+```sh
+/Users/rexxa/.cache/uv/archive-v0/m3Qiivy-EEbMpbyIKj-mJ/bin/python -m pytest art/pipeline_polish2/test_blind_packets.py art/pipeline_polish2/test_blind_score.py art/pipeline_polish2/test_portrait_process.py -q
+```
+
+Result: **11 passed in 6.27s**. This demonstrates existing test behavior,
+including the gaps reproduced above, rather than production acceptance.
+
+Bounded synthetic reproduction results are retained externally in
+`/Users/rexxa/work/artpolish2-data/portraits/protocol_review/`:
+
+- `candidate_mutation_reproduction.json`
+- `inspection_overwrite_reproduction.json`
+- `exact2x_reproduction.json`
+
+## Later verification
+
+Pending executor fixes and an independent recheck. Original findings and
+failed values above must remain intact when recording their disposition.
+
+### Recheck 1 — 2026-10-24 KST, 18:21 UTC snapshot
+
+**Disposition: CHANGES_REQUIRED; one remaining P1 in reviewer aggregation.**
+No production portrait content was viewed. All 22 current protocol tests
+passed in 9.21s using the same cached Python environment, adding
+`art/pipeline_polish2/test_blind_round.py` to the command above.
+
+| Initial finding | Recheck disposition and evidence |
+|---|---|
+| Candidate mutation between phases | **CLOSED for the original reproduction.** `blind_round.py:62` copies candidate/plan/image bytes into private immutable evidence; `:84` verifies original and frozen hashes. Both matching keys must share the manifest (`blind_matching.py:55`) and load it before rendering (`:58`). The mutation regression now rejects an updated source image plus internally valid replacement index; frozen-copy corruption also rejects. |
+| Two NEW reviewers | **PARTIALLY CLOSED; remaining P1 below.** `blind_models.py:26` records canonical agent task, optional session UUID, isolation declaration and hash-bound spawn receipt. The roster rejects duplicate roles/tasks/sessions (`:48`); `blind_round.py:40` rejects round1 task/session reuse and requires round0 evidence. Tests confirm two new canonical tasks work without inventing UUIDs, reused canonical tasks or sessions reject, unknown response tasks reject, and a relabelled round rejects. Actual isolation and receipt authenticity still require the recorded launch evidence. |
+| Structural-failure replacement | **CLOSED for the original reproduction.** `portrait_process.py:82` preserves original observation bytes; `:95` retains full observation plus its AssetRef; `:97` records distinct immutable revisions. The real-processing synthetic regression retains `processed.json` as FAIL and the changed observation as `processed.revision002.json` with PASS, preserving the original hair/top/accessory observations and inspection hash. `selected_revision.json` points to the current record. |
+| Same-round failure replacement | **CLOSED for the original overwrite path.** `blind_score.py:104`–`:108` preserves key and response bytes; `:136`–`:138` records immutable score revisions plus a latest pointer. An additional independent end-to-end synthetic run scored A=31/36 as FAIL, changed A's source response to 36/36, rescored, and preserved the original score and original response bytes while writing `scores.revision002.json`. This preserves history; it does not authorize a revised response as a new blind trial. |
+
+#### Remaining P1 — The aggregate scorer can count A twice
+
+- Location: `art/pipeline_polish2/blind_score.py:124`–`:135`.
+- The scorer checks each key against the roster, then checks requested round
+  and shared manifest, but never requires the **scored pair** to contain A and
+  B exactly once. A valid A key stored at `private/B.json` remains a valid A
+  assignment when loaded independently.
+- Independent reproduction: build a valid synthetic round with distinct A/B
+  roster, build A's matching packet from B's descriptions, place that valid A
+  key in both `private/A.json` and `private/B.json`, and invoke
+  `main(A_identity, A_identity, A_match, A_match)`. Actual result:
+  `passed=true`, reviewer labels `["A","A"]`, agent tasks
+  `["/synthetic/A","/synthetic/A"]`.
+- Required closure: enforce A and B exactly once in the scored pair and bind
+  each input slot to its expected role; keep distinct actual agent/session
+  evidence and the same frozen round. Add an end-to-end aggregate scorer
+  regression rather than testing only individual `score_reviewer()` calls.
+- Evidence: external `protocol_review/recheck_duplicate_reviewer_reproduction.json`.
+  The separate score-history reproduction is
+  `protocol_review/recheck_score_history.json` under the same portrait data root.
+
+The root and executor were notified immediately. This recheck does not claim
+production structure, blind success, round1 eligibility or owner acceptance.
+
+### Recheck 2 — 2026-10-24 KST, 18:25 UTC snapshot
+
+**Final bounded protocol disposition: ALL FOUR FINDINGS CLOSED.** The later
+duplicate-A aggregation finding is also **CLOSED**. This disposition applies
+to the reviewed pipeline and synthetic integrity reproductions, not to the
+quality or acceptance of any production portraits.
+
+`blind_score.py:132` now requires the scored slots to be exactly `(A, B)`;
+`:135`–`:142` verifies the shared frozen manifest, compares each complete agent
+record with its assigned roster entry, and requires distinct canonical tasks
+and distinct supplied session IDs before publishing a result.
+
+Independent rerun of the original exploit (valid distinct roster, valid A key
+copied to B's key path, A's exact identity/matching response paths supplied in
+both slots) produced:
+
+```text
+ValueError: Aggregate scoring requires exactly A and B in their assigned slots
+scores.json published: false
+```
+
+The corresponding positive control used the actual four separate synthetic
+response paths `A_identity.json`, `B_identity.json`, `A_matching.json` and
+`B_matching.json`. It produced `passed=true`, roles `[A,B]`, canonical tasks
+`[/synthetic/A,/synthetic/B]`, both session IDs `null`, identity counts
+`[36,36]`, and every distinctness look at 6/6. This confirms the fix supports
+hash-bound canonical agent/launch evidence when a separate UUID is unavailable.
+The round1 disjointness checks verified in Recheck 1 remain unchanged.
+
+Fresh full scoped verification: **24 passed in 6.11s** with the four test modules
+listed in Recheck 1. Independent negative/positive results are retained at
+`/Users/rexxa/work/artpolish2-data/portraits/protocol_review/final_aggregation_recheck.json`.
+No code or production evidence was edited by this reviewer, and no production
+portrait image was viewed. All initial failed values and intermediate findings
+remain above. Actual reviewer launch isolation, production geometry, both
+production blind gates and owner choice still require their own evidence.
+
+### Source-appearance/request repair review — 2026-10-24 KST, 18:51 UTC
+
+**Disposition for this subsequent change: CHANGES_REQUIRED for one stale-envelope
+guard gap.** The five earlier blind/evidence findings remain closed; this is a
+separate bounded preparation/provenance review. No generation, code changes,
+staging or production portrait-content review was performed.
+
+#### P1 — Preparation and processing accept a changed source-observation envelope
+
+- Locations: `art/pipeline_polish2/portrait_appearance.py:79`–`:85` and
+  `art/pipeline_polish2/portrait_process.py:60`–`:66`.
+- `compile_appearance()` records hashes for the source-envelope files, but
+  `appearance_for()` verifies only the original sprite reference. Processing
+  verifies the compiled appearance manifest and original sprite, but does not
+  validate the manifest's envelope references. Thus changing a source-review
+  envelope after compilation can silently leave its old brief in a new request.
+- Independent synthetic reproduction: compile a valid appearance manifest,
+  replace the envelope's `appearance_brief` with a different synthetic
+  observation, then run actual `prepare()` and `process()`. Preparation accepted
+  one request with the old brief; the updated brief was absent. Processing
+  published its synthetic candidate with `PENDING_OBSERVATION`, despite the
+  envelope hash mismatch.
+- Required closure: verify all linked source-envelope hashes when loading
+  appearance evidence for preparation and again before processing. Recompiling
+  a deliberately updated provisional manifest is legitimate; silently accepting
+  a changed envelope behind an already compiled manifest is the missing guard.
+- Evidence: external
+  `protocol_review/changed_appearance_envelope_reproduction.json`.
+
+The current workspace manifest has stale hashes for both source-envelope files,
+but those files are intentionally still under revision and no new generation
+request has been dispatched from this provisional repair. **This is not a
+finding of production corruption.** All 34 current compiled appearance briefs
+still equal their current envelope briefs. The root confirmed that final
+compilation/request preparation waits for the source-review freeze. The stale
+provisional metadata demonstrates why the API guard must exist before use.
+
+#### Verified preservation and requested boundaries
+
+| Check | Fresh result |
+|---|---|
+| Original 30 requests | **30/30 byte-identical** to their `try1_inputs/request.json` snapshots. |
+| Original 30 raws | **30/30 byte-identical** between `try1.png` and preserved `try1/raw.png`. No image content was viewed. |
+| Source coverage and original hashes | Current appearance manifest covers exactly all **34 accepted looks**; all 34 references point to each look's original `S/idle.png`, and all 34 hashes verify. Importer rejects a changed original source and requires exact plan coverage (`portrait_appearance.py:56`). |
+| Exact third reference | Independent per-pixel comparison checked every synthetic native RGBA pixel against all 16 pixels in its 4×4 block. Dimensions, mode and alpha all match. No resize call was used to compute that expected comparison. |
+| Ordered references | `build_request()` keeps native tinted sprite first, style anchor second, exact enlargement third (`portrait_prepare.py:73`). `Candidate.sprite` still uses reference0 (`portrait_process.py:99`). |
+| Legacy two references | Existing legacy JSON parses as attempt1 with no fabricated appearance metadata; processing tests still accept the two-reference path with valid original hashes. |
+| Separate immutable retry | Independent end-to-end preparation retained original request/raw bytes, emitted `try2.request.json` and a single `try2.queue.json` object, and accepted an identical repeat. Conflicting retry preparation rejected without replacing the first retry request. |
+| Explicit attempt2 and paths | Retry request, queue and processed candidate all identify attempt2. Queue `request_path` points exactly to `try2.request.json`; current corrected native reference, previous request hash and original face-plan hash are bound. |
+| Limits and mismatch rejection | Preparing a retry from an attempt2 request, conflicting retry contents, processing retry2 as attempt1, and constructing processing attempt3 all rejected in the independent check. Existing tests also reject processing a first-attempt request as attempt2. |
+| Mutable compiled manifest/original sprite | Current processing tests reject either mutation before publishing a candidate. The remaining gap is the linked source-envelope hash described above. |
+
+Fresh scoped suite: **32 passed in 6.18s**, adding
+`art/pipeline_polish2/test_portrait_prepare.py` to the previous four modules.
+The suite covers the requested preparation, preservation, retry and processing
+paths as well as all previous blind-scoring regressions. No dependencies were
+added.
+
+Additional external evidence under
+`/Users/rexxa/work/artpolish2-data/portraits/protocol_review/`:
+
+- `source_appearance_original_preservation.json`: all 30 key/hash comparisons.
+- `current_appearance_provenance.json`: exact coverage, 34 source checks and
+  provisional envelope-hash differences.
+- `source_appearance_scale_retry_checks.json`: independent pixel-block, retry,
+  immutable-input and attempt-rejection results.
+
+The root was notified of the missing guard. Production appearance quality,
+geometry, blind results and owner choice remain outside this review's claims.
+
+### Linked-envelope guard recheck — 2026-10-24 KST, 18:55 UTC
+
+**Disposition: linked-envelope P1 CLOSED.** All earlier blind/evidence findings
+remain closed. Original failure evidence and provisional-state caveats remain
+above; the production appearance manifest was not recompiled or otherwise
+changed by this review.
+
+`portrait_appearance.py:79`–`:85` now verifies the compiled manifest and every
+linked envelope reference. `appearance_for()` uses that shared guard before
+request preparation (`:90`); processing uses the same guard before creating
+an attempt directory or writing a candidate (`portrait_process.py:65`).
+
+Independent reruns of the edited-brief reproduction, using separate synthetic
+workspaces for each path, returned:
+
+- **Preparation:** changed source-envelope brief rejected with `ValueError`;
+  zero request files written.
+- **Processing:** prepare a valid request, then change its envelope brief;
+  rejected with `ValueError`, no candidate published and no attempt directory
+  created.
+- **Valid control:** unchanged manifest/envelope prepared and processed
+  successfully with the source brief, three references,
+  `structure_status=PENDING_OBSERVATION` and `owner_adopted=false`.
+
+Fresh original-evidence recheck: all **30/30 requests and 30/30 raws** still
+match both their preserved snapshots and the hashes recorded by the preceding
+review. Scoped verification: **36 tests passed**, including four regressions
+covering each linked envelope independently in preparation and processing.
+No dependencies were added and no production candidate content was viewed.
+
+Independent evidence under external `portraits/protocol_review/`:
+
+- `linked_envelope_final_recheck.json`
+- `linked_envelope_originals_recheck.json`
+
+The intentionally provisional production manifest still requires compilation
+after the source-review freeze. This review establishes the rejection guard
+and valid synthetic path, not source-review readiness or portrait acceptance.
