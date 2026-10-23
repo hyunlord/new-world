@@ -1,0 +1,3421 @@
+{
+  "schema": 1,
+  "inventory_kind": "frozen simulation drawable audit; production acceptance is separate",
+  "source_commit": "3a3b236c125c0c25e9b74261be88536473fc01e9",
+  "art_base": "159ef0f9a1cfb7ee9e6005e85d5388d677e07fa8",
+  "snapshot_schema_version": 5,
+  "source_worktree": "/Users/rexxa/work/artenv1-data/probe-worktree",
+  "source_files": [
+    {
+      "path": "docs/v8/snapshot_schema.md",
+      "sha256": "d604a5a9b498e3f764bdbd240b4f326f733be2c2d9d33b369e4ae237d5575c3e"
+    },
+    {
+      "path": "rust/crates/sim-bridge/src/ffi/space.rs",
+      "sha256": "a5527afe3ca95b67de4de6671e225750e2239696b19f87b8448f85acd42883de"
+    },
+    {
+      "path": "rust/crates/sim-core/data/colony/recipes.ron",
+      "sha256": "334b3553c724773bd20065a433b2e4753a16e62c521c6ec843f86146703a573a"
+    },
+    {
+      "path": "rust/crates/sim-core/src/chronicle.rs",
+      "sha256": "1def91117d735bba9c803dbba70dcc2026d736d0bcc57495475f87eeaee1ac12"
+    },
+    {
+      "path": "rust/crates/sim-core/src/colony/items.rs",
+      "sha256": "a4456c768bb9b4c992fc5cf9c429fd047d2c1c2cf5fac17e6e52d42d04748002"
+    },
+    {
+      "path": "rust/crates/sim-core/src/colony/job.rs",
+      "sha256": "f159e4db70981e99e8c727ad34292c432a2a3750af88642efbb8d213f63bcbb9"
+    },
+    {
+      "path": "rust/crates/sim-core/src/colony/orders.rs",
+      "sha256": "e9b0ab34c8dc9e0563789aaf4305f09283838e260bc6ca4d436a1c8482a11c73"
+    },
+    {
+      "path": "rust/crates/sim-core/src/colony/people.rs",
+      "sha256": "62e021a9a5af8f808a770a9449052f894624bd2fceec7c8460cbab4b6eb45d95"
+    },
+    {
+      "path": "rust/crates/sim-core/src/colony/story.rs",
+      "sha256": "56a382187c821c9a0737791938010856a40f0b6817c9e1da36cf1bcb66a0d719"
+    },
+    {
+      "path": "rust/crates/sim-core/src/colony/wildlife.rs",
+      "sha256": "980297be752b10c34c13047011806711fcbfc7ca696ccfb34f522c90d56b42b2"
+    },
+    {
+      "path": "rust/crates/sim-core/src/colony/workshop.rs",
+      "sha256": "d151c09a046ab7ac93aa8ef180ba4c4ef0735e8348a1fa9fc5bd76a78bd1f8bb"
+    },
+    {
+      "path": "rust/crates/sim-core/src/components/activity.rs",
+      "sha256": "7e837c3cbc208d6fc17783362e623ce5e8b3c40d8478be4a835a8d340094c412"
+    },
+    {
+      "path": "rust/crates/sim-core/src/components/building_kind.rs",
+      "sha256": "8a6968a319877b5ac91cd559f0e638255df3f9904933f886f9c748019f097cf9"
+    },
+    {
+      "path": "rust/crates/sim-core/src/material/terrain.rs",
+      "sha256": "21327f2fc13a338f959c8ac4ea5b2a519e4d22c79e492804dc7c66b456d61c98"
+    },
+    {
+      "path": "rust/crates/sim-core/src/rooms.rs",
+      "sha256": "0e9381689086deac0da8e97ac904e6371ae657688fe37bbc9f94e534ff1a53aa"
+    },
+    {
+      "path": "rust/crates/sim-test/src/probe/ascii.rs",
+      "sha256": "0b911d6ba5dda529013411e10504ee0e49c9be10d78650c3771ba84f0bb61d2a"
+    },
+    {
+      "path": "scripts/ui/economy_text.gd",
+      "sha256": "cddee8a324faef9cdabfb5b6567ee936408f1c3d4d3a9e55b43a835ddb6c26d5"
+    },
+    {
+      "path": "scripts/world/colony/agent_layer.gd",
+      "sha256": "f34f00aa03a596984b32579419a506d8da21c8dd9c639f37aa049c834507730f"
+    },
+    {
+      "path": "scripts/world/colony/animal_layer.gd",
+      "sha256": "80049b96f8b5cafa408146c70b0ede5ad4904dc6e42b282b7e36af595a83e8e6"
+    },
+    {
+      "path": "scripts/world/colony/building_layer.gd",
+      "sha256": "bde7631ba39ca4568a8cc9d7848162c1bb8e44a74db6f586c68d2fb4919f0e29"
+    },
+    {
+      "path": "scripts/world/colony/overlay_layer.gd",
+      "sha256": "bfc89cfd633876c515d4dc3a546428a61f1e9c6639059e0eddbe74886ae71918"
+    },
+    {
+      "path": "scripts/world/colony/room_layer.gd",
+      "sha256": "401ba2d1c7ff8b5dbbbc3095e430b9040258dafdffb66d22e482349502fecb52"
+    },
+    {
+      "path": "scripts/world/colony/terrain_layer.gd",
+      "sha256": "e159e60432f4fe8f69a4b8a47d110d19f799b920b9a1b6be2b46f1db86411230"
+    },
+    {
+      "path": "scripts/world/colony/tree_layer.gd",
+      "sha256": "c9a1a3e6219b2b4cca7503c00e0583aab80cd7f7569c268ab173cbd7815c68ca"
+    }
+  ],
+  "enum_audit": {
+    "TerrainType": {
+      "path": "rust/crates/sim-core/src/material/terrain.rs",
+      "count": 10,
+      "variants": [
+        "Plain",
+        "Forest",
+        "Mountain",
+        "Hill",
+        "River",
+        "Coast",
+        "Desert",
+        "Tundra",
+        "Swamp",
+        "Cave"
+      ]
+    },
+    "ItemKind": {
+      "path": "rust/crates/sim-core/src/colony/items.rs",
+      "count": 17,
+      "variants": [
+        "Log",
+        "Firewood",
+        "Stone",
+        "Flint",
+        "FlintBlade",
+        "StoneAxe",
+        "Hide",
+        "Clay",
+        "RawPot",
+        "ClayPot",
+        "GroundAxe",
+        "Meat",
+        "CuredHide",
+        "HideWrap",
+        "FurCloak",
+        "Spear",
+        "WolfHide"
+      ]
+    },
+    "BuildingKind": {
+      "path": "rust/crates/sim-core/src/components/building_kind.rs",
+      "count": 4,
+      "variants": [
+        "Hearth",
+        "Shelter",
+        "Stockpile",
+        "Hut"
+      ]
+    },
+    "BlueprintKind": {
+      "path": "rust/crates/sim-core/src/colony/orders.rs",
+      "count": 12,
+      "variants": [
+        "Hut",
+        "KnappingSpot",
+        "WoodBench",
+        "DryingRack",
+        "LogWall",
+        "StoneWall",
+        "Door",
+        "PackedFloor",
+        "Bedroll",
+        "GrindingStone",
+        "PotteryBench",
+        "HearthFire"
+      ]
+    },
+    "NodeKind": {
+      "path": "rust/crates/sim-core/src/colony/orders.rs",
+      "count": 3,
+      "variants": [
+        "Boulder",
+        "FlintOutcrop",
+        "ClayBank"
+      ]
+    },
+    "Designation": {
+      "path": "rust/crates/sim-core/src/colony/orders.rs",
+      "count": 6,
+      "variants": [
+        "Chop",
+        "Quarry",
+        "Dig",
+        "Deconstruct",
+        "ClayPit",
+        "Hunt"
+      ]
+    },
+    "ZoneKind": {
+      "path": "rust/crates/sim-core/src/colony/orders.rs",
+      "count": 1,
+      "variants": [
+        "Stockpile"
+      ]
+    },
+    "RoomRole": {
+      "path": "rust/crates/sim-core/src/rooms.rs",
+      "count": 5,
+      "variants": [
+        "Unassigned",
+        "Bedroom",
+        "Storehouse",
+        "Workshop",
+        "Hall"
+      ]
+    },
+    "AnimalKind": {
+      "path": "rust/crates/sim-core/src/colony/wildlife.rs",
+      "count": 2,
+      "variants": [
+        "Wolf",
+        "Deer"
+      ]
+    },
+    "AnimalState": {
+      "path": "rust/crates/sim-core/src/colony/wildlife.rs",
+      "count": 6,
+      "variants": [
+        "Wander",
+        "Flee",
+        "Rest",
+        "Hunt",
+        "Attack",
+        "Retreat"
+      ]
+    },
+    "Top": {
+      "path": "rust/crates/sim-core/src/colony/people.rs",
+      "count": 2,
+      "variants": [
+        "HideWrap",
+        "FurCloak"
+      ]
+    },
+    "JobKind": {
+      "path": "rust/crates/sim-core/src/colony/job.rs",
+      "count": 16,
+      "variants": [
+        "Chop",
+        "Haul",
+        "Deliver",
+        "Build",
+        "Quarry",
+        "Supply",
+        "Gather",
+        "Dig",
+        "Deconstruct",
+        "Clear",
+        "DigClay",
+        "Teach",
+        "Learn",
+        "Hunt",
+        "Equip",
+        "Craft"
+      ]
+    },
+    "ActivityKind": {
+      "path": "rust/crates/sim-core/src/components/activity.rs",
+      "count": 7,
+      "variants": [
+        "TendFire",
+        "Craft",
+        "Repair",
+        "HearthCircle",
+        "Explore",
+        "Play",
+        "SitByFire"
+      ]
+    },
+    "RecipeKind": {
+      "path": "rust/crates/sim-core/src/colony/workshop.rs",
+      "count": 11,
+      "variants": [
+        "KnapBlade",
+        "HaftAxe",
+        "SplitFirewood",
+        "KnapFineBlade",
+        "GrindAxe",
+        "FormPot",
+        "FirePot",
+        "HaftSpear",
+        "ScrapeHide",
+        "MakeHideWrap",
+        "MakeFurCloak"
+      ]
+    },
+    "PressureKind": {
+      "path": "rust/crates/sim-core/src/colony/story.rs",
+      "count": 4,
+      "variants": [
+        "ColdSnap",
+        "Drought",
+        "Beasts",
+        "Illness"
+      ]
+    },
+    "ChronicleKind": {
+      "path": "rust/crates/sim-core/src/chronicle.rs",
+      "count": 38,
+      "variants": [
+        "Born",
+        "FoundingMember",
+        "Paired",
+        "CameOfAge",
+        "BecameElder",
+        "Departed",
+        "DepartureCancelled",
+        "Settled",
+        "Joined",
+        "LeftSettlement",
+        "Widowed",
+        "Died",
+        "SettlementFormed",
+        "FissionStarted",
+        "DaughterFounded",
+        "FissionCancelled",
+        "SettlementDissolved",
+        "PorterDeparted",
+        "PorterDelivered",
+        "Quarrel",
+        "VillagesEstranged",
+        "VillagesReconciled",
+        "HutBuilt",
+        "RoomFormed",
+        "ToolBroke",
+        "KnowledgeLearned",
+        "KnowledgeDiscovered",
+        "KnowledgeAtRisk",
+        "KnowledgeLost",
+        "PressureBegan",
+        "PressureEnded",
+        "Hunted",
+        "Fight",
+        "Breakdown",
+        "Drafted",
+        "WolfKilled",
+        "Sick",
+        "Recovered"
+      ]
+    }
+  },
+  "rows": [
+    {
+      "id": "T00",
+      "category": "terrain",
+      "name": "Plain",
+      "sim_code": "TerrainType::Plain=0",
+      "tile_footprint": "1×1",
+      "states": "기본 / day / night / winter; ground cap 적용",
+      "existing_assets": [
+        "art/style05/env/ground/meadow.png",
+        "art/style05/env/ground/dark_grass.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 tone cap",
+      "note": "두 grass 톤은 시각 변형이며 별도 sim biome가 아니다.",
+      "source_refs": [
+        "rust/crates/sim-core/src/material/terrain.rs:10",
+        "scripts/world/colony/terrain_layer.gd:115"
+      ]
+    },
+    {
+      "id": "T01",
+      "category": "terrain",
+      "name": "Forest",
+      "sim_code": "TerrainType::Forest=1",
+      "tile_footprint": "1×1",
+      "states": "기본 / day / night / winter; ground cap 적용",
+      "existing_assets": [
+        "art/style05/env/ground/forest_floor.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 tone cap",
+      "note": "실제 나무는 get_trees 별도 레이어.",
+      "source_refs": [
+        "rust/crates/sim-core/src/material/terrain.rs:10",
+        "scripts/world/colony/terrain_layer.gd:115"
+      ]
+    },
+    {
+      "id": "T02",
+      "category": "terrain",
+      "name": "Mountain",
+      "sim_code": "TerrainType::Mountain=2",
+      "tile_footprint": "1×1",
+      "states": "기본 / day / night / winter; ground cap 적용",
+      "existing_assets": [
+        "art/style05/env/ground/hill_rock.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 tone cap",
+      "note": "암석 표면 재사용만 가능; cliff/top 전용 실루엣은 T10에서 따로 미충족 처리.",
+      "source_refs": [
+        "rust/crates/sim-core/src/material/terrain.rs:10",
+        "scripts/world/colony/terrain_layer.gd:115"
+      ]
+    },
+    {
+      "id": "T03",
+      "category": "terrain",
+      "name": "Hill",
+      "sim_code": "TerrainType::Hill=3",
+      "tile_footprint": "1×1",
+      "states": "기본 / day / night / winter; ground cap 적용",
+      "existing_assets": [
+        "art/style05/env/ground/hill_rock.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 tone cap",
+      "note": "미굴착 hill; 가장자리와 굴착면은 T11/T12.",
+      "source_refs": [
+        "rust/crates/sim-core/src/material/terrain.rs:10",
+        "scripts/world/colony/terrain_layer.gd:115"
+      ]
+    },
+    {
+      "id": "T04",
+      "category": "terrain",
+      "name": "River",
+      "sim_code": "TerrainType::River=4",
+      "tile_footprint": "1×1",
+      "states": "기본 / day / night / winter; ground cap 적용",
+      "existing_assets": [
+        "art/style05/env/ground/river_bank.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 tone cap",
+      "note": "기존 강둑만 검증된 자산; 물 내부와 모든 접속형은 T13에서 따로 미충족 처리.",
+      "source_refs": [
+        "rust/crates/sim-core/src/material/terrain.rs:10",
+        "scripts/world/colony/terrain_layer.gd:115"
+      ]
+    },
+    {
+      "id": "T05",
+      "category": "terrain",
+      "name": "Coast",
+      "sim_code": "TerrainType::Coast=5",
+      "tile_footprint": "1×1",
+      "states": "기본 / day / night / winter; ground cap 적용",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → 보류: 전용 해안 자산 없음. 필수 M3–M5 리허설 외 biome라 ENV1에서는 보류; river_bank를 해안 수락으로 세지 않는다.",
+      "note": "전용 해안 자산 없음. 필수 M3–M5 리허설 외 biome라 ENV1에서는 보류; river_bank를 해안 수락으로 세지 않는다.",
+      "source_refs": [
+        "rust/crates/sim-core/src/material/terrain.rs:10",
+        "scripts/world/colony/terrain_layer.gd:115"
+      ]
+    },
+    {
+      "id": "T06",
+      "category": "terrain",
+      "name": "Desert",
+      "sim_code": "TerrainType::Desert=6",
+      "tile_footprint": "1×1",
+      "states": "기본 / day / night / winter; ground cap 적용",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → 보류: 전용 사막 자산 없음. 필수 M3–M5 리허설 외 biome라 보류; packed earth는 사막 수락이 아니다.",
+      "note": "전용 사막 자산 없음. 필수 M3–M5 리허설 외 biome라 보류; packed earth는 사막 수락이 아니다.",
+      "source_refs": [
+        "rust/crates/sim-core/src/material/terrain.rs:10",
+        "scripts/world/colony/terrain_layer.gd:115"
+      ]
+    },
+    {
+      "id": "T07",
+      "category": "terrain",
+      "name": "Tundra",
+      "sim_code": "TerrainType::Tundra=7",
+      "tile_footprint": "1×1",
+      "states": "기본 / day / night / winter; ground cap 적용",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → 보류: 전용 툰드라 자산 없음. 겨울 눈 tone은 계절 처리이며 biome 자산을 대체하지 않아 보류.",
+      "note": "전용 툰드라 자산 없음. 겨울 눈 tone은 계절 처리이며 biome 자산을 대체하지 않아 보류.",
+      "source_refs": [
+        "rust/crates/sim-core/src/material/terrain.rs:10",
+        "scripts/world/colony/terrain_layer.gd:115"
+      ]
+    },
+    {
+      "id": "T08",
+      "category": "terrain",
+      "name": "Swamp",
+      "sim_code": "TerrainType::Swamp=8",
+      "tile_footprint": "1×1",
+      "states": "기본 / day / night / winter; ground cap 적용",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → 보류: 전용 늪 바닥 없음. reeds 보유만으로 지형 커버리지 충족 아님; 필수 리허설 외 biome라 보류.",
+      "note": "전용 늪 바닥 없음. reeds 보유만으로 지형 커버리지 충족 아님; 필수 리허설 외 biome라 보류.",
+      "source_refs": [
+        "rust/crates/sim-core/src/material/terrain.rs:10",
+        "scripts/world/colony/terrain_layer.gd:115"
+      ]
+    },
+    {
+      "id": "T09",
+      "category": "terrain",
+      "name": "Cave",
+      "sim_code": "TerrainType::Cave=9",
+      "tile_footprint": "1×1",
+      "states": "기본 / day / night / winter; ground cap 적용",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → 보류: 전용 동굴 지형 없음. dug rock은 M3 바닥이며 Cave 전체가 아님; 필수 리허설 외 biome라 보류.",
+      "note": "전용 동굴 지형 없음. dug rock은 M3 바닥이며 Cave 전체가 아님; 필수 리허설 외 biome라 보류.",
+      "source_refs": [
+        "rust/crates/sim-core/src/material/terrain.rs:10",
+        "scripts/world/colony/terrain_layer.gd:115"
+      ]
+    },
+    {
+      "id": "T10",
+      "category": "terrain",
+      "name": "Mountain top / cliff",
+      "sim_code": "TerrainType::Mountain=2, N/S 경계",
+      "tile_footprint": "1×1",
+      "states": "top / cliff / interior",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → 보류: 전용 절벽은 필수 제작 목록 외; hill_rock 재사용을 절벽 커버리지로 세지 않음",
+      "note": "현재 renderer는 mountain_top_0..2, mountain_cliff를 분리한다.",
+      "source_refs": [
+        "scripts/world/colony/terrain_layer.gd:115"
+      ]
+    },
+    {
+      "id": "T11",
+      "category": "terrain",
+      "name": "Hill edge",
+      "sim_code": "TerrainType::Hill=3와 이웃 지형",
+      "tile_footprint": "1×1",
+      "states": "N/E/S/W 경계와 연속 edge",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 hill edge",
+      "note": "64px 타일 접속 검증; 내부 hill_rock과 별개.",
+      "source_refs": [
+        "scripts/world/colony/terrain_layer.gd:123"
+      ]
+    },
+    {
+      "id": "T12",
+      "category": "terrain",
+      "name": "Dug face",
+      "sim_code": "get_space.dug_xs/ys와 Hill 경계",
+      "tile_footprint": "1×1",
+      "states": "N/E/S/W 노출 굴착면",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 dug face",
+      "note": "floor_rock 위 경계; bridge에 독립 face kind는 없다.",
+      "source_refs": [
+        "rust/crates/sim-bridge/src/ffi/space.rs:230"
+      ]
+    },
+    {
+      "id": "T13",
+      "category": "terrain",
+      "name": "River interior and bank joins",
+      "sim_code": "TerrainType::River=4, N/E/S/W land mask",
+      "tile_footprint": "1×1",
+      "states": "deep / shallow / bank mask1..15 / four inner corners",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → 보류: river_bank 1장으로 전 접속형 수락을 주장하지 않음; 필수 ford는 B17 별도 제작",
+      "note": "현재 renderer의 water/shallow/bank는 별개 시각 파생; map topology의 빈틈으로 인계.",
+      "source_refs": [
+        "scripts/world/colony/terrain_layer.gd:204"
+      ]
+    },
+    {
+      "id": "T14",
+      "category": "terrain",
+      "name": "Worn camp ground",
+      "sim_code": "hearth 거리와 terrain의 시각 hash",
+      "tile_footprint": "1×1",
+      "states": "packed interior / grass edge",
+      "existing_assets": [
+        "art/style05/env/ground/packed_earth.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 tone cap",
+      "note": "미시뮬레이션 마모 장식; PackedFloor와 다른 사용.",
+      "source_refs": [
+        "scripts/world/colony/terrain_layer.gd:158"
+      ]
+    },
+    {
+      "id": "N00",
+      "category": "nature",
+      "name": "oak standing tree",
+      "sim_code": "get_trees; hash 0..4",
+      "tile_footprint": "root 1×1; crown may overlap",
+      "states": "small / middle / large; chop mark overlay",
+      "existing_assets": [
+        "art/style05/env/plants/oak_small.png",
+        "art/style05/env/plants/oak_large.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·중간은 동일 전체 sprite 기하 scale",
+      "note": "수종·크기는 시뮬레이션 kind가 아닌 현재 renderer hash; root와 canopy 크기를 혼동하지 않음.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/orders.rs:10",
+        "scripts/world/colony/tree_layer.gd:21",
+        "scripts/world/colony/tree_layer.gd:172"
+      ]
+    },
+    {
+      "id": "N01",
+      "category": "nature",
+      "name": "birch standing tree",
+      "sim_code": "get_trees; hash 5..7",
+      "tile_footprint": "root 1×1; crown may overlap",
+      "states": "small / middle / large; chop mark overlay",
+      "existing_assets": [
+        "art/style05/env/plants/birch_small.png",
+        "art/style05/env/plants/birch_large.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·중간은 동일 전체 sprite 기하 scale",
+      "note": "수종·크기는 시뮬레이션 kind가 아닌 현재 renderer hash; root와 canopy 크기를 혼동하지 않음.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/orders.rs:10",
+        "scripts/world/colony/tree_layer.gd:21",
+        "scripts/world/colony/tree_layer.gd:172"
+      ]
+    },
+    {
+      "id": "N02",
+      "category": "nature",
+      "name": "pine standing tree",
+      "sim_code": "get_trees; hash 8..9",
+      "tile_footprint": "root 1×1; crown may overlap",
+      "states": "small / middle / large; chop mark overlay",
+      "existing_assets": [
+        "art/style05/env/plants/pine_small.png",
+        "art/style05/env/plants/pine_large.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·중간은 동일 전체 sprite 기하 scale",
+      "note": "수종·크기는 시뮬레이션 kind가 아닌 현재 renderer hash; root와 canopy 크기를 혼동하지 않음.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/orders.rs:10",
+        "scripts/world/colony/tree_layer.gd:21",
+        "scripts/world/colony/tree_layer.gd:172"
+      ]
+    },
+    {
+      "id": "N03",
+      "category": "nature",
+      "name": "Tree stump",
+      "sim_code": "get_trees 이전 read−현재 read",
+      "tile_footprint": "1×1",
+      "states": "벌목 후 1440 tick / 만료",
+      "existing_assets": [
+        "art/style05/env/misc/stump.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용",
+      "note": "stump collector 없음; 누적 read가 없으면 첫 화면의 그루터기는 알 수 없다.",
+      "source_refs": [
+        "scripts/world/colony/tree_layer.gd:136",
+        "docs/v8/snapshot_schema.md:530"
+      ]
+    },
+    {
+      "id": "N04",
+      "category": "nature",
+      "name": "Berry bush / food source",
+      "sim_code": "get_resource_snapshot.kinds=0",
+      "tile_footprint": "source 1×1; art96×96",
+      "states": "amount>0 full / amount=0 bare",
+      "existing_assets": [
+        "art/style05/env/plants/berry_full.png",
+        "art/style05/env/plants/berry_bare.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용",
+      "note": "ASCII에 없는 source.",
+      "source_refs": [
+        "scripts/world/colony/tree_layer.gd:223",
+        "docs/v8/snapshot_schema.md:450"
+      ]
+    },
+    {
+      "id": "N05",
+      "category": "nature",
+      "name": "Water source",
+      "sim_code": "get_resource_snapshot.kinds=1",
+      "tile_footprint": "1×1",
+      "states": "available amount; no standalone sprite",
+      "existing_assets": [
+        "art/style05/env/ground/river_bank.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·ground와 결합",
+      "note": "독립 물통·샘을 생성하지 않는다. 현재 nature layer도 별도 drawing 없음.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md:450",
+        "scripts/world/colony/tree_layer.gd:231"
+      ]
+    },
+    {
+      "id": "N06",
+      "category": "nature",
+      "name": "Sleep source",
+      "sim_code": "get_resource_snapshot.kinds=2",
+      "tile_footprint": "1×1 sim source",
+      "states": "available / occupied",
+      "existing_assets": [
+        "art/style05/env/buildings/lean_to.png",
+        "art/style05/env/buildings/hut.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·건물/침상 표시에 결합",
+      "note": "source 자체는 독립 물체 아님.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md:450",
+        "scripts/world/colony/tree_layer.gd:231"
+      ]
+    },
+    {
+      "id": "N07",
+      "category": "nature",
+      "name": "Deadwood source",
+      "sim_code": "get_resource_snapshot.kinds=3",
+      "tile_footprint": "1×1",
+      "states": "amount>0 / depleted(undrawn)",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → 보류: 자연 잔가지 고유 silhouette 미제작; 통나무 더미로 같다고 주장하지 않음",
+      "note": "ASCII에 없음; 현재 renderer는 deadwood sprite.",
+      "source_refs": [
+        "scripts/world/colony/tree_layer.gd:234"
+      ]
+    },
+    {
+      "id": "N08",
+      "category": "nature",
+      "name": "Boulder node",
+      "sim_code": "NodeKind::Boulder=0",
+      "tile_footprint": "1×1",
+      "states": "left>0; exhausted removed",
+      "existing_assets": [
+        "art/style05/env/misc/boulder_small.png",
+        "art/style05/env/misc/boulder_large.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용",
+      "note": "Stone ground item과 node를 구분.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/orders.rs:17"
+      ]
+    },
+    {
+      "id": "N09",
+      "category": "nature",
+      "name": "Flint outcrop node",
+      "sim_code": "NodeKind::FlintOutcrop=1",
+      "tile_footprint": "1×1",
+      "states": "left>0; exhausted removed",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → 보류: flint_pile은 채굴 지층이 아닌 item; mandatory fixtures 후속 후보",
+      "note": "현재 05에 고유 outcrop 없음.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/orders.rs:17",
+        "scripts/world/colony/overlay_layer.gd:42"
+      ]
+    },
+    {
+      "id": "N10",
+      "category": "nature",
+      "name": "Clay bank node",
+      "sim_code": "NodeKind::ClayBank=2",
+      "tile_footprint": "1×1",
+      "states": "full / depleted",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 clay bank full+depleted",
+      "note": "left=0에서 node 제거; depleted는 요청된 리허설 시각 상태이지 지속 sim node 아님.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/orders.rs:17",
+        "rust/crates/sim-core/src/colony/orders.rs:46"
+      ]
+    },
+    {
+      "id": "N11",
+      "category": "nature",
+      "name": "Reeds decoration",
+      "sim_code": "no distinct sim code",
+      "tile_footprint": "root 1×1; art96×96",
+      "states": "static",
+      "existing_assets": [
+        "art/style05/env/plants/reeds.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·선언 장식만",
+      "note": "별도 simulation plant로 세지 않는다.",
+      "source_refs": [
+        "art/style05/env/plants/reeds.json"
+      ]
+    },
+    {
+      "id": "B00",
+      "category": "built",
+      "name": "Hearth",
+      "sim_code": "BuildingKind::Hearth=0; BlueprintKind::HearthFire=11",
+      "tile_footprint": "1×1",
+      "states": "lit frame0/1 / unlit / firing pots",
+      "existing_assets": [
+        "art/style05/env/misc/hearth_0.png",
+        "art/style05/env/misc/hearth_1.png"
+      ],
+      "coverage_at_start": "PARTIAL",
+      "schedule": "NEW → Part1.2 firing pots + unlit; 기존 lit animation 재사용",
+      "note": "두 기존 PNG는 모두 불이 켜진 frame. HearthFire는 workshop이지만 player-placeable 아님.",
+      "source_refs": [
+        "rust/crates/sim-core/src/components/building_kind.rs:6",
+        "rust/crates/sim-core/src/colony/orders.rs:112",
+        "scripts/world/wood_visuals.gd:35"
+      ]
+    },
+    {
+      "id": "B01",
+      "category": "built",
+      "name": "Shelter / lean-to",
+      "sim_code": "BuildingKind::Shelter=1; SHELTER_BLUEPRINT_ID=1",
+      "tile_footprint": "sim1×1; existing visual2×2",
+      "states": "site / finished / occupied",
+      "existing_assets": [
+        "art/style05/env/buildings/lean_to.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part1.2 site overlay / scale review",
+      "note": "128² art와 1×1 sim footprint 차이를 명시; art를 물리 2×2로 해석하지 않음.",
+      "source_refs": [
+        "rust/crates/sim-core/src/components/building_kind.rs:39"
+      ]
+    },
+    {
+      "id": "B02",
+      "category": "built",
+      "name": "Legacy stockpile marker",
+      "sim_code": "BuildingKind::Stockpile=2",
+      "tile_footprint": "point1×1",
+      "states": "stored amount / empty",
+      "existing_assets": [
+        "art/style05/env/buildings/storage_pit.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용 후보·현 colony에서는 숨김",
+      "note": "현재 building_layer와 ASCII는 kind2를 그리지 않는다. storage_pit은 legacy marker 후보이며 stockpile zone 대체 아님.",
+      "source_refs": [
+        "rust/crates/sim-core/src/components/building_kind.rs:6",
+        "scripts/world/colony/building_layer.gd:22"
+      ]
+    },
+    {
+      "id": "B03",
+      "category": "built",
+      "name": "Hut",
+      "sim_code": "BuildingKind::Hut=3; BlueprintKind::Hut=0",
+      "tile_footprint": "3×3; centre-keyed finished",
+      "states": "site / finished / occupied",
+      "existing_assets": [
+        "art/style05/env/buildings/hut.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part1.1 벽 대비 scale / Part1.2 site overlay",
+      "note": "site는 top-left, finished는 centre;192² 유지.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/orders.rs:112",
+        "scripts/world/colony/building_layer.gd:243"
+      ]
+    },
+    {
+      "id": "B04",
+      "category": "built",
+      "name": "knapping_spot",
+      "sim_code": "BlueprintKind::KnappingSpot=1",
+      "tile_footprint": "1×1",
+      "states": "empty/inputs/active fine-or-normal blade; south work tile",
+      "existing_assets": [
+        "art/style05/env/buildings/knapping_spot.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part1.2 재검토",
+      "note": "모든 placeable kind는 완성 sprite의 pale outline+25% wash로 site 파생; 별도 생성 없음.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/orders.rs:112",
+        "rust/crates/sim-core/src/colony/orders.rs:242",
+        "scripts/world/colony/building_layer.gd:154"
+      ]
+    },
+    {
+      "id": "B05",
+      "category": "built",
+      "name": "wood_bench",
+      "sim_code": "BlueprintKind::WoodBench=2",
+      "tile_footprint": "2×1",
+      "states": "idle/axe/firewood/spear inputs+active; south work tile",
+      "existing_assets": [
+        "art/style05/env/buildings/woodworking_bench.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part1.2 재검토",
+      "note": "모든 placeable kind는 완성 sprite의 pale outline+25% wash로 site 파생; 별도 생성 없음.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/orders.rs:112",
+        "rust/crates/sim-core/src/colony/orders.rs:242",
+        "scripts/world/colony/building_layer.gd:154"
+      ]
+    },
+    {
+      "id": "B06",
+      "category": "built",
+      "name": "drying_rack",
+      "sim_code": "BlueprintKind::DryingRack=3",
+      "tile_footprint": "2×1",
+      "states": "empty/with hide; scrape/hide-wrap/fur-cloak bills",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 empty + hide",
+      "note": "모든 placeable kind는 완성 sprite의 pale outline+25% wash로 site 파생; 별도 생성 없음.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/orders.rs:112",
+        "rust/crates/sim-core/src/colony/orders.rs:242",
+        "scripts/world/colony/building_layer.gd:154"
+      ]
+    },
+    {
+      "id": "B07",
+      "category": "built",
+      "name": "log_wall",
+      "sim_code": "BlueprintKind::LogWall=4",
+      "tile_footprint": "1×1",
+      "states": "site/finished; masks 0..15 N1/E2/S4/W8",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.1 straight strip + 2×2 corner → 16 cases",
+      "note": "모든 placeable kind는 완성 sprite의 pale outline+25% wash로 site 파생; 별도 생성 없음.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/orders.rs:112",
+        "rust/crates/sim-core/src/colony/orders.rs:242",
+        "scripts/world/colony/building_layer.gd:154"
+      ]
+    },
+    {
+      "id": "B08",
+      "category": "built",
+      "name": "stone_wall",
+      "sim_code": "BlueprintKind::StoneWall=5",
+      "tile_footprint": "1×1",
+      "states": "site/finished; masks 0..15 N1/E2/S4/W8",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.1 straight strip + 2×2 corner → 16 cases",
+      "note": "모든 placeable kind는 완성 sprite의 pale outline+25% wash로 site 파생; 별도 생성 없음.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/orders.rs:112",
+        "rust/crates/sim-core/src/colony/orders.rs:242",
+        "scripts/world/colony/building_layer.gd:154"
+      ]
+    },
+    {
+      "id": "B09",
+      "category": "built",
+      "name": "door",
+      "sim_code": "BlueprintKind::Door=6",
+      "tile_footprint": "1×1",
+      "states": "horizontal/vertical; open/closed and material contexts",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.1 log+stone surrounds × closed/open",
+      "note": "모든 placeable kind는 완성 sprite의 pale outline+25% wash로 site 파생; 별도 생성 없음. sim door는 passable wall flag만 제공; material/open-state 없음. 두 재질·open state는 선언된 rehearsal art 변형.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/orders.rs:112",
+        "rust/crates/sim-core/src/colony/orders.rs:242",
+        "scripts/world/colony/building_layer.gd:154"
+      ]
+    },
+    {
+      "id": "B10",
+      "category": "built",
+      "name": "packed_floor",
+      "sim_code": "BlueprintKind::PackedFloor=7",
+      "tile_footprint": "1×1",
+      "states": "site/finished; seamless repeat",
+      "existing_assets": [
+        "art/style05/env/ground/packed_earth.png"
+      ],
+      "coverage_at_start": "PARTIAL",
+      "schedule": "NEW → Part1.1 quieter packed floor tile; source material reusable",
+      "note": "모든 placeable kind는 완성 sprite의 pale outline+25% wash로 site 파생; 별도 생성 없음.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/orders.rs:112",
+        "rust/crates/sim-core/src/colony/orders.rs:242",
+        "scripts/world/colony/building_layer.gd:154"
+      ]
+    },
+    {
+      "id": "B11",
+      "category": "built",
+      "name": "bedroll",
+      "sim_code": "BlueprintKind::Bedroll=8",
+      "tile_footprint": "1×1",
+      "states": "site/finished/assigned/occupied via person",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.1 bedroll",
+      "note": "모든 placeable kind는 완성 sprite의 pale outline+25% wash로 site 파생; 별도 생성 없음.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/orders.rs:112",
+        "rust/crates/sim-core/src/colony/orders.rs:242",
+        "scripts/world/colony/building_layer.gd:154"
+      ]
+    },
+    {
+      "id": "B12",
+      "category": "built",
+      "name": "grinding_stone",
+      "sim_code": "BlueprintKind::GrindingStone=9",
+      "tile_footprint": "1×1",
+      "states": "idle/stone+axe inputs/active; south work tile",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 grinding stone",
+      "note": "모든 placeable kind는 완성 sprite의 pale outline+25% wash로 site 파생; 별도 생성 없음.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/orders.rs:112",
+        "rust/crates/sim-core/src/colony/orders.rs:242",
+        "scripts/world/colony/building_layer.gd:154"
+      ]
+    },
+    {
+      "id": "B13",
+      "category": "built",
+      "name": "pottery_bench",
+      "sim_code": "BlueprintKind::PotteryBench=10",
+      "tile_footprint": "1×1",
+      "states": "idle/clay/raw pot/active; south work tile",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 pottery bench",
+      "note": "모든 placeable kind는 완성 sprite의 pale outline+25% wash로 site 파생; 별도 생성 없음.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/orders.rs:112",
+        "rust/crates/sim-core/src/colony/orders.rs:242",
+        "scripts/world/colony/building_layer.gd:154"
+      ]
+    },
+    {
+      "id": "B14",
+      "category": "built",
+      "name": "Dug-rock floor",
+      "sim_code": "get_space.floor_kinds=1 + dug_xs/ys",
+      "tile_footprint": "1×1",
+      "states": "dug / packed overwrite distinction / repeat",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.1 dug-rock floor",
+      "note": "collect_space emits a dug tile in both dug and floors; draw one floor, not duplicate art.",
+      "source_refs": [
+        "rust/crates/sim-bridge/src/ffi/space.rs:256"
+      ]
+    },
+    {
+      "id": "B15",
+      "category": "built",
+      "name": "Storehouse roof coverage",
+      "sim_code": "get_rooms.roofed + RoomRole=2; item_covered=1",
+      "tile_footprint": "room tile set",
+      "states": "roofed/unroofed; covered/uncovered stacks",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 code overlay; opaque roof sprite deferred to M-ART2",
+      "note": "재고를 가리지 않는 pale region boundary/label. 실제 roof tile collector 없음.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md:578",
+        "scripts/world/colony/room_layer.gd:166"
+      ]
+    },
+    {
+      "id": "B16",
+      "category": "built",
+      "name": "Blueprint / construction state",
+      "sim_code": "ConstructionSite; site_kinds0..10",
+      "tile_footprint": "kind별 plan footprint",
+      "states": "planned/delivering/work progress/finished",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 code overlay (generation 0)",
+      "note": "각 B01/B03/B04..B13의 finished sprite25% wash+pale ink outline; materials/work progress separate. HearthFire11은 site 없음.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md:440",
+        "scripts/world/colony/overlay_layer.gd:191"
+      ]
+    },
+    {
+      "id": "B17",
+      "category": "built",
+      "name": "Ford",
+      "sim_code": "get_space.ford_xs/ys; TileGrid::is_ford",
+      "tile_footprint": "1×1 connected river tiles",
+      "states": "shallow crossing / along-river repeat",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 ford tiles",
+      "note": "물 위, 다른 floor-level layer 아래.",
+      "source_refs": [
+        "rust/crates/sim-bridge/src/ffi/space.rs:253",
+        "scripts/world/colony/building_layer.gd:129"
+      ]
+    },
+    {
+      "id": "I00",
+      "category": "item",
+      "name": "Log",
+      "sim_code": "ItemKind::Log=0",
+      "tile_footprint": "ground1×1; tool may overhang",
+      "states": "ground / carried / shelf; count1 / 2–8 / 9+; quality via text",
+      "existing_assets": [
+        "art/style05/env/items/log_pile_small.png",
+        "art/style05/env/items/log_pile_medium.png",
+        "art/style05/env/items/log_pile_large.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part1.3 count/32px review",
+      "note": "수량 bucket은 전체 sprite의 기하 복제·배치로 파생 가능; 새 texture variant마다 생성 불필요. 32px silhouette review 필요. ENV1 bucket1/2–8/9+는 현 renderer≤8/≤16/>16과 다름; 의도적 rehearsal 분류.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/items.rs:9",
+        "scripts/ui/economy_text.gd:34",
+        "scripts/world/colony/overlay_layer.gd:145"
+      ]
+    },
+    {
+      "id": "I01",
+      "category": "item",
+      "name": "Firewood",
+      "sim_code": "ItemKind::Firewood=1",
+      "tile_footprint": "ground1×1; tool may overhang",
+      "states": "ground / carried / shelf; count1 / 2–8 / 9+; quality via text",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.3 Firewood",
+      "note": "수량 bucket은 전체 sprite의 기하 복제·배치로 파생 가능; 새 texture variant마다 생성 불필요. 32px silhouette review 필요.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/items.rs:9",
+        "scripts/ui/economy_text.gd:34",
+        "scripts/world/colony/overlay_layer.gd:145"
+      ]
+    },
+    {
+      "id": "I02",
+      "category": "item",
+      "name": "Stone",
+      "sim_code": "ItemKind::Stone=2",
+      "tile_footprint": "ground1×1; tool may overhang",
+      "states": "ground / carried / shelf; count1 / 2–8 / 9+; quality via text",
+      "existing_assets": [
+        "art/style05/env/items/stone_pile.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part1.3 count/32px review",
+      "note": "수량 bucket은 전체 sprite의 기하 복제·배치로 파생 가능; 새 texture variant마다 생성 불필요. 32px silhouette review 필요.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/items.rs:9",
+        "scripts/ui/economy_text.gd:34",
+        "scripts/world/colony/overlay_layer.gd:145"
+      ]
+    },
+    {
+      "id": "I03",
+      "category": "item",
+      "name": "Flint",
+      "sim_code": "ItemKind::Flint=3",
+      "tile_footprint": "ground1×1; tool may overhang",
+      "states": "ground / carried / shelf; count1 / 2–8 / 9+; quality via text",
+      "existing_assets": [
+        "art/style05/env/items/flint_pile.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part1.3 count/32px review",
+      "note": "수량 bucket은 전체 sprite의 기하 복제·배치로 파생 가능; 새 texture variant마다 생성 불필요. 32px silhouette review 필요.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/items.rs:9",
+        "scripts/ui/economy_text.gd:34",
+        "scripts/world/colony/overlay_layer.gd:145"
+      ]
+    },
+    {
+      "id": "I04",
+      "category": "item",
+      "name": "FlintBlade",
+      "sim_code": "ItemKind::FlintBlade=4",
+      "tile_footprint": "ground1×1; tool may overhang",
+      "states": "ground / carried / shelf; count1 / 2–8 / 9+; quality via text; held tool/weapon",
+      "existing_assets": [
+        "art/style05/env/items/flint_blade.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part1.3 count/32px review",
+      "note": "수량 bucket은 전체 sprite의 기하 복제·배치로 파생 가능; 새 texture variant마다 생성 불필요. 32px silhouette review 필요.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/items.rs:9",
+        "scripts/ui/economy_text.gd:34",
+        "scripts/world/colony/overlay_layer.gd:145"
+      ]
+    },
+    {
+      "id": "I05",
+      "category": "item",
+      "name": "StoneAxe",
+      "sim_code": "ItemKind::StoneAxe=5",
+      "tile_footprint": "ground1×1; tool may overhang",
+      "states": "ground / carried / shelf; count1 / 2–8 / 9+; quality via text; held tool/weapon",
+      "existing_assets": [
+        "art/style05/env/items/stone_axe.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part1.3 count/32px review",
+      "note": "수량 bucket은 전체 sprite의 기하 복제·배치로 파생 가능; 새 texture variant마다 생성 불필요. 32px silhouette review 필요.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/items.rs:9",
+        "scripts/ui/economy_text.gd:34",
+        "scripts/world/colony/overlay_layer.gd:145"
+      ]
+    },
+    {
+      "id": "I06",
+      "category": "item",
+      "name": "Hide",
+      "sim_code": "ItemKind::Hide=6",
+      "tile_footprint": "ground1×1; tool may overhang",
+      "states": "ground / carried / shelf; count1 / 2–8 / 9+; quality via text",
+      "existing_assets": [
+        "art/style05/env/items/hide.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part1.3 count/32px review",
+      "note": "수량 bucket은 전체 sprite의 기하 복제·배치로 파생 가능; 새 texture variant마다 생성 불필요. 32px silhouette review 필요.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/items.rs:9",
+        "scripts/ui/economy_text.gd:34",
+        "scripts/world/colony/overlay_layer.gd:145"
+      ]
+    },
+    {
+      "id": "I07",
+      "category": "item",
+      "name": "Clay",
+      "sim_code": "ItemKind::Clay=7",
+      "tile_footprint": "ground1×1; tool may overhang",
+      "states": "ground / carried / shelf; count1 / 2–8 / 9+; quality via text",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.3 Clay",
+      "note": "수량 bucket은 전체 sprite의 기하 복제·배치로 파생 가능; 새 texture variant마다 생성 불필요. 32px silhouette review 필요.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/items.rs:9",
+        "scripts/ui/economy_text.gd:34",
+        "scripts/world/colony/overlay_layer.gd:145"
+      ]
+    },
+    {
+      "id": "I08",
+      "category": "item",
+      "name": "RawPot",
+      "sim_code": "ItemKind::RawPot=8",
+      "tile_footprint": "ground1×1; tool may overhang",
+      "states": "ground / carried / shelf; count1 / 2–8 / 9+; quality via text",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.3 RawPot",
+      "note": "수량 bucket은 전체 sprite의 기하 복제·배치로 파생 가능; 새 texture variant마다 생성 불필요. 32px silhouette review 필요.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/items.rs:9",
+        "scripts/ui/economy_text.gd:34",
+        "scripts/world/colony/overlay_layer.gd:145"
+      ]
+    },
+    {
+      "id": "I09",
+      "category": "item",
+      "name": "ClayPot",
+      "sim_code": "ItemKind::ClayPot=9",
+      "tile_footprint": "ground1×1; tool may overhang",
+      "states": "ground / carried / shelf; count1 / 2–8 / 9+; quality via text; empty / filled",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.3 ClayPot",
+      "note": "수량 bucket은 전체 sprite의 기하 복제·배치로 파생 가능; 새 texture variant마다 생성 불필요. 32px silhouette review 필요. ItemStack에 filled 상태 없음; filled는 art 요청의 선언 상태.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/items.rs:9",
+        "scripts/ui/economy_text.gd:34",
+        "scripts/world/colony/overlay_layer.gd:145"
+      ]
+    },
+    {
+      "id": "I10",
+      "category": "item",
+      "name": "GroundAxe",
+      "sim_code": "ItemKind::GroundAxe=10",
+      "tile_footprint": "ground1×1; tool may overhang",
+      "states": "ground / carried / shelf; count1 / 2–8 / 9+; quality via text; held tool/weapon",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.3 GroundAxe",
+      "note": "수량 bucket은 전체 sprite의 기하 복제·배치로 파생 가능; 새 texture variant마다 생성 불필요. 32px silhouette review 필요.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/items.rs:9",
+        "scripts/ui/economy_text.gd:34",
+        "scripts/world/colony/overlay_layer.gd:145"
+      ]
+    },
+    {
+      "id": "I11",
+      "category": "item",
+      "name": "Meat",
+      "sim_code": "ItemKind::Meat=11",
+      "tile_footprint": "ground1×1; tool may overhang",
+      "states": "ground / carried / shelf; count1 / 2–8 / 9+; quality via text; fresh / spoiled global tint",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.3 Meat",
+      "note": "수량 bucket은 전체 sprite의 기하 복제·배치로 파생 가능; 새 texture variant마다 생성 불필요. 32px silhouette review 필요. 현재 ground sprite는 carcass; sim은 spoil 시 meat lot/item을 없앤다. 지속 spoiled sprite는 선언한 보조 상태.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/items.rs:9",
+        "scripts/ui/economy_text.gd:34",
+        "scripts/world/colony/overlay_layer.gd:145"
+      ]
+    },
+    {
+      "id": "I12",
+      "category": "item",
+      "name": "CuredHide",
+      "sim_code": "ItemKind::CuredHide=12",
+      "tile_footprint": "ground1×1; tool may overhang",
+      "states": "ground / carried / shelf; count1 / 2–8 / 9+; quality via text",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.3 CuredHide",
+      "note": "수량 bucket은 전체 sprite의 기하 복제·배치로 파생 가능; 새 texture variant마다 생성 불필요. 32px silhouette review 필요.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/items.rs:9",
+        "scripts/ui/economy_text.gd:34",
+        "scripts/world/colony/overlay_layer.gd:145"
+      ]
+    },
+    {
+      "id": "I13",
+      "category": "item",
+      "name": "HideWrap",
+      "sim_code": "ItemKind::HideWrap=13",
+      "tile_footprint": "ground1×1; tool may overhang",
+      "states": "ground / carried / shelf; count1 / 2–8 / 9+; quality via text; worn uses whole person look",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.3 HideWrap",
+      "note": "수량 bucket은 전체 sprite의 기하 복제·배치로 파생 가능; 새 texture variant마다 생성 불필요. 32px silhouette review 필요.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/items.rs:9",
+        "scripts/ui/economy_text.gd:34",
+        "scripts/world/colony/overlay_layer.gd:145"
+      ]
+    },
+    {
+      "id": "I14",
+      "category": "item",
+      "name": "FurCloak",
+      "sim_code": "ItemKind::FurCloak=14",
+      "tile_footprint": "ground1×1; tool may overhang",
+      "states": "ground / carried / shelf; count1 / 2–8 / 9+; quality via text; worn uses whole person look",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.3 FurCloak",
+      "note": "수량 bucket은 전체 sprite의 기하 복제·배치로 파생 가능; 새 texture variant마다 생성 불필요. 32px silhouette review 필요.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/items.rs:9",
+        "scripts/ui/economy_text.gd:34",
+        "scripts/world/colony/overlay_layer.gd:145"
+      ]
+    },
+    {
+      "id": "I15",
+      "category": "item",
+      "name": "Spear",
+      "sim_code": "ItemKind::Spear=15",
+      "tile_footprint": "ground1×1; tool may overhang",
+      "states": "ground / carried / shelf; count1 / 2–8 / 9+; quality via text; held tool/weapon",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.3 Spear",
+      "note": "수량 bucket은 전체 sprite의 기하 복제·배치로 파생 가능; 새 texture variant마다 생성 불필요. 32px silhouette review 필요.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/items.rs:9",
+        "scripts/ui/economy_text.gd:34",
+        "scripts/world/colony/overlay_layer.gd:145"
+      ]
+    },
+    {
+      "id": "I16",
+      "category": "item",
+      "name": "WolfHide",
+      "sim_code": "ItemKind::WolfHide=16",
+      "tile_footprint": "ground1×1; tool may overhang",
+      "states": "ground / carried / shelf; count1 / 2–8 / 9+; quality via text",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.3 WolfHide",
+      "note": "수량 bucket은 전체 sprite의 기하 복제·배치로 파생 가능; 새 texture variant마다 생성 불필요. 32px silhouette review 필요.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/items.rs:9",
+        "scripts/ui/economy_text.gd:34",
+        "scripts/world/colony/overlay_layer.gd:145"
+      ]
+    },
+    {
+      "id": "I17",
+      "category": "item",
+      "name": "Gathered food basket",
+      "sim_code": "Inventory.food / porter.kind=0; no ItemKind",
+      "tile_footprint": "1×1",
+      "states": "ground food cue / carried food",
+      "existing_assets": [
+        "art/style05/env/items/berry_basket.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용",
+      "note": "17 ItemKind의 추가 enum으로 세지 않음. legacy food resource/porter용.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md:259",
+        "art/style05/env/items/berry_basket.json"
+      ]
+    },
+    {
+      "id": "M00",
+      "category": "designation",
+      "name": "Chop",
+      "sim_code": "Designation::Chop=0",
+      "tile_footprint": "1×1; Hunt follows AnimalId",
+      "states": "designated / active / cancelled",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 code overlay (generation 0)",
+      "note": "current marks 0; 고유 overlay glyph로 구별.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/orders.rs:59",
+        "scripts/world/colony/overlay_layer.gd:46"
+      ]
+    },
+    {
+      "id": "M01",
+      "category": "designation",
+      "name": "Quarry",
+      "sim_code": "Designation::Quarry=1",
+      "tile_footprint": "1×1; Hunt follows AnimalId",
+      "states": "designated / active / cancelled",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 code overlay (generation 0)",
+      "note": "current marks 1; 고유 overlay glyph로 구별.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/orders.rs:59",
+        "scripts/world/colony/overlay_layer.gd:46"
+      ]
+    },
+    {
+      "id": "M02",
+      "category": "designation",
+      "name": "Dig",
+      "sim_code": "Designation::Dig=2",
+      "tile_footprint": "1×1; Hunt follows AnimalId",
+      "states": "designated / active / cancelled",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 code overlay (generation 0)",
+      "note": "current marks 2; 고유 overlay glyph로 구별.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/orders.rs:59",
+        "scripts/world/colony/overlay_layer.gd:46"
+      ]
+    },
+    {
+      "id": "M03",
+      "category": "designation",
+      "name": "Deconstruct",
+      "sim_code": "Designation::Deconstruct=3",
+      "tile_footprint": "1×1; Hunt follows AnimalId",
+      "states": "designated / active / cancelled",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 code overlay (generation 0)",
+      "note": "current marks 3; 고유 overlay glyph로 구별.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/orders.rs:59",
+        "scripts/world/colony/overlay_layer.gd:46"
+      ]
+    },
+    {
+      "id": "M04",
+      "category": "designation",
+      "name": "ClayPit",
+      "sim_code": "Designation::ClayPit=4",
+      "tile_footprint": "1×1; Hunt follows AnimalId",
+      "states": "designated / active / cancelled",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 code overlay (generation 0)",
+      "note": "current marks 4; 고유 overlay glyph로 구별.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/orders.rs:59",
+        "scripts/world/colony/overlay_layer.gd:46"
+      ]
+    },
+    {
+      "id": "M05",
+      "category": "designation",
+      "name": "Hunt",
+      "sim_code": "Designation::Hunt=5",
+      "tile_footprint": "1×1; Hunt follows AnimalId",
+      "states": "designated / active / cancelled",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 code overlay (generation 0)",
+      "note": "pale ink tool glyph; Hunt는 tile designation이 아니라 get_animals.marked에 연결.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/orders.rs:59",
+        "scripts/world/colony/overlay_layer.gd:46"
+      ]
+    },
+    {
+      "id": "M06",
+      "category": "designation",
+      "name": "Stockpile zone",
+      "sim_code": "ZoneKind::Stockpile; zone_ids/zone_xs/zone_ys",
+      "tile_footprint": "arbitrary tile set",
+      "states": "empty/filled; open edges/corner stakes",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 code overlay (generation 0)",
+      "note": "타일 wash+경계+stakes; storage_pit 한 장으로 zone을 대체하지 않음.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/orders.rs:94",
+        "scripts/world/colony/overlay_layer.gd:163"
+      ]
+    },
+    {
+      "id": "M07",
+      "category": "designation",
+      "name": "Hunt zone",
+      "sim_code": "Wildlife.zones; get_animals.zones",
+      "tile_footprint": "inclusive rectangle",
+      "states": "shown/hidden; contains huntable deer",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 code overlay (generation 0)",
+      "note": "황토색 border/wash, get_animals 기반.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/wildlife.rs:131",
+        "scripts/world/colony/animal_layer.gd:160"
+      ]
+    },
+    {
+      "id": "M08",
+      "category": "designation",
+      "name": "Placement preview",
+      "sim_code": "get_place_preview.ok/reasons",
+      "tile_footprint": "requested footprint",
+      "states": "valid/invalid; line/hollow/fill",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 code overlay (generation 0)",
+      "note": "pale finished-sprite ghost + valid/invalid ring; game code 설치는 M-ART2.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md:642"
+      ]
+    },
+    {
+      "id": "R00",
+      "category": "room",
+      "name": "Unassigned",
+      "sim_code": "RoomRole::Unassigned=0",
+      "tile_footprint": "irregular room tile set",
+      "states": "auto/overridden; roofed/dug; border+label",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 code overlay (generation 0)",
+      "note": "역할은 새 건물 모델 아님; 역할마다 구별된 얇은 경계색과 label.",
+      "source_refs": [
+        "rust/crates/sim-core/src/rooms.rs:33",
+        "scripts/world/colony/room_layer.gd:20"
+      ]
+    },
+    {
+      "id": "R01",
+      "category": "room",
+      "name": "Bedroom",
+      "sim_code": "RoomRole::Bedroom=1",
+      "tile_footprint": "irregular room tile set",
+      "states": "auto/overridden; roofed/dug; border+label",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 code overlay (generation 0)",
+      "note": "역할은 새 건물 모델 아님; 역할마다 구별된 얇은 경계색과 label.",
+      "source_refs": [
+        "rust/crates/sim-core/src/rooms.rs:33",
+        "scripts/world/colony/room_layer.gd:20"
+      ]
+    },
+    {
+      "id": "R02",
+      "category": "room",
+      "name": "Storehouse",
+      "sim_code": "RoomRole::Storehouse=2",
+      "tile_footprint": "irregular room tile set",
+      "states": "auto/overridden; roofed/dug; border+label",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 code overlay (generation 0)",
+      "note": "역할은 새 건물 모델 아님; 역할마다 구별된 얇은 경계색과 label.",
+      "source_refs": [
+        "rust/crates/sim-core/src/rooms.rs:33",
+        "scripts/world/colony/room_layer.gd:20"
+      ]
+    },
+    {
+      "id": "R03",
+      "category": "room",
+      "name": "Workshop",
+      "sim_code": "RoomRole::Workshop=3",
+      "tile_footprint": "irregular room tile set",
+      "states": "auto/overridden; roofed/dug; border+label",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 code overlay (generation 0)",
+      "note": "역할은 새 건물 모델 아님; 역할마다 구별된 얇은 경계색과 label.",
+      "source_refs": [
+        "rust/crates/sim-core/src/rooms.rs:33",
+        "scripts/world/colony/room_layer.gd:20"
+      ]
+    },
+    {
+      "id": "R04",
+      "category": "room",
+      "name": "Hall",
+      "sim_code": "RoomRole::Hall=4",
+      "tile_footprint": "irregular room tile set",
+      "states": "auto/overridden; roofed/dug; border+label",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 code overlay (generation 0)",
+      "note": "역할은 새 건물 모델 아님; 역할마다 구별된 얇은 경계색과 label.",
+      "source_refs": [
+        "rust/crates/sim-core/src/rooms.rs:33",
+        "scripts/world/colony/room_layer.gd:20"
+      ]
+    },
+    {
+      "id": "A00",
+      "category": "animal",
+      "name": "Wolf",
+      "sim_code": "AnimalKind::Wolf=0",
+      "tile_footprint": "occupied1×1; art96×80, dead96×64",
+      "states": "S/E; W flip; stand / walk / run / attack / dead",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part2 whole-figure sheet ×10 frames",
+      "note": "어깨높이 28px; foot y72. carcass는 dead frame을 사용하되 persistent animal entity로 주장하지 않음.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/wildlife.rs:13",
+        "rust/crates/sim-core/src/colony/wildlife.rs:40"
+      ]
+    },
+    {
+      "id": "A01",
+      "category": "animal",
+      "name": "Deer",
+      "sim_code": "AnimalKind::Deer=1",
+      "tile_footprint": "occupied1×1; art96×80, dead96×64",
+      "states": "S/E; W flip; stand / walk / run(flee) / graze / dead",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part2 whole-figure sheet ×10 frames",
+      "note": "어깨높이 40px; foot y72. carcass는 dead frame을 사용하되 persistent animal entity로 주장하지 않음.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/wildlife.rs:13",
+        "rust/crates/sim-core/src/colony/wildlife.rs:40"
+      ]
+    },
+    {
+      "id": "P00",
+      "category": "person",
+      "name": "Adult",
+      "sim_code": "get_agent_snapshot.life_stages=0",
+      "tile_footprint": "anchor1×1; upright80×112 / sleep112×80",
+      "states": "idle/walk_a/work_a/carry/sleep ×S/E; W flip; N=S",
+      "existing_assets": [
+        "art/character/route_i/adult_M_loincloth_short/S/idle.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 adopted look selection",
+      "note": "adult56px/child40px; 34 adopted look exact paths는 아래 roster.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md:140",
+        "docs/v8/artprod3/HANDOVER.md"
+      ]
+    },
+    {
+      "id": "P01",
+      "category": "person",
+      "name": "Child",
+      "sim_code": "get_agent_snapshot.life_stages=1",
+      "tile_footprint": "anchor1×1; upright80×112 / sleep112×80",
+      "states": "idle/walk_a/work_a/carry/sleep ×S/E; W flip; N=S",
+      "existing_assets": [
+        "art/character/route_i/child_M_loincloth_short/S/idle.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 adopted look selection",
+      "note": "adult56px/child40px; 34 adopted look exact paths는 아래 roster.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md:140",
+        "docs/v8/artprod3/HANDOVER.md"
+      ]
+    },
+    {
+      "id": "P02",
+      "category": "person",
+      "name": "Elder",
+      "sim_code": "get_agent_snapshot.life_stages=2",
+      "tile_footprint": "anchor1×1; upright80×112 / sleep112×80",
+      "states": "idle/walk_a/work_a/carry/sleep ×S/E; W flip; N=S",
+      "existing_assets": [
+        "art/character/route_i/adult_M_loincloth_short/S/idle.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 adopted look selection",
+      "note": "전용 elder art는 보류; adult fallback을 명시.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md:140",
+        "docs/v8/artprod3/HANDOVER.md"
+      ]
+    },
+    {
+      "id": "P03",
+      "category": "person",
+      "name": "Infant",
+      "sim_code": "get_agent_snapshot.infants=1",
+      "tile_footprint": "anchor1×1",
+      "states": "carried/sleep/idle distinction absent",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → 보류: 전용 infant 그림은 Part2 animal 범위 밖; child proxy는 명시",
+      "note": "infant를 새 accepted look로 세지 않음.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md:157"
+      ]
+    },
+    {
+      "id": "P04",
+      "category": "apparel",
+      "name": "Loincloth",
+      "sim_code": "no Apparel=0",
+      "tile_footprint": "person full-figure",
+      "states": "worn / S/E activity; all adopted looks",
+      "existing_assets": [
+        "art/character/route_i/adult_M_loincloth_short/S/idle.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 whole person only",
+      "note": "의복 분해 합성 금지; 땅의 item은 I13/I14 별도.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/people.rs:13",
+        "docs/v8/artprod3/HANDOVER.md"
+      ]
+    },
+    {
+      "id": "P05",
+      "category": "apparel",
+      "name": "HideWrap",
+      "sim_code": "Top::HideWrap=1",
+      "tile_footprint": "person full-figure",
+      "states": "worn / S/E activity; all adopted looks",
+      "existing_assets": [
+        "art/character/route_i/adult_M_hide_wrap_short/S/idle.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 whole person only",
+      "note": "의복 분해 합성 금지; 땅의 item은 I13/I14 별도.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/people.rs:13",
+        "docs/v8/artprod3/HANDOVER.md"
+      ]
+    },
+    {
+      "id": "P06",
+      "category": "apparel",
+      "name": "FurCloak",
+      "sim_code": "Top::FurCloak=2",
+      "tile_footprint": "person full-figure",
+      "states": "worn / S/E activity; all adopted looks",
+      "existing_assets": [
+        "art/character/route_i/adult_M_fur_cloak_short/S/idle.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 whole person only",
+      "note": "의복 분해 합성 금지; 땅의 item은 I13/I14 별도.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/people.rs:13",
+        "docs/v8/artprod3/HANDOVER.md"
+      ]
+    },
+    {
+      "id": "J01",
+      "category": "job",
+      "name": "Chop",
+      "sim_code": "JobKind::Chop=1",
+      "tile_footprint": "person anchor1×1",
+      "states": "work_a / movement / target",
+      "existing_assets": [
+        "art/character/route_i/adult_M_loincloth_short/S/work_a.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 frame plan; NEW glyph는 Part1.2 code overlay",
+      "note": "이동중 idle/walk_a; 수면 sleep가 우선. chop은 도끼 work_a와 대응.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/job.rs:88",
+        "rust/crates/sim-core/src/colony/job.rs:197"
+      ]
+    },
+    {
+      "id": "J02",
+      "category": "job",
+      "name": "Haul",
+      "sim_code": "JobKind::Haul=2",
+      "tile_footprint": "person anchor1×1",
+      "states": "carry / movement / target",
+      "existing_assets": [
+        "art/character/route_i/adult_M_loincloth_short/S/carry.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 frame plan; NEW glyph는 Part1.2 code overlay",
+      "note": "이동중 idle/walk_a; 수면 sleep가 우선. carry frame은 통나무 pose이며 비통나무 내용물 일치 보장은 없음; 종류 glyph/label로 명시, dedicated carrying pose는 M-ART2 보류.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/job.rs:88",
+        "rust/crates/sim-core/src/colony/job.rs:197"
+      ]
+    },
+    {
+      "id": "J03",
+      "category": "job",
+      "name": "Deliver",
+      "sim_code": "JobKind::Deliver=3",
+      "tile_footprint": "person anchor1×1",
+      "states": "carry / movement / target",
+      "existing_assets": [
+        "art/character/route_i/adult_M_loincloth_short/S/carry.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 frame plan; NEW glyph는 Part1.2 code overlay",
+      "note": "이동중 idle/walk_a; 수면 sleep가 우선. carry frame은 통나무 pose이며 비통나무 내용물 일치 보장은 없음; 종류 glyph/label로 명시, dedicated carrying pose는 M-ART2 보류.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/job.rs:88",
+        "rust/crates/sim-core/src/colony/job.rs:197"
+      ]
+    },
+    {
+      "id": "J04",
+      "category": "job",
+      "name": "Build",
+      "sim_code": "JobKind::Build=4",
+      "tile_footprint": "person anchor1×1",
+      "states": "work_a / movement / target",
+      "existing_assets": [
+        "art/character/route_i/adult_M_loincloth_short/S/work_a.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 frame plan; NEW glyph는 Part1.2 code overlay",
+      "note": "이동중 idle/walk_a; 수면 sleep가 우선. 기존 work/idle 대체는 동작 의미의 개별 수락 아님; 비도끼 전용 pose 제작은 ENV1 범위 밖, activity glyph/label 필요.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/job.rs:88",
+        "rust/crates/sim-core/src/colony/job.rs:197"
+      ]
+    },
+    {
+      "id": "J05",
+      "category": "job",
+      "name": "Quarry",
+      "sim_code": "JobKind::Quarry=5",
+      "tile_footprint": "person anchor1×1",
+      "states": "work_a / movement / target",
+      "existing_assets": [
+        "art/character/route_i/adult_M_loincloth_short/S/work_a.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 frame plan; NEW glyph는 Part1.2 code overlay",
+      "note": "이동중 idle/walk_a; 수면 sleep가 우선. 기존 work/idle 대체는 동작 의미의 개별 수락 아님; 비도끼 전용 pose 제작은 ENV1 범위 밖, activity glyph/label 필요.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/job.rs:88",
+        "rust/crates/sim-core/src/colony/job.rs:197"
+      ]
+    },
+    {
+      "id": "J06",
+      "category": "job",
+      "name": "Supply",
+      "sim_code": "JobKind::Supply=6",
+      "tile_footprint": "person anchor1×1",
+      "states": "carry / movement / target",
+      "existing_assets": [
+        "art/character/route_i/adult_M_loincloth_short/S/carry.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 frame plan; NEW glyph는 Part1.2 code overlay",
+      "note": "이동중 idle/walk_a; 수면 sleep가 우선. carry frame은 통나무 pose이며 비통나무 내용물 일치 보장은 없음; 종류 glyph/label로 명시, dedicated carrying pose는 M-ART2 보류.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/job.rs:88",
+        "rust/crates/sim-core/src/colony/job.rs:197"
+      ]
+    },
+    {
+      "id": "J07",
+      "category": "job",
+      "name": "Craft",
+      "sim_code": "JobKind::Craft=7",
+      "tile_footprint": "person anchor1×1",
+      "states": "work_a / movement / target",
+      "existing_assets": [
+        "art/character/route_i/adult_M_loincloth_short/S/work_a.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 frame plan; NEW glyph는 Part1.2 code overlay",
+      "note": "이동중 idle/walk_a; 수면 sleep가 우선. 기존 work/idle 대체는 동작 의미의 개별 수락 아님; 비도끼 전용 pose 제작은 ENV1 범위 밖, activity glyph/label 필요.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/job.rs:88",
+        "rust/crates/sim-core/src/colony/job.rs:197"
+      ]
+    },
+    {
+      "id": "J08",
+      "category": "job",
+      "name": "Gather",
+      "sim_code": "JobKind::Gather=8",
+      "tile_footprint": "person anchor1×1",
+      "states": "work_a / movement / target",
+      "existing_assets": [
+        "art/character/route_i/adult_M_loincloth_short/S/work_a.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 frame plan; NEW glyph는 Part1.2 code overlay",
+      "note": "이동중 idle/walk_a; 수면 sleep가 우선. 기존 work/idle 대체는 동작 의미의 개별 수락 아님; 비도끼 전용 pose 제작은 ENV1 범위 밖, activity glyph/label 필요.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/job.rs:88",
+        "rust/crates/sim-core/src/colony/job.rs:197"
+      ]
+    },
+    {
+      "id": "J09",
+      "category": "job",
+      "name": "Dig",
+      "sim_code": "JobKind::Dig=9",
+      "tile_footprint": "person anchor1×1",
+      "states": "work_a / movement / target",
+      "existing_assets": [
+        "art/character/route_i/adult_M_loincloth_short/S/work_a.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 frame plan; NEW glyph는 Part1.2 code overlay",
+      "note": "이동중 idle/walk_a; 수면 sleep가 우선. 기존 work/idle 대체는 동작 의미의 개별 수락 아님; 비도끼 전용 pose 제작은 ENV1 범위 밖, activity glyph/label 필요.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/job.rs:88",
+        "rust/crates/sim-core/src/colony/job.rs:197"
+      ]
+    },
+    {
+      "id": "J10",
+      "category": "job",
+      "name": "Deconstruct",
+      "sim_code": "JobKind::Deconstruct=10",
+      "tile_footprint": "person anchor1×1",
+      "states": "work_a / movement / target",
+      "existing_assets": [
+        "art/character/route_i/adult_M_loincloth_short/S/work_a.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 frame plan; NEW glyph는 Part1.2 code overlay",
+      "note": "이동중 idle/walk_a; 수면 sleep가 우선. 기존 work/idle 대체는 동작 의미의 개별 수락 아님; 비도끼 전용 pose 제작은 ENV1 범위 밖, activity glyph/label 필요.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/job.rs:88",
+        "rust/crates/sim-core/src/colony/job.rs:197"
+      ]
+    },
+    {
+      "id": "J11",
+      "category": "job",
+      "name": "Clear",
+      "sim_code": "JobKind::Clear=11",
+      "tile_footprint": "person anchor1×1",
+      "states": "carry / movement / target",
+      "existing_assets": [
+        "art/character/route_i/adult_M_loincloth_short/S/carry.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 frame plan; NEW glyph는 Part1.2 code overlay",
+      "note": "이동중 idle/walk_a; 수면 sleep가 우선. carry frame은 통나무 pose이며 비통나무 내용물 일치 보장은 없음; 종류 glyph/label로 명시, dedicated carrying pose는 M-ART2 보류.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/job.rs:88",
+        "rust/crates/sim-core/src/colony/job.rs:197"
+      ]
+    },
+    {
+      "id": "J12",
+      "category": "job",
+      "name": "DigClay",
+      "sim_code": "JobKind::DigClay=12",
+      "tile_footprint": "person anchor1×1",
+      "states": "work_a / movement / target",
+      "existing_assets": [
+        "art/character/route_i/adult_M_loincloth_short/S/work_a.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 frame plan; NEW glyph는 Part1.2 code overlay",
+      "note": "이동중 idle/walk_a; 수면 sleep가 우선. 기존 work/idle 대체는 동작 의미의 개별 수락 아님; 비도끼 전용 pose 제작은 ENV1 범위 밖, activity glyph/label 필요.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/job.rs:88",
+        "rust/crates/sim-core/src/colony/job.rs:197"
+      ]
+    },
+    {
+      "id": "J13",
+      "category": "job",
+      "name": "Teach",
+      "sim_code": "JobKind::Teach=13",
+      "tile_footprint": "person anchor1×1",
+      "states": "idle / movement / target",
+      "existing_assets": [
+        "art/character/route_i/adult_M_loincloth_short/S/idle.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 frame plan; NEW glyph는 Part1.2 code overlay",
+      "note": "이동중 idle/walk_a; 수면 sleep가 우선. 기존 work/idle 대체는 동작 의미의 개별 수락 아님; 비도끼 전용 pose 제작은 ENV1 범위 밖, activity glyph/label 필요.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/job.rs:88",
+        "rust/crates/sim-core/src/colony/job.rs:197"
+      ]
+    },
+    {
+      "id": "J14",
+      "category": "job",
+      "name": "Learn",
+      "sim_code": "JobKind::Learn=14",
+      "tile_footprint": "person anchor1×1",
+      "states": "idle / movement / target",
+      "existing_assets": [
+        "art/character/route_i/adult_M_loincloth_short/S/idle.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 frame plan; NEW glyph는 Part1.2 code overlay",
+      "note": "이동중 idle/walk_a; 수면 sleep가 우선. 기존 work/idle 대체는 동작 의미의 개별 수락 아님; 비도끼 전용 pose 제작은 ENV1 범위 밖, activity glyph/label 필요.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/job.rs:88",
+        "rust/crates/sim-core/src/colony/job.rs:197"
+      ]
+    },
+    {
+      "id": "J15",
+      "category": "job",
+      "name": "Hunt",
+      "sim_code": "JobKind::Hunt=15",
+      "tile_footprint": "person anchor1×1",
+      "states": "work_a / movement / target",
+      "existing_assets": [
+        "art/character/route_i/adult_M_loincloth_short/S/work_a.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 frame plan; NEW glyph는 Part1.2 code overlay",
+      "note": "이동중 idle/walk_a; 수면 sleep가 우선. 기존 work/idle 대체는 동작 의미의 개별 수락 아님; 비도끼 전용 pose 제작은 ENV1 범위 밖, activity glyph/label 필요.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/job.rs:88",
+        "rust/crates/sim-core/src/colony/job.rs:197"
+      ]
+    },
+    {
+      "id": "J16",
+      "category": "job",
+      "name": "Equip",
+      "sim_code": "JobKind::Equip=16",
+      "tile_footprint": "person anchor1×1",
+      "states": "idle / movement / target",
+      "existing_assets": [
+        "art/character/route_i/adult_M_loincloth_short/S/idle.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 frame plan; NEW glyph는 Part1.2 code overlay",
+      "note": "이동중 idle/walk_a; 수면 sleep가 우선. 기존 work/idle 대체는 동작 의미의 개별 수락 아님; 비도끼 전용 pose 제작은 ENV1 범위 밖, activity glyph/label 필요.",
+      "source_refs": [
+        "rust/crates/sim-core/src/colony/job.rs:88",
+        "rust/crates/sim-core/src/colony/job.rs:197"
+      ]
+    },
+    {
+      "id": "Q00",
+      "category": "routine",
+      "name": "TendFire",
+      "sim_code": "ActivityKind::TendFire=0",
+      "tile_footprint": "person anchor1×1",
+      "states": "travel / work_a",
+      "existing_assets": [
+        "art/character/route_i/adult_M_loincloth_short/S/work_a.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 frame plan; NEW glyph는 Part1.2 code overlay",
+      "note": "각 activity의 전용 포즈 없음; pose alias와 읽기 한계 공개. Play는 실제 child look 사용.",
+      "source_refs": [
+        "rust/crates/sim-core/src/components/activity.rs:8"
+      ]
+    },
+    {
+      "id": "Q01",
+      "category": "routine",
+      "name": "Craft",
+      "sim_code": "ActivityKind::Craft=1",
+      "tile_footprint": "person anchor1×1",
+      "states": "travel / work_a",
+      "existing_assets": [
+        "art/character/route_i/adult_M_loincloth_short/S/work_a.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 frame plan; NEW glyph는 Part1.2 code overlay",
+      "note": "각 activity의 전용 포즈 없음; pose alias와 읽기 한계 공개. Play는 실제 child look 사용.",
+      "source_refs": [
+        "rust/crates/sim-core/src/components/activity.rs:8"
+      ]
+    },
+    {
+      "id": "Q02",
+      "category": "routine",
+      "name": "Repair",
+      "sim_code": "ActivityKind::Repair=2",
+      "tile_footprint": "person anchor1×1",
+      "states": "travel / work_a",
+      "existing_assets": [
+        "art/character/route_i/adult_M_loincloth_short/S/work_a.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 frame plan; NEW glyph는 Part1.2 code overlay",
+      "note": "각 activity의 전용 포즈 없음; pose alias와 읽기 한계 공개. Play는 실제 child look 사용.",
+      "source_refs": [
+        "rust/crates/sim-core/src/components/activity.rs:8"
+      ]
+    },
+    {
+      "id": "Q03",
+      "category": "routine",
+      "name": "HearthCircle",
+      "sim_code": "ActivityKind::HearthCircle=3",
+      "tile_footprint": "person anchor1×1",
+      "states": "travel / idle",
+      "existing_assets": [
+        "art/character/route_i/adult_M_loincloth_short/S/idle.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 frame plan; NEW glyph는 Part1.2 code overlay",
+      "note": "각 activity의 전용 포즈 없음; pose alias와 읽기 한계 공개. Play는 실제 child look 사용.",
+      "source_refs": [
+        "rust/crates/sim-core/src/components/activity.rs:8"
+      ]
+    },
+    {
+      "id": "Q04",
+      "category": "routine",
+      "name": "Explore",
+      "sim_code": "ActivityKind::Explore=4",
+      "tile_footprint": "person anchor1×1",
+      "states": "travel / walk_a",
+      "existing_assets": [
+        "art/character/route_i/adult_M_loincloth_short/S/walk_a.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 frame plan; NEW glyph는 Part1.2 code overlay",
+      "note": "각 activity의 전용 포즈 없음; pose alias와 읽기 한계 공개. Play는 실제 child look 사용.",
+      "source_refs": [
+        "rust/crates/sim-core/src/components/activity.rs:8"
+      ]
+    },
+    {
+      "id": "Q05",
+      "category": "routine",
+      "name": "Play",
+      "sim_code": "ActivityKind::Play=5",
+      "tile_footprint": "person anchor1×1",
+      "states": "travel / walk_a",
+      "existing_assets": [
+        "art/character/route_i/adult_M_loincloth_short/S/walk_a.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 frame plan; NEW glyph는 Part1.2 code overlay",
+      "note": "각 activity의 전용 포즈 없음; pose alias와 읽기 한계 공개. Play는 실제 child look 사용.",
+      "source_refs": [
+        "rust/crates/sim-core/src/components/activity.rs:8"
+      ]
+    },
+    {
+      "id": "Q06",
+      "category": "routine",
+      "name": "SitByFire",
+      "sim_code": "ActivityKind::SitByFire=6",
+      "tile_footprint": "person anchor1×1",
+      "states": "travel / idle",
+      "existing_assets": [
+        "art/character/route_i/adult_M_loincloth_short/S/idle.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 frame plan; NEW glyph는 Part1.2 code overlay",
+      "note": "각 activity의 전용 포즈 없음; pose alias와 읽기 한계 공개. Play는 실제 child look 사용.",
+      "source_refs": [
+        "rust/crates/sim-core/src/components/activity.rs:8"
+      ]
+    },
+    {
+      "id": "E00",
+      "category": "effect",
+      "name": "Smoke",
+      "sim_code": "hearth fire_lit; derived visual",
+      "tile_footprint": "hearth tile; rising overlay",
+      "states": "lit only / fade",
+      "existing_assets": [
+        "art/style05/env/misc/smoke_puff.png"
+      ],
+      "coverage_at_start": "REUSE",
+      "schedule": "재사용·Part4 conditional smoke",
+      "note": "smoke entity/chronicle code 없음.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md",
+        "rust/crates/sim-core/src/chronicle.rs:20",
+        "scripts/world/colony/agent_layer.gd:384"
+      ]
+    },
+    {
+      "id": "E01",
+      "category": "effect",
+      "name": "Hearth light",
+      "sim_code": "fire_lit + time_of_day",
+      "tile_footprint": "radius5 tiles",
+      "states": "day0 / night restore value",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.4 + Part4 code light (generation0)",
+      "note": "전역 -45% value 후 화로 반경 복원; 별도 physics 아님.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md",
+        "rust/crates/sim-core/src/chronicle.rs:20",
+        "scripts/world/colony/agent_layer.gd:384"
+      ]
+    },
+    {
+      "id": "E02",
+      "category": "effect",
+      "name": "Snow",
+      "sim_code": "season=3; ground only",
+      "tile_footprint": "tileable1×1",
+      "states": "winter alpha≤0.60",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.4 single snow texture",
+      "note": "인물·물체는 ground snow transform 대상 아님.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md",
+        "rust/crates/sim-core/src/chronicle.rs:20",
+        "scripts/world/colony/agent_layer.gd:384"
+      ]
+    },
+    {
+      "id": "E03",
+      "category": "effect",
+      "name": "Drought ground",
+      "sim_code": "PressureKind::Drought=1",
+      "tile_footprint": "ground tiles",
+      "states": "grass hue→ochre",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.4 code tone; hard-stop drop allowed",
+      "note": "재생성 없음; 선택 condition.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md",
+        "rust/crates/sim-core/src/chronicle.rs:20",
+        "scripts/world/colony/agent_layer.gd:384"
+      ]
+    },
+    {
+      "id": "E04",
+      "category": "effect",
+      "name": "Cold snap",
+      "sim_code": "PressureKind::ColdSnap=0",
+      "tile_footprint": "ground/people status",
+      "states": "winter/severity + cold cue",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.4 code tone; dedicated cold glyph deferred to M-ART2",
+      "note": "별도 눈 texture 재생성 없음.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md",
+        "rust/crates/sim-core/src/chronicle.rs:20",
+        "scripts/world/colony/agent_layer.gd:384"
+      ]
+    },
+    {
+      "id": "E05",
+      "category": "effect",
+      "name": "Beasts pressure",
+      "sim_code": "PressureKind::Beasts=2",
+      "tile_footprint": "wolf positions/banner",
+      "states": "approach/attack/retreat",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part2 animals + Part1.2 code marker",
+      "note": "늑대 A00 재사용; 별도 beast creature 없음.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md",
+        "rust/crates/sim-core/src/chronicle.rs:20",
+        "scripts/world/colony/agent_layer.gd:384"
+      ]
+    },
+    {
+      "id": "E06",
+      "category": "effect",
+      "name": "Illness badge",
+      "sim_code": "PressureKind::Illness=3; sick=1",
+      "tile_footprint": "person badge",
+      "states": "sick/recovered",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 code overlay; M-ART2 bridge integration deferred",
+      "note": "현재 agent badge를 보존할 UI 의미; generated sick face는 없음.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md",
+        "rust/crates/sim-core/src/chronicle.rs:20",
+        "scripts/world/colony/agent_layer.gd:384"
+      ]
+    },
+    {
+      "id": "E07",
+      "category": "effect",
+      "name": "Draft outline / target",
+      "sim_code": "drafted=1; DraftOrder0..3",
+      "tile_footprint": "person+target",
+      "states": "hold/move/attack animal/attack person",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 code overlay; M-ART2 bridge integration deferred",
+      "note": "외곽선/target line; 사람 sprite 재색칠 금지.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md",
+        "rust/crates/sim-core/src/chronicle.rs:20",
+        "scripts/world/colony/agent_layer.gd:384"
+      ]
+    },
+    {
+      "id": "E08",
+      "category": "effect",
+      "name": "Mood band",
+      "sim_code": "mood_bands=0..4",
+      "tile_footprint": "person badge",
+      "states": "none/low/normal/high/breakdown",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 code overlay; M-ART2 bridge integration deferred",
+      "note": "별도 표정 variant는 범위 밖.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md",
+        "rust/crates/sim-core/src/chronicle.rs:20",
+        "scripts/world/colony/agent_layer.gd:384"
+      ]
+    },
+    {
+      "id": "E09",
+      "category": "effect",
+      "name": "Death cue",
+      "sim_code": "get_recent_deaths; ChronicleKind::Died=11",
+      "tile_footprint": "death tile1×1",
+      "states": "reason/fade",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → 보류: 전용 인간 사체/죽음 효과는 ENV1 필수 asset 목록 밖",
+      "note": "sleep frame을 dead human으로 수락하지 않는다.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md",
+        "rust/crates/sim-core/src/chronicle.rs:20",
+        "scripts/world/colony/agent_layer.gd:384"
+      ]
+    },
+    {
+      "id": "E10",
+      "category": "effect",
+      "name": "Deer carcass",
+      "sim_code": "ChronicleKind::Hunted=31; Meat11+Hide6",
+      "tile_footprint": "dead art96×64",
+      "states": "fresh / removed",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part2 Deer dead frame reuse",
+      "note": "실제 persistent carcass collector 없음; 선언된 death visualization.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md",
+        "rust/crates/sim-core/src/chronicle.rs:20",
+        "scripts/world/colony/agent_layer.gd:384"
+      ]
+    },
+    {
+      "id": "E11",
+      "category": "effect",
+      "name": "Wolf carcass",
+      "sim_code": "ChronicleKind::WolfKilled=35; WolfHide16",
+      "tile_footprint": "dead art96×64",
+      "states": "fresh / removed",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part2 Wolf dead frame reuse",
+      "note": "실제 persistent carcass collector 없음; 종류는 event/declared overlay에서만 알 수 있음.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md",
+        "rust/crates/sim-core/src/chronicle.rs:20",
+        "scripts/world/colony/agent_layer.gd:384"
+      ]
+    },
+    {
+      "id": "E12",
+      "category": "effect",
+      "name": "Spoiled meat cue",
+      "sim_code": "Wildlife.meat_lots expiry",
+      "tile_footprint": "item1×1",
+      "states": "fresh / spoiled tint before removal",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.3 Meat global tint, generation0",
+      "note": "spoiled persistent stack이 없으므로 선언된 state.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md",
+        "rust/crates/sim-core/src/chronicle.rs:20",
+        "scripts/world/colony/agent_layer.gd:384"
+      ]
+    },
+    {
+      "id": "E13",
+      "category": "effect",
+      "name": "Construction progress",
+      "sim_code": "site_delivered/needed; progress/required",
+      "tile_footprint": "site footprint",
+      "states": "delivery/work/complete",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 code overlay",
+      "note": "B16 ghost 위 bar/text; 모든 kind에 같은 규칙.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md",
+        "rust/crates/sim-core/src/chronicle.rs:20",
+        "scripts/world/colony/agent_layer.gd:384"
+      ]
+    },
+    {
+      "id": "E14",
+      "category": "effect",
+      "name": "Contact shadow",
+      "sim_code": "display derived",
+      "tile_footprint": "person28×8px",
+      "states": "standing / sleeping anchor",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part4 code ellipse, generation0",
+      "note": "PNG에 굽지 않음; HANDOVER foot anchor.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md",
+        "rust/crates/sim-core/src/chronicle.rs:20",
+        "scripts/world/colony/agent_layer.gd:384"
+      ]
+    },
+    {
+      "id": "E15",
+      "category": "effect",
+      "name": "Person LOD marker",
+      "sim_code": "zoom≤0.5",
+      "tile_footprint": "10px circle;0.25=6px",
+      "states": "top colour+1px ink; activity at0.5",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part4 code overlay",
+      "note": "1/2 without LOD도 별도 렌더.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md",
+        "rust/crates/sim-core/src/chronicle.rs:20",
+        "scripts/world/colony/agent_layer.gd:384"
+      ]
+    },
+    {
+      "id": "E16",
+      "category": "effect",
+      "name": "Animal LOD marker",
+      "sim_code": "zoom≤0.5; animal kind",
+      "tile_footprint": "triangle",
+      "states": "wolf red/deer tan",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part4 code overlay",
+      "note": "A00/A01을 대체하는 축소 표시.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md",
+        "rust/crates/sim-core/src/chronicle.rs:20",
+        "scripts/world/colony/agent_layer.gd:384"
+      ]
+    },
+    {
+      "id": "E17",
+      "category": "effect",
+      "name": "Roof/indoor cue",
+      "sim_code": "get_rooms.roofed; TileGrid.outdoor",
+      "tile_footprint": "room tile set",
+      "states": "roofed/unroofed",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → Part1.2 code overlay",
+      "note": "B15 storehouse 외 bedroom/workshop/hall도 적용; opaque roof deferred.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md",
+        "rust/crates/sim-core/src/chronicle.rs:20",
+        "scripts/world/colony/agent_layer.gd:384"
+      ]
+    },
+    {
+      "id": "E18",
+      "category": "effect",
+      "name": "Tool break cue",
+      "sim_code": "ChronicleKind::ToolBroke=24",
+      "tile_footprint": "person/item position",
+      "states": "intact / tool removed",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → 보류: 전용 깨짐 effect는 ENV1 필수 목록 밖",
+      "note": "current chronicle/UI로만 인계; broken item enum 없음.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md",
+        "rust/crates/sim-core/src/chronicle.rs:20",
+        "scripts/world/colony/agent_layer.gd:384"
+      ]
+    },
+    {
+      "id": "E19",
+      "category": "effect",
+      "name": "Fight / quarrel cue",
+      "sim_code": "ChronicleKind::Quarrel=19,Fight=32",
+      "tile_footprint": "people position",
+      "states": "talk conflict / hit",
+      "existing_assets": [],
+      "coverage_at_start": "NEW",
+      "schedule": "NEW → 보류: 전용 combat hit effect는 ENV1 범위 밖",
+      "note": "늑대 attack A00은 별도 필수; 사람 combat pose는 generation되지 않음.",
+      "source_refs": [
+        "docs/v8/snapshot_schema.md",
+        "rust/crates/sim-core/src/chronicle.rs:20",
+        "scripts/world/colony/agent_layer.gd:384"
+      ]
+    }
+  ],
+  "row_counts": {
+    "REUSE": 57,
+    "NEW": 70,
+    "PARTIAL": 2
+  },
+  "category_counts": {
+    "terrain": 15,
+    "nature": 12,
+    "built": 18,
+    "item": 18,
+    "designation": 9,
+    "room": 5,
+    "animal": 2,
+    "person": 4,
+    "apparel": 3,
+    "job": 16,
+    "routine": 7,
+    "effect": 20
+  },
+  "base_05_assets": [
+    "art/style05/env/buildings/hut.png",
+    "art/style05/env/buildings/knapping_spot.png",
+    "art/style05/env/buildings/lean_to.png",
+    "art/style05/env/buildings/storage_pit.png",
+    "art/style05/env/buildings/woodworking_bench.png",
+    "art/style05/env/ground/dark_grass.png",
+    "art/style05/env/ground/forest_floor.png",
+    "art/style05/env/ground/hill_rock.png",
+    "art/style05/env/ground/meadow.png",
+    "art/style05/env/ground/packed_earth.png",
+    "art/style05/env/ground/river_bank.png",
+    "art/style05/env/items/berry_basket.png",
+    "art/style05/env/items/flint_blade.png",
+    "art/style05/env/items/flint_pile.png",
+    "art/style05/env/items/hide.png",
+    "art/style05/env/items/log_pile_large.png",
+    "art/style05/env/items/log_pile_medium.png",
+    "art/style05/env/items/log_pile_small.png",
+    "art/style05/env/items/stone_axe.png",
+    "art/style05/env/items/stone_pile.png",
+    "art/style05/env/misc/boulder_large.png",
+    "art/style05/env/misc/boulder_small.png",
+    "art/style05/env/misc/hearth_0.png",
+    "art/style05/env/misc/hearth_1.png",
+    "art/style05/env/misc/smoke_puff.png",
+    "art/style05/env/misc/stump.png",
+    "art/style05/env/plants/berry_bare.png",
+    "art/style05/env/plants/berry_full.png",
+    "art/style05/env/plants/birch_large.png",
+    "art/style05/env/plants/birch_small.png",
+    "art/style05/env/plants/oak_large.png",
+    "art/style05/env/plants/oak_small.png",
+    "art/style05/env/plants/pine_large.png",
+    "art/style05/env/plants/pine_small.png",
+    "art/style05/env/plants/reeds.png"
+  ],
+  "base_05_asset_count": 35,
+  "accepted_person_look_count": 34,
+  "accepted_person_looks": [
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/adult_F_fur_cloak_bun/S/idle.png",
+        "art/character/route_i/adult_F_fur_cloak_bun/S/walk_a.png",
+        "art/character/route_i/adult_F_fur_cloak_bun/S/work_a.png",
+        "art/character/route_i/adult_F_fur_cloak_bun/S/carry.png",
+        "art/character/route_i/adult_F_fur_cloak_bun/S/sleep.png",
+        "art/character/route_i/adult_F_fur_cloak_bun/E/idle.png",
+        "art/character/route_i/adult_F_fur_cloak_bun/E/walk_a.png",
+        "art/character/route_i/adult_F_fur_cloak_bun/E/work_a.png",
+        "art/character/route_i/adult_F_fur_cloak_bun/E/carry.png",
+        "art/character/route_i/adult_F_fur_cloak_bun/E/sleep.png"
+      ]
+    },
+    {
+      "look": "adult_F_fur_cloak_long_tied",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/adult_F_fur_cloak_long_tied/S/idle.png",
+        "art/character/route_i/adult_F_fur_cloak_long_tied/S/walk_a.png",
+        "art/character/route_i/adult_F_fur_cloak_long_tied/S/work_a.png",
+        "art/character/route_i/adult_F_fur_cloak_long_tied/S/carry.png",
+        "art/character/route_i/adult_F_fur_cloak_long_tied/S/sleep.png",
+        "art/character/route_i/adult_F_fur_cloak_long_tied/E/idle.png",
+        "art/character/route_i/adult_F_fur_cloak_long_tied/E/walk_a.png",
+        "art/character/route_i/adult_F_fur_cloak_long_tied/E/work_a.png",
+        "art/character/route_i/adult_F_fur_cloak_long_tied/E/carry.png",
+        "art/character/route_i/adult_F_fur_cloak_long_tied/E/sleep.png"
+      ]
+    },
+    {
+      "look": "adult_F_fur_cloak_short",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/adult_F_fur_cloak_short/S/idle.png",
+        "art/character/route_i/adult_F_fur_cloak_short/S/walk_a.png",
+        "art/character/route_i/adult_F_fur_cloak_short/S/work_a.png",
+        "art/character/route_i/adult_F_fur_cloak_short/S/carry.png",
+        "art/character/route_i/adult_F_fur_cloak_short/S/sleep.png",
+        "art/character/route_i/adult_F_fur_cloak_short/E/idle.png",
+        "art/character/route_i/adult_F_fur_cloak_short/E/walk_a.png",
+        "art/character/route_i/adult_F_fur_cloak_short/E/work_a.png",
+        "art/character/route_i/adult_F_fur_cloak_short/E/carry.png",
+        "art/character/route_i/adult_F_fur_cloak_short/E/sleep.png"
+      ]
+    },
+    {
+      "look": "adult_F_hide_wrap_bun",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/adult_F_hide_wrap_bun/S/idle.png",
+        "art/character/route_i/adult_F_hide_wrap_bun/S/walk_a.png",
+        "art/character/route_i/adult_F_hide_wrap_bun/S/work_a.png",
+        "art/character/route_i/adult_F_hide_wrap_bun/S/carry.png",
+        "art/character/route_i/adult_F_hide_wrap_bun/S/sleep.png",
+        "art/character/route_i/adult_F_hide_wrap_bun/E/idle.png",
+        "art/character/route_i/adult_F_hide_wrap_bun/E/walk_a.png",
+        "art/character/route_i/adult_F_hide_wrap_bun/E/work_a.png",
+        "art/character/route_i/adult_F_hide_wrap_bun/E/carry.png",
+        "art/character/route_i/adult_F_hide_wrap_bun/E/sleep.png"
+      ]
+    },
+    {
+      "look": "adult_F_hide_wrap_long_tied",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/adult_F_hide_wrap_long_tied/S/idle.png",
+        "art/character/route_i/adult_F_hide_wrap_long_tied/S/walk_a.png",
+        "art/character/route_i/adult_F_hide_wrap_long_tied/S/work_a.png",
+        "art/character/route_i/adult_F_hide_wrap_long_tied/S/carry.png",
+        "art/character/route_i/adult_F_hide_wrap_long_tied/S/sleep.png",
+        "art/character/route_i/adult_F_hide_wrap_long_tied/E/idle.png",
+        "art/character/route_i/adult_F_hide_wrap_long_tied/E/walk_a.png",
+        "art/character/route_i/adult_F_hide_wrap_long_tied/E/work_a.png",
+        "art/character/route_i/adult_F_hide_wrap_long_tied/E/carry.png",
+        "art/character/route_i/adult_F_hide_wrap_long_tied/E/sleep.png"
+      ]
+    },
+    {
+      "look": "adult_F_hide_wrap_short",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/adult_F_hide_wrap_short/S/idle.png",
+        "art/character/route_i/adult_F_hide_wrap_short/S/walk_a.png",
+        "art/character/route_i/adult_F_hide_wrap_short/S/work_a.png",
+        "art/character/route_i/adult_F_hide_wrap_short/S/carry.png",
+        "art/character/route_i/adult_F_hide_wrap_short/S/sleep.png",
+        "art/character/route_i/adult_F_hide_wrap_short/E/idle.png",
+        "art/character/route_i/adult_F_hide_wrap_short/E/walk_a.png",
+        "art/character/route_i/adult_F_hide_wrap_short/E/work_a.png",
+        "art/character/route_i/adult_F_hide_wrap_short/E/carry.png",
+        "art/character/route_i/adult_F_hide_wrap_short/E/sleep.png"
+      ]
+    },
+    {
+      "look": "adult_F_loincloth_bun",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/adult_F_loincloth_bun/S/idle.png",
+        "art/character/route_i/adult_F_loincloth_bun/S/walk_a.png",
+        "art/character/route_i/adult_F_loincloth_bun/S/work_a.png",
+        "art/character/route_i/adult_F_loincloth_bun/S/carry.png",
+        "art/character/route_i/adult_F_loincloth_bun/S/sleep.png",
+        "art/character/route_i/adult_F_loincloth_bun/E/idle.png",
+        "art/character/route_i/adult_F_loincloth_bun/E/walk_a.png",
+        "art/character/route_i/adult_F_loincloth_bun/E/work_a.png",
+        "art/character/route_i/adult_F_loincloth_bun/E/carry.png",
+        "art/character/route_i/adult_F_loincloth_bun/E/sleep.png"
+      ]
+    },
+    {
+      "look": "adult_F_loincloth_long_tied",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/adult_F_loincloth_long_tied/S/idle.png",
+        "art/character/route_i/adult_F_loincloth_long_tied/S/walk_a.png",
+        "art/character/route_i/adult_F_loincloth_long_tied/S/work_a.png",
+        "art/character/route_i/adult_F_loincloth_long_tied/S/carry.png",
+        "art/character/route_i/adult_F_loincloth_long_tied/S/sleep.png",
+        "art/character/route_i/adult_F_loincloth_long_tied/E/idle.png",
+        "art/character/route_i/adult_F_loincloth_long_tied/E/walk_a.png",
+        "art/character/route_i/adult_F_loincloth_long_tied/E/work_a.png",
+        "art/character/route_i/adult_F_loincloth_long_tied/E/carry.png",
+        "art/character/route_i/adult_F_loincloth_long_tied/E/sleep.png"
+      ]
+    },
+    {
+      "look": "adult_F_loincloth_short",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/adult_F_loincloth_short/S/idle.png",
+        "art/character/route_i/adult_F_loincloth_short/S/walk_a.png",
+        "art/character/route_i/adult_F_loincloth_short/S/work_a.png",
+        "art/character/route_i/adult_F_loincloth_short/S/carry.png",
+        "art/character/route_i/adult_F_loincloth_short/S/sleep.png",
+        "art/character/route_i/adult_F_loincloth_short/E/idle.png",
+        "art/character/route_i/adult_F_loincloth_short/E/walk_a.png",
+        "art/character/route_i/adult_F_loincloth_short/E/work_a.png",
+        "art/character/route_i/adult_F_loincloth_short/E/carry.png",
+        "art/character/route_i/adult_F_loincloth_short/E/sleep.png"
+      ]
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/adult_M_fur_cloak_bun/S/idle.png",
+        "art/character/route_i/adult_M_fur_cloak_bun/S/walk_a.png",
+        "art/character/route_i/adult_M_fur_cloak_bun/S/work_a.png",
+        "art/character/route_i/adult_M_fur_cloak_bun/S/carry.png",
+        "art/character/route_i/adult_M_fur_cloak_bun/S/sleep.png",
+        "art/character/route_i/adult_M_fur_cloak_bun/E/idle.png",
+        "art/character/route_i/adult_M_fur_cloak_bun/E/walk_a.png",
+        "art/character/route_i/adult_M_fur_cloak_bun/E/work_a.png",
+        "art/character/route_i/adult_M_fur_cloak_bun/E/carry.png",
+        "art/character/route_i/adult_M_fur_cloak_bun/E/sleep.png"
+      ]
+    },
+    {
+      "look": "adult_M_fur_cloak_short",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/adult_M_fur_cloak_short/S/idle.png",
+        "art/character/route_i/adult_M_fur_cloak_short/S/walk_a.png",
+        "art/character/route_i/adult_M_fur_cloak_short/S/work_a.png",
+        "art/character/route_i/adult_M_fur_cloak_short/S/carry.png",
+        "art/character/route_i/adult_M_fur_cloak_short/S/sleep.png",
+        "art/character/route_i/adult_M_fur_cloak_short/E/idle.png",
+        "art/character/route_i/adult_M_fur_cloak_short/E/walk_a.png",
+        "art/character/route_i/adult_M_fur_cloak_short/E/work_a.png",
+        "art/character/route_i/adult_M_fur_cloak_short/E/carry.png",
+        "art/character/route_i/adult_M_fur_cloak_short/E/sleep.png"
+      ]
+    },
+    {
+      "look": "adult_M_hide_wrap_bun",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/adult_M_hide_wrap_bun/S/idle.png",
+        "art/character/route_i/adult_M_hide_wrap_bun/S/walk_a.png",
+        "art/character/route_i/adult_M_hide_wrap_bun/S/work_a.png",
+        "art/character/route_i/adult_M_hide_wrap_bun/S/carry.png",
+        "art/character/route_i/adult_M_hide_wrap_bun/S/sleep.png",
+        "art/character/route_i/adult_M_hide_wrap_bun/E/idle.png",
+        "art/character/route_i/adult_M_hide_wrap_bun/E/walk_a.png",
+        "art/character/route_i/adult_M_hide_wrap_bun/E/work_a.png",
+        "art/character/route_i/adult_M_hide_wrap_bun/E/carry.png",
+        "art/character/route_i/adult_M_hide_wrap_bun/E/sleep.png"
+      ]
+    },
+    {
+      "look": "adult_M_hide_wrap_short",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/adult_M_hide_wrap_short/S/idle.png",
+        "art/character/route_i/adult_M_hide_wrap_short/S/walk_a.png",
+        "art/character/route_i/adult_M_hide_wrap_short/S/work_a.png",
+        "art/character/route_i/adult_M_hide_wrap_short/S/carry.png",
+        "art/character/route_i/adult_M_hide_wrap_short/S/sleep.png",
+        "art/character/route_i/adult_M_hide_wrap_short/E/idle.png",
+        "art/character/route_i/adult_M_hide_wrap_short/E/walk_a.png",
+        "art/character/route_i/adult_M_hide_wrap_short/E/work_a.png",
+        "art/character/route_i/adult_M_hide_wrap_short/E/carry.png",
+        "art/character/route_i/adult_M_hide_wrap_short/E/sleep.png"
+      ]
+    },
+    {
+      "look": "adult_M_loincloth_bun",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/adult_M_loincloth_bun/S/idle.png",
+        "art/character/route_i/adult_M_loincloth_bun/S/walk_a.png",
+        "art/character/route_i/adult_M_loincloth_bun/S/work_a.png",
+        "art/character/route_i/adult_M_loincloth_bun/S/carry.png",
+        "art/character/route_i/adult_M_loincloth_bun/S/sleep.png",
+        "art/character/route_i/adult_M_loincloth_bun/E/idle.png",
+        "art/character/route_i/adult_M_loincloth_bun/E/walk_a.png",
+        "art/character/route_i/adult_M_loincloth_bun/E/work_a.png",
+        "art/character/route_i/adult_M_loincloth_bun/E/carry.png",
+        "art/character/route_i/adult_M_loincloth_bun/E/sleep.png"
+      ]
+    },
+    {
+      "look": "adult_M_loincloth_long_tied",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/adult_M_loincloth_long_tied/S/idle.png",
+        "art/character/route_i/adult_M_loincloth_long_tied/S/walk_a.png",
+        "art/character/route_i/adult_M_loincloth_long_tied/S/work_a.png",
+        "art/character/route_i/adult_M_loincloth_long_tied/S/carry.png",
+        "art/character/route_i/adult_M_loincloth_long_tied/S/sleep.png",
+        "art/character/route_i/adult_M_loincloth_long_tied/E/idle.png",
+        "art/character/route_i/adult_M_loincloth_long_tied/E/walk_a.png",
+        "art/character/route_i/adult_M_loincloth_long_tied/E/work_a.png",
+        "art/character/route_i/adult_M_loincloth_long_tied/E/carry.png",
+        "art/character/route_i/adult_M_loincloth_long_tied/E/sleep.png"
+      ]
+    },
+    {
+      "look": "adult_M_loincloth_short",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/adult_M_loincloth_short/S/idle.png",
+        "art/character/route_i/adult_M_loincloth_short/S/walk_a.png",
+        "art/character/route_i/adult_M_loincloth_short/S/work_a.png",
+        "art/character/route_i/adult_M_loincloth_short/S/carry.png",
+        "art/character/route_i/adult_M_loincloth_short/S/sleep.png",
+        "art/character/route_i/adult_M_loincloth_short/E/idle.png",
+        "art/character/route_i/adult_M_loincloth_short/E/walk_a.png",
+        "art/character/route_i/adult_M_loincloth_short/E/work_a.png",
+        "art/character/route_i/adult_M_loincloth_short/E/carry.png",
+        "art/character/route_i/adult_M_loincloth_short/E/sleep.png"
+      ]
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/child_F_fur_cloak_bun/S/idle.png",
+        "art/character/route_i/child_F_fur_cloak_bun/S/walk_a.png",
+        "art/character/route_i/child_F_fur_cloak_bun/S/work_a.png",
+        "art/character/route_i/child_F_fur_cloak_bun/S/carry.png",
+        "art/character/route_i/child_F_fur_cloak_bun/S/sleep.png",
+        "art/character/route_i/child_F_fur_cloak_bun/E/idle.png",
+        "art/character/route_i/child_F_fur_cloak_bun/E/walk_a.png",
+        "art/character/route_i/child_F_fur_cloak_bun/E/work_a.png",
+        "art/character/route_i/child_F_fur_cloak_bun/E/carry.png",
+        "art/character/route_i/child_F_fur_cloak_bun/E/sleep.png"
+      ]
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/child_F_fur_cloak_long_tied/S/idle.png",
+        "art/character/route_i/child_F_fur_cloak_long_tied/S/walk_a.png",
+        "art/character/route_i/child_F_fur_cloak_long_tied/S/work_a.png",
+        "art/character/route_i/child_F_fur_cloak_long_tied/S/carry.png",
+        "art/character/route_i/child_F_fur_cloak_long_tied/S/sleep.png",
+        "art/character/route_i/child_F_fur_cloak_long_tied/E/idle.png",
+        "art/character/route_i/child_F_fur_cloak_long_tied/E/walk_a.png",
+        "art/character/route_i/child_F_fur_cloak_long_tied/E/work_a.png",
+        "art/character/route_i/child_F_fur_cloak_long_tied/E/carry.png",
+        "art/character/route_i/child_F_fur_cloak_long_tied/E/sleep.png"
+      ]
+    },
+    {
+      "look": "child_F_fur_cloak_short",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/child_F_fur_cloak_short/S/idle.png",
+        "art/character/route_i/child_F_fur_cloak_short/S/walk_a.png",
+        "art/character/route_i/child_F_fur_cloak_short/S/work_a.png",
+        "art/character/route_i/child_F_fur_cloak_short/S/carry.png",
+        "art/character/route_i/child_F_fur_cloak_short/S/sleep.png",
+        "art/character/route_i/child_F_fur_cloak_short/E/idle.png",
+        "art/character/route_i/child_F_fur_cloak_short/E/walk_a.png",
+        "art/character/route_i/child_F_fur_cloak_short/E/work_a.png",
+        "art/character/route_i/child_F_fur_cloak_short/E/carry.png",
+        "art/character/route_i/child_F_fur_cloak_short/E/sleep.png"
+      ]
+    },
+    {
+      "look": "child_F_hide_wrap_bun",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/child_F_hide_wrap_bun/S/idle.png",
+        "art/character/route_i/child_F_hide_wrap_bun/S/walk_a.png",
+        "art/character/route_i/child_F_hide_wrap_bun/S/work_a.png",
+        "art/character/route_i/child_F_hide_wrap_bun/S/carry.png",
+        "art/character/route_i/child_F_hide_wrap_bun/S/sleep.png",
+        "art/character/route_i/child_F_hide_wrap_bun/E/idle.png",
+        "art/character/route_i/child_F_hide_wrap_bun/E/walk_a.png",
+        "art/character/route_i/child_F_hide_wrap_bun/E/work_a.png",
+        "art/character/route_i/child_F_hide_wrap_bun/E/carry.png",
+        "art/character/route_i/child_F_hide_wrap_bun/E/sleep.png"
+      ]
+    },
+    {
+      "look": "child_F_hide_wrap_long_tied",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/child_F_hide_wrap_long_tied/S/idle.png",
+        "art/character/route_i/child_F_hide_wrap_long_tied/S/walk_a.png",
+        "art/character/route_i/child_F_hide_wrap_long_tied/S/work_a.png",
+        "art/character/route_i/child_F_hide_wrap_long_tied/S/carry.png",
+        "art/character/route_i/child_F_hide_wrap_long_tied/S/sleep.png",
+        "art/character/route_i/child_F_hide_wrap_long_tied/E/idle.png",
+        "art/character/route_i/child_F_hide_wrap_long_tied/E/walk_a.png",
+        "art/character/route_i/child_F_hide_wrap_long_tied/E/work_a.png",
+        "art/character/route_i/child_F_hide_wrap_long_tied/E/carry.png",
+        "art/character/route_i/child_F_hide_wrap_long_tied/E/sleep.png"
+      ]
+    },
+    {
+      "look": "child_F_hide_wrap_short",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/child_F_hide_wrap_short/S/idle.png",
+        "art/character/route_i/child_F_hide_wrap_short/S/walk_a.png",
+        "art/character/route_i/child_F_hide_wrap_short/S/work_a.png",
+        "art/character/route_i/child_F_hide_wrap_short/S/carry.png",
+        "art/character/route_i/child_F_hide_wrap_short/S/sleep.png",
+        "art/character/route_i/child_F_hide_wrap_short/E/idle.png",
+        "art/character/route_i/child_F_hide_wrap_short/E/walk_a.png",
+        "art/character/route_i/child_F_hide_wrap_short/E/work_a.png",
+        "art/character/route_i/child_F_hide_wrap_short/E/carry.png",
+        "art/character/route_i/child_F_hide_wrap_short/E/sleep.png"
+      ]
+    },
+    {
+      "look": "child_F_loincloth_bun",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/child_F_loincloth_bun/S/idle.png",
+        "art/character/route_i/child_F_loincloth_bun/S/walk_a.png",
+        "art/character/route_i/child_F_loincloth_bun/S/work_a.png",
+        "art/character/route_i/child_F_loincloth_bun/S/carry.png",
+        "art/character/route_i/child_F_loincloth_bun/S/sleep.png",
+        "art/character/route_i/child_F_loincloth_bun/E/idle.png",
+        "art/character/route_i/child_F_loincloth_bun/E/walk_a.png",
+        "art/character/route_i/child_F_loincloth_bun/E/work_a.png",
+        "art/character/route_i/child_F_loincloth_bun/E/carry.png",
+        "art/character/route_i/child_F_loincloth_bun/E/sleep.png"
+      ]
+    },
+    {
+      "look": "child_F_loincloth_long_tied",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/child_F_loincloth_long_tied/S/idle.png",
+        "art/character/route_i/child_F_loincloth_long_tied/S/walk_a.png",
+        "art/character/route_i/child_F_loincloth_long_tied/S/work_a.png",
+        "art/character/route_i/child_F_loincloth_long_tied/S/carry.png",
+        "art/character/route_i/child_F_loincloth_long_tied/S/sleep.png",
+        "art/character/route_i/child_F_loincloth_long_tied/E/idle.png",
+        "art/character/route_i/child_F_loincloth_long_tied/E/walk_a.png",
+        "art/character/route_i/child_F_loincloth_long_tied/E/work_a.png",
+        "art/character/route_i/child_F_loincloth_long_tied/E/carry.png",
+        "art/character/route_i/child_F_loincloth_long_tied/E/sleep.png"
+      ]
+    },
+    {
+      "look": "child_F_loincloth_short",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/child_F_loincloth_short/S/idle.png",
+        "art/character/route_i/child_F_loincloth_short/S/walk_a.png",
+        "art/character/route_i/child_F_loincloth_short/S/work_a.png",
+        "art/character/route_i/child_F_loincloth_short/S/carry.png",
+        "art/character/route_i/child_F_loincloth_short/S/sleep.png",
+        "art/character/route_i/child_F_loincloth_short/E/idle.png",
+        "art/character/route_i/child_F_loincloth_short/E/walk_a.png",
+        "art/character/route_i/child_F_loincloth_short/E/work_a.png",
+        "art/character/route_i/child_F_loincloth_short/E/carry.png",
+        "art/character/route_i/child_F_loincloth_short/E/sleep.png"
+      ]
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/child_M_fur_cloak_bun/S/idle.png",
+        "art/character/route_i/child_M_fur_cloak_bun/S/walk_a.png",
+        "art/character/route_i/child_M_fur_cloak_bun/S/work_a.png",
+        "art/character/route_i/child_M_fur_cloak_bun/S/carry.png",
+        "art/character/route_i/child_M_fur_cloak_bun/S/sleep.png",
+        "art/character/route_i/child_M_fur_cloak_bun/E/idle.png",
+        "art/character/route_i/child_M_fur_cloak_bun/E/walk_a.png",
+        "art/character/route_i/child_M_fur_cloak_bun/E/work_a.png",
+        "art/character/route_i/child_M_fur_cloak_bun/E/carry.png",
+        "art/character/route_i/child_M_fur_cloak_bun/E/sleep.png"
+      ]
+    },
+    {
+      "look": "child_M_fur_cloak_long_tied",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/child_M_fur_cloak_long_tied/S/idle.png",
+        "art/character/route_i/child_M_fur_cloak_long_tied/S/walk_a.png",
+        "art/character/route_i/child_M_fur_cloak_long_tied/S/work_a.png",
+        "art/character/route_i/child_M_fur_cloak_long_tied/S/carry.png",
+        "art/character/route_i/child_M_fur_cloak_long_tied/S/sleep.png",
+        "art/character/route_i/child_M_fur_cloak_long_tied/E/idle.png",
+        "art/character/route_i/child_M_fur_cloak_long_tied/E/walk_a.png",
+        "art/character/route_i/child_M_fur_cloak_long_tied/E/work_a.png",
+        "art/character/route_i/child_M_fur_cloak_long_tied/E/carry.png",
+        "art/character/route_i/child_M_fur_cloak_long_tied/E/sleep.png"
+      ]
+    },
+    {
+      "look": "child_M_fur_cloak_short",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/child_M_fur_cloak_short/S/idle.png",
+        "art/character/route_i/child_M_fur_cloak_short/S/walk_a.png",
+        "art/character/route_i/child_M_fur_cloak_short/S/work_a.png",
+        "art/character/route_i/child_M_fur_cloak_short/S/carry.png",
+        "art/character/route_i/child_M_fur_cloak_short/S/sleep.png",
+        "art/character/route_i/child_M_fur_cloak_short/E/idle.png",
+        "art/character/route_i/child_M_fur_cloak_short/E/walk_a.png",
+        "art/character/route_i/child_M_fur_cloak_short/E/work_a.png",
+        "art/character/route_i/child_M_fur_cloak_short/E/carry.png",
+        "art/character/route_i/child_M_fur_cloak_short/E/sleep.png"
+      ]
+    },
+    {
+      "look": "child_M_hide_wrap_bun",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/child_M_hide_wrap_bun/S/idle.png",
+        "art/character/route_i/child_M_hide_wrap_bun/S/walk_a.png",
+        "art/character/route_i/child_M_hide_wrap_bun/S/work_a.png",
+        "art/character/route_i/child_M_hide_wrap_bun/S/carry.png",
+        "art/character/route_i/child_M_hide_wrap_bun/S/sleep.png",
+        "art/character/route_i/child_M_hide_wrap_bun/E/idle.png",
+        "art/character/route_i/child_M_hide_wrap_bun/E/walk_a.png",
+        "art/character/route_i/child_M_hide_wrap_bun/E/work_a.png",
+        "art/character/route_i/child_M_hide_wrap_bun/E/carry.png",
+        "art/character/route_i/child_M_hide_wrap_bun/E/sleep.png"
+      ]
+    },
+    {
+      "look": "child_M_hide_wrap_long_tied",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/child_M_hide_wrap_long_tied/S/idle.png",
+        "art/character/route_i/child_M_hide_wrap_long_tied/S/walk_a.png",
+        "art/character/route_i/child_M_hide_wrap_long_tied/S/work_a.png",
+        "art/character/route_i/child_M_hide_wrap_long_tied/S/carry.png",
+        "art/character/route_i/child_M_hide_wrap_long_tied/S/sleep.png",
+        "art/character/route_i/child_M_hide_wrap_long_tied/E/idle.png",
+        "art/character/route_i/child_M_hide_wrap_long_tied/E/walk_a.png",
+        "art/character/route_i/child_M_hide_wrap_long_tied/E/work_a.png",
+        "art/character/route_i/child_M_hide_wrap_long_tied/E/carry.png",
+        "art/character/route_i/child_M_hide_wrap_long_tied/E/sleep.png"
+      ]
+    },
+    {
+      "look": "child_M_hide_wrap_short",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/child_M_hide_wrap_short/S/idle.png",
+        "art/character/route_i/child_M_hide_wrap_short/S/walk_a.png",
+        "art/character/route_i/child_M_hide_wrap_short/S/work_a.png",
+        "art/character/route_i/child_M_hide_wrap_short/S/carry.png",
+        "art/character/route_i/child_M_hide_wrap_short/S/sleep.png",
+        "art/character/route_i/child_M_hide_wrap_short/E/idle.png",
+        "art/character/route_i/child_M_hide_wrap_short/E/walk_a.png",
+        "art/character/route_i/child_M_hide_wrap_short/E/work_a.png",
+        "art/character/route_i/child_M_hide_wrap_short/E/carry.png",
+        "art/character/route_i/child_M_hide_wrap_short/E/sleep.png"
+      ]
+    },
+    {
+      "look": "child_M_loincloth_bun",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/child_M_loincloth_bun/S/idle.png",
+        "art/character/route_i/child_M_loincloth_bun/S/walk_a.png",
+        "art/character/route_i/child_M_loincloth_bun/S/work_a.png",
+        "art/character/route_i/child_M_loincloth_bun/S/carry.png",
+        "art/character/route_i/child_M_loincloth_bun/S/sleep.png",
+        "art/character/route_i/child_M_loincloth_bun/E/idle.png",
+        "art/character/route_i/child_M_loincloth_bun/E/walk_a.png",
+        "art/character/route_i/child_M_loincloth_bun/E/work_a.png",
+        "art/character/route_i/child_M_loincloth_bun/E/carry.png",
+        "art/character/route_i/child_M_loincloth_bun/E/sleep.png"
+      ]
+    },
+    {
+      "look": "child_M_loincloth_long_tied",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/child_M_loincloth_long_tied/S/idle.png",
+        "art/character/route_i/child_M_loincloth_long_tied/S/walk_a.png",
+        "art/character/route_i/child_M_loincloth_long_tied/S/work_a.png",
+        "art/character/route_i/child_M_loincloth_long_tied/S/carry.png",
+        "art/character/route_i/child_M_loincloth_long_tied/S/sleep.png",
+        "art/character/route_i/child_M_loincloth_long_tied/E/idle.png",
+        "art/character/route_i/child_M_loincloth_long_tied/E/walk_a.png",
+        "art/character/route_i/child_M_loincloth_long_tied/E/work_a.png",
+        "art/character/route_i/child_M_loincloth_long_tied/E/carry.png",
+        "art/character/route_i/child_M_loincloth_long_tied/E/sleep.png"
+      ]
+    },
+    {
+      "look": "child_M_loincloth_short",
+      "frame_count": 10,
+      "frames": [
+        "art/character/route_i/child_M_loincloth_short/S/idle.png",
+        "art/character/route_i/child_M_loincloth_short/S/walk_a.png",
+        "art/character/route_i/child_M_loincloth_short/S/work_a.png",
+        "art/character/route_i/child_M_loincloth_short/S/carry.png",
+        "art/character/route_i/child_M_loincloth_short/S/sleep.png",
+        "art/character/route_i/child_M_loincloth_short/E/idle.png",
+        "art/character/route_i/child_M_loincloth_short/E/walk_a.png",
+        "art/character/route_i/child_M_loincloth_short/E/work_a.png",
+        "art/character/route_i/child_M_loincloth_short/E/carry.png",
+        "art/character/route_i/child_M_loincloth_short/E/sleep.png"
+      ]
+    }
+  ],
+  "animal_state_pose_map": {
+    "Wander": {
+      "code": 0,
+      "deer": "stand/graze/walk by movement",
+      "wolf": "stand/walk by movement"
+    },
+    "Flee": {
+      "code": 1,
+      "deer": "run",
+      "wolf": "not normal species state"
+    },
+    "Rest": {
+      "code": 2,
+      "deer": "stand (dedicated rest pose deferred)",
+      "wolf": "not normal species state"
+    },
+    "Hunt": {
+      "code": 3,
+      "deer": "not normal species state",
+      "wolf": "walk/run by movement"
+    },
+    "Attack": {
+      "code": 4,
+      "deer": "not normal species state",
+      "wolf": "attack"
+    },
+    "Retreat": {
+      "code": 5,
+      "deer": "not normal species state",
+      "wolf": "run"
+    }
+  },
+  "recipe_routes": {
+    "KnapBlade": "B04+I03→I04",
+    "HaftAxe": "B05+I04+I00→I05",
+    "SplitFirewood": "B05+I00→I01",
+    "KnapFineBlade": "B04+I03→I04 (quality only)",
+    "GrindAxe": "B12+I05+I02→I10",
+    "FormPot": "B13+I07→I08",
+    "FirePot": "B00+I08+I01→I09",
+    "HaftSpear": "B05+I04+I00→I15",
+    "ScrapeHide": "B06+I06+I04→I12",
+    "MakeHideWrap": "B06+I12→I13",
+    "MakeFurCloak": "B06+I16→I14"
+  },
+  "chronicle_routes": [
+    {
+      "code": 0,
+      "variant": "Born",
+      "drawable_route": "P01/P03"
+    },
+    {
+      "code": 1,
+      "variant": "FoundingMember",
+      "drawable_route": "UI_ONLY: no distinct spatial object or persistent map effect in collectors"
+    },
+    {
+      "code": 2,
+      "variant": "Paired",
+      "drawable_route": "UI_ONLY: no distinct spatial object or persistent map effect in collectors"
+    },
+    {
+      "code": 3,
+      "variant": "CameOfAge",
+      "drawable_route": "P00"
+    },
+    {
+      "code": 4,
+      "variant": "BecameElder",
+      "drawable_route": "P02"
+    },
+    {
+      "code": 5,
+      "variant": "Departed",
+      "drawable_route": "UI_ONLY: no distinct spatial object or persistent map effect in collectors"
+    },
+    {
+      "code": 6,
+      "variant": "DepartureCancelled",
+      "drawable_route": "UI_ONLY: no distinct spatial object or persistent map effect in collectors"
+    },
+    {
+      "code": 7,
+      "variant": "Settled",
+      "drawable_route": "UI_ONLY: no distinct spatial object or persistent map effect in collectors"
+    },
+    {
+      "code": 8,
+      "variant": "Joined",
+      "drawable_route": "UI_ONLY: no distinct spatial object or persistent map effect in collectors"
+    },
+    {
+      "code": 9,
+      "variant": "LeftSettlement",
+      "drawable_route": "UI_ONLY: no distinct spatial object or persistent map effect in collectors"
+    },
+    {
+      "code": 10,
+      "variant": "Widowed",
+      "drawable_route": "UI_ONLY: no distinct spatial object or persistent map effect in collectors"
+    },
+    {
+      "code": 11,
+      "variant": "Died",
+      "drawable_route": "E09"
+    },
+    {
+      "code": 12,
+      "variant": "SettlementFormed",
+      "drawable_route": "UI_ONLY: no distinct spatial object or persistent map effect in collectors"
+    },
+    {
+      "code": 13,
+      "variant": "FissionStarted",
+      "drawable_route": "UI_ONLY: no distinct spatial object or persistent map effect in collectors"
+    },
+    {
+      "code": 14,
+      "variant": "DaughterFounded",
+      "drawable_route": "UI_ONLY: no distinct spatial object or persistent map effect in collectors"
+    },
+    {
+      "code": 15,
+      "variant": "FissionCancelled",
+      "drawable_route": "UI_ONLY: no distinct spatial object or persistent map effect in collectors"
+    },
+    {
+      "code": 16,
+      "variant": "SettlementDissolved",
+      "drawable_route": "UI_ONLY: no distinct spatial object or persistent map effect in collectors"
+    },
+    {
+      "code": 17,
+      "variant": "PorterDeparted",
+      "drawable_route": "I17/J02"
+    },
+    {
+      "code": 18,
+      "variant": "PorterDelivered",
+      "drawable_route": "I17/J02"
+    },
+    {
+      "code": 19,
+      "variant": "Quarrel",
+      "drawable_route": "E19"
+    },
+    {
+      "code": 20,
+      "variant": "VillagesEstranged",
+      "drawable_route": "UI_ONLY: no distinct spatial object or persistent map effect in collectors"
+    },
+    {
+      "code": 21,
+      "variant": "VillagesReconciled",
+      "drawable_route": "UI_ONLY: no distinct spatial object or persistent map effect in collectors"
+    },
+    {
+      "code": 22,
+      "variant": "HutBuilt",
+      "drawable_route": "B03"
+    },
+    {
+      "code": 23,
+      "variant": "RoomFormed",
+      "drawable_route": "R00..R04"
+    },
+    {
+      "code": 24,
+      "variant": "ToolBroke",
+      "drawable_route": "E18"
+    },
+    {
+      "code": 25,
+      "variant": "KnowledgeLearned",
+      "drawable_route": "UI_ONLY: no distinct spatial object or persistent map effect in collectors"
+    },
+    {
+      "code": 26,
+      "variant": "KnowledgeDiscovered",
+      "drawable_route": "UI_ONLY: no distinct spatial object or persistent map effect in collectors"
+    },
+    {
+      "code": 27,
+      "variant": "KnowledgeAtRisk",
+      "drawable_route": "UI_ONLY: no distinct spatial object or persistent map effect in collectors"
+    },
+    {
+      "code": 28,
+      "variant": "KnowledgeLost",
+      "drawable_route": "UI_ONLY: no distinct spatial object or persistent map effect in collectors"
+    },
+    {
+      "code": 29,
+      "variant": "PressureBegan",
+      "drawable_route": "E03..E06"
+    },
+    {
+      "code": 30,
+      "variant": "PressureEnded",
+      "drawable_route": "E03..E06"
+    },
+    {
+      "code": 31,
+      "variant": "Hunted",
+      "drawable_route": "E10"
+    },
+    {
+      "code": 32,
+      "variant": "Fight",
+      "drawable_route": "E19"
+    },
+    {
+      "code": 33,
+      "variant": "Breakdown",
+      "drawable_route": "E08"
+    },
+    {
+      "code": 34,
+      "variant": "Drafted",
+      "drawable_route": "E07"
+    },
+    {
+      "code": 35,
+      "variant": "WolfKilled",
+      "drawable_route": "E11"
+    },
+    {
+      "code": 36,
+      "variant": "Sick",
+      "drawable_route": "E06"
+    },
+    {
+      "code": 37,
+      "variant": "Recovered",
+      "drawable_route": "E06"
+    }
+  ],
+  "notes": [
+    "This is inventory and scheduling, not asset acceptance. Existing paths validated as files, not rejudged in this audit.",
+    "REUSE counts rows whose main drawing has existing art; partial missing states are explicitly flagged. Rows are semantic drawables, not unique PNG counts.",
+    "Hut/Hearth shared BuildingKind and BlueprintKind aliases are counted once.",
+    "No game code was edited. Generated asset status must be taken from ENV1 production manifests/report."
+  ]
+}
