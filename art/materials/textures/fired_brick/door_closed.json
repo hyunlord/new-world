@@ -1,0 +1,58 @@
+{
+  "id": "fired_brick/door_closed",
+  "attempt": 1,
+  "source": "/Users/rexxa/work/artpolish2-data/materials/originals/fired_brick_door_closed_try1.png",
+  "source_sha256": "2a887fbeb2fab114846eb4c14c8bddd5711981ef07bbd1bf2d8f3f97275b9d0f",
+  "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a169d1-0aa7-7952-8adf-21ec2890edd7/exec-dfca69b4-ba41-42c6-9818-94e3838b1b7a.png",
+  "prompt": "Use case: transparent game sprite. Generate ONE CLOSED solid rectangular doorway/frame with its shut rough slab, in the wall material. Wall construction: kiln-fired red terracotta bricks laid in a staggered running bond, crisp rectangular edges with handmade irregularities, thin sandy clay mortar joints. Material: fired terracotta clay. Era: early Bronze Age. Door slab may use rough timber with plain lashings appropriate to the wall, never modern hardware. Straight-on front elevation from the south with only a very small top visible; not isometric, not a perspective room. Entire standing doorway fills most canvas with generous transparent margin and completely transparent background/opening, no ground or cast shadow. Full square outer silhouette, top lintel horizontal and uprights vertical; no arch. Style reference for controlled dark-brown hand ink and warm watercolor earth tones. Keep upper-left edges brighter, right/bottom surfaces distinctly shaded, strong upper-left light. No text or framing. Will be uniformly reduced to 60 pixels tall and padded to the final sprite size, so broad shapes. Fill the whole available canvas with material. Output dimensions will be normalized later; never put a narrow strip on a white backdrop. No white or blank border, no letterboxing. Opposite repeating edges must have matching course placement and average colors. Local upper-left light on facets, no large-scale gradient.",
+  "prompt_sha256": "a7e71a53b5f7bb565e0973ebf461e6b2e9c49e3c646fafe13549f216fda4e6f1",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+      "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e"
+    }
+  ],
+  "normalized_path": "/Users/rexxa/work/artpolish2-data/materials/normalized/fired_brick_door_closed_try1.png",
+  "normalized_sha256": "3f4d999ecd53c868462a13dfb0833829da0a5a706103e31052b7f37faa0f3b81",
+  "size": [
+    64,
+    60
+  ],
+  "operations": [
+    "STRUCT alpha>=128 bbox+2 fringe crop (40, 9, 1217, 1244)",
+    "uniform LANCZOS scale 0.048582995951417005",
+    "bottom-aligned transparent canvas padding; no pixel edits"
+  ],
+  "opaque": false,
+  "seam_x": null,
+  "seam_y": null,
+  "seam_applicability": "Repeat axes only; isolated end/junction/door do not tile.",
+  "projection": {
+    "family": "door",
+    "anchor": [
+      32,
+      59
+    ],
+    "height_band": [
+      58,
+      62
+    ],
+    "height_band_override": false,
+    "opaque_pixels": 3313,
+    "base_row": 59,
+    "base_error": 0,
+    "height": 60,
+    "gradient_x": -1.3887395878191326,
+    "gradient_y": -1.671059987669544,
+    "light_angle_degrees": 230.2716189151295,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "projection_applicability": "Standing doors only; wall components/top/floor do not have a standing silhouette.",
+  "numeric_pass": true,
+  "owner_approval": "NOT_CLAIMED",
+  "visual_rejection": "",
+  "candidate_ready": true
+}

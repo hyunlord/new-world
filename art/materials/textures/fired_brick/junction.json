@@ -1,0 +1,34 @@
+{
+  "id": "fired_brick/junction",
+  "attempt": 1,
+  "source": "/Users/rexxa/work/artpolish2-data/materials/originals/fired_brick_junction_try1.png",
+  "source_sha256": "d1dac3b2011b169e7d7b58050511750cbe6fdcacf68e506a6a88a80563a616f7",
+  "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a169d1-0aa7-7952-8adf-21ec2890edd7/exec-d8a2a2ab-2dc2-4a7a-9f6d-7afdd51e4e13.png",
+  "prompt": "Use case: game texture asset. Generate ONE square the final sprite size wall TOP junction piece seen directly overhead with material courses interlocking at a corner and crossing for a stone-age settlement game. Construction style: kiln-fired red terracotta bricks laid in a staggered running bond, crisp rectangular edges with handmade irregularities, thin sandy clay mortar joints. Material: fired terracotta clay. Era: early Bronze Age. Style reference is only for ink/watercolor rendering and palette, not its composition. Natural-history illustration, warm restrained earth colors, dark-brown hand-inked contours and broad watercolor planes; no photorealism, no 3D rendering. Lighting stays upper-left: upper-left facets subtly lit, lower-right facets shaded. Opaque full bleed square top surface. Broad interlocking courses compatible with straight strips. No wall face, no ground, no exterior silhouette No text, frame, ground, scenery, labels or watermark. Broad readable forms surviving reduction to the final sprite size. Fill the whole available canvas with material. Output dimensions will be normalized later; never put a narrow strip on a white backdrop. No white or blank border, no letterboxing. Opposite repeating edges must have matching course placement and average colors. Local upper-left light on facets, no large-scale gradient.",
+  "prompt_sha256": "631b491c07ea5cb56487af84d1b678756a86a0a285731cf904cb0e63a419cfb2",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+      "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e"
+    }
+  ],
+  "normalized_path": "/Users/rexxa/work/artpolish2-data/materials/normalized/fired_brick_junction_try1.png",
+  "normalized_sha256": "7ffe232f4979e6af79dd63f3fa6c388a7c36685e66c62372c4b29d755c9738b3",
+  "size": [
+    64,
+    64
+  ],
+  "operations": [
+    "full-frame LANCZOS resize (1254, 1254) -> (64, 64)"
+  ],
+  "opaque": true,
+  "seam_x": null,
+  "seam_y": null,
+  "seam_applicability": "Repeat axes only; isolated end/junction/door do not tile.",
+  "projection": null,
+  "projection_applicability": "Standing doors only; wall components/top/floor do not have a standing silhouette.",
+  "numeric_pass": true,
+  "owner_approval": "NOT_CLAIMED",
+  "visual_rejection": "",
+  "candidate_ready": true
+}

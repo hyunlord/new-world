@@ -1,0 +1,50 @@
+{
+  "id": "fired_brick/face",
+  "attempt": 1,
+  "source": "/Users/rexxa/work/artpolish2-data/materials/originals/fired_brick_face_try1.png",
+  "source_sha256": "c5a0f92dd8bf696a130ffb8ca33b773db212e994cb51e18c4fa973b667cbaf64",
+  "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a169d1-0aa7-7952-8adf-21ec2890edd7/exec-19206107-bc8d-4628-98af-51b15a9a665f.png",
+  "prompt": "Use case: game texture asset. Generate ONE wide the final sprite size wall FACE strip, front elevation from south, showing 3 stacked courses running east-west, opaque material full bleed for a stone-age settlement game. Construction style: kiln-fired red terracotta bricks laid in a staggered running bond, crisp rectangular edges with handmade irregularities, thin sandy clay mortar joints. Material: fired terracotta clay. Era: early Bronze Age. Style reference is only for ink/watercolor rendering and palette, not its composition. Natural-history illustration, warm restrained earth colors, dark-brown hand-inked contours and broad watercolor planes; no photorealism, no 3D rendering. Lighting stays upper-left: upper-left facets subtly lit, lower-right facets shaded. Seamless left-to-right. Match left and right boundary colors and course heights; no exterior ends, no top surface, no top or bottom exterior black frame No text, frame, ground, scenery, labels or watermark. Broad readable forms surviving reduction to the final sprite size. Fill the whole available canvas with material. Output dimensions will be normalized later; never put a narrow strip on a white backdrop. No white or blank border, no letterboxing. Opposite repeating edges must have matching course placement and average colors. Local upper-left light on facets, no large-scale gradient.",
+  "prompt_sha256": "277425210e729fe60b97d3487f23ff9537448b583763c7fc564f5496ef0eb51a",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+      "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e"
+    }
+  ],
+  "normalized_path": "/Users/rexxa/work/artpolish2-data/materials/normalized/fired_brick_face_try1.png",
+  "normalized_sha256": "77686d330384f994bd79a959ec4f243d53041687c76a811ea4cd6862a46d3683",
+  "size": [
+    256,
+    44
+  ],
+  "operations": [
+    "full-frame LANCZOS resize (2172, 724) -> (256, 44)"
+  ],
+  "opaque": true,
+  "seam_x": {
+    "width": 256,
+    "height": 44,
+    "interior_p95": 23.7560606060606,
+    "join_columns": [
+      256,
+      512,
+      768
+    ],
+    "join_mad": [
+      18.545454545454547,
+      18.545454545454547,
+      18.545454545454547
+    ],
+    "limit": 27.319469696969687,
+    "passed": true
+  },
+  "seam_y": null,
+  "seam_applicability": "Repeat axes only; isolated end/junction/door do not tile.",
+  "projection": null,
+  "projection_applicability": "Standing doors only; wall components/top/floor do not have a standing silhouette.",
+  "numeric_pass": true,
+  "owner_approval": "NOT_CLAIMED",
+  "visual_rejection": "",
+  "candidate_ready": true
+}

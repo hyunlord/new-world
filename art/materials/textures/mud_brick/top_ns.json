@@ -1,0 +1,50 @@
+{
+  "id": "mud_brick/top_ns",
+  "attempt": 3,
+  "source": "/Users/rexxa/work/artpolish2-data/materials/originals/mud_brick_top_ns_try3.png",
+  "source_sha256": "44ee4587a19d0ed5d8b20939936960830fc363f4af86b6f1ba090a1881d1ee12",
+  "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a169d1-0aa7-7952-8adf-21ec2890edd7/exec-85538346-ef64-4530-bd97-9e3851e8b9ae.png",
+  "prompt": "Generate ONE opaque seamless top-down texture of the TOP SURFACE of a wall made of sun-dried ochre mud bricks in the Neolithic. Portrait tall image fully filled. Viewed exactly from above, NOT the wall's vertical face. Each rectangular brick is long vertically (NORTH-SOUTH); all long brick axes point from TOP to BOTTOM of the image, arranged as two or three narrow columns, offset vertically. The wall RUN is north-south. Bricks are about three times as long top-to-bottom as they are wide. No horizontal long bricks. Full-bleed material to all edges, no white margins. Seamless top/bottom: matching column colors and courses at both ends. Upper-left local lighting remains upper-left, not rotated with bricks. Restrained dark-brown ink and warm earthy ochre watercolor broad forms, straw specks sparse. No ground, borders, wallsides, text or perspective.",
+  "prompt_sha256": "92c81680fe92068b27d7a6c7d1747949e6dd277a3743fd72648fd3e6102e6c37",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+      "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e"
+    }
+  ],
+  "normalized_path": "/Users/rexxa/work/artpolish2-data/materials/normalized/mud_brick_top_ns_try3.png",
+  "normalized_sha256": "fa263dccd94860c3809e3371f35f55b272ece29140e8444cd32c7c2155c7878e",
+  "size": [
+    64,
+    256
+  ],
+  "operations": [
+    "full-frame LANCZOS resize (1024, 1536) -> (64, 256)"
+  ],
+  "opaque": true,
+  "seam_x": null,
+  "seam_y": {
+    "width": 256,
+    "height": 64,
+    "interior_p95": 17.384895833333328,
+    "join_columns": [
+      256,
+      512,
+      768
+    ],
+    "join_mad": [
+      26.119791666666668,
+      26.119791666666668,
+      26.119791666666668
+    ],
+    "limit": 19.992630208333324,
+    "passed": false
+  },
+  "seam_applicability": "Repeat axes only; isolated end/junction/door do not tile.",
+  "projection": null,
+  "projection_applicability": "Standing doors only; wall components/top/floor do not have a standing silhouette.",
+  "numeric_pass": false,
+  "owner_approval": "NOT_CLAIMED",
+  "visual_rejection": "",
+  "candidate_ready": false
+}

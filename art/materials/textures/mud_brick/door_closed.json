@@ -1,0 +1,58 @@
+{
+  "id": "mud_brick/door_closed",
+  "attempt": 1,
+  "source": "/Users/rexxa/work/artpolish2-data/materials/originals/mud_brick_door_closed_try1.png",
+  "source_sha256": "c9e7a385a0e4c1a4b693d60ffdba66ba2ea33239c6738fd05f1b3a1cc7693a94",
+  "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a169d1-0aa7-7952-8adf-21ec2890edd7/exec-457bd314-c463-4c02-9e84-b384df6c66de.png",
+  "prompt": "Use case: transparent game sprite. Generate ONE CLOSED solid rectangular doorway/frame with its shut rough slab, in the wall material. Wall construction: hand-moulded warm ochre mud bricks laid in a staggered running bond, small visible straw fibres, soft irregular rectangular edges and thin clay joints. Material: sun-dried clay with straw. Era: Neolithic. Door slab may use rough timber with plain lashings appropriate to the wall, never modern hardware. Straight-on front elevation from the south with only a very small top visible; not isometric, not a perspective room. Entire standing doorway fills most canvas with generous transparent margin and completely transparent background/opening, no ground or cast shadow. Full square outer silhouette, top lintel horizontal and uprights vertical; no arch. Style reference for controlled dark-brown hand ink and warm watercolor earth tones. Keep upper-left edges brighter, right/bottom surfaces distinctly shaded, strong upper-left light. No text or framing. Will be uniformly reduced to 60 pixels tall and padded to 64x60, so broad shapes.",
+  "prompt_sha256": "ddd4ccd1e67d5b29744e1e998ac32a72b280ee3ae4c9b0de6a5600a4df1708de",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+      "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e"
+    }
+  ],
+  "normalized_path": "/Users/rexxa/work/artpolish2-data/materials/normalized/mud_brick_door_closed_try1.png",
+  "normalized_sha256": "49af5bd8dc6e17cc6ca45c04b8fa9a3c7d52b7db569989ccd6066a01a4d20aff",
+  "size": [
+    64,
+    60
+  ],
+  "operations": [
+    "STRUCT alpha>=128 bbox+2 fringe crop (61, 42, 1195, 1159)",
+    "uniform LANCZOS scale 0.05371530886302596",
+    "bottom-aligned transparent canvas padding; no pixel edits"
+  ],
+  "opaque": false,
+  "seam_x": null,
+  "seam_y": null,
+  "seam_applicability": "Repeat axes only; isolated end/junction/door do not tile.",
+  "projection": {
+    "family": "door",
+    "anchor": [
+      32,
+      59
+    ],
+    "height_band": [
+      58,
+      62
+    ],
+    "height_band_override": false,
+    "opaque_pixels": 3624,
+    "base_row": 59,
+    "base_error": 0,
+    "height": 60,
+    "gradient_x": -1.766045436675091,
+    "gradient_y": -1.2904199438202246,
+    "light_angle_degrees": 216.15497656011175,
+    "base_passed": true,
+    "height_passed": true,
+    "light_passed": true,
+    "passed": true
+  },
+  "projection_applicability": "Standing doors only; wall components/top/floor do not have a standing silhouette.",
+  "numeric_pass": true,
+  "owner_approval": "NOT_CLAIMED",
+  "visual_rejection": "",
+  "candidate_ready": true
+}

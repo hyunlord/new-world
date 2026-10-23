@@ -1,18 +1,82 @@
 {
   "schema_version": 1,
   "room_keys": {
-    "log": {"style_id": "log", "material_id": "oak", "label": "log / oak"},
-    "stone": {"style_id": "drystone", "material_id": "granite", "label": "drystone / granite"}
+    "log": {
+      "style_id": "log",
+      "material_id": "oak",
+      "label": "log / oak"
+    },
+    "stone": {
+      "style_id": "drystone",
+      "material_id": "granite",
+      "label": "drystone / granite"
+    }
   },
   "samples": [
-    {"style_id": "log", "material_id": "oak", "label": "log / oak"},
-    {"style_id": "log", "material_id": "pine", "label": "log / pine"},
-    {"style_id": "drystone", "material_id": "granite", "label": "drystone / granite"},
-    {"style_id": "drystone", "material_id": "sandstone", "label": "drystone / sandstone"}
+    {
+      "style_id": "log",
+      "material_id": "oak",
+      "label": "log / oak"
+    },
+    {
+      "style_id": "log",
+      "material_id": "pine",
+      "label": "log / pine"
+    },
+    {
+      "style_id": "drystone",
+      "material_id": "granite",
+      "label": "drystone / granite"
+    },
+    {
+      "style_id": "drystone",
+      "material_id": "sandstone",
+      "label": "drystone / sandstone"
+    },
+    {
+      "style_id": "mud_brick",
+      "material_id": "clay",
+      "label": "mud_brick / clay"
+    },
+    {
+      "style_id": "fired_brick",
+      "material_id": "clay",
+      "label": "fired_brick / clay"
+    }
   ],
   "owner_modes": [
-    {"id": "a", "label": "a / POLISH dark top x0.45", "renderer": "legacy"},
-    {"id": "b", "label": "b / material along run / width64", "renderer": "material", "top": {"value": 0.75, "saturation": 0.85, "blur_px": 2, "ink_edge_px": 2, "width_px": 64, "side_shadow": 0.0, "orientation": "along_run"}},
-    {"id": "c", "label": "c / material along run / width44", "renderer": "material", "top": {"value": 0.75, "saturation": 0.85, "blur_px": 2, "ink_edge_px": 2, "width_px": 44, "side_shadow": 0.25, "orientation": "along_run"}}
+    {
+      "id": "a",
+      "label": "a / POLISH dark top x0.45",
+      "renderer": "legacy"
+    },
+    {
+      "id": "b",
+      "label": "b / material along run / width64",
+      "renderer": "material",
+      "top": {
+        "value": 0.75,
+        "saturation": 0.85,
+        "blur_px": 2,
+        "ink_edge_px": 2,
+        "width_px": 64,
+        "side_shadow": 0.0,
+        "orientation": "along_run"
+      }
+    },
+    {
+      "id": "c",
+      "label": "c / material along run / width44",
+      "renderer": "material",
+      "top": {
+        "value": 0.75,
+        "saturation": 0.85,
+        "blur_px": 2,
+        "ink_edge_px": 2,
+        "width_px": 44,
+        "side_shadow": 0.25,
+        "orientation": "along_run"
+      }
+    }
   ]
 }

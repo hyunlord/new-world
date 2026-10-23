@@ -1,0 +1,50 @@
+{
+  "id": "fired_brick/top_ns",
+  "attempt": 1,
+  "source": "/Users/rexxa/work/artpolish2-data/materials/originals/fired_brick_top_ns_try1.png",
+  "source_sha256": "ab43145850bfa873eb700aa16aaf9e5d6ba087488f2ecdfbd224ead01dee67aa",
+  "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a169d1-0aa7-7952-8adf-21ec2890edd7/exec-c5a850c2-12dd-4fbb-8777-6f26f94f9dba.png",
+  "prompt": "Use case: game texture asset. Generate ONE tall narrow the final sprite size wall TOP strip seen exactly overhead; the built courses and long axes lie vertically NORTH-SOUTH top-to-bottom for a stone-age settlement game. Construction style: kiln-fired red terracotta bricks laid in a staggered running bond, crisp rectangular edges with handmade irregularities, thin sandy clay mortar joints. Material: fired terracotta clay. Era: early Bronze Age. Style reference is only for ink/watercolor rendering and palette, not its composition. Natural-history illustration, warm restrained earth colors, dark-brown hand-inked contours and broad watercolor planes; no photorealism, no 3D rendering. Lighting stays upper-left: upper-left facets subtly lit, lower-right facets shaded. Independently draw north-south geometry with light from UPPER LEFT. Do NOT rotate an east-west texture. Seamless top-to-bottom; top/bottom boundary colors and course positions compatible. No wall face, no log ends, no planks or decking No text, frame, ground, scenery, labels or watermark. Broad readable forms surviving reduction to the final sprite size. Fill the whole available canvas with material. Output dimensions will be normalized later; never put a narrow strip on a white backdrop. No white or blank border, no letterboxing. Opposite repeating edges must have matching course placement and average colors. Local upper-left light on facets, no large-scale gradient. Every rectangular brick must have its LONG AXIS VERTICAL, three times taller than wide. Two or three offset vertical columns. Show their horizontal top surface, NOT a wall face. No long horizontal bricks.",
+  "prompt_sha256": "6da01065b96bb8d43c17c0e3639bb263fe6c90ea369d45cf1ce2d6c71409f420",
+  "references": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+      "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e"
+    }
+  ],
+  "normalized_path": "/Users/rexxa/work/artpolish2-data/materials/normalized/fired_brick_top_ns_try1.png",
+  "normalized_sha256": "6fe819321f7ea4a793f278b09f5b0f037b4c2722f1b243008b435ee230a661bf",
+  "size": [
+    64,
+    256
+  ],
+  "operations": [
+    "full-frame LANCZOS resize (887, 1774) -> (64, 256)"
+  ],
+  "opaque": true,
+  "seam_x": null,
+  "seam_y": {
+    "width": 256,
+    "height": 64,
+    "interior_p95": 21.799479166666664,
+    "join_columns": [
+      256,
+      512,
+      768
+    ],
+    "join_mad": [
+      7.614583333333333,
+      7.614583333333333,
+      7.614583333333333
+    ],
+    "limit": 25.069401041666662,
+    "passed": true
+  },
+  "seam_applicability": "Repeat axes only; isolated end/junction/door do not tile.",
+  "projection": null,
+  "projection_applicability": "Standing doors only; wall components/top/floor do not have a standing silhouette.",
+  "numeric_pass": true,
+  "owner_approval": "NOT_CLAIMED",
+  "visual_rejection": "",
+  "candidate_ready": true
+}
