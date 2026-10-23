@@ -129,3 +129,18 @@ owner": every open question is decided here.
 - `tracking` gates `Designation::Hunt` (a gate-only variant: hunt marks live in `ColonyState::wildlife`, never on a
   tile), `hafting` also gates `haft_spear`, `hide_scraping` also gates `scrape_hide`, `make_hide_wrap` and
   `make_fur_cloak` (knowledge.ron). The M4 rules have no hunting and no such recipes, so M4 worlds are unchanged.
+
+## D10 — The knife, the dressing pass and what a worn top is
+
+- A knife recipe (`scrape_hide`, the recipe file's `knife: true`) needs one flint blade on the workshop's shelf
+  besides its inputs (`Recipe::needs`): the bill supplies it like an input, the craft does not consume it, and each
+  craft's start wears it one use (`ColonyState::knife_wear` per workshop); the 8th use takes it off the shelf, used
+  up (ledger consumed, chronicle `ToolBroke` naming the crafter). The blade on the shelf is counted as shelved by the
+  ledger, so the invariant needs no new term. A crafter keeps the axe in hand.
+- Butchering wears a flint blade only when the hunter holds one as the tool; a hunter without a tool fetches a spear
+  first, a blade only when no spear is stocked (so most kills give 2 meat once spears exist; F4 counts meat eaten).
+- Dressing: hourly, while the order is on; tops on stockpile cells warmest first; the neediest adult (highest
+  `Hardiness` permille, i.e. the lowest cold tolerance, then `AgentId`) who wears something colder gets it; when that
+  person is busy the top waits for them. Children are not dressed (children take no jobs); recorded as a limit.
+- A worn top is counted as held by the ledger (`ledger_of` adds worn tops to `held`); at a death it is left on the
+  ground like a held tool. Tops never wear out in M5.

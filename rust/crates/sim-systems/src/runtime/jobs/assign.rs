@@ -340,13 +340,15 @@ fn pick_work(
                 } else {
                     1
                 };
-                for &(kind, n) in &recipe.inputs {
+                for (kind, n) in recipe.needs() {
+                    // M5: the knife is one blade, whatever the trip's crafts.
+                    let knife = recipe.knife && kind == ItemKind::FlintBlade;
                     let coming = ctx.supply.get(&(id, kind)).copied().unwrap_or(0);
                     let have = shop.shelved(kind) + coming;
                     if have >= n {
                         continue;
                     }
-                    let n = n.saturating_mul(crafts);
+                    let n = if knife { n } else { n.saturating_mul(crafts) };
                     let stocked = search(
                         &index.ground,
                         pos,
@@ -378,7 +380,7 @@ fn pick_work(
                 }
                 // Craft: every input on the shelf and the bench free.
                 let ready = recipe
-                    .inputs
+                    .needs()
                     .iter()
                     .all(|&(kind, n)| shop.shelved(kind) >= n);
                 // M4: only a practitioner of the recipe's gate crafts it.
@@ -1048,6 +1050,12 @@ impl RuntimeSystem for JobAssignSystem {
         // M4: today's apprenticeship sessions first (both partners must be free).
         if let Some(k) = knowledge_rule {
             super::teach::assign(world, resources, &k, &mut assigned, &mut taken);
+        }
+        // M5 (ADR 0029): the dressing pass, hourly while "everyone in hides" is on.
+        if rule.wildlife.is_some() && !resources.colony.dress_off && tick.is_multiple_of(60) {
+            let free: Vec<(AgentId, Entity, (u32, u32))> =
+                available.iter().map(|row| (row.0, row.1, row.2)).collect();
+            super::hunt::dress(world, resources, &free, &mut assigned, &mut taken);
         }
         // The skills of the crafts on offer (active bills of work type Craft), for the craft round's order.
         let mut craft_skills: Vec<SkillKind> = resources

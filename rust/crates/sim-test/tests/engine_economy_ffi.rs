@@ -133,7 +133,11 @@ fn priorities_and_one_persons_economy() {
         ["craft", "build", "quarry", "mine", "hunt", "chop", "split", "haul"]
     );
     assert_eq!(levels_in_work_order(&row)[3], 1, "mine");
-    assert_eq!(levels_in_work_order(&row)[5], 0, "chop (M5: hunt is 4th in work order)");
+    assert_eq!(
+        levels_in_work_order(&row)[5],
+        0,
+        "chop (M5: hunt is 4th in work order)"
+    );
     // Economy of one person: skills, a tool, a load.
     let entity = engine
         .world

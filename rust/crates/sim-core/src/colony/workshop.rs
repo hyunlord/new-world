@@ -116,6 +116,18 @@ pub enum RecipeKind {
     MakeFurCloak,
 }
 
+impl Recipe {
+    /// What one craft needs on the shelf: its inputs, and for a knife recipe one
+    /// flint blade (the knife: kept on the shelf, worn one use a craft, M5 ADR 0029).
+    pub fn needs(&self) -> Vec<(ItemKind, u16)> {
+        let mut out = self.inputs.clone();
+        if self.knife && !out.iter().any(|(k, _)| *k == ItemKind::FlintBlade) {
+            out.push((ItemKind::FlintBlade, 1));
+        }
+        out
+    }
+}
+
 impl RecipeKind {
     /// Every recipe, in code order.
     pub const ALL: [Self; 11] = [

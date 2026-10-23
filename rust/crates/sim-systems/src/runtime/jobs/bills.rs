@@ -140,7 +140,7 @@ pub fn runnable(world: &World, res: &SimResources, shop: &Workshop, index: usize
         BillMode::Maintain(n) => bill_count(world, res, recipe.output.0) < u32::from(n),
     };
     more && recipe
-        .inputs
+        .needs()
         .iter()
         .all(|&(kind, n)| u32::from(shop.shelved(kind)) + available(res, kind) >= u32::from(n))
 }
@@ -161,7 +161,7 @@ pub fn schedule(world: &World, res: &mut SimResources) {
             .iter()
             .filter(|b| !b.suspended && b.remaining() != Some(0))
             .filter_map(|b| b.recipe.recipe())
-            .flat_map(|r| r.inputs.iter().map(|(k, _)| *k))
+            .flat_map(|r| r.needs().into_iter().map(|(k, _)| k))
             .collect();
         let work_tile = shop.work_tile();
         let mut spill: Vec<(ItemSpec, u16)> = Vec::new();

@@ -12,7 +12,7 @@ use sim_core::colony::skills::{
     craft_quality, material_term, quality_bonus, scaled_ticks, temperament_quality,
     temperament_ticks,
 };
-use sim_core::colony::{BillId, ItemSpec, Job, JobKind, SkillKind, Skills, WorkshopId};
+use sim_core::colony::{BillId, ItemKind, ItemSpec, Job, JobKind, SkillKind, Skills, WorkshopId};
 use sim_core::components::{AgentId, Temperament};
 use sim_engine::SimResources;
 
@@ -67,7 +67,7 @@ pub fn start(
         return None;
     }
     if !recipe
-        .inputs
+        .needs()
         .iter()
         .all(|&(kind, n)| shop.shelved(kind) >= n)
     {
@@ -91,6 +91,9 @@ pub fn start(
     }
     res.colony.item_ledger.craft_start(&recipe.inputs);
     res.colony.touch(false);
+    if recipe.knife {
+        wear_knife(world, res, entity, workshop);
+    }
     job.material = material;
     let level = level_of(world, entity, recipe.skill);
     let temperament = world.get::<&Temperament>(entity).ok().map(|t| *t);
@@ -137,9 +140,56 @@ pub fn next_ready(world: &World, res: &SimResources, workshop: WorkshopId, bill:
         }
     }
     recipe
-        .inputs
+        .needs()
         .iter()
         .all(|&(kind, n)| shop.shelved(kind) >= n)
+}
+
+/// One use of `workshop`'s knife (the flint blade kept on its shelf; M5 ADR 0029):
+/// at `knife_uses` the blade breaks — taken off the shelf and used up (ledger
+/// consumed), chronicle `ToolBroke` naming the crafter.
+fn wear_knife(world: &World, res: &mut SimResources, entity: Entity, workshop: WorkshopId) {
+    let limit = res
+        .rules
+        .colony
+        .and_then(|c| c.wildlife)
+        .map_or(8, |w| w.knife_uses)
+        .max(1);
+    let uses = {
+        let wear = res.colony.knife_wear.entry(workshop).or_insert(0);
+        *wear += 1;
+        *wear
+    };
+    res.colony.wildlife.tallies.knife_uses += 1;
+    if uses < limit {
+        return;
+    }
+    res.colony.knife_wear.remove(&workshop);
+    let Some(shop) = res.colony.workshops.get_mut(&workshop) else {
+        return;
+    };
+    let Some(stack) = shop
+        .shelf
+        .iter_mut()
+        .find(|s| s.kind == ItemKind::FlintBlade)
+    else {
+        return;
+    };
+    stack.count -= 1;
+    shop.shelf.retain(|s| s.count > 0);
+    res.colony.item_ledger.consume(ItemKind::FlintBlade, 1);
+    res.colony.tallies.tools_broken += 1;
+    res.colony.wildlife.tallies.knives_broken += 1;
+    let mut entry = sim_core::chronicle::ChronicleEntry::new(
+        res.current_tick,
+        sim_core::chronicle::ChronicleKind::ToolBroke,
+    )
+    .cause(ItemKind::FlintBlade.code())
+    .value(i64::from(uses));
+    if let Ok(agent) = world.get::<&sim_core::components::Agent>(entity) {
+        entry = entry.subject(agent.id);
+    }
+    res.chronicle.push(entry);
 }
 
 /// Finish the craft `job` (a `JobKind::Craft`): draw its quality, create the

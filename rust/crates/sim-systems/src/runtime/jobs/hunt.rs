@@ -430,6 +430,99 @@ pub fn equip_step(
     finish(world, res, entity);
 }
 
+/// How warm a top is (0 = the loincloth).
+const fn warmth(top: Option<Top>) -> u8 {
+    match top {
+        None => 0,
+        Some(Top::HideWrap) => 1,
+        Some(Top::FurCloak) => 2,
+    }
+}
+
+/// The dressing pass (ADR 0029; `JobAssignSystem`, every 60 ticks while the
+/// standing order is on): each free top on a stockpile cell, warmest first,
+/// goes to the person who most needs one — highest `Hardiness` (the lowest
+/// cold tolerance), then `AgentId` — among adults wearing something colder. When
+/// that person is not free this tick the top waits for them (nobody less needy
+/// takes it). One `Equip` job a stack a pass (the stack is reserved).
+pub fn dress(
+    world: &World,
+    res: &mut SimResources,
+    available: &[(AgentId, Entity, (u32, u32))],
+    assigned: &mut std::collections::BTreeSet<AgentId>,
+    taken: &mut Vec<(Entity, Job, (u32, u32))>,
+) {
+    use sim_core::components::{Agent, Child, Hardiness};
+    let tick = res.current_tick;
+    let mut tops: Vec<(std::cmp::Reverse<u8>, u32, u32, Top)> = res
+        .colony
+        .ground_items
+        .iter()
+        .filter(|(t, s)| {
+            s.count > 0
+                && res.colony.zone_of_tile.contains_key(*t)
+                && !res
+                    .colony
+                    .reservations
+                    .contains_key(&ReserveKey::Stack(**t))
+        })
+        .filter_map(|(t, s)| {
+            Top::of_item(s.kind).map(|top| (std::cmp::Reverse(warmth(Some(top))), t.1, t.0, top))
+        })
+        .collect();
+    if tops.is_empty() {
+        return;
+    }
+    tops.sort();
+    let mut wearers: Vec<(std::cmp::Reverse<u16>, AgentId, u8)> = world
+        .query::<(&Agent, Option<&Hardiness>, Option<&Apparel>)>()
+        .without::<&Child>()
+        .iter()
+        .map(|(_, (a, h, ap))| {
+            (
+                std::cmp::Reverse(h.map_or(1000, |h| h.permille)),
+                a.id,
+                warmth(ap.map(|x| x.top)),
+            )
+        })
+        .collect();
+    wearers.sort();
+    let mut served: std::collections::BTreeSet<AgentId> = std::collections::BTreeSet::new();
+    for (_, y, x, top) in tops {
+        let from = (x, y);
+        let Some(&(_, id, _)) = wearers
+            .iter()
+            .find(|(_, id, now)| *now < warmth(Some(top)) && !served.contains(id))
+        else {
+            continue;
+        };
+        served.insert(id);
+        let Some(&(_, entity, pos)) = available.iter().find(|row| row.0 == id) else {
+            continue;
+        };
+        if assigned.contains(&id) || !res.nav.reaches(res.nav.region_of(pos), from) {
+            continue;
+        }
+        let job = Job {
+            kind: JobKind::Equip { from },
+            stage: JobStage::ToSource,
+            taken_at: tick,
+            amount: 1,
+            item: top.item(),
+            material: None,
+            fetch: None,
+            best_distance: chebyshev(pos, from),
+            progress_tick: tick,
+        };
+        for key in job.keys() {
+            super::cancel::reserve(res, key, id);
+        }
+        res.colony.tallies.jobs_taken += 1;
+        assigned.insert(id);
+        taken.push((entity, job, from));
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

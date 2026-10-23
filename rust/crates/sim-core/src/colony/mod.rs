@@ -245,6 +245,9 @@ pub struct ColonyState {
     /// M5 (ADR 0028): animals, hunt marks and zones, meat lots.
     #[serde(default)]
     pub wildlife: wildlife::Wildlife,
+    /// M5 (ADR 0029): uses of each workshop's knife (the flint blade on its shelf) so far.
+    #[serde(default)]
+    pub knife_wear: BTreeMap<WorkshopId, u32>,
     /// M5 (ADR 0029): the standing order "everyone in hides" is off (it is on by default).
     #[serde(default)]
     pub dress_off: bool,
