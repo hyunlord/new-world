@@ -113,3 +113,24 @@ Godot runtime integration or owner approval.
   changed Python files. A small explicit full-prompt option for the later
   immutable retry creation is undergoing independent review and will be checked
   before use. Blind rounds have not begun.
+
+## Round0 complete: full pool frozen at9a0101dd
+
+- All204 candidates and actual observations are complete: geometry196/204,
+  coarse hair204/204, garment131/204, extras0. All234 portrait calls and39
+  texture calls are audited; baseline273 leaves47. Full index SHA256 is
+  `b1e70036b014c032bfa4f9ddcafd142051475780d93e9faeb71bcfec2aac17af`.
+- Actual isolated reviewers `/root/blind_a0` and `/root/blind_b0` each viewed
+  48 descriptions,36 identity questions and48 exchanged-description matches.
+  Identity is35/36 for both (PASS). A distinctness is4/6 for
+  `child_F_fur_cloak_bun`, otherwise6/6; B is6/6 for every look.
+  Both missed targets in that failed look (v2,v5) already used two attempts.
+- The original round0 failure is immutable. `PORTRAIT_REPAIR_SELECTION.json`
+  fixes47 eligible quality repairs from75 candidates, records28 budget-deferred
+  cases and6 exhausted failure variants, including the2 blind misses.
+  Every baseline selected record and attempt canonical is preserved externally.
+- Fifth-reference edit integrity is independently verified ata164b924:
+  252 scoped tests, Ruff and strict typing across68 Python files pass. The
+  foreign-chain rejection failure and its regression/closure remain recorded.
+  Actual image-edit quality still requires observation. One selected retry will
+  run first, then the remaining fixed union; no variant can receive a third call.
