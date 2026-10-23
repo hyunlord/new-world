@@ -1,0 +1,269 @@
+{
+  "scope": "round0 playback transport/render QA; not R1 semantic certification",
+  "mechanical_pass": true,
+  "raw_screenshots_verified": 576,
+  "blind_images_verified": 48,
+  "authored_frames_reconstructed": 192,
+  "nearest_2x_frames_verified": 96,
+  "source_hashes_verified": 240,
+  "accepted_only_12_look_cohort": true,
+  "adult_females": 5,
+  "children": 2,
+  "coverage": "S/E columns; meadow/forest_floor rows; all five activities; all three tops/hairs",
+  "records": [
+    {
+      "id": "p1_01",
+      "zoom": 1,
+      "screenshots": 24,
+      "matching_decoded_states": 1,
+      "decoded_unique_states": 1,
+      "all_decoded_states_observed": true
+    },
+    {
+      "id": "p1_02",
+      "zoom": 1,
+      "screenshots": 24,
+      "matching_decoded_states": 2,
+      "decoded_unique_states": 2,
+      "all_decoded_states_observed": true
+    },
+    {
+      "id": "p1_03",
+      "zoom": 1,
+      "screenshots": 24,
+      "matching_decoded_states": 2,
+      "decoded_unique_states": 2,
+      "all_decoded_states_observed": true
+    },
+    {
+      "id": "p1_04",
+      "zoom": 1,
+      "screenshots": 24,
+      "matching_decoded_states": 2,
+      "decoded_unique_states": 2,
+      "all_decoded_states_observed": true
+    },
+    {
+      "id": "p1_05",
+      "zoom": 1,
+      "screenshots": 24,
+      "matching_decoded_states": 1,
+      "decoded_unique_states": 1,
+      "all_decoded_states_observed": true
+    },
+    {
+      "id": "p1_06",
+      "zoom": 1,
+      "screenshots": 24,
+      "matching_decoded_states": 1,
+      "decoded_unique_states": 1,
+      "all_decoded_states_observed": true
+    },
+    {
+      "id": "p1_07",
+      "zoom": 1,
+      "screenshots": 24,
+      "matching_decoded_states": 2,
+      "decoded_unique_states": 2,
+      "all_decoded_states_observed": true
+    },
+    {
+      "id": "p1_08",
+      "zoom": 1,
+      "screenshots": 24,
+      "matching_decoded_states": 2,
+      "decoded_unique_states": 2,
+      "all_decoded_states_observed": true
+    },
+    {
+      "id": "p1_09",
+      "zoom": 1,
+      "screenshots": 24,
+      "matching_decoded_states": 2,
+      "decoded_unique_states": 2,
+      "all_decoded_states_observed": true
+    },
+    {
+      "id": "p1_10",
+      "zoom": 1,
+      "screenshots": 24,
+      "matching_decoded_states": 1,
+      "decoded_unique_states": 1,
+      "all_decoded_states_observed": true
+    },
+    {
+      "id": "p1_11",
+      "zoom": 1,
+      "screenshots": 24,
+      "matching_decoded_states": 1,
+      "decoded_unique_states": 1,
+      "all_decoded_states_observed": true
+    },
+    {
+      "id": "p1_12",
+      "zoom": 1,
+      "screenshots": 24,
+      "matching_decoded_states": 2,
+      "decoded_unique_states": 2,
+      "all_decoded_states_observed": true
+    },
+    {
+      "id": "p1_01",
+      "zoom": 2,
+      "screenshots": 24,
+      "matching_decoded_states": 1,
+      "decoded_unique_states": 1,
+      "all_decoded_states_observed": true
+    },
+    {
+      "id": "p1_02",
+      "zoom": 2,
+      "screenshots": 24,
+      "matching_decoded_states": 2,
+      "decoded_unique_states": 2,
+      "all_decoded_states_observed": true
+    },
+    {
+      "id": "p1_03",
+      "zoom": 2,
+      "screenshots": 24,
+      "matching_decoded_states": 2,
+      "decoded_unique_states": 2,
+      "all_decoded_states_observed": true
+    },
+    {
+      "id": "p1_04",
+      "zoom": 2,
+      "screenshots": 24,
+      "matching_decoded_states": 2,
+      "decoded_unique_states": 2,
+      "all_decoded_states_observed": true
+    },
+    {
+      "id": "p1_05",
+      "zoom": 2,
+      "screenshots": 24,
+      "matching_decoded_states": 1,
+      "decoded_unique_states": 1,
+      "all_decoded_states_observed": true
+    },
+    {
+      "id": "p1_06",
+      "zoom": 2,
+      "screenshots": 24,
+      "matching_decoded_states": 1,
+      "decoded_unique_states": 1,
+      "all_decoded_states_observed": true
+    },
+    {
+      "id": "p1_07",
+      "zoom": 2,
+      "screenshots": 24,
+      "matching_decoded_states": 2,
+      "decoded_unique_states": 2,
+      "all_decoded_states_observed": true
+    },
+    {
+      "id": "p1_08",
+      "zoom": 2,
+      "screenshots": 24,
+      "matching_decoded_states": 2,
+      "decoded_unique_states": 2,
+      "all_decoded_states_observed": true
+    },
+    {
+      "id": "p1_09",
+      "zoom": 2,
+      "screenshots": 24,
+      "matching_decoded_states": 2,
+      "decoded_unique_states": 2,
+      "all_decoded_states_observed": true
+    },
+    {
+      "id": "p1_10",
+      "zoom": 2,
+      "screenshots": 24,
+      "matching_decoded_states": 1,
+      "decoded_unique_states": 1,
+      "all_decoded_states_observed": true
+    },
+    {
+      "id": "p1_11",
+      "zoom": 2,
+      "screenshots": 24,
+      "matching_decoded_states": 1,
+      "decoded_unique_states": 1,
+      "all_decoded_states_observed": true
+    },
+    {
+      "id": "p1_12",
+      "zoom": 2,
+      "screenshots": 24,
+      "matching_decoded_states": 2,
+      "decoded_unique_states": 2,
+      "all_decoded_states_observed": true
+    }
+  ],
+  "evidence": {
+    "playback": "/Users/rexxa/work/artprod2-data/lab/round0/browser/playback.json",
+    "playback_sha256": "ee059db2baa389ebc079598396b90d68034d1f8fcc50fe33955ce2d93e458ddb",
+    "packet_manifest": "/Users/rexxa/work/artprod2-data/blind/round0/manifest.json",
+    "packet_manifest_sha256": "03b4a585590b67510f43262ae448e7a77b133dff8455bb0440d050d40622395d",
+    "provenance": "/Users/rexxa/work/artprod2-data/lab/round0/provenance.json",
+    "provenance_sha256": "fc9758ad8be015a18296dc63df2be289e36991303560116a565a74167a56a87a"
+  },
+  "limitations": [
+    "Browser RGB crops compared exactly to decoded GIF RGB states; GIF palette quantization is not required to match lossless authored PNG bytes.",
+    "Static screenshots and observed changes establish captured states, not continuous playback cadence or semantic accuracy.",
+    "No reviewer files accessed; freshness/blinding and readability outcomes are outside this audit."
+  ],
+  "source_originals_unchanged": {
+    "passed": true,
+    "sources": 96,
+    "raw_and_prompt_sha256_verified": 192
+  },
+  "visual_verdict": {
+    "verdict": "PASS_RENDER_FIDELITY_ONLY",
+    "native_pixelmatch": "PASS",
+    "nearest_2x": "PASS",
+    "facings_backgrounds": "PASS",
+    "clipping": "PASS_ON_INSPECTED_CAPTURES",
+    "semantic_R1": "NOT_ASSESSED",
+    "reviewer_files_accessed": false,
+    "observations": [
+      "Directly opened screenshots or observed playback contact sheets covering all 12 anonymous IDs.",
+      "Figures are contained within their quadrants with no visible cropping or opaque rectangular sprite backgrounds.",
+      "Front/side columns and green meadow/brown forest-floor rows are visibly distinct.",
+      "Two smaller figures are visibly smaller than adults; horizontal sleeping figures remain fully contained.",
+      "Observed sequence for p1_12 alternates standing and stepping poses; p1_05 sleep sequence is intentionally static.",
+      "At native 1x the figure occupies a small part of each ground quadrant; 2x preserves visible pixel edges.",
+      "Carry poses p1_04 and p1_09 partly obscure hair with logs. This is a semantic visibility limitation for blind review, not a pixel transport defect."
+    ],
+    "inspected_paths": [
+      "/Users/rexxa/work/artprod2-data/lab/round0/browser/playback/p1_03_1x/000.png",
+      "/Users/rexxa/work/artprod2-data/blind/round0/p1_12_2x_sequence1.png",
+      "/Users/rexxa/work/artprod2-data/blind/round0/p1_05_2x_sequence1.png",
+      "/Users/rexxa/work/artprod2-data/lab/round0/browser/playback/p1_01_2x/001.png",
+      "/Users/rexxa/work/artprod2-data/lab/round0/browser/playback/p1_02_2x/001.png",
+      "/Users/rexxa/work/artprod2-data/lab/round0/browser/playback/p1_04_2x/001.png",
+      "/Users/rexxa/work/artprod2-data/lab/round0/browser/playback/p1_06_2x/001.png",
+      "/Users/rexxa/work/artprod2-data/lab/round0/browser/playback/p1_07_2x/001.png",
+      "/Users/rexxa/work/artprod2-data/lab/round0/browser/playback/p1_08_2x/001.png",
+      "/Users/rexxa/work/artprod2-data/lab/round0/browser/playback/p1_09_2x/001.png",
+      "/Users/rexxa/work/artprod2-data/lab/round0/browser/playback/p1_10_2x/001.png",
+      "/Users/rexxa/work/artprod2-data/lab/round0/browser/playback/p1_11_2x/001.png"
+    ]
+  },
+  "code_audit": {
+    "baseline": "ebc24049",
+    "files": [
+      "art/pipeline5/prod2_verify_new.py",
+      "art/pipeline5/prod2_test_verify_new.py"
+    ],
+    "blocking_findings": [],
+    "targeted_tests": "1 passed in 0.36s",
+    "limits": "New D1 verifier inspected; no new full gate or image semantic certification claimed."
+  },
+  "mechanical_script": "/Users/rexxa/work/artprod2-data/qa/audit_lab.py",
+  "mechanical_script_sha256": "51ae9f7ac3f7354d513836cc8330b13ca8a35899dd97036ebd90d21ea79774c3"
+}

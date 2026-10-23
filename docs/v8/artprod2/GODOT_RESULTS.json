@@ -1,0 +1,59 @@
+{
+  "P1_pass": true,
+  "animation_hz": 8,
+  "capture_error": 0,
+  "count": 200,
+  "counter": "RenderingServer.frame_post_draw",
+  "display_server": "macOS",
+  "elapsed_us": 60000226,
+  "engine_frames_drawn_delta": 31490,
+  "fps": 524.831356468557,
+  "godot": {
+    "build": "official",
+    "hash": "89cea143987d564363e15d207438530651d943ac",
+    "hex": 263680,
+    "major": 4,
+    "minor": 6,
+    "patch": 0,
+    "status": "stable",
+    "string": "4.6-stable (official)",
+    "timestamp": 0
+  },
+  "hidden_process_frames": 0,
+  "inputs_unchanged": true,
+  "limitations": "Isolated rendering lab, no simulation; rendered frames are not display scanout; shared host.",
+  "max_fps": 0,
+  "measurement_verified": true,
+  "rendered_frames": 31490,
+  "rendering_method": "gl_compatibility",
+  "scale": 1,
+  "source_frames": [
+    "S/idle",
+    "S/walk_a",
+    "S/work_a",
+    "S/carry",
+    "S/sleep",
+    "E/idle",
+    "E/walk_a",
+    "E/work_a",
+    "E/carry",
+    "E/sleep"
+  ],
+  "video_adapter": "Apple M4 Max",
+  "viewport": [
+    1600,
+    960
+  ],
+  "visible_final": 200,
+  "vsync_mode": 0,
+  "raw_path": "/Users/rexxa/work/artprod2-data/godot-crowd/measurement.json",
+  "raw_sha256": "271e6a7e239014ee949fac2aa1069f8a4be1e45b6780442f252962c9c359ff82",
+  "frame_interval_count": 31490,
+  "visibility_sample_count": 60,
+  "all_visibility_samples_valid": true,
+  "input_hash_count": 288,
+  "captures": {
+    "crowd_final.png": "4fc36d05b5504c538f31061c05b4cd982308a174011a57ca4b0acc599f4ba93e",
+    "crowd_start.png": "4fc36d05b5504c538f31061c05b4cd982308a174011a57ca4b0acc599f4ba93e"
+  }
+}

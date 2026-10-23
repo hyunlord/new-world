@@ -1,0 +1,156 @@
+{
+  "schema": 1,
+  "status": "CANDIDATE_NOT_ADOPTED",
+  "reason": "S1 FAIL: 26/36 total and 13/18 adults",
+  "pass": "ART-PROD2",
+  "template": "../TEMPLATE_V3.md",
+  "accepted_looks": [
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "manifest": "adult_F_fur_cloak_bun/MANIFEST.json",
+      "sha256": "4876b8df0522119acfa6bf6c861c3361372c3c222b56964cced2d995c79973e6"
+    },
+    {
+      "look": "adult_F_fur_cloak_long_tied",
+      "manifest": "adult_F_fur_cloak_long_tied/MANIFEST.json",
+      "sha256": "48c8eb2a2d1a4200d73c3f358aa1dc6b7ab94065f954ddcfa566f5d2601bc13e"
+    },
+    {
+      "look": "adult_F_fur_cloak_short",
+      "manifest": "adult_F_fur_cloak_short/MANIFEST.json",
+      "sha256": "9cf63cf7cffa8491ddb3ec40cadfdd76b1e051aa999612e85c5118a526165c4a"
+    },
+    {
+      "look": "adult_F_hide_wrap_long_tied",
+      "manifest": "adult_F_hide_wrap_long_tied/MANIFEST.json",
+      "sha256": "5267b6c44fdb605aca58fbadd5a55388be710d9718e32965ab763862377c9b78"
+    },
+    {
+      "look": "adult_F_hide_wrap_short",
+      "manifest": "adult_F_hide_wrap_short/MANIFEST.json",
+      "sha256": "a10571e2c2d769f6a76e2d96b2e4249f30a53dbabe1ca73a5cdcebb0ee4963e7"
+    },
+    {
+      "look": "adult_F_loincloth_bun",
+      "manifest": "adult_F_loincloth_bun/MANIFEST.json",
+      "sha256": "d649f5843de1ca30e9aa12414dcabe2cb447e1b562852323cad4c8a3db491cca"
+    },
+    {
+      "look": "adult_F_loincloth_long_tied",
+      "manifest": "adult_F_loincloth_long_tied/MANIFEST.json",
+      "sha256": "03d03d9aae4bb664e27481804bcd7de2b6d8c21f0238572f8ba8693a70f1a450"
+    },
+    {
+      "look": "adult_F_loincloth_short",
+      "manifest": "adult_F_loincloth_short/MANIFEST.json",
+      "sha256": "d42c16b675757211a92bf2c45630f84135c34bac4fffd1355e96ef0a9175e122"
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "manifest": "adult_M_fur_cloak_bun/MANIFEST.json",
+      "sha256": "af122f0f84a312ce067c576f4935c5c64828d196d0adb5d63bcad5f2adf30bcd"
+    },
+    {
+      "look": "adult_M_hide_wrap_bun",
+      "manifest": "adult_M_hide_wrap_bun/MANIFEST.json",
+      "sha256": "9aa5491a2c15d73b64a13e0388fef7456c47625cf0723ed8173ce5d43a6ef594"
+    },
+    {
+      "look": "adult_M_hide_wrap_short",
+      "manifest": "adult_M_hide_wrap_short/MANIFEST.json",
+      "sha256": "b4ff6ab5030126d93523f248849456b4f7e83ddff95fb36f1488a2442760f110"
+    },
+    {
+      "look": "adult_M_loincloth_long_tied",
+      "manifest": "adult_M_loincloth_long_tied/MANIFEST.json",
+      "sha256": "ae60c9e29ec414ba7a70d397688d9f036c13e5ec5c7297ab3b0202439975080b"
+    },
+    {
+      "look": "adult_M_loincloth_short",
+      "manifest": "adult_M_loincloth_short/MANIFEST.json",
+      "sha256": "d943abbc510270a416036c6a18c0745085f4f2990310884f0d13f6868f09e622"
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "manifest": "child_F_fur_cloak_long_tied/MANIFEST.json",
+      "sha256": "86ce4fa3c4a856c6ca42c1d3f5ccb2bdc13e27a492dff78e6762e74214805c63"
+    },
+    {
+      "look": "child_F_hide_wrap_bun",
+      "manifest": "child_F_hide_wrap_bun/MANIFEST.json",
+      "sha256": "48851ee5f62e75361c57e23bd1207bf58122823f0c195ab8d09f3b26e8bc3d95"
+    },
+    {
+      "look": "child_F_hide_wrap_long_tied",
+      "manifest": "child_F_hide_wrap_long_tied/MANIFEST.json",
+      "sha256": "bcd5a61e4fc4c76da9a51ba9b67c9a694dab9b2cdd46089f8061a1ea4f45e785"
+    },
+    {
+      "look": "child_F_hide_wrap_short",
+      "manifest": "child_F_hide_wrap_short/MANIFEST.json",
+      "sha256": "73baffaaff1ba10c29e68e68b961536969dba1e099fa4a1bf41bb39d19dcf12b"
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "manifest": "child_M_fur_cloak_bun/MANIFEST.json",
+      "sha256": "8ee659e1baa711ca33c3bd8a08ba4cedc599c0ad7cfd99026c1fb3fce0b82f8f"
+    },
+    {
+      "look": "child_M_fur_cloak_long_tied",
+      "manifest": "child_M_fur_cloak_long_tied/MANIFEST.json",
+      "sha256": "3d3286b57da286831cf92ff97ad700c2a202954a5b292d06112316be2b08f1a2"
+    },
+    {
+      "look": "child_M_fur_cloak_short",
+      "manifest": "child_M_fur_cloak_short/MANIFEST.json",
+      "sha256": "0398e88b5f29e65b3afad02f2b19bfa8175885dd26f55532f04bf9c44efd8152"
+    },
+    {
+      "look": "child_M_hide_wrap_bun",
+      "manifest": "child_M_hide_wrap_bun/MANIFEST.json",
+      "sha256": "3208336dd0c21cdd70173d51522df9f12f3da3733be72d6f63e59b4d3aca62e7"
+    },
+    {
+      "look": "child_M_hide_wrap_long_tied",
+      "manifest": "child_M_hide_wrap_long_tied/MANIFEST.json",
+      "sha256": "9508e99f3959f7c5ed70b38bd17870fd1e7acbf04532d6439a7c77d72d4f5082"
+    },
+    {
+      "look": "child_M_hide_wrap_short",
+      "manifest": "child_M_hide_wrap_short/MANIFEST.json",
+      "sha256": "2d78cebd50fa499011bd4f8d57c08dc4795ae768cc232aae48514bf0dc006554"
+    },
+    {
+      "look": "child_M_loincloth_bun",
+      "manifest": "child_M_loincloth_bun/MANIFEST.json",
+      "sha256": "2fc7862b157307a9af16a9f8e3dfc4e95aa0f25240618aae2f67ae196fa54793"
+    },
+    {
+      "look": "child_M_loincloth_long_tied",
+      "manifest": "child_M_loincloth_long_tied/MANIFEST.json",
+      "sha256": "24888bc50ee735cd014bdb863f77850e42741a6d68eb98683e2178a3fcdccd42"
+    },
+    {
+      "look": "child_M_loincloth_short",
+      "manifest": "child_M_loincloth_short/MANIFEST.json",
+      "sha256": "172dbc5af85655a7fc99c4102f9f78088be74ee503e3c08c4d7dbb970967172c"
+    }
+  ],
+  "accepted_count": 26,
+  "adult_count": 13,
+  "child_count": 13,
+  "readability": "R1 PASS on registered 12-person cohort; not every look reviewed",
+  "generation_count": 27,
+  "missing_looks": [
+    "adult_F_hide_wrap_bun",
+    "adult_M_fur_cloak_long_tied",
+    "adult_M_fur_cloak_short",
+    "adult_M_hide_wrap_long_tied",
+    "adult_M_loincloth_bun",
+    "child_F_fur_cloak_bun",
+    "child_F_fur_cloak_short",
+    "child_F_loincloth_bun",
+    "child_F_loincloth_long_tied",
+    "child_F_loincloth_short"
+  ]
+}

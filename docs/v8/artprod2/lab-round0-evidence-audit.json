@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "gif_count": 24,
+  "specimens": 24,
+  "raw_screenshots": 576,
+  "packet_contact_sheets": 48,
+  "formal_R1_eligible": true,
+  "page_errors": [],
+  "target_hz": 8,
+  "browser": "156.0.8078.4",
+  "sample_elapsed_range_s": [
+    2.8926305000204593,
+    2.9313392501790076
+  ],
+  "key_sha256": "b2f5ce93a342cf72637eceb2ecab3f3486a32f2e7af88fd1d64a0b1b0adbe3d0",
+  "packet": "/Users/rexxa/work/artprod2-data/blind/round0",
+  "note": "Eligibility is accepted-source cohort and captured evidence only; R1 readability remains NOT_SCORED."
+}

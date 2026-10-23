@@ -1,0 +1,46 @@
+{
+  "verdict": "NOT_ADOPTED",
+  "S1": {
+    "passed": false,
+    "accepted": 26,
+    "total": 36,
+    "adults": 13,
+    "adult_total": 18,
+    "required_total": 32,
+    "required_adults": 17
+  },
+  "S2": {
+    "passed": true,
+    "generations": 27,
+    "limit": 40,
+    "max_per_look": 2,
+    "review_generations": 0
+  },
+  "R1": {
+    "passed": true,
+    "round": 0,
+    "reviewers": 2,
+    "fresh_no_inherited_context": true,
+    "children": 2,
+    "adult_females": 5,
+    "round1": "NOT_TRIGGERED",
+    "scores": "review_round0/scores.json"
+  },
+  "P1": {
+    "passed": true,
+    "fps": 524.831356468557,
+    "rendered_frames": 31490,
+    "elapsed_seconds": 60.000226,
+    "people": 200,
+    "scale": 1
+  },
+  "D1": {
+    "passed": true,
+    "sources": 123,
+    "runs_per_source": 2,
+    "comparison": "PNG exact bytes; JSON only run-root paths normalized"
+  },
+  "adoption_exception": "Not eligible: adults also fail S1",
+  "archive_moved": false,
+  "game_installed": false
+}

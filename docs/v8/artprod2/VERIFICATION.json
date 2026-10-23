@@ -1,0 +1,33 @@
+{
+  "full_art_tests": {
+    "passed": 117,
+    "seconds": 23.71,
+    "log": "/Users/rexxa/work/artprod2-data/final-tests-complete.log"
+  },
+  "test_typing_followup": {
+    "passed": 35,
+    "seconds": 8.3,
+    "scope": "Only two test assertions changed after full117 run; production code unchanged",
+    "log": "/Users/rexxa/work/artprod2-data/final-type-fix-tests.log"
+  },
+  "ruff": "PASS all19changed Python files; modified2tests rechecked",
+  "basedpyright": {
+    "errors": 0,
+    "warnings": 148,
+    "exit_code": 1,
+    "status": "WARN_NOT_CLEAN",
+    "scope": "all19changed Python files, including tests",
+    "log": "/Users/rexxa/work/artprod2-data/final-typecheck-all.log",
+    "warning_categories": "JSON Any and unknown boundary types, unused return values, test inferred types, implicit string concatenation; warnings not suppressed"
+  },
+  "docs_check": "PASS after moving three review PNGs from docs/ to art/character/route_i_lab/prod2; initial staged-docs failure preserved in decisions",
+  "asset_audit": "PASS26looks260frames48sampleidentities0findings",
+  "full_game_gate": "NOT_RUN: art-only scope",
+  "logs_sha256": {
+    "final-tests-complete.log": "4fcab2039589406f9ffb2564b158813acd3e19ae1ddd03a8685c7313fe99fa6d",
+    "final-type-fix-tests.log": "f19510c1dcf899e93886138b95f8ff2c377a51df651e22ce0c9e21c86581fec2",
+    "final-typecheck-all.log": "8d34f29e6b896316cf0996aee7a6ca4b1e95fd9120b406438143af746f5467fe",
+    "final-docs-check.log": "8960240de2f1bb8a8c9e98bd204f424fb29620ce42d1254af59a32b4250b4fe7",
+    "publication-docs-check.log": "8960240de2f1bb8a8c9e98bd204f424fb29620ce42d1254af59a32b4250b4fe7"
+  }
+}

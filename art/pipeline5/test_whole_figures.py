@@ -289,7 +289,8 @@ def test_prod1_two_row_grid_ownership_and_order() -> None:
     assert len(panels.images) == 10
     assert panels.idle_height == 301
     assert panels.ownership.reconstructed_exactly
-    assert [panel.getpixel((0, 0))[:2] for panel in panels.images] == [(row+1,col+1) for row in range(2) for col in range(5)]
+    colors = [panel.getpixel((0, 0)) for panel in panels.images]
+    assert colors == [(row+1, col+1, 30, 255) for row in range(2) for col in range(5)]
     draw.rectangle((80, 600, 180, 900), fill=(0,0,0,0))
     with pytest.raises(ValueError, match='panel_count|grid'):
         split_panels(source, rows=2)

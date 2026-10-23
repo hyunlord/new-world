@@ -20,3 +20,5 @@
 - Godot timer는 frame_post_draw를 세고 engine-drawn delta와 대조한다. viewport capture는 측정 구간 밖이다. 실제60초 실행은 별도 결과를 따른다.
 
 전체 art pipeline/lab116테스트 및 이후 driver10테스트 통과. 최종 원시 검증 로그는 외부 데이터 루트의 `final-tests.log`, `final-lint.log`, `lab-typecheck.log`에 보존한다. 최종 fresh check_set과 R1/P1은 보고서에서 별도 판정한다.
+
+최종 확대 타입 검사에서 두 테스트의 union 접근20오류를 발견해 JSON shape assertions 및 전체RGBA 값 비교로 고쳤다. 최종19Python파일은0오류·148경고(exit1)이며 경고를 숨기지 않았다. 전체117테스트 및 테스트 수정 후35개 재실행 통과; 최신 결과는 VERIFICATION.json을 따른다.

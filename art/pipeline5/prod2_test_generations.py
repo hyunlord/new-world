@@ -135,7 +135,13 @@ def test_review_wrong_round_or_target_cannot_authorize(tmp_path: Path, change: s
     elif change == 'passing':
         report['all_numeric_bars_met'] = True
     elif change == 'missing_rows':
-        report['reviewers'][0]['cases'].pop()
+        reviewers = report['reviewers']
+        assert isinstance(reviewers, list)
+        reviewer = reviewers[0]
+        assert isinstance(reviewer, dict)
+        cases = reviewer['cases']
+        assert isinstance(cases, list)
+        _ = cases.pop()
     else:
         report['misread_looks'] = [{'look': 'child_M_hide_wrap_short'}]
     path = tmp_path / 'scores.json'
