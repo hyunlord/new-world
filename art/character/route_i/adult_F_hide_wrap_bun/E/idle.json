@@ -1,0 +1,97 @@
+{
+  "look": "adult_F_hide_wrap_bun",
+  "age": "adult",
+  "facing": "E",
+  "frame": "idle",
+  "attempt": 1,
+  "raw_sha256": "351d0a240adf54419331916e64134233105d56b417822a7b66be9504ec9fba2b",
+  "prompt_sha256": "acb5feea7d120d6e37bbb540908771126f3d72b5c0fba5f0fabcb5d389bf81e6",
+  "image_sha256": "421e3de4b303a066f3b3664b81ec22368f6880be54e98291f88bc0526bc82dc7",
+  "raw": "/Users/rexxa/work/artprod3-data/reslice/missing10/adult_F_hide_wrap_bun/try1/raw.png",
+  "diagnostics": "/Users/rexxa/work/artprod3-data/reslice/missing10/adult_F_hide_wrap_bun/try1",
+  "panel_index": 5,
+  "calibration_sha256": "7218ac77979065ec6398c77cb6156bce5bd523979ed48732945f2ab642a5d5fd",
+  "scale": 0.1278538812785388,
+  "rotation": 0,
+  "source_box": [
+    0,
+    532,
+    312,
+    1024
+  ],
+  "normalization": {
+    "scaled_size": [
+      40,
+      63
+    ],
+    "trim_box": [
+      14,
+      4,
+      30,
+      61
+    ],
+    "placement": [
+      32,
+      48
+    ],
+    "resized_to_canvas_offset": [
+      18,
+      44
+    ],
+    "visible_pixels": 650,
+    "rotation_degrees": 0,
+    "scale": 0.1278538812785388,
+    "discarded_pixels": 0,
+    "discarded_max_alpha": 0,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "passed": true,
+    "findings": [],
+    "coverage": 0.06305803571428571,
+    "component_count": 1,
+    "largest_hole": 0,
+    "contact_ok": true,
+    "sleep_axis_ok": true,
+    "opaque_height": 56,
+    "opaque_width": 14,
+    "coverage_rule": "idle height only; age-specific sleep length and height; posed extent constrained by canvas",
+    "limb_ok": "NOT_MEASURED: whole figures have no semantic limb masks",
+    "visible_height": 57,
+    "visible_width": 16,
+    "visibility_threshold": 16
+  },
+  "judge": {
+    "candidate": "/Users/rexxa/work/artprod3-data/reslice/missing10/adult_F_hide_wrap_bun/try1/judge/panel_05.png",
+    "sha256": "cdac3d1c143ecaa68f3c68c44046a2195f0f8fc8ae5c04cb8e63406d4b9146fb",
+    "family": "person",
+    "metrics": {
+      "edge_density": 0.17177097203728361,
+      "saturation_q25": 0.6094052500529473,
+      "saturation_q75": 0.6654041399848427,
+      "stroke_q25": 2.8284271247461903,
+      "stroke_q50": 4.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 5.656854249492381,
+      "wash_flatness": 0.0253635231549586,
+      "foreground_pixels": 11868
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "standing_scale": 0.1278538812785388,
+  "sleep_scale": 0.13793103448275862,
+  "template_version": 3
+}

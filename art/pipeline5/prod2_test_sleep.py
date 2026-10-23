@@ -30,7 +30,7 @@ def test_oversized_lying_capsule_normalizes_to_body_length(age: str, target: int
     checked = check_whole(result.image, age, 'sleep')
     assert checked.passed, checked.findings
     assert abs(checked.opaque_width - target) <= 1
-    assert np.nonzero(np.asarray(result.image)[:, :, 3] >= 128)[0].max() == 72
+    assert np.nonzero(np.asarray(result.image)[:, :, 3] >= 16)[0].max() == 72
     assert result.transform.scale == target / 320
     assert source.tobytes() == before
 

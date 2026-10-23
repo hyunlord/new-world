@@ -80,7 +80,7 @@ def test_enclosed_negative_space_is_allowed() -> None:
 def test_translucent_border_and_detached_opaque_island_fail() -> None:
     image = Image.new('RGBA', (80, 112))
     ImageDraw.Draw(image).rectangle((28, 49, 51, 104), fill=(100, 70, 40, 255))
-    image.putpixel((0, 40), (0, 0, 0, 1))
+    image.putpixel((0, 40), (0, 0, 0, 16))
     assert any('alpha_edge' in rule for rule in check_whole(image, 'adult', 'idle').findings)
     image.putpixel((4, 40), (0, 0, 0, 128))
     assert check_whole(image, 'adult', 'idle').component_count == 2
@@ -232,9 +232,9 @@ def test_post_resize_zero_alpha_padding_is_trimmed_without_visible_loss() -> Non
 
 
 def test_visible_low_alpha_tail_is_never_trimmed_to_fit() -> None:
-    source = Image.new('RGBA', (64, 120))
+    source = Image.new('RGBA', (64, 150))
     ImageDraw.Draw(source).rectangle((20, 30, 43, 85), fill=(100, 70, 40, 254))
-    source.putpixel((32, 119), (10, 20, 30, 1))
+    source.putpixel((32, 149), (10, 20, 30, 16))
     with pytest.raises(ValueError, match='visible extent'):
         normalize(source, 1, False)
 

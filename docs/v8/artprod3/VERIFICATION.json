@@ -1,0 +1,160 @@
+{
+  "base": "c63eb72b198f7cd213be5bb5dfd0fe4cc2339b73",
+  "branch": "v8/art-prod1",
+  "verdict": "NOT_ADOPTED",
+  "S1": {
+    "accepted": 34,
+    "adults": 16,
+    "children": 18,
+    "required_total": 32,
+    "required_adults": 17,
+    "passed": false,
+    "adult_only": false
+  },
+  "generations": 0,
+  "tests": {
+    "command": "uv run --with pytest --with pillow --with numpy --with scipy --with scikit-image python -m pytest art/pipeline5/*test*.py art/whole_figure_lab/*test*.py -q",
+    "passed": 133,
+    "visibility_synthetic": 16,
+    "red_before_fix": {
+      "failed": 10,
+      "passed": 4
+    }
+  },
+  "lint": "PASS",
+  "typecheck": {
+    "errors": 0,
+    "warnings": 0,
+    "files": [
+      "sheet_geometry.py",
+      "whole_checks.py",
+      "prod3_test_visibility.py",
+      "prod3_reslice.py"
+    ]
+  },
+  "source_parser_records": 36,
+  "docs_check": "PASS",
+  "prior_accepted_tree": {
+    "files": 546,
+    "byte_identical": true
+  },
+  "prior_accepted_rerun": {
+    "looks": 26,
+    "pass": 26,
+    "png_count": 260,
+    "different_pngs": 202,
+    "diff_looks": 26,
+    "discarded_pixels": 0
+  },
+  "preserved_sources": {
+    "raw_and_prompt_files": 72,
+    "byte_identical": true
+  },
+  "new_promoted_audit": {
+    "new_looks": [
+      {
+        "look": "adult_F_hide_wrap_bun",
+        "frames": 10,
+        "passed": true
+      },
+      {
+        "look": "adult_M_fur_cloak_short",
+        "frames": 10,
+        "passed": true
+      },
+      {
+        "look": "adult_M_loincloth_bun",
+        "frames": 10,
+        "passed": true
+      },
+      {
+        "look": "child_F_fur_cloak_bun",
+        "frames": 10,
+        "passed": true
+      },
+      {
+        "look": "child_F_fur_cloak_short",
+        "frames": 10,
+        "passed": true
+      },
+      {
+        "look": "child_F_loincloth_bun",
+        "frames": 10,
+        "passed": true
+      },
+      {
+        "look": "child_F_loincloth_long_tied",
+        "frames": 10,
+        "passed": true
+      },
+      {
+        "look": "child_F_loincloth_short",
+        "frames": 10,
+        "passed": true
+      }
+    ],
+    "new_frames": 80,
+    "root_manifest_hashes_match": true,
+    "passed": true
+  },
+  "final_candidate_audit": {
+    "manifest_hashes": 34,
+    "frame_and_sidecar_hashes": 680,
+    "fresh_structure_pass_frames": 340
+  },
+  "archive": {
+    "moved": false,
+    "reason": "adult S1 threshold not reached",
+    "original_files_unchanged": 2320,
+    "route_b": "ABSENT_IN_BASE"
+  },
+  "boards": {
+    "sheet_1x_visual_checked": true,
+    "sheet_2x_visual_checked": true,
+    "two_missing_labels": true,
+    "2x_exact_nearest_upscale": true,
+    "note": "구조·보드 확인이며 신규 R1 평가 아님"
+  },
+  "scope": {
+    "allowed": [
+      "art/**",
+      "docs/v8/artprod3/**"
+    ],
+    "game_code_changed": false,
+    "merge": false
+  },
+  "historical_gates": {
+    "reused_from": "docs/v8/artprod2/GATES.json",
+    "R1": "PASS",
+    "P1_fps": 524.831356468557,
+    "D1": "PASS",
+    "rerun_this_pass": false
+  },
+  "logs": {
+    "final-all-tests.log": {
+      "path": "/Users/rexxa/work/artprod3-data/final-all-tests.log",
+      "sha256": "44bd41931cfb9745ec91bc788b8bc5920062bb812133975c7b0d4b02741d4f43"
+    },
+    "final-lint.log": {
+      "path": "/Users/rexxa/work/artprod3-data/final-lint.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    "final-types.log": {
+      "path": "/Users/rexxa/work/artprod3-data/final-types.log",
+      "sha256": "56882e01cb80173ef053c4096e4ee43e3123a15f5c0a06715f96988d48fbd91c"
+    },
+    "final-docs.log": {
+      "path": "/Users/rexxa/work/artprod3-data/final-docs.log",
+      "sha256": "8960240de2f1bb8a8c9e98bd204f424fb29620ce42d1254af59a32b4250b4fe7"
+    },
+    "accepted26-identity.log": {
+      "path": "/Users/rexxa/work/artprod3-data/accepted26-identity.log",
+      "sha256": "a1c48ba5b7d3b3bff525ca30f51d01dff6c7915ef016a323059287e5ec2f6be5"
+    },
+    "archive-identity.log": {
+      "path": "/Users/rexxa/work/artprod3-data/archive-identity.log",
+      "sha256": "d3de7cdd420566a89529819aa6fb6bc1b6d1c8a70e4f3fc81d632771036d33fb"
+    }
+  },
+  "publication": "Final local HEAD and ls-remote equality recorded in external /Users/rexxa/work/artprod3-data/PUBLICATION.json and final response."
+}

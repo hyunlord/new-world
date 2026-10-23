@@ -1,30 +1,33 @@
-# Character template v3 — PROD2 whole figure candidate
+# Character template v3 — PROD3 whole figure contract
 
-PROD2 route I, identity reference I-1. Candidate until S1 + R1 + P1 authorize
-adoption. Historical TRIAL5 rules remain in
+Route I, identity reference I-1. Adoption status is recorded in
+`route_i/STATUS.md` and `docs/v8/artprod3/PROD3_REPORT.md`. Historical TRIAL5 rules remain in
 `docs/v8/arttrial5/WHOLE_FIGURE_CONTRACT.md`; layered pawn contracts remain in
 TEMPLATE.md and TEMPLATE_V2_HISTORICAL.md. No layer or material masks apply.
 
 ## Geometry and structural acceptance
 
 - Standing canvas **80×112**, foot line **y=104**, anchor **x=40**.
-- Sleep canvas **112×80**, lowest opaque pixel **y=72**, centred at **x=56**.
-- Opaque means alpha≥128. Contact accepts the foot line ±2; normalization places
-  the lowest opaque pixel exactly on it. No visible alpha>0 pixel may touch a
-  canvas border. Every owned source pixel survives slicing; only alpha-zero
-  padding may be trimmed after uniform Lanczos scaling.
+- Sleep canvas **112×80**, lowest visible pixel **y=72**, centred at **x=56**.
+- Visible means **alpha≥16**; opaque means alpha≥128. Canvas fit, contact and
+  size bands use the visible bbox for every frame. Contact accepts the foot
+  line ±2; normalization places its lowest visible pixel exactly on that line.
+  No alpha≥16 pixel may touch a canvas border. Owned source RGBA survives
+  slicing and uniform Lanczos scaling. Placement may discard alpha<16 pixels
+  outside the canvas, logging `discarded_pixels` (nonzero alpha count) and
+  `discarded_max_alpha` per frame. Every in-canvas pixel is retained untouched.
 - One 8-connected opaque component after the source dust ownership rule.
   Dust means a component smaller than 0.0001×source canvas area; assign it intact
   to its nearest figure, never delete it. Detached opaque pixels still present
   after normalization are counted by connectivity.
-- Adult idle opaque height **52–58** (target56), child idle **37–43** (target40).
+- Adult idle visible height **52–58** (target56), child idle **37–43** (target40).
   The standing-height calibration is measured on idle, not an axe or log's
   raised extent. Walk/work/carry use the same S-idle-derived scale, without
   pose-specific resizing; their full extent must fit the canvas.
 - Sleep uses its own uniform scale: target body length **56 adult / 40 child**
   divided by the source opaque bbox long axis. Adult sleep length **52–60**,
   height **≤36**; child length **37–43**, height **≤28**; wider than tall.
-  Lanczos sampling can round the final opaque extent within these bands.
+  Lanczos sampling can round the final visible extent within these bands.
   Before scaling, a vertical
   sleep opaque (alpha≥128) bbox rotates90° or270° so the end with larger total alpha mass in its
   outer30% lies left; already-horizontal head-right figures rotate180°.
@@ -51,9 +54,11 @@ sidecars and MANIFEST.json. Metadata records source and prompt hashes, attempt,
 source boxes, actual frame `scale`, `standing_scale`, facing-specific
 `sleep_scale`, rotation, ownership, checker and source-resolution padded
 panel judge verdicts. A failed sheet never supplies individual accepted frames.
-PROD2 permits at most2 new generations per remaining look and40 total,
-including any targeted readability retry; preserved PROD1 sources are re-sliced
-without consuming new generation attempts.
+PROD3 permits **zero new generations**. Only the ten missing looks' preserved
+best sources are re-sliced for promotion. The 26 accepted PROD2 looks remain
+byte-preserved; independent alpha16 reruns and any differences are recorded in
+`docs/v8/artprod3/RESLICE_RESULTS.json`. Their historical sidecars retain the
+PROD2 normalization contract rather than falsely claiming new measurements.
 
 ## Display contract
 

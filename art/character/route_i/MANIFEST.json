@@ -1,8 +1,7 @@
 {
   "schema": 1,
   "status": "CANDIDATE_NOT_ADOPTED",
-  "reason": "S1 FAIL: 26/36 total and 13/18 adults",
-  "pass": "ART-PROD2",
+  "pass": "ART-PROD3",
   "template": "../TEMPLATE_V3.md",
   "accepted_looks": [
     {
@@ -19,6 +18,11 @@
       "look": "adult_F_fur_cloak_short",
       "manifest": "adult_F_fur_cloak_short/MANIFEST.json",
       "sha256": "9cf63cf7cffa8491ddb3ec40cadfdd76b1e051aa999612e85c5118a526165c4a"
+    },
+    {
+      "look": "adult_F_hide_wrap_bun",
+      "manifest": "adult_F_hide_wrap_bun/MANIFEST.json",
+      "sha256": "d5ad4fa883585daa14fcdb7065eee2e31b7fafeba0f13efdaf176848b7ff15cd"
     },
     {
       "look": "adult_F_hide_wrap_long_tied",
@@ -51,6 +55,11 @@
       "sha256": "af122f0f84a312ce067c576f4935c5c64828d196d0adb5d63bcad5f2adf30bcd"
     },
     {
+      "look": "adult_M_fur_cloak_short",
+      "manifest": "adult_M_fur_cloak_short/MANIFEST.json",
+      "sha256": "692c5cd5417735381d7039dc65a6d0ff41d56557f963161d3d1af8575348a7dd"
+    },
+    {
       "look": "adult_M_hide_wrap_bun",
       "manifest": "adult_M_hide_wrap_bun/MANIFEST.json",
       "sha256": "9aa5491a2c15d73b64a13e0388fef7456c47625cf0723ed8173ce5d43a6ef594"
@@ -59,6 +68,11 @@
       "look": "adult_M_hide_wrap_short",
       "manifest": "adult_M_hide_wrap_short/MANIFEST.json",
       "sha256": "b4ff6ab5030126d93523f248849456b4f7e83ddff95fb36f1488a2442760f110"
+    },
+    {
+      "look": "adult_M_loincloth_bun",
+      "manifest": "adult_M_loincloth_bun/MANIFEST.json",
+      "sha256": "612752360117e6bef426beeadc9a2062bb8d340cebed0e050f29d909d8f55a30"
     },
     {
       "look": "adult_M_loincloth_long_tied",
@@ -71,9 +85,19 @@
       "sha256": "d943abbc510270a416036c6a18c0745085f4f2990310884f0d13f6868f09e622"
     },
     {
+      "look": "child_F_fur_cloak_bun",
+      "manifest": "child_F_fur_cloak_bun/MANIFEST.json",
+      "sha256": "80a35b4a20dbac91011b19fd8bd8fa90870d018d90ea7d90490959ce458525ce"
+    },
+    {
       "look": "child_F_fur_cloak_long_tied",
       "manifest": "child_F_fur_cloak_long_tied/MANIFEST.json",
       "sha256": "86ce4fa3c4a856c6ca42c1d3f5ccb2bdc13e27a492dff78e6762e74214805c63"
+    },
+    {
+      "look": "child_F_fur_cloak_short",
+      "manifest": "child_F_fur_cloak_short/MANIFEST.json",
+      "sha256": "11a5e0e4a27127b850bb5c6d28e37fdba1de1734acc1bd993e03ebfbd9e2a2f8"
     },
     {
       "look": "child_F_hide_wrap_bun",
@@ -89,6 +113,21 @@
       "look": "child_F_hide_wrap_short",
       "manifest": "child_F_hide_wrap_short/MANIFEST.json",
       "sha256": "73baffaaff1ba10c29e68e68b961536969dba1e099fa4a1bf41bb39d19dcf12b"
+    },
+    {
+      "look": "child_F_loincloth_bun",
+      "manifest": "child_F_loincloth_bun/MANIFEST.json",
+      "sha256": "14d24359ba29ad9def688dc215253dbb0305470fc2acacbc2c252981d5878f03"
+    },
+    {
+      "look": "child_F_loincloth_long_tied",
+      "manifest": "child_F_loincloth_long_tied/MANIFEST.json",
+      "sha256": "61791d161e54874221f5ebedbe658c71b9722c028276af4b029712ba450f698d"
+    },
+    {
+      "look": "child_F_loincloth_short",
+      "manifest": "child_F_loincloth_short/MANIFEST.json",
+      "sha256": "0f98bc9304cf15f0a9249f3000d30b88183348b0a5c159e235f7a2456c99af03"
     },
     {
       "look": "child_M_fur_cloak_bun",
@@ -136,21 +175,16 @@
       "sha256": "172dbc5af85655a7fc99c4102f9f78088be74ee503e3c08c4d7dbb970967172c"
     }
   ],
-  "accepted_count": 26,
-  "adult_count": 13,
-  "child_count": 13,
-  "readability": "R1 PASS on registered 12-person cohort; not every look reviewed",
-  "generation_count": 27,
+  "accepted_count": 34,
+  "adult_count": 16,
+  "child_count": 18,
   "missing_looks": [
-    "adult_F_hide_wrap_bun",
     "adult_M_fur_cloak_long_tied",
-    "adult_M_fur_cloak_short",
-    "adult_M_hide_wrap_long_tied",
-    "adult_M_loincloth_bun",
-    "child_F_fur_cloak_bun",
-    "child_F_fur_cloak_short",
-    "child_F_loincloth_bun",
-    "child_F_loincloth_long_tied",
-    "child_F_loincloth_short"
-  ]
+    "adult_M_hide_wrap_long_tied"
+  ],
+  "readability": "PROD2 R1 PASS; source and reviewed accepted assets preserved",
+  "generation_count": 0,
+  "prior_prod2_generation_count": 27,
+  "visibility_threshold": 16,
+  "verification": "../../../docs/v8/artprod3/RESLICE_RESULTS.json"
 }

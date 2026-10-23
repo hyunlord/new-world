@@ -18,7 +18,7 @@ from art.pipeline5.panel_ownership import (
     OwnershipEvidence,
     extract_owned,
 )
-from art.pipeline5.whole_checks import ALPHA_THRESHOLD
+from art.pipeline5.whole_checks import ALPHA_THRESHOLD, VISIBILITY_THRESHOLD
 
 DUST_AREA_FRACTION: Final = 0.0001
 
@@ -98,6 +98,9 @@ class Normalization:
     visible_pixels: int
     rotation_degrees: int = 0
     scale: float = 1.0
+    discarded_pixels: int = 0
+    discarded_max_alpha: int = 0
+    visibility_threshold: int = VISIBILITY_THRESHOLD
 
 
 @dataclass(frozen=True, slots=True)
@@ -117,7 +120,7 @@ def sleep_body_scale(panel: Image.Image, target_length: int) -> float:
 
 def normalize_panel(panel: Image.Image, scale: float, sleep: bool,
                     *, sleep_length: int | None = None) -> NormalizedPanel:
-    """Trim only zero-alpha post-Lanczos padding, then register visible content."""
+    """Register alpha16 extent; retain all RGBA within the canvas, logging clipped halos."""
     if sleep and sleep_length is not None:
         scale = sleep_body_scale(panel, sleep_length)
     oriented = panel
@@ -141,26 +144,28 @@ def normalize_panel(panel: Image.Image, scale: float, sleep: bool,
                 oriented = panel.transpose(Image.Transpose.ROTATE_180)
     size = (max(1, round(oriented.width*scale)), max(1, round(oriented.height*scale)))
     resized = oriented.resize(size, Image.Resampling.LANCZOS)
-    box = resized.getchannel('A').getbbox()
+    alpha = np.asarray(resized)[:, :, 3]
+    box = Image.fromarray(alpha >= VISIBILITY_THRESHOLD).getbbox()
     if box is None:
         message = 'normalization: no visible pixels after Lanczos'
         raise ValueError(message)
-    trimmed = resized.crop(box)
-    alpha = np.asarray(trimmed)[:, :, 3]
-    opaque_y, _ = np.nonzero(alpha >= ALPHA_THRESHOLD)
-    if not len(opaque_y):
-        message = 'normalization: no alpha128 contact pixels'
-        raise ValueError(message)
+    width, height = box[2] - box[0], box[3] - box[1]
     canvas_size = (112, 80) if sleep else (80, 112)
-    x = (canvas_size[0]-trimmed.width)//2
-    y = (72 if sleep else 104)-int(opaque_y.max())
-    if x < 1 or y < 1 or x+trimmed.width >= canvas_size[0] or y+trimmed.height >= canvas_size[1]:
-        message = (f'normalization: visible extent {trimmed.size} offset {(x,y)} would clip '
+    x = (canvas_size[0]-width)//2
+    y = (72 if sleep else 104)-(height-1)
+    if x < 1 or y < 1 or x+width >= canvas_size[0] or y+height >= canvas_size[1]:
+        message = (f'normalization: visible extent {(width, height)} offset {(x,y)} would clip '
                    f'canvas {canvas_size}; scaled_size={size}, trim_box={box}')
         raise ValueError(message)
+    dx, dy = x-box[0], y-box[1]
+    discarded = alpha.copy()
+    discarded[max(0, -dy):min(size[1], canvas_size[1]-dy),
+              max(0, -dx):min(size[0], canvas_size[0]-dx)] = 0
     canvas = Image.new('RGBA', canvas_size)
-    canvas.paste(trimmed, (x, y))
-    transform = Normalization(size, box, (x, y), (x-box[0], y-box[1]), int(np.count_nonzero(alpha)), rotation, scale)
+    canvas.paste(resized, (dx, dy))
+    transform = Normalization(size, box, (x, y), (dx, dy),
+                              int(np.count_nonzero(alpha >= VISIBILITY_THRESHOLD)), rotation, scale,
+                              int(np.count_nonzero(discarded)), int(discarded.max()))
     return NormalizedPanel(canvas, transform)
 
 
