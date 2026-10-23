@@ -284,6 +284,26 @@ pub enum Command {
         /// On or off.
         on: bool,
     },
+    /// M5.5 (ADR 0031): take migrant wave `wave` (its number) into the colony.
+    AcceptMigrants {
+        /// The wave number (`Wave::id`).
+        wave: u32,
+    },
+    /// M5.5 (ADR 0031): send migrant wave `wave` away.
+    DeclineMigrants {
+        /// The wave number (`Wave::id`).
+        wave: u32,
+    },
+    /// M5.5 (ADR 0032): barter with caravan `caravan`: hand over `give` (stockpiled stacks: `(x, y, count)`) for
+    /// `take` (`(goods index, count)` of the caravan's goods); a gift when `take` is empty.
+    Trade {
+        /// The caravan number (`Caravan::id`).
+        caravan: u32,
+        /// What the colony gives: `(x, y, count)` of stacks on stockpile cells.
+        give: Vec<(u32, u32, u16)>,
+        /// What the colony takes: `(goods index, count)`.
+        take: Vec<(u16, u16)>,
+    },
 }
 
 impl Command {
@@ -320,6 +340,9 @@ impl Command {
             Self::AddHuntZone { .. } => "add_hunt_zone",
             Self::CancelHunt { .. } => "cancel_hunt",
             Self::SetDressOrder { .. } => "set_dress_order",
+            Self::AcceptMigrants { .. } => "accept_migrants",
+            Self::DeclineMigrants { .. } => "decline_migrants",
+            Self::Trade { .. } => "trade",
         }
     }
 }
@@ -360,6 +383,10 @@ pub enum RejectReason {
     TooYoung,
     /// The person is not drafted (M5: a draft order to someone not drafted).
     NotDrafted,
+    /// M5.5: no migrant wave or caravan of that number is at the hearth.
+    NoVisitor,
+    /// M5.5: the traders refuse — what the colony gives is worth less than 80 % … 120 % of what it takes.
+    Unbalanced,
 }
 
 impl RejectReason {
@@ -382,6 +409,8 @@ impl RejectReason {
             Self::NoPractitioner => "no_practitioner",
             Self::TooYoung => "too_young",
             Self::NotDrafted => "not_drafted",
+            Self::NoVisitor => "no_visitor",
+            Self::Unbalanced => "unbalanced",
         }
     }
 }

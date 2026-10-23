@@ -10,7 +10,8 @@ use std::collections::{BTreeMap, BTreeSet};
 use super::items::{can_hold_items, colony_sites, stack_max};
 
 /// Where the items of one kind are (M2 goal 3.1): the terms of the per-kind
-/// conservation `created == ground + carried + held + delivered + shelved + consumed`.
+/// conservation `created + traded_in == ground + carried + held + delivered + shelved + consumed + traded_out`
+/// (M5.5, ADR 0032: a caravan's goods enter as `traded_in`, what the colony hands over leaves as `traded_out`).
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub struct LedgerTerms {
     /// Items ever created (`ItemLedger::created`).
@@ -27,18 +28,23 @@ pub struct LedgerTerms {
     pub shelved: u64,
     /// Used up (`ItemLedger::consumed`).
     pub consumed: u64,
+    /// M5.5: given by caravans (`ItemLedger::traded_in`).
+    pub traded_in: u64,
+    /// M5.5: handed to caravans (`ItemLedger::traded_out`).
+    pub traded_out: u64,
 }
 
 impl LedgerTerms {
     /// Whether the conservation holds.
     pub const fn balanced(&self) -> bool {
-        self.created
+        self.created + self.traded_in
             == self.ground
                 + self.carried
                 + self.held
                 + self.delivered
                 + self.shelved
                 + self.consumed
+                + self.traded_out
     }
 }
 
@@ -82,6 +88,8 @@ pub fn ledger_of(world: &World, res: &SimResources, kind: ItemKind) -> LedgerTer
         delivered,
         shelved,
         consumed: res.colony.item_ledger.consumed_of(kind),
+        traded_in: res.colony.item_ledger.traded_in_of(kind),
+        traded_out: res.colony.item_ledger.traded_out_of(kind),
     }
 }
 
@@ -109,8 +117,8 @@ pub fn check(world: &World, res: &SimResources) -> Result<(), String> {
                 format!("item ledger ({})", kind.name())
             };
             return Err(format!(
-                "{label}: created {} != ground {} + carried {} + held {} + delivered {} + shelved {} + consumed {}",
-                t.created, t.ground, t.carried, t.held, t.delivered, t.shelved, t.consumed
+                "{label}: created {} + traded in {} != ground {} + carried {} + held {} + delivered {} + shelved {} + consumed {} + traded out {}",
+                t.created, t.traded_in, t.ground, t.carried, t.held, t.delivered, t.shelved, t.consumed, t.traded_out
             ));
         }
     }

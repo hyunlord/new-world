@@ -100,6 +100,7 @@ pub fn registry() -> Vec<ComponentCodec> {
         codec::<Child>("Child"),
         codec::<Cold>("Cold"),
         codec::<sim_core::colony::people::Drafted>("Drafted"),
+        codec::<sim_core::colony::people::Fleeing>("Fleeing"),
         codec::<ColonySite>("ColonySite"),
         codec::<ConstructionSite>("ConstructionSite"),
         codec::<Elder>("Elder"),

@@ -97,11 +97,12 @@ pub fn relation(res: &SimResources, rule: &MoodRule, a: AgentId, b: AgentId, bas
 /// The quarrel chance ‰ of a pair with moods `ma`, `mb` and relation `rel` (goal 3.4).
 pub fn chance(rule: &MoodRule, ma: i16, mb: i16, rel: i16) -> u32 {
     let low = ma.min(mb);
-    let from_mood = (i32::from(rule.low) - i32::from(low)).max(0) / 25;
-    let from_rel = (-i32::from(rel)).max(0) / 100;
+    let from_mood =
+        (i32::from(rule.low) - i32::from(low)).max(0) / rule.quarrel_mood_divisor.max(1);
+    let from_rel = (-i32::from(rel)).max(0) / rule.quarrel_relation_divisor.max(1);
     let mut c = rule.quarrel_base_permille as i32 + from_mood + from_rel;
     if low < rule.low {
-        c *= 3;
+        c *= rule.quarrel_low_factor;
     }
     (c.max(0) as u32).min(rule.quarrel_cap_permille)
 }
@@ -280,9 +281,10 @@ fn quarrel(
         .map(|b| b.last_quarrel)
         .filter(|e| *e != u32::MAX);
     let (code, cause_ref) = match mods.first() {
+        // M5.5: the cause is a concrete record — a need sample, the death, the pressure (ADR 0030 amendment).
         Some((m, _)) => (
             m.quarrel_cause(),
-            Some(super::cause_of(res, *m, facts.mood)),
+            Some(super::cause_record(world, res, init.1, init.0, *m, &facts)),
         ),
         // Bad blood: the relation itself, pointing at the pair's previous quarrel.
         None => (

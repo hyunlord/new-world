@@ -132,19 +132,22 @@ pub enum Source {
     Observed,
     /// Taught in apprenticeship sessions.
     Apprenticed,
+    /// M5.5 (ADR 0031): brought by a migrant from a neighbour; forgotten no lower than an apprenticed entry.
+    Migrant,
 }
 
 impl Source {
     /// Every source in code order.
-    pub const ALL: [Self; 5] = [
+    pub const ALL: [Self; 6] = [
         Self::Seeded,
         Self::Discovered,
         Self::Oral,
         Self::Observed,
         Self::Apprenticed,
+        Self::Migrant,
     ];
 
-    /// Stable code (0 seeded … 4 apprenticed); index into the rule's decay tables.
+    /// Stable code (0 seeded … 4 apprenticed, 5 migrant; the entry keeps 3 bits for it).
     pub const fn code(self) -> u8 {
         match self {
             Self::Seeded => 0,
@@ -152,6 +155,16 @@ impl Source {
             Self::Oral => 2,
             Self::Observed => 3,
             Self::Apprenticed => 4,
+            Self::Migrant => 5,
+        }
+    }
+
+    /// The index into the rule's decay and floor tables (`KnowledgeRule::decay`, `floor`): the code, except a
+    /// migrant's entry, which fades and floors as an apprenticed one (goal M5.5 §3.2).
+    pub const fn table_index(self) -> usize {
+        match self {
+            Self::Migrant => 4,
+            other => other.code() as usize,
         }
     }
 
@@ -162,6 +175,7 @@ impl Source {
             2 => Self::Oral,
             3 => Self::Observed,
             4 => Self::Apprenticed,
+            5 => Self::Migrant,
             _ => Self::Seeded,
         }
     }
@@ -174,6 +188,7 @@ impl Source {
             Self::Oral => "oral",
             Self::Observed => "observed",
             Self::Apprenticed => "apprenticed",
+            Self::Migrant => "migrant",
         }
     }
 }
@@ -1143,7 +1158,20 @@ mod tests {
             (0, 1, 1, 2)
         );
         let codes: Vec<u8> = Source::ALL.iter().map(|s| s.code()).collect();
-        assert_eq!(codes, vec![0, 1, 2, 3, 4]);
+        assert_eq!(codes, vec![0, 1, 2, 3, 4, 5]);
+        for s in Source::ALL {
+            assert_eq!(Source::from_code(s.code()), s);
+        }
+        // M5.5: a migrant's entry fades and floors as an apprenticed one.
+        assert_eq!(
+            Source::Migrant.table_index(),
+            Source::Apprenticed.table_index()
+        );
+        let e = KnowledgeEntry::new(17, Source::Migrant, 500, 3);
+        assert_eq!(
+            (e.id(), e.source(), e.proficiency),
+            (17, Source::Migrant, 500)
+        );
         let lanes: Vec<u8> = Lane::ALL.iter().map(|l| l.code()).collect();
         assert_eq!(lanes, vec![0, 1, 2, 3, 4, 5]);
     }

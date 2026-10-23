@@ -173,6 +173,13 @@ pub fn holders(world: &World, res: &SimResources) -> JobHolders {
             .iter()
             .map(|(entity, _)| entity),
     );
+    // M5.5 (ADR 0028 amendment): a fleeing person runs; the decision skips them as it skips the drafted.
+    inert.extend(
+        world
+            .query::<&sim_core::colony::people::Fleeing>()
+            .iter()
+            .map(|(entity, _)| entity),
+    );
     JobHolders { all, inert }
 }
 

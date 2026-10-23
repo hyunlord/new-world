@@ -309,6 +309,12 @@ pub struct ItemLedger {
     /// Crafts done.
     #[serde(default)]
     pub transforms: u64,
+    /// M5.5 (ADR 0032): items a caravan gave the colony (they enter the world here, like `created`).
+    #[serde(default)]
+    pub traded_in: BTreeMap<ItemKind, u64>,
+    /// M5.5 (ADR 0032): items the colony handed to a caravan (they leave the world here, like `consumed`).
+    #[serde(default)]
+    pub traded_out: BTreeMap<ItemKind, u64>,
 }
 
 impl ItemLedger {
@@ -320,6 +326,26 @@ impl ItemLedger {
     /// Record `n` items of `kind` used up.
     pub fn consume(&mut self, kind: ItemKind, n: u64) {
         *self.consumed.entry(kind).or_insert(0) += n;
+    }
+
+    /// M5.5: record `n` items of `kind` a caravan gave the colony.
+    pub fn trade_in(&mut self, kind: ItemKind, n: u64) {
+        *self.traded_in.entry(kind).or_insert(0) += n;
+    }
+
+    /// M5.5: record `n` items of `kind` handed to a caravan.
+    pub fn trade_out(&mut self, kind: ItemKind, n: u64) {
+        *self.traded_out.entry(kind).or_insert(0) += n;
+    }
+
+    /// M5.5: items of `kind` a caravan gave the colony so far.
+    pub fn traded_in_of(&self, kind: ItemKind) -> u64 {
+        self.traded_in.get(&kind).copied().unwrap_or(0)
+    }
+
+    /// M5.5: items of `kind` handed to caravans so far.
+    pub fn traded_out_of(&self, kind: ItemKind) -> u64 {
+        self.traded_out.get(&kind).copied().unwrap_or(0)
     }
 
     /// Record one whole craft: `inputs` consumed, `outputs` created.

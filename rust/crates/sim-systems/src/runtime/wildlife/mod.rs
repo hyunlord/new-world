@@ -46,8 +46,10 @@ use crate::runtime::jobs::items::chebyshev;
 
 pub mod draft;
 pub mod fight;
+pub mod flee;
 
 pub use draft::{DraftSystem, DRAFT_PRIORITY};
+pub use flee::{FleeSystem, FLEE_PRIORITY};
 
 /// Priority of [`AnimalSystem`].
 pub const ANIMAL_PRIORITY: u32 = 171;
@@ -235,7 +237,7 @@ fn deer_births(res: &mut SimResources, rule: &WildlifeRule, hearth: (u32, u32)) 
 
 /// The tile one step from `from` toward (`toward` = true) or away from `to`, among
 /// the passable 8-neighbours `ok` accepts (ties `(y, x)`); `None` if none is better.
-fn step_rel(
+pub(crate) fn step_rel(
     res: &SimResources,
     from: (u32, u32),
     to: (u32, u32),
@@ -551,7 +553,7 @@ fn wolf_steps(
                         .keys()
                         .any(|(att, _)| *att == Fighter::Person(pid));
                     if !busy && world.get::<&sim_core::colony::people::Drafted>(e).is_err() {
-                        let damage = crate::runtime::jobs::hunt::weapon_damage(world, rule, e);
+                        let damage = crate::runtime::jobs::hunt::defence_damage(world, rule, e);
                         res.colony.fights.insert(
                             back,
                             Fight {
@@ -687,6 +689,9 @@ fn spoil(res: &mut SimResources, rule: &WildlifeRule) {
         let (taken, _) = crate::runtime::jobs::items::take_items(res, tile, ItemKind::Meat, want);
         due -= u32::from(taken);
         spoiled += u32::from(taken);
+        if !res.colony.zone_of_tile.contains_key(&tile) {
+            res.colony.wildlife.tallies.meat_spoiled_afield += u64::from(taken);
+        }
     }
     if spoiled > 0 {
         res.colony
@@ -732,6 +737,26 @@ impl RuntimeSystem for AnimalSystem {
         wolf_steps(world, res, &rule, hearth, &folk);
         if tick.is_multiple_of(60) {
             feed_larder(res, &rule);
+            // M5.5: a carcass tile leaves the list once nothing of the kill lies there off the stockpiles.
+            if !res.colony.wildlife.carcasses.is_empty() {
+                let colony = &res.colony;
+                let keep: std::collections::BTreeSet<(u32, u32)> = colony
+                    .wildlife
+                    .carcasses
+                    .iter()
+                    .copied()
+                    .filter(|t| {
+                        !colony.zone_of_tile.contains_key(t)
+                            && colony.ground_items.get(t).is_some_and(|s| {
+                                matches!(
+                                    s.kind,
+                                    ItemKind::Meat | ItemKind::Hide | ItemKind::WolfHide
+                                )
+                            })
+                    })
+                    .collect();
+                res.colony.wildlife.carcasses = keep;
+            }
         }
         if tick.is_multiple_of(res.ticks_per_day.max(1)) {
             spoil(res, &rule);

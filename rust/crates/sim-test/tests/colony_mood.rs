@@ -208,8 +208,21 @@ fn hungry_neighbours_on_bad_terms_quarrel_over_hunger_and_the_why_chain_resolves
         "the pair quarrelled"
     );
     assert_eq!(q.cause, 1, "cause 1 + hunger (code 0)");
-    assert!(
-        matches!(engine.resources.chronicle.cause_of(index), Some(CauseRef::Modifier { code, .. }) if code == Modifier::Hungry.code())
+    // M5.5 (goal §3.1.7): the cause is the initiator's need sample at the quarrel tick, and it resolves.
+    let Some(CauseRef::Sample { code, sample }) = engine.resources.chronicle.cause_of(index) else {
+        panic!("a hunger quarrel's cause is a need sample");
+    };
+    assert_eq!(code, Modifier::Hungry.code());
+    let s = *engine
+        .resources
+        .chronicle
+        .sample(sample)
+        .expect("the sample");
+    assert_eq!((s.agent, s.tick), (q.subject.expect("initiator"), q.tick));
+    assert!(s.hunger >= 500, "hungry at the quarrel: {}", s.hunger);
+    assert_eq!(
+        sim_systems::runtime::mood::check_cause(&engine.resources.chronicle, index, 2 * 1_440),
+        Ok(())
     );
     let chain = why_chain(&engine.resources.chronicle, index);
     assert_eq!(

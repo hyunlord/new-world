@@ -12,6 +12,10 @@
 //! a hit does the weapon's damage (a spear wears one use). A deer at 0 hp
 //! drops meat (3 with a knife held — one knife use — else 2) and a hide on
 //! its tile; the meat joins the spoilage lots; chronicle `Hunted`.
+//! M5.5 (`WildlifeRule::hunter_hauls`, ADR 0028 amendment): the kill turns the
+//! hunt into a `Haul` of up to `hunter_meat` meat by the hunter to the nearest
+//! stockpile cell with room ([`haul_home`]); the hide and any meat left are
+//! noted in `Wildlife::carcasses` and hauled before other loose stacks.
 use hecs::{Entity, World};
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind};
 use sim_core::colony::knowledge::gates;
@@ -188,6 +192,20 @@ pub fn weapon_damage(world: &World, rule: &WildlifeRule, entity: Entity) -> u16 
     }
 }
 
+/// The damage of `entity`'s blows in a fight: the held weapon's ([`weapon_damage`]), scaled to
+/// `flee_defence_permille` while the person flees (M5.5, ADR 0028 amendment; at least 1).
+pub fn defence_damage(world: &World, rule: &WildlifeRule, entity: Entity) -> u16 {
+    let full = weapon_damage(world, rule, entity);
+    if world
+        .get::<&sim_core::colony::people::Fleeing>(entity)
+        .is_ok()
+    {
+        (u32::from(full) * rule.flee_defence_permille / 1000).max(1) as u16
+    } else {
+        full
+    }
+}
+
 /// One use of `entity`'s held tool of `kind` (a spear's attack, a knife's cut):
 /// at `limit` uses it breaks — used up (ledger consumed), chronicle `ToolBroke`.
 /// Returns whether a tool of that kind was used.
@@ -313,8 +331,15 @@ pub fn step(
             }
             craft::train(world, entity, SkillKind::Hunting, u32::from(job.amount));
             if attack(world, res, &rule, id, entity, animal) {
-                kill(world, res, &rule, id, entity, animal);
-                finish(world, res, entity);
+                let meat = kill(world, res, &rule, id, entity, animal);
+                // M5.5: the hunter carries the meat home before any other job.
+                let hauled = rule.hunter_hauls
+                    && meat
+                        .first()
+                        .is_some_and(|&from| haul_home(world, res, &rule, id, entity, from, pos));
+                if !hauled {
+                    finish(world, res, entity);
+                }
                 return;
             }
             // A miss: back to stalking (seeking, so the job layer keeps the job; review m1).
@@ -371,7 +396,7 @@ fn attack(
     deer.hp == 0
 }
 
-/// The deer fell: meat (a knife held: one use, more meat) and a hide on its tile.
+/// The deer fell: meat (a knife held: one use, more meat) and a hide on its tile. Returns the meat's tiles.
 fn kill(
     world: &mut World,
     res: &mut SimResources,
@@ -379,9 +404,9 @@ fn kill(
     id: AgentId,
     entity: Entity,
     animal: u32,
-) {
+) -> Vec<(u32, u32)> {
     let Some(deer) = res.colony.wildlife.animals.remove(&animal) else {
-        return;
+        return Vec::new();
     };
     res.colony.wildlife.marks.remove(&animal);
     let knife = wear_tool(
@@ -400,7 +425,7 @@ fn kill(
     } else {
         rule.meat_without_knife
     };
-    drop_carcass(res, deer.pos, meat, ItemKind::Hide);
+    let meat_tiles = drop_carcass(res, deer.pos, meat, ItemKind::Hide);
     let w = &mut res.colony.wildlife;
     w.tallies.deer_killed += 1;
     w.version += 1;
@@ -411,15 +436,24 @@ fn kill(
             .value(i64::from(meat)),
     );
     crate::runtime::knowledge::used(world, res, entity, gates().designation(Designation::Hunt));
+    meat_tiles
 }
 
-/// Put a carcass's meat and hide on `tile` (ledger created; the meat joins today's lot).
-pub fn drop_carcass(res: &mut SimResources, tile: (u32, u32), meat: u16, hide: ItemKind) {
+/// Put a carcass's meat and hide on `tile` (ledger created; the meat joins today's lot). Returns the tiles the meat
+/// went to (first the tile itself when it had room). M5.5: every tile the carcass filled is noted in
+/// `Wildlife::carcasses` so its leftovers are hauled before other loose stacks.
+pub fn drop_carcass(
+    res: &mut SimResources,
+    tile: (u32, u32),
+    meat: u16,
+    hide: ItemKind,
+) -> Vec<(u32, u32)> {
+    let mut meat_tiles = Vec::new();
     if meat > 0 {
         res.colony
             .item_ledger
             .create(ItemKind::Meat, u64::from(meat));
-        put_items(res, tile, ItemSpec::raw(ItemKind::Meat, None), meat);
+        meat_tiles = put_items(res, tile, ItemSpec::raw(ItemKind::Meat, None), meat);
         let day = u32::try_from(crate::runtime::resource_regen::day_index(res)).unwrap_or(u32::MAX);
         let lots = &mut res.colony.wildlife.meat_lots;
         match lots.last_mut() {
@@ -429,8 +463,84 @@ pub fn drop_carcass(res: &mut SimResources, tile: (u32, u32), meat: u16, hide: I
         res.colony.wildlife.tallies.meat_dropped += u64::from(meat);
     }
     res.colony.item_ledger.create(hide, 1);
-    put_items(res, tile, ItemSpec::raw(hide, None), 1);
+    let hide_tiles = put_items(res, tile, ItemSpec::raw(hide, None), 1);
     res.colony.wildlife.tallies.hides_dropped += 1;
+    if rule(res).is_some_and(|r| r.hunter_hauls) {
+        let carcasses = &mut res.colony.wildlife.carcasses;
+        carcasses.extend(meat_tiles.iter().copied());
+        carcasses.extend(hide_tiles);
+    }
+    meat_tiles
+}
+
+/// M5.5 (ADR 0028 amendment): right after the kill the hunter carries the meat home — the hunt becomes a `Haul` of
+/// up to `hunter_meat` meat from `from` to the nearest stockpile cell with room for it (`(distance, y, x)` from the
+/// meat, not reserved, reachable from the hunter). Returns `false` (the hunt just finishes) when there is no meat
+/// there or no such cell. The hunt counts as done and the haul as taken.
+fn haul_home(
+    world: &mut World,
+    res: &mut SimResources,
+    rule: &WildlifeRule,
+    id: AgentId,
+    entity: Entity,
+    from: (u32, u32),
+    pos: (u32, u32),
+) -> bool {
+    let Some(stack) = res
+        .colony
+        .ground_items
+        .get(&from)
+        .filter(|s| s.kind == ItemKind::Meat && s.count > 0)
+    else {
+        return false;
+    };
+    let (spec, count) = (stack.spec(), stack.count);
+    let region = res.nav.region_of(pos);
+    let Some(to) = res
+        .colony
+        .zone_of_tile
+        .keys()
+        .copied()
+        .filter(|c| {
+            super::items::room_on(res, *c, spec) > 0
+                && !res.colony.reservations.contains_key(&ReserveKey::Cell(*c))
+                && res.nav.reaches(region, *c)
+        })
+        .min_by_key(|c| (chebyshev(from, *c), c.1, c.0))
+    else {
+        return false;
+    };
+    let amount = rule
+        .hunter_meat
+        .min(count)
+        .min(super::items::room_on(res, to, spec))
+        .min(ItemKind::Meat.default_carry().max(1));
+    if amount == 0 {
+        return false;
+    }
+    super::cancel::release_all(res, id);
+    res.colony.tallies.jobs_done += 1;
+    let now = res.current_tick;
+    let job = Job {
+        kind: JobKind::Haul { from, to },
+        stage: JobStage::ToSource,
+        taken_at: now,
+        amount,
+        item: ItemKind::Meat,
+        material: None,
+        fetch: None,
+        best_distance: chebyshev(pos, from),
+        progress_tick: now,
+    };
+    for key in job.keys() {
+        super::cancel::reserve(res, key, id);
+    }
+    res.colony.tallies.jobs_taken += 1;
+    res.colony.wildlife.tallies.meat_hauls += 1;
+    put_job(world, entity, job);
+    set_state(world, entity, SEEK_JOB);
+    let _ = world.insert_one(entity, SeekTarget::new(from));
+    true
 }
 
 /// One tick of an `Equip` job: walk to the stack, take one top and wear it (the

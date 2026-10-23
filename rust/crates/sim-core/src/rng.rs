@@ -147,8 +147,13 @@ pub const STREAM_QUARREL: u64 = 0x5155_4152_5245_4C53;
 /// the wearer's lineage key, tick = the hour).
 pub const STREAM_APPAREL: u64 = 0x4150_5041_5245_4C21;
 
+/// M5.5 (ADR 0031): the neighbours' generation, migrant waves, migrants' knowledge and population drift.
+pub const STREAM_NEIGHBOURS: u64 = 0x4E45_4947_4842_4F52;
+/// M5.5 (ADR 0032): caravan dates and their goods.
+pub const STREAM_TRADE: u64 = 0x5452_4144_4552_5321;
+
 /// Every stream constant, for the distinctness test and the inventory.
-pub const STREAMS: [u64; 36] = [
+pub const STREAMS: [u64; 38] = [
     STREAM_MOVE_PAUSE,
     STREAM_MOVE_DX,
     STREAM_MOVE_DY,
@@ -185,6 +190,8 @@ pub const STREAMS: [u64; 36] = [
     STREAM_WILDLIFE,
     STREAM_QUARREL,
     STREAM_APPAREL,
+    STREAM_NEIGHBOURS,
+    STREAM_TRADE,
 ];
 
 /// One splitmix64 output for state `x` (identical to `MovementRng::new(x).next_u64()`).

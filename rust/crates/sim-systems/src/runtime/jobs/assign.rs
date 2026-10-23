@@ -603,6 +603,58 @@ fn pick_work(
             .map(|(tree, ())| (JobKind::Chop { tree }, 0, ItemKind::Log))
         }
         WorkType::Haul => {
+            // M5.5 (ADR 0032): items owed to a trading caravan first, carried to its spot.
+            if let Some(c) = colony.neighbours.trading_caravan() {
+                let spot = c.spot.unwrap_or(c.pos);
+                let owed = c
+                    .owed
+                    .iter()
+                    .filter(|(t, _, n)| {
+                        *n > 0 && chebyshev(pos, *t) <= radius && stack_of(*t, None, Some(true))
+                    })
+                    .min_by_key(|(t, ..)| (chebyshev(pos, *t), t.1, t.0));
+                if let Some(&(from, kind, n)) = owed {
+                    let amount = rule.carry(kind).min(n).min(count(from));
+                    if amount > 0
+                        && colony
+                            .ground_items
+                            .get(&from)
+                            .is_some_and(|s| s.kind == kind)
+                    {
+                        return Some((JobKind::Trade { from, to: spot }, amount, kind));
+                    }
+                }
+            }
+            // M5.5 (ADR 0028 amendment): a kill's leftovers first — the hide, meat the hunter could not carry.
+            let carcass = colony
+                .wildlife
+                .carcasses
+                .iter()
+                .copied()
+                .filter(|t| chebyshev(pos, *t) <= radius && stack_of(*t, None, Some(false)))
+                .min_by_key(|t| (chebyshev(pos, *t), t.1, t.0));
+            if let Some(from) = carcass {
+                if let Some(spec) = colony.ground_items.get(&from).map(|s| s.spec()) {
+                    let open = |cell: (u32, u32)| {
+                        room_on(res, cell, spec) > 0
+                            && !colony.reservations.contains_key(&ReserveKey::Cell(cell))
+                            && reach(cell)
+                    };
+                    let cell = index
+                        .cells
+                        .nearest_where(from, u32::MAX, |c, _| open(c))
+                        .map(|(to, ())| prefer_covered(res, ctx, from, to, &open));
+                    if let Some(to) = cell {
+                        let amount = rule
+                            .carry(spec.kind)
+                            .min(count(from))
+                            .min(room_on(res, to, spec));
+                        if amount > 0 {
+                            return Some((JobKind::Haul { from, to }, amount, spec.kind));
+                        }
+                    }
+                }
+            }
             // The nearest loose stack, to the stockpile cell nearest that stack
             // with room for it. Stacks whose spec no cell takes (a memo found
             // none this tick) are skipped; the predicate only grows stricter
@@ -1161,6 +1213,10 @@ impl RuntimeSystem for JobAssignSystem {
                     }
                     JobKind::Supply { workshop, .. } => {
                         *supply.entry((workshop, item)).or_insert(0) += amount;
+                    }
+                    // M5.5: the owed items this haul carries are no longer owed (an undelivered load is forgiven).
+                    JobKind::Trade { from, .. } => {
+                        crate::runtime::neighbours::trade::take_owed(resources, from, amount);
                     }
                     JobKind::Gather { .. } => {
                         let carry = u32::from(rule.carry(ItemKind::Firewood));

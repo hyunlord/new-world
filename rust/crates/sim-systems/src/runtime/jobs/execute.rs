@@ -161,6 +161,11 @@ fn target_exists(world: &World, res: &SimResources, job: &Job) -> bool {
             })
         }
         (JobKind::Equip { .. }, _) => true,
+        // M5.5: the caravan still trades at the hearth (and, walking to the source, the stack is there).
+        (JobKind::Trade { from, .. }, JobStage::ToSource) => {
+            stack(from) && colony.neighbours.trading_caravan().is_some()
+        }
+        (JobKind::Trade { .. }, _) => colony.neighbours.trading_caravan().is_some(),
     }
 }
 
@@ -337,7 +342,8 @@ fn step(
                 JobKind::Haul { from, .. }
                 | JobKind::Deliver { from, .. }
                 | JobKind::Supply { from, .. }
-                | JobKind::Clear { from, .. } => {
+                | JobKind::Clear { from, .. }
+                | JobKind::Trade { from, .. } => {
                     let (taken, spec) = take_items(res, from, job.item, job.amount);
                     res.colony.reservations.remove(&ReserveKey::Stack(from));
                     if taken == 0 {
@@ -810,6 +816,13 @@ fn arrive(
                 if rest > 0 {
                     put_items(res, pos, carry.spec(), rest);
                 }
+            }
+            // M5.5 (ADR 0032): handed to the caravan — it leaves the colony's ledger.
+            JobKind::Trade { .. } => {
+                res.colony
+                    .item_ledger
+                    .trade_out(carry.kind, u64::from(carry.count));
+                res.colony.neighbours.version += 1;
             }
             _ => {
                 put_items(res, pos, carry.spec(), carry.count);

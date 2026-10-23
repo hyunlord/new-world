@@ -66,6 +66,9 @@ pub struct ColonyRule {
     /// M5 (ADR 0030): mood and quarrels. `None` = M4 (no mood).
     #[serde(default)]
     pub mood: Option<super::MoodRule>,
+    /// M5.5 (ADR 0031, 0032): the neighbours, migrant waves and caravans. `None` = M5 (nobody comes).
+    #[serde(default)]
+    pub neighbours: Option<super::NeighbourRule>,
 }
 
 /// M3's tunables (goal 3.2–3.3; `ColonyRule::space`).
@@ -187,6 +190,7 @@ impl ColonyRule {
         story: None,
         wildlife: None,
         mood: None,
+        neighbours: None,
     };
 
     /// The M1.5 colony values: [`Self::M1`] with the job-churn remedies
@@ -222,6 +226,16 @@ impl ColonyRule {
         wildlife: Some(super::WildlifeRule::M5),
         mood: Some(super::MoodRule::M5),
         ..Self::M4
+    };
+
+    /// The M5.5 colony values (ADR 0027–0030 amendments, 0031, 0032): [`Self::M5`] without stacked pressure, with
+    /// flight, the hunter's meat haul, a 4-use knife and the calibrated mood.
+    pub const M5_5: Self = Self {
+        story: Some(super::StoryRule::M5_5),
+        wildlife: Some(super::WildlifeRule::M5_5),
+        mood: Some(super::MoodRule::M5_5),
+        neighbours: None,
+        ..Self::M5
     };
 
     /// Items of `kind` one tile holds (logs: `stack_max_logs`; goal 3.1 for the rest).
@@ -299,7 +313,7 @@ impl super::WorldRules {
                 firewood,
                 ..base.society
             },
-            colony: Some(ColonyRule::M5),
+            colony: Some(ColonyRule::M5_5),
             seasons,
             calendar: COLONY_CALENDAR,
             ..base

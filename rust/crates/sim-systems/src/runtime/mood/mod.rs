@@ -161,6 +161,54 @@ pub struct Facts {
     pub ha: u16,
     /// See [`Self::ha`].
     pub rd: u16,
+    /// The weights of the pressure-related modifiers (M5.5 calibration knobs; `MoodRule::cold_weight` …).
+    pub weights: Weights,
+}
+
+/// The rule's weights of the pressure-related modifiers (M5.5, goal §3.1.6): cold, hungry, sick, pressure, grief.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Weights {
+    /// `MoodRule::cold_weight`.
+    pub cold: i16,
+    /// `MoodRule::hungry_weight`.
+    pub hungry: i16,
+    /// `MoodRule::sick_weight`.
+    pub sick: i16,
+    /// `MoodRule::pressure_weight`.
+    pub pressure: i16,
+    /// `MoodRule::grief_weight`.
+    pub grief: i16,
+}
+
+impl Default for Weights {
+    fn default() -> Self {
+        Self::of(&MoodRule::M5)
+    }
+}
+
+impl Weights {
+    /// The weights of `rule`.
+    pub const fn of(rule: &MoodRule) -> Self {
+        Self {
+            cold: rule.cold_weight,
+            hungry: rule.hungry_weight,
+            sick: rule.sick_weight,
+            pressure: rule.pressure_weight,
+            grief: rule.grief_weight,
+        }
+    }
+
+    /// The weight of `m`: the rule's for the pressure-related modifiers, else the table's (`Modifier::weight`).
+    pub const fn weight(&self, m: Modifier) -> i32 {
+        match m {
+            Modifier::Cold => self.cold as i32,
+            Modifier::Hungry => self.hungry as i32,
+            Modifier::Sick => self.sick as i32,
+            Modifier::Pressure => self.pressure as i32,
+            Modifier::Grief => self.grief as i32,
+            other => other.weight(),
+        }
+    }
 }
 
 /// The active modifiers of a person with `f`, each with its weight after temperament.
@@ -168,7 +216,7 @@ pub fn modifiers(f: &Facts) -> Vec<(Modifier, i32)> {
     let mut out = Vec::with_capacity(8);
     let last = f.nights & 7;
     let mut push = |m: Modifier| {
-        let w = m.weight();
+        let w = f.weights.weight(m);
         let scaled = if m.social() {
             w * (800 + i32::from(f.rd) / 5) / 1000
         } else if w < 0 {
@@ -265,6 +313,7 @@ pub fn facts_of(world: &World, res: &SimResources, entity: Entity) -> Facts {
         day,
         ha: t.map_or(500, |t| t.ha),
         rd: t.map_or(500, |t| t.rd),
+        weights: rule(res).map_or_else(Weights::default, |r| Weights::of(&r)),
     }
 }
 
@@ -291,6 +340,138 @@ pub fn cause_of(res: &SimResources, m: Modifier, mood: Option<Mood>) -> CauseRef
     CauseRef::Modifier {
         code: m.code(),
         entry,
+    }
+}
+
+/// M5.5 (ADR 0030 amendment): the concrete record behind modifier `m` as a quarrel's cause for the person `id`
+/// (`entity`, facts `f`): hunger, thirst, a cold or an outdoor night are sampled now (`NeedSample`, kept in the
+/// chronicle; with the pressure behind them for the "why?" chain); grief points at the death, sickness, drafting and a
+/// pressure at the pressure's `PressureBegan`. Anything else has no record (`entry: None`).
+pub fn cause_record(
+    world: &World,
+    res: &mut SimResources,
+    entity: Entity,
+    id: AgentId,
+    m: Modifier,
+    f: &Facts,
+) -> CauseRef {
+    match m {
+        Modifier::Hungry | Modifier::Thirsty | Modifier::Cold | Modifier::SleptOutside => {
+            let entry = match cause_of(res, m, f.mood) {
+                CauseRef::Modifier { entry, .. } => entry,
+                _ => None,
+            };
+            let tenths = |v: f64| (v.clamp(0.0, 100.0) * 10.0) as u16;
+            let sample = sim_core::chronicle::NeedSample {
+                agent: id,
+                tick: res.current_tick,
+                hunger: world
+                    .get::<&Hunger>(entity)
+                    .map_or(0, |h| tenths(f64::from(h.value))),
+                thirst: world.get::<&Thirst>(entity).map_or(0, |t| tenths(t.value)),
+                nights: f.nights & 7,
+                entry,
+            };
+            CauseRef::Sample {
+                code: m.code(),
+                sample: res.chronicle.push_sample(sample),
+            }
+        }
+        _ => cause_of(res, m, f.mood),
+    }
+}
+
+/// M5.5 (ADR 0030 amendment, goal §3.1.7): whether the cause of quarrel entry `index` resolves — its record exists,
+/// belongs to the initiator (the entry's subject; the world for a pressure) and lies within `window` ticks before the
+/// quarrel (a state — a pressure — lies within it when it was in force at some tick of it). A need sample must also
+/// show the need (hunger or thirst at its seek threshold, the night's cold or outdoor sleep). `Err` says why not.
+pub fn check_cause(
+    chronicle: &sim_core::chronicle::Chronicle,
+    index: u32,
+    window: u64,
+) -> Result<(), &'static str> {
+    use crate::runtime::decision::needs as n;
+    let q = chronicle.entry(index).ok_or("no such entry")?;
+    if q.kind != ChronicleKind::Quarrel {
+        return Err("not a quarrel");
+    }
+    let who = q.subject.ok_or("no initiator")?;
+    let from = q.tick.saturating_sub(window);
+    let within = |t: u64| (from..=q.tick).contains(&t);
+    let entry_ok = |e: u32| -> Result<(), &'static str> {
+        let rec = chronicle.entry(e).ok_or("record missing")?;
+        match rec.kind {
+            ChronicleKind::PressureBegan => {
+                if rec.tick > q.tick {
+                    return Err("pressure after the quarrel");
+                }
+                let ended = (0..chronicle.len() as u32).find(|&i| {
+                    chronicle
+                        .entry(i)
+                        .is_some_and(|x| x.kind == ChronicleKind::PressureEnded)
+                        && chronicle.cause_of(i) == Some(CauseRef::Entry(e))
+                });
+                match ended.and_then(|i| chronicle.entry(i)) {
+                    Some(end) if end.tick < from => Err("pressure ended before the window"),
+                    _ => Ok(()),
+                }
+            }
+            ChronicleKind::Died => {
+                let dead = rec.subject.ok_or("death without a person")?;
+                let parents = |id| chronicle.person(id).map(|p| (p.mother, p.father));
+                let kin = rec.other == Some(who)
+                    || parents(dead).is_some_and(|(m, f)| m == Some(who) || f == Some(who))
+                    || parents(who).is_some_and(|(m, f)| m == Some(dead) || f == Some(dead));
+                if !kin {
+                    Err("the death is not the initiator's kin")
+                } else if !within(rec.tick) {
+                    Err("the death lies outside the window")
+                } else {
+                    Ok(())
+                }
+            }
+            ChronicleKind::Quarrel => {
+                if rec.subject != Some(who) && rec.other != Some(who) {
+                    Err("the earlier quarrel is not the initiator's")
+                } else if !within(rec.tick) || e >= index {
+                    Err("the earlier quarrel lies outside the window")
+                } else {
+                    Ok(())
+                }
+            }
+            _ => Err("a record of another kind"),
+        }
+    };
+    match chronicle.cause_of(index) {
+        None => Err("no cause"),
+        Some(CauseRef::Entry(e)) => entry_ok(e),
+        Some(CauseRef::Modifier { entry: Some(e), .. }) => entry_ok(e),
+        Some(CauseRef::Modifier { entry: None, .. }) => Err("no record behind the modifier"),
+        Some(CauseRef::Pressure { entry: Some(e), .. }) => entry_ok(e),
+        Some(CauseRef::Pressure { entry: None, .. }) => Err("no record behind the pressure"),
+        Some(CauseRef::Sample { code, sample }) => {
+            let s = chronicle.sample(sample).ok_or("sample missing")?;
+            if s.agent != who {
+                return Err("the sample is not the initiator's");
+            }
+            if !within(s.tick) {
+                return Err("the sample lies outside the window");
+            }
+            let shows = match Modifier::from_code(code) {
+                Some(Modifier::Hungry) => {
+                    f64::from(s.hunger) >= f64::from(n::HUNGER_THRESHOLD) * 10.0
+                }
+                Some(Modifier::Thirsty) => f64::from(s.thirst) >= n::THIRST_THRESHOLD * 10.0,
+                Some(Modifier::Cold) => s.nights & COLD != 0,
+                Some(Modifier::SleptOutside) => s.nights & OUTSIDE != 0,
+                _ => false,
+            };
+            if shows {
+                Ok(())
+            } else {
+                Err("the sample does not show the need")
+            }
+        }
     }
 }
 
@@ -322,6 +503,11 @@ pub fn why_chain(chronicle: &sim_core::chronicle::Chronicle, index: u32) -> Vec<
             Some(CauseRef::Modifier { code, entry }) => {
                 out.push(Link::Modifier(code));
                 entry
+            }
+            // M5.5: a modifier backed by a need sample; the chain goes on to the pressure behind it, if any.
+            Some(CauseRef::Sample { code, sample }) => {
+                out.push(Link::Modifier(code));
+                chronicle.sample(sample).and_then(|s| s.entry)
             }
         };
         match next {
@@ -530,5 +716,215 @@ mod tests {
             ]
         );
         assert_eq!(target(&rule, &modifiers(&cold)), 188);
+    }
+
+    /// M5.5 (goal §3.1.7): a quarrel's cause resolves only when its record exists, is the initiator's (or the
+    /// world's) and lies within the window — each failing case fails.
+    #[test]
+    fn quarrel_causes_resolve_only_to_a_fitting_record() {
+        use sim_core::chronicle::{Chronicle, NeedSample, PersonRecord};
+        const DAY: u64 = 1_440;
+        let window = 2 * DAY;
+        let quarrel =
+            |c: &mut Chronicle, tick: u64, who: AgentId, other: AgentId, cause: CauseRef| {
+                c.push_caused(
+                    ChronicleEntry::new(tick, ChronicleKind::Quarrel)
+                        .subject(who)
+                        .other(Some(other))
+                        .cause(1),
+                    Some(cause),
+                )
+            };
+        let sample = |c: &mut Chronicle, who: AgentId, tick: u64, hunger: u16, nights: u8| {
+            c.push_sample(NeedSample {
+                agent: who,
+                tick,
+                hunger,
+                thirst: 0,
+                nights,
+                entry: None,
+            })
+        };
+        let mut c = Chronicle::new();
+        let hungry = Modifier::Hungry.code();
+        // A hungry initiator sampled at the quarrel: resolves.
+        let s = sample(&mut c, 1, 10 * DAY, 700, 0);
+        let q = quarrel(
+            &mut c,
+            10 * DAY,
+            1,
+            2,
+            CauseRef::Sample {
+                code: hungry,
+                sample: s,
+            },
+        );
+        assert_eq!(check_cause(&c, q, window), Ok(()));
+        // Someone else's sample, an old sample, a sample that is not hungry: each fails.
+        let s = sample(&mut c, 2, 10 * DAY, 700, 0);
+        let q = quarrel(
+            &mut c,
+            10 * DAY,
+            1,
+            2,
+            CauseRef::Sample {
+                code: hungry,
+                sample: s,
+            },
+        );
+        assert!(check_cause(&c, q, window).is_err());
+        let s = sample(&mut c, 1, 7 * DAY, 700, 0);
+        let q = quarrel(
+            &mut c,
+            10 * DAY,
+            1,
+            2,
+            CauseRef::Sample {
+                code: hungry,
+                sample: s,
+            },
+        );
+        assert!(check_cause(&c, q, window).is_err());
+        let s = sample(&mut c, 1, 10 * DAY, 100, 0);
+        let q = quarrel(
+            &mut c,
+            10 * DAY,
+            1,
+            2,
+            CauseRef::Sample {
+                code: hungry,
+                sample: s,
+            },
+        );
+        assert!(check_cause(&c, q, window).is_err());
+        // Last night's cold: the sample must carry the cold bit.
+        let cold = Modifier::Cold.code();
+        let s = sample(&mut c, 1, 10 * DAY, 0, COLD);
+        let q = quarrel(
+            &mut c,
+            10 * DAY,
+            1,
+            2,
+            CauseRef::Sample {
+                code: cold,
+                sample: s,
+            },
+        );
+        assert_eq!(check_cause(&c, q, window), Ok(()));
+        let s = sample(&mut c, 1, 10 * DAY, 0, OUTSIDE);
+        let q = quarrel(
+            &mut c,
+            10 * DAY,
+            1,
+            2,
+            CauseRef::Sample {
+                code: cold,
+                sample: s,
+            },
+        );
+        assert!(check_cause(&c, q, window).is_err());
+        // A pressure: in force within the window resolves; one that ended before it does not.
+        let began = c.push_caused(
+            ChronicleEntry::new(5 * DAY, ChronicleKind::PressureBegan).cause(3),
+            None,
+        );
+        let pressure = Modifier::Pressure.code();
+        let q = quarrel(
+            &mut c,
+            10 * DAY,
+            1,
+            2,
+            CauseRef::Modifier {
+                code: pressure,
+                entry: Some(began),
+            },
+        );
+        assert_eq!(check_cause(&c, q, window), Ok(()), "still in force");
+        c.push_caused(
+            ChronicleEntry::new(6 * DAY, ChronicleKind::PressureEnded).cause(3),
+            Some(CauseRef::Entry(began)),
+        );
+        let q = quarrel(
+            &mut c,
+            10 * DAY,
+            1,
+            2,
+            CauseRef::Modifier {
+                code: pressure,
+                entry: Some(began),
+            },
+        );
+        assert!(
+            check_cause(&c, q, window).is_err(),
+            "ended four days before"
+        );
+        // Grief: the death of a child of the initiator, within the window; a stranger's death fails.
+        c.ensure_person(7, || {
+            Some(PersonRecord {
+                mother: Some(1),
+                ..PersonRecord::default()
+            })
+        });
+        let died = c.push_caused(
+            ChronicleEntry::new(9 * DAY, ChronicleKind::Died).subject(7),
+            None,
+        );
+        let grief = Modifier::Grief.code();
+        let q = quarrel(
+            &mut c,
+            10 * DAY,
+            1,
+            2,
+            CauseRef::Modifier {
+                code: grief,
+                entry: Some(died),
+            },
+        );
+        assert_eq!(check_cause(&c, q, window), Ok(()));
+        let q = quarrel(
+            &mut c,
+            10 * DAY,
+            3,
+            2,
+            CauseRef::Modifier {
+                code: grief,
+                entry: Some(died),
+            },
+        );
+        assert!(check_cause(&c, q, window).is_err(), "not person 3's kin");
+        // The relation: the pair's earlier quarrel within the window resolves; no record fails.
+        let earlier = quarrel(
+            &mut c,
+            9 * DAY,
+            2,
+            1,
+            CauseRef::Modifier {
+                code: 0,
+                entry: None,
+            },
+        );
+        let rel = sim_core::colony::people::RELATION_CAUSE;
+        let q = quarrel(
+            &mut c,
+            10 * DAY,
+            1,
+            2,
+            CauseRef::Modifier {
+                code: rel,
+                entry: Some(earlier),
+            },
+        );
+        assert_eq!(check_cause(&c, q, window), Ok(()));
+        let q = quarrel(
+            &mut c,
+            10 * DAY,
+            1,
+            2,
+            CauseRef::Modifier {
+                code: rel,
+                entry: None,
+            },
+        );
+        assert!(check_cause(&c, q, window).is_err());
     }
 }

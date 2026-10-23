@@ -438,6 +438,42 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
                 counted(removed)
             }
         },
+        // M5.5 (ADR 0031, 0032): neighbours' visitors.
+        Command::AcceptMigrants { .. }
+        | Command::DeclineMigrants { .. }
+        | Command::Trade { .. }
+            if rule.neighbours.is_none() =>
+        {
+            CommandResult::rejected(RejectReason::NotYet)
+        }
+        Command::AcceptMigrants { wave } => {
+            match crate::runtime::neighbours::join::accept(world, res, wave) {
+                Some(n) => CommandResult::ok(n),
+                None => CommandResult::rejected(RejectReason::NoVisitor),
+            }
+        }
+        Command::DeclineMigrants { wave } => {
+            if crate::runtime::neighbours::join::decline(res, wave) {
+                CommandResult::ok(1)
+            } else {
+                CommandResult::rejected(RejectReason::NoVisitor)
+            }
+        }
+        Command::Trade {
+            caravan,
+            ref give,
+            ref take,
+        } => {
+            let give: Vec<((u32, u32), u16)> = give.iter().map(|&(x, y, n)| ((x, y), n)).collect();
+            use crate::runtime::neighbours::trade::{trade, TradeRefusal};
+            match trade(res, caravan, &give, take) {
+                Ok(n) => CommandResult::ok(n),
+                Err(TradeRefusal::NoCaravan) => CommandResult::rejected(RejectReason::NoVisitor),
+                Err(TradeRefusal::BadItems) => CommandResult::rejected(RejectReason::Unknown),
+                Err(TradeRefusal::Empty) => CommandResult::rejected(RejectReason::Nothing),
+                Err(TradeRefusal::Balance) => CommandResult::rejected(RejectReason::Unbalanced),
+            }
+        }
         Command::SetDressOrder { on } => {
             if res.colony.dress_off != on {
                 return CommandResult::rejected(RejectReason::Nothing);

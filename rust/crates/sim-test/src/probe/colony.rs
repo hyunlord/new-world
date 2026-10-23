@@ -1231,6 +1231,35 @@ pub fn resolve(
         ("set_dress_order", None) => vec![Command::SetDressOrder {
             on: spec["on"].as_bool().unwrap_or(true),
         }],
+        ("accept_migrants", None) => vec![Command::AcceptMigrants {
+            wave: field(spec, "wave")?,
+        }],
+        ("decline_migrants", None) => vec![Command::DeclineMigrants {
+            wave: field(spec, "wave")?,
+        }],
+        ("trade", None) => {
+            let triple = |v: &Value| -> Option<(u32, u32, u16)> {
+                let a = v.as_array()?;
+                Some((
+                    u32::try_from(a.first()?.as_u64()?).ok()?,
+                    u32::try_from(a.get(1)?.as_u64()?).ok()?,
+                    u16::try_from(a.get(2)?.as_u64()?).ok()?,
+                ))
+            };
+            let pair = |v: &Value| -> Option<(u16, u16)> {
+                let a = v.as_array()?;
+                Some((
+                    u16::try_from(a.first()?.as_u64()?).ok()?,
+                    u16::try_from(a.get(1)?.as_u64()?).ok()?,
+                ))
+            };
+            let list = |key: &str| spec[key].as_array().cloned().unwrap_or_default();
+            vec![Command::Trade {
+                caravan: field(spec, "caravan")?,
+                give: list("give").iter().filter_map(triple).collect(),
+                take: list("take").iter().filter_map(pair).collect(),
+            }]
+        }
         (other, None) => return Err(format!("unknown command {other}")),
     })
 }
@@ -1262,6 +1291,14 @@ pub fn command_json(tick: u64, cmd: &Command) -> Value {
         Command::DraftAttackPerson { agent, target } => json!({"agent": agent, "target": target}),
         Command::DesignateHunt { animal } => json!({"animal": animal}),
         Command::SetDressOrder { on } => json!({"on": on}),
+        Command::AcceptMigrants { wave } | Command::DeclineMigrants { wave } => {
+            json!({"wave": wave})
+        }
+        Command::Trade {
+            caravan,
+            give,
+            take,
+        } => json!({"caravan": caravan, "give": give, "take": take}),
         Command::DesignateChopTiles { tiles } => {
             json!({"tiles": tiles.iter().map(|t| json!([t.0, t.1])).collect::<Vec<_>>()})
         }
@@ -1460,6 +1497,7 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
     let mut space = super::space::SpaceWatch::new();
     let mut knowledge = super::knowledge::KnowledgeWatch::new();
     let mut m5 = super::m5::M5Watch::new();
+    let mut m55 = super::m55::M55Watch::new();
     let mut waiting: Vec<usize> = Vec::new();
     // `"every_days"` entries: (tick of the next application, entry), M3.
     let mut repeats: Vec<(u64, usize)> = Vec::new();
@@ -1528,6 +1566,7 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
         space.after_tick(&engine);
         knowledge.after_tick(&engine);
         m5.after_tick(&engine);
+        m55.after_tick(&engine);
         if let Some(t) = twin.as_mut() {
             t.tick();
         }
@@ -1648,6 +1687,7 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
     });
     summary["m4"] = knowledge.report(&engine);
     summary["m5"] = m5.report(&engine);
+    summary["m55"] = m55.report(&engine);
     let mut sorted = tick_ns.clone();
     sorted.sort_unstable();
     let mean = tick_ns.iter().sum::<u64>() as f64 / tick_ns.len().max(1) as f64 / 1e6;

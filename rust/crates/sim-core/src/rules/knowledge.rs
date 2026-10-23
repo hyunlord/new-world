@@ -104,11 +104,11 @@ impl KnowledgeRule {
 
     /// The forgetting step ‰ of an entry from `source`.
     pub const fn decay_of(&self, source: crate::colony::knowledge::Source) -> u16 {
-        self.decay[source.code() as usize]
+        self.decay[source.table_index()]
     }
 
     /// The forgetting floor ‰ of an entry from `source`.
     pub const fn floor_of(&self, source: crate::colony::knowledge::Source) -> u16 {
-        self.floor[source.code() as usize]
+        self.floor[source.table_index()]
     }
 }

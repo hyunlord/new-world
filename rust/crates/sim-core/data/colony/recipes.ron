@@ -92,7 +92,8 @@
         (
             id: "make_hide_wrap",
             workshop: "drying_rack",
-            inputs: [("cured_hide", 2)],
+            // M5.5 (ADR 0029 amendment): one cured hide a wrap (M5: 2), so 4 wraps need 4 kills.
+            inputs: [("cured_hide", 1)],
             output: ("hide_wrap", 1),
             work_ticks: 90,
             skill: "knap",

@@ -10,7 +10,7 @@ mod colony_support;
 use colony_support::{adults, detect, open_area, tick_checked, walled_box};
 use sim_core::chronicle::ChronicleKind;
 use sim_core::colony::knowledge::{self, Knowledge, Source};
-use sim_core::colony::people::Drafted;
+use sim_core::colony::people::{Drafted, Fleeing};
 use sim_core::colony::wildlife::{AnimalKind, Fighter};
 use sim_core::colony::{Command, ItemKind, ItemSpec, Job, Tool};
 use sim_core::components::{AgentState, BodyHealth, Position, TargetKind, Thirst};
@@ -610,5 +610,183 @@ fn a_missed_attack_keeps_the_hunt_job() {
     assert_eq!(
         kept, misses,
         "every miss kept the job (code review m1): {kept} of {misses}"
+    );
+}
+
+/// M5.5 (ADR 0028 amendment, goal §3.1.2): an undrafted person outside near a hunting wolf flees within 30 ticks —
+/// their job is dropped, they move away from the wolf and toward the nearest roofed room — and a drafted person does not.
+#[test]
+fn an_undrafted_person_near_a_wolf_runs_for_a_roofed_room_and_a_drafted_one_stands() {
+    let mut engine = sim_test::colony_engine(2);
+    for _ in 0..10 {
+        engine.tick();
+    }
+    let at = open_area(&engine, 7, 7);
+    let inside = walled_box(&mut engine, at, 7, 7, true);
+    detect(&mut engine);
+    assert!(
+        inside
+            .iter()
+            .all(|t| sim_systems::runtime::rooms::roofed(&engine.resources, *t)),
+        "the box is a roofed room"
+    );
+    let people = adults(&engine);
+    let (_, runner) = people[0];
+    let (soldier_id, soldier) = people[1];
+    let start = (at.0 + 3, at.1 + 12);
+    place(&mut engine, runner, start);
+    place(&mut engine, soldier, (start.0 + 2, start.1));
+    // Everyone else far away inside the room, so the wolf has these two.
+    for (_, e) in people.iter().skip(2) {
+        place(&mut engine, *e, inside[0]);
+    }
+    assert!(
+        submit(
+            &mut engine,
+            Command::SetDrafted {
+                agent: soldier_id,
+                drafted: true
+            }
+        )
+        .accepted
+    );
+    let wolf_at = (start.0, start.1 + 7);
+    wildlife::spawn_pack(&mut engine.resources, wolf_at, 1, 0);
+    let d0 = start.0.abs_diff(wolf_at.0).max(start.1.abs_diff(wolf_at.1));
+    let mut fled_at = None;
+    for k in 1..=30u64 {
+        tick_checked(&mut engine);
+        if fled_at.is_none() && engine.world.get::<&Fleeing>(runner).is_ok() {
+            fled_at = Some(k);
+        }
+    }
+    let k = fled_at.expect("the undrafted person fled");
+    assert!(
+        k <= 3,
+        "the flight began at the first FleeSystem run (tick {k})"
+    );
+    let flight = *engine.world.get::<&Fleeing>(runner).expect("still fleeing");
+    assert!(
+        inside.contains(&flight.to),
+        "running for the roofed room: {:?}",
+        flight.to
+    );
+    let pos = engine
+        .world
+        .get::<&Position>(runner)
+        .map(|p| (p.x, p.y))
+        .expect("pos");
+    let d = pos.0.abs_diff(wolf_at.0).max(pos.1.abs_diff(wolf_at.1));
+    assert!(d > d0, "moved away from the wolf: {d0} → {d} ({pos:?})");
+    let to_room = |p: (u32, u32)| p.0.abs_diff(flight.to.0).max(p.1.abs_diff(flight.to.1));
+    assert!(to_room(pos) < to_room(start), "closer to the room");
+    assert!(
+        engine.world.get::<&Job>(runner).is_err(),
+        "no job while fleeing"
+    );
+    assert!(
+        engine.world.get::<&Fleeing>(soldier).is_err(),
+        "the drafted person does not flee"
+    );
+    assert!(engine.resources.colony.wildlife.tallies.flights >= 1);
+}
+
+/// M5.5: with no roofed room the refuge is the hearth (`flee::refuge`).
+#[test]
+fn without_a_roofed_room_the_refuge_is_the_hearth() {
+    let engine = sim_test::colony_engine(0);
+    let h = hearth(&engine);
+    let to = wildlife::flee::refuge(&engine.resources, (h.0 + 10, h.1), (h.0 + 15, h.1), 8);
+    assert_eq!(to, h);
+}
+
+/// M5.5 (goal §3.1.2): a fleeing person strikes back at a wolf at half the weapon's damage.
+#[test]
+fn a_fleeing_person_defends_at_half_damage() {
+    let mut engine = sim_test::colony_engine(0);
+    let (_, e) = adults(&engine)[0];
+    spear(&mut engine, e);
+    let rule = wildlife::rule(&engine.resources).expect("rule");
+    let full = sim_systems::runtime::jobs::hunt::defence_damage(&engine.world, &rule, e);
+    let _ = engine.world.insert_one(
+        e,
+        Fleeing {
+            until: 100,
+            from: 1,
+            to: (0, 0),
+            since: 0,
+        },
+    );
+    let half = sim_systems::runtime::jobs::hunt::defence_damage(&engine.world, &rule, e);
+    assert_eq!((full, half), (12, 6));
+}
+
+/// M5.5 (ADR 0028 amendment, goal §3.1.3): the hunter carries the meat to the nearest stockpile cell right after the
+/// kill — the hunt turns into a haul — and it lies on the stockpile (or is in the larder) within the hour.
+#[test]
+fn the_hunter_carries_the_meat_to_a_stockpile_within_the_hour_of_the_kill() {
+    let mut engine = sim_test::colony_engine(1);
+    tick_checked(&mut engine);
+    let (_, hunter) = adults(&engine)[0];
+    know(&mut engine, hunter, "tracking");
+    spear(&mut engine, hunter);
+    for (_, other) in adults(&engine).into_iter().skip(1) {
+        if let Ok(mut k) = engine.world.get::<&mut Knowledge>(other) {
+            let id = knowledge::id("tracking").expect("node");
+            k.set(id, 0, Source::Seeded, 0);
+        }
+    }
+    let at = open_area(&engine, 3, 3);
+    assert!(
+        submit(
+            &mut engine,
+            Command::AddStockpile {
+                x0: at.0,
+                y0: at.1,
+                x1: at.0 + 2,
+                y1: at.1 + 2
+            }
+        )
+        .accepted
+    );
+    let mut animals = AnimalSystem;
+    animals.tick(&mut engine.world, &mut engine.resources);
+    engine.resources.colony.wildlife.animals.clear();
+    let deer_at = (at.0 + 1, at.1 + 12);
+    let deer = wildlife::spawn_deer(&mut engine.resources, deer_at).expect("deer");
+    place(&mut engine, hunter, (at.0 + 1, at.1 + 3));
+    assert!(submit(&mut engine, Command::DesignateHunt { animal: deer }).accepted);
+    let mut kill_tick = None;
+    let mut hauled = false;
+    for _ in 0..2 * 1_440 {
+        tick_checked(&mut engine);
+        if kill_tick.is_none() && engine.resources.colony.wildlife.tallies.deer_killed > 0 {
+            kill_tick = Some(engine.current_tick());
+            hauled = engine.world.get::<&Job>(hunter).is_ok_and(|j| {
+                matches!(j.kind, sim_core::colony::JobKind::Haul { .. }) && j.item == ItemKind::Meat
+            });
+        }
+        if kill_tick.is_some_and(|t| engine.current_tick() >= t + 60) {
+            break;
+        }
+    }
+    let t = kill_tick.expect("the deer fell");
+    assert!(hauled, "the hunt became a haul of the meat");
+    let w = &engine.resources.colony.wildlife.tallies;
+    assert_eq!(w.meat_hauls, 1);
+    let zone = &engine.resources.colony.zone_of_tile;
+    let on_stockpile: u64 = engine
+        .resources
+        .colony
+        .ground_items
+        .iter()
+        .filter(|(tile, s)| s.kind == ItemKind::Meat && zone.contains_key(*tile))
+        .map(|(_, s)| u64::from(s.count))
+        .sum();
+    assert!(
+        on_stockpile + w.meat_eaten >= w.meat_dropped.min(3) && w.meat_dropped > 0,
+        "within the hour of the kill at {t} the meat is home: {on_stockpile} on the stockpile, {} eaten of {}",
+        w.meat_eaten,
+        w.meat_dropped
     );
 }

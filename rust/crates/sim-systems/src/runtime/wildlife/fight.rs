@@ -88,7 +88,8 @@ pub fn resolve_fights(world: &mut World, res: &mut SimResources) {
         if let Fighter::Person(id) = attacker {
             if let Some((e, _)) = person(world, id) {
                 if fight.quarrel.is_none() {
-                    damage = crate::runtime::jobs::hunt::weapon_damage(world, &rule, e);
+                    // M5.5: a fleeing person defends at `flee_defence_permille` (a drafted one at full damage).
+                    damage = crate::runtime::jobs::hunt::defence_damage(world, &rule, e);
                 }
                 crate::runtime::jobs::hunt::wear_tool(
                     world,
@@ -182,12 +183,15 @@ fn hit_animal(
             res.colony.wildlife.tallies.wolves_killed += 1;
             if rule.wolf_hides {
                 res.colony.item_ledger.create(ItemKind::WolfHide, 1);
-                crate::runtime::jobs::items::put_items(
+                let tiles = crate::runtime::jobs::items::put_items(
                     res,
                     pos,
                     sim_core::colony::ItemSpec::raw(ItemKind::WolfHide, None),
                     1,
                 );
+                if rule.hunter_hauls {
+                    res.colony.wildlife.carcasses.extend(tiles);
+                }
                 res.colony.wildlife.tallies.hides_dropped += 1;
             }
             let left = res.colony.wildlife.wolves().count() as i64;

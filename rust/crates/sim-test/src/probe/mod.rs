@@ -21,6 +21,7 @@ pub(crate) mod fission_settlements;
 pub mod knowledge;
 mod long_run;
 pub mod m5;
+pub mod m55;
 pub(crate) mod meals_firewood;
 pub(crate) mod metrics;
 pub(crate) mod night_burn;

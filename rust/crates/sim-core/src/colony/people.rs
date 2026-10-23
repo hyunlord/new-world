@@ -84,6 +84,20 @@ pub struct Drafted {
     pub arming: Option<(u32, u32)>,
 }
 
+/// A person running from a wolf (M5.5, ADR 0028 amendment; `FleeSystem`): the decision seam skips them while it
+/// lasts, as it skips a drafted person.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Fleeing {
+    /// The tick the flight ends unless a wolf is still near (renewed then).
+    pub until: u64,
+    /// The wolf it began with (`AnimalId`).
+    pub from: u32,
+    /// Where they run: a roofed room's tile, the hearth, or a tile away from the wolf.
+    pub to: (u32, u32),
+    /// The tick the flight began.
+    pub since: u64,
+}
+
 /// A mood modifier (M5, ADR 0030): what moves a person's mood target, with its weight ‰ of the scale.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub enum Modifier {

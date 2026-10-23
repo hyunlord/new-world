@@ -14,10 +14,12 @@ mod items;
 mod job;
 pub mod knowledge;
 pub mod materials;
+pub mod neighbours;
 mod orders;
 pub mod people;
 pub mod skills;
 pub mod story;
+pub mod values;
 pub mod wildlife;
 pub mod workshop;
 
@@ -261,6 +263,9 @@ pub struct ColonyState {
     /// resolved by `CombatSystem`.
     #[serde(default)]
     pub fights: BTreeMap<(wildlife::Fighter, wildlife::Fighter), wildlife::Fight>,
+    /// M5.5 (ADR 0031, 0032): the two neighbours, their migrant waves and caravans.
+    #[serde(default)]
+    pub neighbours: neighbours::Neighbours,
     /// Measurement only (M1.5 goal 8.2.1): jobs the decision seam released to
     /// a need, counted by [`JobReleaseKey`]. No system reads it, and no
     /// fingerprint or summary includes it.

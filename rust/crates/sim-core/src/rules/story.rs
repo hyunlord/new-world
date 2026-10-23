@@ -57,10 +57,25 @@ pub struct StoryRule {
     /// Whether beasts come at all (on in M5; the soak turns them off).
     #[serde(default = "yes")]
     pub beasts: bool,
+    /// M5.5 (ADR 0027 amendment): pressures do not stack — an illness never begins while a major is active or within
+    /// `stack_gap_days` after one ended, and a major never begins while `major_wait_sick` or more people are sick (each
+    /// waits a day at a time inside its season). `false` = M5.
+    #[serde(default)]
+    pub no_stack: bool,
+    /// Days after a major ends before an illness may begin (goal M5.5 §3.1.1: 2).
+    #[serde(default = "two")]
+    pub stack_gap_days: u32,
+    /// A major waits while this many people or more are sick (goal M5.5 §3.1.1: 2).
+    #[serde(default = "two")]
+    pub major_wait_sick: u32,
 }
 
 const fn yes() -> bool {
     true
+}
+
+const fn two() -> u32 {
+    2
 }
 
 impl StoryRule {
@@ -92,5 +107,14 @@ impl StoryRule {
         beasts_due_days: 18,
         illness: true,
         beasts: true,
+        no_stack: false,
+        stack_gap_days: 2,
+        major_wait_sick: 2,
+    };
+
+    /// The M5.5 values: [`Self::M5`] with no stacked pressure (goal M5.5 §3.1.1, ADR 0027 amendment).
+    pub const M5_5: Self = Self {
+        no_stack: true,
+        ..Self::M5
     };
 }

@@ -1,0 +1,26 @@
+// M5.5 value table (docs/v8/m5_5/M55_GOAL.md §3.3, ADR 0032). Loaded by sim_core::colony::values::base_value()
+// (embedded with include_str!, parsed once). A stack's value = base × (500 + 5 × quality) / 1000, rounded, at least 1.
+// Traders buy any item at 80 % of its value and sell at 120 % (NeighbourRule::buy_permille, sell_permille).
+// Every ItemKind must be listed (a unit test checks it).
+(
+    schema_version: 1,
+    values: [
+        ("log", 2),
+        ("firewood", 1),
+        ("stone", 1),
+        ("flint", 3),
+        ("flint_blade", 6),
+        ("stone_axe", 14),
+        ("ground_axe", 24),
+        ("spear", 16),
+        ("hide", 5),
+        ("cured_hide", 9),
+        ("hide_wrap", 14),
+        ("fur_cloak", 30),
+        ("wolf_hide", 8),
+        ("clay", 2),
+        ("raw_pot", 5),
+        ("clay_pot", 12),
+        ("meat", 3),
+    ],
+)

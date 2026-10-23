@@ -604,6 +604,15 @@ pub fn cause_link(chronicle: &Chronicle, index: u32) -> (i32, i64, i32) {
         Some(CauseRef::Pressure { kind, entry }) => {
             (2, entry.map_or(-1, i64::from), i32::from(kind))
         }
+        // M5.5: a sampled need reads as its modifier, linked to the pressure behind it.
+        Some(CauseRef::Sample { code, sample }) => (
+            1,
+            chronicle
+                .sample(sample)
+                .and_then(|s| s.entry)
+                .map_or(-1, i64::from),
+            i32::from(code),
+        ),
     }
 }
 

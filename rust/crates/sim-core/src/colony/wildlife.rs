@@ -154,6 +154,10 @@ pub struct Wildlife {
     pub zones: Vec<HuntZone>,
     /// Meat on the map by the display day it was killed: `(day, count)`, oldest first.
     pub meat_lots: Vec<(u32, u32)>,
+    /// M5.5: tiles where a kill left meat or a hide, hauled before other loose stacks (ADR 0028 amendment); a tile
+    /// leaves the set when nothing of the carcass lies there any more.
+    #[serde(default)]
+    pub carcasses: BTreeSet<(u32, u32)>,
     /// Counters (measurement and UI).
     pub tallies: WildlifeTallies,
     /// Bumped whenever animals appear, move, change state or die (renderers).
@@ -220,6 +224,15 @@ pub struct WildlifeTallies {
     pub spears_broken: u64,
     /// People drafted (commands), and self-undrafts at a critical need.
     pub drafts: u64,
+    /// M5.5: flights begun (`FleeSystem`).
+    #[serde(default)]
+    pub flights: u64,
+    /// M5.5: meat that spoiled before it reached a stockpile cell (on the ground off the zones).
+    #[serde(default)]
+    pub meat_spoiled_afield: u64,
+    /// M5.5: hunts that chained the hunter's haul of the meat home.
+    #[serde(default)]
+    pub meat_hauls: u64,
     /// See [`Self::drafts`].
     pub auto_undrafts: u64,
 }

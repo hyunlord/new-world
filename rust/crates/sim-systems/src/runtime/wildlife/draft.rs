@@ -83,6 +83,8 @@ pub fn draft(world: &mut World, res: &mut SimResources, entity: Entity, id: Agen
     }
     crate::runtime::jobs::cancel(world, res, entity, CancelReason::Command);
     let _ = world.remove_one::<sim_core::components::Activity>(entity);
+    // M5.5: a drafted person stops running and takes orders.
+    super::flee::end_flight(world, entity);
     let pos = world
         .get::<&Position>(entity)
         .map_or((0, 0), |p| (p.x, p.y));

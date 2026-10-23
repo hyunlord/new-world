@@ -67,6 +67,40 @@ pub struct WildlifeRule {
     pub knife_uses: u32,
     /// Whether wolves leave a wolf hide (droppable 8.5).
     pub wolf_hides: bool,
+    /// M5.5 (ADR 0028 amendment): undrafted people near a hunting wolf flee (`FleeSystem`). `false` = M5.
+    #[serde(default)]
+    pub flee: bool,
+    /// A person flees from a hunting or attacking wolf within this distance (goal M5.5 §3.1.2: 8).
+    #[serde(default = "flee_tiles")]
+    pub flee_tiles: u32,
+    /// Ticks one flight lasts, renewed while a wolf is near (goal M5.5 §3.1.2: 30).
+    #[serde(default = "flee_ticks")]
+    pub flee_ticks: u64,
+    /// A fleeing person's blows at a wolf, ‰ of the weapon's damage (goal M5.5 §3.1.2: 500).
+    #[serde(default = "flee_defence")]
+    pub flee_defence_permille: u32,
+    /// M5.5 (ADR 0028 amendment): a hunter carries the kill's meat to a stockpile right after the kill. `false` = M5.
+    #[serde(default)]
+    pub hunter_hauls: bool,
+    /// Most meat the hunter carries home (goal M5.5 §3.1.3: 3).
+    #[serde(default = "hunter_meat")]
+    pub hunter_meat: u16,
+}
+
+const fn flee_tiles() -> u32 {
+    8
+}
+
+const fn flee_ticks() -> u64 {
+    30
+}
+
+const fn flee_defence() -> u32 {
+    500
+}
+
+const fn hunter_meat() -> u16 {
+    3
 }
 
 impl WildlifeRule {
@@ -103,5 +137,19 @@ impl WildlifeRule {
         meat_spoil_days: 6,
         knife_uses: 8,
         wolf_hides: true,
+        flee: false,
+        flee_tiles: 8,
+        flee_ticks: 30,
+        flee_defence_permille: 500,
+        hunter_hauls: false,
+        hunter_meat: 3,
+    };
+
+    /// The M5.5 values (goal M5.5 §3.1.2–5): the undrafted flee, the hunter carries the meat home, a knife lasts 4 uses.
+    pub const M5_5: Self = Self {
+        knife_uses: 4,
+        flee: true,
+        hunter_hauls: true,
+        ..Self::M5
     };
 }

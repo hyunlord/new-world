@@ -242,3 +242,45 @@ fn meat_spoils_six_days_after_the_kill() {
         "spoilage is consumed"
     );
 }
+
+/// M5.5 (ADR 0029 amendment): under the M5.5 wildlife rule a knife lasts 4 uses, and a hide wrap takes one cured hide.
+#[test]
+fn an_m55_knife_breaks_after_4_uses_and_a_wrap_takes_one_cured_hide() {
+    let (mut engine, shop) = hide_world();
+    if let Some(c) = engine.resources.rules.colony.as_mut() {
+        c.wildlife = Some(WildlifeRule::M5_5);
+    }
+    drop_items(&mut engine, (20, 20), raw(ItemKind::Hide), 5);
+    drop_items(&mut engine, (21, 20), raw(ItemKind::FlintBlade), 2);
+    bill(&mut engine, shop, RecipeKind::ScrapeHide, 5);
+    let used = run_until(&mut engine, 8_000, |e| {
+        e.resources.colony.tallies.crafts_done >= 5
+    });
+    assert!(used < 8_000, "five scrapes");
+    let w = &engine.resources.colony.wildlife.tallies;
+    // Five uses: the first blade broke at its 4th, the second has one (M5's 8-use knife would have none broken).
+    assert_eq!((w.knife_uses, w.knives_broken), (5, 1));
+    assert_eq!(
+        engine.resources.colony.knife_wear.get(&shop).copied(),
+        Some(1)
+    );
+    assert!(engine.resources.chronicle.entries().iter().any(|e| {
+        e.kind == ChronicleKind::ToolBroke && e.cause == ItemKind::FlintBlade.code() && e.value == 4
+    }));
+    // Three wraps from three of the five cured hides (M5: two hides a wrap — only two wraps).
+    bill(&mut engine, shop, RecipeKind::MakeHideWrap, 3);
+    let used = run_until(&mut engine, 8_000, |e| {
+        ledger_of(&e.world, &e.resources, ItemKind::HideWrap).created >= 3
+    });
+    assert!(used < 8_000, "three wraps");
+    for _ in 0..200 {
+        tick_checked(&mut engine);
+    }
+    let cured = ledger_of(&engine.world, &engine.resources, ItemKind::CuredHide);
+    let wraps = ledger_of(&engine.world, &engine.resources, ItemKind::HideWrap);
+    assert_eq!(
+        (wraps.created, cured.consumed),
+        (3, 3),
+        "one cured hide a wrap"
+    );
+}

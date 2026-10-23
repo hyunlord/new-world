@@ -18,6 +18,13 @@
 //! and the active ones whose end day came end with their cost; beasts also end
 //! when their pack is gone (`end_pressure`, called by the animal system).
 //!
+//! M5.5 (ADR 0027 amendment, `StoryRule::no_stack`): pressures do not stack.
+//! A planned illness whose day comes while a major is active or within
+//! `stack_gap_days` after one ended, and a planned major whose day comes while
+//! `major_wait_sick` or more people are sick, wait a day at a time inside their
+//! season ([`held_back`]); one that cannot begin before its season's last
+//! allowed day is dropped (`skipped`).
+//!
 //! Effects live where the behaviour lives: `FireSystem` (cold snap burn,
 //! exposure, roofed sleepers), `ResourceRegenSystem` and `ThirstDecaySystem`
 //! (drought), `SleepDecaySystem` and the job layer's work ticks (illness, the
@@ -572,6 +579,71 @@ pub fn force(world: &mut World, res: &mut SimResources, kind: PressureKind, days
     begin(world, res, &rule, planned(kind, day, days));
 }
 
+/// Whether pressure `kind` may not begin on `day` because pressures do not stack (M5.5, `StoryRule::no_stack`):
+/// an illness while a major is active or within `stack_gap_days` after one ended (the end day is exclusive: a major
+/// ending on day E lets an illness begin on E + `stack_gap_days`); a major while `sick` ≥ `major_wait_sick`.
+pub fn stack_blocked(
+    rule: &StoryRule,
+    story: &Storyteller,
+    kind: PressureKind,
+    day: u32,
+    sick: u32,
+) -> bool {
+    if !rule.no_stack {
+        return false;
+    }
+    if kind.is_major() {
+        return sick >= rule.major_wait_sick;
+    }
+    story.active.iter().any(|p| p.kind.is_major())
+        || story
+            .history
+            .iter()
+            .any(|p| p.kind.is_major() && day < p.end_day.saturating_add(rule.stack_gap_days))
+}
+
+/// The last day of its season on which held-back pressure `p` may still begin (M5.5): an illness until the season's
+/// last day, a major until its window's last day (mercy rules: winter's last days for beasts).
+fn last_wait_day(rule: &StoryRule, p: &Pressure, per_season: u32, per_year: u32) -> u32 {
+    let index = p.start_day / per_season.max(1);
+    let first_day = index * per_season;
+    if !p.kind.is_major() {
+        return first_day + per_season.saturating_sub(1);
+    }
+    // The window's last day (`window`); a held-back major only moves later, so its first day does not matter.
+    let mut last = first_day + per_season.saturating_sub(2).max(1);
+    if p.kind == PressureKind::Beasts && index % per_year.max(1) == WINTER {
+        last = last.min(first_day + per_season.saturating_sub(1 + rule.winter_end_mercy_days));
+    }
+    last
+}
+
+/// What to do with planned pressure `p` on `day` (M5.5): `None` = begin it; `Some(Some(next))` = it waits for `next`;
+/// `Some(None)` = it cannot begin this season (dropped).
+pub fn held_back(
+    rule: &StoryRule,
+    story: &Storyteller,
+    p: &Pressure,
+    day: u32,
+    sick: u32,
+    per_season: u32,
+    per_year: u32,
+) -> Option<Option<Pressure>> {
+    if !stack_blocked(rule, story, p.kind, day, sick) {
+        return None;
+    }
+    let next = day + 1;
+    if next > last_wait_day(rule, p, per_season, per_year) {
+        return Some(None);
+    }
+    let days = p.end_day.saturating_sub(p.start_day);
+    Some(Some(Pressure {
+        start_day: next,
+        end_day: next + days,
+        ..*p
+    }))
+}
+
 /// The storyteller's schedule alone, without a world: every pressure that
 /// would begin in `days` days, planned season by season as the system does
 /// (every pressure lasts its planned days; beasts their longest stay). Pure in
@@ -613,6 +685,19 @@ pub fn simulate_schedule(seed: u64, rule: &StoryRule, days: u32, per_season: u32
             if story.is_active(p.kind) {
                 story.skipped += 1;
                 continue;
+            }
+            // M5.5: no stacking (nobody is sick in a schedule without a world).
+            match held_back(rule, &story, &p, day, 0, per_season, 4) {
+                Some(Some(later)) => {
+                    story.planned.push(later);
+                    story.planned.sort_by_key(|q| (q.start_day, q.kind));
+                    continue;
+                }
+                Some(None) => {
+                    story.skipped += 1;
+                    continue;
+                }
+                None => {}
             }
             if p.kind.is_major() {
                 story.last_major_day = Some(p.start_day);
@@ -701,10 +786,33 @@ impl RuntimeSystem for StorytellerSystem {
             .copied()
             .collect();
         res.colony.story.planned.retain(|p| p.start_day > day);
+        let sick = world.query::<&Sick>().iter().count() as u32;
         for p in today {
             if res.colony.story.is_active(p.kind) {
                 res.colony.story.skipped += 1;
                 continue;
+            }
+            // M5.5: pressures do not stack (a held-back pressure waits a day, or is dropped).
+            match held_back(
+                &rule,
+                &res.colony.story,
+                &p,
+                day,
+                sick,
+                per_season,
+                per_year,
+            ) {
+                Some(Some(later)) => {
+                    let story = &mut res.colony.story;
+                    story.planned.push(later);
+                    story.planned.sort_by_key(|q| (q.start_day, q.kind));
+                    continue;
+                }
+                Some(None) => {
+                    res.colony.story.skipped += 1;
+                    continue;
+                }
+                None => {}
             }
             begin(world, res, &rule, p);
         }

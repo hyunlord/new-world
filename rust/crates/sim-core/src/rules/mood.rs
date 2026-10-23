@@ -54,10 +54,69 @@ pub struct MoodRule {
     /// (DECISIONS D18: 8 — a crowd of 279 on one tile made the check O(N²), goal §4 and C3).
     #[serde(default = "partners_max")]
     pub quarrel_partners_max: u32,
+    /// M5.5 calibration knobs (goal M5.5 §3.1.6, ADR 0030 amendment; M5 values by default): the weights of the
+    /// pressure-related modifiers — cold last night, hungry, sick, a pressure active, a kin died (at most ×2 the M5
+    /// weight).
+    #[serde(default = "cold_weight")]
+    pub cold_weight: i16,
+    /// See [`Self::cold_weight`].
+    #[serde(default = "hungry_weight")]
+    pub hungry_weight: i16,
+    /// See [`Self::cold_weight`].
+    #[serde(default = "sick_weight")]
+    pub sick_weight: i16,
+    /// See [`Self::cold_weight`].
+    #[serde(default = "pressure_weight")]
+    pub pressure_weight: i16,
+    /// See [`Self::cold_weight`].
+    #[serde(default = "grief_weight")]
+    pub grief_weight: i16,
+    /// The quarrel formula's constants (goal 3.4: chance = base + (low − mood) / `quarrel_mood_divisor` + (−relation)
+    /// / `quarrel_relation_divisor`, × `quarrel_low_factor` under tantrum risk).
+    #[serde(default = "mood_divisor")]
+    pub quarrel_mood_divisor: i32,
+    /// See [`Self::quarrel_mood_divisor`].
+    #[serde(default = "relation_divisor")]
+    pub quarrel_relation_divisor: i32,
+    /// See [`Self::quarrel_mood_divisor`].
+    #[serde(default = "low_factor")]
+    pub quarrel_low_factor: i32,
 }
 
 const fn partners_max() -> u32 {
     8
+}
+
+const fn cold_weight() -> i16 {
+    -120
+}
+
+const fn hungry_weight() -> i16 {
+    -150
+}
+
+const fn sick_weight() -> i16 {
+    -80
+}
+
+const fn pressure_weight() -> i16 {
+    -40
+}
+
+const fn grief_weight() -> i16 {
+    -250
+}
+
+const fn mood_divisor() -> i32 {
+    25
+}
+
+const fn relation_divisor() -> i32 {
+    100
+}
+
+const fn low_factor() -> i32 {
+    3
 }
 
 impl MoodRule {
@@ -87,5 +146,16 @@ impl MoodRule {
         relation_drift: 10,
         chemistry: 300,
         quarrel_partners_max: 8,
+        cold_weight: -120,
+        hungry_weight: -150,
+        sick_weight: -80,
+        pressure_weight: -40,
+        grief_weight: -250,
+        quarrel_mood_divisor: 25,
+        quarrel_relation_divisor: 100,
+        quarrel_low_factor: 3,
     };
+
+    /// The M5.5 values: [`Self::M5`] as calibrated on seeds 0–7 (goal M5.5 §3.1.6; M5.5 DECISIONS, calibration rounds).
+    pub const M5_5: Self = Self { ..Self::M5 };
 }

@@ -120,10 +120,12 @@ fn the_live_storyteller_begins_what_the_schedule_plans_and_chronicles_it() {
     let begun: Vec<(PressureKind, u32)> = story.begun().map(|p| (p.kind, p.start_day)).collect();
     let mut begun_sorted = begun.clone();
     begun_sorted.sort_by_key(|(k, d)| (*d, *k));
-    let planned: Vec<(PressureKind, u32)> = schedule(engine.resources.world_seed)
-        .iter()
-        .map(|p| (p.kind, p.start_day))
-        .collect();
+    // The colony runs the M5.5 rule (no stacked pressure); nobody falls ill twice here (no bedrooms), so no major waits.
+    let planned: Vec<(PressureKind, u32)> =
+        simulate_schedule(engine.resources.world_seed, &StoryRule::M5_5, DAYS, 6)
+            .iter()
+            .map(|p| (p.kind, p.start_day))
+            .collect();
     assert_eq!(begun_sorted, planned, "the live run follows the schedule");
     let chronicle = &engine.resources.chronicle;
     let began: Vec<u32> = (0..chronicle.len() as u32)
@@ -512,4 +514,109 @@ fn an_illness_in_a_big_bedroom_strikes_each_sleeper_once_and_ends() {
         first_end <= bound,
         "ended on day {first_end}, bound {bound}"
     );
+}
+
+/// M5.5 (ADR 0027 amendment, goal §3.1.1): with `no_stack` no illness begins while a major is active or within two
+/// days after one ended, on the calibration seeds over two years; the rule acts (M5 had such illnesses).
+#[test]
+fn no_illness_begins_during_or_within_two_days_after_a_major() {
+    let (mut illnesses, mut m5_overlaps) = (0, 0);
+    let overlaps = |plan: &[sim_core::colony::story::Pressure]| {
+        plan.iter()
+            .filter(|p| p.kind == PressureKind::Illness)
+            .filter(|p| {
+                plan.iter().any(|m| {
+                    m.kind.is_major() && p.start_day >= m.start_day && p.start_day < m.end_day + 2
+                })
+            })
+            .count()
+    };
+    for seed in 0..8u64 {
+        let plan = simulate_schedule(seed, &StoryRule::M5_5, DAYS, 6);
+        assert_eq!(overlaps(&plan), 0, "seed {seed}: {plan:?}");
+        illnesses += plan
+            .iter()
+            .filter(|p| p.kind == PressureKind::Illness)
+            .count();
+        m5_overlaps += overlaps(&schedule(seed));
+    }
+    // Observed on seeds 0–7 × 48 days: 14 illnesses under M5.5; M5's schedule stacked 15 illnesses on a major.
+    assert!(illnesses >= 8, "illness still comes: {illnesses}");
+    assert!(
+        m5_overlaps >= 8,
+        "the M5 schedule stacked pressure, so the rule has work to do: {m5_overlaps}"
+    );
+}
+
+/// M5.5 (goal §3.1.1): a major planned for a day when two people are sick waits a day at a time; it begins once
+/// fewer than two are sick, inside its season.
+#[test]
+fn a_major_waits_while_two_people_are_sick() {
+    let mut engine = sim_test::colony_engine(1);
+    // Day 13 (summer, past the mercy day): plan a drought, make two people sick.
+    let day = 13u32;
+    engine.resources.colony.story.seasons_planned = 3;
+    engine.resources.colony.story.next_check_day = day;
+    engine.resources.colony.story.planned = vec![sim_core::colony::story::Pressure {
+        kind: PressureKind::Drought,
+        start_day: day,
+        end_day: day + 4,
+        began_entry: None,
+        deaths_at_start: 0,
+        intensity: 0,
+        subject: None,
+        cost: Default::default(),
+    }];
+    let sick: Vec<hecs::Entity> = adults(&engine).iter().take(2).map(|(_, e)| *e).collect();
+    for e in &sick {
+        let _ = engine.world.insert_one(*e, Sick { until: u64::MAX });
+    }
+    let mut system = StorytellerSystem;
+    engine.resources.current_tick = u64::from(day) * 1_440;
+    system.tick(&mut engine.world, &mut engine.resources);
+    let story = &engine.resources.colony.story;
+    assert!(
+        !story.is_active(PressureKind::Drought),
+        "two sick: the drought waits"
+    );
+    assert_eq!(
+        story.planned.first().map(|p| (p.start_day, p.end_day)),
+        Some((day + 1, day + 5))
+    );
+    // One recovers: the drought begins the next day.
+    let _ = engine.world.remove_one::<Sick>(sick[0]);
+    engine.resources.current_tick = u64::from(day + 1) * 1_440;
+    system.tick(&mut engine.world, &mut engine.resources);
+    assert!(
+        engine
+            .resources
+            .colony
+            .story
+            .is_active(PressureKind::Drought),
+        "one sick: it begins"
+    );
+    // Without the rule (M5) it would have begun on day 13 with two sick.
+    let mut m5 = sim_test::colony_engine(1);
+    if let Some(c) = m5.resources.rules.colony.as_mut() {
+        c.story = Some(StoryRule::M5);
+    }
+    m5.resources.colony.story = engine.resources.colony.story.clone();
+    m5.resources.colony.story.active.clear();
+    m5.resources.colony.story.next_check_day = day;
+    m5.resources.colony.story.planned = vec![sim_core::colony::story::Pressure {
+        kind: PressureKind::Drought,
+        start_day: day,
+        end_day: day + 4,
+        began_entry: None,
+        deaths_at_start: 0,
+        intensity: 0,
+        subject: None,
+        cost: Default::default(),
+    }];
+    for (_, e) in adults(&m5).iter().take(2) {
+        let _ = m5.world.insert_one(*e, Sick { until: u64::MAX });
+    }
+    m5.resources.current_tick = u64::from(day) * 1_440;
+    system.tick(&mut m5.world, &mut m5.resources);
+    assert!(m5.resources.colony.story.is_active(PressureKind::Drought));
 }

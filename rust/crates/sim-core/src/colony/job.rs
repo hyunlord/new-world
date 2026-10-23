@@ -182,6 +182,14 @@ pub enum JobKind {
         /// The stack tile.
         from: (u32, u32),
     },
+    /// Carry items the colony owes a caravan from the stack at `from` to the caravan's spot `to` (M5.5, ADR 0032):
+    /// handed over on arrival (ledger `traded_out`).
+    Trade {
+        /// The source stack tile.
+        from: (u32, u32),
+        /// The caravan's spot by the hearth.
+        to: (u32, u32),
+    },
     /// Make one item of `bill` at `workshop`, working at its work tile `at` (M2).
     Craft {
         /// The workshop.
@@ -213,6 +221,7 @@ impl JobKind {
             Self::Learn { .. } => 14,
             Self::Hunt { .. } => 15,
             Self::Equip { .. } => 16,
+            Self::Trade { .. } => 17,
         }
     }
 
@@ -235,6 +244,7 @@ impl JobKind {
             Self::Learn { .. } => "learn",
             Self::Hunt { .. } => "hunt",
             Self::Equip { .. } => "equip",
+            Self::Trade { .. } => "trade",
         }
     }
 
@@ -253,6 +263,7 @@ impl JobKind {
             Self::Teach { .. } | Self::Learn { .. } => WorkType::Craft,
             Self::Hunt { .. } => WorkType::Hunt,
             Self::Equip { .. } => WorkType::Haul,
+            Self::Trade { .. } => WorkType::Haul,
         }
     }
 
@@ -273,6 +284,7 @@ impl JobKind {
             // The deer moves: the job layer walks to its current tile.
             Self::Hunt { .. } => (u32::MAX, u32::MAX),
             Self::Equip { from } => from,
+            Self::Trade { from, .. } => from,
         }
     }
 
@@ -282,7 +294,8 @@ impl JobKind {
             Self::Haul { to, .. }
             | Self::Supply { to, .. }
             | Self::Gather { to, .. }
-            | Self::Clear { to, .. } => Some(to),
+            | Self::Clear { to, .. }
+            | Self::Trade { to, .. } => Some(to),
             Self::Deliver { site, .. } => Some(site),
             Self::Chop { .. }
             | Self::Build { .. }
@@ -380,6 +393,8 @@ impl Job {
             },
             (JobKind::Equip { from }, JobStage::ToSource) => vec![ReserveKey::Stack(from)],
             (JobKind::Equip { .. }, _) => Vec::new(),
+            (JobKind::Trade { from, .. }, JobStage::ToSource) => vec![ReserveKey::Stack(from)],
+            (JobKind::Trade { .. }, _) => Vec::new(),
         }
     }
 }

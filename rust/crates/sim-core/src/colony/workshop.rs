@@ -443,7 +443,7 @@ mod tests {
                 ),
                 (
                     BlueprintKind::DryingRack,
-                    vec![(ItemKind::CuredHide, 2)],
+                    vec![(ItemKind::CuredHide, 1)],
                     (ItemKind::HideWrap, 1),
                     90,
                     false

@@ -129,11 +129,30 @@ pub enum ChronicleKind {
     Sick = 36,
     /// M5: subject = the person recovered.
     Recovered = 37,
+    /// M5.5 (ADR 0031): a migrant wave reached the hearth; no subject; cause = the neighbour id; value =
+    /// `wave << 8 | count` (the wave number and its people).
+    MigrantsArrived = 38,
+    /// M5.5: a wave was accepted and joined; subject = its first person; cause = the neighbour id; value =
+    /// `wave << 8 | count`.
+    MigrantsJoined = 39,
+    /// M5.5: a wave left without joining; no subject; cause = the neighbour id; value =
+    /// `reason << 24 | wave << 8 | count` (reason 0 declined by the player, 1 unanswered within a day).
+    MigrantsDeclined = 40,
+    /// M5.5 (ADR 0032): a caravan reached the hearth; cause = the neighbour id; value = the caravan number.
+    TraderArrived = 41,
+    /// M5.5: a trade (or a gift) was made; cause = the neighbour id; value = `give_value << 16 | take_value`
+    /// (each at most 65,535, after the traders' 80 % / 120 %).
+    Traded = 42,
+    /// M5.5: a caravan left; cause = the neighbour id; value = the caravan number.
+    TraderLeft = 43,
+    /// M5.5: a discovery helped by an artifact; subject = the discoverer; cause = the artifact's `ItemKind::code`;
+    /// value = the knowledge node id.
+    Eureka = 44,
 }
 
 impl ChronicleKind {
     /// Every kind in discriminant order.
-    pub const ALL: [ChronicleKind; 38] = [
+    pub const ALL: [ChronicleKind; 45] = [
         Self::Born,
         Self::FoundingMember,
         Self::Paired,
@@ -172,6 +191,13 @@ impl ChronicleKind {
         Self::WolfKilled,
         Self::Sick,
         Self::Recovered,
+        Self::MigrantsArrived,
+        Self::MigrantsJoined,
+        Self::MigrantsDeclined,
+        Self::TraderArrived,
+        Self::Traded,
+        Self::TraderLeft,
+        Self::Eureka,
     ];
 
     /// Stable numeric discriminant.
@@ -220,6 +246,13 @@ impl ChronicleKind {
             Self::WolfKilled => "wolf_killed",
             Self::Sick => "sick",
             Self::Recovered => "recovered",
+            Self::MigrantsArrived => "migrants_arrived",
+            Self::MigrantsJoined => "migrants_joined",
+            Self::MigrantsDeclined => "migrants_declined",
+            Self::TraderArrived => "trader_arrived",
+            Self::Traded => "traded",
+            Self::TraderLeft => "trader_left",
+            Self::Eureka => "eureka",
         }
     }
 }
@@ -412,6 +445,31 @@ pub enum CauseRef {
         /// The entry behind it.
         entry: Option<u32>,
     },
+    /// M5.5 (ADR 0030 amendment): a mood modifier backed by a need-state sample taken when the entry happened
+    /// (`Chronicle::sample`): hunger, thirst and last night's facts of the person, so the cause can be checked.
+    Sample {
+        /// The modifier code (`sim_core::colony::people::Modifier::code`).
+        code: u8,
+        /// The sample's index (`Chronicle::sample`).
+        sample: u32,
+    },
+}
+
+/// M5.5 (ADR 0030 amendment): a person's need state at one tick, the record behind a `CauseRef::Sample`.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+pub struct NeedSample {
+    /// The person.
+    pub agent: AgentId,
+    /// The tick it was taken.
+    pub tick: u64,
+    /// Hunger in tenths of a point (0–1,000).
+    pub hunger: u16,
+    /// Thirst in tenths of a point (0–1,000).
+    pub thirst: u16,
+    /// Last night's facts (`Mood::nights`, bit 0 slept roofed, 1 slept outside, 2 cold).
+    pub nights: u8,
+    /// The entry behind the need when there is one (the cold snap or drought in force), for the "why?" chain.
+    pub entry: Option<u32>,
 }
 
 /// The chronicle store (`SimResources::chronicle`).
@@ -425,6 +483,9 @@ pub struct Chronicle {
     /// their V7 layout, so the baseline's chronicle files are unchanged).
     #[serde(default)]
     causes: BTreeMap<u32, CauseRef>,
+    /// M5.5: need-state samples behind `CauseRef::Sample` causes, in append order (empty in the baseline).
+    #[serde(default)]
+    samples: Vec<NeedSample>,
 }
 
 impl Chronicle {
@@ -474,6 +535,18 @@ impl Chronicle {
     /// The indices of the entries naming settlement `id`, in append order.
     pub fn indices_of_settlement(&self, id: SettlementId) -> &[u32] {
         self.by_settlement.get(&id).map_or(&[], |v| v.as_slice())
+    }
+
+    /// M5.5: keep a need-state sample and return its index (for `CauseRef::Sample`).
+    pub fn push_sample(&mut self, sample: NeedSample) -> u32 {
+        let index = u32::try_from(self.samples.len()).unwrap_or(u32::MAX);
+        self.samples.push(sample);
+        index
+    }
+
+    /// M5.5: the need-state sample `index`.
+    pub fn sample(&self, index: u32) -> Option<&NeedSample> {
+        self.samples.get(index as usize)
     }
 
     /// M5: every recorded cause, by entry index.
@@ -583,6 +656,7 @@ impl Chronicle {
             + settlement_index
             + self.people.len() * (size_of::<AgentId>() + size_of::<PersonRecord>())
             + self.causes.len() * (size_of::<u32>() + size_of::<CauseRef>())
+            + self.samples.len() * size_of::<NeedSample>()
     }
 }
 
@@ -624,10 +698,13 @@ mod tests {
         // M5: kinds 29–37 appended; 0–28 unchanged.
         assert_eq!(ChronicleKind::PressureBegan.as_u8(), 29);
         assert_eq!(ChronicleKind::Recovered.as_u8(), 37);
-        assert_eq!(ChronicleKind::ALL.len(), 38);
+        assert_eq!(ChronicleKind::MigrantsArrived.as_u8(), 38);
+        assert_eq!(ChronicleKind::Eureka.as_u8(), 44);
+        // M5.5: kinds 38–44 appended; 0–37 unchanged.
+        assert_eq!(ChronicleKind::ALL.len(), 45);
         let names: std::collections::BTreeSet<&str> =
             ChronicleKind::ALL.iter().map(|k| k.as_str()).collect();
-        assert_eq!(names.len(), 38);
+        assert_eq!(names.len(), 45);
         assert_eq!(DepartCause::TopUp.as_u8(), 4);
     }
 

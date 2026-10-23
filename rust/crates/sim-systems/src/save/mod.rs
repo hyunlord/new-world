@@ -46,8 +46,9 @@ pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 /// 4 = M4 (`Knowledge`, seven skills, the ford column, apprenticeship orders,
 /// the technology aggregate, new item, recipe, blueprint and job kinds);
 /// 5 = M5 (the storyteller, `Sick`, `Apparel`, new item and chronicle kinds,
-/// the chronicle's cause table, animals, fights, drafting, mood, bonds).
-pub const FORMAT_VERSION: u32 = 5;
+/// the chronicle's cause table, animals, fights, drafting, mood, bonds); 6 = M5.5 (`Fleeing`, neighbours,
+/// migrants, caravans, the trade ledger, need samples, new chronicle kinds and the knowledge source `Migrant`).
+pub const FORMAT_VERSION: u32 = 6;
 
 /// Upper bound for one decode (guards against corrupt length prefixes).
 const DECODE_LIMIT: u64 = 1 << 31;
