@@ -55,7 +55,7 @@ M4), so the knowledge node `tracking` was lore only and hides had no source.
   pack bites), F4 27/32 (deer are killed on every world, but on four the meat spoils before it reaches the larder).
   Undrafted colonies beat the packs too (people strike back), so drafting changes little (`M5_EVALUATION.md`).
 
-## Amendment M5.5 — the undrafted flee, the hunter carries the meat home (draft; M5.5 goal §3.1.2–3)
+## Amendment M5.5 — the undrafted flee, the hunter carries the meat home (as built; M5.5 goal §3.1.2–3, DECISIONS M5.5 D10, D11, D15)
 - `FleeSystem` (priority 123, every 3 ticks): an undrafted person outside a roofed room within 8 tiles of a hunting or
   attacking wolf gets `Fleeing { until }` (30 ticks, renewed while a wolf is within 8): the job is cancelled and the
   person walks toward the nearest roofed room, else the hearth, else away from the wolf. The decision seam treats a
@@ -66,6 +66,11 @@ M4), so the knowledge node `tracking` was lore only and hides had no source.
 - Reason: M5's undrafted worlds beat all 100 packs with 3 deaths (drafting barely mattered), and meat rotted where it
   fell waiting for haulers (F4 27/32).
 
+- As built: a refuge is only a roofed room (or the hearth) the person reaches before the wolf; a refuge the wolf comes to
+  reach first is given up. Calibration r1 (the goal allows wolf strength to change when calibration needs it): a wolf
+  runs 2 tiles a step while it chases a person within 8 (`wolf_chase_tiles`; M5 1) — at the people's pace no undrafted
+  person was ever bitten (r0: 0 bites in every no-draft pack). The hunter carries up to 3 meat (a `Carry` holds one
+  kind); the hide and leftovers are listed in `Wildlife::carcasses` and hauled before other loose stacks.
 ## Date
 2026-10-23
 

@@ -1,6 +1,6 @@
 # ADR 0031 — Neighbours and migrants
 
-Status: draft (M5.5 Part 0, 2026-10-24); final in Part 6 with the amendments as built.
+Status: accepted (M5.5, 2026-10-24; drafted in Part 0, final in Part 6 with the amendments below).
 
 ## Context
 VISION §7 item 7 and §10.2: "이웃은 지식의 통로다." Ten founders alone cannot hold a growing technology (Henrich
@@ -39,6 +39,20 @@ off-screen neighbour (M5.5 DECISIONS).
 - The colony's population and knowledge can grow from outside; the knowledge aggregate (ADR 0026) sees migrants'
   nodes the day they join. The save format version is bumped (v6).
 - Population is capped at 40 for waves (births are not capped).
+
+## Amendments (as built, M5.5 DECISIONS D16–D18, D21, D25)
+- Neighbours, waves and caravans live in `ColonyState::neighbours` (saved; in the colony fingerprint); visitors are
+  records, not ECS entities, until a wave is accepted (V7's proximity sync would admit anyone at the hearth).
+- `VisitorSystem` (175, every 3 ticks, offset 1) walks waves and caravans from the edge tile nearest the edge's middle
+  to the meeting tile by the hearth; a wave arrives the day it sets out. Seasonal rolls begin with the first season
+  that starts after day 26; food-surplus days count 3 food units a day per adult.
+- A wave's people get their `AgentId`s when it sets out (the dialog names them as the colony will); accepting is
+  allowed while the wave waits or walks in; migrants spawn with the founders' component set, needs at 20, and join
+  the colony's settlement; households form through pairing.
+- At least one neighbour knows pot firing (the end of the pottery chain): when neither drew it, the first neighbour's
+  last-drawn Neolithic node is replaced by it (calibration r1, D23).
+- A wave accepted while still walking in keeps walking and joins on reaching the hearth; a group with no meeting tile
+  waits where it stands, so its wait still times out (code review, D25).
 
 ## Date
 2026-10-24

@@ -328,7 +328,7 @@ What the rounds showed:
   `draw × 1,000 < eureka_permille` (3,000: draws 0, 1, 2 of `odds`) — the same keyed draw, so without a clue nothing
   changes (draw 0 only). The candidate must still practise the prerequisites. A clue discovery is chronicled
   `Eureka` (cause the artifact's code, value the node) after its `KnowledgeDiscovered`.
-- Evidence (probe, seeds 0–7, 48 days, M55-U script with `--neighbours off`; `$DATA/eureka/`): with a clay pot given
+- **Superseded by D26** (this run measured the ungated path, review F2). Evidence (probe, seeds 0–7, 48 days, M55-U script with `--neighbours off`; `$DATA/eureka/`): with a clay pot given
   on day 2 (`DebugGive`, a probe-only command like M4's `DebugKill`) the first pot-forming discovery came on day
   6.7, 22.7, 10.2, 16.7, 21.8, 11.0, 6.7, 13.3 — **median 12.2** — against 9.0, 22.7, 10.2, 16.7, 21.8, 36.8, 10.8,
   13.3 — **median 15.0** — without; clay preparation median 9.5 against 11.0. Unit test: a clay pot no one can make is a
@@ -422,3 +422,29 @@ mechanism check, the check ran on calibration seeds 0–7 or on the M5 base buil
   noted in ARCHITECTURE). D17 and a test comment now say pot firing. A wave with no edge tile is dropped without a
   tally (cannot happen on the colony maps: every edge has passable tiles). The 40-person cap is checked when a wave
   sets out, as the goal says; accepting can pass it (an owner question).
+
+## D26 — Eureka evidence re-done with the neighbour rule on (review F2)
+
+D20's evidence ran with `--neighbours off`, where (as the review found) the ×3 never applied and the clue acted only
+through its ungated stockpile path; after D25 nothing applies there. Re-run at 32948f2d on calibration seeds 0–7, 48
+days, neighbours **on** in both arms (`$DATA/eureka2/`): the M55-U script, and the same with a clay pot given on day 2
+(`DebugGive`; the scripts differ only by that line). Caravans and migrants act in both arms, so the difference is the
+pot. First discovery day per seed (— = not discovered in 48 days, counted as 48 for the median):
+- clay preparation: with 2.2, 19.2, 8.2, 25.5, 10.2, 12.5, 4.7, 2.2 (median 9.2) — without 7.5, 19.0, 8.2, 9.3, 10.2,
+  12.5, 8.7, 8.2 (median 9.0);
+- pot forming: with 3.8, 25.7, 10.2, 12.5, 14.5, —, 5.0, 2.3 (**median 11.4**) — without 9.0, 22.0, 10.2, 13.7, 14.5,
+  —, 10.8, 13.3 (**median 13.5**);
+- pot firing: with —, —, 18.5, 13.5, 16.8, 11.3, 13.2, 2.5 (**median 15.2**) — without —, —, 25.3, 16.0, 16.8, 22.3,
+  13.2, 21.7 (**median 22.0**).
+Eurekas counted (the clue decided, D25 F5): 15 with the pot, 7 without (the latter from traded pots). The unit-level
+proof of the ×3 is `a_clue_triples_the_discovery_draw` (through `DiscoverySystem`). Seed 1 is the counter-case: its
+pot-forming came later with the pot (25.7 against 22.0) — the discoveries are keyed per tick, and a pot changes who
+practises what earlier, so single seeds can move either way.
+
+## D27 — ROADMAP "다음" (goal §11)
+
+The goal: "다음 → M-ART2 when ART-STRUCT is approved by the owner, else M6 prep". ART-STRUCT's last commit on
+`origin/v8/art-struct` is `b6baa73f` (2026-10-23 23:59 KST); its report (`docs/v8/artstruct/STRUCT_REPORT.md` on that
+branch, read, not merged) says "오너 판단 대기" and records the log-wall cap seam failing all three attempts. No owner
+approval exists, so "다음" is M6 preparation, with M-ART2 named as the step after the owner approves. The art branch
+was not merged or touched.

@@ -1,6 +1,6 @@
 ---
 name: worldsim-testing
-description: Use when testing or verifying any WorldSim change, before claiming "no behaviour change", "deterministic", "faster" or "done" — identity (tools/v8/identity.sh), determinism, the 29-step gate (tools/v8/gate.sh), the economy soak, perf comparison (tools/v8/perf.sh), test layout by domain on sim_test::baseline_engine, and how to write an assertion that can fail.
+description: Use when testing or verifying any WorldSim change, before claiming "no behaviour change", "deterministic", "faster" or "done" — identity (tools/v8/identity.sh), determinism, the 30-step gate (tools/v8/gate.sh), the economy soak, perf comparison (tools/v8/perf.sh), test layout by domain on sim_test::baseline_engine, and how to write an assertion that can fail.
 ---
 
 # WorldSim testing
@@ -72,7 +72,7 @@ Longer versions (assertion recipes, perf and contention protocol):
 3. For an order-sensitive fix, run the twin over many fresh engines (32) so hash-order luck cannot pass it.
 
 ### C. The gate (`tools/v8/gate.sh <log_dir> [--base-data DIR]`)
-Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration and exit code is `<log_dir>/gate.txt`. The gate passes only when every step except `perf` exits 0 (20 steps since M1, 21 since V8-PLAY, 25 since M1.5, 27 since M3, 28 since M4, 29 since M5; `nav_bench` is report only too).
+Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration and exit code is `<log_dir>/gate.txt`. The gate passes only when every step except `perf` exits 0 (20 steps since M1, 21 since V8-PLAY, 25 since M1.5, 27 since M3, 28 since M4, 29 since M5, 30 since M5.5; `nav_bench` is report only too).
 
 | # | step | checks |
 |---|---|---|
@@ -105,6 +105,7 @@ Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration 
 | 27 | `nav_bench` | `worldsim_perf nav-bench`: N = 1,000 with the soak script; movement + pathfinding µs per tick against the 600 µs budget, requests, memo hits, nodes expanded (report only) |
 | 28 | `knowledge` | `cargo test --release -p sim-test --test colony_knowledge` + the loss fixture `tools/v8/m4_f10_script.json` (seeds 0..8, 4 days) scored by `docs/v8/m4/m4_score.py --f10`: 8/8 lose the doorway within 240 ticks of the kill, end Lost, and leave door orders waiting on it |
 | 29 | `story` | colony seeds 0..2 × 48 days with `tools/v8/m5_u_script.json` (no panic), scored by `docs/v8/m5/m5_score.py --story`: F1's schedule, 0 ledger and 0 reservation violation ticks on every seed |
+| 30 | `neighbours` | colony seeds 0..2 × 48 days with `tools/v8/m55_u_script.json`, scored by `docs/v8/m5_5/m55_score.py --neighbours`: two neighbours, waves 1 and 2 in their windows and accepted, ≥ 1 trade, 0 ledger (with traded in and out) and 0 reservation violation ticks |
 
 1. Commit first; run the gate on that head; do not touch the tree until it finishes (it records `head` and `dirty` in `gate.txt`).
 2. Read `gate.txt`, not only the exit code: test counts, perf WARN lines, determinism line.
@@ -151,6 +152,24 @@ Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration 
 3. Bars that say "the pressure is felt" are read on the pressure run (F2a, F6b); bars that say "a prepared colony survives" on the same run (F2b, F3a).
 4. Rates pooled over worlds when a world holds a handful of events (births, breakdowns), never per world; register the pooling in the scorer's docstring before the held-out run.
 5. The gate's `story` step runs two worlds × 48 days with the storyteller and scores the schedule and the ledger (`m5_score.py --story`); the soak runs `--story no-beasts` (weather and illness, no wolves) and still asks 0 deaths.
+
+### J. Controls and the arithmetic before a bar (M5.5)
+1. A behaviour that answers the player is measured against the same seeds without the answer: M5.5 runs the script
+   (pressure), the script without drafting (no-draft), without the storyteller (story-off), without neighbours
+   (no-neighbours) and with neither (quiet, the demographic control). Register which run each bar reads in the
+   scorer's docstring before the held-out run.
+2. A bar that depends on rates states its expected value from the rates before it is registered (M5.5 F4: ~1 kill in
+   7 days → ~4 wraps by day 30; F9: quality 30 + 3L + 2.5). M5's F5 and F8 failed on the planner's own arithmetic (8 kills
+   for 4 wraps in 48 days that give ~6; 80 knife uses where worlds had 6–22); write the arithmetic next to the bar and
+   check it against a calibration run before trusting the bar — the premise too, not only the product: M5.5 F9
+   assumed knapping level ~1 in days 1–12, and the held-out worlds had their top knapper at level ≥ 6 by day 2–10, so
+   the "quality gain ≥ 8" could not happen (M5.5 D24).
+3. Make every check a record can fail (M5.5 F6: a quarrel's cause must be a record that exists, fits the cause — grief
+   a death, cold a cold snap, the relation the same pair's quarrel — belongs to the initiator and lies within 2 days;
+   `mood::check_cause`, tested on each failing case; the review found the first version accepted mismatched records).
+4. A ratio bar is unmeasured, not passed, in a world where the compared quantity is 0 in both groups: M5.5's F4 scorer
+   counted 0 ≤ 0.8 × 0 as a pass in 29 of 32 worlds (nobody cold at night: housed people lose the marker), and the 3
+   measurable worlds all failed. Count the measurable worlds and report the bar on them.
 
 ## Lessons
 

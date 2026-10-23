@@ -11,7 +11,7 @@
 
 > 지금(M1.5)의 게임은 192×192 세계에 창설자 10명으로 시작하는 첫 정착지다. 위 막대에 `1년 차 · 봄 1일째`처럼 해와 계절이 보이고(계절 6일, 1년 24일, 1배속에서 1년 약 48분), 나이는 '세'로 센다. 아이는 1년에 한두 명 태어나고(임신 18일), 15세에 어른이 된다. F1–F4·F6–F8·F10으로 지시 모드를 고른다: F1 나무 베기(끌어서 범위), F2 비축 구역, F3 짓기 메뉴(1 오두막 3×3 통나무 12개 · 2 돌깎이 자리 돌 4개 · 3 목공대 통나무 6개와 돌 2개 · 4 건조대 통나무 4개 · 5 통나무 벽 · 6 문 · 7 바닥 · 8 침상 · 9 돌담; 벽과 바닥은 끌면 줄, Shift+끌기면 네모), F4 구역 지우기, F6 취소, F7 채석(바위·부싯돌 노두), F8 언덕 파기, F10 철거. R 키는 방 보기(역할별 색과 이름; 방을 클릭하면 방 패널). 다 지은 작업장을 클릭하면 주문 목록(만들기 n / 유지 n)이 열리고, P 키는 사람별 작업 우선순위 표다. F5 저장, F9 불러오기. Home/H 키는 캠프로 화면을 옮긴다. 사람들이 나무를 베어 통나무를 나르고 비축 구역에 쌓고 오두막을 짓는다. 사람을 클릭하면 상세 정보와 지금 하는 일, 들고 있는 것이 보인다. 화면의 타일셋은 임시(코드로 그림)다.
 
-**지금 화면:** [docs/images/m5_contact_sheet.png](docs/images/m5_contact_sheet.png) (M5: 늑대 무리 배너, D로 소집한 창 든 4명, 한파 배너 "한파 2일째 · 장작 158 (하루 104 필요)", 다툼의 "→ 왜?", M 기분 표시, 사람의 이야기 탭, 사슴 사냥과 고기 더미, 가죽 랩을 입은 사람; 창으로 찍은 9장, `docs/v8/m5/contact_sheet_m5.json`) · M1 화면 평가는 [docs/v8/play/SCREEN_REPORT.md](docs/v8/play/SCREEN_REPORT.md), 그림 기준은 [docs/v8/m1art/ART_REPORT.md](docs/v8/m1art/ART_REPORT.md), 이번 패스 보고는 [docs/v8/m5/M5_REPORT.md](docs/v8/m5/M5_REPORT.md).
+**지금 화면:** [docs/images/m55_contact_sheet.png](docs/images/m55_contact_sheet.png) (M5.5: 이주민 4명이 온 창, 교역 창과 값 막대, N 이웃 창, 늑대를 피해 '!'를 띄우고 도망하는 사람, 연대기의 '토기를 보고 … 발견 (단서)', 기술 지도의 '이웃 붉은바위가 앎 (소문)'과 ★; 창으로 찍은 6장, `docs/v8/m5_5/contact_sheet_m55.json`) · M1 화면 평가는 [docs/v8/play/SCREEN_REPORT.md](docs/v8/play/SCREEN_REPORT.md), 그림 기준은 [docs/v8/m1art/ART_REPORT.md](docs/v8/m1art/ART_REPORT.md), 이번 패스 보고는 [docs/v8/m5_5/M55_REPORT.md](docs/v8/m5_5/M55_REPORT.md).
 
 ## 빌드와 실행
 

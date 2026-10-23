@@ -246,6 +246,34 @@ The modifier table lives in `sim_core::colony::people::Modifier` (`weight`, `soc
 
 A new modifier: append it to `Modifier::ALL` (codes are chronicle and bridge contracts), give it a weight, a fact read in `mood::facts_of` / `modifiers`, a quarrel cause, a locale name, and a unit test in `mood/mod.rs`.
 
+### R. Add a neighbour event (M5.5; ADR 0031, 0032)
+1. Visitors (a wave, a caravan) are records in `ColonyState::neighbours`, not ECS entities: an agent standing at the
+   hearth is admitted to the settlement by V7's proximity sync, eats and appears in every census (M5.5 D16). A visitor
+   becomes people only through a command (`AcceptMigrants` → `neighbours::join`, the founders' component set,
+   `AgentId`s reserved when it set out so the dialog names them as the colony will).
+2. Plan its date on the season's first day in `NeighbourSystem` (keyed, `STREAM_NEIGHBOURS` / `STREAM_TRADE`, subject a
+   fixed tag, the season index as tick) and let `VisitorSystem` walk it (one group, one tile a step, nav paths, a
+   `VisitState`); never during a major pressure (read the storyteller's planned and active majors).
+3. Chronicle its arrival and departure (kinds 38–44 hold the neighbour in `cause`, numbers packed in `value`); a bridge
+   row in `ffi/neighbours.rs`; locale keys.
+4. Tests in `colony_neighbours.rs`: its window on the calibration seeds, a save while it walks in, its command's
+   refusals.
+
+- **Do** move every item a trade gives or takes through the ledger's trade terms: taken goods `trade_in` where they
+  appear (the caravan's spot), given items `trade_out` where they leave (a `JobKind::Trade` haul's arrival). The
+  identity is created + traded_in = ground + carried + held + delivered + shelved + consumed + traded_out per kind
+  (`invariants::LedgerTerms::balanced`). *Reason:* a trade that creates or consumes silently is a ledger hole the
+  per-tick check cannot tell from a bug.
+- **Do** settle a debt of items (a caravan's `owed`) when the items move — the pickup — not when a job is assigned
+  for them. *Reason:* M5.5 review F1: owed blades left the list at assignment while still on the stack, so the same 12
+  blades were given twice and the ledger (which books only deliveries) could not see it.
+- **Do** gate every path of a rule-bound feature on its rule, not only the headline effect. *Reason:* M5.5 review F2:
+  eureka's ×3 was gated on `ColonyRule::neighbours` but its "stockpile conditions count as met" path ran for every
+  rule, and the pass's own evidence (a `--neighbours off` run) measured that ungated path.
+- **Do** keep the eureka rule a widening of the same keyed draw: a clue wins on `draw × 1,000 < eureka_permille`, no
+  clue on `draw == 0`, so a world without clues draws exactly as before (`discover.rs`). *Reason:* a second draw for a
+  clue would shift nothing else (keyed) but would make the clue path differ from the plain one by more than its odds.
+
 ## Lessons
 
 | date | symptom | root cause | fix | source |

@@ -31,7 +31,7 @@ agent-facing docs are English (`docs/ARCHITECTURE.md`, `docs/decisions/*`,
 4. **ADR** (`docs/decisions/NNNN-slug.md`): one file per design decision made in the pass.
 5. **ARCHITECTURE** (`docs/ARCHITECTURE.md`): regenerate the system table; update the crate/folder maps, the bridge API groups and the GDScript layout if structure changed. Every path you name must exist.
 6. **Skills** (`.claude/skills/*/SKILL.md`): add a lesson row when a problem needed more than one attempt, a better method was found, or Godot/gdext behaved unexpectedly. Same pass, not later.
-7. `tools/play.sh --headless-check main` passes, and the current `docs/images/<pass>_contact_sheet.png` (now `m5_contact_sheet.png`) is replaced by the new pass's sheet when the view changed (keep ≤ 12 images; delete the previous pass's sheet). Make the sheet with `tools/v8/capture.gd` and `tools/v8/contact_sheet.py` (`worldsim-godot`, procedure 4) and point README's "지금 화면" line at it.
+7. `tools/play.sh --headless-check main` passes, and the current `docs/images/<pass>_contact_sheet.png` (now `m55_contact_sheet.png`) is replaced by the new pass's sheet when the view changed (keep ≤ 12 images; delete the previous pass's sheet). Make the sheet with `tools/v8/capture.gd` and `tools/v8/contact_sheet.py` (`worldsim-godot`, procedure 4) and point README's "지금 화면" line at it.
 8. Run `bash tools/v8/check_docs.sh` — it must print `docs: PASS` (it also requires a `docs/images/*_contact_sheet.png` that README links).
 
 ### Writing a HISTORY line (Korean)

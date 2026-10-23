@@ -37,6 +37,11 @@ checked; ADR 0016 is amended for the memory instrument. Report: `docs/v8/m5_5/M5
 - Gate step 30 `neighbours` (two worlds × 48 days: waves accepted, a trade, ledger exact).
 - Probe: the `m55` block, `--neighbours on|off`; `tools/v8/m55_u_script.json`, `m55_u_nodraft_script.json`;
   `docs/v8/m5_5/m55_score.py`.
+- UI: the migrant dialog (pauses the clock at 1×), the trade dialog with the balance bar, visitors drawn on the map,
+  the N neighbours panel, the visitor banner, the tech map's rumours and eureka star, "!" over fleeing people and the
+  inspector's flight line, chronicle lines for kinds 38–44 and the year line; 96 locale keys
+  (`docs/v8/m5_5/M55_LOCALE.md`); `tools/v8/m55_ui_test.gd` (35 checks); `capture.gd --m55-set`.
+- `MoodRule::cause_records` (M5.5 true): the need-sample causes; the M5 rule keeps M5's references.
 
 ### Changed
 - The storyteller holds an illness back during or 2 days after a major and a major while 2 or more are sick.
@@ -49,6 +54,13 @@ checked; ADR 0016 is amended for the memory instrument. Report: `docs/v8/m5_5/M5
 - A quarrel's cause is a concrete record (a need sample, a death, a pressure, an earlier quarrel), checked by
   `mood::check_cause`.
 - Save format 6.
+- Review fixes (M5.5 DECISIONS D25): items given to a caravan stay owed until a hauler picks them up and cannot be
+  given twice; owed entries are matched by kind; eureka acts only under the neighbour rule and is counted only when
+  the clue decided the discovery; a wave accepted on its way joins at the hearth; visitors with no meeting tile still
+  wait and leave; `mood::check_cause` requires a record that fits the cause.
+
+### Removed
+- `docs/images/m5_contact_sheet.png` — replaced by `docs/images/m55_contact_sheet.png`.
 
 ## M5 — 2026-10-23
 
