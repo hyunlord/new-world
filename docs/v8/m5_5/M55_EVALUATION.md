@@ -64,6 +64,19 @@ Pot firing is "discovered" later with neighbours most likely because 16 worlds n
 brings it (D23 guarantees one neighbour knows it; hypothesis, not traced per world). Eurekas: 33 with neighbours, 0 without. The clue's own effect, with
 everything else equal, is D26 (calibration seeds: pot forming median 11.4 against 13.5 days).
 
-## F11 — performance
+## F11 — performance (PASS)
 
-PENDING: the interleaved quiet session (`$DATA/bench_session.sh`) and the gate's bench step.
+| part of the bar | result |
+|---|---|
+| M5.5 systems ≤ 60 µs/tick at N = 1,000 (+ the wolves line) | 0.40 µs/tick at N = 1,000 without wolves; **9.5 µs/tick** on `n1000_wolves` (a 4-wolf pack; `FleeSystem` 9.5, plan ≤ 15), 998 of 1,000 alive (gate bench at `ae443aa4`) |
+| alloc/agent ≤ M5 + 32 B | 1,871 → 1,871 B (+0) |
+| RSS outer bound | 2,175 B/agent (≤ 5,120), 82 B/tile (≤ 128), median of 5 build-only repeats |
+| C3 | 6/6 ceilings PASS |
+| regression vs M5's quiet rows (gate step `bench`, `> +10 %` fails) | tick mean ×0.996–×1.015, p99 ×0.989–×1.023 on all five scenes: PASS |
+| identity, replay | gate steps 10 and 19 PASS (`$DATA/gate2/gate.txt`) |
+
+Interleaved session (01:12–01:17 KST, 1-minute load 4.9–7.3; M5 `cb58a801` and M5.5 `32948f2d`, 3 rounds,
+`$DATA/bench/`): tick mean ×0.969–×1.044 on four scenes; `n200_script` read ×1.159 with the same world fingerprint and
+the decision system +45 µs, which a focused 5-repeat interleaved A/B of that scene did not reproduce (median 522.9 →
+532.6 µs, ×1.019; host load rose to 15 during the session from other work). The gate's bench at the final commit reads
+`n200_script` ×1.003 against M5's ledger row. Ledger rows appended from the gate log (pass "M5.5").
