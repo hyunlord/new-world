@@ -275,3 +275,11 @@ margin. Started prompts and images are not reframed or patched. This is an
 input clarification, not a changed evaluation rule or an extra attempt.
 The full36 protocol tests, Ruff and strict typing again pass after this edit;
 actual framing adherence remains subject to observed-image review.
+
+Actual later outputs also lowered some children's diagonal wraps and changed a
+straight adult bandeau trim into a diagonal fold. Unstarted prompts now explicitly
+preserve the source garment edge's height relative to the shoulders/clavicles,
+its upper-trim direction and its chest coverage. This adds no look-name inference
+and changes neither the source-appearance manifest nor the frozen face plan.
+Existing failed first attempts remain candidates for the single coordinated
+repair phase within the original attempt and call limits.
