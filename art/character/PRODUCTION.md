@@ -1,5 +1,12 @@
 # Producing compatible characters
 
+Current standard (2026-10-23): [TEMPLATE_V3.md](TEMPLATE_V3.md), adopted route I
+assets in [route_i/MANIFEST.json](route_i/MANIFEST.json), and
+[M-ART2 handover](../../docs/v8/artprod3/HANDOVER.md).
+The procedure below is historical TRIAL3 documentation. Its route paths now
+resolve through [archive/README.md](archive/README.md); it is not the current
+production workflow and does not authorize new generation.
+
 This is the Trial3 production procedure, not an acceptance certificate. Read
 TEMPLATE.md and LAYER_CONTRACT.md before creating assets. Originals, tool output,
 renders and logs belong in `/Users/rexxa/work/arttrial3-data/`. Keep accepted

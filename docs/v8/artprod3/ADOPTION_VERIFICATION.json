@@ -1,0 +1,66 @@
+{
+  "status": "ADOPTED",
+  "decision_date": "2026-10-23",
+  "authority": "planner/owner explicit waiver",
+  "S1_original_passed": false,
+  "accepted": 34,
+  "adults": 16,
+  "children": 18,
+  "waived_adult_minimum": 17,
+  "fallbacks": {
+    "adult_M_fur_cloak_long_tied": "adult_M_fur_cloak_bun",
+    "adult_M_hide_wrap_long_tied": "adult_M_hide_wrap_bun"
+  },
+  "new_generations": 0,
+  "asset_files_unchanged": 714,
+  "manifest_hashes_checked": 34,
+  "frame_and_sidecar_hashes_checked": 680,
+  "archive_files_byte_identical": 2320,
+  "archive_moves": [
+    {
+      "source": "art/character/route_p",
+      "destination": "art/character/archive/route_p",
+      "status": "MOVED_BYTE_IDENTICAL",
+      "files": 1912
+    },
+    {
+      "source": "art/character/route_a",
+      "destination": "art/character/archive/route_a",
+      "status": "MOVED_BYTE_IDENTICAL",
+      "files": 265
+    },
+    {
+      "source": "art/character/route_b",
+      "status": "ABSENT_IN_BASE",
+      "files": 0
+    },
+    {
+      "source": "art/character/candidates",
+      "destination": "art/character/archive/candidates",
+      "status": "MOVED_BYTE_IDENTICAL",
+      "files": 10
+    },
+    {
+      "source": "art/character/trial5_diagnostics",
+      "destination": "art/character/archive/trial5_diagnostics",
+      "status": "MOVED_BYTE_IDENTICAL",
+      "files": 106
+    },
+    {
+      "source": "art/character/route_i_lab/prod2",
+      "destination": "art/character/archive/route_i_lab/prod2",
+      "status": "MOVED_BYTE_IDENTICAL",
+      "files": 27
+    }
+  ],
+  "lab_tool_bytes_unchanged": true,
+  "game_code_changed": false,
+  "merge": false,
+  "previous_checks": "VERIFICATION.json retains pre-waiver numerical disposition; this file records adoption follow-up",
+  "external_hashes": "/Users/rexxa/work/artprod3-data/ADOPTION_ARCHIVE_HASHES.json",
+  "docs_check": "PASS",
+  "current_document_links": "PASS",
+  "staged_byte_identical_renames": 2320,
+  "lab_loader_accepted_looks": 34,
+  "tests": "No code or pixels changed in adoption follow-up; prior133 tests retained as historical evidence; fresh loader/hash/docs checks performed."
+}

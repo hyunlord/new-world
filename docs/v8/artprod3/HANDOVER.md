@@ -1,10 +1,10 @@
 # M-ART2 인수인계 — ART-PROD3
 
-**판정: S1 FAIL, route I 미채택.** 결손10룩 중8룩이 통과하여 전체34/36·성인16/18·어린이18/18이다. 전체≥32 기준은 충족하지만 성인≥17 기준이 미달하며, 어린이만 부족한 경우의 성인 단독 채택 예외도 적용되지 않는다. [PROD3_REPORT.md](PROD3_REPORT.md)를 최종 판정으로 따른다. 새 생성은0회이며 게임 코드 변경·설치·merge·archive 이동은 수행하지 않는다.
+**판정: route I 채택(2026-10-23 planner/owner 결정 D4).** 전체34/36·성인16/18·어린이18/18과 PROD2 R1·P1·D1을 근거로 채택했다. 기존 S1 성인≥17 기준의 측정 결과는 FAIL로 보존하며, 오너가 잔여 성인2룩에 한해 이 채택 기준을 면제했다. 두 결손은 아래 fallback으로 표시하고 수락 룩에 포함하지 않는다. [PROD3_REPORT.md](PROD3_REPORT.md)를 최종 판정으로 따른다. 새 생성은0회이며 게임 코드 변경·설치·merge는 수행하지 않는다. 역사 route와 진단은 `art/character/archive/`로 이동했다.
 
 ## 자산과 좌표
 
-- 후보 규격: [TEMPLATE_V3.md](../../../art/character/TEMPLATE_V3.md). 후보 자산과 수락 이력: [route_i/MANIFEST.json](../../../art/character/route_i/MANIFEST.json). 승인된 게임 표준으로 선언하지 않는다.
+- 캐릭터 표준: [TEMPLATE_V3.md](../../../art/character/TEMPLATE_V3.md). 채택 자산 원천은 `art/character/route_i/`와 [MANIFEST.json](../../../art/character/route_i/MANIFEST.json)이다.
 - PNG 경로: `art/character/route_i/<age>_<sex>_<top>_<hair>/<S|E>/<frame>.png`; 같은 이름의 JSON sidecar와 룩별 `MANIFEST.json`에 원본 해시·검사·배율이 있다. 다른 route와 진단 이미지는 게임 자산으로 혼합하지 않는다.
 - upright: 80×112px, 발 anchor `(40,104)`; sleep: 112×80px, anchor `(56,72)`. 64px 타일에서 발을 `(tile_left+32,tile_top+43)`에 놓고 해당 anchor를 빼서 PNG 좌상단을 계산한다. 투영 좌표는 M-ART2 renderer에서 변환한다.
 - 1px=1world-px, nearest filtering; 2×는 정수 확대다. 캔버스를 64×64에 맞춰 늘이거나 찌그러뜨리지 않는다.
@@ -34,11 +34,18 @@ PROD3의 가시 bbox는 **alpha≥16**이다. 캔버스 적합성·발 기준·b
 
 MISSING은 [INSTALL_NOTES.md](INSTALL_NOTES.md)의 fallback을 사용하며 수락 수에 포함하지 않는다. 같은 age/sex에서 top 일치 우선, 다음 hair 일치, 동률 ID 사전순이다. 후보가 없으면 같은 age에서 동일 우선순위를 적용하고 성별 대체를 명시한다. child를 adult 크기로 대체하지 않으며 해당 age 자체가 없으면 MISSING을 유지한다.
 
+| MISSING look | 채택 세트의 fallback | 속성 차이 |
+|---|---|---|
+| `adult_M_fur_cloak_long_tied` | `adult_M_fur_cloak_bun` | age/sex/top 유지, hair 대체 |
+| `adult_M_hide_wrap_long_tied` | `adult_M_hide_wrap_bun` | age/sex/top 유지, hair 대체 |
+
+첫 룩은 E/work_a panel judge 실패, 둘째는 E/idle 가시 높이60px가 상한58px를 넘는다. 실패와 원본은 보존하며 신규 생성·band 완화 없이 위 대체를 사용한다.
+
 ## 리뷰 증거와 한계
 
 - PROD2 판정·점수·측정: [PROD2_REPORT.md](../artprod2/PROD2_REPORT.md), [GATES.json](../artprod2/GATES.json), [GODOT_RESULTS.json](../artprod2/GODOT_RESULTS.json), [D1_RESULTS.json](../artprod2/D1_RESULTS.json).
 - 원시 가독성 응답: `/Users/rexxa/work/artprod2-data/reviews/round0/{a,b}.{json,md}`; 채점 `reviews/round0/scored/scores.json`; 블라인드 패킷 `blind/round0`; 실제 재생 랩 `lab/round0`(모두 같은 외부 데이터 루트).
-- 현재 시각 자료: `art/character/route_i_lab/prod2/{lab_p1_1x.png,lab_p1_2x.png,crowd_1x.png}` 및24 GIF. 미채택이므로 기존 경로를 유지한다.
+- 현재 시각 자료: `art/character/archive/route_i_lab/prod2/{lab_p1_1x.png,lab_p1_2x.png,crowd_1x.png}` 및24 GIF. 역사 route·진단 위치와 보고서 대응은 [archive/README.md](../../../art/character/archive/README.md)를 따른다.
 - 전체 룩 보드: [1×](../../../art/character/boards/route_i_sheet_1x.png), [2×](../../../art/character/boards/route_i_sheet_2x.png).
 
 PROD2 R1은 두 리뷰어·양 배율에서 활동 12/12, item+top+hair 31–32/36, 성인 sex+age 20–21/22로 통과했다. P1은 실제 Godot 창 200명·60초에서 524.831FPS, D1은 재현성 통과다. 이 결과는 게임 시뮬레이션 성능·모든 룩의 개별 가독성·자연스러움·최종 정착지 화면 승인과 다르다. planner의 PROD3 결정 D1에 따라 원본과 리뷰 프레임이 유지되는 임계값 수정에 새 리뷰를 요구하지 않는다.

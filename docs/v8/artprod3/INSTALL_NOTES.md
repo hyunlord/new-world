@@ -1,6 +1,6 @@
-# M-ART2 설치 노트 — ART-PROD3 미채택
+# M-ART2 설치 노트 — ART-PROD3 채택
 
-**S1 FAIL: 전체34/36·성인16/18·어린이18/18, route I 미채택.** 결손10룩 중8룩이 통과했다. 전체≥32/36은 충족하지만 성인≥17/18이 미달하며, 어린이만 부족한 경우의 성인 단독 채택 예외도 적용되지 않는다. PROD2의 R1·P1·D1은 유지한다. 이 문서는 renderer 인계 규격이며 게임 코드 설치·merge·archive 이동을 수행하지 않는다. 최종 근거는 [PROD3_REPORT.md](PROD3_REPORT.md)를 따른다. 후보 자산은 `art/character/route_i/`와 그 `MANIFEST.json`, 후보 규격은 `art/character/TEMPLATE_V3.md`이며 승인된 게임 표준이 아니다. 상세 인계와 오너 결정은 [HANDOVER.md](HANDOVER.md)에 있다.
+**route I 채택: 전체34/36·성인16/18·어린이18/18.** 2026-10-23 planner/owner 결정 D4가 성인≥17/18 채택 기준을 잔여 성인2룩에 한해 면제했다. 원래 S1 기준의 FAIL과 결손은 보존하며 아래 fallback을 사용한다. PROD2 R1·P1·D1은 유지한다. 캐릭터 표준은 `art/character/TEMPLATE_V3.md`, 자산 원천은 `art/character/route_i/`와 그 `MANIFEST.json`이다. 역사 route·진단은 `art/character/archive/`로 이동했다. 이 문서는 renderer 인계 규격이며 게임 코드 설치·merge는 수행하지 않는다. 최종 근거는 [PROD3_REPORT.md](PROD3_REPORT.md), 상세 인계와 오너 결정은 [HANDOVER.md](HANDOVER.md)를 따른다.
 
 PROD3 가시 bbox는 alpha≥16이며 캔버스 적합성·발 기준·bands에 적용한다. 배치 후 캔버스 밖 alpha<16만 버리고 수량·최대 alpha를 프레임별 기록한다. 내부 RGBA는 유지하며, 이 규칙이 픽셀 지우기·덧칠을 허가하지 않는다. 새 생성 예산과 실행은 0회다.
 

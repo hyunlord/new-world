@@ -1,6 +1,10 @@
-# Character template v3 — PROD3 whole figure contract
+# Character template v3 — adopted character standard
 
-Route I, identity reference I-1. Adoption status is recorded in
+Route I, identity reference I-1, is ADOPTED by the planner/owner on 2026-10-23
+at 34/36 looks (16/18 adults), with the adult minimum explicitly waived for
+the two MISSING long_tied looks. This is the character standard; the asset
+source is `art/character/route_i/` and its `MANIFEST.json`. Use its explicit
+fallbacks rather than the archived historical routes. Adoption is recorded in
 `route_i/STATUS.md` and `docs/v8/artprod3/PROD3_REPORT.md`. Historical TRIAL5 rules remain in
 `docs/v8/arttrial5/WHOLE_FIGURE_CONTRACT.md`; layered pawn contracts remain in
 TEMPLATE.md and TEMPLATE_V2_HISTORICAL.md. No layer or material masks apply.

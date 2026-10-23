@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "status": "CANDIDATE_NOT_ADOPTED",
+  "status": "ADOPTED",
   "pass": "ART-PROD3",
   "template": "../TEMPLATE_V3.md",
   "accepted_looks": [
@@ -186,5 +186,26 @@
   "generation_count": 0,
   "prior_prod2_generation_count": 27,
   "visibility_threshold": 16,
-  "verification": "../../../docs/v8/artprod3/RESLICE_RESULTS.json"
+  "verification": "../../../docs/v8/artprod3/RESLICE_RESULTS.json",
+  "asset_source": "art/character/route_i/",
+  "adoption": {
+    "date": "2026-10-23",
+    "authority": "Planner/owner explicit decision",
+    "accepted_count": 34,
+    "adult_count": 16,
+    "child_count": 18,
+    "original_S1_passed": false,
+    "adult_17_of_18_requirement_waived": true,
+    "basis": [
+      "PROD2 R1 PASS",
+      "PROD2 P1 PASS",
+      "PROD2 D1 PASS",
+      "PROD3 34/36 and owner waiver"
+    ],
+    "decision": "../../../docs/v8/artprod3/PROD3_DECISIONS.md"
+  },
+  "fallbacks": {
+    "adult_M_fur_cloak_long_tied": "adult_M_fur_cloak_bun",
+    "adult_M_hide_wrap_long_tied": "adult_M_hide_wrap_bun"
+  }
 }

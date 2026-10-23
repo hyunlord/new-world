@@ -19,3 +19,11 @@ planner가 PROD2의 불일치한 임계값에 대한 책임을 명시했다. 모
 실제 결과는 34/36·성인16/18·어린이18/18이다. sleep fit 문제는 해결되었으나 adult_M_hide_wrap_long_tied의 E/idle visible 높이60이 상한58을 넘고, adult_M_fur_cloak_long_tied의 E/work_a panel judge 실패도 남았다. 추가 원본 탐색·생성·배율 보정·band 완화 없이 두 룩을 결손으로 유지한다. 성인 기준 미달이므로 전체·성인 단독 모두 미채택이며 조건부 archive 이동을 수행하지 않는다.
 
 기존26룩의 재실행에서 202/260 PNG 차이가 관측되었다. 잘림이 없어도 alpha16 bbox 중심과 발 기준이 alpha128/alpha>0 혼합 규칙과 달라질 수 있다. 목표의 “or list the diffs”에 따라 전후 SHA를 목록화하고 기존546파일은 보존했다. 기존260PNG와 재실행260PNG는 모두 새 구조 검사를 통과한다. sidecar를 다시 쓰며 불변이라고 주장하지 않는다.
+
+## D4 — planner/owner 채택 결정 (2026-10-23)
+
+> Planner/owner decision 2026-10-23: route I is ADOPTED at S1 34/36 (adults 16/18) on top of PROD2's R1, P1 and D1 — the 17/18 bar was the planner's and is waived for the two adult_M_*_long_tied looks, which fall back per HANDOVER.md.
+
+이 결정은 D3의 미채택·archive 미이동 처분만 대체한다. 측정값34/36·성인16/18·어린이18/18, 두 룩의 MISSING, 원래 S1 기준의 FAIL, 기존26룩 재실행202/260 PNG 차이와 게시546파일 불변은 그대로 보존한다. `adult_M_fur_cloak_long_tied`는 `adult_M_fur_cloak_bun`, `adult_M_hide_wrap_long_tied`는 `adult_M_hide_wrap_bun`으로 대체하고 별도 수락으로 세지 않는다.
+
+TEMPLATE_V3가 캐릭터 표준이며 `art/character/route_i/`와 `MANIFEST.json`이 자산 원천이다. §2의 역사 route와 prod 진단을 `art/character/archive/` 아래로 옮기고 랩 도구는 유지한다. route_b는 기준 트리에 없다. 생성0회·게임 코드 변경 없음·merge 없음의 범위를 유지한다. 실제 N 방향, 노인/머리색 tint, 추가 상의의 세 오너 결정은 미결로 인계한다.
