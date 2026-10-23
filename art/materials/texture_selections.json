@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "selections": {
+    "log/top_ew": {
+      "attempt": 2,
+      "source_sha256": "4d468fd2fed6a3b278dbe95bd946c7c011566a5267523b88c37d52a8af9cfde9",
+      "reason": "Attempt2 has no separate visual rejection and lower joinMAD and join/limit ratio. Best available failed diagnostic; not accepted seamless art.",
+      "review": {
+        "requested_by": "root: choose best visually valid failed diagnostic, preserving all historical failures",
+        "surface": "/Users/rexxa/work/artpolish2-data/materials/log_ew_selection_native_and_assembled.png",
+        "surface_sha256": "866e67e2592b06ee9b1c989545cea01f802469a00ec5c83f2ae2a89fff8eb558",
+        "view": "native256x64; four-repeat strip; actual12cellE-Wrenderer at native scale",
+        "attempt2_visual": "Fullbleed, horizontal log grain, no white gutters or independent visible defect; compatible with existing face and junction.",
+        "attempt3_visual": "Fullbleed, horizontal log grain, no white gutters; repeated strip has larger bright-course mismatch at joins.",
+        "selected_attempt": 2,
+        "selected_join_to_limit_ratio": 1.4121389027534852,
+        "superseded_attempt": 3,
+        "superseded_join_to_limit_ratio": 2.2835615098962982,
+        "reason": "Attempt2 has no separate visual rejection and lower joinMAD and join/limit ratio. Best available failed diagnostic; not accepted seamless art.",
+        "numeric_status": "FAIL",
+        "owner_approval": "NOT_CLAIMED"
+      }
+    }
+  }
+}

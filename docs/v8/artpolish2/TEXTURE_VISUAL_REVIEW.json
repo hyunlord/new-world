@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "reviewer": "material_textures executor",
+  "owner_approval": "NOT_CLAIMED",
+  "surface": "/Users/rexxa/work/artpolish2-data/materials/contact_sheet.png",
+  "surface_sha256": "712eab9be90a47c40f16068c35264ab708046977e6c0ad76d498f3392ab59f5a",
+  "selected_images": 29,
+  "white_gutters": "No remaining opaque white gutters observed after replacements. Original rejects retained.",
+  "orientation": "log and drystone EW/NS independently generated; log grain follows run. Mud-brick NS try2 rejected for transverse brick axes; try3 restores vertical long axes. Fired-brick NS vertical axes.",
+  "projection": "All8doorselectedimagespassunchangedSTRUCTprojectioninstrument.",
+  "seam": "FAIL log/top_ew try3 and mud_brick/top_ns try3; others repeating axes pass.",
+  "limitations": "Visual review is executor inspection at contact-sheet/native asset scale, not owner approval; seam failure means visible repetition risk remains."
+}

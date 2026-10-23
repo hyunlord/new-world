@@ -1,42 +1,42 @@
 {
   "id": "log/top_ew",
-  "attempt": 3,
-  "source": "/Users/rexxa/work/artpolish2-data/materials/originals/log_top_ew_try3.png",
-  "source_sha256": "1e5f38e40e6370f99641b02520e34b10f4403df155f553a6d09638f840eeb1cf",
-  "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a169d1-0aa7-7952-8adf-21ec2890edd7/exec-20a1e28d-90e8-4c93-9b4a-a5a85d59fdba.png",
-  "prompt": "Generate ONE perfectly seamless repeat texture of three bark-covered oak logs seen directly from ABOVE, logs lying horizontally east-west. Entire landscape image fully filled with the logs, no border or blank pixels. This is a wall's top, no ground or wall face. Dark-brown ink and muted watercolor natural history game art, broad quiet bark shapes. CRITICAL: Three uniform long continuous horizontal bark bands run all the way across. The LEFT EDGE and RIGHT EDGE must be pixel-consistent: the same log and bark stripe at exactly the same y coordinate, the same brightness and color row by row. Use subtle surface variation without large knots or local patches, equal brightness across left-to-right, upper-left light only local around small bark details. Absolutely no gradient across the image width. No perspective, no diagonal logs. Do not draw cut ends. No text. Full bleed bark, no white margins. Match reference ink rendering only.",
-  "prompt_sha256": "7d5fc3e9a10f9bc04188e090ed1cc355fec84b5764b75df91f5bd0789ff873ed",
+  "attempt": 2,
+  "source": "/Users/rexxa/work/artpolish2-data/materials/originals/log_top_ew_try2.png",
+  "source_sha256": "4d468fd2fed6a3b278dbe95bd946c7c011566a5267523b88c37d52a8af9cfde9",
+  "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a169d1-0aa7-7952-8adf-21ec2890edd7/exec-799d6fb0-d17e-427e-8440-8783cb55b2e1.png",
+  "prompt": "Use case: game texture asset. Generate ONE wide the final sprite size wall TOP strip seen exactly overhead; the built courses and long axes lie horizontally EAST-WEST left-to-right for a stone-age settlement game. Construction style: rough stacked oak logs with bark; horizontal cylindrical logs, not smooth milled planks. Material: oak. Era: Stone Age. Style reference is only for ink/watercolor rendering and palette, not its composition. Natural-history illustration, warm restrained earth colors, dark-brown hand-inked contours and broad watercolor planes; no photorealism, no 3D rendering. Lighting stays upper-left: upper-left facets subtly lit, lower-right facets shaded. Seamless left-to-right. Keep left/right boundary colors and course positions compatible. No wall face, no visible log ends, no planks or decking No text, frame, ground, scenery, labels or watermark. Broad readable forms surviving reduction to the final sprite size. CRITICAL RETRY CORRECTION: The generated image must be entirely filled with the material from edge to edge, including every corner. DO NOT place a strip or rectangle on a white background. DO NOT add any white or blank gutters, letterboxing, padding or margin. The texture IS the whole canvas. Its exact pixel dimensions will be normalized later, so fill the available image shape completely. Keep opposite repeating edges compatible and identical in average color; no global left-to-right or top-to-bottom lighting gradient. Local upper-left facet lighting only. Use broad uniform material tones and low-contrast surface variation rather than different brightness at opposite edges.",
+  "prompt_sha256": "5d4b7a3de2625b4c28eec27fb335a08e2363931e2ced3007317fc6fedff251bf",
   "references": [
     {
       "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/crops/props_logs.png",
       "sha256": "c326f280444e9cf529221f7a9dbb897d493fbd4781c5ef5daf657d8c0f8ad458"
     }
   ],
-  "normalized_path": "/Users/rexxa/work/artpolish2-data/materials/normalized/log_top_ew_try3.png",
-  "normalized_sha256": "f1815257f13fc5fb2a7c1927409b7721759886bec643e6d4349d3bffe431b629",
+  "normalized_path": "/Users/rexxa/work/artpolish2-data/materials/normalized/log_top_ew_try2.png",
+  "normalized_sha256": "261deab20efa34dea6a8e917a51fb83dbb95a8c208b1600e6b9f09c8450c48b5",
   "size": [
     256,
     64
   ],
   "operations": [
-    "full-frame LANCZOS resize (1536, 1024) -> (256, 64)"
+    "full-frame LANCZOS resize (2059, 764) -> (256, 64)"
   ],
   "opaque": true,
   "seam_x": {
     "width": 256,
     "height": 64,
-    "interior_p95": 11.3484375,
+    "interior_p95": 15.833854166666665,
     "join_columns": [
       256,
       512,
       768
     ],
     "join_mad": [
-      29.802083333333332,
-      29.802083333333332,
-      29.802083333333332
+      25.713541666666668,
+      25.713541666666668,
+      25.713541666666668
     ],
-    "limit": 13.050703124999998,
+    "limit": 18.208932291666663,
     "passed": false
   },
   "seam_y": null,
@@ -46,5 +46,20 @@
   "numeric_pass": false,
   "owner_approval": "NOT_CLAIMED",
   "visual_rejection": "",
-  "candidate_ready": false
+  "candidate_ready": false,
+  "final_diagnostic_selection": {
+    "requested_by": "root: choose best visually valid failed diagnostic, preserving all historical failures",
+    "surface": "/Users/rexxa/work/artpolish2-data/materials/log_ew_selection_native_and_assembled.png",
+    "surface_sha256": "866e67e2592b06ee9b1c989545cea01f802469a00ec5c83f2ae2a89fff8eb558",
+    "view": "native256x64; four-repeat strip; actual12cellE-Wrenderer at native scale",
+    "attempt2_visual": "Fullbleed, horizontal log grain, no white gutters or independent visible defect; compatible with existing face and junction.",
+    "attempt3_visual": "Fullbleed, horizontal log grain, no white gutters; repeated strip has larger bright-course mismatch at joins.",
+    "selected_attempt": 2,
+    "selected_join_to_limit_ratio": 1.4121389027534852,
+    "superseded_attempt": 3,
+    "superseded_join_to_limit_ratio": 2.2835615098962982,
+    "reason": "Attempt2 has no separate visual rejection and lower joinMAD and join/limit ratio. Best available failed diagnostic; not accepted seamless art.",
+    "numeric_status": "FAIL",
+    "owner_approval": "NOT_CLAIMED"
+  }
 }

@@ -1,0 +1,1703 @@
+{
+  "schema_version": 1,
+  "generation_tool": "image_gen.imagegen",
+  "generation_calls": 39,
+  "scorecard_calls": 0,
+  "errors": 0,
+  "max_tries_per_texture": 3,
+  "originals_directory": "/Users/rexxa/work/artpolish2-data/materials/originals",
+  "ledger": "/Users/rexxa/work/artpolish2-data/materials/generation-ledger.jsonl",
+  "ledger_sha256": "f6c34a19704d29d55a5a7197311e0cf057d88a84f3c789176306e9c793f58f65",
+  "all_attempts_checks": "/Users/rexxa/work/artpolish2-data/materials/checks.json",
+  "all_attempts_checks_sha256": "95710c1dc259621f08d968e32811bbea820b4f537ac7cca6861c4f73210fa01f",
+  "selected": [
+    {
+      "id": "drystone/door_closed",
+      "attempt": 1,
+      "path": "art/materials/textures/drystone/door_closed.png",
+      "sha256": "5758040c4a94f9ad1f143e5f708f8f04c0941d4cb087c8dba108773791b61644",
+      "source_sha256": "79431345d84354d34996bad2e89ca1feafd9fefd969df17b7c36b565c8235a3d",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": null,
+      "seam_y": null,
+      "projection": {
+        "family": "door",
+        "anchor": [
+          32,
+          59
+        ],
+        "height_band": [
+          58,
+          62
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 3344,
+        "base_row": 59,
+        "base_error": 0,
+        "height": 60,
+        "gradient_x": -1.7012095150960658,
+        "gradient_y": -1.564171664122137,
+        "light_angle_degrees": 222.59688519849834,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "drystone/door_open",
+      "attempt": 1,
+      "path": "art/materials/textures/drystone/door_open.png",
+      "sha256": "feb3d8a4b9471e041a9d9df593c57acb8380049e078e97472f57812f8381952a",
+      "source_sha256": "d501234be070290674279925791ab60d407b649909bb58eb9aacd8b07cee20e2",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": null,
+      "seam_y": null,
+      "projection": {
+        "family": "door",
+        "anchor": [
+          32,
+          59
+        ],
+        "height_band": [
+          58,
+          62
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 2537,
+        "base_row": 59,
+        "base_error": 0,
+        "height": 60,
+        "gradient_x": -1.9645798679867983,
+        "gradient_y": -2.020190301548492,
+        "light_angle_degrees": 225.79955334303287,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "drystone/end",
+      "attempt": 2,
+      "path": "art/materials/textures/drystone/end.png",
+      "sha256": "e650e43d754dd224e0a7fe071c4cd4509085bda1ec5c1d85e093532a27223736",
+      "source_sha256": "d7d1b118e4b14bd6bf68066dec1e84fda59e6cf59ddc80480cfd59da9b1493c0",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": null,
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "drystone/face",
+      "attempt": 2,
+      "path": "art/materials/textures/drystone/face.png",
+      "sha256": "517c4f431303d3ae01362fb451a6757f77cc18797875760c0eabae945c73c682",
+      "source_sha256": "9e0be78d1432ff3845f73355c6aad659f23924fbb98756025f14e719a770965e",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": {
+        "width": 256,
+        "height": 44,
+        "interior_p95": 27.586363636363632,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          15.93939393939394,
+          15.93939393939394,
+          15.93939393939394
+        ],
+        "limit": 31.724318181818173,
+        "passed": true
+      },
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "drystone/junction",
+      "attempt": 1,
+      "path": "art/materials/textures/drystone/junction.png",
+      "sha256": "7f23847290dc8f0540c32acf456bdfee845e6aa5515ff900a135ac607f44d832",
+      "source_sha256": "c2a0f7369b22b82c6d7f9506dc043204b7301ddff802b7d71416cd69592b0e09",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": null,
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "drystone/top_ew",
+      "attempt": 2,
+      "path": "art/materials/textures/drystone/top_ew.png",
+      "sha256": "da69983a6b11042dd1bfb6f492636f194b4142b78d9b2523c030f636234efd20",
+      "source_sha256": "fbd5f990e5186a4beb25f0615b8264a72c39b05dcdb27e5322038fa80f352260",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": {
+        "width": 256,
+        "height": 64,
+        "interior_p95": 29.883854166666666,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          24.260416666666668,
+          24.260416666666668,
+          24.260416666666668
+        ],
+        "limit": 34.36643229166666,
+        "passed": true
+      },
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "drystone/top_ns",
+      "attempt": 1,
+      "path": "art/materials/textures/drystone/top_ns.png",
+      "sha256": "31ba8122524c41166e55514cd62b7025b85ee975dbaa03c52379fa085b21758e",
+      "source_sha256": "0019666fd4cd45c53c1ffc1af42c8adf3028698a753fe442fda486fb58370280",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": null,
+      "seam_y": {
+        "width": 256,
+        "height": 64,
+        "interior_p95": 30.010416666666664,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          34.375,
+          34.375,
+          34.375
+        ],
+        "limit": 34.51197916666666,
+        "passed": true
+      },
+      "projection": null
+    },
+    {
+      "id": "fired_brick/door_closed",
+      "attempt": 1,
+      "path": "art/materials/textures/fired_brick/door_closed.png",
+      "sha256": "3f4d999ecd53c868462a13dfb0833829da0a5a706103e31052b7f37faa0f3b81",
+      "source_sha256": "2a887fbeb2fab114846eb4c14c8bddd5711981ef07bbd1bf2d8f3f97275b9d0f",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": null,
+      "seam_y": null,
+      "projection": {
+        "family": "door",
+        "anchor": [
+          32,
+          59
+        ],
+        "height_band": [
+          58,
+          62
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 3313,
+        "base_row": 59,
+        "base_error": 0,
+        "height": 60,
+        "gradient_x": -1.3887395878191326,
+        "gradient_y": -1.671059987669544,
+        "light_angle_degrees": 230.2716189151295,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "fired_brick/door_open",
+      "attempt": 1,
+      "path": "art/materials/textures/fired_brick/door_open.png",
+      "sha256": "4559d039d0d5e980ef70c633d830f2cffd7a9341453054956bfadd8894e92dac",
+      "source_sha256": "f9f4df138076186e673fd6815a5965e0d20cacf068d395767174521420d3befd",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": null,
+      "seam_y": null,
+      "projection": {
+        "family": "door",
+        "anchor": [
+          32,
+          59
+        ],
+        "height_band": [
+          58,
+          62
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1956,
+        "base_row": 59,
+        "base_error": 0,
+        "height": 60,
+        "gradient_x": -2.6186870460704608,
+        "gradient_y": -1.475882433862434,
+        "light_angle_degrees": 209.40544870327088,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "fired_brick/end",
+      "attempt": 1,
+      "path": "art/materials/textures/fired_brick/end.png",
+      "sha256": "9adef41bdd1e24a6d37d0d9bc6bf24a9ed88329adde2c72d5809628b303d804a",
+      "source_sha256": "893e985e9985f2965b09338da21c7609168caeacc2dd9c1987ae48aebf838832",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": null,
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "fired_brick/face",
+      "attempt": 1,
+      "path": "art/materials/textures/fired_brick/face.png",
+      "sha256": "77686d330384f994bd79a959ec4f243d53041687c76a811ea4cd6862a46d3683",
+      "source_sha256": "c5a0f92dd8bf696a130ffb8ca33b773db212e994cb51e18c4fa973b667cbaf64",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": {
+        "width": 256,
+        "height": 44,
+        "interior_p95": 23.7560606060606,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          18.545454545454547,
+          18.545454545454547,
+          18.545454545454547
+        ],
+        "limit": 27.319469696969687,
+        "passed": true
+      },
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "fired_brick/junction",
+      "attempt": 1,
+      "path": "art/materials/textures/fired_brick/junction.png",
+      "sha256": "7ffe232f4979e6af79dd63f3fa6c388a7c36685e66c62372c4b29d755c9738b3",
+      "source_sha256": "d1dac3b2011b169e7d7b58050511750cbe6fdcacf68e506a6a88a80563a616f7",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": null,
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "fired_brick/top_ew",
+      "attempt": 1,
+      "path": "art/materials/textures/fired_brick/top_ew.png",
+      "sha256": "df47bf04ee758ce51f0ec8f91506f29bcdf6abcaedbac878ab594153747d4faa",
+      "source_sha256": "93b3d34792db0fab4a6cc85a2bcbb57e82c009a4e45e906340942427d4d8d57f",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": {
+        "width": 256,
+        "height": 64,
+        "interior_p95": 20.733854166666664,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          13.28125,
+          13.28125,
+          13.28125
+        ],
+        "limit": 23.84393229166666,
+        "passed": true
+      },
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "fired_brick/top_ns",
+      "attempt": 1,
+      "path": "art/materials/textures/fired_brick/top_ns.png",
+      "sha256": "6fe819321f7ea4a793f278b09f5b0f037b4c2722f1b243008b435ee230a661bf",
+      "source_sha256": "ab43145850bfa873eb700aa16aaf9e5d6ba087488f2ecdfbd224ead01dee67aa",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": null,
+      "seam_y": {
+        "width": 256,
+        "height": 64,
+        "interior_p95": 21.799479166666664,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          7.614583333333333,
+          7.614583333333333,
+          7.614583333333333
+        ],
+        "limit": 25.069401041666662,
+        "passed": true
+      },
+      "projection": null
+    },
+    {
+      "id": "log/door_closed",
+      "attempt": 1,
+      "path": "art/materials/textures/log/door_closed.png",
+      "sha256": "b02d7a683b528d15361ff498121aea489d58aa3e055e23ade24a69ea322c14b2",
+      "source_sha256": "d23df0fbf23aa12345cef24133039b50d46e9fe43194e8cb1f490b845034ed02",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": null,
+      "seam_y": null,
+      "projection": {
+        "family": "door",
+        "anchor": [
+          32,
+          59
+        ],
+        "height_band": [
+          58,
+          62
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 3495,
+        "base_row": 59,
+        "base_error": 0,
+        "height": 58,
+        "gradient_x": -0.9252805240174673,
+        "gradient_y": -0.6928966949400411,
+        "light_angle_degrees": 216.82771952839238,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "log/door_open",
+      "attempt": 1,
+      "path": "art/materials/textures/log/door_open.png",
+      "sha256": "e52c8d34c1443a50103bb06f880fecedf5a00cf1173e21500b2d90d12b69857c",
+      "source_sha256": "072057f6a3a7151fe63a8c42632406d62049e0e40e7b129841987866cac56ccf",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": null,
+      "seam_y": null,
+      "projection": {
+        "family": "door",
+        "anchor": [
+          32,
+          59
+        ],
+        "height_band": [
+          58,
+          62
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 2505,
+        "base_row": 59,
+        "base_error": 0,
+        "height": 60,
+        "gradient_x": -2.2909409261576976,
+        "gradient_y": -1.4362997938144326,
+        "light_angle_degrees": 212.08555475718268,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "log/end",
+      "attempt": 2,
+      "path": "art/materials/textures/log/end.png",
+      "sha256": "2b0524ffb511c3f3ce20cc90fe4d9a123bc5669f15347703093c7fd9688653a3",
+      "source_sha256": "a6b854545a80ce85c58d72c3e32f44a2e420d7af5293e2fd9666a46ec857d9b1",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": null,
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "log/face",
+      "attempt": 1,
+      "path": "art/materials/textures/log/face.png",
+      "sha256": "3ed372b6c9cd7a9500c881178cc0302daf36522c6a8045925b6285933d2a30be",
+      "source_sha256": "6b0f924aaa57f89435977c1aa4d74d1fccd2eaaad10e534ef9459e4533d5c48f",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": {
+        "width": 256,
+        "height": 44,
+        "interior_p95": 15.229545454545452,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          9.325757575757576,
+          9.325757575757576,
+          9.325757575757576
+        ],
+        "limit": 17.513977272727267,
+        "passed": true
+      },
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "log/junction",
+      "attempt": 1,
+      "path": "art/materials/textures/log/junction.png",
+      "sha256": "de583b4b0fd6c30c074e9e7c2de14cd2d01c7cf0d0633aff0da9aa400fa3c728",
+      "source_sha256": "f26724b3394dd9d842a5813ee90bc87290039271a571b495efd6f338ef89e51d",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": null,
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "log/top_ew",
+      "attempt": 2,
+      "path": "art/materials/textures/log/top_ew.png",
+      "sha256": "261deab20efa34dea6a8e917a51fb83dbb95a8c208b1600e6b9f09c8450c48b5",
+      "source_sha256": "4d468fd2fed6a3b278dbe95bd946c7c011566a5267523b88c37d52a8af9cfde9",
+      "numeric_pass": false,
+      "candidate_ready": false,
+      "seam_x": {
+        "width": 256,
+        "height": 64,
+        "interior_p95": 15.833854166666665,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          25.713541666666668,
+          25.713541666666668,
+          25.713541666666668
+        ],
+        "limit": 18.208932291666663,
+        "passed": false
+      },
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "log/top_ns",
+      "attempt": 1,
+      "path": "art/materials/textures/log/top_ns.png",
+      "sha256": "00f92664cacf52828bb5afa665a5936576adf5b063764508a10d8c2dfe2cfbe3",
+      "source_sha256": "d8e10f878377758925a24eef1047e9df2e77f633ff27fbd13695af55bcb910e9",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": null,
+      "seam_y": {
+        "width": 256,
+        "height": 64,
+        "interior_p95": 15.247916666666663,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          17.401041666666668,
+          17.401041666666668,
+          17.401041666666668
+        ],
+        "limit": 17.53510416666666,
+        "passed": true
+      },
+      "projection": null
+    },
+    {
+      "id": "mud_brick/door_closed",
+      "attempt": 1,
+      "path": "art/materials/textures/mud_brick/door_closed.png",
+      "sha256": "49af5bd8dc6e17cc6ca45c04b8fa9a3c7d52b7db569989ccd6066a01a4d20aff",
+      "source_sha256": "c9e7a385a0e4c1a4b693d60ffdba66ba2ea33239c6738fd05f1b3a1cc7693a94",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": null,
+      "seam_y": null,
+      "projection": {
+        "family": "door",
+        "anchor": [
+          32,
+          59
+        ],
+        "height_band": [
+          58,
+          62
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 3624,
+        "base_row": 59,
+        "base_error": 0,
+        "height": 60,
+        "gradient_x": -1.766045436675091,
+        "gradient_y": -1.2904199438202246,
+        "light_angle_degrees": 216.15497656011175,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "mud_brick/door_open",
+      "attempt": 1,
+      "path": "art/materials/textures/mud_brick/door_open.png",
+      "sha256": "2b29cf83fc38c7b05b02db3181d6dc1c21d1eb9cb3da10a79057f52d6338eb50",
+      "source_sha256": "041449333614b57a32ba127b562add10023ec9dc4527c6cdf4739781d8b185b7",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": null,
+      "seam_y": null,
+      "projection": {
+        "family": "door",
+        "anchor": [
+          32,
+          59
+        ],
+        "height_band": [
+          58,
+          62
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 2484,
+        "base_row": 59,
+        "base_error": 0,
+        "height": 60,
+        "gradient_x": -3.015627679324894,
+        "gradient_y": -2.1296132669983416,
+        "light_angle_degrees": 215.22944680549998,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "mud_brick/end",
+      "attempt": 1,
+      "path": "art/materials/textures/mud_brick/end.png",
+      "sha256": "120bbbd936b5fe120a862293faf0a42a8f184ab1a50767b42f942810571b420b",
+      "source_sha256": "c3f4295fef95579513ba1872936cf2742a81401dffc61f51dc0c35648bc582f3",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": null,
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "mud_brick/face",
+      "attempt": 2,
+      "path": "art/materials/textures/mud_brick/face.png",
+      "sha256": "a74ddf28cf41cddc2e71ad1ef7fc97f5fb5519d1399ca0c165da643791c5a464",
+      "source_sha256": "44e465c100e271b86fbc409defbe363bda2474c331e5e178a952b030a4ba70b6",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": {
+        "width": 256,
+        "height": 44,
+        "interior_p95": 18.542424242424243,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          12.303030303030303,
+          12.303030303030303,
+          12.303030303030303
+        ],
+        "limit": 21.32378787878788,
+        "passed": true
+      },
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "mud_brick/junction",
+      "attempt": 1,
+      "path": "art/materials/textures/mud_brick/junction.png",
+      "sha256": "94c90a7896230612bc719faf02c10b47ef1f1cac21a22dadfcc1f4e1d1b58953",
+      "source_sha256": "edc9a43c99cefe9c563c42ee43e56ca3ca74d620e00a159b3739840d6758ab17",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": null,
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "mud_brick/top_ew",
+      "attempt": 2,
+      "path": "art/materials/textures/mud_brick/top_ew.png",
+      "sha256": "17e520a1822ea3f7128579042ef8115540c539c0e08360755e8000f0827cfd72",
+      "source_sha256": "2ee1e8422f4e3c9307aaf042acee6565c0b81b4f0d8202c39c4698bccc6d1453",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": {
+        "width": 256,
+        "height": 64,
+        "interior_p95": 14.303645833333327,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          7.869791666666667,
+          7.869791666666667,
+          7.869791666666667
+        ],
+        "limit": 16.449192708333324,
+        "passed": true
+      },
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "mud_brick/top_ns",
+      "attempt": 3,
+      "path": "art/materials/textures/mud_brick/top_ns.png",
+      "sha256": "fa263dccd94860c3809e3371f35f55b272ece29140e8444cd32c7c2155c7878e",
+      "source_sha256": "44ee4587a19d0ed5d8b20939936960830fc363f4af86b6f1ba090a1881d1ee12",
+      "numeric_pass": false,
+      "candidate_ready": false,
+      "seam_x": null,
+      "seam_y": {
+        "width": 256,
+        "height": 64,
+        "interior_p95": 17.384895833333328,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          26.119791666666668,
+          26.119791666666668,
+          26.119791666666668
+        ],
+        "limit": 19.992630208333324,
+        "passed": false
+      },
+      "projection": null
+    },
+    {
+      "id": "packed_earth/floor",
+      "attempt": 1,
+      "path": "art/materials/textures/packed_earth/floor.png",
+      "sha256": "c4cef172345fbbdb287c3ba7c83b6116e00c1b77effc44995593d9905d1693c1",
+      "source_sha256": "f4712a40826e4d90889e3aeb48b01d2375b33572fcb9de2e263d035d7127ad97",
+      "numeric_pass": true,
+      "candidate_ready": true,
+      "seam_x": {
+        "width": 256,
+        "height": 256,
+        "interior_p95": 30.73138020833333,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          21.119791666666668,
+          21.119791666666668,
+          21.119791666666668
+        ],
+        "limit": 35.34108723958333,
+        "passed": true
+      },
+      "seam_y": {
+        "width": 256,
+        "height": 256,
+        "interior_p95": 31.71744791666666,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          22.244791666666668,
+          22.244791666666668,
+          22.244791666666668
+        ],
+        "limit": 36.47506510416666,
+        "passed": true
+      },
+      "projection": null
+    }
+  ],
+  "attempt_summary": [
+    {
+      "id": "drystone/door_closed",
+      "attempt": 1,
+      "source_sha256": "79431345d84354d34996bad2e89ca1feafd9fefd969df17b7c36b565c8235a3d",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": null,
+      "seam_y": null,
+      "projection": {
+        "family": "door",
+        "anchor": [
+          32,
+          59
+        ],
+        "height_band": [
+          58,
+          62
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 3344,
+        "base_row": 59,
+        "base_error": 0,
+        "height": 60,
+        "gradient_x": -1.7012095150960658,
+        "gradient_y": -1.564171664122137,
+        "light_angle_degrees": 222.59688519849834,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "drystone/door_open",
+      "attempt": 1,
+      "source_sha256": "d501234be070290674279925791ab60d407b649909bb58eb9aacd8b07cee20e2",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": null,
+      "seam_y": null,
+      "projection": {
+        "family": "door",
+        "anchor": [
+          32,
+          59
+        ],
+        "height_band": [
+          58,
+          62
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 2537,
+        "base_row": 59,
+        "base_error": 0,
+        "height": 60,
+        "gradient_x": -1.9645798679867983,
+        "gradient_y": -2.020190301548492,
+        "light_angle_degrees": 225.79955334303287,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "drystone/end",
+      "attempt": 1,
+      "source_sha256": "a525b526a3d4662b2915272663eb229adccb140fb358cf2929b8490109cf1ec8",
+      "numeric_pass": true,
+      "visual_rejection": "Opaque white gutter around face end.",
+      "seam_x": null,
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "drystone/end",
+      "attempt": 2,
+      "source_sha256": "d7d1b118e4b14bd6bf68066dec1e84fda59e6cf59ddc80480cfd59da9b1493c0",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": null,
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "drystone/face",
+      "attempt": 1,
+      "source_sha256": "8815a3f622fe2e600f471dfd196a9c2f20808cd40bf3126142b625004c1111c6",
+      "numeric_pass": true,
+      "visual_rejection": "Opaque white bottom gutter; material does not fill canvas.",
+      "seam_x": {
+        "width": 256,
+        "height": 44,
+        "interior_p95": 20.313636363636363,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          21.696969696969695,
+          21.696969696969695,
+          21.696969696969695
+        ],
+        "limit": 23.360681818181813,
+        "passed": true
+      },
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "drystone/face",
+      "attempt": 2,
+      "source_sha256": "9e0be78d1432ff3845f73355c6aad659f23924fbb98756025f14e719a770965e",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": {
+        "width": 256,
+        "height": 44,
+        "interior_p95": 27.586363636363632,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          15.93939393939394,
+          15.93939393939394,
+          15.93939393939394
+        ],
+        "limit": 31.724318181818173,
+        "passed": true
+      },
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "drystone/junction",
+      "attempt": 1,
+      "source_sha256": "c2a0f7369b22b82c6d7f9506dc043204b7301ddff802b7d71416cd69592b0e09",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": null,
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "drystone/top_ew",
+      "attempt": 1,
+      "source_sha256": "61665693c7741408c74fbb0745e40cafeb21b8f7b9d58ef66931c9601038306e",
+      "numeric_pass": false,
+      "visual_rejection": "",
+      "seam_x": {
+        "width": 256,
+        "height": 64,
+        "interior_p95": 29.297395833333326,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          37.989583333333336,
+          37.989583333333336,
+          37.989583333333336
+        ],
+        "limit": 33.69200520833332,
+        "passed": false
+      },
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "drystone/top_ew",
+      "attempt": 2,
+      "source_sha256": "fbd5f990e5186a4beb25f0615b8264a72c39b05dcdb27e5322038fa80f352260",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": {
+        "width": 256,
+        "height": 64,
+        "interior_p95": 29.883854166666666,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          24.260416666666668,
+          24.260416666666668,
+          24.260416666666668
+        ],
+        "limit": 34.36643229166666,
+        "passed": true
+      },
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "drystone/top_ns",
+      "attempt": 1,
+      "source_sha256": "0019666fd4cd45c53c1ffc1af42c8adf3028698a753fe442fda486fb58370280",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": null,
+      "seam_y": {
+        "width": 256,
+        "height": 64,
+        "interior_p95": 30.010416666666664,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          34.375,
+          34.375,
+          34.375
+        ],
+        "limit": 34.51197916666666,
+        "passed": true
+      },
+      "projection": null
+    },
+    {
+      "id": "fired_brick/door_closed",
+      "attempt": 1,
+      "source_sha256": "2a887fbeb2fab114846eb4c14c8bddd5711981ef07bbd1bf2d8f3f97275b9d0f",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": null,
+      "seam_y": null,
+      "projection": {
+        "family": "door",
+        "anchor": [
+          32,
+          59
+        ],
+        "height_band": [
+          58,
+          62
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 3313,
+        "base_row": 59,
+        "base_error": 0,
+        "height": 60,
+        "gradient_x": -1.3887395878191326,
+        "gradient_y": -1.671059987669544,
+        "light_angle_degrees": 230.2716189151295,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "fired_brick/door_open",
+      "attempt": 1,
+      "source_sha256": "f9f4df138076186e673fd6815a5965e0d20cacf068d395767174521420d3befd",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": null,
+      "seam_y": null,
+      "projection": {
+        "family": "door",
+        "anchor": [
+          32,
+          59
+        ],
+        "height_band": [
+          58,
+          62
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1956,
+        "base_row": 59,
+        "base_error": 0,
+        "height": 60,
+        "gradient_x": -2.6186870460704608,
+        "gradient_y": -1.475882433862434,
+        "light_angle_degrees": 209.40544870327088,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "fired_brick/end",
+      "attempt": 1,
+      "source_sha256": "893e985e9985f2965b09338da21c7609168caeacc2dd9c1987ae48aebf838832",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": null,
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "fired_brick/face",
+      "attempt": 1,
+      "source_sha256": "c5a0f92dd8bf696a130ffb8ca33b773db212e994cb51e18c4fa973b667cbaf64",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": {
+        "width": 256,
+        "height": 44,
+        "interior_p95": 23.7560606060606,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          18.545454545454547,
+          18.545454545454547,
+          18.545454545454547
+        ],
+        "limit": 27.319469696969687,
+        "passed": true
+      },
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "fired_brick/junction",
+      "attempt": 1,
+      "source_sha256": "d1dac3b2011b169e7d7b58050511750cbe6fdcacf68e506a6a88a80563a616f7",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": null,
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "fired_brick/top_ew",
+      "attempt": 1,
+      "source_sha256": "93b3d34792db0fab4a6cc85a2bcbb57e82c009a4e45e906340942427d4d8d57f",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": {
+        "width": 256,
+        "height": 64,
+        "interior_p95": 20.733854166666664,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          13.28125,
+          13.28125,
+          13.28125
+        ],
+        "limit": 23.84393229166666,
+        "passed": true
+      },
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "fired_brick/top_ns",
+      "attempt": 1,
+      "source_sha256": "ab43145850bfa873eb700aa16aaf9e5d6ba087488f2ecdfbd224ead01dee67aa",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": null,
+      "seam_y": {
+        "width": 256,
+        "height": 64,
+        "interior_p95": 21.799479166666664,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          7.614583333333333,
+          7.614583333333333,
+          7.614583333333333
+        ],
+        "limit": 25.069401041666662,
+        "passed": true
+      },
+      "projection": null
+    },
+    {
+      "id": "log/door_closed",
+      "attempt": 1,
+      "source_sha256": "d23df0fbf23aa12345cef24133039b50d46e9fe43194e8cb1f490b845034ed02",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": null,
+      "seam_y": null,
+      "projection": {
+        "family": "door",
+        "anchor": [
+          32,
+          59
+        ],
+        "height_band": [
+          58,
+          62
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 3495,
+        "base_row": 59,
+        "base_error": 0,
+        "height": 58,
+        "gradient_x": -0.9252805240174673,
+        "gradient_y": -0.6928966949400411,
+        "light_angle_degrees": 216.82771952839238,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "log/door_open",
+      "attempt": 1,
+      "source_sha256": "072057f6a3a7151fe63a8c42632406d62049e0e40e7b129841987866cac56ccf",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": null,
+      "seam_y": null,
+      "projection": {
+        "family": "door",
+        "anchor": [
+          32,
+          59
+        ],
+        "height_band": [
+          58,
+          62
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 2505,
+        "base_row": 59,
+        "base_error": 0,
+        "height": 60,
+        "gradient_x": -2.2909409261576976,
+        "gradient_y": -1.4362997938144326,
+        "light_angle_degrees": 212.08555475718268,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "log/end",
+      "attempt": 1,
+      "source_sha256": "de42a0a1aff2b3233460614af9ed4deab9fdd7cbf924ef4856aa131b4617d703",
+      "numeric_pass": true,
+      "visual_rejection": "Opaque white gutter around face end.",
+      "seam_x": null,
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "log/end",
+      "attempt": 2,
+      "source_sha256": "a6b854545a80ce85c58d72c3e32f44a2e420d7af5293e2fd9666a46ec857d9b1",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": null,
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "log/face",
+      "attempt": 1,
+      "source_sha256": "6b0f924aaa57f89435977c1aa4d74d1fccd2eaaad10e534ef9459e4533d5c48f",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": {
+        "width": 256,
+        "height": 44,
+        "interior_p95": 15.229545454545452,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          9.325757575757576,
+          9.325757575757576,
+          9.325757575757576
+        ],
+        "limit": 17.513977272727267,
+        "passed": true
+      },
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "log/junction",
+      "attempt": 1,
+      "source_sha256": "f26724b3394dd9d842a5813ee90bc87290039271a571b495efd6f338ef89e51d",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": null,
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "log/top_ew",
+      "attempt": 1,
+      "source_sha256": "65448b6e08e052caf54cea377c1442e8d944415a10d6b3a5a57b7ab999657e66",
+      "numeric_pass": false,
+      "visual_rejection": "",
+      "seam_x": {
+        "width": 256,
+        "height": 64,
+        "interior_p95": 17.986979166666668,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          30.822916666666668,
+          30.822916666666668,
+          30.822916666666668
+        ],
+        "limit": 20.685026041666667,
+        "passed": false
+      },
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "log/top_ew",
+      "attempt": 2,
+      "source_sha256": "4d468fd2fed6a3b278dbe95bd946c7c011566a5267523b88c37d52a8af9cfde9",
+      "numeric_pass": false,
+      "visual_rejection": "",
+      "seam_x": {
+        "width": 256,
+        "height": 64,
+        "interior_p95": 15.833854166666665,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          25.713541666666668,
+          25.713541666666668,
+          25.713541666666668
+        ],
+        "limit": 18.208932291666663,
+        "passed": false
+      },
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "log/top_ew",
+      "attempt": 3,
+      "source_sha256": "1e5f38e40e6370f99641b02520e34b10f4403df155f553a6d09638f840eeb1cf",
+      "numeric_pass": false,
+      "visual_rejection": "",
+      "seam_x": {
+        "width": 256,
+        "height": 64,
+        "interior_p95": 11.3484375,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          29.802083333333332,
+          29.802083333333332,
+          29.802083333333332
+        ],
+        "limit": 13.050703124999998,
+        "passed": false
+      },
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "log/top_ns",
+      "attempt": 1,
+      "source_sha256": "d8e10f878377758925a24eef1047e9df2e77f633ff27fbd13695af55bcb910e9",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": null,
+      "seam_y": {
+        "width": 256,
+        "height": 64,
+        "interior_p95": 15.247916666666663,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          17.401041666666668,
+          17.401041666666668,
+          17.401041666666668
+        ],
+        "limit": 17.53510416666666,
+        "passed": true
+      },
+      "projection": null
+    },
+    {
+      "id": "mud_brick/door_closed",
+      "attempt": 1,
+      "source_sha256": "c9e7a385a0e4c1a4b693d60ffdba66ba2ea33239c6738fd05f1b3a1cc7693a94",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": null,
+      "seam_y": null,
+      "projection": {
+        "family": "door",
+        "anchor": [
+          32,
+          59
+        ],
+        "height_band": [
+          58,
+          62
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 3624,
+        "base_row": 59,
+        "base_error": 0,
+        "height": 60,
+        "gradient_x": -1.766045436675091,
+        "gradient_y": -1.2904199438202246,
+        "light_angle_degrees": 216.15497656011175,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "mud_brick/door_open",
+      "attempt": 1,
+      "source_sha256": "041449333614b57a32ba127b562add10023ec9dc4527c6cdf4739781d8b185b7",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": null,
+      "seam_y": null,
+      "projection": {
+        "family": "door",
+        "anchor": [
+          32,
+          59
+        ],
+        "height_band": [
+          58,
+          62
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 2484,
+        "base_row": 59,
+        "base_error": 0,
+        "height": 60,
+        "gradient_x": -3.015627679324894,
+        "gradient_y": -2.1296132669983416,
+        "light_angle_degrees": 215.22944680549998,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      }
+    },
+    {
+      "id": "mud_brick/end",
+      "attempt": 1,
+      "source_sha256": "c3f4295fef95579513ba1872936cf2742a81401dffc61f51dc0c35648bc582f3",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": null,
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "mud_brick/face",
+      "attempt": 1,
+      "source_sha256": "b9345544b291dcf5b146cd0322a0b78cdfdbb2c54745279092466e9700a42c2c",
+      "numeric_pass": true,
+      "visual_rejection": "Opaque white top/bottom gutters.",
+      "seam_x": {
+        "width": 256,
+        "height": 44,
+        "interior_p95": 10.740151515151513,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          9.772727272727273,
+          9.772727272727273,
+          9.772727272727273
+        ],
+        "limit": 12.35117424242424,
+        "passed": true
+      },
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "mud_brick/face",
+      "attempt": 2,
+      "source_sha256": "44e465c100e271b86fbc409defbe363bda2474c331e5e178a952b030a4ba70b6",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": {
+        "width": 256,
+        "height": 44,
+        "interior_p95": 18.542424242424243,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          12.303030303030303,
+          12.303030303030303,
+          12.303030303030303
+        ],
+        "limit": 21.32378787878788,
+        "passed": true
+      },
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "mud_brick/junction",
+      "attempt": 1,
+      "source_sha256": "edc9a43c99cefe9c563c42ee43e56ca3ca74d620e00a159b3739840d6758ab17",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": null,
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "mud_brick/top_ew",
+      "attempt": 1,
+      "source_sha256": "8251f08b36a9b4dcd1f5fcc28bdfdac9e74e4ef7b3a20378a0aa01305e6e4664",
+      "numeric_pass": false,
+      "visual_rejection": "Opaque white top/bottom gutters.",
+      "seam_x": {
+        "width": 256,
+        "height": 64,
+        "interior_p95": 9.732812499999994,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          24.302083333333332,
+          24.302083333333332,
+          24.302083333333332
+        ],
+        "limit": 11.192734374999993,
+        "passed": false
+      },
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "mud_brick/top_ew",
+      "attempt": 2,
+      "source_sha256": "2ee1e8422f4e3c9307aaf042acee6565c0b81b4f0d8202c39c4698bccc6d1453",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": {
+        "width": 256,
+        "height": 64,
+        "interior_p95": 14.303645833333327,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          7.869791666666667,
+          7.869791666666667,
+          7.869791666666667
+        ],
+        "limit": 16.449192708333324,
+        "passed": true
+      },
+      "seam_y": null,
+      "projection": null
+    },
+    {
+      "id": "mud_brick/top_ns",
+      "attempt": 1,
+      "source_sha256": "3979f4c14d9867e0ec4b6f992aabf6ee713d29efd5ae0892fb5be80e78884719",
+      "numeric_pass": true,
+      "visual_rejection": "Opaque white left/right gutters.",
+      "seam_x": null,
+      "seam_y": {
+        "width": 256,
+        "height": 64,
+        "interior_p95": 13.863541666666654,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          9.395833333333334,
+          9.395833333333334,
+          9.395833333333334
+        ],
+        "limit": 15.943072916666651,
+        "passed": true
+      },
+      "projection": null
+    },
+    {
+      "id": "mud_brick/top_ns",
+      "attempt": 2,
+      "source_sha256": "5d7e323bdc67d47bf70d1d05d0c6f9c1b7f1e66bccee6dd72f8e4550ae7ed918",
+      "numeric_pass": true,
+      "visual_rejection": "Bricks run across rather than along the north-south wall; third attempt corrects long-axis geometry.",
+      "seam_x": null,
+      "seam_y": {
+        "width": 256,
+        "height": 64,
+        "interior_p95": 34.49479166666664,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          26.838541666666668,
+          26.838541666666668,
+          26.838541666666668
+        ],
+        "limit": 39.66901041666664,
+        "passed": true
+      },
+      "projection": null
+    },
+    {
+      "id": "mud_brick/top_ns",
+      "attempt": 3,
+      "source_sha256": "44ee4587a19d0ed5d8b20939936960830fc363f4af86b6f1ba090a1881d1ee12",
+      "numeric_pass": false,
+      "visual_rejection": "",
+      "seam_x": null,
+      "seam_y": {
+        "width": 256,
+        "height": 64,
+        "interior_p95": 17.384895833333328,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          26.119791666666668,
+          26.119791666666668,
+          26.119791666666668
+        ],
+        "limit": 19.992630208333324,
+        "passed": false
+      },
+      "projection": null
+    },
+    {
+      "id": "packed_earth/floor",
+      "attempt": 1,
+      "source_sha256": "f4712a40826e4d90889e3aeb48b01d2375b33572fcb9de2e263d035d7127ad97",
+      "numeric_pass": true,
+      "visual_rejection": "",
+      "seam_x": {
+        "width": 256,
+        "height": 256,
+        "interior_p95": 30.73138020833333,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          21.119791666666668,
+          21.119791666666668,
+          21.119791666666668
+        ],
+        "limit": 35.34108723958333,
+        "passed": true
+      },
+      "seam_y": {
+        "width": 256,
+        "height": 256,
+        "interior_p95": 31.71744791666666,
+        "join_columns": [
+          256,
+          512,
+          768
+        ],
+        "join_mad": [
+          22.244791666666668,
+          22.244791666666668,
+          22.244791666666668
+        ],
+        "limit": 36.47506510416666,
+        "passed": true
+      },
+      "projection": null
+    }
+  ],
+  "owner_approval": "NOT_CLAIMED",
+  "technical_status": "PARTIAL_FAIL",
+  "diagnostic_selection_overrides": [
+    {
+      "id": "log/top_ew",
+      "requested_by": "root: choose best visually valid failed diagnostic, preserving all historical failures",
+      "surface": "/Users/rexxa/work/artpolish2-data/materials/log_ew_selection_native_and_assembled.png",
+      "surface_sha256": "866e67e2592b06ee9b1c989545cea01f802469a00ec5c83f2ae2a89fff8eb558",
+      "view": "native256x64; four-repeat strip; actual12cellE-Wrenderer at native scale",
+      "attempt2_visual": "Fullbleed, horizontal log grain, no white gutters or independent visible defect; compatible with existing face and junction.",
+      "attempt3_visual": "Fullbleed, horizontal log grain, no white gutters; repeated strip has larger bright-course mismatch at joins.",
+      "selected_attempt": 2,
+      "selected_join_to_limit_ratio": 1.4121389027534852,
+      "superseded_attempt": 3,
+      "superseded_join_to_limit_ratio": 2.2835615098962982,
+      "reason": "Attempt2 has no separate visual rejection and lower joinMAD and join/limit ratio. Best available failed diagnostic; not accepted seamless art.",
+      "numeric_status": "FAIL",
+      "owner_approval": "NOT_CLAIMED"
+    }
+  ]
+}
