@@ -1,0 +1,398 @@
+{
+  "status": "OWNER_DECISION_PENDING",
+  "selected": {
+    "wolf": 2,
+    "deer": 2
+  },
+  "frames": [
+    {
+      "species": "wolf",
+      "facing": "S",
+      "pose": "stand",
+      "image": "art/animal/polish/wolf/try2/S/stand.png",
+      "image_sha256": "ae15a6109060e0d439704e8ea263dd9b41a550ead0992962d48377fd35e8f33b",
+      "metadata": "art/animal/polish/wolf/try2/S/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "structural_pass": true,
+      "status": "CANDIDATE_OWNER_DECISION_PENDING"
+    },
+    {
+      "species": "wolf",
+      "facing": "S",
+      "pose": "walk",
+      "image": "art/animal/polish/wolf/try2/S/walk.png",
+      "image_sha256": "c52461c32cd91a6e7fc4aecd181bca58e7666a0a21e88b603a1256938bbb4a5c",
+      "metadata": "art/animal/polish/wolf/try2/S/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "structural_pass": true,
+      "status": "CANDIDATE_OWNER_DECISION_PENDING"
+    },
+    {
+      "species": "wolf",
+      "facing": "S",
+      "pose": "run",
+      "image": "art/animal/polish/wolf/try2/S/run.png",
+      "image_sha256": "2b6053a9eab0887a04c72d9c35cfe65b99641d87332a93cf818422c9d8a64590",
+      "metadata": "art/animal/polish/wolf/try2/S/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "structural_pass": true,
+      "status": "CANDIDATE_OWNER_DECISION_PENDING"
+    },
+    {
+      "species": "wolf",
+      "facing": "S",
+      "pose": "attack",
+      "image": "art/animal/polish/wolf/try2/S/attack.png",
+      "image_sha256": "d1d04453cfd6c048b82e88583f7636163cbe84ccbaa3051450c8f053de8eb5ea",
+      "metadata": "art/animal/polish/wolf/try2/S/attack.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "structural_pass": true,
+      "status": "CANDIDATE_OWNER_DECISION_PENDING"
+    },
+    {
+      "species": "wolf",
+      "facing": "S",
+      "pose": "dead",
+      "image": "art/animal/polish/wolf/try2/S/dead.png",
+      "image_sha256": "133255d7b9fb3eb745e713f1525c54fb4fa99733b5284c573e2ce8b1a413f0b2",
+      "metadata": "art/animal/polish/wolf/try2/S/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "structural_pass": true,
+      "status": "CANDIDATE_OWNER_DECISION_PENDING"
+    },
+    {
+      "species": "wolf",
+      "facing": "E",
+      "pose": "stand",
+      "image": "art/animal/polish/wolf/try2/E/stand.png",
+      "image_sha256": "bdf09c6d3d1d066847f7fadbd101dacf60a88de1751749ca48121ff35c3028de",
+      "metadata": "art/animal/polish/wolf/try2/E/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "structural_pass": true,
+      "status": "CANDIDATE_OWNER_DECISION_PENDING"
+    },
+    {
+      "species": "wolf",
+      "facing": "E",
+      "pose": "walk",
+      "image": "art/animal/polish/wolf/try2/E/walk.png",
+      "image_sha256": "8b745c94e54c397221a4b1e0233b593051e39a0bca53e61bf76f05e3a7ce2280",
+      "metadata": "art/animal/polish/wolf/try2/E/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "structural_pass": true,
+      "status": "CANDIDATE_OWNER_DECISION_PENDING"
+    },
+    {
+      "species": "wolf",
+      "facing": "E",
+      "pose": "run",
+      "image": "art/animal/polish/wolf/try2/E/run.png",
+      "image_sha256": "4815d1a3c066d77a0abe008b6f44ecad1e5ce6c4b7bc4f3f8d94f5df1b24cf19",
+      "metadata": "art/animal/polish/wolf/try2/E/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "structural_pass": true,
+      "status": "CANDIDATE_OWNER_DECISION_PENDING"
+    },
+    {
+      "species": "wolf",
+      "facing": "E",
+      "pose": "attack",
+      "image": "art/animal/polish/wolf/try2/E/attack.png",
+      "image_sha256": "9e55587872e7c896fe843dce8bef278db799a5f4739fe3f769353de63a3ef97e",
+      "metadata": "art/animal/polish/wolf/try2/E/attack.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "structural_pass": true,
+      "status": "CANDIDATE_OWNER_DECISION_PENDING"
+    },
+    {
+      "species": "wolf",
+      "facing": "E",
+      "pose": "dead",
+      "image": "art/animal/polish/wolf/try2/E/dead.png",
+      "image_sha256": "285dca9606b4b92e3ac2c6fdb6877390cc5283bde02186f54b0c84649ac2bbd5",
+      "metadata": "art/animal/polish/wolf/try2/E/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "structural_pass": true,
+      "status": "CANDIDATE_OWNER_DECISION_PENDING"
+    },
+    {
+      "species": "deer",
+      "facing": "S",
+      "pose": "stand",
+      "image": "art/animal/polish/deer/try2/S/stand.png",
+      "image_sha256": "de486ce9f8ac709dd38680f5f93b651ef4a4288ef7fd298ce3b1817e9cfba3e4",
+      "metadata": "art/animal/polish/deer/try2/S/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "structural_pass": true,
+      "status": "CANDIDATE_OWNER_DECISION_PENDING"
+    },
+    {
+      "species": "deer",
+      "facing": "S",
+      "pose": "walk",
+      "image": "art/animal/polish/deer/try2/S/walk.png",
+      "image_sha256": "0d4407847048aa3823b2da5ad8ba5b380c79ab415d2856436b82be807218c8a6",
+      "metadata": "art/animal/polish/deer/try2/S/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "structural_pass": true,
+      "status": "CANDIDATE_OWNER_DECISION_PENDING"
+    },
+    {
+      "species": "deer",
+      "facing": "S",
+      "pose": "run",
+      "image": "art/animal/polish/deer/try2/S/run.png",
+      "image_sha256": "f9623fab1c4676961052c9ee2520fe2f6bd379c66af500b2bf5c114d192a9191",
+      "metadata": "art/animal/polish/deer/try2/S/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "structural_pass": true,
+      "status": "CANDIDATE_OWNER_DECISION_PENDING"
+    },
+    {
+      "species": "deer",
+      "facing": "S",
+      "pose": "graze",
+      "image": "art/animal/polish/deer/try2/S/graze.png",
+      "image_sha256": "6ffb257785bd84796015651646c175da385461912a86f6a7b1fffcb812d93587",
+      "metadata": "art/animal/polish/deer/try2/S/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "structural_pass": true,
+      "status": "CANDIDATE_OWNER_DECISION_PENDING"
+    },
+    {
+      "species": "deer",
+      "facing": "S",
+      "pose": "dead",
+      "image": "art/animal/polish/deer/try2/S/dead.png",
+      "image_sha256": "ef30c3f4ce82329d85f1f5ada8300369f2090c0599f85c5bad74da71771cb59e",
+      "metadata": "art/animal/polish/deer/try2/S/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "structural_pass": true,
+      "status": "CANDIDATE_OWNER_DECISION_PENDING"
+    },
+    {
+      "species": "deer",
+      "facing": "E",
+      "pose": "stand",
+      "image": "art/animal/polish/deer/try2/E/stand.png",
+      "image_sha256": "df21582d5f2a68d778b8f8117740c3b155df74fcc316a2acda997e2f9eece702",
+      "metadata": "art/animal/polish/deer/try2/E/stand.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "structural_pass": true,
+      "status": "CANDIDATE_OWNER_DECISION_PENDING"
+    },
+    {
+      "species": "deer",
+      "facing": "E",
+      "pose": "walk",
+      "image": "art/animal/polish/deer/try2/E/walk.png",
+      "image_sha256": "238b45f140b6f9a06c0cc97491f3364685d2e8b85f77af4f24d565ecbac7b171",
+      "metadata": "art/animal/polish/deer/try2/E/walk.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "structural_pass": true,
+      "status": "CANDIDATE_OWNER_DECISION_PENDING"
+    },
+    {
+      "species": "deer",
+      "facing": "E",
+      "pose": "run",
+      "image": "art/animal/polish/deer/try2/E/run.png",
+      "image_sha256": "bee267aa102094e2b935b2ce5b20b2e8cf2150acf03a7a94b2484cf1f9aa4da6",
+      "metadata": "art/animal/polish/deer/try2/E/run.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "structural_pass": true,
+      "status": "CANDIDATE_OWNER_DECISION_PENDING"
+    },
+    {
+      "species": "deer",
+      "facing": "E",
+      "pose": "graze",
+      "image": "art/animal/polish/deer/try2/E/graze.png",
+      "image_sha256": "5e2ff684f838c326111ae62669c891294f1896d70b853f49d9b06db1cfc60f7a",
+      "metadata": "art/animal/polish/deer/try2/E/graze.json",
+      "canvas_px": [
+        96,
+        80
+      ],
+      "anchor_px": [
+        48,
+        72
+      ],
+      "structural_pass": true,
+      "status": "CANDIDATE_OWNER_DECISION_PENDING"
+    },
+    {
+      "species": "deer",
+      "facing": "E",
+      "pose": "dead",
+      "image": "art/animal/polish/deer/try2/E/dead.png",
+      "image_sha256": "0077b790b819c5f023055792036b64536e946d3e1ebba97c107858593fb0fe16",
+      "metadata": "art/animal/polish/deer/try2/E/dead.json",
+      "canvas_px": [
+        96,
+        64
+      ],
+      "anchor_px": [
+        48,
+        56
+      ],
+      "structural_pass": true,
+      "status": "CANDIDATE_OWNER_DECISION_PENDING"
+    }
+  ],
+  "structural_pass": true,
+  "blind_final_pass": true,
+  "blind_rounds": [
+    {
+      "path": "docs/v8/artpolish/blind_animals_round0.json",
+      "sha256": "8dda1951a6bbf783e6e6d920dec44a84d4a7420133a0b3fb0bb02e47f431c609"
+    },
+    {
+      "path": "docs/v8/artpolish/blind_animals_round1.json",
+      "sha256": "e9f56004871c1abf586ec9f62c951ad24caf6da840338f46b82c8057995a1f4f"
+    }
+  ],
+  "style_gates": false,
+  "style_policy": "D1 report only",
+  "generation_calls": 6,
+  "asset_calls": 4,
+  "scorecard_calls": 2,
+  "failed_calls": 0,
+  "owner_board": "art/boards/animals_owner.png",
+  "owner_board_sha256": "cbe1d1e520bea549c2b89bf95aa2eadab65ac8476d7aa27ccc4a4f0106ef0bc8",
+  "residual_confusion": "Both reviewers read both attack directions as leaping at both scales; retained as pose errors, not mapped to attack.",
+  "facing_rule": "S front three-quarter turned35degrees toward viewer left; E unchanged right-facing side three-quarter",
+  "facing_measurement_limit": "Prompt exact35degrees, visually viewer-left three-quarter; no numerical camera-angle measurement possible from generated raster.",
+  "not_tested": [
+    "human readability cohort",
+    "runtime animation",
+    "game integration"
+  ],
+  "owner_adopted": false
+}

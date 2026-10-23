@@ -1,0 +1,959 @@
+{
+  "species": "deer",
+  "attempt": 1,
+  "raw": "/Users/rexxa/work/artpolish-data/animals/deer_try1.png",
+  "raw_sha256": "caf81505de4923616885a5d47734a25c0e6a75f324457230669b12964571fca8",
+  "prompt": "/Users/rexxa/work/artpolish-data/animals/deer_try1.prompt.txt",
+  "prompt_sha256": "2ac915aeaf89b3eb055f6fe3e63935f6e6f4ded212fe5f6d31f7bfd62759be94",
+  "landmarks": {
+    "species": "deer",
+    "attempt": 1,
+    "shoulder_y": 250,
+    "hoof_y": 486,
+    "shoulder_target": 40,
+    "dead_length": 64,
+    "special_pose": "graze"
+  },
+  "landmark_method": "Manual source S-stand withers/back plane and lowest grounded hoof; source y coordinates",
+  "upright_scale": 0.1694915254237288,
+  "ownership": {
+    "source_rgba_sha256": "834e73060c374192a82e88e7de583ad764f09ed4cf48234f60b9473f343e96c3",
+    "ownership_sha256": "cde0d8aa67457df116045622c85dc49576c4a0ba91d9bd8eba4b79ff07bc63fa",
+    "visible_pixels": 482591,
+    "tied_visible_pixels": 5,
+    "reconstructed_exactly": true,
+    "foreign_major_pixels": 0,
+    "fragments": []
+  },
+  "major_components": 10,
+  "source_opaque_border_pixels": 0,
+  "calibration": "docs/v8/artenv1/animal_judge_calibration.json",
+  "calibration_sha256": "e48654cbbf7e63505723d092dd0cd679c0ae4942fc8703494e84ac9d5abf694d",
+  "structural_pass": false,
+  "numeric_pass_frames": 10,
+  "numeric_gates": false,
+  "style_policy": "D1: numeric v2 and image-model style scorecard are reported, never gates",
+  "facing_rule": "S: front three-quarter 35 degrees toward viewer left; E: right-facing side three-quarter",
+  "frames": [
+    {
+      "species": "deer",
+      "facing": "S",
+      "pose": "stand",
+      "attempt": 1,
+      "image": "art/animal/polish/deer/try1/S/stand.png",
+      "image_sha256": "287c68a4fee6850c43baa181160d3ca21af52a27b26d0530869492ec51400211",
+      "source_panel": "/Users/rexxa/work/artpolish-data/animals/deer_try1_S_stand.png",
+      "source_panel_sha256": "3fe81c436e8b8da181666b8b3a952ebb1f597dedcc52c6372013dd32bba5f30c",
+      "source_box": [
+        0,
+        23,
+        314,
+        568
+      ],
+      "raw": "/Users/rexxa/work/artpolish-data/animals/deer_try1.png",
+      "raw_sha256": "caf81505de4923616885a5d47734a25c0e6a75f324457230669b12964571fca8",
+      "scale": 0.1694915254237288,
+      "upright_scale": 0.1694915254237288,
+      "normalization": {
+        "scaled_size": [
+          53,
+          92
+        ],
+        "trim_box": [
+          2,
+          17,
+          47,
+          79
+        ],
+        "placement": [
+          25,
+          11
+        ],
+        "resized_to_canvas_offset": [
+          23,
+          -6
+        ],
+        "visible_pixels": 1202,
+        "rotation_degrees": 0,
+        "scale": 0.1694915254237288,
+        "discarded_pixels": 5,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "component_count": 1,
+      "visible_width": 45,
+      "visible_height": 62,
+      "structural_pass": true,
+      "numeric_v2_report_only": {
+        "candidate": "/Users/rexxa/work/artpolish-data/animals/deer_try1_S_stand.png",
+        "sha256": "3fe81c436e8b8da181666b8b3a952ebb1f597dedcc52c6372013dd32bba5f30c",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.15946205571565802,
+          "saturation_q25": 0.4715823908681514,
+          "saturation_q75": 0.6271587801695959,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.01687684751046983,
+          "foreground_pixels": 17688
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "CANDIDATE_PENDING_BLIND_TEST_AND_OWNER"
+    },
+    {
+      "species": "deer",
+      "facing": "S",
+      "pose": "walk",
+      "attempt": 1,
+      "image": "art/animal/polish/deer/try1/S/walk.png",
+      "image_sha256": "7c28c6bf8c7a045343ad665d3d9dfa528a8fab1a39017dfc7bd5438c17a1d259",
+      "source_panel": "/Users/rexxa/work/artpolish-data/animals/deer_try1_S_walk.png",
+      "source_panel_sha256": "16f6b64d415f6184a1ddf42d59d34671670efdc437d7e78142a8bb907f8961de",
+      "source_box": [
+        215,
+        17,
+        628,
+        576
+      ],
+      "raw": "/Users/rexxa/work/artpolish-data/animals/deer_try1.png",
+      "raw_sha256": "caf81505de4923616885a5d47734a25c0e6a75f324457230669b12964571fca8",
+      "scale": 0.1694915254237288,
+      "upright_scale": 0.1694915254237288,
+      "normalization": {
+        "scaled_size": [
+          70,
+          95
+        ],
+        "trim_box": [
+          15,
+          18,
+          62,
+          80
+        ],
+        "placement": [
+          24,
+          11
+        ],
+        "resized_to_canvas_offset": [
+          9,
+          -7
+        ],
+        "visible_pixels": 1189,
+        "rotation_degrees": 0,
+        "scale": 0.1694915254237288,
+        "discarded_pixels": 9,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "component_count": 1,
+      "visible_width": 47,
+      "visible_height": 62,
+      "structural_pass": true,
+      "numeric_v2_report_only": {
+        "candidate": "/Users/rexxa/work/artpolish-data/animals/deer_try1_S_walk.png",
+        "sha256": "16f6b64d415f6184a1ddf42d59d34671670efdc437d7e78142a8bb907f8961de",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.1766469060147872,
+          "saturation_q25": 0.4978068417805642,
+          "saturation_q75": 0.6294163070572419,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.019058243247689354,
+          "foreground_pixels": 17954
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "CANDIDATE_PENDING_BLIND_TEST_AND_OWNER"
+    },
+    {
+      "species": "deer",
+      "facing": "S",
+      "pose": "run",
+      "attempt": 1,
+      "image": "art/animal/polish/deer/try1/S/run.png",
+      "image_sha256": "29ed0f18524d28219014c8342c27ba33ab7100648bc2295c908b8d0d95555a23",
+      "source_panel": "/Users/rexxa/work/artpolish-data/animals/deer_try1_S_run.png",
+      "source_panel_sha256": "d6c8976d16d96767de623b8a2dc9c1083becdb96ffe68f3a5ab34092adabd34f",
+      "source_box": [
+        503,
+        9,
+        942,
+        529
+      ],
+      "raw": "/Users/rexxa/work/artpolish-data/animals/deer_try1.png",
+      "raw_sha256": "caf81505de4923616885a5d47734a25c0e6a75f324457230669b12964571fca8",
+      "scale": 0.1694915254237288,
+      "upright_scale": 0.1694915254237288,
+      "normalization": {
+        "scaled_size": [
+          74,
+          88
+        ],
+        "trim_box": [
+          15,
+          20,
+          72,
+          74
+        ],
+        "placement": [
+          19,
+          19
+        ],
+        "resized_to_canvas_offset": [
+          4,
+          -1
+        ],
+        "visible_pixels": 1158,
+        "rotation_degrees": 0,
+        "scale": 0.1694915254237288,
+        "discarded_pixels": 4,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "component_count": 1,
+      "visible_width": 57,
+      "visible_height": 54,
+      "structural_pass": true,
+      "numeric_v2_report_only": {
+        "candidate": "/Users/rexxa/work/artpolish-data/animals/deer_try1_S_run.png",
+        "sha256": "d6c8976d16d96767de623b8a2dc9c1083becdb96ffe68f3a5ab34092adabd34f",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.16674293559089348,
+          "saturation_q25": 0.4717432706267099,
+          "saturation_q75": 0.6248366829224173,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.01781875552630508,
+          "foreground_pixels": 20433
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "CANDIDATE_PENDING_BLIND_TEST_AND_OWNER"
+    },
+    {
+      "species": "deer",
+      "facing": "S",
+      "pose": "graze",
+      "attempt": 1,
+      "image": "art/animal/polish/deer/try1/S/graze.png",
+      "image_sha256": "4ab72362da6e53bd6dea7ca9bf1b20b76dfcd53ce82c38d8b36b8954e1d5d0ad",
+      "source_panel": "/Users/rexxa/work/artpolish-data/animals/deer_try1_S_graze.png",
+      "source_panel_sha256": "1b68a12efb4bdd8deb4e299c73fd7e00ca7ffe5f06b0dc6e7b09a439bfe4a077",
+      "source_box": [
+        909,
+        27,
+        1422,
+        598
+      ],
+      "raw": "/Users/rexxa/work/artpolish-data/animals/deer_try1.png",
+      "raw_sha256": "caf81505de4923616885a5d47734a25c0e6a75f324457230669b12964571fca8",
+      "scale": 0.1694915254237288,
+      "upright_scale": 0.1694915254237288,
+      "normalization": {
+        "scaled_size": [
+          87,
+          97
+        ],
+        "trim_box": [
+          2,
+          33,
+          45,
+          78
+        ],
+        "placement": [
+          26,
+          28
+        ],
+        "resized_to_canvas_offset": [
+          24,
+          -5
+        ],
+        "visible_pixels": 1076,
+        "rotation_degrees": 0,
+        "scale": 0.1694915254237288,
+        "discarded_pixels": 10,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "component_count": 1,
+      "visible_width": 43,
+      "visible_height": 45,
+      "structural_pass": true,
+      "numeric_v2_report_only": {
+        "candidate": "/Users/rexxa/work/artpolish-data/animals/deer_try1_S_graze.png",
+        "sha256": "1b68a12efb4bdd8deb4e299c73fd7e00ca7ffe5f06b0dc6e7b09a439bfe4a077",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.17749771689497718,
+          "saturation_q25": 0.5541738088290926,
+          "saturation_q75": 0.6455670878995935,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.01258867195987711,
+          "foreground_pixels": 30737
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "CANDIDATE_PENDING_BLIND_TEST_AND_OWNER"
+    },
+    {
+      "species": "deer",
+      "facing": "S",
+      "pose": "dead",
+      "attempt": 1,
+      "image": "art/animal/polish/deer/try1/S/dead.png",
+      "image_sha256": "8f84d08b94953706db64ed56ef3858d8a4c2b43b8a48fe48e3dda77e226b78f0",
+      "source_panel": "/Users/rexxa/work/artpolish-data/animals/deer_try1_S_dead.png",
+      "source_panel_sha256": "1d44a1abe4b2dd70741d0341fe023b6dba141139fc88235f25eea66f36f5be8c",
+      "source_box": [
+        1181,
+        49,
+        1536,
+        661
+      ],
+      "raw": "/Users/rexxa/work/artpolish-data/animals/deer_try1.png",
+      "raw_sha256": "caf81505de4923616885a5d47734a25c0e6a75f324457230669b12964571fca8",
+      "scale": 0.191044776119403,
+      "upright_scale": 0.1694915254237288,
+      "normalization": {
+        "scaled_size": [
+          68,
+          117
+        ],
+        "trim_box": [
+          1,
+          63,
+          66,
+          87
+        ],
+        "placement": [
+          15,
+          33
+        ],
+        "resized_to_canvas_offset": [
+          14,
+          -30
+        ],
+        "visible_pixels": 880,
+        "rotation_degrees": 0,
+        "scale": 0.191044776119403,
+        "discarded_pixels": 31,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": false,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "component_count": 2,
+      "visible_width": 65,
+      "visible_height": 24,
+      "structural_pass": false,
+      "numeric_v2_report_only": {
+        "candidate": "/Users/rexxa/work/artpolish-data/animals/deer_try1_S_dead.png",
+        "sha256": "1d44a1abe4b2dd70741d0341fe023b6dba141139fc88235f25eea66f36f5be8c",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.19160321053714757,
+          "saturation_q25": 0.41389455366460975,
+          "saturation_q75": 0.6210746794486184,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.02124698119575877,
+          "foreground_pixels": 11756
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "CANDIDATE_PENDING_BLIND_TEST_AND_OWNER"
+    },
+    {
+      "species": "deer",
+      "facing": "E",
+      "pose": "stand",
+      "attempt": 1,
+      "image": "art/animal/polish/deer/try1/E/stand.png",
+      "image_sha256": "86fc4f43badf23837a13b0ac4d569377fd40fadd3048deb0ca4232c48f3b91eb",
+      "source_panel": "/Users/rexxa/work/artpolish-data/animals/deer_try1_E_stand.png",
+      "source_panel_sha256": "84e57b61f682eb1ef78012dee0263e61d75dcb2cfeae9e60b9c05408012e312a",
+      "source_box": [
+        0,
+        519,
+        378,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/artpolish-data/animals/deer_try1.png",
+      "raw_sha256": "caf81505de4923616885a5d47734a25c0e6a75f324457230669b12964571fca8",
+      "scale": 0.1694915254237288,
+      "upright_scale": 0.1694915254237288,
+      "normalization": {
+        "scaled_size": [
+          64,
+          86
+        ],
+        "trim_box": [
+          5,
+          8,
+          53,
+          68
+        ],
+        "placement": [
+          24,
+          13
+        ],
+        "resized_to_canvas_offset": [
+          19,
+          5
+        ],
+        "visible_pixels": 1159,
+        "rotation_degrees": 0,
+        "scale": 0.1694915254237288,
+        "discarded_pixels": 11,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "component_count": 1,
+      "visible_width": 48,
+      "visible_height": 60,
+      "structural_pass": true,
+      "numeric_v2_report_only": {
+        "candidate": "/Users/rexxa/work/artpolish-data/animals/deer_try1_E_stand.png",
+        "sha256": "84e57b61f682eb1ef78012dee0263e61d75dcb2cfeae9e60b9c05408012e312a",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.1591680281513133,
+          "saturation_q25": 0.4750192527478392,
+          "saturation_q75": 0.6326795171868337,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.018289145166725897,
+          "foreground_pixels": 18901
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "CANDIDATE_PENDING_BLIND_TEST_AND_OWNER"
+    },
+    {
+      "species": "deer",
+      "facing": "E",
+      "pose": "walk",
+      "attempt": 1,
+      "image": "art/animal/polish/deer/try1/E/walk.png",
+      "image_sha256": "3aa9ef0edbfd11cb3a0260434a6ec485ab2fa7b87834d568fe17e95992f2e837",
+      "source_panel": "/Users/rexxa/work/artpolish-data/animals/deer_try1_E_walk.png",
+      "source_panel_sha256": "33caf8013d787653b59ac505291661e0dcf002919a554ae5debc9de4b43ada03",
+      "source_box": [
+        281,
+        517,
+        690,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/artpolish-data/animals/deer_try1.png",
+      "raw_sha256": "caf81505de4923616885a5d47734a25c0e6a75f324457230669b12964571fca8",
+      "scale": 0.1694915254237288,
+      "upright_scale": 0.1694915254237288,
+      "normalization": {
+        "scaled_size": [
+          69,
+          86
+        ],
+        "trim_box": [
+          3,
+          9,
+          54,
+          66
+        ],
+        "placement": [
+          22,
+          16
+        ],
+        "resized_to_canvas_offset": [
+          19,
+          7
+        ],
+        "visible_pixels": 1127,
+        "rotation_degrees": 0,
+        "scale": 0.1694915254237288,
+        "discarded_pixels": 15,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "component_count": 1,
+      "visible_width": 51,
+      "visible_height": 57,
+      "structural_pass": true,
+      "numeric_v2_report_only": {
+        "candidate": "/Users/rexxa/work/artpolish-data/animals/deer_try1_E_walk.png",
+        "sha256": "33caf8013d787653b59ac505291661e0dcf002919a554ae5debc9de4b43ada03",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.15972012787260992,
+          "saturation_q25": 0.49786417400324623,
+          "saturation_q75": 0.6332122091617056,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.015543988430057613,
+          "foreground_pixels": 19518
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "CANDIDATE_PENDING_BLIND_TEST_AND_OWNER"
+    },
+    {
+      "species": "deer",
+      "facing": "E",
+      "pose": "run",
+      "attempt": 1,
+      "image": "art/animal/polish/deer/try1/E/run.png",
+      "image_sha256": "2608cc56f4748faa52cd34524b430615b66f8532264758468e5ce0113e66d7fc",
+      "source_panel": "/Users/rexxa/work/artpolish-data/animals/deer_try1_E_run.png",
+      "source_panel_sha256": "a4f7abe15749249d8d8617a78f3513176cffbf55c25c2d47960661ebe7731b2a",
+      "source_box": [
+        543,
+        509,
+        1014,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/artpolish-data/animals/deer_try1.png",
+      "raw_sha256": "caf81505de4923616885a5d47734a25c0e6a75f324457230669b12964571fca8",
+      "scale": 0.1694915254237288,
+      "upright_scale": 0.1694915254237288,
+      "normalization": {
+        "scaled_size": [
+          80,
+          87
+        ],
+        "trim_box": [
+          4,
+          11,
+          68,
+          63
+        ],
+        "placement": [
+          16,
+          21
+        ],
+        "resized_to_canvas_offset": [
+          12,
+          10
+        ],
+        "visible_pixels": 1101,
+        "rotation_degrees": 0,
+        "scale": 0.1694915254237288,
+        "discarded_pixels": 59,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "component_count": 1,
+      "visible_width": 64,
+      "visible_height": 52,
+      "structural_pass": true,
+      "numeric_v2_report_only": {
+        "candidate": "/Users/rexxa/work/artpolish-data/animals/deer_try1_E_run.png",
+        "sha256": "a4f7abe15749249d8d8617a78f3513176cffbf55c25c2d47960661ebe7731b2a",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.14920178557917832,
+          "saturation_q25": 0.48645902717157596,
+          "saturation_q75": 0.6274617204268328,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.01155481070793897,
+          "foreground_pixels": 15614
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "CANDIDATE_PENDING_BLIND_TEST_AND_OWNER"
+    },
+    {
+      "species": "deer",
+      "facing": "E",
+      "pose": "graze",
+      "attempt": 1,
+      "image": "art/animal/polish/deer/try1/E/graze.png",
+      "image_sha256": "308b01f32a524a9dee92a9f98e3897650901c56f72f28b79fa67b1e712578f99",
+      "source_panel": "/Users/rexxa/work/artpolish-data/animals/deer_try1_E_graze.png",
+      "source_panel_sha256": "628e3b06a82088fee2333b13b178aa9379c2f68834b7c26c6849551cecf944a7",
+      "source_box": [
+        835,
+        585,
+        1284,
+        1005
+      ],
+      "raw": "/Users/rexxa/work/artpolish-data/animals/deer_try1.png",
+      "raw_sha256": "caf81505de4923616885a5d47734a25c0e6a75f324457230669b12964571fca8",
+      "scale": 0.1694915254237288,
+      "upright_scale": 0.1694915254237288,
+      "normalization": {
+        "scaled_size": [
+          76,
+          71
+        ],
+        "trim_box": [
+          18,
+          16,
+          64,
+          57
+        ],
+        "placement": [
+          25,
+          32
+        ],
+        "resized_to_canvas_offset": [
+          7,
+          16
+        ],
+        "visible_pixels": 1007,
+        "rotation_degrees": 0,
+        "scale": 0.1694915254237288,
+        "discarded_pixels": 7,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "component_count": 1,
+      "visible_width": 46,
+      "visible_height": 41,
+      "structural_pass": true,
+      "numeric_v2_report_only": {
+        "candidate": "/Users/rexxa/work/artpolish-data/animals/deer_try1_E_graze.png",
+        "sha256": "628e3b06a82088fee2333b13b178aa9379c2f68834b7c26c6849551cecf944a7",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.1605060288594584,
+          "saturation_q25": 0.555191677760569,
+          "saturation_q75": 0.6467610567777676,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.013514802417009692,
+          "foreground_pixels": 28652
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "CANDIDATE_PENDING_BLIND_TEST_AND_OWNER"
+    },
+    {
+      "species": "deer",
+      "facing": "E",
+      "pose": "dead",
+      "attempt": 1,
+      "image": "art/animal/polish/deer/try1/E/dead.png",
+      "image_sha256": "834bec0c8addbeac715365aacecd6fc26c4b73371a2c0fdcd508806651e60016",
+      "source_panel": "/Users/rexxa/work/artpolish-data/animals/deer_try1_E_dead.png",
+      "source_panel_sha256": "7e01c7f68253471c1aab3a8233eae2189986dd2dc714170c7d773092f69ffd27",
+      "source_box": [
+        1195,
+        649,
+        1536,
+        1001
+      ],
+      "raw": "/Users/rexxa/work/artpolish-data/animals/deer_try1.png",
+      "raw_sha256": "caf81505de4923616885a5d47734a25c0e6a75f324457230669b12964571fca8",
+      "scale": 0.19753086419753085,
+      "upright_scale": 0.1694915254237288,
+      "normalization": {
+        "scaled_size": [
+          67,
+          70
+        ],
+        "trim_box": [
+          2,
+          32,
+          67,
+          56
+        ],
+        "placement": [
+          15,
+          33
+        ],
+        "resized_to_canvas_offset": [
+          13,
+          1
+        ],
+        "visible_pixels": 944,
+        "rotation_degrees": 0,
+        "scale": 0.19753086419753085,
+        "discarded_pixels": 1,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "component_count": 1,
+      "visible_width": 65,
+      "visible_height": 24,
+      "structural_pass": true,
+      "numeric_v2_report_only": {
+        "candidate": "/Users/rexxa/work/artpolish-data/animals/deer_try1_E_dead.png",
+        "sha256": "7e01c7f68253471c1aab3a8233eae2189986dd2dc714170c7d773092f69ffd27",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.1738451648452567,
+          "saturation_q25": 0.40059179106934395,
+          "saturation_q75": 0.6177908337600678,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.030521115553025443,
+          "foreground_pixels": 12858
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "CANDIDATE_PENDING_BLIND_TEST_AND_OWNER"
+    }
+  ]
+}

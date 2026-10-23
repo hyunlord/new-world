@@ -1,0 +1,250 @@
+{
+  "status": "PASS",
+  "frames_reconstructed": 40,
+  "raw_tool_pairs_verified": 6,
+  "round_packet_groups_verified": 8,
+  "all_owned_files_below_1500000_bytes": true,
+  "owner_board_sha256": "cbe1d1e520bea549c2b89bf95aa2eadab65ac8476d7aa27ccc4a4f0106ef0bc8",
+  "frames": [
+    {
+      "image": "art/animal/polish/wolf/try1/S/stand.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/wolf/try1/S/walk.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/wolf/try1/S/run.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/wolf/try1/S/attack.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/wolf/try1/S/dead.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/wolf/try1/E/stand.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/wolf/try1/E/walk.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/wolf/try1/E/run.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/wolf/try1/E/attack.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/wolf/try1/E/dead.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/wolf/try2/S/stand.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/wolf/try2/S/walk.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/wolf/try2/S/run.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/wolf/try2/S/attack.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/wolf/try2/S/dead.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/wolf/try2/E/stand.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/wolf/try2/E/walk.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/wolf/try2/E/run.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/wolf/try2/E/attack.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/wolf/try2/E/dead.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/deer/try1/S/stand.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/deer/try1/S/walk.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/deer/try1/S/run.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/deer/try1/S/graze.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/deer/try1/S/dead.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": false
+    },
+    {
+      "image": "art/animal/polish/deer/try1/E/stand.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/deer/try1/E/walk.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/deer/try1/E/run.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/deer/try1/E/graze.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/deer/try1/E/dead.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/deer/try2/S/stand.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/deer/try2/S/walk.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/deer/try2/S/run.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/deer/try2/S/graze.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/deer/try2/S/dead.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/deer/try2/E/stand.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/deer/try2/E/walk.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/deer/try2/E/run.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/deer/try2/E/graze.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    },
+    {
+      "image": "art/animal/polish/deer/try2/E/dead.png",
+      "raw_to_sprite_rgba_exact": true,
+      "sha256_matches": true,
+      "structural_pass": true
+    }
+  ]
+}

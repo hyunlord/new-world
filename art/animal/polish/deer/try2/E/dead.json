@@ -1,0 +1,92 @@
+{
+  "species": "deer",
+  "facing": "E",
+  "pose": "dead",
+  "attempt": 2,
+  "image": "art/animal/polish/deer/try2/E/dead.png",
+  "image_sha256": "0077b790b819c5f023055792036b64536e946d3e1ebba97c107858593fb0fe16",
+  "source_panel": "/Users/rexxa/work/artpolish-data/animals/deer_try2_E_dead.png",
+  "source_panel_sha256": "7afc70d7b0bc6f109459d0a1044b2fda7d212dd475f20a1050f937e907a5bda5",
+  "source_box": [
+    1197,
+    631,
+    1523,
+    1024
+  ],
+  "raw": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+  "raw_sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f",
+  "scale": 0.20915032679738563,
+  "upright_scale": 0.17543859649122806,
+  "normalization": {
+    "scaled_size": [
+      68,
+      82
+    ],
+    "trim_box": [
+      3,
+      32,
+      68,
+      58
+    ],
+    "placement": [
+      15,
+      31
+    ],
+    "resized_to_canvas_offset": [
+      12,
+      -1
+    ],
+    "visible_pixels": 1097,
+    "rotation_degrees": 0,
+    "scale": 0.20915032679738563,
+    "discarded_pixels": 5,
+    "discarded_max_alpha": 1,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "component_count": 1,
+  "visible_width": 65,
+  "visible_height": 26,
+  "structural_pass": true,
+  "numeric_v2_report_only": {
+    "candidate": "/Users/rexxa/work/artpolish-data/animals/deer_try2_E_dead.png",
+    "sha256": "7afc70d7b0bc6f109459d0a1044b2fda7d212dd475f20a1050f937e907a5bda5",
+    "family": "animal",
+    "metrics": {
+      "edge_density": 0.23212880143112702,
+      "saturation_q25": 0.5038789808574919,
+      "saturation_q75": 0.6216219265974268,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.8284271247461903,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.47213595499958,
+      "wash_flatness": 0.019783508094755254,
+      "foreground_pixels": 15706
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "status": "CANDIDATE_NOT_OWNER_ADOPTED"
+}

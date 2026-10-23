@@ -1,0 +1,202 @@
+{
+  "inspections": [
+    {
+      "look": "adult_F_fur_cloak_long_tied",
+      "attempt": 1,
+      "head_bbox": [
+        14,
+        6,
+        99,
+        87
+      ],
+      "face_bbox": [
+        42,
+        34,
+        88,
+        78
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Matches observed sprite hairstyle and neckline; identity matching is assigned to fresh blind reviewers, not asserted by producer.",
+      "inspection_method": "Manual visual observation on original raw and 3x nearest display of canonical128; conservative boundaries include approximately2px uncertainty. Not alpha or canvas bounding box."
+    },
+    {
+      "look": "adult_F_hide_wrap_bun",
+      "attempt": 1,
+      "head_bbox": [
+        32,
+        5,
+        94,
+        83
+      ],
+      "face_bbox": [
+        42,
+        34,
+        85,
+        78
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Matches observed sprite hairstyle and neckline; identity matching is assigned to fresh blind reviewers, not asserted by producer.",
+      "inspection_method": "Manual visual observation on original raw and 3x nearest display of canonical128; conservative boundaries include approximately2px uncertainty. Not alpha or canvas bounding box."
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "attempt": 1,
+      "head_bbox": [
+        27,
+        8,
+        95,
+        85
+      ],
+      "face_bbox": [
+        36,
+        44,
+        85,
+        83
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Matches observed sprite hairstyle and neckline; identity matching is assigned to fresh blind reviewers, not asserted by producer.",
+      "inspection_method": "Manual visual observation on original raw and 3x nearest display of canonical128; conservative boundaries include approximately2px uncertainty. Not alpha or canvas bounding box."
+    },
+    {
+      "look": "child_M_loincloth_bun",
+      "attempt": 1,
+      "head_bbox": [
+        29,
+        9,
+        98,
+        88
+      ],
+      "face_bbox": [
+        39,
+        43,
+        85,
+        86
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Matches observed sprite hairstyle and neckline; identity matching is assigned to fresh blind reviewers, not asserted by producer.",
+      "inspection_method": "Manual visual observation on original raw and 3x nearest display of canonical128; conservative boundaries include approximately2px uncertainty. Not alpha or canvas bounding box."
+    },
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "attempt": 1,
+      "head_bbox": [
+        28,
+        3,
+        95,
+        84
+      ],
+      "face_bbox": [
+        38,
+        30,
+        84,
+        77
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Matches observed sprite hairstyle and neckline; identity matching is assigned to fresh blind reviewers, not asserted by producer.",
+      "inspection_method": "Manual visual observation on original raw and 3x nearest display of canonical128; conservative boundaries include approximately2px uncertainty. Not alpha or canvas bounding box."
+    },
+    {
+      "look": "child_F_hide_wrap_bun",
+      "attempt": 1,
+      "head_bbox": [
+        28,
+        7,
+        99,
+        89
+      ],
+      "face_bbox": [
+        38,
+        43,
+        86,
+        85
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Matches observed sprite hairstyle and neckline; identity matching is assigned to fresh blind reviewers, not asserted by producer.",
+      "inspection_method": "Manual visual observation on original raw and 3x nearest display of canonical128; conservative boundaries include approximately2px uncertainty. Not alpha or canvas bounding box."
+    },
+    {
+      "look": "child_F_loincloth_long_tied",
+      "attempt": 1,
+      "head_bbox": [
+        18,
+        7,
+        98,
+        94
+      ],
+      "face_bbox": [
+        41,
+        42,
+        88,
+        84
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Matches observed sprite hairstyle and neckline; identity matching is assigned to fresh blind reviewers, not asserted by producer.",
+      "inspection_method": "Manual visual observation on original raw and 3x nearest display of canonical128; conservative boundaries include approximately2px uncertainty. Not alpha or canvas bounding box."
+    },
+    {
+      "look": "child_M_hide_wrap_bun",
+      "attempt": 1,
+      "head_bbox": [
+        24,
+        6,
+        98,
+        88
+      ],
+      "face_bbox": [
+        36,
+        47,
+        89,
+        89
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Matches observed sprite hairstyle and neckline; identity matching is assigned to fresh blind reviewers, not asserted by producer.",
+      "inspection_method": "Manual visual observation on original raw and 3x nearest display of canonical128; conservative boundaries include approximately2px uncertainty. Not alpha or canvas bounding box."
+    },
+    {
+      "look": "child_M_hide_wrap_short",
+      "attempt": 1,
+      "head_bbox": [
+        25,
+        8,
+        98,
+        84
+      ],
+      "face_bbox": [
+        35,
+        43,
+        89,
+        84
+      ],
+      "head_uncropped": true,
+      "hair_match": true,
+      "top_match": true,
+      "extra_accessory": false,
+      "identity_note": "Matches observed sprite hairstyle and neckline; identity matching is assigned to fresh blind reviewers, not asserted by producer.",
+      "inspection_method": "Manual visual observation on original raw and 3x nearest display of canonical128; conservative boundaries include approximately2px uncertainty. Not alpha or canvas bounding box."
+    }
+  ]
+}

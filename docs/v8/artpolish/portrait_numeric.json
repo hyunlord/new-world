@@ -1,0 +1,308 @@
+[
+  {
+    "look": "adult_F_fur_cloak_bun",
+    "attempt": 1,
+    "numeric": {
+      "candidate": "/Users/rexxa/work/artpolish-data/portraits/adult_F_fur_cloak_bun_try1.png",
+      "sha256": "def7a1eb6a6ffcfcdacd494c9e30b6a3a0cab1a85b19b0e3a8d7ac6b05ed96dd",
+      "family": "portrait",
+      "metrics": {
+        "edge_density": 0.14509322247417486,
+        "saturation_q25": 0.39655939644985266,
+        "saturation_q75": 0.6498186645306292,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 2.8284271247461903,
+        "wash_flatness": 0.0399399852977859,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    }
+  },
+  {
+    "look": "adult_F_fur_cloak_long_tied",
+    "attempt": 1,
+    "numeric": {
+      "candidate": "/Users/rexxa/work/artpolish-data/portraits/adult_F_fur_cloak_long_tied_try1.png",
+      "sha256": "ad889576fe7b8d870f2acf17f19e3e9ae9302da585e960b6493b7a7819cfb53c",
+      "family": "portrait",
+      "metrics": {
+        "edge_density": 0.15502960443436634,
+        "saturation_q25": 0.407422854738136,
+        "saturation_q75": 0.6718693492106835,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.02544514834539622,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    }
+  },
+  {
+    "look": "adult_F_hide_wrap_bun",
+    "attempt": 1,
+    "numeric": {
+      "candidate": "/Users/rexxa/work/artpolish-data/portraits/adult_F_hide_wrap_bun_try1.png",
+      "sha256": "402b689b9972751c176267267155409de2a57b045240bb62d6da1561d16e10d4",
+      "family": "portrait",
+      "metrics": {
+        "edge_density": 0.10245023935500126,
+        "saturation_q25": 0.4155751855973495,
+        "saturation_q75": 0.6433120838248749,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.006918761411554428,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": false,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    }
+  },
+  {
+    "look": "child_F_hide_wrap_bun",
+    "attempt": 1,
+    "numeric": {
+      "candidate": "/Users/rexxa/work/artpolish-data/portraits/child_F_hide_wrap_bun_try1.png",
+      "sha256": "1dd45112b9453f1258911452d49e2eccf2a873c325ae6802bb40f3cff5e42753",
+      "family": "portrait",
+      "metrics": {
+        "edge_density": 0.11022927689594356,
+        "saturation_q25": 0.39893006519825974,
+        "saturation_q75": 0.6271116936246004,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.00472119516331136,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": false,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    }
+  },
+  {
+    "look": "child_F_loincloth_long_tied",
+    "attempt": 1,
+    "numeric": {
+      "candidate": "/Users/rexxa/work/artpolish-data/portraits/child_F_loincloth_long_tied_try1.png",
+      "sha256": "7490374e329d0eea9f3c5780404282559d268300112f3bd5360821d7b55fabfa",
+      "family": "portrait",
+      "metrics": {
+        "edge_density": 0.1151581002771479,
+        "saturation_q25": 0.40402899036924,
+        "saturation_q75": 0.6626337975713423,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.008679355294164613,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": false,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    }
+  },
+  {
+    "look": "child_M_fur_cloak_bun",
+    "attempt": 1,
+    "numeric": {
+      "candidate": "/Users/rexxa/work/artpolish-data/portraits/child_M_fur_cloak_bun_try1.png",
+      "sha256": "bd2310a0f8d29a586b1e589b7711311d06332d0b160ae4afdd7e3de4ad385b0c",
+      "family": "portrait",
+      "metrics": {
+        "edge_density": 0.12762975560594608,
+        "saturation_q25": 0.38361262150298503,
+        "saturation_q75": 0.6772841346754874,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.027477970281799054,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": true,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": false
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    }
+  },
+  {
+    "look": "child_M_hide_wrap_bun",
+    "attempt": 1,
+    "numeric": {
+      "candidate": "/Users/rexxa/work/artpolish-data/portraits/child_M_hide_wrap_bun_try1.png",
+      "sha256": "d20379d42400628d01726133c45cf006041a8fde00bd9d8348b3c105469bc359",
+      "family": "portrait",
+      "metrics": {
+        "edge_density": 0.11235512723607961,
+        "saturation_q25": 0.38420517375358765,
+        "saturation_q75": 0.6178241188171854,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.008237995221481657,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": false,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    }
+  },
+  {
+    "look": "child_M_hide_wrap_short",
+    "attempt": 1,
+    "numeric": {
+      "candidate": "/Users/rexxa/work/artpolish-data/portraits/child_M_hide_wrap_short_try1.png",
+      "sha256": "61ebaf78f48ccab76905e1980074f75d7409b0c3a862a8eebf680865bc90eb57",
+      "family": "portrait",
+      "metrics": {
+        "edge_density": 0.11375661375661375,
+        "saturation_q25": 0.37183664646245584,
+        "saturation_q75": 0.6660055847303861,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.8284271247461903,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.007732334813262598,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": false,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    }
+  },
+  {
+    "look": "child_M_loincloth_bun",
+    "attempt": 1,
+    "numeric": {
+      "candidate": "/Users/rexxa/work/artpolish-data/portraits/child_M_loincloth_bun_try1.png",
+      "sha256": "c372bb381dda3b5755ef6f1bd9eda12daaf487357a09199ea7a19d815016e9d5",
+      "family": "portrait",
+      "metrics": {
+        "edge_density": 0.09971025447215924,
+        "saturation_q25": 0.3571312866939893,
+        "saturation_q75": 0.6392411947000675,
+        "stroke_q25": 2.0,
+        "stroke_q50": 2.0,
+        "stroke_q75": 2.0,
+        "stroke_q90": 4.0,
+        "wash_flatness": 0.005417062715423257,
+        "foreground_pixels": 65536
+      },
+      "numeric_checks": {
+        "edge_density": false,
+        "saturation_q25": true,
+        "saturation_q75": true,
+        "stroke_q25": true,
+        "stroke_q50": true,
+        "stroke_q75": true,
+        "stroke_q90": true,
+        "wash_flatness": true
+      },
+      "numeric_pass": false,
+      "model_scores": null,
+      "model_status": "MISSING",
+      "passed": false
+    }
+  }
+]

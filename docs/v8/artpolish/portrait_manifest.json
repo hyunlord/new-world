@@ -1,0 +1,2310 @@
+{
+  "schema_version": 1,
+  "instrument_change": "D1: numeric v2 and image-model style report only",
+  "counts": {
+    "portraits": 34,
+    "regenerated": 9,
+    "retained": 25,
+    "art_calls": 9,
+    "scorecard_calls": 1,
+    "failed_calls": 0,
+    "total_calls": 10,
+    "structural_pass": 34,
+    "numeric_pass_report_only": 24,
+    "owner_adopted": 0
+  },
+  "board": "art/boards/portraits_owner.png",
+  "records": [
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "path": "art/portrait/polish/adult_F_fur_cloak_bun_try1.png",
+      "sha256": "a5bac1055cc7092f9b0139b982e741f687a0999cc558a62c420e42dd14f17829",
+      "sprite": "art/character/route_i/adult_F_fur_cloak_bun/S/idle.png",
+      "sprite_sha256": "34831c2a1733a4ce81e06960c78c81881e07535ae6ad16296eef4b1f35a98bed",
+      "source": "POLISH",
+      "polish_art_attempts": 1,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/adult_F_fur_cloak_bun_try1.png",
+      "env1_sha256": "70bdce543ad6f906b0813f100d7f742540a8b0ec3c9f80653a84b87a329051a3",
+      "structural": {
+        "face_bbox": [
+          38,
+          30,
+          84,
+          77
+        ],
+        "head_bbox": [
+          28,
+          3,
+          95,
+          84
+        ],
+        "face_bbox_corner_ellipse_max": 0.704572962003032,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 3,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation on original raw and 3x nearest display of canonical128; conservative boundaries include approximately2px uncertainty. Not alpha or canvas bounding box."
+      },
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artpolish-data/portraits/adult_F_fur_cloak_bun_try1.png",
+        "sha256": "def7a1eb6a6ffcfcdacd494c9e30b6a3a0cab1a85b19b0e3a8d7ac6b05ed96dd",
+        "family": "portrait",
+        "metrics": {
+          "edge_density": 0.14509322247417486,
+          "saturation_q25": 0.39655939644985266,
+          "saturation_q75": 0.6498186645306292,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.0399399852977859,
+          "foreground_pixels": 65536
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "model_scores": {
+        "look": "adult_F_fur_cloak_bun",
+        "attempt": 1,
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "scorecard": "/Users/rexxa/work/artpolish-data/portraits/style_scorecard_1.png",
+        "scorecard_sha256": "03fa54e86826744fc6281761ce89ce8bd2dfcedac1eba8d79edba540239be4dd",
+        "method": "Actual built-in imagegen scorecard visually transcribed; nine300px candidate previews; D1 diagnostic only."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "adult_F_fur_cloak_long_tied",
+      "path": "art/portrait/polish/adult_F_fur_cloak_long_tied_try1.png",
+      "sha256": "ffd97cb0a3e0f089567fb28504d591818d44750548f58e9568ede984641dedeb",
+      "sprite": "art/character/route_i/adult_F_fur_cloak_long_tied/S/idle.png",
+      "sprite_sha256": "7752d665d2d21c1593e6f9014ee3a134ab235681c55121fb398e4e201ee9e068",
+      "source": "POLISH",
+      "polish_art_attempts": 1,
+      "env1_selected_attempt": 2,
+      "env1_path": "art/portrait/env1/adult_F_fur_cloak_long_tied_try2.png",
+      "env1_sha256": "4127c005b6184e04951d09f2d9f896c36d2ea24b6e086b6a8cf422e943abc596",
+      "structural": {
+        "face_bbox": [
+          42,
+          34,
+          88,
+          78
+        ],
+        "head_bbox": [
+          14,
+          6,
+          99,
+          87
+        ],
+        "face_bbox_corner_ellipse_max": 0.5671212528730012,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 6,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation on original raw and 3x nearest display of canonical128; conservative boundaries include approximately2px uncertainty. Not alpha or canvas bounding box."
+      },
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artpolish-data/portraits/adult_F_fur_cloak_long_tied_try1.png",
+        "sha256": "ad889576fe7b8d870f2acf17f19e3e9ae9302da585e960b6493b7a7819cfb53c",
+        "family": "portrait",
+        "metrics": {
+          "edge_density": 0.15502960443436634,
+          "saturation_q25": 0.407422854738136,
+          "saturation_q75": 0.6718693492106835,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.02544514834539622,
+          "foreground_pixels": 65536
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "model_scores": {
+        "look": "adult_F_fur_cloak_long_tied",
+        "attempt": 1,
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "scorecard": "/Users/rexxa/work/artpolish-data/portraits/style_scorecard_1.png",
+        "scorecard_sha256": "03fa54e86826744fc6281761ce89ce8bd2dfcedac1eba8d79edba540239be4dd",
+        "method": "Actual built-in imagegen scorecard visually transcribed; nine300px candidate previews; D1 diagnostic only."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "adult_F_fur_cloak_short",
+      "path": "art/portrait/env1/adult_F_fur_cloak_short_try1.png",
+      "sha256": "874217e7e753be1fad4e8aab2ee80bbc582c23203fa402a6783a013988afc475",
+      "sprite": "art/character/route_i/adult_F_fur_cloak_short/S/idle.png",
+      "sprite_sha256": "b93b32485e0a2038b97bdfc5ea7d6c4e9c20c9b6582876747e983a08e4218968",
+      "source": "ENV1_RETAINED",
+      "polish_art_attempts": 0,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/adult_F_fur_cloak_short_try1.png",
+      "env1_sha256": "874217e7e753be1fad4e8aab2ee80bbc582c23203fa402a6783a013988afc475",
+      "structural": {
+        "face_bbox": [
+          42,
+          27,
+          93,
+          77
+        ],
+        "head_bbox": [
+          27,
+          5,
+          98,
+          75
+        ],
+        "face_bbox_corner_ellipse_max": 0.8619156193456893,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 5,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+      },
+      "numeric": {
+        "numeric_pass": true,
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "source": "Retained exact ENV1 evidence"
+      },
+      "model_scores": {
+        "id": "P03",
+        "look": "adult_F_fur_cloak_short",
+        "attempt": 1,
+        "scorecard": "batch1",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Strong stylistic match: clean ink lines, subtle wash texture, proper upper-left light and consistent warm earth tones."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "adult_F_hide_wrap_bun",
+      "path": "art/portrait/polish/adult_F_hide_wrap_bun_try1.png",
+      "sha256": "fc69220936a117eec8f3323455005abc8311ed11f03621be6c786a8f0fcae157",
+      "sprite": "art/character/route_i/adult_F_hide_wrap_bun/S/idle.png",
+      "sprite_sha256": "c548357f80708897392be558b86e0fad98b73ce12693c98f8e3aea132f7ffb7c",
+      "source": "POLISH",
+      "polish_art_attempts": 1,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/adult_F_hide_wrap_bun_try1.png",
+      "env1_sha256": "16e3af73ae460aa357c27c9f0ae7478c1f5fbfcfb6cb5ec3084558b8d55e750e",
+      "structural": {
+        "face_bbox": [
+          42,
+          34,
+          85,
+          78
+        ],
+        "head_bbox": [
+          32,
+          5,
+          94,
+          83
+        ],
+        "face_bbox_corner_ellipse_max": 0.5196005917159764,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 5,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation on original raw and 3x nearest display of canonical128; conservative boundaries include approximately2px uncertainty. Not alpha or canvas bounding box."
+      },
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artpolish-data/portraits/adult_F_hide_wrap_bun_try1.png",
+        "sha256": "402b689b9972751c176267267155409de2a57b045240bb62d6da1561d16e10d4",
+        "family": "portrait",
+        "metrics": {
+          "edge_density": 0.10245023935500126,
+          "saturation_q25": 0.4155751855973495,
+          "saturation_q75": 0.6433120838248749,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.006918761411554428,
+          "foreground_pixels": 65536
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "model_scores": {
+        "look": "adult_F_hide_wrap_bun",
+        "attempt": 1,
+        "medium": 4,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "scorecard": "/Users/rexxa/work/artpolish-data/portraits/style_scorecard_1.png",
+        "scorecard_sha256": "03fa54e86826744fc6281761ce89ce8bd2dfcedac1eba8d79edba540239be4dd",
+        "method": "Actual built-in imagegen scorecard visually transcribed; nine300px candidate previews; D1 diagnostic only."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "adult_F_hide_wrap_long_tied",
+      "path": "art/portrait/env1/adult_F_hide_wrap_long_tied_try1.png",
+      "sha256": "4b056f762d9c623493b2f4f5f3df74ebc236a4cbdbefe937e6d6a5d3f5da7d1e",
+      "sprite": "art/character/route_i/adult_F_hide_wrap_long_tied/S/idle.png",
+      "sprite_sha256": "25cdf72bf5b64b4d02e2d4ca34d78a76de58a174211ab8338f9d3a8c5cd6446a",
+      "source": "ENV1_RETAINED",
+      "polish_art_attempts": 0,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/adult_F_hide_wrap_long_tied_try1.png",
+      "env1_sha256": "4b056f762d9c623493b2f4f5f3df74ebc236a4cbdbefe937e6d6a5d3f5da7d1e",
+      "structural": {
+        "face_bbox": [
+          44,
+          30,
+          94,
+          79
+        ],
+        "head_bbox": [
+          13,
+          5,
+          104,
+          91
+        ],
+        "face_bbox_corner_ellipse_max": 0.8202754413418749,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 5,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+      },
+      "numeric": {
+        "numeric_pass": true,
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "source": "Retained exact ENV1 evidence"
+      },
+      "model_scores": {
+        "id": "P05",
+        "look": "adult_F_hide_wrap_long_tied",
+        "attempt": 1,
+        "scorecard": "batch1",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Consistent ink drawing style with careful wash and texture. Upper-left lighting and warm earth palette match well."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "adult_F_hide_wrap_short",
+      "path": "art/portrait/env1/adult_F_hide_wrap_short_try1.png",
+      "sha256": "7eba4ded2716a6ca6fb29ea77d7648d9b57176860b0ad43d57c4b636c7518a6c",
+      "sprite": "art/character/route_i/adult_F_hide_wrap_short/S/idle.png",
+      "sprite_sha256": "08cf7a69d6342d83667b1ffb402d41d9be47e0fbc7bd96d8b13996ac8af72e1c",
+      "source": "ENV1_RETAINED",
+      "polish_art_attempts": 0,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/adult_F_hide_wrap_short_try1.png",
+      "env1_sha256": "7eba4ded2716a6ca6fb29ea77d7648d9b57176860b0ad43d57c4b636c7518a6c",
+      "structural": {
+        "face_bbox": [
+          39,
+          27,
+          91,
+          78
+        ],
+        "head_bbox": [
+          25,
+          5,
+          95,
+          78
+        ],
+        "face_bbox_corner_ellipse_max": 0.8040643796762679,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 5,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+      },
+      "numeric": {
+        "numeric_pass": true,
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "source": "Retained exact ENV1 evidence"
+      },
+      "model_scores": {
+        "id": "P06",
+        "look": "adult_F_hide_wrap_short",
+        "attempt": 1,
+        "scorecard": "batch1",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Good match to the reference style: fine linework, restrained wash, correct lighting direction, and cohesive ochre/sepia palette."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "adult_F_loincloth_bun",
+      "path": "art/portrait/env1/adult_F_loincloth_bun_try2.png",
+      "sha256": "499a210ace11f54ee20237ddef00743b2433efd588b69c89e2d721a2c0feb37f",
+      "sprite": "art/character/route_i/adult_F_loincloth_bun/S/idle.png",
+      "sprite_sha256": "22465fb470e1aa61afecac3e506596fa75e389fdc79076c0323f6fb1ed2dce30",
+      "source": "ENV1_RETAINED",
+      "polish_art_attempts": 0,
+      "env1_selected_attempt": 2,
+      "env1_path": "art/portrait/env1/adult_F_loincloth_bun_try2.png",
+      "env1_sha256": "499a210ace11f54ee20237ddef00743b2433efd588b69c89e2d721a2c0feb37f",
+      "structural": {
+        "face_bbox": [
+          38,
+          30,
+          89,
+          79
+        ],
+        "head_bbox": [
+          27,
+          2,
+          94,
+          85
+        ],
+        "face_bbox_corner_ellipse_max": 0.704572962003032,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 2,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation of actual portrait; +/-2px estimate, conservative bounds."
+      },
+      "numeric": {
+        "numeric_pass": true,
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "source": "Retained exact ENV1 evidence"
+      },
+      "model_scores": {
+        "id": "R02",
+        "look": "adult_F_loincloth_bun",
+        "attempt": 2,
+        "scorecard": "retry",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Also fits the reference style: same ink-and-wash technique, line treatment, lighting direction and warm earth/ochre palette. Slightly smoother rendering and a touch lighter in contrast, but still a strong match overall."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "adult_F_loincloth_long_tied",
+      "path": "art/portrait/env1/adult_F_loincloth_long_tied_try1.png",
+      "sha256": "aa8ffbc65b5cdf443f385455703e0884878d6643d05c2b2298164a9aae57fad3",
+      "sprite": "art/character/route_i/adult_F_loincloth_long_tied/S/idle.png",
+      "sprite_sha256": "752163930586413cdaf3ddfd76f22f08d2960bbc9868c5073cb7bbf8dd75a2cb",
+      "source": "ENV1_RETAINED",
+      "polish_art_attempts": 0,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/adult_F_loincloth_long_tied_try1.png",
+      "env1_sha256": "aa8ffbc65b5cdf443f385455703e0884878d6643d05c2b2298164a9aae57fad3",
+      "structural": {
+        "face_bbox": [
+          45,
+          31,
+          97,
+          80
+        ],
+        "head_bbox": [
+          12,
+          3,
+          105,
+          91
+        ],
+        "face_bbox_corner_ellipse_max": 0.8953402366863905,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 3,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+      },
+      "numeric": {
+        "numeric_pass": true,
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "source": "Retained exact ENV1 evidence"
+      },
+      "model_scores": {
+        "id": "P08",
+        "look": "adult_F_loincloth_long_tied",
+        "attempt": 1,
+        "scorecard": "batch1",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Maintains the same ink-and-wash look, line quality, lighting and warm earthy colours as the anchors."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "adult_F_loincloth_short",
+      "path": "art/portrait/env1/adult_F_loincloth_short_try1.png",
+      "sha256": "ec16e5c34eb7fc26d8654562a9d5dde1960f0a07199d618041a1ad93dfa790b9",
+      "sprite": "art/character/route_i/adult_F_loincloth_short/S/idle.png",
+      "sprite_sha256": "3497d79c1f1dfd5ce3679b736c52f0b913c00831e68a872de55fbe8fbb36ce66",
+      "source": "ENV1_RETAINED",
+      "polish_art_attempts": 0,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/adult_F_loincloth_short_try1.png",
+      "env1_sha256": "ec16e5c34eb7fc26d8654562a9d5dde1960f0a07199d618041a1ad93dfa790b9",
+      "structural": {
+        "face_bbox": [
+          39,
+          27,
+          92,
+          78
+        ],
+        "head_bbox": [
+          25,
+          2,
+          98,
+          77
+        ],
+        "face_bbox_corner_ellipse_max": 0.8324734705853587,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 2,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+      },
+      "numeric": {
+        "numeric_pass": true,
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "source": "Retained exact ENV1 evidence"
+      },
+      "model_scores": {
+        "id": "P09",
+        "look": "adult_F_loincloth_short",
+        "attempt": 1,
+        "scorecard": "batch2",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Matches the hand-drawn ink and wash look with clean contours and textured hatching. Lighting and warm earth palette align well with the references."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "path": "art/portrait/env1/adult_M_fur_cloak_bun_try1.png",
+      "sha256": "a3d77851640851bba02c74acae48175405d93cf17787f75d22a29001999e9562",
+      "sprite": "art/character/route_i/adult_M_fur_cloak_bun/S/idle.png",
+      "sprite_sha256": "a98c1b8271c9373c1ad7ad2a9f1d3f48fb4f37f2fd27a32c4d6c535ffda90208",
+      "source": "ENV1_RETAINED",
+      "polish_art_attempts": 0,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/adult_M_fur_cloak_bun_try1.png",
+      "env1_sha256": "a3d77851640851bba02c74acae48175405d93cf17787f75d22a29001999e9562",
+      "structural": {
+        "face_bbox": [
+          35,
+          28,
+          88,
+          83
+        ],
+        "head_bbox": [
+          28,
+          4,
+          94,
+          84
+        ],
+        "face_bbox_corner_ellipse_max": 0.8371375128368135,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 4,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+      },
+      "numeric": {
+        "numeric_pass": true,
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "source": "Retained exact ENV1 evidence"
+      },
+      "model_scores": {
+        "id": "P10",
+        "look": "adult_M_fur_cloak_bun",
+        "attempt": 1,
+        "scorecard": "batch2",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Very consistent with the reference style: fine linework, controlled ink wash, and natural upper-left lighting. Palette and rendering closely match."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "adult_M_fur_cloak_short",
+      "path": "art/portrait/env1/adult_M_fur_cloak_short_try1.png",
+      "sha256": "4557b369817780da19c1555a515be16801b039cb825c853e43c5c19846760976",
+      "sprite": "art/character/route_i/adult_M_fur_cloak_short/S/idle.png",
+      "sprite_sha256": "345b19c1776ab4517396b0b90882fda0b1cfa0a4dd3e6adfe7e9adb0d9728500",
+      "source": "ENV1_RETAINED",
+      "polish_art_attempts": 0,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/adult_M_fur_cloak_short_try1.png",
+      "env1_sha256": "4557b369817780da19c1555a515be16801b039cb825c853e43c5c19846760976",
+      "structural": {
+        "face_bbox": [
+          36,
+          29,
+          90,
+          84
+        ],
+        "head_bbox": [
+          28,
+          5,
+          98,
+          84
+        ],
+        "face_bbox_corner_ellipse_max": 0.7836569025380214,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 5,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+      },
+      "numeric": {
+        "numeric_pass": false,
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "source": "Retained exact ENV1 evidence"
+      },
+      "model_scores": {
+        "id": "P11",
+        "look": "adult_M_fur_cloak_short",
+        "attempt": 1,
+        "scorecard": "batch2",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Strong match to style with the same illustrative line quality and restrained colouring. Lighting and warm tones are consistent and well integrated."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "adult_M_hide_wrap_bun",
+      "path": "art/portrait/env1/adult_M_hide_wrap_bun_try1.png",
+      "sha256": "3eefc815ac67abc6058bcae20a43ce38e11cb69f45b5cb72059adbff5ccb3adc",
+      "sprite": "art/character/route_i/adult_M_hide_wrap_bun/S/idle.png",
+      "sprite_sha256": "d72ae163db9da2a64b523157ff197c7b602f14baf264d418c5ff354f3c1d8f46",
+      "source": "ENV1_RETAINED",
+      "polish_art_attempts": 0,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/adult_M_hide_wrap_bun_try1.png",
+      "env1_sha256": "3eefc815ac67abc6058bcae20a43ce38e11cb69f45b5cb72059adbff5ccb3adc",
+      "structural": {
+        "face_bbox": [
+          36,
+          29,
+          90,
+          83
+        ],
+        "head_bbox": [
+          27,
+          2,
+          96,
+          86
+        ],
+        "face_bbox_corner_ellipse_max": 0.7836569025380214,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 2,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+      },
+      "numeric": {
+        "numeric_pass": true,
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "source": "Retained exact ENV1 evidence"
+      },
+      "model_scores": {
+        "id": "P12",
+        "look": "adult_M_hide_wrap_bun",
+        "attempt": 1,
+        "scorecard": "batch2",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Excellent stylistic fit. Linework, ink texture and wash are consistent with the references, with correct lighting direction and earthy palette."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "adult_M_hide_wrap_short",
+      "path": "art/portrait/env1/adult_M_hide_wrap_short_try1.png",
+      "sha256": "e496c227ec474647e8d9356d30fd13ca1aae02889bbe3d4ff701144fcfe5f643",
+      "sprite": "art/character/route_i/adult_M_hide_wrap_short/S/idle.png",
+      "sprite_sha256": "e0d14af6d00de104698610adf099e677fb0596bb8d5d30de1f508206aaf15310",
+      "source": "ENV1_RETAINED",
+      "polish_art_attempts": 0,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/adult_M_hide_wrap_short_try1.png",
+      "env1_sha256": "e496c227ec474647e8d9356d30fd13ca1aae02889bbe3d4ff701144fcfe5f643",
+      "structural": {
+        "face_bbox": [
+          35,
+          29,
+          90,
+          85
+        ],
+        "head_bbox": [
+          25,
+          4,
+          97,
+          84
+        ],
+        "face_bbox_corner_ellipse_max": 0.813099051298352,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 4,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+      },
+      "numeric": {
+        "numeric_pass": true,
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "source": "Retained exact ENV1 evidence"
+      },
+      "model_scores": {
+        "id": "P13",
+        "look": "adult_M_hide_wrap_short",
+        "attempt": 1,
+        "scorecard": "batch2",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Very close to the reference style. Good ink lines, textured brushwork and restrained warm colours with the same lighting feel."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "adult_M_loincloth_bun",
+      "path": "art/portrait/env1/adult_M_loincloth_bun_try1.png",
+      "sha256": "64cea081a5636ef91123ad434a02adefa28ae34856128748e8920416b34f231f",
+      "sprite": "art/character/route_i/adult_M_loincloth_bun/S/idle.png",
+      "sprite_sha256": "e28ea430edf4f15d7a2910d17b573ecfddce965da9eb045d91989c6f174e6f95",
+      "source": "ENV1_RETAINED",
+      "polish_art_attempts": 0,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/adult_M_loincloth_bun_try1.png",
+      "env1_sha256": "64cea081a5636ef91123ad434a02adefa28ae34856128748e8920416b34f231f",
+      "structural": {
+        "face_bbox": [
+          35,
+          30,
+          90,
+          85
+        ],
+        "head_bbox": [
+          28,
+          2,
+          97,
+          85
+        ],
+        "face_bbox_corner_ellipse_max": 0.7898002347303046,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 2,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+      },
+      "numeric": {
+        "numeric_pass": true,
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "source": "Retained exact ENV1 evidence"
+      },
+      "model_scores": {
+        "id": "P14",
+        "look": "adult_M_loincloth_bun",
+        "attempt": 1,
+        "scorecard": "batch2",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Excellent match. Line quality, shading and wash treatment align well with the locked examples, with consistent lighting and colour palette."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "adult_M_loincloth_long_tied",
+      "path": "art/portrait/env1/adult_M_loincloth_long_tied_try1.png",
+      "sha256": "dc61f88a477c1b818069ad4c891b397c06d81c0dafedbe0c26d5d086ea7eb8d4",
+      "sprite": "art/character/route_i/adult_M_loincloth_long_tied/S/idle.png",
+      "sprite_sha256": "600661c1a40459299ad5e26662bd19191956fcbb988d8f6007dc2157a4900801",
+      "source": "ENV1_RETAINED",
+      "polish_art_attempts": 0,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/adult_M_loincloth_long_tied_try1.png",
+      "env1_sha256": "dc61f88a477c1b818069ad4c891b397c06d81c0dafedbe0c26d5d086ea7eb8d4",
+      "structural": {
+        "face_bbox": [
+          41,
+          29,
+          94,
+          85
+        ],
+        "head_bbox": [
+          15,
+          4,
+          105,
+          87
+        ],
+        "face_bbox_corner_ellipse_max": 0.8435742579099222,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 4,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+      },
+      "numeric": {
+        "numeric_pass": true,
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "source": "Retained exact ENV1 evidence"
+      },
+      "model_scores": {
+        "id": "P15",
+        "look": "adult_M_loincloth_long_tied",
+        "attempt": 1,
+        "scorecard": "batch2",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Strong stylistic consistency. Same inked edges, hatching detail and warm ochre palette with upper-left lighting."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "adult_M_loincloth_short",
+      "path": "art/portrait/env1/adult_M_loincloth_short_try1.png",
+      "sha256": "c2ecc157356fdd5de31da7a6ebfec39f622bce4ed199e99a8979ca729a90e729",
+      "sprite": "art/character/route_i/adult_M_loincloth_short/S/idle.png",
+      "sprite_sha256": "643d6b90a5cedaae69ba3eb8ef2db304911bf5121e61483e03fa82024d61060b",
+      "source": "ENV1_RETAINED",
+      "polish_art_attempts": 0,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/adult_M_loincloth_short_try1.png",
+      "env1_sha256": "c2ecc157356fdd5de31da7a6ebfec39f622bce4ed199e99a8979ca729a90e729",
+      "structural": {
+        "face_bbox": [
+          35,
+          28,
+          90,
+          85
+        ],
+        "head_bbox": [
+          27,
+          4,
+          94,
+          82
+        ],
+        "face_bbox_corner_ellipse_max": 0.8371375128368135,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 4,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+      },
+      "numeric": {
+        "numeric_pass": true,
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "source": "Retained exact ENV1 evidence"
+      },
+      "model_scores": {
+        "id": "P16",
+        "look": "adult_M_loincloth_short",
+        "attempt": 1,
+        "scorecard": "batch2",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Matches the reference style well with clean ink contours, textured wash and restrained earth tones. Lighting and overall rendering are consistent."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "path": "art/portrait/env1/child_F_fur_cloak_bun_try1.png",
+      "sha256": "c0d81e1813aefcc144b9d9e23aac378620c0e393e39e403804e017a2ee36df14",
+      "sprite": "art/character/route_i/child_F_fur_cloak_bun/S/idle.png",
+      "sprite_sha256": "2c12e35971c40f6aa26d13e994a294fefaca50645218e83f7e39b1ba96e892c5",
+      "source": "ENV1_RETAINED",
+      "polish_art_attempts": 0,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/child_F_fur_cloak_bun_try1.png",
+      "env1_sha256": "c0d81e1813aefcc144b9d9e23aac378620c0e393e39e403804e017a2ee36df14",
+      "structural": {
+        "face_bbox": [
+          37,
+          34,
+          92,
+          85
+        ],
+        "head_bbox": [
+          25,
+          2,
+          98,
+          85
+        ],
+        "face_bbox_corner_ellipse_max": 0.6745592694019268,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 2,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+      },
+      "numeric": {
+        "numeric_pass": true,
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "source": "Retained exact ENV1 evidence"
+      },
+      "model_scores": {
+        "id": "P17",
+        "look": "child_F_fur_cloak_bun",
+        "attempt": 1,
+        "scorecard": "batch3",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Matches the rendered ink/wash look with fine contours, correct upper-left warm lighting and earthy palette."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "path": "art/portrait/env1/child_F_fur_cloak_long_tied_try1.png",
+      "sha256": "1e0aac5e5ab03d2e81653d21f14291205e59ff11916a8b827819f3b60781518c",
+      "sprite": "art/character/route_i/child_F_fur_cloak_long_tied/S/idle.png",
+      "sprite_sha256": "dc212949d71914dd4d4b8cbc4cc3d89c5bf091897aa67fb7f04f769928c8ca6d",
+      "source": "ENV1_RETAINED",
+      "polish_art_attempts": 0,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/child_F_fur_cloak_long_tied_try1.png",
+      "env1_sha256": "1e0aac5e5ab03d2e81653d21f14291205e59ff11916a8b827819f3b60781518c",
+      "structural": {
+        "face_bbox": [
+          41,
+          31,
+          94,
+          83
+        ],
+        "head_bbox": [
+          15,
+          3,
+          102,
+          88
+        ],
+        "face_bbox_corner_ellipse_max": 0.7977162697442417,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 3,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+      },
+      "numeric": {
+        "numeric_pass": true,
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "source": "Retained exact ENV1 evidence"
+      },
+      "model_scores": {
+        "id": "P18",
+        "look": "child_F_fur_cloak_long_tied",
+        "attempt": 1,
+        "scorecard": "batch3",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Consistent hand-drawn medium and linework, lighting from upper-left, restrained ochre/sepia colours."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "child_F_fur_cloak_short",
+      "path": "art/portrait/env1/child_F_fur_cloak_short_try1.png",
+      "sha256": "bca3b5ebb749d64853918f86ccc74628555f13c1dbc9e779f75a424229949899",
+      "sprite": "art/character/route_i/child_F_fur_cloak_short/S/idle.png",
+      "sprite_sha256": "44f21b433c051926ff9848142e1fe285780af14a28de169130563ea9614aba20",
+      "source": "ENV1_RETAINED",
+      "polish_art_attempts": 0,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/child_F_fur_cloak_short_try1.png",
+      "env1_sha256": "bca3b5ebb749d64853918f86ccc74628555f13c1dbc9e779f75a424229949899",
+      "structural": {
+        "face_bbox": [
+          35,
+          30,
+          92,
+          82
+        ],
+        "head_bbox": [
+          22,
+          4,
+          100,
+          84
+        ],
+        "face_bbox_corner_ellipse_max": 0.7898002347303046,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 4,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+      },
+      "numeric": {
+        "numeric_pass": true,
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "source": "Retained exact ENV1 evidence"
+      },
+      "model_scores": {
+        "id": "P19",
+        "look": "child_F_fur_cloak_short",
+        "attempt": 1,
+        "scorecard": "batch3",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Very close to reference style with clean ink lines, natural warm light and appropriate muted palette."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "child_F_hide_wrap_bun",
+      "path": "art/portrait/polish/child_F_hide_wrap_bun_try1.png",
+      "sha256": "ae43e7ab7cc2e5e9624cf04b2642706eb7d299e835a6d190ab524eaa6352e8e9",
+      "sprite": "art/character/route_i/child_F_hide_wrap_bun/S/idle.png",
+      "sprite_sha256": "aa25c1e64ccfd1213749ed8c8af3a801d449d508d82b344071665243b061b073",
+      "source": "POLISH",
+      "polish_art_attempts": 1,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/child_F_hide_wrap_bun_try1.png",
+      "env1_sha256": "3c45d5502ce25f97e60de8e7aa2c5ec02c8ade6bb83590babff511b42e4489b8",
+      "structural": {
+        "face_bbox": [
+          38,
+          43,
+          86,
+          85
+        ],
+        "head_bbox": [
+          28,
+          7,
+          99,
+          89
+        ],
+        "face_bbox_corner_ellipse_max": 0.5621913051982983,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 7,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation on original raw and 3x nearest display of canonical128; conservative boundaries include approximately2px uncertainty. Not alpha or canvas bounding box."
+      },
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artpolish-data/portraits/child_F_hide_wrap_bun_try1.png",
+        "sha256": "1dd45112b9453f1258911452d49e2eccf2a873c325ae6802bb40f3cff5e42753",
+        "family": "portrait",
+        "metrics": {
+          "edge_density": 0.11022927689594356,
+          "saturation_q25": 0.39893006519825974,
+          "saturation_q75": 0.6271116936246004,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.00472119516331136,
+          "foreground_pixels": 65536
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "model_scores": {
+        "look": "child_F_hide_wrap_bun",
+        "attempt": 1,
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "scorecard": "/Users/rexxa/work/artpolish-data/portraits/style_scorecard_1.png",
+        "scorecard_sha256": "03fa54e86826744fc6281761ce89ce8bd2dfcedac1eba8d79edba540239be4dd",
+        "method": "Actual built-in imagegen scorecard visually transcribed; nine300px candidate previews; D1 diagnostic only."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "child_F_hide_wrap_long_tied",
+      "path": "art/portrait/env1/child_F_hide_wrap_long_tied_try1.png",
+      "sha256": "e5042d1aaf653fd6a8da4b2ae0fded0dac5c04b082e55286671c9e9ffdd8736b",
+      "sprite": "art/character/route_i/child_F_hide_wrap_long_tied/S/idle.png",
+      "sprite_sha256": "e8913e557c1526c24c71602856e0d52f3a8b5d47e1d505378811aa798629b513",
+      "source": "ENV1_RETAINED",
+      "polish_art_attempts": 0,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/child_F_hide_wrap_long_tied_try1.png",
+      "env1_sha256": "e5042d1aaf653fd6a8da4b2ae0fded0dac5c04b082e55286671c9e9ffdd8736b",
+      "structural": {
+        "face_bbox": [
+          39,
+          32,
+          96,
+          86
+        ],
+        "head_bbox": [
+          12,
+          4,
+          104,
+          93
+        ],
+        "face_bbox_corner_ellipse_max": 0.8399463298938823,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 4,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+      },
+      "numeric": {
+        "numeric_pass": true,
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "source": "Retained exact ENV1 evidence"
+      },
+      "model_scores": {
+        "id": "P21",
+        "look": "child_F_hide_wrap_long_tied",
+        "attempt": 1,
+        "scorecard": "batch3",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Good match: inked linework, controlled wash, upper-left light, and earthy natural colours."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "child_F_hide_wrap_short",
+      "path": "art/portrait/env1/child_F_hide_wrap_short_try1.png",
+      "sha256": "6d821d16d774e7c2a60d0b67d050fe223dd40528e117b2c34ae3f6a702354506",
+      "sprite": "art/character/route_i/child_F_hide_wrap_short/S/idle.png",
+      "sprite_sha256": "350846f7210a7298393f83bb7221555b129bafcd94ddf35e1df3dd837783cb23",
+      "source": "ENV1_RETAINED",
+      "polish_art_attempts": 0,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/child_F_hide_wrap_short_try1.png",
+      "env1_sha256": "6d821d16d774e7c2a60d0b67d050fe223dd40528e117b2c34ae3f6a702354506",
+      "structural": {
+        "face_bbox": [
+          36,
+          30,
+          93,
+          82
+        ],
+        "head_bbox": [
+          20,
+          3,
+          103,
+          83
+        ],
+        "face_bbox_corner_ellipse_max": 0.7898002347303046,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 3,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+      },
+      "numeric": {
+        "numeric_pass": true,
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "source": "Retained exact ENV1 evidence"
+      },
+      "model_scores": {
+        "id": "P22",
+        "look": "child_F_hide_wrap_short",
+        "attempt": 1,
+        "scorecard": "batch3",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Aligns well with references in medium, line quality, lighting direction and restrained warm palette."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "child_F_loincloth_bun",
+      "path": "art/portrait/env1/child_F_loincloth_bun_try1.png",
+      "sha256": "f14ce3c8e766a473abaeb20220bd9de40d92700a64f9389e455f1883c8b5c58f",
+      "sprite": "art/character/route_i/child_F_loincloth_bun/S/idle.png",
+      "sprite_sha256": "32529ab74914ed26abe8d7bc9d0e90cb9c0c9fe4c3d362915b011cd87611b61c",
+      "source": "ENV1_RETAINED",
+      "polish_art_attempts": 0,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/child_F_loincloth_bun_try1.png",
+      "env1_sha256": "f14ce3c8e766a473abaeb20220bd9de40d92700a64f9389e455f1883c8b5c58f",
+      "structural": {
+        "face_bbox": [
+          38,
+          34,
+          93,
+          85
+        ],
+        "head_bbox": [
+          27,
+          2,
+          98,
+          87
+        ],
+        "face_bbox_corner_ellipse_max": 0.7040014181622574,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 2,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+      },
+      "numeric": {
+        "numeric_pass": true,
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "source": "Retained exact ENV1 evidence"
+      },
+      "model_scores": {
+        "id": "P23",
+        "look": "child_F_loincloth_bun",
+        "attempt": 1,
+        "scorecard": "batch3",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Consistent style with fine contours, warm top-left lighting and natural ochre/sepia tones."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "child_F_loincloth_long_tied",
+      "path": "art/portrait/polish/child_F_loincloth_long_tied_try1.png",
+      "sha256": "9647b0176c879fe1eb3f253f5ce02d40e4dab5cf9c8c8e9126a41a587a94da08",
+      "sprite": "art/character/route_i/child_F_loincloth_long_tied/S/idle.png",
+      "sprite_sha256": "e7d76faa835632fc4059185916b7f2580bccaa7e3e5bbdc65a9538bd97450b28",
+      "source": "POLISH",
+      "polish_art_attempts": 1,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/child_F_loincloth_long_tied_try1.png",
+      "env1_sha256": "e8e030eb2d9ce5add2212e8b7b2165f816cf16b723e4e291c610126c829cf8df",
+      "structural": {
+        "face_bbox": [
+          41,
+          42,
+          88,
+          84
+        ],
+        "head_bbox": [
+          18,
+          7,
+          98,
+          94
+        ],
+        "face_bbox_corner_ellipse_max": 0.4931567558315809,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 7,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation on original raw and 3x nearest display of canonical128; conservative boundaries include approximately2px uncertainty. Not alpha or canvas bounding box."
+      },
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artpolish-data/portraits/child_F_loincloth_long_tied_try1.png",
+        "sha256": "7490374e329d0eea9f3c5780404282559d268300112f3bd5360821d7b55fabfa",
+        "family": "portrait",
+        "metrics": {
+          "edge_density": 0.1151581002771479,
+          "saturation_q25": 0.40402899036924,
+          "saturation_q75": 0.6626337975713423,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.008679355294164613,
+          "foreground_pixels": 65536
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "model_scores": {
+        "look": "child_F_loincloth_long_tied",
+        "attempt": 1,
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "scorecard": "/Users/rexxa/work/artpolish-data/portraits/style_scorecard_1.png",
+        "scorecard_sha256": "03fa54e86826744fc6281761ce89ce8bd2dfcedac1eba8d79edba540239be4dd",
+        "method": "Actual built-in imagegen scorecard visually transcribed; nine300px candidate previews; D1 diagnostic only."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "child_F_loincloth_short",
+      "path": "art/portrait/env1/child_F_loincloth_short_try1.png",
+      "sha256": "f495b6fc2baaeb30b362b07e5f4d64ff035a87e32359bc98f5792f17c18a5e28",
+      "sprite": "art/character/route_i/child_F_loincloth_short/S/idle.png",
+      "sprite_sha256": "3ffcbf2c6157985078c2687d76a5edcad0eaf455d563742024f2834b9e9d96ca",
+      "source": "ENV1_RETAINED",
+      "polish_art_attempts": 0,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/child_F_loincloth_short_try1.png",
+      "env1_sha256": "f495b6fc2baaeb30b362b07e5f4d64ff035a87e32359bc98f5792f17c18a5e28",
+      "structural": {
+        "face_bbox": [
+          33,
+          29,
+          92,
+          83
+        ],
+        "head_bbox": [
+          20,
+          3,
+          102,
+          83
+        ],
+        "face_bbox_corner_ellipse_max": 0.8750825223727323,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 3,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+      },
+      "numeric": {
+        "numeric_pass": true,
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "source": "Retained exact ENV1 evidence"
+      },
+      "model_scores": {
+        "id": "P25",
+        "look": "child_F_loincloth_short",
+        "attempt": 1,
+        "scorecard": "batch4",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Strong match. Inked linework and restrained wash, consistent warm upper-left lighting and shadows, and the same earthy sepia palette as the references."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "path": "art/portrait/polish/child_M_fur_cloak_bun_try1.png",
+      "sha256": "85849d058e0d50eafb40ab15832a2d064d4b91c941a61786bd9e12ed68cc84a4",
+      "sprite": "art/character/route_i/child_M_fur_cloak_bun/S/idle.png",
+      "sprite_sha256": "3c61b4824d4f9ab461a1be252aae2c4c8399508bb68cb55809130b1d586814d2",
+      "source": "POLISH",
+      "polish_art_attempts": 1,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/child_M_fur_cloak_bun_try1.png",
+      "env1_sha256": "1ff9124c15f3a2f7f7674b8126ce1a019dc8280ed237f69f745a5fc2028c1b50",
+      "structural": {
+        "face_bbox": [
+          36,
+          44,
+          85,
+          83
+        ],
+        "head_bbox": [
+          27,
+          8,
+          95,
+          85
+        ],
+        "face_bbox_corner_ellipse_max": 0.583952760526187,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 8,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation on original raw and 3x nearest display of canonical128; conservative boundaries include approximately2px uncertainty. Not alpha or canvas bounding box."
+      },
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artpolish-data/portraits/child_M_fur_cloak_bun_try1.png",
+        "sha256": "bd2310a0f8d29a586b1e589b7711311d06332d0b160ae4afdd7e3de4ad385b0c",
+        "family": "portrait",
+        "metrics": {
+          "edge_density": 0.12762975560594608,
+          "saturation_q25": 0.38361262150298503,
+          "saturation_q75": 0.6772841346754874,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.027477970281799054,
+          "foreground_pixels": 65536
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "model_scores": {
+        "look": "child_M_fur_cloak_bun",
+        "attempt": 1,
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "scorecard": "/Users/rexxa/work/artpolish-data/portraits/style_scorecard_1.png",
+        "scorecard_sha256": "03fa54e86826744fc6281761ce89ce8bd2dfcedac1eba8d79edba540239be4dd",
+        "method": "Actual built-in imagegen scorecard visually transcribed; nine300px candidate previews; D1 diagnostic only."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "child_M_fur_cloak_long_tied",
+      "path": "art/portrait/env1/child_M_fur_cloak_long_tied_try1.png",
+      "sha256": "5d0a6f52305594aac85a6fab12b1cb41a44c04984dad22facea7d8cf4a2d9fe3",
+      "sprite": "art/character/route_i/child_M_fur_cloak_long_tied/S/idle.png",
+      "sprite_sha256": "c86a67a0cec5e0edaf9d3e590285247d4622f23453078b8491b4e71ae43697d4",
+      "source": "ENV1_RETAINED",
+      "polish_art_attempts": 0,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/child_M_fur_cloak_long_tied_try1.png",
+      "env1_sha256": "5d0a6f52305594aac85a6fab12b1cb41a44c04984dad22facea7d8cf4a2d9fe3",
+      "structural": {
+        "face_bbox": [
+          41,
+          32,
+          96,
+          85
+        ],
+        "head_bbox": [
+          16,
+          4,
+          103,
+          88
+        ],
+        "face_bbox_corner_ellipse_max": 0.8399463298938823,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 4,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+      },
+      "numeric": {
+        "numeric_pass": true,
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "source": "Retained exact ENV1 evidence"
+      },
+      "model_scores": {
+        "id": "P27",
+        "look": "child_M_fur_cloak_long_tied",
+        "attempt": 1,
+        "scorecard": "batch4",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Very good match. Clean contours, selective detail, and natural upper-left light; colour and texture align well with the anchors."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "child_M_fur_cloak_short",
+      "path": "art/portrait/env1/child_M_fur_cloak_short_try1.png",
+      "sha256": "a4b682bde65c5195bcf0cfe90802ec2d5888c39224f7e131ed2ab23bdf672041",
+      "sprite": "art/character/route_i/child_M_fur_cloak_short/S/idle.png",
+      "sprite_sha256": "681b02a75d69e1356944d820642e784047e5b7fb93ee8cfd0d90fb0118dd549a",
+      "source": "ENV1_RETAINED",
+      "polish_art_attempts": 0,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/child_M_fur_cloak_short_try1.png",
+      "env1_sha256": "a4b682bde65c5195bcf0cfe90802ec2d5888c39224f7e131ed2ab23bdf672041",
+      "structural": {
+        "face_bbox": [
+          35,
+          30,
+          93,
+          83
+        ],
+        "head_bbox": [
+          22,
+          5,
+          102,
+          83
+        ],
+        "face_bbox_corner_ellipse_max": 0.7898002347303046,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 5,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+      },
+      "numeric": {
+        "numeric_pass": true,
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "source": "Retained exact ENV1 evidence"
+      },
+      "model_scores": {
+        "id": "P28",
+        "look": "child_M_fur_cloak_short",
+        "attempt": 1,
+        "scorecard": "batch4",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Good match. Style, line and wash are consistent with the references, with appropriate lighting and restrained warm palette."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "child_M_hide_wrap_bun",
+      "path": "art/portrait/polish/child_M_hide_wrap_bun_try1.png",
+      "sha256": "3c1476881ccabaaf3ea3bcd86feb0a52227e6373caf48d028395f29b3b79b461",
+      "sprite": "art/character/route_i/child_M_hide_wrap_bun/S/idle.png",
+      "sprite_sha256": "6834c584e03a847f7883b8cda1f39f87fcd1c2d4b5e818984a9e0842397186a0",
+      "source": "POLISH",
+      "polish_art_attempts": 1,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/child_M_hide_wrap_bun_try1.png",
+      "env1_sha256": "999b2713c5bab0f117f46619c68098197ae8e1ef4fccc7df2cd3fe5ec0f0a593",
+      "structural": {
+        "face_bbox": [
+          36,
+          47,
+          89,
+          89
+        ],
+        "head_bbox": [
+          24,
+          6,
+          98,
+          88
+        ],
+        "face_bbox_corner_ellipse_max": 0.6948995060883172,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 6,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation on original raw and 3x nearest display of canonical128; conservative boundaries include approximately2px uncertainty. Not alpha or canvas bounding box."
+      },
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artpolish-data/portraits/child_M_hide_wrap_bun_try1.png",
+        "sha256": "d20379d42400628d01726133c45cf006041a8fde00bd9d8348b3c105469bc359",
+        "family": "portrait",
+        "metrics": {
+          "edge_density": 0.11235512723607961,
+          "saturation_q25": 0.38420517375358765,
+          "saturation_q75": 0.6178241188171854,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.008237995221481657,
+          "foreground_pixels": 65536
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "model_scores": {
+        "look": "child_M_hide_wrap_bun",
+        "attempt": 1,
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "scorecard": "/Users/rexxa/work/artpolish-data/portraits/style_scorecard_1.png",
+        "scorecard_sha256": "03fa54e86826744fc6281761ce89ce8bd2dfcedac1eba8d79edba540239be4dd",
+        "method": "Actual built-in imagegen scorecard visually transcribed; nine300px candidate previews; D1 diagnostic only."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "child_M_hide_wrap_long_tied",
+      "path": "art/portrait/env1/child_M_hide_wrap_long_tied_try1.png",
+      "sha256": "d074ff9a665d5eca9870326461877a34ca2c9a7791e19eb2cdce9ac493d70e4a",
+      "sprite": "art/character/route_i/child_M_hide_wrap_long_tied/S/idle.png",
+      "sprite_sha256": "bf634eaa8532288e7e5fee06d599b15ca1efd423bd7c8fd9311fa075f37d1f24",
+      "source": "ENV1_RETAINED",
+      "polish_art_attempts": 0,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/child_M_hide_wrap_long_tied_try1.png",
+      "env1_sha256": "d074ff9a665d5eca9870326461877a34ca2c9a7791e19eb2cdce9ac493d70e4a",
+      "structural": {
+        "face_bbox": [
+          40,
+          32,
+          95,
+          86
+        ],
+        "head_bbox": [
+          17,
+          3,
+          106,
+          91
+        ],
+        "face_bbox_corner_ellipse_max": 0.8074050075798328,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 3,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+      },
+      "numeric": {
+        "numeric_pass": true,
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "source": "Retained exact ENV1 evidence"
+      },
+      "model_scores": {
+        "id": "P30",
+        "look": "child_M_hide_wrap_long_tied",
+        "attempt": 1,
+        "scorecard": "batch4",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Strong match. Lines, texture and brushwork closely follow the reference style with correct upper-left lighting and warm earthy colours."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "child_M_hide_wrap_short",
+      "path": "art/portrait/polish/child_M_hide_wrap_short_try1.png",
+      "sha256": "2c47e660a1065078573e8fe2df9d7cc09a211dffee81f9f5fc8352e59aa282c6",
+      "sprite": "art/character/route_i/child_M_hide_wrap_short/S/idle.png",
+      "sprite_sha256": "c21c64389e34db098483d676bb6acb83c06ebf79c81014202937acc2041f4337",
+      "source": "POLISH",
+      "polish_art_attempts": 1,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/child_M_hide_wrap_short_try1.png",
+      "env1_sha256": "23539de91e203aee7aed57e0d427d6f2f8533a32aa14b3039257a44e731d3831",
+      "structural": {
+        "face_bbox": [
+          35,
+          43,
+          89,
+          84
+        ],
+        "head_bbox": [
+          25,
+          8,
+          98,
+          84
+        ],
+        "face_bbox_corner_ellipse_max": 0.6300369211208372,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 8,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation on original raw and 3x nearest display of canonical128; conservative boundaries include approximately2px uncertainty. Not alpha or canvas bounding box."
+      },
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artpolish-data/portraits/child_M_hide_wrap_short_try1.png",
+        "sha256": "61ebaf78f48ccab76905e1980074f75d7409b0c3a862a8eebf680865bc90eb57",
+        "family": "portrait",
+        "metrics": {
+          "edge_density": 0.11375661375661375,
+          "saturation_q25": 0.37183664646245584,
+          "saturation_q75": 0.6660055847303861,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.007732334813262598,
+          "foreground_pixels": 65536
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "model_scores": {
+        "look": "child_M_hide_wrap_short",
+        "attempt": 1,
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "scorecard": "/Users/rexxa/work/artpolish-data/portraits/style_scorecard_1.png",
+        "scorecard_sha256": "03fa54e86826744fc6281761ce89ce8bd2dfcedac1eba8d79edba540239be4dd",
+        "method": "Actual built-in imagegen scorecard visually transcribed; nine300px candidate previews; D1 diagnostic only."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "child_M_loincloth_bun",
+      "path": "art/portrait/polish/child_M_loincloth_bun_try1.png",
+      "sha256": "2f4012be67b446e281d110177475906f10301f6b49536a66a32a9951d9d66d2f",
+      "sprite": "art/character/route_i/child_M_loincloth_bun/S/idle.png",
+      "sprite_sha256": "8bafb28e58849f6c55662dac964be6c7b0c1a209fb123ea76bcdd5b1636e6a55",
+      "source": "POLISH",
+      "polish_art_attempts": 1,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/child_M_loincloth_bun_try1.png",
+      "env1_sha256": "456650fb5a779828f60dac465a88ff59b6124c9a71ce48f2088001ce1ceb7bc9",
+      "structural": {
+        "face_bbox": [
+          39,
+          43,
+          85,
+          86
+        ],
+        "head_bbox": [
+          29,
+          9,
+          98,
+          88
+        ],
+        "face_bbox_corner_ellipse_max": 0.5539696317668347,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 9,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation on original raw and 3x nearest display of canonical128; conservative boundaries include approximately2px uncertainty. Not alpha or canvas bounding box."
+      },
+      "numeric": {
+        "candidate": "/Users/rexxa/work/artpolish-data/portraits/child_M_loincloth_bun_try1.png",
+        "sha256": "c372bb381dda3b5755ef6f1bd9eda12daaf487357a09199ea7a19d815016e9d5",
+        "family": "portrait",
+        "metrics": {
+          "edge_density": 0.09971025447215924,
+          "saturation_q25": 0.3571312866939893,
+          "saturation_q75": 0.6392411947000675,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.005417062715423257,
+          "foreground_pixels": 65536
+        },
+        "numeric_checks": {
+          "edge_density": false,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "model_scores": {
+        "look": "child_M_loincloth_bun",
+        "attempt": 1,
+        "medium": 5,
+        "line": 5,
+        "light": 5,
+        "palette": 5,
+        "scorecard": "/Users/rexxa/work/artpolish-data/portraits/style_scorecard_1.png",
+        "scorecard_sha256": "03fa54e86826744fc6281761ce89ce8bd2dfcedac1eba8d79edba540239be4dd",
+        "method": "Actual built-in imagegen scorecard visually transcribed; nine300px candidate previews; D1 diagnostic only."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "child_M_loincloth_long_tied",
+      "path": "art/portrait/env1/child_M_loincloth_long_tied_try1.png",
+      "sha256": "cf5353d32d1e261109284f87ea88abaf8404a860406c391d213bd26dd4718b87",
+      "sprite": "art/character/route_i/child_M_loincloth_long_tied/S/idle.png",
+      "sprite_sha256": "aa75fd472f1f4327b38f940bec458bad24e0ce7f7f6b3e5d37d5bc73712538b7",
+      "source": "ENV1_RETAINED",
+      "polish_art_attempts": 0,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/child_M_loincloth_long_tied_try1.png",
+      "env1_sha256": "cf5353d32d1e261109284f87ea88abaf8404a860406c391d213bd26dd4718b87",
+      "structural": {
+        "face_bbox": [
+          37,
+          32,
+          94,
+          85
+        ],
+        "head_bbox": [
+          16,
+          2,
+          103,
+          99
+        ],
+        "face_bbox_corner_ellipse_max": 0.7758967431170227,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 2,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+      },
+      "numeric": {
+        "numeric_pass": true,
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "source": "Retained exact ENV1 evidence"
+      },
+      "model_scores": {
+        "id": "P33",
+        "look": "child_M_loincloth_long_tied",
+        "attempt": 1,
+        "scorecard": "batch5",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Matches the hand-drawn ink and wash medium with fine, confident linework. Lighting and shadows align with the upper-left warm light and the restrained ochre/sepia earth palette seen in the reference portrait and scene."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    },
+    {
+      "look": "child_M_loincloth_short",
+      "path": "art/portrait/env1/child_M_loincloth_short_try1.png",
+      "sha256": "919b89392bffba9631b47549bab6462fcda4f025ab3860045caf0f607c1e0df0",
+      "sprite": "art/character/route_i/child_M_loincloth_short/S/idle.png",
+      "sprite_sha256": "3511b960e7878a4854ea22830a8e72a3b290e75a84949712a817641c76a3c335",
+      "source": "ENV1_RETAINED",
+      "polish_art_attempts": 0,
+      "env1_selected_attempt": 1,
+      "env1_path": "art/portrait/env1/child_M_loincloth_short_try1.png",
+      "env1_sha256": "919b89392bffba9631b47549bab6462fcda4f025ab3860045caf0f607c1e0df0",
+      "structural": {
+        "face_bbox": [
+          34,
+          30,
+          92,
+          83
+        ],
+        "head_bbox": [
+          22,
+          3,
+          100,
+          84
+        ],
+        "face_bbox_corner_ellipse_max": 0.8202754413418749,
+        "face_inside_fixed_oval": true,
+        "head_uncropped": true,
+        "head_margin_px": 3,
+        "head_margin_pass": true,
+        "passed": true,
+        "method": "Manual visual observation of head including flyaway hair and face skin/ear bounds, estimated to +/-2px on 128px canvas; conservative rounded bounds. Not canvas/alpha bounds."
+      },
+      "numeric": {
+        "numeric_pass": true,
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "source": "Retained exact ENV1 evidence"
+      },
+      "model_scores": {
+        "id": "P34",
+        "look": "child_M_loincloth_short",
+        "attempt": 1,
+        "scorecard": "batch5",
+        "medium": 4,
+        "line": 4,
+        "light": 4,
+        "palette": 4,
+        "sentence": "Consistent with the reference style: controlled ink lines, selective detail, and textured wash shading. Warm upper-left lighting with appropriate shadowing, and a restrained earth/ochre palette matching the portrait and scene."
+      },
+      "style_gates_acceptance": false,
+      "identity_test": "PASS: reviewera 34/34; reviewerb 34/34",
+      "owner_adopted": false,
+      "status": "OWNER_CHOICE_PENDING"
+    }
+  ],
+  "board_sha256": "30ed02b12c0ae5961f575f749055a00c5bc2c6ffc808fc5504688c1d4df599b7",
+  "board_bytes": 1472492,
+  "blind_packet": "/Users/rexxa/work/artpolish-data/portraits/blind/packet",
+  "identity_bar_per_reviewer": "30/34",
+  "geometry_method": "ENV1 fixed ellipse center64,61 radii44,52; conservative manually observed head and face bboxes, approximately2px uncertainty; head margin>=2px",
+  "generation_ledger": "docs/v8/artpolish/portrait_generation_ledger.json",
+  "identity_evidence": {
+    "path": "docs/v8/artpolish/blind_portraits.json",
+    "sha256": "e82911f265bf78005b1bb66ed7a9aff815adadddbc6674eb1e52bfe662e9808c",
+    "summaries": [
+      {
+        "reviewer": "a",
+        "correct": 34,
+        "total": 34,
+        "passed": true
+      },
+      {
+        "reviewer": "b",
+        "correct": 34,
+        "total": 34,
+        "passed": true
+      }
+    ]
+  },
+  "owner_display": {
+    "portrait_native": [
+      128,
+      128
+    ],
+    "portrait_small": [
+      64,
+      64
+    ],
+    "portrait_small_filter": "BILINEAR",
+    "sprite_scale": 0.5,
+    "sprite_filter": "LANCZOS",
+    "blind_sprite_scale": 2,
+    "blind_sprite_filter": "NEAREST"
+  }
+}

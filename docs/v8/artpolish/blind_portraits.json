@@ -1,0 +1,1671 @@
+{
+  "protocol": "docs/v8/artpolish/BLIND_PROTOCOL.md",
+  "protocol_sha256": "9e4708e2aa588edd530688fe6b1772cbfff38458cfd7cef7e78054219ec40894",
+  "answer_key": "/Users/rexxa/work/artpolish-data/portraits/blind/answer_key.json",
+  "answer_key_sha256": "500a603d7e7b3930d509f6d4ef776e501857d7e123a29361eaab0ac49cb624d7",
+  "sources": [
+    {
+      "path": "/Users/rexxa/work/artpolish-data/portraits/blind/response_a.json",
+      "sha256": "aa821f9758394c0962e630b5c414dc2f01e8261906361b00cd275fcde7d2252b"
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish-data/portraits/blind/response_b.json",
+      "sha256": "46bc671f1dbb8003cafa011d64520209dd565c9ce211b3c2010803033b2d6779"
+    }
+  ],
+  "summaries": [
+    {
+      "reviewer": "a",
+      "agent": "/root/portrait_blind_a",
+      "correct": 34,
+      "total": 34,
+      "passed": true
+    },
+    {
+      "reviewer": "b",
+      "agent": "/root/portrait_blind_b",
+      "correct": 34,
+      "total": 34,
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "records": [
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P001",
+        "look": "child_M_fur_cloak_long_tied",
+        "correct": "D",
+        "options": {
+          "A": "child_M_hide_wrap_long_tied",
+          "B": "child_M_fur_cloak_bun",
+          "C": "child_M_hide_wrap_bun",
+          "D": "child_M_fur_cloak_long_tied"
+        },
+        "image_sha256": "565364558afded150360f64a74a41b579581afb00eb4f1b9cd473b18d46ca0b5",
+        "portrait": "art/portrait/env1/child_M_fur_cloak_long_tied_try1.png"
+      },
+      "raw": {
+        "id": "P001",
+        "choice": "D",
+        "confidence": 0.89,
+        "reason": "High side ponytail and pale fur-edged brown cloak fit D; B has a centered bun."
+      },
+      "id": "P001",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P002",
+        "look": "child_M_fur_cloak_bun",
+        "correct": "C",
+        "options": {
+          "A": "child_M_hide_wrap_bun",
+          "B": "child_M_hide_wrap_long_tied",
+          "C": "child_M_fur_cloak_bun",
+          "D": "child_M_fur_cloak_long_tied"
+        },
+        "image_sha256": "a8b523729c6ab605f0f4820fc936c177c3103da3ee6e26f83e8673b899f28c6d",
+        "portrait": "art/portrait/polish/child_M_fur_cloak_bun_try1.png"
+      },
+      "raw": {
+        "id": "P002",
+        "choice": "C",
+        "confidence": 0.93,
+        "reason": "The high bun and broad fur collar match C."
+      },
+      "id": "P002",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P003",
+        "look": "adult_F_hide_wrap_bun",
+        "correct": "D",
+        "options": {
+          "A": "adult_F_fur_cloak_bun",
+          "B": "adult_F_fur_cloak_long_tied",
+          "C": "adult_F_hide_wrap_long_tied",
+          "D": "adult_F_hide_wrap_bun"
+        },
+        "image_sha256": "86943fe505850c2f49d25f6273713e7c9fab10da5f7bf1c53bdbaf5ae1ed7811",
+        "portrait": "art/portrait/polish/adult_F_hide_wrap_bun_try1.png"
+      },
+      "raw": {
+        "id": "P003",
+        "choice": "D",
+        "confidence": 0.93,
+        "reason": "Adult proportions, high bun and exposed shoulder with a diagonal hide strap match D."
+      },
+      "id": "P003",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P004",
+        "look": "child_M_hide_wrap_long_tied",
+        "correct": "D",
+        "options": {
+          "A": "child_M_fur_cloak_bun",
+          "B": "child_M_hide_wrap_bun",
+          "C": "child_M_fur_cloak_long_tied",
+          "D": "child_M_hide_wrap_long_tied"
+        },
+        "image_sha256": "38ff060a4d08747cd0b228865e8d618839f47b996ae82d6b490fcbd28d3db695",
+        "portrait": "art/portrait/env1/child_M_hide_wrap_long_tied_try1.png"
+      },
+      "raw": {
+        "id": "P004",
+        "choice": "D",
+        "confidence": 0.88,
+        "reason": "Side ponytail and uncovered shoulder with diagonal hide edging match D."
+      },
+      "id": "P004",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P005",
+        "look": "adult_M_loincloth_short",
+        "correct": "B",
+        "options": {
+          "A": "adult_M_fur_cloak_bun",
+          "B": "adult_M_loincloth_short",
+          "C": "adult_M_loincloth_bun",
+          "D": "adult_M_fur_cloak_short"
+        },
+        "image_sha256": "3e57c32f3a5ca1ccf5eff594b8b3c25e015689805cb45070bb581c1bab81bc77",
+        "portrait": "art/portrait/env1/adult_M_loincloth_short_try1.png"
+      },
+      "raw": {
+        "id": "P005",
+        "choice": "B",
+        "confidence": 0.92,
+        "reason": "Short loose hair, beard and uncovered upper chest fit B."
+      },
+      "id": "P005",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P006",
+        "look": "child_F_loincloth_bun",
+        "correct": "D",
+        "options": {
+          "A": "child_F_fur_cloak_bun",
+          "B": "child_F_fur_cloak_long_tied",
+          "C": "child_F_loincloth_long_tied",
+          "D": "child_F_loincloth_bun"
+        },
+        "image_sha256": "e1aac33cad551153c029a8397dd52c8b688572e6159e03764af4496959e55437",
+        "portrait": "art/portrait/env1/child_F_loincloth_bun_try1.png"
+      },
+      "raw": {
+        "id": "P006",
+        "choice": "D",
+        "confidence": 0.88,
+        "reason": "The high bun and strapless straight neckline fit D; C has a larger side ponytail."
+      },
+      "id": "P006",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P007",
+        "look": "adult_M_loincloth_bun",
+        "correct": "D",
+        "options": {
+          "A": "adult_M_fur_cloak_short",
+          "B": "adult_M_fur_cloak_bun",
+          "C": "adult_M_loincloth_long_tied",
+          "D": "adult_M_loincloth_bun"
+        },
+        "image_sha256": "01433b2b81f56ad475825120f476402bb075b003e536005756ec5dc3a1f64046",
+        "portrait": "art/portrait/env1/adult_M_loincloth_bun_try1.png"
+      },
+      "raw": {
+        "id": "P007",
+        "choice": "D",
+        "confidence": 0.93,
+        "reason": "Beard, centered high bun and diagonal shoulder wrap fit D."
+      },
+      "id": "P007",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P008",
+        "look": "adult_F_loincloth_short",
+        "correct": "D",
+        "options": {
+          "A": "adult_F_loincloth_bun",
+          "B": "adult_F_fur_cloak_bun",
+          "C": "adult_F_fur_cloak_short",
+          "D": "adult_F_loincloth_short"
+        },
+        "image_sha256": "2219149757c8076b87ae1fd56948b5a1ba0b664621fd9ff458bc29fa231cc975",
+        "portrait": "art/portrait/env1/adult_F_loincloth_short_try1.png"
+      },
+      "raw": {
+        "id": "P008",
+        "choice": "D",
+        "confidence": 0.94,
+        "reason": "Short loose hair and strapless neckline match D."
+      },
+      "id": "P008",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P009",
+        "look": "child_M_loincloth_long_tied",
+        "correct": "C",
+        "options": {
+          "A": "child_M_fur_cloak_long_tied",
+          "B": "child_M_loincloth_bun",
+          "C": "child_M_loincloth_long_tied",
+          "D": "child_M_fur_cloak_bun"
+        },
+        "image_sha256": "9caeadae331a21aadee4a4ae19fd93805e78572cf8354cd76518c3d603d3d563",
+        "portrait": "art/portrait/env1/child_M_loincloth_long_tied_try1.png"
+      },
+      "raw": {
+        "id": "P009",
+        "choice": "C",
+        "confidence": 0.6,
+        "reason": "C best fits the loose front hair and diagonal shoulder wrap; the portrait's low tied tail is not clearly readable on the sprite."
+      },
+      "id": "P009",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P010",
+        "look": "adult_M_fur_cloak_bun",
+        "correct": "C",
+        "options": {
+          "A": "adult_M_hide_wrap_short",
+          "B": "adult_M_hide_wrap_bun",
+          "C": "adult_M_fur_cloak_bun",
+          "D": "adult_M_fur_cloak_short"
+        },
+        "image_sha256": "b7b4422a67ad597bc8a32a941500ee3fd3d85dd8a58c0d070142a1bee0d66cef",
+        "portrait": "art/portrait/env1/adult_M_fur_cloak_bun_try1.png"
+      },
+      "raw": {
+        "id": "P010",
+        "choice": "C",
+        "confidence": 0.94,
+        "reason": "Bearded face, high bun and fur-collared cloak match C."
+      },
+      "id": "P010",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P011",
+        "look": "adult_M_loincloth_long_tied",
+        "correct": "D",
+        "options": {
+          "A": "adult_M_fur_cloak_bun",
+          "B": "adult_M_fur_cloak_short",
+          "C": "adult_M_loincloth_bun",
+          "D": "adult_M_loincloth_long_tied"
+        },
+        "image_sha256": "2d37efa2e6d99b7e43bf48b40bbb66576269d178bf1108c16242fbb6559cb191",
+        "portrait": "art/portrait/env1/adult_M_loincloth_long_tied_try1.png"
+      },
+      "raw": {
+        "id": "P011",
+        "choice": "D",
+        "confidence": 0.94,
+        "reason": "Prominent side ponytail, beard and diagonal wrap match D."
+      },
+      "id": "P011",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P012",
+        "look": "child_M_hide_wrap_bun",
+        "correct": "B",
+        "options": {
+          "A": "child_M_hide_wrap_long_tied",
+          "B": "child_M_hide_wrap_bun",
+          "C": "child_M_fur_cloak_long_tied",
+          "D": "child_M_fur_cloak_bun"
+        },
+        "image_sha256": "56f6d026a92a43ee97344d77261ea52377d6c3772446fa6687fadc742155a7f0",
+        "portrait": "art/portrait/polish/child_M_hide_wrap_bun_try1.png"
+      },
+      "raw": {
+        "id": "P012",
+        "choice": "B",
+        "confidence": 0.88,
+        "reason": "High bun and one-shoulder hide garment match B."
+      },
+      "id": "P012",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P013",
+        "look": "adult_F_loincloth_long_tied",
+        "correct": "C",
+        "options": {
+          "A": "adult_F_fur_cloak_long_tied",
+          "B": "adult_F_fur_cloak_bun",
+          "C": "adult_F_loincloth_long_tied",
+          "D": "adult_F_loincloth_bun"
+        },
+        "image_sha256": "b0cf35a72679fa059cec341424baf7cb67e86e2a52b56b47985dd3dc7e251d7c",
+        "portrait": "art/portrait/env1/adult_F_loincloth_long_tied_try1.png"
+      },
+      "raw": {
+        "id": "P013",
+        "choice": "C",
+        "confidence": 0.93,
+        "reason": "Large side ponytail and strapless garment match C."
+      },
+      "id": "P013",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P014",
+        "look": "child_F_hide_wrap_short",
+        "correct": "A",
+        "options": {
+          "A": "child_F_hide_wrap_short",
+          "B": "child_F_fur_cloak_bun",
+          "C": "child_F_fur_cloak_short",
+          "D": "child_F_hide_wrap_bun"
+        },
+        "image_sha256": "2f94ee2f3092b0ed3c82cb8ede7bf1aa6b512e4bff5e9fd19e02fdb394457c94",
+        "portrait": "art/portrait/env1/child_F_hide_wrap_short_try1.png"
+      },
+      "raw": {
+        "id": "P014",
+        "choice": "A",
+        "confidence": 0.91,
+        "reason": "Short loose bob and bare shoulder with diagonal trim match A."
+      },
+      "id": "P014",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P015",
+        "look": "child_F_fur_cloak_short",
+        "correct": "B",
+        "options": {
+          "A": "child_F_fur_cloak_bun",
+          "B": "child_F_fur_cloak_short",
+          "C": "child_F_hide_wrap_short",
+          "D": "child_F_hide_wrap_bun"
+        },
+        "image_sha256": "64cdfef72448331682fba7c590804422027791453d45e33f8af42775db2564b7",
+        "portrait": "art/portrait/env1/child_F_fur_cloak_short_try1.png"
+      },
+      "raw": {
+        "id": "P015",
+        "choice": "B",
+        "confidence": 0.91,
+        "reason": "Short loose hair and fur-trimmed cloak fit B."
+      },
+      "id": "P015",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P016",
+        "look": "adult_F_hide_wrap_short",
+        "correct": "B",
+        "options": {
+          "A": "adult_F_fur_cloak_short",
+          "B": "adult_F_hide_wrap_short",
+          "C": "adult_F_fur_cloak_bun",
+          "D": "adult_F_hide_wrap_bun"
+        },
+        "image_sha256": "f323bf4a01f254fb6fa62445664fd102d95b06b386021c73cd79deced16471e8",
+        "portrait": "art/portrait/env1/adult_F_hide_wrap_short_try1.png"
+      },
+      "raw": {
+        "id": "P016",
+        "choice": "B",
+        "confidence": 0.94,
+        "reason": "Short hair, adult proportions and diagonal hide strap match B."
+      },
+      "id": "P016",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P017",
+        "look": "adult_M_hide_wrap_short",
+        "correct": "C",
+        "options": {
+          "A": "adult_M_fur_cloak_bun",
+          "B": "adult_M_fur_cloak_short",
+          "C": "adult_M_hide_wrap_short",
+          "D": "adult_M_hide_wrap_bun"
+        },
+        "image_sha256": "883f5b04369b2bf080ab5e084a41c5316c90c935a69b6cef75fefcd07227bf8e",
+        "portrait": "art/portrait/env1/adult_M_hide_wrap_short_try1.png"
+      },
+      "raw": {
+        "id": "P017",
+        "choice": "C",
+        "confidence": 0.94,
+        "reason": "Short hair, beard and diagonal fur-edged wrap match C."
+      },
+      "id": "P017",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P018",
+        "look": "child_M_loincloth_short",
+        "correct": "A",
+        "options": {
+          "A": "child_M_loincloth_short",
+          "B": "child_M_loincloth_bun",
+          "C": "child_M_fur_cloak_short",
+          "D": "child_M_fur_cloak_bun"
+        },
+        "image_sha256": "cf23842591a2a5843c0254209a8405d3bea05a6d245faeefaaf172f63a967ed2",
+        "portrait": "art/portrait/env1/child_M_loincloth_short_try1.png"
+      },
+      "raw": {
+        "id": "P018",
+        "choice": "A",
+        "confidence": 0.88,
+        "reason": "Short tousled hair and open one-shoulder garment fit A."
+      },
+      "id": "P018",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P019",
+        "look": "child_M_loincloth_bun",
+        "correct": "B",
+        "options": {
+          "A": "child_M_fur_cloak_long_tied",
+          "B": "child_M_loincloth_bun",
+          "C": "child_M_loincloth_long_tied",
+          "D": "child_M_fur_cloak_bun"
+        },
+        "image_sha256": "84c580a82c49f40239e90f70257d544ebcb6bd28925ea0af7ca6690c49af7f3b",
+        "portrait": "art/portrait/polish/child_M_loincloth_bun_try1.png"
+      },
+      "raw": {
+        "id": "P019",
+        "choice": "B",
+        "confidence": 0.86,
+        "reason": "High gathered bun and uncovered shoulder with diagonal wrap fit B."
+      },
+      "id": "P019",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P020",
+        "look": "child_M_fur_cloak_short",
+        "correct": "B",
+        "options": {
+          "A": "child_M_hide_wrap_bun",
+          "B": "child_M_fur_cloak_short",
+          "C": "child_M_hide_wrap_short",
+          "D": "child_M_fur_cloak_bun"
+        },
+        "image_sha256": "10dbae812b4bc02ee58670b190b892d078d57ad99bebd1991b10fa5a6a9bb073",
+        "portrait": "art/portrait/env1/child_M_fur_cloak_short_try1.png"
+      },
+      "raw": {
+        "id": "P020",
+        "choice": "B",
+        "confidence": 0.89,
+        "reason": "Short side-swept hair and fur-edged cloak match B."
+      },
+      "id": "P020",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P021",
+        "look": "adult_M_fur_cloak_short",
+        "correct": "B",
+        "options": {
+          "A": "adult_M_fur_cloak_bun",
+          "B": "adult_M_fur_cloak_short",
+          "C": "adult_M_hide_wrap_short",
+          "D": "adult_M_hide_wrap_bun"
+        },
+        "image_sha256": "92e441a87d1b2bfadc04938271641604f264c36f82da2b3d9a828f970d956923",
+        "portrait": "art/portrait/env1/adult_M_fur_cloak_short_try1.png"
+      },
+      "raw": {
+        "id": "P021",
+        "choice": "B",
+        "confidence": 0.95,
+        "reason": "Short loose hair, beard and full fur-collared cloak match B."
+      },
+      "id": "P021",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P022",
+        "look": "adult_F_fur_cloak_short",
+        "correct": "A",
+        "options": {
+          "A": "adult_F_fur_cloak_short",
+          "B": "adult_F_hide_wrap_bun",
+          "C": "adult_F_hide_wrap_short",
+          "D": "adult_F_fur_cloak_bun"
+        },
+        "image_sha256": "a77d08f232e3059393f5200438ade6a7a5d44ec0e464fb57c64237398c16a5cd",
+        "portrait": "art/portrait/env1/adult_F_fur_cloak_short_try1.png"
+      },
+      "raw": {
+        "id": "P022",
+        "choice": "A",
+        "confidence": 0.94,
+        "reason": "Short bob and broad pale fur collar match A."
+      },
+      "id": "P022",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P023",
+        "look": "child_F_fur_cloak_long_tied",
+        "correct": "A",
+        "options": {
+          "A": "child_F_fur_cloak_long_tied",
+          "B": "child_F_hide_wrap_long_tied",
+          "C": "child_F_hide_wrap_bun",
+          "D": "child_F_fur_cloak_bun"
+        },
+        "image_sha256": "b658dc3bfd2cd48f554c94ea6207183a85c352cd1a4f6c755c3c16631e1ae8b1",
+        "portrait": "art/portrait/env1/child_F_fur_cloak_long_tied_try1.png"
+      },
+      "raw": {
+        "id": "P023",
+        "choice": "A",
+        "confidence": 0.89,
+        "reason": "Side ponytail and fur-trimmed brown cloak match A."
+      },
+      "id": "P023",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P024",
+        "look": "child_M_hide_wrap_short",
+        "correct": "B",
+        "options": {
+          "A": "child_M_fur_cloak_short",
+          "B": "child_M_hide_wrap_short",
+          "C": "child_M_hide_wrap_bun",
+          "D": "child_M_fur_cloak_bun"
+        },
+        "image_sha256": "9bafde4f30d151e1824ed01749080c9c17b770382ec3211be9f0dd60d5417557",
+        "portrait": "art/portrait/polish/child_M_hide_wrap_short_try1.png"
+      },
+      "raw": {
+        "id": "P024",
+        "choice": "B",
+        "confidence": 0.86,
+        "reason": "Short side-swept hair and diagonal shoulder garment match B."
+      },
+      "id": "P024",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P025",
+        "look": "child_F_loincloth_long_tied",
+        "correct": "A",
+        "options": {
+          "A": "child_F_loincloth_long_tied",
+          "B": "child_F_fur_cloak_bun",
+          "C": "child_F_loincloth_bun",
+          "D": "child_F_fur_cloak_long_tied"
+        },
+        "image_sha256": "d50815630bbea5af4931fef8af2009007a6e4a28952415045d4706c56203f4f6",
+        "portrait": "art/portrait/polish/child_F_loincloth_long_tied_try1.png"
+      },
+      "raw": {
+        "id": "P025",
+        "choice": "A",
+        "confidence": 0.85,
+        "reason": "Side ponytail and straight strapless neckline fit A; C appears to have a compact bun."
+      },
+      "id": "P025",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P026",
+        "look": "adult_F_fur_cloak_long_tied",
+        "correct": "A",
+        "options": {
+          "A": "adult_F_fur_cloak_long_tied",
+          "B": "adult_F_hide_wrap_bun",
+          "C": "adult_F_fur_cloak_bun",
+          "D": "adult_F_hide_wrap_long_tied"
+        },
+        "image_sha256": "478a59b0f64a2af1bda26d20063c6ea37dc2aad35ab0427692cc6ae856cc71fa",
+        "portrait": "art/portrait/polish/adult_F_fur_cloak_long_tied_try1.png"
+      },
+      "raw": {
+        "id": "P026",
+        "choice": "A",
+        "confidence": 0.93,
+        "reason": "High side ponytail and broad fur-trimmed cloak match A."
+      },
+      "id": "P026",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P027",
+        "look": "child_F_loincloth_short",
+        "correct": "A",
+        "options": {
+          "A": "child_F_loincloth_short",
+          "B": "child_F_loincloth_bun",
+          "C": "child_F_fur_cloak_bun",
+          "D": "child_F_fur_cloak_short"
+        },
+        "image_sha256": "4c62e503aee60b18192eaf8be5b8d2180fd94c7760c54654287a2cea99ec5608",
+        "portrait": "art/portrait/env1/child_F_loincloth_short_try1.png"
+      },
+      "raw": {
+        "id": "P027",
+        "choice": "A",
+        "confidence": 0.93,
+        "reason": "Short bob and strapless brown garment match A."
+      },
+      "id": "P027",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P028",
+        "look": "child_F_fur_cloak_bun",
+        "correct": "D",
+        "options": {
+          "A": "child_F_fur_cloak_long_tied",
+          "B": "child_F_hide_wrap_bun",
+          "C": "child_F_hide_wrap_long_tied",
+          "D": "child_F_fur_cloak_bun"
+        },
+        "image_sha256": "2215e00d9a8194a7bae07309ae4805e8810d5df5c719b81b0b6aa657ad05cccf",
+        "portrait": "art/portrait/env1/child_F_fur_cloak_bun_try1.png"
+      },
+      "raw": {
+        "id": "P028",
+        "choice": "D",
+        "confidence": 0.91,
+        "reason": "High bun and broad pale collar on the brown cloak match D."
+      },
+      "id": "P028",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P029",
+        "look": "adult_F_loincloth_bun",
+        "correct": "D",
+        "options": {
+          "A": "adult_F_loincloth_long_tied",
+          "B": "adult_F_fur_cloak_long_tied",
+          "C": "adult_F_fur_cloak_bun",
+          "D": "adult_F_loincloth_bun"
+        },
+        "image_sha256": "15e925ade41648069eb099bfe7777282279daad3714b0e0f68033e82688d7699",
+        "portrait": "art/portrait/env1/adult_F_loincloth_bun_try2.png"
+      },
+      "raw": {
+        "id": "P029",
+        "choice": "D",
+        "confidence": 0.95,
+        "reason": "High bun and straight strapless neckline match D."
+      },
+      "id": "P029",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P030",
+        "look": "adult_F_fur_cloak_bun",
+        "correct": "A",
+        "options": {
+          "A": "adult_F_fur_cloak_bun",
+          "B": "adult_F_hide_wrap_bun",
+          "C": "adult_F_hide_wrap_long_tied",
+          "D": "adult_F_fur_cloak_long_tied"
+        },
+        "image_sha256": "81302e89464eab429dc479a05a06b547467439a533bfd633ebe4c656c6a5633a",
+        "portrait": "art/portrait/polish/adult_F_fur_cloak_bun_try1.png"
+      },
+      "raw": {
+        "id": "P030",
+        "choice": "A",
+        "confidence": 0.94,
+        "reason": "High bun and dark cloak with pale fur collar match A."
+      },
+      "id": "P030",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P031",
+        "look": "child_F_hide_wrap_long_tied",
+        "correct": "D",
+        "options": {
+          "A": "child_F_hide_wrap_bun",
+          "B": "child_F_fur_cloak_bun",
+          "C": "child_F_fur_cloak_long_tied",
+          "D": "child_F_hide_wrap_long_tied"
+        },
+        "image_sha256": "a411748fb9fab31e391cc3cc62016ccc13b4e94539eaba750337803ea7b372a5",
+        "portrait": "art/portrait/env1/child_F_hide_wrap_long_tied_try1.png"
+      },
+      "raw": {
+        "id": "P031",
+        "choice": "D",
+        "confidence": 0.93,
+        "reason": "Large high ponytail and diagonal one-shoulder wrap match D."
+      },
+      "id": "P031",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P032",
+        "look": "child_F_hide_wrap_bun",
+        "correct": "C",
+        "options": {
+          "A": "child_F_hide_wrap_long_tied",
+          "B": "child_F_fur_cloak_bun",
+          "C": "child_F_hide_wrap_bun",
+          "D": "child_F_fur_cloak_long_tied"
+        },
+        "image_sha256": "486974144da1077b0b1a0be9208a0896ce0453cdb64ddd7f00812dc85c87c488",
+        "portrait": "art/portrait/polish/child_F_hide_wrap_bun_try1.png"
+      },
+      "raw": {
+        "id": "P032",
+        "choice": "C",
+        "confidence": 0.89,
+        "reason": "High bun and uncovered shoulder with diagonal hide edging match C."
+      },
+      "id": "P032",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P033",
+        "look": "adult_F_hide_wrap_long_tied",
+        "correct": "C",
+        "options": {
+          "A": "adult_F_fur_cloak_long_tied",
+          "B": "adult_F_hide_wrap_bun",
+          "C": "adult_F_hide_wrap_long_tied",
+          "D": "adult_F_fur_cloak_bun"
+        },
+        "image_sha256": "f9ff7b6f56c448f7291a3e3360cd351106fb4fbdeac1126f6171a882a88d7611",
+        "portrait": "art/portrait/env1/adult_F_hide_wrap_long_tied_try1.png"
+      },
+      "raw": {
+        "id": "P033",
+        "choice": "C",
+        "confidence": 0.94,
+        "reason": "Large side ponytail and diagonal shoulder wrap match C."
+      },
+      "id": "P033",
+      "correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "P034",
+        "look": "adult_M_hide_wrap_bun",
+        "correct": "C",
+        "options": {
+          "A": "adult_M_fur_cloak_bun",
+          "B": "adult_M_hide_wrap_short",
+          "C": "adult_M_hide_wrap_bun",
+          "D": "adult_M_fur_cloak_short"
+        },
+        "image_sha256": "38edefb6a586a8b59e3368950d2e083666e2b00a329d160632dc081526cb7cb8",
+        "portrait": "art/portrait/env1/adult_M_hide_wrap_bun_try1.png"
+      },
+      "raw": {
+        "id": "P034",
+        "choice": "C",
+        "confidence": 0.94,
+        "reason": "High bun, beard and diagonal fur-edged shoulder wrap match C."
+      },
+      "id": "P034",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P001",
+        "look": "child_M_fur_cloak_long_tied",
+        "correct": "D",
+        "options": {
+          "A": "child_M_hide_wrap_long_tied",
+          "B": "child_M_fur_cloak_bun",
+          "C": "child_M_hide_wrap_bun",
+          "D": "child_M_fur_cloak_long_tied"
+        },
+        "image_sha256": "565364558afded150360f64a74a41b579581afb00eb4f1b9cd473b18d46ca0b5",
+        "portrait": "art/portrait/env1/child_M_fur_cloak_long_tied_try1.png"
+      },
+      "raw": {
+        "id": "P001",
+        "choice": "D",
+        "confidence": 0.93,
+        "reason": "Dark high ponytail, young face, and pale fur-edged cloak match best."
+      },
+      "id": "P001",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P002",
+        "look": "child_M_fur_cloak_bun",
+        "correct": "C",
+        "options": {
+          "A": "child_M_hide_wrap_bun",
+          "B": "child_M_hide_wrap_long_tied",
+          "C": "child_M_fur_cloak_bun",
+          "D": "child_M_fur_cloak_long_tied"
+        },
+        "image_sha256": "a8b523729c6ab605f0f4820fc936c177c3103da3ee6e26f83e8673b899f28c6d",
+        "portrait": "art/portrait/polish/child_M_fur_cloak_bun_try1.png"
+      },
+      "raw": {
+        "id": "P002",
+        "choice": "C",
+        "confidence": 0.94,
+        "reason": "High compact bun and wrapped fur cloak match the portrait."
+      },
+      "id": "P002",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P003",
+        "look": "adult_F_hide_wrap_bun",
+        "correct": "D",
+        "options": {
+          "A": "adult_F_fur_cloak_bun",
+          "B": "adult_F_fur_cloak_long_tied",
+          "C": "adult_F_hide_wrap_long_tied",
+          "D": "adult_F_hide_wrap_bun"
+        },
+        "image_sha256": "86943fe505850c2f49d25f6273713e7c9fab10da5f7bf1c53bdbaf5ae1ed7811",
+        "portrait": "art/portrait/polish/adult_F_hide_wrap_bun_try1.png"
+      },
+      "raw": {
+        "id": "P003",
+        "choice": "D",
+        "confidence": 0.92,
+        "reason": "Adult build, high bun, and exposed one-shoulder wrap match."
+      },
+      "id": "P003",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P004",
+        "look": "child_M_hide_wrap_long_tied",
+        "correct": "D",
+        "options": {
+          "A": "child_M_fur_cloak_bun",
+          "B": "child_M_hide_wrap_bun",
+          "C": "child_M_fur_cloak_long_tied",
+          "D": "child_M_hide_wrap_long_tied"
+        },
+        "image_sha256": "38ff060a4d08747cd0b228865e8d618839f47b996ae82d6b490fcbd28d3db695",
+        "portrait": "art/portrait/env1/child_M_hide_wrap_long_tied_try1.png"
+      },
+      "raw": {
+        "id": "P004",
+        "choice": "D",
+        "confidence": 0.92,
+        "reason": "Young figure with a high rear ponytail and one-shoulder wrap."
+      },
+      "id": "P004",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P005",
+        "look": "adult_M_loincloth_short",
+        "correct": "B",
+        "options": {
+          "A": "adult_M_fur_cloak_bun",
+          "B": "adult_M_loincloth_short",
+          "C": "adult_M_loincloth_bun",
+          "D": "adult_M_fur_cloak_short"
+        },
+        "image_sha256": "3e57c32f3a5ca1ccf5eff594b8b3c25e015689805cb45070bb581c1bab81bc77",
+        "portrait": "art/portrait/env1/adult_M_loincloth_short_try1.png"
+      },
+      "raw": {
+        "id": "P005",
+        "choice": "B",
+        "confidence": 0.88,
+        "reason": "Short loose hair, beard, and bare shoulders are closest."
+      },
+      "id": "P005",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P006",
+        "look": "child_F_loincloth_bun",
+        "correct": "D",
+        "options": {
+          "A": "child_F_fur_cloak_bun",
+          "B": "child_F_fur_cloak_long_tied",
+          "C": "child_F_loincloth_long_tied",
+          "D": "child_F_loincloth_bun"
+        },
+        "image_sha256": "e1aac33cad551153c029a8397dd52c8b688572e6159e03764af4496959e55437",
+        "portrait": "art/portrait/env1/child_F_loincloth_bun_try1.png"
+      },
+      "raw": {
+        "id": "P006",
+        "choice": "D",
+        "confidence": 0.9,
+        "reason": "Young face, high bun, and strapless wrap match."
+      },
+      "id": "P006",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P007",
+        "look": "adult_M_loincloth_bun",
+        "correct": "D",
+        "options": {
+          "A": "adult_M_fur_cloak_short",
+          "B": "adult_M_fur_cloak_bun",
+          "C": "adult_M_loincloth_long_tied",
+          "D": "adult_M_loincloth_bun"
+        },
+        "image_sha256": "01433b2b81f56ad475825120f476402bb075b003e536005756ec5dc3a1f64046",
+        "portrait": "art/portrait/env1/adult_M_loincloth_bun_try1.png"
+      },
+      "raw": {
+        "id": "P007",
+        "choice": "D",
+        "confidence": 0.94,
+        "reason": "Bearded adult with a compact top bun and diagonal shoulder wrap."
+      },
+      "id": "P007",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P008",
+        "look": "adult_F_loincloth_short",
+        "correct": "D",
+        "options": {
+          "A": "adult_F_loincloth_bun",
+          "B": "adult_F_fur_cloak_bun",
+          "C": "adult_F_fur_cloak_short",
+          "D": "adult_F_loincloth_short"
+        },
+        "image_sha256": "2219149757c8076b87ae1fd56948b5a1ba0b664621fd9ff458bc29fa231cc975",
+        "portrait": "art/portrait/env1/adult_F_loincloth_short_try1.png"
+      },
+      "raw": {
+        "id": "P008",
+        "choice": "D",
+        "confidence": 0.9,
+        "reason": "Short brown hair and strapless adult wrap match best."
+      },
+      "id": "P008",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P009",
+        "look": "child_M_loincloth_long_tied",
+        "correct": "C",
+        "options": {
+          "A": "child_M_fur_cloak_long_tied",
+          "B": "child_M_loincloth_bun",
+          "C": "child_M_loincloth_long_tied",
+          "D": "child_M_fur_cloak_bun"
+        },
+        "image_sha256": "9caeadae331a21aadee4a4ae19fd93805e78572cf8354cd76518c3d603d3d563",
+        "portrait": "art/portrait/env1/child_M_loincloth_long_tied_try1.png"
+      },
+      "raw": {
+        "id": "P009",
+        "choice": "C",
+        "confidence": 0.52,
+        "reason": "Loose lower hair silhouette is closest, but the portrait's low ponytail is not clearly resolved in the sprite."
+      },
+      "id": "P009",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P010",
+        "look": "adult_M_fur_cloak_bun",
+        "correct": "C",
+        "options": {
+          "A": "adult_M_hide_wrap_short",
+          "B": "adult_M_hide_wrap_bun",
+          "C": "adult_M_fur_cloak_bun",
+          "D": "adult_M_fur_cloak_short"
+        },
+        "image_sha256": "b7b4422a67ad597bc8a32a941500ee3fd3d85dd8a58c0d070142a1bee0d66cef",
+        "portrait": "art/portrait/env1/adult_M_fur_cloak_bun_try1.png"
+      },
+      "raw": {
+        "id": "P010",
+        "choice": "C",
+        "confidence": 0.93,
+        "reason": "Beard, top bun, and broad fur collar match."
+      },
+      "id": "P010",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P011",
+        "look": "adult_M_loincloth_long_tied",
+        "correct": "D",
+        "options": {
+          "A": "adult_M_fur_cloak_bun",
+          "B": "adult_M_fur_cloak_short",
+          "C": "adult_M_loincloth_bun",
+          "D": "adult_M_loincloth_long_tied"
+        },
+        "image_sha256": "2d37efa2e6d99b7e43bf48b40bbb66576269d178bf1108c16242fbb6559cb191",
+        "portrait": "art/portrait/env1/adult_M_loincloth_long_tied_try1.png"
+      },
+      "raw": {
+        "id": "P011",
+        "choice": "D",
+        "confidence": 0.95,
+        "reason": "Bearded adult with a large rear ponytail and one-shoulder wrap."
+      },
+      "id": "P011",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P012",
+        "look": "child_M_hide_wrap_bun",
+        "correct": "B",
+        "options": {
+          "A": "child_M_hide_wrap_long_tied",
+          "B": "child_M_hide_wrap_bun",
+          "C": "child_M_fur_cloak_long_tied",
+          "D": "child_M_fur_cloak_bun"
+        },
+        "image_sha256": "56f6d026a92a43ee97344d77261ea52377d6c3772446fa6687fadc742155a7f0",
+        "portrait": "art/portrait/polish/child_M_hide_wrap_bun_try1.png"
+      },
+      "raw": {
+        "id": "P012",
+        "choice": "B",
+        "confidence": 0.91,
+        "reason": "Compact high bun and exposed diagonal wrap match the young portrait."
+      },
+      "id": "P012",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P013",
+        "look": "adult_F_loincloth_long_tied",
+        "correct": "C",
+        "options": {
+          "A": "adult_F_fur_cloak_long_tied",
+          "B": "adult_F_fur_cloak_bun",
+          "C": "adult_F_loincloth_long_tied",
+          "D": "adult_F_loincloth_bun"
+        },
+        "image_sha256": "b0cf35a72679fa059cec341424baf7cb67e86e2a52b56b47985dd3dc7e251d7c",
+        "portrait": "art/portrait/env1/adult_F_loincloth_long_tied_try1.png"
+      },
+      "raw": {
+        "id": "P013",
+        "choice": "C",
+        "confidence": 0.93,
+        "reason": "Adult figure with long rear ponytail and strapless wrap."
+      },
+      "id": "P013",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P014",
+        "look": "child_F_hide_wrap_short",
+        "correct": "A",
+        "options": {
+          "A": "child_F_hide_wrap_short",
+          "B": "child_F_fur_cloak_bun",
+          "C": "child_F_fur_cloak_short",
+          "D": "child_F_hide_wrap_bun"
+        },
+        "image_sha256": "2f94ee2f3092b0ed3c82cb8ede7bf1aa6b512e4bff5e9fd19e02fdb394457c94",
+        "portrait": "art/portrait/env1/child_F_hide_wrap_short_try1.png"
+      },
+      "raw": {
+        "id": "P014",
+        "choice": "A",
+        "confidence": 0.94,
+        "reason": "Short bobbed hair and a young one-shoulder figure match."
+      },
+      "id": "P014",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P015",
+        "look": "child_F_fur_cloak_short",
+        "correct": "B",
+        "options": {
+          "A": "child_F_fur_cloak_bun",
+          "B": "child_F_fur_cloak_short",
+          "C": "child_F_hide_wrap_short",
+          "D": "child_F_hide_wrap_bun"
+        },
+        "image_sha256": "64cdfef72448331682fba7c590804422027791453d45e33f8af42775db2564b7",
+        "portrait": "art/portrait/env1/child_F_fur_cloak_short_try1.png"
+      },
+      "raw": {
+        "id": "P015",
+        "choice": "B",
+        "confidence": 0.94,
+        "reason": "Short hair and pale fur collar on a young cloaked figure."
+      },
+      "id": "P015",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P016",
+        "look": "adult_F_hide_wrap_short",
+        "correct": "B",
+        "options": {
+          "A": "adult_F_fur_cloak_short",
+          "B": "adult_F_hide_wrap_short",
+          "C": "adult_F_fur_cloak_bun",
+          "D": "adult_F_hide_wrap_bun"
+        },
+        "image_sha256": "f323bf4a01f254fb6fa62445664fd102d95b06b386021c73cd79deced16471e8",
+        "portrait": "art/portrait/env1/adult_F_hide_wrap_short_try1.png"
+      },
+      "raw": {
+        "id": "P016",
+        "choice": "B",
+        "confidence": 0.93,
+        "reason": "Adult short hair and exposed one-shoulder wrap match."
+      },
+      "id": "P016",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P017",
+        "look": "adult_M_hide_wrap_short",
+        "correct": "C",
+        "options": {
+          "A": "adult_M_fur_cloak_bun",
+          "B": "adult_M_fur_cloak_short",
+          "C": "adult_M_hide_wrap_short",
+          "D": "adult_M_hide_wrap_bun"
+        },
+        "image_sha256": "883f5b04369b2bf080ab5e084a41c5316c90c935a69b6cef75fefcd07227bf8e",
+        "portrait": "art/portrait/env1/adult_M_hide_wrap_short_try1.png"
+      },
+      "raw": {
+        "id": "P017",
+        "choice": "C",
+        "confidence": 0.95,
+        "reason": "Short-haired bearded adult wearing the same diagonal shoulder wrap."
+      },
+      "id": "P017",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P018",
+        "look": "child_M_loincloth_short",
+        "correct": "A",
+        "options": {
+          "A": "child_M_loincloth_short",
+          "B": "child_M_loincloth_bun",
+          "C": "child_M_fur_cloak_short",
+          "D": "child_M_fur_cloak_bun"
+        },
+        "image_sha256": "cf23842591a2a5843c0254209a8405d3bea05a6d245faeefaaf172f63a967ed2",
+        "portrait": "art/portrait/env1/child_M_loincloth_short_try1.png"
+      },
+      "raw": {
+        "id": "P018",
+        "choice": "A",
+        "confidence": 0.94,
+        "reason": "Short loose hair and a young one-shoulder figure match."
+      },
+      "id": "P018",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P019",
+        "look": "child_M_loincloth_bun",
+        "correct": "B",
+        "options": {
+          "A": "child_M_fur_cloak_long_tied",
+          "B": "child_M_loincloth_bun",
+          "C": "child_M_loincloth_long_tied",
+          "D": "child_M_fur_cloak_bun"
+        },
+        "image_sha256": "84c580a82c49f40239e90f70257d544ebcb6bd28925ea0af7ca6690c49af7f3b",
+        "portrait": "art/portrait/polish/child_M_loincloth_bun_try1.png"
+      },
+      "raw": {
+        "id": "P019",
+        "choice": "B",
+        "confidence": 0.89,
+        "reason": "Young figure with a compact bun and diagonal wrap; facial details remain tiny."
+      },
+      "id": "P019",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P020",
+        "look": "child_M_fur_cloak_short",
+        "correct": "B",
+        "options": {
+          "A": "child_M_hide_wrap_bun",
+          "B": "child_M_fur_cloak_short",
+          "C": "child_M_hide_wrap_short",
+          "D": "child_M_fur_cloak_bun"
+        },
+        "image_sha256": "10dbae812b4bc02ee58670b190b892d078d57ad99bebd1991b10fa5a6a9bb073",
+        "portrait": "art/portrait/env1/child_M_fur_cloak_short_try1.png"
+      },
+      "raw": {
+        "id": "P020",
+        "choice": "B",
+        "confidence": 0.94,
+        "reason": "Short hair and fur-edged cloak match the youthful portrait."
+      },
+      "id": "P020",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P021",
+        "look": "adult_M_fur_cloak_short",
+        "correct": "B",
+        "options": {
+          "A": "adult_M_fur_cloak_bun",
+          "B": "adult_M_fur_cloak_short",
+          "C": "adult_M_hide_wrap_short",
+          "D": "adult_M_hide_wrap_bun"
+        },
+        "image_sha256": "92e441a87d1b2bfadc04938271641604f264c36f82da2b3d9a828f970d956923",
+        "portrait": "art/portrait/env1/adult_M_fur_cloak_short_try1.png"
+      },
+      "raw": {
+        "id": "P021",
+        "choice": "B",
+        "confidence": 0.95,
+        "reason": "Short-haired bearded adult with a broad pale fur collar."
+      },
+      "id": "P021",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P022",
+        "look": "adult_F_fur_cloak_short",
+        "correct": "A",
+        "options": {
+          "A": "adult_F_fur_cloak_short",
+          "B": "adult_F_hide_wrap_bun",
+          "C": "adult_F_hide_wrap_short",
+          "D": "adult_F_fur_cloak_bun"
+        },
+        "image_sha256": "a77d08f232e3059393f5200438ade6a7a5d44ec0e464fb57c64237398c16a5cd",
+        "portrait": "art/portrait/env1/adult_F_fur_cloak_short_try1.png"
+      },
+      "raw": {
+        "id": "P022",
+        "choice": "A",
+        "confidence": 0.94,
+        "reason": "Adult short hair and fur-collared cape match best."
+      },
+      "id": "P022",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P023",
+        "look": "child_F_fur_cloak_long_tied",
+        "correct": "A",
+        "options": {
+          "A": "child_F_fur_cloak_long_tied",
+          "B": "child_F_hide_wrap_long_tied",
+          "C": "child_F_hide_wrap_bun",
+          "D": "child_F_fur_cloak_bun"
+        },
+        "image_sha256": "b658dc3bfd2cd48f554c94ea6207183a85c352cd1a4f6c755c3c16631e1ae8b1",
+        "portrait": "art/portrait/env1/child_F_fur_cloak_long_tied_try1.png"
+      },
+      "raw": {
+        "id": "P023",
+        "choice": "A",
+        "confidence": 0.91,
+        "reason": "Young figure with a rear ponytail and pale fur-edged cape."
+      },
+      "id": "P023",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P024",
+        "look": "child_M_hide_wrap_short",
+        "correct": "B",
+        "options": {
+          "A": "child_M_fur_cloak_short",
+          "B": "child_M_hide_wrap_short",
+          "C": "child_M_hide_wrap_bun",
+          "D": "child_M_fur_cloak_bun"
+        },
+        "image_sha256": "9bafde4f30d151e1824ed01749080c9c17b770382ec3211be9f0dd60d5417557",
+        "portrait": "art/portrait/polish/child_M_hide_wrap_short_try1.png"
+      },
+      "raw": {
+        "id": "P024",
+        "choice": "B",
+        "confidence": 0.94,
+        "reason": "Short-haired young figure with an exposed diagonal wrap."
+      },
+      "id": "P024",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P025",
+        "look": "child_F_loincloth_long_tied",
+        "correct": "A",
+        "options": {
+          "A": "child_F_loincloth_long_tied",
+          "B": "child_F_fur_cloak_bun",
+          "C": "child_F_loincloth_bun",
+          "D": "child_F_fur_cloak_long_tied"
+        },
+        "image_sha256": "d50815630bbea5af4931fef8af2009007a6e4a28952415045d4706c56203f4f6",
+        "portrait": "art/portrait/polish/child_F_loincloth_long_tied_try1.png"
+      },
+      "raw": {
+        "id": "P025",
+        "choice": "A",
+        "confidence": 0.85,
+        "reason": "Rear ponytail and strapless young figure are closest; the tail is compressed in the sprite."
+      },
+      "id": "P025",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P026",
+        "look": "adult_F_fur_cloak_long_tied",
+        "correct": "A",
+        "options": {
+          "A": "adult_F_fur_cloak_long_tied",
+          "B": "adult_F_hide_wrap_bun",
+          "C": "adult_F_fur_cloak_bun",
+          "D": "adult_F_hide_wrap_long_tied"
+        },
+        "image_sha256": "478a59b0f64a2af1bda26d20063c6ea37dc2aad35ab0427692cc6ae856cc71fa",
+        "portrait": "art/portrait/polish/adult_F_fur_cloak_long_tied_try1.png"
+      },
+      "raw": {
+        "id": "P026",
+        "choice": "A",
+        "confidence": 0.92,
+        "reason": "Long rear ponytail and adult fur-collared cloak match."
+      },
+      "id": "P026",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P027",
+        "look": "child_F_loincloth_short",
+        "correct": "A",
+        "options": {
+          "A": "child_F_loincloth_short",
+          "B": "child_F_loincloth_bun",
+          "C": "child_F_fur_cloak_bun",
+          "D": "child_F_fur_cloak_short"
+        },
+        "image_sha256": "4c62e503aee60b18192eaf8be5b8d2180fd94c7760c54654287a2cea99ec5608",
+        "portrait": "art/portrait/env1/child_F_loincloth_short_try1.png"
+      },
+      "raw": {
+        "id": "P027",
+        "choice": "A",
+        "confidence": 0.94,
+        "reason": "Young short-haired figure with strapless clothing."
+      },
+      "id": "P027",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P028",
+        "look": "child_F_fur_cloak_bun",
+        "correct": "D",
+        "options": {
+          "A": "child_F_fur_cloak_long_tied",
+          "B": "child_F_hide_wrap_bun",
+          "C": "child_F_hide_wrap_long_tied",
+          "D": "child_F_fur_cloak_bun"
+        },
+        "image_sha256": "2215e00d9a8194a7bae07309ae4805e8810d5df5c719b81b0b6aa657ad05cccf",
+        "portrait": "art/portrait/env1/child_F_fur_cloak_bun_try1.png"
+      },
+      "raw": {
+        "id": "P028",
+        "choice": "D",
+        "confidence": 0.92,
+        "reason": "Compact high bun and a young fur-collared cloak match."
+      },
+      "id": "P028",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P029",
+        "look": "adult_F_loincloth_bun",
+        "correct": "D",
+        "options": {
+          "A": "adult_F_loincloth_long_tied",
+          "B": "adult_F_fur_cloak_long_tied",
+          "C": "adult_F_fur_cloak_bun",
+          "D": "adult_F_loincloth_bun"
+        },
+        "image_sha256": "15e925ade41648069eb099bfe7777282279daad3714b0e0f68033e82688d7699",
+        "portrait": "art/portrait/env1/adult_F_loincloth_bun_try2.png"
+      },
+      "raw": {
+        "id": "P029",
+        "choice": "D",
+        "confidence": 0.94,
+        "reason": "Adult figure with a tall compact bun and strapless wrap."
+      },
+      "id": "P029",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P030",
+        "look": "adult_F_fur_cloak_bun",
+        "correct": "A",
+        "options": {
+          "A": "adult_F_fur_cloak_bun",
+          "B": "adult_F_hide_wrap_bun",
+          "C": "adult_F_hide_wrap_long_tied",
+          "D": "adult_F_fur_cloak_long_tied"
+        },
+        "image_sha256": "81302e89464eab429dc479a05a06b547467439a533bfd633ebe4c656c6a5633a",
+        "portrait": "art/portrait/polish/adult_F_fur_cloak_bun_try1.png"
+      },
+      "raw": {
+        "id": "P030",
+        "choice": "A",
+        "confidence": 0.92,
+        "reason": "High bun, adult build, and broad fur-collared cloak match."
+      },
+      "id": "P030",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P031",
+        "look": "child_F_hide_wrap_long_tied",
+        "correct": "D",
+        "options": {
+          "A": "child_F_hide_wrap_bun",
+          "B": "child_F_fur_cloak_bun",
+          "C": "child_F_fur_cloak_long_tied",
+          "D": "child_F_hide_wrap_long_tied"
+        },
+        "image_sha256": "a411748fb9fab31e391cc3cc62016ccc13b4e94539eaba750337803ea7b372a5",
+        "portrait": "art/portrait/env1/child_F_hide_wrap_long_tied_try1.png"
+      },
+      "raw": {
+        "id": "P031",
+        "choice": "D",
+        "confidence": 0.94,
+        "reason": "Large rear ponytail and young one-shoulder figure match."
+      },
+      "id": "P031",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P032",
+        "look": "child_F_hide_wrap_bun",
+        "correct": "C",
+        "options": {
+          "A": "child_F_hide_wrap_long_tied",
+          "B": "child_F_fur_cloak_bun",
+          "C": "child_F_hide_wrap_bun",
+          "D": "child_F_fur_cloak_long_tied"
+        },
+        "image_sha256": "486974144da1077b0b1a0be9208a0896ce0453cdb64ddd7f00812dc85c87c488",
+        "portrait": "art/portrait/polish/child_F_hide_wrap_bun_try1.png"
+      },
+      "raw": {
+        "id": "P032",
+        "choice": "C",
+        "confidence": 0.92,
+        "reason": "High bun and young one-shoulder wrap match best."
+      },
+      "id": "P032",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P033",
+        "look": "adult_F_hide_wrap_long_tied",
+        "correct": "C",
+        "options": {
+          "A": "adult_F_fur_cloak_long_tied",
+          "B": "adult_F_hide_wrap_bun",
+          "C": "adult_F_hide_wrap_long_tied",
+          "D": "adult_F_fur_cloak_bun"
+        },
+        "image_sha256": "f9ff7b6f56c448f7291a3e3360cd351106fb4fbdeac1126f6171a882a88d7611",
+        "portrait": "art/portrait/env1/adult_F_hide_wrap_long_tied_try1.png"
+      },
+      "raw": {
+        "id": "P033",
+        "choice": "C",
+        "confidence": 0.94,
+        "reason": "Adult rear ponytail and diagonal shoulder wrap match."
+      },
+      "id": "P033",
+      "correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "P034",
+        "look": "adult_M_hide_wrap_bun",
+        "correct": "C",
+        "options": {
+          "A": "adult_M_fur_cloak_bun",
+          "B": "adult_M_hide_wrap_short",
+          "C": "adult_M_hide_wrap_bun",
+          "D": "adult_M_fur_cloak_short"
+        },
+        "image_sha256": "38edefb6a586a8b59e3368950d2e083666e2b00a329d160632dc081526cb7cb8",
+        "portrait": "art/portrait/env1/adult_M_hide_wrap_bun_try1.png"
+      },
+      "raw": {
+        "id": "P034",
+        "choice": "C",
+        "confidence": 0.94,
+        "reason": "Bearded adult with a top bun and exposed diagonal wrap."
+      },
+      "id": "P034",
+      "correct": true
+    }
+  ],
+  "limitations": [
+    "Fresh independent model reviewers, not human acceptance.",
+    "Identity matching does not confer owner adoption."
+  ]
+}

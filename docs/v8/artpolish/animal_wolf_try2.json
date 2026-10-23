@@ -1,0 +1,959 @@
+{
+  "species": "wolf",
+  "attempt": 2,
+  "raw": "/Users/rexxa/work/artpolish-data/animals/wolf_try2.png",
+  "raw_sha256": "2cc76e3cae682279695d0f9cda12d434a139f19899e21a7915f0f0ed50d7854c",
+  "prompt": "/Users/rexxa/work/artpolish-data/animals/wolf_try2.prompt.txt",
+  "prompt_sha256": "c723ff17ef0ba86cdec6c6673c66ed0b04dc178b8c4cbbc7e07216614bf093cb",
+  "landmarks": {
+    "species": "wolf",
+    "attempt": 2,
+    "shoulder_y": 236,
+    "hoof_y": 440,
+    "shoulder_target": 28,
+    "dead_length": 56,
+    "special_pose": "attack"
+  },
+  "landmark_method": "Manual source S-stand withers/back plane and lowest grounded hoof; source y coordinates",
+  "upright_scale": 0.13725490196078433,
+  "ownership": {
+    "source_rgba_sha256": "afc1a6fb6e7a70afe94b8b62aa8082596c651aa02a24f3c995212406e3a7fca5",
+    "ownership_sha256": "63a152add0a6f8cd3b32ec42a0f6e514d5884f997a2cb1c2a4e7cd8fcb65be6f",
+    "visible_pixels": 382463,
+    "tied_visible_pixels": 9,
+    "reconstructed_exactly": true,
+    "foreign_major_pixels": 0,
+    "fragments": []
+  },
+  "major_components": 10,
+  "source_opaque_border_pixels": 0,
+  "calibration": "docs/v8/artenv1/animal_judge_calibration.json",
+  "calibration_sha256": "e48654cbbf7e63505723d092dd0cd679c0ae4942fc8703494e84ac9d5abf694d",
+  "structural_pass": true,
+  "numeric_pass_frames": 10,
+  "numeric_gates": false,
+  "style_policy": "D1: numeric v2 and image-model style scorecard are reported, never gates",
+  "facing_rule": "S: front three-quarter 35 degrees toward viewer left; E: right-facing side three-quarter",
+  "frames": [
+    {
+      "species": "wolf",
+      "facing": "S",
+      "pose": "stand",
+      "attempt": 2,
+      "image": "art/animal/polish/wolf/try2/S/stand.png",
+      "image_sha256": "ae15a6109060e0d439704e8ea263dd9b41a550ead0992962d48377fd35e8f33b",
+      "source_panel": "/Users/rexxa/work/artpolish-data/animals/wolf_try2_S_stand.png",
+      "source_panel_sha256": "8fa2547ac40b068a328df0ca33db0669944eecb634bb0cef9a7807d9fd5d8e9c",
+      "source_box": [
+        14,
+        31,
+        318,
+        536
+      ],
+      "raw": "/Users/rexxa/work/artpolish-data/animals/wolf_try2.png",
+      "raw_sha256": "2cc76e3cae682279695d0f9cda12d434a139f19899e21a7915f0f0ed50d7854c",
+      "scale": 0.13725490196078433,
+      "upright_scale": 0.13725490196078433,
+      "normalization": {
+        "scaled_size": [
+          42,
+          69
+        ],
+        "trim_box": [
+          0,
+          23,
+          38,
+          57
+        ],
+        "placement": [
+          29,
+          39
+        ],
+        "resized_to_canvas_offset": [
+          29,
+          16
+        ],
+        "visible_pixels": 737,
+        "rotation_degrees": 0,
+        "scale": 0.13725490196078433,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "component_count": 1,
+      "visible_width": 38,
+      "visible_height": 34,
+      "structural_pass": true,
+      "numeric_v2_report_only": {
+        "candidate": "/Users/rexxa/work/artpolish-data/animals/wolf_try2_S_stand.png",
+        "sha256": "8fa2547ac40b068a328df0ca33db0669944eecb634bb0cef9a7807d9fd5d8e9c",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.2425296839688632,
+          "saturation_q25": 0.3857101078251957,
+          "saturation_q75": 0.4676868427177879,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.022627398809534193,
+          "foreground_pixels": 30526
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "CANDIDATE_NOT_OWNER_ADOPTED"
+    },
+    {
+      "species": "wolf",
+      "facing": "S",
+      "pose": "walk",
+      "attempt": 2,
+      "image": "art/animal/polish/wolf/try2/S/walk.png",
+      "image_sha256": "c52461c32cd91a6e7fc4aecd181bca58e7666a0a21e88b603a1256938bbb4a5c",
+      "source_panel": "/Users/rexxa/work/artpolish-data/animals/wolf_try2_S_walk.png",
+      "source_panel_sha256": "3fd981de6e62a7621f06f8e208192cc343717eb5c6277e92da08f0ad50cc338b",
+      "source_box": [
+        303,
+        41,
+        574,
+        556
+      ],
+      "raw": "/Users/rexxa/work/artpolish-data/animals/wolf_try2.png",
+      "raw_sha256": "2cc76e3cae682279695d0f9cda12d434a139f19899e21a7915f0f0ed50d7854c",
+      "scale": 0.13725490196078433,
+      "upright_scale": 0.13725490196078433,
+      "normalization": {
+        "scaled_size": [
+          37,
+          71
+        ],
+        "trim_box": [
+          1,
+          24,
+          36,
+          56
+        ],
+        "placement": [
+          30,
+          41
+        ],
+        "resized_to_canvas_offset": [
+          29,
+          17
+        ],
+        "visible_pixels": 621,
+        "rotation_degrees": 0,
+        "scale": 0.13725490196078433,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "component_count": 1,
+      "visible_width": 35,
+      "visible_height": 32,
+      "structural_pass": true,
+      "numeric_v2_report_only": {
+        "candidate": "/Users/rexxa/work/artpolish-data/animals/wolf_try2_S_walk.png",
+        "sha256": "3fd981de6e62a7621f06f8e208192cc343717eb5c6277e92da08f0ad50cc338b",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.2313534638498691,
+          "saturation_q25": 0.3886635979247056,
+          "saturation_q75": 0.46499042716511496,
+          "stroke_q25": 2.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.031521259606046105,
+          "foreground_pixels": 29622
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "CANDIDATE_NOT_OWNER_ADOPTED"
+    },
+    {
+      "species": "wolf",
+      "facing": "S",
+      "pose": "run",
+      "attempt": 2,
+      "image": "art/animal/polish/wolf/try2/S/run.png",
+      "image_sha256": "2b6053a9eab0887a04c72d9c35cfe65b99641d87332a93cf818422c9d8a64590",
+      "source_panel": "/Users/rexxa/work/artpolish-data/animals/wolf_try2_S_run.png",
+      "source_panel_sha256": "08d79c93779669e7829a67409f2093563c6b9f77f13d4529fcfe4429f2056297",
+      "source_box": [
+        557,
+        33,
+        988,
+        536
+      ],
+      "raw": "/Users/rexxa/work/artpolish-data/animals/wolf_try2.png",
+      "raw_sha256": "2cc76e3cae682279695d0f9cda12d434a139f19899e21a7915f0f0ed50d7854c",
+      "scale": 0.13725490196078433,
+      "upright_scale": 0.13725490196078433,
+      "normalization": {
+        "scaled_size": [
+          59,
+          69
+        ],
+        "trim_box": [
+          1,
+          25,
+          48,
+          51
+        ],
+        "placement": [
+          24,
+          47
+        ],
+        "resized_to_canvas_offset": [
+          23,
+          22
+        ],
+        "visible_pixels": 665,
+        "rotation_degrees": 0,
+        "scale": 0.13725490196078433,
+        "discarded_pixels": 1,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "component_count": 1,
+      "visible_width": 47,
+      "visible_height": 26,
+      "structural_pass": true,
+      "numeric_v2_report_only": {
+        "candidate": "/Users/rexxa/work/artpolish-data/animals/wolf_try2_S_run.png",
+        "sha256": "08d79c93779669e7829a67409f2093563c6b9f77f13d4529fcfe4429f2056297",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.24356459916646236,
+          "saturation_q25": 0.40099928312305605,
+          "saturation_q75": 0.46678350838068305,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.030445081251397933,
+          "foreground_pixels": 18087
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "CANDIDATE_NOT_OWNER_ADOPTED"
+    },
+    {
+      "species": "wolf",
+      "facing": "S",
+      "pose": "attack",
+      "attempt": 2,
+      "image": "art/animal/polish/wolf/try2/S/attack.png",
+      "image_sha256": "d1d04453cfd6c048b82e88583f7636163cbe84ccbaa3051450c8f053de8eb5ea",
+      "source_panel": "/Users/rexxa/work/artpolish-data/animals/wolf_try2_S_attack.png",
+      "source_panel_sha256": "b6eaf4268b48524735635dcd29a71d3ae82a0dfb42cea535f75b7a0f1aaa0adf",
+      "source_box": [
+        817,
+        21,
+        1304,
+        480
+      ],
+      "raw": "/Users/rexxa/work/artpolish-data/animals/wolf_try2.png",
+      "raw_sha256": "2cc76e3cae682279695d0f9cda12d434a139f19899e21a7915f0f0ed50d7854c",
+      "scale": 0.13725490196078433,
+      "upright_scale": 0.13725490196078433,
+      "normalization": {
+        "scaled_size": [
+          67,
+          63
+        ],
+        "trim_box": [
+          11,
+          22,
+          54,
+          55
+        ],
+        "placement": [
+          26,
+          40
+        ],
+        "resized_to_canvas_offset": [
+          15,
+          18
+        ],
+        "visible_pixels": 653,
+        "rotation_degrees": 0,
+        "scale": 0.13725490196078433,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "component_count": 1,
+      "visible_width": 43,
+      "visible_height": 33,
+      "structural_pass": true,
+      "numeric_v2_report_only": {
+        "candidate": "/Users/rexxa/work/artpolish-data/animals/wolf_try2_S_attack.png",
+        "sha256": "b6eaf4268b48524735635dcd29a71d3ae82a0dfb42cea535f75b7a0f1aaa0adf",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.238266566426807,
+          "saturation_q25": 0.4050551764954389,
+          "saturation_q75": 0.4804742351424739,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.02542060331434025,
+          "foreground_pixels": 20623
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "CANDIDATE_NOT_OWNER_ADOPTED"
+    },
+    {
+      "species": "wolf",
+      "facing": "S",
+      "pose": "dead",
+      "attempt": 2,
+      "image": "art/animal/polish/wolf/try2/S/dead.png",
+      "image_sha256": "133255d7b9fb3eb745e713f1525c54fb4fa99733b5284c573e2ce8b1a413f0b2",
+      "source_panel": "/Users/rexxa/work/artpolish-data/animals/wolf_try2_S_dead.png",
+      "source_panel_sha256": "e60925996904fdfcabbb4542673a07c352f3e177f184716fbe2257eecab3e493",
+      "source_box": [
+        1187,
+        53,
+        1536,
+        605
+      ],
+      "raw": "/Users/rexxa/work/artpolish-data/animals/wolf_try2.png",
+      "raw_sha256": "2cc76e3cae682279695d0f9cda12d434a139f19899e21a7915f0f0ed50d7854c",
+      "scale": 0.1723076923076923,
+      "upright_scale": 0.13725490196078433,
+      "normalization": {
+        "scaled_size": [
+          60,
+          95
+        ],
+        "trim_box": [
+          2,
+          46,
+          59,
+          68
+        ],
+        "placement": [
+          19,
+          35
+        ],
+        "resized_to_canvas_offset": [
+          17,
+          -11
+        ],
+        "visible_pixels": 817,
+        "rotation_degrees": 0,
+        "scale": 0.1723076923076923,
+        "discarded_pixels": 3,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "component_count": 1,
+      "visible_width": 57,
+      "visible_height": 22,
+      "structural_pass": true,
+      "numeric_v2_report_only": {
+        "candidate": "/Users/rexxa/work/artpolish-data/animals/wolf_try2_S_dead.png",
+        "sha256": "e60925996904fdfcabbb4542673a07c352f3e177f184716fbe2257eecab3e493",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.24868402333191067,
+          "saturation_q25": 0.38076765212272295,
+          "saturation_q75": 0.4625195126906388,
+          "stroke_q25": 2.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.47213595499958,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.034394029523716584,
+          "foreground_pixels": 15452
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "CANDIDATE_NOT_OWNER_ADOPTED"
+    },
+    {
+      "species": "wolf",
+      "facing": "E",
+      "pose": "stand",
+      "attempt": 2,
+      "image": "art/animal/polish/wolf/try2/E/stand.png",
+      "image_sha256": "bdf09c6d3d1d066847f7fadbd101dacf60a88de1751749ca48121ff35c3028de",
+      "source_panel": "/Users/rexxa/work/artpolish-data/animals/wolf_try2_E_stand.png",
+      "source_panel_sha256": "9b87c858da0b327de0f0450e62302d01d834aec69762cc7bddce43a67a4f0d30",
+      "source_box": [
+        12,
+        527,
+        364,
+        1000
+      ],
+      "raw": "/Users/rexxa/work/artpolish-data/animals/wolf_try2.png",
+      "raw_sha256": "2cc76e3cae682279695d0f9cda12d434a139f19899e21a7915f0f0ed50d7854c",
+      "scale": 0.13725490196078433,
+      "upright_scale": 0.13725490196078433,
+      "normalization": {
+        "scaled_size": [
+          48,
+          65
+        ],
+        "trim_box": [
+          0,
+          14,
+          40,
+          47
+        ],
+        "placement": [
+          28,
+          40
+        ],
+        "resized_to_canvas_offset": [
+          28,
+          26
+        ],
+        "visible_pixels": 702,
+        "rotation_degrees": 0,
+        "scale": 0.13725490196078433,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "component_count": 1,
+      "visible_width": 40,
+      "visible_height": 33,
+      "structural_pass": true,
+      "numeric_v2_report_only": {
+        "candidate": "/Users/rexxa/work/artpolish-data/animals/wolf_try2_E_stand.png",
+        "sha256": "9b87c858da0b327de0f0450e62302d01d834aec69762cc7bddce43a67a4f0d30",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.24191678474816436,
+          "saturation_q25": 0.38489657100065094,
+          "saturation_q75": 0.4667697763286181,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.03270502141094897,
+          "foreground_pixels": 25797
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "CANDIDATE_NOT_OWNER_ADOPTED"
+    },
+    {
+      "species": "wolf",
+      "facing": "E",
+      "pose": "walk",
+      "attempt": 2,
+      "image": "art/animal/polish/wolf/try2/E/walk.png",
+      "image_sha256": "8b745c94e54c397221a4b1e0233b593051e39a0bca53e61bf76f05e3a7ce2280",
+      "source_panel": "/Users/rexxa/work/artpolish-data/animals/wolf_try2_E_walk.png",
+      "source_panel_sha256": "f60465d49d9aab55705d9952230f0cba762227f8a2a56487f888f652a06d7d36",
+      "source_box": [
+        287,
+        529,
+        660,
+        1002
+      ],
+      "raw": "/Users/rexxa/work/artpolish-data/animals/wolf_try2.png",
+      "raw_sha256": "2cc76e3cae682279695d0f9cda12d434a139f19899e21a7915f0f0ed50d7854c",
+      "scale": 0.13725490196078433,
+      "upright_scale": 0.13725490196078433,
+      "normalization": {
+        "scaled_size": [
+          51,
+          65
+        ],
+        "trim_box": [
+          1,
+          16,
+          42,
+          47
+        ],
+        "placement": [
+          27,
+          42
+        ],
+        "resized_to_canvas_offset": [
+          26,
+          26
+        ],
+        "visible_pixels": 663,
+        "rotation_degrees": 0,
+        "scale": 0.13725490196078433,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "component_count": 1,
+      "visible_width": 41,
+      "visible_height": 31,
+      "structural_pass": true,
+      "numeric_v2_report_only": {
+        "candidate": "/Users/rexxa/work/artpolish-data/animals/wolf_try2_E_walk.png",
+        "sha256": "f60465d49d9aab55705d9952230f0cba762227f8a2a56487f888f652a06d7d36",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.23907442516163532,
+          "saturation_q25": 0.38871709317272846,
+          "saturation_q75": 0.46667229501809665,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.027939181954329453,
+          "foreground_pixels": 22813
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "CANDIDATE_NOT_OWNER_ADOPTED"
+    },
+    {
+      "species": "wolf",
+      "facing": "E",
+      "pose": "run",
+      "attempt": 2,
+      "image": "art/animal/polish/wolf/try2/E/run.png",
+      "image_sha256": "4815d1a3c066d77a0abe008b6f44ecad1e5ce6c4b7bc4f3f8d94f5df1b24cf19",
+      "source_panel": "/Users/rexxa/work/artpolish-data/animals/wolf_try2_E_run.png",
+      "source_panel_sha256": "57569810d0693da95502ca4763cbcbd74fbffb2ce045469622df44f31ed264b5",
+      "source_box": [
+        577,
+        508,
+        933,
+        992
+      ],
+      "raw": "/Users/rexxa/work/artpolish-data/animals/wolf_try2.png",
+      "raw_sha256": "2cc76e3cae682279695d0f9cda12d434a139f19899e21a7915f0f0ed50d7854c",
+      "scale": 0.13725490196078433,
+      "upright_scale": 0.13725490196078433,
+      "normalization": {
+        "scaled_size": [
+          49,
+          66
+        ],
+        "trim_box": [
+          1,
+          19,
+          48,
+          43
+        ],
+        "placement": [
+          24,
+          49
+        ],
+        "resized_to_canvas_offset": [
+          23,
+          30
+        ],
+        "visible_pixels": 617,
+        "rotation_degrees": 0,
+        "scale": 0.13725490196078433,
+        "discarded_pixels": 3,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "component_count": 1,
+      "visible_width": 47,
+      "visible_height": 24,
+      "structural_pass": true,
+      "numeric_v2_report_only": {
+        "candidate": "/Users/rexxa/work/artpolish-data/animals/wolf_try2_E_run.png",
+        "sha256": "57569810d0693da95502ca4763cbcbd74fbffb2ce045469622df44f31ed264b5",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.24059902361789154,
+          "saturation_q25": 0.38932129241948477,
+          "saturation_q75": 0.4661485070588966,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.0329964684197149,
+          "foreground_pixels": 16790
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "CANDIDATE_NOT_OWNER_ADOPTED"
+    },
+    {
+      "species": "wolf",
+      "facing": "E",
+      "pose": "attack",
+      "attempt": 2,
+      "image": "art/animal/polish/wolf/try2/E/attack.png",
+      "image_sha256": "9e55587872e7c896fe843dce8bef278db799a5f4739fe3f769353de63a3ef97e",
+      "source_panel": "/Users/rexxa/work/artpolish-data/animals/wolf_try2_E_attack.png",
+      "source_panel_sha256": "50cada68c73565d93fc249d8da106a869f56bad98dd2fa806ed450cf915bce0e",
+      "source_box": [
+        815,
+        501,
+        1344,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/artpolish-data/animals/wolf_try2.png",
+      "raw_sha256": "2cc76e3cae682279695d0f9cda12d434a139f19899e21a7915f0f0ed50d7854c",
+      "scale": 0.13725490196078433,
+      "upright_scale": 0.13725490196078433,
+      "normalization": {
+        "scaled_size": [
+          73,
+          72
+        ],
+        "trim_box": [
+          15,
+          13,
+          61,
+          49
+        ],
+        "placement": [
+          25,
+          37
+        ],
+        "resized_to_canvas_offset": [
+          10,
+          24
+        ],
+        "visible_pixels": 694,
+        "rotation_degrees": 0,
+        "scale": 0.13725490196078433,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "component_count": 1,
+      "visible_width": 46,
+      "visible_height": 36,
+      "structural_pass": true,
+      "numeric_v2_report_only": {
+        "candidate": "/Users/rexxa/work/artpolish-data/animals/wolf_try2_E_attack.png",
+        "sha256": "50cada68c73565d93fc249d8da106a869f56bad98dd2fa806ed450cf915bce0e",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.23654553124811667,
+          "saturation_q25": 0.3980901504433153,
+          "saturation_q75": 0.473292595780183,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.03070473448609665,
+          "foreground_pixels": 18561
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "CANDIDATE_NOT_OWNER_ADOPTED"
+    },
+    {
+      "species": "wolf",
+      "facing": "E",
+      "pose": "dead",
+      "attempt": 2,
+      "image": "art/animal/polish/wolf/try2/E/dead.png",
+      "image_sha256": "285dca9606b4b92e3ac2c6fdb6877390cc5283bde02186f54b0c84649ac2bbd5",
+      "source_panel": "/Users/rexxa/work/artpolish-data/animals/wolf_try2_E_dead.png",
+      "source_panel_sha256": "8ebd79f9fdd579511e6fd52ff6dcf34a499a42751f11c514271c9635b358c148",
+      "source_box": [
+        1103,
+        637,
+        1536,
+        1024
+      ],
+      "raw": "/Users/rexxa/work/artpolish-data/animals/wolf_try2.png",
+      "raw_sha256": "2cc76e3cae682279695d0f9cda12d434a139f19899e21a7915f0f0ed50d7854c",
+      "scale": 0.16091954022988506,
+      "upright_scale": 0.13725490196078433,
+      "normalization": {
+        "scaled_size": [
+          70,
+          62
+        ],
+        "trim_box": [
+          13,
+          20,
+          70,
+          39
+        ],
+        "placement": [
+          19,
+          38
+        ],
+        "resized_to_canvas_offset": [
+          6,
+          18
+        ],
+        "visible_pixels": 690,
+        "rotation_degrees": 0,
+        "scale": 0.16091954022988506,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "checks": {
+        "canvas": true,
+        "contact": true,
+        "border": true,
+        "connectivity": true,
+        "dead_length": true,
+        "dead_axis": true,
+        "source_border": true,
+        "ownership": true,
+        "discarded_alpha": true
+      },
+      "component_count": 1,
+      "visible_width": 57,
+      "visible_height": 19,
+      "structural_pass": true,
+      "numeric_v2_report_only": {
+        "candidate": "/Users/rexxa/work/artpolish-data/animals/wolf_try2_E_dead.png",
+        "sha256": "8ebd79f9fdd579511e6fd52ff6dcf34a499a42751f11c514271c9635b358c148",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.24240593717638936,
+          "saturation_q25": 0.36470397662428156,
+          "saturation_q75": 0.4578792894925403,
+          "stroke_q25": 2.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.0348805694771596,
+          "foreground_pixels": 12907
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "CANDIDATE_NOT_OWNER_ADOPTED"
+    }
+  ]
+}

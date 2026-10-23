@@ -1,0 +1,2148 @@
+{
+  "round": 0,
+  "protocol": "docs/v8/artpolish/BLIND_PROTOCOL.md",
+  "protocol_sha256": "9e4708e2aa588edd530688fe6b1772cbfff38458cfd7cef7e78054219ec40894",
+  "fresh_reviewers": true,
+  "style_gate": false,
+  "answer_key": "/Users/rexxa/work/artpolish-data/animals/round0/answer_key.json",
+  "answer_key_sha256": "c0ac8f3b254db9d876d7a07745e249ff58cf75a4ab1dec915646e53a12802577",
+  "sources": [
+    {
+      "path": "/Users/rexxa/work/artpolish-data/animals/round0/response_a.json",
+      "sha256": "f52171949ffcd964b7ba47800d7c37f93b0e177306b64aadac9a120b0ff9cb5f"
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish-data/animals/round0/response_b.json",
+      "sha256": "45c48c11a3e4f5e187220bd5351ce5429fd52ab05648d1141979674ea373435d"
+    }
+  ],
+  "summaries": [
+    {
+      "reviewer": "a",
+      "agent": "/root/animal_blind_a0",
+      "groups": [
+        {
+          "scale": 1,
+          "species_correct": 20,
+          "pose_correct": 17,
+          "passed": true
+        },
+        {
+          "scale": 2,
+          "species_correct": 20,
+          "pose_correct": 17,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "reviewer": "b",
+      "agent": "/root/animal_blind_b0",
+      "groups": [
+        {
+          "scale": 1,
+          "species_correct": 20,
+          "pose_correct": 18,
+          "passed": true
+        },
+        {
+          "scale": 2,
+          "species_correct": 20,
+          "pose_correct": 18,
+          "passed": true
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "records": [
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-01",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "deer",
+        "pose": "stand",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try1/E/stand.png",
+        "sha256": "86fc4f43badf23837a13b0ac4d569377fd40fadd3048deb0ca4232c48f3b91eb"
+      },
+      "raw": {
+        "id": "A1-01",
+        "species": "Deer",
+        "pose": "Standing",
+        "confidence": 0.98,
+        "notes": "Upright neck and four planted legs."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "A1-01",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-02",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "dead",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try1/S/dead.png",
+        "sha256": "21c3064218abdf8f36ba04e862b1ab30e10e11415eb08562396e3d340af01e26"
+      },
+      "raw": {
+        "id": "A1-02",
+        "species": "Wolf",
+        "pose": "Lying on its side",
+        "confidence": 0.87,
+        "notes": "Body is low with legs extended sideways; cannot tell whether resting or dead."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 frozen sideways-lying pose class; this does not establish death versus rest.",
+      "id": "A1-02",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-03",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "deer",
+        "pose": "run",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try1/E/run.png",
+        "sha256": "2608cc56f4748faa52cd34524b430615b66f8532264758468e5ce0113e66d7fc"
+      },
+      "raw": {
+        "id": "A1-03",
+        "species": "Deer",
+        "pose": "Leaping",
+        "confidence": 0.98,
+        "notes": "Body stretched in the air, facing right."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Directional leaping/bounding is running locomotion under ENV1 ordinary-meaning rule.",
+      "id": "A1-03",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-04",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "dead",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try1/E/dead.png",
+        "sha256": "70d3f40db6442a8ff66588d24f10ad666396a7a1414717e7fab4990bd37353aa"
+      },
+      "raw": {
+        "id": "A1-04",
+        "species": "Wolf",
+        "pose": "Prowling with its head lowered",
+        "confidence": 0.72,
+        "notes": "Body and head are close to the ground; precise movement is uncertain at this size."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Walking/prowling is locomotion; not dead or attacking.",
+      "id": "A1-04",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-05",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "attack",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try1/E/attack.png",
+        "sha256": "ce80587c4a9e5f7d0a733c892501659f2c59c4193487242d71404e34916617b4"
+      },
+      "raw": {
+        "id": "A1-05",
+        "species": "Wolf",
+        "pose": "Crouching",
+        "confidence": 0.73,
+        "notes": "Low forward posture, facing right; mouth appears open."
+      },
+      "normalized_pose": "crouch",
+      "mapping_rationale": "Stationary crouching does not identify an attacking lunge.",
+      "id": "A1-05",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-06",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "deer",
+        "pose": "graze",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try1/E/graze.png",
+        "sha256": "308b01f32a524a9dee92a9f98e3897650901c56f72f28b79fa67b1e712578f99"
+      },
+      "raw": {
+        "id": "A1-06",
+        "species": "Deer",
+        "pose": "Grazing",
+        "confidence": 0.98,
+        "notes": "Head lowered to the ground."
+      },
+      "normalized_pose": "graze",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "A1-06",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-07",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "attack",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try1/S/attack.png",
+        "sha256": "555d66c833716886e6759c78c124cf1367ce7b7f52849af6761bd3fab93d66d6"
+      },
+      "raw": {
+        "id": "A1-07",
+        "species": "Wolf",
+        "pose": "Crouching",
+        "confidence": 0.78,
+        "notes": "Hunched posture, facing left, with an apparently open mouth."
+      },
+      "normalized_pose": "crouch",
+      "mapping_rationale": "Stationary crouching does not identify an attacking lunge.",
+      "id": "A1-07",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-08",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "deer",
+        "pose": "walk",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try1/S/walk.png",
+        "sha256": "7c28c6bf8c7a045343ad665d3d9dfa528a8fab1a39017dfc7bd5438c17a1d259"
+      },
+      "raw": {
+        "id": "A1-08",
+        "species": "Deer",
+        "pose": "Walking",
+        "confidence": 0.94,
+        "notes": "Facing left with a foreleg lifted."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Walking/prowling is locomotion; not dead or attacking.",
+      "id": "A1-08",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-09",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "stand",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try1/S/stand.png",
+        "sha256": "e61314aa84091e9b6152b62bd903006ebc817633f5aae139c5a69ff48f073d91"
+      },
+      "raw": {
+        "id": "A1-09",
+        "species": "Wolf",
+        "pose": "Standing",
+        "confidence": 0.94,
+        "notes": "Upright head, facing left."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "A1-09",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-10",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "deer",
+        "pose": "stand",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try1/S/stand.png",
+        "sha256": "287c68a4fee6850c43baa181160d3ca21af52a27b26d0530869492ec51400211"
+      },
+      "raw": {
+        "id": "A1-10",
+        "species": "Deer",
+        "pose": "Standing",
+        "confidence": 0.98,
+        "notes": "Facing left with legs planted."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "A1-10",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-11",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "run",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try1/S/run.png",
+        "sha256": "a466c9aa118cea0fe630536469dba891428b24b8812357a5f7a252911b864711"
+      },
+      "raw": {
+        "id": "A1-11",
+        "species": "Wolf",
+        "pose": "Running",
+        "confidence": 0.93,
+        "notes": "Legs extended in a leftward stride."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Directional leaping/bounding is running locomotion under ENV1 ordinary-meaning rule.",
+      "id": "A1-11",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-12",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "stand",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try1/E/stand.png",
+        "sha256": "531fbee48cfb9d09d359d058bd92cead4ea897fd476243c5ce99851fd453c0b1"
+      },
+      "raw": {
+        "id": "A1-12",
+        "species": "Wolf",
+        "pose": "Standing",
+        "confidence": 0.96,
+        "notes": "Facing right with an upright head."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "A1-12",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-13",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "deer",
+        "pose": "walk",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try1/E/walk.png",
+        "sha256": "3aa9ef0edbfd11cb3a0260434a6ec485ab2fa7b87834d568fe17e95992f2e837"
+      },
+      "raw": {
+        "id": "A1-13",
+        "species": "Deer",
+        "pose": "Walking",
+        "confidence": 0.97,
+        "notes": "Facing right with one front leg raised."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Walking/prowling is locomotion; not dead or attacking.",
+      "id": "A1-13",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-14",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "deer",
+        "pose": "dead",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try1/E/dead.png",
+        "sha256": "834bec0c8addbeac715365aacecd6fc26c4b73371a2c0fdcd508806651e60016"
+      },
+      "raw": {
+        "id": "A1-14",
+        "species": "Deer",
+        "pose": "Lying on its side",
+        "confidence": 0.97,
+        "notes": "Head and body are down, legs extended; cannot determine whether dead or resting."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 frozen sideways-lying pose class; this does not establish death versus rest.",
+      "id": "A1-14",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-15",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "walk",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try1/S/walk.png",
+        "sha256": "cd4a0de08b09a521d9c13a9ce58a350050927a5ce58e3ba19264767b5f5d4ab3"
+      },
+      "raw": {
+        "id": "A1-15",
+        "species": "Wolf",
+        "pose": "Walking",
+        "confidence": 0.86,
+        "notes": "Facing left with one foreleg lifted."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Walking/prowling is locomotion; not dead or attacking.",
+      "id": "A1-15",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-16",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "deer",
+        "pose": "dead",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try1/S/dead.png",
+        "sha256": "8f84d08b94953706db64ed56ef3858d8a4c2b43b8a48fe48e3dda77e226b78f0"
+      },
+      "raw": {
+        "id": "A1-16",
+        "species": "Deer",
+        "pose": "Lying on its side",
+        "confidence": 0.97,
+        "notes": "Legs extended and head on the ground; cannot determine whether dead or resting."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 frozen sideways-lying pose class; this does not establish death versus rest.",
+      "id": "A1-16",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-17",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "walk",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try1/E/walk.png",
+        "sha256": "25ccee7a043c4946a45e5d12874fefb8068673d95364acd21a860ce041ea77ea"
+      },
+      "raw": {
+        "id": "A1-17",
+        "species": "Wolf",
+        "pose": "Walking",
+        "confidence": 0.93,
+        "notes": "Facing right with one foreleg raised."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Walking/prowling is locomotion; not dead or attacking.",
+      "id": "A1-17",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-18",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "run",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try1/E/run.png",
+        "sha256": "59fba0c459e12396aac0d5349bc853ce67c4b4a5cbce20d5bd60219588fd605d"
+      },
+      "raw": {
+        "id": "A1-18",
+        "species": "Wolf",
+        "pose": "Running",
+        "confidence": 0.94,
+        "notes": "Low, stretched rightward stride."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Directional leaping/bounding is running locomotion under ENV1 ordinary-meaning rule.",
+      "id": "A1-18",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-19",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "deer",
+        "pose": "run",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try1/S/run.png",
+        "sha256": "29ed0f18524d28219014c8342c27ba33ab7100648bc2295c908b8d0d95555a23"
+      },
+      "raw": {
+        "id": "A1-19",
+        "species": "Deer",
+        "pose": "Leaping",
+        "confidence": 0.98,
+        "notes": "Facing left with legs stretched away from the body."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Directional leaping/bounding is running locomotion under ENV1 ordinary-meaning rule.",
+      "id": "A1-19",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-20",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "deer",
+        "pose": "graze",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try1/S/graze.png",
+        "sha256": "4ab72362da6e53bd6dea7ca9bf1b20b76dfcd53ce82c38d8b36b8954e1d5d0ad"
+      },
+      "raw": {
+        "id": "A1-20",
+        "species": "Deer",
+        "pose": "Grazing",
+        "confidence": 0.98,
+        "notes": "Neck bent down and muzzle at the ground."
+      },
+      "normalized_pose": "graze",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "A1-20",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-01",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "deer",
+        "pose": "walk",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try1/E/walk.png",
+        "sha256": "3aa9ef0edbfd11cb3a0260434a6ec485ab2fa7b87834d568fe17e95992f2e837"
+      },
+      "raw": {
+        "id": "A2-01",
+        "species": "Deer",
+        "pose": "Walking",
+        "confidence": 0.99,
+        "notes": "Facing right with a bent, raised foreleg."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Walking/prowling is locomotion; not dead or attacking.",
+      "id": "A2-01",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-02",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "deer",
+        "pose": "dead",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try1/E/dead.png",
+        "sha256": "834bec0c8addbeac715365aacecd6fc26c4b73371a2c0fdcd508806651e60016"
+      },
+      "raw": {
+        "id": "A2-02",
+        "species": "Deer",
+        "pose": "Lying on its side",
+        "confidence": 0.99,
+        "notes": "Head down and legs extended; whether resting or dead is uncertain."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 frozen sideways-lying pose class; this does not establish death versus rest.",
+      "id": "A2-02",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-03",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "deer",
+        "pose": "walk",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try1/S/walk.png",
+        "sha256": "7c28c6bf8c7a045343ad665d3d9dfa528a8fab1a39017dfc7bd5438c17a1d259"
+      },
+      "raw": {
+        "id": "A2-03",
+        "species": "Deer",
+        "pose": "Walking",
+        "confidence": 0.98,
+        "notes": "Facing left with one foreleg lifted."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Walking/prowling is locomotion; not dead or attacking.",
+      "id": "A2-03",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-04",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "run",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try1/S/run.png",
+        "sha256": "a466c9aa118cea0fe630536469dba891428b24b8812357a5f7a252911b864711"
+      },
+      "raw": {
+        "id": "A2-04",
+        "species": "Wolf",
+        "pose": "Running",
+        "confidence": 0.97,
+        "notes": "Facing left in a stretched stride."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Directional leaping/bounding is running locomotion under ENV1 ordinary-meaning rule.",
+      "id": "A2-04",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-05",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "deer",
+        "pose": "run",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try1/E/run.png",
+        "sha256": "2608cc56f4748faa52cd34524b430615b66f8532264758468e5ce0113e66d7fc"
+      },
+      "raw": {
+        "id": "A2-05",
+        "species": "Deer",
+        "pose": "Leaping",
+        "confidence": 0.99,
+        "notes": "Facing right, body airborne and legs extended."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Directional leaping/bounding is running locomotion under ENV1 ordinary-meaning rule.",
+      "id": "A2-05",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-06",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "deer",
+        "pose": "graze",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try1/E/graze.png",
+        "sha256": "308b01f32a524a9dee92a9f98e3897650901c56f72f28b79fa67b1e712578f99"
+      },
+      "raw": {
+        "id": "A2-06",
+        "species": "Deer",
+        "pose": "Grazing",
+        "confidence": 0.99,
+        "notes": "Head lowered to the ground."
+      },
+      "normalized_pose": "graze",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "A2-06",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-07",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "deer",
+        "pose": "graze",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try1/S/graze.png",
+        "sha256": "4ab72362da6e53bd6dea7ca9bf1b20b76dfcd53ce82c38d8b36b8954e1d5d0ad"
+      },
+      "raw": {
+        "id": "A2-07",
+        "species": "Deer",
+        "pose": "Grazing",
+        "confidence": 0.99,
+        "notes": "Muzzle down near the ground."
+      },
+      "normalized_pose": "graze",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "A2-07",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-08",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "deer",
+        "pose": "dead",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try1/S/dead.png",
+        "sha256": "8f84d08b94953706db64ed56ef3858d8a4c2b43b8a48fe48e3dda77e226b78f0"
+      },
+      "raw": {
+        "id": "A2-08",
+        "species": "Deer",
+        "pose": "Lying on its side",
+        "confidence": 0.99,
+        "notes": "Legs extended beside a grounded body; whether resting or dead is uncertain."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 frozen sideways-lying pose class; this does not establish death versus rest.",
+      "id": "A2-08",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-09",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "deer",
+        "pose": "stand",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try1/S/stand.png",
+        "sha256": "287c68a4fee6850c43baa181160d3ca21af52a27b26d0530869492ec51400211"
+      },
+      "raw": {
+        "id": "A2-09",
+        "species": "Deer",
+        "pose": "Standing",
+        "confidence": 0.99,
+        "notes": "Facing left with an upright neck and planted legs."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "A2-09",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-10",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "stand",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try1/E/stand.png",
+        "sha256": "531fbee48cfb9d09d359d058bd92cead4ea897fd476243c5ce99851fd453c0b1"
+      },
+      "raw": {
+        "id": "A2-10",
+        "species": "Wolf",
+        "pose": "Standing",
+        "confidence": 0.99,
+        "notes": "Facing right with an upright head and planted feet."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "A2-10",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-11",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "dead",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try1/E/dead.png",
+        "sha256": "70d3f40db6442a8ff66588d24f10ad666396a7a1414717e7fab4990bd37353aa"
+      },
+      "raw": {
+        "id": "A2-11",
+        "species": "Wolf",
+        "pose": "Prowling with its head lowered",
+        "confidence": 0.84,
+        "notes": "Very low torso and muzzle, with legs tucked into a cautious-looking stride."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Walking/prowling is locomotion; not dead or attacking.",
+      "id": "A2-11",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-12",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "walk",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try1/E/walk.png",
+        "sha256": "25ccee7a043c4946a45e5d12874fefb8068673d95364acd21a860ce041ea77ea"
+      },
+      "raw": {
+        "id": "A2-12",
+        "species": "Wolf",
+        "pose": "Walking",
+        "confidence": 0.98,
+        "notes": "Facing right with a raised foreleg."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Walking/prowling is locomotion; not dead or attacking.",
+      "id": "A2-12",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-13",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "stand",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try1/S/stand.png",
+        "sha256": "e61314aa84091e9b6152b62bd903006ebc817633f5aae139c5a69ff48f073d91"
+      },
+      "raw": {
+        "id": "A2-13",
+        "species": "Wolf",
+        "pose": "Standing",
+        "confidence": 0.98,
+        "notes": "Facing left, legs planted beneath the body."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "A2-13",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-14",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "walk",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try1/S/walk.png",
+        "sha256": "cd4a0de08b09a521d9c13a9ce58a350050927a5ce58e3ba19264767b5f5d4ab3"
+      },
+      "raw": {
+        "id": "A2-14",
+        "species": "Wolf",
+        "pose": "Walking",
+        "confidence": 0.95,
+        "notes": "Facing left with one foreleg lifted."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Walking/prowling is locomotion; not dead or attacking.",
+      "id": "A2-14",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-15",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "attack",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try1/E/attack.png",
+        "sha256": "ce80587c4a9e5f7d0a733c892501659f2c59c4193487242d71404e34916617b4"
+      },
+      "raw": {
+        "id": "A2-15",
+        "species": "Wolf",
+        "pose": "Crouching",
+        "confidence": 0.84,
+        "notes": "Low, braced posture facing right; open mouth suggests an aggressive expression."
+      },
+      "normalized_pose": "crouch",
+      "mapping_rationale": "Stationary crouching does not identify an attacking lunge.",
+      "id": "A2-15",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-16",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "deer",
+        "pose": "run",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try1/S/run.png",
+        "sha256": "29ed0f18524d28219014c8342c27ba33ab7100648bc2295c908b8d0d95555a23"
+      },
+      "raw": {
+        "id": "A2-16",
+        "species": "Deer",
+        "pose": "Leaping",
+        "confidence": 0.99,
+        "notes": "Facing left with front legs bent and rear legs extended."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Directional leaping/bounding is running locomotion under ENV1 ordinary-meaning rule.",
+      "id": "A2-16",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-17",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "deer",
+        "pose": "stand",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try1/E/stand.png",
+        "sha256": "86fc4f43badf23837a13b0ac4d569377fd40fadd3048deb0ca4232c48f3b91eb"
+      },
+      "raw": {
+        "id": "A2-17",
+        "species": "Deer",
+        "pose": "Standing",
+        "confidence": 0.99,
+        "notes": "Upright and facing right."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "A2-17",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-18",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "dead",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try1/S/dead.png",
+        "sha256": "21c3064218abdf8f36ba04e862b1ab30e10e11415eb08562396e3d340af01e26"
+      },
+      "raw": {
+        "id": "A2-18",
+        "species": "Wolf",
+        "pose": "Lying on its side",
+        "confidence": 0.97,
+        "notes": "Head grounded and legs extended sideways; cannot tell whether dead or resting."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 frozen sideways-lying pose class; this does not establish death versus rest.",
+      "id": "A2-18",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-19",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "run",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try1/E/run.png",
+        "sha256": "59fba0c459e12396aac0d5349bc853ce67c4b4a5cbce20d5bd60219588fd605d"
+      },
+      "raw": {
+        "id": "A2-19",
+        "species": "Wolf",
+        "pose": "Running",
+        "confidence": 0.98,
+        "notes": "Facing right in a long, low stride."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Directional leaping/bounding is running locomotion under ENV1 ordinary-meaning rule.",
+      "id": "A2-19",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-20",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "attack",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try1/S/attack.png",
+        "sha256": "555d66c833716886e6759c78c124cf1367ce7b7f52849af6761bd3fab93d66d6"
+      },
+      "raw": {
+        "id": "A2-20",
+        "species": "Wolf",
+        "pose": "Crouching",
+        "confidence": 0.88,
+        "notes": "Hunched and facing left with an open mouth and braced forelegs."
+      },
+      "normalized_pose": "crouch",
+      "mapping_rationale": "Stationary crouching does not identify an attacking lunge.",
+      "id": "A2-20",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-01",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "attack",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try1/E/attack.png",
+        "sha256": "ce80587c4a9e5f7d0a733c892501659f2c59c4193487242d71404e34916617b4"
+      },
+      "raw": {
+        "id": "B1-01",
+        "species": "wolf",
+        "pose": "walking low to the ground",
+        "confidence": "medium",
+        "notes": "Body and head are lowered; a cautious walk is my primary reading."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Walking/prowling is locomotion; not dead or attacking.",
+      "id": "B1-01",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-02",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "run",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try1/E/run.png",
+        "sha256": "59fba0c459e12396aac0d5349bc853ce67c4b4a5cbce20d5bd60219588fd605d"
+      },
+      "raw": {
+        "id": "B1-02",
+        "species": "wolf",
+        "pose": "running",
+        "confidence": "high",
+        "notes": "Legs extend forward and backward beneath a stretched body."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Directional leaping/bounding is running locomotion under ENV1 ordinary-meaning rule.",
+      "id": "B1-02",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-03",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "deer",
+        "pose": "stand",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try1/S/stand.png",
+        "sha256": "287c68a4fee6850c43baa181160d3ca21af52a27b26d0530869492ec51400211"
+      },
+      "raw": {
+        "id": "B1-03",
+        "species": "deer",
+        "pose": "standing",
+        "confidence": "high",
+        "notes": "Antlered deer with head raised and feet planted."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "B1-03",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-04",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "dead",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try1/S/dead.png",
+        "sha256": "21c3064218abdf8f36ba04e862b1ab30e10e11415eb08562396e3d340af01e26"
+      },
+      "raw": {
+        "id": "B1-04",
+        "species": "wolf",
+        "pose": "lying on the ground",
+        "confidence": "medium",
+        "notes": "Low horizontal body and head near the ground; lying is my primary reading."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 frozen sideways-lying pose class; this does not establish death versus rest.",
+      "id": "B1-04",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-05",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "stand",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try1/S/stand.png",
+        "sha256": "e61314aa84091e9b6152b62bd903006ebc817633f5aae139c5a69ff48f073d91"
+      },
+      "raw": {
+        "id": "B1-05",
+        "species": "wolf",
+        "pose": "standing",
+        "confidence": "high",
+        "notes": "Upright body with head raised, facing partly toward the viewer."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "B1-05",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-06",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "deer",
+        "pose": "graze",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try1/E/graze.png",
+        "sha256": "308b01f32a524a9dee92a9f98e3897650901c56f72f28b79fa67b1e712578f99"
+      },
+      "raw": {
+        "id": "B1-06",
+        "species": "deer",
+        "pose": "grazing",
+        "confidence": "high",
+        "notes": "Head lowered toward the ground."
+      },
+      "normalized_pose": "graze",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "B1-06",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-07",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "deer",
+        "pose": "stand",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try1/E/stand.png",
+        "sha256": "86fc4f43badf23837a13b0ac4d569377fd40fadd3048deb0ca4232c48f3b91eb"
+      },
+      "raw": {
+        "id": "B1-07",
+        "species": "deer",
+        "pose": "standing",
+        "confidence": "high",
+        "notes": "Antlered deer stands with its head raised."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "B1-07",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-08",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "deer",
+        "pose": "walk",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try1/E/walk.png",
+        "sha256": "3aa9ef0edbfd11cb3a0260434a6ec485ab2fa7b87834d568fe17e95992f2e837"
+      },
+      "raw": {
+        "id": "B1-08",
+        "species": "deer",
+        "pose": "walking",
+        "confidence": "high",
+        "notes": "One foreleg is lifted in a step."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Walking/prowling is locomotion; not dead or attacking.",
+      "id": "B1-08",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-09",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "deer",
+        "pose": "walk",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try1/S/walk.png",
+        "sha256": "7c28c6bf8c7a045343ad665d3d9dfa528a8fab1a39017dfc7bd5438c17a1d259"
+      },
+      "raw": {
+        "id": "B1-09",
+        "species": "deer",
+        "pose": "walking",
+        "confidence": "high",
+        "notes": "Foreleg raised and legs offset as if stepping."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Walking/prowling is locomotion; not dead or attacking.",
+      "id": "B1-09",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-10",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "dead",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try1/E/dead.png",
+        "sha256": "70d3f40db6442a8ff66588d24f10ad666396a7a1414717e7fab4990bd37353aa"
+      },
+      "raw": {
+        "id": "B1-10",
+        "species": "wolf",
+        "pose": "lying on the ground",
+        "confidence": "medium",
+        "notes": "Body is stretched close to the ground; the small legs are difficult to distinguish."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 frozen sideways-lying pose class; this does not establish death versus rest.",
+      "id": "B1-10",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-11",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "walk",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try1/S/walk.png",
+        "sha256": "cd4a0de08b09a521d9c13a9ce58a350050927a5ce58e3ba19264767b5f5d4ab3"
+      },
+      "raw": {
+        "id": "B1-11",
+        "species": "wolf",
+        "pose": "walking",
+        "confidence": "medium",
+        "notes": "Facing partly toward the viewer with one foreleg appearing lifted."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Walking/prowling is locomotion; not dead or attacking.",
+      "id": "B1-11",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-12",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "run",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try1/S/run.png",
+        "sha256": "a466c9aa118cea0fe630536469dba891428b24b8812357a5f7a252911b864711"
+      },
+      "raw": {
+        "id": "B1-12",
+        "species": "wolf",
+        "pose": "running",
+        "confidence": "high",
+        "notes": "Extended legs and elongated stride."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Directional leaping/bounding is running locomotion under ENV1 ordinary-meaning rule.",
+      "id": "B1-12",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-13",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "walk",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try1/E/walk.png",
+        "sha256": "25ccee7a043c4946a45e5d12874fefb8068673d95364acd21a860ce041ea77ea"
+      },
+      "raw": {
+        "id": "B1-13",
+        "species": "wolf",
+        "pose": "walking",
+        "confidence": "medium",
+        "notes": "Raised foreleg suggests a step."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Walking/prowling is locomotion; not dead or attacking.",
+      "id": "B1-13",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-14",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "stand",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try1/E/stand.png",
+        "sha256": "531fbee48cfb9d09d359d058bd92cead4ea897fd476243c5ce99851fd453c0b1"
+      },
+      "raw": {
+        "id": "B1-14",
+        "species": "wolf",
+        "pose": "standing",
+        "confidence": "high",
+        "notes": "Head raised and legs beneath the body."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "B1-14",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-15",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "deer",
+        "pose": "run",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try1/E/run.png",
+        "sha256": "2608cc56f4748faa52cd34524b430615b66f8532264758468e5ce0113e66d7fc"
+      },
+      "raw": {
+        "id": "B1-15",
+        "species": "deer",
+        "pose": "leaping",
+        "confidence": "high",
+        "notes": "Body stretched in the air with forelegs folded and hind legs extended."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Directional leaping/bounding is running locomotion under ENV1 ordinary-meaning rule.",
+      "id": "B1-15",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-16",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "deer",
+        "pose": "run",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try1/S/run.png",
+        "sha256": "29ed0f18524d28219014c8342c27ba33ab7100648bc2295c908b8d0d95555a23"
+      },
+      "raw": {
+        "id": "B1-16",
+        "species": "deer",
+        "pose": "leaping",
+        "confidence": "high",
+        "notes": "Raised body and bent forelegs suggest an airborne bound."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Directional leaping/bounding is running locomotion under ENV1 ordinary-meaning rule.",
+      "id": "B1-16",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-17",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "deer",
+        "pose": "dead",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try1/S/dead.png",
+        "sha256": "8f84d08b94953706db64ed56ef3858d8a4c2b43b8a48fe48e3dda77e226b78f0"
+      },
+      "raw": {
+        "id": "B1-17",
+        "species": "deer",
+        "pose": "lying on its side",
+        "confidence": "high",
+        "notes": "Body and head lie sideways against the ground."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 frozen sideways-lying pose class; this does not establish death versus rest.",
+      "id": "B1-17",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-18",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "deer",
+        "pose": "graze",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try1/S/graze.png",
+        "sha256": "4ab72362da6e53bd6dea7ca9bf1b20b76dfcd53ce82c38d8b36b8954e1d5d0ad"
+      },
+      "raw": {
+        "id": "B1-18",
+        "species": "deer",
+        "pose": "grazing",
+        "confidence": "high",
+        "notes": "Head lowered between the forelegs."
+      },
+      "normalized_pose": "graze",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "B1-18",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-19",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "attack",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try1/S/attack.png",
+        "sha256": "555d66c833716886e6759c78c124cf1367ce7b7f52849af6761bd3fab93d66d6"
+      },
+      "raw": {
+        "id": "B1-19",
+        "species": "wolf",
+        "pose": "crouching",
+        "confidence": "medium",
+        "notes": "Body is low with bent legs; the exact movement is uncertain."
+      },
+      "normalized_pose": "crouch",
+      "mapping_rationale": "Stationary crouching does not identify an attacking lunge.",
+      "id": "B1-19",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-20",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "deer",
+        "pose": "dead",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try1/E/dead.png",
+        "sha256": "834bec0c8addbeac715365aacecd6fc26c4b73371a2c0fdcd508806651e60016"
+      },
+      "raw": {
+        "id": "B1-20",
+        "species": "deer",
+        "pose": "lying on its side",
+        "confidence": "high",
+        "notes": "Body is horizontal with legs extended sideways."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 frozen sideways-lying pose class; this does not establish death versus rest.",
+      "id": "B1-20",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-01",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "dead",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try1/S/dead.png",
+        "sha256": "21c3064218abdf8f36ba04e862b1ab30e10e11415eb08562396e3d340af01e26"
+      },
+      "raw": {
+        "id": "B2-01",
+        "species": "wolf",
+        "pose": "lying on its side",
+        "confidence": "high",
+        "notes": "Head rests on the ground and legs extend sideways from the body."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 frozen sideways-lying pose class; this does not establish death versus rest.",
+      "id": "B2-01",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-02",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "deer",
+        "pose": "stand",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try1/E/stand.png",
+        "sha256": "86fc4f43badf23837a13b0ac4d569377fd40fadd3048deb0ca4232c48f3b91eb"
+      },
+      "raw": {
+        "id": "B2-02",
+        "species": "deer",
+        "pose": "standing",
+        "confidence": "high",
+        "notes": "Antlered deer with an upright neck and planted legs."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "B2-02",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-03",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "run",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try1/E/run.png",
+        "sha256": "59fba0c459e12396aac0d5349bc853ce67c4b4a5cbce20d5bd60219588fd605d"
+      },
+      "raw": {
+        "id": "B2-03",
+        "species": "wolf",
+        "pose": "running",
+        "confidence": "high",
+        "notes": "Legs are widely stretched through a running stride."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Directional leaping/bounding is running locomotion under ENV1 ordinary-meaning rule.",
+      "id": "B2-03",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-04",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "stand",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try1/S/stand.png",
+        "sha256": "e61314aa84091e9b6152b62bd903006ebc817633f5aae139c5a69ff48f073d91"
+      },
+      "raw": {
+        "id": "B2-04",
+        "species": "wolf",
+        "pose": "standing",
+        "confidence": "high",
+        "notes": "Upright posture with feet beneath the body."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "B2-04",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-05",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "deer",
+        "pose": "run",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try1/S/run.png",
+        "sha256": "29ed0f18524d28219014c8342c27ba33ab7100648bc2295c908b8d0d95555a23"
+      },
+      "raw": {
+        "id": "B2-05",
+        "species": "deer",
+        "pose": "leaping",
+        "confidence": "high",
+        "notes": "Forelegs folded and hind legs extended behind an airborne body."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Directional leaping/bounding is running locomotion under ENV1 ordinary-meaning rule.",
+      "id": "B2-05",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-06",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "run",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try1/S/run.png",
+        "sha256": "a466c9aa118cea0fe630536469dba891428b24b8812357a5f7a252911b864711"
+      },
+      "raw": {
+        "id": "B2-06",
+        "species": "wolf",
+        "pose": "running",
+        "confidence": "high",
+        "notes": "Forward-reaching forelegs and rearward-reaching hind legs."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Directional leaping/bounding is running locomotion under ENV1 ordinary-meaning rule.",
+      "id": "B2-06",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-07",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "walk",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try1/E/walk.png",
+        "sha256": "25ccee7a043c4946a45e5d12874fefb8068673d95364acd21a860ce041ea77ea"
+      },
+      "raw": {
+        "id": "B2-07",
+        "species": "wolf",
+        "pose": "walking",
+        "confidence": "high",
+        "notes": "One foreleg is lifted while the body remains upright."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Walking/prowling is locomotion; not dead or attacking.",
+      "id": "B2-07",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-08",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "dead",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try1/E/dead.png",
+        "sha256": "70d3f40db6442a8ff66588d24f10ad666396a7a1414717e7fab4990bd37353aa"
+      },
+      "raw": {
+        "id": "B2-08",
+        "species": "wolf",
+        "pose": "lying on its side",
+        "confidence": "high",
+        "notes": "Head is down and legs are collapsed beside the body."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 frozen sideways-lying pose class; this does not establish death versus rest.",
+      "id": "B2-08",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-09",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "deer",
+        "pose": "dead",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try1/E/dead.png",
+        "sha256": "834bec0c8addbeac715365aacecd6fc26c4b73371a2c0fdcd508806651e60016"
+      },
+      "raw": {
+        "id": "B2-09",
+        "species": "deer",
+        "pose": "lying on its side",
+        "confidence": "high",
+        "notes": "Antlers and muzzle are on the ground with the body sideways."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 frozen sideways-lying pose class; this does not establish death versus rest.",
+      "id": "B2-09",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-10",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "walk",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try1/S/walk.png",
+        "sha256": "cd4a0de08b09a521d9c13a9ce58a350050927a5ce58e3ba19264767b5f5d4ab3"
+      },
+      "raw": {
+        "id": "B2-10",
+        "species": "wolf",
+        "pose": "walking",
+        "confidence": "high",
+        "notes": "A foreleg is raised in a forward step."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Walking/prowling is locomotion; not dead or attacking.",
+      "id": "B2-10",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-11",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "deer",
+        "pose": "run",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try1/E/run.png",
+        "sha256": "2608cc56f4748faa52cd34524b430615b66f8532264758468e5ce0113e66d7fc"
+      },
+      "raw": {
+        "id": "B2-11",
+        "species": "deer",
+        "pose": "leaping",
+        "confidence": "high",
+        "notes": "Stretched hind legs and bent forelegs indicate a bound."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Directional leaping/bounding is running locomotion under ENV1 ordinary-meaning rule.",
+      "id": "B2-11",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-12",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "deer",
+        "pose": "dead",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try1/S/dead.png",
+        "sha256": "8f84d08b94953706db64ed56ef3858d8a4c2b43b8a48fe48e3dda77e226b78f0"
+      },
+      "raw": {
+        "id": "B2-12",
+        "species": "deer",
+        "pose": "lying on its side",
+        "confidence": "high",
+        "notes": "Legs extend horizontally beside the body and head."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 frozen sideways-lying pose class; this does not establish death versus rest.",
+      "id": "B2-12",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-13",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "attack",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try1/S/attack.png",
+        "sha256": "555d66c833716886e6759c78c124cf1367ce7b7f52849af6761bd3fab93d66d6"
+      },
+      "raw": {
+        "id": "B2-13",
+        "species": "wolf",
+        "pose": "crouching",
+        "confidence": "high",
+        "notes": "Bent legs, lowered shoulders, and bared teeth create a tense low posture."
+      },
+      "normalized_pose": "crouch",
+      "mapping_rationale": "Stationary crouching does not identify an attacking lunge.",
+      "id": "B2-13",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-14",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "deer",
+        "pose": "stand",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try1/S/stand.png",
+        "sha256": "287c68a4fee6850c43baa181160d3ca21af52a27b26d0530869492ec51400211"
+      },
+      "raw": {
+        "id": "B2-14",
+        "species": "deer",
+        "pose": "standing",
+        "confidence": "high",
+        "notes": "Raised head and four settled legs."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "B2-14",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-15",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "deer",
+        "pose": "walk",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try1/S/walk.png",
+        "sha256": "7c28c6bf8c7a045343ad665d3d9dfa528a8fab1a39017dfc7bd5438c17a1d259"
+      },
+      "raw": {
+        "id": "B2-15",
+        "species": "deer",
+        "pose": "walking",
+        "confidence": "high",
+        "notes": "A bent foreleg is raised in a step."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Walking/prowling is locomotion; not dead or attacking.",
+      "id": "B2-15",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-16",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "deer",
+        "pose": "graze",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try1/S/graze.png",
+        "sha256": "4ab72362da6e53bd6dea7ca9bf1b20b76dfcd53ce82c38d8b36b8954e1d5d0ad"
+      },
+      "raw": {
+        "id": "B2-16",
+        "species": "deer",
+        "pose": "grazing",
+        "confidence": "high",
+        "notes": "Muzzle touches the ground beneath a deeply lowered neck."
+      },
+      "normalized_pose": "graze",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "B2-16",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-17",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "stand",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try1/E/stand.png",
+        "sha256": "531fbee48cfb9d09d359d058bd92cead4ea897fd476243c5ce99851fd453c0b1"
+      },
+      "raw": {
+        "id": "B2-17",
+        "species": "wolf",
+        "pose": "standing",
+        "confidence": "high",
+        "notes": "Head is raised and all legs are placed under the body."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "B2-17",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-18",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "deer",
+        "pose": "walk",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try1/E/walk.png",
+        "sha256": "3aa9ef0edbfd11cb3a0260434a6ec485ab2fa7b87834d568fe17e95992f2e837"
+      },
+      "raw": {
+        "id": "B2-18",
+        "species": "deer",
+        "pose": "walking",
+        "confidence": "high",
+        "notes": "Raised foreleg and staggered legs suggest a walking stride."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Walking/prowling is locomotion; not dead or attacking.",
+      "id": "B2-18",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-19",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "attack",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try1/E/attack.png",
+        "sha256": "ce80587c4a9e5f7d0a733c892501659f2c59c4193487242d71404e34916617b4"
+      },
+      "raw": {
+        "id": "B2-19",
+        "species": "wolf",
+        "pose": "crouching",
+        "confidence": "high",
+        "notes": "Low tense body with bent legs and visible bared teeth."
+      },
+      "normalized_pose": "crouch",
+      "mapping_rationale": "Stationary crouching does not identify an attacking lunge.",
+      "id": "B2-19",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-20",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "deer",
+        "pose": "graze",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try1/E/graze.png",
+        "sha256": "308b01f32a524a9dee92a9f98e3897650901c56f72f28b79fa67b1e712578f99"
+      },
+      "raw": {
+        "id": "B2-20",
+        "species": "deer",
+        "pose": "grazing",
+        "confidence": "high",
+        "notes": "Head and muzzle lowered to the ground."
+      },
+      "normalized_pose": "graze",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "B2-20",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    }
+  ],
+  "limitations": [
+    "Model reviewers, not human users.",
+    "Side-lying counts as dead pose per ENV1 semantics; death versus rest is unresolved.",
+    "Species/pose thresholds can pass while individual attack frames remain misread.",
+    "Deer S/dead structure failure is independent and not waived."
+  ]
+}

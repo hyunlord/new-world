@@ -1,0 +1,232 @@
+{
+  "cap": 9,
+  "records": [
+    {
+      "index": 1,
+      "kind": "asset_generation",
+      "species": "wolf",
+      "attempt": 1,
+      "status": "COMPLETED",
+      "started_at": "2026-10-23T15:41:16.348778+00:00",
+      "prompt": "/Users/rexxa/work/artpolish-data/animals/wolf_try1.prompt.txt",
+      "prompt_text": "Use case: stylized-concept. Create one complete game sprite sheet of ONE grey-brown WOLF in exactly TEN separate WHOLE-FIGURE drawings. 1536x1024 landscape transparent RGBA. Exactly TWO rows by FIVE columns, equal invisible cells, very wide transparent gutters, at least40 source pixels blank margin around every animal including tails and muzzles. No labels, text, grid, cast shadows, scenery, floor, people or props. Same individual, consistent proportions and source shoulder height in all upright poses. Every silhouette remains connected: paws attached to legs, legs and tail attached to body.\n\nLocked references person.png and scene.png are STYLE ONLY: fine brown-black ink, restrained warm earth wash, broad quiet fur planes and distinct shadows, stronger contour than interior detail, sparse fur accents and upper-left light. NOT a photo, vector, 3D, or dense engraving. This will reduce to shoulder height28pixels; action silhouettes must read clearly.\n\nCAMERA IS CRITICAL. Top row SOUTH: front three-quarter, rotated EXACTLY35degrees toward viewer's LEFT from head-on; muzzle points diagonally toward bottom-left of image, long left-facing side of torso visible as well as chest. This is NOT a symmetric head-on view. Four legs clearly separated in depth. Bottom row EAST unchanged: side three-quarter facing RIGHT. Same slightly elevated view in both rows, only modest top of back visible, no steep overhead.\n\nFIVE COLUMNS IN EACH ROW:\n1 STAND: four straight legs, four planted paws spaced distinctly, level horizontal back, head LEVEL forward, tail LOW, even weight. Definitely standing on all fours, NEVER sitting or crouching. Hip as high as shoulder.\n2 WALK: diagonal leg pairs visibly APART, one forepaw lifted and bent well above the ground, opposite hind leg stepping forward, head forward and torso level. Exactly four legs, no extra limbs. Silhouette obviously stepping.\n3 RUN: an extended suspended GALLOP, forelegs reaching forward and hindlegs reaching backward, all legs out of the standing line, body horizontal and airborne, mouth closed.\n4 ATTACK: aggressive forward LUNGE with forelegs reaching at prey, jaws conspicuously OPEN with dark mouth and ivory teeth, ears pinned, head thrust forward. Not sitting upright, no rear-up begging pose. A distinctive angled forward lunge, not ordinary running.\n5 DEAD: lying limp ON ITS SIDE, long body horizontal, legs out sideways, head rests flat, eyes shut, tail relaxed. Silhouette clearly lifeless, not sleeping curled or standing. No blood.\n\nAnatomy: long pointed wolf muzzle, pointed ears, thick chest, thick grey-brown coat, long LOW bushy tail. Keep whole animals complete and well spaced. No pose smaller than the others. Exactly ten wolves. Actual transparent alpha background.\n",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "completed_at": "2026-10-23T15:42:12.750584+00:00",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-061d-78f3-885e-daa152838af3/exec-260d8896-eb1a-4b0c-bb2d-8d85d843a6a2.png",
+      "raw": "/Users/rexxa/work/artpolish-data/animals/wolf_try1.png",
+      "raw_sha256": "5d477d6cc4bd39bbf43fd1b2c21d37eee26081cd0b5e2131f20869e947e2ed9b",
+      "tool_sha256": "5d477d6cc4bd39bbf43fd1b2c21d37eee26081cd0b5e2131f20869e947e2ed9b",
+      "prompt_sha256": "fe298890e2df1f2ab74dbf63da69617b6fe59b439403bfa30631bed640b28f6c",
+      "raw_bytes": 1874771
+    },
+    {
+      "index": 2,
+      "kind": "asset_generation",
+      "species": "deer",
+      "attempt": 1,
+      "status": "COMPLETED",
+      "started_at": "2026-10-23T15:42:48.149650+00:00",
+      "prompt": "/Users/rexxa/work/artpolish-data/animals/deer_try1.prompt.txt",
+      "prompt_text": "Use case: stylized-concept. Create one complete game sprite sheet of ONE adult tan-brown DEER in exactly TEN separate WHOLE-FIGURE drawings. 1536x1024 landscape transparent RGBA. Exactly TWO rows by FIVE columns, equal invisible cells, wide transparent gutters, at least40source pixels blank margin around all antlers, hooves and tails. No text, labels, grid, scenery, shadows, ground or extra objects. Exactly the same deer individual and source shoulder height in every upright pose. All limbs connected to body, no detached markings.\n\nLocked person.png and scene.png references are STYLE ONLY. Fine controlled brown-black ink, restrained warm earth-colour washes, contour stronger than sparse interior detail, broad quiet planes and upper-left lighting. Not photorealism, 3D, pixel art or dense hatching. Sprite shoulder height will be40px on96x80canvas: prioritize recognizable pose silhouette.\n\nCAMERA: first row SOUTH is front three-quarter rotated EXACTLY35degrees toward viewer's LEFT from head-on, muzzle points diagonally toward bottom-left, both chest and long side of torso visible, never symmetric head-on. Second row EAST is side three-quarter facing RIGHT, unchanged from standard game side view. Modestly elevated view, only slight top of back; no overhead. Same angle across five poses.\n\nSUBJECT: adult tan-brown deer with slender long neck, long legs, black cloven hooves, large pointed ears, SHORT pale tail and small consistent branching antlers. Total antler height less than1.65times shoulder height. Four distinct legs, no limbs merging.\nCOLUMNS IN BOTH ROWS:\n1 STAND: still, four straight legs and all four hooves grounded evenly, head level and alert, weight even.\n2 WALK: deliberate diagonal leg pairs APART, one forehoof conspicuously lifted and bent, opposite hind hoof stepping forward, head forward. Visibly a step, not idle.\n3 RUN/FLEE: extended bounding GALLOP, front legs extended forward and hindlegs back, all legs away from standing line and all hooves airborne. Clear long leaping silhouette.\n4 GRAZE: head and muzzle lowered fully to hoof level, neck bent down strongly, forelegs steady, no grass drawn. Not walking.\n5 DEAD: completely on its side horizontally, neck and head resting flat, legs out sideways, eyes closed, limp, no blood; not curled sleeping or mid-jump.\n\nSame body proportions throughout, do not shrink individual poses. Exactly ten complete deer on actual transparent background; no brown/white backdrop or mist and no cast shadows.\n",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "completed_at": "2026-10-23T15:44:00.575609+00:00",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-061d-78f3-885e-daa152838af3/exec-aec3009f-7925-4766-96ed-a64be1c55ab1.png",
+      "raw": "/Users/rexxa/work/artpolish-data/animals/deer_try1.png",
+      "raw_sha256": "caf81505de4923616885a5d47734a25c0e6a75f324457230669b12964571fca8",
+      "tool_sha256": "caf81505de4923616885a5d47734a25c0e6a75f324457230669b12964571fca8",
+      "prompt_sha256": "2ac915aeaf89b3eb055f6fe3e63935f6e6f4ded212fe5f6d31f7bfd62759be94",
+      "raw_bytes": 1978049
+    },
+    {
+      "index": 3,
+      "kind": "model_style_scorecard",
+      "species": "wolf+deer",
+      "round": 0,
+      "status": "COMPLETED",
+      "started_at": "2026-10-23T15:48:29.369518+00:00",
+      "prompt": "/Users/rexxa/work/artpolish-data/animals/style_round0.prompt.txt",
+      "prompt_text": "Create a plain readable STYLE REVIEW SCORECARD image, not animal art. First two attached images are LOCKED STYLE REFERENCES (person, scene). Third image is candidate WOLF sheet; fourth is candidate DEER sheet. Evaluate the candidate drawing style against the locked references. Ignore pose correctness, identity, subject, composition and sheet layout. Score each candidate independently with four integers from1 to5: MEDIUM (restrained ink plus watercolor wash, not digital photo/render), LINE (fine controlled brown-black ink contours stronger than sparse interior strokes), LIGHT (consistent upper-left illumination), PALETTE (restrained warm earth family, subject-specific natural colors allowed). Be strict, use low scores when mismatch; do not presume pass. Output a simple white table with rows WOLF try1 and DEER try1, columns medium, line, light, palette, and a short explanation per row in legible black text. No other imagery. These scores are report-only diagnostics, not approval.\n",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/wolf_try1.png",
+          "sha256": "5d477d6cc4bd39bbf43fd1b2c21d37eee26081cd0b5e2131f20869e947e2ed9b"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try1.png",
+          "sha256": "caf81505de4923616885a5d47734a25c0e6a75f324457230669b12964571fca8"
+        }
+      ],
+      "completed_at": "2026-10-23T15:49:26.477091+00:00",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-061d-78f3-885e-daa152838af3/exec-f845dcae-041f-4afd-9ff2-21f60aff3477.png",
+      "raw": "/Users/rexxa/work/artpolish-data/animals/style_round0.png",
+      "raw_sha256": "0a0016f7d45af0d2863247c4c7eb7f6fb0893f1f220f225efde7a0ca0b382db2",
+      "tool_sha256": "0a0016f7d45af0d2863247c4c7eb7f6fb0893f1f220f225efde7a0ca0b382db2",
+      "scores": {
+        "wolf": [
+          4,
+          4,
+          4,
+          5
+        ],
+        "deer": [
+          4,
+          4,
+          4,
+          5
+        ]
+      },
+      "reported_not_gating": true,
+      "mechanism": "Built-in image_gen style scorecard, visually transcribed",
+      "prompt_sha256": "6d32b46a1fec9d91b04c1d5123595988480fa3e24611e651c35a1ca0e4f47a1d",
+      "raw_bytes": 1321753,
+      "explanations": {
+        "wolf": "Matches the hand-drawn ink and watercolor wash medium well, with controlled ink contours and lighter interior strokes. Consistent upper-left lighting and soft shadows. Natural, restrained earthy palette aligned with the references.",
+        "deer": "Same illustrated medium and technique as the references, with clean ink lines and watercolor-style washes. Lighting direction and shadow treatment are consistent. Warm, natural earth tones fit the reference palette well."
+      }
+    },
+    {
+      "index": 4,
+      "kind": "asset_generation",
+      "species": "wolf",
+      "attempt": 2,
+      "status": "COMPLETED",
+      "started_at": "2026-10-23T15:54:18.313309+00:00",
+      "prompt": "/Users/rexxa/work/artpolish-data/animals/wolf_try2.prompt.txt",
+      "prompt_text": "Use case: stylized-concept. Create one complete game sprite sheet of ONE grey-brown WOLF in exactly TEN separate WHOLE-FIGURE drawings. 1536x1024 landscape transparent RGBA. Exactly TWO rows by FIVE columns, equal invisible cells, very wide transparent gutters, at least40 source pixels blank margin around every animal including tails and muzzles. No labels, text, grid, cast shadows, scenery, floor, people or props. Same individual, consistent proportions and source shoulder height in all upright poses. Every silhouette remains connected: paws attached to legs, legs and tail attached to body.\n\nLocked references person.png and scene.png are STYLE ONLY: fine brown-black ink, restrained warm earth wash, broad quiet fur planes and distinct shadows, stronger contour than interior detail, sparse fur accents and upper-left light. NOT a photo, vector, 3D, or dense engraving. This will reduce to shoulder height28pixels; action silhouettes must read clearly.\n\nCAMERA IS CRITICAL. Top row SOUTH: front three-quarter, rotated EXACTLY35degrees toward viewer's LEFT from head-on; muzzle points diagonally toward bottom-left of image, long left-facing side of torso visible as well as chest. This is NOT a symmetric head-on view. Four legs clearly separated in depth. Bottom row EAST unchanged: side three-quarter facing RIGHT. Same slightly elevated view in both rows, only modest top of back visible, no steep overhead.\n\nFIVE COLUMNS IN EACH ROW:\n1 STAND: four straight legs, four planted paws spaced distinctly, level horizontal back, head LEVEL forward, tail LOW, even weight. Definitely standing on all fours, NEVER sitting or crouching. Hip as high as shoulder.\n2 WALK: diagonal leg pairs visibly APART, one forepaw lifted and bent well above the ground, opposite hind leg stepping forward, head forward and torso level. Exactly four legs, no extra limbs. Silhouette obviously stepping.\n3 RUN: an extended suspended GALLOP, forelegs reaching forward and hindlegs reaching backward, all legs out of the standing line, body horizontal and airborne, mouth closed.\n4 ATTACK: aggressive forward LUNGE with forelegs reaching at prey, jaws conspicuously OPEN with dark mouth and ivory teeth, ears pinned, head thrust forward. Not sitting upright, no rear-up begging pose. A distinctive angled forward lunge, not ordinary running.\n5 DEAD: lying limp ON ITS SIDE, long body horizontal, legs out sideways, head rests flat, eyes shut, tail relaxed. Silhouette clearly lifeless, not sleeping curled or standing. No blood.\n\nAnatomy: long pointed wolf muzzle, pointed ears, thick chest, thick grey-brown coat, long LOW bushy tail. Keep whole animals complete and well spaced. No pose smaller than the others. Exactly ten wolves. Actual transparent alpha background.\nTARGETED REGENERATION: keep the first three pose concepts. The ATTACK silhouette must NOT be crouched: show an upward-and-forward pouncing LUNGE, hind legs driving from behind, chest elevated above haunches, BOTH long forelegs reaching forward in the air, elbows unfolded, front paws obviously ahead of muzzle line, WIDE OPEN jaws whose dark triangular gap is a major silhouette feature. Not begging upright and not the horizontal stretched gallop in column3. Head thrust directly toward the left-front victim in S and rightward in E. Exaggerate jaw opening and reaching paw separation enough to read at28px shoulder height.\nDEAD both rows: unmistakable limp SIDE-LYING carcass, pale belly turned partly toward viewer, all four relaxed legs extend sideways ABOVE/beside the torso silhouette, never four paws supporting a standing body. Head lies flat at ground level, eyes shut, spine straight, body flattened: silhouette height under one-third its length. No hunched back, no head raised, no folded crouch. Complete connected anatomy.\n",
+      "prompt_sha256": "c723ff17ef0ba86cdec6c6673c66ed0b04dc178b8c4cbbc7e07216614bf093cb",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "completed_at": "2026-10-23T15:55:16.274371+00:00",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-061d-78f3-885e-daa152838af3/exec-70a581c0-5534-44d0-94f4-157840ef3c7f.png",
+      "raw": "/Users/rexxa/work/artpolish-data/animals/wolf_try2.png",
+      "raw_sha256": "2cc76e3cae682279695d0f9cda12d434a139f19899e21a7915f0f0ed50d7854c",
+      "tool_sha256": "2cc76e3cae682279695d0f9cda12d434a139f19899e21a7915f0f0ed50d7854c",
+      "raw_bytes": 1888039
+    },
+    {
+      "index": 5,
+      "kind": "asset_generation",
+      "species": "deer",
+      "attempt": 2,
+      "status": "COMPLETED",
+      "started_at": "2026-10-23T15:54:18.317827+00:00",
+      "prompt": "/Users/rexxa/work/artpolish-data/animals/deer_try2.prompt.txt",
+      "prompt_text": "Use case: stylized-concept. Create one complete game sprite sheet of ONE adult tan-brown DEER in exactly TEN separate WHOLE-FIGURE drawings. 1536x1024 landscape transparent RGBA. Exactly TWO rows by FIVE columns, equal invisible cells, wide transparent gutters, at least40source pixels blank margin around all antlers, hooves and tails. No text, labels, grid, scenery, shadows, ground or extra objects. Exactly the same deer individual and source shoulder height in every upright pose. All limbs connected to body, no detached markings.\n\nLocked person.png and scene.png references are STYLE ONLY. Fine controlled brown-black ink, restrained warm earth-colour washes, contour stronger than sparse interior detail, broad quiet planes and upper-left lighting. Not photorealism, 3D, pixel art or dense hatching. Sprite shoulder height will be40px on96x80canvas: prioritize recognizable pose silhouette.\n\nCAMERA: first row SOUTH is front three-quarter rotated EXACTLY35degrees toward viewer's LEFT from head-on, muzzle points diagonally toward bottom-left, both chest and long side of torso visible, never symmetric head-on. Second row EAST is side three-quarter facing RIGHT, unchanged from standard game side view. Modestly elevated view, only slight top of back; no overhead. Same angle across five poses.\n\nSUBJECT: adult tan-brown deer with slender long neck, long legs, black cloven hooves, large pointed ears, SHORT pale tail and small consistent branching antlers. Total antler height less than1.65times shoulder height. Four distinct legs, no limbs merging.\nCOLUMNS IN BOTH ROWS:\n1 STAND: still, four straight legs and all four hooves grounded evenly, head level and alert, weight even.\n2 WALK: deliberate diagonal leg pairs APART, one forehoof conspicuously lifted and bent, opposite hind hoof stepping forward, head forward. Visibly a step, not idle.\n3 RUN/FLEE: extended bounding GALLOP, front legs extended forward and hindlegs back, all legs away from standing line and all hooves airborne. Clear long leaping silhouette.\n4 GRAZE: head and muzzle lowered fully to hoof level, neck bent down strongly, forelegs steady, no grass drawn. Not walking.\n5 DEAD: completely on its side horizontally, neck and head resting flat, legs out sideways, eyes closed, limp, no blood; not curled sleeping or mid-jump.\n\nSame body proportions throughout, do not shrink individual poses. Exactly ten complete deer on actual transparent background; no brown/white backdrop or mist and no cast shadows.\nTARGETED REGENERATION: the small branching antlers must have short, broad, rounded, clearly attached branches: no thin hairline twig tips or detached specks. Every branch must remain strongly connected when the whole carcass is reduced to64px long. In both DEAD poses, keep antlers compact against the head with thick unbroken bases. Preserve natural deer anatomy and all poses. S must show a clearly visible chest and both sides of face with torso receding diagonally to viewer right: 35degrees left of head-on, not a left side profile.\n",
+      "prompt_sha256": "40e19d9e2f3d21658389549b77b6541edd81e3d8b6ee2e11fedd1b1b45b291dc",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        }
+      ],
+      "completed_at": "2026-10-23T15:56:28.390406+00:00",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-061d-78f3-885e-daa152838af3/exec-3e75f818-346d-4513-8e70-075b33cb0796.png",
+      "raw": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+      "raw_sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f",
+      "tool_sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f",
+      "raw_bytes": 1951096
+    },
+    {
+      "index": 6,
+      "kind": "model_style_scorecard",
+      "species": "wolf+deer",
+      "round": 1,
+      "status": "COMPLETED",
+      "started_at": "2026-10-23T15:57:30.391457+00:00",
+      "prompt": "/Users/rexxa/work/artpolish-data/animals/style_round1.prompt.txt",
+      "prompt_text": "Create a plain readable STYLE REVIEW SCORECARD image, not animal art. First two attached images are LOCKED STYLE REFERENCES (person, scene). Third image is candidate WOLF sheet; fourth is candidate DEER sheet. Evaluate the candidate drawing style against the locked references. Ignore pose correctness, identity, subject, composition and sheet layout. Score each candidate independently with four integers from1 to5: MEDIUM (restrained ink plus watercolor wash, not digital photo/render), LINE (fine controlled brown-black ink contours stronger than sparse interior strokes), LIGHT (consistent upper-left illumination), PALETTE (restrained warm earth family, subject-specific natural colors allowed). Be strict, use low scores when mismatch; do not presume pass. Output a simple white table with rows WOLF try2 and DEER try2, columns medium, line, light, palette, and a short explanation per row in legible black text. No other imagery. These scores are report-only diagnostics, not approval.\n",
+      "prompt_sha256": "fbdad1574ca3dc41f68d24150a7e41b421af5f71b0b522772a4d0820d68ddf33",
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/person.png",
+          "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675"
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/scene.png",
+          "sha256": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/wolf_try2.png",
+          "sha256": "2cc76e3cae682279695d0f9cda12d434a139f19899e21a7915f0f0ed50d7854c"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish-data/animals/deer_try2.png",
+          "sha256": "eeb5609f9bcc28cd1d046be7d3fee8b15d8e493d25a45ab591996a0cc304093f"
+        }
+      ],
+      "completed_at": "2026-10-23T15:58:51.261099+00:00",
+      "tool_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a1696b-061d-78f3-885e-daa152838af3/exec-c8cbab8b-82e2-4d0d-8a98-3a05647d06d1.png",
+      "raw": "/Users/rexxa/work/artpolish-data/animals/style_round1.png",
+      "raw_sha256": "a352bb8b30efb03c02330e2feb628a5d9a4f01d093ba76d90057d63e49723755",
+      "tool_sha256": "a352bb8b30efb03c02330e2feb628a5d9a4f01d093ba76d90057d63e49723755",
+      "raw_bytes": 1330457,
+      "scores": {
+        "wolf": [
+          5,
+          5,
+          4,
+          5
+        ],
+        "deer": [
+          5,
+          5,
+          4,
+          5
+        ]
+      },
+      "reported_not_gating": true,
+      "mechanism": "Built-in image_gen style scorecard, visually transcribed",
+      "explanations": {
+        "wolf": "Matches the hand-drawn ink and watercolor wash look with natural paper texture feel. Contours are clean, controlled brown-black ink with restrained interior strokes. Lighting is consistent from upper-left like the references (minor variation only). Colors are a restrained, natural earth palette that fits the reference style well.",
+        "deer": "Uses the same ink and watercolor wash medium with a hand-drawn look consistent with the references. Line work matches the reference style with clear ink contours and sparse interior strokes. Lighting is from upper-left and consistent across figures (minor variation only). Palette is warm and natural, fitting the reference style."
+      }
+    }
+  ],
+  "calls_used": 6,
+  "timestamp_semantics": "started_at is pre-call preparation/reservation bound; completed_at is observed tool-return bound, not internal scheduling time",
+  "asset_calls": 4,
+  "scorecard_calls": 2,
+  "failed_calls": 0,
+  "attempts": {
+    "wolf": 2,
+    "deer": 2
+  }
+}

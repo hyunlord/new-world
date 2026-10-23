@@ -1,0 +1,101 @@
+[
+  {
+    "look": "adult_F_fur_cloak_long_tied",
+    "attempt": 1,
+    "medium": 5,
+    "line": 5,
+    "light": 5,
+    "palette": 5,
+    "scorecard": "/Users/rexxa/work/artpolish-data/portraits/style_scorecard_1.png",
+    "scorecard_sha256": "03fa54e86826744fc6281761ce89ce8bd2dfcedac1eba8d79edba540239be4dd",
+    "method": "Actual built-in imagegen scorecard visually transcribed; nine300px candidate previews; D1 diagnostic only."
+  },
+  {
+    "look": "adult_F_hide_wrap_bun",
+    "attempt": 1,
+    "medium": 4,
+    "line": 5,
+    "light": 5,
+    "palette": 5,
+    "scorecard": "/Users/rexxa/work/artpolish-data/portraits/style_scorecard_1.png",
+    "scorecard_sha256": "03fa54e86826744fc6281761ce89ce8bd2dfcedac1eba8d79edba540239be4dd",
+    "method": "Actual built-in imagegen scorecard visually transcribed; nine300px candidate previews; D1 diagnostic only."
+  },
+  {
+    "look": "child_M_fur_cloak_bun",
+    "attempt": 1,
+    "medium": 5,
+    "line": 5,
+    "light": 5,
+    "palette": 5,
+    "scorecard": "/Users/rexxa/work/artpolish-data/portraits/style_scorecard_1.png",
+    "scorecard_sha256": "03fa54e86826744fc6281761ce89ce8bd2dfcedac1eba8d79edba540239be4dd",
+    "method": "Actual built-in imagegen scorecard visually transcribed; nine300px candidate previews; D1 diagnostic only."
+  },
+  {
+    "look": "child_M_loincloth_bun",
+    "attempt": 1,
+    "medium": 5,
+    "line": 5,
+    "light": 5,
+    "palette": 5,
+    "scorecard": "/Users/rexxa/work/artpolish-data/portraits/style_scorecard_1.png",
+    "scorecard_sha256": "03fa54e86826744fc6281761ce89ce8bd2dfcedac1eba8d79edba540239be4dd",
+    "method": "Actual built-in imagegen scorecard visually transcribed; nine300px candidate previews; D1 diagnostic only."
+  },
+  {
+    "look": "adult_F_fur_cloak_bun",
+    "attempt": 1,
+    "medium": 5,
+    "line": 5,
+    "light": 5,
+    "palette": 5,
+    "scorecard": "/Users/rexxa/work/artpolish-data/portraits/style_scorecard_1.png",
+    "scorecard_sha256": "03fa54e86826744fc6281761ce89ce8bd2dfcedac1eba8d79edba540239be4dd",
+    "method": "Actual built-in imagegen scorecard visually transcribed; nine300px candidate previews; D1 diagnostic only."
+  },
+  {
+    "look": "child_F_hide_wrap_bun",
+    "attempt": 1,
+    "medium": 5,
+    "line": 5,
+    "light": 5,
+    "palette": 5,
+    "scorecard": "/Users/rexxa/work/artpolish-data/portraits/style_scorecard_1.png",
+    "scorecard_sha256": "03fa54e86826744fc6281761ce89ce8bd2dfcedac1eba8d79edba540239be4dd",
+    "method": "Actual built-in imagegen scorecard visually transcribed; nine300px candidate previews; D1 diagnostic only."
+  },
+  {
+    "look": "child_F_loincloth_long_tied",
+    "attempt": 1,
+    "medium": 5,
+    "line": 5,
+    "light": 5,
+    "palette": 5,
+    "scorecard": "/Users/rexxa/work/artpolish-data/portraits/style_scorecard_1.png",
+    "scorecard_sha256": "03fa54e86826744fc6281761ce89ce8bd2dfcedac1eba8d79edba540239be4dd",
+    "method": "Actual built-in imagegen scorecard visually transcribed; nine300px candidate previews; D1 diagnostic only."
+  },
+  {
+    "look": "child_M_hide_wrap_bun",
+    "attempt": 1,
+    "medium": 5,
+    "line": 5,
+    "light": 5,
+    "palette": 5,
+    "scorecard": "/Users/rexxa/work/artpolish-data/portraits/style_scorecard_1.png",
+    "scorecard_sha256": "03fa54e86826744fc6281761ce89ce8bd2dfcedac1eba8d79edba540239be4dd",
+    "method": "Actual built-in imagegen scorecard visually transcribed; nine300px candidate previews; D1 diagnostic only."
+  },
+  {
+    "look": "child_M_hide_wrap_short",
+    "attempt": 1,
+    "medium": 5,
+    "line": 5,
+    "light": 5,
+    "palette": 5,
+    "scorecard": "/Users/rexxa/work/artpolish-data/portraits/style_scorecard_1.png",
+    "scorecard_sha256": "03fa54e86826744fc6281761ce89ce8bd2dfcedac1eba8d79edba540239be4dd",
+    "method": "Actual built-in imagegen scorecard visually transcribed; nine300px candidate previews; D1 diagnostic only."
+  }
+]

@@ -1,0 +1,2147 @@
+{
+  "round": 1,
+  "protocol": "docs/v8/artpolish/BLIND_PROTOCOL.md",
+  "protocol_sha256": "9e4708e2aa588edd530688fe6b1772cbfff38458cfd7cef7e78054219ec40894",
+  "fresh_reviewers": true,
+  "style_gate": false,
+  "answer_key": "/Users/rexxa/work/artpolish-data/animals/round1/answer_key.json",
+  "answer_key_sha256": "eb47bf4ef5519849456d537506e861ea36c5508289cff34715ddc6fd521ea84c",
+  "sources": [
+    {
+      "path": "/Users/rexxa/work/artpolish-data/animals/round1/response_a.json",
+      "sha256": "e7fa3690676f39a9791a301acffeb8b64f6f90f4df78bc05d360cc3d2d7b1c77"
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish-data/animals/round1/response_b.json",
+      "sha256": "4402075b6d13449c7c0288cdc30baf4ad4a170c98370f9337c77f2459d53a8cb"
+    }
+  ],
+  "summaries": [
+    {
+      "reviewer": "a",
+      "agent": "/root/animal_blind_a1",
+      "groups": [
+        {
+          "scale": 1,
+          "species_correct": 20,
+          "pose_correct": 18,
+          "passed": true
+        },
+        {
+          "scale": 2,
+          "species_correct": 20,
+          "pose_correct": 18,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "reviewer": "b",
+      "agent": "/root/animal_blind_b1",
+      "groups": [
+        {
+          "scale": 1,
+          "species_correct": 20,
+          "pose_correct": 18,
+          "passed": true
+        },
+        {
+          "scale": 2,
+          "species_correct": 20,
+          "pose_correct": 18,
+          "passed": true
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "records": [
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-01",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "dead",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try2/E/dead.png",
+        "sha256": "285dca9606b4b92e3ac2c6fdb6877390cc5283bde02186f54b0c84649ac2bbd5"
+      },
+      "raw": {
+        "id": "A1-01",
+        "species": "wolf",
+        "pose": "lying on its side",
+        "confidence": 0.91,
+        "notes": "Body is stretched out close to the ground, with head toward the right."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 sideways-lying pose class; does not establish death versus rest.",
+      "id": "A1-01",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-02",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "stand",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try2/E/stand.png",
+        "sha256": "bdf09c6d3d1d066847f7fadbd101dacf60a88de1751749ca48121ff35c3028de"
+      },
+      "raw": {
+        "id": "A1-02",
+        "species": "wolf",
+        "pose": "standing",
+        "confidence": 0.83,
+        "notes": "Upright gray canine facing right; the small legs are somewhat difficult to separate."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "A1-02",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-03",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "attack",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try2/S/attack.png",
+        "sha256": "d1d04453cfd6c048b82e88583f7636163cbe84ccbaa3051450c8f053de8eb5ea"
+      },
+      "raw": {
+        "id": "A1-03",
+        "species": "wolf",
+        "pose": "leaping",
+        "confidence": 0.93,
+        "notes": "Body is off the ground, with front reaching left and hind legs trailing."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Primary directional leap is locomotion; an attack expected key does not turn the same answer into attack.",
+      "id": "A1-03",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-04",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "deer",
+        "pose": "run",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try2/S/run.png",
+        "sha256": "f9623fab1c4676961052c9ee2520fe2f6bd379c66af500b2bf5c114d192a9191"
+      },
+      "raw": {
+        "id": "A1-04",
+        "species": "deer",
+        "pose": "leaping",
+        "confidence": 0.94,
+        "notes": "Antlered animal facing left with legs extended beneath and behind its body."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Primary directional leap is locomotion; an attack expected key does not turn the same answer into attack.",
+      "id": "A1-04",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-05",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "deer",
+        "pose": "run",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try2/E/run.png",
+        "sha256": "bee267aa102094e2b935b2ce5b20b2e8cf2150acf03a7a94b2484cf1f9aa4da6"
+      },
+      "raw": {
+        "id": "A1-05",
+        "species": "deer",
+        "pose": "leaping",
+        "confidence": 0.96,
+        "notes": "Facing right in a long airborne stride."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Primary directional leap is locomotion; an attack expected key does not turn the same answer into attack.",
+      "id": "A1-05",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-06",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "deer",
+        "pose": "dead",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try2/E/dead.png",
+        "sha256": "0077b790b819c5f023055792036b64536e946d3e1ebba97c107858593fb0fe16"
+      },
+      "raw": {
+        "id": "A1-06",
+        "species": "deer",
+        "pose": "lying on its side",
+        "confidence": 0.95,
+        "notes": "Head and antlers rest near the ground on the right."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 sideways-lying pose class; does not establish death versus rest.",
+      "id": "A1-06",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-07",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "deer",
+        "pose": "graze",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try2/S/graze.png",
+        "sha256": "6ffb257785bd84796015651646c175da385461912a86f6a7b1fffcb812d93587"
+      },
+      "raw": {
+        "id": "A1-07",
+        "species": "deer",
+        "pose": "grazing",
+        "confidence": 0.97,
+        "notes": "Head is lowered to the ground on the left."
+      },
+      "normalized_pose": "graze",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "A1-07",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-08",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "deer",
+        "pose": "walk",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try2/S/walk.png",
+        "sha256": "0d4407847048aa3823b2da5ad8ba5b380c79ab415d2856436b82be807218c8a6"
+      },
+      "raw": {
+        "id": "A1-08",
+        "species": "deer",
+        "pose": "walking",
+        "confidence": 0.89,
+        "notes": "Facing left with one foreleg reaching forward."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Primary walking/prowling is locomotion.",
+      "id": "A1-08",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-09",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "dead",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try2/S/dead.png",
+        "sha256": "133255d7b9fb3eb745e713f1525c54fb4fa99733b5284c573e2ce8b1a413f0b2"
+      },
+      "raw": {
+        "id": "A1-09",
+        "species": "wolf",
+        "pose": "lying on its side",
+        "confidence": 0.92,
+        "notes": "Head is down on the left and the legs extend to the right."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 sideways-lying pose class; does not establish death versus rest.",
+      "id": "A1-09",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-10",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "deer",
+        "pose": "stand",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try2/E/stand.png",
+        "sha256": "df21582d5f2a68d778b8f8117740c3b155df74fcc316a2acda997e2f9eece702"
+      },
+      "raw": {
+        "id": "A1-10",
+        "species": "deer",
+        "pose": "standing",
+        "confidence": 0.96,
+        "notes": "Head raised and facing right."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "A1-10",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-11",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "deer",
+        "pose": "walk",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try2/E/walk.png",
+        "sha256": "238b45f140b6f9a06c0cc97491f3364685d2e8b85f77af4f24d565ecbac7b171"
+      },
+      "raw": {
+        "id": "A1-11",
+        "species": "deer",
+        "pose": "walking",
+        "confidence": 0.91,
+        "notes": "Facing right with staggered legs and a raised foreleg."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Primary walking/prowling is locomotion.",
+      "id": "A1-11",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-12",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "deer",
+        "pose": "graze",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try2/E/graze.png",
+        "sha256": "5e2ff684f838c326111ae62669c891294f1896d70b853f49d9b06db1cfc60f7a"
+      },
+      "raw": {
+        "id": "A1-12",
+        "species": "deer",
+        "pose": "grazing",
+        "confidence": 0.97,
+        "notes": "Head is lowered to the ground on the right."
+      },
+      "normalized_pose": "graze",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "A1-12",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-13",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "run",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try2/S/run.png",
+        "sha256": "2b6053a9eab0887a04c72d9c35cfe65b99641d87332a93cf818422c9d8a64590"
+      },
+      "raw": {
+        "id": "A1-13",
+        "species": "wolf",
+        "pose": "running",
+        "confidence": 0.94,
+        "notes": "Low extended stride toward the left."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Primary directional leap is locomotion; an attack expected key does not turn the same answer into attack.",
+      "id": "A1-13",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-14",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "walk",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try2/E/walk.png",
+        "sha256": "8b745c94e54c397221a4b1e0233b593051e39a0bca53e61bf76f05e3a7ce2280"
+      },
+      "raw": {
+        "id": "A1-14",
+        "species": "wolf",
+        "pose": "walking",
+        "confidence": 0.86,
+        "notes": "Facing right, with legs spread through a short step."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Primary walking/prowling is locomotion.",
+      "id": "A1-14",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-15",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "attack",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try2/E/attack.png",
+        "sha256": "9e55587872e7c896fe843dce8bef278db799a5f4739fe3f769353de63a3ef97e"
+      },
+      "raw": {
+        "id": "A1-15",
+        "species": "wolf",
+        "pose": "leaping",
+        "confidence": 0.94,
+        "notes": "Front legs reach right while the hind legs trail below and behind."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Primary directional leap is locomotion; an attack expected key does not turn the same answer into attack.",
+      "id": "A1-15",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-16",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "walk",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try2/S/walk.png",
+        "sha256": "c52461c32cd91a6e7fc4aecd181bca58e7666a0a21e88b603a1256938bbb4a5c"
+      },
+      "raw": {
+        "id": "A1-16",
+        "species": "wolf",
+        "pose": "walking",
+        "confidence": 0.85,
+        "notes": "Facing left with a foreleg lifted."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Primary walking/prowling is locomotion.",
+      "id": "A1-16",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-17",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "run",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try2/E/run.png",
+        "sha256": "4815d1a3c066d77a0abe008b6f44ecad1e5ce6c4b7bc4f3f8d94f5df1b24cf19"
+      },
+      "raw": {
+        "id": "A1-17",
+        "species": "wolf",
+        "pose": "running",
+        "confidence": 0.94,
+        "notes": "Body is low and extended toward the right."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Primary directional leap is locomotion; an attack expected key does not turn the same answer into attack.",
+      "id": "A1-17",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-18",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "deer",
+        "pose": "dead",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try2/S/dead.png",
+        "sha256": "ef30c3f4ce82329d85f1f5ada8300369f2090c0599f85c5bad74da71771cb59e"
+      },
+      "raw": {
+        "id": "A1-18",
+        "species": "deer",
+        "pose": "lying on its side",
+        "confidence": 0.97,
+        "notes": "Head is down on the left and long legs extend to the right."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 sideways-lying pose class; does not establish death versus rest.",
+      "id": "A1-18",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-19",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "deer",
+        "pose": "stand",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try2/S/stand.png",
+        "sha256": "de486ce9f8ac709dd38680f5f93b651ef4a4288ef7fd298ce3b1817e9cfba3e4"
+      },
+      "raw": {
+        "id": "A1-19",
+        "species": "deer",
+        "pose": "standing",
+        "confidence": 0.97,
+        "notes": "Head raised and facing left."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "A1-19",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A1-20",
+        "reviewer": "a",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "stand",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try2/S/stand.png",
+        "sha256": "ae15a6109060e0d439704e8ea263dd9b41a550ead0992962d48377fd35e8f33b"
+      },
+      "raw": {
+        "id": "A1-20",
+        "species": "wolf",
+        "pose": "standing",
+        "confidence": 0.87,
+        "notes": "Upright gray canine facing left."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "A1-20",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-01",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "stand",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try2/S/stand.png",
+        "sha256": "ae15a6109060e0d439704e8ea263dd9b41a550ead0992962d48377fd35e8f33b"
+      },
+      "raw": {
+        "id": "A2-01",
+        "species": "wolf",
+        "pose": "standing",
+        "confidence": 0.97,
+        "notes": "Facing left with feet planted beneath the body."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "A2-01",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-02",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "deer",
+        "pose": "run",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try2/S/run.png",
+        "sha256": "f9623fab1c4676961052c9ee2520fe2f6bd379c66af500b2bf5c114d192a9191"
+      },
+      "raw": {
+        "id": "A2-02",
+        "species": "deer",
+        "pose": "leaping",
+        "confidence": 0.98,
+        "notes": "Antlered animal facing left in an airborne stride."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Primary directional leap is locomotion; an attack expected key does not turn the same answer into attack.",
+      "id": "A2-02",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-03",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "run",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try2/E/run.png",
+        "sha256": "4815d1a3c066d77a0abe008b6f44ecad1e5ce6c4b7bc4f3f8d94f5df1b24cf19"
+      },
+      "raw": {
+        "id": "A2-03",
+        "species": "wolf",
+        "pose": "running",
+        "confidence": 0.98,
+        "notes": "Low stretched stride toward the right."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Primary directional leap is locomotion; an attack expected key does not turn the same answer into attack.",
+      "id": "A2-03",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-04",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "deer",
+        "pose": "graze",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try2/E/graze.png",
+        "sha256": "5e2ff684f838c326111ae62669c891294f1896d70b853f49d9b06db1cfc60f7a"
+      },
+      "raw": {
+        "id": "A2-04",
+        "species": "deer",
+        "pose": "grazing",
+        "confidence": 0.99,
+        "notes": "Muzzle is lowered to the ground on the right."
+      },
+      "normalized_pose": "graze",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "A2-04",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-05",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "deer",
+        "pose": "dead",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try2/E/dead.png",
+        "sha256": "0077b790b819c5f023055792036b64536e946d3e1ebba97c107858593fb0fe16"
+      },
+      "raw": {
+        "id": "A2-05",
+        "species": "deer",
+        "pose": "lying on its side",
+        "confidence": 0.99,
+        "notes": "Body and head are down, with the antlers on the right."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 sideways-lying pose class; does not establish death versus rest.",
+      "id": "A2-05",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-06",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "attack",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try2/E/attack.png",
+        "sha256": "9e55587872e7c896fe843dce8bef278db799a5f4739fe3f769353de63a3ef97e"
+      },
+      "raw": {
+        "id": "A2-06",
+        "species": "wolf",
+        "pose": "leaping",
+        "confidence": 0.99,
+        "notes": "Front legs reach right and hind legs trail far behind."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Primary directional leap is locomotion; an attack expected key does not turn the same answer into attack.",
+      "id": "A2-06",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-07",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "deer",
+        "pose": "walk",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try2/E/walk.png",
+        "sha256": "238b45f140b6f9a06c0cc97491f3364685d2e8b85f77af4f24d565ecbac7b171"
+      },
+      "raw": {
+        "id": "A2-07",
+        "species": "deer",
+        "pose": "walking",
+        "confidence": 0.98,
+        "notes": "Facing right with one foreleg raised and bent."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Primary walking/prowling is locomotion.",
+      "id": "A2-07",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-08",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "walk",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try2/E/walk.png",
+        "sha256": "8b745c94e54c397221a4b1e0233b593051e39a0bca53e61bf76f05e3a7ce2280"
+      },
+      "raw": {
+        "id": "A2-08",
+        "species": "wolf",
+        "pose": "walking",
+        "confidence": 0.97,
+        "notes": "Facing right with a foreleg lifted through a step."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Primary walking/prowling is locomotion.",
+      "id": "A2-08",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-09",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "deer",
+        "pose": "run",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try2/E/run.png",
+        "sha256": "bee267aa102094e2b935b2ce5b20b2e8cf2150acf03a7a94b2484cf1f9aa4da6"
+      },
+      "raw": {
+        "id": "A2-09",
+        "species": "deer",
+        "pose": "leaping",
+        "confidence": 0.99,
+        "notes": "Facing right, with forelegs forward and hind legs stretched back."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Primary directional leap is locomotion; an attack expected key does not turn the same answer into attack.",
+      "id": "A2-09",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-10",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "dead",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try2/S/dead.png",
+        "sha256": "133255d7b9fb3eb745e713f1525c54fb4fa99733b5284c573e2ce8b1a413f0b2"
+      },
+      "raw": {
+        "id": "A2-10",
+        "species": "wolf",
+        "pose": "lying on its side",
+        "confidence": 0.99,
+        "notes": "Head is down on the left and legs extend behind it."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 sideways-lying pose class; does not establish death versus rest.",
+      "id": "A2-10",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-11",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "deer",
+        "pose": "walk",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try2/S/walk.png",
+        "sha256": "0d4407847048aa3823b2da5ad8ba5b380c79ab415d2856436b82be807218c8a6"
+      },
+      "raw": {
+        "id": "A2-11",
+        "species": "deer",
+        "pose": "walking",
+        "confidence": 0.98,
+        "notes": "Facing left with a front leg reaching forward."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Primary walking/prowling is locomotion.",
+      "id": "A2-11",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-12",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "deer",
+        "pose": "graze",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try2/S/graze.png",
+        "sha256": "6ffb257785bd84796015651646c175da385461912a86f6a7b1fffcb812d93587"
+      },
+      "raw": {
+        "id": "A2-12",
+        "species": "deer",
+        "pose": "grazing",
+        "confidence": 0.99,
+        "notes": "Head and muzzle are lowered to the ground on the left."
+      },
+      "normalized_pose": "graze",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "A2-12",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-13",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "attack",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try2/S/attack.png",
+        "sha256": "d1d04453cfd6c048b82e88583f7636163cbe84ccbaa3051450c8f053de8eb5ea"
+      },
+      "raw": {
+        "id": "A2-13",
+        "species": "wolf",
+        "pose": "leaping",
+        "confidence": 0.98,
+        "notes": "Facing left with front paws lifted and hind legs trailing."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Primary directional leap is locomotion; an attack expected key does not turn the same answer into attack.",
+      "id": "A2-13",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": false
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-14",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "deer",
+        "pose": "stand",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try2/S/stand.png",
+        "sha256": "de486ce9f8ac709dd38680f5f93b651ef4a4288ef7fd298ce3b1817e9cfba3e4"
+      },
+      "raw": {
+        "id": "A2-14",
+        "species": "deer",
+        "pose": "standing",
+        "confidence": 0.99,
+        "notes": "Facing left with head raised and feet planted."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "A2-14",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-15",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "stand",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try2/E/stand.png",
+        "sha256": "bdf09c6d3d1d066847f7fadbd101dacf60a88de1751749ca48121ff35c3028de"
+      },
+      "raw": {
+        "id": "A2-15",
+        "species": "wolf",
+        "pose": "standing",
+        "confidence": 0.97,
+        "notes": "Facing right with its head raised."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "A2-15",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-16",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "dead",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try2/E/dead.png",
+        "sha256": "285dca9606b4b92e3ac2c6fdb6877390cc5283bde02186f54b0c84649ac2bbd5"
+      },
+      "raw": {
+        "id": "A2-16",
+        "species": "wolf",
+        "pose": "lying on its side",
+        "confidence": 0.98,
+        "notes": "Stretched along the ground with the head on the right."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 sideways-lying pose class; does not establish death versus rest.",
+      "id": "A2-16",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-17",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "run",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try2/S/run.png",
+        "sha256": "2b6053a9eab0887a04c72d9c35cfe65b99641d87332a93cf818422c9d8a64590"
+      },
+      "raw": {
+        "id": "A2-17",
+        "species": "wolf",
+        "pose": "running",
+        "confidence": 0.98,
+        "notes": "Low extended stride toward the left."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Primary directional leap is locomotion; an attack expected key does not turn the same answer into attack.",
+      "id": "A2-17",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-18",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "walk",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try2/S/walk.png",
+        "sha256": "c52461c32cd91a6e7fc4aecd181bca58e7666a0a21e88b603a1256938bbb4a5c"
+      },
+      "raw": {
+        "id": "A2-18",
+        "species": "wolf",
+        "pose": "walking",
+        "confidence": 0.97,
+        "notes": "Facing left with a foreleg bent and lifted."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Primary walking/prowling is locomotion.",
+      "id": "A2-18",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-19",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "deer",
+        "pose": "dead",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try2/S/dead.png",
+        "sha256": "ef30c3f4ce82329d85f1f5ada8300369f2090c0599f85c5bad74da71771cb59e"
+      },
+      "raw": {
+        "id": "A2-19",
+        "species": "deer",
+        "pose": "lying on its side",
+        "confidence": 0.99,
+        "notes": "Head and antlers are down on the left, with legs extended to the right."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 sideways-lying pose class; does not establish death versus rest.",
+      "id": "A2-19",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "a",
+      "expected": {
+        "id": "A2-20",
+        "reviewer": "a",
+        "scale": 2,
+        "species": "deer",
+        "pose": "stand",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try2/E/stand.png",
+        "sha256": "df21582d5f2a68d778b8f8117740c3b155df74fcc316a2acda997e2f9eece702"
+      },
+      "raw": {
+        "id": "A2-20",
+        "species": "deer",
+        "pose": "standing",
+        "confidence": 0.99,
+        "notes": "Facing right with head raised and feet planted."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "A2-20",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-01",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "deer",
+        "pose": "dead",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try2/S/dead.png",
+        "sha256": "ef30c3f4ce82329d85f1f5ada8300369f2090c0599f85c5bad74da71771cb59e"
+      },
+      "raw": {
+        "id": "B1-01",
+        "species": "deer",
+        "pose": "lying on its side",
+        "confidence": "high",
+        "notes": "Head lowered at the left, legs stretched to the right."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 sideways-lying pose class; does not establish death versus rest.",
+      "id": "B1-01",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-02",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "deer",
+        "pose": "stand",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try2/S/stand.png",
+        "sha256": "de486ce9f8ac709dd38680f5f93b651ef4a4288ef7fd298ce3b1817e9cfba3e4"
+      },
+      "raw": {
+        "id": "B1-02",
+        "species": "deer",
+        "pose": "standing",
+        "confidence": "high",
+        "notes": "Upright with head raised toward the left."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "B1-02",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-03",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "deer",
+        "pose": "graze",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try2/S/graze.png",
+        "sha256": "6ffb257785bd84796015651646c175da385461912a86f6a7b1fffcb812d93587"
+      },
+      "raw": {
+        "id": "B1-03",
+        "species": "deer",
+        "pose": "grazing",
+        "confidence": "high",
+        "notes": "Head lowered to the ground on the left."
+      },
+      "normalized_pose": "graze",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "B1-03",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-04",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "deer",
+        "pose": "graze",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try2/E/graze.png",
+        "sha256": "5e2ff684f838c326111ae62669c891294f1896d70b853f49d9b06db1cfc60f7a"
+      },
+      "raw": {
+        "id": "B1-04",
+        "species": "deer",
+        "pose": "grazing",
+        "confidence": "high",
+        "notes": "Head lowered to the ground on the right."
+      },
+      "normalized_pose": "graze",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "B1-04",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-05",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "attack",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try2/S/attack.png",
+        "sha256": "d1d04453cfd6c048b82e88583f7636163cbe84ccbaa3051450c8f053de8eb5ea"
+      },
+      "raw": {
+        "id": "B1-05",
+        "species": "wolf",
+        "pose": "leaping",
+        "confidence": "medium",
+        "notes": "Body raised diagonally, facing left."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Primary directional leap is locomotion; an attack expected key does not turn the same answer into attack.",
+      "id": "B1-05",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-06",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "walk",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try2/E/walk.png",
+        "sha256": "8b745c94e54c397221a4b1e0233b593051e39a0bca53e61bf76f05e3a7ce2280"
+      },
+      "raw": {
+        "id": "B1-06",
+        "species": "wolf",
+        "pose": "walking",
+        "confidence": "medium",
+        "notes": "Facing right with legs in a stepping arrangement."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Primary walking/prowling is locomotion.",
+      "id": "B1-06",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-07",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "deer",
+        "pose": "run",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try2/S/run.png",
+        "sha256": "f9623fab1c4676961052c9ee2520fe2f6bd379c66af500b2bf5c114d192a9191"
+      },
+      "raw": {
+        "id": "B1-07",
+        "species": "deer",
+        "pose": "running",
+        "confidence": "high",
+        "notes": "Facing left with legs spread into a long stride."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Primary directional leap is locomotion; an attack expected key does not turn the same answer into attack.",
+      "id": "B1-07",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-08",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "stand",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try2/E/stand.png",
+        "sha256": "bdf09c6d3d1d066847f7fadbd101dacf60a88de1751749ca48121ff35c3028de"
+      },
+      "raw": {
+        "id": "B1-08",
+        "species": "wolf",
+        "pose": "standing",
+        "confidence": "high",
+        "notes": "Facing right with an upright head."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "B1-08",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-09",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "dead",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try2/E/dead.png",
+        "sha256": "285dca9606b4b92e3ac2c6fdb6877390cc5283bde02186f54b0c84649ac2bbd5"
+      },
+      "raw": {
+        "id": "B1-09",
+        "species": "wolf",
+        "pose": "lying on its side",
+        "confidence": "high",
+        "notes": "Pale underside visible, head at the right."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 sideways-lying pose class; does not establish death versus rest.",
+      "id": "B1-09",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-10",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "dead",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try2/S/dead.png",
+        "sha256": "133255d7b9fb3eb745e713f1525c54fb4fa99733b5284c573e2ce8b1a413f0b2"
+      },
+      "raw": {
+        "id": "B1-10",
+        "species": "wolf",
+        "pose": "lying on its side",
+        "confidence": "high",
+        "notes": "Head down at the left, body resting low."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 sideways-lying pose class; does not establish death versus rest.",
+      "id": "B1-10",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-11",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "deer",
+        "pose": "walk",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try2/S/walk.png",
+        "sha256": "0d4407847048aa3823b2da5ad8ba5b380c79ab415d2856436b82be807218c8a6"
+      },
+      "raw": {
+        "id": "B1-11",
+        "species": "deer",
+        "pose": "walking",
+        "confidence": "medium",
+        "notes": "Facing left with a front leg reaching forward."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Primary walking/prowling is locomotion.",
+      "id": "B1-11",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-12",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "walk",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try2/S/walk.png",
+        "sha256": "c52461c32cd91a6e7fc4aecd181bca58e7666a0a21e88b603a1256938bbb4a5c"
+      },
+      "raw": {
+        "id": "B1-12",
+        "species": "wolf",
+        "pose": "walking",
+        "confidence": "medium",
+        "notes": "Facing left with legs offset in a step."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Primary walking/prowling is locomotion.",
+      "id": "B1-12",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-13",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "run",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try2/S/run.png",
+        "sha256": "2b6053a9eab0887a04c72d9c35cfe65b99641d87332a93cf818422c9d8a64590"
+      },
+      "raw": {
+        "id": "B1-13",
+        "species": "wolf",
+        "pose": "running",
+        "confidence": "high",
+        "notes": "Facing left, body low with legs stretched outward."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Primary directional leap is locomotion; an attack expected key does not turn the same answer into attack.",
+      "id": "B1-13",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-14",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "attack",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try2/E/attack.png",
+        "sha256": "9e55587872e7c896fe843dce8bef278db799a5f4739fe3f769353de63a3ef97e"
+      },
+      "raw": {
+        "id": "B1-14",
+        "species": "wolf",
+        "pose": "leaping",
+        "confidence": "high",
+        "notes": "Facing right, forelegs reaching ahead and rear legs trailing."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Primary directional leap is locomotion; an attack expected key does not turn the same answer into attack.",
+      "id": "B1-14",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-15",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "deer",
+        "pose": "dead",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try2/E/dead.png",
+        "sha256": "0077b790b819c5f023055792036b64536e946d3e1ebba97c107858593fb0fe16"
+      },
+      "raw": {
+        "id": "B1-15",
+        "species": "deer",
+        "pose": "lying on its side",
+        "confidence": "high",
+        "notes": "Head down at the right and legs stretched along the ground."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 sideways-lying pose class; does not establish death versus rest.",
+      "id": "B1-15",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-16",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "stand",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try2/S/stand.png",
+        "sha256": "ae15a6109060e0d439704e8ea263dd9b41a550ead0992962d48377fd35e8f33b"
+      },
+      "raw": {
+        "id": "B1-16",
+        "species": "wolf",
+        "pose": "standing",
+        "confidence": "medium",
+        "notes": "Facing left with its feet beneath its body."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "B1-16",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-17",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "deer",
+        "pose": "stand",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try2/E/stand.png",
+        "sha256": "df21582d5f2a68d778b8f8117740c3b155df74fcc316a2acda997e2f9eece702"
+      },
+      "raw": {
+        "id": "B1-17",
+        "species": "deer",
+        "pose": "standing",
+        "confidence": "high",
+        "notes": "Facing right with head raised."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "B1-17",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-18",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "wolf",
+        "pose": "run",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try2/E/run.png",
+        "sha256": "4815d1a3c066d77a0abe008b6f44ecad1e5ce6c4b7bc4f3f8d94f5df1b24cf19"
+      },
+      "raw": {
+        "id": "B1-18",
+        "species": "wolf",
+        "pose": "running",
+        "confidence": "medium",
+        "notes": "Facing right with a low body and extended legs."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Primary directional leap is locomotion; an attack expected key does not turn the same answer into attack.",
+      "id": "B1-18",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-19",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "deer",
+        "pose": "walk",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try2/E/walk.png",
+        "sha256": "238b45f140b6f9a06c0cc97491f3364685d2e8b85f77af4f24d565ecbac7b171"
+      },
+      "raw": {
+        "id": "B1-19",
+        "species": "deer",
+        "pose": "walking",
+        "confidence": "high",
+        "notes": "Facing right with one foreleg lifted."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Primary walking/prowling is locomotion.",
+      "id": "B1-19",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B1-20",
+        "reviewer": "b",
+        "scale": 1,
+        "species": "deer",
+        "pose": "run",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try2/E/run.png",
+        "sha256": "bee267aa102094e2b935b2ce5b20b2e8cf2150acf03a7a94b2484cf1f9aa4da6"
+      },
+      "raw": {
+        "id": "B1-20",
+        "species": "deer",
+        "pose": "running",
+        "confidence": "high",
+        "notes": "Facing right with a long stretched stride."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Primary directional leap is locomotion; an attack expected key does not turn the same answer into attack.",
+      "id": "B1-20",
+      "scale": 1,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-01",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "deer",
+        "pose": "run",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try2/S/run.png",
+        "sha256": "f9623fab1c4676961052c9ee2520fe2f6bd379c66af500b2bf5c114d192a9191"
+      },
+      "raw": {
+        "id": "B2-01",
+        "species": "deer",
+        "pose": "running",
+        "confidence": "high",
+        "notes": "Facing left with legs extended fore and aft."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Primary directional leap is locomotion; an attack expected key does not turn the same answer into attack.",
+      "id": "B2-01",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-02",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "walk",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try2/S/walk.png",
+        "sha256": "c52461c32cd91a6e7fc4aecd181bca58e7666a0a21e88b603a1256938bbb4a5c"
+      },
+      "raw": {
+        "id": "B2-02",
+        "species": "wolf",
+        "pose": "walking",
+        "confidence": "high",
+        "notes": "Facing left, one foreleg lifted and the other reaching down."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Primary walking/prowling is locomotion.",
+      "id": "B2-02",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-03",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "attack",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try2/S/attack.png",
+        "sha256": "d1d04453cfd6c048b82e88583f7636163cbe84ccbaa3051450c8f053de8eb5ea"
+      },
+      "raw": {
+        "id": "B2-03",
+        "species": "wolf",
+        "pose": "leaping",
+        "confidence": "high",
+        "notes": "Facing left with forequarters raised and hind legs trailing."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Primary directional leap is locomotion; an attack expected key does not turn the same answer into attack.",
+      "id": "B2-03",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-04",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "stand",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try2/E/stand.png",
+        "sha256": "bdf09c6d3d1d066847f7fadbd101dacf60a88de1751749ca48121ff35c3028de"
+      },
+      "raw": {
+        "id": "B2-04",
+        "species": "wolf",
+        "pose": "standing",
+        "confidence": "high",
+        "notes": "Facing right with legs planted beneath the body."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "B2-04",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-05",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "deer",
+        "pose": "graze",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try2/E/graze.png",
+        "sha256": "5e2ff684f838c326111ae62669c891294f1896d70b853f49d9b06db1cfc60f7a"
+      },
+      "raw": {
+        "id": "B2-05",
+        "species": "deer",
+        "pose": "grazing",
+        "confidence": "high",
+        "notes": "Head lowered to the ground on the right."
+      },
+      "normalized_pose": "graze",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "B2-05",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-06",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "dead",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try2/S/dead.png",
+        "sha256": "133255d7b9fb3eb745e713f1525c54fb4fa99733b5284c573e2ce8b1a413f0b2"
+      },
+      "raw": {
+        "id": "B2-06",
+        "species": "wolf",
+        "pose": "lying on its side",
+        "confidence": "high",
+        "notes": "Head rests at the left, pale belly and extended legs visible."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 sideways-lying pose class; does not establish death versus rest.",
+      "id": "B2-06",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-07",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "deer",
+        "pose": "walk",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try2/S/walk.png",
+        "sha256": "0d4407847048aa3823b2da5ad8ba5b380c79ab415d2856436b82be807218c8a6"
+      },
+      "raw": {
+        "id": "B2-07",
+        "species": "deer",
+        "pose": "walking",
+        "confidence": "high",
+        "notes": "Facing left with a front leg reaching forward."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Primary walking/prowling is locomotion.",
+      "id": "B2-07",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-08",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "deer",
+        "pose": "dead",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try2/S/dead.png",
+        "sha256": "ef30c3f4ce82329d85f1f5ada8300369f2090c0599f85c5bad74da71771cb59e"
+      },
+      "raw": {
+        "id": "B2-08",
+        "species": "deer",
+        "pose": "lying on its side",
+        "confidence": "high",
+        "notes": "Head down at the left and long legs extended to the right."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 sideways-lying pose class; does not establish death versus rest.",
+      "id": "B2-08",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-09",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "attack",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try2/E/attack.png",
+        "sha256": "9e55587872e7c896fe843dce8bef278db799a5f4739fe3f769353de63a3ef97e"
+      },
+      "raw": {
+        "id": "B2-09",
+        "species": "wolf",
+        "pose": "leaping",
+        "confidence": "high",
+        "notes": "Facing right with front paws reaching forward and hind legs stretched back."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Primary directional leap is locomotion; an attack expected key does not turn the same answer into attack.",
+      "id": "B2-09",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": false
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-10",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "run",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try2/S/run.png",
+        "sha256": "2b6053a9eab0887a04c72d9c35cfe65b99641d87332a93cf818422c9d8a64590"
+      },
+      "raw": {
+        "id": "B2-10",
+        "species": "wolf",
+        "pose": "running",
+        "confidence": "high",
+        "notes": "Facing left in a low extended stride."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Primary directional leap is locomotion; an attack expected key does not turn the same answer into attack.",
+      "id": "B2-10",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-11",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "deer",
+        "pose": "graze",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try2/S/graze.png",
+        "sha256": "6ffb257785bd84796015651646c175da385461912a86f6a7b1fffcb812d93587"
+      },
+      "raw": {
+        "id": "B2-11",
+        "species": "deer",
+        "pose": "grazing",
+        "confidence": "high",
+        "notes": "Head lowered to the ground on the left."
+      },
+      "normalized_pose": "graze",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "B2-11",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-12",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "deer",
+        "pose": "stand",
+        "facing": "S",
+        "path": "art/animal/polish/deer/try2/S/stand.png",
+        "sha256": "de486ce9f8ac709dd38680f5f93b651ef4a4288ef7fd298ce3b1817e9cfba3e4"
+      },
+      "raw": {
+        "id": "B2-12",
+        "species": "deer",
+        "pose": "standing",
+        "confidence": "high",
+        "notes": "Facing left, head raised and legs beneath the body."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "B2-12",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-13",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "deer",
+        "pose": "walk",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try2/E/walk.png",
+        "sha256": "238b45f140b6f9a06c0cc97491f3364685d2e8b85f77af4f24d565ecbac7b171"
+      },
+      "raw": {
+        "id": "B2-13",
+        "species": "deer",
+        "pose": "walking",
+        "confidence": "high",
+        "notes": "Facing right with a bent foreleg lifted."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Primary walking/prowling is locomotion.",
+      "id": "B2-13",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-14",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "run",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try2/E/run.png",
+        "sha256": "4815d1a3c066d77a0abe008b6f44ecad1e5ce6c4b7bc4f3f8d94f5df1b24cf19"
+      },
+      "raw": {
+        "id": "B2-14",
+        "species": "wolf",
+        "pose": "running",
+        "confidence": "high",
+        "notes": "Facing right with its body low and legs extended."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Primary directional leap is locomotion; an attack expected key does not turn the same answer into attack.",
+      "id": "B2-14",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-15",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "deer",
+        "pose": "run",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try2/E/run.png",
+        "sha256": "bee267aa102094e2b935b2ce5b20b2e8cf2150acf03a7a94b2484cf1f9aa4da6"
+      },
+      "raw": {
+        "id": "B2-15",
+        "species": "deer",
+        "pose": "running",
+        "confidence": "high",
+        "notes": "Facing right in a long airborne stride."
+      },
+      "normalized_pose": "run",
+      "mapping_rationale": "Primary directional leap is locomotion; an attack expected key does not turn the same answer into attack.",
+      "id": "B2-15",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-16",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "stand",
+        "facing": "S",
+        "path": "art/animal/polish/wolf/try2/S/stand.png",
+        "sha256": "ae15a6109060e0d439704e8ea263dd9b41a550ead0992962d48377fd35e8f33b"
+      },
+      "raw": {
+        "id": "B2-16",
+        "species": "wolf",
+        "pose": "standing",
+        "confidence": "high",
+        "notes": "Facing left with head raised and feet planted."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "B2-16",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-17",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "deer",
+        "pose": "dead",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try2/E/dead.png",
+        "sha256": "0077b790b819c5f023055792036b64536e946d3e1ebba97c107858593fb0fe16"
+      },
+      "raw": {
+        "id": "B2-17",
+        "species": "deer",
+        "pose": "lying on its side",
+        "confidence": "high",
+        "notes": "Head on the ground at the right, legs resting to the left."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 sideways-lying pose class; does not establish death versus rest.",
+      "id": "B2-17",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-18",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "walk",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try2/E/walk.png",
+        "sha256": "8b745c94e54c397221a4b1e0233b593051e39a0bca53e61bf76f05e3a7ce2280"
+      },
+      "raw": {
+        "id": "B2-18",
+        "species": "wolf",
+        "pose": "walking",
+        "confidence": "high",
+        "notes": "Facing right with a bent foreleg lifted."
+      },
+      "normalized_pose": "walk",
+      "mapping_rationale": "Primary walking/prowling is locomotion.",
+      "id": "B2-18",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-19",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "wolf",
+        "pose": "dead",
+        "facing": "E",
+        "path": "art/animal/polish/wolf/try2/E/dead.png",
+        "sha256": "285dca9606b4b92e3ac2c6fdb6877390cc5283bde02186f54b0c84649ac2bbd5"
+      },
+      "raw": {
+        "id": "B2-19",
+        "species": "wolf",
+        "pose": "lying on its side",
+        "confidence": "high",
+        "notes": "Head down at the right with pale belly exposed."
+      },
+      "normalized_pose": "dead",
+      "mapping_rationale": "ENV1 sideways-lying pose class; does not establish death versus rest.",
+      "id": "B2-19",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    },
+    {
+      "reviewer": "b",
+      "expected": {
+        "id": "B2-20",
+        "reviewer": "b",
+        "scale": 2,
+        "species": "deer",
+        "pose": "stand",
+        "facing": "E",
+        "path": "art/animal/polish/deer/try2/E/stand.png",
+        "sha256": "df21582d5f2a68d778b8f8117740c3b155df74fcc316a2acda997e2f9eece702"
+      },
+      "raw": {
+        "id": "B2-20",
+        "species": "deer",
+        "pose": "standing",
+        "confidence": "high",
+        "notes": "Facing right with head raised and legs planted."
+      },
+      "normalized_pose": "stand",
+      "mapping_rationale": "Primary ordinary-language action corresponds directly.",
+      "id": "B2-20",
+      "scale": 2,
+      "species_correct": true,
+      "pose_correct": true
+    }
+  ],
+  "limitations": [
+    "Model reviewers, not human users.",
+    "Side-lying counts as dead pose per ENV1; death versus rest unresolved.",
+    "Both wolf attack poses read as leaping, retained as errors despite aggregate pose PASS."
+  ]
+}

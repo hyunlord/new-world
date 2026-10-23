@@ -1,0 +1,92 @@
+{
+  "species": "deer",
+  "facing": "E",
+  "pose": "walk",
+  "attempt": 1,
+  "image": "art/animal/polish/deer/try1/E/walk.png",
+  "image_sha256": "3aa9ef0edbfd11cb3a0260434a6ec485ab2fa7b87834d568fe17e95992f2e837",
+  "source_panel": "/Users/rexxa/work/artpolish-data/animals/deer_try1_E_walk.png",
+  "source_panel_sha256": "33caf8013d787653b59ac505291661e0dcf002919a554ae5debc9de4b43ada03",
+  "source_box": [
+    281,
+    517,
+    690,
+    1024
+  ],
+  "raw": "/Users/rexxa/work/artpolish-data/animals/deer_try1.png",
+  "raw_sha256": "caf81505de4923616885a5d47734a25c0e6a75f324457230669b12964571fca8",
+  "scale": 0.1694915254237288,
+  "upright_scale": 0.1694915254237288,
+  "normalization": {
+    "scaled_size": [
+      69,
+      86
+    ],
+    "trim_box": [
+      3,
+      9,
+      54,
+      66
+    ],
+    "placement": [
+      22,
+      16
+    ],
+    "resized_to_canvas_offset": [
+      19,
+      7
+    ],
+    "visible_pixels": 1127,
+    "rotation_degrees": 0,
+    "scale": 0.1694915254237288,
+    "discarded_pixels": 15,
+    "discarded_max_alpha": 1,
+    "visibility_threshold": 16
+  },
+  "checks": {
+    "canvas": true,
+    "contact": true,
+    "border": true,
+    "connectivity": true,
+    "dead_length": true,
+    "dead_axis": true,
+    "source_border": true,
+    "ownership": true,
+    "discarded_alpha": true
+  },
+  "component_count": 1,
+  "visible_width": 51,
+  "visible_height": 57,
+  "structural_pass": true,
+  "numeric_v2_report_only": {
+    "candidate": "/Users/rexxa/work/artpolish-data/animals/deer_try1_E_walk.png",
+    "sha256": "33caf8013d787653b59ac505291661e0dcf002919a554ae5debc9de4b43ada03",
+    "family": "animal",
+    "metrics": {
+      "edge_density": 0.15972012787260992,
+      "saturation_q25": 0.49786417400324623,
+      "saturation_q75": 0.6332122091617056,
+      "stroke_q25": 2.0,
+      "stroke_q50": 2.0,
+      "stroke_q75": 4.0,
+      "stroke_q90": 4.0,
+      "wash_flatness": 0.015543988430057613,
+      "foreground_pixels": 19518
+    },
+    "numeric_checks": {
+      "edge_density": true,
+      "saturation_q25": true,
+      "saturation_q75": true,
+      "stroke_q25": true,
+      "stroke_q50": true,
+      "stroke_q75": true,
+      "stroke_q90": true,
+      "wash_flatness": true
+    },
+    "numeric_pass": true,
+    "model_scores": null,
+    "model_status": "MISSING",
+    "passed": false
+  },
+  "status": "CANDIDATE_PENDING_BLIND_TEST_AND_OWNER"
+}

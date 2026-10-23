@@ -1,0 +1,20 @@
+{
+  "scope": "ART-POLISH portraits",
+  "owner_adoption": "PENDING",
+  "board": "art/boards/portraits_owner.png",
+  "board_sha256": "30ed02b12c0ae5961f575f749055a00c5bc2c6ffc808fc5504688c1d4df599b7",
+  "method": "Actual view_image at original resolution plus pixel-level packet tests",
+  "findings": {
+    "34_named_candidates_visible": true,
+    "128px_and64px_portraits_visible": true,
+    "sprite0_5x_label_visible": true,
+    "board_no_clipping_or_overlap_observed": true,
+    "new9_head_margin_and_fixed_oval_checked": true,
+    "existing25_bytes_retained": true
+  },
+  "limitations": [
+    "Manual head/face boundaries have approximately2px observation uncertainty",
+    "Owner-board sprite companions are0.5x; blind identity sprites remain2x",
+    "Style scores diagnostic only underD1; no owner approval claimed"
+  ]
+}
