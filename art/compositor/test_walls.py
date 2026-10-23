@@ -78,7 +78,7 @@ def test_world_x_sampling_continues_across_positive_and_negative_tiles() -> None
     source = walls.WallTextures(source.face, Image.fromarray(strip), source.end, source.inner_corner)
     cells = frozenset((x, 0) for x in range(-2, 6))
     # When rendering a run.
-    result = walls.render_walls(cells, source)
+    result = walls.render_walls(cells, source, cap_style="struct")
     # Then interior cap pixels preserve world phase across wrap and crop boundaries.
     red = np.asarray(result.image)[0, 64:-64, 0]
     expected = np.arange(-64, 320) % 256
@@ -156,7 +156,7 @@ def test_cross_draws_only_connected_cap_surface() -> None:
     # Given a four-way junction with distinguishable face, cap and end colours.
     cells = frozenset({(1, 0), (0, 1), (1, 1), (2, 1), (1, 2)})
     # When assembling its middle.
-    tile = next(tile for tile in walls.wall_tiles(cells, textures()) if tile.cell == (1, 1))
+    tile = next(tile for tile in walls.wall_tiles(cells, textures(), cap_style="struct") if tile.cell == (1, 1))
     # Then no face or end texture contaminates any of the junction top.
     assert not tile.face_visible
     assert tile.image.getextrema() == ((180, 180), (160, 160), (140, 140), (255, 255))

@@ -30,6 +30,8 @@ class EdgeField:
     walls: frozenset[Cell] = frozenset()
     water: frozenset[Cell] = frozenset()
     seed: int = SEED
+    hills: frozenset[Cell] = frozenset()
+    ground_blend_px: int = 12
 
 
 @dataclass(frozen=True, slots=True)
@@ -119,16 +121,16 @@ def render_tile(field: EdgeField, cell: Cell) -> Image.Image:
     """Blend the strongest 12px edge, or water over its strongest bank ground."""
     origin = (cell[0] * TILE, cell[1] * TILE)
     source = sample_texture(field.textures[field.terrain[cell]], origin)
-    if cell in field.walls:
+    if cell in field.walls or cell in field.hills:
         return source
     pixels = np.asarray(source, dtype=np.float64).copy()
     strongest = np.zeros((TILE, TILE), dtype=np.float64)
     replacement = pixels.copy()
     is_water = cell in field.water
-    weights = _weights(cell, 10 if is_water else 12, field.seed)
+    weights = _weights(cell, 10 if is_water else field.ground_blend_px, field.seed)
     for offset, weight in zip(DIRECTIONS, weights, strict=True):
         neighbour = (cell[0] + offset[0], cell[1] + offset[1])
-        if neighbour not in field.terrain or neighbour in field.walls:
+        if neighbour not in field.terrain or neighbour in field.walls or neighbour in field.hills:
             continue
         if field.terrain[neighbour] == field.terrain[cell]:
             continue

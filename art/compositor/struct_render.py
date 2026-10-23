@@ -35,6 +35,7 @@ from art.compositor.render import (
 from art.compositor.struct_ground import paint_ground
 from art.compositor.struct_layers import StructureTile, build_layout, structural_tiles
 from art.compositor.tone import Condition, NightLight, night_value
+from art.compositor.wall_style import CapStyle, WallParameters
 
 DOCS: Final = REPO / "docs/v8/artstruct"
 ENV1: Final = REPO / "docs/v8/artenv1"
@@ -65,18 +66,19 @@ def paint_structure(painter: ForegroundPainter, row: StructureTile) -> dict[str,
             "face_visible": row.tile.face_visible, "site": row.site}
 
 
-def compose(inputs: RenderInputs, settings: RenderSettings) -> RenderProduct:
+def compose(inputs: RenderInputs, settings: RenderSettings, *, cap_style: CapStyle = "dark",
+            wall_params: WallParameters | None = None) -> RenderProduct:
     """Re-compose, retaining original scene coordinates and declared actor identities."""
     scene, catalog = inputs.scene, inputs.catalog
     viewport = Viewport(scene.camp, settings.zoom)
     layout = build_layout(scene, inputs.overlay, catalog)
-    ground = paint_ground(scene, layout, GroundPainter(catalog, viewport, settings.condition))
+    ground = paint_ground(scene, layout, GroundPainter(catalog, viewport, settings.condition), wall_params)
     image = ground.image
     coverage = Image.new("L", WINDOW)
     painter = ForegroundPainter(image, viewport, catalog, settings.lod, coverage)
     actors = render_people(scene, inputs.overlay)
     labels = {actor.person.id: index + 1 for index, actor in enumerate(actors)}
-    walls = structural_tiles(layout, catalog, (scene.width, scene.height))
+    walls = structural_tiles(layout, catalog, (scene.width, scene.height), cap_style=cap_style, params=wall_params)
     layers: list[Sprite | RenderPerson | StructureTile] = [*layout.sprites, *actors, *walls]
     objects: list[dict[str, JsonValue]] = []
     people: list[dict[str, JsonValue]] = []
@@ -137,6 +139,7 @@ def compose(inputs: RenderInputs, settings: RenderSettings) -> RenderProduct:
         "asset_hashes": {key: value for key, value in catalog.hashes.items()}, "owner_approval": "PENDING",
         "depth_rule": "base y then x; standing base tile top+43; stable order on ties",
         "roof": "not drawn", "native_hut_count": sum(room.id.startswith("real_hut_") for room in layout.rooms),
+        "cap_style": cap_style, "wall_parameters": (wall_params or WallParameters.read()).model_dump(mode="json"),
     }
     return RenderProduct(image.convert("RGB"), evidence)
 

@@ -31,6 +31,7 @@ from art.compositor.struct_render import (
     struct_catalog,
 )
 from art.compositor.tone import Condition
+from art.compositor.wall_style import CapStyle, WallParameters
 
 FONT: Final = ImageFont.truetype("/System/Library/Fonts/Supplemental/Arial.ttf", 18)
 SMALL: Final = ImageFont.truetype("/System/Library/Fonts/Supplemental/Arial.ttf", 13)
@@ -84,9 +85,10 @@ class WorkshopPainter(ForegroundPainter):
         return None
 
 
-def detail_demos() -> tuple[Path, Path, Path]:
+def detail_demos(*, external: Path = EXTERNAL, docs: Path = DOCS,
+                 cap_style: CapStyle = "dark", wall_params: WallParameters | None = None) -> tuple[Path, Path, Path]:
     """Show requested occupants/workers separately from canonical scene comparisons."""
-    source = EXTERNAL / "scene_day6_noon_day_1x_figures.png"
+    source = external / "scene_day6_noon_day_1x_figures.png"
     scene = Scene.read(SCENES / "scene_day6_noon.json")
     overlay = Overlay.read(SCENES / "m5_overlay.json")
     catalog = struct_catalog()
@@ -135,7 +137,7 @@ def detail_demos() -> tuple[Path, Path, Path]:
                         message = "Declared sleeper does not overlap the bed"
                         raise ValueError(message)
                 actor_records.append(row)
-        path = EXTERNAL / f"detail_demo_{name}.png"
+        path = external / f"detail_demo_{name}.png"
         path.parent.mkdir(parents=True, exist_ok=True)
         image.convert("RGB").save(path, optimize=True)
         paths.append(path)
@@ -149,16 +151,24 @@ def detail_demos() -> tuple[Path, Path, Path]:
     look = choose_look(actors[0].person, actors[0].top)
     figure_path = frame_path(look, "idle")
     hut.alpha_composite(read_image(figure_path), (112 - 40, 139 - 104))
-    chunk_path = REPO / "art/proto/struct/rooms/hut.png"
+    from art.compositor.geometry import perimeter
+    from art.compositor.struct_layers import load_wall_textures, wall_door
+    from art.compositor.walls import Door, render_walls
+
+    chunk_path = external / "detail_demo_hut_wall_chunk.png"
+    chunk = render_walls(perimeter((3, 3)), load_wall_textures("log"),
+                         (Door((1, 2), wall_door(catalog, "door_log_open")),),
+                         cap_style=cap_style, params=wall_params)
+    chunk.image.save(chunk_path, optimize=True)
     hut.alpha_composite(read_image(chunk_path), (16, 16))
-    hut_path = EXTERNAL / "detail_demo_hut.png"
+    hut_path = external / "detail_demo_hut.png"
     hut.convert("RGB").save(hut_path, optimize=True)
     records.append({"name": "roofless_hut", "path": str(hut_path), "sha256": sha256(hut_path),
                     "chunk_path": str(chunk_path), "chunk_sha256": sha256(chunk_path),
                     "figure_path": str(figure_path), "figure_sha256": sha256(figure_path),
                     "floor_path": catalog.asset("floor_packed_earth").path,
                     "interpretation": "Declared3x3 hut fixture; no such completed hut exists in the three real scenes"})
-    _ = (DOCS / "detail_demo_manifest.json").write_text(json.dumps({"demonstrations": records}, indent=2) + "\n")
+    _ = (docs / "detail_demo_manifest.json").write_text(json.dumps({"demonstrations": records}, indent=2) + "\n")
     return paths[0], paths[1], hut_path
 
 

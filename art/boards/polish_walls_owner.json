@@ -1,0 +1,68 @@
+{
+  "panels": [
+    {
+      "path": "/Users/rexxa/work/artpolish-data/walls/struct/scene_day6_noon_day_1x_figures.png",
+      "sha256": "76b056646f467e87ad3c5af2ad86bf0ff989a59c100f8e0cec096465eb5df4ed",
+      "crop": [
+        0,
+        140,
+        448,
+        500
+      ],
+      "integer_scale": 1,
+      "board_origin": [
+        0,
+        38
+      ]
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish-data/walls/dark_045/scene_day6_noon_day_1x_figures.png",
+      "sha256": "f244ac4c3f97eb61bc56d17f29d66e283cb87b5613096d9f09ad8622873629da",
+      "crop": [
+        0,
+        140,
+        448,
+        500
+      ],
+      "integer_scale": 1,
+      "board_origin": [
+        448,
+        38
+      ]
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish-data/walls/struct/scene_day6_noon_day_1x_figures.png",
+      "sha256": "76b056646f467e87ad3c5af2ad86bf0ff989a59c100f8e0cec096465eb5df4ed",
+      "crop": [
+        0,
+        140,
+        448,
+        500
+      ],
+      "integer_scale": 2,
+      "board_origin": [
+        896,
+        38
+      ]
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish-data/walls/dark_045/scene_day6_noon_day_1x_figures.png",
+      "sha256": "f244ac4c3f97eb61bc56d17f29d66e283cb87b5613096d9f09ad8622873629da",
+      "crop": [
+        0,
+        140,
+        448,
+        500
+      ],
+      "integer_scale": 2,
+      "board_origin": [
+        1792,
+        38
+      ]
+    }
+  ],
+  "sha256": "e0720bd4e5cfc660a3118092d5a060095ee929b4dce7bac5cce21388493bfa71",
+  "bytes": 652022,
+  "owner_approval": "PENDING",
+  "operation": "same-coordinate crops; integer nearest enlargement only"
+}

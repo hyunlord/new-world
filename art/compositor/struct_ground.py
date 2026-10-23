@@ -31,6 +31,7 @@ from art.compositor.tone import (
     night_value,
     season_ground,
 )
+from art.compositor.wall_style import WallParameters
 
 
 @dataclass(frozen=True, slots=True)
@@ -40,7 +41,8 @@ class GroundProduct:
     field: EdgeField
 
 
-def paint_ground(scene: Scene, layout: Layout, painter: GroundPainter) -> GroundProduct:
+def paint_ground(scene: Scene, layout: Layout, painter: GroundPainter,
+                 wall_params: WallParameters | None = None) -> GroundProduct:
     """Blend before zoom reduction, and measure unoccluded terrain boundaries."""
     terrain = {(x, y): TERRAIN[glyph] for y, row in enumerate(scene.terrain_rows) for x, glyph in enumerate(row)}
     terrain.update(layout.floors)
@@ -52,7 +54,9 @@ def paint_ground(scene: Scene, layout: Layout, painter: GroundPainter) -> Ground
     source = read_image(REPO / "art/style05/struct/water.png")
     calm = cap_ground(season_ground(source, painter.condition), painter.limit).image.convert("RGBA")
     textures.update({"river_bank": calm, "water": calm})
-    field = EdgeField(terrain, textures, layout.wall_cells, water)
+    params = wall_params or WallParameters.read()
+    field = EdgeField(terrain, textures, layout.wall_cells, water, hills=layout.hills,
+                      ground_blend_px=params.dug_floor_blend_px)
     viewport = painter.viewport
     image = Image.new("RGBA", WINDOW, (30, 32, 29, 255))
     xs, ys = viewport.tile_bounds((scene.width, scene.height))
@@ -82,7 +86,7 @@ def paint_ground(scene: Scene, layout: Layout, painter: GroundPainter) -> Ground
             adjacent = (x + dx, y + dy)
             if adjacent not in tiles or terrain[(x, y)] == terrain[adjacent]:
                 continue
-            if (x, y) in layout.wall_cells or adjacent in layout.wall_cells:
+            if (x, y) in layout.wall_cells | layout.hills or adjacent in layout.wall_cells | layout.hills:
                 continue
             strip = Image.new("RGBA", (2 * tile_px, tile_px) if dx else (tile_px, 2 * tile_px))
             strip.paste(tile, (0, 0))

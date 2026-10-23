@@ -9,14 +9,17 @@ The exposed cap is 16px and the face is 44px, ending at tile y+43.
 For a south-connected tile the cap's top surface continues for 64px to
 meet the next cap: rows repeat, never stretch or retouch generated art.
 This top-down connector prevents 48px gaps along vertical runs. T/cross
-junctions have caps only. Door sprites own their transparency completely.
+junctions have caps only. Dark caps share a blurred strip and palette hue;
+end pieces are restricted to face ends. Door sprites own their transparency.
 """
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Final
+from typing import Final, assert_never
 
 from PIL import Image
+
+from art.compositor.wall_style import CapStyle, WallParameters, dark_strip, outline_cap
 
 Cell = tuple[int, int]
 TILE: Final = 64
@@ -33,6 +36,8 @@ class WallTextures:
     cap: Image.Image
     end: Image.Image
     inner_corner: Image.Image
+    dark_cap: Image.Image | None = None
+    cap_hue: float | None = None
 
     def __post_init__(self) -> None:
         for name, image, size in (
@@ -87,13 +92,24 @@ def _strip_tile(strip: Image.Image, world_x: int) -> Image.Image:
 
 def wall_tiles(
     cells: frozenset[Cell], textures: WallTextures, doors: tuple[Door, ...] = (),
+    *, cap_style: CapStyle = "dark", params: WallParameters | None = None,
 ) -> tuple[WallTile, ...]:
     """Return tiles sorted by base y then x, retaining doors as neighbours."""
     replacements = {door.cell: door.image for door in doors}
     if len(replacements) != len(doors) or not replacements.keys() <= cells:
         message = "Door cells must be unique and present in the wall cell set"
         raise ValueError(message)
+    settings = params or WallParameters.read()
+    match cap_style:
+        case "dark":
+            strip = dark_strip(textures.dark_cap or textures.cap, settings, textures.cap_hue)
+        case "struct":
+            strip = textures.cap
+        case unreachable:
+            assert_never(unreachable)
     result: list[WallTile] = []
+    faces = frozenset((x, y) for x, y in cells if (x, y) not in replacements and (x, y + 1) not in cells
+                      and sum((x + dx, y + dy) in cells for dx, dy in ((0, -1), (1, 0), (0, 1), (-1, 0))) < 3)
     for x, y in sorted(cells, key=lambda cell: (cell[1], cell[0])):
         if (x, y) in replacements:
             door = replacements[(x, y)]
@@ -105,14 +121,22 @@ def wall_tiles(
             (x + dx, y + dy) in cells for dx, dy in ((0, -1), (1, 0), (0, 1), (-1, 0))
         )
         junction = sum((north, east, south, west)) >= 3
-        face_visible = not south and not junction
+        face_visible = (x, y) in faces
         image = Image.new("RGBA", (TILE, TILE if south else CAP + FACE))
-        cap = _strip_tile(textures.cap, x)
+        cap = _strip_tile(strip, x)
         for top in range(0, TILE if south else CAP, CAP):
             image.alpha_composite(cap, (0, top))
         if face_visible:
             image.alpha_composite(_strip_tile(textures.face, x), (0, CAP))
-        if not junction:
+        if cap_style == "dark":
+            if face_visible:
+                end = textures.end.convert("RGBA").crop((0, CAP, textures.end.width, CAP + FACE))
+                if (x - 1, y) not in faces:
+                    image.alpha_composite(end, (0, CAP))
+                if (x + 1, y) not in faces:
+                    image.alpha_composite(end, (TILE - end.width, CAP))
+            outline_cap(image, TILE if south else CAP, (north, east, south, west), face_visible, settings)
+        elif not junction:
             end = textures.end.convert("RGBA")
             if not face_visible:
                 end = end.crop((0, 0, end.width, CAP))
@@ -129,9 +153,10 @@ def wall_tiles(
 
 def render_walls(
     cells: frozenset[Cell], textures: WallTextures, doors: tuple[Door, ...] = (),
+    *, cap_style: CapStyle = "dark", params: WallParameters | None = None,
 ) -> WallRender:
     """Bake a wall chunk with an explicit world-pixel origin for placement."""
-    tiles = wall_tiles(cells, textures, doors)
+    tiles = wall_tiles(cells, textures, doors, cap_style=cap_style, params=params)
     if not tiles:
         return WallRender(Image.new("RGBA", (1, 1)), (0, 0))
     left = min(tile.origin[0] for tile in tiles)

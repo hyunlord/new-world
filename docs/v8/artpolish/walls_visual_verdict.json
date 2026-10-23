@@ -1,0 +1,15 @@
+{
+  "score": 92,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "The matched 1x/2x detail comparison replaces pale deck-like caps with dark continuous bands while preserving wall-face texture.",
+    "The closeups retain the six requested scene/fixture views and explicit labels; the three cap values have visibly distinct brightness.",
+    "Full original scene crops are split into four supplementary PNGs so every board remains below 1.5 MB."
+  ],
+  "suggestions": [
+    "Keep the 0.35 / 0.45 / 0.60 owner choice open.",
+    "Retain the full scene supplementary boards alongside the main matched-detail comparison."
+  ],
+  "reasoning": "Directly inspected the actual comparison, six closeups and three-step darkness strip. Presentation satisfies the comparison brief; the score judges artifact presentation only and never asserts owner art approval."
+}

@@ -1,0 +1,49 @@
+{
+  "boards": [
+    {
+      "path": "art/boards/polish_walls_owner.png",
+      "bytes": 652022,
+      "panels": 4,
+      "native_or_nearest_pixels_exact": true
+    },
+    {
+      "path": "art/boards/polish_closeups_2x.png",
+      "bytes": 682353,
+      "panels": 6,
+      "native_or_nearest_pixels_exact": true
+    },
+    {
+      "path": "art/boards/polish_cap_darkness_strip.png",
+      "bytes": 327567,
+      "panels": 3,
+      "native_or_nearest_pixels_exact": true
+    },
+    {
+      "path": "art/boards/polish_walls_owner.struct_1x.png",
+      "bytes": 680566,
+      "panels": 1,
+      "native_or_nearest_pixels_exact": true
+    },
+    {
+      "path": "art/boards/polish_walls_owner.struct_2x.png",
+      "bytes": 870350,
+      "panels": 1,
+      "native_or_nearest_pixels_exact": true
+    },
+    {
+      "path": "art/boards/polish_walls_owner.dark_1x.png",
+      "bytes": 599086,
+      "panels": 1,
+      "native_or_nearest_pixels_exact": true
+    },
+    {
+      "path": "art/boards/polish_walls_owner.dark_2x.png",
+      "bytes": 775176,
+      "panels": 1,
+      "native_or_nearest_pixels_exact": true
+    }
+  ],
+  "all_7_boards_below_1500000_bytes": true,
+  "source_hashes_match": true,
+  "owner_approval": "PENDING"
+}

@@ -17,6 +17,7 @@ from art.compositor.geometry import perimeter
 from art.compositor.models import Overlay, Scene
 from art.compositor.native_layers import bridge_sprites, verified_layer
 from art.compositor.placements import Sprite, overlay_sprites, real_sprites
+from art.compositor.wall_style import CapStyle, WallParameters, material_hue
 from art.compositor.walls import Door, WallTextures, WallTile, hill_tiles, wall_tiles
 
 Cell = tuple[int, int]
@@ -98,6 +99,7 @@ def build_layout(scene: Scene, overlay: Overlay, catalog: Catalog) -> Layout:
             hills.discard(cell)
         else:
             sprites.append(row)
+    hills.difference_update(cell for cell, _ in floors)
     water = {(x, y) for y, row in enumerate(scene.terrain_rows) for x, glyph in enumerate(row) if glyph in "~_"}
     water.difference_update(cell for cell, _ in floors)
     water.update(fords)
@@ -106,10 +108,15 @@ def build_layout(scene: Scene, overlay: Overlay, catalog: Catalog) -> Layout:
 
 def load_wall_textures(material: str) -> WallTextures:
     root = REPO / "art/style05/struct"
-    return WallTextures(*(read_image(root / f"{material}_{part}.png") for part in ("face", "cap", "end", "inner_corner")))
+    params = WallParameters.read()
+    palette_root = Path(__file__).resolve().parents[2]
+    return WallTextures(*(read_image(root / f"{material}_{part}.png") for part in ("face", "cap", "end", "inner_corner")),
+                        dark_cap=read_image(REPO / params.shared_cap_source),
+                        cap_hue=material_hue(palette_root, material, params))
 
 
-def structural_tiles(layout: Layout, catalog: Catalog, dimensions: tuple[int, int]) -> tuple[StructureTile, ...]:
+def structural_tiles(layout: Layout, catalog: Catalog, dimensions: tuple[int, int], *,
+                     cap_style: CapStyle = "dark", params: WallParameters | None = None) -> tuple[StructureTile, ...]:
     """Assemble wall connectivity globally within each material/site group."""
     result: list[StructureTile] = []
     for material in ("log", "stone"):
@@ -120,7 +127,7 @@ def structural_tiles(layout: Layout, catalog: Catalog, dimensions: tuple[int, in
             selected = frozenset(cell for room in rooms if room.site == site for cell in room.cells)
             doors = tuple(Door(room.door, wall_door(catalog, f"door_{material}_{'open' if room.open_door else 'closed'}"))
                           for room in rooms if room.door is not None)
-            result.extend(StructureTile(tile, f"{material}_wall", site) for tile in wall_tiles(cells, textures, doors) if tile.cell in selected)
+            result.extend(StructureTile(tile, f"{material}_wall", site) for tile in wall_tiles(cells, textures, doors, cap_style=cap_style, params=params) if tile.cell in selected)
     rock = catalog.image("hill_rock").resize((256, 64), Image.Resampling.LANCZOS)
     rock_textures = WallTextures(read_image(REPO / "art/style05/struct/rock_face.png"),
                                 rock.crop((0, 0, 256, 16)), rock.resize((24, 60)), rock.crop((0, 0, 16, 16)))

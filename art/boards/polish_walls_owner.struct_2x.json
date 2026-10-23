@@ -1,0 +1,23 @@
+{
+  "panels": [
+    {
+      "path": "/Users/rexxa/work/artpolish-data/walls/struct/scene_day6_noon_day_1x_figures.png",
+      "sha256": "76b056646f467e87ad3c5af2ad86bf0ff989a59c100f8e0cec096465eb5df4ed",
+      "crop": [
+        0,
+        140,
+        960,
+        740
+      ],
+      "integer_scale": 2,
+      "board_origin": [
+        0,
+        38
+      ]
+    }
+  ],
+  "sha256": "3eb5218bf750eb3729d39a3beb5331ff23f1d1005c7ec7e7c4ca9e590e1ca32f",
+  "bytes": 870350,
+  "owner_approval": "PENDING",
+  "operation": "same-coordinate crops; integer nearest enlargement only"
+}

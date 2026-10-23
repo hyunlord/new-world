@@ -1,0 +1,16 @@
+{
+  "cap_style": "dark",
+  "box_blur_px": 9,
+  "value_multiplier": 0.45,
+  "saturation_multiplier": 0.40,
+  "ink_hex": "#141210",
+  "ink_alpha": 0.80,
+  "ink_width_px": 2,
+  "south_highlight_width_px": 1,
+  "south_highlight_value_add": 0.08,
+  "shared_cap_source": "art/style05/struct/stone_cap.png",
+  "palette_source": "art/style05/palette_05.json",
+  "material_palette_indices": {"log": 1, "stone": 23},
+  "dug_floor_blend_px": 12,
+  "owner_value_choices": [0.35, 0.45, 0.60]
+}

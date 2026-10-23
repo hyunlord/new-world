@@ -1,0 +1,93 @@
+{
+  "boards": [
+    {
+      "path": "art/boards/polish_walls_owner.png",
+      "sha256": "e0720bd4e5cfc660a3118092d5a060095ee929b4dce7bac5cce21388493bfa71",
+      "bytes": 652022
+    },
+    {
+      "path": "art/boards/polish_closeups_2x.png",
+      "sha256": "3983962606dd764d2d35b37594fb25e51e3a3c80d5fb17b37b0ed5fb3704b4c4",
+      "bytes": 682353
+    },
+    {
+      "path": "art/boards/polish_cap_darkness_strip.png",
+      "sha256": "a67e6c4ec590b5ecf582dcee23bd2bf0c55b8afcf782f32bfb562980a225ccef",
+      "bytes": 327567
+    },
+    {
+      "path": "art/boards/polish_walls_owner.struct_1x.png",
+      "sha256": "32fdfd0fdcbc2ed97d6df65bbefda062b29ed3fc9a168d98d81e06526de7d743",
+      "bytes": 680566
+    },
+    {
+      "path": "art/boards/polish_walls_owner.struct_2x.png",
+      "sha256": "3eb5218bf750eb3729d39a3beb5331ff23f1d1005c7ec7e7c4ca9e590e1ca32f",
+      "bytes": 870350
+    },
+    {
+      "path": "art/boards/polish_walls_owner.dark_1x.png",
+      "sha256": "1eca3b0c2216aa953941336ffa198a06913d706df3843222c4e75dd34b5a3c7e",
+      "bytes": 599086
+    },
+    {
+      "path": "art/boards/polish_walls_owner.dark_2x.png",
+      "sha256": "fa6aa50753c06b3078246e2551a372885e3c80035d39d3e6c69a9796d1fb3c18",
+      "bytes": 775176
+    }
+  ],
+  "source_sha256": {
+    "art/compositor/polish_boards.py": "491478501256c263fcdf948197a32a80f796c1000b3e9f9fe007403625169cb4",
+    "art/compositor/wall_params.json": "a3c6bdaf165fc58dc0b0ee9cfbf829f322c53b34ab6a8f1462c84dea1fe19e04",
+    "art/compositor/walls.py": "ea520ffe96a1292610f17d3f4a3272765709c8a5811add58b4bdc9e1d730f45d",
+    "art/compositor/wall_style.py": "8096602cef54e77b0f26485747e07bb2a2a0b425fc8d3385620e1ec72e46e882",
+    "art/compositor/edges.py": "c0a85c6122fc0400a73332eb8c7964c678048f4295824751a11e13daa5010859",
+    "art/compositor/struct_ground.py": "4b9d285d4d7ffa82bc548efd0b606b1ea4d98fda4acf2ca38fa9bdb912aa9464",
+    "art/compositor/struct_layers.py": "07a5c6698f4e3c2e3c8672cd3b276aefd59910255912bce4251515f1f6aa9105",
+    "art/compositor/struct_render.py": "ea589e41f6d5b25f43b4ed9bb80d4a2b006763e8a4f035b776619581f1bbd54e",
+    "art/compositor/struct_boards.py": "b06ef9f4d1cb427acb442b62174be3643b0495deef150286d8c2739e8befb71b"
+  },
+  "owner_approval": "PENDING",
+  "full_scene_crop": [
+    0,
+    140,
+    960,
+    740
+  ],
+  "same_detail_crop": [
+    0,
+    140,
+    448,
+    500
+  ],
+  "scales": [
+    1,
+    2
+  ],
+  "params": {
+    "cap_style": "dark",
+    "box_blur_px": 9,
+    "value_multiplier": 0.45,
+    "saturation_multiplier": 0.4,
+    "ink_hex": "#141210",
+    "ink_alpha": 0.8,
+    "ink_width_px": 2,
+    "south_highlight_width_px": 1,
+    "south_highlight_value_add": 0.08,
+    "shared_cap_source": "art/style05/struct/stone_cap.png",
+    "palette_source": "art/style05/palette_05.json",
+    "material_palette_indices": {
+      "log": 1,
+      "stone": 23
+    },
+    "dug_floor_blend_px": 12,
+    "owner_value_choices": [
+      0.35,
+      0.45,
+      0.6
+    ]
+  },
+  "raw_render_directory": "/Users/rexxa/work/artpolish-data/walls",
+  "comparison": "Both styles use the same corrected dug-floor topology and blend exclusion; STRUCT retains its original cap, end and corner textures.",
+  "layout_reason": "Full scene x two styles x two scales in one PNG was 1850232 bytes after pngcrush -brute. Main board preserves matched detail crops at both scales; four supplementary boards preserve the entire original scene crop at both scales without downsampling or quantization."
+}
