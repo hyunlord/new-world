@@ -1,0 +1,561 @@
+{
+  "ledger_sha256": "a98ae030b4229878b291ad38ceec811ead2b1970b1f8dbe321e624c319538d6d",
+  "acceptance": "Candidate only; numeric and executor reading are not owner approval",
+  "attempts": [
+    {
+      "asset": "ground_axe",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-2f42d96e-af6d-4336-b8ef-c7665087ccc3.png",
+      "raw_sha256": "0e31bad6bd63b66e046d61121cbf29aafdf61f62f2748af233209c509c23b463",
+      "readable": true,
+      "reading": "Front thickness and compressed upper surface visible; clean isolated cutout.",
+      "owner_projection_acceptance": "N/A: no explicit item height band; flat tools have projected footprint height",
+      "judge_v2_raw": {
+        "candidate": "/Users/rexxa/work/artstruct-data/generations/ground_axe_try1.png",
+        "sha256": "0e31bad6bd63b66e046d61121cbf29aafdf61f62f2748af233209c509c23b463",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.28323580741197,
+          "saturation_q25": 0.17066050727356744,
+          "saturation_q75": 0.540729501897904,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.017916919924247217,
+          "foreground_pixels": 20807
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "candidate",
+      "operations": [
+        "alpha bounds crop plus fringe",
+        "uniform LANCZOS fit max54px width and provisional height",
+        "transparent padding to64x64 with base43",
+        "count variants1/3/6 same-source copies at scales1/.65/.5"
+      ],
+      "export_sha256": "f29a5acd6dec1813135842b6c3ca30c381e358dbc21584eddc25f3aa6382facb"
+    },
+    {
+      "asset": "spear",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-38a8239a-447e-4ae2-bf36-0f424d9f7df7.png",
+      "raw_sha256": "056ab81125525e70bbcb1352c013e5a76d945dc532ccebad13b9a277160828e9",
+      "readable": false,
+      "reading": "Brown halo outside spear.",
+      "owner_projection_acceptance": "N/A: no explicit item height band; flat tools have projected footprint height",
+      "judge_v2_raw": {
+        "candidate": "/Users/rexxa/work/artstruct-data/generations/spear_try1.png",
+        "sha256": "056ab81125525e70bbcb1352c013e5a76d945dc532ccebad13b9a277160828e9",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.24635701275045538,
+          "saturation_q25": 0.2876972566570438,
+          "saturation_q75": 0.540590293771969,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.02926010555949825,
+          "foreground_pixels": 3225
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "rejected_visual",
+      "operations": [
+        "alpha bounds crop plus fringe",
+        "uniform LANCZOS fit max54px width and provisional height",
+        "transparent padding to64x64 with base43",
+        "count variants1/3/6 same-source copies at scales1/.65/.5"
+      ]
+    },
+    {
+      "asset": "cured_hide",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-8cd4bd0d-ca97-4830-a81f-87c74a3b33c9.png",
+      "raw_sha256": "d0cee97347f1457f86591ad224326defa11494a9bde6d2862597eaf7abea5a5a",
+      "readable": true,
+      "reading": "Front thickness and compressed upper surface visible; clean isolated cutout.",
+      "owner_projection_acceptance": "N/A: no explicit item height band; flat tools have projected footprint height",
+      "judge_v2_raw": {
+        "candidate": "/Users/rexxa/work/artstruct-data/generations/cured_hide_try1.png",
+        "sha256": "d0cee97347f1457f86591ad224326defa11494a9bde6d2862597eaf7abea5a5a",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.23474337828660133,
+          "saturation_q25": 0.596114519803372,
+          "saturation_q75": 0.7327656615611862,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 2.8284271247461903,
+          "wash_flatness": 0.02423808287092061,
+          "foreground_pixels": 21782
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "rejected_numeric",
+      "operations": [
+        "alpha bounds crop plus fringe",
+        "uniform LANCZOS fit max54px width and provisional height",
+        "transparent padding to64x64 with base43",
+        "count variants1/3/6 same-source copies at scales1/.65/.5"
+      ]
+    },
+    {
+      "asset": "wolf_hide",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-ceeb3d52-fe5e-4f7b-a263-0e95d2866d60.png",
+      "raw_sha256": "1576c664a08acc305e3647e15be3da1af6ff7143f8d572da2d6b827493e8401c",
+      "readable": false,
+      "reading": "Brown halo outside folded pelt.",
+      "owner_projection_acceptance": "N/A: no explicit item height band; flat tools have projected footprint height",
+      "judge_v2_raw": {
+        "candidate": "/Users/rexxa/work/artstruct-data/generations/wolf_hide_try1.png",
+        "sha256": "1576c664a08acc305e3647e15be3da1af6ff7143f8d572da2d6b827493e8401c",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.2794871794871795,
+          "saturation_q25": 0.21255907419877373,
+          "saturation_q75": 0.3134991787760617,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.0,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.030349538419282174,
+          "foreground_pixels": 27644
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "rejected_visual",
+      "operations": [
+        "alpha bounds crop plus fringe",
+        "uniform LANCZOS fit max54px width and provisional height",
+        "transparent padding to64x64 with base43",
+        "count variants1/3/6 same-source copies at scales1/.65/.5"
+      ]
+    },
+    {
+      "asset": "flint_nodule",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-1456c8fa-5ec9-4305-8cb9-e8ca639cd1d3.png",
+      "raw_sha256": "2836213e000144211034783a901e959c7a24a17d30ca5a02f75bbb71c083046e",
+      "readable": true,
+      "reading": "Front thickness and compressed upper surface visible; clean isolated cutout.",
+      "owner_projection_acceptance": "N/A: no explicit item height band; flat tools have projected footprint height",
+      "judge_v2_raw": {
+        "candidate": "/Users/rexxa/work/artstruct-data/generations/flint_nodule_try1.png",
+        "sha256": "2836213e000144211034783a901e959c7a24a17d30ca5a02f75bbb71c083046e",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.2824668539717185,
+          "saturation_q25": 0.26424556004734007,
+          "saturation_q75": 0.4137009252524061,
+          "stroke_q25": 2.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.015763862316226004,
+          "foreground_pixels": 44480
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "candidate",
+      "operations": [
+        "alpha bounds crop plus fringe",
+        "uniform LANCZOS fit max54px width and provisional height",
+        "transparent padding to64x64 with base43",
+        "count variants1/3/6 same-source copies at scales1/.65/.5"
+      ],
+      "export_sha256": "bfb2ea523479171e01b423a3a2932f051fb4edd0cc63e7c4fb4187593c51de7e"
+    },
+    {
+      "asset": "log_pile_large",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-7bedaf03-3e4d-49f7-8fcb-738940d42ed8.png",
+      "raw_sha256": "f9afec49f69f42a10ce39b84a9dc6a161ff0ad759c0c01cc10db6d78f619f9ab",
+      "readable": true,
+      "reading": "Front thickness and compressed upper surface visible; clean isolated cutout. Generated support posts are an extra semantic detail.",
+      "owner_projection_acceptance": "N/A: no explicit item height band; flat tools have projected footprint height",
+      "judge_v2_raw": {
+        "candidate": "/Users/rexxa/work/artstruct-data/generations/log_pile_large_try1.png",
+        "sha256": "f9afec49f69f42a10ce39b84a9dc6a161ff0ad759c0c01cc10db6d78f619f9ab",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.26498757249378624,
+          "saturation_q25": 0.5091102519898304,
+          "saturation_q75": 0.6073622192554737,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.03695926143169226,
+          "foreground_pixels": 31683
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "rejected_numeric",
+      "operations": [
+        "alpha bounds crop plus fringe",
+        "uniform LANCZOS fit max54px width and provisional height",
+        "transparent padding to64x64 with base43",
+        "count variants1/3/6 same-source copies at scales1/.65/.5"
+      ]
+    },
+    {
+      "asset": "stone_pile",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-8696e85e-3c97-4bb8-a389-7acab9b01e3b.png",
+      "raw_sha256": "0562760069ec59440676cfa1c52b81d6ec5aee42c48e0120c55477f431803cbd",
+      "readable": true,
+      "reading": "Front thickness and compressed upper surface visible; clean isolated cutout.",
+      "owner_projection_acceptance": "N/A: no explicit item height band; flat tools have projected footprint height",
+      "judge_v2_raw": {
+        "candidate": "/Users/rexxa/work/artstruct-data/generations/stone_pile_try1.png",
+        "sha256": "0562760069ec59440676cfa1c52b81d6ec5aee42c48e0120c55477f431803cbd",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.268871679814721,
+          "saturation_q25": 0.3213904003937902,
+          "saturation_q75": 0.44829541601254713,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.012853453926913684,
+          "foreground_pixels": 28858
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "candidate",
+      "operations": [
+        "alpha bounds crop plus fringe",
+        "uniform LANCZOS fit max54px width and provisional height",
+        "transparent padding to64x64 with base43",
+        "count variants1/3/6 same-source copies at scales1/.65/.5"
+      ],
+      "export_sha256": "e307a7b6007564fab28ceb3b1a8dff4d0ddefe2924d3b2552f0242b7210aedb0"
+    },
+    {
+      "asset": "flint_pile",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-bdc742cb-9df9-4378-82d1-3b8e4c72f42c.png",
+      "raw_sha256": "8a42dc380d6c16f6f95b415bffe427584129207166ae49179382c78548f77fc6",
+      "readable": true,
+      "reading": "Front thickness and compressed upper surface visible; clean isolated cutout.",
+      "owner_projection_acceptance": "N/A: no explicit item height band; flat tools have projected footprint height",
+      "judge_v2_raw": {
+        "candidate": "/Users/rexxa/work/artstruct-data/generations/flint_pile_try1.png",
+        "sha256": "8a42dc380d6c16f6f95b415bffe427584129207166ae49179382c78548f77fc6",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.251159040516025,
+          "saturation_q25": 0.24670509481039835,
+          "saturation_q75": 0.39963947631057284,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.02087342630398004,
+          "foreground_pixels": 26084
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "rejected_numeric",
+      "operations": [
+        "alpha bounds crop plus fringe",
+        "uniform LANCZOS fit max54px width and provisional height",
+        "transparent padding to64x64 with base43",
+        "count variants1/3/6 same-source copies at scales1/.65/.5"
+      ]
+    },
+    {
+      "asset": "flint_blade",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-1f35df66-7c9c-479d-a613-501d5dcaee9b.png",
+      "raw_sha256": "00210373d5754f5d14c144c364a8a895bb9af9ef038d608281cc719d78c15a0b",
+      "readable": true,
+      "reading": "Front thickness and compressed upper surface visible; clean isolated cutout.",
+      "owner_projection_acceptance": "N/A: no explicit item height band; flat tools have projected footprint height",
+      "judge_v2_raw": {
+        "candidate": "/Users/rexxa/work/artstruct-data/generations/flint_blade_try1.png",
+        "sha256": "00210373d5754f5d14c144c364a8a895bb9af9ef038d608281cc719d78c15a0b",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.2708518728258232,
+          "saturation_q25": 0.14503082541044549,
+          "saturation_q75": 0.23439766686729024,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.018187023694785767,
+          "foreground_pixels": 13417
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": false,
+          "saturation_q75": false,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "rejected_numeric",
+      "operations": [
+        "alpha bounds crop plus fringe",
+        "uniform LANCZOS fit max54px width and provisional height",
+        "transparent padding to64x64 with base43",
+        "count variants1/3/6 same-source copies at scales1/.65/.5"
+      ]
+    },
+    {
+      "asset": "stone_axe",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-4f49b287-3b0c-4b09-b493-e70df154a795.png",
+      "raw_sha256": "dc926e1c4594dd048c9ae850fb2eeed75229922b789c880ba1d8326b720beb4c",
+      "readable": true,
+      "reading": "Front thickness and compressed upper surface visible; clean isolated cutout.",
+      "owner_projection_acceptance": "N/A: no explicit item height band; flat tools have projected footprint height",
+      "judge_v2_raw": {
+        "candidate": "/Users/rexxa/work/artstruct-data/generations/stone_axe_try1.png",
+        "sha256": "dc926e1c4594dd048c9ae850fb2eeed75229922b789c880ba1d8326b720beb4c",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.24981028987706785,
+          "saturation_q25": 0.4708501895492038,
+          "saturation_q75": 0.5761805088177113,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.038013476000134314,
+          "foreground_pixels": 7767
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "rejected_numeric",
+      "operations": [
+        "alpha bounds crop plus fringe",
+        "uniform LANCZOS fit max54px width and provisional height",
+        "transparent padding to64x64 with base43",
+        "count variants1/3/6 same-source copies at scales1/.65/.5"
+      ]
+    },
+    {
+      "asset": "hide",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-1331dbce-5b65-4607-a2c4-240adbd6b336.png",
+      "raw_sha256": "f87da466ad927065cd8398ecc710a89011ba91b044adb48a403fd79144ea9a5c",
+      "readable": false,
+      "reading": "Brown halo outside folded hide.",
+      "owner_projection_acceptance": "N/A: no explicit item height band; flat tools have projected footprint height",
+      "judge_v2_raw": {
+        "candidate": "/Users/rexxa/work/artstruct-data/generations/hide_try1.png",
+        "sha256": "f87da466ad927065cd8398ecc710a89011ba91b044adb48a403fd79144ea9a5c",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.24600881140745653,
+          "saturation_q25": 0.5656826469767009,
+          "saturation_q75": 0.717337020775229,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.0,
+          "stroke_q75": 2.8284271247461903,
+          "stroke_q90": 4.0,
+          "wash_flatness": 0.02124785171466506,
+          "foreground_pixels": 22388
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": false
+        },
+        "numeric_pass": false,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "rejected_visual",
+      "operations": [
+        "alpha bounds crop plus fringe",
+        "uniform LANCZOS fit max54px width and provisional height",
+        "transparent padding to64x64 with base43",
+        "count variants1/3/6 same-source copies at scales1/.65/.5"
+      ]
+    },
+    {
+      "asset": "berry_basket",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-cd7cdad2-5fae-431c-ba1d-a0f30938d84c.png",
+      "raw_sha256": "857ccef7bf6f157de36427d45dd3e8c2bde8d5a0f622a02d7ea3406974e2e31c",
+      "readable": false,
+      "reading": "Brown halo outside basket.",
+      "owner_projection_acceptance": "N/A: no explicit item height band; flat tools have projected footprint height",
+      "judge_v2_raw": {
+        "candidate": "/Users/rexxa/work/artstruct-data/generations/berry_basket_try1.png",
+        "sha256": "857ccef7bf6f157de36427d45dd3e8c2bde8d5a0f622a02d7ea3406974e2e31c",
+        "family": "items",
+        "metrics": {
+          "edge_density": 0.2922152690863579,
+          "saturation_q25": 0.5253660191502793,
+          "saturation_q75": 0.6451780818978041,
+          "stroke_q25": 2.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.017836566747441104,
+          "foreground_pixels": 41375
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "status": "rejected_visual",
+      "operations": [
+        "alpha bounds crop plus fringe",
+        "uniform LANCZOS fit max54px width and provisional height",
+        "transparent padding to64x64 with base43",
+        "count variants1/3/6 same-source copies at scales1/.65/.5"
+      ]
+    }
+  ]
+}

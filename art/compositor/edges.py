@@ -94,6 +94,27 @@ def water_mask(field: EdgeField, cell: Cell) -> Image.Image:
     return Image.fromarray(np.rint((1 - erosion) * 255).astype(np.uint8))
 
 
+def _bank_ink(field: EdgeField, cell: Cell) -> FloatGrid:
+    """Two-pixel ink contour displaced 0–4px onto land; corners use max ink.
+
+    The world-seeded value noise moves the stroke itself, not just its shade.
+    This avoids a straight black tile border passing a luminance-only metric.
+    """
+    y, x = np.indices((TILE, TILE))
+    noise = _noise(cell, field.seed)
+    distances = (y, TILE - 1 - x, TILE - 1 - y, x)
+    edge_noise = (noise[0:1, :], noise[:, -1:], noise[-1:, :], noise[:, 0:1])
+    strength = np.zeros((TILE, TILE), dtype=np.float64)
+    for offset, distance, along in zip(DIRECTIONS, distances, edge_noise, strict=True):
+        neighbour = (cell[0] + offset[0], cell[1] + offset[1])
+        if neighbour not in field.water or neighbour in field.walls:
+            continue
+        displacement = np.rint(along * 4)
+        stroke = (distance >= displacement) & (distance < displacement + 2)
+        strength = np.maximum(strength, stroke * (.20 + .15 * noise))
+    return strength
+
+
 def render_tile(field: EdgeField, cell: Cell) -> Image.Image:
     """Blend the strongest 12px edge, or water over its strongest bank ground."""
     origin = (cell[0] * TILE, cell[1] * TILE)
@@ -105,18 +126,13 @@ def render_tile(field: EdgeField, cell: Cell) -> Image.Image:
     replacement = pixels.copy()
     is_water = cell in field.water
     weights = _weights(cell, 10 if is_water else 12, field.seed)
-    y, x = np.indices((TILE, TILE))
-    distances = (y, TILE - 1 - x, TILE - 1 - y, x)
-    for index, (offset, weight) in enumerate(zip(DIRECTIONS, weights, strict=True)):
+    for offset, weight in zip(DIRECTIONS, weights, strict=True):
         neighbour = (cell[0] + offset[0], cell[1] + offset[1])
         if neighbour not in field.terrain or neighbour in field.walls:
             continue
         if field.terrain[neighbour] == field.terrain[cell]:
             continue
         if neighbour in field.water:
-            if not is_water:
-                ink = distances[index] < 2
-                pixels[ink, :3] *= (.45 + .15 * _noise(cell, field.seed)[ink, None])
             continue
         active = weight > strongest
         other = np.asarray(sample_texture(field.textures[field.terrain[neighbour]], origin),
@@ -126,6 +142,8 @@ def render_tile(field: EdgeField, cell: Cell) -> Image.Image:
     # Water fades fully into land; ordinary ground meets halfway at the edge.
     alpha = strongest[:, :, None] * (1 if is_water else .5)
     result = pixels * (1 - alpha) + replacement * alpha
+    if not is_water:
+        result[:, :, :3] *= 1 - _bank_ink(field, cell)[:, :, None]
     return Image.fromarray(np.rint(result).astype(np.uint8))
 
 

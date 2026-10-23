@@ -1,0 +1,67 @@
+{
+  "assets": [
+    {
+      "id": "ground_axe",
+      "path": "art/style05/struct/items/ground_axe.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        32.0,
+        43.0
+      ],
+      "count_buckets": [
+        "art/style05/struct/items/ground_axe_count_1.png",
+        "art/style05/struct/items/ground_axe_count_2_8.png",
+        "art/style05/struct/items/ground_axe_count_9_plus.png"
+      ],
+      "family": "item",
+      "status": "candidate"
+    },
+    {
+      "id": "flint_nodule",
+      "path": "art/style05/struct/items/flint_nodule.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        32.0,
+        43.0
+      ],
+      "count_buckets": [
+        "art/style05/struct/items/flint_nodule_count_1.png",
+        "art/style05/struct/items/flint_nodule_count_2_8.png",
+        "art/style05/struct/items/flint_nodule_count_9_plus.png"
+      ],
+      "family": "item",
+      "status": "candidate"
+    },
+    {
+      "id": "stone_pile",
+      "path": "art/style05/struct/items/stone_pile.png",
+      "width": 64,
+      "height": 64,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        32.0,
+        43.0
+      ],
+      "count_buckets": [
+        "art/style05/struct/items/stone_pile_count_1.png",
+        "art/style05/struct/items/stone_pile_count_2_8.png",
+        "art/style05/struct/items/stone_pile_count_9_plus.png"
+      ],
+      "family": "item",
+      "status": "candidate"
+    }
+  ]
+}

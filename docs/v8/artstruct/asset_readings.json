@@ -1,0 +1,254 @@
+[
+  {
+    "asset": "bedroll",
+    "attempt": 1,
+    "readable": false,
+    "reading": "정규화 높이14px에서 폭이 약8px로 축소되어 1x2타일 침구로 읽히지 않음."
+  },
+  {
+    "asset": "bedroll",
+    "attempt": 2,
+    "readable": false,
+    "reading": "25x22 캔버스의 작은 침구 조각; 요청된 사람 규모에 불충분."
+  },
+  {
+    "asset": "bedroll",
+    "attempt": 3,
+    "readable": true,
+    "reading": "긴 옆면과 솟은 베개가 있는 입상 침구로 읽힘. 불투명98x14px, 논리2x1(원래1x2의90도 회전). 스타일 수치 실패는 유지."
+  },
+  {
+    "asset": "birch_large",
+    "attempt": 1,
+    "readable": false,
+    "reading": "수관 주변 색 번짐이 넓게 남음."
+  },
+  {
+    "asset": "birch_large",
+    "attempt": 2,
+    "readable": false,
+    "reading": "금색 배경 halo가 나무 주위를 채워 독립 스프라이트로 부적절."
+  },
+  {
+    "asset": "log_inner_corner",
+    "attempt": 1,
+    "readable": false,
+    "reading": "상면 조각 대신 높이 있는 전체 벽 모서리."
+  },
+  {
+    "asset": "stone_inner_corner",
+    "attempt": 1,
+    "readable": false,
+    "reading": "상면 조각 대신 높이 있는 전체 벽 모서리."
+  },
+  {
+    "asset": "door_log_open",
+    "attempt": 1,
+    "readable": false,
+    "reading": "통나무 문틀 요청에 돌 기둥이 섞임."
+  },
+  {
+    "asset": "door_stone_open",
+    "attempt": 1,
+    "readable": false,
+    "reading": "석기 시대 문에 금속 경첩·띠·고리가 표시됨."
+  },
+  {
+    "asset": "door_log_closed",
+    "attempt": 1,
+    "readable": true,
+    "reading": "나무 판자와 밧줄 가로대로 닫힌 문이 읽힘."
+  },
+  {
+    "asset": "door_stone_closed",
+    "attempt": 1,
+    "readable": true,
+    "reading": "돌 문틀 안에 밧줄로 묶인 나무 문이 읽힘."
+  },
+  {
+    "asset": "boulder_large",
+    "attempt": 1,
+    "readable": true,
+    "reading": "바위 앞면이 넓게 보여 높이가 있는 큰 바위로 읽힘."
+  },
+  {
+    "asset": "boulder_small",
+    "attempt": 1,
+    "readable": true,
+    "reading": "윗면과 전면이 분리된 낮은 작은 바위."
+  },
+  {
+    "asset": "flint_outcrop",
+    "attempt": 1,
+    "readable": true,
+    "reading": "밝은 모암에 어두운 부싯돌 덩이가 솟아 있음."
+  },
+  {
+    "asset": "claybank_full",
+    "attempt": 1,
+    "readable": true,
+    "reading": "긁힌 점토 절벽 전면과 낮은 상면이 보임."
+  },
+  {
+    "asset": "claybank_depleted",
+    "attempt": 1,
+    "readable": true,
+    "reading": "파낸 움푹한 점토 둑과 남은 낮은 테두리가 보임."
+  },
+  {
+    "asset": "stump",
+    "attempt": 1,
+    "readable": true,
+    "reading": "줄기 껍질 전면과 타원형 절단면이 분리됨."
+  },
+  {
+    "asset": "lean_to",
+    "attempt": 1,
+    "readable": true,
+    "reading": "앞기둥과 열린 입구가 있는 기울임막; 상판 테이블로 읽히지 않음."
+  },
+  {
+    "asset": "log_inner_corner",
+    "attempt": 2,
+    "readable": true,
+    "reading": "짧은 목재 두 개의 연결 상면이 보임; 두께가 남는 후보로 기록."
+  },
+  {
+    "asset": "stone_inner_corner",
+    "attempt": 2,
+    "readable": true,
+    "reading": "짧은 돌 상단 조각으로 읽힌다. 약간의 측면 두께는 남아 있다."
+  },
+  {
+    "asset": "door_log_open",
+    "attempt": 2,
+    "readable": false,
+    "reading": "통나무 문틀이나 금속 띠 경첩이 있어 석기시대 재료 조건에서 탈락."
+  },
+  {
+    "asset": "door_log_open",
+    "attempt": 3,
+    "readable": true,
+    "reading": "통나무 문틀과 열린 판자문, 끈 경첩과 끈 손잡이로 읽힌다."
+  },
+  {
+    "asset": "door_stone_open",
+    "attempt": 2,
+    "readable": true,
+    "reading": "돌 문틀과 열린 판자문, 끈 경첩과 손잡이가 식별된다."
+  },
+  {
+    "asset": "flint_outcrop",
+    "attempt": 2,
+    "readable": false,
+    "reading": "부싯돌 돌출부는 읽히지만 넓은 발광 같은 외곽 번짐이 남는다."
+  },
+  {
+    "asset": "flint_outcrop",
+    "attempt": 3,
+    "readable": false,
+    "reading": "형태는 낮은 부싯돌 노두이나 금지한 외곽 발광 번짐이 그대로 남아 탈락. 세 번 상한 도달."
+  },
+  {
+    "asset": "birch_large",
+    "attempt": 3,
+    "readable": true,
+    "reading": "흰 줄기와 높은 성긴 수관의 자작나무로 읽힌다."
+  },
+  {
+    "asset": "birch_small",
+    "attempt": 2,
+    "readable": true,
+    "reading": "좁은 줄기와 잎 덩어리가 구분되는 어린 자작나무다."
+  },
+  {
+    "asset": "drying_rack_empty",
+    "attempt": 3,
+    "readable": true,
+    "reading": "빈 직립 나무틀과 앞뒤 지지대가 보인다. 색면 수치 실패는 유지한다."
+  },
+  {
+    "asset": "drying_rack_hide",
+    "attempt": 2,
+    "readable": true,
+    "reading": "나무틀에 가죽을 매단 직립 건조대로 읽힌다."
+  },
+  {
+    "asset": "ford_stones",
+    "attempt": 1,
+    "readable": true,
+    "reading": "별개 네 디딤돌이다. 통짜 sheet는 standing 승인 대상이 아니며 네 분할본으로 배치한다."
+  },
+  {
+    "asset": "grinding_stone",
+    "attempt": 1,
+    "readable": true,
+    "reading": "두꺼운 석재 받침의 홈과 손돌이 식별된다."
+  },
+  {
+    "asset": "hearth_1",
+    "attempt": 3,
+    "readable": true,
+    "reading": "낮은 돌 테두리와 그 위 불꽃의 화덕이다. 색면 수치 실패는 유지한다."
+  },
+  {
+    "asset": "hearth_pots",
+    "attempt": 1,
+    "readable": true,
+    "reading": "돌 테두리 안에 도기 세 개와 불꽃이 있는 소성 화덕이다."
+  },
+  {
+    "asset": "hearth_unlit",
+    "attempt": 1,
+    "readable": true,
+    "reading": "돌 테두리와 재, 장작이 있는 꺼진 화덕이다."
+  },
+  {
+    "asset": "knapping_spot",
+    "attempt": 2,
+    "readable": true,
+    "reading": "두 돌 받침 위 작업판과 석기가 놓인 작업대다."
+  },
+  {
+    "asset": "oak_large",
+    "attempt": 1,
+    "readable": true,
+    "reading": "굵은 줄기와 넓은 수관이 있는 큰 참나무다."
+  },
+  {
+    "asset": "oak_small",
+    "attempt": 1,
+    "readable": true,
+    "reading": "가는 줄기와 성긴 수관이 있는 작은 참나무다."
+  },
+  {
+    "asset": "pine_large",
+    "attempt": 3,
+    "readable": true,
+    "reading": "줄기와 가지 층이 드러나는 큰 소나무다. 수치 실패는 별도 유지한다."
+  },
+  {
+    "asset": "pine_small",
+    "attempt": 1,
+    "readable": true,
+    "reading": "좁은 원추 수관과 줄기가 있는 작은 소나무다."
+  },
+  {
+    "asset": "pottery_bench",
+    "attempt": 1,
+    "readable": true,
+    "reading": "다리 달린 작업대 위 세 도기가 식별된다."
+  },
+  {
+    "asset": "woodworking_bench",
+    "attempt": 2,
+    "readable": true,
+    "reading": "굵은 다리와 상판, 도구가 있는 목공 작업대다."
+  },
+  {
+    "asset": "lean_to",
+    "attempt": 2,
+    "readable": true,
+    "reading": "기둥 두 개와 뒤로 기운 가죽 차양, 사람이 들어갈 열린 앞면의 쉼터로 읽힌다."
+  }
+]

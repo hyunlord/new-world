@@ -102,7 +102,7 @@ def test_corner_falloff_uses_max_not_sum() -> None:
                                              np.asarray(edges.water_mask(other, (0, 0)))))
 
 
-def test_bank_ink_stays_on_two_land_side_pixels() -> None:
+def test_bank_ink_is_two_pixels_wide_on_a_noisy_land_side_contour() -> None:
     # Given land immediately east of water.
     textures = {"water": Image.new("RGBA", (256, 256), (0, 0, 200, 255)),
                 "land": Image.new("RGBA", (256, 256), (120, 100, 60, 255))}
@@ -110,9 +110,23 @@ def test_bank_ink_stays_on_two_land_side_pixels() -> None:
                             water=frozenset({(0, 0)}))
     # When drawing land.
     tile = np.asarray(edges.render_tile(field, (1, 0)))
-    # Then the two columns touching water contain ink; the rest stays land.
-    assert np.all(tile[:, :2, :3] < np.array([120, 100, 60]))
-    assert np.all(tile[:, 2:, :3] == np.array([120, 100, 60]))
+    # Then every row has exactly two ink pixels, but their land-side location varies.
+    ink = tile[:, :, 0] < 120
+    assert np.all(ink.sum(axis=1) == 2)
+    assert len(np.unique(np.argmax(ink, axis=1))) >= 3
+    assert np.all(tile[:, 6:, :3] == np.array([120, 100, 60]))
+
+
+def test_bank_corner_does_not_multiply_ink_darkness() -> None:
+    # Given water north and west of the same land corner.
+    textures = {"water": Image.new("RGBA", (256, 256), (0, 0, 200, 255)),
+                "land": Image.new("RGBA", (256, 256), (120, 100, 60, 255))}
+    field = edges.EdgeField({(0, 0): "land", (-1, 0): "water", (0, -1): "water"},
+                            textures, water=frozenset({(-1, 0), (0, -1)}))
+    # When two ink strokes meet.
+    tile = np.asarray(edges.render_tile(field, (0, 0)))
+    # Then their maximum35% ink never compounds into a darker corner.
+    assert tile[:, :, 0].min() >= round(120 * .65)
 
 
 def test_zone_is_eight_percent_with_only_outer_corner_ticks() -> None:

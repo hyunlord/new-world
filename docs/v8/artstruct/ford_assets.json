@@ -1,0 +1,72 @@
+{
+  "assets": [
+    {
+      "id": "ford_stone_1",
+      "path": "art/style05/struct/ford_stone_1.png",
+      "width": 28,
+      "height": 20,
+      "footprint": [
+        0.5,
+        0.5
+      ],
+      "anchor": [
+        14.0,
+        15.0
+      ],
+      "count_buckets": [],
+      "family": "ground",
+      "status": "CANDIDATE_NORMALIZED_NOT_ACCEPTED"
+    },
+    {
+      "id": "ford_stone_2",
+      "path": "art/style05/struct/ford_stone_2.png",
+      "width": 29,
+      "height": 20,
+      "footprint": [
+        0.5,
+        0.5
+      ],
+      "anchor": [
+        14.0,
+        15.0
+      ],
+      "count_buckets": [],
+      "family": "ground",
+      "status": "CANDIDATE_NORMALIZED_NOT_ACCEPTED"
+    },
+    {
+      "id": "ford_stone_3",
+      "path": "art/style05/struct/ford_stone_3.png",
+      "width": 26,
+      "height": 20,
+      "footprint": [
+        0.5,
+        0.5
+      ],
+      "anchor": [
+        13.0,
+        15.0
+      ],
+      "count_buckets": [],
+      "family": "ground",
+      "status": "CANDIDATE_NORMALIZED_NOT_ACCEPTED"
+    },
+    {
+      "id": "ford_stone_4",
+      "path": "art/style05/struct/ford_stone_4.png",
+      "width": 28,
+      "height": 20,
+      "footprint": [
+        0.5,
+        0.5
+      ],
+      "anchor": [
+        14.0,
+        15.0
+      ],
+      "count_buckets": [],
+      "family": "ground",
+      "status": "CANDIDATE_NORMALIZED_NOT_ACCEPTED"
+    }
+  ]
+}

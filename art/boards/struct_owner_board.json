@@ -1,0 +1,53 @@
+{
+  "panels": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/docs/v8/artenv1/reference/current_day6_noon_1x.png",
+      "sha256": "e033dbef9c450fe992d0890394c5ba5e579e5e62a7fa87a7391cc216f69b7d21",
+      "crop": [
+        0,
+        140,
+        960,
+        740
+      ],
+      "integer_scale": 1,
+      "board_origin": [
+        0,
+        38
+      ]
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/docs/v8/artenv1/renders/scene_day6_noon_day_1x_figures.png",
+      "sha256": "abe826694acfc6a54aa1e5581cc849ffaa61a7063e49d91dac9de94128a04129",
+      "crop": [
+        0,
+        140,
+        960,
+        740
+      ],
+      "integer_scale": 1,
+      "board_origin": [
+        960,
+        38
+      ]
+    },
+    {
+      "path": "/Users/rexxa/work/artstruct-data/renders/scene_day6_noon_day_1x_figures.png",
+      "sha256": "685f826250a7d63c6e06e1a8fae66f08fd74d95d3bebca175cc6a5565ca03d8f",
+      "crop": [
+        0,
+        140,
+        960,
+        740
+      ],
+      "integer_scale": 1,
+      "board_origin": [
+        1920,
+        38
+      ]
+    }
+  ],
+  "sha256": "de572bd52907a71102ee59da758929f5a0d840c4573b00a30ef79267236e704d",
+  "bytes": 1076276,
+  "owner_approval": "PENDING",
+  "operation": "same-coordinate crops; integer nearest enlargement only"
+}

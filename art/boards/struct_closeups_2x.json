@@ -1,0 +1,98 @@
+{
+  "panels": [
+    {
+      "path": "/Users/rexxa/work/artstruct-data/renders/detail_demo_house.png",
+      "sha256": "62d848f4129549bfea007a777ec8a57993da068a63cdfa6bb363e700017dee31",
+      "crop": [
+        0,
+        130,
+        448,
+        490
+      ],
+      "integer_scale": 2,
+      "board_origin": [
+        0,
+        38
+      ]
+    },
+    {
+      "path": "/Users/rexxa/work/artstruct-data/renders/scene_day6_noon_day_1x_figures.png",
+      "sha256": "685f826250a7d63c6e06e1a8fae66f08fd74d95d3bebca175cc6a5565ca03d8f",
+      "crop": [
+        0,
+        450,
+        320,
+        730
+      ],
+      "integer_scale": 2,
+      "board_origin": [
+        896,
+        38
+      ]
+    },
+    {
+      "path": "/Users/rexxa/work/artstruct-data/renders/scene_day6_noon_day_1x_figures.png",
+      "sha256": "685f826250a7d63c6e06e1a8fae66f08fd74d95d3bebca175cc6a5565ca03d8f",
+      "crop": [
+        448,
+        130,
+        640,
+        354
+      ],
+      "integer_scale": 2,
+      "board_origin": [
+        1536,
+        38
+      ]
+    },
+    {
+      "path": "/Users/rexxa/work/artstruct-data/renders/scene_day6_noon_day_1x_figures.png",
+      "sha256": "685f826250a7d63c6e06e1a8fae66f08fd74d95d3bebca175cc6a5565ca03d8f",
+      "crop": [
+        544,
+        330,
+        736,
+        458
+      ],
+      "integer_scale": 2,
+      "board_origin": [
+        1920,
+        38
+      ]
+    },
+    {
+      "path": "/Users/rexxa/work/artstruct-data/renders/detail_demo_workshop.png",
+      "sha256": "a3848960303111f275ade43f4ecd6a423a46b6cb6b28da394b55f772656cdd75",
+      "crop": [
+        608,
+        130,
+        928,
+        386
+      ],
+      "integer_scale": 2,
+      "board_origin": [
+        2304,
+        38
+      ]
+    },
+    {
+      "path": "/Users/rexxa/work/artstruct-data/renders/detail_demo_hut.png",
+      "sha256": "f267d0dd7e387ff72dd739b91595e13c542cbfd24bb5917909915af5c9719f5e",
+      "crop": [
+        0,
+        0,
+        224,
+        224
+      ],
+      "integer_scale": 2,
+      "board_origin": [
+        2944,
+        38
+      ]
+    }
+  ],
+  "sha256": "26517244f6378fc0377418b2bebca4528a8a746f964407b35494fdf19b6c5ae3",
+  "bytes": 821601,
+  "owner_approval": "PENDING",
+  "operation": "same-coordinate crops; integer nearest enlargement only"
+}

@@ -1,0 +1,2118 @@
+{
+  "calls": 78,
+  "successful_images": 77,
+  "failed_tool_calls": 1,
+  "budget": 120,
+  "max_attempts": 3,
+  "attempts_by_asset": {
+    "bedroll": 3,
+    "berry_basket": 1,
+    "birch_large": 3,
+    "birch_small": 2,
+    "boulder_large": 1,
+    "boulder_small": 1,
+    "claybank_depleted": 1,
+    "claybank_full": 1,
+    "cured_hide": 1,
+    "door_log_closed": 1,
+    "door_log_open": 3,
+    "door_stone_closed": 1,
+    "door_stone_open": 2,
+    "drying_rack_empty": 3,
+    "drying_rack_hide": 2,
+    "flint_blade": 1,
+    "flint_nodule": 1,
+    "flint_outcrop": 3,
+    "flint_pile": 1,
+    "ford_stones": 1,
+    "grinding_stone": 1,
+    "ground_axe": 1,
+    "hearth_1": 3,
+    "hearth_pots": 1,
+    "hearth_unlit": 1,
+    "hide": 1,
+    "knapping_spot": 2,
+    "lean_to": 2,
+    "log_cap": 3,
+    "log_end": 1,
+    "log_face": 1,
+    "log_inner_corner": 2,
+    "log_pile_large": 1,
+    "oak_large": 1,
+    "oak_small": 1,
+    "pine_large": 3,
+    "pine_small": 1,
+    "pottery_bench": 1,
+    "rock_face": 2,
+    "spear": 1,
+    "stone_axe": 1,
+    "stone_cap": 1,
+    "stone_end": 1,
+    "stone_face": 1,
+    "stone_inner_corner": 2,
+    "stone_pile": 1,
+    "stump": 1,
+    "water": 3,
+    "wolf_hide": 1,
+    "wolf_sheet": 1,
+    "woodworking_bench": 2
+  },
+  "reference_provenance": "Actual imagegen calls; root code and lane executor confirmations",
+  "generations": [
+    {
+      "asset": "log_face",
+      "attempt": 1,
+      "prompt": "Create a single seamless horizontally tileable LOG WALL SOUTH FACE texture strip for WorldSim style05, matching attached props reference's muted earthy hand-painted ink and watercolor material rendering. This is ONLY the vertical south face, front view with camera about20 degrees down, light upper left, stacked horizontal rough stone-age timber logs, fine dark ink contours and restrained grain, warm grey-brown bark, no vegetation, no background, no cap/top, no end posts, no cast shadow outside. FULL BLEED RECTANGLE, texture fills every pixel including left/right edges; identical material continuity at left and right so repeated adjacent copies join naturally. Target aspect256:44, export wide landscape strip (may be larger proportional resolution). No perspective taper, no text, no border. This is a repeatable strip sampled by code, not a standalone wall illustration.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-bcb6f272-75d0-42f7-8fa3-0a8987a003d1.png",
+      "kind": "strip",
+      "size": [
+        256,
+        44
+      ],
+      "utc": "2026-10-23T13:47:46.046Z",
+      "references": [
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/log_face_try1.png",
+      "raw_sha256": "0d69669ff4ac1f6021f18c45ee09e53704ecbcb0c6dee37c6ff3fb21a97df4ae",
+      "image_returned": true
+    },
+    {
+      "asset": "log_cap",
+      "size": [
+        256,
+        16
+      ],
+      "subject": "LOG WALL TOP CAP: continuous narrow top surface of rough horizontal timber viewed from above-front 20 degrees, pale upper-left lit bark. Only the top strip; no vertical face.",
+      "kind": "strip",
+      "attempt": 1,
+      "prompt": "Create a single WorldSim style05 game material texture matching attached anchor muted earthy hand-painted ink/watercolor rendering. LOG WALL TOP CAP: continuous narrow top surface of rough horizontal timber viewed from above-front 20 degrees, pale upper-left lit bark. Only the top strip; no vertical face. FULL BLEED rectangle target 256x16 aspect ratio; fill every pixel. Seamlessly tileable horizontally: left and right meet with no change in material tone, position, or detail density. No margin, no border, no text, no perspective taper, no separate objects. Fine dark ink contours, controlled natural pigment grain. Upper-left illumination gentle, consistent across repeats. This is sampled by code, not a standalone illustration.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-cf3b673d-3ae2-4ae5-8056-fd3b502b2d88.png",
+      "utc": "2026-10-23T13:48:43.558Z",
+      "references": [
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/log_cap_try1.png",
+      "raw_sha256": "21163217d23e64bf4a285b4ea7bb0cd278963d4ec4798e8e81c203ceca32ff85",
+      "image_returned": true
+    },
+    {
+      "asset": "stone_face",
+      "size": [
+        256,
+        44
+      ],
+      "subject": "STONE WALL SOUTH FACE: dry stacked irregular grey and warm limestone blocks, vertical face only, front view about20 degrees down. No top cap.",
+      "kind": "strip",
+      "attempt": 1,
+      "prompt": "WorldSim style05 material texture matching attached anchor muted earthy hand-painted ink/watercolor. STONE WALL SOUTH FACE: dry stacked irregular grey and warm limestone blocks, vertical face only, front view about20 degrees down. No top cap. FULL BLEED, EVERY PIXEL MATERIAL. Seamlessly tileable horizontally, no white or empty background, no margins, no text, no perspective taper. Gentle upper-left light. Generate landscape canvas completely covered in the material; code resamples to 256x44.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-de2ee827-4103-46b4-82be-4c3c4d329b9c.png",
+      "utc": "2026-10-23T13:49:58.211Z",
+      "references": [
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/stone_face_try1.png",
+      "raw_sha256": "f93271d1dde52ee6284bcc78b0f00aef5eb63a58046c2db8564417fb942b5d1e",
+      "image_returned": true
+    },
+    {
+      "asset": "stone_cap",
+      "size": [
+        256,
+        16
+      ],
+      "subject": "STONE WALL TOP CAP: continuous narrow top surface of dry stacked irregular grey stone viewed from above-front20 degrees. Only top strip, no face.",
+      "kind": "strip",
+      "attempt": 1,
+      "prompt": "WorldSim style05 material texture matching attached anchor muted earthy hand-painted ink/watercolor. STONE WALL TOP CAP: continuous narrow top surface of dry stacked irregular grey stone viewed from above-front20 degrees. Only top strip, no face. FULL BLEED, EVERY PIXEL MATERIAL. Seamlessly tileable horizontally, no white or empty background, no margins, no text, no perspective taper. Gentle upper-left light. Generate landscape canvas completely covered in the material; code resamples to 256x16.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-872468fa-c5ec-4ef0-9ca2-b8bfb7c16260.png",
+      "utc": "2026-10-23T13:51:01.252Z",
+      "references": [
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/stone_cap_try1.png",
+      "raw_sha256": "7ae84c96a78d264f9617de6ff65c802f204b294cd7dc43d72500ecac1772e2b9",
+      "image_returned": true
+    },
+    {
+      "asset": "rock_face",
+      "size": [
+        256,
+        44
+      ],
+      "subject": "NATURAL HILL CUT ROCK SOUTH FACE: rough exposed grey brown bedrock with fine fissures, continuous vertical cliff face, front view about20 degrees down. No plants, no top cap.",
+      "kind": "strip",
+      "attempt": 1,
+      "prompt": "WorldSim style05 material texture matching attached anchor muted earthy hand-painted ink/watercolor. NATURAL HILL CUT ROCK SOUTH FACE: rough exposed grey brown bedrock with fine fissures, continuous vertical cliff face, front view about20 degrees down. No plants, no top cap. FULL BLEED, EVERY PIXEL MATERIAL. Seamlessly tileable horizontally, no white or empty background, no margins, no text, no perspective taper. Gentle upper-left light. Generate landscape canvas completely covered in the material; code resamples to 256x44.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-32c45521-870d-4bfc-acc8-2a0eb33be24a.png",
+      "utc": "2026-10-23T13:51:44.575Z",
+      "references": [
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/rock_face_try1.png",
+      "raw_sha256": "96c6e6689cb15adb8495d2eeb27abcb53b25f48703d0dd75149dd10cadb9653b",
+      "image_returned": true
+    },
+    {
+      "asset": "water",
+      "size": [
+        256,
+        256
+      ],
+      "subject": "CALM WATER: straight top-down quiet muted blue-green transparent stream water, delicate tiny ripples and subtle inked submerged pebbles. Entire square water, NO banks, NO shore, NO land, NO foam. Seamless on all four sides.",
+      "kind": "strip",
+      "attempt": 1,
+      "prompt": "WorldSim style05 material texture matching attached anchor muted earthy hand-painted ink/watercolor. CALM WATER: straight top-down quiet muted blue-green transparent stream water, delicate tiny ripples and subtle inked submerged pebbles. Entire square water, NO banks, NO shore, NO land, NO foam. Seamless on all four sides. FULL BLEED, EVERY PIXEL MATERIAL. Seamlessly tileable horizontally, no white or empty background, no margins, no text, no perspective taper. Gentle upper-left light. Generate landscape canvas completely covered in the material; code resamples to 256x256.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-71cdea9b-e839-494e-9c4a-c21af0529eae.png",
+      "utc": "2026-10-23T13:52:12.756Z",
+      "references": [
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/water_try1.png",
+      "raw_sha256": "cd8d864a178e2ef5c4081c4fd313b78f4f872061db47bd6fabf12aadcdb316bc",
+      "image_returned": true
+    },
+    {
+      "asset": "log_cap",
+      "attempt": 2,
+      "size": [
+        256,
+        16
+      ],
+      "subject": "LOG WALL TOP SURFACE only, viewed from above-front, closely packed bark covered timbers extending horizontally. The material MUST FILL THE ENTIRE IMAGE, absolutely no empty or white area. Output a wide rectangle fully covered in bark. Code will resample it to a narrow cap.",
+      "kind": "strip",
+      "prompt": "WorldSim style05 material texture matching attached anchor muted earthy hand-painted ink/watercolor. LOG WALL TOP SURFACE only, viewed from above-front, closely packed bark covered timbers extending horizontally. The material MUST FILL THE ENTIRE IMAGE, absolutely no empty or white area. Output a wide rectangle fully covered in bark. Code will resample it to a narrow cap. FULL BLEED, EVERY PIXEL MATERIAL. Seamlessly tileable horizontally, no white or empty background, no margins, no text, no perspective taper. Gentle upper-left light. Generate landscape canvas completely covered in the material; code resamples to 256x16.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-29714a99-0df5-41c5-b940-2b66d150ccd6.png",
+      "utc": "2026-10-23T13:54:03.683Z",
+      "references": [
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/log_cap_try2.png",
+      "raw_sha256": "b7eece6398e5a32dc9a485131be98ca826b23f084bd7ed0cdc06e2654aaa0937",
+      "image_returned": true
+    },
+    {
+      "asset": "log_end",
+      "subject": "cut end of a stacked log wall run, five round timber end grains in a tall narrow24:60 column, front3/4",
+      "height": 60,
+      "projection_family": "wall",
+      "family": "buildings",
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "component",
+      "attempt": 1,
+      "prompt": "Create ONE isolated game sprite: cut end of a stacked log wall run, five round timber end grains in a tall narrow24:60 column, front3/4. WorldSim style05 muted earthy watercolor wash with fine crisp dark ink contours, natural materials, restrained detail readable at64px tile. Camera FRONT THREE-QUARTER about20 degrees down, match attached accepted Route I people sheet's viewing angle and scale. Adult person is56px tall; target object visible height60px. Show substantial FRONT vertical faces, never roof-plan view. LIGHT from UPPER LEFT: left/top visibly brighter, right/bottom shaded. TRANSPARENT background, no ground patch, no cast shadow beyond object, no text, no border, entire object visible centered with margin. Props anchor supplies ink/material style ONLY, person sheet supplies angle. No people in output.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-4d5b8b7f-b92d-4528-b5de-f2181fbcb20c.png",
+      "utc": "2026-10-23T13:54:39.680Z",
+      "size": [
+        24,
+        60
+      ],
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/log_end_try1.png",
+      "raw_sha256": "00d99882103761a0616cd0306965bf76399a135f719a6527e32c21c6a969bb22",
+      "image_returned": true
+    },
+    {
+      "asset": "log_inner_corner",
+      "subject": "small square inner corner cap of two intersecting rough log walls, top surface joint only",
+      "height": 16,
+      "projection_family": "item",
+      "family": "buildings",
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "component",
+      "attempt": 1,
+      "size": [
+        16,
+        16
+      ],
+      "prompt": "Create ONE isolated game sprite: small square inner corner cap of two intersecting rough log walls, top surface joint only. WorldSim style05 muted earthy watercolor wash with fine crisp dark ink contours, natural materials, restrained detail readable at64px tile. Camera FRONT THREE-QUARTER about20 degrees down, match attached accepted Route I people sheet's viewing angle and scale. Adult person is56px tall; target object visible height16px. Show substantial FRONT vertical faces, never roof-plan view. LIGHT from UPPER LEFT: left/top visibly brighter, right/bottom shaded. TRANSPARENT background, no ground patch, no cast shadow beyond object, no text, no border, entire object visible centered with margin. Props anchor supplies ink/material style ONLY, person sheet supplies angle. No people in output.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-f21bb0d8-3322-452c-9af5-7ae4e344fc49.png",
+      "utc": "2026-10-23T13:56:27.348Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/log_inner_corner_try1.png",
+      "raw_sha256": "00a3d4cce76ff889076be55fe612f752880a0dde243706685ca7902b82573a7e",
+      "image_returned": true
+    },
+    {
+      "asset": "stone_end",
+      "subject": "cut end of dry stone wall run, tall narrow24:60 rough limestone column, front3/4",
+      "height": 60,
+      "projection_family": "wall",
+      "family": "buildings",
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "component",
+      "attempt": 1,
+      "size": [
+        24,
+        60
+      ],
+      "prompt": "Create ONE isolated game sprite: cut end of dry stone wall run, tall narrow24:60 rough limestone column, front3/4. WorldSim style05 muted earthy watercolor wash with fine crisp dark ink contours, natural materials, restrained detail readable at64px tile. Camera FRONT THREE-QUARTER about20 degrees down, match attached accepted Route I people sheet's viewing angle and scale. Adult person is56px tall; target object visible height60px. Show substantial FRONT vertical faces, never roof-plan view. LIGHT from UPPER LEFT: left/top visibly brighter, right/bottom shaded. TRANSPARENT background, no ground patch, no cast shadow beyond object, no text, no border, entire object visible centered with margin. Props anchor supplies ink/material style ONLY, person sheet supplies angle. No people in output.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-126ce01c-8013-42b9-b2fe-9f394f63a1de.png",
+      "utc": "2026-10-23T13:57:04.233Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/stone_end_try1.png",
+      "raw_sha256": "585091cd4ceae6df1db2f22ccc2c22284ad56260a9c32fb15e46f7b5ac8f383e",
+      "image_returned": true
+    },
+    {
+      "asset": "log_cap",
+      "attempt": 3,
+      "size": [
+        256,
+        16
+      ],
+      "subject": "Seamless TOP-DOWN timber bark surface, horizontal fine-grained rough wood bands. FLAT TOP SURFACE, not wall front. Leftmost and rightmost columns visually identical in brightness/structure. Evenly distributed small-scale detail; no large knots, no spot lighting. Fill ENTIRE landscape image.",
+      "kind": "strip",
+      "prompt": "WorldSim style05 material texture matching attached anchor muted earthy hand-painted ink/watercolor. Seamless TOP-DOWN timber bark surface, horizontal fine-grained rough wood bands. FLAT TOP SURFACE, not wall front. Leftmost and rightmost columns visually identical in brightness/structure. Evenly distributed small-scale detail; no large knots, no spot lighting. Fill ENTIRE landscape image. FULL BLEED, EVERY PIXEL MATERIAL. Seamlessly tileable horizontally, no white or empty background, no margins, no text, no perspective taper. Gentle upper-left light. Generate landscape canvas completely covered in the material; code resamples to 256x16.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-e234bee6-00d0-4b72-b397-6b64b8a0af17.png",
+      "utc": "2026-10-23T13:58:08.128Z",
+      "references": [
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/log_cap_try3.png",
+      "raw_sha256": "9a8f73a6707853b878808a09ad22dcb0bfa8a56b30aff90531d9a5ea3949d846",
+      "image_returned": true
+    },
+    {
+      "asset": "rock_face",
+      "attempt": 2,
+      "size": [
+        256,
+        44
+      ],
+      "subject": "Seamless rough grey bedrock south-facing cliff texture. Subtle small evenly spaced fractures, no large deep vertical dark clefts; uniform overall grey-brown tone left and right, fine natural ink detail. Match left and right edges perfectly. No top or ground.",
+      "kind": "strip",
+      "prompt": "WorldSim style05 material texture matching attached anchor muted earthy hand-painted ink/watercolor. Seamless rough grey bedrock south-facing cliff texture. Subtle small evenly spaced fractures, no large deep vertical dark clefts; uniform overall grey-brown tone left and right, fine natural ink detail. Match left and right edges perfectly. No top or ground. FULL BLEED, EVERY PIXEL MATERIAL. Seamlessly tileable horizontally, no white or empty background, no margins, no text, no perspective taper. Gentle upper-left light. Generate landscape canvas completely covered in the material; code resamples to 256x44.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-c1c1d019-caa8-446d-af22-b8dc1075ddab.png",
+      "utc": "2026-10-23T13:58:53.508Z",
+      "references": [
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/rock_face_try2.png",
+      "raw_sha256": "bc1d626f998f9473e6914ec71863ad1683506230b67a7ccc65c36e6df7cacc70",
+      "image_returned": true
+    },
+    {
+      "asset": "water",
+      "attempt": 2,
+      "size": [
+        256,
+        256
+      ],
+      "subject": "SEAMLESS ON ALL FOUR EDGES calm blue-green water, TOP-DOWN, fine low-contrast delicate ripples. No large stones or highlights, no land, no shoreline. Uniform field of quiet transparent water evenly toned to opposite edges. True periodic texture.",
+      "kind": "strip",
+      "prompt": "WorldSim style05 material texture matching attached anchor muted earthy hand-painted ink/watercolor. SEAMLESS ON ALL FOUR EDGES calm blue-green water, TOP-DOWN, fine low-contrast delicate ripples. No large stones or highlights, no land, no shoreline. Uniform field of quiet transparent water evenly toned to opposite edges. True periodic texture. FULL BLEED, EVERY PIXEL MATERIAL. Seamlessly tileable horizontally, no white or empty background, no margins, no text, no perspective taper. Gentle upper-left light. Generate landscape canvas completely covered in the material; code resamples to 256x256.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-8c877492-0981-4e37-b32b-66239387f86a.png",
+      "utc": "2026-10-23T14:00:00.475Z",
+      "references": [
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/water_try2.png",
+      "raw_sha256": "c4da76f284bea0d499a083e644ce025e7e5dafa502db5351a6a8e5482c1a16a3",
+      "image_returned": true
+    },
+    {
+      "asset": "stone_inner_corner",
+      "subject": "small square inside corner top cap of two intersecting dry stone walls, top surface joint only",
+      "height": 16,
+      "projection_family": "item",
+      "family": "buildings",
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "component",
+      "attempt": 1,
+      "size": [
+        16,
+        16
+      ],
+      "prompt": "Create ONE isolated game sprite: small square inside corner top cap of two intersecting dry stone walls, top surface joint only. WorldSim style05 muted earthy watercolor wash with fine crisp dark ink contours, natural materials, restrained detail readable at64px tile. Camera FRONT THREE-QUARTER about20 degrees down, match attached accepted Route I people sheet's viewing angle and scale. Adult person is56px tall; target object visible height16px. Show substantial FRONT vertical faces, never roof-plan view. LIGHT from UPPER LEFT: left/top visibly brighter, right/bottom shaded. TRANSPARENT background, no ground patch, no cast shadow beyond object, no text, no border, entire object visible centered with margin. Props anchor supplies ink/material style ONLY, person sheet supplies angle. No people in output.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-a650dd42-98a6-45bd-b7d8-98ff70cb50d2.png",
+      "utc": "2026-10-23T14:01:06.186Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/stone_inner_corner_try1.png",
+      "raw_sha256": "afd4d1ec4800f68f0f745dfe86652b9db881f07803299c7f120efe3d8762c3d1",
+      "image_returned": true
+    },
+    {
+      "asset": "door_log_closed",
+      "subject": "closed stone-age door of rough vertical timber planks with two wooden crossbars, no metal, wall-height",
+      "height": 60,
+      "projection_family": "door",
+      "family": "buildings",
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "sprite",
+      "attempt": 1,
+      "prompt": "Create ONE isolated game sprite: closed stone-age door of rough vertical timber planks with two wooden crossbars, no metal, wall-height. WorldSim style05 muted earthy watercolor wash with fine crisp dark ink contours, natural materials, restrained detail readable at64px tile. Camera FRONT THREE-QUARTER about20 degrees down, match attached accepted Route I people sheet's viewing angle and scale. Adult person is56px tall; target object visible height60px. Show substantial FRONT vertical faces, never roof-plan view. LIGHT from UPPER LEFT: left/top visibly brighter, right/bottom shaded. TRANSPARENT background, no ground patch, no cast shadow beyond object, no text, no border, entire object visible centered with margin. Props anchor supplies ink/material style ONLY, person sheet supplies angle. No people in output.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-773ca3ef-9cb5-4111-a114-ba080d0adb2b.png",
+      "utc": "2026-10-23T14:02:20.162Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/door_log_closed_try1.png",
+      "raw_sha256": "cd5267457e29248cec455307f027a56107c8976b59e5ca82bb9e472fc4514e1e",
+      "image_returned": true
+    },
+    {
+      "asset": "door_log_open",
+      "subject": "open stone-age timber doorway frame with empty TRANSPARENT opening and timber slab swung aside; wall-height",
+      "height": 60,
+      "projection_family": "door",
+      "family": "buildings",
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "sprite",
+      "attempt": 1,
+      "prompt": "Create ONE isolated game sprite: open stone-age timber doorway frame with empty TRANSPARENT opening and timber slab swung aside; wall-height. WorldSim style05 muted earthy watercolor wash with fine crisp dark ink contours, natural materials, restrained detail readable at64px tile. Camera FRONT THREE-QUARTER about20 degrees down, match attached accepted Route I people sheet's viewing angle and scale. Adult person is56px tall; target object visible height60px. Show substantial FRONT vertical faces, never roof-plan view. LIGHT from UPPER LEFT: left/top visibly brighter, right/bottom shaded. TRANSPARENT background, no ground patch, no cast shadow beyond object, no text, no border, entire object visible centered with margin. Props anchor supplies ink/material style ONLY, person sheet supplies angle. No people in output.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-cf44ebc7-217f-4dd9-a1b6-a307f34ac105.png",
+      "utc": "2026-10-23T14:05:11.018Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/door_log_open_try1.png",
+      "raw_sha256": "35b862d99fa7680b2f6bc8e0e872de9347a006da98c6a0d880940b9da9c769fc",
+      "image_returned": true
+    },
+    {
+      "asset": "door_stone_closed",
+      "subject": "closed wood slab door with rough grey dry-stone jambs, stone-age no metal, wall-height",
+      "height": 60,
+      "projection_family": "door",
+      "family": "buildings",
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "sprite",
+      "attempt": 1,
+      "prompt": "Create ONE isolated game sprite: closed wood slab door with rough grey dry-stone jambs, stone-age no metal, wall-height. WorldSim style05 muted earthy watercolor wash with fine crisp dark ink contours, natural materials, restrained detail readable at64px tile. Camera FRONT THREE-QUARTER about20 degrees down, match attached accepted Route I people sheet's viewing angle and scale. Adult person is56px tall; target object visible height60px. Show substantial FRONT vertical faces, never roof-plan view. LIGHT from UPPER LEFT: left/top visibly brighter, right/bottom shaded. TRANSPARENT background, no ground patch, no cast shadow beyond object, no text, no border, entire object visible centered with margin. Props anchor supplies ink/material style ONLY, person sheet supplies angle. No people in output.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-6b800041-a1bb-40e5-a802-a373f2dbab15.png",
+      "utc": "2026-10-23T14:06:39.050Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/door_stone_closed_try1.png",
+      "raw_sha256": "3c422a039288e5fbaf95b98f0dff2f1d8dbd51cf9361fd85929076ecb6384ede",
+      "image_returned": true
+    },
+    {
+      "asset": "door_stone_open",
+      "subject": "open doorway rough grey dry-stone jambs and lintel, empty transparent opening, timber door swung aside, wall-height",
+      "height": 60,
+      "projection_family": "door",
+      "family": "buildings",
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "sprite",
+      "attempt": 1,
+      "prompt": "Create ONE isolated game sprite: open doorway rough grey dry-stone jambs and lintel, empty transparent opening, timber door swung aside, wall-height. WorldSim style05 muted earthy watercolor wash with fine crisp dark ink contours, natural materials, restrained detail readable at64px tile. Camera FRONT THREE-QUARTER about20 degrees down, match attached accepted Route I people sheet's viewing angle and scale. Adult person is56px tall; target object visible height60px. Show substantial FRONT vertical faces, never roof-plan view. LIGHT from UPPER LEFT: left/top visibly brighter, right/bottom shaded. TRANSPARENT background, no ground patch, no cast shadow beyond object, no text, no border, entire object visible centered with margin. Props anchor supplies ink/material style ONLY, person sheet supplies angle. No people in output.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-a876b147-0bfa-4d09-8faf-4b356963c88f.png",
+      "utc": "2026-10-23T14:08:11.852Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/door_stone_open_try1.png",
+      "raw_sha256": "ea7c3969943f13748903a754319c00ed48fdb0246d8641c089d88607be3c81e5",
+      "image_returned": true
+    },
+    {
+      "asset": "boulder_large",
+      "subject": "large irregular grey limestone boulder, broad visible shaded front side, small upper surface, stocky standing rock",
+      "height": 36,
+      "projection_family": "boulder",
+      "family": "ground",
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "sprite",
+      "attempt": 1,
+      "prompt": "Create ONE isolated game sprite: large irregular grey limestone boulder, broad visible shaded front side, small upper surface, stocky standing rock. WorldSim style05 muted earthy watercolor wash with fine crisp dark ink contours, natural materials, restrained detail readable at64px tile. Camera FRONT THREE-QUARTER about20 degrees down, match attached accepted Route I people sheet's viewing angle and scale. Adult person is56px tall; target object visible height36px. Show substantial FRONT vertical faces, never roof-plan view. LIGHT from UPPER LEFT: left/top visibly brighter, right/bottom shaded. TRANSPARENT background, no ground patch, no cast shadow beyond object, no text, no border, entire object visible centered with margin. Props anchor supplies ink/material style ONLY, person sheet supplies angle. No people in output.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-83fb262e-b83c-43a0-95dc-94266837c71d.png",
+      "utc": "2026-10-23T14:09:59.372Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/boulder_large_try1.png",
+      "raw_sha256": "612d10e2b37b9aa22dbb4102d53b47f1da17ef048efb8d38a067329023c8389b",
+      "image_returned": true
+    },
+    {
+      "asset": "oak_large",
+      "height": 176,
+      "attempt": 1,
+      "kind": "sprite",
+      "projection_family": "tree",
+      "family": "plants",
+      "footprint": [
+        2,
+        2
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-c84f163b-1852-48dc-84a1-9ce45dfef012.png",
+      "prompt": "Use case: stylized-concept. Asset type: WorldSim style05 isolated standing tree game sprite. Primary request: one large mature oak tree, broad irregular lobed olive-green crown, strong branching trunk with rough dark brown bark, trunk clearly exposed below canopy. Input image 1 is the accepted route I person sheet: use ONLY as mandatory camera-angle and relative-scale reference, do not include people or labels. Input image 2 ground anchor and image 3 props anchor supply muted natural pigments, fine dark ink contours and hand-painted bark/foliage texture; do not copy their top-down projection. Camera: FRONT THREE QUARTER at about 20 degrees downward, exactly matching the standing people, NOT overhead crown view; show the vertical trunk, its front face and branching under the foliage. Lighting: brighter upper LEFT, soft darker lower-right surfaces. Whole tree crown to root foot visible, upright and centred with generous transparent margins. Root foot is the only lowest opaque point, no separate ground plane, no shadow puddle, no detached leaves or particles. Intended final silhouette height 176px when scaled, versus adult person56px; tree occupies a2x2 tile footprint at64px per tile. One tree only, no landscape, no sheet, no labels, no border. Genuine transparent RGBA background. Fine ink-and-watercolour game illustration, readable silhouette, natural asymmetry; no 3D render, no photorealism, no black background.",
+      "utc": "2026-10-23 14:05:04 UTC",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/ground.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/oak_large_try1.png",
+      "raw_sha256": "9818e9f792574497082eda64ffddb32652d5881c50290c6b354bf284b2d25cab",
+      "image_returned": true
+    },
+    {
+      "asset": "oak_small",
+      "attempt": 1,
+      "kind": "sprite",
+      "height": 136,
+      "projection_family": "tree",
+      "family": "plants",
+      "footprint": [
+        2,
+        2
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-e1f79bee-f71a-4559-83e0-629d51e1fc1d.png",
+      "prompt": "Use case: stylized-concept. Asset type: WorldSim style05 isolated standing tree game sprite. Primary request: one younger small oak tree, modest irregular crown of lobed olive-green foliage, slender branching brown trunk clearly exposed below canopy. Input image 1 is the accepted route I person sheet: use ONLY as mandatory camera-angle and relative-scale reference, do not include people or labels. Input image 2 ground anchor and image 3 props anchor supply muted natural pigments, fine dark ink contours and hand-painted bark/foliage texture; do not copy their top-down projection. Camera: FRONT THREE QUARTER at about 20 degrees downward, exactly matching the standing people, NOT overhead crown view; show the vertical trunk, its front face and branching under the foliage. Lighting: brighter upper LEFT, soft darker lower-right surfaces. Whole tree crown to root foot visible, upright and centred with generous transparent margins. Root foot is the only lowest opaque point, no separate ground plane, no shadow puddle, no detached leaves or particles. Intended final silhouette height 136px when scaled, versus adult person56px; tree occupies a2x2 tile footprint at64px per tile. One tree only, no landscape, no sheet, no labels, no border. Genuine transparent RGBA background. Fine ink-and-watercolour game illustration, readable silhouette, natural asymmetry; no 3D render, no photorealism, no black background.",
+      "utc": "2026-10-23 14:06:06 UTC",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/ground.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/oak_small_try1.png",
+      "raw_sha256": "b10db39376cd4e4d20d62af79004d1e9a248a85d9637857ede2f051c8ae1f95c",
+      "image_returned": true
+    },
+    {
+      "asset": "birch_large",
+      "attempt": 1,
+      "kind": "sprite",
+      "height": 176,
+      "projection_family": "tree",
+      "family": "plants",
+      "footprint": [
+        2,
+        2
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-d4d7f1ea-f81b-4e84-a748-405efaca1fce.png",
+      "prompt": "Use case: stylized-concept. Asset type: WorldSim style05 isolated standing tree game sprite. Primary request: one tall mature silver birch tree, airy irregular green crown, slender white peeling bark trunk with black marks, long trunk clearly exposed below canopy. Input image 1 is the accepted route I person sheet: use ONLY as mandatory camera-angle and relative-scale reference, do not include people or labels. Input image 2 ground anchor and image 3 props anchor supply muted natural pigments, fine dark ink contours and hand-painted bark/foliage texture; do not copy their top-down projection. Camera: FRONT THREE QUARTER at about 20 degrees downward, exactly matching the standing people, NOT overhead crown view; show the vertical trunk, its front face and branching under the foliage. Lighting: brighter upper LEFT, soft darker lower-right surfaces. Whole tree crown to root foot visible, upright and centred with generous transparent margins. Root foot is the only lowest opaque point, no separate ground plane, no shadow puddle, no detached leaves or particles. Intended final silhouette height 176px when scaled, versus adult person56px; tree occupies a2x2 tile footprint at64px per tile. One tree only, no landscape, no sheet, no labels, no border. Genuine transparent RGBA background. Fine ink-and-watercolour game illustration, readable silhouette, natural asymmetry; no 3D render, no photorealism, no black background.",
+      "utc": "2026-10-23 14:07:03 UTC",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/ground.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/birch_large_try1.png",
+      "raw_sha256": "f24742eaee3b81a7c6cb4e7a0a19c0f1afe160515466edb549d8aa144d4e82d8",
+      "image_returned": true
+    },
+    {
+      "asset": "birch_small",
+      "attempt": 1,
+      "kind": "sprite",
+      "height": 136,
+      "projection_family": "tree",
+      "family": "plants",
+      "footprint": [
+        2,
+        2
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-9f245cf5-b3de-4853-a32a-d774a6dcbbb7.png",
+      "prompt": "Use case: stylized-concept. Asset type: WorldSim style05 isolated standing tree game sprite. Primary request: one young small silver birch tree, small airy oval green crown, slender white peeling bark trunk with black marks, trunk clearly exposed below canopy. Input image 1 is the accepted route I person sheet: use ONLY as mandatory camera-angle and relative-scale reference, do not include people or labels. Input image 2 ground anchor and image 3 props anchor supply muted natural pigments, fine dark ink contours and hand-painted bark/foliage texture; do not copy their top-down projection. Camera: FRONT THREE QUARTER at about 20 degrees downward, exactly matching the standing people, NOT overhead crown view; show the vertical trunk, its front face and branching under the foliage. Lighting: brighter upper LEFT, soft darker lower-right surfaces. Whole tree crown to root foot visible, upright and centred with generous transparent margins. Root foot is the only lowest opaque point, no separate ground plane, no shadow puddle, no detached leaves or particles. Intended final silhouette height 136px when scaled, versus adult person56px; tree occupies a2x2 tile footprint at64px per tile. One tree only, no landscape, no sheet, no labels, no border. Genuine transparent RGBA background. Fine ink-and-watercolour game illustration, readable silhouette, natural asymmetry; no 3D render, no photorealism, no black background.",
+      "utc": "2026-10-23 14:08:04 UTC",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/ground.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/birch_small_try1.png",
+      "raw_sha256": "f7a7092e051af8ae7c7d5e3c772f0d8cdec8fc1d16b5c020e72fc0ea962722d8",
+      "image_returned": true
+    },
+    {
+      "asset": "pine_large",
+      "attempt": 1,
+      "kind": "sprite",
+      "height": 176,
+      "projection_family": "tree",
+      "family": "plants",
+      "footprint": [
+        2,
+        2
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-a57be7f4-cffe-4e7a-b5fb-2a3e06ef4b97.png",
+      "prompt": "Use case: stylized-concept. Asset type: WorldSim style05 isolated standing tree game sprite. Primary request: one tall mature Scots pine tree, irregular tiers of dark olive needle foliage and visible branching, reddish rough bark trunk clearly exposed below canopy. Input image 1 is the accepted route I person sheet: use ONLY as mandatory camera-angle and relative-scale reference, do not include people or labels. Input image 2 ground anchor and image 3 props anchor supply muted natural pigments, fine dark ink contours and hand-painted bark/foliage texture; do not copy their top-down projection. Camera: FRONT THREE QUARTER at about 20 degrees downward, exactly matching the standing people, NOT overhead crown view; show the vertical trunk, its front face and branching under the foliage. Lighting: brighter upper LEFT, soft darker lower-right surfaces. Whole tree crown to root foot visible, upright and centred with generous transparent margins. Root foot is the only lowest opaque point, no separate ground plane, no shadow puddle, no detached leaves or particles. Intended final silhouette height 176px when scaled, versus adult person56px; tree occupies a2x2 tile footprint at64px per tile. One tree only, no landscape, no sheet, no labels, no border. Genuine transparent RGBA background. Fine ink-and-watercolour game illustration, readable silhouette, natural asymmetry; no 3D render, no photorealism, no black background.",
+      "utc": "2026-10-23 14:08:58 UTC",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/ground.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/pine_large_try1.png",
+      "raw_sha256": "6095ec2ffc8369a33a785d3d032153dbad531a98b114885cd428524694b1ff22",
+      "image_returned": true
+    },
+    {
+      "asset": "pine_small",
+      "attempt": 1,
+      "kind": "sprite",
+      "height": 136,
+      "projection_family": "tree",
+      "family": "plants",
+      "footprint": [
+        2,
+        2
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-bd70d877-2ff7-4d38-8615-318550cadbb0.png",
+      "prompt": "Use case: stylized-concept. Asset type: WorldSim style05 isolated standing tree game sprite. Primary request: one young small pine tree, narrow irregular cone of dark olive needle clusters, reddish brown trunk clearly exposed below lower branches. Input image 1 is the accepted route I person sheet: use ONLY as mandatory camera-angle and relative-scale reference, do not include people or labels. Input image 2 ground anchor and image 3 props anchor supply muted natural pigments, fine dark ink contours and hand-painted bark/foliage texture; do not copy their top-down projection. Camera: FRONT THREE QUARTER at about 20 degrees downward, exactly matching the standing people, NOT overhead crown view; show the vertical trunk, its front face and branching under the foliage. Lighting: brighter upper LEFT, soft darker lower-right surfaces. Whole tree crown to root foot visible, upright and centred with generous transparent margins. Root foot is the only lowest opaque point, no separate ground plane, no shadow puddle, no detached leaves or particles. Intended final silhouette height 136px when scaled, versus adult person56px; tree occupies a2x2 tile footprint at64px per tile. One tree only, no landscape, no sheet, no labels, no border. Genuine transparent RGBA background. Fine ink-and-watercolour game illustration, readable silhouette, natural asymmetry; no 3D render, no photorealism, no black background.",
+      "utc": "2026-10-23 14:09:53 UTC",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/ground.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/pine_small_try1.png",
+      "raw_sha256": "81aedb490f0fc074e11395db78f461bbf8c27d00fc2cd77b31b5639e809a814c",
+      "image_returned": true
+    },
+    {
+      "asset": "boulder_small",
+      "subject": "small irregular grey limestone boulder, broad visible shaded front side, small upper surface, stocky standing rock",
+      "height": 24,
+      "projection_family": "boulder",
+      "family": "ground",
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "sprite",
+      "attempt": 1,
+      "prompt": "Create ONE isolated game sprite: small irregular grey limestone boulder, broad visible shaded front side, small upper surface, stocky standing rock. WorldSim style05 muted earthy watercolor wash with fine crisp dark ink contours, natural materials, restrained detail readable at64px tile. Camera FRONT THREE-QUARTER about20 degrees down, match attached accepted Route I people sheet's viewing angle and scale. Adult person is56px tall; target object visible height24px. Show substantial FRONT vertical faces, never roof-plan view. LIGHT from UPPER LEFT: left/top visibly brighter, right/bottom shaded. TRANSPARENT background, no ground patch, no cast shadow beyond object, no text, no border, entire object visible centered with margin. Props anchor supplies ink/material style ONLY, person sheet supplies angle. No people in output.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-3388bb8e-7a10-48b6-9126-53f5ae49e517.png",
+      "utc": "2026-10-23T14:11:29.692Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/boulder_small_try1.png",
+      "raw_sha256": "e58fdcd961a2e1a72fad3aed53f03a7d88d3fd0ca2cd87145aa8553bee764594",
+      "image_returned": true
+    },
+    {
+      "asset": "flint_outcrop",
+      "subject": "low flint outcrop, cluster of dark angular flint nodules emerging from pale chalk rock, visible front face",
+      "height": 20,
+      "projection_family": "flint_outcrop",
+      "family": "ground",
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "sprite",
+      "attempt": 1,
+      "prompt": "Create ONE isolated game sprite: low flint outcrop, cluster of dark angular flint nodules emerging from pale chalk rock, visible front face. WorldSim style05 muted earthy watercolor wash with fine crisp dark ink contours, natural materials, restrained detail readable at64px tile. Camera FRONT THREE-QUARTER about20 degrees down, match attached accepted Route I people sheet's viewing angle and scale. Adult person is56px tall; target object visible height20px. Show substantial FRONT vertical faces, never roof-plan view. LIGHT from UPPER LEFT: left/top visibly brighter, right/bottom shaded. TRANSPARENT background, no ground patch, no cast shadow beyond object, no text, no border, entire object visible centered with margin. Props anchor supplies ink/material style ONLY, person sheet supplies angle. No people in output.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-9c8aaa04-cccd-47e5-af3b-9d96c7d96686.png",
+      "utc": "2026-10-23T14:13:07.812Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/flint_outcrop_try1.png",
+      "raw_sha256": "98f0fcfd49e23542c028da3c553f6cf7a6483457001de614542a46f29b035cd6",
+      "image_returned": true
+    },
+    {
+      "asset": "knapping_spot",
+      "height": 34,
+      "projection_family": "knapping_spot",
+      "family": "buildings",
+      "footprint": [
+        1,
+        1
+      ],
+      "prompt": "Use case: stylized-concept. Single transparent WorldSim style05 KNAPPING WORK SPOT game sprite. Attached image1 is accepted Route I people: match its FRONT THREE-QUARTER camera, only about20 degrees looking down, person-relative scale. Attached image2 is material/ink/watercolor reference ONLY; do NOT inherit its high overhead camera or ground. A waist-low broad rough flint knapping block on two short stout stone supports, several small chipped flint cores and one antler pressure-flaker lying on its narrow visible top. The substantial south/front stone face dominates, side depth visible, top shallow. Target height34px when adult person is56px, footprint one64px tile, coherent single object. Warm grey stone, chipped facets, ochre antler, restrained earth colours, thin dark hand-ink contours and subtle mottled pigment wash matching05. Stronger upper-left light, top/left planes light and bottom/right planes shaded consistently; no rim light. Isolated centered entire object on genuine transparent alpha background, generous empty margin; no people, no ground patch, no external cast shadow, no text, no grid, no labels, no border, no multiple views. Read as usable standing work station, never a top-down scattered rug.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-9907-7902-9691-c51572dee47a/exec-fb2e48e9-4acb-4584-aae8-6890ad218fb4.png",
+      "kind": "sprite",
+      "attempt": 1,
+      "utc": "2026-10-23T14:05:56.882Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/knapping_spot_try1.png",
+      "raw_sha256": "8b9f2bc32d310df1dd2334a649950e0eac36f43b4069ef6e5b8c8069251db383",
+      "image_returned": true
+    },
+    {
+      "asset": "woodworking_bench",
+      "height": 36,
+      "projection_family": "wood_bench",
+      "family": "buildings",
+      "footprint": [
+        2,
+        1
+      ],
+      "subject": "STONE AGE WOODWORKING BENCH. Broad thick split-log worktop carried by two sturdy forked timber trestles, about waist height, wedge and stone adze lying flat on the top, a little timber grain but no saw or metal tools. Target36px high at1x, footprint128x64px. Wide horizontal silhouette with clear stout legs and thick dark front apron. Weathered warm grey-brown wood and pale tan cut faces.",
+      "prompt": "Use case: stylized-concept. Single transparent WorldSim style05 game sprite. Attached image1 is accepted Route I people: match its FRONT THREE-QUARTER camera about20 degrees looking down and person-relative scale (adult56px). Attached image2 is ONLY the hand-ink and pigment/material reference; never use its high overhead camera or background. STYLE: warm muted earthy hand-painted watercolor with fine dark irregular ink outlines, restrained natural material grain, readable solid silhouette. LIGHTING: upper-left illumination, top/left faces brighter, bottom/right faces darker; coherent negative x/y brightness slope, no rimlight. COMPOSITION: entire isolated object centered on genuine transparent alpha, generous margin, no people, no ground patch, no external cast shadow, no text, labels, border or multiple views. Front face is substantial, top shallow; never overhead plan view. SUBJECT: STONE AGE WOODWORKING BENCH. Broad thick split-log worktop carried by two sturdy forked timber trestles, about waist height, wedge and stone adze lying flat on the top, a little timber grain but no saw or metal tools. Target36px high at1x, footprint128x64px. Wide horizontal silhouette with clear stout legs and thick dark front apron. Weathered warm grey-brown wood and pale tan cut faces.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-9907-7902-9691-c51572dee47a/exec-7ebfa37a-749d-4dcf-8838-4a986c09dbe8.png",
+      "kind": "sprite",
+      "attempt": 1,
+      "utc": "2026-10-23T14:06:41.243Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/woodworking_bench_try1.png",
+      "raw_sha256": "3bad6941a66d5578cfab98f57274c78094c24ec7603fbcb3867053ed3da24727",
+      "image_returned": true
+    },
+    {
+      "asset": "drying_rack_hide",
+      "height": 48,
+      "projection_family": "drying_rack",
+      "family": "buildings",
+      "footprint": [
+        2,
+        1
+      ],
+      "subject": "HIDE DRYING RACK WITH ONE HIDE. Upright rectangular frame of four rough timber poles lashed with sinew and splayed foot braces. One stretched tawny deer hide held taut by fine sinew ties, irregular four-leg silhouette, broad pale centre and darker right/bottom edge.48px high vs adult56, footprint128x64. Clearly vertical, front facing with slight right side visible, not a table or rug. Transparent openings between hide and frame.",
+      "prompt": "Use case: stylized-concept. Single transparent WorldSim style05 game sprite. Attached image1 is accepted Route I people: match its FRONT THREE-QUARTER camera about20 degrees looking down and person-relative scale (adult56px). Attached image2 is ONLY the hand-ink and pigment/material reference; never use its high overhead camera or background. STYLE: warm muted earthy hand-painted watercolor with fine dark irregular ink outlines, restrained natural material grain, readable solid silhouette. LIGHTING: upper-left illumination, top/left faces brighter, bottom/right faces darker; coherent negative x/y brightness slope, no rimlight. COMPOSITION: entire isolated object centered on genuine transparent alpha, generous margin, no people, no ground patch, no external cast shadow, no text, labels, border or multiple views. Front face is substantial, top shallow; never overhead plan view. SUBJECT: HIDE DRYING RACK WITH ONE HIDE. Upright rectangular frame of four rough timber poles lashed with sinew and splayed foot braces. One stretched tawny deer hide held taut by fine sinew ties, irregular four-leg silhouette, broad pale centre and darker right/bottom edge.48px high vs adult56, footprint128x64. Clearly vertical, front facing with slight right side visible, not a table or rug. Transparent openings between hide and frame.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-9907-7902-9691-c51572dee47a/exec-d317cdc5-6227-4074-a0a9-d0220bd223e1.png",
+      "kind": "sprite",
+      "attempt": 1,
+      "utc": "2026-10-23T14:08:42.153Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/drying_rack_hide_try1.png",
+      "raw_sha256": "efb6caf2d0089ffd545521eddbac74e9779d532629663cb0a22824301550c188",
+      "image_returned": true
+    },
+    {
+      "asset": "pottery_bench",
+      "height": 36,
+      "projection_family": "pottery_bench",
+      "family": "buildings",
+      "footprint": [
+        2,
+        1
+      ],
+      "subject": "STONE AGE POTTERY WORKBENCH. Broad low timber worktable with thick plank front and stout splayed legs, three hand-coiled unfired clay pots and a clay lump on its narrow top, small wooden paddle. No wheel, no metal.36px high vs adult56, footprint128x64. Grey-brown rough wood and muted terracotta pots, substantial visible front and side plane.",
+      "prompt": "Use case: stylized-concept. Single transparent WorldSim style05 game sprite. Attached image1 is accepted Route I people: match its FRONT THREE-QUARTER camera about20 degrees looking down and person-relative scale (adult56px). Attached image2 is ONLY the hand-ink and pigment/material reference; never use its high overhead camera or background. STYLE: warm muted earthy hand-painted watercolor with fine dark irregular ink outlines, restrained natural material grain, readable solid silhouette. LIGHTING: upper-left illumination, top/left faces brighter, bottom/right faces darker; coherent negative x/y brightness slope, no rimlight. COMPOSITION: entire isolated object centered on genuine transparent alpha, generous margin, no people, no ground patch, no external cast shadow, no text, labels, border or multiple views. Front face is substantial, top shallow; never overhead plan view. SUBJECT: STONE AGE POTTERY WORKBENCH. Broad low timber worktable with thick plank front and stout splayed legs, three hand-coiled unfired clay pots and a clay lump on its narrow top, small wooden paddle. No wheel, no metal.36px high vs adult56, footprint128x64. Grey-brown rough wood and muted terracotta pots, substantial visible front and side plane.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-9907-7902-9691-c51572dee47a/exec-7df29602-c1b8-4b83-87f7-d7173377c857.png",
+      "kind": "sprite",
+      "attempt": 1,
+      "utc": "2026-10-23T14:09:16.009Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/pottery_bench_try1.png",
+      "raw_sha256": "dbbefef8e756e307550165782e8f6ed2d4af232f66b51795c3576bc963d754d1",
+      "image_returned": true
+    },
+    {
+      "asset": "grinding_stone",
+      "height": 32,
+      "projection_family": "grinding_stone",
+      "family": "buildings",
+      "footprint": [
+        1,
+        1
+      ],
+      "subject": "STONE AGE GRAIN GRINDING STATION. One bulky knee-high rough granite pedestal supporting a gently concave elongated saddle quern, a short rounded handstone rests across the shallow groove with a few ochre grains. Entire structure32px high vs adult56, one64px tile. Large front face visibly vertical and roughly chiseled, small top seen at20degrees, warm-grey granite with subtle flecks. No wheels or metal.",
+      "prompt": "Use case: stylized-concept. Single transparent WorldSim style05 game sprite. Attached image1 is accepted Route I people: match its FRONT THREE-QUARTER camera about20 degrees looking down and person-relative scale (adult56px). Attached image2 is ONLY the hand-ink and pigment/material reference; never use its high overhead camera or background. STYLE: warm muted earthy hand-painted watercolor with fine dark irregular ink outlines, restrained natural material grain, readable solid silhouette. LIGHTING: upper-left illumination, top/left faces brighter, bottom/right faces darker; coherent negative x/y brightness slope, no rimlight. COMPOSITION: entire isolated object centered on genuine transparent alpha, generous margin, no people, no ground patch, no external cast shadow, no text, labels, border or multiple views. Front face is substantial, top shallow; never overhead plan view. SUBJECT: STONE AGE GRAIN GRINDING STATION. One bulky knee-high rough granite pedestal supporting a gently concave elongated saddle quern, a short rounded handstone rests across the shallow groove with a few ochre grains. Entire structure32px high vs adult56, one64px tile. Large front face visibly vertical and roughly chiseled, small top seen at20degrees, warm-grey granite with subtle flecks. No wheels or metal.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-9907-7902-9691-c51572dee47a/exec-5aa3b900-d088-44e9-bf8b-90ab3cd3f053.png",
+      "kind": "sprite",
+      "attempt": 1,
+      "utc": "2026-10-23T14:09:58.816Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/grinding_stone_try1.png",
+      "raw_sha256": "a4c814213949eb1f5e3da4f4d5fadb6532825a6443a3b648aa40d6bb56a1d62d",
+      "image_returned": true
+    },
+    {
+      "asset": "hearth_unlit",
+      "height": 20,
+      "projection_family": "hearth",
+      "family": "items",
+      "footprint": [
+        1,
+        1
+      ],
+      "subject": "UNLIT RAISED STONE HEARTH. A stout low oval ring of six to eight irregular rough grey stones, dark ash hollow and three charred split logs in its centre, no flame or glow. Front wall is visibly20px tall vs adult56, one64px tile. Shallow top opening, front stones dominate, not a top-down circular flat icon. Muted grey rock and dark brown char.",
+      "prompt": "Use case: stylized-concept. Single transparent WorldSim style05 game sprite. Attached image1 is accepted Route I people: match its FRONT THREE-QUARTER camera about20 degrees looking down and person-relative scale (adult56px). Attached image2 is ONLY the hand-ink and pigment/material reference; never use its high overhead camera or background. STYLE: warm muted earthy hand-painted watercolor with fine dark irregular ink outlines, restrained natural material grain, readable solid silhouette. LIGHTING: upper-left illumination, top/left faces brighter, bottom/right faces darker; coherent negative x/y brightness slope, no rimlight. COMPOSITION: entire isolated object centered on genuine transparent alpha, generous margin, no people, no ground patch, no external cast shadow, no text, labels, border or multiple views. Front face is substantial, top shallow; never overhead plan view. SUBJECT: UNLIT RAISED STONE HEARTH. A stout low oval ring of six to eight irregular rough grey stones, dark ash hollow and three charred split logs in its centre, no flame or glow. Front wall is visibly20px tall vs adult56, one64px tile. Shallow top opening, front stones dominate, not a top-down circular flat icon. Muted grey rock and dark brown char.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-9907-7902-9691-c51572dee47a/exec-910ab6f9-1481-4377-b0ff-a961512a0073.png",
+      "kind": "sprite",
+      "attempt": 1,
+      "utc": "2026-10-23T14:10:37.839Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/hearth_unlit_try1.png",
+      "raw_sha256": "e69c52cd8a12e4ec8e6697eaee72d590debd18b7321e8f6268e9569cf1798383",
+      "image_returned": true
+    },
+    {
+      "asset": "hearth_1",
+      "height": 34,
+      "projection_family": "hearth_lit",
+      "family": "items",
+      "footprint": [
+        1,
+        1
+      ],
+      "subject": "LIT RAISED STONE HEARTH. A stout oval ring of six to eight irregular rough grey stones, dark ash hollow and three split logs, lively compact ochre-orange flame rising above centre. Stone body20px high plus flame for34px total vs adult56, one64px tile. Front stones visibly tall, top ring shallow, not overhead. Fire warmly lights inner stone edges but overall left stone faces still brightest and lower-right darkest. No detached sparks or smoke.",
+      "prompt": "Use case: stylized-concept. Single transparent WorldSim style05 game sprite. Attached image1 is accepted Route I people: match its FRONT THREE-QUARTER camera about20 degrees looking down and person-relative scale (adult56px). Attached image2 is ONLY the hand-ink and pigment/material reference; never use its high overhead camera or background. STYLE: warm muted earthy hand-painted watercolor with fine dark irregular ink outlines, restrained natural material grain, readable solid silhouette. LIGHTING: upper-left illumination, top/left faces brighter, bottom/right faces darker; coherent negative x/y brightness slope, no rimlight. COMPOSITION: entire isolated object centered on genuine transparent alpha, generous margin, no people, no ground patch, no external cast shadow, no text, labels, border or multiple views. Front face is substantial, top shallow; never overhead plan view. SUBJECT: LIT RAISED STONE HEARTH. A stout oval ring of six to eight irregular rough grey stones, dark ash hollow and three split logs, lively compact ochre-orange flame rising above centre. Stone body20px high plus flame for34px total vs adult56, one64px tile. Front stones visibly tall, top ring shallow, not overhead. Fire warmly lights inner stone edges but overall left stone faces still brightest and lower-right darkest. No detached sparks or smoke.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-9907-7902-9691-c51572dee47a/exec-d706845f-f690-467f-9ac1-dd0a34a860c9.png",
+      "kind": "sprite",
+      "attempt": 1,
+      "utc": "2026-10-23T14:11:20.922Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/hearth_1_try1.png",
+      "raw_sha256": "e1262d6e0be2276ac11bfdff280587f654437a192383e92d15de8ba083ed4fa6",
+      "image_returned": true
+    },
+    {
+      "asset": "hearth_pots",
+      "height": 36,
+      "projection_family": "hearth_firing",
+      "family": "items",
+      "footprint": [
+        1,
+        1
+      ],
+      "subject": "POTTERY FIRING HEARTH WITH THREE POTS. Raised oval ring of six to eight rough grey stones, dark charcoal and crossed short logs supporting exactly three simple unglazed earthenware pots among compact orange flames. Body20px high, flames/pots give36px total vs adult56, one64px tile. Stout front stone faces and shallow visible ring top, warm muted terracotta, dark ink rims, no modern kiln, no chimney, no detached sparks.",
+      "prompt": "Use case: stylized-concept. Single transparent WorldSim style05 game sprite. Attached image1 is accepted Route I people: match its FRONT THREE-QUARTER camera about20 degrees looking down and person-relative scale (adult56px). Attached image2 is ONLY the hand-ink and pigment/material reference; never use its high overhead camera or background. STYLE: warm muted earthy hand-painted watercolor with fine dark irregular ink outlines, restrained natural material grain, readable solid silhouette. LIGHTING: upper-left illumination, top/left faces brighter, bottom/right faces darker; coherent negative x/y brightness slope, no rimlight. COMPOSITION: entire isolated object centered on genuine transparent alpha, generous margin, no people, no ground patch, no external cast shadow, no text, labels, border or multiple views. Front face is substantial, top shallow; never overhead plan view. SUBJECT: POTTERY FIRING HEARTH WITH THREE POTS. Raised oval ring of six to eight rough grey stones, dark charcoal and crossed short logs supporting exactly three simple unglazed earthenware pots among compact orange flames. Body20px high, flames/pots give36px total vs adult56, one64px tile. Stout front stone faces and shallow visible ring top, warm muted terracotta, dark ink rims, no modern kiln, no chimney, no detached sparks.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-9907-7902-9691-c51572dee47a/exec-b536c7c3-e91d-44a0-a6cb-d7e3fbc40661.png",
+      "kind": "sprite",
+      "attempt": 1,
+      "utc": "2026-10-23T14:12:02.713Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/hearth_pots_try1.png",
+      "raw_sha256": "ca17080455bfccfaffe970df29c28f8818152299e42202cd8535ad4330cae412",
+      "image_returned": true
+    },
+    {
+      "asset": "bedroll",
+      "height": 14,
+      "projection_family": "bedroll",
+      "family": "items",
+      "footprint": [
+        1,
+        2
+      ],
+      "subject": "EMPTY RAISED HIDE BEDROLL. Thick padded straw-filled hide mattress with a rolled fur pillow at the far/north end, rounded soft sides and a folded brown hide blanket across lower half. Oriented north-south (long axis recedes from viewer), one tile wide by two tiles long ground footprint. Mattress BODY14px high vs adult56, visibly thick raised front edge; top seen only at shallow20degree angle, so silhouette low but unmistakably padded bed. No bed frame, no person, no carpet tassels, no rug-flat appearance. Muted tan suede and warm dark umber fur, ink seams.",
+      "prompt": "Use case: stylized-concept. Single transparent WorldSim style05 game sprite. Attached image1 is accepted Route I people: match its FRONT THREE-QUARTER camera about20 degrees looking down and person-relative scale (adult56px). Attached image2 is ONLY the hand-ink and pigment/material reference; never use its high overhead camera or background. STYLE: warm muted earthy hand-painted watercolor with fine dark irregular ink outlines, restrained natural material grain, readable solid silhouette. LIGHTING: upper-left illumination, top/left faces brighter, bottom/right faces darker; coherent negative x/y brightness slope, no rimlight. COMPOSITION: entire isolated object centered on genuine transparent alpha, generous margin, no people, no ground patch, no external cast shadow, no text, labels, border or multiple views. Front face is substantial, top shallow; never overhead plan view. SUBJECT: EMPTY RAISED HIDE BEDROLL. Thick padded straw-filled hide mattress with a rolled fur pillow at the far/north end, rounded soft sides and a folded brown hide blanket across lower half. Oriented north-south (long axis recedes from viewer), one tile wide by two tiles long ground footprint. Mattress BODY14px high vs adult56, visibly thick raised front edge; top seen only at shallow20degree angle, so silhouette low but unmistakably padded bed. No bed frame, no person, no carpet tassels, no rug-flat appearance. Muted tan suede and warm dark umber fur, ink seams.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-9907-7902-9691-c51572dee47a/exec-e77bdb92-2eaf-4d4f-b5b7-37fccd375a81.png",
+      "kind": "sprite",
+      "attempt": 1,
+      "utc": "2026-10-23T14:12:42.409Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/bedroll_try1.png",
+      "raw_sha256": "1233917b1380c89cfb10ee681ab519e2d95a66b62f71b06e8939b1470f5009b2",
+      "image_returned": true
+    },
+    {
+      "asset": "claybank_full",
+      "subject": "low exposed clay bank resource mound, warm rust-brown clay with visible cut front ledge and tool scrape marks, low16px height",
+      "height": 16,
+      "projection_family": "clay_bank",
+      "family": "ground",
+      "footprint": [
+        2,
+        2
+      ],
+      "kind": "sprite",
+      "attempt": 1,
+      "prompt": "Create ONE isolated game sprite: low exposed clay bank resource mound, warm rust-brown clay with visible cut front ledge and tool scrape marks, low16px height. WorldSim style05 muted earthy watercolor wash with fine crisp dark ink contours, natural materials, restrained detail readable at64px tile. Camera FRONT THREE-QUARTER about20 degrees down, match attached accepted Route I people sheet's viewing angle and scale. Adult person is56px tall; target object visible height16px. Show substantial FRONT vertical faces, never roof-plan view. LIGHT from UPPER LEFT: left/top visibly brighter, right/bottom shaded. TRANSPARENT background, no ground patch, no cast shadow beyond object, no text, no border, entire object visible centered with margin. Props anchor supplies ink/material style ONLY, person sheet supplies angle. No people in output.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-2caf7e40-7d49-48c2-898b-0b2591ff23ae.png",
+      "utc": "2026-10-23T14:15:00.982Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/claybank_full_try1.png",
+      "raw_sha256": "4507dc4222e1664d7d96c8e42ed8099a33d82b772a59586bc09523dbb7861910",
+      "image_returned": true
+    },
+    {
+      "asset": "claybank_depleted",
+      "subject": "depleted low clay bank, shallow hollow scraped from rust-brown clay with a low rim, still visible front cut ledge,16px height",
+      "height": 16,
+      "projection_family": "clay_bank",
+      "family": "ground",
+      "footprint": [
+        2,
+        2
+      ],
+      "kind": "sprite",
+      "attempt": 1,
+      "prompt": "Create ONE isolated game sprite: depleted low clay bank, shallow hollow scraped from rust-brown clay with a low rim, still visible front cut ledge,16px height. WorldSim style05 muted earthy watercolor wash with fine crisp dark ink contours, natural materials, restrained detail readable at64px tile. Camera FRONT THREE-QUARTER about20 degrees down, match attached accepted Route I people sheet's viewing angle and scale. Adult person is56px tall; target object visible height16px. Show substantial FRONT vertical faces, never roof-plan view. LIGHT from UPPER LEFT: left/top visibly brighter, right/bottom shaded. TRANSPARENT background, no ground patch, no cast shadow beyond object, no text, no border, entire object visible centered with margin. Props anchor supplies ink/material style ONLY, person sheet supplies angle. No people in output.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-d4eaaf34-7559-4825-b73e-efd34f20ebc8.png",
+      "utc": "2026-10-23T14:17:07.812Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/claybank_depleted_try1.png",
+      "raw_sha256": "d3269ca290c08d2d82511c150eca65c34701e1445daed22ac1259a359e8b7e73",
+      "image_returned": true
+    },
+    {
+      "asset": "birch_large",
+      "attempt": 2,
+      "kind": "sprite",
+      "height": 176,
+      "projection_family": "tree",
+      "family": "plants",
+      "footprint": [
+        2,
+        2
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-7b26c2c0-b437-48e8-816e-92639a54d777.png",
+      "prompt": "Use case: precise-object-edit. Create the second candidate for birch_large, a standing mature silver birch tree game sprite. Image1 accepted route I sheet controls camera and scale. Images2 and3 are style05 natural pigment/ink anchors. Image4 is first-attempt tree: preserve its standing front-three-quarter camera20degrees down, slender white trunk, species, airy mature branching silhouette and upper-left illumination. Correct ONLY the rendering problems: remove the entire colored glow/halo and ALL backdrop pixels; background must be genuinely transparent outside the actual tree, including canopy gaps, no colored veil or feathered fog. On the tree, use finely controlled ink contours enclosing CALM watercolor colour areas with low local wash variation, fewer harsh granular dark/light speckles, softly grouped leaf colour planes and clean birch bark with restrained dark marks; avoid mottled high-contrast photo texture. Keep warm muted olive foliage, warm off-white bark, natural asymmetry, crisp readable trunk. Root foot is lowest opaque point, no ground island, no shadow puddle, no labels or border. Intended final silhouette176px versus adult56px, 2x2 footprint at64px tile. Whole tree fits with transparent margins. Preserve actual alpha; no painted checkerboard, white/black background, or colored halo.",
+      "utc": "2026-10-23 14:13:58 UTC",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/ground.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/birch_large_try2.png",
+      "raw_sha256": "238c5d57d7a64c47d469b3c93baaee32abc5bef5f71f7e4cbf3fba70b28cdc7e",
+      "image_returned": true
+    },
+    {
+      "asset": "birch_small",
+      "attempt": 2,
+      "kind": "sprite",
+      "height": 136,
+      "projection_family": "tree",
+      "family": "plants",
+      "footprint": [
+        2,
+        2
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-17a70062-3cc3-4183-a02a-dfd74c69f8d4.png",
+      "prompt": "Use case: precise-object-edit. Create the second candidate for birch_small, a standing young small silver birch tree game sprite. Image1 accepted route I sheet controls camera and scale. Images2 and3 are style05 natural pigment/ink anchors. Image4 is first-attempt tree: preserve its standing front-three-quarter camera20degrees down, slender white trunk, species, modest young branching silhouette and upper-left illumination. Correct ONLY the rendering problems: remove the entire colored glow/halo and ALL backdrop pixels; background must be genuinely transparent outside the actual tree, including canopy gaps, no colored veil or feathered fog. On the tree, use finely controlled ink contours enclosing CALM watercolor colour areas with low local wash variation, fewer harsh granular dark/light speckles, softly grouped leaf colour planes and clean birch bark with restrained dark marks; avoid mottled high-contrast photo texture. Keep warm muted olive foliage, warm off-white bark, natural asymmetry, crisp readable trunk. Root foot is lowest opaque point, no ground island, no shadow puddle, no labels or border. Intended final silhouette136px versus adult56px, 2x2 footprint at64px tile. Whole tree fits with transparent margins. Preserve actual alpha; no painted checkerboard, white/black background, or colored halo.",
+      "utc": "2026-10-23 14:14:56 UTC",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/ground.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/birch_small_try2.png",
+      "raw_sha256": "a70e22b4fc67fa2c7b7d91d92a75768ff6f00628117b59b903f423fdd3512566",
+      "image_returned": true
+    },
+    {
+      "asset": "pine_large",
+      "attempt": 2,
+      "kind": "sprite",
+      "height": 176,
+      "projection_family": "tree",
+      "family": "plants",
+      "footprint": [
+        2,
+        2
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-1c29f101-bafd-4d18-8919-67dd467f9530.png",
+      "prompt": "Use case: precise-object-edit. Create second candidate pine_large, one mature standing Scots pine sprite. Image1 accepted route I sheet is mandatory front-three-quarter camera and scale reference; images2 and3 supply style05 natural pigment and ink treatment; image4 is the first pine candidate. Preserve its upright visible reddish trunk, irregular needle tiers, natural silhouette, front-three-quarter ~20degrees down view and upper-left light. Targeted style correction: give selected primary branch contours, lower edge of needle masses and dark bark cracks clearly MODERATELY THICKER dark ink strokes with varied width; use the strong organic line hierarchy of the reference anchors. Avoid a uniformly hairline needle texture. Keep secondary needle marks fine so the thick-dark stroke hierarchy is readable, no heavy black cartoon outlines. Fine controlled ink and gently varied watercolor washes in muted olive green and reddish brown. Whole tree crown to root foot, generous transparent margins, root foot is lowest opaque point. Intended final silhouette176px relative to adult56px, footprint2x2 tiles at64px per tile. Genuine transparent RGBA outside tree and through canopy gaps. NO halo, fog, glow, coloured or black background, ground plane, shadow puddle, labels, border or other trees.",
+      "utc": "2026-10-23 14:16:14 UTC",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/ground.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/pine_large_try2.png",
+      "raw_sha256": "58d6f97f47a95e70c41c8dd33c8b342fd4b8d39fe9c21dc9074804c1b4a9aa6d",
+      "image_returned": true
+    },
+    {
+      "asset": "drying_rack_empty",
+      "height": 48,
+      "projection_family": "drying_rack",
+      "family": "buildings",
+      "footprint": [
+        2,
+        1
+      ],
+      "prompt": "Use case: stylized-concept. Asset: EMPTY WOODEN SUPPORT FRAME for a stone-age settlement game. One harmless construction prop only: two upright rough timber posts joined by one horizontal top beam, short natural fibre ties around joints, two modest diagonal foot braces. The central opening is completely empty transparent space. No hide, no animal, no person, no tools. Reference image1 provides the accepted game camera angle only: front three-quarter, about20 degrees down, standing prop48px high relative to56px character. Reference image2 provides only style: warm muted natural wood, fine dark hand-ink contour and restrained watercolor pigment texture. View mostly the front with a little right side; narrow top surfaces. Light upper left, upper/left wood brighter and lower/right surfaces shaded. Center entire freestanding wooden frame on a genuine transparent alpha background with margin. No ground patch, no cast shadow, no labels, no text, no extra objects, no scenes.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-9907-7902-9691-c51572dee47a/exec-8ee24c47-9cb7-44de-b7e8-3e8785f855db.png",
+      "kind": "sprite",
+      "attempt": 2,
+      "utc": "2026-10-23T14:15:12.845Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/drying_rack_empty_try2.png",
+      "raw_sha256": "0f5b0f36cb9700c7fc9ebfa53e0324ad50af602040d21cae6f46642c7b479c90",
+      "image_returned": true
+    },
+    {
+      "asset": "stump",
+      "subject": "short cut tree stump with rough bark vertical sides and pale elliptical cut top,20px high",
+      "height": 20,
+      "projection_family": "stump",
+      "family": "plants",
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "sprite",
+      "attempt": 1,
+      "prompt": "Create ONE isolated game sprite: short cut tree stump with rough bark vertical sides and pale elliptical cut top,20px high. WorldSim style05 muted earthy watercolor wash with fine crisp dark ink contours, natural materials, restrained detail readable at64px tile. Camera FRONT THREE-QUARTER about20 degrees down, match attached accepted Route I people sheet's viewing angle and scale. Adult person is56px tall; target object visible height20px. Show substantial FRONT vertical faces, never roof-plan view. LIGHT from UPPER LEFT: left/top visibly brighter, right/bottom shaded. TRANSPARENT background, no ground patch, no cast shadow beyond object, no text, no border, entire object visible centered with margin. Props anchor supplies ink/material style ONLY, person sheet supplies angle. No people in output.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-b823baff-44ab-47ff-b149-89f52d2957f2.png",
+      "utc": "2026-10-23T14:19:00.499Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/stump_try1.png",
+      "raw_sha256": "eaaf82ba3c1d35a336c521b9b873af43c0d74c59b80a97153b238325b27ea4fb",
+      "image_returned": true
+    },
+    {
+      "asset": "lean_to",
+      "subject": "stone-age lean-to shelter, sloping bark screen supported by two tall front poles and short rear posts, OPEN front entrance at adult head height, standing shelter tall enough to fit56px adult, NOT overhead table,60px overall",
+      "height": 60,
+      "projection_family": "lean_to",
+      "family": "buildings",
+      "footprint": [
+        2,
+        2
+      ],
+      "kind": "sprite",
+      "attempt": 1,
+      "prompt": "Create ONE isolated game sprite: stone-age lean-to shelter, sloping bark screen supported by two tall front poles and short rear posts, OPEN front entrance at adult head height, standing shelter tall enough to fit56px adult, NOT overhead table,60px overall. WorldSim style05 muted earthy watercolor wash with fine crisp dark ink contours, natural materials, restrained detail readable at64px tile. Camera FRONT THREE-QUARTER about20 degrees down, match attached accepted Route I people sheet's viewing angle and scale. Adult person is56px tall; target object visible height60px. Show substantial FRONT vertical faces, never roof-plan view. LIGHT from UPPER LEFT: left/top visibly brighter, right/bottom shaded. TRANSPARENT background, no ground patch, no cast shadow beyond object, no text, no border, entire object visible centered with margin. Props anchor supplies ink/material style ONLY, person sheet supplies angle. No people in output.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-b96c4271-86a3-45a2-a2ae-35af5b03bae8.png",
+      "utc": "2026-10-23T14:22:35.834Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/lean_to_try1.png",
+      "raw_sha256": "654e110e3cd8306fc3a59ddd0acfea52e37fb746948b3817f69571b30a20cc7d",
+      "image_returned": true
+    },
+    {
+      "asset": "ford_stones",
+      "subject": "ONE sheet of FOUR separated smooth grey stepping stones, horizontal row4 equal cells, each small flat rock viewed top-down, transparent between stones and around sheet, no other elements",
+      "height": 12,
+      "projection_family": "item",
+      "family": "ground",
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "sprite",
+      "attempt": 1,
+      "prompt": "Create ONE isolated game sprite: ONE sheet of FOUR separated smooth grey stepping stones, horizontal row4 equal cells, each small flat rock viewed top-down, transparent between stones and around sheet, no other elements. WorldSim style05 muted earthy watercolor wash with fine crisp dark ink contours, natural materials, restrained detail readable at64px tile. Camera FRONT THREE-QUARTER about20 degrees down, match attached accepted Route I people sheet's viewing angle and scale. Adult person is56px tall; target object visible height12px. Show substantial FRONT vertical faces, never roof-plan view. LIGHT from UPPER LEFT: left/top visibly brighter, right/bottom shaded. TRANSPARENT background, no ground patch, no cast shadow beyond object, no text, no border, entire object visible centered with margin. Props anchor supplies ink/material style ONLY, person sheet supplies angle. No people in output.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-8baba172-3365-46cc-b2d1-f959913b6f47.png",
+      "utc": "2026-10-23T14:23:46.652Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/ford_stones_try1.png",
+      "raw_sha256": "b07e3738b609a7ecfca0e073a89240607714d8ae1270136507d1a3b2865f0aeb",
+      "image_returned": true
+    },
+    {
+      "asset": "birch_large",
+      "attempt": 3,
+      "kind": "sprite",
+      "height": 176,
+      "projection_family": "tree",
+      "family": "plants",
+      "footprint": [
+        2,
+        2
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-bc5c1f4a-044b-4eb4-bf30-015fb4c83c61.png",
+      "prompt": "Use case: stylized-concept. Make ONE isolated mature silver birch tree GAME SPRITE with a clean transparent RGBA cutout. The tree is drawn in fine ink and muted watercolor, not a glowing illustration. Image1 accepted route I people sheet controls the camera: standing front-three-quarter,20degrees downward, visibly vertical white birch trunk and exposed branching. Images2 and3 are palette and ink texture references only, not background or composition. Mature airy irregular canopy with small triangular olive-green leaves, papery warm-white trunk with controlled dark bark marks, visible long trunk below canopy, root foot at bottom. Light upper-left, shade lower-right. Full tree from crown to root foot, centred, generous EMPTY TRANSPARENT margins. Every pixel outside actual leaves, branches and trunk must have ALPHA ZERO. All open gaps between branches and leaves are empty transparent holes. Hard clean cutout with only tiny antialias edge, absolutely NO GLOW, HALO, HAZE, AURA, BACKDROP, VIGNETTE, COLORED CLOUD, SHADOW MATTE or wash outside silhouette. Calm watercolor color areas contained INSIDE leaves and bark by natural ink edges. Do not paint scenery, ground, a background, a surrounding color field, text, labels, border, other trees or people. Intended final opaque height176px versus adult56px, root anchor bottom, footprint2x2 at64px per tile. Entire silhouette must fit and must read as a standing tree with a trunk, not overhead foliage.",
+      "utc": "2026-10-23 14:22:50 UTC",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/ground.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/birch_large_try3.png",
+      "raw_sha256": "2c264aac73a7ed120fc345d5a8286a8dfdb286a691d3860b200913f469cca5e6",
+      "image_returned": true
+    },
+    {
+      "asset": "pine_large",
+      "attempt": 3,
+      "kind": "sprite",
+      "height": 176,
+      "projection_family": "tree",
+      "family": "plants",
+      "footprint": [
+        2,
+        2
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-4fd832b2-9e1c-414c-9dbc-c21b56b869dc.png",
+      "prompt": "Use case: stylized-concept. One mature Scots pine standing game sprite for WorldSim style05. Image1 is accepted route I people camera/scale reference; images2 and3 are ink/watercolor material anchors. Standing FRONT THREE QUARTER view ~20degrees down, tall reddish-brown trunk visible well below foliage, irregular tiers of muted olive-green needles, natural asymmetry and visible primary branching. Upper-left light, lower-right shadow. Hand-inked botanical game illustration: CLEAR SELECTIVELY BOLD ORGANIC DARK CONTOURS around primary boughs and grouped foliage shapes, about3-5pixels wide at1024px artwork size; natural varied pressure, thin tips, thicker branch undersides and trunk fissures. These substantial organic lines must be visibly present, not only microscopic hairlines. Keep fine needle detail secondary to broad grouped foliage shapes with calm watercolor washes and soft internal pigment variation. Dark contour hierarchy like traditional ink over watercolor, not a black cartoon border and not photoreal bark. Entire tree crown to root foot within generous empty transparent margins. Root foot is the lowest opaque point. Intended final opaque height176px versus adult56px, footprint2x2 at64px tile. Actual transparent RGBA background and canopy gaps; no glow, haze, halo, colored backdrop, ground disk, shadow puddle, text, labels, border, other trees or people.",
+      "utc": "2026-10-23 14:24:10 UTC",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/ground.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/pine_large_try3.png",
+      "raw_sha256": "ff63e498f2a12af7e0c9d81fb09c8396c28138ea862140f0bcf6e706b6bb2e66",
+      "image_returned": true
+    },
+    {
+      "asset": "bedroll",
+      "height": 14,
+      "projection_family": "bedroll",
+      "family": "items",
+      "footprint": [
+        1,
+        2
+      ],
+      "subject": "EMPTY THICK PADDED BEDROLL, north-south1x2tile footprint, rolled pillow at far/north end. Camera SHALLOW20degrees above horizontal so the raised FRONT VERTICAL EDGE of stuffed mattress is clearly visible, a thick soft volume not a flat rug; narrow foreshortened upper surface recedes away. Hide cushion stuffed with straw, tan suede top with dark umber folded blanket over lower half, modest stitched border. BODY14px high compared to56px adult; retain this low but visibly raised body. Smooth broad tan watercolor wash areas with only a few restrained mottled variations, no dense speckling or individual fur hair detail. Pillow and blanket distinct forms, no frame or person.",
+      "prompt": "Use case stylized-concept: one transparent WorldSim style05 game sprite. Attachments are references, not editing targets. Image1 accepted Route I people fixes front-three-quarter camera about20degrees down and relative scale. Image2 fixes fine dark ink and muted earthy watercolor materials ONLY, not its overhead camera or background. Preserve the handcrafted05 look while using calmer broader pigment washes: moderately low local variance within each material plane, fine dark contour lines, sparse deliberate texture, no dense random stipple. Upper-left light: upper/left planes brighter, lower/right planes shaded; no rimlight. Entire isolated object with genuine transparent alpha, generous margin, absolutely no ground patch, no external cast shadow, no brown haze, no labels/text/border, no multiple views. SUBJECT: EMPTY THICK PADDED BEDROLL, north-south1x2tile footprint, rolled pillow at far/north end. Camera SHALLOW20degrees above horizontal so the raised FRONT VERTICAL EDGE of stuffed mattress is clearly visible, a thick soft volume not a flat rug; narrow foreshortened upper surface recedes away. Hide cushion stuffed with straw, tan suede top with dark umber folded blanket over lower half, modest stitched border. BODY14px high compared to56px adult; retain this low but visibly raised body. Smooth broad tan watercolor wash areas with only a few restrained mottled variations, no dense speckling or individual fur hair detail. Pillow and blanket distinct forms, no frame or person.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-9907-7902-9691-c51572dee47a/exec-c42a9f5d-c4ee-4a2d-9d93-9d16e6fcd0e1.png",
+      "kind": "sprite",
+      "attempt": 2,
+      "utc": "2026-10-23T14:18:29.104Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/bedroll_try2.png",
+      "raw_sha256": "e7b1d8a5fd1da53a08ce2026bfc6a4a85f5e3fcaca9d1ffd93f423e773a995f5",
+      "image_returned": true
+    },
+    {
+      "asset": "drying_rack_hide",
+      "height": 48,
+      "projection_family": "drying_rack",
+      "family": "buildings",
+      "footprint": [
+        2,
+        1
+      ],
+      "subject": "ONE UPRIGHT HIDE DRYING FRAME,48px tall vs56px adult,128x64footprint. Rough timber rectangle with sinew lashings and splayed foot braces. One tawny dried deer hide stretched taut by fine ties, irregular four-leg silhouette. Front-facing vertical hide surface, slight right-side frame visible. Main hide panel is a CALM BROAD PALE TAN WATERCOLOR WASH, only sparse soft pigment mottling, no busy dark stains, no dense hair detail. Clearly distinct fine dark ink contours and cord lines. Empty gaps between hide and poles genuinely transparent. No surrounding brown haze or glow.",
+      "prompt": "Use case stylized-concept: one transparent WorldSim style05 game sprite. Attachments are references, not editing targets. Image1 accepted Route I people fixes front-three-quarter camera about20degrees down and relative scale. Image2 fixes fine dark ink and muted earthy watercolor materials ONLY, not its overhead camera or background. Preserve the handcrafted05 look while using calmer broader pigment washes: moderately low local variance within each material plane, fine dark contour lines, sparse deliberate texture, no dense random stipple. Upper-left light: upper/left planes brighter, lower/right planes shaded; no rimlight. Entire isolated object with genuine transparent alpha, generous margin, absolutely no ground patch, no external cast shadow, no brown haze, no labels/text/border, no multiple views. SUBJECT: ONE UPRIGHT HIDE DRYING FRAME,48px tall vs56px adult,128x64footprint. Rough timber rectangle with sinew lashings and splayed foot braces. One tawny dried deer hide stretched taut by fine ties, irregular four-leg silhouette. Front-facing vertical hide surface, slight right-side frame visible. Main hide panel is a CALM BROAD PALE TAN WATERCOLOR WASH, only sparse soft pigment mottling, no busy dark stains, no dense hair detail. Clearly distinct fine dark ink contours and cord lines. Empty gaps between hide and poles genuinely transparent. No surrounding brown haze or glow.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-9907-7902-9691-c51572dee47a/exec-30b1cdb4-b6a9-4930-8e74-3de74140a2cd.png",
+      "kind": "sprite",
+      "attempt": 2,
+      "utc": "2026-10-23T14:19:02.943Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/drying_rack_hide_try2.png",
+      "raw_sha256": "f524aabb4d40bae74b3a5e409bf700b444195d8a248bf9c600efec22a1e02d35",
+      "image_returned": true
+    },
+    {
+      "asset": "hearth_1",
+      "height": 34,
+      "projection_family": "hearth_lit",
+      "family": "items",
+      "footprint": [
+        1,
+        1
+      ],
+      "subject": "LIT RAISED STONE HEARTH, body20px high plus small flame for34px total compared with56px adult, one64px tile footprint. Oval low ring of six or eight rough grey stones, substantial vertical front faces, top opening shallow, three brown logs with compact ochre-orange flame. Each stone has broad softly washed grey-beige planes, sparse cracks outlined with thin dark ink, less tiny fleck noise. Flame hand-painted with broad simple orange/yellow tongues, no photographic sparks, no smoke. Left/upper rock faces light, right/lower faces darker; inner warmth restrained.",
+      "prompt": "Use case stylized-concept: one transparent WorldSim style05 game sprite. Attachments are references, not editing targets. Image1 accepted Route I people fixes front-three-quarter camera about20degrees down and relative scale. Image2 fixes fine dark ink and muted earthy watercolor materials ONLY, not its overhead camera or background. Preserve the handcrafted05 look while using calmer broader pigment washes: moderately low local variance within each material plane, fine dark contour lines, sparse deliberate texture, no dense random stipple. Upper-left light: upper/left planes brighter, lower/right planes shaded; no rimlight. Entire isolated object with genuine transparent alpha, generous margin, absolutely no ground patch, no external cast shadow, no brown haze, no labels/text/border, no multiple views. SUBJECT: LIT RAISED STONE HEARTH, body20px high plus small flame for34px total compared with56px adult, one64px tile footprint. Oval low ring of six or eight rough grey stones, substantial vertical front faces, top opening shallow, three brown logs with compact ochre-orange flame. Each stone has broad softly washed grey-beige planes, sparse cracks outlined with thin dark ink, less tiny fleck noise. Flame hand-painted with broad simple orange/yellow tongues, no photographic sparks, no smoke. Left/upper rock faces light, right/lower faces darker; inner warmth restrained.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-9907-7902-9691-c51572dee47a/exec-31b2c6be-84e9-483f-a101-e175d945751c.png",
+      "kind": "sprite",
+      "attempt": 2,
+      "utc": "2026-10-23T14:19:47.907Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/hearth_1_try2.png",
+      "raw_sha256": "9114420a67c2dfdb766572f68a6858037678fe22f2acd11cb732d1a1681aeece",
+      "image_returned": true
+    },
+    {
+      "asset": "knapping_spot",
+      "height": 34,
+      "projection_family": "knapping_spot",
+      "family": "buildings",
+      "footprint": [
+        1,
+        1
+      ],
+      "subject": "KNAPPING WORK STATION,34px high vs56px adult, one64px footprint. A waist-low broad rough flint work block on two short stout stone supports, a few chipped flint cores and one antler pressure-flaker on narrow shallow top. Substantial front face and a little right side, not overhead. Warm-grey stone rendered as broad CALM WATERCOLOUR WASH PLANES with sparse deliberate chips and fractures. Keep thin dark hand-ink outlines around contour and main facet edges; greatly reduce fine noisy spotty texture inside each plane. Ochre antler, muted dark grey flint. No scattered objects beyond station.",
+      "prompt": "Use case stylized-concept: one transparent WorldSim style05 game sprite. Attachments are references, not editing targets. Image1 accepted Route I people fixes front-three-quarter camera about20degrees down and relative scale. Image2 fixes fine dark ink and muted earthy watercolor materials ONLY, not its overhead camera or background. Preserve the handcrafted05 look while using calmer broader pigment washes: moderately low local variance within each material plane, fine dark contour lines, sparse deliberate texture, no dense random stipple. Upper-left light: upper/left planes brighter, lower/right planes shaded; no rimlight. Entire isolated object with genuine transparent alpha, generous margin, absolutely no ground patch, no external cast shadow, no brown haze, no labels/text/border, no multiple views. SUBJECT: KNAPPING WORK STATION,34px high vs56px adult, one64px footprint. A waist-low broad rough flint work block on two short stout stone supports, a few chipped flint cores and one antler pressure-flaker on narrow shallow top. Substantial front face and a little right side, not overhead. Warm-grey stone rendered as broad CALM WATERCOLOUR WASH PLANES with sparse deliberate chips and fractures. Keep thin dark hand-ink outlines around contour and main facet edges; greatly reduce fine noisy spotty texture inside each plane. Ochre antler, muted dark grey flint. No scattered objects beyond station.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-9907-7902-9691-c51572dee47a/exec-fa46d0bf-2579-4075-9e15-65611abc8f63.png",
+      "kind": "sprite",
+      "attempt": 2,
+      "utc": "2026-10-23T14:20:27.990Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/knapping_spot_try2.png",
+      "raw_sha256": "fb1dc1345c55ecdc64080337ddca4931a989631d03afc8516f20ac09b4655e8f",
+      "image_returned": true
+    },
+    {
+      "asset": "woodworking_bench",
+      "height": 36,
+      "projection_family": "wood_bench",
+      "family": "buildings",
+      "footprint": [
+        2,
+        1
+      ],
+      "subject": "STONE AGE WOODWORKING BENCH,36px high vs56px adult,128x64footprint. Wide thick split-log worktop supported by two stout forked timber trestles with fibre lashings. One stone adze and wooden wedge rest on narrow visible top. Broad front wood apron and solid legs, slight right side, camera shallow20degrees. Weathered warm-grey brown wood with pale tan cut faces. Broad quiet watercolor pigment washes and a few longer deliberate grain lines; avoid high-frequency bark speckles, dense scratch noise, tiny shiny flecks. Preserve fine dark contour ink and structural lines. No metal, saw, people or external wood scraps.",
+      "prompt": "Use case stylized-concept: one transparent WorldSim style05 game sprite. Attachments are references, not editing targets. Image1 accepted Route I people fixes front-three-quarter camera about20degrees down and relative scale. Image2 fixes fine dark ink and muted earthy watercolor materials ONLY, not its overhead camera or background. Preserve the handcrafted05 look while using calmer broader pigment washes: moderately low local variance within each material plane, fine dark contour lines, sparse deliberate texture, no dense random stipple. Upper-left light: upper/left planes brighter, lower/right planes shaded; no rimlight. Entire isolated object with genuine transparent alpha, generous margin, absolutely no ground patch, no external cast shadow, no brown haze, no labels/text/border, no multiple views. SUBJECT: STONE AGE WOODWORKING BENCH,36px high vs56px adult,128x64footprint. Wide thick split-log worktop supported by two stout forked timber trestles with fibre lashings. One stone adze and wooden wedge rest on narrow visible top. Broad front wood apron and solid legs, slight right side, camera shallow20degrees. Weathered warm-grey brown wood with pale tan cut faces. Broad quiet watercolor pigment washes and a few longer deliberate grain lines; avoid high-frequency bark speckles, dense scratch noise, tiny shiny flecks. Preserve fine dark contour ink and structural lines. No metal, saw, people or external wood scraps.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-9907-7902-9691-c51572dee47a/exec-08ab4efe-ed2c-46bd-ad90-a4e7b9ce8f5b.png",
+      "kind": "sprite",
+      "attempt": 2,
+      "utc": "2026-10-23T14:20:59.796Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/woodworking_bench_try2.png",
+      "raw_sha256": "5deb7a930d5002557a7f4db78d3d1d8ee79d07ec29c9f7e33f4fe18a931c7dc1",
+      "image_returned": true
+    },
+    {
+      "asset": "bedroll",
+      "height": 14,
+      "projection_family": "bedroll",
+      "family": "items",
+      "footprint": [
+        2,
+        1
+      ],
+      "logical_original_footprint": [
+        1,
+        2
+      ],
+      "orientation": "90 degree rotation of 1x2 logical footprint; long side runs screen horizontally",
+      "prompt": "Use case: stylized-concept. ONE EMPTY STONE-AGE FUR BEDROLL, a very LONG LOW HORIZONTAL sleeping cushion seen from its long side, extending LEFT TO RIGHT across landscape canvas. Mandatory silhouette geometry: long horizontal width128 units, TOTAL vertical extent14 units including small rolled pillow, aspect about9:1. Imagine one adult can lie lengthwise on it. A thick but low straw-filled tan hide mattress, tiny rolled hide pillow at far LEFT end, muted dark umber hide blanket over right half. Front vertical edge is clearly visible, modest thickness, top is a narrow shallow strip viewed at20degrees downward; do not turn length away from camera, do not show overhead plan, do not draw upright portrait mattress. Ground footprint two tiles long horizontally and one tile deep, the specified1x2 footprint rotated90degrees. Attached reference1 is accepted Route I people, use same front-three-quarter projection but do NOT draw a person. Attached reference2 is style05 ink and watercolor material reference only: calm broad earthy pigment washes, fine dark hand-ink seams and contour, restrained few fur marks not noisy speckling. Upper-left light, left/top brighter, lower/right shaded. Entire very elongated LOW bedroll centered with transparent margins in LANDSCAPE image. GENUINE transparent alpha background, no ground patch, no external cast shadow, no glow, no brown haze, no text, no other objects, no frame. Pillow must stay low within14unit overall silhouette. Show long side nearly straight-on, with a slight view of right end to retain three-quarter form.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-9907-7902-9691-c51572dee47a/exec-5b2a6342-6bc5-46a9-ab2c-a7dc172aba1e.png",
+      "kind": "sprite",
+      "attempt": 3,
+      "utc": "2026-10-23T14:24:05.083Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/bedroll_try3.png",
+      "raw_sha256": "ca5be84e73be2f342dd01de337badf082b037f35c0d618f455871a2ad4698f46",
+      "image_returned": true
+    },
+    {
+      "asset": "water",
+      "attempt": 3,
+      "kind": "strip",
+      "size": [
+        256,
+        256
+      ],
+      "family": "ground",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-c126fd1a-165f-42b0-a891-380fcc183211.png",
+      "prompt": "Use case: stylized-concept. Asset type: one seamless square water material tile for WorldSim style05, final256x256. Reference image is ONLY the muted natural pigment and delicate ink-and-watercolor surface style; do NOT reproduce its shore, rocks, plants or panel divisions. Draw a STRAIGHT TOP-DOWN square fullbleed field of calm muted blue-green water. Tiny sparse low-contrast ripple traces with subtle watercolor granulation, quiet even overall color. It must repeat seamlessly BOTH horizontally AND vertically: matching color, brightness and ripple phase at opposite edges, left meets right and top meets bottom. All four edges must share the same soft midtone blue-green with tiny details continuing across edges, no long diagonal light/dark gradient, no edge vignette, no central spotlight, no broad pale streak, no bright sparkling highlights. Keep ripple amplitude visually tiny and lowcontrast everywhere including outermost edges. ONE continuous texture, not a tile preview or a grid. Every pixel is water, opaque fullbleed artwork; square format, no margin, no transparency, no shore, no large stones, no foam, no vegetation, no objects, no text, no border. Finely painted game texture with the restrained earthy pigments of reference, not a photo or 3D render.",
+      "utc": "2026-10-23 14:18:59 UTC",
+      "references": [
+        "art/style05/anchors/ground.png"
+      ],
+      "reference_sha256": {
+        "art/style05/anchors/ground.png": "234aed1a9176b73b87c22233057402808e90249f4f268cf58505f809253b51ed"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/water_try3.png",
+      "raw_sha256": "1959972f74bd46f0f2da9e533073a474269b3d866d65e338df66df3541c4008e",
+      "image_returned": true
+    },
+    {
+      "asset": "log_inner_corner",
+      "subject": "ONLY a flat square timber TOP CAP join, 2D overhead small wooden elbow fitting. Absolutely NO vertical faces, NO wall height, NO columns. Just horizontal top surface of two timbers meeting at right angle, fills square silhouette",
+      "height": 16,
+      "projection_family": "item",
+      "family": "buildings",
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "component",
+      "size": [
+        16,
+        16
+      ],
+      "attempt": 2,
+      "prompt": "Create ONLY the horizontal cap described; ignore all standing angle instructions below. Create ONE isolated game sprite: ONLY a flat square timber TOP CAP join, 2D overhead small wooden elbow fitting. Absolutely NO vertical faces, NO wall height, NO columns. Just horizontal top surface of two timbers meeting at right angle, fills square silhouette. WorldSim style05 muted earthy watercolor wash with fine crisp dark ink contours, natural materials, restrained detail readable at64px tile. Camera FRONT THREE-QUARTER about20 degrees down, match attached accepted Route I people sheet's viewing angle and scale. Adult person is56px tall; target object visible height16px. Show substantial FRONT vertical faces, never roof-plan view. LIGHT from UPPER LEFT: left/top visibly brighter, right/bottom shaded. TRANSPARENT background, no ground patch, no cast shadow beyond object, no text, no border, entire object visible centered with margin. Props anchor supplies ink/material style ONLY, person sheet supplies angle. No people in output.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-a072234e-d754-4ea2-842e-03c61babd05e.png",
+      "utc": "2026-10-23T14:26:14.036Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/log_inner_corner_try2.png",
+      "raw_sha256": "b682d40449f2cac4f95adeb2497f353ad1122e0ce2e1dff96be8293805bacbd9",
+      "image_returned": true
+    },
+    {
+      "asset": "stone_inner_corner",
+      "subject": "ONLY a flat square stone TOP CAP join, 2D overhead single flat limestone corner slab. Absolutely NO vertical faces, NO wall height, NO columns. Just horizontal top surface, square silhouette",
+      "height": 16,
+      "projection_family": "item",
+      "family": "buildings",
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "component",
+      "size": [
+        16,
+        16
+      ],
+      "attempt": 2,
+      "prompt": "Create ONLY the horizontal cap described; ignore all standing angle instructions below. Create ONE isolated game sprite: ONLY a flat square stone TOP CAP join, 2D overhead single flat limestone corner slab. Absolutely NO vertical faces, NO wall height, NO columns. Just horizontal top surface, square silhouette. WorldSim style05 muted earthy watercolor wash with fine crisp dark ink contours, natural materials, restrained detail readable at64px tile. Camera FRONT THREE-QUARTER about20 degrees down, match attached accepted Route I people sheet's viewing angle and scale. Adult person is56px tall; target object visible height16px. Show substantial FRONT vertical faces, never roof-plan view. LIGHT from UPPER LEFT: left/top visibly brighter, right/bottom shaded. TRANSPARENT background, no ground patch, no cast shadow beyond object, no text, no border, entire object visible centered with margin. Props anchor supplies ink/material style ONLY, person sheet supplies angle. No people in output.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-6de61bfa-0a36-45a5-86a1-fed6bbc7b4bf.png",
+      "utc": "2026-10-23T14:30:27.317Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/stone_inner_corner_try2.png",
+      "raw_sha256": "770618572272c05549435cefc8e68b36987942f7052272b87dc51f2f1e962366",
+      "image_returned": true
+    },
+    {
+      "asset": "door_log_open",
+      "subject": "open doorway made ONLY OF WOOD. Two upright timber posts and single horizontal log lintel, wood plank door swung aside. NO STONE whatsoever, no stone jamb, no masonry, no wall around it. Transparent empty doorway. Wall-height60px.",
+      "height": 60,
+      "projection_family": "door",
+      "family": "buildings",
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "sprite",
+      "attempt": 2,
+      "prompt": "Create ONE isolated game sprite: open doorway made ONLY OF WOOD. Two upright timber posts and single horizontal log lintel, wood plank door swung aside. NO STONE whatsoever, no stone jamb, no masonry, no wall around it. Transparent empty doorway. Wall-height60px.. WorldSim style05 muted earthy watercolor wash with fine crisp dark ink contours, natural materials, restrained detail readable at64px tile. Camera FRONT THREE-QUARTER about20 degrees down, match attached accepted Route I people sheet's viewing angle and scale. Adult person is56px tall; target object visible height60px. Show substantial FRONT vertical faces, never roof-plan view. LIGHT from UPPER LEFT: left/top visibly brighter, right/bottom shaded. TRANSPARENT background, no ground patch, no cast shadow beyond object, no text, no border, entire object visible centered with margin. Props anchor supplies ink/material style ONLY, person sheet supplies angle. No people in output.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-29ac0964-d95a-4920-a76c-a53fb875c02f.png",
+      "utc": "2026-10-23T14:31:47.196Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/door_log_open_try2.png",
+      "raw_sha256": "e34278c9558be3373cfeb9413a177a73eb1780a930fae28e4c320e7f434c9efc",
+      "image_returned": true
+    },
+    {
+      "asset": "door_stone_open",
+      "subject": "STONE AGE open doorway of rough grey dry-stone jambs and lintel, EMPTY doorway opening, simple rough wood slab swung aside tied with vegetal rope hinges and a rope loop handle. NO METAL, no iron, no nails, no metal bands, no ring handle, no modern hardware. ALL fasteners are wooden pegs and fibre rope.",
+      "height": 60,
+      "projection_family": "door",
+      "family": "buildings",
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "sprite",
+      "attempt": 2,
+      "prompt": "Create ONE isolated game sprite: STONE AGE open doorway of rough grey dry-stone jambs and lintel, EMPTY doorway opening, simple rough wood slab swung aside tied with vegetal rope hinges and a rope loop handle. NO METAL, no iron, no nails, no metal bands, no ring handle, no modern hardware. ALL fasteners are wooden pegs and fibre rope.. WorldSim style05 muted earthy watercolor wash with fine crisp dark ink contours, natural materials, restrained detail readable at64px tile. Camera FRONT THREE-QUARTER about20 degrees down, match attached accepted Route I people sheet's viewing angle and scale. Adult person is56px tall; target object visible height60px. Show substantial FRONT vertical faces, never roof-plan view. LIGHT from UPPER LEFT: left/top visibly brighter, right/bottom shaded. TRANSPARENT background, no ground patch, no cast shadow beyond object, no text, no border, entire object visible centered with margin. Props anchor supplies ink/material style ONLY, person sheet supplies angle. No people in output.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-15b9aa5b-6afc-454b-b1c8-ee946097d5d9.png",
+      "utc": "2026-10-23T14:36:26.804Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/door_stone_open_try2.png",
+      "raw_sha256": "7152c9cecac289763187090111c36bd955e16605ff7fb96823eacc6e5f024441",
+      "image_returned": true
+    },
+    {
+      "asset": "flint_outcrop",
+      "subject": "low flint outcrop with dark angular flint emerging from pale chalk, visible front vertical face; calm bounded watercolor washes, sparse controlled detail, no mottled noise, no halo or background",
+      "height": 20,
+      "projection_family": "flint_outcrop",
+      "family": "ground",
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "sprite",
+      "attempt": 2,
+      "prompt": "Create ONE isolated game sprite: low flint outcrop with dark angular flint emerging from pale chalk, visible front vertical face; calm bounded watercolor washes, sparse controlled detail, no mottled noise, no halo or background. WorldSim style05 muted earthy watercolor wash with fine crisp dark ink contours, natural materials, restrained detail readable at64px tile. Camera FRONT THREE-QUARTER about20 degrees down, match attached accepted Route I people sheet's viewing angle and scale. Adult person is56px tall; target object visible height20px. Show substantial FRONT vertical faces, never roof-plan view. LIGHT from UPPER LEFT: left/top visibly brighter, right/bottom shaded. TRANSPARENT background, no ground patch, no cast shadow beyond object, no text, no border, entire object visible centered with margin. Props anchor supplies ink/material style ONLY, person sheet supplies angle. No people in output.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-b579f437-b992-44db-95b5-514cefa98d85.png",
+      "utc": "2026-10-23T14:37:24.944Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/flint_outcrop_try2.png",
+      "raw_sha256": "7919281f9efc64c329946aea8f8b58e63a424cf0eafef33681146dd9fb5f553a",
+      "image_returned": true
+    },
+    {
+      "asset": "door_log_open",
+      "subject": "primitive STONE AGE doorway entirely made of round timber posts and a log lintel, wooden slab swung outward. Hinges are thick tan fibre rope lashings wrapped around a wooden pivot, handle is simple tan rope loop. Absolutely no metal of any kind, no hinges made from metal, no bands or straps or plates, no nails, no rivets. Empty transparent opening. Natural wood and tan rope are the only materials.",
+      "height": 60,
+      "projection_family": "door",
+      "family": "buildings",
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "sprite",
+      "attempt": 3,
+      "prompt": "Create ONE isolated game sprite: primitive STONE AGE doorway entirely made of round timber posts and a log lintel, wooden slab swung outward. Hinges are thick tan fibre rope lashings wrapped around a wooden pivot, handle is simple tan rope loop. Absolutely no metal of any kind, no hinges made from metal, no bands or straps or plates, no nails, no rivets. Empty transparent opening. Natural wood and tan rope are the only materials.. WorldSim style05 muted earthy watercolor wash with fine crisp dark ink contours, natural materials, restrained detail readable at64px tile. Camera FRONT THREE-QUARTER about20 degrees down, match attached accepted Route I people sheet's viewing angle and scale. Adult person is56px tall; target object visible height60px. Show substantial FRONT vertical faces, never roof-plan view. LIGHT from UPPER LEFT: left/top visibly brighter, right/bottom shaded. TRANSPARENT background, no ground patch, no cast shadow beyond object, no text, no border, entire object visible centered with margin. Props anchor supplies ink/material style ONLY, person sheet supplies angle. No people in output.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-ba6f31ea-cd55-4154-9c1f-15fd3e0b9f5c.png",
+      "utc": "2026-10-23T14:39:03.376Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/door_log_open_try3.png",
+      "raw_sha256": "0f6831f0f9abb54e8a0c0d46701fd7d3e7e7f1a9f4914186d972ba9f87583a0c",
+      "image_returned": true
+    },
+    {
+      "asset": "flint_outcrop",
+      "subject": "ONE very low natural chalk rock with three small dark flint nodules emerging, sparse thin ink contour and large smooth watercolor washes. Simple calm broad regions, no noisy speckle. Isolated solid physical rock ONLY. Absolutely transparent pixels around its crisp silhouette. No atmospheric glow, NO ambient halo, NO ground, NO shadow patch, no beige fog. It is a shallow outcrop20px tall at game scale, with visible small south-facing edge.",
+      "height": 20,
+      "projection_family": "flint_outcrop",
+      "family": "ground",
+      "footprint": [
+        1,
+        1
+      ],
+      "kind": "sprite",
+      "attempt": 3,
+      "prompt": "Create ONE isolated game sprite: ONE very low natural chalk rock with three small dark flint nodules emerging, sparse thin ink contour and large smooth watercolor washes. Simple calm broad regions, no noisy speckle. Isolated solid physical rock ONLY. Absolutely transparent pixels around its crisp silhouette. No atmospheric glow, NO ambient halo, NO ground, NO shadow patch, no beige fog. It is a shallow outcrop20px tall at game scale, with visible small south-facing edge.. WorldSim style05 muted earthy watercolor wash with fine crisp dark ink contours, natural materials, restrained detail readable at64px tile. Camera FRONT THREE-QUARTER about20 degrees down, match attached accepted Route I people sheet's viewing angle and scale. Adult person is56px tall; target object visible height20px. Show substantial FRONT vertical faces, never roof-plan view. LIGHT from UPPER LEFT: left/top visibly brighter, right/bottom shaded. TRANSPARENT background, no ground patch, no cast shadow beyond object, no text, no border, entire object visible centered with margin. Props anchor supplies ink/material style ONLY, person sheet supplies angle. No people in output.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-1ea26db2-0548-462c-a9c4-757590c90965.png",
+      "utc": "2026-10-23T14:40:46.463Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/flint_outcrop_try3.png",
+      "raw_sha256": "38d3cff5ad4f4b666aa424ee6e6388e5339812e1c9c5846cea6b6dcffb91e75e",
+      "image_returned": true
+    },
+    {
+      "asset": "drying_rack_empty",
+      "attempt": 3,
+      "height": 48,
+      "projection_family": "drying_rack",
+      "family": "buildings",
+      "footprint": [
+        2,
+        1
+      ],
+      "subject": "EMPTY WOODEN SUPPORT FRAME,48px tall at game scale relative to56px adult, footprint128x64. Two upright timber poles connected by one horizontal upper beam and a slim lower stabilizer, tied with simple natural fibre cords, two short splayed support feet. Central opening entirely transparent. NO hide, NO animal, NO person. Pale weathered wood with broad smooth muted beige-grey watercolor fills; sparse thin bark lines, no dark deep bark crevices or stippled grain. Every individual wood plane has a largely even pale midtone, with just a gentle upper-left-to-lower-right shading gradient. Fine narrow black-brown outline distinguishes the poles/cords. Front-facing three-quarter frame, shallow20degree viewing angle. No haze, glow, ground or shadows outside.",
+      "prompt": "Use case stylized-concept. Create ONE isolated transparent WorldSim05 game sprite. Reference1 acceptedRouteI people supplies camera angle and scale ONLY, no person in output. Reference2 supplies fine hand-drawn ink outlines plus restrained natural watercolor medium ONLY, do not inherit its photographic noisy material detail or top-down camera. Broad COHERENT CALM COLOR WASH REGIONS with very low contrast inside each individual material face, thin dark outlines at structural edges, no speckled texture, no mottled dark blotches. Muted warm earthy palette. This remains a watercolor-and-ink sprite, not vector art and not photorealism. Illumination upper left, upper and left planes lighter than lower and right planes. Genuine transparent alpha, centered entire object with margins, no glow or brown haze on background, no labels/text/border. SUBJECT: EMPTY WOODEN SUPPORT FRAME,48px tall at game scale relative to56px adult, footprint128x64. Two upright timber poles connected by one horizontal upper beam and a slim lower stabilizer, tied with simple natural fibre cords, two short splayed support feet. Central opening entirely transparent. NO hide, NO animal, NO person. Pale weathered wood with broad smooth muted beige-grey watercolor fills; sparse thin bark lines, no dark deep bark crevices or stippled grain. Every individual wood plane has a largely even pale midtone, with just a gentle upper-left-to-lower-right shading gradient. Fine narrow black-brown outline distinguishes the poles/cords. Front-facing three-quarter frame, shallow20degree viewing angle. No haze, glow, ground or shadows outside.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-9907-7902-9691-c51572dee47a/exec-3767f58b-e98b-43af-925b-266764bfe08d.png",
+      "kind": "sprite",
+      "utc": "2026-10-23T14:38:33.522Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/drying_rack_empty_try3.png",
+      "raw_sha256": "739b0e5070acd90fc14439d52722a43f2eabc511435ec0ea181b835f5c0bc987",
+      "image_returned": true
+    },
+    {
+      "asset": "hearth_1",
+      "attempt": 3,
+      "height": 34,
+      "projection_family": "hearth_lit",
+      "family": "items",
+      "footprint": [
+        1,
+        1
+      ],
+      "subject": "LIT LOW STONE HEARTH, one64px tile footprint, stone body20px high and compact flame makes34px total, adult56px reference scale. Shallow oval ring of seven stout warm grey stones with clearly raised front faces; three short brown split logs and a compact small ochre-orange/yellow flame in centre. Each stone rendered with an EVEN muted GREY-BEIGE watercolor WASH bounded by delicate dark ink contours; extremely sparse internal marks, no random mottled high-contrast facets, no dense granite flecks. Same simple even wash on logs, a few fine grain lines. Thin dark cracks delineate stones. Flame only three simple broad translucent paint-like tongues with no intense white glare, no sparks and no smoke. Coherent upper-left daylight plus restrained hearth glow. Front three-quarter shallow20degree camera, front stones substantial and top opening foreshortened. No surrounding ground or shadow.",
+      "prompt": "Use case stylized-concept. Create ONE isolated transparent WorldSim05 game sprite. Reference1 acceptedRouteI people supplies camera angle and scale ONLY, no person in output. Reference2 supplies fine hand-drawn ink outlines plus restrained natural watercolor medium ONLY, do not inherit its photographic noisy material detail or top-down camera. Broad COHERENT CALM COLOR WASH REGIONS with very low contrast inside each individual material face, thin dark outlines at structural edges, no speckled texture, no mottled dark blotches. Muted warm earthy palette. This remains a watercolor-and-ink sprite, not vector art and not photorealism. Illumination upper left, upper and left planes lighter than lower and right planes. Genuine transparent alpha, centered entire object with margins, no glow or brown haze on background, no labels/text/border. SUBJECT: LIT LOW STONE HEARTH, one64px tile footprint, stone body20px high and compact flame makes34px total, adult56px reference scale. Shallow oval ring of seven stout warm grey stones with clearly raised front faces; three short brown split logs and a compact small ochre-orange/yellow flame in centre. Each stone rendered with an EVEN muted GREY-BEIGE watercolor WASH bounded by delicate dark ink contours; extremely sparse internal marks, no random mottled high-contrast facets, no dense granite flecks. Same simple even wash on logs, a few fine grain lines. Thin dark cracks delineate stones. Flame only three simple broad translucent paint-like tongues with no intense white glare, no sparks and no smoke. Coherent upper-left daylight plus restrained hearth glow. Front three-quarter shallow20degree camera, front stones substantial and top opening foreshortened. No surrounding ground or shadow.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-9907-7902-9691-c51572dee47a/exec-64c10538-5df8-47e1-877e-09f2f78c1bbf.png",
+      "kind": "sprite",
+      "utc": "2026-10-23T14:39:06.167Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/hearth_1_try3.png",
+      "raw_sha256": "b8d1ac216b28e93d2a4125d476b1cd201ed0baa43dcf665a3cb2af33e37030dd",
+      "image_returned": true
+    },
+    {
+      "asset": "lean_to",
+      "subject": "primitive lean-to shelter at adult person scale, two front upright timber posts and a sloping hide and branch canopy leaning back, OPEN FRONT and clearly visible tall entrance. Spare fine ink outline with broad smooth muted brown watercolor wash shapes; low detail, no stippling or crackle, no halo, no background. It must read as a shelter tall enough to enter, not a table. Light upperleft.",
+      "height": 64,
+      "projection_family": "lean_to",
+      "family": "buildings",
+      "footprint": [
+        2,
+        2
+      ],
+      "kind": "sprite",
+      "attempt": 2,
+      "prompt": "Create ONE isolated game sprite: primitive lean-to shelter at adult person scale, two front upright timber posts and a sloping hide and branch canopy leaning back, OPEN FRONT and clearly visible tall entrance. Spare fine ink outline with broad smooth muted brown watercolor wash shapes; low detail, no stippling or crackle, no halo, no background. It must read as a shelter tall enough to enter, not a table. Light upperleft.. WorldSim style05 muted earthy watercolor wash with fine crisp dark ink contours, natural materials, restrained detail readable at64px tile. Camera FRONT THREE-QUARTER about20 degrees down, match attached accepted Route I people sheet's viewing angle and scale. Adult person is56px tall; target object visible height64px. Show substantial FRONT vertical faces, never roof-plan view. LIGHT from UPPER LEFT: left/top visibly brighter, right/bottom shaded. TRANSPARENT background, no ground patch, no cast shadow beyond object, no text, no border, entire object visible centered with margin. Props anchor supplies ink/material style ONLY, person sheet supplies angle. No people in output.",
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16901-75b0-7203-94de-125399cc0044/exec-b2ec431c-ed80-4bd2-8d9e-2a6b592ed12d.png",
+      "utc": "2026-10-23T14:43:12.166Z",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/lean_to_try2.png",
+      "raw_sha256": "d160caf82c14b1cff7aa065d9798842f9736aed55721b803d3403329ee061c80",
+      "image_returned": true
+    },
+    {
+      "asset": "ground_axe",
+      "attempt": 1,
+      "kind": "sprite",
+      "height": 14,
+      "projection_family": "item",
+      "family": "items",
+      "footprint": [
+        1,
+        1
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-2f42d96e-af6d-4336-b8ef-c7665087ccc3.png",
+      "prompt": "Use case: stylized-concept. Asset type: one isolated WorldSim style05 stone-age inventory object laid in the world, ground_axe. Primary request: one primitive stone axe lying low on the ground in a shallow front three-quarter view, thick gray stone axe head with a visible front side face, cord binding and short wooden handle receding away; not an overhead diagram. Reference1 accepted route I person sheet is mandatory camera-angle/scale reference only; do not include people or text. Reference2 props anchor supplies hand-painted muted earth pigments, fine dark ink outlines and gently varied watercolor surface. Camera same as standing people, front-three-quarter about20degrees down, visible front side thickness with foreshortened top, never overhead. Upper-left light, darker right/lower surfaces. One object only, whole silhouette, centred with generous truly transparent margins, no ground patch, no shadow puddle, no backdrop/halo/glow, labels or border. Natural utilitarian stone-age materials, no metal, no glossy plastic or3D render. Final target opaque silhouette height14px within a64px world tile, adult56px for scale; silhouette width max56px, show major material shapes legibly at this size. Genuine transparent RGBA background; only actual object carries alpha.",
+      "utc": "2026-10-23 14:40:26 UTC",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/ground_axe_try1.png",
+      "raw_sha256": "0e31bad6bd63b66e046d61121cbf29aafdf61f62f2748af233209c509c23b463",
+      "image_returned": true
+    },
+    {
+      "asset": "spear",
+      "attempt": 1,
+      "kind": "sprite",
+      "height": 8,
+      "projection_family": "item",
+      "family": "items",
+      "footprint": [
+        1,
+        1
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-38a8239a-447e-4ae2-bf36-0f424d9f7df7.png",
+      "prompt": "Use case: stylized-concept. Asset type: one isolated WorldSim style05 stone-age inventory object laid in the world, spear. Primary request: one stone-tipped wooden spear laid horizontally left-to-right on the ground, shallow front three-quarter view with compressed depth, slender shaft and visible thickness of the flint point; entire spear, not an overhead diagonal diagram. Reference1 accepted route I person sheet is mandatory camera-angle/scale reference only; do not include people or text. Reference2 props anchor supplies hand-painted muted earth pigments, fine dark ink outlines and gently varied watercolor surface. Camera same as standing people, front-three-quarter about20degrees down, visible front side thickness with foreshortened top, never overhead. Upper-left light, darker right/lower surfaces. One object only, whole silhouette, centred with generous truly transparent margins, no ground patch, no shadow puddle, no backdrop/halo/glow, labels or border. Natural utilitarian stone-age materials, no metal, no glossy plastic or3D render. Final target opaque silhouette height8px within a64px world tile, adult56px for scale; silhouette width max56px, show major material shapes legibly at this size. Genuine transparent RGBA background; only actual object carries alpha.",
+      "utc": "2026-10-23 14:41:00 UTC",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/spear_try1.png",
+      "raw_sha256": "056ab81125525e70bbcb1352c013e5a76d945dc532ccebad13b9a277160828e9",
+      "image_returned": true
+    },
+    {
+      "asset": "cured_hide",
+      "attempt": 1,
+      "kind": "sprite",
+      "height": 10,
+      "projection_family": "item",
+      "family": "items",
+      "footprint": [
+        1,
+        1
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-8cd4bd0d-ca97-4830-a81f-87c74a3b33c9.png",
+      "prompt": "Use case: stylized-concept. One isolated WorldSim style05 stone-age game item: one cured golden-tan hide loosely folded into a low bundle, curled edge exposing leather thickness and short folded corners, shallow front three-quarter view, not a fully spread hide seen from above. Reference1 accepted route I people sheet controls camera-angle/scale only; no people or text. Reference2 props anchor supplies muted earth pigments, fine dark ink and controlled watercolor inside material surfaces. FRONT THREE-QUARTER about20degrees down with clearly visible front thickness and compressed top; upper-left light, darker right/lower sides. Entire one object centred with generous EMPTY TRANSPARENT margins. Every pixel outside the actual object is ALPHA ZERO, including gaps; clean cutout with fine antialias edge only. NO GLOW/HALO/HAZE/AURA/BACKDROP, ground patch, shadow puddle, colored veil, checkerboard, text or border. Natural utilitarian stone-age materials, no metal/plastic/3D. Final silhouette target height10px within64px tile, width max56px, adult56px for scale. Legible material shapes. Generate RGBA transparency, not a painted background.",
+      "utc": "2026-10-23 14:42:04 UTC",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/cured_hide_try1.png",
+      "raw_sha256": "d0cee97347f1457f86591ad224326defa11494a9bde6d2862597eaf7abea5a5a",
+      "image_returned": true
+    },
+    {
+      "asset": "wolf_hide",
+      "attempt": 1,
+      "kind": "sprite",
+      "height": 12,
+      "projection_family": "item",
+      "family": "items",
+      "footprint": [
+        1,
+        1
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-ceeb3d52-fe5e-4f7b-a263-0e95d2866d60.png",
+      "prompt": "Use case: stylized-concept. One isolated WorldSim style05 stone-age game item: one gray wolf pelt loosely folded as a low bundle, coarse gray fur, tail and small folded paw extremities identifiable, front visible thickness, shallow front three-quarter, not an overhead spread pelt. Reference1 accepted route I people sheet controls camera-angle/scale only; no people or text. Reference2 props anchor supplies muted earth pigments, fine dark ink and controlled watercolor inside material surfaces. FRONT THREE-QUARTER about20degrees down with clearly visible front thickness and compressed top; upper-left light, darker right/lower sides. Entire one object centred with generous EMPTY TRANSPARENT margins. Every pixel outside the actual object is ALPHA ZERO, including gaps; clean cutout with fine antialias edge only. NO GLOW/HALO/HAZE/AURA/BACKDROP, ground patch, shadow puddle, colored veil, checkerboard, text or border. Natural utilitarian stone-age materials, no metal/plastic/3D. Final silhouette target height12px within64px tile, width max56px, adult56px for scale. Legible material shapes. Generate RGBA transparency, not a painted background.",
+      "utc": "2026-10-23 14:42:38 UTC",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/wolf_hide_try1.png",
+      "raw_sha256": "1576c664a08acc305e3647e15be3da1af6ff7143f8d572da2d6b827493e8401c",
+      "image_returned": true
+    },
+    {
+      "asset": "flint_nodule",
+      "attempt": 1,
+      "kind": "sprite",
+      "height": 16,
+      "projection_family": "item",
+      "family": "items",
+      "footprint": [
+        1,
+        1
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-1456c8fa-5ec9-4305-8cb9-e8ca639cd1d3.png",
+      "prompt": "Use case: stylized-concept. One isolated WorldSim style05 stone-age game item: one small irregular gray-brown flint nodule resting on its base, clearly visible front face and narrow upper surface, shallow front three-quarter view, stone chip facets. Reference1 accepted route I people sheet controls camera-angle/scale only; no people or text. Reference2 props anchor supplies muted earth pigments, fine dark ink and controlled watercolor inside material surfaces. FRONT THREE-QUARTER about20degrees down with clearly visible front thickness and compressed top; upper-left light, darker right/lower sides. Entire one object centred with generous EMPTY TRANSPARENT margins. Every pixel outside the actual object is ALPHA ZERO, including gaps; clean cutout with fine antialias edge only. NO GLOW/HALO/HAZE/AURA/BACKDROP, ground patch, shadow puddle, colored veil, checkerboard, text or border. Natural utilitarian stone-age materials, no metal/plastic/3D. Final silhouette target height16px within64px tile, width max56px, adult56px for scale. Legible material shapes. Generate RGBA transparency, not a painted background.",
+      "utc": "2026-10-23 14:43:30 UTC",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/flint_nodule_try1.png",
+      "raw_sha256": "2836213e000144211034783a901e959c7a24a17d30ca5a02f75bbb71c083046e",
+      "image_returned": true
+    },
+    {
+      "asset": "log_pile_large",
+      "attempt": 1,
+      "kind": "sprite",
+      "height": 24,
+      "projection_family": "item",
+      "family": "items",
+      "footprint": [
+        1,
+        1
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-7bedaf03-3e4d-49f7-8fcb-738940d42ed8.png",
+      "prompt": "Use case: stylized-concept. One isolated WorldSim style05 stone-age game item: one large compact stockpile of cut logs stacked in three tiers, round cut ends visibly facing front-left, bark sides receding to right, front three-quarter20degree downward view with substantial visible front height, not overhead rows. Reference1 accepted route I people sheet controls camera-angle/scale only; no people or text. Reference2 props anchor supplies muted earth pigments, fine dark ink and controlled watercolor inside material surfaces. FRONT THREE-QUARTER about20degrees down with clearly visible front thickness and compressed top; upper-left light, darker right/lower sides. Entire one object centred with generous EMPTY TRANSPARENT margins. Every pixel outside the actual object is ALPHA ZERO, including gaps; clean cutout with fine antialias edge only. NO GLOW/HALO/HAZE/AURA/BACKDROP, ground patch, shadow puddle, colored veil, checkerboard, text or border. Natural utilitarian stone-age materials, no metal/plastic/3D. Final silhouette target height24px within64px tile, width max56px, adult56px for scale. Legible material shapes. Generate RGBA transparency, not a painted background.",
+      "utc": "2026-10-23 14:44:13 UTC",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/log_pile_large_try1.png",
+      "raw_sha256": "f9afec49f69f42a10ce39b84a9dc6a161ff0ad759c0c01cc10db6d78f619f9ab",
+      "image_returned": true
+    },
+    {
+      "asset": "stone_pile",
+      "attempt": 1,
+      "kind": "sprite",
+      "height": 20,
+      "projection_family": "item",
+      "family": "items",
+      "footprint": [
+        1,
+        1
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-8696e85e-3c97-4bb8-a389-7acab9b01e3b.png",
+      "prompt": "Use case: stylized-concept. One isolated WorldSim style05 stone-age game item: one low heap of five irregular gray and ocher stones stacked with visible front vertical faces and two tiers, shallow front three-quarter20degree downward view, not a radial top-down circle. Reference1 accepted route I people sheet controls camera-angle/scale only; no people or text. Reference2 props anchor supplies muted earth pigments, fine dark ink and controlled watercolor inside material surfaces. FRONT THREE-QUARTER about20degrees down with clearly visible front thickness and compressed top; upper-left light, darker right/lower sides. Entire one object centred with generous EMPTY TRANSPARENT margins. Every pixel outside the actual object is ALPHA ZERO, including gaps; clean cutout with fine antialias edge only. NO GLOW/HALO/HAZE/AURA/BACKDROP, ground patch, shadow puddle, colored veil, checkerboard, text or border. Natural utilitarian stone-age materials, no metal/plastic/3D. Final silhouette target height20px within64px tile, width max56px, adult56px for scale. Legible material shapes. Generate RGBA transparency, not a painted background.",
+      "utc": "2026-10-23 14:45:39 UTC",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/stone_pile_try1.png",
+      "raw_sha256": "0562760069ec59440676cfa1c52b81d6ec5aee42c48e0120c55477f431803cbd",
+      "image_returned": true
+    },
+    {
+      "asset": "flint_pile",
+      "attempt": 1,
+      "kind": "sprite",
+      "height": 18,
+      "projection_family": "item",
+      "family": "items",
+      "footprint": [
+        1,
+        1
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-bdc742cb-9df9-4378-82d1-3b8e4c72f42c.png",
+      "prompt": "Use case: stylized-concept. One isolated WorldSim style05 stone-age game item: one low heap of chipped flint pieces stacked in two tiers, gray and pale ocher flint with dark sharp facets, front three-quarter20degree downward view with visible front thickness, not radial overhead arrangement. Reference1 accepted route I people sheet controls camera-angle/scale only; no people or text. Reference2 props anchor supplies muted earth pigments, fine dark ink and controlled watercolor inside material surfaces. FRONT THREE-QUARTER about20degrees down with clearly visible front thickness and compressed top; upper-left light, darker right/lower sides. Entire one object centred with generous EMPTY TRANSPARENT margins. Every pixel outside the actual object is ALPHA ZERO, including gaps; clean cutout with fine antialias edge only. NO GLOW/HALO/HAZE/AURA/BACKDROP, ground patch, shadow puddle, colored veil, checkerboard, text or border. Natural utilitarian stone-age materials, no metal/plastic/3D. Final silhouette target height18px within64px tile, width max56px, adult56px for scale. Legible material shapes. Generate RGBA transparency, not a painted background.",
+      "utc": "2026-10-23 14:46:09 UTC",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/flint_pile_try1.png",
+      "raw_sha256": "8a42dc380d6c16f6f95b415bffe427584129207166ae49179382c78548f77fc6",
+      "image_returned": true
+    },
+    {
+      "asset": "flint_blade",
+      "attempt": 1,
+      "kind": "sprite",
+      "height": 8,
+      "projection_family": "item",
+      "family": "items",
+      "footprint": [
+        1,
+        1
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-1f35df66-7c9c-479d-a613-501d5dcaee9b.png",
+      "prompt": "One isolated WorldSim style05 stone-age game item: one knapped gray flint blade lying low horizontally on its side, shallow front three-quarter20degree downward view with thin edge thickness and obliquely visible chip faces, not flat overhead diagram. Reference1 accepted route I people sheet controls camera-angle/scale only; no people or text. Reference2 props anchor supplies muted earth pigments, fine dark ink and controlled watercolor inside material surfaces. FRONT THREE-QUARTER about20degrees down with visible front thickness and compressed top; upper-left light, darker right/lower sides. Entire object centred with generous EMPTY TRANSPARENT margins. Every pixel outside actual object ALPHA ZERO, including gaps; clean cutout fine antialias edge only. NO GLOW/HALO/HAZE/AURA/BACKDROP, ground patch, shadow puddle, colored veil, checkerboard, text or border. Natural utilitarian stone-age materials. Final silhouette target height8px within64px tile, width max56px, adult56px scale. Legible material shapes. Generate RGBA transparency, not painted background.",
+      "utc": "2026-10-23 14:48:51 UTC",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/flint_blade_try1.png",
+      "raw_sha256": "00210373d5754f5d14c144c364a8a895bb9af9ef038d608281cc719d78c15a0b",
+      "image_returned": true
+    },
+    {
+      "asset": "stone_axe",
+      "attempt": 1,
+      "kind": "sprite",
+      "height": 14,
+      "projection_family": "item",
+      "family": "items",
+      "footprint": [
+        1,
+        1
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-4f49b287-3b0c-4b09-b493-e70df154a795.png",
+      "prompt": "One isolated WorldSim style05 stone-age game item: one primitive stone axe with long wooden handle lying low nearly horizontally, shallow front three-quarter20degree downward view, cord-bound stone head with visible side thickness, handle receding slightly back, not overhead diagram. Reference1 accepted route I people sheet controls camera-angle/scale only; no people or text. Reference2 props anchor supplies muted earth pigments, fine dark ink and controlled watercolor inside material surfaces. FRONT THREE-QUARTER about20degrees down with visible front thickness and compressed top; upper-left light, darker right/lower sides. Entire object centred with generous EMPTY TRANSPARENT margins. Every pixel outside actual object ALPHA ZERO, including gaps; clean cutout fine antialias edge only. NO GLOW/HALO/HAZE/AURA/BACKDROP, ground patch, shadow puddle, colored veil, checkerboard, text or border. Natural utilitarian stone-age materials. Final silhouette target height14px within64px tile, width max56px, adult56px scale. Legible material shapes. Generate RGBA transparency, not painted background.",
+      "utc": "2026-10-23 14:49:27 UTC",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/stone_axe_try1.png",
+      "raw_sha256": "dc926e1c4594dd048c9ae850fb2eeed75229922b789c880ba1d8326b720beb4c",
+      "image_returned": true
+    },
+    {
+      "asset": "hide",
+      "attempt": 1,
+      "kind": "sprite",
+      "height": 10,
+      "projection_family": "item",
+      "family": "items",
+      "footprint": [
+        1,
+        1
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-1331dbce-5b65-4607-a2c4-240adbd6b336.png",
+      "prompt": "One isolated WorldSim style05 stone-age game item: one fresh brown animal hide loosely folded low, slightly curled edges and folded hide thickness visible in front three-quarter20degree downward view, natural irregular hide shape, not fully splayed flat overhead diagram. Reference1 accepted route I people sheet controls camera-angle/scale only; no people or text. Reference2 props anchor supplies muted earth pigments, fine dark ink and controlled watercolor inside material surfaces. FRONT THREE-QUARTER about20degrees down with visible front thickness and compressed top; upper-left light, darker right/lower sides. Entire object centred with generous EMPTY TRANSPARENT margins. Every pixel outside actual object ALPHA ZERO, including gaps; clean cutout fine antialias edge only. NO GLOW/HALO/HAZE/AURA/BACKDROP, ground patch, shadow puddle, colored veil, checkerboard, text or border. Natural utilitarian stone-age materials. Final silhouette target height10px within64px tile, width max56px, adult56px scale. Legible material shapes. Generate RGBA transparency, not painted background.",
+      "utc": "2026-10-23 14:50:05 UTC",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/hide_try1.png",
+      "raw_sha256": "f87da466ad927065cd8398ecc710a89011ba91b044adb48a403fd79144ea9a5c",
+      "image_returned": true
+    },
+    {
+      "asset": "berry_basket",
+      "attempt": 1,
+      "kind": "sprite",
+      "height": 24,
+      "projection_family": "item",
+      "family": "items",
+      "footprint": [
+        1,
+        1
+      ],
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16902-4da8-79b0-a223-82140df8ae4f/exec-cd7cdad2-5fae-431c-ba1d-a0f30938d84c.png",
+      "prompt": "One isolated WorldSim style05 stone-age game item: one low round woven reed basket filled with red and dark purple berries, standing front three-quarter20degree downward view, substantial woven FRONT WALL visible with only narrow elliptical opening and a few berries above rim, not overhead circular opening. Reference1 accepted route I people sheet controls camera-angle/scale only; no people or text. Reference2 props anchor supplies muted earth pigments, fine dark ink and controlled watercolor inside material surfaces. FRONT THREE-QUARTER about20degrees down with visible front thickness and compressed top; upper-left light, darker right/lower sides. Entire object centred with generous EMPTY TRANSPARENT margins. Every pixel outside actual object ALPHA ZERO, including gaps; clean cutout fine antialias edge only. NO GLOW/HALO/HAZE/AURA/BACKDROP, ground patch, shadow puddle, colored veil, checkerboard, text or border. Natural utilitarian stone-age materials. Final silhouette target height24px within64px tile, width max56px, adult56px scale. Legible material shapes. Generate RGBA transparency, not painted background.",
+      "utc": "2026-10-23 14:50:40 UTC",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/props.png"
+      ],
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/props.png": "d248a0199aa7e5e70f1229e10c9d52dad137efc3bf51b740318b08a887b4c1e8"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/berry_basket_try1.png",
+      "raw_sha256": "857ccef7bf6f157de36427d45dd3e8c2bde8d5a0f622a02d7ea3406974e2e31c",
+      "image_returned": true
+    },
+    {
+      "asset": "wolf_sheet",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16907-11f8-7a32-b972-88c0c0942d9e/exec-a7908c2e-3dd6-4121-aea4-c86b4c26bcd7.png",
+      "prompt": "Create ONE transparent-background wolf sprite sheet, exactly 2 rows x 5 columns, ten complete separate wolves, no captions/no grid/no shadows/no scenery. WorldSim style05: finely inked contours with textured watercolor grey-brown fur, muted earth palette, strong upper-left light, no photoreal rendering. Reference1 adopted Route I sheet is camera/scale authority: front three-quarter camera only about20 degrees down, NOT top-down. Reference2 original05 person and Reference3 scene are medium/ink/palette references, not camera. Reference4 prior wolf sheet is identity reference ONLY; fix its ambiguous poses. Top row south-facing front3/4, bottom row east-facing rightward3/4. SAME lean adult grey wolf anatomy, long muzzle, erect pointed ears, low bushy tail. Columns left-to-right: (1) STANDING fully upright on FOUR STRAIGHT EXTENDED LEGS, level back and hips HIGH, belly visibly clear of ground, ALL FOUR FEET GROUNDED, absolutely not sitting or crouching; (2) WALKING unmistakable slow stride with one foreleg raised and opposite hindleg advanced, clear unequal foot positions and gap between legs, torso level, NO standing pose; (3) RUNNING full stretched gallop forward, front/rear limbs separated horizontally, level body not upward pounce; (4) ATTACK low forward lunge jaws open teeth exposed, forelegs thrust ahead, clearly distinct from running; (5) DEAD lying laterally on side with four limp legs and closed eyes, no blood. Preserve generous transparent gutters between all ten figures and full tails/feet. Uniform scale: at final game scale shoulders28px and person56px (half adult human), body about56px long; produce large clear source figures for uniform downsample. No seated wolves anywhere. Top row must show all four long legs and level high hips; do not shorten hindlegs into a seated silhouette.",
+      "references": [
+        "art/character/boards/route_i_sheet_1x.png",
+        "art/style05/anchors/person.png",
+        "art/style05/anchors/scene.png",
+        "art/animal/boards/wolf_sheet_2x.png"
+      ],
+      "utc": "2026-10-23T14:41:42.993Z",
+      "status": "DIAGNOSTIC_CANDIDATE_NOT_ADOPTED",
+      "raw_sha256": "b8d778f710c7f32c9fa42789bbfc78ab68ca0a9cbed1814e50d0c0a527374d94",
+      "reference_sha256": {
+        "art/character/boards/route_i_sheet_1x.png": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+        "art/style05/anchors/person.png": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
+        "art/style05/anchors/scene.png": "773b46af93bcb4b77170ce5d1f1b43223b6d1aabee69fc5773a02f89cd2cefb5",
+        "art/animal/boards/wolf_sheet_2x.png": "824797bed8e774af74c4016c12274698f0ccf4536e1cc63ce2efd19a7af7a7ac"
+      },
+      "raw_preserved": "/Users/rexxa/work/artstruct-data/generations/wolf_try1.png",
+      "image_returned": true
+    }
+  ],
+  "failures": [
+    {
+      "asset": "drying_rack_empty",
+      "attempt": 1,
+      "prompt": "Use case: stylized-concept. Single transparent WorldSim style05 game sprite. Attached image1 is accepted Route I people: match its FRONT THREE-QUARTER camera about20 degrees looking down and person-relative scale (adult56px). Attached image2 is ONLY the hand-ink and pigment/material reference; never use its high overhead camera or background. STYLE: warm muted earthy hand-painted watercolor with fine dark irregular ink outlines, restrained natural material grain, readable solid silhouette. LIGHTING: upper-left illumination, top/left faces brighter, bottom/right faces darker; coherent negative x/y brightness slope, no rimlight. COMPOSITION: entire isolated object centered on genuine transparent alpha, generous margin, no people, no ground patch, no external cast shadow, no text, labels, border or multiple views. Front face is substantial, top shallow; never overhead plan view. SUBJECT: EMPTY HIDE DRYING RACK. One upright rectangular frame of four rough slender timber poles lashed with sinew, supported by two splayed foot braces, empty transparent opening with several hanging short tie cords. It stands almost person-high:48px vs adult56, footprint128x64. Look mostly at front of frame, slight right side visible, no horizontal table top. Empty truly transparent centre.",
+      "utc": "2026-10-23T14:07:40.647Z",
+      "error": "image generation failed HTTP400 moderation_blocked output safety_violations violence",
+      "request_id": "4801702f-69b4-4ce5-af12-87d630ba8979",
+      "image_returned": false
+    }
+  ]
+}

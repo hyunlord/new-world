@@ -1,0 +1,100 @@
+{
+  "owner_approval": "PENDING",
+  "scope": [
+    "art/**",
+    "docs/v8/artstruct/**"
+  ],
+  "base": "429a18000266483ee40d756840d68b08840313c5",
+  "branch": "v8/art-struct",
+  "generation_calls": 78,
+  "image_successes": 77,
+  "tool_failures": 1,
+  "max_attempts_per_asset": 3,
+  "tests_passed": 63,
+  "ruff": "PASS",
+  "type_errors": 0,
+  "type_warnings": 3,
+  "game_gate": "NOT_RUN_art_only_no_game_or_bridge_change",
+  "boards": {
+    "boards": [
+      {
+        "path": "art/boards/struct_closeups_2x.png",
+        "bytes": 821601,
+        "size": [
+          3392,
+          792
+        ],
+        "panels": 6,
+        "exact_pixels": true
+      },
+      {
+        "path": "art/boards/struct_conditions.png",
+        "bytes": 1435799,
+        "size": [
+          2160,
+          632
+        ],
+        "panels": 4,
+        "exact_pixels": true
+      },
+      {
+        "path": "art/boards/struct_owner_board.png",
+        "bytes": 1076276,
+        "size": [
+          2880,
+          672
+        ],
+        "panels": 3,
+        "exact_pixels": true
+      }
+    ],
+    "passed": true
+  },
+  "determinism": {
+    "renders": 12,
+    "pixel_equal": 12,
+    "inputs_unchanged": true
+  },
+  "fps": {
+    "valid": true,
+    "fps": 304.108106023482,
+    "seconds": 60.001689,
+    "people": 200,
+    "environment": 600,
+    "rooms": 3,
+    "input_hashes": 423,
+    "invalid_frames": 0
+  },
+  "remaining_failures": [
+    "log_cap seam, all3 attempts",
+    "standing family numeric6/27",
+    "wolf diagnostic not adopted",
+    "optional item9/12 excluded"
+  ],
+  "raw_evidence": [
+    {
+      "path": "/Users/rexxa/work/artstruct-data/struct-final-tests.txt",
+      "sha256": "75e658cc1d2c6c951d1cf61e35dda27926a8afa0f33ea7f6772aed9468171ba3"
+    },
+    {
+      "path": "/Users/rexxa/work/artstruct-data/struct-final-ruff.txt",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "path": "/Users/rexxa/work/artstruct-data/struct-final-types.txt",
+      "sha256": "ddc5d217db7eaa0c5912d1c36c060b08d099a0959d1db0ce9f999c3d1ab493b2"
+    },
+    {
+      "path": "/Users/rexxa/work/artstruct-data/board-verification.json",
+      "sha256": "8239a4326932ceddbd75eb54c38ac3c3332f48f659b8e81790a820253362e4bc"
+    },
+    {
+      "path": "/Users/rexxa/work/artstruct-data/render-determinism.json",
+      "sha256": "a6c6757b52731d74b843d6a29079bac96e0707ba2b5398504f944b4a9440a8f0"
+    },
+    {
+      "path": "/Users/rexxa/work/artstruct-data/fps/final/measurement.json",
+      "sha256": "f7a384460316c8eff30e0f82b16e18b4ab99648f581afd5f56d1b6409fa571f6"
+    }
+  ]
+}

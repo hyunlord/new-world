@@ -1,0 +1,650 @@
+{
+  "assets": [
+    {
+      "id": "bedroll",
+      "path": "art/style05/struct/bedroll.png",
+      "width": 106,
+      "height": 22,
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "anchor": [
+        53.0,
+        17.0
+      ],
+      "count_buckets": [],
+      "family": "items",
+      "status": "READABLE_NUMERIC_FAIL: 긴 옆면과 솟은 베개가 있는 입상 침구로 읽힘. 불투명98x14px, 논리2x1(원래1x2의90도 회전). 스타일 수치 실패는 유지."
+    },
+    {
+      "id": "birch_large",
+      "path": "art/style05/struct/birch_large.png",
+      "width": 108,
+      "height": 184,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        54.0,
+        178.0
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "NUMERIC_READY_READABLE_OWNER_PENDING: 흰 줄기와 높은 성긴 수관의 자작나무로 읽힌다."
+    },
+    {
+      "id": "birch_small",
+      "path": "art/style05/struct/birch_small.png",
+      "width": 77,
+      "height": 144,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        38.0,
+        139.0
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "NUMERIC_READY_READABLE_OWNER_PENDING: 좁은 줄기와 잎 덩어리가 구분되는 어린 자작나무다."
+    },
+    {
+      "id": "boulder_large",
+      "path": "art/style05/struct/boulder_large.png",
+      "width": 52,
+      "height": 44,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        26.0,
+        39.0
+      ],
+      "count_buckets": [],
+      "family": "ground",
+      "status": "NUMERIC_READY_READABLE_OWNER_PENDING: 바위 앞면이 넓게 보여 높이가 있는 큰 바위로 읽힘."
+    },
+    {
+      "id": "boulder_small",
+      "path": "art/style05/struct/boulder_small.png",
+      "width": 37,
+      "height": 32,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        18.0,
+        27.0
+      ],
+      "count_buckets": [],
+      "family": "ground",
+      "status": "NUMERIC_READY_READABLE_OWNER_PENDING: 윗면과 전면이 분리된 낮은 작은 바위."
+    },
+    {
+      "id": "claybank_depleted",
+      "path": "art/style05/struct/claybank_depleted.png",
+      "width": 43,
+      "height": 24,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        21.0,
+        19.0
+      ],
+      "count_buckets": [],
+      "family": "ground",
+      "status": "NUMERIC_READY_READABLE_OWNER_PENDING: 파낸 움푹한 점토 둑과 남은 낮은 테두리가 보임."
+    },
+    {
+      "id": "claybank_full",
+      "path": "art/style05/struct/claybank_full.png",
+      "width": 46,
+      "height": 24,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        23.0,
+        19.0
+      ],
+      "count_buckets": [],
+      "family": "ground",
+      "status": "NUMERIC_READY_READABLE_OWNER_PENDING: 긁힌 점토 절벽 전면과 낮은 상면이 보임."
+    },
+    {
+      "id": "door_log_closed",
+      "path": "art/style05/struct/door_log_closed.png",
+      "width": 50,
+      "height": 68,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        25.0,
+        63.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "NUMERIC_READY_READABLE_OWNER_PENDING: 나무 판자와 밧줄 가로대로 닫힌 문이 읽힘."
+    },
+    {
+      "id": "door_log_open",
+      "path": "art/style05/struct/door_log_open.png",
+      "width": 64,
+      "height": 68,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        32.0,
+        63.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "READABLE_NUMERIC_FAIL: 통나무 문틀과 열린 판자문, 끈 경첩과 끈 손잡이로 읽힌다."
+    },
+    {
+      "id": "door_stone_closed",
+      "path": "art/style05/struct/door_stone_closed.png",
+      "width": 59,
+      "height": 68,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        29.0,
+        63.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "NUMERIC_READY_READABLE_OWNER_PENDING: 돌 문틀 안에 밧줄로 묶인 나무 문이 읽힘."
+    },
+    {
+      "id": "door_stone_open",
+      "path": "art/style05/struct/door_stone_open.png",
+      "width": 76,
+      "height": 68,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        38.0,
+        63.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "NUMERIC_READY_READABLE_OWNER_PENDING: 돌 문틀과 열린 판자문, 끈 경첩과 손잡이가 식별된다."
+    },
+    {
+      "id": "drying_rack_empty",
+      "path": "art/style05/struct/drying_rack_empty.png",
+      "width": 86,
+      "height": 56,
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "anchor": [
+        43.0,
+        51.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "READABLE_NUMERIC_FAIL: 빈 직립 나무틀과 앞뒤 지지대가 보인다. 색면 수치 실패는 유지한다."
+    },
+    {
+      "id": "drying_rack_hide",
+      "path": "art/style05/struct/drying_rack_hide.png",
+      "width": 64,
+      "height": 56,
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "anchor": [
+        32.0,
+        51.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "NUMERIC_READY_READABLE_OWNER_PENDING: 나무틀에 가죽을 매단 직립 건조대로 읽힌다."
+    },
+    {
+      "id": "flint_outcrop",
+      "path": "art/style05/struct/flint_outcrop.png",
+      "width": 50,
+      "height": 28,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        25.0,
+        23.0
+      ],
+      "count_buckets": [],
+      "family": "ground",
+      "status": "READABLE_NUMERIC_FAIL: 밝은 모암에 어두운 부싯돌 덩이가 솟아 있음."
+    },
+    {
+      "id": "ford_stones",
+      "path": "art/style05/struct/ford_stones.png",
+      "width": 96,
+      "height": 20,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        48.0,
+        15.0
+      ],
+      "count_buckets": [],
+      "family": "ground",
+      "status": "READABLE_NUMERIC_FAIL: 별개 네 디딤돌이다. 통짜 sheet는 standing 승인 대상이 아니며 네 분할본으로 배치한다."
+    },
+    {
+      "id": "grinding_stone",
+      "path": "art/style05/struct/grinding_stone.png",
+      "width": 53,
+      "height": 40,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        26.0,
+        35.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "NUMERIC_READY_READABLE_OWNER_PENDING: 두꺼운 석재 받침의 홈과 손돌이 식별된다."
+    },
+    {
+      "id": "hearth_1",
+      "path": "art/style05/struct/hearth_1.png",
+      "width": 63,
+      "height": 42,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        31.0,
+        37.0
+      ],
+      "count_buckets": [],
+      "family": "items",
+      "status": "READABLE_NUMERIC_FAIL: 낮은 돌 테두리와 그 위 불꽃의 화덕이다. 색면 수치 실패는 유지한다."
+    },
+    {
+      "id": "hearth_pots",
+      "path": "art/style05/struct/hearth_pots.png",
+      "width": 60,
+      "height": 44,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        30.0,
+        39.0
+      ],
+      "count_buckets": [],
+      "family": "items",
+      "status": "NUMERIC_READY_READABLE_OWNER_PENDING: 돌 테두리 안에 도기 세 개와 불꽃이 있는 소성 화덕이다."
+    },
+    {
+      "id": "hearth_unlit",
+      "path": "art/style05/struct/hearth_unlit.png",
+      "width": 42,
+      "height": 28,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        21.0,
+        23.0
+      ],
+      "count_buckets": [],
+      "family": "items",
+      "status": "NUMERIC_READY_READABLE_OWNER_PENDING: 돌 테두리와 재, 장작이 있는 꺼진 화덕이다."
+    },
+    {
+      "id": "knapping_spot",
+      "path": "art/style05/struct/knapping_spot.png",
+      "width": 61,
+      "height": 42,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        30.0,
+        37.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "NUMERIC_READY_READABLE_OWNER_PENDING: 두 돌 받침 위 작업판과 석기가 놓인 작업대다."
+    },
+    {
+      "id": "lean_to",
+      "path": "art/style05/struct/lean_to.png",
+      "width": 91,
+      "height": 72,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        45.0,
+        67.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "NUMERIC_READY_READABLE_OWNER_PENDING: 기둥 두 개와 뒤로 기운 가죽 차양, 사람이 들어갈 열린 앞면의 쉼터로 읽힌다."
+    },
+    {
+      "id": "log_cap",
+      "path": "art/style05/struct/log_cap.png",
+      "width": 256,
+      "height": 16,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        128.0,
+        15.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "UNREVIEWED_NUMERIC_FAIL"
+    },
+    {
+      "id": "log_end",
+      "path": "art/style05/struct/log_end.png",
+      "width": 24,
+      "height": 60,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        12.0,
+        59.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "UNREVIEWED_NUMERIC_PASS"
+    },
+    {
+      "id": "log_face",
+      "path": "art/style05/struct/log_face.png",
+      "width": 256,
+      "height": 44,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        128.0,
+        43.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "UNREVIEWED_NUMERIC_PASS"
+    },
+    {
+      "id": "log_inner_corner",
+      "path": "art/style05/struct/log_inner_corner.png",
+      "width": 16,
+      "height": 16,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        8.0,
+        15.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "NUMERIC_READY_READABLE_OWNER_PENDING: 짧은 목재 두 개의 연결 상면이 보임; 두께가 남는 후보로 기록."
+    },
+    {
+      "id": "oak_large",
+      "path": "art/style05/struct/oak_large.png",
+      "width": 188,
+      "height": 185,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        94.0,
+        180.0
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "NUMERIC_READY_READABLE_OWNER_PENDING: 굵은 줄기와 넓은 수관이 있는 큰 참나무다."
+    },
+    {
+      "id": "oak_small",
+      "path": "art/style05/struct/oak_small.png",
+      "width": 118,
+      "height": 144,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        59.0,
+        139.0
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "NUMERIC_READY_READABLE_OWNER_PENDING: 가는 줄기와 성긴 수관이 있는 작은 참나무다."
+    },
+    {
+      "id": "pine_large",
+      "path": "art/style05/struct/pine_large.png",
+      "width": 110,
+      "height": 184,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        55.0,
+        179.0
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "READABLE_NUMERIC_FAIL: 줄기와 가지 층이 드러나는 큰 소나무다. 수치 실패는 별도 유지한다."
+    },
+    {
+      "id": "pine_small",
+      "path": "art/style05/struct/pine_small.png",
+      "width": 74,
+      "height": 144,
+      "footprint": [
+        2.0,
+        2.0
+      ],
+      "anchor": [
+        37.0,
+        139.0
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "NUMERIC_READY_READABLE_OWNER_PENDING: 좁은 원추 수관과 줄기가 있는 작은 소나무다."
+    },
+    {
+      "id": "pottery_bench",
+      "path": "art/style05/struct/pottery_bench.png",
+      "width": 73,
+      "height": 44,
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "anchor": [
+        36.0,
+        39.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "NUMERIC_READY_READABLE_OWNER_PENDING: 다리 달린 작업대 위 세 도기가 식별된다."
+    },
+    {
+      "id": "rock_face",
+      "path": "art/style05/struct/rock_face.png",
+      "width": 256,
+      "height": 44,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        128.0,
+        43.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "UNREVIEWED_NUMERIC_PASS"
+    },
+    {
+      "id": "stone_cap",
+      "path": "art/style05/struct/stone_cap.png",
+      "width": 256,
+      "height": 16,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        128.0,
+        15.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "UNREVIEWED_NUMERIC_PASS"
+    },
+    {
+      "id": "stone_end",
+      "path": "art/style05/struct/stone_end.png",
+      "width": 24,
+      "height": 60,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        12.0,
+        59.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "UNREVIEWED_NUMERIC_PASS"
+    },
+    {
+      "id": "stone_face",
+      "path": "art/style05/struct/stone_face.png",
+      "width": 256,
+      "height": 44,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        128.0,
+        43.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "UNREVIEWED_NUMERIC_PASS"
+    },
+    {
+      "id": "stone_inner_corner",
+      "path": "art/style05/struct/stone_inner_corner.png",
+      "width": 16,
+      "height": 16,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        8.0,
+        15.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "NUMERIC_READY_READABLE_OWNER_PENDING: 짧은 돌 상단 조각으로 읽힌다. 약간의 측면 두께는 남아 있다."
+    },
+    {
+      "id": "stump",
+      "path": "art/style05/struct/stump.png",
+      "width": 33,
+      "height": 28,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        16.0,
+        23.0
+      ],
+      "count_buckets": [],
+      "family": "plants",
+      "status": "NUMERIC_READY_READABLE_OWNER_PENDING: 줄기 껍질 전면과 타원형 절단면이 분리됨."
+    },
+    {
+      "id": "water",
+      "path": "art/style05/struct/water.png",
+      "width": 256,
+      "height": 256,
+      "footprint": [
+        1.0,
+        1.0
+      ],
+      "anchor": [
+        128.0,
+        255.0
+      ],
+      "count_buckets": [],
+      "family": "ground",
+      "status": "UNREVIEWED_NUMERIC_PASS"
+    },
+    {
+      "id": "woodworking_bench",
+      "path": "art/style05/struct/woodworking_bench.png",
+      "width": 66,
+      "height": 44,
+      "footprint": [
+        2.0,
+        1.0
+      ],
+      "anchor": [
+        33.0,
+        39.0
+      ],
+      "count_buckets": [],
+      "family": "buildings",
+      "status": "NUMERIC_READY_READABLE_OWNER_PENDING: 굵은 다리와 상판, 도구가 있는 목공 작업대다."
+    }
+  ]
+}

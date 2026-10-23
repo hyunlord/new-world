@@ -1,0 +1,68 @@
+{
+  "panels": [
+    {
+      "path": "/Users/rexxa/work/artstruct-data/renders/scene_day6_night_night_1x_figures.png",
+      "sha256": "4625670e08767733e53ba12f4203808acb71db5bc1a649f06ea0207da7f16854",
+      "crop": [
+        0,
+        150,
+        720,
+        710
+      ],
+      "integer_scale": 1,
+      "board_origin": [
+        0,
+        38
+      ]
+    },
+    {
+      "path": "/Users/rexxa/work/artstruct-data/renders/scene_day6_night_night_half_lod.png",
+      "sha256": "f9cdfd94ca534fd8aada432968549b7eacd8a4a9f28282e28eabd3144d17d395",
+      "crop": [
+        400,
+        328,
+        760,
+        608
+      ],
+      "integer_scale": 1,
+      "board_origin": [
+        720,
+        38
+      ]
+    },
+    {
+      "path": "/Users/rexxa/work/artstruct-data/renders/scene_winter_noon_winter_1x_figures.png",
+      "sha256": "ce92a35802a7dec9a889211baaf09878742093e61f5b1326140e158134d7808f",
+      "crop": [
+        0,
+        150,
+        720,
+        710
+      ],
+      "integer_scale": 1,
+      "board_origin": [
+        1080,
+        38
+      ]
+    },
+    {
+      "path": "/Users/rexxa/work/artstruct-data/renders/scene_winter_noon_winter_half_lod.png",
+      "sha256": "b5aca452e04af02e1f0beea7b4684adad1dd829c6c035de365369a806c8932fd",
+      "crop": [
+        400,
+        328,
+        760,
+        608
+      ],
+      "integer_scale": 1,
+      "board_origin": [
+        1800,
+        38
+      ]
+    }
+  ],
+  "sha256": "bbd12ffacce72bf25c3656ce841cf3bfa9f4b8c0db1af505b6223e97386ef23b",
+  "bytes": 1435799,
+  "owner_approval": "PENDING",
+  "operation": "same-coordinate crops; integer nearest enlargement only"
+}

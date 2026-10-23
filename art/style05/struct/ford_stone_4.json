@@ -1,0 +1,31 @@
+{
+  "id": "ford_stone_4",
+  "source": "/Users/rexxa/work/artstruct-data/generations/ford_stones_try1.png",
+  "source_sha256": "b07e3738b609a7ecfca0e073a89240607714d8ae1270136507d1a3b2865f0aeb",
+  "sheet_cell": [
+    1629,
+    0,
+    2172,
+    724
+  ],
+  "alpha_crop_within_cell": [
+    40,
+    237,
+    464,
+    497
+  ],
+  "uniform_scale": 0.046875,
+  "opaque_target_height": 12,
+  "anchor": [
+    14,
+    15
+  ],
+  "export_sha256": "4d3b21fbd726519b593fc24624d6e468fcda14e261e169d372961d7b19709505",
+  "operations": [
+    "equal four-cell split",
+    "alpha>=128 bbox plus2px fringe crop",
+    "uniform Lanczos to opaque height12",
+    "transparent pad4; no local pixel edits"
+  ],
+  "status": "CANDIDATE_NORMALIZED_NOT_ACCEPTED"
+}

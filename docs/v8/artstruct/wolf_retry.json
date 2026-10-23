@@ -1,0 +1,987 @@
+{
+  "status": "DIAGNOSTIC_CANDIDATE_NOT_ADOPTED",
+  "attempts_used": 1,
+  "attempts_cap": 3,
+  "canonical_replaced": false,
+  "raw": "/Users/rexxa/work/artstruct-data/generations/wolf_try1.png",
+  "raw_sha256": "b8d778f710c7f32c9fa42789bbfc78ab68ca0a9cbed1814e50d0c0a527374d94",
+  "sheet": "art/style05/struct/wolf_retry_sheet_1x.png",
+  "sheet_sha256": "ff1011a2cf255ca9d31f39456151895358a8a10499f455a5ff5327c5f41f99a1",
+  "sheet_bytes": 37569,
+  "ownership": {
+    "source_rgba_sha256": "5d30b2341e0ebccc06c2e2329c7f97cdf702849aa88a69eb0c56d3cb5caeda7f",
+    "ownership_sha256": "951bee38109eed35932255fb19cec7da3639f5a65ed8bf856c2822453d591a88",
+    "visible_pixels": 490450,
+    "tied_visible_pixels": 14,
+    "reconstructed_exactly": true,
+    "foreign_major_pixels": 0,
+    "fragments": []
+  },
+  "landmarks": {
+    "source": "S stand owned panel",
+    "shoulder_y": 250,
+    "lowest_opaque_foot_y": 456,
+    "target_shoulder_height": 28,
+    "method": "Executor visual shoulder/back landmark; not inferred from alpha height. One scale applies to all upright frames."
+  },
+  "prior_failure": "ENV1 S/E stand read as sitting, S walk as standing, S run as pouncing.",
+  "reading": "Standing and walking are more explicit; S run remains near a pounce and dead poses remain sleep-ambiguous. No canonical promotion.",
+  "calibration_limit": "Animal family calibration derives from prior candidates, not adopted animal anchors; frozen negative-control calibration FAIL remains. Numeric passes cannot establish acceptance.",
+  "references_note": "Adopted Route I board supplies angle/scale; original05 person+scene supply style; prior candidate wolf supplies identity only.",
+  "numeric_pass_count": 10,
+  "projection_pass_count": 2,
+  "frames": [
+    {
+      "facing": "S",
+      "pose": "stand",
+      "source_box": [
+        25,
+        8,
+        317,
+        524
+      ],
+      "raw_panel": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_panel_0.png",
+      "normalized": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_S_stand_1x.png",
+      "sha256": "f5e11e00bb0de791b255b84f869fc1576fbde07a9f1067498b123357886e93ca",
+      "scale": 0.13592233009708737,
+      "normalization": {
+        "scaled_size": [
+          40,
+          70
+        ],
+        "trim_box": [
+          8,
+          21,
+          36,
+          62
+        ],
+        "placement": [
+          34,
+          32
+        ],
+        "resized_to_canvas_offset": [
+          26,
+          11
+        ],
+        "visible_pixels": 763,
+        "rotation_degrees": 0,
+        "scale": 0.13592233009708737,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "projection": {
+        "family": "wolf",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          28,
+          42
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 657,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 40,
+        "gradient_x": -2.4387631304347823,
+        "gradient_y": -0.48491423948220125,
+        "light_angle_degrees": 191.24579848483216,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "judge_v2": {
+        "candidate": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_panel_0.png",
+        "sha256": "e2a9fa0d94e7dcf6c777c5233bccfcc982a147588783d9a9ebfa866991b1d078",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.23981619473422752,
+          "saturation_q25": 0.3860785730395198,
+          "saturation_q75": 0.5021611930091594,
+          "stroke_q25": 2.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.0340597156263674,
+          "foreground_pixels": 26617
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "opaque_components": 1,
+      "executor_reading": "Front three-quarter wolf stands on four extended legs; high hips and separated rear feet resolve the seated silhouette."
+    },
+    {
+      "facing": "S",
+      "pose": "walk",
+      "source_box": [
+        305,
+        9,
+        698,
+        522
+      ],
+      "raw_panel": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_panel_1.png",
+      "normalized": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_S_walk_1x.png",
+      "sha256": "5582912948cd0b77ef5eca8048fc4c07b64f558528d72ce4fdca575f2c1d3ef1",
+      "scale": 0.13592233009708737,
+      "normalization": {
+        "scaled_size": [
+          53,
+          70
+        ],
+        "trim_box": [
+          8,
+          26,
+          48,
+          62
+        ],
+        "placement": [
+          28,
+          37
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          11
+        ],
+        "visible_pixels": 830,
+        "rotation_degrees": 0,
+        "scale": 0.13592233009708737,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "projection": {
+        "family": "wolf",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          28,
+          42
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 741,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 36,
+        "gradient_x": -0.008519762258543815,
+        "gradient_y": 0.7219699421965318,
+        "light_angle_degrees": 90.67609984014747,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "judge_v2": {
+        "candidate": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_panel_1.png",
+        "sha256": "7e310079f8827bc324d0afdf4d3ea64ba7ff7f4b03249c36339e1a6e5d0e2974",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.24245556014882183,
+          "saturation_q25": 0.4131545313503834,
+          "saturation_q75": 0.507043055827539,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.029891597176301663,
+          "foreground_pixels": 31367
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "opaque_components": 1,
+      "executor_reading": "Front three-quarter wolf shows raised forward forepaw and staggered hind feet; a walking step is readable."
+    },
+    {
+      "facing": "S",
+      "pose": "run",
+      "source_box": [
+        668,
+        17,
+        1066,
+        534
+      ],
+      "raw_panel": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_panel_2.png",
+      "normalized": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_S_run_1x.png",
+      "sha256": "436c43e87ec5d2fe205eb1c80ce930539388a39734f6c2e361c677195ec5c345",
+      "scale": 0.13592233009708737,
+      "normalization": {
+        "scaled_size": [
+          54,
+          70
+        ],
+        "trim_box": [
+          7,
+          27,
+          49,
+          61
+        ],
+        "placement": [
+          27,
+          39
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          12
+        ],
+        "visible_pixels": 777,
+        "rotation_degrees": 0,
+        "scale": 0.13592233009708737,
+        "discarded_pixels": 5,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "projection": {
+        "family": "wolf",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          28,
+          42
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 694,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 32,
+        "gradient_x": -0.6774295489891133,
+        "gradient_y": 0.6434437106918238,
+        "light_angle_degrees": 136.47388520918193,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "judge_v2": {
+        "candidate": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_panel_2.png",
+        "sha256": "95e8db5b045f381304755ff37804f03a0668fc98ba45842f872140dc19e4de03",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.25032113037893383,
+          "saturation_q25": 0.4125676710102768,
+          "saturation_q75": 0.5048049243729533,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.03400026174819393,
+          "foreground_pixels": 26898
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "opaque_components": 1,
+      "executor_reading": "Front wolf is airborne with extended forelegs; run remains visually close to pounce/lunge."
+    },
+    {
+      "facing": "S",
+      "pose": "attack",
+      "source_box": [
+        1007,
+        31,
+        1462,
+        524
+      ],
+      "raw_panel": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_panel_3.png",
+      "normalized": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_S_attack_1x.png",
+      "sha256": "e389a7a706755544349f8625a9e8c472d37e7444f727b01dcb57294c32f14f93",
+      "scale": 0.13592233009708737,
+      "normalization": {
+        "scaled_size": [
+          62,
+          67
+        ],
+        "trim_box": [
+          8,
+          27,
+          48,
+          59
+        ],
+        "placement": [
+          28,
+          41
+        ],
+        "resized_to_canvas_offset": [
+          20,
+          14
+        ],
+        "visible_pixels": 765,
+        "rotation_degrees": 0,
+        "scale": 0.13592233009708737,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "projection": {
+        "family": "wolf",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          28,
+          42
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 670,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 32,
+        "gradient_x": -1.153633387888707,
+        "gradient_y": -0.5019264516129034,
+        "light_angle_degrees": 203.51304633011472,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": true
+      },
+      "judge_v2": {
+        "candidate": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_panel_3.png",
+        "sha256": "15bc5a6b90874918cc746c798b9b77110c1468dfbb032480f1a5f3b5872b8b62",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.25444188766079445,
+          "saturation_q25": 0.41215730081074564,
+          "saturation_q75": 0.5215232181552992,
+          "stroke_q25": 2.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.03066242455755812,
+          "foreground_pixels": 28591
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "opaque_components": 1,
+      "executor_reading": "Front attacking wolf has open jaws and low head; aggression reads but limb silhouette overlaps running."
+    },
+    {
+      "facing": "S",
+      "pose": "dead",
+      "source_box": [
+        1365,
+        22,
+        1774,
+        567
+      ],
+      "raw_panel": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_panel_4.png",
+      "normalized": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_S_dead_1x.png",
+      "sha256": "121bb783367c8396624052084eb8dfecc09798007ba0a22260f94141f714625f",
+      "scale": 0.14507772020725387,
+      "normalization": {
+        "scaled_size": [
+          59,
+          79
+        ],
+        "trim_box": [
+          1,
+          41,
+          58,
+          64
+        ],
+        "placement": [
+          19,
+          34
+        ],
+        "resized_to_canvas_offset": [
+          18,
+          -7
+        ],
+        "visible_pixels": 854,
+        "rotation_degrees": 0,
+        "scale": 0.14507772020725387,
+        "discarded_pixels": 1,
+        "discarded_max_alpha": 1,
+        "visibility_threshold": 16
+      },
+      "projection": {
+        "family": "carcass",
+        "anchor": [
+          48,
+          56
+        ],
+        "height_band": [
+          12,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 779,
+        "base_row": 55,
+        "base_error": -1,
+        "height": 21,
+        "gradient_x": -0.6983538873994638,
+        "gradient_y": 1.4818499306518715,
+        "light_angle_degrees": 115.23317354371703,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "judge_v2": {
+        "candidate": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_panel_4.png",
+        "sha256": "3b1cd430a8fdeca1b05a691948848a0bd2617c56163a66237e782534a287b9e7",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.2518024032042724,
+          "saturation_q25": 0.3900097916822649,
+          "saturation_q75": 0.48582893951673223,
+          "stroke_q25": 2.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.0469082934619949,
+          "foreground_pixels": 16309
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "opaque_components": 1,
+      "executor_reading": "Wolf lies on its side with folded limp legs; death is plausible but cannot exclude resting from silhouette alone."
+    },
+    {
+      "facing": "E",
+      "pose": "stand",
+      "source_box": [
+        23,
+        475,
+        347,
+        887
+      ],
+      "raw_panel": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_panel_5.png",
+      "normalized": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_E_stand_1x.png",
+      "sha256": "7400eff7947a84f36e127ca76c7d7b63aaaf23765df542ec2c163f624fb90da0",
+      "scale": 0.13592233009708737,
+      "normalization": {
+        "scaled_size": [
+          44,
+          56
+        ],
+        "trim_box": [
+          2,
+          10,
+          43,
+          44
+        ],
+        "placement": [
+          27,
+          39
+        ],
+        "resized_to_canvas_offset": [
+          25,
+          29
+        ],
+        "visible_pixels": 782,
+        "rotation_degrees": 0,
+        "scale": 0.13592233009708737,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "projection": {
+        "family": "wolf",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          28,
+          42
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 694,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 34,
+        "gradient_x": 0.29742815999999983,
+        "gradient_y": 1.101655813953488,
+        "light_angle_degrees": 74.89134153183299,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "judge_v2": {
+        "candidate": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_panel_5.png",
+        "sha256": "3b255e70e09117687e5ed1c0b41ac0532e331ca7396e534ff0cc78fe6d0c55dd",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.24893717524799244,
+          "saturation_q25": 0.40143514302071237,
+          "saturation_q75": 0.49854876250744823,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.03693840401432086,
+          "foreground_pixels": 27881
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "opaque_components": 1,
+      "executor_reading": "Right-facing wolf stands with long straight forelegs and high hindquarters; not sitting."
+    },
+    {
+      "facing": "E",
+      "pose": "walk",
+      "source_box": [
+        321,
+        513,
+        691,
+        859
+      ],
+      "raw_panel": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_panel_6.png",
+      "normalized": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_E_walk_1x.png",
+      "sha256": "0096efa5b9a923c473007955c16f7934bb86429de878b2535639ded096935c89",
+      "scale": 0.13592233009708737,
+      "normalization": {
+        "scaled_size": [
+          50,
+          47
+        ],
+        "trim_box": [
+          4,
+          7,
+          49,
+          38
+        ],
+        "placement": [
+          25,
+          42
+        ],
+        "resized_to_canvas_offset": [
+          21,
+          35
+        ],
+        "visible_pixels": 814,
+        "rotation_degrees": 0,
+        "scale": 0.13592233009708737,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "projection": {
+        "family": "wolf",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          28,
+          42
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 713,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 30,
+        "gradient_x": 1.2091716510903423,
+        "gradient_y": 0.5521097072419104,
+        "light_angle_degrees": 24.541514763883296,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "judge_v2": {
+        "candidate": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_panel_6.png",
+        "sha256": "16d6be4ac2bc4b8517b61251722038542e903690c30c90190b54af87b7d199b9",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.24822263797942,
+          "saturation_q25": 0.41175202339046846,
+          "saturation_q75": 0.4920006432749391,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.0370057319512357,
+          "foreground_pixels": 23641
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "opaque_components": 1,
+      "executor_reading": "Right-facing wolf has one foreleg advancing and a lifted rear paw; walking is readable."
+    },
+    {
+      "facing": "E",
+      "pose": "run",
+      "source_box": [
+        676,
+        487,
+        1064,
+        871
+      ],
+      "raw_panel": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_panel_7.png",
+      "normalized": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_E_run_1x.png",
+      "sha256": "15a3dc392d7203885d14c90a4a9a1f221be4a5eb3e0f68de0de9e678ec04ff55",
+      "scale": 0.13592233009708737,
+      "normalization": {
+        "scaled_size": [
+          53,
+          52
+        ],
+        "trim_box": [
+          0,
+          12,
+          51,
+          40
+        ],
+        "placement": [
+          22,
+          45
+        ],
+        "resized_to_canvas_offset": [
+          22,
+          33
+        ],
+        "visible_pixels": 766,
+        "rotation_degrees": 0,
+        "scale": 0.13592233009708737,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "projection": {
+        "family": "wolf",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          28,
+          42
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 677,
+        "base_row": 71,
+        "base_error": -1,
+        "height": 27,
+        "gradient_x": 1.1589659305993687,
+        "gradient_y": 3.339479669421487,
+        "light_angle_degrees": 70.86067642912376,
+        "base_passed": true,
+        "height_passed": false,
+        "light_passed": false,
+        "passed": false
+      },
+      "judge_v2": {
+        "candidate": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_panel_7.png",
+        "sha256": "98352cc496773e127c0f279edd3a5aaf5fe8aafed784297e75d84a84d33482e0",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.2536172878170999,
+          "saturation_q25": 0.4026437927065805,
+          "saturation_q75": 0.48434238293411364,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.038962259599507706,
+          "foreground_pixels": 17661
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "opaque_components": 1,
+      "executor_reading": "Right-facing stretched airborne wolf reads as galloping."
+    },
+    {
+      "facing": "E",
+      "pose": "attack",
+      "source_box": [
+        1054,
+        520,
+        1437,
+        871
+      ],
+      "raw_panel": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_panel_8.png",
+      "normalized": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_E_attack_1x.png",
+      "sha256": "af7264aaed8a27f0eae993d90793d8dad280b7522b8b69479485fe37b182bb1d",
+      "scale": 0.13592233009708737,
+      "normalization": {
+        "scaled_size": [
+          52,
+          48
+        ],
+        "trim_box": [
+          1,
+          10,
+          47,
+          38
+        ],
+        "placement": [
+          25,
+          45
+        ],
+        "resized_to_canvas_offset": [
+          24,
+          35
+        ],
+        "visible_pixels": 793,
+        "rotation_degrees": 0,
+        "scale": 0.13592233009708737,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "projection": {
+        "family": "wolf",
+        "anchor": [
+          48,
+          72
+        ],
+        "height_band": [
+          28,
+          42
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 692,
+        "base_row": 72,
+        "base_error": 0,
+        "height": 28,
+        "gradient_x": 0.05058687499999977,
+        "gradient_y": 0.9738178343949042,
+        "light_angle_degrees": 87.02633137715144,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "judge_v2": {
+        "candidate": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_panel_8.png",
+        "sha256": "468392cb5e8d63767c921e8ebd6fe077c537eb47f588035d9587444e9c0b5f66",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.251865671641791,
+          "saturation_q25": 0.40975439449768786,
+          "saturation_q75": 0.4909988856678751,
+          "stroke_q25": 2.0,
+          "stroke_q50": 2.8284271247461903,
+          "stroke_q75": 4.0,
+          "stroke_q90": 4.47213595499958,
+          "wash_flatness": 0.03591006049001044,
+          "foreground_pixels": 22310
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "opaque_components": 1,
+      "executor_reading": "Right-facing open-jawed low lunge reads as attack."
+    },
+    {
+      "facing": "E",
+      "pose": "dead",
+      "source_box": [
+        1386,
+        555,
+        1758,
+        887
+      ],
+      "raw_panel": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_panel_9.png",
+      "normalized": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_E_dead_1x.png",
+      "sha256": "dc6ff3b0d4d72755b18a6ec1e762f06f272d3736388e178cb73aeb9c2d6372d3",
+      "scale": 0.1590909090909091,
+      "normalization": {
+        "scaled_size": [
+          59,
+          53
+        ],
+        "trim_box": [
+          2,
+          18,
+          59,
+          40
+        ],
+        "placement": [
+          19,
+          35
+        ],
+        "resized_to_canvas_offset": [
+          17,
+          17
+        ],
+        "visible_pixels": 847,
+        "rotation_degrees": 0,
+        "scale": 0.1590909090909091,
+        "discarded_pixels": 0,
+        "discarded_max_alpha": 0,
+        "visibility_threshold": 16
+      },
+      "projection": {
+        "family": "carcass",
+        "anchor": [
+          48,
+          56
+        ],
+        "height_band": [
+          12,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 762,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 21,
+        "gradient_x": 1.0691966942148758,
+        "gradient_y": 0.0523197163120569,
+        "light_angle_degrees": 2.8014580578531323,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "judge_v2": {
+        "candidate": "/Users/rexxa/work/artstruct-data/generations/wolf_try1_panel_9.png",
+        "sha256": "38821e94129734f2143f23c740d3e8f8fb4e331d53f2c9788920a327d0fae34a",
+        "family": "animal",
+        "metrics": {
+          "edge_density": 0.2523783636857842,
+          "saturation_q25": 0.37977615332446746,
+          "saturation_q75": 0.4918221025276185,
+          "stroke_q25": 2.0,
+          "stroke_q50": 4.0,
+          "stroke_q75": 4.0,
+          "stroke_q90": 5.656854249492381,
+          "wash_flatness": 0.054540872493750954,
+          "foreground_pixels": 16011
+        },
+        "numeric_checks": {
+          "edge_density": true,
+          "saturation_q25": true,
+          "saturation_q75": true,
+          "stroke_q25": true,
+          "stroke_q50": true,
+          "stroke_q75": true,
+          "stroke_q90": true,
+          "wash_flatness": true
+        },
+        "numeric_pass": true,
+        "model_scores": null,
+        "model_status": "MISSING",
+        "passed": false
+      },
+      "opaque_components": 1,
+      "executor_reading": "Right-facing prone wolf lies laterally with limp legs; stillness is readable but sleep/death remains ambiguous."
+    }
+  ],
+  "reviewers_used": 0,
+  "owner_approval": "PENDING"
+}

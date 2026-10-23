@@ -1,0 +1,3186 @@
+{
+  "status": "AUDIT_NOT_OWNER_APPROVAL",
+  "anchor_rounding": "nearest integer from existing metadata; no image modifications",
+  "measurements": [
+    {
+      "category": "tree",
+      "path": "art/style05/env/plants/birch_large.png",
+      "sha256": "f01cf36193f9b4c15c926256676df44b4a074e24e396fb91ff535675a80e46c4",
+      "canvas": [
+        160,
+        160
+      ],
+      "original_metadata_anchor": [
+        80.0,
+        115.19999999999999
+      ],
+      "projection": {
+        "family": "tree",
+        "anchor": [
+          80,
+          115
+        ],
+        "height_band": [
+          128,
+          192
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 14660,
+        "base_row": 157,
+        "base_error": 42,
+        "height": 156,
+        "gradient_x": -0.7496803157589802,
+        "gradient_y": -0.7423783775981524,
+        "light_angle_degrees": 224.71960426167522,
+        "base_passed": false,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_class": "PLAN_VIEW_CROWN",
+      "reading": "수관을 위에서 본 원형/방사형 덩어리이며 줄기 기저에서 솟는 전면 높이가 읽히지 않는다.",
+      "action": "REANGLE_REQUIRED_BY_CONDITIONAL"
+    },
+    {
+      "category": "tree",
+      "path": "art/style05/env/plants/birch_small.png",
+      "sha256": "974f2b1b1678efdc91c4d4996cd0ed58283cd296a8819c800c9d54bbd71284df",
+      "canvas": [
+        96,
+        96
+      ],
+      "original_metadata_anchor": [
+        48.0,
+        69.12
+      ],
+      "projection": {
+        "family": "tree",
+        "anchor": [
+          48,
+          69
+        ],
+        "height_band": [
+          128,
+          192
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 4935,
+        "base_row": 94,
+        "base_error": 25,
+        "height": 95,
+        "gradient_x": -1.620399735449735,
+        "gradient_y": -0.585200659775676,
+        "light_angle_degrees": 199.8569757580362,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_class": "PLAN_VIEW_CROWN",
+      "reading": "수관을 위에서 본 원형/방사형 덩어리이며 줄기 기저에서 솟는 전면 높이가 읽히지 않는다.",
+      "action": "REANGLE_REQUIRED_BY_CONDITIONAL"
+    },
+    {
+      "category": "tree",
+      "path": "art/style05/env/plants/oak_large.png",
+      "sha256": "879ffc811385276e560a17b56e5b25b61ffb63988d8acbcb706fda7d92120900",
+      "canvas": [
+        160,
+        160
+      ],
+      "original_metadata_anchor": [
+        80.0,
+        115.19999999999999
+      ],
+      "projection": {
+        "family": "tree",
+        "anchor": [
+          80,
+          115
+        ],
+        "height_band": [
+          128,
+          192
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 15189,
+        "base_row": 156,
+        "base_error": 41,
+        "height": 154,
+        "gradient_x": -1.1391150796386957,
+        "gradient_y": -0.715774175748379,
+        "light_angle_degrees": 212.1436047679239,
+        "base_passed": false,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_class": "PLAN_VIEW_CROWN",
+      "reading": "수관을 위에서 본 원형/방사형 덩어리이며 줄기 기저에서 솟는 전면 높이가 읽히지 않는다.",
+      "action": "REANGLE_REQUIRED_BY_CONDITIONAL"
+    },
+    {
+      "category": "tree",
+      "path": "art/style05/env/plants/oak_small.png",
+      "sha256": "60fdad1dd222f9eb8a76710866502c9cc87d06f7485987b42e1d7f30d8e5fb2c",
+      "canvas": [
+        96,
+        96
+      ],
+      "original_metadata_anchor": [
+        48.0,
+        69.12
+      ],
+      "projection": {
+        "family": "tree",
+        "anchor": [
+          48,
+          69
+        ],
+        "height_band": [
+          128,
+          192
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 5710,
+        "base_row": 92,
+        "base_error": 23,
+        "height": 91,
+        "gradient_x": -0.9085738134206219,
+        "gradient_y": -0.7513564125886848,
+        "light_angle_degrees": 219.58947006374464,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_class": "PLAN_VIEW_CROWN",
+      "reading": "수관을 위에서 본 원형/방사형 덩어리이며 줄기 기저에서 솟는 전면 높이가 읽히지 않는다.",
+      "action": "REANGLE_REQUIRED_BY_CONDITIONAL"
+    },
+    {
+      "category": "tree",
+      "path": "art/style05/env/plants/pine_large.png",
+      "sha256": "5012b23fb5bcb085dea7f1b2e20f69444e9e7418d94a90b282fe377d7dc0da5f",
+      "canvas": [
+        160,
+        160
+      ],
+      "original_metadata_anchor": [
+        80.0,
+        115.19999999999999
+      ],
+      "projection": {
+        "family": "tree",
+        "anchor": [
+          80,
+          115
+        ],
+        "height_band": [
+          128,
+          192
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 13471,
+        "base_row": 155,
+        "base_error": 40,
+        "height": 153,
+        "gradient_x": -1.1485370056497175,
+        "gradient_y": -0.8926789989801521,
+        "light_angle_degrees": 217.85547217039687,
+        "base_passed": false,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_class": "PLAN_VIEW_CROWN",
+      "reading": "수관을 위에서 본 원형/방사형 덩어리이며 줄기 기저에서 솟는 전면 높이가 읽히지 않는다.",
+      "action": "REANGLE_REQUIRED_BY_CONDITIONAL"
+    },
+    {
+      "category": "tree",
+      "path": "art/style05/env/plants/pine_small.png",
+      "sha256": "9c303ad6fb6bb544698897de1bd3c40bdcffb8bd24bb7066cda0f344a0d765e8",
+      "canvas": [
+        96,
+        96
+      ],
+      "original_metadata_anchor": [
+        48.0,
+        69.12
+      ],
+      "projection": {
+        "family": "tree",
+        "anchor": [
+          48,
+          69
+        ],
+        "height_band": [
+          128,
+          192
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 4965,
+        "base_row": 94,
+        "base_error": 25,
+        "height": 93,
+        "gradient_x": -1.2260814402057436,
+        "gradient_y": -0.3491672727272726,
+        "light_angle_degrees": 195.8960573793149,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_class": "PLAN_VIEW_CROWN",
+      "reading": "수관을 위에서 본 원형/방사형 덩어리이며 줄기 기저에서 솟는 전면 높이가 읽히지 않는다.",
+      "action": "REANGLE_REQUIRED_BY_CONDITIONAL"
+    },
+    {
+      "category": "item",
+      "path": "art/style05/env1/items/firewood.png",
+      "sha256": "d4ba449e03edb569509c14844d27659eda099581488994f5e918b208fc0e9602",
+      "canvas": [
+        64,
+        64
+      ],
+      "original_metadata_anchor": [
+        32,
+        32
+      ],
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 614,
+        "base_row": 49,
+        "base_error": 17,
+        "height": 37,
+        "gradient_x": 0.5628017331022529,
+        "gradient_y": -2.2197940972222217,
+        "light_angle_degrees": 284.2268620242389,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": false,
+        "passed": false
+      },
+      "visual_class": "OBLIQUE_VOLUME_ICON",
+      "reading": "쪼갠 면과 옆면이 보이는 비스듬한 장작; 낮게 놓인 물체.",
+      "action": "REUSE_VISUAL_CANDIDATE_NOT_PROJECTION_PASS"
+    },
+    {
+      "category": "item",
+      "path": "art/style05/env1/items/ground_axe.png",
+      "sha256": "88fc7ca8794a76d34ad0edd400a8eb94d137e904017c15f8a019d8d6ccfb0f18",
+      "canvas": [
+        64,
+        64
+      ],
+      "original_metadata_anchor": [
+        32,
+        32
+      ],
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 713,
+        "base_row": 54,
+        "base_error": 22,
+        "height": 47,
+        "gradient_x": -2.808128376327769,
+        "gradient_y": -0.9123286144578312,
+        "light_angle_degrees": 197.9983832270751,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_class": "PLAN_OR_FLAT_ICON",
+      "reading": "도끼 전체를 바닥에 펼쳐 본 도해에 가깝다.",
+      "action": "DROPPABLE_REANGLE_CANDIDATE"
+    },
+    {
+      "category": "item",
+      "path": "art/style05/env1/items/spear.png",
+      "sha256": "3f0448a9a2b6c7a07b77a90781b0864d089ca0e363de81f3d761384f5043f77d",
+      "canvas": [
+        64,
+        64
+      ],
+      "original_metadata_anchor": [
+        32,
+        32
+      ],
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 230,
+        "base_row": 55,
+        "base_error": 23,
+        "height": 50,
+        "gradient_x": 1.292353333333334,
+        "gradient_y": -4.019846927374301,
+        "light_angle_degrees": 287.8222435105851,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": false,
+        "passed": false
+      },
+      "visual_class": "PLAN_OR_FLAT_ICON",
+      "reading": "창 전체가 평면 대각선으로 펼쳐져 있다.",
+      "action": "DROPPABLE_REANGLE_CANDIDATE"
+    },
+    {
+      "category": "item",
+      "path": "art/style05/env1/items/cured_hide.png",
+      "sha256": "32f5f9b4502c7716cf66e1fe351002c4fd3c83f7b70244cb5ce1d7f128da4720",
+      "canvas": [
+        64,
+        64
+      ],
+      "original_metadata_anchor": [
+        32,
+        32
+      ],
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1307,
+        "base_row": 53,
+        "base_error": 21,
+        "height": 45,
+        "gradient_x": -0.8890922705314008,
+        "gradient_y": -1.2895316680096696,
+        "light_angle_degrees": 235.41493582815093,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_class": "PLAN_OR_FLAT_ICON",
+      "reading": "네 다리와 몸통이 완전히 펼쳐진 평면 가죽.",
+      "action": "DROPPABLE_REANGLE_CANDIDATE"
+    },
+    {
+      "category": "item",
+      "path": "art/style05/env1/items/hide_wrap.png",
+      "sha256": "2db8016a17379e94d4eff7cee5b8a1f58bc0804616048aad69d28b16b3d75b0b",
+      "canvas": [
+        64,
+        64
+      ],
+      "original_metadata_anchor": [
+        32,
+        32
+      ],
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1211,
+        "base_row": 52,
+        "base_error": 20,
+        "height": 45,
+        "gradient_x": -0.5561106712564541,
+        "gradient_y": -0.4475668669527898,
+        "light_angle_degrees": 218.82767368676497,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_class": "OBLIQUE_VOLUME_ICON",
+      "reading": "목과 옷 앞면이 보이는 입체 의복 아이콘; 바닥 놓임 기준은 불명확.",
+      "action": "REUSE_VISUAL_CANDIDATE_NOT_PROJECTION_PASS"
+    },
+    {
+      "category": "item",
+      "path": "art/style05/env1/items/fur_cloak.png",
+      "sha256": "c94efe2f756b2ef339b54f1e158c20b5f93eda077406e71da0054fa73f531448",
+      "canvas": [
+        64,
+        64
+      ],
+      "original_metadata_anchor": [
+        32,
+        32
+      ],
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1386,
+        "base_row": 52,
+        "base_error": 20,
+        "height": 42,
+        "gradient_x": -1.0181931137724547,
+        "gradient_y": -0.45752657657657636,
+        "light_angle_degrees": 204.1968373642582,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_class": "OBLIQUE_VOLUME_ICON",
+      "reading": "목과 전면 주름이 보이는 세워진 망토 아이콘.",
+      "action": "REUSE_VISUAL_CANDIDATE_NOT_PROJECTION_PASS"
+    },
+    {
+      "category": "item",
+      "path": "art/style05/env1/items/wolf_hide.png",
+      "sha256": "3320a868ecd38ecebedffd2a82de7278c4af1a632592c20049e6e02173720085",
+      "canvas": [
+        64,
+        64
+      ],
+      "original_metadata_anchor": [
+        32,
+        32
+      ],
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1133,
+        "base_row": 56,
+        "base_error": 24,
+        "height": 53,
+        "gradient_x": -0.09982781954887218,
+        "gradient_y": 0.4610756554307117,
+        "light_angle_degrees": 102.21658765253407,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": false,
+        "passed": false
+      },
+      "visual_class": "PLAN_OR_FLAT_ICON",
+      "reading": "머리·꼬리·네 다리를 위에서 펼쳐 본 가죽.",
+      "action": "DROPPABLE_REANGLE_CANDIDATE"
+    },
+    {
+      "category": "item",
+      "path": "art/style05/env1/items/clay.png",
+      "sha256": "f868ba9f89f4a5cb00a4f3348f762fb8e16a10d51d923cfca5968580037304fc",
+      "canvas": [
+        64,
+        64
+      ],
+      "original_metadata_anchor": [
+        32,
+        32
+      ],
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 810,
+        "base_row": 47,
+        "base_error": 15,
+        "height": 33,
+        "gradient_x": -0.8080719072164949,
+        "gradient_y": -1.318282945736434,
+        "light_angle_degrees": 238.4928255375801,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_class": "OBLIQUE_VOLUME_ICON",
+      "reading": "앞면과 윗면이 구분되는 낮은 점토 덩어리.",
+      "action": "REUSE_VISUAL_CANDIDATE_NOT_PROJECTION_PASS"
+    },
+    {
+      "category": "item",
+      "path": "art/style05/env1/items/raw_pot.png",
+      "sha256": "0bc4ef70479fb3614f8038cdce455f11c1e775fbf0819b174d57a4a5eac8119f",
+      "canvas": [
+        64,
+        64
+      ],
+      "original_metadata_anchor": [
+        32,
+        32
+      ],
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1106,
+        "base_row": 51,
+        "base_error": 19,
+        "height": 38,
+        "gradient_x": -2.0575930711610484,
+        "gradient_y": -1.9558773408239696,
+        "light_angle_degrees": 223.5482302853685,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_class": "OBLIQUE_VOLUME_ICON",
+      "reading": "입구 타원과 전면 배가 보이는 세워진 토기; 다소 높은 내려다봄.",
+      "action": "REUSE_VISUAL_CANDIDATE_NOT_PROJECTION_PASS"
+    },
+    {
+      "category": "item",
+      "path": "art/style05/env1/items/clay_pot_empty.png",
+      "sha256": "1e0fd136c5b99ad8f4114c9fd0d4b3b518c7c66cf7912812238a7d1b1ba68cd1",
+      "canvas": [
+        64,
+        64
+      ],
+      "original_metadata_anchor": [
+        32,
+        32
+      ],
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1461,
+        "base_row": 52,
+        "base_error": 20,
+        "height": 43,
+        "gradient_x": -0.9351708628005657,
+        "gradient_y": -1.4084785815602836,
+        "light_angle_degrees": 236.41750284752317,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_class": "OBLIQUE_VOLUME_ICON",
+      "reading": "입구 내부 면적이 크지만 전면 몸통을 가진 세워진 항아리.",
+      "action": "REUSE_VISUAL_CANDIDATE_NOT_PROJECTION_PASS"
+    },
+    {
+      "category": "item",
+      "path": "art/style05/env1/items/clay_pot_filled.png",
+      "sha256": "f0e0dad614a9a0d5c394099cdaf00f1af1e40e25234cd76b08af50cd46c5d4b3",
+      "canvas": [
+        64,
+        64
+      ],
+      "original_metadata_anchor": [
+        32,
+        32
+      ],
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1473,
+        "base_row": 51,
+        "base_error": 19,
+        "height": 44,
+        "gradient_x": -0.8715072179397338,
+        "gradient_y": -1.923121769662921,
+        "light_angle_degrees": 245.62124090859095,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_class": "OBLIQUE_VOLUME_ICON",
+      "reading": "수면 타원과 전면 몸통이 보이는 항아리; 내려다봄이 강하다.",
+      "action": "REUSE_VISUAL_CANDIDATE_NOT_PROJECTION_PASS"
+    },
+    {
+      "category": "item",
+      "path": "art/style05/env1/items/meat.png",
+      "sha256": "d3a8165f64dccb33577db38b7a0908c32a716c27dcbe34ec0d5e6e757e7f4714",
+      "canvas": [
+        64,
+        64
+      ],
+      "original_metadata_anchor": [
+        32,
+        32
+      ],
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1005,
+        "base_row": 47,
+        "base_error": 15,
+        "height": 32,
+        "gradient_x": -0.28202892561983445,
+        "gradient_y": -0.6871568586387432,
+        "light_angle_degrees": 247.6853439954282,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_class": "OBLIQUE_VOLUME_ICON",
+      "reading": "육면과 옆 두께가 읽히는 낮은 고기 덩어리.",
+      "action": "REUSE_VISUAL_CANDIDATE_NOT_PROJECTION_PASS"
+    },
+    {
+      "category": "item",
+      "path": "art/style05/env1/items/flint_nodule.png",
+      "sha256": "759f3326c376830f34e6bb1cb2d12a7402b60ce0a16703ee38ff26c60df31e1e",
+      "canvas": [
+        64,
+        64
+      ],
+      "original_metadata_anchor": [
+        32,
+        32
+      ],
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 869,
+        "base_row": 51,
+        "base_error": 19,
+        "height": 40,
+        "gradient_x": -0.6918603136308805,
+        "gradient_y": -1.1304775510204077,
+        "light_angle_degrees": 238.5330708258764,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_class": "PLAN_OR_FLAT_ICON",
+      "reading": "돌의 넓은 상면을 보는 도해에 가깝고 기저 접지가 불명확.",
+      "action": "DROPPABLE_REANGLE_CANDIDATE"
+    },
+    {
+      "category": "item",
+      "path": "art/style05/env/items/log_pile_small.png",
+      "sha256": "30ac46278f8abb12040bc8ff40986e5d939ff010a530cd54e37ed620ba685f45",
+      "canvas": [
+        64,
+        64
+      ],
+      "original_metadata_anchor": [
+        32.0,
+        32.0
+      ],
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 2015,
+        "base_row": 57,
+        "base_error": 25,
+        "height": 53,
+        "gradient_x": -0.11046466088730246,
+        "gradient_y": -0.907641722193747,
+        "light_angle_degrees": 263.06093576946387,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_class": "OBLIQUE_VOLUME_ICON",
+      "reading": "절단면과 쌓인 옆면이 보이는 사선 장작더미.",
+      "action": "REUSE_VISUAL_CANDIDATE_NOT_PROJECTION_PASS"
+    },
+    {
+      "category": "item",
+      "path": "art/style05/env/items/log_pile_medium.png",
+      "sha256": "7e13ab188c634172e59b189ed2a2e0063bf0a3dba5df1fbe3d5792fbbd91df9a",
+      "canvas": [
+        64,
+        64
+      ],
+      "original_metadata_anchor": [
+        32.0,
+        32.0
+      ],
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1768,
+        "base_row": 50,
+        "base_error": 18,
+        "height": 39,
+        "gradient_x": -0.07969052876234752,
+        "gradient_y": -1.6868098649442163,
+        "light_angle_degrees": 267.2951672555215,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_class": "OBLIQUE_VOLUME_ICON",
+      "reading": "전면 절단면과 두 층이 보이는 입체 더미.",
+      "action": "REUSE_VISUAL_CANDIDATE_NOT_PROJECTION_PASS"
+    },
+    {
+      "category": "item",
+      "path": "art/style05/env/items/log_pile_large.png",
+      "sha256": "09144dfdcd810b4a952bf892271697dba19b6b02a0d2727fecafe9d99018a02d",
+      "canvas": [
+        64,
+        64
+      ],
+      "original_metadata_anchor": [
+        32.0,
+        32.0
+      ],
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 3205,
+        "base_row": 61,
+        "base_error": 29,
+        "height": 60,
+        "gradient_x": -0.33805181413112667,
+        "gradient_y": -0.838079578813018,
+        "light_angle_degrees": 248.03258558303475,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_class": "PLAN_OR_FLAT_ICON",
+      "reading": "평행 통나무 윗면이 직사각형을 채우는 평면 배열.",
+      "action": "DROPPABLE_REANGLE_CANDIDATE"
+    },
+    {
+      "category": "item",
+      "path": "art/style05/env/items/stone_pile.png",
+      "sha256": "0021fc6202894a18168d406d8865c43f4d91d50de939b66cf790a6cccecda1a7",
+      "canvas": [
+        64,
+        64
+      ],
+      "original_metadata_anchor": [
+        32.0,
+        32.0
+      ],
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1899,
+        "base_row": 54,
+        "base_error": 22,
+        "height": 46,
+        "gradient_x": -0.6767368706009745,
+        "gradient_y": -1.7466607181719258,
+        "light_angle_degrees": 248.82133597354255,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_class": "PLAN_OR_FLAT_ICON",
+      "reading": "돌 상면이 중심 주위로 모인 위에서 본 더미.",
+      "action": "DROPPABLE_REANGLE_CANDIDATE"
+    },
+    {
+      "category": "item",
+      "path": "art/style05/env/items/flint_pile.png",
+      "sha256": "c43e24ebfc3f97035bf3b1201ba778188349bc49bdc6201aa42568d817569d2c",
+      "canvas": [
+        64,
+        64
+      ],
+      "original_metadata_anchor": [
+        32.0,
+        32.0
+      ],
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 2171,
+        "base_row": 60,
+        "base_error": 28,
+        "height": 58,
+        "gradient_x": -1.9849691790686508,
+        "gradient_y": -1.2003772163965678,
+        "light_angle_degrees": 211.16275593978528,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_class": "PLAN_OR_FLAT_ICON",
+      "reading": "쪼갠 돌 상면들이 방사형으로 펼쳐진 평면 배열.",
+      "action": "DROPPABLE_REANGLE_CANDIDATE"
+    },
+    {
+      "category": "item",
+      "path": "art/style05/env/items/flint_blade.png",
+      "sha256": "f152aa1c52f98b5a73259e484ccdcaaa53539f824176da8c62a6795bc8d3ed4d",
+      "canvas": [
+        48,
+        48
+      ],
+      "original_metadata_anchor": [
+        24.0,
+        24.0
+      ],
+      "projection": {
+        "family": "item",
+        "anchor": [
+          24,
+          24
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 521,
+        "base_row": 45,
+        "base_error": 21,
+        "height": 44,
+        "gradient_x": -2.3797878406708595,
+        "gradient_y": -1.0180011928429422,
+        "light_angle_degrees": 203.15977280088157,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_class": "PLAN_OR_FLAT_ICON",
+      "reading": "날 전체를 정면/평면으로 펼친 도해; 서 있는 기저 없음.",
+      "action": "DROPPABLE_REANGLE_CANDIDATE"
+    },
+    {
+      "category": "item",
+      "path": "art/style05/env/items/stone_axe.png",
+      "sha256": "31b0d4138f790e8e1379ca23930198809e925452fc50ee3148a5d95592df8dab",
+      "canvas": [
+        48,
+        48
+      ],
+      "original_metadata_anchor": [
+        24.0,
+        24.0
+      ],
+      "projection": {
+        "family": "item",
+        "anchor": [
+          24,
+          24
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 436,
+        "base_row": 45,
+        "base_error": 21,
+        "height": 44,
+        "gradient_x": -3.5082330749354007,
+        "gradient_y": -0.8901412658227852,
+        "light_angle_degrees": 194.23716653931982,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_class": "PLAN_OR_FLAT_ICON",
+      "reading": "손잡이와 날 전체를 바닥에 펼친 평면 도해.",
+      "action": "DROPPABLE_REANGLE_CANDIDATE"
+    },
+    {
+      "category": "item",
+      "path": "art/style05/env/items/hide.png",
+      "sha256": "86ad39457f8f516e88bbd10b7c8aa6c1e1afeecb3a206b33cdb19e67cbddbf6e",
+      "canvas": [
+        64,
+        64
+      ],
+      "original_metadata_anchor": [
+        32.0,
+        32.0
+      ],
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 2049,
+        "base_row": 61,
+        "base_error": 29,
+        "height": 60,
+        "gradient_x": -0.37605814663951115,
+        "gradient_y": -0.628828236493374,
+        "light_angle_degrees": 239.11931047001988,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_class": "PLAN_OR_FLAT_ICON",
+      "reading": "가죽 네 귀퉁이가 완전히 펼쳐진 평면.",
+      "action": "DROPPABLE_REANGLE_CANDIDATE"
+    },
+    {
+      "category": "item",
+      "path": "art/style05/env/items/berry_basket.png",
+      "sha256": "98de3c5733f34b0aa058aac8fd1f0e3de085b43f4eba3b6479bb0826ba04760c",
+      "canvas": [
+        64,
+        64
+      ],
+      "original_metadata_anchor": [
+        32.0,
+        32.0
+      ],
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 2700,
+        "base_row": 61,
+        "base_error": 29,
+        "height": 60,
+        "gradient_x": -0.6915883333333332,
+        "gradient_y": -1.1462589840788475,
+        "light_angle_degrees": 238.89557646595284,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_class": "PLAN_OR_FLAT_ICON",
+      "reading": "거의 원형인 바구니 입구와 내용물을 위에서 본다.",
+      "action": "DROPPABLE_REANGLE_CANDIDATE"
+    },
+    {
+      "category": "carcass",
+      "path": "art/animal/deer/S/dead.png",
+      "sha256": "28f134d43b1f61e9f8696bc400e9898de81e165a74f15732de03a69c7055c145",
+      "canvas": [
+        96,
+        64
+      ],
+      "original_metadata_anchor": [
+        48,
+        56
+      ],
+      "projection": {
+        "family": "carcass",
+        "anchor": [
+          48,
+          56
+        ],
+        "height_band": [
+          12,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 840,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 29,
+        "gradient_x": 0.5428820181112547,
+        "gradient_y": -0.27931720430107515,
+        "light_angle_degrees": 332.7738120293053,
+        "base_passed": true,
+        "height_passed": false,
+        "light_passed": false,
+        "passed": false
+      },
+      "visual_class": "LYING_CARCASS",
+      "reading": "옆으로 누운 몸통과 접힌 다리가 읽혀 사체 용도는 식별 가능하다.",
+      "action": "REUSE_CANDIDATE_ONLY_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "category": "carcass",
+      "path": "art/animal/deer/E/dead.png",
+      "sha256": "951c5c28b907a666ab8bd8cfeaf03f7d415aca8d800e8ebf35f8e6d5fae1a4d0",
+      "canvas": [
+        96,
+        64
+      ],
+      "original_metadata_anchor": [
+        48,
+        56
+      ],
+      "projection": {
+        "family": "carcass",
+        "anchor": [
+          48,
+          56
+        ],
+        "height_band": [
+          12,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1161,
+        "base_row": 55,
+        "base_error": -1,
+        "height": 40,
+        "gradient_x": -0.7411856749311292,
+        "gradient_y": -0.016028163653663708,
+        "light_angle_degrees": 181.2388299578692,
+        "base_passed": true,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_class": "LYING_CARCASS",
+      "reading": "옆으로 누운 몸통과 접힌 다리가 읽혀 사체 용도는 식별 가능하다.",
+      "action": "REUSE_CANDIDATE_ONLY_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "category": "carcass",
+      "path": "art/animal/wolf/S/dead.png",
+      "sha256": "7f69b2962bbdd02be5b0721739ab4180d08f7d1533b96986ed55d9614e688643",
+      "canvas": [
+        96,
+        64
+      ],
+      "original_metadata_anchor": [
+        48,
+        56
+      ],
+      "projection": {
+        "family": "carcass",
+        "anchor": [
+          48,
+          56
+        ],
+        "height_band": [
+          12,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 658,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 18,
+        "gradient_x": -0.7325122416534183,
+        "gradient_y": 1.719594019933554,
+        "light_angle_degrees": 113.07302285021059,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "visual_class": "LYING_CARCASS",
+      "reading": "옆으로 누운 몸통과 접힌 다리가 읽혀 사체 용도는 식별 가능하다.",
+      "action": "REUSE_CANDIDATE_ONLY_NOT_NEW_ACCEPTANCE"
+    },
+    {
+      "category": "carcass",
+      "path": "art/animal/wolf/E/dead.png",
+      "sha256": "7b210af1bd0aae0e68ee837a98cbb6b1a36ad958f2b4893701b0e9832c1d5d05",
+      "canvas": [
+        96,
+        64
+      ],
+      "original_metadata_anchor": [
+        48,
+        56
+      ],
+      "projection": {
+        "family": "carcass",
+        "anchor": [
+          48,
+          56
+        ],
+        "height_band": [
+          12,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 599,
+        "base_row": 56,
+        "base_error": 0,
+        "height": 16,
+        "gradient_x": -0.6097111498257841,
+        "gradient_y": 1.8279183823529412,
+        "light_angle_degrees": 108.44637388277124,
+        "base_passed": true,
+        "height_passed": true,
+        "light_passed": false,
+        "passed": false
+      },
+      "visual_class": "LYING_CARCASS",
+      "reading": "옆으로 누운 몸통과 접힌 다리가 읽혀 사체 용도는 식별 가능하다.",
+      "action": "REUSE_CANDIDATE_ONLY_NOT_NEW_ACCEPTANCE"
+    }
+  ],
+  "derived_item_measurements": [
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/berry_basket_count_1.png",
+      "sha256": "96a0d395c5f8849733b6eb03dd301fee57a42084184bff094ab9e47ce78804be",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 2519,
+        "base_row": 60,
+        "base_error": 28,
+        "height": 58,
+        "gradient_x": -0.6577155627793578,
+        "gradient_y": -1.2222813821138212,
+        "light_angle_degrees": 241.7150889203396,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/berry_basket_count_2_8.png",
+      "sha256": "4809a5d039e6abf504c5fb876929f01ed72539ef4e4509f7d9d3f1c801dcd43b",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 2067,
+        "base_row": 59,
+        "base_error": 27,
+        "height": 55,
+        "gradient_x": -0.8987825049701789,
+        "gradient_y": -1.4475873945409425,
+        "light_angle_degrees": 238.16455427356544,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/berry_basket_count_9_plus.png",
+      "sha256": "a9e667b7e3e35c868113fc91378838ee27d1f20d7cdd0b1df3a2eb62bedbd4b9",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 2850,
+        "base_row": 61,
+        "base_error": 29,
+        "height": 58,
+        "gradient_x": -0.8917409777138748,
+        "gradient_y": -1.4936891202872533,
+        "light_angle_degrees": 239.16255607383832,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/clay_count_1.png",
+      "sha256": "f868ba9f89f4a5cb00a4f3348f762fb8e16a10d51d923cfca5968580037304fc",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 810,
+        "base_row": 47,
+        "base_error": 15,
+        "height": 33,
+        "gradient_x": -0.8080719072164949,
+        "gradient_y": -1.318282945736434,
+        "light_angle_degrees": 238.4928255375801,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/clay_count_2_8.png",
+      "sha256": "b5ba0c522acfcc9350d05de2e1a348e6a27526934d6c694f1f4b9cc263984992",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 904,
+        "base_row": 51,
+        "base_error": 19,
+        "height": 39,
+        "gradient_x": -0.6656812064965196,
+        "gradient_y": -1.1702804171494785,
+        "light_angle_degrees": 240.3678301890401,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/clay_count_9_plus.png",
+      "sha256": "dad5192a0ddb5c9829810122e6dbaad1e51931bd00b3f9d8f0e41eb880f5297d",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1464,
+        "base_row": 55,
+        "base_error": 23,
+        "height": 46,
+        "gradient_x": -1.8951310800881702,
+        "gradient_y": -1.7860348923533778,
+        "light_angle_degrees": 223.3024612054614,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/clay_pot_empty_count_1.png",
+      "sha256": "1e0fd136c5b99ad8f4114c9fd0d4b3b518c7c66cf7912812238a7d1b1ba68cd1",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1461,
+        "base_row": 52,
+        "base_error": 20,
+        "height": 43,
+        "gradient_x": -0.9351708628005657,
+        "gradient_y": -1.4084785815602836,
+        "light_angle_degrees": 236.41750284752317,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/clay_pot_empty_count_2_8.png",
+      "sha256": "8d4f40ed3d589bb554d48ebc93b7660dfcba83dc16a50b24867b04e6efa0c707",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1401,
+        "base_row": 54,
+        "base_error": 22,
+        "height": 45,
+        "gradient_x": -1.0553624260355028,
+        "gradient_y": -1.6719598811292717,
+        "light_angle_degrees": 237.7393560933951,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/clay_pot_empty_count_9_plus.png",
+      "sha256": "52eb59fa92969ecd3584de8b08b9b83104471fb5aafb233acee716cbe3dfba7a",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 2205,
+        "base_row": 57,
+        "base_error": 25,
+        "height": 50,
+        "gradient_x": -1.1702187529301453,
+        "gradient_y": -1.7052207351555138,
+        "light_angle_degrees": 235.53988661552847,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/clay_pot_filled_count_1.png",
+      "sha256": "f0e0dad614a9a0d5c394099cdaf00f1af1e40e25234cd76b08af50cd46c5d4b3",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1473,
+        "base_row": 51,
+        "base_error": 19,
+        "height": 44,
+        "gradient_x": -0.8715072179397338,
+        "gradient_y": -1.923121769662921,
+        "light_angle_degrees": 245.62124090859095,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/clay_pot_filled_count_2_8.png",
+      "sha256": "b82b18a1a09f942e4c3f96331e0b7e2b53f093919d229f92343b50ba4c3c20bf",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1405,
+        "base_row": 53,
+        "base_error": 21,
+        "height": 46,
+        "gradient_x": -1.5206315401621222,
+        "gradient_y": -2.095918228782287,
+        "light_angle_degrees": 234.03834707903366,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/clay_pot_filled_count_9_plus.png",
+      "sha256": "3cff102f645204f62197c51df5c4798d3213bde0536e68225ac381b1d25cd776",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 2205,
+        "base_row": 57,
+        "base_error": 25,
+        "height": 51,
+        "gradient_x": -1.0805846948356808,
+        "gradient_y": -2.398169172932331,
+        "light_angle_degrees": 245.7442751939597,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/cured_hide_count_1.png",
+      "sha256": "32f5f9b4502c7716cf66e1fe351002c4fd3c83f7b70244cb5ce1d7f128da4720",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1307,
+        "base_row": 53,
+        "base_error": 21,
+        "height": 45,
+        "gradient_x": -0.8890922705314008,
+        "gradient_y": -1.2895316680096696,
+        "light_angle_degrees": 235.41493582815093,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/cured_hide_count_2_8.png",
+      "sha256": "c620f1b3a07c59a4ea2e41973ed8a90d13925e77c9ce0aeaeb5aba4e50673a0b",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1294,
+        "base_row": 54,
+        "base_error": 22,
+        "height": 46,
+        "gradient_x": -1.2808500815660684,
+        "gradient_y": -0.6696710784313725,
+        "light_angle_degrees": 207.60206699455892,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/cured_hide_count_9_plus.png",
+      "sha256": "45529fc460dc0ef4101865717de83bf4e822a8a306156d81871456f5508ccb44",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 2082,
+        "base_row": 57,
+        "base_error": 25,
+        "height": 51,
+        "gradient_x": -1.1212795094532446,
+        "gradient_y": -0.5314907164480321,
+        "light_angle_degrees": 205.36112823073674,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/firewood_count_1.png",
+      "sha256": "d4ba449e03edb569509c14844d27659eda099581488994f5e918b208fc0e9602",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 614,
+        "base_row": 49,
+        "base_error": 17,
+        "height": 37,
+        "gradient_x": 0.5628017331022529,
+        "gradient_y": -2.2197940972222217,
+        "light_angle_degrees": 284.2268620242389,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": false,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/firewood_count_2_8.png",
+      "sha256": "12720cc76aa698d70f52d928dcf16ccec75733f469fb6580f57ff712a6c9a572",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 729,
+        "base_row": 51,
+        "base_error": 19,
+        "height": 40,
+        "gradient_x": 1.474597019374069,
+        "gradient_y": -4.347888588588589,
+        "light_angle_degrees": 288.7344923428043,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": false,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/firewood_count_9_plus.png",
+      "sha256": "8ab689509eca647b05406403eb2123e0f0edb448b8006d96229017234a72cdba",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1119,
+        "base_row": 55,
+        "base_error": 23,
+        "height": 47,
+        "gradient_x": 2.662866463414634,
+        "gradient_y": -4.241907502569371,
+        "light_angle_degrees": 302.1186346868907,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": false,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/flint_blade_count_1.png",
+      "sha256": "b49c8585fa896948b67a5428c001bbc0e3dac2e2d29212e5ac94e54d7b9e947c",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 521,
+        "base_row": 53,
+        "base_error": 21,
+        "height": 44,
+        "gradient_x": -2.3797878406708595,
+        "gradient_y": -1.0180011928429422,
+        "light_angle_degrees": 203.15977280088157,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/flint_blade_count_2_8.png",
+      "sha256": "1cb84392521f47a5bca2206d0944271430580f88fe4c2483cc4ad1b6939c303a",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 607,
+        "base_row": 54,
+        "base_error": 22,
+        "height": 45,
+        "gradient_x": -5.539971535580524,
+        "gradient_y": -1.0555697594501714,
+        "light_angle_degrees": 190.7876620020914,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/flint_blade_count_9_plus.png",
+      "sha256": "50f7e62b8ee2b11a155ed452e6d5bc2b4f4c847ceaf1f7b6e72bc18216871c63",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 886,
+        "base_row": 57,
+        "base_error": 25,
+        "height": 50,
+        "gradient_x": -7.620105675675677,
+        "gradient_y": -0.8977792857142858,
+        "light_angle_degrees": 186.71945020955465,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/flint_nodule_count_1.png",
+      "sha256": "759f3326c376830f34e6bb1cb2d12a7402b60ce0a16703ee38ff26c60df31e1e",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 869,
+        "base_row": 51,
+        "base_error": 19,
+        "height": 40,
+        "gradient_x": -0.6918603136308805,
+        "gradient_y": -1.1304775510204077,
+        "light_angle_degrees": 238.5330708258764,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/flint_nodule_count_2_8.png",
+      "sha256": "a7069c4effc45fa7345e7347f82d1fee3a25be821a6f5ce76fe29a3d0a8f1017",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 959,
+        "base_row": 53,
+        "base_error": 21,
+        "height": 43,
+        "gradient_x": -0.5108541666666668,
+        "gradient_y": -1.1948375136314064,
+        "light_angle_degrees": 246.85081381188928,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/flint_nodule_count_9_plus.png",
+      "sha256": "e7ad10b955775eeeee32c3a6766806b9f185ac25925dd9c6e3288dba7190d79a",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1572,
+        "base_row": 56,
+        "base_error": 24,
+        "height": 49,
+        "gradient_x": -0.7865396278428668,
+        "gradient_y": -1.7399485987696512,
+        "light_angle_degrees": 245.6747659491053,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/flint_pile_count_1.png",
+      "sha256": "90447225357203b01f8d436cd437c325ef48015d7dfa031504196d1425edd83c",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 2013,
+        "base_row": 59,
+        "base_error": 27,
+        "height": 56,
+        "gradient_x": -1.8646731606217615,
+        "gradient_y": -1.0746003089598348,
+        "light_angle_degrees": 209.95459759251403,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/flint_pile_count_2_8.png",
+      "sha256": "2349703b78da397b23afed2a8dac79fa3b84ede17c9024c9b56c46299ee146c6",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1765,
+        "base_row": 58,
+        "base_error": 26,
+        "height": 53,
+        "gradient_x": -2.3990611472501477,
+        "gradient_y": -1.4080459189665293,
+        "light_angle_degrees": 210.40932861200423,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/flint_pile_count_9_plus.png",
+      "sha256": "4a425880b39d7987019e3c2885fdef0f32fe4dd23325932cc5bc4f82c5db9c30",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 2582,
+        "base_row": 60,
+        "base_error": 28,
+        "height": 56,
+        "gradient_x": -1.6873630016051364,
+        "gradient_y": -0.6534831667333066,
+        "light_angle_degrees": 201.1704253709748,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/fur_cloak_count_1.png",
+      "sha256": "c94efe2f756b2ef339b54f1e158c20b5f93eda077406e71da0054fa73f531448",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1386,
+        "base_row": 52,
+        "base_error": 20,
+        "height": 42,
+        "gradient_x": -1.0181931137724547,
+        "gradient_y": -0.45752657657657636,
+        "light_angle_degrees": 204.1968373642582,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/fur_cloak_count_2_8.png",
+      "sha256": "e7dfd3c63d299580a9a815938130418b22508c9dba62df5b34fa44022f6779f0",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1334,
+        "base_row": 54,
+        "base_error": 22,
+        "height": 45,
+        "gradient_x": -1.0078297971918875,
+        "gradient_y": -0.4714120500782472,
+        "light_angle_degrees": 205.06782680971298,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/fur_cloak_count_9_plus.png",
+      "sha256": "d568e620c74a011819d1bee5969e2510510fa60e3f9dc949b86874acc1f06c64",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 2117,
+        "base_row": 57,
+        "base_error": 25,
+        "height": 50,
+        "gradient_x": -0.783353701875617,
+        "gradient_y": 0.20945629629629625,
+        "light_angle_degrees": 165.0302147306496,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": false,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/ground_axe_count_1.png",
+      "sha256": "88fc7ca8794a76d34ad0edd400a8eb94d137e904017c15f8a019d8d6ccfb0f18",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 713,
+        "base_row": 54,
+        "base_error": 22,
+        "height": 47,
+        "gradient_x": -2.808128376327769,
+        "gradient_y": -0.9123286144578312,
+        "light_angle_degrees": 197.9983832270751,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/ground_axe_count_2_8.png",
+      "sha256": "d419833a891fecf4d8cb85ad83dd5285f9dee9f98eba5301c106f9def6782ba4",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 814,
+        "base_row": 55,
+        "base_error": 23,
+        "height": 48,
+        "gradient_x": -3.7252784741144405,
+        "gradient_y": -1.8872921409214092,
+        "light_angle_degrees": 206.8675821354817,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/ground_axe_count_9_plus.png",
+      "sha256": "ab2b37647f8290003e411497258447b42186accd8eaec58761c7488550f0b0ea",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1276,
+        "base_row": 58,
+        "base_error": 26,
+        "height": 52,
+        "gradient_x": -6.35593698630137,
+        "gradient_y": -3.4875880973850317,
+        "light_angle_degrees": 208.7541687459977,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/hide_count_1.png",
+      "sha256": "1683058c1a18986812d16cb39e5797f39ccf96cf1b74c170047f01ddcb2a6498",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1900,
+        "base_row": 60,
+        "base_error": 28,
+        "height": 58,
+        "gradient_x": -0.5302607260726071,
+        "gradient_y": -0.04310985140341222,
+        "light_angle_degrees": 184.64788731490333,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/hide_count_2_8.png",
+      "sha256": "d43738a221ebca5049e15c9dc068f3c7463d1d93c04863e82c33f2c9ae9b7190",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1691,
+        "base_row": 59,
+        "base_error": 27,
+        "height": 55,
+        "gradient_x": -0.6917748756218906,
+        "gradient_y": -0.25909247980111844,
+        "light_angle_degrees": 200.532580430872,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/hide_count_9_plus.png",
+      "sha256": "a325ded32d71421ce5959d0aa65fb99293164f90f1de8837b531e516e9f4524f",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 2499,
+        "base_row": 60,
+        "base_error": 28,
+        "height": 56,
+        "gradient_x": -0.6225918638439187,
+        "gradient_y": -0.14952386505622658,
+        "light_angle_degrees": 193.50459269598167,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/hide_wrap_count_1.png",
+      "sha256": "2db8016a17379e94d4eff7cee5b8a1f58bc0804616048aad69d28b16b3d75b0b",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1211,
+        "base_row": 52,
+        "base_error": 20,
+        "height": 45,
+        "gradient_x": -0.5561106712564541,
+        "gradient_y": -0.4475668669527898,
+        "light_angle_degrees": 218.82767368676497,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/hide_wrap_count_2_8.png",
+      "sha256": "a524493b7ebb37da8c11b91e3a735e08d1b79d0909c91f4ff5412cbf53a369b0",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1204,
+        "base_row": 54,
+        "base_error": 22,
+        "height": 47,
+        "gradient_x": -0.11925878260869552,
+        "gradient_y": 0.23351806395851327,
+        "light_angle_degrees": 117.05361652863111,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": false,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/hide_wrap_count_9_plus.png",
+      "sha256": "b84db3308c7deab5222b6f4270b703bb0b16a639ba24068a1b09ecf271cd4fbb",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1939,
+        "base_row": 57,
+        "base_error": 25,
+        "height": 51,
+        "gradient_x": -0.7585655701754387,
+        "gradient_y": 0.32059655358104455,
+        "light_angle_degrees": 157.0893667583817,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": false,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/meat_count_1.png",
+      "sha256": "d3a8165f64dccb33577db38b7a0908c32a716c27dcbe34ec0d5e6e757e7f4714",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1005,
+        "base_row": 47,
+        "base_error": 15,
+        "height": 32,
+        "gradient_x": -0.28202892561983445,
+        "gradient_y": -0.6871568586387432,
+        "light_angle_degrees": 247.6853439954282,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/meat_count_2_8.png",
+      "sha256": "03465edc30a76aba75062c6bc0b147482804617a400e7ee9f44f9007c6759432",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1067,
+        "base_row": 50,
+        "base_error": 18,
+        "height": 38,
+        "gradient_x": -0.5788747317073172,
+        "gradient_y": -0.2817437007874014,
+        "light_angle_degrees": 205.95261652336296,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/meat_count_9_plus.png",
+      "sha256": "1a5b74646c6340b4d99b81cf552c2bba6d0be478408b617a7f5c0f866fef7d96",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1650,
+        "base_row": 55,
+        "base_error": 23,
+        "height": 46,
+        "gradient_x": -1.102748271446863,
+        "gradient_y": -0.5018221928665784,
+        "light_angle_degrees": 204.46862267686012,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/raw_pot_count_1.png",
+      "sha256": "0bc4ef70479fb3614f8038cdce455f11c1e775fbf0819b174d57a4a5eac8119f",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1106,
+        "base_row": 51,
+        "base_error": 19,
+        "height": 38,
+        "gradient_x": -2.0575930711610484,
+        "gradient_y": -1.9558773408239696,
+        "light_angle_degrees": 223.5482302853685,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/raw_pot_count_2_8.png",
+      "sha256": "50d8be0ab24724f2941c009cd8d6383b1b5f090ace36d317a1264cb28e693307",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1138,
+        "base_row": 53,
+        "base_error": 21,
+        "height": 42,
+        "gradient_x": -2.0174582116788327,
+        "gradient_y": -2.304317046490428,
+        "light_angle_degrees": 228.79745041370217,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/raw_pot_count_9_plus.png",
+      "sha256": "43a81687707a52c04e9254aaf2b6119f4268729dc2778727732f984c81b544bf",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1849,
+        "base_row": 56,
+        "base_error": 24,
+        "height": 48,
+        "gradient_x": -2.067544666286366,
+        "gradient_y": -3.0004850653038044,
+        "light_angle_degrees": 235.4304332286904,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/spear_count_1.png",
+      "sha256": "3f0448a9a2b6c7a07b77a90781b0864d089ca0e363de81f3d761384f5043f77d",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 230,
+        "base_row": 55,
+        "base_error": 23,
+        "height": 50,
+        "gradient_x": 1.292353333333334,
+        "gradient_y": -4.019846927374301,
+        "light_angle_degrees": 287.8222435105851,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": false,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/spear_count_2_8.png",
+      "sha256": "51d5535cf6f3c8e477db1c3663c7854953424cdb61273f4c20fd18352e7847a5",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 229,
+        "base_row": 56,
+        "base_error": 24,
+        "height": 50,
+        "gradient_x": 4.127694666666666,
+        "gradient_y": -7.7651586666666645,
+        "light_angle_degrees": 297.9935947994121,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": false,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/spear_count_9_plus.png",
+      "sha256": "2d247afc1c481a9dfa96d900b2da1f7f6212193602fa191bfe6180565e8b86cb",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 364,
+        "base_row": 58,
+        "base_error": 26,
+        "height": 53,
+        "gradient_x": -2.3024748603351943,
+        "gradient_y": -2.103909302325581,
+        "light_angle_degrees": 222.4198171658924,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/stone_axe_count_1.png",
+      "sha256": "d9ae415ed30a79b57cb6814cdbb1d3bff4c2e58ab540e86a81badf67246b7002",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 436,
+        "base_row": 53,
+        "base_error": 21,
+        "height": 44,
+        "gradient_x": -3.5082330749354007,
+        "gradient_y": -0.8901412658227852,
+        "light_angle_degrees": 194.23716653931982,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/stone_axe_count_2_8.png",
+      "sha256": "ea3c65f102ac87a44a47cb8c3e9b11777b5297edb5eec4e9b556f7429b27a369",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 522,
+        "base_row": 54,
+        "base_error": 22,
+        "height": 45,
+        "gradient_x": -4.452539325842696,
+        "gradient_y": -0.14789559471365568,
+        "light_angle_degrees": 181.90243778636207,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/stone_axe_count_9_plus.png",
+      "sha256": "4c8576d38f472588310b63bc92ed16374f3e7c58a463d871c380d0c62ab0fd41",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 752,
+        "base_row": 57,
+        "base_error": 25,
+        "height": 50,
+        "gradient_x": -4.7864787985865735,
+        "gradient_y": -2.484489368770764,
+        "light_angle_degrees": 207.43220637963492,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/stone_pile_count_1.png",
+      "sha256": "4db601f8f590fc9599f6f23d857950412399c9eb1acaa67b2031e7db3c061770",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1751,
+        "base_row": 53,
+        "base_error": 21,
+        "height": 44,
+        "gradient_x": -0.7002209042865531,
+        "gradient_y": -2.1101951536643027,
+        "light_angle_degrees": 251.64273334659444,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/stone_pile_count_2_8.png",
+      "sha256": "55d48d92855f6eb276781d49f8199a1ba2cf1528f4ffc9d06a981ad2df57b1d3",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1589,
+        "base_row": 54,
+        "base_error": 22,
+        "height": 45,
+        "gradient_x": -1.0772718547341116,
+        "gradient_y": -2.0980791639451337,
+        "light_angle_degrees": 242.8214854012462,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/stone_pile_count_9_plus.png",
+      "sha256": "39d5ff98e029d9258ccec48436956b995e7b3d86d60674cf1aec10398e76a7d5",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 2397,
+        "base_row": 57,
+        "base_error": 25,
+        "height": 50,
+        "gradient_x": -1.170345758354756,
+        "gradient_y": -2.1981821335646137,
+        "light_angle_degrees": 241.96848063855924,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/wolf_hide_count_1.png",
+      "sha256": "3320a868ecd38ecebedffd2a82de7278c4af1a632592c20049e6e02173720085",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1133,
+        "base_row": 56,
+        "base_error": 24,
+        "height": 53,
+        "gradient_x": -0.09982781954887218,
+        "gradient_y": 0.4610756554307117,
+        "light_angle_degrees": 102.21658765253407,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": false,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/wolf_hide_count_2_8.png",
+      "sha256": "3e447f2f7fdb2bcf5f63da901a44789ad459099277946887cda41dbf1533c388",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1146,
+        "base_row": 56,
+        "base_error": 24,
+        "height": 51,
+        "gradient_x": -0.6050350746268659,
+        "gradient_y": 0.3217573283858997,
+        "light_angle_degrees": 151.99597862296224,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": false,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/wolf_hide_count_9_plus.png",
+      "sha256": "823ea06cd230584a51accfb1e2620e475db2b6a5f9467742c415faedd50fbd3f",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1824,
+        "base_row": 59,
+        "base_error": 27,
+        "height": 55,
+        "gradient_x": -0.8876476932294785,
+        "gradient_y": 0.02083673951565264,
+        "light_angle_degrees": 178.6552795333185,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": false,
+        "passed": false
+      }
+    },
+    {
+      "category": "derived_item",
+      "path": "art/style05/env1/items/meat_spoiled.png",
+      "sha256": "136b78e58bd657a2f3ad231d691f856973b26e7fc27fe352c4289d2e33590350",
+      "canvas": [
+        64,
+        64
+      ],
+      "anchor_source": "inherited centre anchor; variants are item-icon compositions, not new standing assets",
+      "projection": {
+        "family": "item",
+        "anchor": [
+          32,
+          32
+        ],
+        "height_band": [
+          4,
+          24
+        ],
+        "height_band_override": false,
+        "opaque_pixels": 1005,
+        "base_row": 47,
+        "base_error": 15,
+        "height": 32,
+        "gradient_x": -0.17872314049586782,
+        "gradient_y": -0.4355082722513089,
+        "light_angle_degrees": 247.68781797570057,
+        "base_passed": false,
+        "height_passed": false,
+        "light_passed": true,
+        "passed": false
+      }
+    }
+  ],
+  "scope_counts": {
+    "tree_originals": 6,
+    "item_base_sprites": 22,
+    "env_original_item_sprites": 9,
+    "env1_new_item_base_sprites": 13,
+    "derived_item_sprites": 58,
+    "unique_item_sprites": 80,
+    "excluded_presentation_boards": 7,
+    "animal_dead_frames": 4
+  },
+  "limitations": [
+    "Item 4–24px and carcass 12–24px are provisional PROJECTION.md implementation bands, not owner-specified height targets.",
+    "Flat objects have projected footprint height, not an anatomical standing height; their item-band result is diagnostic only.",
+    "Original centre anchors are measured as declared; no relocation, crop, scale, repaint or regeneration occurred.",
+    "Only direct executor visual reading, not reviewer or owner approval."
+  ]
+}

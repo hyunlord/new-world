@@ -1,0 +1,68 @@
+{
+  "rooms": [
+    {
+      "path": "art/proto/struct/rooms/house.png",
+      "sha256": "182ace3ad9a02780f2383ff09ba2016f4bc95389b1e1ed24f3a172939eba3a0c",
+      "position": [
+        30,
+        100
+      ]
+    },
+    {
+      "path": "art/proto/struct/rooms/storehouse.png",
+      "sha256": "8c1b9cdb9f419de7fee60ea43dc7188e61b70fe4fcdf0ca5499f3a1471f606ce",
+      "position": [
+        550,
+        100
+      ]
+    },
+    {
+      "path": "art/proto/struct/rooms/hut.png",
+      "sha256": "9ace8906c9f9806abcd2aa48e7f95e6ebfe235ea9e0f911a0a79d9419aee0506",
+      "position": [
+        1100,
+        100
+      ]
+    }
+  ],
+  "bake_inputs": {
+    "art/compositor/walls.py": "937999640af0582f795ec2095716dac14e385a8265ee2c764c6604779df99280",
+    "art/compositor/struct_layers.py": "7c93c3e052e20a71402a1a727e8b7fdeacd7db9fdc6b363ea04d9f20a366165e",
+    "art/style05/struct/door_log_open.png": "408b1e17c76625693a62f45cd4a8f2694460e17a6fc3a7c840a6ce30592dd563",
+    "art/style05/struct/log_face.png": "2b37c582b1f1e867e9ffeb6572e6ffe19cf1779d782cb4c5632ab1d51d142982",
+    "art/style05/struct/log_cap.png": "39b140a131b41e3a41dfe2f71ff4d5d876a25465fdf3d607f721235cefd2b133",
+    "art/style05/struct/log_end.png": "a1d9fa60ccdcb4c5f4e14d4d650fc95b5807cd2f8747e9992923502cb075ad9a",
+    "art/style05/struct/log_inner_corner.png": "dc623751342aad1aa383226912b7129cc3515d342db9580c8229173777d10d91",
+    "art/style05/struct/door_stone_open.png": "70c9dad60809493852739201905d259573b6bcfbcab12998bf6ca982accf18b1",
+    "art/style05/struct/stone_face.png": "f473c259c7c1aab6aea67e631e542b62ad624f8a17c146614b7f26016c3635f9",
+    "art/style05/struct/stone_cap.png": "23d655b84d4f536ac74222d68e5d5bdee6b7a6e8bc74b84c835eb91c40d6a057",
+    "art/style05/struct/stone_end.png": "1510d1d366d5f97e35d7034187b12e387c0c30cdd1af5626448d7cf70c1d21e1",
+    "art/style05/struct/stone_inner_corner.png": "5d0e9fd05dffcfc8d828c797b624617bd5fbfd8c209583df99f99c9c79ffe310"
+  },
+  "layouts": [
+    {
+      "name": "house",
+      "size": [
+        7,
+        5
+      ],
+      "material": "log"
+    },
+    {
+      "name": "storehouse",
+      "size": [
+        5,
+        4
+      ],
+      "material": "stone"
+    },
+    {
+      "name": "hut",
+      "size": [
+        3,
+        3
+      ],
+      "material": "log"
+    }
+  ]
+}
