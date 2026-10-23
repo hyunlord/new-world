@@ -1,0 +1,287 @@
+{
+  "schema_version": 1,
+  "envelopes": [
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/docs/v8/artpolish2/OWNER_SOURCE_ENVELOPES.json",
+      "sha256": "cdf406915bc548bcfbec05377d0cea25ad1687c4f7f497f41829a5a781ed67bc"
+    },
+    {
+      "path": "/Users/rexxa/work/new-world-art-prod/docs/v8/artpolish2/IDLE_SOURCE_ENVELOPES.json",
+      "sha256": "3a8a7aeffe337ff3bafd5340d05e9748fadd59be7f7ad007183f15b851b9a9e7"
+    }
+  ],
+  "looks": [
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_F_fur_cloak_bun/S/idle.png",
+        "sha256": "34831c2a1733a4ce81e06960c78c81881e07535ae6ad16296eef4b1f35a98bed"
+      },
+      "appearance_brief": "A high rounded bun sits toward image-left with swept fringe and short dark side strands; a thick pale fur-edged wrap covers both shoulders and crosses over the brown-covered chest, leaving only a narrow central neck/upper-sternum opening. Upper arms emerge below the wrap; this is not an exposed single shoulder or a deep open neckline. The back hair fall is partly hidden by the wrap."
+    },
+    {
+      "look": "adult_F_fur_cloak_long_tied",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_F_fur_cloak_long_tied/S/idle.png",
+        "sha256": "7752d665d2d21c1593e6f9014ee3a134ab235681c55121fb398e4e201ee9e068"
+      },
+      "appearance_brief": "The hair is gathered high toward image-left into a thick tied mass behind the swept fringe; the source does not clearly expose a long loose tail below the shoulders. A pale fur-edged wrap covers both shoulders and crosses over a closed brown chest, with a small central neck opening and diagonal fur trim on the front. The upper-arm openings start below the shoulder covering."
+    },
+    {
+      "look": "adult_F_fur_cloak_short",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_F_fur_cloak_short/S/idle.png",
+        "sha256": "b93b32485e0a2038b97bdfc5ea7d6c4e9c20c9b6582876747e983a08e4218968"
+      },
+      "appearance_brief": "Short rounded hair falls to the ears and upper neck; a broad fur collar covers both shoulders above a closed tunic and a hanging cape."
+    },
+    {
+      "look": "adult_F_hide_wrap_bun",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_F_hide_wrap_bun/S/idle.png",
+        "sha256": "c548357f80708897392be558b86e0fad98b73ce12693c98f8e3aea132f7ffb7c"
+      },
+      "appearance_brief": "Hair is gathered in a high crown bun with short side locks; a cream-edged hide wrap crosses high across the chest from the image-right shoulder, leaving the opposite shoulder bare."
+    },
+    {
+      "look": "adult_F_hide_wrap_long_tied",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_F_hide_wrap_long_tied/S/idle.png",
+        "sha256": "25cdf72bf5b64b4d02e2d4ca34d78a76de58a174211ab8338f9d3a8c5cd6446a"
+      },
+      "appearance_brief": "Hair is gathered high toward image-left and falls as a broad tied mass beside the neck; a cream-edged diagonal hide wrap covers the image-right shoulder and chest while the opposite shoulder stays bare."
+    },
+    {
+      "look": "adult_F_hide_wrap_short",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_F_hide_wrap_short/S/idle.png",
+        "sha256": "08cf7a69d6342d83667b1ffb402d41d9be47e0fbc7bd96d8b13996ac8af72e1c"
+      },
+      "appearance_brief": "Short rounded hair has a side-swept fringe and upper-neck side locks; a cream-edged hide wrap crosses high over the chest from the image-right shoulder, leaving the other shoulder bare."
+    },
+    {
+      "look": "adult_F_loincloth_bun",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_F_loincloth_bun/S/idle.png",
+        "sha256": "22465fb470e1aa61afecac3e506596fa75e389fdc79076c0323f6fb1ed2dce30"
+      },
+      "appearance_brief": "A high crown bun sits above short side locks; a straight cream-topped bandeau leaves both shoulders and a narrow midriff exposed above a separate hip wrap."
+    },
+    {
+      "look": "adult_F_loincloth_long_tied",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_F_loincloth_long_tied/S/idle.png",
+        "sha256": "752163930586413cdaf3ddfd76f22f08d2960bbc9868c5073cb7bbf8dd75a2cb"
+      },
+      "appearance_brief": "A high image-left gathering falls as a broad tied mass to the side of the neck; a straight bandeau exposes both shoulders and a narrow midriff above the hip wrap."
+    },
+    {
+      "look": "adult_F_loincloth_short",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_F_loincloth_short/S/idle.png",
+        "sha256": "3497d79c1f1dfd5ce3679b736c52f0b913c00831e68a872de55fbe8fbb36ce66"
+      },
+      "appearance_brief": "Short rounded hair frames the forehead and upper neck; a straight cream-topped bandeau leaves both shoulders and a narrow midriff exposed above a separate hip wrap."
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_M_fur_cloak_bun/S/idle.png",
+        "sha256": "a98c1b8271c9373c1ad7ad2a9f1d3f48fb4f37f2fd27a32c4d6c535ffda90208"
+      },
+      "appearance_brief": "A high rounded bun toward image-left and swept fringe accompany a full dark beard. A thick pale fur border wraps both shoulders and forms a high crossed front over a brown-covered chest; only a narrow neck opening is visible below the beard. Both upper arms emerge below the wrap, with the shoulder joints partly covered; there is no bare single-shoulder neckline."
+    },
+    {
+      "look": "adult_M_fur_cloak_short",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_M_fur_cloak_short/S/idle.png",
+        "sha256": "345b19c1776ab4517396b0b90882fda0b1cfa0a4dd3e6adfe7e9adb0d9728500"
+      },
+      "appearance_brief": "Short rounded hair and a full dark beard sit above a broad high fur collar. The dark cloak covers both shoulders and crosses over the brown chest; the visible skin is a small neck opening, with the image-left arm emerging higher than the image-right arm under the asymmetric cloak drape. A deep V chest opening or bare single shoulder is not present in the source."
+    },
+    {
+      "look": "adult_M_hide_wrap_bun",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_M_hide_wrap_bun/S/idle.png",
+        "sha256": "d72ae163db9da2a64b523157ff197c7b602f14baf264d418c5ff354f3c1d8f46"
+      },
+      "appearance_brief": "Hair forms a high crown bun above a full beard; a cream-edged diagonal hide wrap covers the image-right shoulder and crosses high over the chest while the other shoulder is bare."
+    },
+    {
+      "look": "adult_M_hide_wrap_short",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_M_hide_wrap_short/S/idle.png",
+        "sha256": "e0d14af6d00de104698610adf099e677fb0596bb8d5d30de1f508206aaf15310"
+      },
+      "appearance_brief": "Short tousled hair and a full beard frame the face; a cream-edged diagonal hide wrap covers the image-right shoulder and chest while the opposite shoulder and upper arm are exposed."
+    },
+    {
+      "look": "adult_M_loincloth_bun",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_M_loincloth_bun/S/idle.png",
+        "sha256": "e28ea430edf4f15d7a2910d17b573ecfddce965da9eb045d91989c6f174e6f95"
+      },
+      "appearance_brief": "A high crown bun and full beard frame the face; the visible garment is a cream-edged diagonal shoulder wrap across the chest, with the image-left shoulder exposed."
+    },
+    {
+      "look": "adult_M_loincloth_long_tied",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_M_loincloth_long_tied/S/idle.png",
+        "sha256": "600661c1a40459299ad5e26662bd19191956fcbb988d8f6007dc2157a4900801"
+      },
+      "appearance_brief": "Hair is gathered into a raised image-left cluster with a short visible side fall above a full beard; a cream-edged diagonal wrap covers the image-right shoulder and chest, and a longer hair tail is not clearly visible."
+    },
+    {
+      "look": "adult_M_loincloth_short",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/adult_M_loincloth_short/S/idle.png",
+        "sha256": "643d6b90a5cedaae69ba3eb8ef2db304911bf5121e61483e03fa82024d61060b"
+      },
+      "appearance_brief": "Short tousled hair and a full beard frame the face; the chest and both shoulders are bare above a belted hip wrap."
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/child_F_fur_cloak_bun/S/idle.png",
+        "sha256": "2c12e35971c40f6aa26d13e994a294fefaca50645218e83f7e39b1ba96e892c5"
+      },
+      "appearance_brief": "A small high bun toward image-left and swept fringe frame the face. Thick pale fur wraps both shoulders high beneath the chin and borders the closed brown front, with diagonal lower-front trim. The neck opening is small; upper arms appear only below the shoulder wrap, not through a deep or one-shoulder neckline. Back hair below the bun is partly hidden."
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/child_F_fur_cloak_long_tied/S/idle.png",
+        "sha256": "dc212949d71914dd4d4b8cbc4cc3d89c5bf091897aa67fb7f04f769928c8ca6d"
+      },
+      "appearance_brief": "The hair is gathered high into a rounded tied mass toward image-left; a long free-hanging tail is not clearly visible, and its fall is partly hidden behind the head and wrap. A high pale fur collar covers both shoulders and crosses over the closed brown chest, with a diagonal fur-edged front. The arms emerge below this covering; separate brown calf wraps cover the lower legs above the exposed feet."
+    },
+    {
+      "look": "child_F_fur_cloak_short",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/child_F_fur_cloak_short/S/idle.png",
+        "sha256": "44f21b433c051926ff9848142e1fe285780af14a28de169130563ea9614aba20"
+      },
+      "appearance_brief": "Short rounded hair falls to ear and upper-neck height; a broad pale fur collar wraps both shoulders over a closed tunic and cape."
+    },
+    {
+      "look": "child_F_hide_wrap_bun",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/child_F_hide_wrap_bun/S/idle.png",
+        "sha256": "aa25c1e64ccfd1213749ed8c8af3a801d449d508d82b344071665243b061b073"
+      },
+      "appearance_brief": "Hair is gathered into a high crown bun with short side locks; a cream-edged diagonal wrap sits high across the chest from the image-right shoulder and leaves the opposite shoulder bare."
+    },
+    {
+      "look": "child_F_hide_wrap_long_tied",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/child_F_hide_wrap_long_tied/S/idle.png",
+        "sha256": "e8913e557c1526c24c71602856e0d52f3a8b5d47e1d505378811aa798629b513"
+      },
+      "appearance_brief": "A high image-left gathering falls as a broad tied mass beside the upper neck; a cream-edged diagonal wrap covers the image-right shoulder and chest while the other shoulder is bare."
+    },
+    {
+      "look": "child_F_hide_wrap_short",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/child_F_hide_wrap_short/S/idle.png",
+        "sha256": "350846f7210a7298393f83bb7221555b129bafcd94ddf35e1df3dd837783cb23"
+      },
+      "appearance_brief": "Short rounded hair has a swept fringe and upper-neck side locks; a cream-edged diagonal wrap covers the image-right shoulder and sits high across the chest with the other shoulder bare."
+    },
+    {
+      "look": "child_F_loincloth_bun",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/child_F_loincloth_bun/S/idle.png",
+        "sha256": "32529ab74914ed26abe8d7bc9d0e90cb9c0c9fe4c3d362915b011cd87611b61c"
+      },
+      "appearance_brief": "A high crown bun sits above short side locks; a straight cream-edged bodice continues into the tunic with no visible midriff gap, leaving both shoulders exposed."
+    },
+    {
+      "look": "child_F_loincloth_long_tied",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/child_F_loincloth_long_tied/S/idle.png",
+        "sha256": "e7d76faa835632fc4059185916b7f2580bccaa7e3e5bbdc65a9538bd97450b28"
+      },
+      "appearance_brief": "Hair gathers high toward image-left and falls beside the upper neck; a straight cream-edged bodice continues into the tunic without an exposed midriff, leaving both shoulders bare."
+    },
+    {
+      "look": "child_F_loincloth_short",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/child_F_loincloth_short/S/idle.png",
+        "sha256": "3ffcbf2c6157985078c2687d76a5edcad0eaf455d563742024f2834b9e9d96ca"
+      },
+      "appearance_brief": "Short rounded hair frames the forehead and upper neck; a straight brown bodice covers the chest and continues into the tunic while both shoulders and upper arms remain bare."
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/child_M_fur_cloak_bun/S/idle.png",
+        "sha256": "3c61b4824d4f9ab461a1be252aae2c4c8399508bb68cb55809130b1d586814d2"
+      },
+      "appearance_brief": "A small high topknot toward image-left and swept fringe sit above a child face without a beard. A thick pale fur collar wraps both shoulders beneath the chin and crosses into the closed brown front; the visible neck opening is small. Both upper arms emerge below the cloak, and the garment retains diagonal pale trim rather than an open or one-shoulder chest."
+    },
+    {
+      "look": "child_M_fur_cloak_long_tied",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/child_M_fur_cloak_long_tied/S/idle.png",
+        "sha256": "c86a67a0cec5e0edaf9d3e590285247d4622f23453078b8491b4e71ae43697d4"
+      },
+      "appearance_brief": "The hair is gathered high into a large tied mass toward image-left with a swept front; the source does not show a distinct long loose tail, whose fall is obscured behind the head and collar. The pale fur wrap sits high across both shoulders and crosses over the covered brown chest, with diagonal front trim and small arm openings below the cloak. No deep V or bare single shoulder is visible."
+    },
+    {
+      "look": "child_M_fur_cloak_short",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/child_M_fur_cloak_short/S/idle.png",
+        "sha256": "681b02a75d69e1356944d820642e784047e5b7fb93ee8cfd0d90fb0118dd549a"
+      },
+      "appearance_brief": "Shaggy rounded hair falls over the forehead and ears; a broad pale fur collar wraps high across both shoulders over a closed tunic and cape, with only a small neck opening."
+    },
+    {
+      "look": "child_M_hide_wrap_bun",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/child_M_hide_wrap_bun/S/idle.png",
+        "sha256": "6834c584e03a847f7883b8cda1f39f87fcd1c2d4b5e818984a9e0842397186a0"
+      },
+      "appearance_brief": "A high crown bun sits above a heavy fringe and short side locks; a cream-edged diagonal wrap covers the image-right shoulder and crosses high over the chest with the other shoulder bare."
+    },
+    {
+      "look": "child_M_hide_wrap_long_tied",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/child_M_hide_wrap_long_tied/S/idle.png",
+        "sha256": "bf634eaa8532288e7e5fee06d599b15ca1efd423bd7c8fd9311fa075f37d1f24"
+      },
+      "appearance_brief": "Hair gathers into a high image-left side cluster with a short visible fall rather than a clearly exposed long tail; a cream-edged diagonal wrap covers the image-right shoulder and chest while the opposite shoulder is bare."
+    },
+    {
+      "look": "child_M_hide_wrap_short",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/child_M_hide_wrap_short/S/idle.png",
+        "sha256": "c21c64389e34db098483d676bb6acb83c06ebf79c81014202937acc2041f4337"
+      },
+      "appearance_brief": "Thick rounded hair frames the forehead and ears; a cream-edged diagonal wrap covers the image-right shoulder and sits high across the chest while the other shoulder remains bare."
+    },
+    {
+      "look": "child_M_loincloth_bun",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/child_M_loincloth_bun/S/idle.png",
+        "sha256": "8bafb28e58849f6c55662dac964be6c7b0c1a209fb123ea76bcdd5b1636e6a55"
+      },
+      "appearance_brief": "A high crown bun rises above a thick fringe and short side locks; the visible garment is a cream-edged diagonal shoulder wrap across the chest rather than a bare torso."
+    },
+    {
+      "look": "child_M_loincloth_long_tied",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/child_M_loincloth_long_tied/S/idle.png",
+        "sha256": "aa75fd472f1f4327b38f940bec458bad24e0ce7f7f6b3e5d37d5bc73712538b7"
+      },
+      "appearance_brief": "A raised gathered hair mass sits toward image-left with short visible side locks and no clearly exposed long tail; a cream-edged diagonal wrap crosses high over the chest from the image-right shoulder."
+    },
+    {
+      "look": "child_M_loincloth_short",
+      "source": {
+        "path": "/Users/rexxa/work/new-world-art-prod/art/character/route_i/child_M_loincloth_short/S/idle.png",
+        "sha256": "3511b960e7878a4854ea22830a8e72a3b290e75a84949712a817641c76a3c335"
+      },
+      "appearance_brief": "Short rounded hair has a swept fringe and upper-neck side locks; a cream-edged diagonal wrap covers the image-right shoulder and chest while the opposite shoulder is exposed."
+    }
+  ]
+}
