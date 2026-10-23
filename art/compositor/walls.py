@@ -139,8 +139,8 @@ def _material_tiles(cells: frozenset[Cell], textures: MaterialWallTextures,
         message = "Door cells must be unique and present in the wall cell set"
         raise ValueError(message)
     apertures = openings | replacements.keys()
-    faces = frozenset((x, y) for x, y in occupancy if (x, y) not in apertures and (x, y + 1) not in occupancy
-                      and sum((x + dx, y + dy) in occupancy for dx, dy in ((0, -1), (1, 0), (0, 1), (-1, 0))) < 3)
+    faces = frozenset((x, y) for x, y in occupancy
+                      if (x, y) not in apertures and (x, y + 1) not in occupancy)
     result: list[WallTile] = []
     for x, y in sorted(cells, key=lambda cell: (cell[1], cell[0])):
         if (x, y) in replacements:

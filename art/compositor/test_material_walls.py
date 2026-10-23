@@ -72,6 +72,17 @@ def test_faces_keep_anchor_and_ends_never_cover_tops() -> None:
             assert tile.image.getpixel((32,59)) == (0,0,255,255)
 
 
+def test_north_facing_tee_keeps_its_exposed_south_face() -> None:
+    # Given a junction connected north, east and west, with its south side open.
+    occupied = frozenset({(0,0),(0,-1),(-1,0),(1,0)})
+    # When drawing its centre as one material subset of the global wall layout.
+    tile = walls.wall_tiles(frozenset({(0,0)}), sources(), occupancy=occupied)[0]
+    # Then junction degree cannot hide the exposed face or add internal ends.
+    assert tile.face_visible
+    assert tile.image.getpixel((32,59)) == (0,0,255,255)
+    assert tile.image.getpixel((0,30)) == tile.image.getpixel((63,30)) == (0,0,255,255)
+
+
 def test_width_is_centred_and_shadow_does_not_move_face() -> None:
     # Given the narrow material-top owner option on a vertical run.
     source = sources()

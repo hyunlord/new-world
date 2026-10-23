@@ -189,3 +189,20 @@ Reviewed correction fingerprints (SHA-256):
 
 Review lane edits remain limited to this document; no code or assets were changed
 and no commit was made by the reviewer.
+
+## Final board discovery: exposed T-junction face
+
+The final six-material board exposed an additional assembly condition after the
+initial independent review. A north/east/west T with no south neighbour lost its
+front face because the renderer also required neighbour degree < 3. This
+contradicted the goal's south-neighbour rule. A synthetic mixed-material subset
+regression first failed with `face_visible=False`; the degree filter was removed
+without changing global occupancy or the frozen legacy comparison.
+
+Actual affected non-door cells in the frozen scene were (80,101), (81,101),
+(82,101), (82,105), (83,105). Before images are retained in
+`/Users/rexxa/work/artpolish2-data/boards/final_wall_topology_diagnostic/`.
+The focused regression and the complete material/compositor suite are rerun;
+raw red/green logs are `material-tee-red.txt` and `material-tee-green.txt`.
+Ruff and basedpyright for the two changed files passed with zero diagnostics.
+Final board inspection is recorded separately by the board lane.
