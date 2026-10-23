@@ -1,0 +1,754 @@
+{
+  "schema_version": 1,
+  "task": "ART-POLISH2",
+  "diagnostic": "diagnostic_v5",
+  "status": "FAIL_THREE_CLOTHING_REGRESSIONS_FROM_HIGHLIGHT_RULE",
+  "source_input_sha256": "cdf406915bc548bcfbec05377d0cea25ad1687c4f7f497f41829a5a781ed67bc",
+  "manifest_sha256": "4a11e6be0788610e799cf8c559e9e70d5ddb8c7555a5b84e5abfe92950e84b9c",
+  "summary": {
+    "frames_reviewed": 8,
+    "clothing_contamination_fail": 3,
+    "confirmed_new_clothing_pixels": 6,
+    "known_v4_face_omissions_recovered": true,
+    "limb_landmarks_selected": 71,
+    "limb_landmarks_total": 71,
+    "overall_mask_pass": 0,
+    "owner_approval": "NOT_CLAIMED"
+  },
+  "method": [
+    "Viewed all8 complete v5 source/current/candidate mask panels.",
+    "Compared every v4-to-v5 changed mask pixel against original source coordinates.",
+    "Magnified original source at all6 new fur/hem pixels; all are clothing, not bright exposed skin.",
+    "Verified source snapshots match original hashes and preserved v5 immutable artifacts."
+  ],
+  "limits": [
+    "Recovered sparse landmarks and face openings do not establish full hair silhouette or skin coverage.",
+    "No strict coverage threshold is waived.",
+    "V5 must remain failure evidence; later repairs are separate revisions."
+  ],
+  "frames": [
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "source_sha256": "34831c2a1733a4ce81e06960c78c81881e07535ae6ad16296eef4b1f35a98bed",
+      "files": {
+        "source.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/adult_F_fur_cloak_bun/source.png",
+          "sha256": "34831c2a1733a4ce81e06960c78c81881e07535ae6ad16296eef4b1f35a98bed"
+        },
+        "skin.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/adult_F_fur_cloak_bun/skin.png",
+          "sha256": "d799ffe39ef09960715b8e965ae7c6ffa16acbf7604fae81b5eb4b52bc30c391"
+        },
+        "hair.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/adult_F_fur_cloak_bun/hair.png",
+          "sha256": "aa9d11bc2ecd270d6feb644f55bb076380e66392343aca78ac613647da513446"
+        },
+        "masks.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/adult_F_fur_cloak_bun/masks.png",
+          "sha256": "0b598cf41bc1d8717f36ad9d773339b5ff75c77bce3ca2795e12dcf5e482382a"
+        },
+        "tints.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/adult_F_fur_cloak_bun/tints.png",
+          "sha256": "562a939af3e0e626ba8cd88b68976182c33dc1ad1e82569c4f5360c0338f39fb"
+        }
+      },
+      "clothing_prop_contamination": "FAIL",
+      "confirmed_regressions": [
+        {
+          "xy": [
+            31,
+            69
+          ],
+          "mask": "skin",
+          "source_rgba": [
+            220,
+            185,
+            145,
+            253
+          ],
+          "observation": "Pale diagonal fur band across upper arm opening."
+        },
+        {
+          "xy": [
+            31,
+            70
+          ],
+          "mask": "skin",
+          "source_rgba": [
+            228,
+            189,
+            145,
+            253
+          ],
+          "observation": "Pale diagonal fur band across upper arm opening."
+        }
+      ],
+      "v4_to_v5_exact_pixel_changes": {
+        "skin": {
+          "added": [
+            {
+              "xy": [
+                31,
+                69
+              ],
+              "source_rgba": [
+                220,
+                185,
+                145,
+                253
+              ]
+            },
+            {
+              "xy": [
+                31,
+                70
+              ],
+              "source_rgba": [
+                228,
+                189,
+                145,
+                253
+              ]
+            }
+          ],
+          "removed": []
+        },
+        "hair": {
+          "added": [],
+          "removed": []
+        }
+      },
+      "limb_landmarks_selected": 12,
+      "limb_landmarks_total": 12,
+      "reported_v4_face_omissions": "NOT_APPLICABLE",
+      "overall_completeness": "NOT_FULLY_VERIFIED",
+      "hair_silhouette_completeness": "NOT_VERIFIED",
+      "overall_mask_pass": false
+    },
+    {
+      "look": "adult_F_fur_cloak_long_tied",
+      "source_sha256": "7752d665d2d21c1593e6f9014ee3a134ab235681c55121fb398e4e201ee9e068",
+      "files": {
+        "source.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/adult_F_fur_cloak_long_tied/source.png",
+          "sha256": "7752d665d2d21c1593e6f9014ee3a134ab235681c55121fb398e4e201ee9e068"
+        },
+        "skin.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/adult_F_fur_cloak_long_tied/skin.png",
+          "sha256": "26b4f57118069df4a0520185b6b97952818a1c9127f6c7471c1e97b69a3f20d0"
+        },
+        "hair.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/adult_F_fur_cloak_long_tied/hair.png",
+          "sha256": "ac41b4055074d16aa5f3dccd57fd175a81b62a84e632c2cda9a20bfda5369fc3"
+        },
+        "masks.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/adult_F_fur_cloak_long_tied/masks.png",
+          "sha256": "32134829abcf7c56de2692a232bac3c4457743ccd13d035cf897d4c7d8cc923a"
+        },
+        "tints.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/adult_F_fur_cloak_long_tied/tints.png",
+          "sha256": "0333ee0a14c19b8039950d6334e3f57c091d646d10bee670ac06f314f541db21"
+        }
+      },
+      "clothing_prop_contamination": "PASS_NO_CONFIRMED_OVERLAP_OBSERVED",
+      "confirmed_regressions": [],
+      "v4_to_v5_exact_pixel_changes": {
+        "skin": {
+          "added": [
+            {
+              "xy": [
+                41,
+                56
+              ],
+              "source_rgba": [
+                203,
+                133,
+                79,
+                251
+              ]
+            },
+            {
+              "xy": [
+                41,
+                57
+              ],
+              "source_rgba": [
+                255,
+                213,
+                137,
+                249
+              ]
+            }
+          ],
+          "removed": []
+        },
+        "hair": {
+          "added": [
+            {
+              "xy": [
+                42,
+                56
+              ],
+              "source_rgba": [
+                79,
+                48,
+                30,
+                253
+              ]
+            }
+          ],
+          "removed": []
+        }
+      },
+      "limb_landmarks_selected": 11,
+      "limb_landmarks_total": 11,
+      "reported_v4_face_omissions": "RECOVERED",
+      "overall_completeness": "NOT_FULLY_VERIFIED",
+      "hair_silhouette_completeness": "NOT_VERIFIED",
+      "overall_mask_pass": false
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "source_sha256": "a98c1b8271c9373c1ad7ad2a9f1d3f48fb4f37f2fd27a32c4d6c535ffda90208",
+      "files": {
+        "source.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/adult_M_fur_cloak_bun/source.png",
+          "sha256": "a98c1b8271c9373c1ad7ad2a9f1d3f48fb4f37f2fd27a32c4d6c535ffda90208"
+        },
+        "skin.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/adult_M_fur_cloak_bun/skin.png",
+          "sha256": "2fa2ee6914ea846343f2483e105e20bb4dbe295e2ebfd40af9e61631084d435e"
+        },
+        "hair.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/adult_M_fur_cloak_bun/hair.png",
+          "sha256": "5a522b24f85877d6a55fba5aa1be5d34fab8a5d508985bb260e158c4c8573fef"
+        },
+        "masks.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/adult_M_fur_cloak_bun/masks.png",
+          "sha256": "8f01b23374c0aff4f8dd1d938627208bbbbb47304a7939b6ed02451021be30ff"
+        },
+        "tints.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/adult_M_fur_cloak_bun/tints.png",
+          "sha256": "617d1c6d17aca68075396de347253d5eee69c403bd5974ca2604dfc13ea7f6ee"
+        }
+      },
+      "clothing_prop_contamination": "FAIL",
+      "confirmed_regressions": [
+        {
+          "xy": [
+            31,
+            85
+          ],
+          "mask": "skin",
+          "source_rgba": [
+            232,
+            193,
+            151,
+            253
+          ],
+          "observation": "Tunic hem trim inboard of the left thigh."
+        },
+        {
+          "xy": [
+            30,
+            86
+          ],
+          "mask": "skin",
+          "source_rgba": [
+            205,
+            162,
+            120,
+            253
+          ],
+          "observation": "Tunic hem trim inboard of the left thigh."
+        }
+      ],
+      "v4_to_v5_exact_pixel_changes": {
+        "skin": {
+          "added": [
+            {
+              "xy": [
+                43,
+                60
+              ],
+              "source_rgba": [
+                203,
+                123,
+                66,
+                252
+              ]
+            },
+            {
+              "xy": [
+                31,
+                85
+              ],
+              "source_rgba": [
+                232,
+                193,
+                151,
+                253
+              ]
+            },
+            {
+              "xy": [
+                30,
+                86
+              ],
+              "source_rgba": [
+                205,
+                162,
+                120,
+                253
+              ]
+            }
+          ],
+          "removed": []
+        },
+        "hair": {
+          "added": [],
+          "removed": []
+        }
+      },
+      "limb_landmarks_selected": 8,
+      "limb_landmarks_total": 8,
+      "reported_v4_face_omissions": "RECOVERED",
+      "overall_completeness": "NOT_FULLY_VERIFIED",
+      "hair_silhouette_completeness": "NOT_VERIFIED",
+      "overall_mask_pass": false
+    },
+    {
+      "look": "adult_M_fur_cloak_short",
+      "source_sha256": "345b19c1776ab4517396b0b90882fda0b1cfa0a4dd3e6adfe7e9adb0d9728500",
+      "files": {
+        "source.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/adult_M_fur_cloak_short/source.png",
+          "sha256": "345b19c1776ab4517396b0b90882fda0b1cfa0a4dd3e6adfe7e9adb0d9728500"
+        },
+        "skin.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/adult_M_fur_cloak_short/skin.png",
+          "sha256": "ab65d57425c2534eabede0a9a47b659a7e5f29a2920b086a66fa08853926c9d5"
+        },
+        "hair.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/adult_M_fur_cloak_short/hair.png",
+          "sha256": "db915ff08f029309b42beca6fe6f64eecd102fda2832b793d5076013070b35d9"
+        },
+        "masks.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/adult_M_fur_cloak_short/masks.png",
+          "sha256": "8851e2087dba3967e337817bb3b4b76a24e156bb70fb9914688dddd7ae1c5453"
+        },
+        "tints.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/adult_M_fur_cloak_short/tints.png",
+          "sha256": "804ffb008e0f52ea917fa2220d47a24e38a2a358aaf6e519dff01391c1fa917e"
+        }
+      },
+      "clothing_prop_contamination": "PASS_NO_CONFIRMED_OVERLAP_OBSERVED",
+      "confirmed_regressions": [],
+      "v4_to_v5_exact_pixel_changes": {
+        "skin": {
+          "added": [
+            {
+              "xy": [
+                34,
+                56
+              ],
+              "source_rgba": [
+                120,
+                72,
+                43,
+                252
+              ]
+            },
+            {
+              "xy": [
+                34,
+                57
+              ],
+              "source_rgba": [
+                177,
+                101,
+                54,
+                253
+              ]
+            },
+            {
+              "xy": [
+                34,
+                58
+              ],
+              "source_rgba": [
+                136,
+                84,
+                46,
+                253
+              ]
+            },
+            {
+              "xy": [
+                35,
+                58
+              ],
+              "source_rgba": [
+                118,
+                70,
+                38,
+                253
+              ]
+            },
+            {
+              "xy": [
+                38,
+                59
+              ],
+              "source_rgba": [
+                194,
+                117,
+                67,
+                253
+              ]
+            },
+            {
+              "xy": [
+                39,
+                59
+              ],
+              "source_rgba": [
+                126,
+                79,
+                48,
+                253
+              ]
+            }
+          ],
+          "removed": []
+        },
+        "hair": {
+          "added": [],
+          "removed": [
+            {
+              "xy": [
+                34,
+                56
+              ],
+              "source_rgba": [
+                120,
+                72,
+                43,
+                252
+              ]
+            },
+            {
+              "xy": [
+                35,
+                57
+              ],
+              "source_rgba": [
+                71,
+                43,
+                25,
+                253
+              ]
+            },
+            {
+              "xy": [
+                34,
+                58
+              ],
+              "source_rgba": [
+                136,
+                84,
+                46,
+                253
+              ]
+            }
+          ]
+        }
+      },
+      "limb_landmarks_selected": 8,
+      "limb_landmarks_total": 8,
+      "reported_v4_face_omissions": "RECOVERED",
+      "overall_completeness": "NOT_FULLY_VERIFIED",
+      "hair_silhouette_completeness": "NOT_VERIFIED",
+      "overall_mask_pass": false
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "source_sha256": "2c12e35971c40f6aa26d13e994a294fefaca50645218e83f7e39b1ba96e892c5",
+      "files": {
+        "source.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/child_F_fur_cloak_bun/source.png",
+          "sha256": "2c12e35971c40f6aa26d13e994a294fefaca50645218e83f7e39b1ba96e892c5"
+        },
+        "skin.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/child_F_fur_cloak_bun/skin.png",
+          "sha256": "5fcc8469a240926754b9295b7f3f2040af11a4189ca863530ad23e34d277ce39"
+        },
+        "hair.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/child_F_fur_cloak_bun/hair.png",
+          "sha256": "e6f1394b81b11a48c2f495e5604a70d31338dd71d17108bf53f0734827bea0d5"
+        },
+        "masks.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/child_F_fur_cloak_bun/masks.png",
+          "sha256": "8e4b0af1f4bd9441c943869fe06da59e55c830d922882b3ff1df98e3929aba70"
+        },
+        "tints.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/child_F_fur_cloak_bun/tints.png",
+          "sha256": "b83db4e42e8ce35c51b4b45dcb372ae67b05786d30200e73ff6bebd7b1d1f6aa"
+        }
+      },
+      "clothing_prop_contamination": "PASS_NO_CONFIRMED_OVERLAP_OBSERVED",
+      "confirmed_regressions": [],
+      "v4_to_v5_exact_pixel_changes": {
+        "skin": {
+          "added": [],
+          "removed": []
+        },
+        "hair": {
+          "added": [],
+          "removed": []
+        }
+      },
+      "limb_landmarks_selected": 8,
+      "limb_landmarks_total": 8,
+      "reported_v4_face_omissions": "NOT_APPLICABLE",
+      "overall_completeness": "NOT_FULLY_VERIFIED",
+      "hair_silhouette_completeness": "NOT_VERIFIED",
+      "overall_mask_pass": false
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "source_sha256": "dc212949d71914dd4d4b8cbc4cc3d89c5bf091897aa67fb7f04f769928c8ca6d",
+      "files": {
+        "source.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/child_F_fur_cloak_long_tied/source.png",
+          "sha256": "dc212949d71914dd4d4b8cbc4cc3d89c5bf091897aa67fb7f04f769928c8ca6d"
+        },
+        "skin.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/child_F_fur_cloak_long_tied/skin.png",
+          "sha256": "2db0d9d6fbfd3ebf9d5abec55b7964a89d301037a55d002c9707eed629e68dd3"
+        },
+        "hair.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/child_F_fur_cloak_long_tied/hair.png",
+          "sha256": "2c6a380aa24ca3b45fddbb06ccb155c752e6ce55716d0f67acd2dbea7789cf79"
+        },
+        "masks.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/child_F_fur_cloak_long_tied/masks.png",
+          "sha256": "7743f8e458281d01f58c7e473707645dd20c301c0fd9795c0a5abad1bcf0df5d"
+        },
+        "tints.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/child_F_fur_cloak_long_tied/tints.png",
+          "sha256": "0d15d068bf36b682fb82877f5d751147f82386306f1b7cf629ceeb8e1ed2b537"
+        }
+      },
+      "clothing_prop_contamination": "FAIL",
+      "confirmed_regressions": [
+        {
+          "xy": [
+            34,
+            86
+          ],
+          "mask": "skin",
+          "source_rgba": [
+            237,
+            195,
+            146,
+            253
+          ],
+          "observation": "Pale diagonal fur wrap beside upper arm opening."
+        },
+        {
+          "xy": [
+            35,
+            86
+          ],
+          "mask": "skin",
+          "source_rgba": [
+            200,
+            161,
+            121,
+            253
+          ],
+          "observation": "Pale diagonal fur wrap beside upper arm opening."
+        }
+      ],
+      "v4_to_v5_exact_pixel_changes": {
+        "skin": {
+          "added": [
+            {
+              "xy": [
+                34,
+                86
+              ],
+              "source_rgba": [
+                237,
+                195,
+                146,
+                253
+              ]
+            },
+            {
+              "xy": [
+                35,
+                86
+              ],
+              "source_rgba": [
+                200,
+                161,
+                121,
+                253
+              ]
+            }
+          ],
+          "removed": []
+        },
+        "hair": {
+          "added": [],
+          "removed": []
+        }
+      },
+      "limb_landmarks_selected": 8,
+      "limb_landmarks_total": 8,
+      "reported_v4_face_omissions": "NOT_APPLICABLE",
+      "overall_completeness": "NOT_FULLY_VERIFIED",
+      "hair_silhouette_completeness": "NOT_VERIFIED",
+      "overall_mask_pass": false
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "source_sha256": "3c61b4824d4f9ab461a1be252aae2c4c8399508bb68cb55809130b1d586814d2",
+      "files": {
+        "source.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/child_M_fur_cloak_bun/source.png",
+          "sha256": "3c61b4824d4f9ab461a1be252aae2c4c8399508bb68cb55809130b1d586814d2"
+        },
+        "skin.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/child_M_fur_cloak_bun/skin.png",
+          "sha256": "6c35ec45a10b98d11c2d3fb29def9bdbd0af9f2501128d3f02e7f047afcf6b11"
+        },
+        "hair.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/child_M_fur_cloak_bun/hair.png",
+          "sha256": "a91e598a207ac20a5c566f05013204f5ddfc58c16bceacb10f4265da6656c036"
+        },
+        "masks.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/child_M_fur_cloak_bun/masks.png",
+          "sha256": "08f18c5a090f8723f53d1216582921a64cfa02370bd4e0b27814feb8f63b9245"
+        },
+        "tints.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/child_M_fur_cloak_bun/tints.png",
+          "sha256": "f5edb302f2085cd1c5fc66bd6e18f7c89646f80872840902c6bcf5ef4e859150"
+        }
+      },
+      "clothing_prop_contamination": "PASS_NO_CONFIRMED_OVERLAP_OBSERVED",
+      "confirmed_regressions": [],
+      "v4_to_v5_exact_pixel_changes": {
+        "skin": {
+          "added": [],
+          "removed": []
+        },
+        "hair": {
+          "added": [],
+          "removed": []
+        }
+      },
+      "limb_landmarks_selected": 8,
+      "limb_landmarks_total": 8,
+      "reported_v4_face_omissions": "NOT_APPLICABLE",
+      "overall_completeness": "NOT_FULLY_VERIFIED",
+      "hair_silhouette_completeness": "NOT_VERIFIED",
+      "overall_mask_pass": false
+    },
+    {
+      "look": "child_M_fur_cloak_long_tied",
+      "source_sha256": "c86a67a0cec5e0edaf9d3e590285247d4622f23453078b8491b4e71ae43697d4",
+      "files": {
+        "source.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/child_M_fur_cloak_long_tied/source.png",
+          "sha256": "c86a67a0cec5e0edaf9d3e590285247d4622f23453078b8491b4e71ae43697d4"
+        },
+        "skin.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/child_M_fur_cloak_long_tied/skin.png",
+          "sha256": "5f7b7606f606dfd601724fe68fc0b440edec52551b9fc98437da0666ae3ca141"
+        },
+        "hair.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/child_M_fur_cloak_long_tied/hair.png",
+          "sha256": "823077d36404bbb9208106a494955c68a7ddd86439d0c60505a2d1aa8276dc79"
+        },
+        "masks.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/child_M_fur_cloak_long_tied/masks.png",
+          "sha256": "587d0085dc552a34a294015a8939f3059734e9e331cd7b0eb53ad44b71206f39"
+        },
+        "tints.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v5/child_M_fur_cloak_long_tied/tints.png",
+          "sha256": "ba62dc71ea033ee1836883fd59998ddeb13d0181d1bd1e4c89c33269c4ca26b2"
+        }
+      },
+      "clothing_prop_contamination": "PASS_NO_CONFIRMED_OVERLAP_OBSERVED",
+      "confirmed_regressions": [],
+      "v4_to_v5_exact_pixel_changes": {
+        "skin": {
+          "added": [
+            {
+              "xy": [
+                41,
+                75
+              ],
+              "source_rgba": [
+                178,
+                112,
+                65,
+                253
+              ]
+            },
+            {
+              "xy": [
+                44,
+                75
+              ],
+              "source_rgba": [
+                205,
+                126,
+                69,
+                251
+              ]
+            },
+            {
+              "xy": [
+                39,
+                76
+              ],
+              "source_rgba": [
+                155,
+                95,
+                52,
+                253
+              ]
+            },
+            {
+              "xy": [
+                40,
+                76
+              ],
+              "source_rgba": [
+                158,
+                96,
+                51,
+                253
+              ]
+            }
+          ],
+          "removed": []
+        },
+        "hair": {
+          "added": [],
+          "removed": []
+        }
+      },
+      "limb_landmarks_selected": 8,
+      "limb_landmarks_total": 8,
+      "reported_v4_face_omissions": "RECOVERED",
+      "overall_completeness": "NOT_FULLY_VERIFIED",
+      "hair_silhouette_completeness": "NOT_VERIFIED",
+      "overall_mask_pass": false
+    }
+  ]
+}

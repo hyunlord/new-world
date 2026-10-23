@@ -1,0 +1,3547 @@
+{
+  "schema_version": 1,
+  "review_id": "ART-POLISH2-MASK-CORPUS-V1-INDEPENDENT",
+  "reviewed_at_utc": "2026-10-23T19:12:07.917988+00:00",
+  "reviewer": "mask_corpus_review independent native subagent",
+  "candidate_directory": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1",
+  "candidate_status": "IMMUTABLE_DIAGNOSTIC_V1_NOT_INTEGRATED",
+  "summary_sha256": "1a42e98e4775a18366bbac0abc8b21a9769565a03d213232d75a224d1d741e72",
+  "scope": "All 34 look contact sheets, containing S/E idle, walk_a, work_a, carry, sleep: 340 frame views. Zoomed only indicated additional panels.",
+  "method": [
+    "Actually opened every contact.png using view_image detail=original; observed source, colored skin/hair overlays, and v4 tint for each of the ten frame positions.",
+    "Inspected suspected omissions and carry prop boundaries in the individual source/mask/reference/tint audit panels; masks.png was an additional comparison only where listed.",
+    "Computed hashes after visual review against the immutable v1 directory; numerical pixel reads corroborate already visually classified coordinates and do not generate semantic PASS verdicts."
+  ],
+  "coordinate_note": "Exact pixel examples use source-frame coordinates. Region bboxes are approximate half-open locations, not authored annotation polygons.",
+  "overall_verdict": "FAIL",
+  "counts": {
+    "contacts_actually_viewed": 34,
+    "frame_views": 340,
+    "look_PASS": 26,
+    "look_FAIL": 6,
+    "look_UNCERTAIN": 2,
+    "additional_panels_actually_viewed": 68,
+    "confirmed_failed_frame_findings": 11
+  },
+  "limits": [
+    "This corpus screen does not replace the separate strict 40-frame hair-silhouette/coverage and prop/clothing audit.",
+    "No numeric pass or classifier/reference-mask metric was treated as visual proof.",
+    "No full pixel accuracy, hair 50 percent coverage, mask gate acceptance, runtime acceptance, generated-portrait inspection, blind-review participation, or owner approval is claimed.",
+    "PASS means no obvious broad error found in the actually viewed panels, not that all boundary pixels are correct.",
+    "Dark hair, protected ink, tiny source anatomy, and trim/exposed-skin ambiguity remain explicit where encountered.",
+    "These observations are permanently bound to diagnostic v1. A later repair must be reviewed separately and must not overwrite these findings."
+  ],
+  "owner_approval": "NOT_CLAIMED",
+  "full_pixel_accuracy": "NOT_CLAIMED",
+  "strict_40_frame_gate": "NOT_EVALUATED_BY_THIS_REVIEW",
+  "looks": [
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "overall_visual_verdict": "PASS",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_fur_cloak_bun/contact.png",
+      "contact_sha256": "e00a2b27539efc21044704d3753853908f701870fda9c573a9e32f5fa3f9a098",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_fur_cloak_bun/E/carry/audit.png",
+          "sha256": "5b682385b80f94c401c41b7e6f7cb2e05dab03a6a024e813210b107780f36670"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_fur_cloak_bun/E/idle/audit.png",
+          "sha256": "d89b1d1045a1662fa0fa74311b4124664e65968b2e45ce1377290704e30ca95b"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_fur_cloak_bun/S/carry/audit.png",
+          "sha256": "d637028be9f1abf4fb5886b6081bf20bea3d58c28b66931142b7787063043084"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_fur_cloak_bun/S/sleep/audit.png",
+          "sha256": "e517f2ffe4c03c3956c854d20d3d013df3b58d3a4fcfe51142c41830759874e4"
+        }
+      ],
+      "finding_ids": [],
+      "visual_observation": "No obvious prop/clothing/blanket leakage or large skin/hair omission identified in the ten contact frames at broad review resolution.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "adult_F_fur_cloak_long_tied",
+      "overall_visual_verdict": "PASS",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_fur_cloak_long_tied/contact.png",
+      "contact_sha256": "008e3e6d4f57d862bcfd5e1c6059f3573ad853e734d08c752c641a0b02aea92d",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_fur_cloak_long_tied/E/carry/audit.png",
+          "sha256": "01c8e1b0fbd2fd5a50b9283cc8dfff80e2a61256edf230d924b6e2bcf0698d9a"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_fur_cloak_long_tied/E/idle/audit.png",
+          "sha256": "a1d01106ee07be44a7b4391fc27ba8fad09696181b9ea84354866ad06cbb1713"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_fur_cloak_long_tied/S/carry/audit.png",
+          "sha256": "68c7684e782cb61de61fd4040c1370df2b4efd3ef080ba56140bd6d003a8cd65"
+        }
+      ],
+      "finding_ids": [],
+      "visual_observation": "No obvious prop/clothing/blanket leakage or large skin/hair omission identified in the ten contact frames at broad review resolution.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "adult_F_fur_cloak_short",
+      "overall_visual_verdict": "FAIL",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_fur_cloak_short/contact.png",
+      "contact_sha256": "5eb43bbf90393852f2c8c077b8b6f6b94440a62dadee7f41878ac68846e2f17a",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_fur_cloak_short/E/carry/audit.png",
+          "sha256": "71c6fda498fe89bf3dde0dbb868f045dbb19d7cfc878065eb092a8623acf9ceb"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_fur_cloak_short/E/idle/audit.png",
+          "sha256": "6c17b7f16c1106374840af4edd7e75e066182a33ffa9269ccd2e741c467f7435"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_fur_cloak_short/S/carry/audit.png",
+          "sha256": "1cb582bade8a5520c5499cabb5cb3bc50a1bde82d181773ebde14629834d8bb6"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_fur_cloak_short/S/carry/masks.png",
+          "sha256": "316bb13af6973adca79abbe7c3ece59e81591d84cae87e2599d9de66f7e64f41"
+        }
+      ],
+      "finding_ids": [
+        "CV007",
+        "CV008"
+      ],
+      "visual_observation": "See exact frame findings. The aggregate verdict preserves the worst confirmed or unresolved observation.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "adult_F_hide_wrap_bun",
+      "overall_visual_verdict": "PASS",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_hide_wrap_bun/contact.png",
+      "contact_sha256": "a3487213eae734a2dc9c002eecce93817e50f85f248f135bc350248fc2024753",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_hide_wrap_bun/E/carry/audit.png",
+          "sha256": "0156618b4eb07268e55eb41e6a9164b7e14a00c9e1c8202037722df5fd55ed81"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_hide_wrap_bun/S/carry/audit.png",
+          "sha256": "bd251edb8357a9e9054cec61bb59180ecf515c5dd49d1ed560c5143be8d43e8d"
+        }
+      ],
+      "finding_ids": [],
+      "visual_observation": "No obvious prop/clothing/blanket leakage or large skin/hair omission identified in the ten contact frames at broad review resolution.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "adult_F_hide_wrap_long_tied",
+      "overall_visual_verdict": "PASS",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_hide_wrap_long_tied/contact.png",
+      "contact_sha256": "5b82eafabd85e177202772c6f0d0ce63b38ee9279b642cf413d55bde370f25f5",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_hide_wrap_long_tied/E/carry/audit.png",
+          "sha256": "01bee2f63024893a670a98c478ab9a13e15f280eb960e4c3311fdbdf1e7573c0"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_hide_wrap_long_tied/S/carry/audit.png",
+          "sha256": "a3fe3f57fd336d3429522e8bd643e8420e09dba93cebf033f221937a30786097"
+        }
+      ],
+      "finding_ids": [],
+      "visual_observation": "No obvious prop/clothing/blanket leakage or large skin/hair omission identified in the ten contact frames at broad review resolution.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "adult_F_hide_wrap_short",
+      "overall_visual_verdict": "FAIL",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_hide_wrap_short/contact.png",
+      "contact_sha256": "6144117155e364f636bcbe28c868e5b20aa53c95abca16b7747f39c147555dae",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_hide_wrap_short/E/carry/audit.png",
+          "sha256": "0e0e4f77f0ed2a90595407f1b84ed941585543c9d7786656e42d87ce6b1227ee"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_hide_wrap_short/E/carry/masks.png",
+          "sha256": "bf99ad4d09ef9236048c2074b9eb8dd7ba347f886fe6157fd0abbb5bd9b7e9d0"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_hide_wrap_short/S/carry/audit.png",
+          "sha256": "01b07bee3225d513ce78fb54975d8d2984d5b05e7d542fe18b403d33ab3602ec"
+        }
+      ],
+      "finding_ids": [
+        "CV009"
+      ],
+      "visual_observation": "See exact frame findings. The aggregate verdict preserves the worst confirmed or unresolved observation.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "adult_F_loincloth_bun",
+      "overall_visual_verdict": "PASS",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_loincloth_bun/contact.png",
+      "contact_sha256": "faaf3c365942b49020a1419c11bfb761f8cb55622a87de93a87c5b2de94b650f",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_loincloth_bun/E/carry/audit.png",
+          "sha256": "d8c8c32d644835c91ae769a484ce487384aadbcff0344667199d6b12bd9cec5a"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_loincloth_bun/S/carry/audit.png",
+          "sha256": "c851cd4158c171890bf271707f7029cdc60c1c5ce340ef13ff84527a0a6f4082"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_loincloth_bun/S/sleep/audit.png",
+          "sha256": "7c9b7e37d03d8d022a84aa672d951fd047001086987c9074bf057e0aa5f5ff0a"
+        }
+      ],
+      "finding_ids": [],
+      "visual_observation": "No obvious prop/clothing/blanket leakage or large skin/hair omission identified in the ten contact frames at broad review resolution.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "adult_F_loincloth_long_tied",
+      "overall_visual_verdict": "PASS",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_loincloth_long_tied/contact.png",
+      "contact_sha256": "321da034f4116958a66d3338b1b9a913649be76ef70ea9b2664d509853080517",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_loincloth_long_tied/E/carry/audit.png",
+          "sha256": "0f025976a535351b9efab0160bd09ca325700808f4835ecc55dae9ac401fe0d9"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_loincloth_long_tied/S/carry/audit.png",
+          "sha256": "286c58459aa2ba881952b356676c0df2dd0c2ca503617a5dcf3fa2aa9189f7b7"
+        }
+      ],
+      "finding_ids": [],
+      "visual_observation": "No obvious prop/clothing/blanket leakage or large skin/hair omission identified in the ten contact frames at broad review resolution.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "adult_F_loincloth_short",
+      "overall_visual_verdict": "PASS",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_loincloth_short/contact.png",
+      "contact_sha256": "773adb8c97666a3f9978e1cabc41fc59e199b68d2b30c3757414c044b1bf257f",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_loincloth_short/E/carry/audit.png",
+          "sha256": "e4d6247df32d2ef4f051e635978f7a2c9d3ed8ce4f2fa4d18f8a81f18cebeaa4"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_loincloth_short/S/carry/audit.png",
+          "sha256": "2645fee103a446b1d373bfb3b6848afbaa2f5641d8c23a29ee3f11efad7c831f"
+        }
+      ],
+      "finding_ids": [],
+      "visual_observation": "No obvious prop/clothing/blanket leakage or large skin/hair omission identified in the ten contact frames at broad review resolution.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "overall_visual_verdict": "FAIL",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_fur_cloak_bun/contact.png",
+      "contact_sha256": "d854d206316d6145307098b5955a1299c2948275630070fa8bcbbd4564951ac9",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_fur_cloak_bun/E/carry/audit.png",
+          "sha256": "f82a0959a53d3b6a6d77e9e97a2fc1a337e6feafbaaf2c6194d77412cb8cfa29"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_fur_cloak_bun/E/idle/audit.png",
+          "sha256": "c36852e3e930f6c0e2d9bda23348596e6fb0b85fefb0a96d56c56370c810f13f"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_fur_cloak_bun/E/walk_a/audit.png",
+          "sha256": "93b63ef12286ae11ddee7413c99b4c69636a688b179fe83eccede35321a89842"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_fur_cloak_bun/S/carry/audit.png",
+          "sha256": "6dea8a498a9f831b59ac00c7b3b4dff54d7a2a1519a83477cf1893a7cbdf692a"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_fur_cloak_bun/S/carry/masks.png",
+          "sha256": "590a090d0b47affefa4ed3f3f936daf9695707d23675cdc6f585987f41c24ab8"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_fur_cloak_bun/S/idle/audit.png",
+          "sha256": "1cf92ad8d616f124eaefe0e22d0786d89f82af6938c2b1099d3e2a196deecf49"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_fur_cloak_bun/S/idle/masks.png",
+          "sha256": "9948b93de9bf314523862dcd02d923995273c67470ac45d412f6c9090515203e"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_fur_cloak_bun/S/walk_a/audit.png",
+          "sha256": "bd36870633e746a54bb6867cf1e000f7fb37a53030a64bd90d6ecd687b5776cf"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_fur_cloak_bun/S/work_a/audit.png",
+          "sha256": "df65809373124a07bbfcef804370ebc2f4d55e36effff9bd669f56604aa68ba4"
+        }
+      ],
+      "finding_ids": [
+        "CV001",
+        "CV003",
+        "CV004"
+      ],
+      "visual_observation": "See exact frame findings. The aggregate verdict preserves the worst confirmed or unresolved observation.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "adult_M_fur_cloak_short",
+      "overall_visual_verdict": "FAIL",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_fur_cloak_short/contact.png",
+      "contact_sha256": "bbfae213f8c53fb32180aa8d8ca33db4c8c8533be1850024f780bd16d0f64a98",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_fur_cloak_short/E/carry/audit.png",
+          "sha256": "fd24494582d358b40e8c0a054045c75eeb6bcd9c5b6fe0768248d979647f9207"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_fur_cloak_short/E/idle/audit.png",
+          "sha256": "fd225676d91bba16e54699cf74f4af2cd5bdc77361789ef392727c3161bf30dd"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_fur_cloak_short/E/idle/masks.png",
+          "sha256": "21cb9db235d1e22e9b5ed3aad90dcf7c268fadcbaa1927052d46681c70336934"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_fur_cloak_short/E/walk_a/audit.png",
+          "sha256": "6654575a164dc6b6b90208fe427768377f3f3bff9ae1422dd2b4b0ff3444d436"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_fur_cloak_short/S/carry/audit.png",
+          "sha256": "38cadd6d8d9d67efa958dbed9a64060826f1d3d1e0cf1051704c2719a3fe6947"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_fur_cloak_short/S/walk_a/audit.png",
+          "sha256": "e22827640f2bfe9e75ca2c3e329336ff3dda140f21907e078f848f4e8cca4eda"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_fur_cloak_short/S/work_a/audit.png",
+          "sha256": "2843c13d55ead48a34f137570150de63bdae8013c771792d4b05424fff008965"
+        }
+      ],
+      "finding_ids": [
+        "CV002"
+      ],
+      "visual_observation": "See exact frame findings. The aggregate verdict preserves the worst confirmed or unresolved observation.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "adult_M_hide_wrap_bun",
+      "overall_visual_verdict": "PASS",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_hide_wrap_bun/contact.png",
+      "contact_sha256": "f878a98f022bb92fb01d4447c95eb13a21bb9dcb630fff4e1e91e2ed594d3326",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_hide_wrap_bun/E/carry/audit.png",
+          "sha256": "22af73c0073dcda2f1b55c3c52c0aee1bbc42af79e739adb151b0dd880f685dd"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_hide_wrap_bun/E/idle/audit.png",
+          "sha256": "42a50cbde09a6eca065fd6796707cdbef96996b27817bca0e98a951ea32e0a0f"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_hide_wrap_bun/S/carry/audit.png",
+          "sha256": "18d9a37b3539e37e632666db830f1238e1965c66de7456deaf5d47b5a02dabb8"
+        }
+      ],
+      "finding_ids": [],
+      "visual_observation": "No obvious prop/clothing/blanket leakage or large skin/hair omission identified in the ten contact frames at broad review resolution.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "adult_M_hide_wrap_short",
+      "overall_visual_verdict": "FAIL",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_hide_wrap_short/contact.png",
+      "contact_sha256": "d4026506649c2ac8597d62cd5697c9cdb57717830d264121bfbbab25a9c01bb3",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_hide_wrap_short/E/carry/audit.png",
+          "sha256": "3c9a8ff03e22ea4e559eb76096e3bcf08e4b6babd81908ad3302a28e550ae68e"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_hide_wrap_short/E/carry/masks.png",
+          "sha256": "58a7b7784f8d4945b7a9fe6d576bd297b6e66f9cb68d9e22aa0115046183cd3e"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_hide_wrap_short/E/idle/audit.png",
+          "sha256": "a2bd7eb5a8ef79a9ecee00bade9616372554eba326eec9bcddebd5ffb6b8a075"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_hide_wrap_short/S/carry/audit.png",
+          "sha256": "d02ddccc6612ad3c5c9ed6697aecc90d1d45929a929f0623f365cf90f3d7e5c9"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_hide_wrap_short/S/carry/masks.png",
+          "sha256": "524a7e41c6ee92be3dc69a2d2c9eac02c6fca828375f0bf2e367fede01347784"
+        }
+      ],
+      "finding_ids": [
+        "CV005",
+        "CV010",
+        "CV014"
+      ],
+      "visual_observation": "See exact frame findings. The aggregate verdict preserves the worst confirmed or unresolved observation.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "adult_M_loincloth_bun",
+      "overall_visual_verdict": "PASS",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_loincloth_bun/contact.png",
+      "contact_sha256": "3cc5dcc7afe6947064418a652b9110c24537c430ceedff0f02a2c96c79ea6b3d",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_loincloth_bun/E/carry/audit.png",
+          "sha256": "addb205c077e32398244f2f31470d2b76e3189b16f544e7e82bdbfbe70d816de"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_loincloth_bun/E/idle/audit.png",
+          "sha256": "1ac0bccc9a6499e3fc21bfee0a738d483ef18a140cd20b5891ed40ffa82d0741"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_loincloth_bun/S/carry/audit.png",
+          "sha256": "489cbfd0dc8f9917287b040ca6c5d0d4f1840009b98da7a81e4d1948ceb10cad"
+        }
+      ],
+      "finding_ids": [],
+      "visual_observation": "No obvious prop/clothing/blanket leakage or large skin/hair omission identified in the ten contact frames at broad review resolution.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "adult_M_loincloth_long_tied",
+      "overall_visual_verdict": "UNCERTAIN",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_loincloth_long_tied/contact.png",
+      "contact_sha256": "50715cbd756b9ac0aa3e73fa409d3ec82af8663a0758c183b976b48ada0c1872",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_loincloth_long_tied/E/carry/audit.png",
+          "sha256": "4e4a5bb3561472483f460418eed3329865d6205878dd8a3369a083cfc78a9305"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_loincloth_long_tied/E/idle/audit.png",
+          "sha256": "f1f3a7aadb65f5a8c652cc93848073584043b03383ddb9b8f29586fe5507636d"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_loincloth_long_tied/E/idle/masks.png",
+          "sha256": "d23eb6654b353ed2225cb4e0f21240fa7ba41872b7f777c7e2d7b72b2edcd1be"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_loincloth_long_tied/E/work_a/audit.png",
+          "sha256": "9d1eaaee7b8e4ae6d718c7cd18413964b884ed5a2fa61fde86c113a13faebb85"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_loincloth_long_tied/S/carry/audit.png",
+          "sha256": "978c221b56bce9f20516584fdd0b58f44a8a0584138f9c1722fcdb0c2539c160"
+        }
+      ],
+      "finding_ids": [
+        "CV012"
+      ],
+      "visual_observation": "See exact frame findings. The aggregate verdict preserves the worst confirmed or unresolved observation.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "adult_M_loincloth_short",
+      "overall_visual_verdict": "FAIL",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_loincloth_short/contact.png",
+      "contact_sha256": "7bf7cd3ee5e355d8d8003467f7331d0765c63f970dddd3fe9e625388c169f964",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_loincloth_short/E/carry/audit.png",
+          "sha256": "2c37eefea16fa6128cbc03c056e026b11a3b8d4c94c767bcf123d6453979ad58"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_loincloth_short/E/idle/audit.png",
+          "sha256": "ef4c856f8f0a7dfc1b0d679aa2203ae4bd93a9e2e774da6ba10c04c1f95d3254"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_loincloth_short/S/carry/audit.png",
+          "sha256": "c7540409ff0c188d67e82cce1b139ff929a1adfb9ac6bab04e85d1b6984df3f5"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_loincloth_short/S/carry/masks.png",
+          "sha256": "49d769cd2cf425237555844c5eee98b0a1db055e218a72b0cf3f27bf9470a01d"
+        }
+      ],
+      "finding_ids": [
+        "CV006",
+        "CV011"
+      ],
+      "visual_observation": "See exact frame findings. The aggregate verdict preserves the worst confirmed or unresolved observation.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "overall_visual_verdict": "PASS",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/child_F_fur_cloak_bun/contact.png",
+      "contact_sha256": "dcea7ccf42cd32968736a9b987a97188d3e4379ce470b0885978a680c7f04a42",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [],
+      "finding_ids": [],
+      "visual_observation": "No obvious prop/clothing/blanket leakage or large skin/hair omission identified in the ten contact frames at broad review resolution.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "overall_visual_verdict": "PASS",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/child_F_fur_cloak_long_tied/contact.png",
+      "contact_sha256": "f431eb569001f8a6917d86a50bfb9af79b38c58dcf9fdc362be16968dc220ee8",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/child_F_fur_cloak_long_tied/E/idle/audit.png",
+          "sha256": "c0f9079761a998b0ff42030577ea0273362632f5da4d88892c96468236040aab"
+        },
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/child_F_fur_cloak_long_tied/S/idle/audit.png",
+          "sha256": "cfa862db2f093f68225318e7c3b255c92275950d4777bd3bf4da6222c9aff27a"
+        }
+      ],
+      "finding_ids": [],
+      "visual_observation": "No obvious prop/clothing/blanket leakage or large skin/hair omission identified in the ten contact frames at broad review resolution.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "child_F_fur_cloak_short",
+      "overall_visual_verdict": "PASS",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/child_F_fur_cloak_short/contact.png",
+      "contact_sha256": "942a08467c7d9d973ab730504ef3b165ce2da4822d8802ab14025f2677880d98",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [],
+      "finding_ids": [],
+      "visual_observation": "No obvious prop/clothing/blanket leakage or large skin/hair omission identified in the ten contact frames at broad review resolution.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "child_F_hide_wrap_bun",
+      "overall_visual_verdict": "PASS",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/child_F_hide_wrap_bun/contact.png",
+      "contact_sha256": "75a7564d16ed72713b24c04249d732b286d28b0d4b3956d76287dff188474a2b",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [],
+      "finding_ids": [],
+      "visual_observation": "No obvious prop/clothing/blanket leakage or large skin/hair omission identified in the ten contact frames at broad review resolution.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "child_F_hide_wrap_long_tied",
+      "overall_visual_verdict": "PASS",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/child_F_hide_wrap_long_tied/contact.png",
+      "contact_sha256": "eb4c72d5598419bca353b9800807821452da305f454a6fde41347263279202a3",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [],
+      "finding_ids": [],
+      "visual_observation": "No obvious prop/clothing/blanket leakage or large skin/hair omission identified in the ten contact frames at broad review resolution.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "child_F_hide_wrap_short",
+      "overall_visual_verdict": "PASS",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/child_F_hide_wrap_short/contact.png",
+      "contact_sha256": "00a6c67478b82c8c9b59d0adf346379ecefceeacacf52e31baf5801c248c21c1",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [],
+      "finding_ids": [],
+      "visual_observation": "No obvious prop/clothing/blanket leakage or large skin/hair omission identified in the ten contact frames at broad review resolution.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "child_F_loincloth_bun",
+      "overall_visual_verdict": "PASS",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/child_F_loincloth_bun/contact.png",
+      "contact_sha256": "cd626a2c36f1ebc8fa8ec94ea16fc96009ef7364829d864b360b72e433456b88",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [],
+      "finding_ids": [],
+      "visual_observation": "No obvious prop/clothing/blanket leakage or large skin/hair omission identified in the ten contact frames at broad review resolution.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "child_F_loincloth_long_tied",
+      "overall_visual_verdict": "PASS",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/child_F_loincloth_long_tied/contact.png",
+      "contact_sha256": "92337a03770f81add1368ee5c1284e51136342a5b3ebc24139d898ef4b61ba71",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/child_F_loincloth_long_tied/E/work_a/audit.png",
+          "sha256": "86891c28866a985e6d4addb7597c205b3d4019abf8f1fc1b943364a6f6980fda"
+        }
+      ],
+      "finding_ids": [],
+      "visual_observation": "No obvious prop/clothing/blanket leakage or large skin/hair omission identified in the ten contact frames at broad review resolution.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "child_F_loincloth_short",
+      "overall_visual_verdict": "PASS",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/child_F_loincloth_short/contact.png",
+      "contact_sha256": "fd72eef655b26fbb103eae02b4e3169070c226ad2e5b10b4c1dcdfe6028a327c",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [],
+      "finding_ids": [],
+      "visual_observation": "No obvious prop/clothing/blanket leakage or large skin/hair omission identified in the ten contact frames at broad review resolution.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "overall_visual_verdict": "PASS",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/child_M_fur_cloak_bun/contact.png",
+      "contact_sha256": "e94a6bf486b1d7d03e6e7b608226d322bb73a84abd20b03ea10b0e53e10d544d",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [],
+      "finding_ids": [],
+      "visual_observation": "No obvious prop/clothing/blanket leakage or large skin/hair omission identified in the ten contact frames at broad review resolution.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "child_M_fur_cloak_long_tied",
+      "overall_visual_verdict": "PASS",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/child_M_fur_cloak_long_tied/contact.png",
+      "contact_sha256": "26723b1016173b3cbe1cf6da00cd7877fe964ef2633b0fc740a1d30eb2aa91f0",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [],
+      "finding_ids": [],
+      "visual_observation": "No obvious prop/clothing/blanket leakage or large skin/hair omission identified in the ten contact frames at broad review resolution.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "child_M_fur_cloak_short",
+      "overall_visual_verdict": "PASS",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/child_M_fur_cloak_short/contact.png",
+      "contact_sha256": "19c16c1d27a2d180a0fa615488980f8aed43e2e4df6e33ad43ad7c14593c9f5b",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/child_M_fur_cloak_short/E/idle/audit.png",
+          "sha256": "6e6f49d0dc066c63ca944baa8665bb36dc0b10fe27bf82d9557c0e3e99ba78f3"
+        }
+      ],
+      "finding_ids": [],
+      "visual_observation": "No obvious prop/clothing/blanket leakage or large skin/hair omission identified in the ten contact frames at broad review resolution.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "child_M_hide_wrap_bun",
+      "overall_visual_verdict": "PASS",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/child_M_hide_wrap_bun/contact.png",
+      "contact_sha256": "d041a0e5b201573333bdcd74e9c0c259ffcfc7db5de31f15d5ace3cab686768a",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/child_M_hide_wrap_bun/E/work_a/audit.png",
+          "sha256": "7fb0f3c8386dfd3b6674e068deeb4270cdd9299359db3dafeafbf6c8a1623bd4"
+        }
+      ],
+      "finding_ids": [],
+      "visual_observation": "No obvious prop/clothing/blanket leakage or large skin/hair omission identified in the ten contact frames at broad review resolution.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "child_M_hide_wrap_long_tied",
+      "overall_visual_verdict": "UNCERTAIN",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/child_M_hide_wrap_long_tied/contact.png",
+      "contact_sha256": "dabaa522dc73eeb07f7d1affd09a7381bbd654138695413668e7b4324af71048",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/child_M_hide_wrap_long_tied/E/work_a/audit.png",
+          "sha256": "9b707d2d733a68e7817e807ed0aec10874a1a6092e11007e89abba6f64f34f3b"
+        }
+      ],
+      "finding_ids": [
+        "CV013"
+      ],
+      "visual_observation": "See exact frame findings. The aggregate verdict preserves the worst confirmed or unresolved observation.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "child_M_hide_wrap_short",
+      "overall_visual_verdict": "PASS",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/child_M_hide_wrap_short/contact.png",
+      "contact_sha256": "0b583767ae4f8842c0531e8664fb685a4bd356a2a7a0517098c8fc62cb07b962",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [
+        {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/child_M_hide_wrap_short/E/work_a/audit.png",
+          "sha256": "7c42c105cb54f852f74d0a3ad6420b07be805605be5ada30696fc0484af5c227"
+        }
+      ],
+      "finding_ids": [],
+      "visual_observation": "No obvious prop/clothing/blanket leakage or large skin/hair omission identified in the ten contact frames at broad review resolution.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "child_M_loincloth_bun",
+      "overall_visual_verdict": "PASS",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/child_M_loincloth_bun/contact.png",
+      "contact_sha256": "2ced0f13df9af21a6437d8762d3c5bdfe9fd5e952242f9cf14f9ae240dc59ff0",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [],
+      "finding_ids": [],
+      "visual_observation": "No obvious prop/clothing/blanket leakage or large skin/hair omission identified in the ten contact frames at broad review resolution.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "child_M_loincloth_long_tied",
+      "overall_visual_verdict": "PASS",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/child_M_loincloth_long_tied/contact.png",
+      "contact_sha256": "23d8998fdf37eafe4ed941245c4585014611bc3e52859af57c316ce84df04b04",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [],
+      "finding_ids": [],
+      "visual_observation": "No obvious prop/clothing/blanket leakage or large skin/hair omission identified in the ten contact frames at broad review resolution.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    },
+    {
+      "look": "child_M_loincloth_short",
+      "overall_visual_verdict": "PASS",
+      "contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/child_M_loincloth_short/contact.png",
+      "contact_sha256": "94714bf4a1a11dfe8e3eab68de0f4572907d346aa2209fb3be0ebbc7d7c3cf81",
+      "contact_dimensions": [
+        3400,
+        500
+      ],
+      "contact_actually_viewed": true,
+      "view_tool": "view_image detail=original",
+      "frames_visually_viewed_via_contact": [
+        {
+          "facing": "S",
+          "pose": "idle"
+        },
+        {
+          "facing": "S",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "S",
+          "pose": "work_a"
+        },
+        {
+          "facing": "S",
+          "pose": "carry"
+        },
+        {
+          "facing": "S",
+          "pose": "sleep"
+        },
+        {
+          "facing": "E",
+          "pose": "idle"
+        },
+        {
+          "facing": "E",
+          "pose": "walk_a"
+        },
+        {
+          "facing": "E",
+          "pose": "work_a"
+        },
+        {
+          "facing": "E",
+          "pose": "carry"
+        },
+        {
+          "facing": "E",
+          "pose": "sleep"
+        }
+      ],
+      "frame_count": 10,
+      "additional_panels_actually_viewed": [],
+      "finding_ids": [],
+      "visual_observation": "No obvious prop/clothing/blanket leakage or large skin/hair omission identified in the ten contact frames at broad review resolution.",
+      "pass_limit": "A broad visual screen only; tiny boundaries and every source pixel were not exhaustively audited."
+    }
+  ],
+  "findings": [
+    {
+      "id": "CV001",
+      "look": "adult_M_fur_cloak_bun",
+      "facing": "E",
+      "pose": "idle",
+      "kind": "large_omitted_skin",
+      "verdict": "FAIL",
+      "description": "The plainly exposed orange upper arm and forearm are largely unselected. They remain orange in the light v4 tint while adjacent selected skin becomes light.",
+      "source_coordinate_system": "zero-based x,y in original 80x112 source.png; region half-open",
+      "region_bbox_approx": [
+        38,
+        64,
+        44,
+        85
+      ],
+      "actual_viewed_evidence": [
+        "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_fur_cloak_bun/E/idle/audit.png"
+      ],
+      "source_sha256": "d4b8177e94529f3ecd53bd96c9f9d50948876bce991620806ac742a94b86c755",
+      "skin_sha256": "d3411226d9935a6aeb9a40a4da2b879072e97e47f004b35d36b12cd2ee4c8496",
+      "hair_sha256": "a509c7360205b34520b45978f923b84f667aee1cfce6d91e7f8a28ba65584847",
+      "audit_sha256": "c36852e3e930f6c0e2d9bda23348596e6fb0b85fefb0a96d56c56370c810f13f",
+      "source_specific_uncertainty": null,
+      "exact_pixel_examples": [
+        {
+          "xy": [
+            40,
+            66
+          ],
+          "source_rgba": [
+            255,
+            166,
+            91,
+            253
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            255,
+            166,
+            91,
+            253
+          ]
+        },
+        {
+          "xy": [
+            40,
+            69
+          ],
+          "source_rgba": [
+            245,
+            155,
+            80,
+            253
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            245,
+            155,
+            80,
+            253
+          ]
+        },
+        {
+          "xy": [
+            41,
+            72
+          ],
+          "source_rgba": [
+            245,
+            158,
+            87,
+            253
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            245,
+            158,
+            87,
+            253
+          ]
+        }
+      ],
+      "pixel_evidence_role": "Corroborates a region already classified by viewing source/mask/tint panels; pixel values are not semantic proof."
+    },
+    {
+      "id": "CV002",
+      "look": "adult_M_fur_cloak_short",
+      "facing": "E",
+      "pose": "idle",
+      "kind": "large_omitted_skin",
+      "verdict": "FAIL",
+      "description": "The exposed arm below the cloak is almost entirely omitted; only a tiny lower mark is selected. The arm remains orange in v4.",
+      "source_coordinate_system": "zero-based x,y in original 80x112 source.png; region half-open",
+      "region_bbox_approx": [
+        38,
+        74,
+        44,
+        85
+      ],
+      "actual_viewed_evidence": [
+        "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_fur_cloak_short/E/idle/audit.png",
+        "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_fur_cloak_short/E/idle/masks.png"
+      ],
+      "source_sha256": "19136dcd20de326959893d8a8cb07f8fd1ad689562e20a26dced708ae9b4bb7d",
+      "skin_sha256": "fb20e7ee328db7f9130f6bb30371a5863aa319b86c2d3eaec83747b15e4256cd",
+      "hair_sha256": "321889ced1f7e6c69b506524d30b623155b4cd799aa650c270632c4f6eab6d4c",
+      "audit_sha256": "fd225676d91bba16e54699cf74f4af2cd5bdc77361789ef392727c3161bf30dd",
+      "source_specific_uncertainty": null,
+      "exact_pixel_examples": [
+        {
+          "xy": [
+            40,
+            76
+          ],
+          "source_rgba": [
+            231,
+            153,
+            91,
+            253
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            231,
+            153,
+            91,
+            253
+          ]
+        },
+        {
+          "xy": [
+            40,
+            79
+          ],
+          "source_rgba": [
+            229,
+            152,
+            91,
+            253
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            229,
+            152,
+            91,
+            253
+          ]
+        },
+        {
+          "xy": [
+            41,
+            82
+          ],
+          "source_rgba": [
+            230,
+            154,
+            93,
+            253
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            230,
+            154,
+            93,
+            253
+          ]
+        }
+      ],
+      "pixel_evidence_role": "Corroborates a region already classified by viewing source/mask/tint panels; pixel values are not semantic proof."
+    },
+    {
+      "id": "CV003",
+      "look": "adult_M_fur_cloak_bun",
+      "facing": "S",
+      "pose": "walk_a",
+      "kind": "large_omitted_skin",
+      "verdict": "FAIL",
+      "description": "The image-left exposed arm is unselected while the opposite arm is selected and lightened. This produces a visible orange-versus-light skin mismatch.",
+      "source_coordinate_system": "zero-based x,y in original 80x112 source.png; region half-open",
+      "region_bbox_approx": [
+        26,
+        68,
+        34,
+        85
+      ],
+      "actual_viewed_evidence": [
+        "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_fur_cloak_bun/S/walk_a/audit.png"
+      ],
+      "source_sha256": "aa2ce98d0985ad8339186cb86f4bb18c6779885f1f1a3003eea9543a1036234e",
+      "skin_sha256": "1a8f79fd47981eb62c05a71aa7218ee36c544411f063f0ec073496cf38804c68",
+      "hair_sha256": "bca51910b01b2c7734618d3146b14076cf8a9b2d07a35fe5ec6ae1522f9f72d4",
+      "audit_sha256": "bd36870633e746a54bb6867cf1e000f7fb37a53030a64bd90d6ecd687b5776cf",
+      "source_specific_uncertainty": null,
+      "exact_pixel_examples": [
+        {
+          "xy": [
+            28,
+            73
+          ],
+          "source_rgba": [
+            242,
+            148,
+            74,
+            253
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            242,
+            148,
+            74,
+            253
+          ]
+        },
+        {
+          "xy": [
+            29,
+            76
+          ],
+          "source_rgba": [
+            242,
+            154,
+            81,
+            253
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            242,
+            154,
+            81,
+            253
+          ]
+        }
+      ],
+      "pixel_evidence_role": "Corroborates a region already classified by viewing source/mask/tint panels; pixel values are not semantic proof."
+    },
+    {
+      "id": "CV004",
+      "look": "adult_M_fur_cloak_bun",
+      "facing": "S",
+      "pose": "carry",
+      "kind": "skin_on_log",
+      "verdict": "FAIL",
+      "description": "Six selected pixels sit on the upper-right carried log end, above and to the right of the supporting hand. The wood changes color in v4. This is a small spill visible at zoom, not a large spill region.",
+      "source_coordinate_system": "zero-based x,y in original 80x112 source.png; region half-open",
+      "region_bbox_approx": null,
+      "actual_viewed_evidence": [
+        "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_fur_cloak_bun/S/carry/audit.png",
+        "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_fur_cloak_bun/S/carry/masks.png"
+      ],
+      "source_sha256": "eb5f6202102baa612b49296a6e10a1dfa042092c6f236f5d444e50318ab5db75",
+      "skin_sha256": "8fe50b2e4b88db845c8c199196f7441d346f92b56231c0cda066aa8ab62b377d",
+      "hair_sha256": "9f17cfaa72788152adba87dda287505e90480aecdcd63d7be0aca951f9166c37",
+      "audit_sha256": "6dea8a498a9f831b59ac00c7b3b4dff54d7a2a1519a83477cf1893a7cbdf692a",
+      "source_specific_uncertainty": null,
+      "exact_pixel_examples": [
+        {
+          "xy": [
+            55,
+            58
+          ],
+          "source_rgba": [
+            175,
+            105,
+            47,
+            255
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            175,
+            153,
+            113,
+            255
+          ]
+        },
+        {
+          "xy": [
+            56,
+            58
+          ],
+          "source_rgba": [
+            159,
+            95,
+            41,
+            255
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            159,
+            142,
+            106,
+            255
+          ]
+        },
+        {
+          "xy": [
+            58,
+            59
+          ],
+          "source_rgba": [
+            172,
+            110,
+            54,
+            253
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            170,
+            157,
+            120,
+            253
+          ]
+        },
+        {
+          "xy": [
+            59,
+            59
+          ],
+          "source_rgba": [
+            230,
+            155,
+            79,
+            255
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            228,
+            205,
+            149,
+            255
+          ]
+        },
+        {
+          "xy": [
+            60,
+            59
+          ],
+          "source_rgba": [
+            158,
+            105,
+            54,
+            243
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            154,
+            151,
+            119,
+            243
+          ]
+        },
+        {
+          "xy": [
+            60,
+            60
+          ],
+          "source_rgba": [
+            171,
+            118,
+            64,
+            254
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            166,
+            165,
+            130,
+            254
+          ]
+        }
+      ],
+      "pixel_evidence_role": "Corroborates a region already classified by viewing source/mask/tint panels; pixel values are not semantic proof."
+    },
+    {
+      "id": "CV005",
+      "look": "adult_M_hide_wrap_short",
+      "facing": "S",
+      "pose": "carry",
+      "kind": "skin_on_log",
+      "verdict": "FAIL",
+      "description": "A green strip sits on the log immediately above the hair, with another selected pixel on the far-right log end. The source shows wood at these locations.",
+      "source_coordinate_system": "zero-based x,y in original 80x112 source.png; region half-open",
+      "region_bbox_approx": null,
+      "actual_viewed_evidence": [
+        "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_hide_wrap_short/S/carry/audit.png",
+        "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_hide_wrap_short/S/carry/masks.png"
+      ],
+      "source_sha256": "d2333ac765ba32ec43a0278774a37c7d5ebd03fdb6fb4c7ece39530bbf97263b",
+      "skin_sha256": "a95dfcebac777c64df318f783b043fa8b6bddf29b35d119d67955e4bb53c2918",
+      "hair_sha256": "1db329cfbe4881698dc7cc61dbaf277fc4e7fd9c4c80496fceea74136592bfef",
+      "audit_sha256": "d02ddccc6612ad3c5c9ed6697aecc90d1d45929a929f0623f365cf90f3d7e5c9",
+      "source_specific_uncertainty": null,
+      "exact_pixel_examples": [
+        {
+          "xy": [
+            36,
+            52
+          ],
+          "source_rgba": [
+            161,
+            100,
+            49,
+            251
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            159,
+            146,
+            115,
+            251
+          ]
+        },
+        {
+          "xy": [
+            37,
+            52
+          ],
+          "source_rgba": [
+            190,
+            119,
+            59,
+            253
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            189,
+            167,
+            127,
+            253
+          ]
+        },
+        {
+          "xy": [
+            38,
+            52
+          ],
+          "source_rgba": [
+            190,
+            120,
+            60,
+            255
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            188,
+            168,
+            129,
+            255
+          ]
+        },
+        {
+          "xy": [
+            39,
+            52
+          ],
+          "source_rgba": [
+            181,
+            113,
+            56,
+            255
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            179,
+            160,
+            124,
+            255
+          ]
+        },
+        {
+          "xy": [
+            40,
+            52
+          ],
+          "source_rgba": [
+            176,
+            111,
+            55,
+            255
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            174,
+            158,
+            123,
+            255
+          ]
+        },
+        {
+          "xy": [
+            39,
+            53
+          ],
+          "source_rgba": [
+            163,
+            102,
+            49,
+            251
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            161,
+            148,
+            116,
+            251
+          ]
+        },
+        {
+          "xy": [
+            40,
+            53
+          ],
+          "source_rgba": [
+            195,
+            127,
+            63,
+            250
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            193,
+            175,
+            132,
+            250
+          ]
+        },
+        {
+          "xy": [
+            60,
+            60
+          ],
+          "source_rgba": [
+            173,
+            119,
+            66,
+            255
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            168,
+            166,
+            134,
+            255
+          ]
+        }
+      ],
+      "pixel_evidence_role": "Corroborates a region already classified by viewing source/mask/tint panels; pixel values are not semantic proof."
+    },
+    {
+      "id": "CV006",
+      "look": "adult_M_loincloth_short",
+      "facing": "S",
+      "pose": "carry",
+      "kind": "skin_on_log",
+      "verdict": "FAIL",
+      "description": "A small green patch lies on the upper-right log end, separated from the supporting arm below.",
+      "source_coordinate_system": "zero-based x,y in original 80x112 source.png; region half-open",
+      "region_bbox_approx": null,
+      "actual_viewed_evidence": [
+        "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_loincloth_short/S/carry/audit.png",
+        "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_loincloth_short/S/carry/masks.png"
+      ],
+      "source_sha256": "1b53b608a28de1a0b4022414a2ed2f4ab86e002dbe24937c099e12544e4d8742",
+      "skin_sha256": "90cedbec2aae5577176779fff81f9acd761ca40fedee550527c156dcc94ecd18",
+      "hair_sha256": "3c2f12bb7fd6083bed2306ba6735a5c44c2b0a610b9c3f58b54c93032e26321f",
+      "audit_sha256": "c7540409ff0c188d67e82cce1b139ff929a1adfb9ac6bab04e85d1b6984df3f5",
+      "source_specific_uncertainty": null,
+      "exact_pixel_examples": [
+        {
+          "xy": [
+            56,
+            56
+          ],
+          "source_rgba": [
+            186,
+            126,
+            74,
+            248
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            179,
+            174,
+            143,
+            248
+          ]
+        },
+        {
+          "xy": [
+            57,
+            56
+          ],
+          "source_rgba": [
+            194,
+            134,
+            82,
+            255
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            186,
+            183,
+            151,
+            255
+          ]
+        },
+        {
+          "xy": [
+            57,
+            57
+          ],
+          "source_rgba": [
+            226,
+            160,
+            103,
+            249
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            218,
+            210,
+            174,
+            249
+          ]
+        },
+        {
+          "xy": [
+            58,
+            57
+          ],
+          "source_rgba": [
+            172,
+            118,
+            72,
+            255
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            163,
+            166,
+            140,
+            255
+          ]
+        },
+        {
+          "xy": [
+            58,
+            58
+          ],
+          "source_rgba": [
+            176,
+            124,
+            78,
+            254
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            166,
+            172,
+            146,
+            254
+          ]
+        }
+      ],
+      "pixel_evidence_role": "Corroborates a region already classified by viewing source/mask/tint panels; pixel values are not semantic proof."
+    },
+    {
+      "id": "CV007",
+      "look": "adult_F_fur_cloak_short",
+      "facing": "S",
+      "pose": "carry",
+      "kind": "skin_on_log",
+      "verdict": "FAIL",
+      "description": "One selected skin pixel lies on the log top to the image-left of the hair. Its wood color changes in v4; this is an isolated pixel visible at zoom.",
+      "source_coordinate_system": "zero-based x,y in original 80x112 source.png; region half-open",
+      "region_bbox_approx": null,
+      "actual_viewed_evidence": [
+        "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_fur_cloak_short/S/carry/audit.png",
+        "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_fur_cloak_short/S/carry/masks.png"
+      ],
+      "source_sha256": "1519f9365418ea2637512a660579db82e224516a061a66118232149f8b3ca60d",
+      "skin_sha256": "b894dc2ecdcd1a28c724999beda01730107d5ccef87d5de26f06deadd64bb21f",
+      "hair_sha256": "71f705cc6c28676d5919b4f380d5a8687c23f2e0fecb499442e3605577d0cd12",
+      "audit_sha256": "1cb582bade8a5520c5499cabb5cb3bc50a1bde82d181773ebde14629834d8bb6",
+      "source_specific_uncertainty": null,
+      "exact_pixel_examples": [
+        {
+          "xy": [
+            27,
+            52
+          ],
+          "source_rgba": [
+            163,
+            110,
+            51,
+            255
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            152,
+            145,
+            101,
+            255
+          ]
+        }
+      ],
+      "pixel_evidence_role": "Corroborates a region already classified by viewing source/mask/tint panels; pixel values are not semantic proof."
+    },
+    {
+      "id": "CV008",
+      "look": "adult_F_fur_cloak_short",
+      "facing": "E",
+      "pose": "carry",
+      "kind": "skin_on_log",
+      "verdict": "FAIL",
+      "description": "One selected skin pixel lies on the upper edge of the image-left log, away from the hands.",
+      "source_coordinate_system": "zero-based x,y in original 80x112 source.png; region half-open",
+      "region_bbox_approx": null,
+      "actual_viewed_evidence": [
+        "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_fur_cloak_short/E/carry/audit.png"
+      ],
+      "source_sha256": "19f19b96e8d442018703b34e70bd5e0cd63355c81153ee495d4e50a2b634d78e",
+      "skin_sha256": "da888af28fc6fb74aa68ca0386b8d2c3fb69bd117d77a0a6a3af3356fcf89022",
+      "hair_sha256": "69daba8028328f5d3120fb6849798cc42016a5389e3e40128fa776636909cd3e",
+      "audit_sha256": "71c6fda498fe89bf3dde0dbb868f045dbb19d7cfc878065eb092a8623acf9ceb",
+      "source_specific_uncertainty": null,
+      "exact_pixel_examples": [
+        {
+          "xy": [
+            29,
+            52
+          ],
+          "source_rgba": [
+            174,
+            119,
+            53,
+            255
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            164,
+            154,
+            104,
+            255
+          ]
+        }
+      ],
+      "pixel_evidence_role": "Corroborates a region already classified by viewing source/mask/tint panels; pixel values are not semantic proof."
+    },
+    {
+      "id": "CV009",
+      "look": "adult_F_hide_wrap_short",
+      "facing": "E",
+      "pose": "carry",
+      "kind": "skin_on_log",
+      "verdict": "FAIL",
+      "description": "Two selected skin pixels appear on the far-right log end, separated from the arm below.",
+      "source_coordinate_system": "zero-based x,y in original 80x112 source.png; region half-open",
+      "region_bbox_approx": null,
+      "actual_viewed_evidence": [
+        "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_hide_wrap_short/E/carry/audit.png",
+        "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_F_hide_wrap_short/E/carry/masks.png"
+      ],
+      "source_sha256": "e29aad319f34415d8e6faca9a30871f81324bc57154d6d709e1f1c74376ac14f",
+      "skin_sha256": "33e367efe737018fe03a21c0dc365adca17d32253d77ab9c4ca2daa8cdd2276c",
+      "hair_sha256": "0a1697a7297f99d28ff91036ea8536e1465dd9ab734426dddc43a2170a58390a",
+      "audit_sha256": "0e0e4f77f0ed2a90595407f1b84ed941585543c9d7786656e42d87ce6b1227ee",
+      "source_specific_uncertainty": null,
+      "exact_pixel_examples": [
+        {
+          "xy": [
+            56,
+            58
+          ],
+          "source_rgba": [
+            160,
+            102,
+            49,
+            255
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            154,
+            138,
+            104,
+            255
+          ]
+        },
+        {
+          "xy": [
+            57,
+            62
+          ],
+          "source_rgba": [
+            166,
+            106,
+            48,
+            255
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            160,
+            142,
+            103,
+            255
+          ]
+        }
+      ],
+      "pixel_evidence_role": "Corroborates a region already classified by viewing source/mask/tint panels; pixel values are not semantic proof."
+    },
+    {
+      "id": "CV010",
+      "look": "adult_M_hide_wrap_short",
+      "facing": "E",
+      "pose": "carry",
+      "kind": "skin_on_log",
+      "verdict": "FAIL",
+      "description": "Selected skin marks appear at the image-left log end and along the upper-right log edge, away from the visible hands.",
+      "source_coordinate_system": "zero-based x,y in original 80x112 source.png; region half-open",
+      "region_bbox_approx": null,
+      "actual_viewed_evidence": [
+        "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_hide_wrap_short/E/carry/audit.png",
+        "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_hide_wrap_short/E/carry/masks.png"
+      ],
+      "source_sha256": "48a414ba88cf29a44cf9d64702e095d2c47edf16815de42582bec03ff431e559",
+      "skin_sha256": "831be47a0ce966a513e55ff6be73e61790206764b8b0c5fc2f2bab30a796a8b8",
+      "hair_sha256": "864589a96097a549abb6d6b4e641696c2478c2f63c78fead4e6387fa5a767d1a",
+      "audit_sha256": "3c9a8ff03e22ea4e559eb76096e3bcf08e4b6babd81908ad3302a28e550ae68e",
+      "source_specific_uncertainty": null,
+      "exact_pixel_examples": [
+        {
+          "xy": [
+            52,
+            54
+          ],
+          "source_rgba": [
+            158,
+            99,
+            44,
+            255
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            156,
+            145,
+            111,
+            255
+          ]
+        },
+        {
+          "xy": [
+            55,
+            54
+          ],
+          "source_rgba": [
+            169,
+            110,
+            52,
+            255
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            166,
+            157,
+            120,
+            255
+          ]
+        },
+        {
+          "xy": [
+            20,
+            59
+          ],
+          "source_rgba": [
+            238,
+            168,
+            96,
+            255
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            234,
+            218,
+            168,
+            255
+          ]
+        }
+      ],
+      "pixel_evidence_role": "Corroborates a region already classified by viewing source/mask/tint panels; pixel values are not semantic proof."
+    },
+    {
+      "id": "CV011",
+      "look": "adult_M_loincloth_short",
+      "facing": "E",
+      "pose": "carry",
+      "kind": "skin_on_log",
+      "verdict": "FAIL",
+      "description": "Two selected skin pixels appear on the image-left log top, away from the arms.",
+      "source_coordinate_system": "zero-based x,y in original 80x112 source.png; region half-open",
+      "region_bbox_approx": null,
+      "actual_viewed_evidence": [
+        "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_loincloth_short/E/carry/audit.png"
+      ],
+      "source_sha256": "9ffb62932bd44f4671400142fa66516319e18bdfb6535b10fa5be55e9acce7fd",
+      "skin_sha256": "b011a568c28a430c40f8f0c574450648d24c9e537b8805ef64386a10bd3e6dcc",
+      "hair_sha256": "a44666d4d865e50dddf073103391eabc7c81701fce245fdd56837219613f3e91",
+      "audit_sha256": "2c37eefea16fa6128cbc03c056e026b11a3b8d4c94c767bcf123d6453979ad58",
+      "source_specific_uncertainty": null,
+      "exact_pixel_examples": [
+        {
+          "xy": [
+            31,
+            54
+          ],
+          "source_rgba": [
+            168,
+            114,
+            44,
+            255
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            164,
+            161,
+            113,
+            255
+          ]
+        },
+        {
+          "xy": [
+            32,
+            54
+          ],
+          "source_rgba": [
+            160,
+            108,
+            44,
+            255
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            155,
+            155,
+            112,
+            255
+          ]
+        }
+      ],
+      "pixel_evidence_role": "Corroborates a region already classified by viewing source/mask/tint panels; pixel values are not semantic proof."
+    },
+    {
+      "id": "CV012",
+      "look": "adult_M_loincloth_long_tied",
+      "facing": "E",
+      "pose": "idle",
+      "kind": "possible_omitted_hair",
+      "verdict": "UNCERTAIN",
+      "description": "The rear/lower ponytail stays dark while the scalp becomes grey. Some ponytail interior is selected, but a dark lower patch remains unchanged.",
+      "source_coordinate_system": "zero-based x,y in original 80x112 source.png; region half-open",
+      "region_bbox_approx": [
+        29,
+        49,
+        37,
+        62
+      ],
+      "actual_viewed_evidence": [
+        "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_loincloth_long_tied/E/idle/audit.png",
+        "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_loincloth_long_tied/E/idle/masks.png"
+      ],
+      "source_sha256": "3bb014b1a1217106844e7820d150b74d6af3b80ae0323ad366a0eabcea1cca39",
+      "skin_sha256": "9af46625e0c36369c1f0c0b5cc87b6f635f58b3e5c3cc38637413d6e959eae27",
+      "hair_sha256": "b33acf5f4e044fb918058875aa50db84c72b8d85c7cbf0beabb3bb720800db10",
+      "audit_sha256": "f1f3a7aadb65f5a8c652cc93848073584043b03383ddb9b8f29586fe5507636d",
+      "source_specific_uncertainty": "The unselected patch is very dark and partly translucent at its edge. It may belong to intentionally protected ink/outline. The broad visual review cannot decide whether this is excessive hair omission or establish the formal 50 percent silhouette gate.",
+      "exact_pixel_examples": [
+        {
+          "xy": [
+            31,
+            56
+          ],
+          "source_rgba": [
+            76,
+            53,
+            36,
+            252
+          ],
+          "skin_mask": 0,
+          "hair_mask": 255,
+          "v4_rgba": [
+            150,
+            152,
+            141,
+            252
+          ]
+        },
+        {
+          "xy": [
+            32,
+            58
+          ],
+          "source_rgba": [
+            30,
+            22,
+            15,
+            254
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            30,
+            22,
+            15,
+            254
+          ]
+        },
+        {
+          "xy": [
+            33,
+            60
+          ],
+          "source_rgba": [
+            38,
+            27,
+            13,
+            73
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            38,
+            27,
+            13,
+            73
+          ]
+        }
+      ],
+      "pixel_evidence_role": "Corroborates a region already classified by viewing source/mask/tint panels; pixel values are not semantic proof."
+    },
+    {
+      "id": "CV013",
+      "look": "child_M_hide_wrap_long_tied",
+      "facing": "E",
+      "pose": "work_a",
+      "kind": "possible_omitted_hair",
+      "verdict": "UNCERTAIN",
+      "description": "Most of the small ponytail behind the raised arm remains dark while the main hair cap changes color.",
+      "source_coordinate_system": "zero-based x,y in original 80x112 source.png; region half-open",
+      "region_bbox_approx": [
+        30,
+        69,
+        35,
+        79
+      ],
+      "actual_viewed_evidence": [
+        "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/child_M_hide_wrap_long_tied/E/work_a/audit.png"
+      ],
+      "source_sha256": "cb7bfaf2d914c9f20a0117a0b00624afe958843e32e184154ef9b68390ee30e5",
+      "skin_sha256": "5a9697381abb6d2170811ff6954696fc8db70290dde58043ccb67c458fdae9ea",
+      "hair_sha256": "c05efc6a0794589367a95ac6c5677bf61fc17271b3d5ec39ad89b12493276006",
+      "audit_sha256": "9b707d2d733a68e7817e807ed0aec10874a1a6092e11007e89abba6f64f34f3b",
+      "source_specific_uncertainty": "The ponytail is small, dark, and partly overlaps the raised arm/axe area. Source colors alone do not establish whether the remaining dark pixels should be tintable hair or protected ink. No formal hair-coverage verdict is made.",
+      "exact_pixel_examples": [
+        {
+          "xy": [
+            32,
+            72
+          ],
+          "source_rgba": [
+            59,
+            38,
+            26,
+            251
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            59,
+            38,
+            26,
+            251
+          ]
+        },
+        {
+          "xy": [
+            32,
+            74
+          ],
+          "source_rgba": [
+            56,
+            38,
+            27,
+            251
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            56,
+            38,
+            27,
+            251
+          ]
+        },
+        {
+          "xy": [
+            33,
+            76
+          ],
+          "source_rgba": [
+            18,
+            11,
+            8,
+            239
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            18,
+            11,
+            8,
+            239
+          ]
+        }
+      ],
+      "pixel_evidence_role": "Corroborates a region already classified by viewing source/mask/tint panels; pixel values are not semantic proof."
+    },
+    {
+      "id": "CV014",
+      "look": "adult_M_hide_wrap_short",
+      "facing": "E",
+      "pose": "carry",
+      "kind": "possible_skin_on_clothing",
+      "verdict": "UNCERTAIN",
+      "description": "A thin selected vertical strip follows the image-right torso/garment seam below the arm.",
+      "source_coordinate_system": "zero-based x,y in original 80x112 source.png; region half-open",
+      "region_bbox_approx": [
+        44,
+        73,
+        48,
+        91
+      ],
+      "actual_viewed_evidence": [
+        "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_hide_wrap_short/E/carry/audit.png",
+        "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v1/adult_M_hide_wrap_short/E/carry/masks.png"
+      ],
+      "source_sha256": "48a414ba88cf29a44cf9d64702e095d2c47edf16815de42582bec03ff431e559",
+      "skin_sha256": "831be47a0ce966a513e55ff6be73e61790206764b8b0c5fc2f2bab30a796a8b8",
+      "hair_sha256": "864589a96097a549abb6d6b4e641696c2478c2f63c78fead4e6387fa5a767d1a",
+      "audit_sha256": "3c9a8ff03e22ea4e559eb76096e3bcf08e4b6babd81908ad3302a28e550ae68e",
+      "source_specific_uncertainty": "The source is too ambiguous at this narrow seam to distinguish a small exposed-skin strip from hide trim confidently. Recorded for source-only review, not counted as confirmed clothing leakage."
+    }
+  ]
+}

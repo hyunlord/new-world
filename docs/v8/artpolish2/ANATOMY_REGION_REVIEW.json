@@ -1,0 +1,1950 @@
+{
+  "schema_version": 1,
+  "task": "ART-POLISH2",
+  "reviewer": "independent anatomy_review agent",
+  "review_state": "INITIAL_SOURCE_REGION_REVIEW_COMPLETE_CORRECTIONS_NOT_APPLIED",
+  "overall_verdict": "FAIL",
+  "reviewed_annotation_path": "art/character/variant_anatomy.json",
+  "reviewed_annotation_sha256": "e6c265fbc5104600e54c651c09f861cf29ee9f358e000cc1330c4181c2903d3f",
+  "bbox_convention": "left_top_right_bottom_exclusive",
+  "scope": "34 Route I S/idle source faces and both forearms. This is source-region placement/extent review, not mask coverage, recolor quality, portrait acceptance, or owner approval.",
+  "criteria": {
+    "PASS": "The intended anatomical region is correctly located and no clear omitted anatomical extent was found at this pixel scale. Modest outline/transparency margins are retained.",
+    "FAIL": "A clearly visible portion is omitted from the intended anatomical bounding rectangle, or the rectangle is materially displaced into cloth/gap/background. Face localization may still PASS while complete face extent FAILS.",
+    "UNCERTAIN": "The visible segment is anatomical, but cloth occlusion or low-resolution joint landmarks prevent claiming the full elbow-to-wrist extent. A conservative visible-segment proposal may be given without removing the uncertainty."
+  },
+  "independence": {
+    "all_nine_annotated_sheets_viewed": true,
+    "all_nine_unannotated_source_grids_viewed": true,
+    "additional_inspection": "Source PNGs were read directly and magnified with nearest-neighbor sampling in memory. No images or source assets were written. RGB values were read only to resolve source-coordinate ambiguity.",
+    "mask_code_read": false,
+    "coverage_outputs_read": false,
+    "corrections_mask_derived": false,
+    "source_annotation_creation_provenance": "The annotation file states source-only construction. This reviewer independently checked semantics from source pixels, but did not witness the initial annotation process and does not certify its historical provenance."
+  },
+  "summary": {
+    "looks": 34,
+    "regions": 102,
+    "look_verdict_counts": {
+      "FAIL": 23,
+      "PASS": 11
+    },
+    "region_verdict_counts": {
+      "FAIL": 30,
+      "PASS": 69,
+      "UNCERTAIN": 3
+    },
+    "face_localization_pass": 34,
+    "face_extent_corrections": 23,
+    "forearm_proposals": 10,
+    "source_hash_matches": 34,
+    "owner_approval": "NOT_CLAIMED"
+  },
+  "limitations": [
+    "The source sprites are very small; elbow and wrist landmarks are approximate even after nearest-neighbor magnification.",
+    "Cloak-occluded elbows remain uncertain after a conservative visible-arm expansion; no hidden anatomy is inferred as verified.",
+    "No mask coverage values or thresholds were consulted. Proposed boxes must be measured literally after integration.",
+    "This report reviews the captured original annotation hash. Proposed corrections are recommendations and have not been visually re-reviewed as an integrated second annotation set."
+  ],
+  "frames": [
+    {
+      "index": 0,
+      "look": "adult_F_fur_cloak_bun",
+      "source": "art/character/route_i/adult_F_fur_cloak_bun/S/idle.png",
+      "source_sha256": "34831c2a1733a4ce81e06960c78c81881e07535ae6ad16296eef4b1f35a98bed",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/00.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/00.png",
+      "verdict": "FAIL",
+      "face": {
+        "verdict": "FAIL",
+        "localization": "PASS",
+        "bbox": [
+          35,
+          58,
+          42,
+          65
+        ],
+        "observation": "Visible forehead at y=57 lies above the original top edge.",
+        "proposed_bbox": [
+          35,
+          57,
+          42,
+          65
+        ]
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            26,
+            75,
+            30,
+            83
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            44,
+            76,
+            48,
+            84
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    },
+    {
+      "index": 1,
+      "look": "adult_F_fur_cloak_long_tied",
+      "source": "art/character/route_i/adult_F_fur_cloak_long_tied/S/idle.png",
+      "source_sha256": "7752d665d2d21c1593e6f9014ee3a134ab235681c55121fb398e4e201ee9e068",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/00.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/00.png",
+      "verdict": "FAIL",
+      "face": {
+        "verdict": "FAIL",
+        "localization": "PASS",
+        "bbox": [
+          37,
+          57,
+          44,
+          64
+        ],
+        "observation": "Exposed forehead at y=56 is excluded by the original top edge.",
+        "proposed_bbox": [
+          37,
+          56,
+          44,
+          64
+        ]
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            26,
+            75,
+            30,
+            83
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            46,
+            76,
+            50,
+            84
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "look": "adult_F_fur_cloak_short",
+      "source": "art/character/route_i/adult_F_fur_cloak_short/S/idle.png",
+      "source_sha256": "b93b32485e0a2038b97bdfc5ea7d6c4e9c20c9b6582876747e983a08e4218968",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/00.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/00.png",
+      "verdict": "PASS",
+      "face": {
+        "verdict": "PASS",
+        "localization": "PASS",
+        "bbox": [
+          35,
+          55,
+          42,
+          63
+        ],
+        "observation": "The rectangle refers to the exposed face, with ordinary hair/outline/neck-edge margins; no clear omitted face extent beyond pixel-boundary ambiguity was identified.",
+        "proposed_bbox": null
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            25,
+            76,
+            29,
+            83
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            46,
+            76,
+            50,
+            84
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "look": "adult_F_hide_wrap_bun",
+      "source": "art/character/route_i/adult_F_hide_wrap_bun/S/idle.png",
+      "source_sha256": "c548357f80708897392be558b86e0fad98b73ce12693c98f8e3aea132f7ffb7c",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/00.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/00.png",
+      "verdict": "FAIL",
+      "face": {
+        "verdict": "FAIL",
+        "localization": "PASS",
+        "bbox": [
+          36,
+          57,
+          43,
+          64
+        ],
+        "observation": "The raised forehead under the swept hair includes y=56.",
+        "proposed_bbox": [
+          36,
+          56,
+          43,
+          64
+        ]
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            27,
+            76,
+            31,
+            83
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            46,
+            77,
+            50,
+            85
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "look": "adult_F_hide_wrap_long_tied",
+      "source": "art/character/route_i/adult_F_hide_wrap_long_tied/S/idle.png",
+      "source_sha256": "25cdf72bf5b64b4d02e2d4ca34d78a76de58a174211ab8338f9d3a8c5cd6446a",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/01.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/01.png",
+      "verdict": "PASS",
+      "face": {
+        "verdict": "PASS",
+        "localization": "PASS",
+        "bbox": [
+          38,
+          55,
+          44,
+          63
+        ],
+        "observation": "The rectangle refers to the exposed face, with ordinary hair/outline/neck-edge margins; no clear omitted face extent beyond pixel-boundary ambiguity was identified.",
+        "proposed_bbox": null
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            27,
+            76,
+            31,
+            83
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            48,
+            77,
+            52,
+            84
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "look": "adult_F_hide_wrap_short",
+      "source": "art/character/route_i/adult_F_hide_wrap_short/S/idle.png",
+      "source_sha256": "08cf7a69d6342d83667b1ffb402d41d9be47e0fbc7bd96d8b13996ac8af72e1c",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/01.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/01.png",
+      "verdict": "PASS",
+      "face": {
+        "verdict": "PASS",
+        "localization": "PASS",
+        "bbox": [
+          35,
+          55,
+          42,
+          63
+        ],
+        "observation": "The rectangle refers to the exposed face, with ordinary hair/outline/neck-edge margins; no clear omitted face extent beyond pixel-boundary ambiguity was identified.",
+        "proposed_bbox": null
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            26,
+            76,
+            30,
+            83
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            47,
+            77,
+            51,
+            84
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "look": "adult_F_loincloth_bun",
+      "source": "art/character/route_i/adult_F_loincloth_bun/S/idle.png",
+      "source_sha256": "22465fb470e1aa61afecac3e506596fa75e389fdc79076c0323f6fb1ed2dce30",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/01.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/01.png",
+      "verdict": "PASS",
+      "face": {
+        "verdict": "PASS",
+        "localization": "PASS",
+        "bbox": [
+          37,
+          58,
+          44,
+          65
+        ],
+        "observation": "The rectangle refers to the exposed face, with ordinary hair/outline/neck-edge margins; no clear omitted face extent beyond pixel-boundary ambiguity was identified.",
+        "proposed_bbox": null
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            26,
+            77,
+            30,
+            84
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            47,
+            78,
+            51,
+            85
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "look": "adult_F_loincloth_long_tied",
+      "source": "art/character/route_i/adult_F_loincloth_long_tied/S/idle.png",
+      "source_sha256": "752163930586413cdaf3ddfd76f22f08d2960bbc9868c5073cb7bbf8dd75a2cb",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/01.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/01.png",
+      "verdict": "PASS",
+      "face": {
+        "verdict": "PASS",
+        "localization": "PASS",
+        "bbox": [
+          38,
+          57,
+          44,
+          64
+        ],
+        "observation": "The rectangle refers to the exposed face, with ordinary hair/outline/neck-edge margins; no clear omitted face extent beyond pixel-boundary ambiguity was identified.",
+        "proposed_bbox": null
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            27,
+            76,
+            31,
+            83
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            48,
+            77,
+            52,
+            84
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "look": "adult_F_loincloth_short",
+      "source": "art/character/route_i/adult_F_loincloth_short/S/idle.png",
+      "source_sha256": "3497d79c1f1dfd5ce3679b736c52f0b913c00831e68a872de55fbe8fbb36ce66",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/02.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/02.png",
+      "verdict": "PASS",
+      "face": {
+        "verdict": "PASS",
+        "localization": "PASS",
+        "bbox": [
+          35,
+          55,
+          42,
+          62
+        ],
+        "observation": "The rectangle refers to the exposed face, with ordinary hair/outline/neck-edge margins; no clear omitted face extent beyond pixel-boundary ambiguity was identified.",
+        "proposed_bbox": null
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            26,
+            76,
+            30,
+            83
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            48,
+            77,
+            52,
+            84
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "look": "adult_M_fur_cloak_bun",
+      "source": "art/character/route_i/adult_M_fur_cloak_bun/S/idle.png",
+      "source_sha256": "a98c1b8271c9373c1ad7ad2a9f1d3f48fb4f37f2fd27a32c4d6c535ffda90208",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/02.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/02.png",
+      "verdict": "FAIL",
+      "face": {
+        "verdict": "FAIL",
+        "localization": "PASS",
+        "bbox": [
+          38,
+          57,
+          43,
+          61
+        ],
+        "observation": "The exposed nose/lower cheek continues into y=61 and the image-right cheek reaches x=43; the original 5 by 4 box clips both.",
+        "proposed_bbox": [
+          38,
+          57,
+          44,
+          62
+        ]
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            26,
+            75,
+            30,
+            83
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            48,
+            75,
+            52,
+            81
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "look": "adult_M_fur_cloak_short",
+      "source": "art/character/route_i/adult_M_fur_cloak_short/S/idle.png",
+      "source_sha256": "345b19c1776ab4517396b0b90882fda0b1cfa0a4dd3e6adfe7e9adb0d9728500",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/02.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/02.png",
+      "verdict": "FAIL",
+      "face": {
+        "verdict": "FAIL",
+        "localization": "PASS",
+        "bbox": [
+          35,
+          55,
+          41,
+          59
+        ],
+        "observation": "Exposed cheek reaches x=41 and the nose/skin below the eyes continues at y=59 above the beard; the original 6 by 4 strip is incomplete.",
+        "proposed_bbox": [
+          35,
+          55,
+          42,
+          60
+        ]
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            24,
+            75,
+            28,
+            81
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "UNCERTAIN",
+          "localization": "PASS",
+          "bbox": [
+            48,
+            78,
+            52,
+            84
+          ],
+          "proposed_bbox": [
+            48,
+            75,
+            52,
+            84
+          ],
+          "elbow_occluded": true,
+          "observation": "The current rectangle is on the distal arm, but visible skin emerges below the cloak at about y=75. Expand to include that exposed segment. The cloak hides the true elbow, so exact elbow-to-wrist completeness is not independently verifiable."
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "look": "adult_M_hide_wrap_bun",
+      "source": "art/character/route_i/adult_M_hide_wrap_bun/S/idle.png",
+      "source_sha256": "d72ae163db9da2a64b523157ff197c7b602f14baf264d418c5ff354f3c1d8f46",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/02.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/02.png",
+      "verdict": "FAIL",
+      "face": {
+        "verdict": "FAIL",
+        "localization": "PASS",
+        "bbox": [
+          36,
+          58,
+          42,
+          62
+        ],
+        "observation": "Visible forehead starts at y=57; retain a conservative image-right cheek boundary at x=43 exclusive.",
+        "proposed_bbox": [
+          36,
+          57,
+          43,
+          62
+        ]
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            26,
+            76,
+            30,
+            84
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            48,
+            77,
+            52,
+            85
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    },
+    {
+      "index": 12,
+      "look": "adult_M_hide_wrap_short",
+      "source": "art/character/route_i/adult_M_hide_wrap_short/S/idle.png",
+      "source_sha256": "e0d14af6d00de104698610adf099e677fb0596bb8d5d30de1f508206aaf15310",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/03.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/03.png",
+      "verdict": "PASS",
+      "face": {
+        "verdict": "PASS",
+        "localization": "PASS",
+        "bbox": [
+          36,
+          57,
+          43,
+          62
+        ],
+        "observation": "The rectangle refers to the exposed face, with ordinary hair/outline/neck-edge margins; no clear omitted face extent beyond pixel-boundary ambiguity was identified.",
+        "proposed_bbox": null
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            23,
+            74,
+            27,
+            81
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            49,
+            78,
+            53,
+            85
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    },
+    {
+      "index": 13,
+      "look": "adult_M_loincloth_bun",
+      "source": "art/character/route_i/adult_M_loincloth_bun/S/idle.png",
+      "source_sha256": "e28ea430edf4f15d7a2910d17b573ecfddce965da9eb045d91989c6f174e6f95",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/03.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/03.png",
+      "verdict": "FAIL",
+      "face": {
+        "verdict": "FAIL",
+        "localization": "PASS",
+        "bbox": [
+          36,
+          57,
+          42,
+          62
+        ],
+        "observation": "The visible image-right cheek/nose extends beyond the original x=42 exclusive edge.",
+        "proposed_bbox": [
+          36,
+          57,
+          44,
+          62
+        ]
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            26,
+            77,
+            30,
+            84
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            48,
+            78,
+            52,
+            85
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    },
+    {
+      "index": 14,
+      "look": "adult_M_loincloth_long_tied",
+      "source": "art/character/route_i/adult_M_loincloth_long_tied/S/idle.png",
+      "source_sha256": "600661c1a40459299ad5e26662bd19191956fcbb988d8f6007dc2157a4900801",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/03.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/03.png",
+      "verdict": "PASS",
+      "face": {
+        "verdict": "PASS",
+        "localization": "PASS",
+        "bbox": [
+          39,
+          57,
+          45,
+          62
+        ],
+        "observation": "The rectangle refers to the exposed face, with ordinary hair/outline/neck-edge margins; no clear omitted face extent beyond pixel-boundary ambiguity was identified.",
+        "proposed_bbox": null
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            28,
+            76,
+            32,
+            83
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            49,
+            78,
+            53,
+            85
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    },
+    {
+      "index": 15,
+      "look": "adult_M_loincloth_short",
+      "source": "art/character/route_i/adult_M_loincloth_short/S/idle.png",
+      "source_sha256": "643d6b90a5cedaae69ba3eb8ef2db304911bf5121e61483e03fa82024d61060b",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/03.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/03.png",
+      "verdict": "PASS",
+      "face": {
+        "verdict": "PASS",
+        "localization": "PASS",
+        "bbox": [
+          36,
+          56,
+          42,
+          61
+        ],
+        "observation": "The rectangle refers to the exposed face, with ordinary hair/outline/neck-edge margins; no clear omitted face extent beyond pixel-boundary ambiguity was identified.",
+        "proposed_bbox": null
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            26,
+            74,
+            30,
+            81
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            49,
+            78,
+            53,
+            85
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    },
+    {
+      "index": 16,
+      "look": "child_F_fur_cloak_bun",
+      "source": "art/character/route_i/child_F_fur_cloak_bun/S/idle.png",
+      "source_sha256": "2c12e35971c40f6aa26d13e994a294fefaca50645218e83f7e39b1ba96e892c5",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/04.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/04.png",
+      "verdict": "FAIL",
+      "face": {
+        "verdict": "FAIL",
+        "localization": "PASS",
+        "bbox": [
+          38,
+          73,
+          44,
+          79
+        ],
+        "observation": "Visible forehead at y=72 is above the original rectangle.",
+        "proposed_bbox": [
+          38,
+          72,
+          44,
+          79
+        ]
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            32,
+            88,
+            35,
+            92
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            45,
+            88,
+            48,
+            93
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    },
+    {
+      "index": 17,
+      "look": "child_F_fur_cloak_long_tied",
+      "source": "art/character/route_i/child_F_fur_cloak_long_tied/S/idle.png",
+      "source_sha256": "dc212949d71914dd4d4b8cbc4cc3d89c5bf091897aa67fb7f04f769928c8ca6d",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/04.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/04.png",
+      "verdict": "FAIL",
+      "face": {
+        "verdict": "FAIL",
+        "localization": "PASS",
+        "bbox": [
+          38,
+          74,
+          44,
+          79
+        ],
+        "observation": "The visible forehead begins at y=73, one row above the original rectangle.",
+        "proposed_bbox": [
+          38,
+          73,
+          44,
+          79
+        ]
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "UNCERTAIN",
+          "localization": "PASS",
+          "bbox": [
+            34,
+            89,
+            37,
+            93
+          ],
+          "proposed_bbox": [
+            34,
+            87,
+            37,
+            93
+          ],
+          "elbow_occluded": true,
+          "observation": "The current rectangle selects the lower portion of a short exposed arm. Skin is visible higher at the cloak opening; a conservative visible-segment envelope starts at y=87. The true elbow is hidden by the wrap/cloak."
+        },
+        {
+          "side": "image_right",
+          "verdict": "FAIL",
+          "localization": "FAIL",
+          "bbox": [
+            45,
+            89,
+            47,
+            93
+          ],
+          "proposed_bbox": [
+            45,
+            86,
+            49,
+            93
+          ],
+          "elbow_occluded": true,
+          "observation": "The original two-pixel-wide box is too far image-left and down: it misses much of the short arm at x=47-48 and includes the cloth below. Use the visible arm below the cloak; exact elbow remains occluded."
+        }
+      ]
+    },
+    {
+      "index": 18,
+      "look": "child_F_fur_cloak_short",
+      "source": "art/character/route_i/child_F_fur_cloak_short/S/idle.png",
+      "source_sha256": "44f21b433c051926ff9848142e1fe285780af14a28de169130563ea9614aba20",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/04.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/04.png",
+      "verdict": "PASS",
+      "face": {
+        "verdict": "PASS",
+        "localization": "PASS",
+        "bbox": [
+          37,
+          70,
+          43,
+          76
+        ],
+        "observation": "The rectangle refers to the exposed face, with ordinary hair/outline/neck-edge margins; no clear omitted face extent beyond pixel-boundary ambiguity was identified.",
+        "proposed_bbox": null
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            32,
+            85,
+            35,
+            89
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            45,
+            86,
+            48,
+            91
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    },
+    {
+      "index": 19,
+      "look": "child_F_hide_wrap_bun",
+      "source": "art/character/route_i/child_F_hide_wrap_bun/S/idle.png",
+      "source_sha256": "aa25c1e64ccfd1213749ed8c8af3a801d449d508d82b344071665243b061b073",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/04.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/04.png",
+      "verdict": "FAIL",
+      "face": {
+        "verdict": "FAIL",
+        "localization": "PASS",
+        "bbox": [
+          37,
+          74,
+          43,
+          79
+        ],
+        "observation": "The exposed forehead rises above y=74 and the image-right face reaches x=43.",
+        "proposed_bbox": [
+          37,
+          73,
+          44,
+          79
+        ]
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            32,
+            89,
+            35,
+            93
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            45,
+            89,
+            48,
+            93
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    },
+    {
+      "index": 20,
+      "look": "child_F_hide_wrap_long_tied",
+      "source": "art/character/route_i/child_F_hide_wrap_long_tied/S/idle.png",
+      "source_sha256": "e8913e557c1526c24c71602856e0d52f3a8b5d47e1d505378811aa798629b513",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/05.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/05.png",
+      "verdict": "FAIL",
+      "face": {
+        "verdict": "FAIL",
+        "localization": "PASS",
+        "bbox": [
+          36,
+          72,
+          43,
+          79
+        ],
+        "observation": "Visible forehead/temple pixels at x=43 are outside the original exclusive right edge.",
+        "proposed_bbox": [
+          36,
+          72,
+          44,
+          79
+        ]
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            31,
+            88,
+            34,
+            93
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            45,
+            89,
+            48,
+            94
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    },
+    {
+      "index": 21,
+      "look": "child_F_hide_wrap_short",
+      "source": "art/character/route_i/child_F_hide_wrap_short/S/idle.png",
+      "source_sha256": "350846f7210a7298393f83bb7221555b129bafcd94ddf35e1df3dd837783cb23",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/05.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/05.png",
+      "verdict": "FAIL",
+      "face": {
+        "verdict": "FAIL",
+        "localization": "PASS",
+        "bbox": [
+          37,
+          70,
+          44,
+          76
+        ],
+        "observation": "The lower exposed face continues through y=76; the original bottom edge cuts that row.",
+        "proposed_bbox": [
+          37,
+          70,
+          44,
+          77
+        ]
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            31,
+            88,
+            34,
+            93
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            46,
+            87,
+            49,
+            92
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    },
+    {
+      "index": 22,
+      "look": "child_F_loincloth_bun",
+      "source": "art/character/route_i/child_F_loincloth_bun/S/idle.png",
+      "source_sha256": "32529ab74914ed26abe8d7bc9d0e90cb9c0c9fe4c3d362915b011cd87611b61c",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/05.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/05.png",
+      "verdict": "FAIL",
+      "face": {
+        "verdict": "FAIL",
+        "localization": "PASS",
+        "bbox": [
+          37,
+          74,
+          43,
+          79
+        ],
+        "observation": "The upper image-right forehead reaches y=73 and x=43.",
+        "proposed_bbox": [
+          37,
+          73,
+          44,
+          79
+        ]
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            33,
+            87,
+            36,
+            92
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            45,
+            88,
+            48,
+            93
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    },
+    {
+      "index": 23,
+      "look": "child_F_loincloth_long_tied",
+      "source": "art/character/route_i/child_F_loincloth_long_tied/S/idle.png",
+      "source_sha256": "e7d76faa835632fc4059185916b7f2580bccaa7e3e5bbdc65a9538bd97450b28",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/05.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/05.png",
+      "verdict": "FAIL",
+      "face": {
+        "verdict": "FAIL",
+        "localization": "PASS",
+        "bbox": [
+          38,
+          73,
+          44,
+          79
+        ],
+        "observation": "The image-left cheek includes x=37, outside the original left edge.",
+        "proposed_bbox": [
+          37,
+          73,
+          44,
+          79
+        ]
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            34,
+            88,
+            36,
+            92
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            46,
+            89,
+            48,
+            93
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    },
+    {
+      "index": 24,
+      "look": "child_F_loincloth_short",
+      "source": "art/character/route_i/child_F_loincloth_short/S/idle.png",
+      "source_sha256": "3ffcbf2c6157985078c2687d76a5edcad0eaf455d563742024f2834b9e9d96ca",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/06.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/06.png",
+      "verdict": "FAIL",
+      "face": {
+        "verdict": "FAIL",
+        "localization": "PASS",
+        "bbox": [
+          37,
+          70,
+          43,
+          76
+        ],
+        "observation": "The visible forehead rises to y=69 under the swept fringe.",
+        "proposed_bbox": [
+          37,
+          69,
+          43,
+          76
+        ]
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            32,
+            85,
+            35,
+            89
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            45,
+            86,
+            48,
+            91
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    },
+    {
+      "index": 25,
+      "look": "child_M_fur_cloak_bun",
+      "source": "art/character/route_i/child_M_fur_cloak_bun/S/idle.png",
+      "source_sha256": "3c61b4824d4f9ab461a1be252aae2c4c8399508bb68cb55809130b1d586814d2",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/06.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/06.png",
+      "verdict": "FAIL",
+      "face": {
+        "verdict": "FAIL",
+        "localization": "PASS",
+        "bbox": [
+          36,
+          74,
+          44,
+          79
+        ],
+        "observation": "The forehead includes y=73 and the shaded lower face includes y=79; preserve a complete face envelope rather than just the bright center.",
+        "proposed_bbox": [
+          36,
+          73,
+          44,
+          80
+        ]
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "FAIL",
+          "localization": "FAIL",
+          "bbox": [
+            31,
+            88,
+            34,
+            93
+          ],
+          "proposed_bbox": [
+            28,
+            87,
+            32,
+            93
+          ],
+          "elbow_occluded": false,
+          "observation": "The actual forearm runs around x=29-31. The original x=31-33 rectangle lies mostly over the dark cloak/gap to its image-right, rather than enclosing the forearm."
+        },
+        {
+          "side": "image_right",
+          "verdict": "FAIL",
+          "localization": "FAIL",
+          "bbox": [
+            46,
+            89,
+            49,
+            94
+          ],
+          "proposed_bbox": [
+            43,
+            88,
+            47,
+            94
+          ],
+          "elbow_occluded": false,
+          "observation": "The actual lower arm runs around x=44-45. The original x=46-48 rectangle is shifted into the cloak/background to its image-right."
+        }
+      ]
+    },
+    {
+      "index": 26,
+      "look": "child_M_fur_cloak_long_tied",
+      "source": "art/character/route_i/child_M_fur_cloak_long_tied/S/idle.png",
+      "source_sha256": "c86a67a0cec5e0edaf9d3e590285247d4622f23453078b8491b4e71ae43697d4",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/06.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/06.png",
+      "verdict": "FAIL",
+      "face": {
+        "verdict": "FAIL",
+        "localization": "PASS",
+        "bbox": [
+          37,
+          76,
+          44,
+          81
+        ],
+        "observation": "Forehead pixels occur at y=75 and the image-right cheek reaches x=44.",
+        "proposed_bbox": [
+          37,
+          75,
+          45,
+          81
+        ]
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "FAIL",
+          "localization": "PASS",
+          "bbox": [
+            33,
+            90,
+            36,
+            94
+          ],
+          "proposed_bbox": [
+            33,
+            89,
+            37,
+            94
+          ],
+          "elbow_occluded": true,
+          "observation": "The exposed forearm includes x=36 and extends above the original y=90 top. The original box clips its image-right side; expand conservatively around the visible lower arm."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            46,
+            88,
+            49,
+            92
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    },
+    {
+      "index": 27,
+      "look": "child_M_fur_cloak_short",
+      "source": "art/character/route_i/child_M_fur_cloak_short/S/idle.png",
+      "source_sha256": "681b02a75d69e1356944d820642e784047e5b7fb93ee8cfd0d90fb0118dd549a",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/06.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/06.png",
+      "verdict": "FAIL",
+      "face": {
+        "verdict": "FAIL",
+        "localization": "PASS",
+        "bbox": [
+          37,
+          72,
+          44,
+          78
+        ],
+        "observation": "The image-right forehead rises to y=71 and reaches x=44.",
+        "proposed_bbox": [
+          37,
+          71,
+          45,
+          78
+        ]
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            32,
+            87,
+            35,
+            92
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            46,
+            88,
+            49,
+            93
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    },
+    {
+      "index": 28,
+      "look": "child_M_hide_wrap_bun",
+      "source": "art/character/route_i/child_M_hide_wrap_bun/S/idle.png",
+      "source_sha256": "6834c584e03a847f7883b8cda1f39f87fcd1c2d4b5e818984a9e0842397186a0",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/07.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/07.png",
+      "verdict": "FAIL",
+      "face": {
+        "verdict": "FAIL",
+        "localization": "PASS",
+        "bbox": [
+          36,
+          76,
+          44,
+          81
+        ],
+        "observation": "The forehead includes y=75/x=44 and the exposed lower face continues through y=81.",
+        "proposed_bbox": [
+          36,
+          75,
+          45,
+          82
+        ]
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            31,
+            89,
+            34,
+            93
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "FAIL",
+          "localization": "PASS",
+          "bbox": [
+            47,
+            90,
+            50,
+            94
+          ],
+          "proposed_bbox": [
+            45,
+            88,
+            49,
+            95
+          ],
+          "elbow_occluded": false,
+          "observation": "The original rectangle is displaced toward the outside of the arm and clips its image-left skin. The visible lower arm spans the x=45-48 area below the elbow and extends through y=94."
+        }
+      ]
+    },
+    {
+      "index": 29,
+      "look": "child_M_hide_wrap_long_tied",
+      "source": "art/character/route_i/child_M_hide_wrap_long_tied/S/idle.png",
+      "source_sha256": "bf634eaa8532288e7e5fee06d599b15ca1efd423bd7c8fd9311fa075f37d1f24",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/07.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/07.png",
+      "verdict": "FAIL",
+      "face": {
+        "verdict": "FAIL",
+        "localization": "PASS",
+        "bbox": [
+          38,
+          76,
+          46,
+          81
+        ],
+        "observation": "Exposed forehead at y=75 lies above the original top edge.",
+        "proposed_bbox": [
+          38,
+          75,
+          46,
+          81
+        ]
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            33,
+            90,
+            36,
+            94
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            47,
+            90,
+            50,
+            94
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    },
+    {
+      "index": 30,
+      "look": "child_M_hide_wrap_short",
+      "source": "art/character/route_i/child_M_hide_wrap_short/S/idle.png",
+      "source_sha256": "c21c64389e34db098483d676bb6acb83c06ebf79c81014202937acc2041f4337",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/07.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/07.png",
+      "verdict": "FAIL",
+      "face": {
+        "verdict": "FAIL",
+        "localization": "PASS",
+        "bbox": [
+          36,
+          72,
+          44,
+          78
+        ],
+        "observation": "The forehead begins at y=71 and shaded lower-face pixels continue through y=78.",
+        "proposed_bbox": [
+          36,
+          71,
+          44,
+          79
+        ]
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            31,
+            86,
+            34,
+            90
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "FAIL",
+          "localization": "PASS",
+          "bbox": [
+            47,
+            88,
+            50,
+            92
+          ],
+          "proposed_bbox": [
+            45,
+            87,
+            50,
+            92
+          ],
+          "elbow_occluded": false,
+          "observation": "The current x=47 left edge excludes the image-left portion of the lower arm. The visible elbow-to-wrist strip begins around x=45-46 at y=87 and continues downward."
+        }
+      ]
+    },
+    {
+      "index": 31,
+      "look": "child_M_loincloth_bun",
+      "source": "art/character/route_i/child_M_loincloth_bun/S/idle.png",
+      "source_sha256": "8bafb28e58849f6c55662dac964be6c7b0c1a209fb123ea76bcdd5b1636e6a55",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/07.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/07.png",
+      "verdict": "FAIL",
+      "face": {
+        "verdict": "FAIL",
+        "localization": "PASS",
+        "bbox": [
+          37,
+          74,
+          44,
+          79
+        ],
+        "observation": "The exposed chin/lower face continues through y=79.",
+        "proposed_bbox": [
+          37,
+          74,
+          44,
+          80
+        ]
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            33,
+            88,
+            36,
+            92
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "FAIL",
+          "localization": "PASS",
+          "bbox": [
+            46,
+            89,
+            49,
+            93
+          ],
+          "proposed_bbox": [
+            45,
+            87,
+            49,
+            93
+          ],
+          "elbow_occluded": false,
+          "observation": "The current left/top edges clip the proximal lower arm around x=45 at y=87-88. Expand to retain the complete visible strip rather than its distal bright center."
+        }
+      ]
+    },
+    {
+      "index": 32,
+      "look": "child_M_loincloth_long_tied",
+      "source": "art/character/route_i/child_M_loincloth_long_tied/S/idle.png",
+      "source_sha256": "aa75fd472f1f4327b38f940bec458bad24e0ce7f7f6b3e5d37d5bc73712538b7",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/08.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/08.png",
+      "verdict": "FAIL",
+      "face": {
+        "verdict": "FAIL",
+        "localization": "PASS",
+        "bbox": [
+          35,
+          74,
+          43,
+          79
+        ],
+        "observation": "The exposed chin/lower face continues through y=79.",
+        "proposed_bbox": [
+          35,
+          74,
+          43,
+          80
+        ]
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            31,
+            89,
+            34,
+            93
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "UNCERTAIN",
+          "localization": "PASS",
+          "bbox": [
+            45,
+            90,
+            48,
+            94
+          ],
+          "proposed_bbox": [
+            44,
+            87,
+            48,
+            94
+          ],
+          "elbow_occluded": false,
+          "observation": "The current box lies on the distal arm, but it starts below the visible bend/proximal strip around x=44 at y=87-88. The low-resolution elbow/wrist transition is ambiguous; conservatively include that visible strip."
+        }
+      ]
+    },
+    {
+      "index": 33,
+      "look": "child_M_loincloth_short",
+      "source": "art/character/route_i/child_M_loincloth_short/S/idle.png",
+      "source_sha256": "3511b960e7878a4854ea22830a8e72a3b290e75a84949712a817641c76a3c335",
+      "annotated_sheet": "/Users/rexxa/work/artpolish2-data/masks/annotated/08.png",
+      "source_grid": "/Users/rexxa/work/artpolish2-data/masks/grids/08.png",
+      "verdict": "PASS",
+      "face": {
+        "verdict": "PASS",
+        "localization": "PASS",
+        "bbox": [
+          36,
+          71,
+          44,
+          77
+        ],
+        "observation": "The rectangle refers to the exposed face, with ordinary hair/outline/neck-edge margins; no clear omitted face extent beyond pixel-boundary ambiguity was identified.",
+        "proposed_bbox": null
+      },
+      "forearms": [
+        {
+          "side": "image_left",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            31,
+            86,
+            34,
+            90
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        },
+        {
+          "side": "image_right",
+          "verdict": "PASS",
+          "localization": "PASS",
+          "bbox": [
+            46,
+            87,
+            49,
+            92
+          ],
+          "proposed_bbox": null,
+          "elbow_occluded": false,
+          "observation": "The rectangle follows the visible lower arm toward the wrist. The small source scale makes the exact elbow/wrist pixel boundary approximate; outline or neighboring transparent pixels are not a reason to shrink it."
+        }
+      ]
+    }
+  ]
+}

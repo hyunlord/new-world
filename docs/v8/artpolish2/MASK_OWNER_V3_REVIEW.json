@@ -1,0 +1,774 @@
+{
+  "schema_version": 1,
+  "task": "ART-POLISH2",
+  "diagnostic": "diagnostic_v3",
+  "status": "FAIL_NOT_ELIGIBLE_FOR_OWNER_REFERENCE_FREEZE",
+  "source_envelope_input": {
+    "path": "docs/v8/artpolish2/OWNER_SOURCE_ENVELOPES.json",
+    "sha256": "650b7aee7315742ea1183876b4f816e1e7104d96871ef1874240304058b4a3b5"
+  },
+  "summary": {
+    "frames_reviewed": 8,
+    "contamination_fail": 8,
+    "sparse_source_landmarks_selected": 68,
+    "sparse_source_landmarks_total": 68,
+    "overall_mask_pass": 0,
+    "frozen_reference_changes": 0
+  },
+  "method": [
+    "Viewed all8 source/current/diagnostic panels from locked v3.",
+    "Inspected original source and diagnostic masks in enlarged coordinate views; verified each listed selected/omitted pixel against the actual stored PNG.",
+    "Sparse source landmarks were authored before mask inspection;68/68 selection is not full anatomy coverage.",
+    "No true hair-silhouette denominator was established; head envelopes are candidate spatial support only."
+  ],
+  "v2_history": {
+    "status": "SUPERSEDED_PARTIAL_REVIEW_RETAINED",
+    "exact_consumed_draft": "docs/v8/artpolish2/OWNER_SOURCE_ENVELOPES_V2_CONSUMED_DRAFT.json",
+    "exact_consumed_draft_sha256": "4c033be5af578b68dddfaa4f0d97a966a4c22e6cb178c9b764ae7bf170a3e4ba",
+    "known_findings": [
+      "Adult_F long_tied hair on collar/jaw arc, including (44,62), prompted split scalp/back-fall support.",
+      "Adult_F bun garment exclusion clipped visible right forearm at x44,y76-78/82; source revision2 narrowed the edge.",
+      "Child_F long_tied leg support/calf-wrap geometry and child_M long_tied right upper arm were corrected during source-only validation."
+    ],
+    "claim_limit": "V2 was superseded before a complete independent eight-frame review; no complete v2 PASS is claimed."
+  },
+  "panel_reading_corrections": [
+    "Provisional v3 panel guess (adult_F long_tied44,62) was checked and found unselected; actual remaining collar example is skin43,62.",
+    "Provisional child_M long_tied40,83 and41,83 were checked and found unselected; actual lower collar example is skin42,83."
+  ],
+  "frames": [
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "facing": "S",
+      "pose": "idle",
+      "source": "art/character/route_i/adult_F_fur_cloak_bun/S/idle.png",
+      "source_sha256": "34831c2a1733a4ce81e06960c78c81881e07535ae6ad16296eef4b1f35a98bed",
+      "diagnostic_files": {
+        "skin.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v3/adult_F_fur_cloak_bun/skin.png",
+          "sha256": "65f200daa84b4fc94b6dc25782944dbcafaee7e8cf7a4d68196d3448d4801a9b"
+        },
+        "hair.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v3/adult_F_fur_cloak_bun/hair.png",
+          "sha256": "bf9ae1f621cb605d0a30d98c3f52c9e3a972fda03a80b5f064624f009466a1bb"
+        },
+        "masks.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v3/adult_F_fur_cloak_bun/masks.png",
+          "sha256": "2fa78f512d264a1322a073ece5a7ca8ef870721205287e00d9a5e90436a13e5b"
+        }
+      },
+      "contamination": "FAIL",
+      "confirmed_contamination": [
+        {
+          "mask": "hair",
+          "xy": [
+            43,
+            61
+          ],
+          "source_rgba": [
+            123,
+            91,
+            58,
+            255
+          ],
+          "observation": "Tan/brown upper right fur-collar edge outside the actual scalp and left back fall."
+        },
+        {
+          "mask": "hair",
+          "xy": [
+            42,
+            62
+          ],
+          "source_rgba": [
+            98,
+            67,
+            39,
+            249
+          ],
+          "observation": "Tan/brown upper right fur-collar edge outside the actual scalp and left back fall."
+        }
+      ],
+      "sparse_source_landmarks": {
+        "selected_skin": 12,
+        "total": 12,
+        "all_selected": true,
+        "coordinates": [
+          [
+            29,
+            69
+          ],
+          [
+            29,
+            71
+          ],
+          [
+            44,
+            72
+          ],
+          [
+            44,
+            74
+          ],
+          [
+            31,
+            86
+          ],
+          [
+            32,
+            88
+          ],
+          [
+            43,
+            88
+          ],
+          [
+            43,
+            91
+          ],
+          [
+            44,
+            76
+          ],
+          [
+            44,
+            77
+          ],
+          [
+            44,
+            78
+          ],
+          [
+            44,
+            82
+          ]
+        ]
+      },
+      "skin_completeness": "NOT_CLAIMED",
+      "hair_silhouette_completeness": "NOT_CLAIMED",
+      "overall_mask_pass": false,
+      "uncertainty": "One-pixel antialiased jaw/neck, beard/collar and hairline borders remain ambiguous; confirmed examples do not imply every neighboring dark pixel has the same label."
+    },
+    {
+      "look": "adult_F_fur_cloak_long_tied",
+      "facing": "S",
+      "pose": "idle",
+      "source": "art/character/route_i/adult_F_fur_cloak_long_tied/S/idle.png",
+      "source_sha256": "7752d665d2d21c1593e6f9014ee3a134ab235681c55121fb398e4e201ee9e068",
+      "diagnostic_files": {
+        "skin.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v3/adult_F_fur_cloak_long_tied/skin.png",
+          "sha256": "aeea57dd05df945f6fd4e72b2a4a5dafde3e33e11934c5a0d8597fe45be69bc6"
+        },
+        "hair.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v3/adult_F_fur_cloak_long_tied/hair.png",
+          "sha256": "e127836c5caf155395d7107c018b9639a907823828e0e9ff726c9491f009eb30"
+        },
+        "masks.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v3/adult_F_fur_cloak_long_tied/masks.png",
+          "sha256": "cc175b9eeb45a52e64bd095ec7346eb395c3593823c78584db745d9a49660d5a"
+        }
+      },
+      "contamination": "FAIL",
+      "confirmed_contamination": [
+        {
+          "mask": "skin",
+          "xy": [
+            43,
+            62
+          ],
+          "source_rgba": [
+            212,
+            163,
+            115,
+            255
+          ],
+          "observation": "Pale tan upper right fur-collar edge, lateral to the cheek; prior hair correction does not by itself constrain skin."
+        }
+      ],
+      "sparse_source_landmarks": {
+        "selected_skin": 8,
+        "total": 8,
+        "all_selected": true,
+        "coordinates": [
+          [
+            29,
+            72
+          ],
+          [
+            28,
+            74
+          ],
+          [
+            46,
+            73
+          ],
+          [
+            47,
+            75
+          ],
+          [
+            31,
+            87
+          ],
+          [
+            32,
+            89
+          ],
+          [
+            43,
+            89
+          ],
+          [
+            43,
+            92
+          ]
+        ]
+      },
+      "skin_completeness": "FAIL_RECOVERABLE_VISIBLE_FOREARM_OMISSION",
+      "hair_silhouette_completeness": "NOT_CLAIMED",
+      "overall_mask_pass": false,
+      "uncertainty": "One-pixel antialiased jaw/neck, beard/collar and hairline borders remain ambiguous; confirmed examples do not imply every neighboring dark pixel has the same label.",
+      "confirmed_skin_omissions": [
+        {
+          "xy": [
+            45,
+            76
+          ],
+          "source_rgba": [
+            255,
+            189,
+            120,
+            253
+          ],
+          "observation": "Clearly exposed bright right forearm skin clipped by the draft front-garment diagonal."
+        },
+        {
+          "xy": [
+            45,
+            77
+          ],
+          "source_rgba": [
+            255,
+            192,
+            121,
+            253
+          ],
+          "observation": "Clearly exposed bright right forearm skin clipped by the draft front-garment diagonal."
+        },
+        {
+          "xy": [
+            45,
+            78
+          ],
+          "source_rgba": [
+            238,
+            165,
+            100,
+            253
+          ],
+          "observation": "Clearly exposed bright right forearm skin clipped by the draft front-garment diagonal."
+        }
+      ]
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "facing": "S",
+      "pose": "idle",
+      "source": "art/character/route_i/adult_M_fur_cloak_bun/S/idle.png",
+      "source_sha256": "a98c1b8271c9373c1ad7ad2a9f1d3f48fb4f37f2fd27a32c4d6c535ffda90208",
+      "diagnostic_files": {
+        "skin.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v3/adult_M_fur_cloak_bun/skin.png",
+          "sha256": "a44b06b8a069298421858955f48f178a671d39364475dad154fbce121506cd8b"
+        },
+        "hair.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v3/adult_M_fur_cloak_bun/hair.png",
+          "sha256": "403a37bc9c6ec19d59a31ee1c5ce4031e84cca247adb349a93175322758322d5"
+        },
+        "masks.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v3/adult_M_fur_cloak_bun/masks.png",
+          "sha256": "7baf32de83374e053b129bf8aa93053c0f9f01e357a94019fd841ab40c5dc94b"
+        }
+      },
+      "contamination": "FAIL",
+      "confirmed_contamination": [
+        {
+          "mask": "hair",
+          "xy": [
+            45,
+            60
+          ],
+          "source_rgba": [
+            107,
+            75,
+            47,
+            245
+          ],
+          "observation": "Upper right fur-collar edge lateral to the beard."
+        }
+      ],
+      "sparse_source_landmarks": {
+        "selected_skin": 8,
+        "total": 8,
+        "all_selected": true,
+        "coordinates": [
+          [
+            29,
+            68
+          ],
+          [
+            30,
+            71
+          ],
+          [
+            48,
+            70
+          ],
+          [
+            49,
+            73
+          ],
+          [
+            32,
+            88
+          ],
+          [
+            33,
+            90
+          ],
+          [
+            44,
+            93
+          ],
+          [
+            44,
+            95
+          ]
+        ]
+      },
+      "skin_completeness": "NOT_CLAIMED",
+      "hair_silhouette_completeness": "NOT_CLAIMED",
+      "overall_mask_pass": false,
+      "uncertainty": "One-pixel antialiased jaw/neck, beard/collar and hairline borders remain ambiguous; confirmed examples do not imply every neighboring dark pixel has the same label."
+    },
+    {
+      "look": "adult_M_fur_cloak_short",
+      "facing": "S",
+      "pose": "idle",
+      "source": "art/character/route_i/adult_M_fur_cloak_short/S/idle.png",
+      "source_sha256": "345b19c1776ab4517396b0b90882fda0b1cfa0a4dd3e6adfe7e9adb0d9728500",
+      "diagnostic_files": {
+        "skin.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v3/adult_M_fur_cloak_short/skin.png",
+          "sha256": "1066cc4b51d10578fbf10e4bc9b315ed4096a3b8465e18d1ae8a531aa43fdde2"
+        },
+        "hair.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v3/adult_M_fur_cloak_short/hair.png",
+          "sha256": "8559dc691fd948196868c0621f85891f7f2ab5cd0384e3467b4122781a2af5a7"
+        },
+        "masks.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v3/adult_M_fur_cloak_short/masks.png",
+          "sha256": "bdb60ebbb010a9b499e75c6ac765f717de4e208ff5c4ecbaa389ca6237374148"
+        }
+      },
+      "contamination": "FAIL",
+      "confirmed_contamination": [
+        {
+          "mask": "skin",
+          "xy": [
+            38,
+            64
+          ],
+          "source_rgba": [
+            157,
+            119,
+            85,
+            253
+          ],
+          "observation": "Muted tan lower collar edge beside the narrow warm neck tip; the broad face/neck support crosses into fur."
+        }
+      ],
+      "sparse_source_landmarks": {
+        "selected_skin": 8,
+        "total": 8,
+        "all_selected": true,
+        "coordinates": [
+          [
+            27,
+            72
+          ],
+          [
+            28,
+            73
+          ],
+          [
+            49,
+            76
+          ],
+          [
+            50,
+            78
+          ],
+          [
+            31,
+            86
+          ],
+          [
+            33,
+            88
+          ],
+          [
+            45,
+            89
+          ],
+          [
+            45,
+            92
+          ]
+        ]
+      },
+      "skin_completeness": "NOT_CLAIMED",
+      "hair_silhouette_completeness": "NOT_CLAIMED",
+      "overall_mask_pass": false,
+      "uncertainty": "One-pixel antialiased jaw/neck, beard/collar and hairline borders remain ambiguous; confirmed examples do not imply every neighboring dark pixel has the same label."
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "facing": "S",
+      "pose": "idle",
+      "source": "art/character/route_i/child_F_fur_cloak_bun/S/idle.png",
+      "source_sha256": "2c12e35971c40f6aa26d13e994a294fefaca50645218e83f7e39b1ba96e892c5",
+      "diagnostic_files": {
+        "skin.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v3/child_F_fur_cloak_bun/skin.png",
+          "sha256": "01290c94e9e0c529f3f3f5564274c22afb92e9095d9d65774c130fe6193f51ec"
+        },
+        "hair.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v3/child_F_fur_cloak_bun/hair.png",
+          "sha256": "7582a753cb9d019d46a34a7db9cb1cd3a9d19db43f5c841595042a085d8fff46"
+        },
+        "masks.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v3/child_F_fur_cloak_bun/masks.png",
+          "sha256": "4b342c9171bd4f225b961c95a7de7fc2fef85ec7cc8cb5987b5337d79c20e574"
+        }
+      },
+      "contamination": "FAIL",
+      "confirmed_contamination": [
+        {
+          "mask": "hair",
+          "xy": [
+            44,
+            78
+          ],
+          "source_rgba": [
+            110,
+            77,
+            48,
+            240
+          ],
+          "observation": "Upper right collar edge, below the visible scalp/temple hair."
+        },
+        {
+          "mask": "hair",
+          "xy": [
+            45,
+            78
+          ],
+          "source_rgba": [
+            100,
+            72,
+            46,
+            158
+          ],
+          "observation": "Upper right collar edge, below the visible scalp/temple hair."
+        }
+      ],
+      "sparse_source_landmarks": {
+        "selected_skin": 8,
+        "total": 8,
+        "all_selected": true,
+        "coordinates": [
+          [
+            34,
+            85
+          ],
+          [
+            34,
+            86
+          ],
+          [
+            46,
+            85
+          ],
+          [
+            46,
+            87
+          ],
+          [
+            37,
+            95
+          ],
+          [
+            36,
+            97
+          ],
+          [
+            43,
+            97
+          ],
+          [
+            43,
+            99
+          ]
+        ]
+      },
+      "skin_completeness": "NOT_CLAIMED",
+      "hair_silhouette_completeness": "NOT_CLAIMED",
+      "overall_mask_pass": false,
+      "uncertainty": "One-pixel antialiased jaw/neck, beard/collar and hairline borders remain ambiguous; confirmed examples do not imply every neighboring dark pixel has the same label."
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "facing": "S",
+      "pose": "idle",
+      "source": "art/character/route_i/child_F_fur_cloak_long_tied/S/idle.png",
+      "source_sha256": "dc212949d71914dd4d4b8cbc4cc3d89c5bf091897aa67fb7f04f769928c8ca6d",
+      "diagnostic_files": {
+        "skin.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v3/child_F_fur_cloak_long_tied/skin.png",
+          "sha256": "0ddc2afe47480c87c1eb9ab514eea6e519d71efe34ce9987b573760e138cd5c8"
+        },
+        "hair.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v3/child_F_fur_cloak_long_tied/hair.png",
+          "sha256": "365bee73d492a034de03c171554484b39ed5ff099f1e83c0886f203af8166bfd"
+        },
+        "masks.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v3/child_F_fur_cloak_long_tied/masks.png",
+          "sha256": "1cf2de40e1ff213ab91f4a131133e0b170b002e0fe73560442f4cf6549b777a6"
+        }
+      },
+      "contamination": "FAIL",
+      "confirmed_contamination": [
+        {
+          "mask": "hair",
+          "xy": [
+            37,
+            79
+          ],
+          "source_rgba": [
+            107,
+            83,
+            59,
+            253
+          ],
+          "observation": "Muted tan collar/trim edge at the left side of the neck, below the visible hair fall."
+        }
+      ],
+      "sparse_source_landmarks": {
+        "selected_skin": 8,
+        "total": 8,
+        "all_selected": true,
+        "coordinates": [
+          [
+            35,
+            88
+          ],
+          [
+            35,
+            89
+          ],
+          [
+            46,
+            87
+          ],
+          [
+            47,
+            89
+          ],
+          [
+            38,
+            95
+          ],
+          [
+            38,
+            97
+          ],
+          [
+            42,
+            96
+          ],
+          [
+            43,
+            96
+          ]
+        ]
+      },
+      "skin_completeness": "NOT_CLAIMED",
+      "hair_silhouette_completeness": "NOT_CLAIMED",
+      "overall_mask_pass": false,
+      "uncertainty": "One-pixel antialiased jaw/neck, beard/collar and hairline borders remain ambiguous; confirmed examples do not imply every neighboring dark pixel has the same label."
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "facing": "S",
+      "pose": "idle",
+      "source": "art/character/route_i/child_M_fur_cloak_bun/S/idle.png",
+      "source_sha256": "3c61b4824d4f9ab461a1be252aae2c4c8399508bb68cb55809130b1d586814d2",
+      "diagnostic_files": {
+        "skin.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v3/child_M_fur_cloak_bun/skin.png",
+          "sha256": "174b4c772ef218c345c364bc4e25a97cfe2e628b2fb15cf70bb0450d4fe8a7a4"
+        },
+        "hair.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v3/child_M_fur_cloak_bun/hair.png",
+          "sha256": "ec182705a69ae9be0f06f24c3c4bd68f42f379efcc85316799b08609caed98c6"
+        },
+        "masks.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v3/child_M_fur_cloak_bun/masks.png",
+          "sha256": "03dadc7273247d2470297a30d62006a373e0b9f42f56c3c06a9ea2a4e5fb3b0c"
+        }
+      },
+      "contamination": "FAIL",
+      "confirmed_contamination": [
+        {
+          "mask": "skin",
+          "xy": [
+            37,
+            82
+          ],
+          "source_rgba": [
+            151,
+            115,
+            81,
+            253
+          ],
+          "observation": "Lower pale/brown fur trim under the neck, continuous with the collar band."
+        }
+      ],
+      "sparse_source_landmarks": {
+        "selected_skin": 8,
+        "total": 8,
+        "all_selected": true,
+        "coordinates": [
+          [
+            31,
+            85
+          ],
+          [
+            31,
+            87
+          ],
+          [
+            43,
+            85
+          ],
+          [
+            44,
+            87
+          ],
+          [
+            34,
+            95
+          ],
+          [
+            35,
+            97
+          ],
+          [
+            42,
+            98
+          ],
+          [
+            42,
+            100
+          ]
+        ]
+      },
+      "skin_completeness": "NOT_CLAIMED",
+      "hair_silhouette_completeness": "NOT_CLAIMED",
+      "overall_mask_pass": false,
+      "uncertainty": "One-pixel antialiased jaw/neck, beard/collar and hairline borders remain ambiguous; confirmed examples do not imply every neighboring dark pixel has the same label."
+    },
+    {
+      "look": "child_M_fur_cloak_long_tied",
+      "facing": "S",
+      "pose": "idle",
+      "source": "art/character/route_i/child_M_fur_cloak_long_tied/S/idle.png",
+      "source_sha256": "c86a67a0cec5e0edaf9d3e590285247d4622f23453078b8491b4e71ae43697d4",
+      "diagnostic_files": {
+        "skin.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v3/child_M_fur_cloak_long_tied/skin.png",
+          "sha256": "a13051e2d3b7d290ac5ee5989ba9ed1d016bc0a5b64cd6f16c66faecfa30a195"
+        },
+        "hair.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v3/child_M_fur_cloak_long_tied/hair.png",
+          "sha256": "65da31150dc28a467e7a86a0e72ab0c3772b20e7781299bc2e198a2b4364c6af"
+        },
+        "masks.png": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/diagnostic_v3/child_M_fur_cloak_long_tied/masks.png",
+          "sha256": "5226217e79c90ee383241e363d29f7bb466f823e7e6ccdf5a602adda07bb9f4d"
+        }
+      },
+      "contamination": "FAIL",
+      "confirmed_contamination": [
+        {
+          "mask": "skin",
+          "xy": [
+            42,
+            83
+          ],
+          "source_rgba": [
+            133,
+            101,
+            71,
+            254
+          ],
+          "observation": "Lower diagonal fur-collar tip below the small exposed neck opening."
+        }
+      ],
+      "sparse_source_landmarks": {
+        "selected_skin": 8,
+        "total": 8,
+        "all_selected": true,
+        "coordinates": [
+          [
+            36,
+            87
+          ],
+          [
+            35,
+            89
+          ],
+          [
+            45,
+            86
+          ],
+          [
+            46,
+            88
+          ],
+          [
+            37,
+            98
+          ],
+          [
+            37,
+            100
+          ],
+          [
+            44,
+            100
+          ],
+          [
+            44,
+            102
+          ]
+        ]
+      },
+      "skin_completeness": "NOT_CLAIMED",
+      "hair_silhouette_completeness": "NOT_CLAIMED",
+      "overall_mask_pass": false,
+      "uncertainty": "One-pixel antialiased jaw/neck, beard/collar and hairline borders remain ambiguous; confirmed examples do not imply every neighboring dark pixel has the same label."
+    }
+  ]
+}

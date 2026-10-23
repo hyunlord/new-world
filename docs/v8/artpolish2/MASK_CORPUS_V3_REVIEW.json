@@ -1,0 +1,2077 @@
+{
+  "schema_version": 1,
+  "review_id": "ART-POLISH2-MASK-CORPUS-V3-BOUNDED-INDEPENDENT",
+  "reviewed_at_utc": "2026-10-23T19:35:23.544230+00:00",
+  "reviewer": "mask_corpus_review independent native subagent",
+  "candidate_directory": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3",
+  "summary_sha256": "dc573b5f824d7e6d119b4e440d21e3bd0f1e93f5db72250dab1c113af78c02b8",
+  "candidate_status": "IMMUTABLE_DIAGNOSTIC_V3",
+  "overall_verdict": "UNCERTAIN",
+  "confirmed_remaining_failures": 0,
+  "unresolved_uncertainty_count": 4,
+  "predecessors": [
+    {
+      "report_path": "docs/v8/artpolish2/MASK_CORPUS_VISUAL_REVIEW.json",
+      "report_sha256": "ea8ca16f5bd0cfb1d3edabba7cb1a2fa7ff04ba71c39eb9f1a5427eeb396815d",
+      "overall_verdict": "FAIL",
+      "preserved_without_edits": true
+    },
+    {
+      "report_path": "docs/v8/artpolish2/MASK_CORPUS_V2_REVIEW.json",
+      "report_sha256": "2b59608e95f9b927198c32bb2d203aca84d2090fe9517c86ec3242e2e7786547",
+      "overall_verdict": "FAIL",
+      "preserved_without_edits": true
+    }
+  ],
+  "scope": "Bounded actual visual review of the two repaired v3 frames; unchanged corpus evidence carried from the v2 34-contact/340-frame review only after independent byte comparison.",
+  "actual_new_visual_views": [
+    {
+      "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_F_fur_cloak_bun/E/walk_a/audit.png",
+      "sha256": "65b6edd1cd50c5ccc6cf6f8402cb1ae80a76ba25659ec140e0682e60101f0030"
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_F_fur_cloak_bun/E/walk_a/masks.png",
+      "sha256": "20aeb3299672f60550bd29f156d749396d5a1f0189b91d4c6eec7cd10119c125"
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/child_M_fur_cloak_bun/E/carry/audit.png",
+      "sha256": "a6215ba5b03cfe79d10aa08f60bb5cd288862e6ec9736e3f49750c5d76a0454f"
+    },
+    {
+      "path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/child_M_fur_cloak_bun/E/carry/masks.png",
+      "sha256": "bea623580818aa2d5edd9f8adf875c8d396435edca0d5c90d3f8f6d707ecc4f7"
+    }
+  ],
+  "v3_contact_sheets_actually_viewed": 0,
+  "inherited_v2_contacts_actually_viewed_in_v2": 34,
+  "inherited_corpus_frame_count": 340,
+  "equality_carryforward": {
+    "verdict": "PASS_MECHANICAL_EQUALITY_ONLY",
+    "v2_directory": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2",
+    "v2_summary_sha256": "bf2395ac750cd98730d54eedee37aa7a792b4d6ae4d48ddd0dd5cd09686f08f3",
+    "v3_summary_sha256": "dc573b5f824d7e6d119b4e440d21e3bd0f1e93f5db72250dab1c113af78c02b8",
+    "comparison_method": "Read and compare every named PNG byte sequence independently; count equal/different files, assert exact expected changed-frame set. Per-group equal-set digest hashes sorted frame + space + PNG sha256 lines with trailing newline.",
+    "groups": {
+      "source": {
+        "same_file_count": 340,
+        "changed_file_count": 0,
+        "same_files_frame_and_sha256_digest": "b10bf8c44565f127517f95159ac896b5a05f48f8ba30af82be9beb4d7f037d0f",
+        "changed_files": []
+      },
+      "hair": {
+        "same_file_count": 340,
+        "changed_file_count": 0,
+        "same_files_frame_and_sha256_digest": "13b27915a6b5a223a803d0730c15ada3a310e1b975ba2b0ad9231f3e10bbda56",
+        "changed_files": []
+      },
+      "hair_reference": {
+        "same_file_count": 340,
+        "changed_file_count": 0,
+        "same_files_frame_and_sha256_digest": "768052f468bf01fc260167301de10b089c88e540262b8b5ff545c0de731c9402",
+        "changed_files": []
+      },
+      "outline": {
+        "same_file_count": 340,
+        "changed_file_count": 0,
+        "same_files_frame_and_sha256_digest": "56325c1aa916a2bf96dbed0b3d576d1762dcfb58681d475d80da4a0196ce6b61",
+        "changed_files": []
+      },
+      "skin": {
+        "same_file_count": 338,
+        "changed_file_count": 2,
+        "same_files_frame_and_sha256_digest": "a07849f88ba28d89efa737c477a726af60de9bb895b16334fdf54572c8dba102",
+        "changed_files": [
+          {
+            "frame": "adult_F_fur_cloak_bun/E/walk_a",
+            "v2_sha256": "30637df49d6a49e58ddeb45f643ad53593152b77193283466ead304000c4c034",
+            "v3_sha256": "a8920cd1b6de7e59831d1a95d57102aa75ae70025c03477f06bb737c0cd7afed"
+          },
+          {
+            "frame": "child_M_fur_cloak_bun/E/carry",
+            "v2_sha256": "c4996f700f868caaccd5b871221b87db649181a0b2bd6ac3a139bb6d77422004",
+            "v3_sha256": "b7b1cf141962041fe4f627396488b2ee27aab2fe63a7dd05214b539f96162486"
+          }
+        ]
+      },
+      "v1": {
+        "same_file_count": 338,
+        "changed_file_count": 2,
+        "same_files_frame_and_sha256_digest": "0358dcb9c4d2333ab70d249cc55b2574c843455f78ab5110aec61c7565741296",
+        "changed_files": [
+          {
+            "frame": "adult_F_fur_cloak_bun/E/walk_a",
+            "v2_sha256": "0f1d34c5ae8876f3f49aed0f68240f968a438878db59fd39035ca16a256bc4b0",
+            "v3_sha256": "eacfefafef54fff2a76d544e501a99309ab6d4bc96981403bf3b122194a0b064"
+          },
+          {
+            "frame": "child_M_fur_cloak_bun/E/carry",
+            "v2_sha256": "8559a66d352a7d6641285ad33bd7682fa3d38dfd02e1a0c128e9a354f1e8f6e5",
+            "v3_sha256": "cb564b7dc971cc0fbd16f9a2adb46fc7fcf65f01ef839f9f8f3c9a1bd1adc9c4"
+          }
+        ]
+      },
+      "v2": {
+        "same_file_count": 338,
+        "changed_file_count": 2,
+        "same_files_frame_and_sha256_digest": "dcff2367a9ecee821acd82e04be0e9910dc5da9387e70b456597dfa1528a6377",
+        "changed_files": [
+          {
+            "frame": "adult_F_fur_cloak_bun/E/walk_a",
+            "v2_sha256": "01276151d6600ab5f5b2bed4f20780f48bdbc12e67a2963a1af36e9fc7efb2fa",
+            "v3_sha256": "f68fe94410d09c7832293939e355085ce624efb7ad9f24e64cbcc08d841692ed"
+          },
+          {
+            "frame": "child_M_fur_cloak_bun/E/carry",
+            "v2_sha256": "1fe887160dab582fee62a72077ae5abc0e2a0638a011edeee82f9d02480e547e",
+            "v3_sha256": "da1294e4c8902ad5d00b22084dbcaee058f7e36a7a385c2fa541552065eafb1b"
+          }
+        ]
+      },
+      "v3": {
+        "same_file_count": 338,
+        "changed_file_count": 2,
+        "same_files_frame_and_sha256_digest": "99bba5992f4392e27aec2095196ef70bdc52f71ba1b681909b77b41a83fc707a",
+        "changed_files": [
+          {
+            "frame": "adult_F_fur_cloak_bun/E/walk_a",
+            "v2_sha256": "11db481908104109af71883827d3ac307cccc936303310714a67cd99724cf8e2",
+            "v3_sha256": "79669f95d1635ceec25cec2bd99018d1021d4d8189f1e13af8a891caa7ea7453"
+          },
+          {
+            "frame": "child_M_fur_cloak_bun/E/carry",
+            "v2_sha256": "ab4e90c119997354c7ae23ff46d357b0ccc7d4867685207b9a9db12cfd32075e",
+            "v3_sha256": "5a5e99ec6a4c618b4ed15d62f23b12544380945a564a85a9d7ec12d355452036"
+          }
+        ]
+      },
+      "v4": {
+        "same_file_count": 338,
+        "changed_file_count": 2,
+        "same_files_frame_and_sha256_digest": "026a4fb1e992cc1282afb4cdcb246fce3f0c1cc67d69908c2e2a1f5225f02769",
+        "changed_files": [
+          {
+            "frame": "adult_F_fur_cloak_bun/E/walk_a",
+            "v2_sha256": "ea2ba07a02c7ec7f227845bb7cd854e4a699cf131a17e0f71bf3abb6c7f7257f",
+            "v3_sha256": "6f492c7d63083d65122cf33aed0bdd89865d51b78cee9175809c46bfff28644d"
+          },
+          {
+            "frame": "child_M_fur_cloak_bun/E/carry",
+            "v2_sha256": "483aac68208d8df8d2f790d80aeb02844ba17abf3fe2a865ac92403d4945a647",
+            "v3_sha256": "aafe3649791d10e0fdb7451735da10ec643312caeb48a19c429ec7f7e444250a"
+          }
+        ]
+      },
+      "v5": {
+        "same_file_count": 338,
+        "changed_file_count": 2,
+        "same_files_frame_and_sha256_digest": "92ddd93d0f4a27bcac0991b2e51f5a552b8b3fd31e03e1e305b9c4043319963a",
+        "changed_files": [
+          {
+            "frame": "adult_F_fur_cloak_bun/E/walk_a",
+            "v2_sha256": "4f6c9d5f33a65492a3b39a99f2b9aaaf35a7546d0d987322d49b84c264969f64",
+            "v3_sha256": "191db33fa6454f8532c2acd0124811f9e44360eacdba9592ce52cc2ad779c092"
+          },
+          {
+            "frame": "child_M_fur_cloak_bun/E/carry",
+            "v2_sha256": "c179e209649cc845704f8b819700cfb6d44383bcb02b8ce6a463c1602a43a756",
+            "v3_sha256": "5ebe5354cfb1c31d8ac91dcd6b29acbe5853a59b9d221197db8d021b84733f58"
+          }
+        ]
+      },
+      "v6": {
+        "same_file_count": 338,
+        "changed_file_count": 2,
+        "same_files_frame_and_sha256_digest": "03e5e287a1b494d8caf2e0514ceb7cfc980b03e3a490374532853763a6f9aa43",
+        "changed_files": [
+          {
+            "frame": "adult_F_fur_cloak_bun/E/walk_a",
+            "v2_sha256": "d7eb46b91ee1c7c9cdf3aa0aab71a48205c5d8f15a1960bd1f310365bedb1dcc",
+            "v3_sha256": "5a56ee9779d59754ebdd9b79f7ac1af97a3fa48c89e3ce01eef2a229dcf2640e"
+          },
+          {
+            "frame": "child_M_fur_cloak_bun/E/carry",
+            "v2_sha256": "6f01efdb864b5957dbf32887b54158d61883fb5f5f609b36fd00086cc04e5da3",
+            "v3_sha256": "d6f2a078233997135172f615932b87f9ffe3948ac16831cd85ced9afca999e8c"
+          }
+        ]
+      }
+    },
+    "totals": {
+      "unchanged_source": 340,
+      "unchanged_hair": 340,
+      "unchanged_hair_reference": 340,
+      "unchanged_outline": 340,
+      "unchanged_skin": 338,
+      "unchanged_bakes": 2028,
+      "changed_skin": 2,
+      "changed_bakes": 12
+    },
+    "excluded_from_image_equality_claim": "Contact/audit composites were rebuilt with corrected captions and are not claimed byte-identical. Underlying frame images are the equality basis.",
+    "semantic_limit": "Mechanical equality carries the earlier visual evidence and its limitations; it does not create a new semantic PASS."
+  },
+  "frozen_S_idle_check": {
+    "verdict": "PASS_MECHANICAL_EQUALITY_ONLY",
+    "byte_comparisons": 272,
+    "mismatches": 0,
+    "manifest_path": "art/character/variant_reference_freeze.json",
+    "manifest_sha256": "9cd4f807a1b42b1b021e143e85b357b1b3e058c6c2cf037b55b30b068d44d89a"
+  },
+  "counts": {
+    "look_PASS": 30,
+    "look_FAIL": 0,
+    "look_UNCERTAIN": 4,
+    "newly_viewed_v3_frames": 2,
+    "newly_viewed_v3_panels": 4,
+    "v2_failures_visually_resolved": 2,
+    "known_wood_witness_pixels_clear": 28
+  },
+  "repaired_frame_reviews": [
+    {
+      "frame": "adult_F_fur_cloak_bun/E/walk_a",
+      "source_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_F_fur_cloak_bun/E/walk_a/source.png",
+      "source_sha256": "4389638614f49c561d5685c7a2a23bdff08b78860519a303b324bf5e4130116d",
+      "skin_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_F_fur_cloak_bun/E/walk_a/skin.png",
+      "skin_sha256": "a8920cd1b6de7e59831d1a95d57102aa75ae70025c03477f06bb737c0cd7afed",
+      "hair_sha256": "b897e6d4dcf94b2be3f6d66443afccdc2befcad509d598eb8fc6d902e7c64817",
+      "hair_reference_sha256": "7fa8fc4e48c0980c4d0d9f0aba2f4fb8375d0cbb319c0fef6198bef1488b7a5d",
+      "outline_sha256": "edba470447023beb0787519940bec23b5532366cef5aa2964bf1e07ceb49ab43",
+      "bake_sha256": {
+        "v1": "eacfefafef54fff2a76d544e501a99309ab6d4bc96981403bf3b122194a0b064",
+        "v2": "f68fe94410d09c7832293939e355085ce624efb7ad9f24e64cbcc08d841692ed",
+        "v3": "79669f95d1635ceec25cec2bd99018d1021d4d8189f1e13af8a891caa7ea7453",
+        "v4": "6f492c7d63083d65122cf33aed0bdd89865d51b78cee9175809c46bfff28644d",
+        "v5": "191db33fa6454f8532c2acd0124811f9e44360eacdba9592ce52cc2ad779c092",
+        "v6": "5a56ee9779d59754ebdd9b79f7ac1af97a3fa48c89e3ce01eef2a229dcf2640e"
+      },
+      "audit_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_F_fur_cloak_bun/E/walk_a/audit.png",
+      "audit_sha256": "65b6edd1cd50c5ccc6cf6f8402cb1ae80a76ba25659ec140e0682e60101f0030",
+      "masks_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_F_fur_cloak_bun/E/walk_a/masks.png",
+      "masks_sha256": "20aeb3299672f60550bd29f156d749396d5a1f0189b91d4c6eec7cd10119c125",
+      "prior_finding_id": "V2F001",
+      "prior_v2_verdict": "FAIL",
+      "v3_visual_recheck": "PASS_FOR_PRIOR_DEFECT",
+      "actually_viewed_panels": [
+        "audit.png",
+        "masks.png"
+      ],
+      "observation": "The exposed upper arm and forearm now carry a continuous substantial skin selection and lighten in the tint. The prior unchanged orange arm is absent; adjacent cloak/front garment remains visually separate.",
+      "region_bbox_approx": [
+        39,
+        68,
+        45,
+        85
+      ],
+      "exact_pixel_examples": [
+        {
+          "xy": [
+            41,
+            71
+          ],
+          "source_rgba": [
+            253,
+            168,
+            96,
+            253
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            255,
+            225,
+            166,
+            253
+          ]
+        },
+        {
+          "xy": [
+            41,
+            73
+          ],
+          "source_rgba": [
+            247,
+            163,
+            94,
+            253
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            255,
+            220,
+            164,
+            253
+          ]
+        },
+        {
+          "xy": [
+            42,
+            77
+          ],
+          "source_rgba": [
+            240,
+            155,
+            86,
+            253
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            255,
+            212,
+            156,
+            253
+          ]
+        },
+        {
+          "xy": [
+            43,
+            81
+          ],
+          "source_rgba": [
+            243,
+            159,
+            88,
+            253
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            255,
+            216,
+            158,
+            253
+          ]
+        }
+      ],
+      "claim_limit": "This resolves the recorded substantial omission only; not full pixel accuracy or owner approval."
+    },
+    {
+      "frame": "child_M_fur_cloak_bun/E/carry",
+      "source_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/child_M_fur_cloak_bun/E/carry/source.png",
+      "source_sha256": "2bca530e4df66fa1d3b4a45ba04c378ef861d0b40683e53bc42c5fb20f7f8390",
+      "skin_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/child_M_fur_cloak_bun/E/carry/skin.png",
+      "skin_sha256": "b7b1cf141962041fe4f627396488b2ee27aab2fe63a7dd05214b539f96162486",
+      "hair_sha256": "48b97d5ba37158f3cfe6800e4c81fe44312c88df81e5f036156444bf4b21d5d9",
+      "hair_reference_sha256": "6009ec7325257e76573489114ba062386186f1d0a8ebbf53c74b09d9364c5f6d",
+      "outline_sha256": "94c89df83dd179c53bc2b824023228d5af8b536751fdf28e1c7e74e9168252cc",
+      "bake_sha256": {
+        "v1": "cb564b7dc971cc0fbd16f9a2adb46fc7fcf65f01ef839f9f8f3c9a1bd1adc9c4",
+        "v2": "da1294e4c8902ad5d00b22084dbcaee058f7e36a7a385c2fa541552065eafb1b",
+        "v3": "5a5e99ec6a4c618b4ed15d62f23b12544380945a564a85a9d7ec12d355452036",
+        "v4": "aafe3649791d10e0fdb7451735da10ec643312caeb48a19c429ec7f7e444250a",
+        "v5": "5ebe5354cfb1c31d8ac91dcd6b29acbe5853a59b9d221197db8d021b84733f58",
+        "v6": "d6f2a078233997135172f615932b87f9ffe3948ac16831cd85ced9afca999e8c"
+      },
+      "audit_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/child_M_fur_cloak_bun/E/carry/audit.png",
+      "audit_sha256": "a6215ba5b03cfe79d10aa08f60bb5cd288862e6ec9736e3f49750c5d76a0454f",
+      "masks_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/child_M_fur_cloak_bun/E/carry/masks.png",
+      "masks_sha256": "bea623580818aa2d5edd9f8adf875c8d396435edca0d5c90d3f8f6d707ecc4f7",
+      "prior_finding_id": "V2F002",
+      "prior_v2_verdict": "FAIL",
+      "v3_visual_recheck": "PASS_FOR_PRIOR_DEFECT",
+      "actually_viewed_panels": [
+        "audit.png",
+        "masks.png"
+      ],
+      "observation": "The image-left supporting arm now has a substantial skin selection and lightens along with the other arm. The adjacent carried log and cloak show no obvious new spill in the viewed panels.",
+      "region_bbox_approx": [
+        33,
+        81,
+        38,
+        88
+      ],
+      "exact_pixel_examples": [
+        {
+          "xy": [
+            35,
+            82
+          ],
+          "source_rgba": [
+            222,
+            151,
+            84,
+            253
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            242,
+            209,
+            157,
+            253
+          ]
+        },
+        {
+          "xy": [
+            34,
+            83
+          ],
+          "source_rgba": [
+            212,
+            138,
+            72,
+            253
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            233,
+            196,
+            144,
+            253
+          ]
+        },
+        {
+          "xy": [
+            35,
+            84
+          ],
+          "source_rgba": [
+            253,
+            175,
+            95,
+            253
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            255,
+            234,
+            170,
+            253
+          ]
+        },
+        {
+          "xy": [
+            34,
+            85
+          ],
+          "source_rgba": [
+            255,
+            184,
+            103,
+            254
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            255,
+            243,
+            178,
+            254
+          ]
+        }
+      ],
+      "claim_limit": "This resolves the recorded substantial omission only; not full pixel accuracy or owner approval."
+    }
+  ],
+  "prior_wood_witness_checks": [
+    {
+      "frame": "adult_M_fur_cloak_bun/S/carry",
+      "source_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_fur_cloak_bun/S/carry/source.png",
+      "source_sha256": "eb5f6202102baa612b49296a6e10a1dfa042092c6f236f5d444e50318ab5db75",
+      "skin_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_fur_cloak_bun/S/carry/skin.png",
+      "skin_sha256": "90a582d74eaa62800a3546f2654f8cecc53b2ec2a625373629907265ea75add9",
+      "hair_sha256": "9f17cfaa72788152adba87dda287505e90480aecdcd63d7be0aca951f9166c37",
+      "hair_reference_sha256": "44d0b2c5b7d79aa0b578873ce7fd9ea7cf3b74d8447cf4e11f4849fb8cf901c3",
+      "outline_sha256": "fd27fa830c51d533071fb1c26710dca7b98c7c9ae304657e3c5755644836b073",
+      "bake_sha256": {
+        "v1": "c913e47ad2b25560d600086865dd33b454126ed128d49f1ccf7565b6f4fc6047",
+        "v2": "c59cae4234eff35ea56edd68c2335f79bb64ff9952167778ce9b71b17fc93b02",
+        "v3": "355e5c2366ecf7e47949bcefe5dd02246878cc64bef6026549b4af6cfed4340e",
+        "v4": "5e0adc17a18ee9d49f65eeb0d0399a082b4abdf2ab8bc0cfaed85e88615983b4",
+        "v5": "0166160f935f9dbc03bad2ca0f34b2062523b0076bd55ac62414c4cfaa276198",
+        "v6": "86431c00735a10e1b1a119a09adf0be06a3862b412cfe0ce3dcd5b0515f55218"
+      },
+      "audit_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_fur_cloak_bun/S/carry/audit.png",
+      "audit_sha256": "bb7a8ec125f69373fe07adc7a2a50c9a85f3c8ae0ed5de6617aabe44257a66af",
+      "masks_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_fur_cloak_bun/S/carry/masks.png",
+      "masks_sha256": "fdf30d7ef8acd9a26e6a60770257e16992e0acde1a0f4c9eb10c206b8ccf8a28",
+      "prior_finding_id": "CV004",
+      "source_semantics_basis": "Wood classification and clear v2 overlays were actually viewed in prior reviews; v3 source/masks/tints here are byte-identical to v2. These unchanged panels were not newly viewed in v3.",
+      "witness_verdict": "UNCHANGED_CLEAR",
+      "exact_pixel_examples": [
+        {
+          "xy": [
+            55,
+            58
+          ],
+          "source_rgba": [
+            175,
+            105,
+            47,
+            255
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            175,
+            105,
+            47,
+            255
+          ]
+        },
+        {
+          "xy": [
+            56,
+            58
+          ],
+          "source_rgba": [
+            159,
+            95,
+            41,
+            255
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            159,
+            95,
+            41,
+            255
+          ]
+        },
+        {
+          "xy": [
+            58,
+            59
+          ],
+          "source_rgba": [
+            172,
+            110,
+            54,
+            253
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            172,
+            110,
+            54,
+            253
+          ]
+        },
+        {
+          "xy": [
+            59,
+            59
+          ],
+          "source_rgba": [
+            230,
+            155,
+            79,
+            255
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            230,
+            155,
+            79,
+            255
+          ]
+        },
+        {
+          "xy": [
+            60,
+            59
+          ],
+          "source_rgba": [
+            158,
+            105,
+            54,
+            243
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            158,
+            105,
+            54,
+            243
+          ]
+        },
+        {
+          "xy": [
+            60,
+            60
+          ],
+          "source_rgba": [
+            171,
+            118,
+            64,
+            254
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            171,
+            118,
+            64,
+            254
+          ]
+        }
+      ]
+    },
+    {
+      "frame": "adult_M_hide_wrap_short/S/carry",
+      "source_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_hide_wrap_short/S/carry/source.png",
+      "source_sha256": "d2333ac765ba32ec43a0278774a37c7d5ebd03fdb6fb4c7ece39530bbf97263b",
+      "skin_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_hide_wrap_short/S/carry/skin.png",
+      "skin_sha256": "33616de0d4f4f1252fe675fcc971206b770d6f56723406ca7e9d3ac0f467ffd4",
+      "hair_sha256": "1db329cfbe4881698dc7cc61dbaf277fc4e7fd9c4c80496fceea74136592bfef",
+      "hair_reference_sha256": "c0dd9bd5740d59c65b0568eaadecbd4b8fe74fd7c733b61d193445431ced4a0f",
+      "outline_sha256": "c977c37ffd0381e843698df49e5502364526ec6ed0c0621daf9358a8ac86e349",
+      "bake_sha256": {
+        "v1": "acc93a88dc6990453f66a796163e63958b61a1dd6991b7d0e7d1d59ea63474bd",
+        "v2": "40dcdf8d6e181eb9ae3c9d30ac89e528d177bb407caca0b8ba1f4b5508916675",
+        "v3": "9dcae45b7ae35ccc50db4fe5be09e6d46d8d52e5a039e8698aa46cce82845b59",
+        "v4": "50cece8e5e869e122e5d1489a4ae2dfc362009b3d5799655c2c0d84ce0e37441",
+        "v5": "bb8657ac7a6d2c543142a932a31c15331ec234810233e677698557b5d05136a3",
+        "v6": "4073c316dd38ec58b4e42a818270e68298ddda1f3a23851ab5072bc19dd1ad33"
+      },
+      "audit_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_hide_wrap_short/S/carry/audit.png",
+      "audit_sha256": "9450ef3688e9f822f039f451a0562b7575823765de2809a7767b760e4e9346a4",
+      "masks_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_hide_wrap_short/S/carry/masks.png",
+      "masks_sha256": "2dc42fa089ca2a06890b8520efc09ab842df3defe24870fdff3b041fe19ef88f",
+      "prior_finding_id": "CV005",
+      "source_semantics_basis": "Wood classification and clear v2 overlays were actually viewed in prior reviews; v3 source/masks/tints here are byte-identical to v2. These unchanged panels were not newly viewed in v3.",
+      "witness_verdict": "UNCHANGED_CLEAR",
+      "exact_pixel_examples": [
+        {
+          "xy": [
+            36,
+            52
+          ],
+          "source_rgba": [
+            161,
+            100,
+            49,
+            251
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            161,
+            100,
+            49,
+            251
+          ]
+        },
+        {
+          "xy": [
+            37,
+            52
+          ],
+          "source_rgba": [
+            190,
+            119,
+            59,
+            253
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            190,
+            119,
+            59,
+            253
+          ]
+        },
+        {
+          "xy": [
+            38,
+            52
+          ],
+          "source_rgba": [
+            190,
+            120,
+            60,
+            255
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            190,
+            120,
+            60,
+            255
+          ]
+        },
+        {
+          "xy": [
+            39,
+            52
+          ],
+          "source_rgba": [
+            181,
+            113,
+            56,
+            255
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            181,
+            113,
+            56,
+            255
+          ]
+        },
+        {
+          "xy": [
+            40,
+            52
+          ],
+          "source_rgba": [
+            176,
+            111,
+            55,
+            255
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            176,
+            111,
+            55,
+            255
+          ]
+        },
+        {
+          "xy": [
+            39,
+            53
+          ],
+          "source_rgba": [
+            163,
+            102,
+            49,
+            251
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            163,
+            102,
+            49,
+            251
+          ]
+        },
+        {
+          "xy": [
+            40,
+            53
+          ],
+          "source_rgba": [
+            195,
+            127,
+            63,
+            250
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            195,
+            127,
+            63,
+            250
+          ]
+        },
+        {
+          "xy": [
+            60,
+            60
+          ],
+          "source_rgba": [
+            173,
+            119,
+            66,
+            255
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            173,
+            119,
+            66,
+            255
+          ]
+        }
+      ]
+    },
+    {
+      "frame": "adult_M_loincloth_short/S/carry",
+      "source_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_loincloth_short/S/carry/source.png",
+      "source_sha256": "1b53b608a28de1a0b4022414a2ed2f4ab86e002dbe24937c099e12544e4d8742",
+      "skin_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_loincloth_short/S/carry/skin.png",
+      "skin_sha256": "b647dcf6ae08b30dbeac52ea194f28e914777b4a258924acee20ba965957b73c",
+      "hair_sha256": "3c2f12bb7fd6083bed2306ba6735a5c44c2b0a610b9c3f58b54c93032e26321f",
+      "hair_reference_sha256": "b6488dd5bf05b837a711b7d73d2158ee80358c4fc27d7f69adbf29a1ec2311e9",
+      "outline_sha256": "5ca1c227193cd4baa085c35b8bcc31eda167ea70be1d4eaac03b2671c00542d9",
+      "bake_sha256": {
+        "v1": "647479c972ce1bc6079d53af88e81c6253811ba434ee0d0f8d09f90cd0913ff5",
+        "v2": "05b10d64bc3cbb2e76b776fff253d39d8c59b60f0b1c33c6834257ba1b653a1f",
+        "v3": "885c84eff636e2e6be95d95255b6953987d2a6681c6cc421087a29deba5cceac",
+        "v4": "2441b2db1d74efad148c3fc483c8e137b029226142c5735d70b317eeb2349872",
+        "v5": "49c69fe4f7e55b87c7de877cfd16758403632dc9ffc09b176f4e1e3cc9adcb4e",
+        "v6": "d4e82e8cbf8350852f3e98f1d95dd502b48fca32e46a8a7619635bc2fb2024f5"
+      },
+      "audit_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_loincloth_short/S/carry/audit.png",
+      "audit_sha256": "12ccfe22e95d9ded7a18c3108498996715fd908d47f6b1bc0cb9ebd42e76a71e",
+      "masks_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_loincloth_short/S/carry/masks.png",
+      "masks_sha256": "17b1860026596bc332182319c5c1ed298b9a951d9f06c87da6489a92a1a7b2ef",
+      "prior_finding_id": "CV006",
+      "source_semantics_basis": "Wood classification and clear v2 overlays were actually viewed in prior reviews; v3 source/masks/tints here are byte-identical to v2. These unchanged panels were not newly viewed in v3.",
+      "witness_verdict": "UNCHANGED_CLEAR",
+      "exact_pixel_examples": [
+        {
+          "xy": [
+            56,
+            56
+          ],
+          "source_rgba": [
+            186,
+            126,
+            74,
+            248
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            186,
+            126,
+            74,
+            248
+          ]
+        },
+        {
+          "xy": [
+            57,
+            56
+          ],
+          "source_rgba": [
+            194,
+            134,
+            82,
+            255
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            194,
+            134,
+            82,
+            255
+          ]
+        },
+        {
+          "xy": [
+            57,
+            57
+          ],
+          "source_rgba": [
+            226,
+            160,
+            103,
+            249
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            226,
+            160,
+            103,
+            249
+          ]
+        },
+        {
+          "xy": [
+            58,
+            57
+          ],
+          "source_rgba": [
+            172,
+            118,
+            72,
+            255
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            172,
+            118,
+            72,
+            255
+          ]
+        },
+        {
+          "xy": [
+            58,
+            58
+          ],
+          "source_rgba": [
+            176,
+            124,
+            78,
+            254
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            176,
+            124,
+            78,
+            254
+          ]
+        }
+      ]
+    },
+    {
+      "frame": "adult_F_fur_cloak_short/S/carry",
+      "source_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_F_fur_cloak_short/S/carry/source.png",
+      "source_sha256": "1519f9365418ea2637512a660579db82e224516a061a66118232149f8b3ca60d",
+      "skin_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_F_fur_cloak_short/S/carry/skin.png",
+      "skin_sha256": "280cd16e604f74332e8379d8c1b70c73f48d94bc7d0c290a14b1e08fb9478b98",
+      "hair_sha256": "71f705cc6c28676d5919b4f380d5a8687c23f2e0fecb499442e3605577d0cd12",
+      "hair_reference_sha256": "dce6070e6d5c6ef829bb57e63ba5f9be02f53090980e9bf56095e5516760cada",
+      "outline_sha256": "b9fd9fffe6c20761eb02d8ab4c63e6ed9b3befbf0977592d22ff3a42da5376be",
+      "bake_sha256": {
+        "v1": "8d68d0ba969974e9b08dfcdab3b9e4a0da21a4b8a64a32584a9ad7ddbcd7f55b",
+        "v2": "9bdf79efb2d4ba11a7711c7644cbbb26cebd5dccec91e09d5981153f0c773fec",
+        "v3": "152ca8a4674acf5a85f02e10c90bb7475cbe010e6aa730bdd38ebab33f470d98",
+        "v4": "3ea2188624f540eef69c5ca66d1df48f1d66444337678083313ca0dd4a233b57",
+        "v5": "bea641be0f4dd721934e64b1e6967a22986f938ff051ebcec544ddb49ff20120",
+        "v6": "e8cb67e839562f5d6159a8880b49005317c2552cad7b7cf8270d436b687fd0c5"
+      },
+      "audit_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_F_fur_cloak_short/S/carry/audit.png",
+      "audit_sha256": "5759b0ea1e9a50eaabef3538d8efda804988c6aa4254840e36d92d71914f3ee0",
+      "masks_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_F_fur_cloak_short/S/carry/masks.png",
+      "masks_sha256": "c6fc9cd87d2cf6f99ffbb2e17af00c88c4620b429042c6a4b9f377273e9b433b",
+      "prior_finding_id": "CV007",
+      "source_semantics_basis": "Wood classification and clear v2 overlays were actually viewed in prior reviews; v3 source/masks/tints here are byte-identical to v2. These unchanged panels were not newly viewed in v3.",
+      "witness_verdict": "UNCHANGED_CLEAR",
+      "exact_pixel_examples": [
+        {
+          "xy": [
+            27,
+            52
+          ],
+          "source_rgba": [
+            163,
+            110,
+            51,
+            255
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            163,
+            110,
+            51,
+            255
+          ]
+        }
+      ]
+    },
+    {
+      "frame": "adult_F_fur_cloak_short/E/carry",
+      "source_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_F_fur_cloak_short/E/carry/source.png",
+      "source_sha256": "19f19b96e8d442018703b34e70bd5e0cd63355c81153ee495d4e50a2b634d78e",
+      "skin_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_F_fur_cloak_short/E/carry/skin.png",
+      "skin_sha256": "2f9d7e4fda8059455ab8dc06cf7b5808df24913e13b9fe4692d39fd11b49b1cb",
+      "hair_sha256": "69daba8028328f5d3120fb6849798cc42016a5389e3e40128fa776636909cd3e",
+      "hair_reference_sha256": "f0917baf39ef15b37ff1c693be9434854e475251fa075177a43c7510285b14d8",
+      "outline_sha256": "3fc1a6f450c34a44499dfb4816bdd58e90c87fd39128257ea3440eb9652ea3dc",
+      "bake_sha256": {
+        "v1": "1f83e52bd1348ec5e815b63841091b2bb30800cf07b6416a9ddd60978b5d0e8e",
+        "v2": "2cdfbf7cf26c4e26c7da7e491553a235819693ce82e1acac2dba0dba936afda6",
+        "v3": "bee2a5ff99bfb4442780504f3bc449c36f4a783861d570f01f64b319e9b0bbb3",
+        "v4": "e5b933e6bc1467068bd767863054f62f09aac7eacddf301b92d044bcf302a869",
+        "v5": "3f03236c673889ae784275cd161813a362903238a63b09bde5681878ce1b5919",
+        "v6": "dfbf809a8795147589d5bccf627b75b21bf9b57a258daaae2505091aaae3eedd"
+      },
+      "audit_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_F_fur_cloak_short/E/carry/audit.png",
+      "audit_sha256": "0ed7584b69bf4646298e5e10ff6fc9087cf9cb71c08b78f886a1590f7eb9cb8f",
+      "masks_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_F_fur_cloak_short/E/carry/masks.png",
+      "masks_sha256": "ffe74e4587982eeb06f49d45c1493712074242fac640a44b50728afa07f0da06",
+      "prior_finding_id": "CV008",
+      "source_semantics_basis": "Wood classification and clear v2 overlays were actually viewed in prior reviews; v3 source/masks/tints here are byte-identical to v2. These unchanged panels were not newly viewed in v3.",
+      "witness_verdict": "UNCHANGED_CLEAR",
+      "exact_pixel_examples": [
+        {
+          "xy": [
+            29,
+            52
+          ],
+          "source_rgba": [
+            174,
+            119,
+            53,
+            255
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            174,
+            119,
+            53,
+            255
+          ]
+        }
+      ]
+    },
+    {
+      "frame": "adult_F_hide_wrap_short/E/carry",
+      "source_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_F_hide_wrap_short/E/carry/source.png",
+      "source_sha256": "e29aad319f34415d8e6faca9a30871f81324bc57154d6d709e1f1c74376ac14f",
+      "skin_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_F_hide_wrap_short/E/carry/skin.png",
+      "skin_sha256": "f468e30d71f483c6cafbb8ad0555d7b7cf7ad52e0bcaf9a8988451bbfef82c9a",
+      "hair_sha256": "0a1697a7297f99d28ff91036ea8536e1465dd9ab734426dddc43a2170a58390a",
+      "hair_reference_sha256": "f2c0ade9c6feeaa8afd652cd5b28ac2d66064fd319b6f234ed47fba8322cf3ae",
+      "outline_sha256": "cf13b3bf06b77cf334907ff36e93d155f1ef1ad5a60d92585fda86572ddb2091",
+      "bake_sha256": {
+        "v1": "acd87059a1d211a9bfe0f01135212518c1800fb8af23c0b0fd58b5d52f6881f9",
+        "v2": "db96d9f5438ff3d5199f840519e3536d6eb8277fbafdf422636adc6270e942c7",
+        "v3": "9933193942eb8e717c69952f50bad94465bcb306e32db7dd3c2297466651952f",
+        "v4": "6c7a940d4ddc61f7297e95d5564f1fdb4a38edbf37646b88aaca7cee761ef487",
+        "v5": "ff5356d43d1bf83e6f3703fe74e67156106124842dd454c7814799b286d9e89a",
+        "v6": "30db1eecddd859a8466f6a30eeb4dcc9da21cce634e5be763d3bad7fd41d4a2a"
+      },
+      "audit_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_F_hide_wrap_short/E/carry/audit.png",
+      "audit_sha256": "82c94947a17ced53ad80ec0e3d6543c0ca0d16063be1634dbae3e0bff4cae8b9",
+      "masks_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_F_hide_wrap_short/E/carry/masks.png",
+      "masks_sha256": "2dc7a4a01b8c1f2fadf9fca09f85ae0cfaf2d139dbfe26d749fe7b545ed17d6b",
+      "prior_finding_id": "CV009",
+      "source_semantics_basis": "Wood classification and clear v2 overlays were actually viewed in prior reviews; v3 source/masks/tints here are byte-identical to v2. These unchanged panels were not newly viewed in v3.",
+      "witness_verdict": "UNCHANGED_CLEAR",
+      "exact_pixel_examples": [
+        {
+          "xy": [
+            56,
+            58
+          ],
+          "source_rgba": [
+            160,
+            102,
+            49,
+            255
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            160,
+            102,
+            49,
+            255
+          ]
+        },
+        {
+          "xy": [
+            57,
+            62
+          ],
+          "source_rgba": [
+            166,
+            106,
+            48,
+            255
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            166,
+            106,
+            48,
+            255
+          ]
+        }
+      ]
+    },
+    {
+      "frame": "adult_M_hide_wrap_short/E/carry",
+      "source_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_hide_wrap_short/E/carry/source.png",
+      "source_sha256": "48a414ba88cf29a44cf9d64702e095d2c47edf16815de42582bec03ff431e559",
+      "skin_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_hide_wrap_short/E/carry/skin.png",
+      "skin_sha256": "525d16cffc04c2723bc868af47253923b18ea39b685bfa6e90665d0a2f433d3b",
+      "hair_sha256": "864589a96097a549abb6d6b4e641696c2478c2f63c78fead4e6387fa5a767d1a",
+      "hair_reference_sha256": "dd1aa462f77068d7a2bfd20d55d9133b0797012d418f60e67325d64f534139f2",
+      "outline_sha256": "bed47563623063df495c5474bc194b3cf069d7c6c00c82720cf3eddda9930687",
+      "bake_sha256": {
+        "v1": "d1b89f21b1442cd1ec63eb3d4009bdb287c3d456f2428e9cff34925df98d2f5c",
+        "v2": "a03543c2668aa32b70127e50578b88e62bb07b7ece1fa96065c1a7160f7b8ef1",
+        "v3": "b08c33a79e8b8d564dd32c7f4f6ccbb295ae6e582ca83cc56cd8fd984b023c91",
+        "v4": "99563a850eeecbc5a73d892c64f79e9ee919b5b4c2fe2ce23dbdc20a3806beeb",
+        "v5": "32ecba3fb7c3a4f19beef0aab86ea49b0f908a6e885e04dc28ce3a028a21eb8e",
+        "v6": "cd9abb18a2a125a641a4684839081f23e2ed3e76d450b1163e87a961bc6eb44d"
+      },
+      "audit_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_hide_wrap_short/E/carry/audit.png",
+      "audit_sha256": "6521a8b96c29ecccf45fb603d26b81dda19894c05e6fb2dfbdded2586b168cf6",
+      "masks_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_hide_wrap_short/E/carry/masks.png",
+      "masks_sha256": "7e578d2f3f98e69f2f669ca3ab2352a90f0eaab1b4386191ff47c200793675d8",
+      "prior_finding_id": "CV010",
+      "source_semantics_basis": "Wood classification and clear v2 overlays were actually viewed in prior reviews; v3 source/masks/tints here are byte-identical to v2. These unchanged panels were not newly viewed in v3.",
+      "witness_verdict": "UNCHANGED_CLEAR",
+      "exact_pixel_examples": [
+        {
+          "xy": [
+            52,
+            54
+          ],
+          "source_rgba": [
+            158,
+            99,
+            44,
+            255
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            158,
+            99,
+            44,
+            255
+          ]
+        },
+        {
+          "xy": [
+            55,
+            54
+          ],
+          "source_rgba": [
+            169,
+            110,
+            52,
+            255
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            169,
+            110,
+            52,
+            255
+          ]
+        },
+        {
+          "xy": [
+            20,
+            59
+          ],
+          "source_rgba": [
+            238,
+            168,
+            96,
+            255
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            238,
+            168,
+            96,
+            255
+          ]
+        }
+      ]
+    },
+    {
+      "frame": "adult_M_loincloth_short/E/carry",
+      "source_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_loincloth_short/E/carry/source.png",
+      "source_sha256": "9ffb62932bd44f4671400142fa66516319e18bdfb6535b10fa5be55e9acce7fd",
+      "skin_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_loincloth_short/E/carry/skin.png",
+      "skin_sha256": "0c2ed906707e6cc43e5f56c6cf5fd377c596a0a6e8138ec024fc67c7b4c9428b",
+      "hair_sha256": "a44666d4d865e50dddf073103391eabc7c81701fce245fdd56837219613f3e91",
+      "hair_reference_sha256": "464d48d291d3376c4362f3beae26110281f6c4fca7ffd98cd3b2e861e4913310",
+      "outline_sha256": "892e0ae592804761958afd838ff77283911103a2c1bdf936e3e7c7d1067901c3",
+      "bake_sha256": {
+        "v1": "1bfd799d2a5ddf3e2591b7a36faccece46367cd792946b26809af9a8f6e9efae",
+        "v2": "b8d2a98bf4c5873ebfc0f4adbd7219c6d1847de893b2c0acc7ae5e55d5fa67ff",
+        "v3": "4fdae4c0dbc450a586fe96bebfffce66a99a291daad2458e16c40425f17ec14f",
+        "v4": "dfa420c45e81df71933bec7fa3fd04b636ca1d75295764e6ea0eb035959e3d66",
+        "v5": "d135479f17ac6ab041e1c11a2e1a6e1608f8c822e10032ac5f776184b4852032",
+        "v6": "0b4b9dc46ab7853fc59e4c90c9e8ba07c2cb4b4bfe68258c00fc7c7adb4d5ea5"
+      },
+      "audit_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_loincloth_short/E/carry/audit.png",
+      "audit_sha256": "5c71be961946a896202353d3fb6b85a4f35dc2bf5b3ff3560266998d17d8d0f4",
+      "masks_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_loincloth_short/E/carry/masks.png",
+      "masks_sha256": "53ddd21861e436e87f2777ec0db497421966cdd42aabf322cc1cd2bf5b3a03e6",
+      "prior_finding_id": "CV011",
+      "source_semantics_basis": "Wood classification and clear v2 overlays were actually viewed in prior reviews; v3 source/masks/tints here are byte-identical to v2. These unchanged panels were not newly viewed in v3.",
+      "witness_verdict": "UNCHANGED_CLEAR",
+      "exact_pixel_examples": [
+        {
+          "xy": [
+            31,
+            54
+          ],
+          "source_rgba": [
+            168,
+            114,
+            44,
+            255
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            168,
+            114,
+            44,
+            255
+          ]
+        },
+        {
+          "xy": [
+            32,
+            54
+          ],
+          "source_rgba": [
+            160,
+            108,
+            44,
+            255
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            160,
+            108,
+            44,
+            255
+          ]
+        }
+      ]
+    }
+  ],
+  "adjacent_apron_witnesses": {
+    "frame": "adult_F_fur_cloak_bun/E/walk_a",
+    "source_semantics_basis": "Source-author apron witnesses; consistent with adjacent untinted front garment in the actually viewed v3 panels.",
+    "exact_pixel_examples": [
+      {
+        "xy": [
+          47,
+          83
+        ],
+        "source_rgba": [
+          157,
+          100,
+          46,
+          248
+        ],
+        "skin_mask": 0,
+        "hair_mask": 0,
+        "v4_rgba": [
+          157,
+          100,
+          46,
+          248
+        ]
+      },
+      {
+        "xy": [
+          47,
+          84
+        ],
+        "source_rgba": [
+          171,
+          107,
+          45,
+          249
+        ],
+        "skin_mask": 0,
+        "hair_mask": 0,
+        "v4_rgba": [
+          171,
+          107,
+          45,
+          249
+        ]
+      }
+    ]
+  },
+  "retained_uncertainties": [
+    {
+      "look": "adult_M_loincloth_long_tied",
+      "facing": "E",
+      "pose": "idle",
+      "source_dimensions": [
+        80,
+        112
+      ],
+      "source_sha256": "3bb014b1a1217106844e7820d150b74d6af3b80ae0323ad366a0eabcea1cca39",
+      "skin_sha256": "9af46625e0c36369c1f0c0b5cc87b6f635f58b3e5c3cc38637413d6e959eae27",
+      "hair_sha256": "b33acf5f4e044fb918058875aa50db84c72b8d85c7cbf0beabb3bb720800db10",
+      "v4_sha256": "ae2682c7d0bafc9b7ce6a4f82ffa908216ed05ee3b08df543b893a35416256fb",
+      "audit_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/adult_M_loincloth_long_tied/E/idle/audit.png",
+      "audit_sha256": "7b5ae2c0db11a49fb3f3e7d8858f477eb2f1ceab79ff807bd9c873863deb4d3e",
+      "exact_pixel_examples": [
+        {
+          "xy": [
+            31,
+            56
+          ],
+          "source_rgba": [
+            76,
+            53,
+            36,
+            252
+          ],
+          "skin_mask": 0,
+          "hair_mask": 255,
+          "v4_rgba": [
+            146,
+            150,
+            140,
+            252
+          ]
+        },
+        {
+          "xy": [
+            32,
+            58
+          ],
+          "source_rgba": [
+            30,
+            22,
+            15,
+            254
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            30,
+            22,
+            15,
+            254
+          ]
+        },
+        {
+          "xy": [
+            33,
+            60
+          ],
+          "source_rgba": [
+            38,
+            27,
+            13,
+            73
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            38,
+            27,
+            13,
+            73
+          ]
+        }
+      ],
+      "id": "V2U001",
+      "verdict": "UNCERTAIN",
+      "kind": "possible_omitted_hair",
+      "description": "The rear/lower ponytail stays dark while the scalp becomes grey. Some ponytail interior is selected, but a dark lower patch remains unchanged. The same source ambiguity remains on the v2 enlarged panel.",
+      "region_bbox_approx": [
+        29,
+        49,
+        37,
+        62
+      ],
+      "prior_finding_id": "CV012",
+      "source_specific_uncertainty": "The unselected patch is very dark and partly translucent at its edge. It may belong to intentionally protected ink/outline. The broad visual review cannot decide whether this is excessive hair omission or establish the formal 50 percent silhouette gate.",
+      "carried_from_v2_finding_id": "V2U001",
+      "carryforward_method": "Source, skin, hair and all six tinted images are independently byte-identical to v2; semantic uncertainty is retained without reclassification. Not newly viewed in this bounded v3 review.",
+      "v3_image_bindings": {
+        "frame": "adult_M_loincloth_long_tied/E/idle",
+        "source_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_loincloth_long_tied/E/idle/source.png",
+        "source_sha256": "3bb014b1a1217106844e7820d150b74d6af3b80ae0323ad366a0eabcea1cca39",
+        "skin_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_loincloth_long_tied/E/idle/skin.png",
+        "skin_sha256": "9af46625e0c36369c1f0c0b5cc87b6f635f58b3e5c3cc38637413d6e959eae27",
+        "hair_sha256": "b33acf5f4e044fb918058875aa50db84c72b8d85c7cbf0beabb3bb720800db10",
+        "hair_reference_sha256": "3886225150e9712561ad1b1d2726455a607234141e5761a93b1bfe82f3444db9",
+        "outline_sha256": "247e33ed2c6f5917f8ebbb046a0af439ec49fbee8c61f0c2b4b7804c2aff09d3",
+        "bake_sha256": {
+          "v1": "75b731ed48883ee3ee5917033de29f75ecfb9c477b737866278a01d388f7b67d",
+          "v2": "4c9f6d909840ae058caf563b9c6338eb3be1db97ad74f1a71ace934bce2a6fc6",
+          "v3": "cc68f754c6a283719d74d0a650025d0dc751dc0ab0a35eab303b57fd59505094",
+          "v4": "ae2682c7d0bafc9b7ce6a4f82ffa908216ed05ee3b08df543b893a35416256fb",
+          "v5": "199f93f51825d73f03d17a1c460349a3a1bf829f78a9e4f4b4ef32fd741a5772",
+          "v6": "b9f752206ee1ab1fa07665f3f18b6a307f0e4985e4ca4ea9aba806d99b833233"
+        },
+        "audit_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_loincloth_long_tied/E/idle/audit.png",
+        "audit_sha256": "9568f9c8f1298f4b055dd6b1661360151e764b93da95b3d06e88a66ac1d4b08c",
+        "masks_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_loincloth_long_tied/E/idle/masks.png",
+        "masks_sha256": "d23eb6654b353ed2225cb4e0f21240fa7ba41872b7f777c7e2d7b72b2edcd1be"
+      }
+    },
+    {
+      "look": "child_M_hide_wrap_long_tied",
+      "facing": "E",
+      "pose": "work_a",
+      "source_dimensions": [
+        80,
+        112
+      ],
+      "source_sha256": "cb7bfaf2d914c9f20a0117a0b00624afe958843e32e184154ef9b68390ee30e5",
+      "skin_sha256": "5a9697381abb6d2170811ff6954696fc8db70290dde58043ccb67c458fdae9ea",
+      "hair_sha256": "c05efc6a0794589367a95ac6c5677bf61fc17271b3d5ec39ad89b12493276006",
+      "v4_sha256": "152d8b195e9984b8219b28c1387cc326a2ed56b76cca4d96e97464e38494d302",
+      "audit_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/child_M_hide_wrap_long_tied/E/work_a/audit.png",
+      "audit_sha256": "eef218666ddd8a3a3594be85a3364aecf8559d0854e3bdfb6cb8906c8a92efc1",
+      "exact_pixel_examples": [
+        {
+          "xy": [
+            32,
+            72
+          ],
+          "source_rgba": [
+            59,
+            38,
+            26,
+            251
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            59,
+            38,
+            26,
+            251
+          ]
+        },
+        {
+          "xy": [
+            32,
+            74
+          ],
+          "source_rgba": [
+            56,
+            38,
+            27,
+            251
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            56,
+            38,
+            27,
+            251
+          ]
+        },
+        {
+          "xy": [
+            33,
+            76
+          ],
+          "source_rgba": [
+            18,
+            11,
+            8,
+            239
+          ],
+          "skin_mask": 0,
+          "hair_mask": 0,
+          "v4_rgba": [
+            18,
+            11,
+            8,
+            239
+          ]
+        }
+      ],
+      "id": "V2U002",
+      "verdict": "UNCERTAIN",
+      "kind": "possible_omitted_hair",
+      "description": "Most of the small ponytail behind the raised arm remains dark while the main hair cap changes color. The same source ambiguity remains on the v2 enlarged panel.",
+      "region_bbox_approx": [
+        30,
+        69,
+        35,
+        79
+      ],
+      "prior_finding_id": "CV013",
+      "source_specific_uncertainty": "The ponytail is small, dark, and partly overlaps the raised arm/axe area. Source colors alone do not establish whether the remaining dark pixels should be tintable hair or protected ink. No formal hair-coverage verdict is made.",
+      "carried_from_v2_finding_id": "V2U002",
+      "carryforward_method": "Source, skin, hair and all six tinted images are independently byte-identical to v2; semantic uncertainty is retained without reclassification. Not newly viewed in this bounded v3 review.",
+      "v3_image_bindings": {
+        "frame": "child_M_hide_wrap_long_tied/E/work_a",
+        "source_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/child_M_hide_wrap_long_tied/E/work_a/source.png",
+        "source_sha256": "cb7bfaf2d914c9f20a0117a0b00624afe958843e32e184154ef9b68390ee30e5",
+        "skin_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/child_M_hide_wrap_long_tied/E/work_a/skin.png",
+        "skin_sha256": "5a9697381abb6d2170811ff6954696fc8db70290dde58043ccb67c458fdae9ea",
+        "hair_sha256": "c05efc6a0794589367a95ac6c5677bf61fc17271b3d5ec39ad89b12493276006",
+        "hair_reference_sha256": "3e1746c69920b5625819c1e503a40e39df098290ed227962a0e4d1193e6c2328",
+        "outline_sha256": "49976ab356cbd4aa9939d5d50eb91dd9b719509ddb27b64b284aa0abf3ae9bf5",
+        "bake_sha256": {
+          "v1": "abb73884b3ab08de62a36837a463d02dc96601b33e379b44c11e7bb5fe3d41da",
+          "v2": "7c5ccfa59ad79a93036a61da9c39f01e0e70a9f599945ad8b7417e3ca3abe09d",
+          "v3": "cd81ee3d73f4a61b82a692d8d4a0c1f2dc56d8025e0e76ca9797d2893ec06d45",
+          "v4": "152d8b195e9984b8219b28c1387cc326a2ed56b76cca4d96e97464e38494d302",
+          "v5": "c6157ef9d605d11a07db3196eef7ddd226ed034091cef82184f0bff8489cf361",
+          "v6": "cf695204426538b618a436c60378c6cbb8bbc41fbd51ad11c965034997632718"
+        },
+        "audit_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/child_M_hide_wrap_long_tied/E/work_a/audit.png",
+        "audit_sha256": "59010444edf7c936d2f2317e4ad0911b9ad59d9abe0a9a0570d6748b1f2de144",
+        "masks_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/child_M_hide_wrap_long_tied/E/work_a/masks.png",
+        "masks_sha256": "253946a0bd0658e39aa2341bd99445533e49b9b692ca4fc9b6ace8009dc598c7"
+      }
+    },
+    {
+      "look": "adult_M_hide_wrap_short",
+      "facing": "E",
+      "pose": "carry",
+      "source_dimensions": [
+        80,
+        112
+      ],
+      "source_sha256": "48a414ba88cf29a44cf9d64702e095d2c47edf16815de42582bec03ff431e559",
+      "skin_sha256": "525d16cffc04c2723bc868af47253923b18ea39b685bfa6e90665d0a2f433d3b",
+      "hair_sha256": "864589a96097a549abb6d6b4e641696c2478c2f63c78fead4e6387fa5a767d1a",
+      "v4_sha256": "99563a850eeecbc5a73d892c64f79e9ee919b5b4c2fe2ce23dbdc20a3806beeb",
+      "audit_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/adult_M_hide_wrap_short/E/carry/audit.png",
+      "audit_sha256": "b85225635f46c16a05b8be637951b918b116e18ded2d1c8cc30fde4ab5cc2daf",
+      "id": "V2U003",
+      "verdict": "UNCERTAIN",
+      "kind": "possible_skin_on_clothing",
+      "description": "A thin selected vertical strip follows the image-right torso/garment seam below the arm. The same source ambiguity remains on the v2 enlarged panel.",
+      "region_bbox_approx": [
+        44,
+        73,
+        48,
+        91
+      ],
+      "prior_finding_id": "CV014",
+      "source_specific_uncertainty": "The source is too ambiguous at this narrow seam to distinguish a small exposed-skin strip from hide trim confidently. Recorded for source-only review, not counted as confirmed clothing leakage.",
+      "carried_from_v2_finding_id": "V2U003",
+      "carryforward_method": "Source, skin, hair and all six tinted images are independently byte-identical to v2; semantic uncertainty is retained without reclassification. Not newly viewed in this bounded v3 review.",
+      "v3_image_bindings": {
+        "frame": "adult_M_hide_wrap_short/E/carry",
+        "source_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_hide_wrap_short/E/carry/source.png",
+        "source_sha256": "48a414ba88cf29a44cf9d64702e095d2c47edf16815de42582bec03ff431e559",
+        "skin_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_hide_wrap_short/E/carry/skin.png",
+        "skin_sha256": "525d16cffc04c2723bc868af47253923b18ea39b685bfa6e90665d0a2f433d3b",
+        "hair_sha256": "864589a96097a549abb6d6b4e641696c2478c2f63c78fead4e6387fa5a767d1a",
+        "hair_reference_sha256": "dd1aa462f77068d7a2bfd20d55d9133b0797012d418f60e67325d64f534139f2",
+        "outline_sha256": "bed47563623063df495c5474bc194b3cf069d7c6c00c82720cf3eddda9930687",
+        "bake_sha256": {
+          "v1": "d1b89f21b1442cd1ec63eb3d4009bdb287c3d456f2428e9cff34925df98d2f5c",
+          "v2": "a03543c2668aa32b70127e50578b88e62bb07b7ece1fa96065c1a7160f7b8ef1",
+          "v3": "b08c33a79e8b8d564dd32c7f4f6ccbb295ae6e582ca83cc56cd8fd984b023c91",
+          "v4": "99563a850eeecbc5a73d892c64f79e9ee919b5b4c2fe2ce23dbdc20a3806beeb",
+          "v5": "32ecba3fb7c3a4f19beef0aab86ea49b0f908a6e885e04dc28ce3a028a21eb8e",
+          "v6": "cd9abb18a2a125a641a4684839081f23e2ed3e76d450b1163e87a961bc6eb44d"
+        },
+        "audit_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_hide_wrap_short/E/carry/audit.png",
+        "audit_sha256": "6521a8b96c29ecccf45fb603d26b81dda19894c05e6fb2dfbdded2586b168cf6",
+        "masks_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_hide_wrap_short/E/carry/masks.png",
+        "masks_sha256": "7e578d2f3f98e69f2f669ca3ab2352a90f0eaab1b4386191ff47c200793675d8"
+      }
+    },
+    {
+      "look": "adult_M_loincloth_short",
+      "facing": "S",
+      "pose": "carry",
+      "source_dimensions": [
+        80,
+        112
+      ],
+      "source_sha256": "1b53b608a28de1a0b4022414a2ed2f4ab86e002dbe24937c099e12544e4d8742",
+      "skin_sha256": "b647dcf6ae08b30dbeac52ea194f28e914777b4a258924acee20ba965957b73c",
+      "hair_sha256": "3c2f12bb7fd6083bed2306ba6735a5c44c2b0a610b9c3f58b54c93032e26321f",
+      "v4_sha256": "2441b2db1d74efad148c3fc483c8e137b029226142c5735d70b317eeb2349872",
+      "audit_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/adult_M_loincloth_short/S/carry/audit.png",
+      "audit_sha256": "173dfe449cbdb63cb4e4c18fd329222aecb429685c0d20b2c8975567584f13f4",
+      "exact_pixel_examples": [
+        {
+          "xy": [
+            28,
+            59
+          ],
+          "source_rgba": [
+            183,
+            111,
+            65,
+            253
+          ],
+          "skin_mask": 255,
+          "hair_mask": 0,
+          "v4_rgba": [
+            179,
+            161,
+            133,
+            253
+          ]
+        }
+      ],
+      "id": "V2U004",
+      "verdict": "UNCERTAIN",
+      "kind": "skin_at_hair_log_junction",
+      "description": "An isolated selected skin pixel at (28,59) sits on the image-left hair/log junction. Its source location is not cleanly separable as a visible ear versus wood in these panels.",
+      "region_bbox_approx": [
+        27,
+        58,
+        30,
+        61
+      ],
+      "prior_finding_id": null,
+      "source_specific_uncertainty": "Could be a small visible ear/skin pixel or log leakage. Source-only clarification was requested from the source annotator; no answer was available when this bounded review was recorded. It is not classified as a confirmed new spill.",
+      "carried_from_v2_finding_id": "V2U004",
+      "carryforward_method": "Source, skin, hair and all six tinted images are independently byte-identical to v2; semantic uncertainty is retained without reclassification. Not newly viewed in this bounded v3 review.",
+      "v3_image_bindings": {
+        "frame": "adult_M_loincloth_short/S/carry",
+        "source_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_loincloth_short/S/carry/source.png",
+        "source_sha256": "1b53b608a28de1a0b4022414a2ed2f4ab86e002dbe24937c099e12544e4d8742",
+        "skin_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_loincloth_short/S/carry/skin.png",
+        "skin_sha256": "b647dcf6ae08b30dbeac52ea194f28e914777b4a258924acee20ba965957b73c",
+        "hair_sha256": "3c2f12bb7fd6083bed2306ba6735a5c44c2b0a610b9c3f58b54c93032e26321f",
+        "hair_reference_sha256": "b6488dd5bf05b837a711b7d73d2158ee80358c4fc27d7f69adbf29a1ec2311e9",
+        "outline_sha256": "5ca1c227193cd4baa085c35b8bcc31eda167ea70be1d4eaac03b2671c00542d9",
+        "bake_sha256": {
+          "v1": "647479c972ce1bc6079d53af88e81c6253811ba434ee0d0f8d09f90cd0913ff5",
+          "v2": "05b10d64bc3cbb2e76b776fff253d39d8c59b60f0b1c33c6834257ba1b653a1f",
+          "v3": "885c84eff636e2e6be95d95255b6953987d2a6681c6cc421087a29deba5cceac",
+          "v4": "2441b2db1d74efad148c3fc483c8e137b029226142c5735d70b317eeb2349872",
+          "v5": "49c69fe4f7e55b87c7de877cfd16758403632dc9ffc09b176f4e1e3cc9adcb4e",
+          "v6": "d4e82e8cbf8350852f3e98f1d95dd502b48fca32e46a8a7619635bc2fb2024f5"
+        },
+        "audit_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_loincloth_short/S/carry/audit.png",
+        "audit_sha256": "12ccfe22e95d9ded7a18c3108498996715fd908d47f6b1bc0cb9ebd42e76a71e",
+        "masks_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v3/adult_M_loincloth_short/S/carry/masks.png",
+        "masks_sha256": "17b1860026596bc332182319c5c1ed298b9a951d9f06c87da6489a92a1a7b2ef"
+      }
+    }
+  ],
+  "looks": [
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "Two-frame bounded v3 repair review for the listed frame; unchanged remaining frame-image evidence carried from verified v2.",
+      "newly_viewed_v3_frames": [
+        "adult_F_fur_cloak_bun/E/walk_a"
+      ],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/adult_F_fur_cloak_bun/contact.png",
+      "v2_contact_sha256": "596e62ab8af57367fa19f3b0706f86d6e24e2ef887356bb5325f5bf8aac4f35b",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "adult_F_fur_cloak_long_tied",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/adult_F_fur_cloak_long_tied/contact.png",
+      "v2_contact_sha256": "b3d158dafcf1d3ded0037ec8b2f2d63f15cf0d96240879754c07a6cc119ca6f3",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "adult_F_fur_cloak_short",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/adult_F_fur_cloak_short/contact.png",
+      "v2_contact_sha256": "2d8b4b31d4c92648a2f58779a8da4a88df159a61dcc7cf71004fa65720c3051f",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "adult_F_hide_wrap_bun",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/adult_F_hide_wrap_bun/contact.png",
+      "v2_contact_sha256": "680cdcad9fecc15fa7ca4af66f31279aad6d26649bc37833359884d39e99ecdd",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "adult_F_hide_wrap_long_tied",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/adult_F_hide_wrap_long_tied/contact.png",
+      "v2_contact_sha256": "64770dfe63e9c9dfd478f36bb2061995ebec87edfbb515ac10b98b3b27769529",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "adult_F_hide_wrap_short",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/adult_F_hide_wrap_short/contact.png",
+      "v2_contact_sha256": "1329e8fa4cf46d736efe221ec887cc851fc52700e96c0b33d54620790f43941f",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "adult_F_loincloth_bun",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/adult_F_loincloth_bun/contact.png",
+      "v2_contact_sha256": "fe57ac704a1e42a2dd33890c2b5fd54645642cc4032586f41a493ea4c3c0eb51",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "adult_F_loincloth_long_tied",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/adult_F_loincloth_long_tied/contact.png",
+      "v2_contact_sha256": "beb0131c4b7985cca7a063b29c1e019b74ecb62f433a0a1c71957e55ba9ee81f",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "adult_F_loincloth_short",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/adult_F_loincloth_short/contact.png",
+      "v2_contact_sha256": "8eafd22f4f1ef150352bc59fd108d64fbfd45bd99993630ce4e466ba4dee045e",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/adult_M_fur_cloak_bun/contact.png",
+      "v2_contact_sha256": "8c794c748e43110a1192d8d458b1914dfa74cae480d126f3cf360b42a7a0a100",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "adult_M_fur_cloak_short",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/adult_M_fur_cloak_short/contact.png",
+      "v2_contact_sha256": "8aafb35ebc5b87984a6887a231ce445ae3712e87ac914ac8c88896846a48a3cb",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "adult_M_hide_wrap_bun",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/adult_M_hide_wrap_bun/contact.png",
+      "v2_contact_sha256": "c52325e555b193e34c5c002a8c98d5fa906c47da9c41a5d31459ba6f43f8b08d",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "adult_M_hide_wrap_short",
+      "overall_visual_verdict": "UNCERTAIN",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/adult_M_hide_wrap_short/contact.png",
+      "v2_contact_sha256": "7946badbc88aa71cf1b2b83a8fcf90acc574e9b1c035b02e1d66cda08de2e661",
+      "uncertainty_finding_ids": [
+        "V2U003"
+      ],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "adult_M_loincloth_bun",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/adult_M_loincloth_bun/contact.png",
+      "v2_contact_sha256": "2f020e3d6dc9939473a57d74c22662e0e5332e7420becdf8d1fa990601801436",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "adult_M_loincloth_long_tied",
+      "overall_visual_verdict": "UNCERTAIN",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/adult_M_loincloth_long_tied/contact.png",
+      "v2_contact_sha256": "10113dc3046138a1908bfbc1c7bc0452c371d93ff53737fbc29baf4a5894ba85",
+      "uncertainty_finding_ids": [
+        "V2U001"
+      ],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "adult_M_loincloth_short",
+      "overall_visual_verdict": "UNCERTAIN",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/adult_M_loincloth_short/contact.png",
+      "v2_contact_sha256": "078fb70057fbd716cfe4a6abfa528c3e835cc819a94430f298b828b91c71e51d",
+      "uncertainty_finding_ids": [
+        "V2U004"
+      ],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/child_F_fur_cloak_bun/contact.png",
+      "v2_contact_sha256": "b3ac28c2cd2084b44be2201006a2bb047cf1e13c5f19253c69ded901aafc24e4",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/child_F_fur_cloak_long_tied/contact.png",
+      "v2_contact_sha256": "916ab0537d3e8d9f0c620fd235cfc37796838d9713ff1cb2c54d16caacf68467",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "child_F_fur_cloak_short",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/child_F_fur_cloak_short/contact.png",
+      "v2_contact_sha256": "9e4d3259dacfdeec7c0501f0c9682f55f75840e14b1a95dac6d4a298ee181a6f",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "child_F_hide_wrap_bun",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/child_F_hide_wrap_bun/contact.png",
+      "v2_contact_sha256": "1931f625930d4bfc8acd3c72e14ce9c1f7f22908ac552994a0ebde523de760a6",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "child_F_hide_wrap_long_tied",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/child_F_hide_wrap_long_tied/contact.png",
+      "v2_contact_sha256": "cf64e2059585ef3466136aaa935537610cda764bfcfe26389ba2bd22eb64826a",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "child_F_hide_wrap_short",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/child_F_hide_wrap_short/contact.png",
+      "v2_contact_sha256": "d1ac9c01afea5f8216d99e2b632f9421067d9ab7584f8f812ca7a0ca583f1956",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "child_F_loincloth_bun",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/child_F_loincloth_bun/contact.png",
+      "v2_contact_sha256": "f1316f6ff2fd957ba075887eddb119e43ddbf3680b1a0f83b181d6590dd3c72c",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "child_F_loincloth_long_tied",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/child_F_loincloth_long_tied/contact.png",
+      "v2_contact_sha256": "9ea8305e8ee213e9a002c415d40fcfa6fa5861c181b7b7e493d1b35a5a6e9a1d",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "child_F_loincloth_short",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/child_F_loincloth_short/contact.png",
+      "v2_contact_sha256": "9970c8ef2c7b383511ec1b8dd0a51e61e2921c3d5915b7e2ae6f77e5968de8cf",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "Two-frame bounded v3 repair review for the listed frame; unchanged remaining frame-image evidence carried from verified v2.",
+      "newly_viewed_v3_frames": [
+        "child_M_fur_cloak_bun/E/carry"
+      ],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/child_M_fur_cloak_bun/contact.png",
+      "v2_contact_sha256": "220f9b7370834c4bed1e48248a226d4e80b419da3b3fc91b1172087e4dd82d24",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "child_M_fur_cloak_long_tied",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/child_M_fur_cloak_long_tied/contact.png",
+      "v2_contact_sha256": "23ae001d4c5653e7096398f6f50f0dbab5c6cc910aa422135a2815f22aaf1c52",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "child_M_fur_cloak_short",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/child_M_fur_cloak_short/contact.png",
+      "v2_contact_sha256": "da6ec55690b9fe6390cda27a80386dbb6daa493b4fbdd9fa437f90e61211b5ec",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "child_M_hide_wrap_bun",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/child_M_hide_wrap_bun/contact.png",
+      "v2_contact_sha256": "b341d3deb94e99f0df00b9839cf54eb26aab5aab1c1b7e965d846ee31a1fd0f3",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "child_M_hide_wrap_long_tied",
+      "overall_visual_verdict": "UNCERTAIN",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/child_M_hide_wrap_long_tied/contact.png",
+      "v2_contact_sha256": "038d951eaa73b3000fb2bc48c640bd477ec9211d4a6a73964eb8acefe787ddc2",
+      "uncertainty_finding_ids": [
+        "V2U002"
+      ],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "child_M_hide_wrap_short",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/child_M_hide_wrap_short/contact.png",
+      "v2_contact_sha256": "675c7d4cbd72603a57a97798bd9b6392fad259054b7fe81fbbf0e4808bf0a648",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "child_M_loincloth_bun",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/child_M_loincloth_bun/contact.png",
+      "v2_contact_sha256": "4334caa28ec066e18f8a8acaf1a28fd2afea9297a34d7d3e10ce939ce8361790",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "child_M_loincloth_long_tied",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/child_M_loincloth_long_tied/contact.png",
+      "v2_contact_sha256": "cce578cf33a5f4fa8ddca8a9a6a6a4db1eb01b4cbd138db4c7b9b2457b74c00b",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    },
+    {
+      "look": "child_M_loincloth_short",
+      "overall_visual_verdict": "PASS",
+      "frame_count": 10,
+      "evidence_basis": "All ten frame-image evidence carried from v2 after independently verifying underlying source/mask/tint equality.",
+      "newly_viewed_v3_frames": [],
+      "new_v3_contact_actually_viewed": false,
+      "v2_contact_path": "/Users/rexxa/work/artpolish2-data/masks/frames_diagnostic_v2/child_M_loincloth_short/contact.png",
+      "v2_contact_sha256": "adbf53cd2aace0bad8f7de5c875d70746cd9a322050ce9513301bef5e49ae40c",
+      "uncertainty_finding_ids": [],
+      "pass_limit": "No confirmed remaining obvious failure was identified within the bounded plus inherited review; full pixel accuracy is not claimed."
+    }
+  ],
+  "limits": [
+    "Overall UNCERTAIN deliberately retains all four v2 unresolved source-boundary/ponytail findings without forced reclassification.",
+    "Zero confirmed remaining failures is narrower than whole-corpus pixel accuracy, strict40 mask PASS, formal hair50 coverage, runtime acceptance, or owner approval.",
+    "Prior v1/v2 FAIL reports remain unchanged; this bounded repair review does not erase their findings.",
+    "Broad contact review previously missed omissions found at enlargement, so inherited contact coverage is not treated as exhaustive semantic proof.",
+    "No generated portraits or blind-review targets were inspected.",
+    "The new audit caption reads v4 stored transform; repaired displayed frames were actually viewed and hash-bound."
+  ],
+  "owner_approval": "NOT_CLAIMED",
+  "full_pixel_accuracy": "NOT_CLAIMED",
+  "strict_40_frame_gate": "NOT_EVALUATED_BY_THIS_REVIEW"
+}

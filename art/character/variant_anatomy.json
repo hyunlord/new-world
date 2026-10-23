@@ -1,0 +1,915 @@
+{
+  "schema_version": 1,
+  "method": "Source-only 10x nearest-neighbour coordinate-grid annotation. Exposed face above beard and both forearm extents; never mask-derived. Transparent and immutable-outline pixels remain in the literal rectangle denominator. Independent source-only review corrections applied literally from docs/v8/artpolish2/ANATOMY_REGION_REVIEW.json. Prior annotation sha256=e6c265fbc5104600e54c651c09f861cf29ee9f358e000cc1330c4181c2903d3f; review sha256=ecf3a82db9b2eaac8a309dbf3c58804737acd310be2d68a6d9e073ff8e2a2903. No coverage denominator was shrunk to satisfy a threshold. Independent anatomy reviewer additionally proposed short-haired adult male fur-cloak head/hair envelope [29,47,44,63] and child female fur-cloak long-tied garment exclusion [43,91,46,95] from source pixels. The garment box conservatively excludes ambiguous hand/trim boundary (45,91); this uncertainty is retained. Adult male short-hair source envelope was refined by independent re-review to upper [29,47,44,57] union lower [33,57,44,63], preserving sideburn/beard while excluding detached fur-collar point (30,57).",
+  "annotated_by": "sprite_variants executor visual inspection",
+  "review_status": "INDEPENDENT_SOURCE_CORRECTIONS_APPLIED; 3 forearm extent uncertainties retained",
+  "frames": [
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "source": "art/character/route_i/adult_F_fur_cloak_bun/S/idle.png",
+      "source_sha256": "34831c2a1733a4ce81e06960c78c81881e07535ae6ad16296eef4b1f35a98bed",
+      "face": [
+        35,
+        57,
+        42,
+        65
+      ],
+      "forearms": [
+        [
+          26,
+          75,
+          30,
+          83
+        ],
+        [
+          44,
+          76,
+          48,
+          84
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "adult_F_fur_cloak_long_tied",
+      "source": "art/character/route_i/adult_F_fur_cloak_long_tied/S/idle.png",
+      "source_sha256": "7752d665d2d21c1593e6f9014ee3a134ab235681c55121fb398e4e201ee9e068",
+      "face": [
+        37,
+        56,
+        44,
+        64
+      ],
+      "forearms": [
+        [
+          26,
+          75,
+          30,
+          83
+        ],
+        [
+          46,
+          76,
+          50,
+          84
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "adult_F_fur_cloak_short",
+      "source": "art/character/route_i/adult_F_fur_cloak_short/S/idle.png",
+      "source_sha256": "b93b32485e0a2038b97bdfc5ea7d6c4e9c20c9b6582876747e983a08e4218968",
+      "face": [
+        35,
+        55,
+        42,
+        63
+      ],
+      "forearms": [
+        [
+          25,
+          76,
+          29,
+          83
+        ],
+        [
+          46,
+          76,
+          50,
+          84
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "adult_F_hide_wrap_bun",
+      "source": "art/character/route_i/adult_F_hide_wrap_bun/S/idle.png",
+      "source_sha256": "c548357f80708897392be558b86e0fad98b73ce12693c98f8e3aea132f7ffb7c",
+      "face": [
+        36,
+        56,
+        43,
+        64
+      ],
+      "forearms": [
+        [
+          27,
+          76,
+          31,
+          83
+        ],
+        [
+          46,
+          77,
+          50,
+          85
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "adult_F_hide_wrap_long_tied",
+      "source": "art/character/route_i/adult_F_hide_wrap_long_tied/S/idle.png",
+      "source_sha256": "25cdf72bf5b64b4d02e2d4ca34d78a76de58a174211ab8338f9d3a8c5cd6446a",
+      "face": [
+        38,
+        55,
+        44,
+        63
+      ],
+      "forearms": [
+        [
+          27,
+          76,
+          31,
+          83
+        ],
+        [
+          48,
+          77,
+          52,
+          84
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "adult_F_hide_wrap_short",
+      "source": "art/character/route_i/adult_F_hide_wrap_short/S/idle.png",
+      "source_sha256": "08cf7a69d6342d83667b1ffb402d41d9be47e0fbc7bd96d8b13996ac8af72e1c",
+      "face": [
+        35,
+        55,
+        42,
+        63
+      ],
+      "forearms": [
+        [
+          26,
+          76,
+          30,
+          83
+        ],
+        [
+          47,
+          77,
+          51,
+          84
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "adult_F_loincloth_bun",
+      "source": "art/character/route_i/adult_F_loincloth_bun/S/idle.png",
+      "source_sha256": "22465fb470e1aa61afecac3e506596fa75e389fdc79076c0323f6fb1ed2dce30",
+      "face": [
+        37,
+        58,
+        44,
+        65
+      ],
+      "forearms": [
+        [
+          26,
+          77,
+          30,
+          84
+        ],
+        [
+          47,
+          78,
+          51,
+          85
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "adult_F_loincloth_long_tied",
+      "source": "art/character/route_i/adult_F_loincloth_long_tied/S/idle.png",
+      "source_sha256": "752163930586413cdaf3ddfd76f22f08d2960bbc9868c5073cb7bbf8dd75a2cb",
+      "face": [
+        38,
+        57,
+        44,
+        64
+      ],
+      "forearms": [
+        [
+          27,
+          76,
+          31,
+          83
+        ],
+        [
+          48,
+          77,
+          52,
+          84
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "adult_F_loincloth_short",
+      "source": "art/character/route_i/adult_F_loincloth_short/S/idle.png",
+      "source_sha256": "3497d79c1f1dfd5ce3679b736c52f0b913c00831e68a872de55fbe8fbb36ce66",
+      "face": [
+        35,
+        55,
+        42,
+        62
+      ],
+      "forearms": [
+        [
+          26,
+          76,
+          30,
+          83
+        ],
+        [
+          48,
+          77,
+          52,
+          84
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "source": "art/character/route_i/adult_M_fur_cloak_bun/S/idle.png",
+      "source_sha256": "a98c1b8271c9373c1ad7ad2a9f1d3f48fb4f37f2fd27a32c4d6c535ffda90208",
+      "face": [
+        38,
+        57,
+        44,
+        62
+      ],
+      "forearms": [
+        [
+          26,
+          75,
+          30,
+          83
+        ],
+        [
+          48,
+          75,
+          52,
+          81
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "adult_M_fur_cloak_short",
+      "source": "art/character/route_i/adult_M_fur_cloak_short/S/idle.png",
+      "source_sha256": "345b19c1776ab4517396b0b90882fda0b1cfa0a4dd3e6adfe7e9adb0d9728500",
+      "face": [
+        35,
+        55,
+        42,
+        60
+      ],
+      "forearms": [
+        [
+          24,
+          75,
+          28,
+          81
+        ],
+        [
+          48,
+          75,
+          52,
+          84
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive",
+      "hair_region": null,
+      "hair_regions": [
+        [
+          29,
+          47,
+          44,
+          57
+        ],
+        [
+          33,
+          57,
+          44,
+          63
+        ]
+      ]
+    },
+    {
+      "look": "adult_M_hide_wrap_bun",
+      "source": "art/character/route_i/adult_M_hide_wrap_bun/S/idle.png",
+      "source_sha256": "d72ae163db9da2a64b523157ff197c7b602f14baf264d418c5ff354f3c1d8f46",
+      "face": [
+        36,
+        57,
+        43,
+        62
+      ],
+      "forearms": [
+        [
+          26,
+          76,
+          30,
+          84
+        ],
+        [
+          48,
+          77,
+          52,
+          85
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "adult_M_hide_wrap_short",
+      "source": "art/character/route_i/adult_M_hide_wrap_short/S/idle.png",
+      "source_sha256": "e0d14af6d00de104698610adf099e677fb0596bb8d5d30de1f508206aaf15310",
+      "face": [
+        36,
+        57,
+        43,
+        62
+      ],
+      "forearms": [
+        [
+          23,
+          74,
+          27,
+          81
+        ],
+        [
+          49,
+          78,
+          53,
+          85
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "adult_M_loincloth_bun",
+      "source": "art/character/route_i/adult_M_loincloth_bun/S/idle.png",
+      "source_sha256": "e28ea430edf4f15d7a2910d17b573ecfddce965da9eb045d91989c6f174e6f95",
+      "face": [
+        36,
+        57,
+        44,
+        62
+      ],
+      "forearms": [
+        [
+          26,
+          77,
+          30,
+          84
+        ],
+        [
+          48,
+          78,
+          52,
+          85
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "adult_M_loincloth_long_tied",
+      "source": "art/character/route_i/adult_M_loincloth_long_tied/S/idle.png",
+      "source_sha256": "600661c1a40459299ad5e26662bd19191956fcbb988d8f6007dc2157a4900801",
+      "face": [
+        39,
+        57,
+        45,
+        62
+      ],
+      "forearms": [
+        [
+          28,
+          76,
+          32,
+          83
+        ],
+        [
+          49,
+          78,
+          53,
+          85
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "adult_M_loincloth_short",
+      "source": "art/character/route_i/adult_M_loincloth_short/S/idle.png",
+      "source_sha256": "643d6b90a5cedaae69ba3eb8ef2db304911bf5121e61483e03fa82024d61060b",
+      "face": [
+        36,
+        56,
+        42,
+        61
+      ],
+      "forearms": [
+        [
+          26,
+          74,
+          30,
+          81
+        ],
+        [
+          49,
+          78,
+          53,
+          85
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "source": "art/character/route_i/child_F_fur_cloak_bun/S/idle.png",
+      "source_sha256": "2c12e35971c40f6aa26d13e994a294fefaca50645218e83f7e39b1ba96e892c5",
+      "face": [
+        38,
+        72,
+        44,
+        79
+      ],
+      "forearms": [
+        [
+          32,
+          88,
+          35,
+          92
+        ],
+        [
+          45,
+          88,
+          48,
+          93
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "source": "art/character/route_i/child_F_fur_cloak_long_tied/S/idle.png",
+      "source_sha256": "dc212949d71914dd4d4b8cbc4cc3d89c5bf091897aa67fb7f04f769928c8ca6d",
+      "face": [
+        38,
+        73,
+        44,
+        79
+      ],
+      "forearms": [
+        [
+          34,
+          87,
+          37,
+          93
+        ],
+        [
+          45,
+          86,
+          49,
+          93
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive",
+      "clothing_regions": [
+        [
+          43,
+          91,
+          46,
+          95
+        ]
+      ]
+    },
+    {
+      "look": "child_F_fur_cloak_short",
+      "source": "art/character/route_i/child_F_fur_cloak_short/S/idle.png",
+      "source_sha256": "44f21b433c051926ff9848142e1fe285780af14a28de169130563ea9614aba20",
+      "face": [
+        37,
+        70,
+        43,
+        76
+      ],
+      "forearms": [
+        [
+          32,
+          85,
+          35,
+          89
+        ],
+        [
+          45,
+          86,
+          48,
+          91
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "child_F_hide_wrap_bun",
+      "source": "art/character/route_i/child_F_hide_wrap_bun/S/idle.png",
+      "source_sha256": "aa25c1e64ccfd1213749ed8c8af3a801d449d508d82b344071665243b061b073",
+      "face": [
+        37,
+        73,
+        44,
+        79
+      ],
+      "forearms": [
+        [
+          32,
+          89,
+          35,
+          93
+        ],
+        [
+          45,
+          89,
+          48,
+          93
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "child_F_hide_wrap_long_tied",
+      "source": "art/character/route_i/child_F_hide_wrap_long_tied/S/idle.png",
+      "source_sha256": "e8913e557c1526c24c71602856e0d52f3a8b5d47e1d505378811aa798629b513",
+      "face": [
+        36,
+        72,
+        44,
+        79
+      ],
+      "forearms": [
+        [
+          31,
+          88,
+          34,
+          93
+        ],
+        [
+          45,
+          89,
+          48,
+          94
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "child_F_hide_wrap_short",
+      "source": "art/character/route_i/child_F_hide_wrap_short/S/idle.png",
+      "source_sha256": "350846f7210a7298393f83bb7221555b129bafcd94ddf35e1df3dd837783cb23",
+      "face": [
+        37,
+        70,
+        44,
+        77
+      ],
+      "forearms": [
+        [
+          31,
+          88,
+          34,
+          93
+        ],
+        [
+          46,
+          87,
+          49,
+          92
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "child_F_loincloth_bun",
+      "source": "art/character/route_i/child_F_loincloth_bun/S/idle.png",
+      "source_sha256": "32529ab74914ed26abe8d7bc9d0e90cb9c0c9fe4c3d362915b011cd87611b61c",
+      "face": [
+        37,
+        73,
+        44,
+        79
+      ],
+      "forearms": [
+        [
+          33,
+          87,
+          36,
+          92
+        ],
+        [
+          45,
+          88,
+          48,
+          93
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "child_F_loincloth_long_tied",
+      "source": "art/character/route_i/child_F_loincloth_long_tied/S/idle.png",
+      "source_sha256": "e7d76faa835632fc4059185916b7f2580bccaa7e3e5bbdc65a9538bd97450b28",
+      "face": [
+        37,
+        73,
+        44,
+        79
+      ],
+      "forearms": [
+        [
+          34,
+          88,
+          36,
+          92
+        ],
+        [
+          46,
+          89,
+          48,
+          93
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "child_F_loincloth_short",
+      "source": "art/character/route_i/child_F_loincloth_short/S/idle.png",
+      "source_sha256": "3ffcbf2c6157985078c2687d76a5edcad0eaf455d563742024f2834b9e9d96ca",
+      "face": [
+        37,
+        69,
+        43,
+        76
+      ],
+      "forearms": [
+        [
+          32,
+          85,
+          35,
+          89
+        ],
+        [
+          45,
+          86,
+          48,
+          91
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "source": "art/character/route_i/child_M_fur_cloak_bun/S/idle.png",
+      "source_sha256": "3c61b4824d4f9ab461a1be252aae2c4c8399508bb68cb55809130b1d586814d2",
+      "face": [
+        36,
+        73,
+        44,
+        80
+      ],
+      "forearms": [
+        [
+          28,
+          87,
+          32,
+          93
+        ],
+        [
+          43,
+          88,
+          47,
+          94
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "child_M_fur_cloak_long_tied",
+      "source": "art/character/route_i/child_M_fur_cloak_long_tied/S/idle.png",
+      "source_sha256": "c86a67a0cec5e0edaf9d3e590285247d4622f23453078b8491b4e71ae43697d4",
+      "face": [
+        37,
+        75,
+        45,
+        81
+      ],
+      "forearms": [
+        [
+          33,
+          89,
+          37,
+          94
+        ],
+        [
+          46,
+          88,
+          49,
+          92
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "child_M_fur_cloak_short",
+      "source": "art/character/route_i/child_M_fur_cloak_short/S/idle.png",
+      "source_sha256": "681b02a75d69e1356944d820642e784047e5b7fb93ee8cfd0d90fb0118dd549a",
+      "face": [
+        37,
+        71,
+        45,
+        78
+      ],
+      "forearms": [
+        [
+          32,
+          87,
+          35,
+          92
+        ],
+        [
+          46,
+          88,
+          49,
+          93
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "child_M_hide_wrap_bun",
+      "source": "art/character/route_i/child_M_hide_wrap_bun/S/idle.png",
+      "source_sha256": "6834c584e03a847f7883b8cda1f39f87fcd1c2d4b5e818984a9e0842397186a0",
+      "face": [
+        36,
+        75,
+        45,
+        82
+      ],
+      "forearms": [
+        [
+          31,
+          89,
+          34,
+          93
+        ],
+        [
+          45,
+          88,
+          49,
+          95
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "child_M_hide_wrap_long_tied",
+      "source": "art/character/route_i/child_M_hide_wrap_long_tied/S/idle.png",
+      "source_sha256": "bf634eaa8532288e7e5fee06d599b15ca1efd423bd7c8fd9311fa075f37d1f24",
+      "face": [
+        38,
+        75,
+        46,
+        81
+      ],
+      "forearms": [
+        [
+          33,
+          90,
+          36,
+          94
+        ],
+        [
+          47,
+          90,
+          50,
+          94
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "child_M_hide_wrap_short",
+      "source": "art/character/route_i/child_M_hide_wrap_short/S/idle.png",
+      "source_sha256": "c21c64389e34db098483d676bb6acb83c06ebf79c81014202937acc2041f4337",
+      "face": [
+        36,
+        71,
+        44,
+        79
+      ],
+      "forearms": [
+        [
+          31,
+          86,
+          34,
+          90
+        ],
+        [
+          45,
+          87,
+          50,
+          92
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "child_M_loincloth_bun",
+      "source": "art/character/route_i/child_M_loincloth_bun/S/idle.png",
+      "source_sha256": "8bafb28e58849f6c55662dac964be6c7b0c1a209fb123ea76bcdd5b1636e6a55",
+      "face": [
+        37,
+        74,
+        44,
+        80
+      ],
+      "forearms": [
+        [
+          33,
+          88,
+          36,
+          92
+        ],
+        [
+          45,
+          87,
+          49,
+          93
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "child_M_loincloth_long_tied",
+      "source": "art/character/route_i/child_M_loincloth_long_tied/S/idle.png",
+      "source_sha256": "aa75fd472f1f4327b38f940bec458bad24e0ce7f7f6b3e5d37d5bc73712538b7",
+      "face": [
+        35,
+        74,
+        43,
+        80
+      ],
+      "forearms": [
+        [
+          31,
+          89,
+          34,
+          93
+        ],
+        [
+          44,
+          87,
+          48,
+          94
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    },
+    {
+      "look": "child_M_loincloth_short",
+      "source": "art/character/route_i/child_M_loincloth_short/S/idle.png",
+      "source_sha256": "3511b960e7878a4854ea22830a8e72a3b290e75a84949712a817641c76a3c335",
+      "face": [
+        36,
+        71,
+        44,
+        77
+      ],
+      "forearms": [
+        [
+          31,
+          86,
+          34,
+          90
+        ],
+        [
+          46,
+          87,
+          49,
+          92
+        ]
+      ],
+      "convention": "left_top_right_bottom_exclusive"
+    }
+  ]
+}

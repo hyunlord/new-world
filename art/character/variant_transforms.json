@@ -1,0 +1,7563 @@
+{
+  "schema_version": 2,
+  "colour_space": "CIELAB D65",
+  "selection_rule": "((agent_id * 2654435761) & 0xffffffff) % pool_size",
+  "fallbacks": {
+    "adult_M_fur_cloak_long_tied": "adult_M_fur_cloak_bun",
+    "adult_M_hide_wrap_long_tied": "adult_M_hide_wrap_bun"
+  },
+  "alpha_preserved": true,
+  "outline_L_max": 18,
+  "outline_alpha_max": 127,
+  "source_plan_sha256": "310a6de08234571c74df9845dc20d2f7c5377bb8aa2d0f861529d555f10f25b1",
+  "transforms": [
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "variant": "v1",
+      "skin_delta_lab": [
+        16.001194618896967,
+        -17.824154402875905,
+        -15.030541635955778
+      ],
+      "hair_delta_lab": [
+        2.8628476853709053,
+        -7.065138133285432,
+        -4.047191314229403
+      ],
+      "source_skin_lab": [
+        62.57573736754765,
+        23.824844780759385,
+        43.464102039936684
+      ],
+      "source_hair_lab": [
+        26.360101504756418,
+        11.106780841264314,
+        19.59645793120055
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_fur_cloak_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_fur_cloak_bun/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -1.1479120814062966,
+        -14.357272542868861,
+        -14.234553477878933
+      ],
+      "hair_delta_lab": [
+        -13.014079562720159,
+        -7.313469757015768,
+        -9.253704714152411
+      ],
+      "source_skin_lab": [
+        62.57573736754765,
+        23.82484478075938,
+        43.464102039936684
+      ],
+      "source_hair_lab": [
+        26.360101504756418,
+        11.106780841264314,
+        19.59645793120055
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_fur_cloak_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_fur_cloak_bun/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -27.34489486717095,
+        -10.40841384835053,
+        -20.70428010257182
+      ],
+      "hair_delta_lab": [
+        12.243223826343833,
+        14.199178948726136,
+        10.421127151867392
+      ],
+      "source_skin_lab": [
+        62.57573736754765,
+        23.82484478075938,
+        43.464102039936684
+      ],
+      "source_hair_lab": [
+        26.360101504756418,
+        11.106780841264314,
+        19.59645793120055
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_fur_cloak_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_fur_cloak_bun/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "variant": "v4",
+      "skin_delta_lab": [
+        16.001194618896967,
+        -17.824154402875905,
+        -15.030541635955778
+      ],
+      "hair_delta_lab": [
+        37.64671851483514,
+        -11.96871355120876,
+        -11.08059475046581
+      ],
+      "source_skin_lab": [
+        62.57573736754765,
+        23.824844780759385,
+        43.464102039936684
+      ],
+      "source_hair_lab": [
+        26.360101504756415,
+        11.106780841264314,
+        19.59645793120055
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        160,
+        155,
+        140
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_fur_cloak_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_fur_cloak_bun/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -1.1479120814062966,
+        -14.357272542868861,
+        -14.234553477878933
+      ],
+      "hair_delta_lab": [
+        12.243223826343833,
+        14.199178948726136,
+        10.421127151867392
+      ],
+      "source_skin_lab": [
+        62.57573736754765,
+        23.82484478075938,
+        43.464102039936684
+      ],
+      "source_hair_lab": [
+        26.360101504756418,
+        11.106780841264314,
+        19.59645793120055
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_fur_cloak_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_fur_cloak_bun/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -27.34489486717095,
+        -10.40841384835053,
+        -20.70428010257182
+      ],
+      "hair_delta_lab": [
+        2.8628476853709053,
+        -7.065138133285432,
+        -4.047191314229403
+      ],
+      "source_skin_lab": [
+        62.57573736754765,
+        23.82484478075938,
+        43.464102039936684
+      ],
+      "source_hair_lab": [
+        26.360101504756418,
+        11.106780841264314,
+        19.59645793120055
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_fur_cloak_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_fur_cloak_bun/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_fur_cloak_long_tied",
+      "variant": "v1",
+      "skin_delta_lab": [
+        11.966917426720173,
+        -15.210324531104368,
+        -12.335994179966349
+      ],
+      "hair_delta_lab": [
+        1.2339151850278327,
+        -8.386063136074394,
+        -2.7571842812936946
+      ],
+      "source_skin_lab": [
+        66.61001455972445,
+        21.211014908987845,
+        40.769554583947254
+      ],
+      "source_hair_lab": [
+        27.98903400509949,
+        12.427705844053277,
+        18.306450898264842
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_fur_cloak_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_fur_cloak_long_tied/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_fur_cloak_long_tied",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -5.1821892735830914,
+        -11.743442671097325,
+        -11.540006021889504
+      ],
+      "hair_delta_lab": [
+        -14.643012063063232,
+        -8.634394759804731,
+        -7.963697681216702
+      ],
+      "source_skin_lab": [
+        66.61001455972445,
+        21.211014908987845,
+        40.769554583947254
+      ],
+      "source_hair_lab": [
+        27.98903400509949,
+        12.427705844053278,
+        18.306450898264842
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_fur_cloak_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_fur_cloak_long_tied/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_fur_cloak_long_tied",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -31.379172059347745,
+        -7.794583976578995,
+        -18.00973264658239
+      ],
+      "hair_delta_lab": [
+        10.61429132600076,
+        12.878253945937173,
+        11.7111341848031
+      ],
+      "source_skin_lab": [
+        66.61001455972445,
+        21.211014908987845,
+        40.769554583947254
+      ],
+      "source_hair_lab": [
+        27.98903400509949,
+        12.427705844053277,
+        18.306450898264842
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_fur_cloak_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_fur_cloak_long_tied/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_fur_cloak_long_tied",
+      "variant": "v4",
+      "skin_delta_lab": [
+        11.966917426720173,
+        -15.210324531104368,
+        -12.335994179966349
+      ],
+      "hair_delta_lab": [
+        36.01778601449207,
+        -13.289638553997722,
+        -9.790587717530101
+      ],
+      "source_skin_lab": [
+        66.61001455972445,
+        21.211014908987845,
+        40.769554583947254
+      ],
+      "source_hair_lab": [
+        27.98903400509949,
+        12.427705844053277,
+        18.306450898264842
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        160,
+        155,
+        140
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_fur_cloak_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_fur_cloak_long_tied/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_fur_cloak_long_tied",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -5.1821892735830914,
+        -11.743442671097325,
+        -11.540006021889504
+      ],
+      "hair_delta_lab": [
+        10.61429132600076,
+        12.878253945937173,
+        11.7111341848031
+      ],
+      "source_skin_lab": [
+        66.61001455972445,
+        21.211014908987845,
+        40.769554583947254
+      ],
+      "source_hair_lab": [
+        27.98903400509949,
+        12.427705844053277,
+        18.306450898264842
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_fur_cloak_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_fur_cloak_long_tied/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_fur_cloak_long_tied",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -31.379172059347745,
+        -7.794583976578995,
+        -18.00973264658239
+      ],
+      "hair_delta_lab": [
+        1.2339151850278327,
+        -8.386063136074394,
+        -2.7571842812936946
+      ],
+      "source_skin_lab": [
+        66.61001455972445,
+        21.211014908987845,
+        40.769554583947254
+      ],
+      "source_hair_lab": [
+        27.98903400509949,
+        12.427705844053277,
+        18.306450898264842
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_fur_cloak_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_fur_cloak_long_tied/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_fur_cloak_short",
+      "variant": "v1",
+      "skin_delta_lab": [
+        10.090266806297521,
+        -19.14732380919458,
+        -15.585214172715034
+      ],
+      "hair_delta_lab": [
+        -1.9914628447967537,
+        -10.096182711808101,
+        -4.235430637000851
+      ],
+      "source_skin_lab": [
+        68.4866651801471,
+        25.14801418707806,
+        44.01877457669594
+      ],
+      "source_hair_lab": [
+        31.214412034924077,
+        14.137825419786983,
+        19.784697253972
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_fur_cloak_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_fur_cloak_short/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_fur_cloak_short",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -7.058839894005743,
+        -15.680441949187541,
+        -14.789226014638189
+      ],
+      "hair_delta_lab": [
+        -17.868390092887818,
+        -10.344514335538438,
+        -9.441944036923859
+      ],
+      "source_skin_lab": [
+        68.4866651801471,
+        25.14801418707806,
+        44.01877457669594
+      ],
+      "source_hair_lab": [
+        31.214412034924077,
+        14.137825419786985,
+        19.784697253972
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_fur_cloak_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_fur_cloak_short/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_fur_cloak_short",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -33.2558226797704,
+        -11.73158325466921,
+        -21.258952639331074
+      ],
+      "hair_delta_lab": [
+        7.388913296176174,
+        11.168134370203466,
+        10.232887829095944
+      ],
+      "source_skin_lab": [
+        68.4866651801471,
+        25.14801418707806,
+        44.01877457669594
+      ],
+      "source_hair_lab": [
+        31.214412034924077,
+        14.137825419786983,
+        19.784697253972
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_fur_cloak_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_fur_cloak_short/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_fur_cloak_short",
+      "variant": "v4",
+      "skin_delta_lab": [
+        10.090266806297521,
+        -19.14732380919458,
+        -15.585214172715034
+      ],
+      "hair_delta_lab": [
+        32.79240798466748,
+        -14.999758129731429,
+        -11.268834073237258
+      ],
+      "source_skin_lab": [
+        68.4866651801471,
+        25.14801418707806,
+        44.01877457669594
+      ],
+      "source_hair_lab": [
+        31.21441203492408,
+        14.137825419786983,
+        19.784697253972
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        160,
+        155,
+        140
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_fur_cloak_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_fur_cloak_short/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_fur_cloak_short",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -7.058839894005743,
+        -15.680441949187541,
+        -14.789226014638189
+      ],
+      "hair_delta_lab": [
+        7.388913296176174,
+        11.168134370203466,
+        10.232887829095944
+      ],
+      "source_skin_lab": [
+        68.4866651801471,
+        25.14801418707806,
+        44.01877457669594
+      ],
+      "source_hair_lab": [
+        31.214412034924077,
+        14.137825419786983,
+        19.784697253972
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_fur_cloak_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_fur_cloak_short/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_fur_cloak_short",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -33.2558226797704,
+        -11.73158325466921,
+        -21.258952639331074
+      ],
+      "hair_delta_lab": [
+        -1.9914628447967537,
+        -10.096182711808101,
+        -4.235430637000851
+      ],
+      "source_skin_lab": [
+        68.4866651801471,
+        25.14801418707806,
+        44.01877457669594
+      ],
+      "source_hair_lab": [
+        31.214412034924077,
+        14.137825419786983,
+        19.784697253972
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_fur_cloak_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_fur_cloak_short/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_hide_wrap_bun",
+      "variant": "v1",
+      "skin_delta_lab": [
+        14.390532406947102,
+        -16.335611285943457,
+        -14.503264805145932
+      ],
+      "hair_delta_lab": [
+        3.674947700525202,
+        -7.371198098875324,
+        -4.093430197264405
+      ],
+      "source_skin_lab": [
+        64.18639957949752,
+        22.336301663826937,
+        42.93682520912684
+      ],
+      "source_hair_lab": [
+        25.54800148960212,
+        11.412840806854206,
+        19.642696814235553
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_hide_wrap_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_hide_wrap_bun/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_hide_wrap_bun",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -2.758574293356162,
+        -12.868729425936417,
+        -13.707276647069087
+      ],
+      "hair_delta_lab": [
+        -12.201979547565863,
+        -7.61952972260566,
+        -9.299943597187413
+      ],
+      "source_skin_lab": [
+        64.18639957949752,
+        22.336301663826937,
+        42.93682520912684
+      ],
+      "source_hair_lab": [
+        25.54800148960212,
+        11.412840806854206,
+        19.642696814235553
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_hide_wrap_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_hide_wrap_bun/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_hide_wrap_bun",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -28.955557079120815,
+        -8.919870731418087,
+        -20.177003271761972
+      ],
+      "hair_delta_lab": [
+        13.05532384149813,
+        13.893118983136244,
+        10.37488826883239
+      ],
+      "source_skin_lab": [
+        64.18639957949752,
+        22.336301663826937,
+        42.93682520912684
+      ],
+      "source_hair_lab": [
+        25.54800148960212,
+        11.412840806854206,
+        19.642696814235553
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_hide_wrap_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_hide_wrap_bun/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_hide_wrap_bun",
+      "variant": "v4",
+      "skin_delta_lab": [
+        14.390532406947102,
+        -16.335611285943457,
+        -14.503264805145932
+      ],
+      "hair_delta_lab": [
+        38.458818529989436,
+        -12.274773516798652,
+        -11.126833633500812
+      ],
+      "source_skin_lab": [
+        64.18639957949752,
+        22.336301663826937,
+        42.93682520912684
+      ],
+      "source_hair_lab": [
+        25.54800148960212,
+        11.412840806854206,
+        19.642696814235553
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        160,
+        155,
+        140
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_hide_wrap_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_hide_wrap_bun/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_hide_wrap_bun",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -2.758574293356162,
+        -12.868729425936417,
+        -13.707276647069087
+      ],
+      "hair_delta_lab": [
+        13.05532384149813,
+        13.893118983136244,
+        10.37488826883239
+      ],
+      "source_skin_lab": [
+        64.18639957949752,
+        22.336301663826937,
+        42.93682520912684
+      ],
+      "source_hair_lab": [
+        25.54800148960212,
+        11.412840806854206,
+        19.642696814235553
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_hide_wrap_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_hide_wrap_bun/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_hide_wrap_bun",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -28.955557079120815,
+        -8.919870731418087,
+        -20.177003271761972
+      ],
+      "hair_delta_lab": [
+        3.674947700525202,
+        -7.371198098875324,
+        -4.093430197264405
+      ],
+      "source_skin_lab": [
+        64.18639957949752,
+        22.336301663826937,
+        42.93682520912684
+      ],
+      "source_hair_lab": [
+        25.54800148960212,
+        11.412840806854206,
+        19.642696814235553
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_hide_wrap_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_hide_wrap_bun/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_hide_wrap_long_tied",
+      "variant": "v1",
+      "skin_delta_lab": [
+        12.006038473491685,
+        -18.208672502316354,
+        -16.424360284028104
+      ],
+      "hair_delta_lab": [
+        2.6447112569732916,
+        -8.403431756926729,
+        -1.5593244307535468
+      ],
+      "source_skin_lab": [
+        66.57089351295294,
+        24.209362880199834,
+        44.85792068800901
+      ],
+      "source_hair_lab": [
+        26.578237933154032,
+        12.44507446490561,
+        17.108591047724694
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_hide_wrap_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_hide_wrap_long_tied/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_hide_wrap_long_tied",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -5.143068226811579,
+        -14.74179064230931,
+        -15.628372125951259
+      ],
+      "hair_delta_lab": [
+        -13.232215991117773,
+        -8.651763380657066,
+        -6.7658378306765545
+      ],
+      "source_skin_lab": [
+        66.57089351295294,
+        24.20936288019983,
+        44.85792068800901
+      ],
+      "source_hair_lab": [
+        26.578237933154032,
+        12.445074464905613,
+        17.108591047724694
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_hide_wrap_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_hide_wrap_long_tied/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_hide_wrap_long_tied",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -31.340051012576232,
+        -10.79293194779098,
+        -22.098098750644144
+      ],
+      "hair_delta_lab": [
+        12.02508739794622,
+        12.860885325084839,
+        12.908994035343248
+      ],
+      "source_skin_lab": [
+        66.57089351295294,
+        24.20936288019983,
+        44.85792068800901
+      ],
+      "source_hair_lab": [
+        26.578237933154032,
+        12.44507446490561,
+        17.108591047724694
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_hide_wrap_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_hide_wrap_long_tied/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_hide_wrap_long_tied",
+      "variant": "v4",
+      "skin_delta_lab": [
+        12.006038473491685,
+        -18.208672502316354,
+        -16.424360284028104
+      ],
+      "hair_delta_lab": [
+        37.42858208643753,
+        -13.307007174850057,
+        -8.592727866989954
+      ],
+      "source_skin_lab": [
+        66.57089351295294,
+        24.209362880199834,
+        44.85792068800901
+      ],
+      "source_hair_lab": [
+        26.57823793315403,
+        12.44507446490561,
+        17.108591047724694
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        160,
+        155,
+        140
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_hide_wrap_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_hide_wrap_long_tied/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_hide_wrap_long_tied",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -5.143068226811579,
+        -14.74179064230931,
+        -15.628372125951259
+      ],
+      "hair_delta_lab": [
+        12.02508739794622,
+        12.860885325084839,
+        12.908994035343248
+      ],
+      "source_skin_lab": [
+        66.57089351295294,
+        24.20936288019983,
+        44.85792068800901
+      ],
+      "source_hair_lab": [
+        26.578237933154032,
+        12.44507446490561,
+        17.108591047724694
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_hide_wrap_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_hide_wrap_long_tied/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_hide_wrap_long_tied",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -31.340051012576232,
+        -10.79293194779098,
+        -22.098098750644144
+      ],
+      "hair_delta_lab": [
+        2.6447112569732916,
+        -8.403431756926729,
+        -1.5593244307535468
+      ],
+      "source_skin_lab": [
+        66.57089351295294,
+        24.20936288019983,
+        44.85792068800901
+      ],
+      "source_hair_lab": [
+        26.578237933154032,
+        12.44507446490561,
+        17.108591047724694
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_hide_wrap_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_hide_wrap_long_tied/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_hide_wrap_short",
+      "variant": "v1",
+      "skin_delta_lab": [
+        10.704756365131345,
+        -17.978333236968012,
+        -17.43920411916985
+      ],
+      "hair_delta_lab": [
+        0.108308080324516,
+        -8.0864731254959,
+        -1.8894092746670896
+      ],
+      "source_skin_lab": [
+        67.87217562131327,
+        23.979023614851492,
+        45.87276452315076
+      ],
+      "source_hair_lab": [
+        29.114641109802808,
+        12.128115833474782,
+        17.438675891638237
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_hide_wrap_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_hide_wrap_short/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_hide_wrap_short",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -6.444350335171919,
+        -14.511451376960968,
+        -16.643215961093006
+      ],
+      "hair_delta_lab": [
+        -15.768619167766548,
+        -8.334804749226237,
+        -7.095922674590097
+      ],
+      "source_skin_lab": [
+        67.87217562131327,
+        23.97902361485149,
+        45.87276452315076
+      ],
+      "source_hair_lab": [
+        29.114641109802808,
+        12.128115833474784,
+        17.438675891638237
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_hide_wrap_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_hide_wrap_short/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_hide_wrap_short",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -32.64133312093657,
+        -10.562592682442638,
+        -23.11294258578589
+      ],
+      "hair_delta_lab": [
+        9.488684221297444,
+        13.177843956515668,
+        12.578909191429705
+      ],
+      "source_skin_lab": [
+        67.87217562131327,
+        23.97902361485149,
+        45.87276452315076
+      ],
+      "source_hair_lab": [
+        29.114641109802808,
+        12.128115833474782,
+        17.438675891638237
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_hide_wrap_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_hide_wrap_short/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_hide_wrap_short",
+      "variant": "v4",
+      "skin_delta_lab": [
+        10.704756365131345,
+        -17.978333236968012,
+        -17.43920411916985
+      ],
+      "hair_delta_lab": [
+        34.892178909788754,
+        -12.990048543419228,
+        -8.922812710903496
+      ],
+      "source_skin_lab": [
+        67.87217562131327,
+        23.979023614851492,
+        45.87276452315076
+      ],
+      "source_hair_lab": [
+        29.114641109802804,
+        12.128115833474782,
+        17.438675891638237
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        160,
+        155,
+        140
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_hide_wrap_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_hide_wrap_short/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_hide_wrap_short",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -6.444350335171919,
+        -14.511451376960968,
+        -16.643215961093006
+      ],
+      "hair_delta_lab": [
+        9.488684221297444,
+        13.177843956515668,
+        12.578909191429705
+      ],
+      "source_skin_lab": [
+        67.87217562131327,
+        23.97902361485149,
+        45.87276452315076
+      ],
+      "source_hair_lab": [
+        29.114641109802808,
+        12.128115833474782,
+        17.438675891638237
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_hide_wrap_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_hide_wrap_short/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_hide_wrap_short",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -32.64133312093657,
+        -10.562592682442638,
+        -23.11294258578589
+      ],
+      "hair_delta_lab": [
+        0.108308080324516,
+        -8.0864731254959,
+        -1.8894092746670896
+      ],
+      "source_skin_lab": [
+        67.87217562131327,
+        23.97902361485149,
+        45.87276452315076
+      ],
+      "source_hair_lab": [
+        29.114641109802808,
+        12.128115833474782,
+        17.438675891638237
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_hide_wrap_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_hide_wrap_short/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_loincloth_bun",
+      "variant": "v1",
+      "skin_delta_lab": [
+        10.814572016763947,
+        -19.03025676645163,
+        -19.23646082898113
+      ],
+      "hair_delta_lab": [
+        -0.7648908285782632,
+        -9.334676066561231,
+        -2.159561604707788
+      ],
+      "source_skin_lab": [
+        67.76235996968067,
+        25.03094714433511,
+        47.670021232962036
+      ],
+      "source_hair_lab": [
+        29.987840018705587,
+        13.376318774540113,
+        17.708828221678935
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_loincloth_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_loincloth_bun/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_loincloth_bun",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -6.334534683539317,
+        -15.563374906444588,
+        -18.440472670904285
+      ],
+      "hair_delta_lab": [
+        -16.641818076669328,
+        -9.583007690291566,
+        -7.366075004630796
+      ],
+      "source_skin_lab": [
+        67.76235996968067,
+        25.03094714433511,
+        47.670021232962036
+      ],
+      "source_hair_lab": [
+        29.987840018705587,
+        13.376318774540113,
+        17.708828221678935
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_loincloth_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_loincloth_bun/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_loincloth_bun",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -32.53151746930397,
+        -11.614516211926258,
+        -24.91019929559717
+      ],
+      "hair_delta_lab": [
+        8.615485312394664,
+        11.929641015450336,
+        12.308756861389007
+      ],
+      "source_skin_lab": [
+        67.76235996968067,
+        25.03094714433511,
+        47.670021232962036
+      ],
+      "source_hair_lab": [
+        29.987840018705587,
+        13.376318774540113,
+        17.708828221678935
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_loincloth_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_loincloth_bun/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_loincloth_bun",
+      "variant": "v4",
+      "skin_delta_lab": [
+        10.814572016763947,
+        -19.03025676645163,
+        -19.23646082898113
+      ],
+      "hair_delta_lab": [
+        34.018980000885975,
+        -14.23825148448456,
+        -9.192965040944195
+      ],
+      "source_skin_lab": [
+        67.76235996968067,
+        25.03094714433511,
+        47.670021232962036
+      ],
+      "source_hair_lab": [
+        29.987840018705583,
+        13.376318774540113,
+        17.708828221678935
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        160,
+        155,
+        140
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_loincloth_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_loincloth_bun/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_loincloth_bun",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -6.334534683539317,
+        -15.563374906444588,
+        -18.440472670904285
+      ],
+      "hair_delta_lab": [
+        8.615485312394664,
+        11.929641015450336,
+        12.308756861389007
+      ],
+      "source_skin_lab": [
+        67.76235996968067,
+        25.03094714433511,
+        47.670021232962036
+      ],
+      "source_hair_lab": [
+        29.987840018705587,
+        13.376318774540113,
+        17.708828221678935
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_loincloth_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_loincloth_bun/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_loincloth_bun",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -32.53151746930397,
+        -11.614516211926258,
+        -24.91019929559717
+      ],
+      "hair_delta_lab": [
+        -0.7648908285782632,
+        -9.334676066561231,
+        -2.159561604707788
+      ],
+      "source_skin_lab": [
+        67.76235996968067,
+        25.03094714433511,
+        47.670021232962036
+      ],
+      "source_hair_lab": [
+        29.987840018705587,
+        13.376318774540113,
+        17.708828221678935
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_loincloth_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_loincloth_bun/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_loincloth_long_tied",
+      "variant": "v1",
+      "skin_delta_lab": [
+        13.2244566204879,
+        -18.19241180825867,
+        -16.88079589521505
+      ],
+      "hair_delta_lab": [
+        3.59917847357454,
+        -6.708653418795855,
+        -2.863164073167672
+      ],
+      "source_skin_lab": [
+        65.35247536595672,
+        24.19310218614215,
+        45.31435629919596
+      ],
+      "source_hair_lab": [
+        25.623770716552784,
+        10.750296126774737,
+        18.41243069013882
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_loincloth_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_loincloth_long_tied/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_loincloth_long_tied",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -3.9246500798153647,
+        -14.725529948251625,
+        -16.084807737138206
+      ],
+      "hair_delta_lab": [
+        -12.277748774516525,
+        -6.956985042526191,
+        -8.06967747309068
+      ],
+      "source_skin_lab": [
+        65.35247536595672,
+        24.193102186142145,
+        45.31435629919596
+      ],
+      "source_hair_lab": [
+        25.623770716552784,
+        10.750296126774737,
+        18.41243069013882
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_loincloth_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_loincloth_long_tied/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_loincloth_long_tied",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -30.12163286558002,
+        -10.776671253733294,
+        -22.55453436183109
+      ],
+      "hair_delta_lab": [
+        12.979554614547467,
+        14.555663663215713,
+        11.605154392929123
+      ],
+      "source_skin_lab": [
+        65.35247536595672,
+        24.193102186142145,
+        45.31435629919596
+      ],
+      "source_hair_lab": [
+        25.623770716552784,
+        10.750296126774737,
+        18.41243069013882
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_loincloth_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_loincloth_long_tied/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_loincloth_long_tied",
+      "variant": "v4",
+      "skin_delta_lab": [
+        13.2244566204879,
+        -18.19241180825867,
+        -16.88079589521505
+      ],
+      "hair_delta_lab": [
+        38.383049303038774,
+        -11.612228836719183,
+        -9.896567509404079
+      ],
+      "source_skin_lab": [
+        65.35247536595672,
+        24.19310218614215,
+        45.31435629919596
+      ],
+      "source_hair_lab": [
+        25.623770716552784,
+        10.750296126774737,
+        18.41243069013882
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        160,
+        155,
+        140
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_loincloth_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_loincloth_long_tied/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_loincloth_long_tied",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -3.9246500798153647,
+        -14.725529948251625,
+        -16.084807737138206
+      ],
+      "hair_delta_lab": [
+        12.979554614547467,
+        14.555663663215713,
+        11.605154392929123
+      ],
+      "source_skin_lab": [
+        65.35247536595672,
+        24.193102186142145,
+        45.31435629919596
+      ],
+      "source_hair_lab": [
+        25.623770716552784,
+        10.750296126774737,
+        18.41243069013882
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_loincloth_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_loincloth_long_tied/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_loincloth_long_tied",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -30.12163286558002,
+        -10.776671253733294,
+        -22.55453436183109
+      ],
+      "hair_delta_lab": [
+        3.59917847357454,
+        -6.708653418795855,
+        -2.863164073167672
+      ],
+      "source_skin_lab": [
+        65.35247536595672,
+        24.193102186142145,
+        45.31435629919596
+      ],
+      "source_hair_lab": [
+        25.623770716552784,
+        10.750296126774737,
+        18.41243069013882
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_loincloth_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_loincloth_long_tied/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_loincloth_short",
+      "variant": "v1",
+      "skin_delta_lab": [
+        11.36845469688484,
+        -18.88375722777746,
+        -19.155946067126848
+      ],
+      "hair_delta_lab": [
+        1.5502558367868282,
+        -8.316880746942175,
+        -4.111882393680181
+      ],
+      "source_skin_lab": [
+        67.20847728955978,
+        24.884447605660938,
+        47.589506471107754
+      ],
+      "source_hair_lab": [
+        27.672693353340495,
+        12.358523454921057,
+        19.66114901065133
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_loincloth_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_loincloth_short/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_loincloth_short",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -5.780652003418425,
+        -15.416875367770418,
+        -18.359957909050003
+      ],
+      "hair_delta_lab": [
+        -14.326671411304236,
+        -8.565212370672512,
+        -9.31839579360319
+      ],
+      "source_skin_lab": [
+        67.20847728955978,
+        24.884447605660938,
+        47.589506471107754
+      ],
+      "source_hair_lab": [
+        27.672693353340495,
+        12.358523454921059,
+        19.66114901065133
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_loincloth_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_loincloth_short/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_loincloth_short",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -31.977634789183078,
+        -11.468016673252087,
+        -24.82968453374289
+      ],
+      "hair_delta_lab": [
+        10.930631977759756,
+        12.947436335069392,
+        10.356436072416614
+      ],
+      "source_skin_lab": [
+        67.20847728955978,
+        24.884447605660938,
+        47.589506471107754
+      ],
+      "source_hair_lab": [
+        27.672693353340495,
+        12.358523454921057,
+        19.66114901065133
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_loincloth_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_loincloth_short/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_loincloth_short",
+      "variant": "v4",
+      "skin_delta_lab": [
+        11.36845469688484,
+        -18.88375722777746,
+        -19.155946067126848
+      ],
+      "hair_delta_lab": [
+        36.334126666251066,
+        -13.220456164865503,
+        -11.145285829916588
+      ],
+      "source_skin_lab": [
+        67.20847728955978,
+        24.884447605660938,
+        47.589506471107754
+      ],
+      "source_hair_lab": [
+        27.67269335334049,
+        12.358523454921057,
+        19.66114901065133
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        160,
+        155,
+        140
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_loincloth_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_loincloth_short/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_loincloth_short",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -5.780652003418425,
+        -15.416875367770418,
+        -18.359957909050003
+      ],
+      "hair_delta_lab": [
+        10.930631977759756,
+        12.947436335069392,
+        10.356436072416614
+      ],
+      "source_skin_lab": [
+        67.20847728955978,
+        24.884447605660938,
+        47.589506471107754
+      ],
+      "source_hair_lab": [
+        27.672693353340495,
+        12.358523454921057,
+        19.66114901065133
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_loincloth_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_loincloth_short/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_F_loincloth_short",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -31.977634789183078,
+        -11.468016673252087,
+        -24.82968453374289
+      ],
+      "hair_delta_lab": [
+        1.5502558367868282,
+        -8.316880746942175,
+        -4.111882393680181
+      ],
+      "source_skin_lab": [
+        67.20847728955978,
+        24.884447605660938,
+        47.589506471107754
+      ],
+      "source_hair_lab": [
+        27.672693353340495,
+        12.358523454921057,
+        19.66114901065133
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_F_loincloth_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_F_loincloth_short/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "variant": "v1",
+      "skin_delta_lab": [
+        16.592573029804697,
+        -19.81242853769524,
+        -17.234672185089714
+      ],
+      "hair_delta_lab": [
+        2.4992384740346623,
+        -9.413438652214595,
+        -4.8559114081619885
+      ],
+      "source_skin_lab": [
+        61.98435895663992,
+        25.81311891557872,
+        45.66823258907062
+      ],
+      "source_hair_lab": [
+        26.72371071609266,
+        13.455081360193477,
+        20.405178025133136
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_fur_cloak_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_fur_cloak_bun/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -0.5565336704985668,
+        -16.345546677688198,
+        -16.43868402701287
+      ],
+      "hair_delta_lab": [
+        -13.377688774056402,
+        -9.661770275944932,
+        -10.062424808084996
+      ],
+      "source_skin_lab": [
+        61.98435895663992,
+        25.81311891557872,
+        45.66823258907062
+      ],
+      "source_hair_lab": [
+        26.72371071609266,
+        13.455081360193478,
+        20.405178025133136
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_fur_cloak_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_fur_cloak_bun/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -26.75351645626322,
+        -12.396687983169869,
+        -22.908410651705754
+      ],
+      "hair_delta_lab": [
+        11.87961461500759,
+        11.850878429796973,
+        9.612407057934806
+      ],
+      "source_skin_lab": [
+        61.98435895663992,
+        25.81311891557872,
+        45.66823258907062
+      ],
+      "source_hair_lab": [
+        26.72371071609266,
+        13.455081360193477,
+        20.405178025133136
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_fur_cloak_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_fur_cloak_bun/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "variant": "v4",
+      "skin_delta_lab": [
+        16.592573029804697,
+        -19.81242853769524,
+        -17.234672185089714
+      ],
+      "hair_delta_lab": [
+        37.2831093034989,
+        -14.317014070137922,
+        -11.889314844398395
+      ],
+      "source_skin_lab": [
+        61.98435895663992,
+        25.81311891557872,
+        45.66823258907062
+      ],
+      "source_hair_lab": [
+        26.72371071609266,
+        13.455081360193477,
+        20.405178025133136
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        160,
+        155,
+        140
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_fur_cloak_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_fur_cloak_bun/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -0.5565336704985668,
+        -16.345546677688198,
+        -16.43868402701287
+      ],
+      "hair_delta_lab": [
+        11.87961461500759,
+        11.850878429796973,
+        9.612407057934806
+      ],
+      "source_skin_lab": [
+        61.98435895663992,
+        25.81311891557872,
+        45.66823258907062
+      ],
+      "source_hair_lab": [
+        26.72371071609266,
+        13.455081360193477,
+        20.405178025133136
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_fur_cloak_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_fur_cloak_bun/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -26.75351645626322,
+        -12.396687983169869,
+        -22.908410651705754
+      ],
+      "hair_delta_lab": [
+        2.4992384740346623,
+        -9.413438652214595,
+        -4.8559114081619885
+      ],
+      "source_skin_lab": [
+        61.98435895663992,
+        25.81311891557872,
+        45.66823258907062
+      ],
+      "source_hair_lab": [
+        26.72371071609266,
+        13.455081360193477,
+        20.405178025133136
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_fur_cloak_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_fur_cloak_bun/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_fur_cloak_short",
+      "variant": "v1",
+      "skin_delta_lab": [
+        20.44963683396182,
+        -16.728709780199374,
+        -10.864934260353209
+      ],
+      "hair_delta_lab": [
+        3.4220752590599304,
+        -6.503077523723434,
+        -0.8440548427057042
+      ],
+      "source_skin_lab": [
+        58.1272951524828,
+        22.729400158082854,
+        39.298494664334115
+      ],
+      "source_hair_lab": [
+        25.800873931067393,
+        10.544720231702316,
+        16.39332145967685
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_fur_cloak_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_fur_cloak_short/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_fur_cloak_short",
+      "variant": "v2",
+      "skin_delta_lab": [
+        3.3005301336585546,
+        -13.26182792019233,
+        -10.068946102276364
+      ],
+      "hair_delta_lab": [
+        -12.454851989031134,
+        -6.75140914745377,
+        -6.050568242628712
+      ],
+      "source_skin_lab": [
+        58.1272951524828,
+        22.72940015808285,
+        39.298494664334115
+      ],
+      "source_hair_lab": [
+        25.800873931067393,
+        10.544720231702316,
+        16.39332145967685
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_fur_cloak_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_fur_cloak_short/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_fur_cloak_short",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -22.8964526521061,
+        -9.312969225674,
+        -16.53867272696925
+      ],
+      "hair_delta_lab": [
+        12.802451400032858,
+        14.761239558288134,
+        13.62426362339109
+      ],
+      "source_skin_lab": [
+        58.1272951524828,
+        22.72940015808285,
+        39.298494664334115
+      ],
+      "source_hair_lab": [
+        25.800873931067393,
+        10.544720231702316,
+        16.39332145967685
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_fur_cloak_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_fur_cloak_short/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_fur_cloak_short",
+      "variant": "v4",
+      "skin_delta_lab": [
+        20.44963683396182,
+        -16.728709780199374,
+        -10.864934260353209
+      ],
+      "hair_delta_lab": [
+        38.205946088524165,
+        -11.406652941646762,
+        -7.877458278942111
+      ],
+      "source_skin_lab": [
+        58.1272951524828,
+        22.729400158082854,
+        39.298494664334115
+      ],
+      "source_hair_lab": [
+        25.800873931067393,
+        10.544720231702316,
+        16.39332145967685
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        160,
+        155,
+        140
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_fur_cloak_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_fur_cloak_short/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_fur_cloak_short",
+      "variant": "v5",
+      "skin_delta_lab": [
+        3.3005301336585546,
+        -13.26182792019233,
+        -10.068946102276364
+      ],
+      "hair_delta_lab": [
+        12.802451400032858,
+        14.761239558288134,
+        13.62426362339109
+      ],
+      "source_skin_lab": [
+        58.1272951524828,
+        22.72940015808285,
+        39.298494664334115
+      ],
+      "source_hair_lab": [
+        25.800873931067393,
+        10.544720231702316,
+        16.39332145967685
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_fur_cloak_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_fur_cloak_short/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_fur_cloak_short",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -22.8964526521061,
+        -9.312969225674,
+        -16.53867272696925
+      ],
+      "hair_delta_lab": [
+        3.4220752590599304,
+        -6.503077523723434,
+        -0.8440548427057042
+      ],
+      "source_skin_lab": [
+        58.1272951524828,
+        22.72940015808285,
+        39.298494664334115
+      ],
+      "source_hair_lab": [
+        25.800873931067393,
+        10.544720231702316,
+        16.39332145967685
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_fur_cloak_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_fur_cloak_short/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_hide_wrap_bun",
+      "variant": "v1",
+      "skin_delta_lab": [
+        13.998111389219346,
+        -16.308198921719523,
+        -17.143082957117876
+      ],
+      "hair_delta_lab": [
+        1.4727092756420745,
+        -9.134151930835305,
+        -5.733026884013627
+      ],
+      "source_skin_lab": [
+        64.57882059722527,
+        22.308889299603003,
+        45.57664336109878
+      ],
+      "source_hair_lab": [
+        27.75023991448525,
+        13.175794638814187,
+        21.282293500984775
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_hide_wrap_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_hide_wrap_bun/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_hide_wrap_bun",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -3.1509953110839177,
+        -12.841317061712482,
+        -16.34709479904103
+      ],
+      "hair_delta_lab": [
+        -14.40421797244899,
+        -9.382483554565642,
+        -10.939540283936635
+      ],
+      "source_skin_lab": [
+        64.57882059722527,
+        22.308889299603003,
+        45.57664336109878
+      ],
+      "source_hair_lab": [
+        27.75023991448525,
+        13.175794638814189,
+        21.282293500984775
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_hide_wrap_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_hide_wrap_bun/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_hide_wrap_bun",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -29.34797809684857,
+        -8.892458367194152,
+        -22.816821423733916
+      ],
+      "hair_delta_lab": [
+        10.853085416615002,
+        12.130165151176262,
+        8.735291582083168
+      ],
+      "source_skin_lab": [
+        64.57882059722527,
+        22.308889299603003,
+        45.57664336109878
+      ],
+      "source_hair_lab": [
+        27.75023991448525,
+        13.175794638814187,
+        21.282293500984775
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_hide_wrap_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_hide_wrap_bun/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_hide_wrap_bun",
+      "variant": "v4",
+      "skin_delta_lab": [
+        13.998111389219346,
+        -16.308198921719523,
+        -17.143082957117876
+      ],
+      "hair_delta_lab": [
+        36.25658010510631,
+        -14.037727348758633,
+        -12.766430320250034
+      ],
+      "source_skin_lab": [
+        64.57882059722527,
+        22.308889299603003,
+        45.57664336109878
+      ],
+      "source_hair_lab": [
+        27.75023991448525,
+        13.175794638814187,
+        21.282293500984775
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        160,
+        155,
+        140
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_hide_wrap_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_hide_wrap_bun/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_hide_wrap_bun",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -3.1509953110839177,
+        -12.841317061712482,
+        -16.34709479904103
+      ],
+      "hair_delta_lab": [
+        10.853085416615002,
+        12.130165151176262,
+        8.735291582083168
+      ],
+      "source_skin_lab": [
+        64.57882059722527,
+        22.308889299603003,
+        45.57664336109878
+      ],
+      "source_hair_lab": [
+        27.75023991448525,
+        13.175794638814187,
+        21.282293500984775
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_hide_wrap_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_hide_wrap_bun/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_hide_wrap_bun",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -29.34797809684857,
+        -8.892458367194152,
+        -22.816821423733916
+      ],
+      "hair_delta_lab": [
+        1.4727092756420745,
+        -9.134151930835305,
+        -5.733026884013627
+      ],
+      "source_skin_lab": [
+        64.57882059722527,
+        22.308889299603003,
+        45.57664336109878
+      ],
+      "source_hair_lab": [
+        27.75023991448525,
+        13.175794638814187,
+        21.282293500984775
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_hide_wrap_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_hide_wrap_bun/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_hide_wrap_short",
+      "variant": "v1",
+      "skin_delta_lab": [
+        12.78638364709765,
+        -20.36932050603297,
+        -20.29005120102059
+      ],
+      "hair_delta_lab": [
+        1.6731220594857703,
+        -8.17155412471475,
+        -3.442386581964472
+      ],
+      "source_skin_lab": [
+        65.79054833934697,
+        26.37001088391645,
+        48.723611605001494
+      ],
+      "source_hair_lab": [
+        27.549827130641553,
+        12.213196832693631,
+        18.99165319893562
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_hide_wrap_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_hide_wrap_short/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_hide_wrap_short",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -4.362723053205613,
+        -16.902438646025928,
+        -19.494063042943743
+      ],
+      "hair_delta_lab": [
+        -14.203805188605294,
+        -8.419885748445086,
+        -8.64889998188748
+      ],
+      "source_skin_lab": [
+        65.79054833934697,
+        26.37001088391645,
+        48.723611605001494
+      ],
+      "source_hair_lab": [
+        27.549827130641553,
+        12.213196832693633,
+        18.99165319893562
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_hide_wrap_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_hide_wrap_short/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_hide_wrap_short",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -30.559705838970267,
+        -12.9535799515076,
+        -25.96378966763663
+      ],
+      "hair_delta_lab": [
+        11.053498200458698,
+        13.092762957296818,
+        11.025931884132323
+      ],
+      "source_skin_lab": [
+        65.79054833934697,
+        26.37001088391645,
+        48.723611605001494
+      ],
+      "source_hair_lab": [
+        27.549827130641553,
+        12.213196832693631,
+        18.99165319893562
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_hide_wrap_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_hide_wrap_short/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_hide_wrap_short",
+      "variant": "v4",
+      "skin_delta_lab": [
+        12.78638364709765,
+        -20.36932050603297,
+        -20.29005120102059
+      ],
+      "hair_delta_lab": [
+        36.456992888950005,
+        -13.075129542638077,
+        -10.475790018200879
+      ],
+      "source_skin_lab": [
+        65.79054833934697,
+        26.37001088391645,
+        48.723611605001494
+      ],
+      "source_hair_lab": [
+        27.549827130641553,
+        12.213196832693631,
+        18.99165319893562
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        160,
+        155,
+        140
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_hide_wrap_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_hide_wrap_short/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_hide_wrap_short",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -4.362723053205613,
+        -16.902438646025928,
+        -19.494063042943743
+      ],
+      "hair_delta_lab": [
+        11.053498200458698,
+        13.092762957296818,
+        11.025931884132323
+      ],
+      "source_skin_lab": [
+        65.79054833934697,
+        26.37001088391645,
+        48.723611605001494
+      ],
+      "source_hair_lab": [
+        27.549827130641553,
+        12.213196832693631,
+        18.99165319893562
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_hide_wrap_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_hide_wrap_short/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_hide_wrap_short",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -30.559705838970267,
+        -12.9535799515076,
+        -25.96378966763663
+      ],
+      "hair_delta_lab": [
+        1.6731220594857703,
+        -8.17155412471475,
+        -3.442386581964472
+      ],
+      "source_skin_lab": [
+        65.79054833934697,
+        26.37001088391645,
+        48.723611605001494
+      ],
+      "source_hair_lab": [
+        27.549827130641553,
+        12.213196832693631,
+        18.99165319893562
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_hide_wrap_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_hide_wrap_short/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_loincloth_bun",
+      "variant": "v1",
+      "skin_delta_lab": [
+        15.465477005836327,
+        -19.095815517754133,
+        -19.02328263416745
+      ],
+      "hair_delta_lab": [
+        2.873053812064324,
+        -8.257460777534018,
+        -3.6121124686817705
+      ],
+      "source_skin_lab": [
+        63.11145498060829,
+        25.096505895637613,
+        47.45684303814836
+      ],
+      "source_hair_lab": [
+        26.349895378063,
+        12.2991034855129,
+        19.161379085652918
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_loincloth_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_loincloth_bun/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_loincloth_bun",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -1.683629694466937,
+        -15.628933657747089,
+        -18.227294476090606
+      ],
+      "hair_delta_lab": [
+        -13.00387343602674,
+        -8.505792401264355,
+        -8.818625868604778
+      ],
+      "source_skin_lab": [
+        63.11145498060829,
+        25.09650589563761,
+        47.45684303814836
+      ],
+      "source_hair_lab": [
+        26.349895378063,
+        12.299103485512902,
+        19.161379085652918
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_loincloth_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_loincloth_bun/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_loincloth_bun",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -27.88061248023159,
+        -11.680074963228758,
+        -24.69702110078349
+      ],
+      "hair_delta_lab": [
+        12.253429953037251,
+        13.00685630447755,
+        10.856205997415024
+      ],
+      "source_skin_lab": [
+        63.11145498060829,
+        25.09650589563761,
+        47.45684303814836
+      ],
+      "source_hair_lab": [
+        26.349895378063,
+        12.2991034855129,
+        19.161379085652918
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_loincloth_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_loincloth_bun/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_loincloth_bun",
+      "variant": "v4",
+      "skin_delta_lab": [
+        15.465477005836327,
+        -19.095815517754133,
+        -19.02328263416745
+      ],
+      "hair_delta_lab": [
+        37.65692464152856,
+        -13.161036195457346,
+        -10.645515904918177
+      ],
+      "source_skin_lab": [
+        63.11145498060829,
+        25.096505895637613,
+        47.45684303814836
+      ],
+      "source_hair_lab": [
+        26.349895378062996,
+        12.2991034855129,
+        19.161379085652918
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        160,
+        155,
+        140
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_loincloth_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_loincloth_bun/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_loincloth_bun",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -1.683629694466937,
+        -15.628933657747089,
+        -18.227294476090606
+      ],
+      "hair_delta_lab": [
+        12.253429953037251,
+        13.00685630447755,
+        10.856205997415024
+      ],
+      "source_skin_lab": [
+        63.11145498060829,
+        25.09650589563761,
+        47.45684303814836
+      ],
+      "source_hair_lab": [
+        26.349895378063,
+        12.2991034855129,
+        19.161379085652918
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_loincloth_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_loincloth_bun/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_loincloth_bun",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -27.88061248023159,
+        -11.680074963228758,
+        -24.69702110078349
+      ],
+      "hair_delta_lab": [
+        2.873053812064324,
+        -8.257460777534018,
+        -3.6121124686817705
+      ],
+      "source_skin_lab": [
+        63.11145498060829,
+        25.09650589563761,
+        47.45684303814836
+      ],
+      "source_hair_lab": [
+        26.349895378063,
+        12.2991034855129,
+        19.161379085652918
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_loincloth_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_loincloth_bun/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_loincloth_long_tied",
+      "variant": "v1",
+      "skin_delta_lab": [
+        12.530848001382324,
+        -17.770161857488475,
+        -20.007376231254327
+      ],
+      "hair_delta_lab": [
+        2.242836266544842,
+        -6.237245041609743,
+        -3.038097107090609
+      ],
+      "source_skin_lab": [
+        66.0460839850623,
+        23.770852235371954,
+        48.44093663523523
+      ],
+      "source_hair_lab": [
+        26.98011292358248,
+        10.278887749588625,
+        18.587363724061756
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_loincloth_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_loincloth_long_tied/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_loincloth_long_tied",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -4.61825869892094,
+        -14.30327999748143,
+        -19.21138807317748
+      ],
+      "hair_delta_lab": [
+        -13.634090981546223,
+        -6.485576665340079,
+        -8.244610507013617
+      ],
+      "source_skin_lab": [
+        66.0460839850623,
+        23.77085223537195,
+        48.44093663523523
+      ],
+      "source_hair_lab": [
+        26.98011292358248,
+        10.278887749588625,
+        18.587363724061756
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_loincloth_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_loincloth_long_tied/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_loincloth_long_tied",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -30.815241484685593,
+        -10.3544213029631,
+        -25.681114697870367
+      ],
+      "hair_delta_lab": [
+        11.62321240751777,
+        15.027072040401825,
+        11.430221359006186
+      ],
+      "source_skin_lab": [
+        66.0460839850623,
+        23.77085223537195,
+        48.44093663523523
+      ],
+      "source_hair_lab": [
+        26.98011292358248,
+        10.278887749588625,
+        18.587363724061756
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_loincloth_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_loincloth_long_tied/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_loincloth_long_tied",
+      "variant": "v4",
+      "skin_delta_lab": [
+        12.530848001382324,
+        -17.770161857488475,
+        -20.007376231254327
+      ],
+      "hair_delta_lab": [
+        37.026707096009076,
+        -11.14082045953307,
+        -10.071500543327016
+      ],
+      "source_skin_lab": [
+        66.0460839850623,
+        23.770852235371954,
+        48.44093663523523
+      ],
+      "source_hair_lab": [
+        26.98011292358248,
+        10.278887749588625,
+        18.587363724061756
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        160,
+        155,
+        140
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_loincloth_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_loincloth_long_tied/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_loincloth_long_tied",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -4.61825869892094,
+        -14.30327999748143,
+        -19.21138807317748
+      ],
+      "hair_delta_lab": [
+        11.62321240751777,
+        15.027072040401825,
+        11.430221359006186
+      ],
+      "source_skin_lab": [
+        66.0460839850623,
+        23.77085223537195,
+        48.44093663523523
+      ],
+      "source_hair_lab": [
+        26.98011292358248,
+        10.278887749588625,
+        18.587363724061756
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_loincloth_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_loincloth_long_tied/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_loincloth_long_tied",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -30.815241484685593,
+        -10.3544213029631,
+        -25.681114697870367
+      ],
+      "hair_delta_lab": [
+        2.242836266544842,
+        -6.237245041609743,
+        -3.038097107090609
+      ],
+      "source_skin_lab": [
+        66.0460839850623,
+        23.77085223537195,
+        48.44093663523523
+      ],
+      "source_hair_lab": [
+        26.98011292358248,
+        10.278887749588625,
+        18.587363724061756
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_loincloth_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_loincloth_long_tied/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_loincloth_short",
+      "variant": "v1",
+      "skin_delta_lab": [
+        13.196269451932565,
+        -21.720033758011013,
+        -20.343577269993496
+      ],
+      "hair_delta_lab": [
+        2.9183781936859923,
+        -8.223928974884059,
+        -2.420344208087508
+      ],
+      "source_skin_lab": [
+        65.38066253451206,
+        27.720724135894493,
+        48.7771376739744
+      ],
+      "source_hair_lab": [
+        26.30457099644133,
+        12.26557168286294,
+        17.969610825058655
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_loincloth_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_loincloth_short/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_loincloth_short",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -3.952837248370699,
+        -18.25315189800397,
+        -19.54758911191665
+      ],
+      "hair_delta_lab": [
+        -12.958549054405072,
+        -8.472260598614394,
+        -7.626857608010516
+      ],
+      "source_skin_lab": [
+        65.38066253451206,
+        27.720724135894493,
+        48.7771376739744
+      ],
+      "source_hair_lab": [
+        26.30457099644133,
+        12.26557168286294,
+        17.969610825058655
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_loincloth_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_loincloth_short/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_loincloth_short",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -30.149820034135352,
+        -14.304293203485638,
+        -26.017315736609536
+      ],
+      "hair_delta_lab": [
+        12.29875433465892,
+        13.040388107127509,
+        12.047974258009287
+      ],
+      "source_skin_lab": [
+        65.38066253451206,
+        27.72072413589449,
+        48.7771376739744
+      ],
+      "source_hair_lab": [
+        26.30457099644133,
+        12.26557168286294,
+        17.969610825058655
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_loincloth_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_loincloth_short/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_loincloth_short",
+      "variant": "v4",
+      "skin_delta_lab": [
+        13.196269451932565,
+        -21.720033758011013,
+        -20.343577269993496
+      ],
+      "hair_delta_lab": [
+        37.70224902315023,
+        -13.127504392807387,
+        -9.453747644323915
+      ],
+      "source_skin_lab": [
+        65.38066253451206,
+        27.720724135894493,
+        48.7771376739744
+      ],
+      "source_hair_lab": [
+        26.304570996441328,
+        12.26557168286294,
+        17.969610825058655
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        160,
+        155,
+        140
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_loincloth_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_loincloth_short/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_loincloth_short",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -3.952837248370699,
+        -18.25315189800397,
+        -19.54758911191665
+      ],
+      "hair_delta_lab": [
+        12.29875433465892,
+        13.040388107127509,
+        12.047974258009287
+      ],
+      "source_skin_lab": [
+        65.38066253451206,
+        27.720724135894493,
+        48.7771376739744
+      ],
+      "source_hair_lab": [
+        26.30457099644133,
+        12.26557168286294,
+        17.969610825058655
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_loincloth_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_loincloth_short/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "adult_M_loincloth_short",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -30.149820034135352,
+        -14.304293203485638,
+        -26.017315736609536
+      ],
+      "hair_delta_lab": [
+        2.9183781936859923,
+        -8.223928974884059,
+        -2.420344208087508
+      ],
+      "source_skin_lab": [
+        65.38066253451206,
+        27.72072413589449,
+        48.7771376739744
+      ],
+      "source_hair_lab": [
+        26.30457099644133,
+        12.26557168286294,
+        17.969610825058655
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/adult_M_loincloth_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/adult_M_loincloth_short/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "variant": "v1",
+      "skin_delta_lab": [
+        19.054544899811404,
+        -16.41460927001355,
+        -13.393774030778516
+      ],
+      "hair_delta_lab": [
+        -12.610842435876975,
+        -8.926566281409674,
+        -10.094630783093157
+      ],
+      "source_skin_lab": [
+        59.522387086633216,
+        22.41529964789703,
+        41.82733443475942
+      ],
+      "source_hair_lab": [
+        25.956864377913234,
+        12.71987736565822,
+        20.437384000141297
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_fur_cloak_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_fur_cloak_bun/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "variant": "v2",
+      "skin_delta_lab": [
+        1.90543819950814,
+        -12.947727410006506,
+        -12.597785872701671
+      ],
+      "hair_delta_lab": [
+        3.266084812214089,
+        -8.678234657679338,
+        -4.888117383170149
+      ],
+      "source_skin_lab": [
+        59.522387086633216,
+        22.415299647897026,
+        41.82733443475942
+      ],
+      "source_hair_lab": [
+        25.956864377913234,
+        12.71987736565822,
+        20.437384000141297
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_fur_cloak_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_fur_cloak_bun/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -24.291544586256514,
+        -8.998868715488175,
+        -19.067512497394556
+      ],
+      "hair_delta_lab": [
+        12.646460953187017,
+        12.58608242433223,
+        9.580201082926646
+      ],
+      "source_skin_lab": [
+        59.522387086633216,
+        22.415299647897026,
+        41.82733443475942
+      ],
+      "source_hair_lab": [
+        25.956864377913234,
+        12.71987736565822,
+        20.437384000141297
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_fur_cloak_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_fur_cloak_bun/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "variant": "v4",
+      "skin_delta_lab": [
+        19.054544899811404,
+        -16.41460927001355,
+        -13.393774030778516
+      ],
+      "hair_delta_lab": [
+        12.646460953187017,
+        12.58608242433223,
+        9.580201082926646
+      ],
+      "source_skin_lab": [
+        59.522387086633216,
+        22.41529964789703,
+        41.82733443475942
+      ],
+      "source_hair_lab": [
+        25.956864377913234,
+        12.71987736565822,
+        20.437384000141297
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_fur_cloak_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_fur_cloak_bun/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "variant": "v5",
+      "skin_delta_lab": [
+        1.90543819950814,
+        -12.947727410006506,
+        -12.597785872701671
+      ],
+      "hair_delta_lab": [
+        -12.610842435876975,
+        -8.926566281409674,
+        -10.094630783093157
+      ],
+      "source_skin_lab": [
+        59.522387086633216,
+        22.415299647897026,
+        41.82733443475942
+      ],
+      "source_hair_lab": [
+        25.956864377913234,
+        12.71987736565822,
+        20.437384000141297
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_fur_cloak_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_fur_cloak_bun/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -24.291544586256514,
+        -8.998868715488175,
+        -19.067512497394556
+      ],
+      "hair_delta_lab": [
+        3.266084812214089,
+        -8.678234657679338,
+        -4.888117383170149
+      ],
+      "source_skin_lab": [
+        59.522387086633216,
+        22.415299647897026,
+        41.82733443475942
+      ],
+      "source_hair_lab": [
+        25.956864377913234,
+        12.71987736565822,
+        20.437384000141297
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_fur_cloak_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_fur_cloak_bun/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "variant": "v1",
+      "skin_delta_lab": [
+        18.89766334464241,
+        -14.045332357193017,
+        -10.078092082612784
+      ],
+      "hair_delta_lab": [
+        -12.813855483454681,
+        -8.2016544261135,
+        -10.391678779055566
+      ],
+      "source_skin_lab": [
+        59.67926864180221,
+        20.046022735076495,
+        38.51165248659369
+      ],
+      "source_hair_lab": [
+        26.15987742549094,
+        11.994965510362047,
+        20.734431996103705
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_fur_cloak_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_fur_cloak_long_tied/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "variant": "v2",
+      "skin_delta_lab": [
+        1.7485566443391463,
+        -10.578450497185974,
+        -9.282103924535939
+      ],
+      "hair_delta_lab": [
+        3.0630717646363834,
+        -7.953322802383163,
+        -5.185165379132558
+      ],
+      "source_skin_lab": [
+        59.67926864180221,
+        20.046022735076495,
+        38.51165248659369
+      ],
+      "source_hair_lab": [
+        26.15987742549094,
+        11.994965510362045,
+        20.734431996103705
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_fur_cloak_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_fur_cloak_long_tied/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -24.448426141425507,
+        -6.629591802667644,
+        -15.751830549228824
+      ],
+      "hair_delta_lab": [
+        12.443447905609311,
+        13.310994279628405,
+        9.283153086964237
+      ],
+      "source_skin_lab": [
+        59.67926864180221,
+        20.046022735076495,
+        38.51165248659369
+      ],
+      "source_hair_lab": [
+        26.15987742549094,
+        11.994965510362045,
+        20.734431996103705
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_fur_cloak_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_fur_cloak_long_tied/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "variant": "v4",
+      "skin_delta_lab": [
+        18.89766334464241,
+        -14.045332357193017,
+        -10.078092082612784
+      ],
+      "hair_delta_lab": [
+        12.443447905609311,
+        13.310994279628405,
+        9.283153086964237
+      ],
+      "source_skin_lab": [
+        59.67926864180221,
+        20.046022735076495,
+        38.51165248659369
+      ],
+      "source_hair_lab": [
+        26.15987742549094,
+        11.994965510362045,
+        20.734431996103705
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_fur_cloak_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_fur_cloak_long_tied/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "variant": "v5",
+      "skin_delta_lab": [
+        1.7485566443391463,
+        -10.578450497185974,
+        -9.282103924535939
+      ],
+      "hair_delta_lab": [
+        -12.813855483454681,
+        -8.2016544261135,
+        -10.391678779055566
+      ],
+      "source_skin_lab": [
+        59.67926864180221,
+        20.046022735076495,
+        38.51165248659369
+      ],
+      "source_hair_lab": [
+        26.15987742549094,
+        11.994965510362047,
+        20.734431996103705
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_fur_cloak_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_fur_cloak_long_tied/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -24.448426141425507,
+        -6.629591802667644,
+        -15.751830549228824
+      ],
+      "hair_delta_lab": [
+        3.0630717646363834,
+        -7.953322802383163,
+        -5.185165379132558
+      ],
+      "source_skin_lab": [
+        59.67926864180221,
+        20.046022735076495,
+        38.51165248659369
+      ],
+      "source_hair_lab": [
+        26.15987742549094,
+        11.994965510362045,
+        20.734431996103705
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_fur_cloak_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_fur_cloak_long_tied/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_fur_cloak_short",
+      "variant": "v1",
+      "skin_delta_lab": [
+        16.949504396455417,
+        -16.375655912762184,
+        -14.070710825097102
+      ],
+      "hair_delta_lab": [
+        -13.243958292480972,
+        -10.89177938355462,
+        -10.976935917547978
+      ],
+      "source_skin_lab": [
+        61.6274275899892,
+        22.376346290645664,
+        42.50427122907801
+      ],
+      "source_hair_lab": [
+        26.58998023451723,
+        14.685090467803168,
+        21.319689134596118
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_fur_cloak_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_fur_cloak_short/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_fur_cloak_short",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -0.19960230384784694,
+        -12.90877405275514,
+        -13.274722667020256
+      ],
+      "hair_delta_lab": [
+        2.6329689556100924,
+        -10.643447759824284,
+        -5.77042251762497
+      ],
+      "source_skin_lab": [
+        61.6274275899892,
+        22.37634629064566,
+        42.50427122907801
+      ],
+      "source_hair_lab": [
+        26.58998023451723,
+        14.685090467803166,
+        21.319689134596118
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_fur_cloak_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_fur_cloak_short/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_fur_cloak_short",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -26.3965850896125,
+        -8.95991535823681,
+        -19.744449291713142
+      ],
+      "hair_delta_lab": [
+        12.01334509658302,
+        10.620869322187284,
+        8.697895948471825
+      ],
+      "source_skin_lab": [
+        61.6274275899892,
+        22.37634629064566,
+        42.50427122907801
+      ],
+      "source_hair_lab": [
+        26.58998023451723,
+        14.685090467803166,
+        21.319689134596118
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_fur_cloak_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_fur_cloak_short/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_fur_cloak_short",
+      "variant": "v4",
+      "skin_delta_lab": [
+        16.949504396455417,
+        -16.375655912762184,
+        -14.070710825097102
+      ],
+      "hair_delta_lab": [
+        12.01334509658302,
+        10.620869322187284,
+        8.697895948471825
+      ],
+      "source_skin_lab": [
+        61.6274275899892,
+        22.376346290645664,
+        42.50427122907801
+      ],
+      "source_hair_lab": [
+        26.58998023451723,
+        14.685090467803166,
+        21.319689134596118
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_fur_cloak_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_fur_cloak_short/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_fur_cloak_short",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -0.19960230384784694,
+        -12.90877405275514,
+        -13.274722667020256
+      ],
+      "hair_delta_lab": [
+        -13.243958292480972,
+        -10.89177938355462,
+        -10.976935917547978
+      ],
+      "source_skin_lab": [
+        61.6274275899892,
+        22.37634629064566,
+        42.50427122907801
+      ],
+      "source_hair_lab": [
+        26.58998023451723,
+        14.685090467803168,
+        21.319689134596118
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_fur_cloak_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_fur_cloak_short/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_fur_cloak_short",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -26.3965850896125,
+        -8.95991535823681,
+        -19.744449291713142
+      ],
+      "hair_delta_lab": [
+        2.6329689556100924,
+        -10.643447759824284,
+        -5.77042251762497
+      ],
+      "source_skin_lab": [
+        61.6274275899892,
+        22.37634629064566,
+        42.50427122907801
+      ],
+      "source_hair_lab": [
+        26.58998023451723,
+        14.685090467803166,
+        21.319689134596118
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_fur_cloak_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_fur_cloak_short/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_hide_wrap_bun",
+      "variant": "v1",
+      "skin_delta_lab": [
+        11.878833697037848,
+        -14.853502274455673,
+        -14.012481307971491
+      ],
+      "hair_delta_lab": [
+        -16.210152836417294,
+        -9.416493208970184,
+        -8.742407387473365
+      ],
+      "source_skin_lab": [
+        66.69809828940677,
+        20.85419265233915,
+        42.4460417119524
+      ],
+      "source_hair_lab": [
+        29.556174778453553,
+        13.209804293218731,
+        19.085160604521505
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_hide_wrap_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_hide_wrap_bun/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_hide_wrap_bun",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -5.270273003265416,
+        -11.38662041444863,
+        -13.216493149894646
+      ],
+      "hair_delta_lab": [
+        -0.33322558832622917,
+        -9.168161585239849,
+        -3.5358939875503577
+      ],
+      "source_skin_lab": [
+        66.69809828940677,
+        20.85419265233915,
+        42.4460417119524
+      ],
+      "source_hair_lab": [
+        29.556174778453553,
+        13.209804293218731,
+        19.085160604521505
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_hide_wrap_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_hide_wrap_bun/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_hide_wrap_bun",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -31.46725578903007,
+        -7.4377617199303,
+        -19.68621977458753
+      ],
+      "hair_delta_lab": [
+        9.047150552646698,
+        12.096155496771718,
+        10.932424478546437
+      ],
+      "source_skin_lab": [
+        66.69809828940677,
+        20.85419265233915,
+        42.4460417119524
+      ],
+      "source_hair_lab": [
+        29.556174778453553,
+        13.209804293218731,
+        19.085160604521505
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_hide_wrap_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_hide_wrap_bun/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_hide_wrap_bun",
+      "variant": "v4",
+      "skin_delta_lab": [
+        11.878833697037848,
+        -14.853502274455673,
+        -14.012481307971491
+      ],
+      "hair_delta_lab": [
+        9.047150552646698,
+        12.096155496771718,
+        10.932424478546437
+      ],
+      "source_skin_lab": [
+        66.69809828940677,
+        20.85419265233915,
+        42.4460417119524
+      ],
+      "source_hair_lab": [
+        29.556174778453553,
+        13.209804293218731,
+        19.085160604521505
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_hide_wrap_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_hide_wrap_bun/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_hide_wrap_bun",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -5.270273003265416,
+        -11.38662041444863,
+        -13.216493149894646
+      ],
+      "hair_delta_lab": [
+        -16.210152836417294,
+        -9.416493208970184,
+        -8.742407387473365
+      ],
+      "source_skin_lab": [
+        66.69809828940677,
+        20.85419265233915,
+        42.4460417119524
+      ],
+      "source_hair_lab": [
+        29.556174778453553,
+        13.209804293218731,
+        19.085160604521505
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_hide_wrap_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_hide_wrap_bun/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_hide_wrap_bun",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -31.46725578903007,
+        -7.4377617199303,
+        -19.68621977458753
+      ],
+      "hair_delta_lab": [
+        -0.33322558832622917,
+        -9.168161585239849,
+        -3.5358939875503577
+      ],
+      "source_skin_lab": [
+        66.69809828940677,
+        20.85419265233915,
+        42.4460417119524
+      ],
+      "source_hair_lab": [
+        29.556174778453553,
+        13.209804293218731,
+        19.085160604521505
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_hide_wrap_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_hide_wrap_bun/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_hide_wrap_long_tied",
+      "variant": "v1",
+      "skin_delta_lab": [
+        12.482771906391108,
+        -17.802971444354,
+        -18.1138170149488
+      ],
+      "hair_delta_lab": [
+        -14.240162276877786,
+        -9.309140970223055,
+        -9.526247486072707
+      ],
+      "source_skin_lab": [
+        66.09416008005351,
+        23.80366182223748,
+        46.547377418929706
+      ],
+      "source_hair_lab": [
+        27.586184218914045,
+        13.102452054471602,
+        19.869000703120847
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_hide_wrap_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_hide_wrap_long_tied/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_hide_wrap_long_tied",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -4.666334793912156,
+        -14.336089584346956,
+        -17.317828856871955
+      ],
+      "hair_delta_lab": [
+        1.6367649712132781,
+        -9.06080934649272,
+        -4.319734086149699
+      ],
+      "source_skin_lab": [
+        66.09416008005351,
+        23.803661822237476,
+        46.547377418929706
+      ],
+      "source_hair_lab": [
+        27.586184218914045,
+        13.102452054471602,
+        19.869000703120847
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_hide_wrap_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_hide_wrap_long_tied/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_hide_wrap_long_tied",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -30.86331757967681,
+        -10.387230889828626,
+        -23.78755548156484
+      ],
+      "hair_delta_lab": [
+        11.017141112186206,
+        12.203507735518848,
+        10.148584379947096
+      ],
+      "source_skin_lab": [
+        66.09416008005351,
+        23.803661822237476,
+        46.547377418929706
+      ],
+      "source_hair_lab": [
+        27.586184218914045,
+        13.102452054471602,
+        19.869000703120847
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_hide_wrap_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_hide_wrap_long_tied/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_hide_wrap_long_tied",
+      "variant": "v4",
+      "skin_delta_lab": [
+        12.482771906391108,
+        -17.802971444354,
+        -18.1138170149488
+      ],
+      "hair_delta_lab": [
+        11.017141112186206,
+        12.203507735518848,
+        10.148584379947096
+      ],
+      "source_skin_lab": [
+        66.09416008005351,
+        23.80366182223748,
+        46.547377418929706
+      ],
+      "source_hair_lab": [
+        27.586184218914045,
+        13.102452054471602,
+        19.869000703120847
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_hide_wrap_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_hide_wrap_long_tied/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_hide_wrap_long_tied",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -4.666334793912156,
+        -14.336089584346956,
+        -17.317828856871955
+      ],
+      "hair_delta_lab": [
+        -14.240162276877786,
+        -9.309140970223055,
+        -9.526247486072707
+      ],
+      "source_skin_lab": [
+        66.09416008005351,
+        23.803661822237476,
+        46.547377418929706
+      ],
+      "source_hair_lab": [
+        27.586184218914045,
+        13.102452054471602,
+        19.869000703120847
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_hide_wrap_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_hide_wrap_long_tied/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_hide_wrap_long_tied",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -30.86331757967681,
+        -10.387230889828626,
+        -23.78755548156484
+      ],
+      "hair_delta_lab": [
+        1.6367649712132781,
+        -9.06080934649272,
+        -4.319734086149699
+      ],
+      "source_skin_lab": [
+        66.09416008005351,
+        23.803661822237476,
+        46.547377418929706
+      ],
+      "source_hair_lab": [
+        27.586184218914045,
+        13.102452054471602,
+        19.869000703120847
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_hide_wrap_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_hide_wrap_long_tied/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_hide_wrap_short",
+      "variant": "v1",
+      "skin_delta_lab": [
+        10.548895308482827,
+        -16.9382884834396,
+        -13.127086295143094
+      ],
+      "hair_delta_lab": [
+        -16.639032284278244,
+        -9.700557492109716,
+        -8.52105922080681
+      ],
+      "source_skin_lab": [
+        68.0280366779618,
+        22.93897886132308,
+        41.560646699124
+      ],
+      "source_hair_lab": [
+        29.985054226314503,
+        13.493868576358263,
+        18.86381243785495
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_hide_wrap_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_hide_wrap_short/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_hide_wrap_short",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -6.600211391820437,
+        -13.471406623432559,
+        -12.331098137066249
+      ],
+      "hair_delta_lab": [
+        -0.7621050361871795,
+        -9.45222586837938,
+        -3.3145458208838026
+      ],
+      "source_skin_lab": [
+        68.0280366779618,
+        22.93897886132308,
+        41.560646699124
+      ],
+      "source_hair_lab": [
+        29.985054226314503,
+        13.493868576358262,
+        18.86381243785495
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_hide_wrap_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_hide_wrap_short/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_hide_wrap_short",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -32.79719417758509,
+        -9.522547928914229,
+        -18.800824761759134
+      ],
+      "hair_delta_lab": [
+        8.618271104785748,
+        11.812091213632188,
+        11.153772645212992
+      ],
+      "source_skin_lab": [
+        68.0280366779618,
+        22.93897886132308,
+        41.560646699124
+      ],
+      "source_hair_lab": [
+        29.985054226314503,
+        13.493868576358262,
+        18.86381243785495
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_hide_wrap_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_hide_wrap_short/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_hide_wrap_short",
+      "variant": "v4",
+      "skin_delta_lab": [
+        10.548895308482827,
+        -16.9382884834396,
+        -13.127086295143094
+      ],
+      "hair_delta_lab": [
+        8.618271104785748,
+        11.812091213632188,
+        11.153772645212992
+      ],
+      "source_skin_lab": [
+        68.0280366779618,
+        22.93897886132308,
+        41.560646699124
+      ],
+      "source_hair_lab": [
+        29.985054226314503,
+        13.493868576358262,
+        18.86381243785495
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_hide_wrap_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_hide_wrap_short/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_hide_wrap_short",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -6.600211391820437,
+        -13.471406623432559,
+        -12.331098137066249
+      ],
+      "hair_delta_lab": [
+        -16.639032284278244,
+        -9.700557492109716,
+        -8.52105922080681
+      ],
+      "source_skin_lab": [
+        68.0280366779618,
+        22.93897886132308,
+        41.560646699124
+      ],
+      "source_hair_lab": [
+        29.985054226314503,
+        13.493868576358263,
+        18.86381243785495
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_hide_wrap_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_hide_wrap_short/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_hide_wrap_short",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -32.79719417758509,
+        -9.522547928914229,
+        -18.800824761759134
+      ],
+      "hair_delta_lab": [
+        -0.7621050361871795,
+        -9.45222586837938,
+        -3.3145458208838026
+      ],
+      "source_skin_lab": [
+        68.0280366779618,
+        22.93897886132308,
+        41.560646699124
+      ],
+      "source_hair_lab": [
+        29.985054226314503,
+        13.493868576358262,
+        18.86381243785495
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_hide_wrap_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_hide_wrap_short/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_loincloth_bun",
+      "variant": "v1",
+      "skin_delta_lab": [
+        14.07450428559305,
+        -15.219611552612344,
+        -14.088029135991995
+      ],
+      "hair_delta_lab": [
+        -14.180532981067834,
+        -7.6694559549818875,
+        -9.243691684670397
+      ],
+      "source_skin_lab": [
+        64.50242770085157,
+        21.220301930495822,
+        42.5215895399729
+      ],
+      "source_hair_lab": [
+        27.526554923104094,
+        11.462767039230433,
+        19.586444901718536
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_loincloth_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_loincloth_bun/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_loincloth_bun",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -3.0746024147102133,
+        -11.752729692605302,
+        -13.29204097791515
+      ],
+      "hair_delta_lab": [
+        1.69639426702323,
+        -7.421124331251551,
+        -4.037178284747389
+      ],
+      "source_skin_lab": [
+        64.50242770085157,
+        21.220301930495822,
+        42.5215895399729
+      ],
+      "source_hair_lab": [
+        27.526554923104094,
+        11.462767039230433,
+        19.586444901718536
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_loincloth_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_loincloth_bun/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_loincloth_bun",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -29.271585200474867,
+        -7.803870998086971,
+        -19.761767602608035
+      ],
+      "hair_delta_lab": [
+        11.076770407996158,
+        13.843192750760016,
+        10.431140181349406
+      ],
+      "source_skin_lab": [
+        64.50242770085157,
+        21.220301930495822,
+        42.5215895399729
+      ],
+      "source_hair_lab": [
+        27.526554923104094,
+        11.462767039230433,
+        19.586444901718536
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_loincloth_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_loincloth_bun/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_loincloth_bun",
+      "variant": "v4",
+      "skin_delta_lab": [
+        14.07450428559305,
+        -15.219611552612344,
+        -14.088029135991995
+      ],
+      "hair_delta_lab": [
+        11.076770407996158,
+        13.843192750760016,
+        10.431140181349406
+      ],
+      "source_skin_lab": [
+        64.50242770085157,
+        21.220301930495822,
+        42.5215895399729
+      ],
+      "source_hair_lab": [
+        27.526554923104094,
+        11.462767039230433,
+        19.586444901718536
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_loincloth_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_loincloth_bun/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_loincloth_bun",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -3.0746024147102133,
+        -11.752729692605302,
+        -13.29204097791515
+      ],
+      "hair_delta_lab": [
+        -14.180532981067834,
+        -7.6694559549818875,
+        -9.243691684670397
+      ],
+      "source_skin_lab": [
+        64.50242770085157,
+        21.220301930495822,
+        42.5215895399729
+      ],
+      "source_hair_lab": [
+        27.526554923104094,
+        11.462767039230433,
+        19.586444901718536
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_loincloth_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_loincloth_bun/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_loincloth_bun",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -29.271585200474867,
+        -7.803870998086971,
+        -19.761767602608035
+      ],
+      "hair_delta_lab": [
+        1.69639426702323,
+        -7.421124331251551,
+        -4.037178284747389
+      ],
+      "source_skin_lab": [
+        64.50242770085157,
+        21.220301930495822,
+        42.5215895399729
+      ],
+      "source_hair_lab": [
+        27.526554923104094,
+        11.462767039230433,
+        19.586444901718536
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_loincloth_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_loincloth_bun/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_loincloth_long_tied",
+      "variant": "v1",
+      "skin_delta_lab": [
+        13.499915766735413,
+        -16.662361845972377,
+        -13.386325915531607
+      ],
+      "hair_delta_lab": [
+        -13.046165377059712,
+        -8.743335652686987,
+        -9.765000335031774
+      ],
+      "source_skin_lab": [
+        65.07701621970921,
+        22.663052223855857,
+        41.81988631951251
+      ],
+      "source_hair_lab": [
+        26.39218731909597,
+        12.536646736935534,
+        20.107753552079913
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_loincloth_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_loincloth_long_tied/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_loincloth_long_tied",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -3.6491909335678514,
+        -13.195479985965337,
+        -12.590337757454762
+      ],
+      "hair_delta_lab": [
+        2.8307618710313527,
+        -8.495004028956652,
+        -4.558486935108766
+      ],
+      "source_skin_lab": [
+        65.07701621970921,
+        22.663052223855857,
+        41.81988631951251
+      ],
+      "source_hair_lab": [
+        26.39218731909597,
+        12.536646736935534,
+        20.107753552079913
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_loincloth_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_loincloth_long_tied/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_loincloth_long_tied",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -29.846173719332505,
+        -9.246621291447006,
+        -19.060064382147647
+      ],
+      "hair_delta_lab": [
+        12.21113801200428,
+        12.769313053054915,
+        9.90983153098803
+      ],
+      "source_skin_lab": [
+        65.07701621970921,
+        22.663052223855857,
+        41.81988631951251
+      ],
+      "source_hair_lab": [
+        26.39218731909597,
+        12.536646736935534,
+        20.107753552079913
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_loincloth_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_loincloth_long_tied/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_loincloth_long_tied",
+      "variant": "v4",
+      "skin_delta_lab": [
+        13.499915766735413,
+        -16.662361845972377,
+        -13.386325915531607
+      ],
+      "hair_delta_lab": [
+        12.21113801200428,
+        12.769313053054915,
+        9.90983153098803
+      ],
+      "source_skin_lab": [
+        65.07701621970921,
+        22.663052223855857,
+        41.81988631951251
+      ],
+      "source_hair_lab": [
+        26.39218731909597,
+        12.536646736935534,
+        20.107753552079913
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_loincloth_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_loincloth_long_tied/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_loincloth_long_tied",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -3.6491909335678514,
+        -13.195479985965337,
+        -12.590337757454762
+      ],
+      "hair_delta_lab": [
+        -13.046165377059712,
+        -8.743335652686987,
+        -9.765000335031774
+      ],
+      "source_skin_lab": [
+        65.07701621970921,
+        22.663052223855857,
+        41.81988631951251
+      ],
+      "source_hair_lab": [
+        26.39218731909597,
+        12.536646736935534,
+        20.107753552079913
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_loincloth_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_loincloth_long_tied/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_loincloth_long_tied",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -29.846173719332505,
+        -9.246621291447006,
+        -19.060064382147647
+      ],
+      "hair_delta_lab": [
+        2.8307618710313527,
+        -8.495004028956652,
+        -4.558486935108766
+      ],
+      "source_skin_lab": [
+        65.07701621970921,
+        22.663052223855857,
+        41.81988631951251
+      ],
+      "source_hair_lab": [
+        26.39218731909597,
+        12.536646736935534,
+        20.107753552079913
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_loincloth_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_loincloth_long_tied/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_loincloth_short",
+      "variant": "v1",
+      "skin_delta_lab": [
+        15.354971597777357,
+        -18.81534208653001,
+        -17.831630718087233
+      ],
+      "hair_delta_lab": [
+        -10.293809922263595,
+        -7.468489613800641,
+        -7.101521835823503
+      ],
+      "source_skin_lab": [
+        63.22196038866726,
+        24.81603246441349,
+        46.26519112206814
+      ],
+      "source_hair_lab": [
+        23.639831864299854,
+        11.261800698049187,
+        17.444275052871642
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_loincloth_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_loincloth_short/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_loincloth_short",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -1.7941351025259067,
+        -15.348460226522965,
+        -17.035642560010388
+      ],
+      "hair_delta_lab": [
+        5.58311732582747,
+        -7.220157990070305,
+        -1.895008435900495
+      ],
+      "source_skin_lab": [
+        63.22196038866726,
+        24.816032464413485,
+        46.26519112206814
+      ],
+      "source_hair_lab": [
+        23.639831864299854,
+        11.261800698049187,
+        17.444275052871642
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_loincloth_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_loincloth_short/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_loincloth_short",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -27.99111788829056,
+        -11.399601532004635,
+        -23.505369184703273
+      ],
+      "hair_delta_lab": [
+        14.963493466800397,
+        14.044159091941262,
+        12.5733100301963
+      ],
+      "source_skin_lab": [
+        63.22196038866726,
+        24.816032464413485,
+        46.26519112206814
+      ],
+      "source_hair_lab": [
+        23.639831864299854,
+        11.261800698049187,
+        17.444275052871642
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_loincloth_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_loincloth_short/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_loincloth_short",
+      "variant": "v4",
+      "skin_delta_lab": [
+        15.354971597777357,
+        -18.81534208653001,
+        -17.831630718087233
+      ],
+      "hair_delta_lab": [
+        14.963493466800397,
+        14.044159091941262,
+        12.5733100301963
+      ],
+      "source_skin_lab": [
+        63.22196038866726,
+        24.81603246441349,
+        46.26519112206814
+      ],
+      "source_hair_lab": [
+        23.639831864299854,
+        11.261800698049187,
+        17.444275052871642
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_loincloth_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_loincloth_short/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_loincloth_short",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -1.7941351025259067,
+        -15.348460226522965,
+        -17.035642560010388
+      ],
+      "hair_delta_lab": [
+        -10.293809922263595,
+        -7.468489613800641,
+        -7.101521835823503
+      ],
+      "source_skin_lab": [
+        63.22196038866726,
+        24.816032464413485,
+        46.26519112206814
+      ],
+      "source_hair_lab": [
+        23.639831864299854,
+        11.261800698049187,
+        17.444275052871642
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_loincloth_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_loincloth_short/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_F_loincloth_short",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -27.99111788829056,
+        -11.399601532004635,
+        -23.505369184703273
+      ],
+      "hair_delta_lab": [
+        5.58311732582747,
+        -7.220157990070305,
+        -1.895008435900495
+      ],
+      "source_skin_lab": [
+        63.22196038866726,
+        24.816032464413485,
+        46.26519112206814
+      ],
+      "source_hair_lab": [
+        23.639831864299854,
+        11.261800698049187,
+        17.444275052871642
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_F_loincloth_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_F_loincloth_short/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "variant": "v1",
+      "skin_delta_lab": [
+        17.257906691046763,
+        -15.732163630022912,
+        -15.122093186599656
+      ],
+      "hair_delta_lab": [
+        -16.261362112574723,
+        -8.175417965398378,
+        -9.725608672894415
+      ],
+      "source_skin_lab": [
+        61.31902529539786,
+        21.73285400790639,
+        43.55565359058056
+      ],
+      "source_hair_lab": [
+        29.607384054610982,
+        11.968729049646925,
+        20.068361889942555
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_fur_cloak_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_fur_cloak_bun/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "variant": "v2",
+      "skin_delta_lab": [
+        0.10879999074349911,
+        -12.26528177001587,
+        -14.32610502852281
+      ],
+      "hair_delta_lab": [
+        -0.3844348644836586,
+        -7.927086341668042,
+        -4.519095272971407
+      ],
+      "source_skin_lab": [
+        61.31902529539786,
+        21.73285400790639,
+        43.55565359058056
+      ],
+      "source_hair_lab": [
+        29.607384054610982,
+        11.968729049646925,
+        20.068361889942555
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_fur_cloak_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_fur_cloak_bun/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -26.088182795021154,
+        -8.31642307549754,
+        -20.795831653215696
+      ],
+      "hair_delta_lab": [
+        8.995941276489269,
+        13.337230740343525,
+        9.949223193125388
+      ],
+      "source_skin_lab": [
+        61.31902529539786,
+        21.73285400790639,
+        43.55565359058056
+      ],
+      "source_hair_lab": [
+        29.607384054610982,
+        11.968729049646925,
+        20.068361889942555
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_fur_cloak_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_fur_cloak_bun/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "variant": "v4",
+      "skin_delta_lab": [
+        17.257906691046763,
+        -15.732163630022912,
+        -15.122093186599656
+      ],
+      "hair_delta_lab": [
+        8.995941276489269,
+        13.337230740343525,
+        9.949223193125388
+      ],
+      "source_skin_lab": [
+        61.31902529539786,
+        21.73285400790639,
+        43.55565359058056
+      ],
+      "source_hair_lab": [
+        29.607384054610982,
+        11.968729049646925,
+        20.068361889942555
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_fur_cloak_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_fur_cloak_bun/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "variant": "v5",
+      "skin_delta_lab": [
+        0.10879999074349911,
+        -12.26528177001587,
+        -14.32610502852281
+      ],
+      "hair_delta_lab": [
+        -16.261362112574723,
+        -8.175417965398378,
+        -9.725608672894415
+      ],
+      "source_skin_lab": [
+        61.31902529539786,
+        21.73285400790639,
+        43.55565359058056
+      ],
+      "source_hair_lab": [
+        29.607384054610982,
+        11.968729049646925,
+        20.068361889942555
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_fur_cloak_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_fur_cloak_bun/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -26.088182795021154,
+        -8.31642307549754,
+        -20.795831653215696
+      ],
+      "hair_delta_lab": [
+        -0.3844348644836586,
+        -7.927086341668042,
+        -4.519095272971407
+      ],
+      "source_skin_lab": [
+        61.31902529539786,
+        21.73285400790639,
+        43.55565359058056
+      ],
+      "source_hair_lab": [
+        29.607384054610982,
+        11.968729049646925,
+        20.068361889942555
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_fur_cloak_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_fur_cloak_bun/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_fur_cloak_long_tied",
+      "variant": "v1",
+      "skin_delta_lab": [
+        14.518848009961786,
+        -14.82365669825696,
+        -12.635173166083646
+      ],
+      "hair_delta_lab": [
+        -14.760659435490446,
+        -5.596595963180895,
+        -6.761183596085813
+      ],
+      "source_skin_lab": [
+        64.05808397648283,
+        20.824347076140437,
+        41.06873357006455
+      ],
+      "source_hair_lab": [
+        28.106681377526705,
+        9.38990704742944,
+        17.103936813133952
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_fur_cloak_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_fur_cloak_long_tied/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_fur_cloak_long_tied",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -2.6302586903414777,
+        -11.356774838249917,
+        -11.839185008006801
+      ],
+      "hair_delta_lab": [
+        1.1162678126006185,
+        -5.348264339450559,
+        -1.5546701961628049
+      ],
+      "source_skin_lab": [
+        64.05808397648283,
+        20.824347076140437,
+        41.06873357006455
+      ],
+      "source_hair_lab": [
+        28.106681377526705,
+        9.38990704742944,
+        17.103936813133952
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_fur_cloak_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_fur_cloak_long_tied/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_fur_cloak_long_tied",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -28.82724147610613,
+        -7.407916143731587,
+        -18.308911632699687
+      ],
+      "hair_delta_lab": [
+        10.496643953573546,
+        15.916052742561009,
+        12.91364826993399
+      ],
+      "source_skin_lab": [
+        64.05808397648283,
+        20.824347076140437,
+        41.06873357006455
+      ],
+      "source_hair_lab": [
+        28.106681377526705,
+        9.38990704742944,
+        17.103936813133952
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_fur_cloak_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_fur_cloak_long_tied/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_fur_cloak_long_tied",
+      "variant": "v4",
+      "skin_delta_lab": [
+        14.518848009961786,
+        -14.82365669825696,
+        -12.635173166083646
+      ],
+      "hair_delta_lab": [
+        10.496643953573546,
+        15.916052742561009,
+        12.91364826993399
+      ],
+      "source_skin_lab": [
+        64.05808397648283,
+        20.824347076140437,
+        41.06873357006455
+      ],
+      "source_hair_lab": [
+        28.106681377526705,
+        9.38990704742944,
+        17.103936813133952
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_fur_cloak_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_fur_cloak_long_tied/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_fur_cloak_long_tied",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -2.6302586903414777,
+        -11.356774838249917,
+        -11.839185008006801
+      ],
+      "hair_delta_lab": [
+        -14.760659435490446,
+        -5.596595963180895,
+        -6.761183596085813
+      ],
+      "source_skin_lab": [
+        64.05808397648283,
+        20.824347076140437,
+        41.06873357006455
+      ],
+      "source_hair_lab": [
+        28.106681377526705,
+        9.38990704742944,
+        17.103936813133952
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_fur_cloak_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_fur_cloak_long_tied/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_fur_cloak_long_tied",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -28.82724147610613,
+        -7.407916143731587,
+        -18.308911632699687
+      ],
+      "hair_delta_lab": [
+        1.1162678126006185,
+        -5.348264339450559,
+        -1.5546701961628049
+      ],
+      "source_skin_lab": [
+        64.05808397648283,
+        20.824347076140437,
+        41.06873357006455
+      ],
+      "source_hair_lab": [
+        28.106681377526705,
+        9.38990704742944,
+        17.103936813133952
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_fur_cloak_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_fur_cloak_long_tied/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_fur_cloak_short",
+      "variant": "v1",
+      "skin_delta_lab": [
+        10.50020002964878,
+        -15.893301409305911,
+        -15.171691171839406
+      ],
+      "hair_delta_lab": [
+        -16.63620915851337,
+        -7.8581580286190205,
+        -8.144994363381217
+      ],
+      "source_skin_lab": [
+        68.07673195679584,
+        21.89399178718939,
+        43.60525157582031
+      ],
+      "source_hair_lab": [
+        29.98223110054963,
+        11.651469112867566,
+        18.487747580429357
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_fur_cloak_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_fur_cloak_short/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_fur_cloak_short",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -6.648906670654483,
+        -12.426419549298869,
+        -14.37570301376256
+      ],
+      "hair_delta_lab": [
+        -0.7592819104223061,
+        -7.609826404888684,
+        -2.9384809634582094
+      ],
+      "source_skin_lab": [
+        68.07673195679584,
+        21.89399178718939,
+        43.60525157582031
+      ],
+      "source_hair_lab": [
+        29.98223110054963,
+        11.651469112867566,
+        18.487747580429357
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_fur_cloak_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_fur_cloak_short/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_fur_cloak_short",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -32.84588945641914,
+        -8.477560854780538,
+        -20.845429638455446
+      ],
+      "hair_delta_lab": [
+        8.621094230550622,
+        13.654490677122883,
+        11.529837502638586
+      ],
+      "source_skin_lab": [
+        68.07673195679584,
+        21.89399178718939,
+        43.60525157582031
+      ],
+      "source_hair_lab": [
+        29.98223110054963,
+        11.651469112867566,
+        18.487747580429357
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_fur_cloak_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_fur_cloak_short/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_fur_cloak_short",
+      "variant": "v4",
+      "skin_delta_lab": [
+        10.50020002964878,
+        -15.893301409305911,
+        -15.171691171839406
+      ],
+      "hair_delta_lab": [
+        8.621094230550622,
+        13.654490677122883,
+        11.529837502638586
+      ],
+      "source_skin_lab": [
+        68.07673195679584,
+        21.89399178718939,
+        43.60525157582031
+      ],
+      "source_hair_lab": [
+        29.98223110054963,
+        11.651469112867566,
+        18.487747580429357
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_fur_cloak_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_fur_cloak_short/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_fur_cloak_short",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -6.648906670654483,
+        -12.426419549298869,
+        -14.37570301376256
+      ],
+      "hair_delta_lab": [
+        -16.63620915851337,
+        -7.8581580286190205,
+        -8.144994363381217
+      ],
+      "source_skin_lab": [
+        68.07673195679584,
+        21.89399178718939,
+        43.60525157582031
+      ],
+      "source_hair_lab": [
+        29.98223110054963,
+        11.651469112867566,
+        18.487747580429357
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_fur_cloak_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_fur_cloak_short/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_fur_cloak_short",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -32.84588945641914,
+        -8.477560854780538,
+        -20.845429638455446
+      ],
+      "hair_delta_lab": [
+        -0.7592819104223061,
+        -7.609826404888684,
+        -2.9384809634582094
+      ],
+      "source_skin_lab": [
+        68.07673195679584,
+        21.89399178718939,
+        43.60525157582031
+      ],
+      "source_hair_lab": [
+        29.98223110054963,
+        11.651469112867566,
+        18.487747580429357
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_fur_cloak_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_fur_cloak_short/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_hide_wrap_bun",
+      "variant": "v1",
+      "skin_delta_lab": [
+        10.292120705560308,
+        -14.71821100331008,
+        -16.960330322684158
+      ],
+      "hair_delta_lab": [
+        -14.938498828775025,
+        -7.0149128149855615,
+        -7.609530611038215
+      ],
+      "source_skin_lab": [
+        68.28481128088431,
+        20.718901381193557,
+        45.39389072666506
+      ],
+      "source_hair_lab": [
+        28.284520770811284,
+        10.808223899234108,
+        17.952283828086355
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_hide_wrap_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_hide_wrap_bun/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_hide_wrap_bun",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -6.856985994742956,
+        -11.251329143303037,
+        -16.164342164607312
+      ],
+      "hair_delta_lab": [
+        0.9384284193160397,
+        -6.766581191255225,
+        -2.4030172111152073
+      ],
+      "source_skin_lab": [
+        68.28481128088431,
+        20.718901381193557,
+        45.39389072666506
+      ],
+      "source_hair_lab": [
+        28.284520770811284,
+        10.808223899234108,
+        17.952283828086355
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_hide_wrap_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_hide_wrap_bun/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_hide_wrap_bun",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -33.05396878050761,
+        -7.302470448784707,
+        -22.634068789300198
+      ],
+      "hair_delta_lab": [
+        10.318804560288967,
+        14.497735890756342,
+        12.065301254981588
+      ],
+      "source_skin_lab": [
+        68.28481128088431,
+        20.718901381193557,
+        45.39389072666506
+      ],
+      "source_hair_lab": [
+        28.284520770811284,
+        10.808223899234108,
+        17.952283828086355
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_hide_wrap_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_hide_wrap_bun/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_hide_wrap_bun",
+      "variant": "v4",
+      "skin_delta_lab": [
+        10.292120705560308,
+        -14.71821100331008,
+        -16.960330322684158
+      ],
+      "hair_delta_lab": [
+        10.318804560288967,
+        14.497735890756342,
+        12.065301254981588
+      ],
+      "source_skin_lab": [
+        68.28481128088431,
+        20.718901381193557,
+        45.39389072666506
+      ],
+      "source_hair_lab": [
+        28.284520770811284,
+        10.808223899234108,
+        17.952283828086355
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_hide_wrap_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_hide_wrap_bun/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_hide_wrap_bun",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -6.856985994742956,
+        -11.251329143303037,
+        -16.164342164607312
+      ],
+      "hair_delta_lab": [
+        -14.938498828775025,
+        -7.0149128149855615,
+        -7.609530611038215
+      ],
+      "source_skin_lab": [
+        68.28481128088431,
+        20.718901381193557,
+        45.39389072666506
+      ],
+      "source_hair_lab": [
+        28.284520770811284,
+        10.808223899234108,
+        17.952283828086355
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_hide_wrap_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_hide_wrap_bun/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_hide_wrap_bun",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -33.05396878050761,
+        -7.302470448784707,
+        -22.634068789300198
+      ],
+      "hair_delta_lab": [
+        0.9384284193160397,
+        -6.766581191255225,
+        -2.4030172111152073
+      ],
+      "source_skin_lab": [
+        68.28481128088431,
+        20.718901381193557,
+        45.39389072666506
+      ],
+      "source_hair_lab": [
+        28.284520770811284,
+        10.808223899234108,
+        17.952283828086355
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_hide_wrap_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_hide_wrap_bun/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_hide_wrap_long_tied",
+      "variant": "v1",
+      "skin_delta_lab": [
+        11.48250864854063,
+        -14.4679273220907,
+        -15.24013681792377
+      ],
+      "hair_delta_lab": [
+        -14.403275730863804,
+        -7.429021764253769,
+        -7.4584589005581545
+      ],
+      "source_skin_lab": [
+        67.09442333790399,
+        20.46861769997418,
+        43.673697221904675
+      ],
+      "source_hair_lab": [
+        27.749297672900063,
+        11.222332848502315,
+        17.801212117606294
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_hide_wrap_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_hide_wrap_long_tied/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_hide_wrap_long_tied",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -5.666598051762634,
+        -11.001045462083658,
+        -14.444148659846924
+      ],
+      "hair_delta_lab": [
+        1.4736515172272604,
+        -7.180690140523433,
+        -2.2519455006351468
+      ],
+      "source_skin_lab": [
+        67.09442333790399,
+        20.46861769997418,
+        43.673697221904675
+      ],
+      "source_hair_lab": [
+        27.749297672900063,
+        11.222332848502315,
+        17.801212117606294
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_hide_wrap_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_hide_wrap_long_tied/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_hide_wrap_long_tied",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -31.863580837527287,
+        -7.052186767565328,
+        -20.91387528453981
+      ],
+      "hair_delta_lab": [
+        10.854027658200188,
+        14.083626941488134,
+        12.216372965461648
+      ],
+      "source_skin_lab": [
+        67.09442333790399,
+        20.46861769997418,
+        43.673697221904675
+      ],
+      "source_hair_lab": [
+        27.749297672900063,
+        11.222332848502315,
+        17.801212117606294
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_hide_wrap_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_hide_wrap_long_tied/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_hide_wrap_long_tied",
+      "variant": "v4",
+      "skin_delta_lab": [
+        11.48250864854063,
+        -14.4679273220907,
+        -15.24013681792377
+      ],
+      "hair_delta_lab": [
+        10.854027658200188,
+        14.083626941488134,
+        12.216372965461648
+      ],
+      "source_skin_lab": [
+        67.09442333790399,
+        20.46861769997418,
+        43.673697221904675
+      ],
+      "source_hair_lab": [
+        27.749297672900063,
+        11.222332848502315,
+        17.801212117606294
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_hide_wrap_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_hide_wrap_long_tied/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_hide_wrap_long_tied",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -5.666598051762634,
+        -11.001045462083658,
+        -14.444148659846924
+      ],
+      "hair_delta_lab": [
+        -14.403275730863804,
+        -7.429021764253769,
+        -7.4584589005581545
+      ],
+      "source_skin_lab": [
+        67.09442333790399,
+        20.46861769997418,
+        43.673697221904675
+      ],
+      "source_hair_lab": [
+        27.749297672900063,
+        11.222332848502315,
+        17.801212117606294
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_hide_wrap_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_hide_wrap_long_tied/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_hide_wrap_long_tied",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -31.863580837527287,
+        -7.052186767565328,
+        -20.91387528453981
+      ],
+      "hair_delta_lab": [
+        1.4736515172272604,
+        -7.180690140523433,
+        -2.2519455006351468
+      ],
+      "source_skin_lab": [
+        67.09442333790399,
+        20.46861769997418,
+        43.673697221904675
+      ],
+      "source_hair_lab": [
+        27.749297672900063,
+        11.222332848502315,
+        17.801212117606294
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_hide_wrap_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_hide_wrap_long_tied/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_hide_wrap_short",
+      "variant": "v1",
+      "skin_delta_lab": [
+        11.914597036396373,
+        -17.199670188282127,
+        -17.215397018753357
+      ],
+      "hair_delta_lab": [
+        -16.933206615862865,
+        -10.635512897424281,
+        -11.741654948197295
+      ],
+      "source_skin_lab": [
+        66.66233495004825,
+        23.200360566165607,
+        45.64895742273426
+      ],
+      "source_hair_lab": [
+        30.279228557899124,
+        14.428823981672828,
+        22.084408165245435
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_hide_wrap_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_hide_wrap_short/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_hide_wrap_short",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -5.234509663906891,
+        -13.732788328275086,
+        -16.419408860676512
+      ],
+      "hair_delta_lab": [
+        -1.0562793677718005,
+        -10.387181273693944,
+        -6.535141548274288
+      ],
+      "source_skin_lab": [
+        66.66233495004825,
+        23.200360566165607,
+        45.64895742273426
+      ],
+      "source_hair_lab": [
+        30.279228557899124,
+        14.428823981672826,
+        22.084408165245435
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_hide_wrap_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_hide_wrap_short/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_hide_wrap_short",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -31.431492449671545,
+        -9.783929633756756,
+        -22.889135485369398
+      ],
+      "hair_delta_lab": [
+        8.324096773201127,
+        10.877135808317623,
+        7.933176917822507
+      ],
+      "source_skin_lab": [
+        66.66233495004825,
+        23.200360566165607,
+        45.64895742273426
+      ],
+      "source_hair_lab": [
+        30.279228557899124,
+        14.428823981672826,
+        22.084408165245435
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_hide_wrap_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_hide_wrap_short/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_hide_wrap_short",
+      "variant": "v4",
+      "skin_delta_lab": [
+        11.914597036396373,
+        -17.199670188282127,
+        -17.215397018753357
+      ],
+      "hair_delta_lab": [
+        8.324096773201127,
+        10.877135808317623,
+        7.933176917822507
+      ],
+      "source_skin_lab": [
+        66.66233495004825,
+        23.200360566165607,
+        45.64895742273426
+      ],
+      "source_hair_lab": [
+        30.279228557899124,
+        14.428823981672826,
+        22.084408165245435
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_hide_wrap_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_hide_wrap_short/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_hide_wrap_short",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -5.234509663906891,
+        -13.732788328275086,
+        -16.419408860676512
+      ],
+      "hair_delta_lab": [
+        -16.933206615862865,
+        -10.635512897424281,
+        -11.741654948197295
+      ],
+      "source_skin_lab": [
+        66.66233495004825,
+        23.200360566165607,
+        45.64895742273426
+      ],
+      "source_hair_lab": [
+        30.279228557899124,
+        14.428823981672828,
+        22.084408165245435
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_hide_wrap_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_hide_wrap_short/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_hide_wrap_short",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -31.431492449671545,
+        -9.783929633756756,
+        -22.889135485369398
+      ],
+      "hair_delta_lab": [
+        -1.0562793677718005,
+        -10.387181273693944,
+        -6.535141548274288
+      ],
+      "source_skin_lab": [
+        66.66233495004825,
+        23.200360566165607,
+        45.64895742273426
+      ],
+      "source_hair_lab": [
+        30.279228557899124,
+        14.428823981672826,
+        22.084408165245435
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_hide_wrap_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_hide_wrap_short/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_loincloth_bun",
+      "variant": "v1",
+      "skin_delta_lab": [
+        13.425508299305278,
+        -16.578439403007593,
+        -17.872435206302406
+      ],
+      "hair_delta_lab": [
+        -15.022155232541095,
+        -8.740390477533339,
+        -10.623987874305326
+      ],
+      "source_skin_lab": [
+        65.15142368713934,
+        22.579129780891073,
+        46.30599561028331
+      ],
+      "source_hair_lab": [
+        28.368177174577355,
+        12.533701561781886,
+        20.966741091353466
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_loincloth_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_loincloth_bun/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_loincloth_bun",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -3.723598400997986,
+        -13.111557543000552,
+        -17.07644704822556
+      ],
+      "hair_delta_lab": [
+        0.854772015549969,
+        -8.492058853803004,
+        -5.417474474382319
+      ],
+      "source_skin_lab": [
+        65.15142368713934,
+        22.579129780891073,
+        46.30599561028331
+      ],
+      "source_hair_lab": [
+        28.368177174577355,
+        12.533701561781886,
+        20.966741091353466
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_loincloth_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_loincloth_bun/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_loincloth_bun",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -29.92058118676264,
+        -9.162698848482222,
+        -23.546173672918446
+      ],
+      "hair_delta_lab": [
+        10.235148156522897,
+        12.772258228208564,
+        9.050843991714476
+      ],
+      "source_skin_lab": [
+        65.15142368713934,
+        22.579129780891073,
+        46.30599561028331
+      ],
+      "source_hair_lab": [
+        28.368177174577355,
+        12.533701561781886,
+        20.966741091353466
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_loincloth_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_loincloth_bun/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_loincloth_bun",
+      "variant": "v4",
+      "skin_delta_lab": [
+        13.425508299305278,
+        -16.578439403007593,
+        -17.872435206302406
+      ],
+      "hair_delta_lab": [
+        10.235148156522897,
+        12.772258228208564,
+        9.050843991714476
+      ],
+      "source_skin_lab": [
+        65.15142368713934,
+        22.579129780891073,
+        46.30599561028331
+      ],
+      "source_hair_lab": [
+        28.368177174577355,
+        12.533701561781886,
+        20.966741091353466
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_loincloth_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_loincloth_bun/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_loincloth_bun",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -3.723598400997986,
+        -13.111557543000552,
+        -17.07644704822556
+      ],
+      "hair_delta_lab": [
+        -15.022155232541095,
+        -8.740390477533339,
+        -10.623987874305326
+      ],
+      "source_skin_lab": [
+        65.15142368713934,
+        22.579129780891073,
+        46.30599561028331
+      ],
+      "source_hair_lab": [
+        28.368177174577355,
+        12.533701561781886,
+        20.966741091353466
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_loincloth_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_loincloth_bun/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_loincloth_bun",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -29.92058118676264,
+        -9.162698848482222,
+        -23.546173672918446
+      ],
+      "hair_delta_lab": [
+        0.854772015549969,
+        -8.492058853803004,
+        -5.417474474382319
+      ],
+      "source_skin_lab": [
+        65.15142368713934,
+        22.579129780891073,
+        46.30599561028331
+      ],
+      "source_hair_lab": [
+        28.368177174577355,
+        12.533701561781886,
+        20.966741091353466
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_loincloth_bun/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_loincloth_bun/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_loincloth_long_tied",
+      "variant": "v1",
+      "skin_delta_lab": [
+        12.288130858240848,
+        -16.145835238020368,
+        -17.474181044714385
+      ],
+      "hair_delta_lab": [
+        -14.123838026125803,
+        -8.784856835202397,
+        -8.988052516665197
+      ],
+      "source_skin_lab": [
+        66.28880112820377,
+        22.146525615903847,
+        45.90774144869529
+      ],
+      "source_hair_lab": [
+        27.469859968162062,
+        12.578167919450944,
+        19.330805733713337
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_loincloth_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_loincloth_long_tied/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_loincloth_long_tied",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -4.860975842062416,
+        -12.678953378013324,
+        -16.67819288663754
+      ],
+      "hair_delta_lab": [
+        1.7530892219652614,
+        -8.536525211472062,
+        -3.7815391167421897
+      ],
+      "source_skin_lab": [
+        66.28880112820377,
+        22.146525615903844,
+        45.90774144869529
+      ],
+      "source_hair_lab": [
+        27.469859968162062,
+        12.578167919450944,
+        19.330805733713337
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_loincloth_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_loincloth_long_tied/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_loincloth_long_tied",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -31.05795862782707,
+        -8.730094683494993,
+        -23.147919511330425
+      ],
+      "hair_delta_lab": [
+        11.133465362938189,
+        12.727791870539505,
+        10.686779349354605
+      ],
+      "source_skin_lab": [
+        66.28880112820377,
+        22.146525615903844,
+        45.90774144869529
+      ],
+      "source_hair_lab": [
+        27.469859968162062,
+        12.578167919450944,
+        19.330805733713337
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_loincloth_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_loincloth_long_tied/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_loincloth_long_tied",
+      "variant": "v4",
+      "skin_delta_lab": [
+        12.288130858240848,
+        -16.145835238020368,
+        -17.474181044714385
+      ],
+      "hair_delta_lab": [
+        11.133465362938189,
+        12.727791870539505,
+        10.686779349354605
+      ],
+      "source_skin_lab": [
+        66.28880112820377,
+        22.146525615903847,
+        45.90774144869529
+      ],
+      "source_hair_lab": [
+        27.469859968162062,
+        12.578167919450944,
+        19.330805733713337
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_loincloth_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_loincloth_long_tied/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_loincloth_long_tied",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -4.860975842062416,
+        -12.678953378013324,
+        -16.67819288663754
+      ],
+      "hair_delta_lab": [
+        -14.123838026125803,
+        -8.784856835202397,
+        -8.988052516665197
+      ],
+      "source_skin_lab": [
+        66.28880112820377,
+        22.146525615903844,
+        45.90774144869529
+      ],
+      "source_hair_lab": [
+        27.469859968162062,
+        12.578167919450944,
+        19.330805733713337
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_loincloth_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_loincloth_long_tied/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_loincloth_long_tied",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -31.05795862782707,
+        -8.730094683494993,
+        -23.147919511330425
+      ],
+      "hair_delta_lab": [
+        1.7530892219652614,
+        -8.536525211472062,
+        -3.7815391167421897
+      ],
+      "source_skin_lab": [
+        66.28880112820377,
+        22.146525615903844,
+        45.90774144869529
+      ],
+      "source_hair_lab": [
+        27.469859968162062,
+        12.578167919450944,
+        19.330805733713337
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_loincloth_long_tied/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_loincloth_long_tied/v6/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_loincloth_short",
+      "variant": "v1",
+      "skin_delta_lab": [
+        13.570763224163372,
+        -17.976174549094573,
+        -17.105019608600244
+      ],
+      "hair_delta_lab": [
+        -14.540096979975157,
+        -8.461219159722802,
+        -8.145922988888875
+      ],
+      "source_skin_lab": [
+        65.00616876228125,
+        23.976864926978052,
+        45.53858001258115
+      ],
+      "source_hair_lab": [
+        27.886118922011416,
+        12.254530243971349,
+        18.488676205937015
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_loincloth_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_loincloth_short/v1/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_loincloth_short",
+      "variant": "v2",
+      "skin_delta_lab": [
+        -3.5783434761398922,
+        -14.509292689087529,
+        -16.3090314505234
+      ],
+      "hair_delta_lab": [
+        1.3368302681159072,
+        -8.212887535992467,
+        -2.9394095889658676
+      ],
+      "source_skin_lab": [
+        65.00616876228125,
+        23.97686492697805,
+        45.53858001258115
+      ],
+      "source_hair_lab": [
+        27.886118922011416,
+        12.254530243971349,
+        18.488676205937015
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_loincloth_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_loincloth_short/v2/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_loincloth_short",
+      "variant": "v3",
+      "skin_delta_lab": [
+        -29.775326261904546,
+        -10.560433994569198,
+        -22.778758075216285
+      ],
+      "hair_delta_lab": [
+        10.717206409088835,
+        13.0514295460191,
+        11.528908877130927
+      ],
+      "source_skin_lab": [
+        65.00616876228125,
+        23.97686492697805,
+        45.53858001258115
+      ],
+      "source_hair_lab": [
+        27.886118922011416,
+        12.254530243971349,
+        18.488676205937015
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_loincloth_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_loincloth_short/v3/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_loincloth_short",
+      "variant": "v4",
+      "skin_delta_lab": [
+        13.570763224163372,
+        -17.976174549094573,
+        -17.105019608600244
+      ],
+      "hair_delta_lab": [
+        10.717206409088835,
+        13.0514295460191,
+        11.528908877130927
+      ],
+      "source_skin_lab": [
+        65.00616876228125,
+        23.976864926978052,
+        45.53858001258115
+      ],
+      "source_hair_lab": [
+        27.886118922011416,
+        12.254530243971349,
+        18.488676205937015
+      ],
+      "target_skin_rgb": [
+        224,
+        189,
+        142
+      ],
+      "target_hair_rgb": [
+        139,
+        73,
+        43
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_loincloth_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_loincloth_short/v4/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_loincloth_short",
+      "variant": "v5",
+      "skin_delta_lab": [
+        -3.5783434761398922,
+        -14.509292689087529,
+        -16.3090314505234
+      ],
+      "hair_delta_lab": [
+        -14.540096979975157,
+        -8.461219159722802,
+        -8.145922988888875
+      ],
+      "source_skin_lab": [
+        65.00616876228125,
+        23.97686492697805,
+        45.53858001258115
+      ],
+      "source_hair_lab": [
+        27.886118922011416,
+        12.254530243971349,
+        18.488676205937015
+      ],
+      "target_skin_rgb": [
+        181,
+        141,
+        97
+      ],
+      "target_hair_rgb": [
+        44,
+        32,
+        20
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_loincloth_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_loincloth_short/v5/{facing}/{pose}.png"
+    },
+    {
+      "look": "child_M_loincloth_short",
+      "variant": "v6",
+      "skin_delta_lab": [
+        -29.775326261904546,
+        -10.560433994569198,
+        -22.778758075216285
+      ],
+      "hair_delta_lab": [
+        1.3368302681159072,
+        -8.212887535992467,
+        -2.9394095889658676
+      ],
+      "source_skin_lab": [
+        65.00616876228125,
+        23.97686492697805,
+        45.53858001258115
+      ],
+      "source_hair_lab": [
+        27.886118922011416,
+        12.254530243971349,
+        18.488676205937015
+      ],
+      "target_skin_rgb": [
+        113,
+        74,
+        47
+      ],
+      "target_hair_rgb": [
+        83,
+        66,
+        45
+      ],
+      "frame_count": 10,
+      "mask_pattern": "art/character/variant_masks/child_M_loincloth_short/{facing}/{pose}_{region}.png",
+      "baked_pattern": "art/character/route_i/child_M_loincloth_short/v6/{facing}/{pose}.png"
+    }
+  ]
+}

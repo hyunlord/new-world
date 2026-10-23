@@ -1,0 +1,461 @@
+{
+  "schema_version": 1,
+  "task": "ART-POLISH2",
+  "review_state": "OWNER8_FINAL_SEMANTIC_CONTAMINATION_REVIEW_COMPLETE",
+  "overall_mask_verdict": "NOT_PASSED",
+  "semantic_contamination_counts": {
+    "PASS": 8,
+    "FAIL": 0,
+    "UNCERTAIN": 0
+  },
+  "initial_review_preserved": {
+    "path": "docs/v8/artpolish2/MASK_OWNER_SAMPLE_REVIEW.json",
+    "sha256": "08a96ab1f524e04db697290338add14057e8e4cc17369dd00e0ca33d91134acf"
+  },
+  "source_only_review_preserved": {
+    "path": "docs/v8/artpolish2/ANATOMY_REGION_REVIEW.json",
+    "sha256": "ecf3a82db9b2eaac8a309dbf3c58804737acd310be2d68a6d9e073ff8e2a2903"
+  },
+  "initial_fixed40_review_preserved": {
+    "path": "docs/v8/artpolish2/MASK40_SEMANTIC_REVIEW.json",
+    "sha256": "a60e167e62385585219a2a0043cd3b0a66946dad1c1f713df3afdd56c5d460e6",
+    "raw_snapshot": "/Users/rexxa/work/artpolish2-data/masks/semantic_initial_snapshot",
+    "verified_preserved_mask_files": 80,
+    "verified_preserved_panel_files": 40,
+    "method_text_erratum": "The initial method string says four cohort overview sheets for adults. The reviewer viewed two adult cohort overview sheets plus all 40 individual panels; all frame observations/counts remain unchanged."
+  },
+  "verification": {
+    "previously_cleared_owner_looks_byte_identical": 6,
+    "child_long_tied_restored_to_previous_clear_hash": true,
+    "adult_short_all_reported_collar_pixels_unselected": true,
+    "latest_two_stored_mask_panels_viewed": true,
+    "child_final_visual_basis": "The final stored skin/hair masks are byte-identical to the previously inspected clean garment-exclusion repair; the intermediate template regression was not accepted."
+  },
+  "repair_history": [
+    {
+      "look": "adult_M_fur_cloak_short",
+      "phase": "initial",
+      "verdict": "FAIL",
+      "observed_clothing_pixels": [
+        [
+          45,
+          57
+        ],
+        [
+          47,
+          58
+        ],
+        [
+          48,
+          59
+        ],
+        [
+          28,
+          60
+        ],
+        [
+          49,
+          60
+        ],
+        [
+          49,
+          61
+        ]
+      ]
+    },
+    {
+      "look": "adult_M_fur_cloak_short",
+      "phase": "rectangular_head_envelope_repair",
+      "verdict": "FAIL",
+      "residual_clothing_pixels": [
+        [
+          30,
+          57
+        ]
+      ],
+      "observation": "The rectangle removed six reported collar points but retained one detached upper-collar pixel."
+    },
+    {
+      "look": "adult_M_fur_cloak_short",
+      "phase": "final_source_contour_repair",
+      "verdict": "PASS",
+      "hair_envelope_union": [
+        [
+          29,
+          47,
+          44,
+          57
+        ],
+        [
+          33,
+          57,
+          44,
+          63
+        ]
+      ],
+      "observation": "The lower-left notch removes the remaining collar point while preserving scalp, sideburn and beard. Newly selected upper-arm/thigh pixels were inspected and refer to exposed skin."
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "phase": "initial",
+      "verdict": "FAIL",
+      "observed_clothing_pixels": [
+        [
+          44,
+          92
+        ],
+        [
+          44,
+          93
+        ]
+      ],
+      "uncertain_hand_trim_boundary": [
+        [
+          45,
+          91
+        ]
+      ]
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "phase": "source_garment_exclusion_repair",
+      "verdict": "PASS",
+      "garment_exclusion": [
+        43,
+        91,
+        46,
+        95
+      ],
+      "observation": "Clothing and ambiguous boundary pixels were excluded while retaining clearly exposed forearm."
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "phase": "broader_skin_support_intermediate",
+      "verdict": "FAIL",
+      "new_clothing_pixels": [
+        [
+          43,
+          84
+        ]
+      ],
+      "source_rgba": [
+        188,
+        128,
+        63,
+        253
+      ],
+      "observation": "One new skin-mask pixel appeared on the golden chest garment; this intermediate state was rejected."
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "phase": "final_restore_and_freeze",
+      "verdict": "PASS",
+      "skin_sha256": "d526aec0bc66e376b4689eb6bec86acac6ec83f1f818912e2bb622229fa2445e",
+      "hair_sha256": "607a1a4f8836ff801f334546f7801bda5e30dcb90536ca6968bd49c0b90d9cfe",
+      "observation": "Restored exactly the earlier visually cleared masks; the chest-garment regression is absent."
+    }
+  ],
+  "remaining_work_outside_this_review": [
+    "Repaired non-idle/fixed40 masks require a later independent audit. Initial 27 FAIL and 5 UNCERTAIN outcomes remain historical evidence.",
+    "Strict face/forearm coverage and true hair-silhouette coverage are separate gates; semantic cleanliness does not waive their failures.",
+    "Tint completeness, portrait identity/distinctness, rendered game appearance and owner approval are not established by this clearance."
+  ],
+  "frames": [
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "pose": "S/idle",
+      "semantic_contamination_verdict": "PASS",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/adult_F_fur_cloak_bun/S/idle.png",
+          "sha256": "34831c2a1733a4ce81e06960c78c81881e07535ae6ad16296eef4b1f35a98bed"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/adult_F_fur_cloak_bun/S/idle_skin.png",
+          "sha256": "767c2d94dcfdac3bd597665febbd3922af47d43ff7f508bc73a9cc766222d625"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/adult_F_fur_cloak_bun/S/idle_hair.png",
+          "sha256": "b88f4139e0a55e51f58f0ca7f57c9357e032661675fab82ebdc37d9207bb3c4b"
+        }
+      },
+      "source_box_corrections_applied": true,
+      "scope_limit": "Only absence of observed clothing/prop contamination at these exact hashes is cleared. This is not an overall mask PASS.",
+      "completeness_observation": "The masks visibly leave some exposed skin and parts of the hairstyle unselected, including source highlights, shadows or protected ink. No complete-body tint coverage or exact true-hair silhouette coverage is claimed.",
+      "formal_coverage_evidence": {
+        "face_box_coverage": 0.5,
+        "forearm_box_coverage": [
+          0.65625,
+          0.65625
+        ],
+        "reported_hair_source_proxy_coverage": 0.4380952380952381,
+        "reported_hair_source_proxy_pixels": 105,
+        "reported_hair_source_proxy_outline_pixels": 54,
+        "face_pass": false,
+        "forearms_pass": true,
+        "hair_source_proxy_numeric_pass": false,
+        "true_hair_silhouette_gate": "NOT_VERIFIED"
+      },
+      "owner_approval": "NOT_CLAIMED"
+    },
+    {
+      "look": "adult_F_fur_cloak_long_tied",
+      "pose": "S/idle",
+      "semantic_contamination_verdict": "PASS",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/adult_F_fur_cloak_long_tied/S/idle.png",
+          "sha256": "7752d665d2d21c1593e6f9014ee3a134ab235681c55121fb398e4e201ee9e068"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/adult_F_fur_cloak_long_tied/S/idle_skin.png",
+          "sha256": "0275dbbc46e2a3ea6dd891b675a4fb7e3cd93785e7323453e74bbb95ba0da32a"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/adult_F_fur_cloak_long_tied/S/idle_hair.png",
+          "sha256": "5e0739fb9b1a9241da1e5a3ecf300de90644defcf53678d3138f2377173bc7bd"
+        }
+      },
+      "source_box_corrections_applied": true,
+      "scope_limit": "Only absence of observed clothing/prop contamination at these exact hashes is cleared. This is not an overall mask PASS.",
+      "completeness_observation": "The masks visibly leave some exposed skin and parts of the hairstyle unselected, including source highlights, shadows or protected ink. No complete-body tint coverage or exact true-hair silhouette coverage is claimed.",
+      "formal_coverage_evidence": {
+        "face_box_coverage": 0.4107142857142857,
+        "forearm_box_coverage": [
+          0.53125,
+          0.5
+        ],
+        "reported_hair_source_proxy_coverage": 0.4715447154471545,
+        "reported_hair_source_proxy_pixels": 123,
+        "reported_hair_source_proxy_outline_pixels": 48,
+        "face_pass": false,
+        "forearms_pass": false,
+        "hair_source_proxy_numeric_pass": false,
+        "true_hair_silhouette_gate": "NOT_VERIFIED"
+      },
+      "owner_approval": "NOT_CLAIMED"
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "pose": "S/idle",
+      "semantic_contamination_verdict": "PASS",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/adult_M_fur_cloak_bun/S/idle.png",
+          "sha256": "a98c1b8271c9373c1ad7ad2a9f1d3f48fb4f37f2fd27a32c4d6c535ffda90208"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/adult_M_fur_cloak_bun/S/idle_skin.png",
+          "sha256": "df503c7dc41cc58f55d9769426917e54bf4ba7fb7febbf9a7b8591606f0aa79b"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/adult_M_fur_cloak_bun/S/idle_hair.png",
+          "sha256": "68f8d106ad46fdbe67a6324f292b754d6ed595db50025954e25a98b08f1e48b0"
+        }
+      },
+      "source_box_corrections_applied": true,
+      "scope_limit": "Only absence of observed clothing/prop contamination at these exact hashes is cleared. This is not an overall mask PASS.",
+      "completeness_observation": "The masks visibly leave some exposed skin and parts of the hairstyle unselected, including source highlights, shadows or protected ink. No complete-body tint coverage or exact true-hair silhouette coverage is claimed.",
+      "formal_coverage_evidence": {
+        "face_box_coverage": 0.5666666666666667,
+        "forearm_box_coverage": [
+          0.78125,
+          0.8333333333333334
+        ],
+        "reported_hair_source_proxy_coverage": 0.4918032786885246,
+        "reported_hair_source_proxy_pixels": 122,
+        "reported_hair_source_proxy_outline_pixels": 43,
+        "face_pass": false,
+        "forearms_pass": true,
+        "hair_source_proxy_numeric_pass": false,
+        "true_hair_silhouette_gate": "NOT_VERIFIED"
+      },
+      "owner_approval": "NOT_CLAIMED"
+    },
+    {
+      "look": "adult_M_fur_cloak_short",
+      "pose": "S/idle",
+      "semantic_contamination_verdict": "PASS",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/adult_M_fur_cloak_short/S/idle.png",
+          "sha256": "345b19c1776ab4517396b0b90882fda0b1cfa0a4dd3e6adfe7e9adb0d9728500"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/adult_M_fur_cloak_short/S/idle_skin.png",
+          "sha256": "57ec28adf447fa616445d6086d2c0948a2e150c458d88a8700edde539eb47b43"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/adult_M_fur_cloak_short/S/idle_hair.png",
+          "sha256": "6731e00aee12df2f691bde22c1a3815a2e80e5ccf3d46c7ed834035be7be5885"
+        }
+      },
+      "source_box_corrections_applied": true,
+      "scope_limit": "Only absence of observed clothing/prop contamination at these exact hashes is cleared. This is not an overall mask PASS.",
+      "completeness_observation": "The masks visibly leave some exposed skin and parts of the hairstyle unselected, including source highlights, shadows or protected ink. No complete-body tint coverage or exact true-hair silhouette coverage is claimed.",
+      "formal_coverage_evidence": {
+        "face_box_coverage": 0.42857142857142855,
+        "forearm_box_coverage": [
+          0.6666666666666666,
+          0.8611111111111112
+        ],
+        "reported_hair_source_proxy_coverage": 0.42105263157894735,
+        "reported_hair_source_proxy_pixels": 133,
+        "reported_hair_source_proxy_outline_pixels": 45,
+        "face_pass": false,
+        "forearms_pass": true,
+        "hair_source_proxy_numeric_pass": false,
+        "true_hair_silhouette_gate": "NOT_VERIFIED"
+      },
+      "owner_approval": "NOT_CLAIMED"
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "pose": "S/idle",
+      "semantic_contamination_verdict": "PASS",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/child_F_fur_cloak_bun/S/idle.png",
+          "sha256": "2c12e35971c40f6aa26d13e994a294fefaca50645218e83f7e39b1ba96e892c5"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/child_F_fur_cloak_bun/S/idle_skin.png",
+          "sha256": "69a4db45235989e0a6e8e25e7abc3760e82b12a1799cec3731c3b98933fbcbba"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/child_F_fur_cloak_bun/S/idle_hair.png",
+          "sha256": "fb2c25b1ab1f20dd0f14853007d64c6d70ab09e4db883781844627038e34e2d0"
+        }
+      },
+      "source_box_corrections_applied": true,
+      "scope_limit": "Only absence of observed clothing/prop contamination at these exact hashes is cleared. This is not an overall mask PASS.",
+      "completeness_observation": "The masks visibly leave some exposed skin and parts of the hairstyle unselected, including source highlights, shadows or protected ink. No complete-body tint coverage or exact true-hair silhouette coverage is claimed.",
+      "formal_coverage_evidence": {
+        "face_box_coverage": 0.5476190476190477,
+        "forearm_box_coverage": [
+          0.6666666666666666,
+          0.4666666666666667
+        ],
+        "reported_hair_source_proxy_coverage": 0.47058823529411764,
+        "reported_hair_source_proxy_pixels": 102,
+        "reported_hair_source_proxy_outline_pixels": 42,
+        "face_pass": false,
+        "forearms_pass": false,
+        "hair_source_proxy_numeric_pass": false,
+        "true_hair_silhouette_gate": "NOT_VERIFIED"
+      },
+      "owner_approval": "NOT_CLAIMED"
+    },
+    {
+      "look": "child_F_fur_cloak_long_tied",
+      "pose": "S/idle",
+      "semantic_contamination_verdict": "PASS",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/child_F_fur_cloak_long_tied/S/idle.png",
+          "sha256": "dc212949d71914dd4d4b8cbc4cc3d89c5bf091897aa67fb7f04f769928c8ca6d"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/child_F_fur_cloak_long_tied/S/idle_skin.png",
+          "sha256": "d526aec0bc66e376b4689eb6bec86acac6ec83f1f818912e2bb622229fa2445e"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/child_F_fur_cloak_long_tied/S/idle_hair.png",
+          "sha256": "607a1a4f8836ff801f334546f7801bda5e30dcb90536ca6968bd49c0b90d9cfe"
+        }
+      },
+      "source_box_corrections_applied": true,
+      "scope_limit": "Only absence of observed clothing/prop contamination at these exact hashes is cleared. This is not an overall mask PASS.",
+      "completeness_observation": "The masks visibly leave some exposed skin and parts of the hairstyle unselected, including source highlights, shadows or protected ink. No complete-body tint coverage or exact true-hair silhouette coverage is claimed.",
+      "formal_coverage_evidence": {
+        "face_box_coverage": 0.5555555555555556,
+        "forearm_box_coverage": [
+          0.7222222222222222,
+          0.2857142857142857
+        ],
+        "reported_hair_source_proxy_coverage": 0.5545454545454546,
+        "reported_hair_source_proxy_pixels": 110,
+        "reported_hair_source_proxy_outline_pixels": 36,
+        "face_pass": false,
+        "forearms_pass": false,
+        "hair_source_proxy_numeric_pass": true,
+        "true_hair_silhouette_gate": "NOT_VERIFIED"
+      },
+      "owner_approval": "NOT_CLAIMED"
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "pose": "S/idle",
+      "semantic_contamination_verdict": "PASS",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/child_M_fur_cloak_bun/S/idle.png",
+          "sha256": "3c61b4824d4f9ab461a1be252aae2c4c8399508bb68cb55809130b1d586814d2"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/child_M_fur_cloak_bun/S/idle_skin.png",
+          "sha256": "3570b53b0a7fe388d76e6457ccdfcb9ebb6550acf275c187cc63aec1b72adfdf"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/child_M_fur_cloak_bun/S/idle_hair.png",
+          "sha256": "1ae2702af38bb195d5903216e300b3996889a6032e60215f81e9828f0b934801"
+        }
+      },
+      "source_box_corrections_applied": true,
+      "scope_limit": "Only absence of observed clothing/prop contamination at these exact hashes is cleared. This is not an overall mask PASS.",
+      "completeness_observation": "The masks visibly leave some exposed skin and parts of the hairstyle unselected, including source highlights, shadows or protected ink. No complete-body tint coverage or exact true-hair silhouette coverage is claimed.",
+      "formal_coverage_evidence": {
+        "face_box_coverage": 0.5,
+        "forearm_box_coverage": [
+          0.5416666666666666,
+          0.5
+        ],
+        "reported_hair_source_proxy_coverage": 0.49056603773584906,
+        "reported_hair_source_proxy_pixels": 106,
+        "reported_hair_source_proxy_outline_pixels": 29,
+        "face_pass": false,
+        "forearms_pass": false,
+        "hair_source_proxy_numeric_pass": false,
+        "true_hair_silhouette_gate": "NOT_VERIFIED"
+      },
+      "owner_approval": "NOT_CLAIMED"
+    },
+    {
+      "look": "child_M_fur_cloak_long_tied",
+      "pose": "S/idle",
+      "semantic_contamination_verdict": "PASS",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/child_M_fur_cloak_long_tied/S/idle.png",
+          "sha256": "c86a67a0cec5e0edaf9d3e590285247d4622f23453078b8491b4e71ae43697d4"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/child_M_fur_cloak_long_tied/S/idle_skin.png",
+          "sha256": "3911c01c35d6660e1d242a55bcb3f631857583686c7ca735e1d74fd60407b66b"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/child_M_fur_cloak_long_tied/S/idle_hair.png",
+          "sha256": "e397b1b2f861c87d81cfad6e6184081c29d6d716967a3bd51b9613da0dac1173"
+        }
+      },
+      "source_box_corrections_applied": true,
+      "scope_limit": "Only absence of observed clothing/prop contamination at these exact hashes is cleared. This is not an overall mask PASS.",
+      "completeness_observation": "The masks visibly leave some exposed skin and parts of the hairstyle unselected, including source highlights, shadows or protected ink. No complete-body tint coverage or exact true-hair silhouette coverage is claimed.",
+      "formal_coverage_evidence": {
+        "face_box_coverage": 0.5625,
+        "forearm_box_coverage": [
+          0.6,
+          0.5
+        ],
+        "reported_hair_source_proxy_coverage": 0.5488721804511278,
+        "reported_hair_source_proxy_pixels": 133,
+        "reported_hair_source_proxy_outline_pixels": 40,
+        "face_pass": false,
+        "forearms_pass": false,
+        "hair_source_proxy_numeric_pass": true,
+        "true_hair_silhouette_gate": "NOT_VERIFIED"
+      },
+      "owner_approval": "NOT_CLAIMED"
+    }
+  ]
+}

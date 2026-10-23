@@ -1,0 +1,3338 @@
+{
+  "schema_version": 1,
+  "task": "ART-POLISH2",
+  "review_state": "INITIAL_FIXED40_MASK_AUDIT_COMPLETE",
+  "overall_verdict": "FAIL",
+  "sample_rule": "first accepted look in each age-sex cohort; all ten frames",
+  "sample_manifest": {
+    "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/sample.json",
+    "sha256": "63a8412ffa51594f147bf17292613b350bed8e69bfc96e87f712b11804767775"
+  },
+  "reviewed_mask_manifest": {
+    "path": "art/character/variant_masks/MANIFEST.json",
+    "sha256": "95876f7e07a9c13da2c8b81c24116b0c1121fa4601a783da8fbb96b7e2731167"
+  },
+  "preserved_source_only_review": "docs/v8/artpolish2/ANATOMY_REGION_REVIEW.json",
+  "owner_idle_review": "docs/v8/artpolish2/MASK_OWNER_SAMPLE_REVIEW.json",
+  "method": "Viewed all 40 enlarged source/mask/source-hair-proxy/region panels, with four cohort overview sheets for adults and direct source-pixel review where needed. Read classifier construction only after the independent source-only region review was frozen. Counts and head-bound containment were recomputed from stored mask PNGs.",
+  "hair_denominator_assessment": {
+    "verdict": "FAIL_AS_FORMAL_SILHOUETTE_EVIDENCE",
+    "provided_reference": "source Lab L <= 48 and R-G < 55, source alpha >=128, within head support and shared allowed_hair geometry; protected dark ink remains in its denominator",
+    "positive": "This is separate from the Lloyd hair-label/classifier silhouette and includes protected ink, so it is not simply selected-mask/self coverage.",
+    "failure": "It is still a color/geometric proxy, with visible axe, arm, collar and blanket inclusion in multiple poses and possible clipped bun/side-hair in carries. Therefore its >=50% ratio does not establish coverage of the true semantic hair silhouette.",
+    "true_hair_silhouette_pixel_count": null,
+    "true_hair_silhouette_coverage": null,
+    "replacement_ground_truth": "NOT_CREATED - independent review did not paint or modify source/mask assets."
+  },
+  "excluded_cluster_assessment": {
+    "verdict": "FAIL_AS_SEMANTIC_CLEANLINESS_EVIDENCE",
+    "reported_zero_is_not_semantic_zero": "Masks select particular classifier labels while excluded is the complementary label family. A zero intersection is a classifier consistency check; it does not independently prove absence of clothing/props, as the visual failures demonstrate."
+  },
+  "summary": {
+    "frames_viewed": 40,
+    "source_hash_matches": 40,
+    "stored_mask_counts_match_manifest": 40,
+    "contamination_verdict_counts": {
+      "PASS": 8,
+      "UNCERTAIN": 5,
+      "FAIL": 27
+    },
+    "hair_proxy_semantic_verdict_counts": {
+      "UNCERTAIN": 21,
+      "FAIL": 19
+    },
+    "source_proxy_numeric_passes": 15,
+    "true_hair_silhouette_gate_verified_frames": 0,
+    "head_plus_4_containment_passes": 40,
+    "alpha_boundary_passes": 40,
+    "owner_approval": "NOT_CLAIMED"
+  },
+  "limits": [
+    "PASS is a source/mask visual cleanliness judgment at the recorded hashes; it does not pass strict coverage, identity, portrait quality, or owner acceptance.",
+    "UNCERTAIN regions are not counted as clean.",
+    "Automated non-idle face/arm boxes were not independently accepted as anatomy; literal counts are diagnostic outside S/idle.",
+    "This is the initial fixed40 snapshot. Later repairs must retain these failures and be reported as a separate reviewed revision."
+  ],
+  "frames": [
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "facing": "S",
+      "pose": "idle",
+      "semantic_contamination_verdict": "PASS",
+      "observation": "No visible clothing/prop selection in S/idle; previously cleared source/mask hashes.",
+      "hair_reference_semantic_verdict": "UNCERTAIN",
+      "hair_reference_observation": "The reference mostly follows the hairstyle, but a lightness/color threshold with geometric support is only a source-color proxy. Full silhouette inclusion, highlighted hair and prop-occluded boundaries were not established pixel by pixel.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/adult_F_fur_cloak_bun/S/idle.png",
+          "sha256": "34831c2a1733a4ce81e06960c78c81881e07535ae6ad16296eef4b1f35a98bed"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/adult_F_fur_cloak_bun/S/idle_skin.png",
+          "sha256": "767c2d94dcfdac3bd597665febbd3922af47d43ff7f508bc73a9cc766222d625"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/adult_F_fur_cloak_bun/S/idle_hair.png",
+          "sha256": "b88f4139e0a55e51f58f0ca7f57c9357e032661675fab82ebdc37d9207bb3c4b"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/adult_F_fur_cloak_bun/S_idle.png",
+          "sha256": "4695ddb25afd1345e19df5696661c0ccef960e79056d3da64d965128efe77a83"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 184,
+        "hair_pixels": 46,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 35,
+              "top": 57,
+              "right": 42,
+              "bottom": 65
+            },
+            "literal_box_pixels": 56,
+            "selected_skin_pixels": 28,
+            "coverage": 0.5
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 26,
+              "top": 75,
+              "right": 30,
+              "bottom": 83
+            },
+            "literal_box_pixels": 32,
+            "selected_skin_pixels": 21,
+            "coverage": 0.65625
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 44,
+              "top": 76,
+              "right": 48,
+              "bottom": 84
+            },
+            "literal_box_pixels": 32,
+            "selected_skin_pixels": 21,
+            "coverage": 0.65625
+          }
+        ],
+        "source_boxes_formally_reviewed": true
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 105,
+        "source_proxy_protected_ink_pixels": 54,
+        "hair_intersection_with_source_proxy_pixels": 46,
+        "source_proxy_coverage": 0.4380952380952381,
+        "source_proxy_numeric_pass": false,
+        "classifier_hair_coverage": 0.9787234042553191,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "facing": "S",
+      "pose": "walk_a",
+      "semantic_contamination_verdict": "UNCERTAIN",
+      "observation": "A small magenta extension near the image-left collar could be side hair or collar; the reference also enters that boundary. Do not certify zero contamination at this ambiguous contact.",
+      "hair_reference_semantic_verdict": "FAIL",
+      "hair_reference_observation": "The reference reaches collar/neck boundaries outside the clearly visible hairstyle; it is not validated as a full semantic silhouette.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/adult_F_fur_cloak_bun/S/walk_a.png",
+          "sha256": "902eb26646dd0e34f58ee1edc970703dd29eb4be183c72d9130b7b9b82846cea"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/adult_F_fur_cloak_bun/S/walk_a_skin.png",
+          "sha256": "6657c9ce6d51df4d882d0f11769d1a0614902ef2df56eb026523344f7c9934e6"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/adult_F_fur_cloak_bun/S/walk_a_hair.png",
+          "sha256": "4b3a0d7283caf62c837e49784da4500d0d84fda5cce21dc9345f157ff082c941"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/adult_F_fur_cloak_bun/S_walk_a.png",
+          "sha256": "d632c6d8fcc97d1f7df4e474952707e9e40ecef6bd77b3138d33285d1784dfa9"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 132,
+        "hair_pixels": 47,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 38,
+              "top": 58,
+              "right": 42,
+              "bottom": 62
+            },
+            "literal_box_pixels": 16,
+            "selected_skin_pixels": 10,
+            "coverage": 0.625
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 26,
+              "top": 75,
+              "right": 29,
+              "bottom": 83
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 6,
+            "coverage": 0.25
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 45,
+              "top": 76,
+              "right": 48,
+              "bottom": 84
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 15,
+            "coverage": 0.625
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 104,
+        "source_proxy_protected_ink_pixels": 42,
+        "hair_intersection_with_source_proxy_pixels": 47,
+        "source_proxy_coverage": 0.4519230769230769,
+        "source_proxy_numeric_pass": false,
+        "classifier_hair_coverage": 0.9215686274509803,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "facing": "S",
+      "pose": "work_a",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "Hair mask includes the raised axe-handle/hand junction; the hair-reference proxy also includes a vertical part of the tool/arm region separate from the hairstyle.",
+      "hair_reference_semantic_verdict": "FAIL",
+      "hair_reference_observation": "The blue/yellow proxy visibly includes non-hair tool, hand/arm, collar or blanket pixels in this pose; its count is not a valid true-hair silhouette denominator.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/adult_F_fur_cloak_bun/S/work_a.png",
+          "sha256": "c69a9eb94ce8c41d69c5ce4a2044b346a3cfdcb1d86fc532460134695c164482"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/adult_F_fur_cloak_bun/S/work_a_skin.png",
+          "sha256": "47e122664da5b0747e255d57929db01e437f9ceff8e3bb97a790d3599813948d"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/adult_F_fur_cloak_bun/S/work_a_hair.png",
+          "sha256": "c0f037966806e226b3bbf09130f44a000d9454031491a3cd435ef75b30efb7ad"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/adult_F_fur_cloak_bun/S_work_a.png",
+          "sha256": "c22ccc04714eec806d351f9974757ef11c425e7ac769077f8056b6a6e5333dfd"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 219,
+        "hair_pixels": 50,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 39,
+              "top": 62,
+              "right": 43,
+              "bottom": 66
+            },
+            "literal_box_pixels": 16,
+            "selected_skin_pixels": 9,
+            "coverage": 0.5625
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 35,
+              "top": 78,
+              "right": 38,
+              "bottom": 86
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 41,
+              "top": 79,
+              "right": 44,
+              "bottom": 87
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 122,
+        "source_proxy_protected_ink_pixels": 55,
+        "hair_intersection_with_source_proxy_pixels": 50,
+        "source_proxy_coverage": 0.4098360655737705,
+        "source_proxy_numeric_pass": false,
+        "classifier_hair_coverage": 0.9259259259259259,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "facing": "S",
+      "pose": "carry",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "Skin-mask pixels occur on the image-right end of the carried log, separate from the raised hand.",
+      "hair_reference_semantic_verdict": "UNCERTAIN",
+      "hair_reference_observation": "The reference mostly follows the hairstyle, but a lightness/color threshold with geometric support is only a source-color proxy. Full silhouette inclusion, highlighted hair and prop-occluded boundaries were not established pixel by pixel. The shared geometric prop exclusion can also clip bun/side-hair portions; the carry panels show abrupt support boundaries.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/adult_F_fur_cloak_bun/S/carry.png",
+          "sha256": "2fbf05d0ec72534df4ec34df06d80015f9a249d7a3f7a729346db234425bd661"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/adult_F_fur_cloak_bun/S/carry_skin.png",
+          "sha256": "40d31b569828b09ccd31f8a96ca925bce6edc46ddd68306cfd48f7de45761ed5"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/adult_F_fur_cloak_bun/S/carry_hair.png",
+          "sha256": "f15030521939e2912505714c4b1d51e28d99bb9ba7757100d40ab6314a6f90df"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/adult_F_fur_cloak_bun/S_carry.png",
+          "sha256": "51a5ea125c9b8405a8693d8c4ff1ae5bf3f6adc9982118f77966753a7cf4f0bb"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 146,
+        "hair_pixels": 43,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 38,
+              "top": 62,
+              "right": 42,
+              "bottom": 66
+            },
+            "literal_box_pixels": 16,
+            "selected_skin_pixels": 11,
+            "coverage": 0.6875
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 33,
+              "top": 72,
+              "right": 36,
+              "bottom": 80
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 40,
+              "top": 78,
+              "right": 43,
+              "bottom": 86
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 100,
+        "source_proxy_protected_ink_pixels": 47,
+        "hair_intersection_with_source_proxy_pixels": 43,
+        "source_proxy_coverage": 0.43,
+        "source_proxy_numeric_pass": false,
+        "classifier_hair_coverage": 0.9555555555555556,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "facing": "S",
+      "pose": "sleep",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "Hair mask reaches the upright fur-collar/blanket strip beside the head. The hair reference includes the same non-hair strip.",
+      "hair_reference_semantic_verdict": "FAIL",
+      "hair_reference_observation": "The blue/yellow proxy visibly includes non-hair tool, hand/arm, collar or blanket pixels in this pose; its count is not a valid true-hair silhouette denominator.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/adult_F_fur_cloak_bun/S/sleep.png",
+          "sha256": "fc5a5791126111075809310130d1f9aba3b43d416806cbbd6d2434d3542f0d32"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/adult_F_fur_cloak_bun/S/sleep_skin.png",
+          "sha256": "783344e3425c6f1665062024094cb51a395a2cd4ab36ce81543a6d3f03f7ac16"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/adult_F_fur_cloak_bun/S/sleep_hair.png",
+          "sha256": "302d3fb1ce1db6f950bdf404163dd8f821991831b79b671bd93259f834a7d446"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/adult_F_fur_cloak_bun/S_sleep.png",
+          "sha256": "5fdfae8cfd0876bd598ed40db82a7e423848f53637a154b35eb288b94878ea79"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 207,
+        "hair_pixels": 74,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 30,
+              "top": 57,
+              "right": 43,
+              "bottom": 71
+            },
+            "literal_box_pixels": 182,
+            "selected_skin_pixels": 31,
+            "coverage": 0.17032967032967034
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 45,
+              "top": 55,
+              "right": 49,
+              "bottom": 73
+            },
+            "literal_box_pixels": 72,
+            "selected_skin_pixels": 10,
+            "coverage": 0.1388888888888889
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 49,
+              "top": 55,
+              "right": 53,
+              "bottom": 73
+            },
+            "literal_box_pixels": 72,
+            "selected_skin_pixels": 26,
+            "coverage": 0.3611111111111111
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 170,
+        "source_proxy_protected_ink_pixels": 72,
+        "hair_intersection_with_source_proxy_pixels": 74,
+        "source_proxy_coverage": 0.43529411764705883,
+        "source_proxy_numeric_pass": false,
+        "classifier_hair_coverage": 1.0,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "facing": "E",
+      "pose": "idle",
+      "semantic_contamination_verdict": "PASS",
+      "observation": "No clear clothing/prop leakage observed in the turned idle panel; hand/belt contact remains at ordinary source-pixel boundary precision.",
+      "hair_reference_semantic_verdict": "UNCERTAIN",
+      "hair_reference_observation": "The reference mostly follows the hairstyle, but a lightness/color threshold with geometric support is only a source-color proxy. Full silhouette inclusion, highlighted hair and prop-occluded boundaries were not established pixel by pixel.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/adult_F_fur_cloak_bun/E/idle.png",
+          "sha256": "4fdb9f071003e833048221e9014100adb7346ed3f3f915caa65c46221b55daa3"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/adult_F_fur_cloak_bun/E/idle_skin.png",
+          "sha256": "13a8d9a64d55386ef0b170512622b77dc5c29ac9fa531ab99d92e5db69961870"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/adult_F_fur_cloak_bun/E/idle_hair.png",
+          "sha256": "db6297910b00c45e468c9c1997215488b5070a49adc37c03d721dbbd51d5f491"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/adult_F_fur_cloak_bun/E_idle.png",
+          "sha256": "c8c657c551d3ffe355618713500cdd571db36bfc6b87b7763a0ee25297b83d28"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 115,
+        "hair_pixels": 41,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 43,
+              "top": 58,
+              "right": 47,
+              "bottom": 62
+            },
+            "literal_box_pixels": 16,
+            "selected_skin_pixels": 13,
+            "coverage": 0.8125
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 38,
+              "top": 72,
+              "right": 41,
+              "bottom": 80
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 14,
+            "coverage": 0.5833333333333334
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 42,
+              "top": 78,
+              "right": 45,
+              "bottom": 86
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 11,
+            "coverage": 0.4583333333333333
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 108,
+        "source_proxy_protected_ink_pixels": 58,
+        "hair_intersection_with_source_proxy_pixels": 41,
+        "source_proxy_coverage": 0.37962962962962965,
+        "source_proxy_numeric_pass": false,
+        "classifier_hair_coverage": 0.9318181818181818,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "facing": "E",
+      "pose": "walk_a",
+      "semantic_contamination_verdict": "UNCERTAIN",
+      "observation": "Small selections at the neck/collar and hip/hand contacts cannot be confidently separated from garment pixels at this source resolution.",
+      "hair_reference_semantic_verdict": "FAIL",
+      "hair_reference_observation": "The reference reaches collar/neck boundaries outside the clearly visible hairstyle; it is not validated as a full semantic silhouette.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/adult_F_fur_cloak_bun/E/walk_a.png",
+          "sha256": "4389638614f49c561d5685c7a2a23bdff08b78860519a303b324bf5e4130116d"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/adult_F_fur_cloak_bun/E/walk_a_skin.png",
+          "sha256": "4fd1316e2847405b41769c179676c1b201d447bc0ba421711fe7348f162cbb54"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/adult_F_fur_cloak_bun/E/walk_a_hair.png",
+          "sha256": "0da61ac0791859b6b63d461e61f1da2105bfaea818828796c5c90ca9d69ca97a"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/adult_F_fur_cloak_bun/E_walk_a.png",
+          "sha256": "66fd613decbc9f57b0e23bc74a775d3b3304a394d47b3a5640fc059636cceb15"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 136,
+        "hair_pixels": 41,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 44,
+              "top": 59,
+              "right": 48,
+              "bottom": 63
+            },
+            "literal_box_pixels": 16,
+            "selected_skin_pixels": 10,
+            "coverage": 0.625
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 38,
+              "top": 76,
+              "right": 41,
+              "bottom": 84
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 6,
+            "coverage": 0.25
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 43,
+              "top": 79,
+              "right": 46,
+              "bottom": 87
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 8,
+            "coverage": 0.3333333333333333
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 102,
+        "source_proxy_protected_ink_pixels": 54,
+        "hair_intersection_with_source_proxy_pixels": 41,
+        "source_proxy_coverage": 0.4019607843137255,
+        "source_proxy_numeric_pass": false,
+        "classifier_hair_coverage": 0.9534883720930233,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "facing": "E",
+      "pose": "work_a",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "Hair mask selects the raised axe-handle end beside the hand and a collar area behind the head; the reference includes tool/collar pixels.",
+      "hair_reference_semantic_verdict": "FAIL",
+      "hair_reference_observation": "The blue/yellow proxy visibly includes non-hair tool, hand/arm, collar or blanket pixels in this pose; its count is not a valid true-hair silhouette denominator.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/adult_F_fur_cloak_bun/E/work_a.png",
+          "sha256": "f078b5c7cbfd41022548de5d3b3e9f12d52e55c7936dc312c017655bf2684109"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/adult_F_fur_cloak_bun/E/work_a_skin.png",
+          "sha256": "3fe923c3a9cd12e3448cc4d21bec39352535f88e08975665435004c0b0732294"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/adult_F_fur_cloak_bun/E/work_a_hair.png",
+          "sha256": "c90d3182d973b651f88e29823f1430f530fa9077320312091a3721c51fe2a301"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/adult_F_fur_cloak_bun/E_work_a.png",
+          "sha256": "166cc829420a9b6dc759c7db4c84f7b6e5094afc8c6165e332f1aaa2e196e801"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 207,
+        "hair_pixels": 35,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 44,
+              "top": 60,
+              "right": 48,
+              "bottom": 64
+            },
+            "literal_box_pixels": 16,
+            "selected_skin_pixels": 11,
+            "coverage": 0.6875
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 38,
+              "top": 78,
+              "right": 41,
+              "bottom": 86
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 44,
+              "top": 78,
+              "right": 47,
+              "bottom": 86
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 113,
+        "source_proxy_protected_ink_pixels": 54,
+        "hair_intersection_with_source_proxy_pixels": 35,
+        "source_proxy_coverage": 0.30973451327433627,
+        "source_proxy_numeric_pass": false,
+        "classifier_hair_coverage": 0.9722222222222222,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "facing": "E",
+      "pose": "carry",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "Skin mask selects detached pixels on the image-left log end, far from the visible hand.",
+      "hair_reference_semantic_verdict": "UNCERTAIN",
+      "hair_reference_observation": "The reference mostly follows the hairstyle, but a lightness/color threshold with geometric support is only a source-color proxy. Full silhouette inclusion, highlighted hair and prop-occluded boundaries were not established pixel by pixel. The shared geometric prop exclusion can also clip bun/side-hair portions; the carry panels show abrupt support boundaries.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/adult_F_fur_cloak_bun/E/carry.png",
+          "sha256": "77e880bb54cfbf764862710735672cba42d1792e0ef3a37b4344ec2e22f3fd60"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/adult_F_fur_cloak_bun/E/carry_skin.png",
+          "sha256": "18b25c9074a11b1322d2c93ed1abe8a811ea63578e35b58ff9406a39b592d765"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/adult_F_fur_cloak_bun/E/carry_hair.png",
+          "sha256": "5366bc7857bf6d9960184882f54cc72e9433cc72dd432b35132246c62cef60fb"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/adult_F_fur_cloak_bun/E_carry.png",
+          "sha256": "ea6e0fc3b0cd48ef50033af6cbf1924274e41b460d1339e323f2b3e8cd565522"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 132,
+        "hair_pixels": 45,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 36,
+              "top": 60,
+              "right": 40,
+              "bottom": 64
+            },
+            "literal_box_pixels": 16,
+            "selected_skin_pixels": 10,
+            "coverage": 0.625
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 31,
+              "top": 81,
+              "right": 34,
+              "bottom": 89
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 48,
+              "top": 75,
+              "right": 51,
+              "bottom": 83
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 102,
+        "source_proxy_protected_ink_pixels": 48,
+        "hair_intersection_with_source_proxy_pixels": 45,
+        "source_proxy_coverage": 0.4411764705882353,
+        "source_proxy_numeric_pass": false,
+        "classifier_hair_coverage": 0.9782608695652174,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "adult_F_fur_cloak_bun",
+      "facing": "E",
+      "pose": "sleep",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "Hair mask/reference extend along the upright fur-collar strip; the reference also follows non-hair lower outline/arm pixels.",
+      "hair_reference_semantic_verdict": "FAIL",
+      "hair_reference_observation": "The blue/yellow proxy visibly includes non-hair tool, hand/arm, collar or blanket pixels in this pose; its count is not a valid true-hair silhouette denominator.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/adult_F_fur_cloak_bun/E/sleep.png",
+          "sha256": "8fd24316ceb5e3e3c392c1994d18dea86a52cfccbac2b82a967462b33ed0004f"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/adult_F_fur_cloak_bun/E/sleep_skin.png",
+          "sha256": "e8e04a55b7e31903dbd8b042e964982fcec5c47c7f190ce6ebcdd302b6b95b6f"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/adult_F_fur_cloak_bun/E/sleep_hair.png",
+          "sha256": "161fe9633f08c24e1fd024f68b5cc651159c4b85d6cff8a5c001d0deb85ce2df"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/adult_F_fur_cloak_bun/E_sleep.png",
+          "sha256": "bbaf30bdb382fb7459890ec19c8761b9651017366554d3cbcc8e45226eba728a"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 151,
+        "hair_pixels": 67,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 30,
+              "top": 59,
+              "right": 43,
+              "bottom": 71
+            },
+            "literal_box_pixels": 156,
+            "selected_skin_pixels": 31,
+            "coverage": 0.1987179487179487
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 45,
+              "top": 57,
+              "right": 49,
+              "bottom": 73
+            },
+            "literal_box_pixels": 64,
+            "selected_skin_pixels": 11,
+            "coverage": 0.171875
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 49,
+              "top": 57,
+              "right": 53,
+              "bottom": 73
+            },
+            "literal_box_pixels": 64,
+            "selected_skin_pixels": 12,
+            "coverage": 0.1875
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 169,
+        "source_proxy_protected_ink_pixels": 73,
+        "hair_intersection_with_source_proxy_pixels": 67,
+        "source_proxy_coverage": 0.39644970414201186,
+        "source_proxy_numeric_pass": false,
+        "classifier_hair_coverage": 0.9710144927536232,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "facing": "S",
+      "pose": "idle",
+      "semantic_contamination_verdict": "PASS",
+      "observation": "No visible clothing/prop selection in S/idle; previously cleared source/mask hashes.",
+      "hair_reference_semantic_verdict": "UNCERTAIN",
+      "hair_reference_observation": "The reference mostly follows the hairstyle, but a lightness/color threshold with geometric support is only a source-color proxy. Full silhouette inclusion, highlighted hair and prop-occluded boundaries were not established pixel by pixel.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/adult_M_fur_cloak_bun/S/idle.png",
+          "sha256": "a98c1b8271c9373c1ad7ad2a9f1d3f48fb4f37f2fd27a32c4d6c535ffda90208"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/adult_M_fur_cloak_bun/S/idle_skin.png",
+          "sha256": "df503c7dc41cc58f55d9769426917e54bf4ba7fb7febbf9a7b8591606f0aa79b"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/adult_M_fur_cloak_bun/S/idle_hair.png",
+          "sha256": "68f8d106ad46fdbe67a6324f292b754d6ed595db50025954e25a98b08f1e48b0"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/adult_M_fur_cloak_bun/S_idle.png",
+          "sha256": "809035486e56e5df06ff907d09567eeaa93aa0bd694ecfff6c8fa74390a41458"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 240,
+        "hair_pixels": 60,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 38,
+              "top": 57,
+              "right": 44,
+              "bottom": 62
+            },
+            "literal_box_pixels": 30,
+            "selected_skin_pixels": 17,
+            "coverage": 0.5666666666666667
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 26,
+              "top": 75,
+              "right": 30,
+              "bottom": 83
+            },
+            "literal_box_pixels": 32,
+            "selected_skin_pixels": 25,
+            "coverage": 0.78125
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 48,
+              "top": 75,
+              "right": 52,
+              "bottom": 81
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 20,
+            "coverage": 0.8333333333333334
+          }
+        ],
+        "source_boxes_formally_reviewed": true
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 122,
+        "source_proxy_protected_ink_pixels": 43,
+        "hair_intersection_with_source_proxy_pixels": 60,
+        "source_proxy_coverage": 0.4918032786885246,
+        "source_proxy_numeric_pass": false,
+        "classifier_hair_coverage": 0.967741935483871,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "facing": "S",
+      "pose": "walk_a",
+      "semantic_contamination_verdict": "UNCERTAIN",
+      "observation": "Small hair-mask/reference extensions touch the collar beside the beard; exact boundary ownership is not clear enough to certify cleanliness.",
+      "hair_reference_semantic_verdict": "FAIL",
+      "hair_reference_observation": "The reference reaches collar/neck boundaries outside the clearly visible hairstyle; it is not validated as a full semantic silhouette.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/adult_M_fur_cloak_bun/S/walk_a.png",
+          "sha256": "aa2ce98d0985ad8339186cb86f4bb18c6779885f1f1a3003eea9543a1036234e"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/adult_M_fur_cloak_bun/S/walk_a_skin.png",
+          "sha256": "a7d31e6b6592f9c9c85413824071647bf16a7b6b67340b1a5c6b424ae9c38eec"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/adult_M_fur_cloak_bun/S/walk_a_hair.png",
+          "sha256": "9891f8f220214f86d1851ae45a2d4af2f4ffedba45104ce7f7fee848b2ce5cad"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/adult_M_fur_cloak_bun/S_walk_a.png",
+          "sha256": "4cf4f88d11652ebd6cc062e5910ff0664d486c293736f3d1bb3e695ada787f2c"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 175,
+        "hair_pixels": 61,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 41,
+              "top": 58,
+              "right": 45,
+              "bottom": 62
+            },
+            "literal_box_pixels": 16,
+            "selected_skin_pixels": 11,
+            "coverage": 0.6875
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 28,
+              "top": 74,
+              "right": 31,
+              "bottom": 82
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 21,
+            "coverage": 0.875
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 51,
+              "top": 75,
+              "right": 54,
+              "bottom": 83
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 12,
+            "coverage": 0.5
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 116,
+        "source_proxy_protected_ink_pixels": 42,
+        "hair_intersection_with_source_proxy_pixels": 61,
+        "source_proxy_coverage": 0.5258620689655172,
+        "source_proxy_numeric_pass": true,
+        "classifier_hair_coverage": 0.9242424242424242,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "facing": "S",
+      "pose": "work_a",
+      "semantic_contamination_verdict": "UNCERTAIN",
+      "observation": "Hair selection near the raised hand/axe-shaft and upper hair contact is ambiguous. The hair-reference proxy visibly reaches non-hair tool/arm boundaries.",
+      "hair_reference_semantic_verdict": "FAIL",
+      "hair_reference_observation": "The blue/yellow proxy visibly includes non-hair tool, hand/arm, collar or blanket pixels in this pose; its count is not a valid true-hair silhouette denominator.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/adult_M_fur_cloak_bun/S/work_a.png",
+          "sha256": "68d73ce7a0aa1be4ae40899c185fa7453b3694a7375d396fefbac46892252c5e"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/adult_M_fur_cloak_bun/S/work_a_skin.png",
+          "sha256": "4781e765c6cc1fc09ccf2d35b0358b8065e5dd06e3c6cc98d78df3812252d110"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/adult_M_fur_cloak_bun/S/work_a_hair.png",
+          "sha256": "0ab140ba1e09cca9a8fb22ac76b62f2fd8015270ba1f5de98a0e34e7a9e260ab"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/adult_M_fur_cloak_bun/S_work_a.png",
+          "sha256": "dcce165be79dfcc8e4f200715a68fc01523f0af305a11bd66936f270a5cfe707"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 285,
+        "hair_pixels": 53,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 39,
+              "top": 62,
+              "right": 43,
+              "bottom": 66
+            },
+            "literal_box_pixels": 16,
+            "selected_skin_pixels": 9,
+            "coverage": 0.5625
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 35,
+              "top": 78,
+              "right": 38,
+              "bottom": 86
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 41,
+              "top": 79,
+              "right": 44,
+              "bottom": 87
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 116,
+        "source_proxy_protected_ink_pixels": 36,
+        "hair_intersection_with_source_proxy_pixels": 53,
+        "source_proxy_coverage": 0.45689655172413796,
+        "source_proxy_numeric_pass": false,
+        "classifier_hair_coverage": 0.9298245614035088,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "facing": "S",
+      "pose": "carry",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "Skin mask marks both exposed ends of the log bundle, spatially separated from the hands.",
+      "hair_reference_semantic_verdict": "UNCERTAIN",
+      "hair_reference_observation": "The reference mostly follows the hairstyle, but a lightness/color threshold with geometric support is only a source-color proxy. Full silhouette inclusion, highlighted hair and prop-occluded boundaries were not established pixel by pixel. The shared geometric prop exclusion can also clip bun/side-hair portions; the carry panels show abrupt support boundaries.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/adult_M_fur_cloak_bun/S/carry.png",
+          "sha256": "eb5f6202102baa612b49296a6e10a1dfa042092c6f236f5d444e50318ab5db75"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/adult_M_fur_cloak_bun/S/carry_skin.png",
+          "sha256": "9210912d522af2f8556535d572cada93e9cfd7be6d2e14d1a9a32791483dc011"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/adult_M_fur_cloak_bun/S/carry_hair.png",
+          "sha256": "af4d244145d445f48122ae9225f1abdf7de1538d84a2c72e64467c0188d99204"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/adult_M_fur_cloak_bun/S_carry.png",
+          "sha256": "135a8e0e5959a486338b7fbfe75bee26f5b9685fb459287b91a1c196232c26e0"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 153,
+        "hair_pixels": 58,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 37,
+              "top": 61,
+              "right": 41,
+              "bottom": 65
+            },
+            "literal_box_pixels": 16,
+            "selected_skin_pixels": 9,
+            "coverage": 0.5625
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 27,
+              "top": 70,
+              "right": 30,
+              "bottom": 78
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 5,
+            "coverage": 0.20833333333333334
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 39,
+              "top": 79,
+              "right": 42,
+              "bottom": 87
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 97,
+        "source_proxy_protected_ink_pixels": 27,
+        "hair_intersection_with_source_proxy_pixels": 58,
+        "source_proxy_coverage": 0.5979381443298969,
+        "source_proxy_numeric_pass": true,
+        "classifier_hair_coverage": 1.0,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "facing": "S",
+      "pose": "sleep",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "Hair selection enters the upright fur/blanket strip; isolated green selections also occur in the wrapped garment away from the exposed arm and legs.",
+      "hair_reference_semantic_verdict": "FAIL",
+      "hair_reference_observation": "The blue/yellow proxy visibly includes non-hair tool, hand/arm, collar or blanket pixels in this pose; its count is not a valid true-hair silhouette denominator.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/adult_M_fur_cloak_bun/S/sleep.png",
+          "sha256": "5aeefa9804329fa196a61031dd92c15e931e3395df42fb5f4ece6215a5c8a904"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/adult_M_fur_cloak_bun/S/sleep_skin.png",
+          "sha256": "cc5d9de4fee5a6eabfa8dfe76d3586129259dc3ea0014980a12f6be54b07cc9f"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/adult_M_fur_cloak_bun/S/sleep_hair.png",
+          "sha256": "7862f18c8b9663b82273dfdf9d8f6ab284c4d6afbbc8a59cb8db150b5e221278"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/adult_M_fur_cloak_bun/S_sleep.png",
+          "sha256": "6e66aed5d1e0fbfcfe52ad8996d60da10bccb029456639f2b333d8f7eb415dd6"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 215,
+        "hair_pixels": 102,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 30,
+              "top": 56,
+              "right": 43,
+              "bottom": 71
+            },
+            "literal_box_pixels": 195,
+            "selected_skin_pixels": 33,
+            "coverage": 0.16923076923076924
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 45,
+              "top": 54,
+              "right": 49,
+              "bottom": 73
+            },
+            "literal_box_pixels": 76,
+            "selected_skin_pixels": 29,
+            "coverage": 0.3815789473684211
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 49,
+              "top": 54,
+              "right": 53,
+              "bottom": 73
+            },
+            "literal_box_pixels": 76,
+            "selected_skin_pixels": 25,
+            "coverage": 0.32894736842105265
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 180,
+        "source_proxy_protected_ink_pixels": 67,
+        "hair_intersection_with_source_proxy_pixels": 101,
+        "source_proxy_coverage": 0.5611111111111111,
+        "source_proxy_numeric_pass": true,
+        "classifier_hair_coverage": 0.9902912621359223,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "facing": "E",
+      "pose": "idle",
+      "semantic_contamination_verdict": "PASS",
+      "observation": "No clear clothing/prop leakage observed in the turned idle panel.",
+      "hair_reference_semantic_verdict": "UNCERTAIN",
+      "hair_reference_observation": "The reference mostly follows the hairstyle, but a lightness/color threshold with geometric support is only a source-color proxy. Full silhouette inclusion, highlighted hair and prop-occluded boundaries were not established pixel by pixel.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/adult_M_fur_cloak_bun/E/idle.png",
+          "sha256": "d4b8177e94529f3ecd53bd96c9f9d50948876bce991620806ac742a94b86c755"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/adult_M_fur_cloak_bun/E/idle_skin.png",
+          "sha256": "1ab7142b0cc621205e316f0340d91bd3cf6e7ae9a547401df33cc34d053e1d91"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/adult_M_fur_cloak_bun/E/idle_hair.png",
+          "sha256": "ad158d4719fe54cbf77bdf9a875bd2a4b34fc48b6f1ee202a4be0f44243365c1"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/adult_M_fur_cloak_bun/E_idle.png",
+          "sha256": "d32cae7251f342882ae16347505a66ebae76c803b8ebfb9c8beee34584f157f5"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 110,
+        "hair_pixels": 62,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 45,
+              "top": 56,
+              "right": 49,
+              "bottom": 60
+            },
+            "literal_box_pixels": 16,
+            "selected_skin_pixels": 7,
+            "coverage": 0.4375
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 38,
+              "top": 71,
+              "right": 41,
+              "bottom": 79
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 22,
+            "coverage": 0.9166666666666666
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 46,
+              "top": 78,
+              "right": 49,
+              "bottom": 86
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 6,
+            "coverage": 0.25
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 122,
+        "source_proxy_protected_ink_pixels": 42,
+        "hair_intersection_with_source_proxy_pixels": 62,
+        "source_proxy_coverage": 0.5081967213114754,
+        "source_proxy_numeric_pass": true,
+        "classifier_hair_coverage": 1.0,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "facing": "E",
+      "pose": "walk_a",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "Skin mask selects a strip on the garment at the rear hip, behind the visible extended arm.",
+      "hair_reference_semantic_verdict": "UNCERTAIN",
+      "hair_reference_observation": "The reference mostly follows the hairstyle, but a lightness/color threshold with geometric support is only a source-color proxy. Full silhouette inclusion, highlighted hair and prop-occluded boundaries were not established pixel by pixel.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/adult_M_fur_cloak_bun/E/walk_a.png",
+          "sha256": "a276da3d697cf986d898ceeec62bbe07275029cdd0ad1183d02b80d2fec99789"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/adult_M_fur_cloak_bun/E/walk_a_skin.png",
+          "sha256": "52bf6ed6b26f3d631073134f43bc2c1441562149ad8631c88be13e0a65766a04"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/adult_M_fur_cloak_bun/E/walk_a_hair.png",
+          "sha256": "701b462835f1dba014bc5ee9287c5c1b24ff705453cb8958e917ef3c5e886a3a"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/adult_M_fur_cloak_bun/E_walk_a.png",
+          "sha256": "5066790036a7c5f324616d41df08d7228b93a755d1a8a1a9e919b8c3bf0023a5"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 170,
+        "hair_pixels": 63,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 43,
+              "top": 58,
+              "right": 47,
+              "bottom": 62
+            },
+            "literal_box_pixels": 16,
+            "selected_skin_pixels": 6,
+            "coverage": 0.375
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 33,
+              "top": 77,
+              "right": 36,
+              "bottom": 85
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 10,
+            "coverage": 0.4166666666666667
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 43,
+              "top": 75,
+              "right": 46,
+              "bottom": 83
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 14,
+            "coverage": 0.5833333333333334
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 111,
+        "source_proxy_protected_ink_pixels": 32,
+        "hair_intersection_with_source_proxy_pixels": 63,
+        "source_proxy_coverage": 0.5675675675675675,
+        "source_proxy_numeric_pass": true,
+        "classifier_hair_coverage": 1.0,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "facing": "E",
+      "pose": "work_a",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "Hair/reference selection includes the axe head/shaft region above and behind the head. A mask boundary follows the prop rather than hair.",
+      "hair_reference_semantic_verdict": "FAIL",
+      "hair_reference_observation": "The blue/yellow proxy visibly includes non-hair tool, hand/arm, collar or blanket pixels in this pose; its count is not a valid true-hair silhouette denominator.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/adult_M_fur_cloak_bun/E/work_a.png",
+          "sha256": "6b3da774b8fe08385c979092907a047304caf7f073eae7b43d06dc4791d56df4"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/adult_M_fur_cloak_bun/E/work_a_skin.png",
+          "sha256": "9ef8080ddb522f4d460327a009056dd547ca49b5d67226467a13a06debe18342"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/adult_M_fur_cloak_bun/E/work_a_hair.png",
+          "sha256": "6a24b0a96f3da9791008ece5ca7bbc3da9242d192a33127f2add227725010628"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/adult_M_fur_cloak_bun/E_work_a.png",
+          "sha256": "3fdba536800d061507aedc7f1381281a252ee21d00477aeb350c002564132122"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 267,
+        "hair_pixels": 59,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 43,
+              "top": 61,
+              "right": 47,
+              "bottom": 65
+            },
+            "literal_box_pixels": 16,
+            "selected_skin_pixels": 8,
+            "coverage": 0.5
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 35,
+              "top": 79,
+              "right": 38,
+              "bottom": 87
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 43,
+              "top": 80,
+              "right": 46,
+              "bottom": 88
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 136,
+        "source_proxy_protected_ink_pixels": 38,
+        "hair_intersection_with_source_proxy_pixels": 59,
+        "source_proxy_coverage": 0.4338235294117647,
+        "source_proxy_numeric_pass": false,
+        "classifier_hair_coverage": 1.0,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "facing": "E",
+      "pose": "carry",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "Skin mask marks detached pixels on the image-left log end.",
+      "hair_reference_semantic_verdict": "UNCERTAIN",
+      "hair_reference_observation": "The reference mostly follows the hairstyle, but a lightness/color threshold with geometric support is only a source-color proxy. Full silhouette inclusion, highlighted hair and prop-occluded boundaries were not established pixel by pixel. The shared geometric prop exclusion can also clip bun/side-hair portions; the carry panels show abrupt support boundaries.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/adult_M_fur_cloak_bun/E/carry.png",
+          "sha256": "ba50278f3211a7de0228931aae3724bfe44f1a02e613ca0a412c7ade7deab3b2"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/adult_M_fur_cloak_bun/E/carry_skin.png",
+          "sha256": "cd72450f29d9f0291a7403ffe643903648b9aac16cf0b8be18fc08a1c5ea7e97"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/adult_M_fur_cloak_bun/E/carry_hair.png",
+          "sha256": "54a4286d3d3da3358dbac986eee17ea09e9392c72845211153592043185129bb"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/adult_M_fur_cloak_bun/E_carry.png",
+          "sha256": "5a31263fdea290a6c61f4658ffade2688b07335ca11c74d231e33c91be10c22d"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 158,
+        "hair_pixels": 53,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 39,
+              "top": 61,
+              "right": 43,
+              "bottom": 65
+            },
+            "literal_box_pixels": 16,
+            "selected_skin_pixels": 5,
+            "coverage": 0.3125
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 32,
+              "top": 80,
+              "right": 35,
+              "bottom": 88
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 40,
+              "top": 71,
+              "right": 43,
+              "bottom": 79
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 1,
+            "coverage": 0.041666666666666664
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 108,
+        "source_proxy_protected_ink_pixels": 36,
+        "hair_intersection_with_source_proxy_pixels": 53,
+        "source_proxy_coverage": 0.49074074074074076,
+        "source_proxy_numeric_pass": false,
+        "classifier_hair_coverage": 0.9814814814814815,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "adult_M_fur_cloak_bun",
+      "facing": "E",
+      "pose": "sleep",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "Hair selection enters the upright fur-collar/blanket strip; green selections occur in the wrapped garment near the lower trim.",
+      "hair_reference_semantic_verdict": "FAIL",
+      "hair_reference_observation": "The blue/yellow proxy visibly includes non-hair tool, hand/arm, collar or blanket pixels in this pose; its count is not a valid true-hair silhouette denominator.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/adult_M_fur_cloak_bun/E/sleep.png",
+          "sha256": "c4eec678138f2fb27d4e10d675a79ec3435d3c2dccd194d26662d4b01ab4bfcf"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/adult_M_fur_cloak_bun/E/sleep_skin.png",
+          "sha256": "2052cbea22c4c667d23114f2d983a82a162ed3b27d1ed98b245389bd51ee625b"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/adult_M_fur_cloak_bun/E/sleep_hair.png",
+          "sha256": "d5711408dc989e527dc37225307154e2ed234fbbd88f6a1296addf838e5432be"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/adult_M_fur_cloak_bun/E_sleep.png",
+          "sha256": "b082634bdbbe40ea8e0437bb16bad8421eee9c3b84cdd1868308f01a68ef35df"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 219,
+        "hair_pixels": 82,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 30,
+              "top": 58,
+              "right": 43,
+              "bottom": 71
+            },
+            "literal_box_pixels": 169,
+            "selected_skin_pixels": 21,
+            "coverage": 0.1242603550295858
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 45,
+              "top": 56,
+              "right": 49,
+              "bottom": 73
+            },
+            "literal_box_pixels": 68,
+            "selected_skin_pixels": 30,
+            "coverage": 0.4411764705882353
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 49,
+              "top": 56,
+              "right": 53,
+              "bottom": 73
+            },
+            "literal_box_pixels": 68,
+            "selected_skin_pixels": 16,
+            "coverage": 0.23529411764705882
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 168,
+        "source_proxy_protected_ink_pixels": 59,
+        "hair_intersection_with_source_proxy_pixels": 82,
+        "source_proxy_coverage": 0.4880952380952381,
+        "source_proxy_numeric_pass": false,
+        "classifier_hair_coverage": 0.9647058823529412,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "facing": "S",
+      "pose": "idle",
+      "semantic_contamination_verdict": "PASS",
+      "observation": "No visible clothing/prop selection in S/idle; previously cleared source/mask hashes.",
+      "hair_reference_semantic_verdict": "UNCERTAIN",
+      "hair_reference_observation": "The reference mostly follows the hairstyle, but a lightness/color threshold with geometric support is only a source-color proxy. Full silhouette inclusion, highlighted hair and prop-occluded boundaries were not established pixel by pixel.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/child_F_fur_cloak_bun/S/idle.png",
+          "sha256": "2c12e35971c40f6aa26d13e994a294fefaca50645218e83f7e39b1ba96e892c5"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/child_F_fur_cloak_bun/S/idle_skin.png",
+          "sha256": "69a4db45235989e0a6e8e25e7abc3760e82b12a1799cec3731c3b98933fbcbba"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/child_F_fur_cloak_bun/S/idle_hair.png",
+          "sha256": "fb2c25b1ab1f20dd0f14853007d64c6d70ab09e4db883781844627038e34e2d0"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/child_F_fur_cloak_bun/S_idle.png",
+          "sha256": "f364283cec8b3b733a27879560a065e73d8e1c6f8332bc0b3f39cc9739f6d54f"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 93,
+        "hair_pixels": 48,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 38,
+              "top": 72,
+              "right": 44,
+              "bottom": 79
+            },
+            "literal_box_pixels": 42,
+            "selected_skin_pixels": 23,
+            "coverage": 0.5476190476190477
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 32,
+              "top": 88,
+              "right": 35,
+              "bottom": 92
+            },
+            "literal_box_pixels": 12,
+            "selected_skin_pixels": 8,
+            "coverage": 0.6666666666666666
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 45,
+              "top": 88,
+              "right": 48,
+              "bottom": 93
+            },
+            "literal_box_pixels": 15,
+            "selected_skin_pixels": 7,
+            "coverage": 0.4666666666666667
+          }
+        ],
+        "source_boxes_formally_reviewed": true
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 102,
+        "source_proxy_protected_ink_pixels": 42,
+        "hair_intersection_with_source_proxy_pixels": 48,
+        "source_proxy_coverage": 0.47058823529411764,
+        "source_proxy_numeric_pass": false,
+        "classifier_hair_coverage": 0.9411764705882353,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "facing": "S",
+      "pose": "walk_a",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "Skin mask includes detached pixels on the outer image-left cloak and lower cloak edge, away from exposed arm/leg skin.",
+      "hair_reference_semantic_verdict": "UNCERTAIN",
+      "hair_reference_observation": "The reference mostly follows the hairstyle, but a lightness/color threshold with geometric support is only a source-color proxy. Full silhouette inclusion, highlighted hair and prop-occluded boundaries were not established pixel by pixel.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/child_F_fur_cloak_bun/S/walk_a.png",
+          "sha256": "b739127b49ce8b019d4a050131cb18bfdafcd19cee52e6e3a630e017eb6f24c7"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/child_F_fur_cloak_bun/S/walk_a_skin.png",
+          "sha256": "dd1406d9e0933ab57d5ef27e73164d75e466a8316c2dec437bcd500e88fabc2c"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/child_F_fur_cloak_bun/S/walk_a_hair.png",
+          "sha256": "62a06a775210bd96eea6ed5877435960d9755fe3dbad8967e31dbb5d78e9662e"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/child_F_fur_cloak_bun/S_walk_a.png",
+          "sha256": "36b7ea0cf48e7cbdf588d814dddad0cc050c5e7d20a7d9ca3cdf447089ec9fca"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 90,
+        "hair_pixels": 51,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 43,
+              "top": 73,
+              "right": 46,
+              "bottom": 77
+            },
+            "literal_box_pixels": 12,
+            "selected_skin_pixels": 5,
+            "coverage": 0.4166666666666667
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 33,
+              "top": 88,
+              "right": 35,
+              "bottom": 93
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 7,
+            "coverage": 0.7
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 46,
+              "top": 88,
+              "right": 48,
+              "bottom": 93
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 1,
+            "coverage": 0.1
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 103,
+        "source_proxy_protected_ink_pixels": 42,
+        "hair_intersection_with_source_proxy_pixels": 51,
+        "source_proxy_coverage": 0.49514563106796117,
+        "source_proxy_numeric_pass": false,
+        "classifier_hair_coverage": 0.9807692307692307,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "facing": "S",
+      "pose": "work_a",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "Skin mask includes a detached image-left cloak/hem patch; hair selection reaches the axe-handle contact above the head.",
+      "hair_reference_semantic_verdict": "FAIL",
+      "hair_reference_observation": "The blue/yellow proxy visibly includes non-hair tool, hand/arm, collar or blanket pixels in this pose; its count is not a valid true-hair silhouette denominator.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/child_F_fur_cloak_bun/S/work_a.png",
+          "sha256": "b0ba382a24b4934277cf5598c85bc1dc583097f69cef501ee5b5a2a812e4ea79"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/child_F_fur_cloak_bun/S/work_a_skin.png",
+          "sha256": "a1a8ddbcb1ebb72b880e6373f3dd66065e09194dcf4472fe2f8710102a9b5567"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/child_F_fur_cloak_bun/S/work_a_hair.png",
+          "sha256": "99eec33bfdaafe77c56283b5983d52a54a7d666e664cfd94c7b285de415a9152"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/child_F_fur_cloak_bun/S_work_a.png",
+          "sha256": "618f4b9660e5124da5ce9c8e04ea859f571384c06d9878682b799f68a05491a0"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 140,
+        "hair_pixels": 45,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 45,
+              "top": 76,
+              "right": 48,
+              "bottom": 80
+            },
+            "literal_box_pixels": 12,
+            "selected_skin_pixels": 7,
+            "coverage": 0.5833333333333334
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 36,
+              "top": 89,
+              "right": 38,
+              "bottom": 94
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 4,
+            "coverage": 0.4
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 44,
+              "top": 91,
+              "right": 46,
+              "bottom": 96
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 93,
+        "source_proxy_protected_ink_pixels": 29,
+        "hair_intersection_with_source_proxy_pixels": 45,
+        "source_proxy_coverage": 0.4838709677419355,
+        "source_proxy_numeric_pass": false,
+        "classifier_hair_coverage": 0.9375,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "facing": "S",
+      "pose": "carry",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "Skin mask includes an image-left cloak/hem patch below the raised arm. No clear log-end leakage was seen in this frame.",
+      "hair_reference_semantic_verdict": "UNCERTAIN",
+      "hair_reference_observation": "The reference mostly follows the hairstyle, but a lightness/color threshold with geometric support is only a source-color proxy. Full silhouette inclusion, highlighted hair and prop-occluded boundaries were not established pixel by pixel. The shared geometric prop exclusion can also clip bun/side-hair portions; the carry panels show abrupt support boundaries.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/child_F_fur_cloak_bun/S/carry.png",
+          "sha256": "e93fc54023491eaffc20bb7b129819f91e4b7035d54454f7041037d2d2133ce7"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/child_F_fur_cloak_bun/S/carry_skin.png",
+          "sha256": "f9695274791e53351ae1675bfe210e33d936aa81ff0263f1822a5a79d3b45f3a"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/child_F_fur_cloak_bun/S/carry_hair.png",
+          "sha256": "57b59400b59c483a2c63f0a79e2009b3bb3cb2c0aac71acd13d94273433a256d"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/child_F_fur_cloak_bun/S_carry.png",
+          "sha256": "4692d13b4c09d9ed66b0011f0613d4c66e691213bb180cb8db3f2dcc73ac6452"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 84,
+        "hair_pixels": 42,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 41,
+              "top": 73,
+              "right": 44,
+              "bottom": 77
+            },
+            "literal_box_pixels": 12,
+            "selected_skin_pixels": 8,
+            "coverage": 0.6666666666666666
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 35,
+              "top": 88,
+              "right": 37,
+              "bottom": 93
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 41,
+              "top": 89,
+              "right": 43,
+              "bottom": 94
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 71,
+        "source_proxy_protected_ink_pixels": 19,
+        "hair_intersection_with_source_proxy_pixels": 42,
+        "source_proxy_coverage": 0.5915492957746479,
+        "source_proxy_numeric_pass": true,
+        "classifier_hair_coverage": 0.9545454545454546,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "facing": "S",
+      "pose": "sleep",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "Isolated green pixels occur on the brown blanket and its trim, separate from exposed arm/legs.",
+      "hair_reference_semantic_verdict": "FAIL",
+      "hair_reference_observation": "The blue/yellow proxy visibly includes non-hair tool, hand/arm, collar or blanket pixels in this pose; its count is not a valid true-hair silhouette denominator.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/child_F_fur_cloak_bun/S/sleep.png",
+          "sha256": "c38699906203db5c993d18d22fc0cc8311854814a1b314e59c53182e0c2a9ece"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/child_F_fur_cloak_bun/S/sleep_skin.png",
+          "sha256": "874c85cd92b4ebc434038cf89547f22e40c35e9cb2ccc593be45533ba1341342"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/child_F_fur_cloak_bun/S/sleep_hair.png",
+          "sha256": "918be76437d06c729b44cfe304213ac41074f8294974dd2851c113d6e830f851"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/child_F_fur_cloak_bun/S_sleep.png",
+          "sha256": "fb897396be2e3c3f0d05a56d77322121cba2aac3a8da571092286f99052338d5"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 134,
+        "hair_pixels": 61,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 38,
+              "top": 57,
+              "right": 46,
+              "bottom": 70
+            },
+            "literal_box_pixels": 104,
+            "selected_skin_pixels": 16,
+            "coverage": 0.15384615384615385
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 48,
+              "top": 55,
+              "right": 52,
+              "bottom": 72
+            },
+            "literal_box_pixels": 68,
+            "selected_skin_pixels": 26,
+            "coverage": 0.38235294117647056
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 52,
+              "top": 55,
+              "right": 56,
+              "bottom": 72
+            },
+            "literal_box_pixels": 68,
+            "selected_skin_pixels": 4,
+            "coverage": 0.058823529411764705
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 134,
+        "source_proxy_protected_ink_pixels": 54,
+        "hair_intersection_with_source_proxy_pixels": 61,
+        "source_proxy_coverage": 0.4552238805970149,
+        "source_proxy_numeric_pass": false,
+        "classifier_hair_coverage": 0.953125,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "facing": "E",
+      "pose": "idle",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "A detached green skin-mask pixel appears on the image-left cloak hem; further garment/hand boundary selections occur near the waist.",
+      "hair_reference_semantic_verdict": "UNCERTAIN",
+      "hair_reference_observation": "The reference mostly follows the hairstyle, but a lightness/color threshold with geometric support is only a source-color proxy. Full silhouette inclusion, highlighted hair and prop-occluded boundaries were not established pixel by pixel.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/child_F_fur_cloak_bun/E/idle.png",
+          "sha256": "1685489f06c6e84d44e0c9120b5a4155e274a2fb1c34a16e4208cb6086245dd6"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/child_F_fur_cloak_bun/E/idle_skin.png",
+          "sha256": "09f3daefab8bfbcba3ce31aeef3373f3cd7d9f582c40864eb14bdc4f539501aa"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/child_F_fur_cloak_bun/E/idle_hair.png",
+          "sha256": "4ae69fd83e29d176e9a4a3ceea79740bd1740449e28a916f8d333e13a46cdd25"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/child_F_fur_cloak_bun/E_idle.png",
+          "sha256": "bcae5afb7a18e3294332bedc9ec9474031671dbf33cb5d8841a5419775207ae6"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 51,
+        "hair_pixels": 58,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 43,
+              "top": 72,
+              "right": 46,
+              "bottom": 76
+            },
+            "literal_box_pixels": 12,
+            "selected_skin_pixels": 4,
+            "coverage": 0.3333333333333333
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 37,
+              "top": 89,
+              "right": 39,
+              "bottom": 94
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 41,
+              "top": 89,
+              "right": 43,
+              "bottom": 94
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 2,
+            "coverage": 0.2
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 110,
+        "source_proxy_protected_ink_pixels": 42,
+        "hair_intersection_with_source_proxy_pixels": 58,
+        "source_proxy_coverage": 0.5272727272727272,
+        "source_proxy_numeric_pass": true,
+        "classifier_hair_coverage": 1.0,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "facing": "E",
+      "pose": "walk_a",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "Skin mask includes the cloak edge behind the near arm and adjacent lower garment/trim.",
+      "hair_reference_semantic_verdict": "UNCERTAIN",
+      "hair_reference_observation": "The reference mostly follows the hairstyle, but a lightness/color threshold with geometric support is only a source-color proxy. Full silhouette inclusion, highlighted hair and prop-occluded boundaries were not established pixel by pixel.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/child_F_fur_cloak_bun/E/walk_a.png",
+          "sha256": "9af413ad4ec7614331d244ee00df6d2e843941600e15851183051b311c217ccd"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/child_F_fur_cloak_bun/E/walk_a_skin.png",
+          "sha256": "01e0442fe2868568f9ff0736911c63c5db08694731a6eb88fddd01457d434c74"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/child_F_fur_cloak_bun/E/walk_a_hair.png",
+          "sha256": "094c573b8625c3d9d4621af938b591b50fb9b6de197e544b0d48ef1948095024"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/child_F_fur_cloak_bun/E_walk_a.png",
+          "sha256": "9dc799ad1f39ef4aa7bba5e35215074345b96a98b06200447a7591f424d2676c"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 85,
+        "hair_pixels": 56,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 45,
+              "top": 74,
+              "right": 48,
+              "bottom": 78
+            },
+            "literal_box_pixels": 12,
+            "selected_skin_pixels": 6,
+            "coverage": 0.5
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 36,
+              "top": 88,
+              "right": 38,
+              "bottom": 93
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 7,
+            "coverage": 0.7
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 45,
+              "top": 87,
+              "right": 47,
+              "bottom": 92
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 3,
+            "coverage": 0.3
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 116,
+        "source_proxy_protected_ink_pixels": 45,
+        "hair_intersection_with_source_proxy_pixels": 56,
+        "source_proxy_coverage": 0.4827586206896552,
+        "source_proxy_numeric_pass": false,
+        "classifier_hair_coverage": 1.0,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "facing": "E",
+      "pose": "work_a",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "Skin mask includes the outer cloak/hem; hair/reference selection reaches the axe-head/handle contact above the hair.",
+      "hair_reference_semantic_verdict": "FAIL",
+      "hair_reference_observation": "The blue/yellow proxy visibly includes non-hair tool, hand/arm, collar or blanket pixels in this pose; its count is not a valid true-hair silhouette denominator.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/child_F_fur_cloak_bun/E/work_a.png",
+          "sha256": "f432ba7e997eea0ff1360ce4a6d151afddc585dd2b912c82b864b72f3c7fb5a0"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/child_F_fur_cloak_bun/E/work_a_skin.png",
+          "sha256": "40fd7f750e00a5becf43834eb8a3b3fc62fbd1b9f9149420796b250140cdccec"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/child_F_fur_cloak_bun/E/work_a_hair.png",
+          "sha256": "47ae780d436a094d7e7dbe04ada38e0f508c402b179fbc15720d4e9bea5cb7a2"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/child_F_fur_cloak_bun/E_work_a.png",
+          "sha256": "a47d776666d7238aaf80bd44112f6e96274d1a78de76c3c72dca6894c950dde7"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 121,
+        "hair_pixels": 41,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 41,
+              "top": 75,
+              "right": 44,
+              "bottom": 79
+            },
+            "literal_box_pixels": 12,
+            "selected_skin_pixels": 8,
+            "coverage": 0.6666666666666666
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 36,
+              "top": 89,
+              "right": 38,
+              "bottom": 94
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 43,
+              "top": 90,
+              "right": 45,
+              "bottom": 95
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 100,
+        "source_proxy_protected_ink_pixels": 38,
+        "hair_intersection_with_source_proxy_pixels": 41,
+        "source_proxy_coverage": 0.41,
+        "source_proxy_numeric_pass": false,
+        "classifier_hair_coverage": 0.8913043478260869,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "facing": "E",
+      "pose": "carry",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "Skin mask marks the outer image-left cloak/hem below the shoulder, away from the raised hands.",
+      "hair_reference_semantic_verdict": "UNCERTAIN",
+      "hair_reference_observation": "The reference mostly follows the hairstyle, but a lightness/color threshold with geometric support is only a source-color proxy. Full silhouette inclusion, highlighted hair and prop-occluded boundaries were not established pixel by pixel. The shared geometric prop exclusion can also clip bun/side-hair portions; the carry panels show abrupt support boundaries.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/child_F_fur_cloak_bun/E/carry.png",
+          "sha256": "41fccf3115063a75b0f49b1de4d004cbe8a69336777dde94b60e9555e5b27fc2"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/child_F_fur_cloak_bun/E/carry_skin.png",
+          "sha256": "04f1aecb3605221e41d8b613e4aec035644946764e61a947de0887c3435d0bd2"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/child_F_fur_cloak_bun/E/carry_hair.png",
+          "sha256": "0070a3ec3ae9f100a83045eb98dbe27026d8c698d144f2c2b99fae7a5377d1cf"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/child_F_fur_cloak_bun/E_carry.png",
+          "sha256": "2838a0e24a1670cc5dedce04f4650a1c6fc29e28929e097baed72e6ce9071cba"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 79,
+        "hair_pixels": 41,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 43,
+              "top": 74,
+              "right": 46,
+              "bottom": 78
+            },
+            "literal_box_pixels": 12,
+            "selected_skin_pixels": 4,
+            "coverage": 0.3333333333333333
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 37,
+              "top": 88,
+              "right": 39,
+              "bottom": 93
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 43,
+              "top": 89,
+              "right": 45,
+              "bottom": 94
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 77,
+        "source_proxy_protected_ink_pixels": 26,
+        "hair_intersection_with_source_proxy_pixels": 41,
+        "source_proxy_coverage": 0.5324675324675324,
+        "source_proxy_numeric_pass": true,
+        "classifier_hair_coverage": 1.0,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "child_F_fur_cloak_bun",
+      "facing": "E",
+      "pose": "sleep",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "Isolated green pixels occur in the brown blanket and along its trim, away from the exposed limbs.",
+      "hair_reference_semantic_verdict": "FAIL",
+      "hair_reference_observation": "The blue/yellow proxy visibly includes non-hair tool, hand/arm, collar or blanket pixels in this pose; its count is not a valid true-hair silhouette denominator.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/child_F_fur_cloak_bun/E/sleep.png",
+          "sha256": "318a5b89e89a8a3d96cb0cd60a1966733df87d42df6035138fc5c2ae23bc64d5"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/child_F_fur_cloak_bun/E/sleep_skin.png",
+          "sha256": "e7f5b48e430afd1d5ae952d212b8d9b71ec9cfdb098c160f90b9c626ed09b5d9"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/child_F_fur_cloak_bun/E/sleep_hair.png",
+          "sha256": "96a8689708202a87e9d5a4c45960bda929278cab70cd13237c2be71d20f34de7"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/child_F_fur_cloak_bun/E_sleep.png",
+          "sha256": "5258cc05f405ce9807e7653b301617dbc1cbee92ec1c536e341fa67c6a07bda9"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 120,
+        "hair_pixels": 60,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 37,
+              "top": 57,
+              "right": 45,
+              "bottom": 70
+            },
+            "literal_box_pixels": 104,
+            "selected_skin_pixels": 14,
+            "coverage": 0.1346153846153846
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 47,
+              "top": 55,
+              "right": 51,
+              "bottom": 72
+            },
+            "literal_box_pixels": 68,
+            "selected_skin_pixels": 31,
+            "coverage": 0.45588235294117646
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 51,
+              "top": 55,
+              "right": 55,
+              "bottom": 72
+            },
+            "literal_box_pixels": 68,
+            "selected_skin_pixels": 7,
+            "coverage": 0.10294117647058823
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 126,
+        "source_proxy_protected_ink_pixels": 47,
+        "hair_intersection_with_source_proxy_pixels": 60,
+        "source_proxy_coverage": 0.47619047619047616,
+        "source_proxy_numeric_pass": false,
+        "classifier_hair_coverage": 0.967741935483871,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "facing": "S",
+      "pose": "idle",
+      "semantic_contamination_verdict": "PASS",
+      "observation": "No visible clothing/prop selection in S/idle; previously cleared source/mask hashes.",
+      "hair_reference_semantic_verdict": "UNCERTAIN",
+      "hair_reference_observation": "The reference mostly follows the hairstyle, but a lightness/color threshold with geometric support is only a source-color proxy. Full silhouette inclusion, highlighted hair and prop-occluded boundaries were not established pixel by pixel.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/child_M_fur_cloak_bun/S/idle.png",
+          "sha256": "3c61b4824d4f9ab461a1be252aae2c4c8399508bb68cb55809130b1d586814d2"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/child_M_fur_cloak_bun/S/idle_skin.png",
+          "sha256": "3570b53b0a7fe388d76e6457ccdfcb9ebb6550acf275c187cc63aec1b72adfdf"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/child_M_fur_cloak_bun/S/idle_hair.png",
+          "sha256": "1ae2702af38bb195d5903216e300b3996889a6032e60215f81e9828f0b934801"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/child_M_fur_cloak_bun/S_idle.png",
+          "sha256": "73bae7996245cd210ca6607484ba6dd099755d9b69492f678c835468d514e475"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 106,
+        "hair_pixels": 52,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 36,
+              "top": 73,
+              "right": 44,
+              "bottom": 80
+            },
+            "literal_box_pixels": 56,
+            "selected_skin_pixels": 28,
+            "coverage": 0.5
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 28,
+              "top": 87,
+              "right": 32,
+              "bottom": 93
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 13,
+            "coverage": 0.5416666666666666
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 43,
+              "top": 88,
+              "right": 47,
+              "bottom": 94
+            },
+            "literal_box_pixels": 24,
+            "selected_skin_pixels": 12,
+            "coverage": 0.5
+          }
+        ],
+        "source_boxes_formally_reviewed": true
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 106,
+        "source_proxy_protected_ink_pixels": 29,
+        "hair_intersection_with_source_proxy_pixels": 52,
+        "source_proxy_coverage": 0.49056603773584906,
+        "source_proxy_numeric_pass": false,
+        "classifier_hair_coverage": 0.9811320754716981,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "facing": "S",
+      "pose": "walk_a",
+      "semantic_contamination_verdict": "PASS",
+      "observation": "No clear prop/clothing leakage observed; mask follows head, exposed lower arms and lower leg.",
+      "hair_reference_semantic_verdict": "UNCERTAIN",
+      "hair_reference_observation": "The reference mostly follows the hairstyle, but a lightness/color threshold with geometric support is only a source-color proxy. Full silhouette inclusion, highlighted hair and prop-occluded boundaries were not established pixel by pixel.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/child_M_fur_cloak_bun/S/walk_a.png",
+          "sha256": "7c41713b94f3a0e70fc559ad3a1bbada1f1a85640c2dcf53ad488e09c57b1481"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/child_M_fur_cloak_bun/S/walk_a_skin.png",
+          "sha256": "1e4633ac2ef470710e5cc34e702a7908e7049381a671f4d11377b8a2579c421d"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/child_M_fur_cloak_bun/S/walk_a_hair.png",
+          "sha256": "0665641555395977ec1e91a955b3b4c8d93421db7d2a6e7bce18298dc378a9eb"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/child_M_fur_cloak_bun/S_walk_a.png",
+          "sha256": "3ec1eab5ea5baa96d87f60f910cf7c767baa33e9acb55f32f2c14660e6e9c80f"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 81,
+        "hair_pixels": 57,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 42,
+              "top": 74,
+              "right": 45,
+              "bottom": 78
+            },
+            "literal_box_pixels": 12,
+            "selected_skin_pixels": 5,
+            "coverage": 0.4166666666666667
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 33,
+              "top": 88,
+              "right": 35,
+              "bottom": 93
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 8,
+            "coverage": 0.8
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 47,
+              "top": 87,
+              "right": 49,
+              "bottom": 92
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 3,
+            "coverage": 0.3
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 103,
+        "source_proxy_protected_ink_pixels": 26,
+        "hair_intersection_with_source_proxy_pixels": 57,
+        "source_proxy_coverage": 0.5533980582524272,
+        "source_proxy_numeric_pass": true,
+        "classifier_hair_coverage": 1.0,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "facing": "S",
+      "pose": "work_a",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "Hair mask selects the thin axe-handle junction above the raised hand; the hair proxy includes part of that non-hair region.",
+      "hair_reference_semantic_verdict": "FAIL",
+      "hair_reference_observation": "The blue/yellow proxy visibly includes non-hair tool, hand/arm, collar or blanket pixels in this pose; its count is not a valid true-hair silhouette denominator.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/child_M_fur_cloak_bun/S/work_a.png",
+          "sha256": "4447d60b3608562493081d78d5a17a6e0164e4dbd28d48c227089532f7f50ef2"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/child_M_fur_cloak_bun/S/work_a_skin.png",
+          "sha256": "836b219fd66c214ddae12b4370b23f158647eb1296ab443fd8909f97b5cc91df"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/child_M_fur_cloak_bun/S/work_a_hair.png",
+          "sha256": "9dec692acdac90120a3b307351e7b8a2865214fcd12089ed23f4da7677b67013"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/child_M_fur_cloak_bun/S_work_a.png",
+          "sha256": "00fdbdc4eb58b7525f3319ee4b7cbf627ad667007bfbf12af654866da541e040"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 125,
+        "hair_pixels": 59,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 43,
+              "top": 75,
+              "right": 46,
+              "bottom": 79
+            },
+            "literal_box_pixels": 12,
+            "selected_skin_pixels": 6,
+            "coverage": 0.5
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 37,
+              "top": 92,
+              "right": 39,
+              "bottom": 97
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 2,
+            "coverage": 0.2
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 43,
+              "top": 91,
+              "right": 45,
+              "bottom": 96
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 109,
+        "source_proxy_protected_ink_pixels": 27,
+        "hair_intersection_with_source_proxy_pixels": 59,
+        "source_proxy_coverage": 0.5412844036697247,
+        "source_proxy_numeric_pass": true,
+        "classifier_hair_coverage": 1.0,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "facing": "S",
+      "pose": "carry",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "Skin mask includes a small patch on the front garment near the image-right lower trim, below the hand.",
+      "hair_reference_semantic_verdict": "UNCERTAIN",
+      "hair_reference_observation": "The reference mostly follows the hairstyle, but a lightness/color threshold with geometric support is only a source-color proxy. Full silhouette inclusion, highlighted hair and prop-occluded boundaries were not established pixel by pixel. The shared geometric prop exclusion can also clip bun/side-hair portions; the carry panels show abrupt support boundaries.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/child_M_fur_cloak_bun/S/carry.png",
+          "sha256": "3127b1d54721f3eac51380f87f19e22e8d8004c58e5f63937e35419512dae45c"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/child_M_fur_cloak_bun/S/carry_skin.png",
+          "sha256": "4eb18beb31c4e880fed06c47d02e618fdc09450ecb2afc090a139bb5432176b5"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/child_M_fur_cloak_bun/S/carry_hair.png",
+          "sha256": "543f998673c00ba0c4605d0025e28a4659f976e663706fadd9b0cb0b81a5de7a"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/child_M_fur_cloak_bun/S_carry.png",
+          "sha256": "7dc6ab9cf803e88a64be2932de48102e2c56198330398f6e63d30fc44505df4c"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 91,
+        "hair_pixels": 47,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 40,
+              "top": 75,
+              "right": 43,
+              "bottom": 79
+            },
+            "literal_box_pixels": 12,
+            "selected_skin_pixels": 6,
+            "coverage": 0.5
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 34,
+              "top": 89,
+              "right": 36,
+              "bottom": 94
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 40,
+              "top": 91,
+              "right": 42,
+              "bottom": 96
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 78,
+        "source_proxy_protected_ink_pixels": 17,
+        "hair_intersection_with_source_proxy_pixels": 47,
+        "source_proxy_coverage": 0.6025641025641025,
+        "source_proxy_numeric_pass": true,
+        "classifier_hair_coverage": 1.0,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "facing": "S",
+      "pose": "sleep",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "Skin mask includes central wrapped-garment patches between the exposed head/arm and legs.",
+      "hair_reference_semantic_verdict": "FAIL",
+      "hair_reference_observation": "The blue/yellow proxy visibly includes non-hair tool, hand/arm, collar or blanket pixels in this pose; its count is not a valid true-hair silhouette denominator.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/child_M_fur_cloak_bun/S/sleep.png",
+          "sha256": "03fee30d5263d282952eaa94dd0b7c959f85aa3fd0f3d1fcd807cc72649d5dbd"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/child_M_fur_cloak_bun/S/sleep_skin.png",
+          "sha256": "9433a45048496aaac697e6437ce83c35759c6ddbfeb81ed058f4da62edecf91d"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/child_M_fur_cloak_bun/S/sleep_hair.png",
+          "sha256": "38238b6575314661fa816f6a502af73bba4519a2da4f7cc5461408ecb2c5ac4d"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/child_M_fur_cloak_bun/S_sleep.png",
+          "sha256": "a874a204b262d1839fcf79da82d8ca551e1885f7a409146ac2b3efcd8bef92dc"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 111,
+        "hair_pixels": 56,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 39,
+              "top": 59,
+              "right": 47,
+              "bottom": 71
+            },
+            "literal_box_pixels": 96,
+            "selected_skin_pixels": 10,
+            "coverage": 0.10416666666666667
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 49,
+              "top": 57,
+              "right": 53,
+              "bottom": 73
+            },
+            "literal_box_pixels": 64,
+            "selected_skin_pixels": 16,
+            "coverage": 0.25
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 53,
+              "top": 57,
+              "right": 57,
+              "bottom": 73
+            },
+            "literal_box_pixels": 64,
+            "selected_skin_pixels": 9,
+            "coverage": 0.140625
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 130,
+        "source_proxy_protected_ink_pixels": 37,
+        "hair_intersection_with_source_proxy_pixels": 56,
+        "source_proxy_coverage": 0.4307692307692308,
+        "source_proxy_numeric_pass": false,
+        "classifier_hair_coverage": 0.9824561403508771,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "facing": "E",
+      "pose": "idle",
+      "semantic_contamination_verdict": "UNCERTAIN",
+      "observation": "Green selection at the turned hand/front-trim contact cannot be confidently assigned wholly to exposed skin; no cleanliness PASS is claimed.",
+      "hair_reference_semantic_verdict": "UNCERTAIN",
+      "hair_reference_observation": "The reference mostly follows the hairstyle, but a lightness/color threshold with geometric support is only a source-color proxy. Full silhouette inclusion, highlighted hair and prop-occluded boundaries were not established pixel by pixel.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/child_M_fur_cloak_bun/E/idle.png",
+          "sha256": "9c840e50b949c6b37716106016be444a8681b941b4cf6571779e8adc5f912141"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/child_M_fur_cloak_bun/E/idle_skin.png",
+          "sha256": "49db1bde6465b93dfc2a9f916fda66a4edf423b9a297d3691b31c3d6d99dd58a"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/child_M_fur_cloak_bun/E/idle_hair.png",
+          "sha256": "40262c0f774daab31544ba16db5f938faaf3bc128217364e51defb7932f14475"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/child_M_fur_cloak_bun/E_idle.png",
+          "sha256": "8d9808d5a3fde5866870445d398b1077ee226ba22081e591c1de846273760845"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 72,
+        "hair_pixels": 64,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 41,
+              "top": 76,
+              "right": 44,
+              "bottom": 80
+            },
+            "literal_box_pixels": 12,
+            "selected_skin_pixels": 9,
+            "coverage": 0.75
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 36,
+              "top": 91,
+              "right": 38,
+              "bottom": 96
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 1,
+            "coverage": 0.1
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 42,
+              "top": 90,
+              "right": 44,
+              "bottom": 95
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 4,
+            "coverage": 0.4
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 109,
+        "source_proxy_protected_ink_pixels": 29,
+        "hair_intersection_with_source_proxy_pixels": 64,
+        "source_proxy_coverage": 0.5871559633027523,
+        "source_proxy_numeric_pass": true,
+        "classifier_hair_coverage": 0.9846153846153847,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "facing": "E",
+      "pose": "walk_a",
+      "semantic_contamination_verdict": "PASS",
+      "observation": "No clear prop/clothing leakage observed in the side walk panel; visible hand/forearm and legs account for the green regions.",
+      "hair_reference_semantic_verdict": "UNCERTAIN",
+      "hair_reference_observation": "The reference mostly follows the hairstyle, but a lightness/color threshold with geometric support is only a source-color proxy. Full silhouette inclusion, highlighted hair and prop-occluded boundaries were not established pixel by pixel.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/child_M_fur_cloak_bun/E/walk_a.png",
+          "sha256": "07fcdecb76a428243cd99295331a25dfde875116c769a902a5074df6608a7fe1"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/child_M_fur_cloak_bun/E/walk_a_skin.png",
+          "sha256": "6e94bb4448123af8febba16d98db7af529d6511245cf24784a3292f589449c42"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/child_M_fur_cloak_bun/E/walk_a_hair.png",
+          "sha256": "256ebd0092a306a05193799bc315330217fb05fa17d6a2d5351dc4f9835b81d6"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/child_M_fur_cloak_bun/E_walk_a.png",
+          "sha256": "403cf4ac8a56a65670d25050431a3adf3b8c032817cb5ed3c6d520f64342df48"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 92,
+        "hair_pixels": 63,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 43,
+              "top": 75,
+              "right": 46,
+              "bottom": 79
+            },
+            "literal_box_pixels": 12,
+            "selected_skin_pixels": 6,
+            "coverage": 0.5
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 37,
+              "top": 89,
+              "right": 39,
+              "bottom": 94
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 7,
+            "coverage": 0.7
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 46,
+              "top": 87,
+              "right": 48,
+              "bottom": 92
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 5,
+            "coverage": 0.5
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 112,
+        "source_proxy_protected_ink_pixels": 30,
+        "hair_intersection_with_source_proxy_pixels": 63,
+        "source_proxy_coverage": 0.5625,
+        "source_proxy_numeric_pass": true,
+        "classifier_hair_coverage": 1.0,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "facing": "E",
+      "pose": "work_a",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "Hair mask reaches the raised axe/handle contact; the reference includes non-hair prop/hand outline regions.",
+      "hair_reference_semantic_verdict": "FAIL",
+      "hair_reference_observation": "The blue/yellow proxy visibly includes non-hair tool, hand/arm, collar or blanket pixels in this pose; its count is not a valid true-hair silhouette denominator.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/child_M_fur_cloak_bun/E/work_a.png",
+          "sha256": "8a6a022e660e546785e8aad8ecab7a1bda43cdc2cacbb89dd39fb353e8f7a4bd"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/child_M_fur_cloak_bun/E/work_a_skin.png",
+          "sha256": "f6d39ce0af56293243094bcad936d93eceb45a88ea3bfdd91a94f484b03c5c3d"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/child_M_fur_cloak_bun/E/work_a_hair.png",
+          "sha256": "ba0cae176136aa070a6c662e171a1698c79c9863fd753cef6dd6d94f86a0cd91"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/child_M_fur_cloak_bun/E_work_a.png",
+          "sha256": "52fe544f0d33695d166e5bdf2654ce676144bde12c37aa4e5f3be9b5e37b5a48"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 106,
+        "hair_pixels": 54,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 40,
+              "top": 78,
+              "right": 43,
+              "bottom": 82
+            },
+            "literal_box_pixels": 12,
+            "selected_skin_pixels": 7,
+            "coverage": 0.5833333333333334
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 35,
+              "top": 92,
+              "right": 37,
+              "bottom": 97
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 39,
+              "top": 90,
+              "right": 41,
+              "bottom": 95
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 107,
+        "source_proxy_protected_ink_pixels": 33,
+        "hair_intersection_with_source_proxy_pixels": 54,
+        "source_proxy_coverage": 0.5046728971962616,
+        "source_proxy_numeric_pass": true,
+        "classifier_hair_coverage": 1.0,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "facing": "E",
+      "pose": "carry",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "Skin mask includes small lower-garment/trim selections below the raised hands.",
+      "hair_reference_semantic_verdict": "UNCERTAIN",
+      "hair_reference_observation": "The reference mostly follows the hairstyle, but a lightness/color threshold with geometric support is only a source-color proxy. Full silhouette inclusion, highlighted hair and prop-occluded boundaries were not established pixel by pixel. The shared geometric prop exclusion can also clip bun/side-hair portions; the carry panels show abrupt support boundaries.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/child_M_fur_cloak_bun/E/carry.png",
+          "sha256": "2bca530e4df66fa1d3b4a45ba04c378ef861d0b40683e53bc42c5fb20f7f8390"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/child_M_fur_cloak_bun/E/carry_skin.png",
+          "sha256": "caf35cc8d57cd59f23eabe6e5bfec73342335fb9e2af751632eb685a102e2cfa"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/child_M_fur_cloak_bun/E/carry_hair.png",
+          "sha256": "4cd9141382f6afd35d8bae417001c5460228ac47e43029c60a181e41cd843c77"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/child_M_fur_cloak_bun/E_carry.png",
+          "sha256": "33db67d5f24267dba1388714962028a288cee1cd1d1cef211ab05ee1d5c511e4"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 98,
+        "hair_pixels": 45,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 40,
+              "top": 76,
+              "right": 43,
+              "bottom": 80
+            },
+            "literal_box_pixels": 12,
+            "selected_skin_pixels": 6,
+            "coverage": 0.5
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 35,
+              "top": 91,
+              "right": 37,
+              "bottom": 96
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 42,
+              "top": 85,
+              "right": 44,
+              "bottom": 90
+            },
+            "literal_box_pixels": 10,
+            "selected_skin_pixels": 0,
+            "coverage": 0.0
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 82,
+        "source_proxy_protected_ink_pixels": 24,
+        "hair_intersection_with_source_proxy_pixels": 45,
+        "source_proxy_coverage": 0.5487804878048781,
+        "source_proxy_numeric_pass": true,
+        "classifier_hair_coverage": 0.9782608695652174,
+        "excluded_cluster_overlap": 0
+      }
+    },
+    {
+      "look": "child_M_fur_cloak_bun",
+      "facing": "E",
+      "pose": "sleep",
+      "semantic_contamination_verdict": "FAIL",
+      "observation": "Skin mask includes central wrapped-garment patches and fur-trim contact areas away from the exposed limbs.",
+      "hair_reference_semantic_verdict": "FAIL",
+      "hair_reference_observation": "The blue/yellow proxy visibly includes non-hair tool, hand/arm, collar or blanket pixels in this pose; its count is not a valid true-hair silhouette denominator.",
+      "hair_silhouette_formal_gate": "NOT_VERIFIED",
+      "files": {
+        "source": {
+          "path": "art/character/route_i/child_M_fur_cloak_bun/E/sleep.png",
+          "sha256": "ae158566be4691fb6517a5f4e644689a7569fe9bf1cd519f1f495e180041d379"
+        },
+        "skin_mask": {
+          "path": "art/character/variant_masks/child_M_fur_cloak_bun/E/sleep_skin.png",
+          "sha256": "7d333e6224f7cbc2c1f7303260bae2d33c90ec3cb73b865980b69bde30d98359"
+        },
+        "hair_mask": {
+          "path": "art/character/variant_masks/child_M_fur_cloak_bun/E/sleep_hair.png",
+          "sha256": "8513697fce3dfe6178adc757786f1952b7b8c4e2dcd8bef0d0cf6518488a0961"
+        },
+        "review_panel": {
+          "path": "/Users/rexxa/work/artpolish2-data/masks/audit40/child_M_fur_cloak_bun/E_sleep.png",
+          "sha256": "5142f1d5456160eac7da4d7f16152473b00117944ea4c4fe3ff3808330036bd4"
+        }
+      },
+      "independent_stored_mask_checks": {
+        "skin_pixels": 124,
+        "hair_pixels": 57,
+        "selected_alpha_below_128": 0,
+        "hair_pixels_outside_head_plus_4": 0,
+        "literal_region_counts": [
+          {
+            "region": "face",
+            "bbox": {
+              "left": 38,
+              "top": 60,
+              "right": 46,
+              "bottom": 71
+            },
+            "literal_box_pixels": 88,
+            "selected_skin_pixels": 6,
+            "coverage": 0.06818181818181818
+          },
+          {
+            "region": "forearm_image_left",
+            "bbox": {
+              "left": 48,
+              "top": 58,
+              "right": 52,
+              "bottom": 73
+            },
+            "literal_box_pixels": 60,
+            "selected_skin_pixels": 22,
+            "coverage": 0.36666666666666664
+          },
+          {
+            "region": "forearm_image_right",
+            "bbox": {
+              "left": 52,
+              "top": 58,
+              "right": 56,
+              "bottom": 73
+            },
+            "literal_box_pixels": 60,
+            "selected_skin_pixels": 12,
+            "coverage": 0.2
+          }
+        ],
+        "source_boxes_formally_reviewed": false
+      },
+      "reported_instrument_evidence": {
+        "source_proxy_denominator_pixels": 124,
+        "source_proxy_protected_ink_pixels": 37,
+        "hair_intersection_with_source_proxy_pixels": 57,
+        "source_proxy_coverage": 0.4596774193548387,
+        "source_proxy_numeric_pass": false,
+        "classifier_hair_coverage": 1.0,
+        "excluded_cluster_overlap": 0
+      }
+    }
+  ]
+}
