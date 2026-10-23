@@ -150,3 +150,20 @@ Godot runtime integration or owner approval.
   Round1 therefore cannot establish regeneration improvement for these images.
 - Current3130 committed changed paths are all in scope and all files are under
   1,500,000 bytes. Final portraits, round1, face board and publication remain.
+
+## Final portrait freeze and round1 dispatch
+
+- All 320 calls completed without tool errors: 281 portraits (204 first and
+  77 second attempts) plus 39 textures. No further generation is allowed.
+- All 47 fixed repairs were actually observed. Select 45 second attempts;
+  retain the first attempt for child_F_loincloth_bun/v4 (new 1px head margin)
+  and child_M_hide_wrap_bun/v1 (new sleeve-like shoulder coverage). Both failed
+  second attempts and their consumed calls remain in the immutable evidence.
+- Selected 204: geometry 201, hair 204, garment 170, extras 0. Two exhausted
+  adult bun beard contradictions remain. Final index SHA256 is
+  `dff7f5b5dc87d22744f58466f60684217fa5106c5f01e195420c36ea5120284b`.
+  Every portrait/sprite hash and 128px portrait size independently checked;
+  owner48 changes at only one portrait, identity36 changes at none.
+- New isolated reviewers /root/blind_a1 and /root/blind_b1 received only their
+  own description/identity packet directories. No pool/index writes may occur
+  during this round. Final face-board rendering reads the same frozen assets.

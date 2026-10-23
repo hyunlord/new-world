@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "baseline_index": {
+    "path": "/Users/rexxa/work/artpolish2-data/portraits/generation/round0_candidate_index_preserved.json",
+    "sha256": "b1e70036b014c032bfa4f9ddcafd142051475780d93e9faeb71bcfec2aac17af"
+  },
+  "final_index": {
+    "path": "/Users/rexxa/work/artpolish2-data/portraits/candidates.json",
+    "sha256": "dff7f5b5dc87d22744f58466f60684217fa5106c5f01e195420c36ea5120284b"
+  },
+  "generation_manifest": {
+    "path": "art/portrait/polish2/GENERATION_MANIFEST.json",
+    "sha256": "6053b121cf4d09965b99970ea0fab5989dce0035b0c68c68ea277dd7610bb3fa",
+    "bytes": 1291755
+  },
+  "portrait_count": 204,
+  "portrait128_and_all_portrait_sprite_hashes_verified": true,
+  "unchanged_sprite_count": 204,
+  "selected_attempt_counts": {
+    "2": 75,
+    "1": 129
+  },
+  "changed_portrait_count": 45,
+  "changed_portraits": [
+    "adult_F_hide_wrap_long_tied/v3",
+    "adult_F_loincloth_long_tied/v1",
+    "adult_M_fur_cloak_short/v1",
+    "adult_M_loincloth_short/v1",
+    "adult_M_loincloth_short/v2",
+    "adult_M_loincloth_short/v3",
+    "adult_M_loincloth_short/v4",
+    "adult_M_loincloth_short/v5",
+    "adult_M_loincloth_short/v6",
+    "child_F_hide_wrap_bun/v1",
+    "child_F_hide_wrap_bun/v2",
+    "child_F_hide_wrap_bun/v3",
+    "child_F_hide_wrap_bun/v4",
+    "child_F_hide_wrap_bun/v5",
+    "child_F_hide_wrap_bun/v6",
+    "child_F_hide_wrap_long_tied/v1",
+    "child_F_hide_wrap_long_tied/v2",
+    "child_F_hide_wrap_long_tied/v3",
+    "child_F_hide_wrap_long_tied/v4",
+    "child_F_hide_wrap_long_tied/v5",
+    "child_F_hide_wrap_long_tied/v6",
+    "child_F_hide_wrap_short/v1",
+    "child_F_hide_wrap_short/v2",
+    "child_F_hide_wrap_short/v3",
+    "child_F_hide_wrap_short/v4",
+    "child_F_hide_wrap_short/v5",
+    "child_F_hide_wrap_short/v6",
+    "child_F_loincloth_bun/v1",
+    "child_F_loincloth_bun/v2",
+    "child_F_loincloth_bun/v3",
+    "child_F_loincloth_bun/v5",
+    "child_F_loincloth_bun/v6",
+    "child_F_loincloth_long_tied/v1",
+    "child_F_loincloth_long_tied/v2",
+    "child_F_loincloth_long_tied/v3",
+    "child_F_loincloth_long_tied/v4",
+    "child_F_loincloth_long_tied/v5",
+    "child_F_loincloth_long_tied/v6",
+    "child_F_loincloth_short/v1",
+    "child_F_loincloth_short/v2",
+    "child_F_loincloth_short/v3",
+    "child_F_loincloth_short/v4",
+    "child_F_loincloth_short/v5",
+    "child_F_loincloth_short/v6",
+    "child_M_hide_wrap_bun/v2"
+  ],
+  "retained_first_attempts": [
+    "child_F_loincloth_bun/v4",
+    "child_M_hide_wrap_bun/v1"
+  ],
+  "owner48_changed": [
+    "adult_M_fur_cloak_short/v1"
+  ],
+  "identity36_changed": [],
+  "unchanged_exhausted_failed_targets": [
+    "child_F_fur_cloak_bun/v2",
+    "child_F_fur_cloak_bun/v5"
+  ],
+  "owner_adopted": false
+}
