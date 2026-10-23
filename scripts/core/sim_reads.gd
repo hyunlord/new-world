@@ -1,17 +1,19 @@
 # SimReads (node "SimReads" beside WorldSim in scenes/main.tscn): the read layer; every snapshot read (GETTERS) and
 #   mutation (MUTATORS) goes through it, frozen and cached per frame (porter/relations and the M4 knowledge reads per
-#   tick, terrain until reset).
+#   tick, terrain until reset; M5 get_story, get_animals, get_drafted per tick).
 # Bridge methods: get_agent_snapshot, get_settlement_snapshot, get_construction_snapshot, get_building_snapshot,
 #   get_resource_snapshot, get_time_snapshot, get_tallies, get_recent_deaths, get_society_snapshot, get_world_info,
 #   get_terrain_snapshot, get_activity_snapshot, get_porter_snapshot, get_settlement_relations, get_colony_versions,
 #   get_trees, get_colony_overlay, get_workshops, get_work_priorities, get_recipes, get_space, get_rooms, get_tech,
-#   get_teach_orders, get_knowledge_waits (GETTERS);
+#   get_teach_orders, get_knowledge_waits, get_story, get_animals, get_drafted (GETTERS);
 #   get_tile_causal_events;
 #   advance_ticks, reset_world, reset_world_stress, on_building_placed, cmd_designate_chop, cmd_designate_chop_tiles,
 #   cmd_cancel_area, cmd_add_stockpile, cmd_remove_zone_area, cmd_place_blueprint, cmd_designate_quarry,
 #   cmd_add_bill, cmd_remove_bill, cmd_set_bill_mode, cmd_move_bill, cmd_set_bill_suspended,
 #   cmd_set_work_priority, cmd_place_line, cmd_place_rect, cmd_designate_dig, cmd_designate_deconstruct,
-#   cmd_set_room_role, cmd_designate_clay, cmd_order_teach, cmd_cancel_teach, save_world, load_world (MUTATORS);
+#   cmd_set_room_role, cmd_designate_clay, cmd_order_teach, cmd_cancel_teach, cmd_draft, cmd_undraft_all,
+#   cmd_draft_move, cmd_draft_attack, cmd_draft_attack_person, cmd_designate_hunt, cmd_add_hunt_zone, cmd_cancel_hunt,
+#   cmd_set_dress_order, save_world, load_world (MUTATORS);
 #   signal world_reset.
 class_name SimReads
 extends Node
@@ -29,9 +31,12 @@ const GETTERS: Array[String] = [
 	"get_space", "get_rooms",
 	# M4: the settlement's tech map and era, open apprenticeship orders, work waiting for a practitioner.
 	"get_tech", "get_teach_orders", "get_knowledge_waits",
+	# M5: the storyteller's pressures and banner numbers; the animals and hunt zones; the drafted people.
+	"get_story", "get_animals", "get_drafted",
 ]
 ## Read once per simulation tick (M4: the knowledge reads change only when a tick runs or a command is sent).
-const TICK_GETTERS: Array[String] = ["get_porter_snapshot", "get_settlement_relations", "get_tech", "get_teach_orders", "get_knowledge_waits"]
+const TICK_GETTERS: Array[String] = ["get_porter_snapshot", "get_settlement_relations", "get_tech", "get_teach_orders", "get_knowledge_waits",
+	"get_story", "get_animals", "get_drafted"]
 const MUTATORS: Array[String] = [
 	"advance_ticks", "reset_world", "reset_world_stress",
 	"on_building_placed",
@@ -45,6 +50,9 @@ const MUTATORS: Array[String] = [
 	"cmd_place_line", "cmd_place_rect", "cmd_designate_dig", "cmd_designate_deconstruct", "cmd_set_room_role",
 	# M4 orders (clay pits, apprenticeship).
 	"cmd_designate_clay", "cmd_order_teach", "cmd_cancel_teach",
+	# M5 orders (draft, hunt, the standing dress order).
+	"cmd_draft", "cmd_undraft_all", "cmd_draft_move", "cmd_draft_attack", "cmd_draft_attack_person",
+	"cmd_designate_hunt", "cmd_add_hunt_zone", "cmd_cancel_hunt", "cmd_set_dress_order",
 	# M1.5 save files: save_world(path) -> bool, load_world(path) -> bool (a load replaces the world).
 	"save_world", "load_world",
 ]

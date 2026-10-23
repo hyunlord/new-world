@@ -2,7 +2,7 @@
 //!
 //! Priority: 123 (`BILL_PRIORITY`). Interval: 60 ticks. Gate: `WorldRules.colony` with `economy`.
 //! Reads: `Job`, `Carry`; `SimResources.colony` (workshops and bills, ground items, zones, reservations), `rules.colony`
-//! Writes: `SimResources.colony.workshops` (active bill, shelf), ground items (spilled shelf items)
+//! Writes: `SimResources.colony.workshops` (active bill, shelf), ground items (spilled shelf items), `knife_wear` (M5: reset without a shelved blade)
 //! Events: none
 //!
 //! M2 goal 3.5. Workshops are visited in id order and their bills in list
@@ -199,5 +199,14 @@ impl RuntimeSystem for BillSystem {
             return;
         }
         schedule(world, resources);
+        // M5 (code review m5): a knife's wear belongs to the blade on the shelf; once no blade is
+        // shelved there (spilled, or the workshop gone) the next blade starts unworn.
+        let colony = &mut resources.colony;
+        let workshops = &colony.workshops;
+        colony.knife_wear.retain(|id, _| {
+            workshops
+                .get(id)
+                .is_some_and(|w| w.shelved(sim_core::colony::ItemKind::FlintBlade) > 0)
+        });
     }
 }

@@ -3,7 +3,7 @@
 //!
 //! Each fight `(attacker, defender)` gains one progress a tick; at its `ticks`
 //! one hit resolves: the defender loses `damage` (a person's `BodyHealth`, an
-//! animal's hp), a spear in the attacker's hand wears one use, a wolf's bite is
+//! animal's hp; a person's blow uses the weapon held at that hit, a quarrel's the fight's fixed damage), a spear in the attacker's hand wears one use, a wolf's bite is
 //! counted and gives the person's "why?" its pressure (`PressureCause`, wound).
 //! A fight ends when either side is gone or more than one tile apart, after its
 //! `hits_left` (a quarrel's fight: one hit), or when the defender falls — a
@@ -82,9 +82,14 @@ pub fn resolve_fights(world: &mut World, res: &mut SimResources) {
         } else {
             res.colony.fights.insert(key, fight);
         }
-        // The attacker's spear wears one use a hit.
+        // A person's blow is the weapon held now (a spear that broke mid-fight no longer hits
+        // for 12; review m2); a quarrel's fight keeps its fixed damage. The spear wears one use a hit.
+        let mut damage = fight.damage;
         if let Fighter::Person(id) = attacker {
             if let Some((e, _)) = person(world, id) {
+                if fight.quarrel.is_none() {
+                    damage = crate::runtime::jobs::hunt::weapon_damage(world, &rule, e);
+                }
                 crate::runtime::jobs::hunt::wear_tool(
                     world,
                     res,
@@ -96,8 +101,8 @@ pub fn resolve_fights(world: &mut World, res: &mut SimResources) {
             }
         }
         match defender {
-            Fighter::Person(id) => hit_person(world, res, attacker, id, fight.damage, d),
-            Fighter::Animal(id) => hit_animal(world, res, &rule, attacker, id, fight.damage),
+            Fighter::Person(id) => hit_person(world, res, attacker, id, damage, d),
+            Fighter::Animal(id) => hit_animal(world, res, &rule, attacker, id, damage),
         }
     }
 }

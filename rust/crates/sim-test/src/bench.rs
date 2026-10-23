@@ -237,8 +237,17 @@ pub fn run_one(scene: &Scene, script_path: Option<&Path>) -> Result<Value, Strin
         "TechAggregateSystem",
     ]);
     let job_assign_us = per_tick(&["JobAssignSystem"]);
+    // M5 (goal §4, F11): the storyteller, animals, drafting, mood and quarrels together.
+    let m5_us = per_tick(&[
+        "StorytellerSystem",
+        "AnimalSystem",
+        "DraftSystem",
+        "MoodSystem",
+        "QuarrelSystem",
+    ]);
     Ok(json!({
         "knowledge_us_per_tick": knowledge_us,
+        "m5_us_per_tick": m5_us,
         "job_assign_us_per_tick": job_assign_us,
         "label": scene.label, "agents": scene.agents, "side": scene.side, "script": scene.script,
         "seed": BENCH_SEED, "warmup_ticks": WARMUP, "measured_ticks": MEASURED_TICKS,

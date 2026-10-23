@@ -7,8 +7,12 @@
 #   a world reset hides it.
 # M4 (goal 9.5): a last, read-only column 토기 솜씨 with each adult's Pottery skill level (skill code 6, get_agent_economy
 #   `skill_levels`; potters craft under 제작), read again when the rows change or every POTTERY_TICKS ticks.
-# Bridge methods: via SimReads get_work_priorities, get_time_snapshot; get_agent_economy (direct, per adult, only on a
-#   refresh of the Pottery column); via SimReads.mutate cmd_set_work_priority; signal world_reset.
+# M5 (goal 3.3, 3.5): the work type 사냥 (hunt) is one more column from the bridge; the header carries the standing
+#   order toggle "모두 가죽 옷" (pressed while get_story `dress_order` is on; a click sends cmd_set_dress_order with the
+#   other state and toasts it).
+# Bridge methods: via SimReads get_work_priorities, get_time_snapshot, get_story; get_agent_economy (direct, per adult,
+#   only on a refresh of the Pottery column); via SimReads.mutate cmd_set_work_priority, cmd_set_dress_order; signal
+#   world_reset.
 extends Control
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
@@ -35,6 +39,8 @@ var _title: Label
 var _hint: Label
 var _reset: Button
 var _close: Button
+## M5: the standing order "모두 가죽 옷".
+var _dress: Button
 var _grid: GridContainer
 ## M4: AgentId -> Pottery level, and the read's tick bucket and rows.
 var _pottery: Dictionary = {}
@@ -62,6 +68,14 @@ func _ready() -> void:
 	_title.theme_type_variation = &"Heading"
 	_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(_title)
+	_dress = Button.new()
+	_dress.name = "DressOrder"
+	_dress.toggle_mode = true
+	_dress.focus_mode = Control.FOCUS_NONE
+	_dress.add_theme_color_override("font_pressed_color", Color("e8c46e"))
+	_dress.add_theme_color_override("font_hover_pressed_color", Color("e8c46e"))
+	_dress.toggled.connect(set_dress_order)
+	head.add_child(_dress)
 	_reset = _button("Reset", reset_all)
 	head.add_child(_reset)
 	_close = _button("Close", func() -> void: visible = false)
@@ -144,6 +158,7 @@ static func next_level(level: int) -> int:
 func _refresh() -> void:
 	if _world_sim == null:
 		return
+	_refresh_dress()
 	var data: Dictionary = table(SimReads.read(_world_sim, "get_work_priorities"))
 	_read_pottery(data["rows"])
 	var key: int = hash([data, Chronicle.language(_locale), _pottery])
@@ -211,6 +226,26 @@ func _refresh() -> void:
 		skill.custom_minimum_size.x = CELL_WIDTH
 		skill.add_theme_color_override("font_color", MUTED)
 		_grid.add_child(skill)
+
+
+## M5: the dress toggle follows get_story (hidden without a storyteller).
+func _refresh_dress() -> void:
+	var story: Dictionary = SimReads.read(_world_sim, "get_story")
+	_dress.visible = bool(story.get("on", false))
+	_dress.text = EconomyText.ltr(_locale, "M5_DRESS_ORDER")
+	_dress.set_pressed_no_signal(bool(story.get("dress_order", false)))
+
+
+## M5: turn the standing order "모두 가죽 옷" on or off (the toggle's action; also used by tools). Returns the result.
+func set_dress_order(on: bool) -> Dictionary:
+	if _world_sim == null:
+		return {}
+	var result: Variant = SimReads.mutate(_world_sim, "cmd_set_dress_order", [on])
+	var data: Dictionary = result if result is Dictionary else {}
+	_toast(EconomyText.ltr(_locale, "M5_TOAST_DRESS_ON" if on else "M5_TOAST_DRESS_OFF") if bool(data.get("accepted", false))
+		else EconomyText.reason(_locale, str(data.get("reason", "unknown"))))
+	_refresh_dress()
+	return data
 
 
 ## M4: each row's Pottery level from get_agent_economy, read when the rows change or every POTTERY_TICKS ticks.

@@ -14,34 +14,42 @@
 #   knap_fine_blade, 4 grind_axe, 5 form_pot, 6 fire_pot; skill `pottery`; material `clay`; blueprint kinds 9
 #   grinding_stone, 10 pottery_bench (build menu 0 and -) and 11 hearth_fire (the camp hearth as the fire_pot workshop:
 #   named, never placed, not in the menu); reasons no_practitioner and too_young.
+# M5 (goal 3.2–3.3): item kinds 11 meat, 12 cured hide, 13 hide wrap, 14 fur cloak, 15 spear, 16 wolf hide (ground
+#   sprites: meat lies as the `carcass`, the others as their item_* sprite); recipes 7 haft_spear, 8 scrape_hide,
+#   9 make_hide_wrap, 10 make_fur_cloak; work type `hunt`, skill `hunting`; reason not_drafted.
 # Bridge methods called: none (callers pass the dictionaries they read).
 extends RefCounted
 
 const LocaleScript = preload("res://scripts/core/locale.gd")
 
 const ITEM_KEYS: Array[String] = ["ITEM_LOG", "ITEM_FIREWOOD", "ITEM_STONE", "ITEM_FLINT", "ITEM_FLINT_BLADE", "ITEM_STONE_AXE", "ITEM_HIDE",
-	"ITEM_CLAY", "ITEM_RAW_POT", "ITEM_CLAY_POT", "ITEM_GROUND_AXE"]
+	"ITEM_CLAY", "ITEM_RAW_POT", "ITEM_CLAY_POT", "ITEM_GROUND_AXE",
+	"M5_ITEM_MEAT", "M5_ITEM_CURED_HIDE", "M5_ITEM_HIDE_WRAP", "M5_ITEM_FUR_CLOAK", "M5_ITEM_SPEAR", "M5_ITEM_WOLF_HIDE"]
 const ITEM_FMT_KEYS: Array[String] = ["ITEM_LOG_FMT", "ITEM_FIREWOOD_FMT", "ITEM_STONE_FMT", "ITEM_FLINT_FMT", "ITEM_FLINT_BLADE_FMT", "ITEM_STONE_AXE_FMT", "ITEM_HIDE_FMT",
 	"ITEM_CLAY_FMT", "ITEM_RAW_POT_FMT", "ITEM_CLAY_POT_FMT", "ITEM_GROUND_AXE_FMT"]
 ## Bridge item names by `ItemKind::code` (discovery conditions name items by them).
-const ITEM_NAMES: Array[String] = ["log", "firewood", "stone", "flint", "flint_blade", "stone_axe", "hide", "clay", "raw_pot", "clay_pot", "ground_axe"]
+const ITEM_NAMES: Array[String] = ["log", "firewood", "stone", "flint", "flint_blade", "stone_axe", "hide", "clay", "raw_pot", "clay_pot", "ground_axe",
+	"meat", "cured_hide", "hide_wrap", "fur_cloak", "spear", "wolf_hide"]
 ## The overlay sprite per item kind (logs use the log piles by count).
 const ITEM_SPRITES: Array[String] = ["logs_s", "item_firewood", "item_stone", "item_flint", "item_blade", "item_axe", "item_hide",
-	"item_clay", "item_raw_pot", "item_clay_pot", "item_ground_axe"]
+	"item_clay", "item_raw_pot", "item_clay_pot", "item_ground_axe",
+	"carcass", "item_cured_hide", "item_hide_wrap", "item_fur_cloak", "item_spear", "item_wolf_hide"]
 const MATERIAL_KEYS: Dictionary = {
 	"flint": "MATERIAL_FLINT", "chert": "MATERIAL_CHERT", "granite": "MATERIAL_GRANITE",
 	"limestone": "MATERIAL_LIMESTONE", "oak": "MATERIAL_OAK", "clay": "MATERIAL_CLAY",
 }
-const RECIPE_NAMES: Array[String] = ["knap_blade", "haft_axe", "split_firewood", "knap_fine_blade", "grind_axe", "form_pot", "fire_pot"]
+const RECIPE_NAMES: Array[String] = ["knap_blade", "haft_axe", "split_firewood", "knap_fine_blade", "grind_axe", "form_pot", "fire_pot",
+	"haft_spear", "scrape_hide", "make_hide_wrap", "make_fur_cloak"]
 const RECIPE_KEYS: Array[String] = ["RECIPE_KNAP_BLADE", "RECIPE_HAFT_AXE", "RECIPE_SPLIT_FIREWOOD", "RECIPE_KNAP_FINE_BLADE", "RECIPE_GRIND_AXE",
-	"RECIPE_FORM_POT", "RECIPE_FIRE_POT"]
+	"RECIPE_FORM_POT", "RECIPE_FIRE_POT", "M5_RECIPE_HAFT_SPEAR", "M5_RECIPE_SCRAPE_HIDE", "M5_RECIPE_MAKE_HIDE_WRAP", "M5_RECIPE_MAKE_FUR_CLOAK"]
 const WORK_KEYS: Dictionary = {
 	"craft": "WORK_CRAFT", "build": "WORK_BUILD", "quarry": "WORK_QUARRY",
-	"chop": "WORK_CHOP", "split": "WORK_SPLIT", "haul": "WORK_HAUL", "mine": "WORK_MINE",
+	"chop": "WORK_CHOP", "split": "WORK_SPLIT", "haul": "WORK_HAUL", "mine": "WORK_MINE", "hunt": "M5_WORK_HUNT",
 }
 const SKILL_KEYS: Dictionary = {
 	"knap": "SKILL_KNAP", "woodwork": "SKILL_WOODWORK", "chop": "SKILL_CHOP",
 	"quarry": "SKILL_QUARRY", "build": "SKILL_BUILD", "mining": "SKILL_MINING", "pottery": "SKILL_POTTERY",
+	"hunting": "M5_SKILL_HUNTING",
 }
 const TIER_KEYS: Array[String] = ["SKILL_TIER_0", "SKILL_TIER_1", "SKILL_TIER_2", "SKILL_TIER_3"]
 const QUALITY_KEYS: Array[String] = ["QUALITY_BAND_0", "QUALITY_BAND_1", "QUALITY_BAND_2", "QUALITY_BAND_3", "QUALITY_BAND_4"]
@@ -86,6 +94,7 @@ const REASON_KEYS: Dictionary = {
 	"unreachable": "UI_REJECT_UNREACHABLE",
 	"no_practitioner": "UI_REJECT_NO_PRACTITIONER",
 	"too_young": "UI_REJECT_TOO_YOUNG",
+	"not_drafted": "M5_REJECT_NOT_DRAFTED",
 }
 
 

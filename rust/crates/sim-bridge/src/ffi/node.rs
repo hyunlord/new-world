@@ -86,6 +86,12 @@ use super::space::{
     collect_place_preview, collect_room_detail, collect_rooms, collect_space, preview_to_dict,
     room_detail_to_dict, rooms_to_dict, space_to_dict, submit_space, SpaceCommand,
 };
+use super::story::{
+    agent_m5_to_dict, animals_to_dict, collect_agent_m5, collect_agent_m5_columns, collect_animals,
+    collect_chronicle_why, collect_drafted, collect_story, collect_year_summary, drafted_to_dict,
+    story_to_dict, submit_story, submit_undraft_all, why_to_dict, year_summary_to_dict,
+    StoryCommand,
+};
 use godot::classes::INode;
 use godot::prelude::*;
 use sim_core::influence::InfluenceChannel;
@@ -464,6 +470,17 @@ impl WorldSimNode {
         dict.set("jobs", PackedByteArray::from(codes.as_slice()));
         dict.set("carry_kinds", PackedInt32Array::from(kinds.as_slice()));
         dict.set("carry_counts", PackedInt32Array::from(counts.as_slice()));
+        // M5 — additive apparel, mood band, draft and illness columns in the same
+        // row order: `tops` (0 loincloth, 1 hide wrap, 2 fur cloak), `mood_bands`
+        // (0 none, 1 우울, 2 보통, 3 흡족, 4 breakdown), `drafted`, `sick` (0/1).
+        let m5 = collect_agent_m5_columns(&self.engine.world, &self.engine.resources);
+        let col = |f: fn(&(u8, u8, u8, u8)) -> u8| -> PackedByteArray {
+            m5.iter().map(f).collect::<Vec<u8>>().as_slice().into()
+        };
+        dict.set("tops", col(|r| r.0));
+        dict.set("mood_bands", col(|r| r.1));
+        dict.set("drafted", col(|r| r.2));
+        dict.set("sick", col(|r| r.3));
         dict
     }
 
@@ -780,6 +797,139 @@ impl WorldSimNode {
         waits_to_dict(&collect_knowledge_waits(
             &self.engine.world,
             &self.engine.resources,
+        ))
+    }
+
+    /// M4 owner decision (M5 D5): the teach dialog's suggested learner for
+    /// `knowledge` taught by `teacher` (`AgentId`; −1 none).
+    #[func]
+    fn get_teach_suggestion(&self, teacher: i64, knowledge: i64) -> i64 {
+        super::knowledge::collect_teach_suggestion(&self.engine.world, teacher, knowledge)
+    }
+
+    /// M5: the storyteller — pressures in force (parallel columns: kinds,
+    /// names, start/end days, day of it, intensity, subject, deaths), the
+    /// firewood line (`firewood`, `firewood_day_need`), wolves on the map and
+    /// their mean tile, the sick count and the dressing order.
+    #[func]
+    fn get_story(&self) -> VarDictionary {
+        story_to_dict(&collect_story(&self.engine.world, &self.engine.resources))
+    }
+
+    /// M5: animals by `AnimalId` (kind, tile, hp, state, huntable, marked) and the hunt zones.
+    #[func]
+    fn get_animals(&self) -> VarDictionary {
+        animals_to_dict(&collect_animals(&self.engine.resources))
+    }
+
+    /// M5: person `agent_id`'s mood (value, band, target, modifiers largest
+    /// first), apparel, draft order and illness.
+    #[func]
+    fn get_agent_m5(&self, agent_id: i64) -> VarDictionary {
+        agent_m5_to_dict(&collect_agent_m5(
+            &self.engine.world,
+            &self.engine.resources,
+            agent_id,
+        ))
+    }
+
+    /// M5: the drafted people by `AgentId` (tile, hp, order, weapon, ticks drafted).
+    #[func]
+    fn get_drafted(&self) -> VarDictionary {
+        drafted_to_dict(&collect_drafted(&self.engine.world, &self.engine.resources))
+    }
+
+    /// M5: chronicle entry `index`'s "→ 왜?" chain (links from the entry to its first cause).
+    #[func]
+    fn get_chronicle_why(&self, index: i64) -> VarDictionary {
+        why_to_dict(&collect_chronicle_why(
+            &self.engine.resources.chronicle,
+            index,
+        ))
+    }
+
+    /// M5: year `year`'s summary (births, deaths by cause, pressures, discoveries,
+    /// quarrels, fights, breakdowns, hunts, wolves killed, era progress).
+    #[func]
+    fn get_year_summary(&self, year: i64) -> VarDictionary {
+        year_summary_to_dict(&collect_year_summary(&self.engine.resources, year))
+    }
+
+    /// M5 order: draft (`on`) or release person `agent` (`AgentId`).
+    #[func]
+    fn cmd_draft(&mut self, agent: i64, on: bool) -> VarDictionary {
+        result_to_dict(submit_story(
+            &mut self.engine,
+            StoryCommand::Draft(agent, on),
+        ))
+    }
+
+    /// M5 order: release every drafted person (count = people released).
+    #[func]
+    fn cmd_undraft_all(&mut self) -> VarDictionary {
+        result_to_dict(submit_undraft_all(&mut self.engine))
+    }
+
+    /// M5 order: drafted person `agent` walks to tile `(x, y)` and stands there.
+    #[func]
+    fn cmd_draft_move(&mut self, agent: i64, x: i32, y: i32) -> VarDictionary {
+        result_to_dict(submit_story(
+            &mut self.engine,
+            StoryCommand::DraftMove(agent, x, y),
+        ))
+    }
+
+    /// M5 order: drafted person `agent` attacks animal `animal` (`AnimalId`).
+    #[func]
+    fn cmd_draft_attack(&mut self, agent: i64, animal: i64) -> VarDictionary {
+        result_to_dict(submit_story(
+            &mut self.engine,
+            StoryCommand::DraftAttack(agent, animal),
+        ))
+    }
+
+    /// M5 order: drafted person `agent` attacks person `target` (`AgentId`).
+    #[func]
+    fn cmd_draft_attack_person(&mut self, agent: i64, target: i64) -> VarDictionary {
+        result_to_dict(submit_story(
+            &mut self.engine,
+            StoryCommand::DraftAttackPerson(agent, target),
+        ))
+    }
+
+    /// M5 order: mark deer `animal` to be hunted.
+    #[func]
+    fn cmd_designate_hunt(&mut self, animal: i64) -> VarDictionary {
+        result_to_dict(submit_story(
+            &mut self.engine,
+            StoryCommand::DesignateHunt(animal),
+        ))
+    }
+
+    /// M5 order: a hunt zone over the rectangle (every deer inside may be hunted).
+    #[func]
+    fn cmd_add_hunt_zone(&mut self, x0: i32, y0: i32, x1: i32, y1: i32) -> VarDictionary {
+        result_to_dict(submit_story(
+            &mut self.engine,
+            StoryCommand::AddHuntZone(x0, y0, x1, y1),
+        ))
+    }
+
+    /// M5 order: remove the hunt zones and hunt marks in the rectangle.
+    #[func]
+    fn cmd_cancel_hunt(&mut self, x0: i32, y0: i32, x1: i32, y1: i32) -> VarDictionary {
+        result_to_dict(submit_story(
+            &mut self.engine,
+            StoryCommand::CancelHunt(x0, y0, x1, y1),
+        ))
+    }
+
+    /// M5 order: the standing order "모두 가죽 옷" on or off.
+    #[func]
+    fn cmd_set_dress_order(&mut self, on: bool) -> VarDictionary {
+        result_to_dict(submit_story(
+            &mut self.engine,
+            StoryCommand::SetDressOrder(on),
         ))
     }
 

@@ -52,13 +52,36 @@
 #   m4_set.json records the tick, the tech read, what each shot shows and the dumps.
 #   Extra bridge methods: get_tech, get_agent_knowledge (direct); via the panels get_tech_node, get_teach_orders,
 #   get_knowledge_waits, get_chronicle_since; the teach dialog sends cmd_order_teach.
+# --m5-set --load <abs save file> [--m5-shots 1,2,…] takes the M5 set (docs/v8/m5, goal §10) on a saved colony world
+#   (the colony probe's `--save-at TICK --save-out FILE` with tools/v8/m5_u_script.json); a save serves the shots that
+#   fit its moment and several runs share one --out (m5_set.json merges their notes; each note names its save). The
+#   world is loaded as for --m3-set (clock stopped, OS cursor parked) and, as a player would: m5_01 the clock is
+#   advanced an hour at a time to the first tick with wolves on the map, then until they are within 30 tiles of the
+#   hearth (or 6 hours more): the camp and the wolves framed together with the HUD's banner "늑대 무리가 다가온다 (n)";
+#   m5_02 four adults (spear holders first) are drafted by a click on each and D, then a right click on the nearest
+#   wolf orders all four (the inspector closed), the clock runs 40 ticks: the party with the drafted list (this changes
+#   the world: four cmd_draft and four cmd_draft_attack); m5_03 the clock is advanced (≤ 3 days) to someone not 보통,
+#   framed with the camp, and M shows the mood overlay; m5_04 C
+#   opens the chronicle and the "→ 왜?" of the latest quarrel with a cause opens its chain (UI/WhyPanel; the link's
+#   meta_clicked, as a click on it sends); m5_05 the camp at 2× with the cold-snap banner "한파 n일째 · 장작 n (하루 n
+#   필요)" on the snap's second evening when it lasts that long; m5_06 a click on the person with the most chronicle lines, then on the inspector's 이야기 tab; m5_07 the
+#   clock is advanced half an hour at a time (≤ 3 days) to a new deer Hunted entry, then the hunter and the meat stack
+#   nearest them are framed at 3× (else the latest hunt before the save); when that meat lies under a crown (the
+#   canopy hides ground stacks, as it hides logs) m5_07b is the first meat stack in the open within a day (a hauled
+#   carcass) at 3× with its hover line; m5_08 the clock is advanced to someone wearing a hide wrap (get_agent_snapshot `tops`), who is
+#   clicked: the inspector scrolled to "옷: 가죽 랩 (추위 −30 %)". Each note records its tick and what it shows.
+#   Extra bridge methods: get_story, get_animals, get_drafted, get_agent_m5, get_agent_economy, get_chronicle_since,
+#   get_chronicle_why, get_person_chronicle (direct or via the panels); D, right clicks and the panels send cmd_draft,
+#   cmd_draft_attack.
 # usage: Godot --path . --rendering-driver opengl3 --resolution 1920x1080 \
 #          --script res://tools/v8/capture.gd -- --out <abs dir> [--tick 1440] [--panels] [--zoom 2] [--m1-set]
 #          [--m3-set --load <abs save file>] [--m4-set --load <abs save file>]
+#          [--m5-set --load <abs save file> [--m5-shots 1,2,3,4,5,6,7,8]]
 extends SceneTree
 
 const TILE: float = 16.0
 const OverlaySuffix = preload("res://scripts/world/colony/overlay_layer.gd")
+const ChronicleText = preload("res://scripts/ui/chronicle_text.gd")
 
 var _out: String = ""
 var _tick: int = 1440
@@ -67,6 +90,8 @@ var _zoom: float = 2.0
 var _m1_set: bool = false
 var _m3_set: bool = false
 var _m4_set: bool = false
+var _m5_set: bool = false
+var _m5_shots: PackedStringArray = PackedStringArray(["1", "2", "3", "4", "5", "6", "7", "8"])
 var _load: String = ""
 var _record: Dictionary = {}
 
@@ -88,6 +113,10 @@ func _init() -> void:
 			_m3_set = true
 		elif args[i] == "--m4-set":
 			_m4_set = true
+		elif args[i] == "--m5-set":
+			_m5_set = true
+		elif args[i] == "--m5-shots" and i + 1 < args.size():
+			_m5_shots = args[i + 1].split(",")
 		elif args[i] == "--load" and i + 1 < args.size():
 			_load = args[i + 1]
 	call_deferred("_run")
@@ -118,6 +147,9 @@ func _run() -> void:
 		return
 	if _m4_set:
 		await _m4_shots(main, world, camera)
+		return
+	if _m5_set:
+		await _m5_shots_run(main, world, camera)
 		return
 	var now: int = int((world.call("get_time_snapshot") as Dictionary).get("tick", 0))
 	if _tick > now:
@@ -1197,3 +1229,464 @@ func _m4_shots(main: Node, world: Node, camera: Camera2D) -> void:
 		file.close()
 	print("CAPTURE_M4_SET_DONE ", JSON.stringify({"tick": _record.get("loaded_tick"), "tech": _record.get("tech"), "notes": notes}))
 	quit(0)
+
+
+# --- --m5-set (M5, goal §10) ---------------------------------------------------------------------------------
+
+## Advance the stopped clock `step` ticks at a time until `done` returns true or `limit` ticks passed; true when done.
+func _advance_until(world: Node, done: Callable, step: int, limit: int) -> bool:
+	var spent: int = 0
+	while spent <= limit:
+		if bool(done.call()):
+			return true
+		world.call("advance_ticks", step)
+		spent += step
+		await process_frame
+	return bool(done.call())
+
+
+## The drawn top-left of the person with AgentId `agent` (its tile when not drawn), and its tile: {drawn, tile, bits}.
+func _person_at(main: Node, world: Node, agent: int) -> Dictionary:
+	var snap: Dictionary = world.call("get_agent_snapshot")
+	var ids: PackedInt64Array = snap.get("agent_ids", PackedInt64Array())
+	var bits: PackedInt64Array = snap.get("ids", PackedInt64Array())
+	var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
+	var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
+	var i: int = ids.find(agent)
+	if i < 0:
+		return {}
+	var tile: Vector2i = Vector2i(xs[i], ys[i])
+	var drawn: Vector2 = Vector2(tile) * TILE
+	var agents: Node = main.get_node_or_null("ColonyView/AgentLayer")
+	if agents != null:
+		var d: Vector2 = agents.call("drawn_position", bits[i])
+		if d.x >= 0.0:
+			drawn = d
+	return {"drawn": drawn, "tile": tile, "bits": bits[i]}
+
+
+## A click on person `agent` as a player gives it (camera on them first when `frame`); true when the inspector shows them.
+func _click_person(main: Node, world: Node, camera: Camera2D, agent: int, zoom: float, frame: bool = true) -> bool:
+	var at: Dictionary = _person_at(main, world, agent)
+	if at.is_empty():
+		return false
+	if frame:
+		await _near(camera, at["tile"], zoom)
+		at = _person_at(main, world, agent)
+	await _click(root.get_canvas_transform() * ((at["drawn"] as Vector2) + Vector2(8, 8)))
+	await _wait(5)
+	var inspector: Node = main.get_node_or_null("UI/AgentInspectorPanel")
+	return inspector != null and (inspector as Control).visible and int(inspector.get("_selected_person")) == agent
+
+
+## The shot's note: the save, the tick, the clock and `extra`.
+func _m5_note(notes: Dictionary, shot: String, world: Node, extra: Dictionary) -> void:
+	var note: Dictionary = extra.duplicate()
+	note["save"] = _load.get_file()
+	note["tick"] = _now(world)
+	note["clock_minute"] = _minute_of_day(world)
+	note["display_day"] = floori(float(_now(world) + int((world.call("get_world_info") as Dictionary).get("clock_offset_ticks", 0))) / 1440.0) + 1
+	notes[shot] = note
+
+
+func _m5_shots_run(main: Node, world: Node, camera: Camera2D) -> void:
+	var reads: Node = main.get_node_or_null("SimReads")
+	var banner: Node = main.get_node_or_null("UI/StoryBanner")
+	var inspector: Node = main.get_node_or_null("UI/AgentInspectorPanel")
+	var chronicle: Node = main.get_node_or_null("UI/ChroniclePanel")
+	if reads == null or banner == null or inspector == null or chronicle == null or _load.is_empty():
+		push_error("capture: --m5-set needs --load <file>, Main/SimReads, the story banner, the inspector, the chronicle")
+		quit(1)
+		return
+	camera.set_process(false)
+	if not bool(reads.call("mutate_raw", "load_world", [_load])):
+		push_error("capture: load_world failed for " + _load)
+		quit(1)
+		return
+	await _wait(20)
+	var path: String = _out.path_join("m5_set.json")
+	var previous: Variant = JSON.parse_string(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else null
+	_record = previous if previous is Dictionary else {}
+	var runs: Array = _record.get("runs", [])
+	runs.append({"save": _load, "loaded_tick": _now(world), "shots": Array(_m5_shots)})
+	_record["runs"] = runs
+	var notes: Dictionary = _record.get("notes", {})
+	Input.warp_mouse(Vector2(1919, 1079))
+	var hearth: Vector2i = _hearth(world)
+	for shot: String in _m5_shots:
+		match shot:
+			"1": await _m5_wolves(main, world, camera, banner, hearth, notes)
+			"2": await _m5_draft(main, world, camera, banner, hearth, notes)
+			"3": await _m5_mood(main, world, camera, banner, hearth, notes)
+			"4": await _m5_why(main, world, camera, chronicle, hearth, notes)
+			"5": await _m5_cold(world, camera, banner, hearth, notes)
+			"6": await _m5_story_tab(main, world, camera, inspector, notes)
+			"7": await _m5_hunt(main, world, camera, hearth, notes)
+			"8": await _m5_wrap(main, world, camera, inspector, notes)
+	_record["notes"] = notes
+	var file: FileAccess = FileAccess.open(path, FileAccess.WRITE)
+	if file != null:
+		file.store_string(JSON.stringify(_record, "  ", true))
+		file.close()
+	print("CAPTURE_M5_SET_DONE ", JSON.stringify({"save": _load.get_file(), "shots": Array(_m5_shots), "notes": notes.keys()}))
+	quit(0)
+
+
+func _wolves(world: Node) -> Array[Vector2i]:
+	var read: Dictionary = world.call("get_animals")
+	var out: Array[Vector2i] = []
+	var kinds: PackedInt32Array = read.get("kinds", PackedInt32Array())
+	var xs: PackedInt32Array = read.get("xs", PackedInt32Array())
+	var ys: PackedInt32Array = read.get("ys", PackedInt32Array())
+	for i: int in mini(kinds.size(), mini(xs.size(), ys.size())):
+		if kinds[i] == 0:
+			out.append(Vector2i(xs[i], ys[i]))
+	return out
+
+
+## Frame `points` at 2× when they fit 1920×1080 (with a margin), else at 1×.
+func _frame_points(camera: Camera2D, points: Array[Vector2i]) -> float:
+	var span: Vector2i = _span(points)
+	var zoom: float = 2.0 if span.x * TILE * 2.0 < 1700.0 and span.y * TILE * 2.0 < 860.0 else 1.0
+	await _near(camera, _centre_of(points), zoom)
+	return zoom
+
+
+func _m5_wolves(_main: Node, world: Node, camera: Camera2D, banner: Node, hearth: Vector2i, notes: Dictionary) -> void:
+	var arrived: bool = await _advance_until(world, func() -> bool: return not _wolves(world).is_empty(), 60, 4 * 1440)
+	if not arrived:
+		push_error("capture: m5_01 no wolves within 4 days of the save")
+		return
+	await _advance_until(world, func() -> bool:
+		for w: Vector2i in _wolves(world):
+			if _cheb(w, hearth) <= 30:
+				return true
+		return false, 30, 360)
+	var points: Array[Vector2i] = [hearth]
+	points.append_array(_wolves(world))
+	var zoom: float = await _frame_points(camera, points)
+	await _wait(10)
+	var story: Dictionary = world.call("get_story")
+	_m5_note(notes, "m5_01_wolves_banner.png", world, {"banner": banner.call("banner_texts"), "wolves": int(story.get("wolves", 0)),
+		"wolves_at": [int(story.get("wolves_x", -1)), int(story.get("wolves_y", -1))], "pulse": str(banner.call("pulse")), "zoom": zoom})
+	await _save_m1("m5_01_wolves_banner.png", world)
+
+
+func _m5_draft(main: Node, world: Node, camera: Camera2D, banner: Node, hearth: Vector2i, notes: Dictionary) -> void:
+	if _wolves(world).is_empty():
+		await _advance_until(world, func() -> bool: return not _wolves(world).is_empty(), 60, 4 * 1440)
+	var snap: Dictionary = world.call("get_agent_snapshot")
+	var ids: PackedInt64Array = snap.get("agent_ids", PackedInt64Array())
+	var stages: PackedByteArray = snap.get("life_stages", PackedByteArray())
+	var picks: Array[int] = []
+	var others: Array[int] = []
+	for i: int in mini(ids.size(), stages.size()):
+		if stages[i] != 0:
+			continue
+		var economy: Dictionary = world.call("get_agent_economy", ids[i])
+		if int(economy.get("tool_kind", -1)) == 15:
+			picks.append(ids[i])
+		else:
+			others.append(ids[i])
+	picks.append_array(others)
+	picks = picks.slice(0, 4)
+	var tool: Node = main.get_node_or_null("ColonyView/OrderTool")
+	var inspector: Node = main.get_node_or_null("UI/AgentInspectorPanel")
+	for agent: int in picks:
+		if await _click_person(main, world, camera, agent, 2.0):
+			await _key(KEY_D)
+			await _wait(3)
+	inspector.call("close")
+	await _wait(3)
+	var wolves: Array[Vector2i] = _wolves(world)
+	var target: Vector2i = hearth
+	if not wolves.is_empty():
+		wolves.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return _cheb(a, hearth) < _cheb(b, hearth))
+		target = wolves[0]
+	await _near(camera, target, 2.0)
+	var animals: Node = main.get_node_or_null("ColonyView/AnimalLayer")
+	var read: Dictionary = world.call("get_animals")
+	var wolf_id: int = -1
+	var xs: PackedInt32Array = read.get("xs", PackedInt32Array())
+	var ys: PackedInt32Array = read.get("ys", PackedInt32Array())
+	var aids: PackedInt64Array = read.get("ids", PackedInt64Array())
+	for i: int in mini(aids.size(), mini(xs.size(), ys.size())):
+		if Vector2i(xs[i], ys[i]) == target:
+			wolf_id = aids[i]
+	if wolf_id >= 0 and animals != null:
+		var drawn: Vector2 = animals.call("drawn_position", wolf_id)
+		var at: Vector2 = root.get_canvas_transform() * (drawn + Vector2(8, 8))
+		await _motion(at)
+		await _button(at, MOUSE_BUTTON_RIGHT, true)
+		await _button(at, MOUSE_BUTTON_RIGHT, false)
+	else:
+		tool.call("draft_order_at", Vector2(target) * TILE + Vector2(8, 8), target)
+	world.call("advance_ticks", 40)
+	await _wait(10)
+	var drafted: Dictionary = world.call("get_drafted")
+	var points: Array[Vector2i] = []
+	var dxs: PackedInt32Array = drafted.get("xs", PackedInt32Array())
+	var dys: PackedInt32Array = drafted.get("ys", PackedInt32Array())
+	for i: int in mini(dxs.size(), dys.size()):
+		points.append(Vector2i(dxs[i], dys[i]))
+	points.append_array(_wolves(world))
+	if points.is_empty():
+		points.append(hearth)
+	var zoom: float = await _frame_points(camera, points)
+	await _wait(10)
+	_m5_note(notes, "m5_02_drafted_party.png", world, {"drafted": Array(drafted.get("ids", PackedInt64Array())), "weapons": Array(drafted.get("weapons", PackedInt32Array())),
+		"orders": Array(drafted.get("orders", PackedInt32Array())), "wolf": wolf_id, "rows": banner.call("drafted_texts"), "zoom": zoom})
+	await _save_m1("m5_02_drafted_party.png", world)
+
+
+func _m5_mood(main: Node, world: Node, camera: Camera2D, banner: Node, hearth: Vector2i, notes: Dictionary) -> void:
+	# A moment when someone is not 보통 (우울, 흡족 or in a breakdown), within three days; framed on them with the camp.
+	var marked: Array[Vector2i] = []
+	var mixed: Callable = func() -> bool:
+		var snap: Dictionary = world.call("get_agent_snapshot")
+		var bands: PackedByteArray = snap.get("mood_bands", PackedByteArray())
+		var xs: PackedInt32Array = snap.get("xs", PackedInt32Array())
+		var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
+		marked.clear()
+		for i: int in mini(bands.size(), mini(xs.size(), ys.size())):
+			if bands[i] == 1 or bands[i] == 3 or bands[i] == 4:
+				marked.append(Vector2i(xs[i], ys[i]))
+		return not marked.is_empty()
+	await _advance_until(world, mixed, 60, 3 * 1440)
+	var points: Array[Vector2i] = [hearth]
+	points.append_array(marked)
+	await _frame_points(camera, points)
+	await _key(KEY_M)
+	await _wait(10)
+	var snap: Dictionary = world.call("get_agent_snapshot")
+	var bands: Dictionary = {}
+	for b: int in snap.get("mood_bands", PackedByteArray()):
+		bands[str(b)] = int(bands.get(str(b), 0)) + 1
+	var agents: Node = main.get_node_or_null("ColonyView/AgentLayer")
+	_m5_note(notes, "m5_03_mood_overlay.png", world, {"bands": bands, "shown": agents != null and bool(agents.call("mood_shown")),
+		"banner": banner.call("banner_texts")})
+	await _save_m1("m5_03_mood_overlay.png", world)
+	await _key(KEY_M)
+
+
+func _m5_why(_main: Node, world: Node, camera: Camera2D, chronicle: Node, hearth: Vector2i, notes: Dictionary) -> void:
+	var page: Dictionary = world.call("get_chronicle_since", 0, 512)
+	var total: int = int(page.get("total", 0))
+	var rows: Array[Dictionary] = []
+	var start: int = 0
+	while start < total:
+		var part: Dictionary = world.call("get_chronicle_since", start, 512)
+		rows.append_array(ChronicleText.rows(part))
+		var next: int = int(part.get("next", total))
+		if next <= start:
+			break
+		start = next
+	var pick: Dictionary = {}
+	for row: Dictionary in rows:
+		if int(row.get("kind", -1)) == 19 and int(row.get("cause", 0)) >= 1 and int(row.get("link", -1)) >= 0:
+			pick = row
+	if pick.is_empty():
+		push_error("capture: m5_04 no quarrel with a cause in this save")
+		return
+	await _near(camera, hearth, 2.0)
+	await _key(KEY_C)
+	await _wait(10)
+	var body: RichTextLabel = chronicle.get("_body") as RichTextLabel
+	body.meta_clicked.emit("why:%d" % int(pick["index"]))
+	await _wait(10)
+	var why: Node = chronicle.get_parent().get_node_or_null("WhyPanel")
+	_m5_note(notes, "m5_04_quarrel_why.png", world, {"entry": int(pick["index"]), "entry_tick": int(pick["tick"]), "cause": int(pick["cause"]),
+		"chain": str(why.call("plain_text")) if why != null else "", "links": Array((world.call("get_chronicle_why", int(pick["index"])) as Dictionary).get("links", PackedInt32Array()))})
+	await _save_m1("m5_04_quarrel_why.png", world)
+	if why != null:
+		why.call("close")
+	await _key(KEY_C)
+
+
+func _m5_cold(world: Node, camera: Camera2D, banner: Node, hearth: Vector2i, notes: Dictionary) -> void:
+	var cold: Callable = func() -> bool: return ((world.call("get_story") as Dictionary).get("kinds", PackedInt32Array()) as PackedInt32Array).has(0)
+	if not await _advance_until(world, cold, 60, 4 * 1440):
+		push_error("capture: m5_05 no cold snap within 4 days of the save")
+		return
+	# Its second day when the snap lasts that long ("한파 2일째"), in the evening when the fire burns.
+	var second: Callable = func() -> bool:
+		var story: Dictionary = world.call("get_story")
+		var kinds: PackedInt32Array = story.get("kinds", PackedInt32Array())
+		var days: PackedInt64Array = story.get("days_of", PackedInt64Array())
+		var i: int = kinds.find(0)
+		return i < 0 or (i < days.size() and days[i] >= 2 and _minute_of_day(world) >= 17 * 60)
+	await _advance_until(world, second, 30, 2 * 1440)
+	if not bool(cold.call()):
+		push_error("capture: m5_05 the cold snap ended before its second evening")
+	await _near(camera, hearth, 2.0)
+	await _wait(10)
+	var story: Dictionary = world.call("get_story")
+	_m5_note(notes, "m5_05_cold_snap_banner.png", world, {"banner": banner.call("banner_texts"), "days_of": Array(story.get("days_of", PackedInt64Array())),
+		"firewood": int(story.get("firewood", -1)), "firewood_day_need": int(story.get("firewood_day_need", -1))})
+	await _save_m1("m5_05_cold_snap_banner.png", world)
+
+
+func _m5_story_tab(main: Node, world: Node, camera: Camera2D, inspector: Node, notes: Dictionary) -> void:
+	var snap: Dictionary = world.call("get_agent_snapshot")
+	var ids: PackedInt64Array = snap.get("agent_ids", PackedInt64Array())
+	var best: int = -1
+	var best_score: int = -1
+	for id: int in ids:
+		var read: Dictionary = world.call("get_person_chronicle", id)
+		var kinds: PackedInt32Array = read.get("kind", PackedInt32Array())
+		var links: PackedInt32Array = read.get("link", PackedInt32Array())
+		var linked: int = 0
+		for l: int in links:
+			if l >= 0:
+				linked += 1
+		# Lines that fit the tab first (8–14), then the most with a "→ 왜?".
+		var score: int = linked * 4 + mini(kinds.size(), 14) - maxi(0, kinds.size() - 14)
+		if score > best_score:
+			best = id
+			best_score = score
+	if best < 0 or not await _click_person(main, world, camera, best, 2.0):
+		push_error("capture: m5_06 could not select a person")
+		return
+	var tab: Button = (inspector as Control).find_child("Tab_2", true, false) as Button
+	if tab != null:
+		await _click(tab.get_global_rect().get_center())
+	await _wait(15)
+	_m5_note(notes, "m5_06_story_tab.png", world, {"agent": best, "tab": int(inspector.call("current_tab")), "text": str(inspector.call("story_text")).left(600)})
+	await _save_m1("m5_06_story_tab.png", world)
+	inspector.call("select_tab", 0)
+	inspector.call("close")
+
+
+func _m5_hunt(main: Node, world: Node, camera: Camera2D, hearth: Vector2i, notes: Dictionary) -> void:
+	# A new deer hunt whose meat lies in the open (a stack under a crown is hidden by the canopy, as logs are), within
+	# three days; else the first new hunt; else the latest hunt before the save.
+	var trees: Node = main.get_node_or_null("ColonyView/TreeLayer")
+	var cursor: Array[int] = [int((world.call("get_chronicle_since", 0, 1) as Dictionary).get("total", 0))]
+	var hunted: Array[Dictionary] = []
+	var picked: Array[Dictionary] = []
+	var found: Callable = func() -> bool:
+		var page: Dictionary = world.call("get_chronicle_since", cursor[0], 512)
+		cursor[0] = int(page.get("next", cursor[0]))
+		for row: Dictionary in ChronicleText.rows(page):
+			if int(row.get("kind", -1)) != 31 or int(row.get("cause", -1)) != 1:
+				continue
+			hunted.append(row)
+			var meat: Vector2i = _meat_near(world, _person_at(main, world, int(row.get("subject", -1))).get("tile", hearth))
+			if meat.x >= 0 and (trees == null or not bool(trees.call("under_canopy", meat))):
+				picked.append(row)
+			return true
+		return false
+	var fresh: bool = await _advance_until(world, found, 30, 3 * 1440)
+	if not picked.is_empty():
+		hunted.clear()
+		hunted.append(picked[0])
+	if hunted.is_empty():
+		# No new hunt (the live world has no scripted orders after the save): the latest hunt before it.
+		var total: int = cursor[0]
+		var start: int = 0
+		while start < total:
+			var part: Dictionary = world.call("get_chronicle_since", start, 512)
+			for row: Dictionary in ChronicleText.rows(part):
+				if int(row.get("kind", -1)) == 31 and int(row.get("cause", -1)) == 1:
+					hunted.clear()
+					hunted.append(row)
+			var next: int = int(part.get("next", total))
+			if next <= start:
+				break
+			start = next
+	if hunted.is_empty():
+		push_error("capture: m5_07 no deer hunted in this world")
+		return
+	var hunter: int = int(hunted[0].get("subject", -1))
+	var near: Vector2i = _person_at(main, world, hunter).get("tile", hearth)
+	var meat: Vector2i = _meat_near(world, near)
+	var points: Array[Vector2i] = [near]
+	if meat.x >= 0:
+		points.append(meat)
+	var span: Vector2i = _span(points)
+	var zoom: float = 3.0 if span.x * TILE * 3.0 < 1700.0 and span.y * TILE * 3.0 < 860.0 else 2.0
+	await _near(camera, _centre_of(points), zoom)
+	await _wait(10)
+	_m5_note(notes, "m5_07_hunted_deer.png", world, {"hunter": hunter, "hunter_tile": [near.x, near.y], "meat_tile": [meat.x, meat.y], "entry_tick": int(hunted[0].get("tick", -1)),
+		"meat": int(hunted[0].get("value", 0)), "zoom": zoom, "fresh_hunt": fresh, "in_the_open": not picked.is_empty(),
+		"meat_under_canopy": trees != null and meat.x >= 0 and bool(trees.call("under_canopy", meat))})
+	await _save_m1("m5_07_hunted_deer.png", world)
+	if meat.x >= 0 and (trees == null or not bool(trees.call("under_canopy", meat))):
+		return
+	# The kill's meat lies under a crown (hidden by the canopy, as logs are): m5_07b the meat stack in the open nearest
+	# the camp (a hauled carcass) within a day, at 3× with the hover line.
+	var found_open: Array[Vector2i] = []
+	var in_open: Callable = func() -> bool:
+		var overlay: Dictionary = world.call("get_colony_overlay")
+		var ixs: PackedInt32Array = overlay.get("item_xs", PackedInt32Array())
+		var iys: PackedInt32Array = overlay.get("item_ys", PackedInt32Array())
+		var iks: PackedInt32Array = overlay.get("item_kinds", PackedInt32Array())
+		found_open.clear()
+		for i: int in mini(ixs.size(), mini(iys.size(), iks.size())):
+			var t: Vector2i = Vector2i(ixs[i], iys[i])
+			if iks[i] == 11 and (trees == null or not bool(trees.call("under_canopy", t))):
+				if found_open.is_empty() or _cheb(t, hearth) < _cheb(found_open[0], hearth):
+					found_open.clear()
+					found_open.append(t)
+		return not found_open.is_empty()
+	if not await _advance_until(world, in_open, 15, 1440):
+		push_error("capture: m5_07b no meat stack in the open within a day of the hunt")
+		return
+	var open: Vector2i = found_open[0]
+	await _near(camera, open, 3.0)
+	var at: Vector2 = _screen_of(open)
+	await _motion(at)
+	Input.warp_mouse(at)
+	await _motion(at)
+	await _wait(10)
+	_m5_note(notes, "m5_07b_carcass_stack.png", world, {"meat_tile": [open.x, open.y], "zoom": 3.0})
+	await _save_m1("m5_07b_carcass_stack.png", world)
+	Input.warp_mouse(Vector2(1919, 1079))
+	await _motion(Vector2(1919, 1079))
+
+
+## The meat stack (item kind 11) nearest `near`, or (-1, -1).
+func _meat_near(world: Node, near: Vector2i) -> Vector2i:
+	var overlay: Dictionary = world.call("get_colony_overlay")
+	var ixs: PackedInt32Array = overlay.get("item_xs", PackedInt32Array())
+	var iys: PackedInt32Array = overlay.get("item_ys", PackedInt32Array())
+	var iks: PackedInt32Array = overlay.get("item_kinds", PackedInt32Array())
+	var meat: Vector2i = Vector2i(-1, -1)
+	for i: int in mini(ixs.size(), mini(iys.size(), iks.size())):
+		var t: Vector2i = Vector2i(ixs[i], iys[i])
+		if iks[i] == 11 and _cheb(t, near) <= 4 and (meat.x < 0 or _cheb(t, near) < _cheb(meat, near)):
+			meat = t
+	return meat
+
+
+func _m5_wrap(main: Node, world: Node, camera: Camera2D, inspector: Node, notes: Dictionary) -> void:
+	var wearer: Array[int] = []
+	var wearing: Callable = func() -> bool:
+		var snap: Dictionary = world.call("get_agent_snapshot")
+		var tops: PackedByteArray = snap.get("tops", PackedByteArray())
+		var ids: PackedInt64Array = snap.get("agent_ids", PackedInt64Array())
+		for i: int in mini(tops.size(), ids.size()):
+			if tops[i] == 1:
+				wearer.append(ids[i])
+				return true
+		return false
+	if not await _advance_until(world, wearing, 60, 6 * 1440):
+		push_error("capture: m5_08 nobody wears a hide wrap within 6 days of the save")
+		return
+	if not await _click_person(main, world, camera, wearer[0], 2.0):
+		push_error("capture: m5_08 could not select the wearer")
+		return
+	await _wait(10)
+	var label: Label = inspector.get("_top_label") as Label
+	var scroll: ScrollContainer = inspector.get("_scroll") as ScrollContainer
+	if label != null and scroll != null:
+		scroll.scroll_vertical = maxi(0, int(label.position.y) - 200)
+		await _wait(10)
+	var wearers: int = 0
+	for t: int in (world.call("get_agent_snapshot") as Dictionary).get("tops", PackedByteArray()):
+		if t == 1:
+			wearers += 1
+	_m5_note(notes, "m5_08_hide_wrap_inspector.png", world, {"agent": wearer[0], "lines": inspector.call("m5_lines"), "wearers": wearers})
+	await _save_m1("m5_08_hide_wrap_inspector.png", world)
+	inspector.call("close")
+

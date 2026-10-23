@@ -27,6 +27,12 @@
 #   만들기", lesson_role/partner/node), then per entry "문 만들기 · 숙련 (전승)" coloured by state (숙련, 배우는 중,
 #   잊어 감), a proficiency bar with the threshold marked, and "65 % · 마지막으로 씀: 3일 전" (days_unused); node names
 #   from get_tech via SimReads. Job codes 12 dig clay, 13 teach, 14 learn. A dead person's record has no 지식 tab.
+# M5 (goal 3.5): under the tool line the mood "기분: 우울 (210) — 춥게 잠, 배고픔, 다툼" (band word, value, the first three
+#   modifiers as words; coloured by band), the apparel "옷: 가죽 랩 (추위 −30 %)" ("옷: 허리 두르개" without a top), and
+#   when it applies "소집됨 · 늑대 공격", "아픔 · 14시간 남음" and "몸 64/100" (hp below 100), from get_agent_m5 (direct,
+#   once per tick for the selected person; the animal named from get_animals via SimReads). Job codes 15 hunt,
+#   16 equip. A third tab 이야기 lists every chronicle line of the person (get_person_chronicle, newest first), each
+#   with "→ 왜?" when it has a cause; a click opens the chain (UI/ChroniclePanel open_why → UI/WhyPanel).
 extends Control
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
@@ -41,6 +47,21 @@ const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
 ## M4: the inspector's tabs (0 정보, 1 지식).
 const TAB_INFO: int = 0
 const TAB_KNOWLEDGE: int = 1
+## M5: the 이야기 tab.
+const TAB_STORY: int = 2
+const StoryText = preload("res://scripts/ui/story_text.gd")
+var _story_box: VBoxContainer
+var _story_text: RichTextLabel
+var _story_key: int = 0
+## M5: the mood, apparel, draft, illness and hp lines and the get_agent_m5 read (per person and tick).
+var _mood_label: Label
+var _top_label: Label
+var _draft_label: Label
+var _sick_label: Label
+var _hp_label: Label
+var _m5: Dictionary = {}
+var _m5_key: Vector3i = Vector3i(-1, -1, -1)
+const M5_FRAMES: int = 10
 var _tab: int = TAB_INFO
 var _tab_row: HBoxContainer
 var _tab_buttons: Array[Button] = []
@@ -124,7 +145,7 @@ var _job_label: Label
 # M3 adds 9 dig, 10 deconstruct, 11 clear (haul-away).
 # M4 adds 12 dig clay, 13 teach, 14 learn.
 const JOB_KEYS: Array[String] = ["UI_JOB_NONE", "UI_JOB_CHOP", "UI_JOB_HAUL", "UI_JOB_DELIVER", "UI_JOB_BUILD", "UI_JOB_QUARRY", "UI_JOB_SUPPLY", "UI_JOB_CRAFT", "UI_JOB_GATHER", "UI_JOB_DIG", "UI_JOB_DECONSTRUCT", "UI_JOB_CLEAR",
-	"UI_JOB_DIG_CLAY", "UI_JOB_TEACH", "UI_JOB_LEARN"]
+	"UI_JOB_DIG_CLAY", "UI_JOB_TEACH", "UI_JOB_LEARN", "M5_JOB_HUNT", "M5_JOB_EQUIP"]
 const RoomLayer = preload("res://scripts/world/colony/room_layer.gd")
 ## BuildingKind code of a hut in get_building_snapshot.
 const HUT_KIND: int = 3
@@ -208,6 +229,20 @@ func _ready() -> void:
 	_tool_label = _make_label("")
 	_bed_label = _make_label("")
 	_bed_label.hide()
+	_mood_label = _make_label("")
+	_mood_label.name = "Mood"
+	_top_label = _make_label("")
+	_top_label.name = "Apparel"
+	_draft_label = _make_label("")
+	_draft_label.name = "Draft"
+	_draft_label.add_theme_color_override("font_color", Color("f07060"))
+	_sick_label = _make_label("")
+	_sick_label.name = "Sick"
+	_sick_label.add_theme_color_override("font_color", Color("a8d888"))
+	_hp_label = _make_label("")
+	_hp_label.name = "Hp"
+	for label: Label in [_mood_label, _top_label, _draft_label, _sick_label, _hp_label]:
+		label.hide()
 	_skills_heading = _make_label("")
 	_skills_heading.theme_type_variation = &"Heading"
 	_skills_label = _make_label("")
@@ -401,6 +436,7 @@ func display_agent(detail: Dictionary) -> void:
 	if logs > 0:
 		_carried_label.text = "%s: %s %d" % [_loc("UI_INSPECT_CARRYING"), _loc("ITEM_LOG"), logs]
 	_refresh_economy(agent_id)
+	_refresh_m5(agent_id)
 	_cold_label.text = _loc("INSPECTOR_COLD")
 	_cold_label.visible = _is_cold(agent_id)
 	visible = true
@@ -416,7 +452,7 @@ func _make_knowledge_tab() -> void:
 	_vbox.add_child(_tab_row)
 	_vbox.move_child(_tab_row, _label_id.get_index() + 1)
 	var group: ButtonGroup = ButtonGroup.new()
-	for tab: int in [TAB_INFO, TAB_KNOWLEDGE]:
+	for tab: int in [TAB_INFO, TAB_KNOWLEDGE, TAB_STORY]:
 		var button: Button = Button.new()
 		button.name = "Tab_%d" % tab
 		button.toggle_mode = true
@@ -434,9 +470,25 @@ func _make_knowledge_tab() -> void:
 	_vbox.add_child(_knowledge_box)
 	_vbox.move_child(_knowledge_box, _tab_row.get_index() + 1)
 	_knowledge_box.hide()
+	_story_box = VBoxContainer.new()
+	_story_box.name = "Story"
+	_vbox.add_child(_story_box)
+	_vbox.move_child(_story_box, _knowledge_box.get_index() + 1)
+	_story_text = RichTextLabel.new()
+	Names.prepare_rich_text(_story_text)
+	_story_text.add_theme_font_size_override("normal_font_size", 24)
+	_story_text.add_theme_font_size_override("bold_font_size", 24)
+	_story_text.bbcode_enabled = true
+	_story_text.fit_content = true
+	_story_text.scroll_active = false
+	_story_text.custom_minimum_size.x = 332
+	_story_text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_story_text.meta_clicked.connect(_follow_link)
+	_story_box.add_child(_story_text)
+	_story_box.hide()
 
 
-## M4: show tab `tab` (0 정보, 1 지식; also used by tools).
+## M4: show tab `tab` (0 정보, 1 지식, M5 2 이야기; also used by tools).
 func select_tab(tab: int) -> void:
 	_tab = tab
 	for i: int in _tab_buttons.size():
@@ -447,7 +499,7 @@ func select_tab(tab: int) -> void:
 		_apply_tab()
 
 
-## The tab shown (0 정보, 1 지식).
+## The tab shown (0 정보, 1 지식, 2 이야기).
 func current_tab() -> int:
 	return _tab
 
@@ -457,9 +509,12 @@ func _apply_tab() -> void:
 	_tab_row.visible = not _record_mode
 	_tab_buttons[0].text = _loc("M4_INSPECT_TAB_INFO")
 	_tab_buttons[1].text = _loc("M4_INSPECT_TAB_KNOWLEDGE")
+	_tab_buttons[2].text = _loc("M5_INSPECT_TAB_STORY")
 	var knowledge: bool = _tab == TAB_KNOWLEDGE and not _record_mode
+	var story: bool = _tab == TAB_STORY and not _record_mode
 	_knowledge_box.visible = knowledge
-	if not knowledge:
+	_story_box.visible = story
+	if not knowledge and not story:
 		return
 	for node: Control in _live_nodes:
 		node.visible = false
@@ -468,7 +523,82 @@ func _apply_tab() -> void:
 	_life_heading.hide()
 	_life_text.hide()
 	_life_more.hide()
-	_refresh_knowledge()
+	if knowledge:
+		_refresh_knowledge()
+	else:
+		_refresh_story()
+
+
+## M5: the 이야기 tab — every chronicle line of the person, newest first, with "→ 왜?" links (rebuilt only when the
+## person's chronicle or the language changes).
+func _refresh_story() -> void:
+	var read: Dictionary = _person_cache.read("get_person_chronicle", _selected_person)
+	var language: String = Chronicle.language(_locale)
+	var key: int = hash([(read.get("tick", PackedInt64Array()) as PackedInt64Array).size(), _selected_person, language])
+	if key == _story_key and _story_text.text != "":
+		return
+	_story_key = key
+	var info: Dictionary = _world_info()
+	var lines: Array[String] = []
+	var rows: Array[Dictionary] = Chronicle.rows(read)
+	for i: int in range(rows.size() - 1, -1, -1):
+		var text: String = Chronicle.line(rows[i], _selected_person, _locale, info, false, true)
+		if not text.is_empty():
+			lines.append(text)
+	_story_text.text = "\n\n".join(lines) if not lines.is_empty() else _loc("M5_INSPECT_STORY_NONE")
+
+
+## M5: the 이야기 tab's lines without BBCode (for tests).
+func story_text() -> String:
+	return _story_text.get_parsed_text()
+
+
+## M5: the mood, apparel, draft, illness and hp lines from get_agent_m5 (read again only when the tick or the person
+## changes).
+func _refresh_m5(agent_id: int) -> void:
+	var labels: Array[Label] = [_mood_label, _top_label, _draft_label, _sick_label, _hp_label]
+	if _world_sim == null or not _world_sim.has_method("get_agent_m5"):
+		for label: Label in labels:
+			label.hide()
+		return
+	var clock: Dictionary = SimReads.read(_world_sim, "get_time_snapshot")
+	# Also every few frames: a draft order changes the read without a tick (the clock may be paused).
+	@warning_ignore("integer_division")
+	var key: Vector3i = Vector3i(agent_id, int(clock.get("tick", -1)), Engine.get_process_frames() / M5_FRAMES)
+	var drafted_now: bool = _carried_amount_byte(agent_id, "drafted") != 0
+	if key != _m5_key or drafted_now != bool(_m5.get("drafted", false)):
+		_m5_key = key
+		var read: Variant = _world_sim.call("get_agent_m5", agent_id)
+		_m5 = read if read is Dictionary else {}
+	var story: Dictionary = SimReads.read(_world_sim, "get_story")
+	if not bool(_m5.get("found", false)) or not bool(story.get("on", false)):
+		for label: Label in labels:
+			label.hide()
+		return
+	_mood_label.text = StoryText.mood_line(_locale, _m5)
+	_mood_label.visible = _mood_label.text != ""
+	_mood_label.add_theme_color_override("font_color", StoryText.band_color(int(_m5.get("band", 0))))
+	_top_label.text = StoryText.apparel_line(_locale, _m5)
+	_top_label.show()
+	_draft_label.text = StoryText.draft_line(_locale, _m5, SimReads.read(_world_sim, "get_animals"))
+	_draft_label.visible = _draft_label.text != ""
+	var info: Dictionary = _world_info()
+	@warning_ignore("integer_division")
+	var per_hour: int = maxi(1, int(info.get("ticks_per_day", 1440)) / 24)
+	_sick_label.text = StoryText.sick_line(_locale, _m5, per_hour)
+	_sick_label.visible = _sick_label.text != ""
+	var hp: int = int(_m5.get("hp", 100))
+	_hp_label.text = StoryText.trf(_locale, "M5_INSPECT_HP_FMT", {"hp": hp})
+	_hp_label.visible = hp < 100
+
+
+## M5: the mood, apparel, draft and illness lines shown (for tests): {mood, apparel, draft, sick, hp}, "" when hidden.
+func m5_lines() -> Dictionary:
+	var out: Dictionary = {}
+	for pair: Array in [["mood", _mood_label], ["apparel", _top_label], ["draft", _draft_label], ["sick", _sick_label], ["hp", _hp_label]]:
+		var label: Label = pair[1]
+		out[pair[0]] = label.text if label.visible else ""
+	return out
 
 
 ## M4: the 지식 list from get_agent_knowledge (read again only when the tick or the person changes; rebuilt only when
@@ -1066,6 +1196,10 @@ func _follow_link(meta: Variant) -> void:
 		return
 	if parts[0] == "person":
 		show_person(int(parts[1]))
+	elif parts[0] == "why":
+		var chronicle: Node = get_node_or_null("../ChroniclePanel")
+		if chronicle != null:
+			chronicle.call("open_why", int(parts[1]))
 	elif parts[0] == "village":
 		var id: int = int(parts[1])
 		var tile: Vector2i = SettlementSelection.formation_for(id)

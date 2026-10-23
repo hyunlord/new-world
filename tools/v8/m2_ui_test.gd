@@ -250,8 +250,8 @@ func _run() -> void:
 		var tool_line: Label = inspector.get("_tool_label") as Label
 		var locale: Node = root.get_node_or_null("Locale")
 		var tier0: String = str(locale.call("ltr", "SKILL_TIER_0")) if locale != null else "SKILL_TIER_0"
-		# Seven skills since M4 (6 = pottery).
-		_check("inspector_skills", skills != null and skills.visible and skills.text.split("\n").size() == 7 and tier0 in skills.text, skills.text.replace("\n", " | ") if skills != null else "")
+		# Eight skills since M5 (hunting).
+		_check("inspector_skills", skills != null and skills.visible and skills.text.split("\n").size() == 8 and tier0 in skills.text, skills.text.replace("\n", " | ") if skills != null else "")
 		_check("inspector_tool_line", tool_line != null and tool_line.visible, tool_line.text if tool_line != null else "")
 	_finish()
 

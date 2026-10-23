@@ -132,18 +132,35 @@ pub fn hunting_fetch(
     }
 }
 
-/// Take one item of the stack at `tile` as `entity`'s held tool; a tool already
-/// held is left on the worker's tile (a hunter swapping an axe for a spear).
+/// Take one item of the stack at `tile` as `entity`'s held tool when it is one of
+/// `kinds`; a tool already held is left on the worker's tile (a hunter swapping an
+/// axe for a spear). `owner` is the taker's reservation of the stack (a hunter's
+/// fetch), released here; a stack another person has reserved is left alone (a
+/// drafted person, who reserves nothing, passes `None`; M5 code review B1).
 pub fn pick_up_tool(
     world: &mut World,
     res: &mut SimResources,
     entity: Entity,
     tile: (u32, u32),
     pos: (u32, u32),
+    owner: Option<AgentId>,
+    kinds: &[ItemKind],
 ) {
-    let kind = res.colony.ground_items.get(&tile).map(|s| s.kind);
-    res.colony.reservations.remove(&ReserveKey::Stack(tile));
-    let Some(kind) = kind else {
+    let key = ReserveKey::Stack(tile);
+    match res.colony.reservations.get(&key).copied() {
+        Some(holder) if Some(holder) == owner => {
+            res.colony.reservations.remove(&key);
+        }
+        Some(_) => return,
+        None => {}
+    }
+    let Some(kind) = res
+        .colony
+        .ground_items
+        .get(&tile)
+        .map(|s| s.kind)
+        .filter(|k| kinds.contains(k))
+    else {
         return;
     };
     let (taken, spec) = take_items(res, tile, kind, 1);
@@ -247,7 +264,15 @@ pub fn step(
             super::execute::walk_job(world, res, id, entity, &mut job, pos, at);
             return;
         }
-        pick_up_tool(world, res, entity, at, pos);
+        pick_up_tool(
+            world,
+            res,
+            entity,
+            at,
+            pos,
+            Some(id),
+            &[ItemKind::Spear, ItemKind::FlintBlade],
+        );
         job.fetch = None;
         job.best_distance = chebyshev(pos, deer);
         job.progress_tick = res.current_tick;
@@ -292,7 +317,12 @@ pub fn step(
                 finish(world, res, entity);
                 return;
             }
+            // A miss: back to stalking (seeking, so the job layer keeps the job; review m1).
             job.stage = JobStage::ToSource;
+            job.best_distance = chebyshev(pos, deer);
+            job.progress_tick = res.current_tick;
+            set_state(world, entity, SEEK_JOB);
+            let _ = world.insert_one(entity, SeekTarget::new(deer));
             put_job(world, entity, job);
         }
     }

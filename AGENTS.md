@@ -48,7 +48,7 @@ Codex reads the same skills through `.agents/skills/<name>` (symlinks).
 ## The gate
 
 ```bash
-bash tools/v8/gate.sh <log_dir>        # 28 steps; every step except perf and nav_bench must pass
+bash tools/v8/gate.sh <log_dir>        # 29 steps; every step except perf and nav_bench must pass
 ```
 
 Steps: fmt, bridge build, Godot import, tests (debug, release), clippy
@@ -56,7 +56,7 @@ Steps: fmt, bridge build, Godot import, tests (debug, release), clippy
 identity, determinism, perf (report only), bridge API, docs check,
 inventory closure, Python unit tests, M1 tests, colony determinism,
 command replay, `.uid` check, play check (`tools/v8/test_play.sh`), and since M1.5 (ADR 0016) snapshot schema
-docs, renderer agreement, save round trip and the standing benchmark against `docs/perf/PERF_LEDGER.md`, since M3 the economy soak (`tools/v8/soak.sh`, since M4 also 0 `KnowledgeLost`) and the nav benchmark (report only), and since M4 the knowledge step (the knowledge tests and the F10 loss fixture). Rebuild the bridge (`cargo build -p
+docs, renderer agreement, save round trip and the standing benchmark against `docs/perf/PERF_LEDGER.md`, since M3 the economy soak (`tools/v8/soak.sh`, since M4 also 0 `KnowledgeLost`) and the nav benchmark (report only), since M4 the knowledge step (the knowledge tests and the F10 loss fixture), and since M5 the story step (two worlds × 48 days with the storyteller: F1's schedule, ledger and reservations exact; the soak runs without beasts). Rebuild the bridge (`cargo build -p
 sim-bridge`) before any Godot run — `cargo test` does not refresh the library
 Godot loads.
 
@@ -68,7 +68,7 @@ Godot loads.
 4. An ADR in `docs/decisions/` for each design decision.
 5. `docs/ARCHITECTURE.md`: regenerate the system table (`python3 tools/v8/system_table.py --write`), update maps if structure changed.
 6. Skills: add a lesson when a problem needed more than one attempt, a better method was found, or Godot/gdext surprised you — in the same pass.
-7. `tools/play.sh --headless-check main` passes; replace the current `docs/images/<pass>_contact_sheet.png` (now `m4_contact_sheet.png`) with the new pass's sheet when the view changed (≤ 12 images; delete the previous sheet).
+7. `tools/play.sh --headless-check main` passes; replace the current `docs/images/<pass>_contact_sheet.png` (now `m5_contact_sheet.png`) with the new pass's sheet when the view changed (≤ 12 images; delete the previous sheet).
 8. `bash tools/v8/check_docs.sh` green.
 
 Details: `.claude/skills/worldsim-docs-upkeep/SKILL.md`.

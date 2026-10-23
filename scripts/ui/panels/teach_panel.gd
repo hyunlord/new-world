@@ -7,8 +7,11 @@
 #   만들기", a bar of the learner's proficiency (the threshold where the order ends marked), "수업 3번" ("· 수업 중"
 #   while a lesson runs) and 취소 (cmd_cancel_teach). The node's people are read again when the node changes or the
 #   hour turns; the list is rebuilt only when the orders change. Esc, 닫기 or a world reset closes it.
-# Bridge methods: get_tech_node (direct, for the chosen node); via SimReads get_tech, get_teach_orders,
-#   get_time_snapshot; via SimReads.mutate cmd_order_teach, cmd_cancel_teach; signal world_reset.
+# M5 (M4 owner decision; M5 DECISIONS D5): when the teacher or the node changes, the 제자 dropdown pre-selects
+#   get_teach_suggestion(teacher, node) (the highest novelty seeking, then the youngest adult who does not practise
+#   it); a learner picked by hand stays picked until the teacher or the node changes again.
+# Bridge methods: get_tech_node, get_teach_suggestion (direct, for the chosen node and teacher); via SimReads get_tech,
+#   get_teach_orders, get_time_snapshot; via SimReads.mutate cmd_order_teach, cmd_cancel_teach; signal world_reset.
 extends Control
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
@@ -37,6 +40,9 @@ var _order: Button
 var _status: Label
 var _active: Label
 var _orders: VBoxContainer
+## M5: the (teacher, node) the learner was last suggested for, and the suggestion (-1 none).
+var _suggested_for: Vector2i = Vector2i(-1, -1)
+var _suggestion: int = -1
 
 
 func _ready() -> void:
@@ -67,6 +73,7 @@ func _ready() -> void:
 	_knowledge = _row(column, "Knowledge")
 	_knowledge.item_selected.connect(_on_knowledge)
 	_teacher = _row(column, "Teacher")
+	_teacher.item_selected.connect(_on_teacher)
 	_learner = _row(column, "Learner")
 	var actions: HBoxContainer = HBoxContainer.new()
 	actions.add_theme_constant_override("separation", 16)
@@ -220,6 +227,7 @@ func _fill_people() -> void:
 		_learner.add_item(_person_text(int(learners[i]), int(progress[i]) if i < progress.size() else 0, language), int(learners[i]))
 	_reselect(_teacher, teacher_before, maxi(best, 0))
 	_reselect(_learner, learner_before, 0)
+	_suggest_learner()
 	_order.disabled = _teacher.item_count == 0 or _learner.item_count == 0
 	if _teacher.item_count == 0:
 		_status.text = _loc("M4_TEACH_NO_TEACHER")
@@ -227,6 +235,28 @@ func _fill_people() -> void:
 		_status.text = _loc("M4_TEACH_NO_LEARNER")
 	else:
 		_status.text = ""
+
+
+## M5: pre-select get_teach_suggestion(teacher, node) when the teacher or the node changed since the last suggestion.
+func _suggest_learner() -> void:
+	var teacher: int = _selected_id(_teacher)
+	var key: Vector2i = Vector2i(teacher, _node)
+	if teacher < 0 or key == _suggested_for or _world_sim == null or not _world_sim.has_method("get_teach_suggestion"):
+		return
+	_suggested_for = key
+	_suggestion = int(_world_sim.call("get_teach_suggestion", teacher, _node))
+	var index: int = _learner.get_item_index(_suggestion) if _suggestion >= 0 else -1
+	if index >= 0:
+		_learner.select(index)
+
+
+func _on_teacher(_index: int) -> void:
+	_suggest_learner()
+
+
+## M5: the learner suggested for the chosen teacher and node (-1 none) and the learner chosen now (for tests).
+func suggestion() -> Dictionary:
+	return {"suggested": _suggestion, "chosen": _selected_id(_learner), "teacher": _selected_id(_teacher)}
 
 
 func _person_text(agent: int, proficiency: int, language: String) -> String:

@@ -472,7 +472,14 @@ fn illness_day(world: &mut World, res: &mut SimResources, rule: &StoryRule) {
         let until = now + res.rules.calendar.days_to_ticks(u64::from(rule.sick_days));
         let day = crate::runtime::resource_regen::day_index(res);
         for (id, entity, key, is_sick) in adults(world) {
-            if is_sick || sick.iter().any(|(s, ..)| *s == id) {
+            // Who has had it in this pressure is immune for the rest of it (`touched` holds every onset;
+            // `end_pressure` clears it; M5 code review M1).
+            let had_it = res
+                .colony
+                .story
+                .touched
+                .contains(&(PressureKind::Illness.code(), id, 2));
+            if is_sick || had_it || sick.iter().any(|(s, ..)| *s == id) {
                 continue;
             }
             let Some(room) = room_of(res, id) else {

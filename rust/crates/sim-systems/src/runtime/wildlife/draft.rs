@@ -86,7 +86,8 @@ pub fn draft(world: &mut World, res: &mut SimResources, entity: Entity, id: Agen
     let pos = world
         .get::<&Position>(entity)
         .map_or((0, 0), |p| (p.x, p.y));
-    let arming = (world.get::<&Tool>(entity).is_err())
+    // Unarmed (no tool, or a tool that is no weapon, such as a knife; review m3) → fetch one.
+    let arming = (!armed(world, entity))
         .then(|| {
             crate::runtime::jobs::hunt::nearest_stack(
                 res,
@@ -215,7 +216,15 @@ impl RuntimeSystem for DraftSystem {
             }
             if let Some(tile) = d.arming {
                 if res.nav.arrived(pos, tile) || pos == tile {
-                    crate::runtime::jobs::hunt::pick_up_tool(world, res, entity, tile, pos);
+                    crate::runtime::jobs::hunt::pick_up_tool(
+                        world,
+                        res,
+                        entity,
+                        tile,
+                        pos,
+                        None,
+                        &[ItemKind::Spear, ItemKind::GroundAxe, ItemKind::StoneAxe],
+                    );
                     if let Ok(mut held) = world.get::<&mut Drafted>(entity) {
                         held.arming = None;
                     }

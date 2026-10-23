@@ -52,21 +52,25 @@ M3_16 = M3_WALLS + M3_DOORS + M3_FLOORS + ["bedroll"] + M3_GHOSTS + M3_MARKS
 # M4 temporaries: the river ford (drawn over the terrain's water tile); Part 4's clay bank, workshops and item kinds.
 M4_OBJECTS = ["clay_bank", "pottery_bench", "grinding_stone"] + ["item_" + k for k in ("clay", "raw_pot", "clay_pot", "ground_axe")]
 M4_16 = ["ford"] + M4_OBJECTS
+# M5 temporaries: the animals, the carcass (meat), the new item kinds, the hunt mark; the sick badge and the hunt icon.
+M5_OBJECTS = (["animal_wolf", "animal_deer", "carcass"]
+              + ["item_" + k for k in ("cured_hide", "hide_wrap", "fur_cloak", "spear", "wolf_hide")] + ["mark_hunt"])
 
 SIZE = {n: (16, 16) for n in GROUND + ZONE + NATURE + ITEMS + CARRY + MARKS + ["hearth_0", "hearth_1"]
-        + M2_OBJECTS + ["mark_quarry"] + M3_16 + M4_16}
+        + M2_OBJECTS + ["mark_quarry"] + M3_16 + M4_16 + M5_OBJECTS}
 SIZE.update({n: (32, 16) for n in M2_WIDE})
 SIZE.update({n: (12, 12) for n in M3_ICONS})
 SIZE.update({n: (12, 12) for n in M2_ICONS})
 SIZE.update({n: (24, 24) for n in CANOPY})
 SIZE.update({n: (12, 12) for n in ICONS})
+SIZE.update({"badge_sick": (7, 7), "icon_hunt": (12, 12)})
 SIZE.update({"hut": (48, 48), "hut_ghost": (48, 48), "hut_ghost_place": (48, 48), "shelter": (16, 20),
              "tree_shadow": (20, 8), "shadow": (10, 4)})
 SIZE.update({n: ((16, 8) if n.endswith("_sleep") else (16, 16)) for n in PEOPLE})
 # Object sprites must carry the outline colour (craft rule 1); people carry it in their outline layer.
 OUTLINED = (CANOPY + NATURE + ITEMS + BUILDINGS + CARRY + ["mark_chop"] + ICONS
             + M2_OBJECTS + M2_WIDE + M2_ICONS + ["mark_quarry"]
-            + M3_WALLS + M3_DOORS + ["bedroll"] + M3_MARKS + M3_ICONS + M4_OBJECTS
+            + M3_WALLS + M3_DOORS + ["bedroll"] + M3_MARKS + M3_ICONS + M4_OBJECTS + M5_OBJECTS + ["badge_sick", "icon_hunt"]
             + [n for n in PEOPLE if "_outline_" in n] + ["stock_stake_" + c for c in ("nw", "ne", "sw", "se")])
 
 

@@ -79,6 +79,14 @@ registration order), then advances the clock. 1,440 ticks = 1 game day
 - **Do** key every knowledge draw on `STREAM_KNOWLEDGE` with the lineage key as subject and the node id or a pair index in `slot`, and run the channels as daily or interval systems (oral at 20:30, observation every 30 ticks, decay every 60, discovery and the aggregate every 240). *Reason:* C4; a keyed draw per node lets one roll be skipped without moving another, and per-tick diffusion would cost every tick.
 - **Don't** let a channel make anything but a fresh entry, a gain or a decay through `Knowledge`'s methods; the aggregate reads, never writes, people. *Reason:* the at-risk and lost states are computed from holders; a side write would desync the bitset and the HUD.
 
+### Story, animals and mood (M5; ADR 0027–0030)
+- **Do** plan pressure once a season with keyed draws (`STREAM_STORY`, subject = the season index) and begin/end it in the daily `StorytellerSystem`; let each effect live in the system whose behaviour it changes, asking `story::active(res, kind)`, and book its cost with `story::add_cost` / `note_cause`. *Reason:* C4 cadence (a daily system, never a per-tick poll); one place decides *when*, the behaviour systems decide *what*, so a pressure kind adds no new loop over people.
+- **Do** keep mercy and gap rules (no drought or beasts before day 12, majors ≥ 6 days apart …) in the planner and test them on the calibration and held-out seeds with `story::simulate_schedule` (`colony_story.rs`). *Reason:* F1 checks them on every evaluation world; a schedule bug shows on one seed in thirty.
+- **Do** keep animals in `ColonyState::wildlife` (≤ 16, not ECS entities) and route every person–animal blow through `colony.fights`, resolved by `CombatSystem`; V7's `combat_pairs` stay person–person. *Reason:* the V7 pair model and its chronicle/despawn paths stay single; adding ECS animals would put them in every `Agent`-less query and the save registry.
+- **Don't** reserve anything for a person without a `Job` (a drafted person's weapon, a dressing target): the reservations invariant allows reservations only to job holders. *Reason:* the draft's arming reservation failed F10 on calibration seed 5; a drafted person takes the weapon if it is still there.
+- **Do** have other systems note mood facts through `mood::note` (teaching, a gated craft, a discovery, a quarrel, a kin's death) and let only `MoodSystem` move the value. *Reason:* one writer keeps the target and the "why?" modifiers consistent with what the inspector shows.
+- **Do** make an effect act on the quantity its bar measures: a worn top spares cold *hours* at its ‰ (a keyed roll an hour), so cold events, the mood's cold night and exposure damage all scale; scaling only the damage left cold events equal by construction. *Reason:* M5 D15; F5 counts events, and a hidden factor on another quantity cannot move it.
+
 ### The simulation contract (ADR 0016; M1.5)
 - **Do** keep the world state a pure function of `(rules, seed, command log)` (C1): no wall clock, no hash order, no state outside `World`, `SimResources` and the systems' own fields; a saved game must restore every one of them. *Reason:* replay, colony determinism, identity and the save round trip are the gate steps that prove it.
 - **Don't** let the sim crates know pixels, tile sizes, sprites, cameras or Godot (C2); every value a renderer needs is a documented snapshot read (`docs/v8/snapshot_schema.md`, checked by `check_docs_helpers.py schema`). *Reason:* the text renderer (`worldsim_probe --ascii`) is the standing second renderer and must agree with the Godot view (`renderer_agreement`).
@@ -193,10 +201,58 @@ Full step lists with code skeletons: `references/procedures.md`.
 
 - **Do** keep run-time rates in integer tables (`XP_TABLE`, `SPEED_PERMILLE`, `QUALITY_BONUS_TABLE`, `AXE_PERMILLE` in `sim_core::colony::skills`) and convert data files' floats once at load (`MaterialStats`). *Reason:* C4; a table is reproducible and readable in a test.
 
+### N. Add a pressure kind (M5)
+1. Add the variant to `sim_core::colony::story::PressureKind` (code, name; list every `match` first) and its numbers to `StoryRule` (`#[serde(default)]`, M5 value in `StoryRule::M5`).
+2. Planning: its season weights, mercy day, gap and due rule in `runtime/story/mod.rs` (`plan_season`, `due`, `force`); begin and end with a chronicle `PressureBegan` / `PressureEnded` and its intensity.
+3. Effects: in the behaviour systems, each asking `story::active(res, kind)`; costs through `story::add_cost`, first effects on a person through `story::note_cause` (one `PressureCause` event a person a pressure).
+4. Mood: a modifier only if the goal gives one (procedure Q); the quarrel cause map (`Modifier::quarrel_cause`).
+5. Bridge and UI: `get_story` rows carry it by code; a banner text and locale keys; the year summary's `pressures`.
+6. Tests: the schedule on seeds 0–7 and the held-out set (`colony_story.rs`), the effect's size against a twin without the pressure, the chronicle pair with its cost.
+
+### O. Add an animal (M5)
+1. `AnimalKind` variant (code, name), its hp and behaviour numbers in `WildlifeRule`; placement and births in `runtime/wildlife/mod.rs` (keyed on `STREAM_WILDLIFE`; deer live as a herd within `deer_herd_max_tiles` of the hearth — the job radius limits who can reach it).
+2. Its steps (`AnimalState` codes are a bridge contract; add new ones at the end) and its fights through `colony.fights` (`Fighter::Animal`), resolved by `CombatSystem` (`wildlife/fight.rs`).
+3. What it leaves: items through the ledger helpers (`put_items`; new kinds by procedure G), a chronicle kind if the goal names one.
+4. Hunting it: `hunt::pick` and `WorkType::Hunt` (gated by `tracking`); its reservation key `ReserveKey::Animal`.
+5. Bridge: `get_animals` rows (kind code), a sprite in `tools/v8/gen_tiles.py`, the schema doc.
+6. Tests in `colony_wildlife.rs`: placement on reachable ground, the kill and its items in the ledger, fights resolve and end.
+
+### P. Add a wearable or a piece of equipment (M5)
+1. The item kind (procedure G) and its recipe (procedure H; a knife recipe sets `knife: true`); the effect's factor as a `const fn` on `Top` (or a new enum) — integer ‰.
+2. Wearing is a job (`JobKind::Equip { from }`, the hourly dressing pass in `hunt::dress`): the neediest *free* adult in a deterministic order (hardiness, then `AgentId`); a busy person is served at a later pass.
+3. The ledger counts a worn item as held (`invariants::ledger_of`); a death drops it like a held tool; the save registers the component.
+4. The effect acts on what its bar measures (rule above): for a top, the keyed warm-hour roll in `FireSystem` (`STREAM_APPAREL`).
+5. Bridge: the snapshot's `tops` column and `get_agent_m5`'s `top`, `top_cold_permille`; the inspector line.
+
+### Q. Mood modifiers (M5; goal 3.4)
+The modifier table lives in `sim_core::colony::people::Modifier` (`weight`, `social`, `quarrel_cause`); `mood::modifiers` reads the facts. Harm avoidance scales a negative one ×(800 + ha/5) ‰, reward dependence a social one.
+
+| modifier | weight | fact | quarrel cause |
+|---|---|---|---|
+| slept in a roofed bedroom | +80 | last night's sleep (20:00–06:00) | — |
+| slept outside | −120 | last night's sleep | sleep |
+| fed / hungry | +40 / −150 | hunger below / at the seek threshold | — / hunger |
+| thirsty | −100 | thirst at the seek threshold | hunger |
+| cold last night | −120 | marked `Cold` in the night window | cold |
+| quarrelled today | −100 | `Mood::quarrel_day` | — |
+| taught or learned today | +60 | `mood::note` (teach, oral) | — |
+| discovered something | +150 for 3 days | `mood::note` (discovery) | — |
+| a kin died | −250 for 6 days | `mood::kin_died` (despawn) | grief |
+| sick | −80 | `Sick` | pressure |
+| worked a gated craft | +40 | `mood::note` (knowledge used) | — |
+| drafted a day or more | −60 | `Drafted::since` | pressure |
+| a pressure active | −40 | `story::any_active` | pressure |
+
+A new modifier: append it to `Modifier::ALL` (codes are chronicle and bridge contracts), give it a weight, a fact read in `mood::facts_of` / `modifiers`, a quarrel cause, a locale name, and a unit test in `mood/mod.rs`.
+
 ## Lessons
 
 | date | symptom | root cause | fix | source |
 |---|---|---|---|---|
+| 2026-10-23 | M5 calibration: one world in eight never hunted although tracking was known and the herd was reachable | the deer herd's centre was drawn from all forest beyond 20 tiles of the hearth and landed 110 tiles out, beyond the job layer's 96-tile scan radius | place what a job must reach within the job radius (`deer_herd_max_tiles` 48); when a job never runs on a seed, check the target against the radius and reachability before tuning its odds | `rust/crates/sim-systems/src/runtime/wildlife/mod.rs`; `docs/v8/m5/M5_DECISIONS.md` D8 |
+| 2026-10-23 | hunting barely ran on any world (rounds 0–2) although hunters were idle at times | `WorkType::Hunt` sat after Quarry and Mine in the work order, which always had work | put a food job right after building in the work order; after adding a work type, count its jobs taken per world on the first round | `rust/crates/sim-core/src/colony/job.rs`; `docs/v8/m5/M5_DECISIONS.md` D8 |
+| 2026-10-23 | three of six hide wraps lay unworn on the stockpile for days | the hourly dressing pass kept each top for the neediest person and skipped the pass when that person was busy — at the one minute of the pass they nearly always were | serve the neediest *free* person; a periodic pass must not wait on one person's state at its minute | `rust/crates/sim-systems/src/runtime/jobs/hunt.rs`; `docs/v8/m5/M5_DECISIONS.md` D10 |
+| 2026-10-23 | clothed and unclothed people had the same cold hours (8 vs 12 of 600) although a wrap cut exposure to 700 ‰ | the factor scaled only the damage; the `Cold` marker comes from the hearth being out, the same for the whole settlement | make the effect act on the quantity the bar measures (a keyed warm-hour roll), so events and damage scale together | `rust/crates/sim-systems/src/runtime/settlement/fire.rs`; `docs/v8/m5/M5_DECISIONS.md` D15 |
 | 2026-10-23 | the F10 loss fixture's seed 5 finished two door sites after the colony lost the doorway, with no living door maker | an idle adult standing on a delivered site took the V7 decision system's construction arm and `ConstructionSystem` advanced the site; the job layer's gate was correct but this second builder never asked | put the gate in every path that can advance gated work; the decision system's site snapshot leaves out knowledge-gated colony sites (`knowledge::open_to_any_builder`); test with a person kept on the site | `rust/crates/sim-systems/src/runtime/knowledge/mod.rs`; `docs/v8/m4/M4_DECISIONS.md` D22 |
 | 2026-10-23 | knowledge cost 161–212 B a person with 12-byte entries in a `Vec`, over the plan's 160 B | a `Vec`'s 24-B header and spare capacity plus a `u32` tick per entry, for a list that changes only on a rare insert | store a boxed slice of packed 6-byte entries (use day, ‰, an id+source byte, the watched part) and rebuild the slice on insert; measure bytes per person in the probe | `rust/crates/sim-core/src/colony/knowledge.rs`; `docs/v8/m4/M4_DECISIONS.md` D10 |
 | 2026-10-22 | the colony's founders were stuck on hill tiles (seed 5) and a whole colony died of thirst in a hill basin (seed 403) | M3 made undug hill impassable, but V7 worldgen placed founders and camps assuming every hill tile could be walked | when a rule changes passability, re-check worldgen's assumptions: founders on open ground (D9), the camp's region open (D17); test every calibration and evaluation seed's camp region | `rust/crates/sim-systems/src/worldgen/colony.rs`; `docs/v8/m3/M3_DECISIONS.md` D9, D17 |

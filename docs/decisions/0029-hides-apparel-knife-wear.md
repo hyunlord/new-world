@@ -1,6 +1,6 @@
 # ADR 0029 — Hides, apparel and knife wear
 
-Status: draft (M5 Part 0, 2026-10-23); final in M5 Part 7.
+Status: accepted (M5, 2026-10-23; drafted in Part 0, final in Part 7 with the amendments below).
 
 ## Context
 M2–M4 never consumed blades except to haft axes, so skill growth (M4 F8) had no subject. The art line's people wear
@@ -17,9 +17,9 @@ one of three tops (loincloth, hide wrap, fur cloak); the simulation never decide
 - **Apparel**: `Apparel { top: HideWrap | FurCloak, since }` on a person who wears one (absent = loincloth). A standing
   order "모두 가죽 옷" (`colony.dress_all`, on by default; command `SetDressOrder`) gives an `Equip` job (Haul type) for a
   top on a stockpile to the person who most needs it — highest `Hardiness` (lowest cold tolerance), then `AgentId` —
-  and the warmest top first. A hide wrap scales cold exposure damage ×700 ‰, a fur cloak ×500 ‰; a fur cloak wearer
-  works outdoors in a cold snap at the normal speed. A worn top is part of the ledger (`worn`); at a death it is left
-  on the ground. The snapshot's apparel column gives the art its top.
+  and the warmest top first. A hide wrap's ×700 ‰ (a fur cloak's ×500 ‰) acts on the cold hour itself (amended,
+  D15); a fur cloak wearer works outdoors in a cold snap at the normal speed. A worn top counts as held in the
+  ledger; at a death it is left on the ground. The snapshot's apparel column gives the art its top.
 - **Ledger**: Meat, CuredHide, HideWrap, FurCloak, Spear and WolfHide join the per-kind invariant (Hide already did);
   spoiled meat and broken knives and spears are consumed.
 
@@ -29,6 +29,17 @@ one of three tops (loincloth, hide wrap, fur cloak); the simulation never decide
 
 ## Consequences
 - Blades now have three sinks (axes, spears, knives); F8 measures knife breakage.
+
+## Amendments (as built, M5 DECISIONS D10, D15)
+- The standing order is `ColonyState::dress_off` (false = on, the default); the hourly pass gives each free top on a
+  stockpile cell to the neediest adult **free at that pass** (a busy person is served at a later pass).
+- When the hearth is out on a winter night a wearer is cold that hour with chance `Top::cold_permille` (one keyed roll
+  an hour, `STREAM_APPAREL`, the lineage key); a cold hour bites as for anyone. Cold hours, the mood's cold night and
+  exposure damage all scale by the factor on average. Scaling only the damage (the draft) left cold events equal
+  between clothed and unclothed people by construction.
+- Held-out result, final: F5 23/32 (wraps arrive too slowly on nine worlds: hides come one a kill and a wrap takes
+  two), F8 0/32 (a world uses a knife 5–22 times in 48 days: one or two knives, not ten — the goal's sink is too small for
+  its bar).
 
 ## Date
 2026-10-23

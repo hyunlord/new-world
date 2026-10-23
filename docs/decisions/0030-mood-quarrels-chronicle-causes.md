@@ -1,6 +1,6 @@
 # ADR 0030 — Mood, quarrels and chronicle causes
 
-Status: draft (M5 Part 0, 2026-10-23); final in M5 Part 7.
+Status: accepted (M5, 2026-10-23; drafted in Part 0, final in Part 7 with the amendments below).
 
 ## Context
 V7's third signature is the person detail, the chronicle and "why?". Temperament, family and relations existed but
@@ -42,6 +42,16 @@ can be followed.
 - Mood, its modifier days and the person-pair relations add ≤ 24 B a person (goal §4).
 - The decision system is not touched by mood: breakdown and tantrum act through the job layer's assignment and work
   ticks.
+
+## Amendments (as built, M5 DECISIONS D11)
+- Kin base 500; non-kin pairs get a keyed base in −300..=300 (chemistry); relations drift back 10 a day.
+- A quarrel with no negative modifier (or a second quarrel of the day) is over the relation: cause code 100
+  (`RELATION_CAUSE`) linked to the pair's previous quarrel, so every quarrel's chain has at least two links.
+- The bridge's chronicle rows carry each entry's index and its "→" link; `get_chronicle_why(index)` returns the chain.
+- Held-out result, final: F6a 32/32 (the control is calm), F6b 7/32 (breakdowns under pressure, one world short of
+  one in four), F7 27/32 (five worlds have fewer than four quarrels in two years; no fight killed anyone). Every chain
+  has two links by construction, but 187 of 218 stop at a mood modifier with no chronicle entry behind it: a modifier
+  cause names the feeling, not the event that caused it (a later pass could link hunger and cold to their entries).
 
 ## Date
 2026-10-23

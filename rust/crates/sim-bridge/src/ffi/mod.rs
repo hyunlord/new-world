@@ -29,6 +29,7 @@ pub mod relations;
 pub mod save;
 pub mod snapshot;
 pub mod space;
+pub mod story;
 
 pub use activity::{collect_activity_snapshot, ActivitySnapshotRow};
 pub use colony::{
@@ -43,13 +44,19 @@ pub use economy::{
 };
 pub use family::{collect_agent_family, AgentFamilyRow};
 pub use knowledge::{
-    collect_agent_knowledge, collect_knowledge_waits, collect_teach_orders, collect_tech,
-    collect_tech_node, AgentKnowledgeView, KnowledgeRow, TeachRow, TechNodeView, TechRow, TechView,
-    WaitRow,
+    collect_agent_knowledge, collect_knowledge_waits, collect_teach_orders,
+    collect_teach_suggestion, collect_tech, collect_tech_node, AgentKnowledgeView, KnowledgeRow,
+    TeachRow, TechNodeView, TechRow, TechView, WaitRow,
 };
 pub use space::{
     collect_place_preview, collect_room_detail, collect_rooms, collect_space, submit_space,
     PlacePreview, RoomDetail, RoomRow, RoomsView, SpaceCommand, SpaceView,
+};
+pub use story::{
+    collect_agent_m5, collect_agent_m5_columns, collect_animals, collect_chronicle_why,
+    collect_drafted, collect_story, collect_year_summary, submit_story, submit_undraft_all,
+    AgentM5View, AnimalRows, DraftedRows, PressureRow, StoryCommand, StoryView, WhyRows,
+    YearSummary,
 };
 
 pub use causal::{

@@ -1,6 +1,6 @@
 # ADR 0027 — The storyteller and seasonal pressure
 
-Status: draft (M5 Part 0, 2026-10-23); final in M5 Part 7.
+Status: accepted (M5, 2026-10-23; drafted in Part 0, final in Part 7 with the amendments below).
 
 ## Context
 VISION §7 items 5–6: pressure arrives at times the system chooses (the god's hand of V7 is gone, ADR 0010), and it
@@ -44,6 +44,15 @@ winter severity draw (`firewood::winter_severity`, mild / normal / harsh burn pe
 ## Consequences
 - Every pressure is a pure function of `(seed, day, colony wealth)`; a world without the rule never draws.
 - New tallies and the probe's `m5` block measure each pressure's cost.
+
+## Amendments (as built, M5 DECISIONS D7, D9, D14)
+- Due rules: a cold snap is due after 24 days without one, beasts after 18 (`StoryRule::cold_due_days`,
+  `beasts_due_days`); the soak's `--story no-beasts` turns beasts off (`StoryRule::beasts`).
+- The firewood line's numbers are shared by the probe and the bridge: `story::firewood_have` (settlement wood +
+  feedable firewood) and `story::firewood_day_need` (one night's burn at the snap's rate).
+- Held-out result, final (`docs/v8/m5/M5_EVALUATION.md`): F1 32/32 (the schedule holds on every world), F2a 26/32
+  (the snap bites), F2b 30/32 (two worlds lost most of their people in their first snap, with illness at the same
+  time).
 
 ## Date
 2026-10-23

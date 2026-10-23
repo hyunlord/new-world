@@ -97,6 +97,14 @@ Sprites (names; see the painters for the exact pixels)
         low log bench with clay and a forming pot), grinding_stone (a flat slab with a worn hollow and a hand stone),
         item_clay / item_raw_pot / item_clay_pot / item_ground_axe (ground stacks of the M4 item kinds); all outlined
         objects with a transparent background, appended after `ford` so every older region stays where it was.
+    M5 temporaries (section "m5"; M-ART2 replaces them), outlined objects with a transparent background, appended
+        after the M4 sprites so every older region stays where it was:
+        animal_wolf, animal_deer 16x16 (side view facing east, feet on rows 13..14: a grey wolf with a lifted tail
+        and a yellow eye; a brown deer with pale antlers and a white tail), carcass 16x16 (the ground stack of meat:
+        two dressed haunches with bone ends), item_cured_hide / item_hide_wrap / item_fur_cloak / item_spear /
+        item_wolf_hide 16x16 (ground stacks of the M5 item kinds), mark_hunt 16x16 (a 7x7 yellow ring glyph at the
+        top-right, like mark_chop: a deer that may be hunted), badge_sick 7x7 (a green cross drawn above a sick
+        person's head), icon_hunt 12x12 (order bar: a spear).
 
 Determinism
     Each sprite draws with its own random.Random(SEED * 1000 + k), k a fixed constant per sprite (no hash(), no
@@ -1415,6 +1423,148 @@ def icon(kind):
     return outline_alpha(im)
 
 
+# ------------------------------------------------------------------ M5 temporary sprites (M-ART2 replaces them)
+WOLF_D, WOLF, WOLF_L = (82, 80, 76), (122, 118, 110), (160, 154, 144)
+DEER_D, DEER, DEER_L = (104, 70, 42), (150, 104, 62), (186, 142, 96)
+ANTLER = (214, 196, 156)
+MEAT_D, MEAT, MEAT_L = (120, 40, 36), (164, 62, 52), (204, 104, 90)
+BONE = (222, 212, 192)
+SHAFT = (176, 128, 80)
+
+
+def animal_wolf():
+    """A grey wolf, side view facing east: body, lowered head with pricked ears, lifted tail, four legs."""
+    im, d = new()
+    d.ellipse([2, 6, 11, 11], fill=rgba(WOLF))
+    d.line([(4, 6), (9, 6)], fill=rgba(WOLF_L))
+    for x in (3, 5, 9, 10):
+        d.rectangle([x, 10, x, 14], fill=rgba(WOLF_D))
+    d.polygon([(10, 5), (13, 5), (15, 7), (15, 8), (12, 9), (10, 8)], fill=rgba(WOLF))
+    d.polygon([(11, 3), (12, 5), (11, 5)], fill=rgba(WOLF_L))
+    d.polygon([(13, 3), (13, 5), (12, 5)], fill=rgba(WOLF_L))
+    d.point((13, 6), fill=rgba((236, 204, 90)))
+    d.point((15, 8), fill=rgba(OUTLINE))
+    d.polygon([(2, 7), (0, 4), (1, 9)], fill=rgba(WOLF_D))
+    d.line([(4, 11), (9, 11)], fill=rgba(WOLF_D))
+    return outline_alpha(im)
+
+
+def animal_deer():
+    """A brown deer, side view facing east: body, a raised neck and head with pale antlers, thin legs, white tail."""
+    im, d = new()
+    d.ellipse([2, 6, 11, 10], fill=rgba(DEER))
+    d.line([(4, 6), (9, 6)], fill=rgba(DEER_L))
+    for x in (3, 4, 9, 10):
+        d.rectangle([x, 10, x, 14], fill=rgba(DEER_D))
+    d.rectangle([10, 3, 11, 7], fill=rgba(DEER))
+    d.ellipse([10, 2, 14, 5], fill=rgba(DEER))
+    d.point((14, 4), fill=rgba(DEER_D))
+    d.point((12, 3), fill=rgba(OUTLINE))
+    d.line([(11, 1), (10, 0)], fill=rgba(ANTLER))
+    d.line([(12, 1), (13, 0)], fill=rgba(ANTLER))
+    d.point((11, 2), fill=rgba(ANTLER))
+    d.point((2, 6), fill=rgba((236, 230, 216)))
+    d.line([(4, 10), (9, 10)], fill=rgba(DEER_D))
+    return outline_alpha(im)
+
+
+def carcass():
+    """Two dressed haunches of meat with pale bone ends (the ground stack of meat)."""
+    im, d = new()
+    for x0, y0 in ((2, 5), (7, 8)):
+        d.ellipse([x0, y0 + 1, x0 + 7, y0 + 6], fill=rgba(MEAT_D))
+        d.ellipse([x0, y0, x0 + 7, y0 + 5], fill=rgba(MEAT))
+        d.point((x0 + 2, y0 + 1), fill=rgba(MEAT_L))
+        d.point((x0 + 3, y0 + 1), fill=rgba(MEAT_L))
+        d.rectangle([x0 + 7, y0 + 2, x0 + 8, y0 + 3], fill=rgba(BONE))
+    return outline_alpha(im)
+
+
+def item_cured_hide():
+    """A scraped, cured hide rolled up: a pale roll with a flat end."""
+    im, d = new()
+    base, light, dark = (204, 182, 138), (226, 208, 168), (164, 142, 104)
+    d.rectangle([3, 6, 12, 11], fill=rgba(base))
+    d.line([(3, 6), (12, 6)], fill=rgba(light))
+    d.line([(3, 11), (12, 11)], fill=rgba(dark))
+    d.ellipse([10, 5, 14, 12], fill=rgba(dark))
+    d.ellipse([11, 7, 13, 10], fill=rgba(base))
+    return outline_alpha(im)
+
+
+def item_hide_wrap():
+    """A folded hide wrap: a brown garment with a lighter collar and a thong belt."""
+    im, d = new()
+    d.polygon([(4, 3), (11, 3), (13, 13), (2, 13)], fill=rgba((150, 108, 68)))
+    d.line([(4, 3), (11, 3)], fill=rgba((188, 146, 100)))
+    d.line([(5, 4), (10, 4)], fill=rgba((188, 146, 100)))
+    d.line([(3, 8), (12, 8)], fill=rgba((96, 66, 40)))
+    d.line([(7, 9), (7, 12)], fill=rgba((116, 82, 50)))
+    return outline_alpha(im)
+
+
+def item_fur_cloak():
+    """A grey fur cloak lying folded, a dark tied edge and a few darker tufts."""
+    im, d = new()
+    d.ellipse([2, 4, 13, 13], fill=rgba(WOLF))
+    d.ellipse([3, 4, 9, 8], fill=rgba(WOLF_L))
+    d.line([(2, 9), (13, 9)], fill=rgba(WOLF_D))
+    for x, y in ((5, 11), (9, 11), (11, 6)):
+        d.point((x, y), fill=rgba(WOLF_D))
+    return outline_alpha(im)
+
+
+def item_spear():
+    """A spear lying diagonally: a wooden shaft with a flint head at the top-right."""
+    im, d = new()
+    d.line([(2, 14), (11, 5)], fill=rgba(SHAFT))
+    d.line([(3, 14), (11, 6)], fill=rgba(shade(SHAFT, 0.8)))
+    d.polygon([(11, 4), (14, 1), (13, 5), (12, 6)], fill=rgba(FLINT))
+    d.point((13, 2), fill=rgba(FLINT_L))
+    return outline_alpha(im)
+
+
+def item_wolf_hide():
+    """A grey wolf hide stretched flat."""
+    im, d = new()
+    d.polygon([(3, 3), (8, 2), (13, 4), (12, 9), (13, 13), (7, 12), (2, 13), (4, 8)], fill=rgba(WOLF))
+    d.polygon([(5, 4), (8, 4), (10, 6), (8, 9), (5, 8)], fill=rgba(WOLF_L))
+    return outline_alpha(im)
+
+
+def mark_hunt():
+    """A 7x7 ring glyph (yellow, outlined) at the cell's top-right, x 9..15, y 0..6 (like mark_chop)."""
+    glyph = from_ascii([
+        ".......",
+        "..yyy..",
+        ".y...y.",
+        ".y.y.y.",
+        ".y...y.",
+        "..yyy..",
+        ".......",
+    ], {"y": rgba(ACCENT)})
+    glyph = outline_alpha(glyph)
+    im, _ = new()
+    im.paste(glyph, (9, 0))
+    return im
+
+
+def badge_sick():
+    """A 7x7 green cross, outlined (drawn above a sick person's head)."""
+    im, d = new(7, 7)
+    d.line([(3, 1), (3, 5)], fill=rgba((128, 208, 96)))
+    d.line([(1, 3), (5, 3)], fill=rgba((128, 208, 96)))
+    return outline_alpha(im)
+
+
+def icon_hunt():
+    """12x12 order-bar icon: a spear."""
+    im, d = new(12, 12)
+    d.line([(1, 11), (8, 4)], fill=rgba(SHAFT), width=2)
+    d.polygon([(8, 3), (11, 0), (10, 4), (9, 5)], fill=rgba((206, 210, 220)))
+    return outline_alpha(im)
+
+
 # ------------------------------------------------------------------ sheet
 def build_sprites():
     """[(section, name, image)] in a fixed order."""
@@ -1526,6 +1676,18 @@ def build_sprites():
     add("m4", "item_raw_pot", item_raw_pot())
     add("m4", "item_clay_pot", item_clay_pot())
     add("m4", "item_ground_axe", item_ground_axe())
+    # M5 temporaries: animals, the carcass (meat), the new item kinds, the hunt mark, the sick badge, the hunt icon.
+    add("m5", "animal_wolf", animal_wolf())
+    add("m5", "animal_deer", animal_deer())
+    add("m5", "carcass", carcass())
+    add("m5", "item_cured_hide", item_cured_hide())
+    add("m5", "item_hide_wrap", item_hide_wrap())
+    add("m5", "item_fur_cloak", item_fur_cloak())
+    add("m5", "item_spear", item_spear())
+    add("m5", "item_wolf_hide", item_wolf_hide())
+    add("m5", "mark_hunt", mark_hunt())
+    add("m5", "badge_sick", badge_sick())
+    add("m5", "icon_hunt", icon_hunt())
     return out
 
 

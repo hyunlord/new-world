@@ -3,7 +3,8 @@
 #   middle-button drag; starts centred on the camp hearth, and Home or H centres on it again (C is the chronicle,
 #   order_bar.gd shows the hint); bounds = the map plus a 4-tile margin. Keys 1–4 set
 #   the speed 1×–4× (12/24/36/48 ticks per second, ADR 0004); Space (or Pause) pauses by disabling the WorldSim
-#   node (M2: P opens the work-priority table, priority_panel.gd).
+#   node (M2: P opens the work-priority table, priority_panel.gd). M5: while the inspector shows a living person, D
+#   drafts them (order_tool.gd), so D does not pan then (the arrow keys still do).
 # Bridge methods: set_sim_speed (direct); via SimReads get_world_info, get_building_snapshot; signal world_reset.
 extends Camera2D
 
@@ -116,7 +117,7 @@ func _process(delta: float) -> void:
 	var direction: Vector2 = Vector2.ZERO
 	if Input.is_key_pressed(KEY_A) or Input.is_key_pressed(KEY_LEFT):
 		direction.x -= 1.0
-	if Input.is_key_pressed(KEY_D) or Input.is_key_pressed(KEY_RIGHT):
+	if (Input.is_key_pressed(KEY_D) and not _person_selected()) or Input.is_key_pressed(KEY_RIGHT):
 		direction.x += 1.0
 	if Input.is_key_pressed(KEY_W) or Input.is_key_pressed(KEY_UP):
 		direction.y -= 1.0
@@ -173,3 +174,9 @@ func _on_world_reset() -> void:
 	_center_pending = true
 	if _world_sim != null:
 		_world_sim.call("set_sim_speed", _speed)
+
+
+## M5: whether the inspector shows a living person (D drafts them instead of panning).
+func _person_selected() -> bool:
+	var inspector: Node = get_node_or_null("/root/Main/UI/AgentInspectorPanel")
+	return inspector != null and (inspector as Control).visible and int(inspector.call("get_selected_entity_bits")) >= 0

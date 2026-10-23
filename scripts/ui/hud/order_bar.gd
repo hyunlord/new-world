@@ -21,6 +21,8 @@
 #   채석 as before and opens a small submenu above its button — "1 채석" / "2 점토 캐기" — where 1 keeps quarrying and 2
 #   switches to the clay-pit area mode (OrderTool CLAY; while the submenu is open, 1 and 2 choose, not the speed; Esc,
 #   a pick, an order or another mode closes it); the F7 button stays pressed in either mode.
+# M5 (goal 3.5): the F7 submenu grows to four — "3 사냥 (사슴)" (OrderTool HUNT: click a deer) and "4 사냥 구역" (OrderTool
+#   HUNT_ZONE: drag a hunt zone), with their hints; the idle hint names D 소집 and M 기분.
 # Bridge methods: via SimReads get_world_info, get_time_snapshot; save_world, load_world (SimReads.mutate; the load
 #   emits world_reset, which every layer already rebuilds on). The orders themselves go through OrderTool.
 extends Control
@@ -46,10 +48,17 @@ const MENU_LABELS: Array[String] = ["1", "2", "3", "4", "5", "6", "7", "8", "9",
 ## M4: the F7 submenu's modes (1 quarry, 2 clay pit) and the order tool's codes for them.
 const QUARRY_MODE: int = 6
 const CLAY_MODE: int = 9
+## M5: the hunt modes (3 click a deer, 4 a hunt zone).
+const HUNT_MODE: int = 10
+const HUNT_ZONE_MODE: int = 11
 const DIG_MENU: Array[Dictionary] = [
 	{"mode": QUARRY_MODE, "key": "UI_ORDER_QUARRY", "hotkey": KEY_1, "icon": "icon_quarry"},
 	{"mode": CLAY_MODE, "key": "UI_ORDER_CLAY", "hotkey": KEY_2, "icon": "icon_dig"},
+	{"mode": HUNT_MODE, "key": "M5_ORDER_HUNT", "hotkey": KEY_3, "icon": "icon_hunt", "hint": "M5_HINT_HUNT"},
+	{"mode": HUNT_ZONE_MODE, "key": "M5_ORDER_HUNT_ZONE", "hotkey": KEY_4, "icon": "icon_hunt", "hint": "M5_HINT_HUNT_ZONE"},
 ]
+## The modes of the F7 submenu (the F7 button stays pressed in any of them).
+const DIG_MODES: Array[int] = [QUARRY_MODE, CLAY_MODE, HUNT_MODE, HUNT_ZONE_MODE]
 const BAR_BOTTOM: float = 1080.0 - 12.0
 const ACTIVE: Color = Color("e8c46e")
 const TOAST_SECONDS: float = 2.0
@@ -195,7 +204,7 @@ func _build_menu() -> void:
 
 ## M4: the F7 submenu (1 채석, 2 점토 캐기), above the F7 button.
 func _build_dig_menu() -> void:
-	_dig_menu = ArtUI.panel(self, Rect2(12, 1080 - 112 - 8 - 2 * 56 - 24, 0, 0))
+	_dig_menu = ArtUI.panel(self, Rect2(12, 1080 - 112 - 8 - DIG_MENU.size() * 56 - 24, 0, 0))
 	_dig_menu.mouse_filter = Control.MOUSE_FILTER_STOP
 	_dig_menu.name = "DigMenu"
 	var column: VBoxContainer = VBoxContainer.new()
@@ -329,11 +338,11 @@ func _on_button(mode: int) -> void:
 	if mode == BUILD_MODE:
 		_toggle_build_menu()
 		return
-	if mode == QUARRY_MODE and not dig_menu_open() and current_mode() != CLAY_MODE and current_mode() != QUARRY_MODE:
+	if mode == QUARRY_MODE and not dig_menu_open() and not DIG_MODES.has(current_mode()):
 		open_dig_menu()
 		return
 	close_dig_menu()
-	if mode == QUARRY_MODE and current_mode() == CLAY_MODE:
+	if mode == QUARRY_MODE and DIG_MODES.has(current_mode()) and current_mode() != QUARRY_MODE:
 		select_mode(0)
 		return
 	close_build_menu()
@@ -359,15 +368,18 @@ func current_mode() -> int:
 
 
 func _on_mode_changed(mode: int) -> void:
-	if mode != QUARRY_MODE and mode != CLAY_MODE and dig_menu_open():
+	if not DIG_MODES.has(mode) and dig_menu_open():
 		_dig_menu.visible = false
 	for i: int in _buttons.size():
 		var on: bool = int(MODES[i]["mode"]) == mode or (int(MODES[i]["mode"]) == BUILD_MODE and build_menu_open()) \
-			or (int(MODES[i]["mode"]) == QUARRY_MODE and mode == CLAY_MODE)
+			or (int(MODES[i]["mode"]) == QUARRY_MODE and DIG_MODES.has(mode))
 		_buttons[i].set_pressed_no_signal(on)
 	_hint.text = _loc(_idle_hint()) if mode == 0 else ""
 	for entry: Dictionary in MODES:
 		if int(entry["mode"]) == mode:
+			_hint.text = _loc(str(entry["hint"]))
+	for entry: Dictionary in DIG_MENU:
+		if int(entry["mode"]) == mode and entry.has("hint"):
 			_hint.text = _loc(str(entry["hint"]))
 	if mode == CLAY_MODE:
 		_hint.text = _loc("UI_ORDER_HINT_CLAY")

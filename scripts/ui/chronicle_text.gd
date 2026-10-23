@@ -6,6 +6,13 @@
 #   "Fox가 Mia에게 문 만들기를 가르쳤다" (or "Mia가 문 만들기를 익혔다 (구전)" without a teacher), 26 KnowledgeDiscovered
 #   "Fox가 간석기를 발견했다!", 27 KnowledgeAtRisk "⚠ 문 만들기: Fox만 안다", 28 KnowledgeLost "기술 소실: 문 만들기
 #   (마지막: Fox)"; lost_plain() is the loss line without BBCode for the toast.
+#   M5 (goal 3.4): kinds 29 PressureBegan "한파가 닥쳤다" / "늑대 3마리가 나타났다", 30 PressureEnded "한파가 지나갔다 · 죽은
+#   사람 0", 31 Hunted "Fox가 사슴을 잡았다 (고기 3)", 32 Fight, 33 Breakdown (value = three modifier codes packed by 8
+#   bits, cause = their count) "Fox가 무너졌다 — 춥게 잠, 배고픔", 34 Drafted (cause 0 drafted, 1 released, 2 left at a
+#   critical need), 35 WolfKilled, 36 Sick (other = who passed it on), 37 Recovered; and the M5 Quarrel (kind 19 with
+#   cause ≥ 1 = 1 + the quarrel cause) "Fox가 Mia와 다퉜다 — 배고파서". An entry with `link` ≥ 0 ends in a "→ 왜?" link
+#   (`why:<index>`) when the caller asks for it; why_lines() renders a get_chronicle_why chain (entries as their text,
+#   modifiers by name, 100 as "사이가 나빠서", pressures by name); self_undraft_plain() is the toast.
 # Bridge methods: none (formats chronicle rows and world info its callers read: ticks_per_day, ticks_per_year,
 #   clock_offset_ticks from get_world_info).
 extends RefCounted
@@ -14,9 +21,12 @@ const Names = preload("res://scripts/ui/person_names.gd")
 const Selection = preload("res://scripts/core/settlement_selection.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
-## The last chronicle kind this text knows (M4: 28 KnowledgeLost).
-const LAST_KIND: int = 28
-const COLUMNS: Array[String] = ["tick", "kind", "subject", "other", "third", "settlement", "settlement2", "cause", "value"]
+const StoryText = preload("res://scripts/ui/story_text.gd")
+## The last chronicle kind this text knows (M5: 37 Recovered).
+const LAST_KIND: int = 37
+## M5 adds `index` (the entry's chronicle index) and its "→" link columns (absent in older reads: -1).
+const COLUMNS: Array[String] = ["tick", "kind", "subject", "other", "third", "settlement", "settlement2", "cause", "value",
+	"index", "link", "link_entry", "link_code"]
 const DEPART: Array[String] = ["CHRON_CAUSE_RANKED", "CHRON_CAUSE_SEED", "CHRON_CAUSE_HOUSEHOLD", "CHRON_CAUSE_ELDER_PARTNER", "CHRON_CAUSE_TOP_UP"]
 const DEATH: Array[String] = ["CHRON_DEATH_STARVATION", "CHRON_DEATH_DEHYDRATION", "CHRON_DEATH_COMBAT", "CHRON_DEATH_OLD_AGE", "CHRON_DEATH_EXPOSURE"]
 
@@ -76,8 +86,12 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 		match kind:
 			0: return loc(locale, "CHRON_CHILD_BORN_FMT") % person(subject, locale)
 			2: return loc(locale, "CHRON_PAIRED_FMT") % person(subject, locale)
-			19: return loc(locale, "CHRON_QUARREL_FMT") % [person(subject, locale), village(int(row.get("settlement", -1)), locale)]
+			19:
+				if cause >= 1:
+					return story_sentence(row, locale)
+				return loc(locale, "CHRON_QUARREL_FMT") % [person(subject, locale), village(int(row.get("settlement", -1)), locale)]
 			22: return hut_built(row, locale)
+			32, 36: return story_sentence(row, locale)
 			25: return knowledge_sentence(row, locale)
 			_: return ""
 	var place: int = int(row.get("settlement", -1))
@@ -117,13 +131,110 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 			if cause >= 10:
 				return loc(locale, "CHRON_PORTER_FAILED_FMT") % [village(place, locale), purpose]
 			return loc(locale, "CHRON_PORTER_DELIVERED_FMT") % [porter_load(cause, locale), value, village(parent, locale), village(place, locale), purpose]
-		19: return loc(locale, "CHRON_QUARREL_FMT") % [person(other, locale), village(parent, locale)]
+		19:
+			if cause >= 1:
+				return story_sentence(row, locale)
+			return loc(locale, "CHRON_QUARREL_FMT") % [person(other, locale), village(parent, locale)]
 		20: return loc(locale, "CHRON_VILLAGES_ESTRANGED_FMT") % [village(place, locale), village(parent, locale)]
 		21: return loc(locale, "CHRON_VILLAGES_RECONCILED_FMT") % [village(place, locale), village(parent, locale)]
 		22: return hut_built(row, locale)
 		23: return room_formed(row, locale)
 		24, 25, 26, 27, 28: return knowledge_sentence(row, locale)
+		29, 30, 31, 32, 33, 34, 35, 36, 37: return story_sentence(row, locale)
 	return ""
+
+
+## M5 kinds 29–37 and the M5 quarrel (19, cause ≥ 1) as BBCode sentences with person links.
+static func story_sentence(row: Dictionary, locale: Node) -> String:
+	var kind: int = int(row.get("kind", -1))
+	var subject: int = int(row.get("subject", -1))
+	var other: int = int(row.get("other", -1))
+	var cause: int = int(row.get("cause", -1))
+	var value: int = int(row.get("value", -1))
+	var who: String = person(subject, locale)
+	match kind:
+		19:
+			return LocaleScript.format_text(loc(locale, "M5_CHRON_QUARREL_FMT"), {"a": who, "b": person(other, locale), "cause": StoryText.quarrel_cause(locale, cause)})
+		29:
+			match cause:
+				StoryText.COLD_SNAP: return loc(locale, "M5_CHRON_BEGAN_COLD")
+				StoryText.DROUGHT: return loc(locale, "M5_CHRON_BEGAN_DROUGHT")
+				StoryText.BEASTS: return LocaleScript.format_text(loc(locale, "M5_CHRON_BEGAN_BEASTS_FMT"), {"count": value})
+				StoryText.ILLNESS:
+					if subject >= 0:
+						return LocaleScript.format_text(loc(locale, "M5_CHRON_BEGAN_ILLNESS_FMT"), {"person": who})
+					return loc(locale, "M5_CHRON_BEGAN_ILLNESS")
+			return loc(locale, "UI_UNKNOWN")
+		30:
+			return LocaleScript.format_text(loc(locale, "M5_CHRON_ENDED_FMT"), {"pressure": KnowledgeText.with_subject(locale, StoryText.pressure(locale, cause)), "deaths": maxi(0, value)})
+		31:
+			var key: String = "M5_CHRON_HUNTED_WOLF_FMT" if cause == StoryText.WOLF else "M5_CHRON_HUNTED_DEER_FMT"
+			return LocaleScript.format_text(loc(locale, key), {"person": who, "meat": maxi(0, value)})
+		32:
+			return LocaleScript.format_text(loc(locale, "M5_CHRON_FIGHT_FMT"), {"a": who, "b": person(other, locale), "cause": StoryText.quarrel_cause(locale, cause)})
+		33:
+			var words: Array[String] = []
+			for k: int in clampi(cause, 0, 3):
+				words.append(StoryText.modifier(locale, (value >> (8 * k)) & 0xff))
+			if words.is_empty():
+				return LocaleScript.format_text(loc(locale, "M5_CHRON_BREAKDOWN_PLAIN_FMT"), {"person": who})
+			return LocaleScript.format_text(loc(locale, "M5_CHRON_BREAKDOWN_FMT"), {"person": who, "mods": ", ".join(words)})
+		34:
+			var keys: Array[String] = ["M5_CHRON_DRAFTED_FMT", "M5_CHRON_UNDRAFTED_FMT", "M5_CHRON_SELF_UNDRAFTED_FMT"]
+			return LocaleScript.format_text(loc(locale, keys[clampi(cause, 0, 2)]), {"person": who})
+		35:
+			if subject >= 0:
+				return LocaleScript.format_text(loc(locale, "M5_CHRON_WOLF_KILLED_FMT"), {"person": who, "left": maxi(0, value)})
+			return LocaleScript.format_text(loc(locale, "M5_CHRON_WOLF_DIED_FMT"), {"left": maxi(0, value)})
+		36:
+			if other >= 0:
+				return LocaleScript.format_text(loc(locale, "M5_CHRON_SICK_FROM_FMT"), {"person": who, "other": person(other, locale)})
+			return LocaleScript.format_text(loc(locale, "M5_CHRON_SICK_FMT"), {"person": who})
+		37:
+			return LocaleScript.format_text(loc(locale, "M5_CHRON_RECOVERED_FMT"), {"person": who})
+	return ""
+
+
+## M5: the "→ 왜?" link of `row` ([url=why:<index>]), "" when the entry has no link.
+static func why_link(row: Dictionary, locale: Node) -> String:
+	if int(row.get("link", -1)) < 0 or int(row.get("index", -1)) < 0:
+		return ""
+	return "[url=why:%d][color=#e8c46e]%s[/color][/url]" % [int(row["index"]), loc(locale, "M5_CHRON_WHY")]
+
+
+## M5: a get_chronicle_why read as lines: the entry itself first (its sentence), then each cause — an entry as its
+## sentence with its day, a mood modifier by name ("→ 배고픔"), the relation ("→ 사이가 나빠서"), a pressure by
+## name ("→ 한파"). BBCode; the first line has no arrow.
+static func why_lines(read: Dictionary, locale: Node, info: Dictionary) -> Array[String]:
+	var out: Array[String] = []
+	var links: PackedInt32Array = read.get("links", PackedInt32Array())
+	var codes: PackedInt64Array = read.get("codes", PackedInt64Array())
+	var ticks: PackedInt64Array = read.get("ticks", PackedInt64Array())
+	var kinds: PackedInt32Array = read.get("kinds", PackedInt32Array())
+	var subjects: PackedInt64Array = read.get("subjects", PackedInt64Array())
+	var others: PackedInt64Array = read.get("others", PackedInt64Array())
+	var causes: PackedInt32Array = read.get("causes", PackedInt32Array())
+	var values: PackedInt64Array = read.get("values", PackedInt64Array())
+	for i: int in links.size():
+		var text: String = ""
+		match links[i]:
+			0:
+				var row: Dictionary = {"tick": ticks[i] if i < ticks.size() else 0, "kind": kinds[i] if i < kinds.size() else -1,
+					"subject": subjects[i] if i < subjects.size() else -1, "other": others[i] if i < others.size() else -1, "third": -1,
+					"settlement": -1, "settlement2": -1, "cause": causes[i] if i < causes.size() else -1, "value": values[i] if i < values.size() else 0}
+				text = line(row, -1, locale, info, true)
+				if text.is_empty():
+					text = loc(locale, "UI_UNKNOWN")
+			1: text = LocaleScript.format_text(loc(locale, "M5_WHY_MODIFIER_FMT"), {"name": StoryText.modifier(locale, int(codes[i]) if i < codes.size() else -1)})
+			2: text = LocaleScript.format_text(loc(locale, "M5_WHY_PRESSURE_FMT"), {"name": StoryText.pressure(locale, int(codes[i]) if i < codes.size() else -1)})
+			_: text = loc(locale, "UI_UNKNOWN")
+		out.append(text if i == 0 else "→ " + text)
+	return out
+
+
+## M5: the toast when someone left the draft at a critical need (kind 34 cause 2), without BBCode.
+static func self_undraft_plain(row: Dictionary, locale: Node) -> String:
+	return LocaleScript.format_text(loc(locale, "M5_TOAST_SELF_UNDRAFT_FMT"), {"person": Names.display_name(int(row.get("subject", -1)), language(locale))})
 
 
 ## M1 kind 22 (HutBuilt): "A hut was finished in {settlement}".
@@ -171,14 +282,17 @@ static func lost_plain(row: Dictionary, locale: Node) -> String:
 		return LocaleScript.format_text(loc(locale, "CHRONICLE_KNOWLEDGE_LOST_NOBODY_FMT"), {"node": node})
 	return LocaleScript.format_text(loc(locale, "CHRONICLE_KNOWLEDGE_LOST_FMT"), {"person": Names.display_name(subject, language(locale)), "node": node})
 
-static func line(row: Dictionary, viewed: int, locale: Node, info: Dictionary, world_feed: bool = false) -> String:
+static func line(row: Dictionary, viewed: int, locale: Node, info: Dictionary, world_feed: bool = false, with_why: bool = false) -> String:
 	var text: String = sentence(row, viewed, locale, info)
 	if text.is_empty():
 		return ""
 	var prefix: String = loc(locale, "CHRONICLE_DAY_FMT") % day(int(row.get("tick", 0)), info)
-	if world_feed and int(row.get("subject", -1)) >= 0 and int(row.get("porter_count", 0)) == 0 and int(row.get("kind", -1)) not in [20, 21, 24, 25, 26, 27, 28]:
+	var kind: int = int(row.get("kind", -1))
+	var named: bool = kind in [20, 21, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37] or (kind == 19 and int(row.get("cause", 0)) >= 1)
+	if world_feed and int(row.get("subject", -1)) >= 0 and int(row.get("porter_count", 0)) == 0 and not named:
 		text = person(int(row["subject"]), locale) + " — " + text
-	return prefix + " · " + text
+	var why: String = why_link(row, locale) if with_why else ""
+	return prefix + " · " + text + (" " + why if why != "" else "")
 
 static func partner(entries: Array[Dictionary], viewed: int) -> int:
 	var result: int = -1

@@ -1,6 +1,6 @@
 # Snapshot schema — the bridge's read surface
 
-Schema version: 4 (M4: the knowledge reads `get_tech`, `get_tech_node`, `get_agent_knowledge`, `get_teach_orders`, `get_knowledge_waits`, `get_space`'s fords and the new item, recipe, blueprint, job and chronicle codes; M3 added built space, rooms, the place preview and the overlay's `item_covered`; M2 the economy reads and the overlay's node, mark and quality columns).
+Schema version: 5 (M5: the story, animal and mood reads `get_story`, `get_animals`, `get_agent_m5`, `get_drafted`, `get_chronicle_why`, `get_year_summary`, `get_teach_suggestion`, the snapshot's `tops`, `mood_bands`, `drafted`, `sick` and the chronicle rows' `index` and links; M4 the knowledge reads `get_tech`, `get_tech_node`, `get_agent_knowledge`, `get_teach_orders`, `get_knowledge_waits`, `get_space`'s fords and the new item, recipe, blueprint, job and chronicle codes; M3 added built space, rooms, the place preview and the overlay's `item_covered`; M2 the economy reads and the overlay's node, mark and quality columns).
 
 Every `#[func] fn get_*` that `WorldSimNode` (`rust/crates/sim-bridge/src/ffi/node.rs`) exposes to GDScript, with the
 keys it returns, their types, id spaces, units and row order, and the pure collector that backs it. A `#[func]` body
@@ -158,8 +158,12 @@ between two reads of an unchanged world, **not** sorted by id and not stable acr
 | `pregnant_days` | PackedInt32Array | M1.5: whole days left of a pregnancy (`Pregnant::days_left`); -1 when not pregnant |
 | `colds` | PackedByteArray | 1 with the `Cold` marker |
 | `jobs` | PackedByteArray | `JobKind::code`: 0 none, 1 chop, 2 haul, 3 deliver, 4 build, 5 quarry, 6 supply, 7 craft, 8 gather (M2) |
-| `carry_kinds` | PackedInt32Array | carried item kind, -1 none, else `ItemKind::code`: 0 log, 1 firewood, 2 stone, 3 flint, 4 flint blade, 5 stone axe, 6 hide (M2) |
+| `carry_kinds` | PackedInt32Array | carried item kind, -1 none, else `ItemKind::code`: 0 log, 1 firewood, 2 stone, 3 flint, 4 flint blade, 5 stone axe, 6 hide (M2); 7 clay, 8 raw pot, 9 clay pot, 10 ground axe (M4); 11 meat, 12 cured hide, 13 hide wrap, 14 fur cloak, 15 spear, 16 wolf hide (M5) |
 | `carry_counts` | PackedInt32Array | M1: carried item count |
+| `tops` | PackedByteArray | M5: the worn top, `Top::code`: 0 loincloth (no `Apparel`), 1 hide wrap, 2 fur cloak |
+| `mood_bands` | PackedByteArray | M5: 0 no mood (a child under 10), 1 우울 (below 250), 2 보통, 3 흡족 (750 or more), 4 in a breakdown |
+| `drafted` | PackedByteArray | M5: 1 when drafted |
+| `sick` | PackedByteArray | M5: 1 when sick |
 
 A person sleeps when `states` is 3 and `target_kinds` is 3 (the agent layer's sleep frame; the text renderer's `z`).
 
@@ -282,6 +286,10 @@ iteration order (a hash map: sort before relying on order).
 | `settlement2` | PackedInt64Array | second SettlementId, -1 none |
 | `cause` | PackedInt32Array | kind-specific cause code |
 | `value` | PackedInt64Array | kind-specific value |
+| `index` | PackedInt64Array | M5: the entry's chronicle index (the key of `get_chronicle_why`) |
+| `link` | PackedInt32Array | M5: the entry's "→" link: -1 none, 0 another entry, 1 a mood modifier, 2 a pressure |
+| `link_entry` | PackedInt64Array | M5: the chronicle index the link points at, -1 none |
+| `link_code` | PackedInt32Array | M5: the link's `Modifier::code` (100 = the relation) or `PressureKind::code`, -1 none |
 
 ### `get_settlement_chronicle`
 `get_settlement_chronicle(settlement_id)`: `collect_settlement_chronicle` → `rows_to_dict(rows, false)`
@@ -299,6 +307,10 @@ iteration order (a hash map: sort before relying on order).
 | `settlement2` | PackedInt64Array | second SettlementId, -1 none |
 | `cause` | PackedInt32Array | kind-specific cause code |
 | `value` | PackedInt64Array | kind-specific value |
+| `index` | PackedInt64Array | M5: the entry's chronicle index (the key of `get_chronicle_why`) |
+| `link` | PackedInt32Array | M5: the entry's "→" link: -1 none, 0 another entry, 1 a mood modifier, 2 a pressure |
+| `link_entry` | PackedInt64Array | M5: the chronicle index the link points at, -1 none |
+| `link_code` | PackedInt32Array | M5: the link's `Modifier::code` (100 = the relation) or `PressureKind::code`, -1 none |
 
 ### `get_chronicle_since`
 `get_chronicle_since(start, max)`: `collect_chronicle_since(&Chronicle, start, max)` → `rows_to_dict(rows, true)`
@@ -316,6 +328,10 @@ iteration order (a hash map: sort before relying on order).
 | `settlement2` | PackedInt64Array | second SettlementId, -1 none |
 | `cause` | PackedInt32Array | kind-specific cause code |
 | `value` | PackedInt64Array | kind-specific value |
+| `index` | PackedInt64Array | M5: the entry's chronicle index (the key of `get_chronicle_why`) |
+| `link` | PackedInt32Array | M5: the entry's "→" link: -1 none, 0 another entry, 1 a mood modifier, 2 a pressure |
+| `link_entry` | PackedInt64Array | M5: the chronicle index the link points at, -1 none |
+| `link_code` | PackedInt32Array | M5: the link's `Modifier::code` (100 = the relation) or `PressureKind::code`, -1 none |
 | `next` | int | the index after the last returned entry (the next `start`) |
 | `total` | int | entries in the chronicle |
 
@@ -552,7 +568,7 @@ tile; M2 adds resource nodes by tile.
 | `zone_ys` | PackedInt32Array | zone cell tile y |
 | `item_xs` | PackedInt32Array | ground stack tile x |
 | `item_ys` | PackedInt32Array | ground stack tile y |
-| `item_kinds` | PackedInt32Array | `ItemKind::code` (0 log … 6 hide, as `carry_kinds`) |
+| `item_kinds` | PackedInt32Array | `ItemKind::code` (0 log … 16 wolf hide, as `carry_kinds`) |
 | `item_counts` | PackedInt32Array | items in the stack |
 | `site_xs` | PackedInt32Array | blueprint site footprint top-left x |
 | `site_ys` | PackedInt32Array | footprint top-left y |
@@ -826,6 +842,139 @@ then sites by centre `(x, y)`, then marks by tile.
 | `b` | PackedInt64Array | bill: bill id; site or mark: tile y |
 | `nodes` | PackedInt64Array | the node no living adult practises ("기다리는 중: … 아는 사람이 없음") |
 
+## Story, animals and mood (M5)
+
+The M5 reads (ADR 0027–0030; `ffi/story.rs`, the teach suggestion in `ffi/knowledge.rs`). Ids: people are
+`AgentId`, animals `AnimalId`, chronicle entries their index. Outside the M5 colony each returns its empty form
+(`get_story().on` false, no animals, every agent's M5 column 0). Not in `SimReads.GETTERS` except `get_story` and
+`get_animals`, which the HUD and the animal layer poll.
+
+### `get_story`
+`collect_story(&World, &SimResources) -> StoryView` → `story_to_dict`. Pressures in force in begin order (parallel
+columns) and the banner's numbers.
+
+| key | type | meaning |
+|---|---|---|
+| `on` | bool | the world has a storyteller |
+| `kinds` | PackedInt32Array | `PressureKind::code`: 0 cold snap, 1 drought, 2 beasts, 3 illness |
+| `names` | PackedStringArray | `PressureKind::name` (`cold_snap`, `drought`, `beasts`, `illness`) |
+| `start_days` | PackedInt64Array | display day it began |
+| `end_days` | PackedInt64Array | display day it ends (exclusive; beasts end earlier when the pack is gone) |
+| `days_of` | PackedInt64Array | which day of it today is (1 = its first day: "한파 2일째") |
+| `intensities` | PackedInt64Array | wolves in the pack; extra days of a snap or drought |
+| `subjects` | PackedInt64Array | the person it struck (illness), -1 none |
+| `deaths` | PackedInt64Array | deaths while it has been in force |
+| `ended` | int | pressures ended so far |
+| `firewood` | int | firewood the hearth can burn now: settlement wood + feedable firewood ("장작 12") |
+| `firewood_day_need` | int | one night's burn at a cold snap's rate: burn hours × the night's rate × hearths × `snap_burn_permille` ("하루 18 필요") |
+| `wolves` | int | wolves on the map |
+| `pack_size` | int | the present pack's size, 0 when no pack came |
+| `wolves_x` | int | the wolves' mean tile x, -1 without wolves (the banner's edge pulse) |
+| `wolves_y` | int | the wolves' mean tile y, -1 without wolves |
+| `sick` | int | people sick now |
+| `dress_order` | bool | the standing order "모두 가죽 옷" is on |
+| `version` | int | pressures begun + ended (changes when the banner should) |
+
+### `get_animals`
+`collect_animals(&SimResources) -> AnimalRows` → `animals_to_dict`. Animals by `AnimalId` (at most 12 deer and 4
+wolves) and the hunt zones.
+
+| key | type | meaning |
+|---|---|---|
+| `ids` | PackedInt64Array | `AnimalId`, ascending |
+| `kinds` | PackedInt32Array | `AnimalKind::code`: 0 wolf, 1 deer |
+| `xs` | PackedInt32Array | tile x |
+| `ys` | PackedInt32Array | tile y |
+| `hps` | PackedInt32Array | hit points (deer 30, wolf 40 at full) |
+| `states` | PackedInt32Array | `AnimalState::code`: 0 wander, 1 flee, 2 rest, 3 hunt, 4 attack, 5 retreat |
+| `huntable` | PackedByteArray | 1 when a deer may be hunted (its own mark or inside a hunt zone) |
+| `marked` | PackedByteArray | 1 when a deer carries a hunt mark of its own |
+| `zones` | PackedInt32Array | hunt zones as `x0, y0, x1, y1` quadruples, in the order they were added |
+| `version` | int | `Wildlife::version` |
+
+A carcass is not an animal: a kill drops meat and a hide as ground items (`get_colony_overlay`, item kinds 11 meat,
+6 hide).
+
+### `get_agent_m5`
+`get_agent_m5(agent_id)`: `collect_agent_m5(&World, &SimResources, i64) -> AgentM5View` → `agent_m5_to_dict`.
+
+| key | type | meaning |
+|---|---|---|
+| `found` | bool | the person is alive |
+| `mood` | int | mood 0–1,000, -1 without a mood |
+| `band` | int | as `mood_bands` in `get_agent_snapshot` |
+| `target` | int | the value the mood moves toward now, -1 without a mood |
+| `modifier_codes` | PackedInt32Array | the modifiers in force, `Modifier::code`, largest magnitude first, then code |
+| `modifier_names` | PackedStringArray | their names (`slept_roofed`, `slept_outside`, `fed`, `hungry`, `thirsty`, `cold`, `quarrelled`, `learned`, `discovered`, `grief`, `sick`, `crafted`, `drafted`, `pressure`) |
+| `modifier_values` | PackedInt32Array | their weights after temperament |
+| `top` | int | as `tops` in `get_agent_snapshot` |
+| `top_cold_permille` | int | the chance ‰ a cold hour bites the wearer (1,000 loincloth, 700 hide wrap, 500 fur cloak): "추위 −30 %" |
+| `top_since` | int | display day the top was put on, -1 none |
+| `drafted` | bool | drafted |
+| `draft_order` | int | 0 hold, 1 move, 2 attack an animal, 3 attack a person, -1 not drafted |
+| `draft_x` | int | the move's tile x, or the attack's target id; -1 none |
+| `draft_y` | int | the move's tile y; -1 otherwise |
+| `sick` | bool | sick |
+| `sick_ticks_left` | int | ticks until the illness passes, 0 when not sick |
+| `hp` | int | hit points 0–100 |
+
+### `get_drafted`
+`collect_drafted(&World, &SimResources) -> DraftedRows` → `drafted_to_dict`. Drafted people by `AgentId` (the HUD's
+list).
+
+| key | type | meaning |
+|---|---|---|
+| `ids` | PackedInt64Array | `AgentId` |
+| `xs` | PackedInt32Array | tile x |
+| `ys` | PackedInt32Array | tile y |
+| `hps` | PackedInt32Array | hit points 0–100 |
+| `orders` | PackedInt32Array | 0 hold, 1 move, 2 attack an animal, 3 attack a person |
+| `weapons` | PackedInt32Array | the held tool's `ItemKind::code` (4 flint blade, 5 stone axe, 10 ground axe, 15 spear), -1 bare hands |
+| `ticks` | PackedInt64Array | ticks since drafted |
+
+### `get_chronicle_why`
+`get_chronicle_why(index)`: `collect_chronicle_why(&Chronicle, i64) -> WhyRows` → `why_to_dict`. The "→ 왜?" chain
+of the entry: one row per link, from the entry itself to its first cause (`mood::why_chain`, at most 8 links).
+
+| key | type | meaning |
+|---|---|---|
+| `found` | bool | the entry exists |
+| `links` | PackedInt32Array | 0 a chronicle entry, 1 a mood modifier, 2 a pressure |
+| `codes` | PackedInt64Array | the entry index (0), `Modifier::code` (1; 100 = the relation) or `PressureKind::code` (2) |
+| `ticks` | PackedInt64Array | an entry's tick, -1 otherwise |
+| `kinds` | PackedInt32Array | an entry's `ChronicleKind::as_u8`, -1 otherwise |
+| `subjects` | PackedInt64Array | an entry's subject `AgentId`, -1 otherwise |
+| `others` | PackedInt64Array | an entry's other `AgentId`, -1 otherwise |
+| `causes` | PackedInt32Array | an entry's cause code, -1 otherwise |
+| `values` | PackedInt64Array | an entry's value, 0 otherwise |
+
+### `get_year_summary`
+`get_year_summary(year)`: `collect_year_summary(&SimResources, i64) -> YearSummary` → `year_summary_to_dict`. Year
+`year` (0-based, `CalendarRule::ticks_per_year` long) counted from the chronicle by entry tick.
+
+| key | type | meaning |
+|---|---|---|
+| `year` | int | the year asked |
+| `found` | bool | the year has begun |
+| `complete` | bool | the year is over |
+| `births` | int | births |
+| `deaths` | PackedInt32Array | deaths by `DeathReason::as_u8`: starvation, dehydration, combat, old age, exposure |
+| `pressures` | PackedInt32Array | pressures begun by `PressureKind::code` |
+| `discoveries` | int | knowledge discovered |
+| `lost` | int | knowledge lost |
+| `quarrels` | int | quarrels |
+| `fights` | int | fights after a quarrel |
+| `breakdowns` | int | breakdowns |
+| `hunted` | int | deer hunted |
+| `wolves_killed` | int | wolves killed |
+| `era_progress` | int | era progress ‰ now |
+
+### `get_teach_suggestion`
+`get_teach_suggestion(teacher, knowledge) -> int`: `collect_teach_suggestion(&World, i64, i64)` (`ffi/knowledge.rs`).
+The teach dialog's pre-selected learner (M4 owner decision; M5 DECISIONS D5): among living adults other than the
+teacher who do not practise the node, the highest novelty seeking, then the youngest, then the lowest `AgentId`; -1
+when there is none.
+
 ## Commands and lifecycle (not snapshot reads)
 
 The mutators GDScript may call (`SimReads.MUTATORS`): the M1 orders `cmd_designate_chop`, `cmd_designate_chop_tiles`,
@@ -838,7 +987,11 @@ y0, x1, y1)`, `cmd_place_rect(kind, x0, y0, x1, y1, hollow)` (space kinds `log_w
 `cmd_designate_deconstruct` (rectangles) and `cmd_set_room_role(room, role)` (`bedroom`, `storehouse`,
 `workshop`, `hall`, `unassigned` or `auto`; `ffi/space.rs`), the M4 orders `cmd_designate_clay(x0, y0, x1, y1)`,
 `cmd_order_teach(teacher, learner, knowledge)` (`AgentId`s and a node id; `count` = the new order id) and
-`cmd_cancel_teach(order)` (`ffi/knowledge.rs`; reasons add `unreachable`, `no_practitioner`, `too_young`), each returning
+`cmd_cancel_teach(order)` (`ffi/knowledge.rs`; reasons add `unreachable`, `no_practitioner`, `too_young`), the M5 orders
+`cmd_draft(agent, on)`, `cmd_undraft_all()` (`count` = people released), `cmd_draft_move(agent, x, y)`,
+`cmd_draft_attack(agent, animal)`, `cmd_draft_attack_person(agent, target)`, `cmd_designate_hunt(animal)`,
+`cmd_add_hunt_zone(x0, y0, x1, y1)`, `cmd_cancel_hunt(x0, y0, x1, y1)` and `cmd_set_dress_order(on)` (`ffi/story.rs`;
+reasons add `not_drafted`), each returning
 `{accepted: bool, count: int, reason: String}` (`result_to_dict` in `ffi/colony.rs`; `reason` is `""` or a
 `RejectReason` name) and logged with the next tick (ADR 0012); `can_place_blueprint(kind, x, y) -> bool`;
 `advance_ticks(n) -> int` (the final absolute tick, at most 200,000 per call); `reset_world(seed)`,

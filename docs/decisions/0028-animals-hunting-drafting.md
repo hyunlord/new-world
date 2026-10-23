@@ -1,6 +1,6 @@
 # ADR 0028 — Animals, hunting and drafting
 
-Status: draft (M5 Part 0, 2026-10-23); final in M5 Part 7.
+Status: accepted (M5, 2026-10-23; drafted in Part 0, final in Part 7 with the amendments below).
 
 ## Context
 VISION §7: beasts are met RimWorld-style, by drafting people. The colony had no animals (`grep Animal` finds none at
@@ -39,6 +39,21 @@ M4), so the knowledge node `tracking` was lore only and hides had no source.
 ## Consequences
 - The decision system changes by at most +20 lines (the seam's inert set carries the drafted).
 - A new item kind (Spear), job kind (Hunt), work type (Hunt), skill (Hunting); saves bump to format 5.
+
+## Amendments (as built, M5 DECISIONS D8, D14)
+- Deer live as a **herd**: 6–12 placed within 16 tiles of one keyed centre, itself within 48 tiles of the hearth when
+  the forest allows (`deer_herd_max_tiles`; the job layer scans 96 tiles), born again near a living deer's home; a deer
+  rests in place 40 steps after a flight and wanders within 16 tiles of its home.
+- `WorkType::Hunt` comes right after Build in the work order (craft, build, hunt, quarry, mine, chop, split, haul);
+  elders do not hunt. A hunter prefers a wounded deer, swaps a held blade for a stocked spear, uses `tracking` once
+  per attack.
+- Wolves spread their targets (each picks a person no other wolf of the step picked, else the nearest).
+- A drafted person may also attack a person (`DraftAttackPerson`, goal 3.5); arming takes a weapon without a
+  reservation (a drafted person holds no job).
+- `decision/system.rs` is unchanged (+0); the seam (`jobs/seam.rs`, +10 −2) keeps drafted people inert.
+- Held-out result, final: F3a 32/32 (the scripted draft beats every pack with no death), F3b 32/32 (without it the
+  pack bites), F4 26/32 (deer are killed on every world, but on five the meat spoils before it reaches the larder).
+  Undrafted colonies beat the packs too (people strike back), so drafting changes little (`M5_EVALUATION.md`).
 
 ## Date
 2026-10-23

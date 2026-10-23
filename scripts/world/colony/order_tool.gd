@@ -15,18 +15,30 @@
 #   the room overlay (R) shown, a click on a room tile opens the room panel (UI/RoomPanel).
 # M4 (goal 9.5): CLAY (9) is an area mode like quarry (`cmd_designate_clay` on the clay banks in the rectangle),
 #   entered from the order bar's F7 submenu (F7 then 2).
+# M5 (goal 3.5): HUNT (10, F7 then 3) marks the deer under a click (`cmd_designate_hunt`; ColonyView/AnimalLayer
+#   `animal_at`), HUNT_ZONE (11, F7 then 4) is an area mode adding a hunt zone (`cmd_add_hunt_zone`); the cancel mode
+#   also sends `cmd_cancel_hunt` over its rectangle (one toast with both counts). D with a living person in the
+#   inspector toggles their draft (`cmd_draft`; the toast "카토 소집" / "카토 소집 해제"); with no mode, a right click
+#   gives the draft order — to the inspector's person when drafted, else to every drafted person: on an animal
+#   `cmd_draft_attack`, on another person `cmd_draft_attack_person`, elsewhere `cmd_draft_move` to the tile (the toast
+#   "3명 이동" / "3명 공격: 늑대"). A right click with nobody drafted does nothing.
 # Bridge methods: can_place_blueprint, get_place_preview, get_agent_detail, get_tile_causal_history (direct); via
-#   SimReads get_workshops; via SimReads.mutate cmd_designate_chop, cmd_cancel_area, cmd_add_stockpile,
-#   cmd_remove_zone_area, cmd_place_blueprint, cmd_designate_quarry, cmd_place_line, cmd_place_rect,
-#   cmd_designate_dig, cmd_designate_deconstruct, cmd_designate_clay.
+#   SimReads get_workshops, get_agent_snapshot, get_animals, get_drafted; via SimReads.mutate cmd_designate_chop,
+#   cmd_cancel_area, cmd_add_stockpile, cmd_remove_zone_area, cmd_place_blueprint, cmd_designate_quarry,
+#   cmd_place_line, cmd_place_rect, cmd_designate_dig, cmd_designate_deconstruct, cmd_designate_clay, cmd_draft,
+#   cmd_draft_move, cmd_draft_attack, cmd_draft_attack_person, cmd_designate_hunt, cmd_add_hunt_zone, cmd_cancel_hunt.
 extends Node2D
 
 const View = preload("res://scripts/world/colony/view.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
+const StoryText = preload("res://scripts/ui/story_text.gd")
+const Names = preload("res://scripts/ui/person_names.gd")
+## M5: D toggles the inspector person's draft.
+const DRAFT_KEY: Key = KEY_D
 
 ## BUILD places the blueprint kind `build_kind` (M1's HUT mode, same code 3); M3 adds DIG (7) and DECONSTRUCT (8);
-## M4 adds CLAY (9, clay pits).
-enum Mode { NONE, CHOP, STOCKPILE, BUILD, REMOVE_ZONE, CANCEL, QUARRY, DIG, DECONSTRUCT, CLAY }
+## M4 adds CLAY (9, clay pits); M5 HUNT (10, click a deer) and HUNT_ZONE (11, a hunt zone rectangle).
+enum Mode { NONE, CHOP, STOCKPILE, BUILD, REMOVE_ZONE, CANCEL, QUARRY, DIG, DECONSTRUCT, CLAY, HUNT, HUNT_ZONE }
 ## `get_place_preview` shapes: one tile, line, hollow rectangle, filled rectangle.
 const SHAPE_TILE: int = 0
 const SHAPE_LINE: int = 1
@@ -42,6 +54,7 @@ const AREA_COMMANDS: Dictionary = {
 	Mode.DIG: "cmd_designate_dig",
 	Mode.DECONSTRUCT: "cmd_designate_deconstruct",
 	Mode.CLAY: "cmd_designate_clay",
+	Mode.HUNT_ZONE: "cmd_add_hunt_zone",
 }
 const RECT_COLORS: Dictionary = {
 	Mode.CHOP: Color(0.98, 0.81, 0.24, 0.9),
@@ -52,6 +65,7 @@ const RECT_COLORS: Dictionary = {
 	Mode.DIG: Color(0.80, 0.62, 0.40, 0.9),
 	Mode.DECONSTRUCT: Color(0.95, 0.55, 0.25, 0.9),
 	Mode.CLAY: Color(0.78, 0.52, 0.36, 0.9),
+	Mode.HUNT_ZONE: Color(0.95, 0.72, 0.3, 0.9),
 }
 # The accepted-order toast per command ({count} = trees, tiles, blueprints or cancelled orders).
 const TOAST_KEYS: Dictionary = {
@@ -64,6 +78,8 @@ const TOAST_KEYS: Dictionary = {
 	"cmd_designate_dig": "UI_ORDER_TOAST_DIG",
 	"cmd_designate_deconstruct": "UI_ORDER_TOAST_DECONSTRUCT",
 	"cmd_designate_clay": "UI_ORDER_TOAST_CLAY",
+	"cmd_add_hunt_zone": "M5_TOAST_HUNT_ZONE",
+	"cmd_designate_hunt": "M5_TOAST_HUNT_MARK",
 }
 const GHOST_OK: Color = Color(0.45, 0.95, 0.45, 0.85)
 const GHOST_BAD: Color = Color(0.95, 0.35, 0.3, 0.85)
@@ -206,8 +222,146 @@ static func drag_toast(result: Dictionary, preview_read: Dictionary, locale: Nod
 func area(a: Vector2i, b: Vector2i) -> Dictionary:
 	if not AREA_COMMANDS.has(mode):
 		return {}
+	if mode == Mode.CANCEL and _world_sim != null:
+		# M5: the cancel rectangle also lifts hunt zones and deer marks; one toast counts both.
+		var hunt: Variant = SimReads.mutate(_world_sim, "cmd_cancel_hunt", [a.x, a.y, b.x, b.y])
+		var orders: Variant = SimReads.mutate(_world_sim, "cmd_cancel_area", [a.x, a.y, b.x, b.y])
+		_finish("cmd_cancel_area", merge_results(orders if orders is Dictionary else {}, hunt if hunt is Dictionary else {}))
+		return _last_result
 	_send(AREA_COMMANDS[mode], [a.x, a.y, b.x, b.y])
 	return _last_result
+
+
+## M5: two results as one: accepted when either was, counts summed, the first's reason otherwise.
+static func merge_results(first: Dictionary, second: Dictionary) -> Dictionary:
+	var accepted: bool = bool(first.get("accepted", false)) or bool(second.get("accepted", false))
+	var count: int = (int(first.get("count", 0)) if bool(first.get("accepted", false)) else 0) \
+		+ (int(second.get("count", 0)) if bool(second.get("accepted", false)) else 0)
+	return {"accepted": accepted, "count": count, "reason": "" if accepted else str(first.get("reason", "nothing"))}
+
+
+## M5: mark the deer drawn at world position `world_pos` for hunting (the HUNT mode's click; also used by tools).
+func hunt_at(world_pos: Vector2) -> Dictionary:
+	var animals: Node = get_node_or_null("../AnimalLayer")
+	var id: int = int(animals.call("animal_at", world_pos)) if animals != null else -1
+	if id < 0 or int(animals.call("kind_of", id)) != StoryText.DEER:
+		_last_result = {"accepted": false, "count": 0, "reason": "nothing"}
+		_toast(StoryText.ltr(get_node_or_null("/root/Locale"), "M5_TOAST_NO_DEER"))
+		return _last_result
+	_send("cmd_designate_hunt", [id])
+	return _last_result
+
+
+## M5: the people a draft order goes to: the inspector's person when drafted, else every drafted person (AgentIds).
+func draft_targets() -> Array[int]:
+	var out: Array[int] = []
+	if _world_sim == null:
+		return out
+	var selected: int = _inspected_person()
+	if selected >= 0 and _is_drafted(selected):
+		out.append(selected)
+		return out
+	for id: int in (SimReads.read(_world_sim, "get_drafted").get("ids", PackedInt64Array()) as PackedInt64Array):
+		out.append(id)
+	return out
+
+
+## M5: the right click's draft order at world position `world_pos` on `tile` (also used by tools): attack the animal
+## or the other person drawn there, else walk to the tile. Returns the merged result ({} when nobody is drafted).
+func draft_order_at(world_pos: Vector2, tile: Vector2i) -> Dictionary:
+	var targets: Array[int] = draft_targets()
+	if targets.is_empty():
+		return {}
+	var locale: Node = get_node_or_null("/root/Locale")
+	var animals: Node = get_node_or_null("../AnimalLayer")
+	var animal: int = int(animals.call("animal_at", world_pos)) if animals != null else -1
+	var victim: int = -1
+	if animal < 0:
+		var agents: Node = get_node_or_null("../AgentLayer")
+		var bits: int = int(agents.call("entity_at", world_pos)) if agents != null else -1
+		victim = _agent_of_bits(bits)
+		if targets.has(victim):
+			victim = -1
+	var accepted: int = 0
+	var reason: String = ""
+	for agent: int in targets:
+		var result: Variant
+		if animal >= 0:
+			result = SimReads.mutate(_world_sim, "cmd_draft_attack", [agent, animal])
+		elif victim >= 0:
+			result = SimReads.mutate(_world_sim, "cmd_draft_attack_person", [agent, victim])
+		else:
+			result = SimReads.mutate(_world_sim, "cmd_draft_move", [agent, tile.x, tile.y])
+		var data: Dictionary = result if result is Dictionary else {}
+		if bool(data.get("accepted", false)):
+			accepted += 1
+		elif reason == "":
+			reason = str(data.get("reason", "nothing"))
+	var merged: Dictionary = {"accepted": accepted > 0, "count": accepted, "reason": "" if accepted > 0 else reason}
+	_last_result = merged
+	var command: String = "cmd_draft_attack" if animal >= 0 else ("cmd_draft_attack_person" if victim >= 0 else "cmd_draft_move")
+	order_sent.emit(command, merged)
+	var text: String = EconomyText.reason(locale, str(merged.get("reason", "nothing")))
+	if bool(merged.get("accepted", false)):
+		var count: int = int(merged.get("count", 0))
+		if animal >= 0:
+			text = StoryText.trf(locale, "M5_TOAST_ATTACK_FMT", {"count": count, "target": StoryText.animal(locale, int(animals.call("kind_of", animal)))})
+		elif victim >= 0:
+			text = StoryText.trf(locale, "M5_TOAST_ATTACK_FMT", {"count": count, "target": Names.present(victim, StoryText.language(locale))})
+		else:
+			text = StoryText.trf(locale, "M5_TOAST_MOVE_FMT", {"count": count})
+	_toast(text)
+	return merged
+
+
+## M5: D — draft or release the inspector's living person; {} when nobody living is selected.
+func toggle_draft_selected() -> Dictionary:
+	var agent: int = _inspected_person()
+	if agent < 0 or _world_sim == null:
+		return {}
+	var on: bool = not _is_drafted(agent)
+	var result: Variant = SimReads.mutate(_world_sim, "cmd_draft", [agent, on])
+	_last_result = result if result is Dictionary else {}
+	order_sent.emit("cmd_draft", _last_result)
+	var locale: Node = get_node_or_null("/root/Locale")
+	if bool(_last_result.get("accepted", false)):
+		_toast(StoryText.trf(locale, "M5_TOAST_DRAFTED_FMT" if on else "M5_TOAST_UNDRAFTED_FMT", {"name": Names.present(agent, StoryText.language(locale))}))
+	else:
+		_toast(EconomyText.reason(locale, str(_last_result.get("reason", "nothing"))))
+	return _last_result
+
+
+## M5: the inspector's living person (AgentId), or -1.
+func _inspected_person() -> int:
+	var inspector: Node = get_node_or_null("/root/Main/UI/AgentInspectorPanel")
+	if inspector == null or not (inspector as Control).visible or int(inspector.call("get_selected_entity_bits")) < 0:
+		return -1
+	return int(inspector.get("_selected_person"))
+
+
+## M5: whether AgentId `agent` is drafted (the agent snapshot's `drafted` column).
+func _is_drafted(agent: int) -> bool:
+	var snap: Dictionary = SimReads.read(_world_sim, "get_agent_snapshot")
+	var ids: PackedInt64Array = snap.get("agent_ids", PackedInt64Array())
+	var drafted: PackedByteArray = snap.get("drafted", PackedByteArray())
+	var i: int = ids.find(agent)
+	return i >= 0 and i < drafted.size() and drafted[i] != 0
+
+
+## M5: the AgentId of entity bits `bits` (-1 when none).
+func _agent_of_bits(bits: int) -> int:
+	if bits < 0 or _world_sim == null:
+		return -1
+	var snap: Dictionary = SimReads.read(_world_sim, "get_agent_snapshot")
+	var i: int = (snap.get("ids", PackedInt64Array()) as PackedInt64Array).find(bits)
+	var ids: PackedInt64Array = snap.get("agent_ids", PackedInt64Array())
+	return ids[i] if i >= 0 and i < ids.size() else -1
+
+
+func _toast(text: String) -> void:
+	var bar: Node = get_node_or_null("/root/Main/UI/OrderBar")
+	if bar != null and bar.has_method("show_toast"):
+		bar.call("show_toast", text)
 
 
 ## The last order's result dictionary ({accepted, count, reason}).
@@ -227,12 +381,17 @@ func _unhandled_input(event: InputEvent) -> void:
 		if button.button_index == MOUSE_BUTTON_RIGHT and button.pressed and mode != Mode.NONE:
 			set_mode(Mode.NONE)
 			get_viewport().set_input_as_handled()
+		elif button.button_index == MOUSE_BUTTON_RIGHT and button.pressed and _world_sim != null:
+			if not draft_order_at(_hover_world, _hover).is_empty():
+				get_viewport().set_input_as_handled()
 		elif button.button_index == MOUSE_BUTTON_LEFT:
 			_left(button.pressed)
 	elif event is InputEventKey and event.pressed and not event.echo:
 		var key: InputEventKey = event
 		if key.keycode == KEY_ESCAPE and mode != Mode.NONE:
 			set_mode(Mode.NONE)
+			get_viewport().set_input_as_handled()
+		elif key.keycode == DRAFT_KEY and not toggle_draft_selected().is_empty():
 			get_viewport().set_input_as_handled()
 	if event is InputEventKey and (event as InputEventKey).keycode == KEY_SHIFT and not event.is_echo():
 		_set_shift(event.is_pressed())
@@ -270,6 +429,10 @@ func _left(pressed: bool) -> void:
 			get_viewport().set_input_as_handled()
 		return
 	get_viewport().set_input_as_handled()
+	if mode == Mode.HUNT:
+		if pressed:
+			hunt_at(_hover_world)
+		return
 	if mode == Mode.BUILD and build_drag() == "":
 		if pressed:
 			place_at(_hover)
@@ -299,7 +462,12 @@ func _left(pressed: bool) -> void:
 ## Send `command`; the toast is `toast_text` of the result, or (M3 line/rectangle, `preview_read` given) `drag_toast`.
 func _send(command: String, arguments: Array, preview_read: Dictionary = {}, locale: Node = null) -> void:
 	var result: Variant = SimReads.mutate(_world_sim, command, arguments)
-	_last_result = result if result is Dictionary else {}
+	_finish(command, result if result is Dictionary else {}, preview_read, locale)
+
+
+## Record `result` of `command`, tell the listeners and toast it (see `_send`).
+func _finish(command: String, result: Dictionary, preview_read: Dictionary = {}, locale: Node = null) -> void:
+	_last_result = result
 	order_sent.emit(command, _last_result)
 	var toast: Node = get_node_or_null("/root/Main/UI/OrderBar")
 	if toast != null and toast.has_method("show_toast"):

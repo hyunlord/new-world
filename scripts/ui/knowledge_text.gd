@@ -7,6 +7,7 @@
 #   3 observed 관찰, 4 apprenticed 도제), entry states (0 숙련, 1 배우는 중, 2 잊어 감), discovery conditions, gates and
 #   the "기다리는 중: … 아는 사람이 없음" line (get_knowledge_waits). Korean object/subject particles (을/를, 이/가) are
 #   chosen from the last Hangul syllable of a name.
+# M5: the hunt designation (gated by tracking) in DESIGNATION_KEYS.
 # Bridge methods called: none (callers pass the dictionaries they read: get_tech, get_tech_node, get_knowledge_waits,
 #   get_colony_overlay).
 extends RefCounted
@@ -40,7 +41,8 @@ const STATE_KEYS: Array[String] = ["M4_ENTRY_SKILLED", "M4_ENTRY_LEARNING", "M4_
 const STATE_COLORS: Array[Color] = [Color("8ee07a"), Color("e8d26e"), Color("b08878")]
 const COND_KEYS: Array[String] = ["M4_COND_STOCKPILE_FMT", "M4_COND_SKILL_FMT", "M4_COND_KNOWS_FMT", "M4_COND_CLAY_FMT"]
 const GATE_KEYS: Array[String] = ["M4_GATE_RECIPE_FMT", "M4_GATE_BLUEPRINT_FMT", "M4_GATE_WORKSHOP_FMT", "M4_GATE_DESIGNATION_FMT", "M4_GATE_CHANNEL_FMT", "M4_GATE_LORE_FMT"]
-const DESIGNATION_KEYS: Dictionary = {"chop": "UI_ORDER_CHOP", "quarry": "UI_ORDER_QUARRY", "dig": "UI_ORDER_DIG", "deconstruct": "UI_ORDER_DECONSTRUCT", "clay_pit": "UI_ORDER_CLAY"}
+const DESIGNATION_KEYS: Dictionary = {"chop": "UI_ORDER_CHOP", "quarry": "UI_ORDER_QUARRY", "dig": "UI_ORDER_DIG", "deconstruct": "UI_ORDER_DECONSTRUCT", "clay_pit": "UI_ORDER_CLAY",
+	"hunt": "M5_ORDER_HUNT"}
 const CHANNEL_KEYS: Dictionary = {"apprenticeship": "M4_CHANNEL_APPRENTICESHIP", "oral": "M4_CHANNEL_ORAL"}
 const LORE_KEYS: Dictionary = {"hearth": "M4_LORE_HEARTH", "forage": "M4_LORE_FORAGE", "water": "M4_LORE_WATER"}
 ## Lanes and era columns as the bridge codes them.

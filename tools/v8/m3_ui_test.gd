@@ -389,8 +389,8 @@ func _run() -> void:
 	var grid: GridContainer = null
 	for node: Node in priorities.find_children("*", "GridContainer", true, false):
 		grid = node as GridContainer
-	# M4 adds the read-only Pottery column after the seven work types.
-	_check("priority_columns", works.size() == 7 and grid != null and grid.columns == 9, "works %s columns %d grid width %d" % [",".join(works), grid.columns if grid != null else -1, int(grid.get_combined_minimum_size().x) if grid != null else -1])
+	# M4 adds the read-only Pottery column after the work types. M5: hunt is the 8th work type.
+	_check("priority_columns", works.size() == 8 and grid != null and grid.columns == 10, "works %s columns %d grid width %d" % [",".join(works), grid.columns if grid != null else -1, int(grid.get_combined_minimum_size().x) if grid != null else -1])
 	await _key(KEY_P)
 	# The bar fits the screen.
 	var bar_panel: Control = bar.find_child("Bar", true, false) as Control

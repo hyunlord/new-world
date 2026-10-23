@@ -17,6 +17,10 @@
 # Positions tween from the previous tile to the current one over `move_interval_ticks` at the current speed; the
 #   drawn rect is what clicks hit (`entity_at`).
 # Also feeds SettlementSelection.observe every frame (the inspector's village row; V8-0 DECISIONS D31).
+# M5 (goal 3.5): a drafted person (snapshot `drafted`) carries a red outline (the selection frame tinted red, drawn
+#   under the yellow selection one), a sick person (`sick`) a small green badge above the head (`badge_sick`); M
+#   toggles the mood overlay, which tints each person by `mood_bands` (StoryText.band_tint: 우울 blue, 보통 none,
+#   흡족 yellow, 무너짐 red; it replaces the night's warm light while shown).
 # Bridge methods: get_agent_family (direct, per person on a slow refresh); via SimReads get_agent_snapshot,
 #   get_world_info, get_society_snapshot, get_settlement_snapshot, get_time_snapshot, get_building_snapshot; signal
 #   world_reset.
@@ -39,6 +43,13 @@ const WARM: Color = Color(2.0, 1.35, 0.72)
 #   hut's top-left: gen_tiles.py HUT_BEDROLLS minus (1, 4)), elsewhere fanned out when several share one tile.
 const BEDROLLS: Array[Vector2] = [Vector2(8, 5), Vector2(24, 5), Vector2(8, 26), Vector2(24, 26)]
 const FAN: Array[Vector2] = [Vector2(0, 0), Vector2(0, -6), Vector2(0, 6), Vector2(-2, -12), Vector2(2, 12)]
+const StoryText = preload("res://scripts/ui/story_text.gd")
+## M5: the mood overlay key, the drafted outline's tint (over the yellow selection frame) and the badge offset.
+const MOOD_KEY: Key = KEY_M
+const DRAFT_TINT: Color = Color(1.0, 0.22, 0.2)
+const BADGE_OFFSET: Vector2 = Vector2(5, -6)
+
+signal mood_toggled(on: bool)
 
 var _world_sim: Node = null
 var _trees: Node = null
@@ -55,6 +66,7 @@ var _halo: Color = Color.WHITE
 var _buildings_key: int = -1
 var _hearths: Array[Vector2i] = []
 var _huts: Array[Rect2i] = []
+var _mood_shown: bool = false
 
 
 class Person:
@@ -77,6 +89,8 @@ class Person:
 	var carry_front: Sprite2D
 	var tool: Sprite2D
 	var select: Sprite2D
+	var draft: Sprite2D
+	var badge: Sprite2D
 	var layers: Dictionary = {}
 
 
@@ -131,7 +145,11 @@ func _make_person(bits: int, agent_id: int, tile: Vector2i) -> Person:
 		person.layers[layer] = _sprite(person, "person_%s_0" % layer)
 	person.carry_front = _sprite(person, "carry_front")
 	person.tool = _sprite(person, "tool_axe")
+	person.draft = _sprite(person, "select")
+	person.draft.modulate = DRAFT_TINT
 	person.select = _sprite(person, "select")
+	person.badge = _sprite(person, "badge_sick")
+	person.badge.position = BADGE_OFFSET
 	(person.layers["skin"] as Sprite2D).modulate = _skin
 	(person.layers["halo"] as Sprite2D).modulate = _halo
 	add_child(person)
@@ -176,6 +194,9 @@ func _process(delta: float) -> void:
 	var carries: PackedInt32Array = snap.get("carry_counts", PackedInt32Array())
 	var states: PackedByteArray = snap.get("states", PackedByteArray())
 	var targets: PackedByteArray = snap.get("target_kinds", PackedByteArray())
+	var drafted: PackedByteArray = snap.get("drafted", PackedByteArray())
+	var sick: PackedByteArray = snap.get("sick", PackedByteArray())
+	var bands: PackedByteArray = snap.get("mood_bands", PackedByteArray())
 	var n: int = mini(mini(bits.size(), ids.size()), mini(xs.size(), ys.size()))
 	_family_frame -= 1
 	if _family_frame <= 0:
@@ -225,8 +246,12 @@ func _process(delta: float) -> void:
 		if person.tool.visible:
 			person.tool.region_rect = View.rect(TOOL_FOR_JOB[job])
 		person.select.visible = key == _selected_bits
+		person.draft.visible = i < drafted.size() and drafted[i] != 0
+		person.badge.visible = i < sick.size() and sick[i] != 0
 		var warm: bool = night > 0.0 and _is_warm(tile)
 		person.modulate = Color.WHITE.lerp(WARM, night) if warm else Color.WHITE
+		if _mood_shown:
+			person.modulate = StoryText.band_tint(int(bands[i]) if i < bands.size() else 0)
 		# The halo marks people that would be hard to find: under a crown, or in the dark away from a fire.
 		var halo: bool = (night >= NIGHT_HALO and not warm) or (_trees != null and bool(_trees.call("under_canopy", tile)))
 		(person.layers["halo"] as Sprite2D).visible = halo and not asleep
@@ -359,7 +384,34 @@ func person_look(bits: int) -> Dictionary:
 	if person == null:
 		return {}
 	return {"frame": person.frame, "west": person.west, "halo": (person.layers["halo"] as Sprite2D).visible,
-		"carry": person.carry_front.visible, "tool": person.tool.visible, "warm": person.modulate != Color.WHITE}
+		"carry": person.carry_front.visible, "tool": person.tool.visible, "warm": person.modulate != Color.WHITE,
+		"drafted": person.draft.visible, "sick": person.badge.visible}
+
+
+## M5: show or hide the mood overlay (M).
+func set_mood_shown(on: bool) -> void:
+	if on == _mood_shown:
+		return
+	_mood_shown = on
+	mood_toggled.emit(on)
+
+
+func mood_shown() -> bool:
+	return _mood_shown
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo and (event as InputEventKey).keycode == MOOD_KEY:
+		set_mood_shown(not _mood_shown)
+		get_viewport().set_input_as_handled()
+
+
+## M5: the drafted outline, sick badge and tint of the person with entity bits `bits` (for tools), or {}.
+func person_marks(bits: int) -> Dictionary:
+	var person: Person = _persons.get(bits)
+	if person == null:
+		return {}
+	return {"drafted": person.draft.visible, "sick": person.badge.visible, "tint": person.modulate}
 
 
 ## How many people are drawn.

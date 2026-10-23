@@ -460,3 +460,155 @@ fn a_drafted_person_at_a_critical_need_undrafts_themselves() {
     );
     let _ = AnimalKind::Deer;
 }
+
+#[test]
+fn a_tool_pick_up_leaves_another_workers_reserved_stack_and_takes_only_its_kinds() {
+    use sim_core::colony::ReserveKey;
+    use sim_systems::runtime::jobs::hunt::pick_up_tool;
+    let mut engine = sim_test::colony_engine(0);
+    tick_checked(&mut engine);
+    let folk = adults(&engine);
+    let ((_, a), (other, _)) = (folk[0], folk[1]);
+    let _ = engine.world.remove_one::<Tool>(a);
+    let at = colony_support::open_area(&engine, 3, 3);
+    let pos = (at.0 + 1, at.1 + 1);
+    colony_support::drop_items(&mut engine, at, ItemSpec::raw(ItemKind::Spear, None), 1);
+    // Another worker holds the spear stack (a hunter's fetch): the drafted person (no owner) leaves it.
+    engine
+        .resources
+        .colony
+        .reservations
+        .insert(ReserveKey::Stack(at), other);
+    let weapons = [ItemKind::Spear, ItemKind::GroundAxe, ItemKind::StoneAxe];
+    pick_up_tool(
+        &mut engine.world,
+        &mut engine.resources,
+        a,
+        at,
+        pos,
+        None,
+        &weapons,
+    );
+    assert_eq!(
+        engine
+            .resources
+            .colony
+            .reservations
+            .get(&ReserveKey::Stack(at)),
+        Some(&other),
+        "the other worker's reservation stays (code review B1)"
+    );
+    assert!(engine.world.get::<&Tool>(a).is_err(), "nothing taken");
+    // The owner's own pick-up takes it and releases its reservation.
+    pick_up_tool(
+        &mut engine.world,
+        &mut engine.resources,
+        a,
+        at,
+        pos,
+        Some(other),
+        &weapons,
+    );
+    assert!(!engine
+        .resources
+        .colony
+        .reservations
+        .contains_key(&ReserveKey::Stack(at)));
+    assert_eq!(
+        engine.world.get::<&Tool>(a).map(|t| t.item.kind).ok(),
+        Some(ItemKind::Spear)
+    );
+    // Logs on an arming tile are no weapon.
+    let _ = engine.world.remove_one::<Tool>(a);
+    let logs = (at.0 + 2, at.1 + 2);
+    colony_support::drop_items(&mut engine, logs, ItemSpec::raw(ItemKind::Log, None), 2);
+    pick_up_tool(
+        &mut engine.world,
+        &mut engine.resources,
+        a,
+        logs,
+        pos,
+        None,
+        &weapons,
+    );
+    assert!(
+        engine.world.get::<&Tool>(a).is_err(),
+        "a log is not taken as a weapon"
+    );
+    assert_eq!(
+        engine
+            .resources
+            .colony
+            .ground_items
+            .get(&logs)
+            .map(|s| s.count),
+        Some(2)
+    );
+}
+
+#[test]
+fn a_missed_attack_keeps_the_hunt_job() {
+    let mut engine = sim_test::colony_engine(1);
+    tick_checked(&mut engine);
+    let (_, hunter) = adults(&engine)[0];
+    know(&mut engine, hunter, "tracking");
+    let mut animals = AnimalSystem;
+    animals.tick(&mut engine.world, &mut engine.resources);
+    let deer = engine
+        .resources
+        .colony
+        .wildlife
+        .deer()
+        .next()
+        .expect("a deer")
+        .id;
+    engine
+        .resources
+        .colony
+        .wildlife
+        .animals
+        .retain(|id, _| *id == deer);
+    for (_, other) in adults(&engine).into_iter().skip(1) {
+        if let Ok(mut k) = engine.world.get::<&mut Knowledge>(other) {
+            let id = knowledge::id("tracking").expect("node");
+            k.set(id, 0, Source::Seeded, 0);
+        }
+    }
+    assert!(submit(&mut engine, Command::DesignateHunt { animal: deer }).accepted);
+    let interrupted = |e: &SimEngine| {
+        e.resources
+            .colony
+            .tallies
+            .cancels_of(sim_core::colony::CancelReason::Interrupted)
+    };
+    let mut misses = 0u64;
+    let mut kept = 0u64;
+    for _ in 0..3 * 1_440 {
+        let (attacks, hits) = {
+            let t = &engine.resources.colony.wildlife.tallies;
+            (t.hunt_attacks, t.hunt_hits)
+        };
+        let before = interrupted(&engine);
+        tick_checked(&mut engine);
+        let t = &engine.resources.colony.wildlife.tallies;
+        if t.hunt_attacks > attacks && t.hunt_hits == hits {
+            misses += 1;
+            // The tick after the miss the job is still the hunt, with no Interrupted cancel.
+            tick_checked(&mut engine);
+            if engine.world.get::<&Job>(hunter).is_ok() && interrupted(&engine) == before {
+                kept += 1;
+            }
+        }
+        if engine.resources.colony.wildlife.tallies.deer_killed > 0 {
+            break;
+        }
+    }
+    assert!(
+        misses >= 1,
+        "a level-0 hunter misses at least once (40 % to hit)"
+    );
+    assert_eq!(
+        kept, misses,
+        "every miss kept the job (code review m1): {kept} of {misses}"
+    );
+}

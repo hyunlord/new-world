@@ -21,7 +21,8 @@ A day d means the end of day d (the `daily` row with "day": d). Registered befor
   need at the snap's burn. F2b: exposure deaths ≤ 1 over the run. Both bars must hold.
 - F3a (PRESSURE): every pack that came is beaten — no wolf of it left on the map, at least half of it killed — and
   no one died while any pack was on the map. F3b (NODRAFT): some pack bit someone (≥ 1 injury).
-- F4: by day 48 ≥ 6 deer killed (each a hide), ≥ 12 meat eaten (put in the larder).
+- F4: by day 48 ≥ 6 deer killed, ≥ 12 meat eaten (put in the larder) and ≥ 6 hides (the `hide` items created: a
+  deer's hide; wolf hides are their own kind).
 - F5: ≥ 4 people wear a hide wrap at the end of day 30, and the clothed people's winter-night cold rate (cold
   person-hours / person-hours) is at most half the unclothed people's (both 0 passes; unclothed 0 with clothed > 0
   fails).
@@ -82,8 +83,10 @@ def score_pressure(s):
     daily = m["daily"]
     d48 = at_day(daily, 48) or (daily[-1] if daily else {})
     w = m["wildlife"]
-    out["F4"] = w["deer_killed"] >= 6 and w["meat_eaten"] >= 12
-    out["F4_detail"] = {"deer_killed": w["deer_killed"], "meat_eaten": w["meat_eaten"], "meat_spoiled": w["meat_spoiled"]}
+    hides = s.get("items", {}).get("hide", {}).get("created", 0)
+    out["F4"] = w["deer_killed"] >= 6 and w["meat_eaten"] >= 12 and hides >= 6
+    out["F4_detail"] = {"deer_killed": w["deer_killed"], "meat_eaten": w["meat_eaten"], "meat_spoiled": w["meat_spoiled"],
+                        "hides": hides}
     a = m["apparel"]
     rate = lambda c, e: c / e if e else 0.0
     unclothed, clothed = rate(a["cold_hours"][0], a["exposure_hours"][0]), rate(a["cold_hours"][1], a["exposure_hours"][1])

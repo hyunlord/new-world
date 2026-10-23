@@ -219,7 +219,11 @@ calibration rounds started:
 - F2a uses the hearth's usable firewood (the settlements' wood plus feedable firewood items), sampled hourly during
   each cold snap, against one day's burn at the snap's rate.
 - F3a counts a pack beaten when no wolf of it is left on the map and at least half of it was killed, with no death
-  while any pack was on the map.
+  while any pack was on the map (the goal's "kills the pack": a pack that has lost half its number retreats, goal
+  3.2, so killing every wolf is not on offer).
+- F4's "hides ≥ 6" was missing from the first scorer and was added after calibration, before the first held-out
+  run: the `hide` items created (one per deer killed; wolf hides are `wolf_hide`). It changes no calibration verdict
+  (r7: hides = deer killed on every seed).
 
 ## D14 — Calibration rounds (seeds 0–7, 48 days; ≤ 8 rounds)
 
@@ -264,3 +268,49 @@ factor on average (`colony_hides.rs`: 678 and 481 ‰ of 1,920 cold hours on see
 half (clothed rate ≤ half the unclothed rate): at 700 ‰ the expected ratio is 0.7, so a world passes that half when
 its fires stay lit through every winter night (both rates 0) or by chance; this follows from the goal's own factor
 and is reported, not tuned.
+
+## D16 — The art line's final state (goal §5.2, §12) and the next milestone
+
+Read from `origin/v8/art-prod1` (not merged; `art/**` and `docs/v8/art*/**` untouched here):
+- ART-PROD2 (`docs/v8/artprod2/PROD2_REPORT.md`, base `eb428ce2`): **S1 FAIL, route I not adopted** — 26/36 looks,
+  adults 13/18, children 13/18; R1 (two fresh reviewers), P1 (524.8 FPS, 200 people, vsync off) and D1 (re-slice
+  reproducible) passed.
+- ART-PROD3 (`docs/v8/artprod3/PROD3_REPORT.md`, head `159ef0f9`, 2026-10-23 10:52): **route I adopted** at S1
+  34/36 (adults 16/18, children 18/18) under the planner/owner's waiver of the adult 17/18 bar for the two
+  `adult_M_*_long_tied` looks (they fall back to the bun of the same age, sex and top); `TEMPLATE_V3` is the
+  character standard and `route_i/` with `MANIFEST.json` the asset source; zero new generations; no game code.
+- The goal's rule ("다음 → M-ART2 if PROD2 adopted, else M6 prep"): the adoption came one pass later (PROD3), on the
+  same route and evidence plus the waiver, so the condition the rule names — route I adopted — holds. ROADMAP's
+  다음 is **M-ART2** (route I install, the 64-px camera, environment tiles), with M6 prep after it. ADR 0018 records
+  PROD2's failure and PROD3's adoption.
+
+## D17 — Code review fixes (`$DATA/review/code_review.md`)
+
+A fresh reviewer read `git diff 08f59813 6f1713b4 -- rust/crates` and verified its claims on an exported copy. All
+seven findings are fixed; each has a test that fails without its fix (checked by reverting it):
+- **B1 (blocker)**: `hunt::pick_up_tool` removed whatever reservation the stack had and took any kind. A drafted
+  person arriving at an arming stack another worker had reserved since deleted that worker's reservation (the debug
+  build's invariant check panics in `JobExecuteSystem`; Godot loads the debug library). Now it takes an `owner` and
+  accepted kinds: it releases only its owner's reservation, leaves a stack reserved by someone else, and takes only a
+  weapon (the draft) or a spear / flint blade (a hunter). Test
+  `a_tool_pick_up_leaves_another_workers_reserved_stack_and_takes_only_its_kinds`.
+- **M1 (major)**: an illness had no immunity, so in a bedroom of about eight sleepers it sustained itself (the
+  reviewer's probe: active on 61–78 % of days over a year). Who has had it during a pressure is immune for the rest
+  of it (`story.touched` holds every onset). With that the pressure ends by itself within people × 3 days, so no cap
+  was added. Test `an_illness_in_a_big_bedroom_strikes_each_sleeper_once_and_ends`. The evaluation's bedrooms hold
+  four beds and every held-out illness lasted 3 days, so the held-out numbers are not expected to move from this.
+- **m1**: a missed attack set the job back to `ToSource` while the state stayed `Consuming`, so the execution system
+  cancelled it as `Interrupted` (17 hunt jobs for 15 attacks). A miss now goes back to seeking the deer. Test
+  `a_missed_attack_keeps_the_hunt_job` (0 of 7 misses kept the job before).
+- **m2**: a fight's damage was fixed when it began; a person's blow now uses the weapon held at that hit (a spear
+  that broke mid-fight hits for 4). Quarrel fights keep their fixed damage.
+- **m3**: a drafted person holding a non-weapon tool (a knife) never armed; arming now asks `draft::armed`.
+- **m4 (C3)**: `wolf_edge` scanned the whole map every 3 ticks while wolves lived; the pack's edge is found once when
+  it comes (`Wildlife::pack_edge`) and searched again only when it can no longer be reached.
+- **m5**: knife wear was kept per workshop, so a new blade inherited a spilled blade's uses; `BillSystem` drops the
+  count once no blade is shelved there. `colony_hides.rs` checks both moments.
+These change behaviour, so the held-out seeds are measured once more on the fixed build ("after the reviews" in
+`M5_EVALUATION.md`, the final simulation); none was tuned on them.
+
+The numbers review (`$DATA/review/numbers_review.md`) matched every recomputed count and seed list; its findings on
+the measurement and the text are applied to `M5_EVALUATION.md` and the probe (the pack window; `m5.rs`).

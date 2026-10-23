@@ -20,6 +20,8 @@
 #   아래" when the overlay's `item_covered` says so). The room overlay is the child "Rooms" (room_layer.gd).
 # M4: clay banks (node kind 2, sprite `clay_bank`, hover "점토 둑 · 점토 6개 남음"); clay-pit marks (designation kind
 #   4) reuse `mark_dig`; the new item kinds 7–10 lie as `item_clay`, `item_raw_pot`, `item_clay_pot`, `item_ground_axe`.
+# M5: the item kinds 11–16 lie as `carcass` (meat: a kill's carcass), `item_cured_hide`, `item_hide_wrap`,
+#   `item_fur_cloak`, `item_spear`, `item_wolf_hide` (EconomyText.ITEM_SPRITES); a kill's hide is the M2 `item_hide`.
 # Redrawn only when the colony overlay version or the hovered stack changes (`get_colony_versions` is polled every
 #   frame).
 # Bridge methods: via SimReads get_colony_versions, get_colony_overlay; signal world_reset.

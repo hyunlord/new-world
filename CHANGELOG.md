@@ -5,6 +5,65 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## M5 — 2026-10-23
+
+Pressure and story (`docs/v8/m5/M5_GOAL.md`): a storyteller sends cold snaps, droughts, wolf packs and illness at
+times it chooses; people hunt deer, draft spears against wolves, scrape hides into wraps that keep the least
+cold-tolerant warm first, and have moods that sour into quarrels and breakdowns, each with a "→ 왜?" chain in the
+chronicle. Evaluation: `docs/v8/m5/M5_EVALUATION.md`; report: `docs/v8/m5/M5_REPORT.md`.
+
+### Added
+- ADR 0027 (storyteller and seasonal pressure), ADR 0028 (animals, hunting, drafting), ADR 0029 (hides, apparel,
+  knife wear), ADR 0030 (mood, quarrels, chronicle causes).
+- Rules `StoryRule::M5`, `WildlifeRule::M5`, `MoodRule::M5` in `ColonyRule::M5` (`WorldRules::colony` uses it).
+- Systems: `DraftSystem` (121), `StorytellerSystem` (170, daily), `AnimalSystem` (171, every 3), `MoodSystem` (172,
+  every 60), `QuarrelSystem` (173, every 30); person–animal fights in `ColonyState::fights`, resolved by
+  `CombatSystem`.
+- Pressure effects where the behaviour lives: cold snap (burn ×2, exposure ×2 outside a room, roofed sleepers warm only
+  by a lit hearth, outdoor work ×1,300 ‰), drought (forage ×400 ‰, thirst ×1,200 ‰), illness (`Sick`, keyed spread in a
+  bedroom, immunity for the rest of the pressure), beasts (a pack of 2–4 wolves at the map edge).
+- Deer as a herd near the camp, hunting (`WorkType::Hunt`, `JobKind::Hunt`, the `Hunting` skill, gated by `tracking`),
+  hunt marks and zones; meat to the larder, spoiling after 6 days; spears (`haft_spear`, 30 attacks); the knife (a
+  flint blade on the drying rack's shelf, 8 uses; butchering with a held blade); `scrape_hide`, `make_hide_wrap`,
+  `make_fur_cloak`; `Apparel` and the hourly dressing pass (`JobKind::Equip`, the "모두 가죽 옷" order); a worn top
+  spares cold hours at its ‰ (keyed, `STREAM_APPAREL`).
+- Items Meat, CuredHide, HideWrap, FurCloak, Spear, WolfHide (codes 11–16); components `Apparel`, `Sick`, `Drafted`,
+  `Mood`; the chronicle's cause side table and kinds 29–37; streams `STREAM_STORY`, `STREAM_WILDLIFE`,
+  `STREAM_QUARREL`, `STREAM_APPAREL`.
+- Commands `SetDrafted`, `DraftMove`, `DraftAttack`, `DraftAttackPerson`, `DesignateHunt`, `AddHuntZone`,
+  `CancelHunt`, `SetDressOrder` (reject reason `NotDrafted`).
+- Bridge (`ffi/story.rs`): `get_story`, `get_animals`, `get_agent_m5`, `get_drafted`, `get_chronicle_why`,
+  `get_year_summary`, `get_teach_suggestion` (the M4 owner decision: the teach dialog's suggested learner), the
+  orders `cmd_draft`, `cmd_undraft_all`, `cmd_draft_move`, `cmd_draft_attack`, `cmd_draft_attack_person`,
+  `cmd_designate_hunt`, `cmd_add_hunt_zone`, `cmd_cancel_hunt`, `cmd_set_dress_order`; the agent snapshot's `tops`,
+  `mood_bands`, `drafted`, `sick`; the chronicle rows' `index`, `link`, `link_entry`, `link_code`.
+- UI (Part 5): see `docs/v8/m5/M5_LOCALE.md` and the report — D draft, the drafted list, banners, the M mood overlay,
+  the inspector's mood and apparel lines, animals drawn, F7-3 / F7-4 hunt orders, the chronicle's "→ 왜?" chains and
+  the 이야기 tab; `tools/v8/m5_ui_test.gd`; `capture.gd --m5-set`.
+- Measurement: the probe's `m5` block (`probe/m5.rs`) and `--story on|off|no-beasts`; `tools/v8/m5_u_script.json`,
+  `tools/v8/m5_u_nodraft_script.json`; `docs/v8/m5/m5_score.py` (F1–F10, `--story` for the gate fixture); the
+  allocator byte counter (`sim_test::alloc::Counting`, `worldsim_perf` only) and the bench's `m5_us_per_tick`.
+- Tests: `colony_story.rs`, `colony_wildlife.rs`, `colony_hides.rs`, `colony_mood.rs`, `engine_story_ffi.rs`.
+- Gate step 29 `story` (two worlds × 48 days with the storyteller: F1's schedule, ledger and reservations exact).
+- ARCHITECTURE §12 "Story, animals and mood"; skills: architecture rules and procedures N (pressure kind), O (animal),
+  P (wearable), Q (mood modifiers), testing procedure I (pressure and control runs), lessons in all three.
+
+### Changed
+- Work order: craft, build, **hunt**, quarry, mine, chop, split, haul. Save `FORMAT_VERSION` 5. Gate: 29 steps; step 13
+  checks `docs/v8/bridge_api_m5.txt`; the soak runs `--story no-beasts`.
+- The ledger rule's second fix (Part 0, D3): `bench_ledger.py check --pass` never compares a pass with itself;
+  `append` needs a passing gate log or `--re-measure`; the ledger gains the `alloc/agent (B)` column; M3 and M4 were
+  re-measured in one quiet interleaved session ("base M3", "M4 re-measure": M5's comparison base).
+- Art record (Part 0, Part 7; ADR 0018): ART-PROD1's route I accepted 13/18 adults; ART-PROD2 ended not adopted (S1
+  26/36); ART-PROD3 adopted route I at 34/36 under the owner's waiver. ROADMAP's next step is M-ART2.
+- Code review fixes (D17): a tool pick-up leaves another worker's reserved stack and takes only its kinds; illness
+  immunity for the rest of a pressure; a missed attack keeps the hunt job; a person's blow uses the weapon held at
+  the hit; a drafted person holding a non-weapon arms; the pack's map edge is found once; knife wear resets with the
+  blade.
+
+### Removed
+- `docs/images/m4_contact_sheet.png` — replaced by `docs/images/m5_contact_sheet.png`.
+
 ## M4 — 2026-10-23
 
 Knowledge and technology (`docs/v8/m4/M4_GOAL.md`): skills are owned by people and die with them; knowledge spreads by talk at the evening fire, by watching and by teaching, fades when unused and is sometimes discovered; a 24-node stone-age map; the settlement's era is observed from what its people practise; ground stone and pottery can be discovered and made. Plus the M3 follow-ups: the benchmark ledger rule, river fords, tool wear. **The colony's behaviour changes**; the `baseline` world is bit-identical (identity PASS at every Part). Evaluation `docs/v8/m4/M4_EVALUATION.md` — held-out seeds 700–731: F1–F7, F9, F11 PASS, F8 (skill growth) FAIL (the economy saturates, D20), F10 8/8 after the gating fix (D22; 7/8 before), F12 partial (knowledge systems 3.3 µs per tick at N = 1,000, C3 ceilings, identity and replay PASS; the +10 % rule fails on the N = 200 scenes, justified below, on n1000 p99 and on RSS per agent). Report `docs/v8/m4/M4_REPORT.md`. Gate 28/28 green at `941410fc` (`v8/main`).

@@ -104,6 +104,14 @@ pub struct ChronicleRows {
     pub cause: Vec<i32>,
     /// Kind-specific values.
     pub value: Vec<i64>,
+    /// M5: each entry's chronicle index (the key of `get_chronicle_why`).
+    pub index: Vec<i64>,
+    /// M5: the "→" link of each entry: −1 none, 0 another entry, 1 a mood modifier, 2 a pressure.
+    pub link: Vec<i32>,
+    /// M5: the entry the link points at (−1 none).
+    pub link_entry: Vec<i64>,
+    /// M5: the link's modifier code (100 = the relation) or pressure code (−1 none).
+    pub link_code: Vec<i32>,
     /// `get_chronicle_since` only: the index after the last returned entry.
     pub next: i64,
     /// `get_chronicle_since` only: total entries.
@@ -111,7 +119,12 @@ pub struct ChronicleRows {
 }
 
 impl ChronicleRows {
-    fn push(&mut self, entry: &ChronicleEntry) {
+    fn push(&mut self, chronicle: &Chronicle, index: u32, entry: &ChronicleEntry) {
+        let (link, link_entry, link_code) = super::story::cause_link(chronicle, index);
+        self.index.push(i64::from(index));
+        self.link.push(link);
+        self.link_entry.push(link_entry);
+        self.link_code.push(link_code);
         self.tick.push(signed(entry.tick));
         self.kind.push(i32::from(entry.kind.as_u8()));
         self.subject.push(entry.subject.map_or(-1, signed));
@@ -124,13 +137,19 @@ impl ChronicleRows {
         self.value.push(entry.value);
     }
 
-    fn from_entries<'a>(found: bool, entries: impl Iterator<Item = &'a ChronicleEntry>) -> Self {
+    fn from_indices(
+        chronicle: &Chronicle,
+        found: bool,
+        indices: impl Iterator<Item = u32>,
+    ) -> Self {
         let mut rows = Self {
             found,
             ..Self::default()
         };
-        for entry in entries {
-            rows.push(entry);
+        for index in indices {
+            if let Some(entry) = chronicle.entry(index) {
+                rows.push(chronicle, index, entry);
+            }
         }
         rows
     }
@@ -140,7 +159,11 @@ impl ChronicleRows {
 pub fn collect_person_chronicle(chronicle: &Chronicle, agent_id: i64) -> ChronicleRows {
     let id = unsigned(agent_id);
     let found = chronicle.person(id).is_some() || chronicle.of_agent(id).next().is_some();
-    ChronicleRows::from_entries(found, chronicle.of_agent(id))
+    ChronicleRows::from_indices(
+        chronicle,
+        found,
+        chronicle.indices_of_agent(id).iter().copied(),
+    )
 }
 
 /// Every entry naming settlement `settlement_id`, in chronicle order.
@@ -149,7 +172,11 @@ pub fn collect_settlement_chronicle(chronicle: &Chronicle, settlement_id: i64) -
         return ChronicleRows::default();
     };
     let found = chronicle.of_settlement(id).next().is_some();
-    ChronicleRows::from_entries(found, chronicle.of_settlement(id))
+    ChronicleRows::from_indices(
+        chronicle,
+        found,
+        chronicle.indices_of_settlement(id).iter().copied(),
+    )
 }
 
 /// Entries `start ..` (at most `max`, clamped to 1..=512) plus `next` and `total`.
@@ -160,7 +187,11 @@ pub fn collect_chronicle_since(chronicle: &Chronicle, start: i64, max: i64) -> C
         .min(total);
     let max = max.clamp(1, CHRONICLE_PAGE_MAX) as usize;
     let end = start.saturating_add(max).min(total);
-    let mut rows = ChronicleRows::from_entries(true, chronicle.entries()[start..end].iter());
+    let mut rows = ChronicleRows::from_indices(
+        chronicle,
+        true,
+        (start..end).map(|i| u32::try_from(i).unwrap_or(u32::MAX)),
+    );
     rows.next = end as i64;
     rows.total = total as i64;
     rows
@@ -203,6 +234,16 @@ pub(super) fn rows_to_dict(rows: ChronicleRows, with_page: bool) -> VarDictionar
     );
     dict.set("cause", PackedInt32Array::from(rows.cause.as_slice()));
     dict.set("value", PackedInt64Array::from(rows.value.as_slice()));
+    dict.set("index", PackedInt64Array::from(rows.index.as_slice()));
+    dict.set("link", PackedInt32Array::from(rows.link.as_slice()));
+    dict.set(
+        "link_entry",
+        PackedInt64Array::from(rows.link_entry.as_slice()),
+    );
+    dict.set(
+        "link_code",
+        PackedInt32Array::from(rows.link_code.as_slice()),
+    );
     if with_page {
         dict.set("next", rows.next);
         dict.set("total", rows.total);

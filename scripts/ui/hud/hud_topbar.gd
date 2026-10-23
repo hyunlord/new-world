@@ -8,6 +8,8 @@
 #   lower row, while N ≥ 1, the warning "⚠ 문 만들기: 카토만 앎" naming the first at-risk node and its one holder
 #   (`first_names`). This node creates the tech map (UI/TechPanel, tech_panel.gd) and the teach dialog
 #   (UI/TeachPanel, teach_panel.gd) beside itself.
+# M5 (goal 3.5): this node also creates the story banner (UI/StoryBanner, story_banner.gd: pressure and wolf banners,
+#   the wolves' pulse, the mood legend and the drafted list) beside itself.
 # Read-only, localized counters from authoritative simulation snapshots.
 # Bridge methods: via SimReads get_agent_snapshot, get_settlement_snapshot, get_construction_snapshot,
 #   get_building_snapshot, get_time_snapshot (day_index, time_of_day, season, day_of_season, days_per_season,
@@ -19,6 +21,7 @@ const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
 const TechPanel = preload("res://scripts/ui/panels/tech_panel.gd")
 const TeachPanel = preload("res://scripts/ui/panels/teach_panel.gd")
+const StoryBanner = preload("res://scripts/ui/hud/story_banner.gd")
 const RISK_COLOR: Color = Color("e05a48")
 const QUIET_COLOR: Color = Color("c8b89a")
 
@@ -143,7 +146,7 @@ func _ready() -> void:
 	_speed_label = ArtUI.pair(lower, 15)
 
 
-	for entry: Array in [["TechPanel", TechPanel], ["TeachPanel", TeachPanel]]:
+	for entry: Array in [["TechPanel", TechPanel], ["TeachPanel", TeachPanel], ["StoryBanner", StoryBanner]]:
 		if get_parent() != null and get_parent().get_node_or_null(str(entry[0])) == null:
 			var panel_node: Control = (entry[1] as GDScript).new()
 			panel_node.name = str(entry[0])

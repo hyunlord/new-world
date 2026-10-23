@@ -145,6 +145,9 @@ pub struct Wildlife {
     pub pack_day: Option<u32>,
     /// Wolves that came with that pack.
     pub pack_size: u32,
+    /// The pack's map-edge tile, found once when it came (its door and its way out; M5 code review m4).
+    #[serde(default)]
+    pub pack_edge: Option<(u32, u32)>,
     /// Deer marked to be hunted.
     pub marks: BTreeSet<AnimalId>,
     /// Hunt zones in the order they were added.

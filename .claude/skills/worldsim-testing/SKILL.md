@@ -1,6 +1,6 @@
 ---
 name: worldsim-testing
-description: Use when testing or verifying any WorldSim change, before claiming "no behaviour change", "deterministic", "faster" or "done" — identity (tools/v8/identity.sh), determinism, the 28-step gate (tools/v8/gate.sh), the economy soak, perf comparison (tools/v8/perf.sh), test layout by domain on sim_test::baseline_engine, and how to write an assertion that can fail.
+description: Use when testing or verifying any WorldSim change, before claiming "no behaviour change", "deterministic", "faster" or "done" — identity (tools/v8/identity.sh), determinism, the 29-step gate (tools/v8/gate.sh), the economy soak, perf comparison (tools/v8/perf.sh), test layout by domain on sim_test::baseline_engine, and how to write an assertion that can fail.
 ---
 
 # WorldSim testing
@@ -71,7 +71,7 @@ Longer versions (assertion recipes, perf and contention protocol):
 3. For an order-sensitive fix, run the twin over many fresh engines (32) so hash-order luck cannot pass it.
 
 ### C. The gate (`tools/v8/gate.sh <log_dir> [--base-data DIR]`)
-Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration and exit code is `<log_dir>/gate.txt`. The gate passes only when every step except `perf` exits 0 (20 steps since M1, 21 since V8-PLAY, 25 since M1.5, 27 since M3, 28 since M4; `nav_bench` is report only too).
+Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration and exit code is `<log_dir>/gate.txt`. The gate passes only when every step except `perf` exits 0 (20 steps since M1, 21 since V8-PLAY, 25 since M1.5, 27 since M3, 28 since M4, 29 since M5; `nav_bench` is report only too).
 
 | # | step | checks |
 |---|---|---|
@@ -100,9 +100,10 @@ Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration 
 | 23 | `renderer_agreement` | `tools/v8/renderer_agreement.sh`: the text renderer's people = the Godot agent layer's (seed 100, U-script, tick 900; C2) |
 | 24 | `save_roundtrip` | `tools/v8/save_roundtrip.sh`: `save_load.rs` (colony seeds 0–7 save → load → tick = tick; C1) |
 | 25 | `bench` | `tools/v8/bench.sh`: the standing benchmark against `docs/perf/PERF_LEDGER.md` (> +10 % fails; ceilings report only; C3) |
-| 26 | `soak` | `tools/v8/soak.sh`: the economy soak fixture, colony seeds 0..4 × 20 days with `tools/v8/soak_script.json` (stone, flint, workshops, bills, axes, a house, a storehouse, a dug pocket; since M4 also 0 `KnowledgeLost`): ledger and reservations exact every tick, 0 deaths, determinism (M3 goal 3.4) |
+| 26 | `soak` | `tools/v8/soak.sh`: the economy soak fixture, colony seeds 0..4 × 20 days with `tools/v8/soak_script.json` (stone, flint, workshops, bills, axes, a house, a storehouse, a dug pocket; since M4 also 0 `KnowledgeLost`; since M5 with `--story no-beasts`): ledger and reservations exact every tick, 0 deaths, determinism (M3 goal 3.4) |
 | 27 | `nav_bench` | `worldsim_perf nav-bench`: N = 1,000 with the soak script; movement + pathfinding µs per tick against the 600 µs budget, requests, memo hits, nodes expanded (report only) |
 | 28 | `knowledge` | `cargo test --release -p sim-test --test colony_knowledge` + the loss fixture `tools/v8/m4_f10_script.json` (seeds 0..8, 4 days) scored by `docs/v8/m4/m4_score.py --f10`: 8/8 lose the doorway within 240 ticks of the kill, end Lost, and leave door orders waiting on it |
+| 29 | `story` | colony seeds 0..2 × 48 days with `tools/v8/m5_u_script.json` (no panic), scored by `docs/v8/m5/m5_score.py --story`: F1's schedule, 0 ledger and 0 reservation violation ticks on every seed |
 
 1. Commit first; run the gate on that head; do not touch the tree until it finishes (it records `head` and `dirty` in `gate.txt`).
 2. Read `gate.txt`, not only the exit code: test counts, perf WARN lines, determinism line.
@@ -143,10 +144,21 @@ Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration 
 3. A gate test must keep a non-practitioner on the work in every way the world can advance it — a job and the V7 arms in place (stand the person on the site) — and assert progress 0; then make them a practitioner and assert the work completes (D22).
 4. Score scripted runs with `docs/v8/m4/m4_score.py` (`--out` for the per-seed appendix; `--f10` for the loss fixture); the bars are registered in its docstring before the first run.
 
+### I. Pressure and control runs (M5)
+1. A behaviour that answers pressure is measured twice on the same seeds and script: with the storyteller (`--story on`, the default) and without (`--story off`, the control); a third run removes the player's answer (`m5_u_nodraft_script.json`: no draft) to show the answer matters (F3b).
+2. Bars that say "unchanged by M5" are read on the control and compared with the previous pass measured the same way (M4's probe built in a detached worktree at its report commit, its own U-script, the same seeds and days): F9a pooled 0.322 against M4's 0.336.
+3. Bars that say "the pressure is felt" are read on the pressure run (F2a, F6b); bars that say "a prepared colony survives" on the same run (F2b, F3a).
+4. Rates pooled over worlds when a world holds a handful of events (births, breakdowns), never per world; register the pooling in the scorer's docstring before the held-out run.
+5. The gate's `story` step runs two worlds × 48 days with the storyteller and scores the schedule and the ledger (`m5_score.py --story`); the soak runs `--story no-beasts` (weather and illness, no wolves) and still asks 0 deaths.
+
 ## Lessons
 
 | date | symptom | root cause | fix | source |
 |---|---|---|---|---|
+| 2026-10-23 | M5's F3a booked a cold snap's 8 exposure deaths to a wolf pack that had left a week earlier | the probe keyed each pack's window on `wildlife.pack_day`, which nothing ever clears, so a window ran until the next pack | bound a measurement window by the event's own end (its pressure active or its wolves on the map), and check a window's deaths against the event's own cost field | `rust/crates/sim-test/src/probe/m5.rs`; `docs/v8/m5/M5_EVALUATION.md` |
+| 2026-10-23 | F7's "every quarrel has a resolvable why-chain" passed 210 of 210 although 175 chains stopped at a mood modifier with no chronicle entry behind it | the registered reading (≥ 2 links) holds by construction: every quarrel is chronicled with its cause, which is itself a link | before registering a bar, ask which world would fail it; a bar no world can fail measures the code path, not the behaviour | `docs/v8/m5/m5_score.py`; `docs/v8/m5/M5_EVALUATION.md` |
+| 2026-10-23 | a quarrel test read cause "relation" where it had set up a hunger quarrel | its helper returned the chronicle's *last* quarrel, and the world had chronicled a quarrel between two other people at setup | a helper that waits for an event looks only at entries made after it started (`chronicle.len()` before), and the test asserts the event's subjects are its own pair | `rust/crates/sim-test/tests/colony_mood.rs` |
+| 2026-10-23 | the M5 F9a bar (births / woman-year 0.20–0.30 "unchanged by M5") failed at 8 calibration worlds with 0.32–0.44 | the band was M1.5's no-orders 3-year measure; the scripted 2-year colony reads higher even before M5 (M4 measured the same way: 0.336) | read an "unchanged" bar against the previous pass run the same way (detached worktree at its report commit, its own script, same seeds and days) and report both numbers | `docs/v8/m5/M5_DECISIONS.md` D14 |
 | 2026-10-22 | the M3 evaluation on seeds 400–431 failed F1, F4, F5 and F9, while calibration seeds 0–7 passed them all | one world (403) sealed its camp in a hill basin (undug hill impassable since M3), and the script's spot pickers checked fewer conditions than the commands they fed (no people, no other building's door) | keep the failing held-out result as the result of record; fix the causes; measure the fixed build again on a second, never-used seed set (600–631) and report both | `docs/v8/m3/M3_DECISIONS.md` D17; `rust/crates/sim-test/src/probe/colony.rs` |
 | 2026-10-22 | the M3 skill bar F4 (sleepers in a bedroom) read 0 on nights when people slept there | one sample at 02:00 missed workers who walked home late from the forest and fell asleep after it | count distinct sleepers over hourly samples across the night window instead of one instant | `docs/v8/m3/M3_DECISIONS.md` D15; `rust/crates/sim-test/src/probe/space.rs` |
 | 2026-10-22 | the M1.5 gate's identity step failed with "No such file … base/probe/summary.json" and perf with no base summary | `--base-data` was given the data root (`$DATA/base`), while the identity capture lives in `$DATA/base/identity` and the gate also reads `<base>/perf/perf_summary.json` | pass the identity capture directory itself and put the base `perf.sh` output in its `perf/` subfolder before the gate; a gate with a wrong base path is rerun whole | `tools/v8/gate.sh`; `docs/v8/m1_5/M1_5_DECISIONS.md` D19 |

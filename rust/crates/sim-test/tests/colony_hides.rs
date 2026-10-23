@@ -76,6 +76,11 @@ fn scraping_cures_hides_with_the_racks_knife_and_the_knife_breaks_after_8_uses()
         e.resources.colony.tallies.crafts_done >= 9
     });
     assert!(used < 12_000, "nine scrapes");
+    assert_eq!(
+        engine.resources.colony.knife_wear.get(&shop).copied(),
+        Some(1),
+        "the second knife has one use"
+    );
     for _ in 0..300 {
         tick_checked(&mut engine);
     }
@@ -98,10 +103,13 @@ fn scraping_cures_hides_with_the_racks_knife_and_the_knife_breaks_after_8_uses()
         .any(|e| e.kind == ChronicleKind::ToolBroke
             && e.cause == ItemKind::FlintBlade.code()
             && e.value == 8));
+    // No bill needs the second blade any more: it leaves the shelf, and its wear with it (code review m5).
+    let shelved = engine.resources.colony.workshops[&shop].shelved(ItemKind::FlintBlade);
+    assert_eq!(shelved, 0, "the unused blade was spilled");
     assert_eq!(
-        engine.resources.colony.knife_wear.get(&shop).copied(),
-        Some(1),
-        "the second knife has one use"
+        engine.resources.colony.knife_wear.get(&shop),
+        None,
+        "the next blade starts unworn"
     );
 }
 

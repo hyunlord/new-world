@@ -475,6 +475,39 @@ fn result_dict(r: CommandResult) -> VarDictionary {
     dict
 }
 
+/// The teach dialog's suggested learner for node `node` taught by `teacher` (M4
+/// owner decision, M5 DECISIONS D5): among living adults other than the teacher
+/// who do not practise the node, the highest novelty seeking (`Temperament.ns`),
+/// then the youngest (latest `Life::born_tick`), then the lowest `AgentId`; −1
+/// when there is none. The dialog shows it pre-selected and editable.
+pub fn collect_teach_suggestion(world: &hecs::World, teacher: i64, node: i64) -> i64 {
+    let (Ok(t), Ok(k)) = (u64::try_from(teacher), u8::try_from(node)) else {
+        return -1;
+    };
+    if defs().get(k).is_none() {
+        return -1;
+    }
+    world
+        .query::<(
+            &Agent,
+            Option<&Knowledge>,
+            Option<&sim_core::components::Temperament>,
+            Option<&Life>,
+        )>()
+        .without::<&Child>()
+        .iter()
+        .filter(|(_, (a, kn, _, _))| a.id != t && !kn.is_some_and(|kn| kn.practises(k)))
+        .map(|(_, (a, _, temp, life))| {
+            (
+                std::cmp::Reverse(temp.map_or(0, |x| x.ns)),
+                std::cmp::Reverse(life.map_or(i64::MIN, |l| l.born_tick)),
+                a.id,
+            )
+        })
+        .min()
+        .map_or(-1, |(_, _, id)| i64::try_from(id).unwrap_or(-1))
+}
+
 /// `OrderTeach` (ids are `AgentId` / `KnowledgeId`; a negative or oversized id is refused as unknown).
 pub fn submit_order_teach(
     engine: &mut SimEngine,

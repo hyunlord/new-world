@@ -201,7 +201,11 @@ fn hungry_neighbours_on_bad_terms_quarrel_over_hunger_and_the_why_chain_resolves
     let q = *engine.resources.chronicle.entry(index).expect("entry");
     let mut who = [q.subject, q.other];
     who.sort();
-    assert_eq!(who, [Some(ia.min(ib)), Some(ia.max(ib))], "the pair quarrelled");
+    assert_eq!(
+        who,
+        [Some(ia.min(ib)), Some(ia.max(ib))],
+        "the pair quarrelled"
+    );
     assert_eq!(q.cause, 1, "cause 1 + hunger (code 0)");
     assert!(
         matches!(engine.resources.chronicle.cause_of(index), Some(CauseRef::Modifier { code, .. }) if code == Modifier::Hungry.code())

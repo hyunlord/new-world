@@ -448,7 +448,8 @@ fn wolf_steps(
         if res.colony.wildlife.pack_day != Some(p.start_day) {
             res.colony.wildlife.pack_day = Some(p.start_day);
             res.colony.wildlife.pack_size = p.intensity.max(1);
-            if let Some(edge) = wolf_edge(res, hearth) {
+            res.colony.wildlife.pack_edge = wolf_edge(res, hearth);
+            if let Some(edge) = res.colony.wildlife.pack_edge {
                 for i in 0..p.intensity.max(1) {
                     let at = step_rel(res, edge, hearth, true, |_| true)
                         .filter(|_| i % 2 == 1)
@@ -471,7 +472,16 @@ fn wolf_steps(
     let size = res.colony.wildlife.pack_size.max(1);
     let alive = wolves.len() as u32;
     let routed = alive * 2 <= size;
-    let edge = wolf_edge(res, hearth);
+    // The pack's edge, found when it came; searched again (the whole map) only when it can no longer be reached.
+    let region = res.nav.region_of(hearth);
+    let edge = match res.colony.wildlife.pack_edge {
+        Some(e) if res.nav.passable(e) && res.nav.reaches(region, e) => Some(e),
+        _ => {
+            let e = wolf_edge(res, hearth);
+            res.colony.wildlife.pack_edge = e;
+            e
+        }
+    };
     let story_days = crate::runtime::story::rule(res).map_or(2, |s| s.beasts_max_days);
     // The pack spreads over its prey: a wolf takes the nearest person no other wolf has this step.
     let mut taken: std::collections::BTreeSet<AgentId> = std::collections::BTreeSet::new();

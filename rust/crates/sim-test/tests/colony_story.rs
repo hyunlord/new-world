@@ -449,3 +449,67 @@ fn illness_passes_only_to_those_sleeping_in_the_same_bedroom() {
         .iter()
         .any(|e| e.kind == ChronicleKind::Recovered));
 }
+
+#[test]
+fn an_illness_in_a_big_bedroom_strikes_each_sleeper_once_and_ends() {
+    let mut engine = sim_test::colony_engine(5);
+    for _ in 0..10 {
+        engine.tick();
+    }
+    let at = open_area(&engine, 6, 4);
+    let inside = walled_box(&mut engine, at, 6, 4, true);
+    for t in &inside {
+        bedroll(&mut engine, *t);
+    }
+    engine.resources.colony.rooms_dirty = true;
+    detect(&mut engine);
+    let people = adults(&engine);
+    assert!(people.len() >= 8, "a dormitory of {}", people.len());
+    for (i, (id, _)) in people.iter().enumerate() {
+        engine
+            .resources
+            .bed_of
+            .insert(*id, inside[i % inside.len()]);
+    }
+    engine.resources.current_tick = 20 * 1_440;
+    story::force(
+        &mut engine.world,
+        &mut engine.resources,
+        PressureKind::Illness,
+        3,
+    );
+    let mut system = StorytellerSystem;
+    engine.resources.colony.story.next_check_day = 21;
+    let mut ended_on = None;
+    for day in 21..120u64 {
+        engine.resources.current_tick = day * 1_440;
+        system.tick(&mut engine.world, &mut engine.resources);
+        if ended_on.is_none()
+            && !engine
+                .resources
+                .colony
+                .story
+                .is_active(PressureKind::Illness)
+        {
+            ended_on = Some(day);
+        }
+    }
+    let mut onsets: std::collections::BTreeMap<u64, u32> = std::collections::BTreeMap::new();
+    let first_end = ended_on.expect("the illness ends");
+    for e in engine.resources.chronicle.entries() {
+        if e.kind == ChronicleKind::Sick && e.tick < first_end * 1_440 {
+            *onsets.entry(e.subject.unwrap_or(u64::MAX)).or_default() += 1;
+        }
+    }
+    assert!(onsets.len() >= 2, "it spread in the dormitory: {onsets:?}");
+    assert!(
+        onsets.values().all(|n| *n == 1),
+        "nobody fell ill twice in one pressure (code review M1): {onsets:?}"
+    );
+    // Each sleeper at most once, 3 days each: the pressure cannot outlast people x 3 days + the onset day.
+    let bound = 21 + 3 * people.len() as u64 + 1;
+    assert!(
+        first_end <= bound,
+        "ended on day {first_end}, bound {bound}"
+    );
+}

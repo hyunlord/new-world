@@ -108,6 +108,13 @@
     59.3 FPS at 200 people) and route I was not yet adopted as the standard. ART-PROD2 runs on the same branch to fix
     the sleep rule and adopt route I; its final state is recorded at the end of M5 (Part 7). The M3/M4 wording "사람
     그림 보류" is withdrawn: people are route I, pending ART-PROD2; `route_p` pawns stay in the game until it lands.
+  - **Final state (M5 Part 7, 2026-10-23; M5 DECISIONS D16).** ART-PROD2 (`docs/v8/artprod2/PROD2_REPORT.md` on
+    `v8/art-prod1`) ended **not adopted**: S1 26/36 looks (adults 13/18, children 13/18) against ≥ 32/36 and adults
+    ≥ 17/18; R1, P1 (524.8 FPS) and D1 passed. ART-PROD3 (`docs/v8/artprod3/PROD3_REPORT.md`, `159ef0f9`) re-sliced
+    with one visibility threshold and, under the planner/owner's waiver of the adult 17/18 bar, **adopted route I at
+    34/36** (adults 16/18, children 18/18): `TEMPLATE_V3` is the character standard and `route_i/` with its
+    `MANIFEST.json` the asset source; the two missing `adult_M_*_long_tied` looks fall back to the bun of the same age,
+    sex and top. Installing it in the game is M-ART2 (not merged here).
 
 ## Date
 2026-10-22
