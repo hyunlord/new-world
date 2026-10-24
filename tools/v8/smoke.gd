@@ -15,6 +15,7 @@
 extends SceneTree
 
 const KEY_RE: String = "^[A-Z][A-Z0-9]*(_[A-Z0-9]+)+$"
+const View = preload("res://scripts/world/colony/view.gd")
 
 var _frames: int = 900
 
@@ -69,10 +70,10 @@ func _open_panels(main: Node) -> void:
 		var ys: PackedInt32Array = snap.get("ys", PackedInt32Array())
 		if not xs.is_empty():
 			var tile: Vector2i = Vector2i(xs[0], ys[0])
-			tool.call("click_world", Vector2(tile) * 16.0 + Vector2(8, 8), tile)
+			tool.call("click_world", Vector2(tile) * View.TILE + Vector2(View.TILE, View.TILE) * 0.5, tile)
 			for _i: int in 10:
 				await process_frame
-		tool.call("click_world", Vector2(2, 2) * 16.0 + Vector2(8, 8), Vector2i(2, 2))
+		tool.call("click_world", Vector2(2, 2) * View.TILE + Vector2(View.TILE, View.TILE) * 0.5, Vector2i(2, 2))
 	# M1: show the order bar's hints and toast texts too (raw-key scan).
 	var bar: Node = main.get_node_or_null("UI/OrderBar")
 	if bar != null and bar.has_method("select_mode"):

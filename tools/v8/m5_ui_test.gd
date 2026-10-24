@@ -25,6 +25,9 @@ const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const View = preload("res://scripts/world/colony/view.gd")
+const ArtData = preload("res://scripts/world/art/art_data.gd")
+const AnimalLayer = preload("res://scripts/world/colony/animal_layer.gd")
+const OverlayLayer = preload("res://scripts/world/colony/overlay_layer.gd")
 const KEY_RE: String = "[A-Z][A-Z0-9]*(_[A-Z0-9]+)+"
 const DOORWAY: int = 10
 ## How far the clock may be advanced looking for the first pack and cold snap (display days).
@@ -121,7 +124,7 @@ func _ui(control: Control) -> Vector2:
 
 
 func _tile_screen(t: Vector2i) -> Vector2:
-	return _screen(Vector2(t) * 16.0 + Vector2(8, 8))
+	return _screen(Vector2(t) * View.TILE + Vector2(View.TILE, View.TILE) * 0.5)
 
 
 ## Centre the camera on `tile` and let it settle.
@@ -216,7 +219,7 @@ func _empty_tile(from: Vector2i) -> Vector2i:
 	for r: int in range(2, 9):
 		for off: Vector2i in [Vector2i(r, 0), Vector2i(0, r), Vector2i(-r, 0), Vector2i(0, -r), Vector2i(r, r)]:
 			var t: Vector2i = from + off
-			var p: Vector2 = Vector2(t) * 16.0 + Vector2(8, 8)
+			var p: Vector2 = Vector2(t) * View.TILE + Vector2(View.TILE, View.TILE) * 0.5
 			if int(_agents.call("entity_at", p)) < 0 and int(_animals.call("animal_at", p)) < 0:
 				return t
 	return from + Vector2i(3, 3)
@@ -258,10 +261,27 @@ func _run() -> void:
 	var animals: Dictionary = SimReads.read(_world, "get_animals")
 	var count: int = (animals.get("ids", PackedInt64Array()) as PackedInt64Array).size()
 	_check("animals_drawn", count > 0 and int((_animals.call("counts") as Dictionary)["animals"]) == count, "read %d drawn %s" % [count, _animals.call("counts")])
-	var sprites_ok: bool = View.has("animal_wolf") and View.has("animal_deer") and View.has("mark_hunt") and View.has("badge_sick")
+	# M-ART2: every animal pose (all states, both facings, still and moving) and the dead frame resolve to manifest
+	# frames through bindings.json; the M5 item kinds resolve to manifest sprites in every count bucket and have names.
+	var sprites_ok: bool = true
+	var missing: Array[String] = []
+	for kind: int in [0, 1]:
+		for state: int in 6:
+			for facing: int in 2:
+				for moving: bool in [false, true]:
+					var fid: String = AnimalLayer.frame_id(kind, state, facing, moving)
+					if not ArtData.has(fid):
+						missing.append(fid)
 	for kind: int in range(11, 17):
-		sprites_ok = sprites_ok and View.has(EconomyText.ITEM_SPRITES[kind]) and _readable(EconomyText.item(_locale, kind))
-	_check("m5_sprites_and_items", sprites_ok and EconomyText.ITEM_SPRITES[11] == "carcass", ", ".join(EconomyText.ITEM_SPRITES.slice(11)))
+		for n_items: int in [1, 5, 20]:
+			var look: Array = OverlayLayer.stack_look(kind, n_items)
+			if not ArtData.has(str(look[0])):
+				missing.append(str(look[0]))
+		var dead: String = OverlayLayer.carcass_id(kind)
+		if dead != "" and not ArtData.has(dead):
+			missing.append(dead)
+		sprites_ok = sprites_ok and _readable(EconomyText.item(_locale, kind))
+	_check("m5_sprites_and_items", sprites_ok and missing.is_empty() and OverlayLayer.carcass_id(11) != "", "missing %s" % [missing])
 	var hearth: Vector2i = _hearth()
 	await _hunt_orders(hearth)
 	await _draft_orders(hearth)
@@ -286,7 +306,7 @@ func _hunt_orders(hearth: Vector2i) -> void:
 	var hint: String = (_bar.get("_hint") as Label).text
 	_check("f7_3_hunt_mode", menu_ok and int(_tool.get("mode")) == 10 and not bool(_bar.call("dig_menu_open")) and _readable(hint), "mode %d hint '%s'" % [int(_tool.get("mode")), hint])
 	var drawn: Vector2 = _animals.call("drawn_position", int(deer["id"]))
-	await _click(_screen(drawn + Vector2(8, 8)))
+	await _click(_screen(drawn + Vector2(View.TILE, View.TILE) * 0.5))
 	await _frames(2)
 	var read: Dictionary = SimReads.read(_world, "get_animals")
 	var i: int = (read.get("ids", PackedInt64Array()) as PackedInt64Array).find(int(deer["id"]))
@@ -321,7 +341,7 @@ func _hunt_orders(hearth: Vector2i) -> void:
 	await _key(KEY_F7)
 	await _key(KEY_3)
 	drawn = _animals.call("drawn_position", int(deer["id"]))
-	await _click(_screen(drawn + Vector2(8, 8)))
+	await _click(_screen(drawn + Vector2(View.TILE, View.TILE) * 0.5))
 	await _key(KEY_ESCAPE)
 
 
@@ -357,7 +377,7 @@ func _draft_orders(hearth: Vector2i) -> void:
 	# Right click on another person: attack them.
 	await _look_at(other["tile"])
 	var other_drawn: Vector2 = _agents.call("drawn_position", int(other["bits"]))
-	await _click(_screen(other_drawn + Vector2(8, 8)), MOUSE_BUTTON_RIGHT)
+	await _click(_screen(other_drawn + Vector2(View.TILE, View.TILE) * 0.5), MOUSE_BUTTON_RIGHT)
 	await _frames(2)
 	m5 = _m5(int(first["id"]))
 	_check("right_click_attack_person", int(m5.get("draft_order", -1)) == 3 and int(m5.get("draft_x", -1)) == int(other["id"]),
@@ -371,7 +391,7 @@ func _draft_orders(hearth: Vector2i) -> void:
 	if not deer.is_empty():
 		await _look_at(deer["tile"])
 		var drawn: Vector2 = _animals.call("drawn_position", int(deer["id"]))
-		await _click(_screen(drawn + Vector2(8, 8)), MOUSE_BUTTON_RIGHT)
+		await _click(_screen(drawn + Vector2(View.TILE, View.TILE) * 0.5), MOUSE_BUTTON_RIGHT)
 		await _frames(2)
 		var a: Dictionary = _m5(int(first["id"]))
 		var b: Dictionary = _m5(int(second["id"]))

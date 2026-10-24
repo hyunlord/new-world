@@ -1,8 +1,9 @@
 # room_layer.gd (ColonyView/OverlayLayer/Rooms, made in code by overlay_layer.gd): the M3 room overlay (goal 9.3).
 # R toggles it (also the order bar's "방 보기 R" button): every room tile tinted by its role (침실 blue, 창고 yellow,
-#   작업장 teal, 홀 orange, 미정 grey; translucent, z 2: above the ground and floors, below walls and people) with a
-#   1-px line where the room ends, and at each room's centre tile a label on a dark backing box (child "Labels",
-#   z 4) "침실 · 35칸 · 침대 4" (`UI_ROOM_LABEL_FMT`, without beds `UI_ROOM_LABEL_NOBED_FMT`, "(역할 고정)" when
+#   작업장 teal, 홀 orange, 미정 grey; translucent, z −5: above the ground chunks and floors, below the y-sorted world
+#   layer with its walls, things and people) with a 2-px line where the room ends (64-px tiles, M-ART2), and at each
+#   room's centre tile a label on a dark backing box (child "Labels", z 6, above everything; the text keeps
+#   `labels.font_px` screen pixels at every zoom and is redrawn when the zoom changes) "침실 · 35칸 · 침대 4" (`UI_ROOM_LABEL_FMT`, without beds `UI_ROOM_LABEL_NOBED_FMT`, "(역할 고정)" when
 #   the player set the role). The index (tile -> room, room -> row) is kept while the overlay is hidden too: the
 #   order tool asks `room_at` for a click (the room panel), the overlay hover and the inspector ask `room` for
 #   "방: 창고 2" and the bed line.
@@ -12,8 +13,8 @@ extends Node2D
 
 const View = preload("res://scripts/world/colony/view.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
+const ArtData = preload("res://scripts/world/art/art_data.gd")
 const FONT_PATH: String = "res://assets/fonts/galmuri/Galmuri11.ttf"
-const FONT_SIZE: int = 12
 const BACK: Color = Color(0.094, 0.082, 0.075, 0.92)
 const TEXT: Color = Color(0.96, 0.92, 0.84)
 ## Tint per `RoomRole::code` (0 unassigned grey, 1 bedroom blue, 2 storehouse yellow, 3 workshop teal, 4 hall orange).
@@ -23,6 +24,8 @@ const ROLE_COLORS: Array[Color] = [
 ]
 const TOGGLE_KEY: Key = KEY_R
 const STEPS: Array[Vector2i] = [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)]
+## Width of the line where a room ends (world pixels).
+const EDGE: int = 2
 
 signal toggled(shown: bool)
 
@@ -34,18 +37,19 @@ var _labels: Node2D = null
 var _rooms: Dictionary = {}
 ## Tile -> room id.
 var _tile_room: Dictionary = {}
+var _zoom: float = 1.0
 
 
 func _ready() -> void:
 	z_as_relative = false
-	z_index = 2
+	z_index = -5
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	visible = false
 	_font = load(FONT_PATH) as Font
 	_labels = Node2D.new()
 	_labels.name = "Labels"
 	_labels.z_as_relative = false
-	_labels.z_index = 4
+	_labels.z_index = 6
 	_labels.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_labels.draw.connect(_draw_labels)
 	add_child(_labels)
@@ -63,6 +67,10 @@ func _on_world_reset() -> void:
 func _process(_delta: float) -> void:
 	if _world_sim == null:
 		return
+	var zoom: float = get_viewport().get_canvas_transform().x.x
+	if visible and not is_equal_approx(zoom, _zoom):
+		_zoom = zoom
+		_labels.queue_redraw()
 	var versions: Dictionary = SimReads.read(_world_sim, "get_colony_versions")
 	var version: int = int(versions.get("rooms_version", 0))
 	if version == _version:
@@ -176,10 +184,10 @@ func _draw() -> void:
 			if int(_tile_room.get(cell + STEPS[bit], -1)) == id:
 				continue
 			match bit:
-				0: draw_rect(Rect2(origin, Vector2(View.TILE, 1)), edge)
-				1: draw_rect(Rect2(origin + Vector2(View.TILE - 1, 0), Vector2(1, View.TILE)), edge)
-				2: draw_rect(Rect2(origin + Vector2(0, View.TILE - 1), Vector2(View.TILE, 1)), edge)
-				_: draw_rect(Rect2(origin, Vector2(1, View.TILE)), edge)
+				0: draw_rect(Rect2(origin, Vector2(View.TILE, EDGE)), edge)
+				1: draw_rect(Rect2(origin + Vector2(View.TILE - EDGE, 0), Vector2(EDGE, View.TILE)), edge)
+				2: draw_rect(Rect2(origin + Vector2(0, View.TILE - EDGE), Vector2(View.TILE, EDGE)), edge)
+				_: draw_rect(Rect2(origin, Vector2(EDGE, View.TILE)), edge)
 
 
 func _draw_labels() -> void:
@@ -192,10 +200,14 @@ func _draw_labels() -> void:
 		if centre.x < 0:
 			continue
 		var text: String = label_text(info, locale)
-		var size: Vector2 = _font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, FONT_SIZE)
-		var anchor: Vector2 = View.tile_to_world(centre) + Vector2(View.TILE * 0.5, View.TILE * 0.5)
-		var box: Rect2 = Rect2(anchor - Vector2(size.x * 0.5 + 3, (FONT_SIZE + 3) * 0.5), Vector2(size.x + 6, FONT_SIZE + 3))
+		var px: int = int(ArtData.param("labels.font_px", 24))
+		var inv: float = 1.0 / maxf(0.05, _zoom) if bool(ArtData.param("labels.follow_camera", true)) else 1.0
+		var pad: float = floorf(px / 4.0)
+		var size: Vector2 = _font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, px)
+		_labels.draw_set_transform(View.tile_centre(centre).round(), 0.0, Vector2(inv, inv))
+		var box: Rect2 = Rect2(-Vector2(size.x * 0.5 + pad, (px + pad) * 0.5), Vector2(size.x + pad * 2.0, px + pad))
 		box.position = box.position.round()
 		_labels.draw_rect(box, BACK)
-		_labels.draw_rect(box, Color(ROLE_COLORS[int(info["role"])], 1.0), false, 1.0)
-		_labels.draw_string(_font, box.position + Vector2(3, FONT_SIZE - 1), text, HORIZONTAL_ALIGNMENT_LEFT, -1, FONT_SIZE, TEXT)
+		_labels.draw_rect(box, Color(ROLE_COLORS[int(info["role"])], 1.0), false, 2.0)
+		_labels.draw_string(_font, box.position + Vector2(pad, px - 2.0), text, HORIZONTAL_ALIGNMENT_LEFT, -1, px, TEXT)
+	_labels.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

@@ -16,8 +16,9 @@
 # usage: Godot --path . --rendering-driver opengl3 --resolution 1920x1080 \
 #          --script res://tools/v8/m1_gui_test.gd -- --out <abs dir> [--days 3] [--fps-seconds 120] [--no-vsync]
 extends SceneTree
+const View = preload("res://scripts/world/colony/view.gd")
 
-const TILE: float = 16.0
+const TILE: float = float(View.TILE)
 const DAY: int = 1440
 
 var _out: String = ""
@@ -110,7 +111,7 @@ func _hearth() -> Vector2i:
 
 
 func _screen(tile: Vector2i) -> Vector2:
-	return root.get_canvas_transform() * (Vector2(tile) * TILE + Vector2(8, 8))
+	return root.get_canvas_transform() * (Vector2(tile) * TILE + Vector2(View.TILE, View.TILE) * 0.5)
 
 
 func _mouse(button: MouseButton, pressed: bool, at: Vector2) -> void:

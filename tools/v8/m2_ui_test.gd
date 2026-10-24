@@ -22,6 +22,7 @@
 extends SceneTree
 
 const WorkshopPanel = preload("res://scripts/ui/panels/workshop_panel.gd")
+const View = preload("res://scripts/world/colony/view.gd")
 const MAX_BUILD_TICKS: int = 14400
 const STEP_TICKS: int = 360
 
@@ -164,7 +165,7 @@ func _run() -> void:
 					spot = t
 	var camera2d: Camera2D = camera as Camera2D
 	if camera2d != null:
-		camera2d.position = Vector2(spot) * 16.0 + Vector2(8, 8)
+		camera2d.position = Vector2(spot) * View.TILE + Vector2(View.TILE, View.TILE) * 0.5
 	var placed: Dictionary = tool.call("place_at", spot)
 	await _frames(2)
 	overlay = SimReads.read(_world, "get_colony_overlay")
@@ -191,7 +192,7 @@ func _run() -> void:
 		var layer: Node = _main.get_node("ColonyView/BuildingLayer")
 		_check("building_layer_draws_it", int(layer.call("workshop_count")) >= 1)
 		_check("no_hearth_on_workshop", int(layer.call("hearth_count")) == 1, "hearths drawn=%d" % int(layer.call("hearth_count")))
-		tool.call("click_world", Vector2(shop_tile) * 16.0 + Vector2(8, 8), shop_tile)
+		tool.call("click_world", Vector2(shop_tile) * View.TILE + Vector2(View.TILE, View.TILE) * 0.5, shop_tile)
 		await _frames(2)
 		_check("click_opens_workshop_panel", int(shop_panel.call("workshop_id")) == shop and (shop_panel as Control).visible)
 		var added: bool = _press(shop_panel, "Add") and _press(shop_panel, "Recipe_knap_blade")

@@ -285,7 +285,7 @@ func _run() -> void:
 	await _key(KEY_ESCAPE)
 	# The hearth stays drawn; its fire_pot workshop opens the workshop panel; a fire_pot bill waits.
 	var buildings: Node = _main.get_node_or_null("ColonyView/BuildingLayer")
-	_check("hearth_drawn", bool(buildings.get("_has_hearth")), "")
+	_check("hearth_drawn", int(buildings.call("hearth_count")) >= 1, "hearths drawn %d" % int(buildings.call("hearth_count")))
 	var shops: Dictionary = SimReads.read(_world, "get_workshops")
 	var shop_ids: PackedInt32Array = shops.get("ids", PackedInt32Array())
 	var shop_kinds: PackedInt32Array = shops.get("kinds", PackedInt32Array())

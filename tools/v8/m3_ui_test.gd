@@ -21,6 +21,7 @@
 extends SceneTree
 
 const RoomLayer = preload("res://scripts/world/colony/room_layer.gd")
+const View = preload("res://scripts/world/colony/view.gd")
 const OverlayLayer = preload("res://scripts/world/colony/overlay_layer.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const Inspector = preload("res://scripts/ui/panels/agent_inspector_panel.gd")
@@ -58,7 +59,7 @@ func _key(code: Key) -> void:
 
 
 func _screen(tile: Vector2i) -> Vector2:
-	return _main.get_viewport().get_canvas_transform() * (Vector2(tile) * 16.0 + Vector2(8, 8))
+	return _main.get_viewport().get_canvas_transform() * (Vector2(tile) * View.TILE + Vector2(View.TILE, View.TILE) * 0.5)
 
 
 func _mouse(tile: Vector2i, button: bool, pressed: bool, shift: bool) -> void:
@@ -289,7 +290,7 @@ func _run() -> void:
 	var people_inside: int = 0
 	for y: int in range(a.y + 1, b.y):
 		for x: int in range(a.x + 1, b.x):
-			if int(agent_layer.call("entity_at", Vector2(x, y) * 16.0 + Vector2(8, 8))) >= 0:
+			if int(agent_layer.call("entity_at", Vector2(x, y) * View.TILE + Vector2(View.TILE, View.TILE) * 0.5)) >= 0:
 				people_inside += 1
 			else:
 				inside = Vector2i(x, y)
@@ -300,7 +301,7 @@ func _run() -> void:
 		if sxs[i] > a.x and sxs[i] < b.x and sys[i] > a.y and sys[i] < b.y:
 			snap_people += 1
 	print("M3_UI INFO people inside the doorless ring: %d by the snapshot (%d tiles hit by the agent layer); clicking %s" % [snap_people, people_inside, inside])
-	tool.call("click_world", Vector2(inside) * 16.0 + Vector2(8, 8), inside)
+	tool.call("click_world", Vector2(inside) * View.TILE + Vector2(View.TILE, View.TILE) * 0.5, inside)
 	await _frames(2)
 	print("M3_UI INFO after click: room panel visible %s, inspector visible %s, causal visible %s, rooms shown %s, room_at %d" % [(room_panel as Control).visible,
 		(inspector as Control).visible, (_main.get_node("UI/CausalPanel") as Control).visible, rooms.call("is_shown"), int(rooms.call("room_at", inside))])

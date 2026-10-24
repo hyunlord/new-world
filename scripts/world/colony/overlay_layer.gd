@@ -1,78 +1,99 @@
 # overlay_layer.gd (ColonyView/OverlayLayer in scenes/main.tscn): what the player ordered and what lies on the
-#   ground.
-# Two draw passes:
-#   - the child node "Ground" (z 1: above the terrain, below canopy, buildings and people): stockpile zones as a
-#     tamped-earth floor with a 1-px darker border on each side without a zone neighbour and a stake where two such
-#     sides meet; M2 resource nodes (boulder, flint outcrop); item stacks by kind (logs by count: logs_s 1–8,
-#     logs_m 9–16, logs_l 17+; the M2 kinds by their item sprite); hut blueprints as the blueprint-blue ghost with
-#     the delivered logs piled on its south row as they arrive (4 logs per tile: s, s, m, l); M2 workshop
-#     blueprints as the workshop's sprite tinted blueprint-blue;
-#   - this node (z 4: above the canopy, below people): chop marks (an axe glyph) and M2 quarry marks (a pick glyph)
-#     at the tile's top-right, each blueprint's label ("통나무 d/n" for a hut, "재료 d/n" for a workshop, then
-#     "· 작업 n%") on a dark backing box above it and a 3-px bar under it (amber with the materials delivered until
-#     all are there, then green with the work done), and, under the mouse, a stack's count (logs) or
-#     "부싯돌 날 ×3 · 품질 62" (M2 kinds), or a node's "바위 · 돌 12개 남음", on a small backing box.
-# M3: space sites (site kinds 4 log wall, 5 stone wall, 6 door, 7 packed floor, 8 bedroll) are drawn as their
-#   blueprint ghost (`ghost_wall` on a wall site, `ghost_door`, `ghost_floor`, `ghost_bedroll`) with a 2-px bar
-#   inside the tile's bottom; their "재료 d/n · 작업 n%" label shows only under the mouse (a drag of 30 walls would
-#   bury the map in labels). Dig and deconstruct marks (designation kinds 2, 3) draw `mark_dig` /
-#   `mark_deconstruct` over the whole tile. The hover text of a stack in a room adds "· 방: 창고 2" (and "· 지붕
-#   아래" when the overlay's `item_covered` says so). The room overlay is the child "Rooms" (room_layer.gd).
-# M4: clay banks (node kind 2, sprite `clay_bank`, hover "점토 둑 · 점토 6개 남음"); clay-pit marks (designation kind
-#   4) reuse `mark_dig`; the new item kinds 7–10 lie as `item_clay`, `item_raw_pot`, `item_clay_pot`, `item_ground_axe`.
-# M5: the item kinds 11–16 lie as `carcass` (meat: a kill's carcass), `item_cured_hide`, `item_hide_wrap`,
-#   `item_fur_cloak`, `item_spear`, `item_wolf_hide` (EconomyText.ITEM_SPRITES); a kill's hide is the M2 `item_hide`.
-# Redrawn only when the colony overlay version or the hovered stack changes (`get_colony_versions` is polled every
-#   frame).
+#   ground, at 64-px tiles (M-ART2 §3.4 zones/designations/sites, §3.5 things).
+# Standing sprites in the y-sorted ColonyView/World (position = base point, offset = −anchor; things lying flat sit
+#   one pixel above the base line so a person on the same tile draws over them):
+#   - item stacks of get_colony_overlay at the tile's base point, by bindings.json `items` (count buckets 1 / 2–8 /
+#     9+ by `items.bucket_limits`: a row with `assets` has one sprite per bucket; a row with `asset` is copied 1 / 3 /
+#     9 times at the `items.stack_layout` offsets into one cached texture, and its `many` sprite replaces it at 9+);
+#     an item whose row names `carcass_of` lying outside every stockpile zone draws that species' dead frame
+#     (manifest `<species>/<first facing>/<the animals row's dead pose>`) instead;
+#   - resource nodes by bindings `nodes` (`depleted` below `depleted_below_permille` of the most seen in the node);
+#   - blueprint sites as their finished look through site_ghost.gd (pale outline + `sites.wash_alpha` wash): hut
+#     rings, workshops, bedrolls and doors as one ghost each; wall sites of every style baked together (so a run
+#     joins) and cut into per-tile ghosts; floor sites flat (below).
+# Flat, drawn by child nodes: "Ground" (z −6, between the ground chunks and the world layer): zones as a
+#   `zones.tint_alpha` tint with `zones.tick_px` corner ticks only on a zone's outer (convex) corners, no grid lines,
+#   and floor-site ghosts; "Marks" (z 3, above the world layer): designations as ink marks (`marks.ink_rgb` on a
+#   pale disc; the mark kind → glyph: 0 chop axe, 1 quarry pick, 2 dig and 4 clay pit spade, 3 deconstruct cross).
+# This node (z 6): each blueprint's bar (amber with the materials delivered until all are there, then green with the
+#   work done; inside the tile's bottom for a space site) and label ("통나무 d/n · 작업 n%"; a space site's only under
+#   the mouse), and under the mouse a stack's "부싯돌 날 ×3 · 품질 62" (+ " · 방: 창고 2", " · 지붕 아래") or a node's
+#   "바위 · 돌 12개 남음". Text follows the camera: `labels.font_px` screen pixels (Galmuri11, 24 = 2 × its 12-px
+#   grid) at every zoom, the backing box scaled with it; redrawn when the zoom changes.
+# The room overlay is the child "Rooms" (room_layer.gd).
+# Sprites are rebuilt only when the colony overlay version moves (and on an F12 params reload), pooled by tile; item
+#   stacks and nodes hold sprites only in the CULL × CULL-tile chunks in view plus a margin (a seed-0 map has ~1,300
+#   nodes), re-synced when the view crosses a chunk.
 # Bridge methods: via SimReads get_colony_versions, get_colony_overlay; signal world_reset.
 extends Node2D
 
 const View = preload("res://scripts/world/colony/view.gd")
+const ArtData = preload("res://scripts/world/art/art_data.gd")
+const SiteGhost = preload("res://scripts/world/art/site_ghost.gd")
+const EconomyText = preload("res://scripts/ui/economy_text.gd")
+const RoomLayer = preload("res://scripts/world/colony/room_layer.gd")
 const FONT_PATH: String = "res://assets/fonts/galmuri/Galmuri11.ttf"
 const BACK: Color = Color(0.094, 0.082, 0.075, 0.92)
 const BACK_LINE: Color = Color(0.275, 0.243, 0.212, 1.0)
 const TEXT: Color = Color(0.96, 0.92, 0.84)
 const BAR_LOGS: Color = Color(0.85, 0.62, 0.3, 1.0)
 const BAR_WORK: Color = Color(0.55, 0.85, 0.45, 1.0)
-const BAR_HEIGHT: int = 3
-const FONT_SIZE: int = 12
-const LOGS_PER_PILE: int = 4
-const EconomyText = preload("res://scripts/ui/economy_text.gd")
-## Resource node sprites by node kind (0 boulder, 1 flint outcrop, M4 2 clay bank), their names and the item they yield.
-const NODE_SPRITES: Array[String] = ["boulder", "flint_outcrop", "clay_bank"]
-const NODE_KEYS: Array[String] = ["NODE_BOULDER", "NODE_FLINT_OUTCROP", "NODE_CLAY_BANK"]
-const NODE_ITEMS: Array[int] = [2, 3, 7]
-## Designation marks by designation kind (0 chop, 1 quarry; M3 2 dig, 3 deconstruct; M4 4 clay pit = the dig mark).
-const MARKS: Array[String] = ["mark_chop", "mark_quarry", "mark_dig", "mark_deconstruct", "mark_dig"]
-const RoomLayer = preload("res://scripts/world/colony/room_layer.gd")
-const BLUEPRINT: Color = Color(0.55, 0.75, 1.0, 0.6)
+const TILE: int = View.TILE
+const BAR_HEIGHT: int = 6
+const SPACE_BAR: int = 4
+## Designation kind → glyph (drawing behaviour, not content): 0 chop, 1 quarry, 2 dig, 3 deconstruct, 4 clay pit.
+const MARK_GLYPHS: Array[String] = ["axe", "pick", "spade", "cross", "spade"]
+## Culling chunk size in tiles (items and nodes).
+const CULL: int = 16
 
 var _world_sim: Node = null
+var _world: Node2D = null
 var _version: int = -1
+var _params_version: int = -1
 var _overlay: Dictionary = {}
 var _font: Font = null
 var _ground: Node2D = null
+var _marks: Node2D = null
 var _rooms: Node2D = null
 ## Tile -> {kind, count, quality, covered} of the item stack on it.
 var _stacks: Dictionary = {}
 ## Tile -> {kind, left} of the resource node on it.
 var _nodes: Dictionary = {}
+## Tile -> the most items seen in that node (its "full" for the depleted look).
+var _node_max: Dictionary = {}
 var _hover: Vector2i = Vector2i(-1, -1)
+var _zoom: float = 1.0
 ## Tiles of M3 space sites (their label shows under the mouse).
 var _space_sites: Dictionary = {}
+## Pools: key → Sprite2D (items "i", nodes "n", sites "s").
+var _sprites: Dictionary = {}
+var _sites_key: int = 0
+## Floor-site ghosts: [world top-left, texture].
+var _floor_ghosts: Array[Array] = []
+var _stack_tex: Dictionary = {}
+var _window: Rect2i = Rect2i()
 
 
 func _ready() -> void:
-	# Above the trees (2) and buildings (3), below people (5): marks and labels must read over canopies.
-	z_index = 4
+	z_as_relative = false
+	z_index = 6
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_font = load(FONT_PATH) as Font
+	_world = get_node_or_null("../World")
 	_ground = Node2D.new()
 	_ground.name = "Ground"
-	_ground.z_index = -3
+	_ground.z_as_relative = false
+	_ground.z_index = -6
 	_ground.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_ground.draw.connect(_draw_ground)
 	add_child(_ground)
+	_marks = Node2D.new()
+	_marks.name = "Marks"
+	_marks.z_as_relative = false
+	_marks.z_index = 3
+	_marks.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_marks.draw.connect(_draw_marks)
+	add_child(_marks)
 	_rooms = RoomLayer.new()
 	_rooms.name = "Rooms"
 	add_child(_rooms)
@@ -83,18 +104,39 @@ func _ready() -> void:
 
 func _on_world_reset() -> void:
 	_version = -1
+	_node_max.clear()
+	for s: Node in _sprites.values():
+		s.queue_free()
+	_sprites.clear()
+	_sites_key = 0
 
 
 func _process(_delta: float) -> void:
 	if _world_sim == null:
 		return
+	if _params_version != ArtData.params_version():
+		_params_version = ArtData.params_version()
+		_version = -1
+		_sites_key = 0
+		_stack_tex.clear()
+		for s: Node in _sprites.values():
+			s.queue_free()
+		_sprites.clear()
 	var versions: Dictionary = SimReads.read(_world_sim, "get_colony_versions")
 	var version: int = int(versions.get("overlay_version", -1))
 	if version != _version:
 		_version = version
 		_overlay = SimReads.read(_world_sim, "get_colony_overlay")
 		_index_stacks()
+		_sync_things()
 		_ground.queue_redraw()
+		_marks.queue_redraw()
+		queue_redraw()
+	elif _update_window():
+		_sync_things()
+	var zoom: float = get_viewport().get_canvas_transform().x.x
+	if not is_equal_approx(zoom, _zoom):
+		_zoom = zoom
 		queue_redraw()
 	var hover: Vector2i = View.world_to_tile(get_global_mouse_position())
 	if hover != _hover:
@@ -131,89 +173,212 @@ func _index_stacks() -> void:
 	_space_sites.clear()
 	for site: Dictionary in _sites():
 		if EconomyText.is_space(int(site["kind"])):
-			_space_sites[View.world_to_tile((site["rect"] as Rect2).position)] = true
+			_space_sites[site["tile"]] = true
 	_nodes.clear()
 	var nxs: PackedInt32Array = _overlay.get("node_xs", PackedInt32Array())
 	var nys: PackedInt32Array = _overlay.get("node_ys", PackedInt32Array())
 	var nkinds: PackedInt32Array = _overlay.get("node_kinds", PackedInt32Array())
 	var left: PackedInt32Array = _overlay.get("node_left", PackedInt32Array())
 	for i: int in mini(mini(nxs.size(), nys.size()), mini(nkinds.size(), left.size())):
-		if nkinds[i] >= 0 and nkinds[i] < NODE_SPRITES.size():
-			_nodes[Vector2i(nxs[i], nys[i])] = {"kind": nkinds[i], "left": left[i]}
+		var t: Vector2i = Vector2i(nxs[i], nys[i])
+		_nodes[t] = {"kind": nkinds[i], "left": left[i]}
+		_node_max[t] = maxi(int(_node_max.get(t, 0)), left[i])
 
 
-## The ground sprite for an item stack of `kind` and `count` (logs by count, else the kind's sprite).
-static func stack_sprite(kind: int, count: int) -> String:
-	if kind <= 0 or kind >= EconomyText.ITEM_SPRITES.size():
-		return pile_name(count)
-	return EconomyText.ITEM_SPRITES[kind]
+## The count bucket of `count` (0: 1, 1: 2–8, 2: 9+ by bindings items.bucket_limits).
+static func bucket(count: int) -> int:
+	var limits: Array = (ArtData.bindings().get("items", {}) as Dictionary).get("bucket_limits", [1, 8])
+	var b: int = 0
+	for lim: Variant in limits:
+		if count > int(lim):
+			b += 1
+	return b
 
 
-## The pile sprite for a stack of `count` logs.
-static func pile_name(count: int) -> String:
-	return "logs_s" if count <= 8 else ("logs_m" if count <= 16 else "logs_l")
+## [manifest id, copies] of an item stack of `kind` and `count` (bindings `items`).
+static func stack_look(kind: int, count: int) -> Array:
+	var row: Dictionary = ArtData.binding("items", kind)
+	var b: int = bucket(count)
+	var assets: Variant = row.get("assets", null)
+	if assets is Array and not (assets as Array).is_empty():
+		return [str(assets[mini(b, (assets as Array).size() - 1)]), 1]
+	if b >= 2 and row.get("many", null) is String:
+		return [str(row["many"]), 1]
+	return [str(row.get("asset", "")), [1, 3, 9][mini(b, 2)]]
 
 
-func _draw_ground() -> void:
-	var texture: Texture2D = View.texture()
-	if texture == null or _overlay.is_empty():
+## The texture and anchor of `copies` copies of item `id` at the stack layout offsets (cached).
+func _stack_texture(id: String, copies: int) -> Array:
+	var key: String = "%s|%d" % [id, copies]
+	if _stack_tex.has(key):
+		return _stack_tex[key]
+	var out: Array = [null, Vector2i.ZERO]
+	if copies <= 1:
+		out = [ArtData.texture(id), ArtData.anchor(id)]
+	else:
+		var src: Image = ArtData.image(id)
+		var layout: Array = (ArtData.bindings().get("items", {}) as Dictionary).get("stack_layout", [[0, 0]])
+		if src != null:
+			var offs: Array[Vector2i] = []
+			for k: int in mini(copies, layout.size()):
+				offs.append(Vector2i(int(layout[k][0]), int(layout[k][1])))
+			offs.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.y < b.y or (a.y == b.y and a.x < b.x))
+			var lo: Vector2i = Vector2i.ZERO
+			var hi: Vector2i = Vector2i.ZERO
+			for o: Vector2i in offs:
+				lo = Vector2i(mini(lo.x, o.x), mini(lo.y, o.y))
+				hi = Vector2i(maxi(hi.x, o.x), maxi(hi.y, o.y))
+			var img: Image = Image.create(src.get_width() + hi.x - lo.x, src.get_height() + hi.y - lo.y, false, Image.FORMAT_RGBA8)
+			for o: Vector2i in offs:
+				img.blend_rect(src, Rect2i(Vector2i.ZERO, src.get_size()), o - lo)
+			out = [ImageTexture.create_from_image(img), ArtData.anchor(id) - lo]
+	_stack_tex[key] = out
+	return out
+
+
+## The dead-frame id for an item of `kind` lying outside every stockpile zone ("" when the row names no carcass).
+static func carcass_id(kind: int) -> String:
+	var species: Variant = ArtData.binding("items", kind).get("carcass_of", null)
+	if not (species is String):
+		return ""
+	var facings: Array = (ArtData.manifest().get("animals", {}) as Dictionary).get("facings", [])
+	for r: Variant in (ArtData.bindings().get("animals", {}) as Dictionary).get("codes", []):
+		if r is Dictionary and str((r as Dictionary).get("species", "")) == str(species) and not facings.is_empty():
+			return "%s/%s/%s" % [str(species), str(facings[0]), str((r as Dictionary).get("dead", ""))]
+	return ""
+
+
+## The chunk window in view plus one chunk (items and nodes outside hold no sprite); true when it moved.
+func _update_window() -> bool:
+	var size: float = float(CULL * TILE)
+	var view: Rect2 = get_viewport().get_canvas_transform().affine_inverse() * get_viewport_rect()
+	var c0: Vector2i = Vector2i(floori(view.position.x / size) - 1, floori(view.position.y / size) - 1)
+	var c1: Vector2i = Vector2i(floori(view.end.x / size) + 1, floori(view.end.y / size) + 1)
+	var window: Rect2i = Rect2i(c0, c1 - c0 + Vector2i.ONE)
+	if window == _window:
+		return false
+	_window = window
+	return true
+
+
+func _in_window(t: Vector2i) -> bool:
+	return _window.has_point(Vector2i(floori(float(t.x) / CULL), floori(float(t.y) / CULL)))
+
+
+## Items, nodes and sites as standing sprites, synced by key with the pool.
+func _sync_things() -> void:
+	if _world == null:
 		return
-	var tile: Vector2 = Vector2(View.TILE, View.TILE)
-	# Zones: floor, a border on each open side, a stake where two open sides meet.
-	var zone_ids: PackedInt32Array = _overlay.get("zone_ids", PackedInt32Array())
+	_update_window()
+	var zones: Dictionary = {}
 	var zxs: PackedInt32Array = _overlay.get("zone_xs", PackedInt32Array())
 	var zys: PackedInt32Array = _overlay.get("zone_ys", PackedInt32Array())
-	var zone_at: Dictionary = {}
-	for i: int in mini(zone_ids.size(), mini(zxs.size(), zys.size())):
-		zone_at[Vector2i(zxs[i], zys[i])] = zone_ids[i]
-	var floor_src: Rect2 = View.rect("stock_floor")
-	for cell: Vector2i in zone_at.keys():
-		var dest: Rect2 = Rect2(View.tile_to_world(cell), tile)
-		_ground.draw_texture_rect_region(texture, dest, floor_src)
-		var id: int = zone_at[cell]
-		var open_n: bool = zone_at.get(cell + Vector2i(0, -1), -1) != id
-		var open_e: bool = zone_at.get(cell + Vector2i(1, 0), -1) != id
-		var open_s: bool = zone_at.get(cell + Vector2i(0, 1), -1) != id
-		var open_w: bool = zone_at.get(cell + Vector2i(-1, 0), -1) != id
-		for part: Array in [[open_n, "stock_edge_n"], [open_e, "stock_edge_e"], [open_s, "stock_edge_s"], [open_w, "stock_edge_w"],
-				[open_n and open_w, "stock_stake_nw"], [open_n and open_e, "stock_stake_ne"],
-				[open_s and open_w, "stock_stake_sw"], [open_s and open_e, "stock_stake_se"]]:
-			if bool(part[0]):
-				_ground.draw_texture_rect_region(texture, dest, View.rect(str(part[1])))
-	# Resource nodes (M2).
-	for cell: Vector2i in _nodes.keys():
-		var node: Dictionary = _nodes[cell]
-		_ground.draw_texture_rect_region(texture, Rect2(View.tile_to_world(cell), tile), View.rect(NODE_SPRITES[int(node["kind"])]))
-	# Item stacks.
-	for cell: Vector2i in _stacks.keys():
-		var stack: Dictionary = _stacks[cell]
-		_ground.draw_texture_rect_region(texture, Rect2(View.tile_to_world(cell), tile), View.rect(stack_sprite(int(stack["kind"]), int(stack["count"]))))
-	# Blueprints: the hut ghost with the delivered logs piled on its south row; a workshop's sprite tinted blue.
+	for i: int in mini(zxs.size(), zys.size()):
+		zones[Vector2i(zxs[i], zys[i])] = true
+	# key → [texture, anchor, base point]
+	var wanted: Dictionary = {}
+	for t: Vector2i in _stacks.keys():
+		if not _in_window(t):
+			continue
+		var stack: Dictionary = _stacks[t]
+		var kind: int = int(stack["kind"])
+		var dead: String = carcass_id(kind) if not zones.has(t) else ""
+		if dead != "" and ArtData.has(dead):
+			wanted["i%d_%d" % [t.x, t.y]] = [ArtData.texture(dead), ArtData.anchor(dead), View.base_point(t) - Vector2(0, 1), dead]
+			continue
+		var look: Array = stack_look(kind, int(stack["count"]))
+		var tex: Array = _stack_texture(str(look[0]), int(look[1]))
+		if tex[0] != null:
+			wanted["i%d_%d" % [t.x, t.y]] = [tex[0], tex[1], View.base_point(t) - Vector2(0, 1), "%s|%d" % look]
+	for t: Vector2i in _nodes.keys():
+		if not _in_window(t):
+			continue
+		var node: Dictionary = _nodes[t]
+		var row: Dictionary = ArtData.binding("nodes", int(node["kind"]))
+		var id: String = str(row.get("structure", ""))
+		var full: int = maxi(1, int(_node_max.get(t, 1)))
+		if row.get("depleted", null) is String and floori(int(node["left"]) * 1000.0 / full) < int(row.get("depleted_below_permille", 0)):
+			id = str(row["depleted"])
+		if ArtData.has(id):
+			wanted["n%d_%d" % [t.x, t.y]] = [ArtData.texture(id), ArtData.anchor(id), View.base_point(t), id]
+	_sync(wanted, ["i", "n"])
 	var sites: Array[Dictionary] = _sites()
-	var ghost: Rect2 = View.rect("hut_ghost")
+	var key: int = hash([_overlay.get("site_xs"), _overlay.get("site_ys"), _overlay.get("site_kinds")])
+	if key != _sites_key:
+		_sites_key = key
+		_build_site_ghosts(sites)
+
+
+## Keep the pooled sprites of the key prefixes `prefixes` equal to `wanted` (key → [texture, anchor, base, ident]).
+func _sync(wanted: Dictionary, prefixes: Array) -> void:
+	for k: String in _sprites.keys():
+		if not prefixes.has(k.left(1)):
+			continue
+		var w: Variant = wanted.get(k, null)
+		var s: Sprite2D = _sprites[k]
+		if w == null or str(s.get_meta("ident", "")) != str(w[3]):
+			s.queue_free()
+			_sprites.erase(k)
+	for k: String in wanted.keys():
+		if _sprites.has(k):
+			continue
+		var w: Array = wanted[k]
+		_sprites[k] = _standing(w[0], w[1], w[2], str(w[3]))
+
+
+func _standing(tex: Texture2D, anchor: Vector2i, base: Vector2, ident: String) -> Sprite2D:
+	var s: Sprite2D = Sprite2D.new()
+	s.texture = tex
+	s.centered = false
+	s.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	s.position = base.round()
+	s.offset = -Vector2(anchor)
+	s.set_meta("ident", ident)
+	_world.add_child(s)
+	return s
+
+
+## Blueprint sites as ghosts of their finished look (rebuilt when the set of sites changes).
+func _build_site_ghosts(sites: Array[Dictionary]) -> void:
+	for k: String in _sprites.keys():
+		if k.begins_with("s"):
+			(_sprites[k] as Node).queue_free()
+			_sprites.erase(k)
+	_floor_ghosts.clear()
+	var walls: Dictionary = {}
+	var doors: Dictionary = {}
 	for site: Dictionary in sites:
-		var rect: Rect2 = site["rect"]
-		var kind: int = int(site["kind"])
-		if EconomyText.is_space(kind):
-			# M3: the kind's blueprint ghost (a wall ghost on a wall site).
-			_ground.draw_texture_rect_region(texture, rect, View.rect(str(EconomyText.BUILD_KINDS[kind]["ghost"])))
+		var code: int = int(site["kind"])
+		var row: Dictionary = SiteGhost.blueprint(code)
+		var tile: Vector2i = site["tile"]
+		var size: Vector2i = site["size"]
+		match str(row.get("kind", "")):
+			"wall":
+				walls[tile] = str(row.get("style", ""))
+				continue
+			"door":
+				doors[tile] = str(row.get("style", ""))
+			"floor":
+				var fl: Image = SiteGhost.floor_tile(str(row.get("style", "")), tile)
+				if fl != null:
+					_floor_ghosts.append([View.tile_to_world(tile), SiteGhost.ghost("", fl)])
+				continue
+		var look: Dictionary = SiteGhost.finished(code)
+		if look.is_empty():
 			continue
-		if kind > 0 and kind < EconomyText.BUILD_KINDS.size():
-			_ground.draw_rect(rect, Color(BLUEPRINT, 0.15))
-			_ground.draw_texture_rect_region(texture, rect, View.rect(str(EconomyText.BUILD_KINDS[kind]["sprite"])), BLUEPRINT)
-			_ground.draw_rect(rect, BLUEPRINT, false, 1.0)
-			continue
-		_ground.draw_texture_rect_region(texture, rect, ghost)
-		var left: int = int(site["delivered"])
-		var columns: int = int(rect.size.x / View.TILE)
-		for col: int in columns:
-			if left <= 0:
-				break
-			var here: int = mini(left, LOGS_PER_PILE)
-			left -= here
-			var name: String = "logs_s" if here <= 2 else ("logs_m" if here == 3 else "logs_l")
-			var origin: Vector2 = rect.position + Vector2(col * View.TILE, rect.size.y - View.TILE)
-			_ground.draw_texture_rect_region(texture, Rect2(origin, tile), View.rect(name))
+		var fp: Vector2i = look.get("footprint", size) if bool(row.get("bed", false)) else size
+		var base: Vector2 = SiteGhost.footprint_base(tile, fp)
+		if bool(look.get("flat", false)):
+			base.y -= 1
+		_sprites["s%d_%d" % [tile.x, tile.y]] = _standing(SiteGhost.ghost("site:%d" % code, look["image"]), look["base"], base, "site")
+	if not walls.is_empty():
+		var rows: Dictionary = SiteGhost.wall_rows(walls, doors)
+		for t: Vector2i in walls.keys():
+			var img: Image = SiteGhost.wall_tile(rows, t)
+			if img == null:
+				continue
+			var s: Sprite2D = _standing(SiteGhost.ghost("", img), Vector2i(0, SiteGhost.CAP + View.BASE.y), Vector2(t.x * TILE, t.y * TILE + View.BASE.y), "site")
+			_sprites["s%d_%d" % [t.x, t.y]] = s
 
 
 func _sites() -> Array[Dictionary]:
@@ -231,26 +396,100 @@ func _sites() -> Array[Dictionary]:
 		mini(mini(needed.size(), delivered.size()), mini(progress.size(), required.size())))
 	for i: int in n:
 		out.append({
-			"rect": Rect2(View.tile_to_world(Vector2i(sxs[i], sys[i])), Vector2(sws[i], shs[i]) * View.TILE),
+			"tile": Vector2i(sxs[i], sys[i]), "size": Vector2i(sws[i], shs[i]),
+			"rect": Rect2(View.tile_to_world(Vector2i(sxs[i], sys[i])), Vector2(sws[i], shs[i]) * TILE),
 			"needed": needed[i], "delivered": delivered[i], "progress": progress[i], "required": required[i],
 			"kind": kinds[i] if i < kinds.size() else 0,
 		})
 	return out
 
 
-func _draw() -> void:
-	var texture: Texture2D = View.texture()
-	if texture == null or _overlay.is_empty():
+func _colour(path: String, fallback: Array) -> Color:
+	var v: Variant = ArtData.param(path, fallback)
+	var a: Array = v if v is Array and ((v as Array).size() == 3 or (v as Array).size() == 4) else fallback
+	return Color8(int(a[0]), int(a[1]), int(a[2]), int(a[3]) if a.size() == 4 else 255)
+
+
+## Zones: a faint tint and ticks on the outer corners; floor-site ghosts.
+func _draw_ground() -> void:
+	if _overlay.is_empty():
 		return
-	var tile: Vector2 = Vector2(View.TILE, View.TILE)
-	# Chop and quarry marks (this node sits over the canopy).
+	var zone_ids: PackedInt32Array = _overlay.get("zone_ids", PackedInt32Array())
+	var zxs: PackedInt32Array = _overlay.get("zone_xs", PackedInt32Array())
+	var zys: PackedInt32Array = _overlay.get("zone_ys", PackedInt32Array())
+	var zone_at: Dictionary = {}
+	for i: int in mini(zone_ids.size(), mini(zxs.size(), zys.size())):
+		zone_at[Vector2i(zxs[i], zys[i])] = zone_ids[i]
+	var tint: Color = _colour("zones.tint_rgb", [226, 204, 150])
+	tint.a = float(ArtData.param("zones.tint_alpha", 0.08))
+	var tick: Color = _colour("zones.tick_rgb", [236, 228, 204])
+	tick.a = float(ArtData.param("zones.tick_alpha", 0.45))
+	var tick_px: float = float(ArtData.param("zones.tick_px", 5))
+	var w: float = 2.0
+	for cell: Vector2i in zone_at.keys():
+		var o: Vector2 = View.tile_to_world(cell)
+		_ground.draw_rect(Rect2(o, Vector2(TILE, TILE)), tint)
+		var id: int = zone_at[cell]
+		var open_n: bool = zone_at.get(cell + Vector2i(0, -1), -1) != id
+		var open_e: bool = zone_at.get(cell + Vector2i(1, 0), -1) != id
+		var open_s: bool = zone_at.get(cell + Vector2i(0, 1), -1) != id
+		var open_w: bool = zone_at.get(cell + Vector2i(-1, 0), -1) != id
+		var t: float = float(TILE)
+		if open_n and open_w:
+			_ground.draw_rect(Rect2(o, Vector2(tick_px, w)), tick)
+			_ground.draw_rect(Rect2(o, Vector2(w, tick_px)), tick)
+		if open_n and open_e:
+			_ground.draw_rect(Rect2(o + Vector2(t - tick_px, 0), Vector2(tick_px, w)), tick)
+			_ground.draw_rect(Rect2(o + Vector2(t - w, 0), Vector2(w, tick_px)), tick)
+		if open_s and open_w:
+			_ground.draw_rect(Rect2(o + Vector2(0, t - w), Vector2(tick_px, w)), tick)
+			_ground.draw_rect(Rect2(o + Vector2(0, t - tick_px), Vector2(w, tick_px)), tick)
+		if open_s and open_e:
+			_ground.draw_rect(Rect2(o + Vector2(t - tick_px, t - w), Vector2(tick_px, w)), tick)
+			_ground.draw_rect(Rect2(o + Vector2(t - w, t - tick_px), Vector2(w, tick_px)), tick)
+	for g: Array in _floor_ghosts:
+		if g[1] != null:
+			_ground.draw_texture(g[1], g[0])
+
+
+## Designations as ink marks on a pale disc at the tile's top-right.
+func _draw_marks() -> void:
 	var dxs: PackedInt32Array = _overlay.get("designation_xs", PackedInt32Array())
 	var dys: PackedInt32Array = _overlay.get("designation_ys", PackedInt32Array())
 	var dkinds: PackedInt32Array = _overlay.get("designation_kinds", PackedInt32Array())
+	var ink: Color = _colour("marks.ink_rgb", [35, 29, 23])
+	var back: Color = _colour("marks.back_rgba", [236, 228, 204, 215])
+	var size: float = float(ArtData.param("marks.size_px", 18))
 	for i: int in mini(dxs.size(), dys.size()):
-		var mark_kind: int = clampi(dkinds[i], 0, MARKS.size() - 1) if i < dkinds.size() else 0
-		draw_texture_rect_region(texture, Rect2(View.tile_to_world(Vector2i(dxs[i], dys[i])), tile), View.rect(MARKS[mark_kind]))
-	# Blueprint labels and bars.
+		var kind: int = clampi(dkinds[i], 0, MARK_GLYPHS.size() - 1) if i < dkinds.size() else 0
+		var c: Vector2 = View.tile_to_world(Vector2i(dxs[i], dys[i])) + Vector2(TILE - size * 0.5 - 4, size * 0.5 + 4)
+		draw_mark(_marks, MARK_GLYPHS[kind], c, size, ink, back)
+
+
+## One ink mark `glyph` centred on `c` (`size` px) on a pale disc with an ink ring.
+static func draw_mark(ci: CanvasItem, glyph: String, c: Vector2, size: float, ink: Color, back: Color) -> void:
+	var r: float = size * 0.5
+	ci.draw_circle(c, r + 1.0, ink)
+	ci.draw_circle(c, r - 1.0, back)
+	var s: float = r * 0.62
+	match glyph:
+		"axe":
+			ci.draw_line(c + Vector2(-s, s), c + Vector2(s * 0.6, -s * 0.6), ink, 2.0)
+			ci.draw_rect(Rect2(c + Vector2(s * 0.1, -s), Vector2(s * 0.9, s * 0.8)), ink)
+		"pick":
+			ci.draw_line(c + Vector2(-s * 0.7, s), c + Vector2(s * 0.5, -s * 0.5), ink, 2.0)
+			ci.draw_line(c + Vector2(-s * 0.6, -s * 0.9), c + Vector2(s, s * 0.2), ink, 2.0)
+		"spade":
+			ci.draw_line(c + Vector2(0, -s), c + Vector2(0, s * 0.1), ink, 2.0)
+			ci.draw_colored_polygon(PackedVector2Array([c + Vector2(-s * 0.55, 0), c + Vector2(s * 0.55, 0), c + Vector2(0, s)]), ink)
+		_:
+			ci.draw_line(c + Vector2(-s, -s), c + Vector2(s, s), ink, 2.0)
+			ci.draw_line(c + Vector2(-s, s), c + Vector2(s, -s), ink, 2.0)
+
+
+func _draw() -> void:
+	if _overlay.is_empty():
+		return
 	var locale: Node = get_node_or_null("/root/Locale")
 	for site: Dictionary in _sites():
 		var rect: Rect2 = site["rect"]
@@ -262,16 +501,19 @@ func _draw() -> void:
 		var fill: float = work_done if building else logs_done
 		var space: bool = EconomyText.is_space(int(site["kind"]))
 		if space:
-			# M3: a 2-px bar inside the tile (a line of sites would overlap bars below the tile); label on hover only.
-			var inner: Rect2 = Rect2(rect.position + Vector2(2, rect.size.y - 4), Vector2(rect.size.x - 4, 3))
-			draw_rect(inner, BACK)
-			draw_rect(Rect2(inner.position + Vector2(1, 1), Vector2((inner.size.x - 2) * fill, 1)), BAR_WORK if building else BAR_LOGS)
-			if not rect.has_point(View.tile_to_world(_hover) + Vector2(1, 1)):
+			# A thin bar inside the tile's bottom once materials arrived (a fresh drag of 30 walls shows none); the
+			# label on hover only.
+			var hovered: bool = rect.has_point(View.tile_centre(_hover))
+			if delivered > 0 or hovered:
+				var inner: Rect2 = Rect2(rect.position + Vector2(8, rect.size.y - 8), Vector2(rect.size.x - TILE * 0.25, SPACE_BAR))
+				draw_rect(inner, BACK)
+				draw_rect(Rect2(inner.position + Vector2(1, 1), Vector2((inner.size.x - 2) * fill, SPACE_BAR - 2)), BAR_WORK if building else BAR_LOGS)
+			if not hovered:
 				continue
 		else:
-			var bar: Rect2 = Rect2(rect.position + Vector2(0, rect.size.y + 1), Vector2(rect.size.x, BAR_HEIGHT + 2))
+			var bar: Rect2 = Rect2(rect.position + Vector2(4, rect.size.y + 2), Vector2(rect.size.x - 8, BAR_HEIGHT))
 			draw_rect(bar, BACK)
-			draw_rect(Rect2(bar.position + Vector2(1, 1), Vector2((bar.size.x - 2) * fill, BAR_HEIGHT)), BAR_WORK if building else BAR_LOGS)
+			draw_rect(Rect2(bar.position + Vector2(1, 1), Vector2((bar.size.x - 2) * fill, BAR_HEIGHT - 2)), BAR_WORK if building else BAR_LOGS)
 		if _font == null:
 			continue
 		var params: Dictionary = {"delivered": delivered, "needed": needed}
@@ -279,9 +521,9 @@ func _draw() -> void:
 		var logs_text: String = str(locale.call("trf", needs_key, params)) if locale != null else "%d/%d" % [delivered, needed]
 		var percent: int = floori(work_done * 100.0)
 		var text: String = str(locale.call("trf", "UI_BLUEPRINT_PROGRESS_FMT", {"logs": logs_text, "percent": percent})) if locale != null else "%s %d%%" % [logs_text, percent]
-		_label(text, Vector2(rect.position.x + rect.size.x * 0.5, rect.position.y - 2), true)
-	# The hovered stack's count (logs) or name, count and quality (M2 kinds); else the hovered node.
-	var at: Vector2 = View.tile_to_world(_hover) + Vector2(View.TILE * 0.5, -1)
+		draw_label(self, _font, text, Vector2(rect.position.x + rect.size.x * 0.5, rect.position.y - 4), _zoom)
+	# The hovered stack's name, count and quality; else the hovered node.
+	var at: Vector2 = View.tile_to_world(_hover) + Vector2(TILE * 0.5, -2)
 	if _stacks.has(_hover) and _font != null:
 		var stack: Dictionary = _stacks[_hover]
 		var kind: int = int(stack["kind"])
@@ -289,12 +531,12 @@ func _draw() -> void:
 		if kind > 0:
 			text = EconomyText.stack(locale, kind, "", int(stack["count"]), int(stack["quality"]))
 		text += room_suffix(_rooms, _hover, bool(stack.get("covered", false)), locale)
-		_label(text, at, true)
+		draw_label(self, _font, text, at, _zoom)
 	elif _nodes.has(_hover) and _font != null:
 		var node: Dictionary = _nodes[_hover]
-		var node_kind: int = int(node["kind"])
-		_label(EconomyText.trf(locale, "UI_NODE_LEFT_FMT", {"name": EconomyText.ltr(locale, NODE_KEYS[node_kind]),
-			"item": EconomyText.item(locale, NODE_ITEMS[node_kind]), "left": int(node["left"])}), at, true)
+		var row: Dictionary = ArtData.binding("nodes", int(node["kind"]))
+		draw_label(self, _font, EconomyText.trf(locale, "UI_NODE_LEFT_FMT", {"name": EconomyText.ltr(locale, str(row.get("name_key", "UI_UNKNOWN"))),
+			"item": EconomyText.item(locale, int(row.get("yields", -1))), "left": int(node["left"])}), at, _zoom)
 
 
 ## M3: " · 방: 창고 2" for a tile inside a room of `rooms` (room_layer.gd), plus " · 지붕 아래" when `covered`; "" outside.
@@ -314,11 +556,18 @@ func rooms() -> Node2D:
 	return _rooms
 
 
-## Text centred on `anchor.x` with its box's bottom at `anchor.y`, on a dark backing box (art_ui panel colours).
-func _label(text: String, anchor: Vector2, centred: bool) -> void:
-	var size: Vector2 = _font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, FONT_SIZE)
-	var box: Rect2 = Rect2(Vector2(anchor.x - (size.x * 0.5 if centred else 0.0) - 3, anchor.y - FONT_SIZE - 3), Vector2(size.x + 6, FONT_SIZE + 3))
+## Text centred on `anchor.x` with its box's bottom at `anchor.y` (world), on a dark backing box; the text is
+## `labels.font_px` screen pixels at camera zoom `zoom` (the box is scaled about the anchor by 1 / zoom).
+static func draw_label(ci: CanvasItem, font: Font, text: String, anchor: Vector2, zoom: float) -> void:
+	var px: int = int(ArtData.param("labels.font_px", 24))
+	var follow: bool = bool(ArtData.param("labels.follow_camera", true))
+	var inv: float = 1.0 / maxf(0.05, zoom) if follow else 1.0
+	var size: Vector2 = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, px)
+	var pad: float = floorf(px / 4.0)
+	ci.draw_set_transform(anchor.round(), 0.0, Vector2(inv, inv))
+	var box: Rect2 = Rect2(Vector2(-size.x * 0.5 - pad, -px - pad), Vector2(size.x + pad * 2.0, px + pad)).abs()
 	box.position = box.position.round()
-	draw_rect(box, BACK)
-	draw_rect(box, BACK_LINE, false, 1.0)
-	draw_string(_font, box.position + Vector2(3, FONT_SIZE - 1), text, HORIZONTAL_ALIGNMENT_LEFT, -1, FONT_SIZE, TEXT)
+	ci.draw_rect(box, BACK)
+	ci.draw_rect(box, BACK_LINE, false, 2.0)
+	ci.draw_string(font, box.position + Vector2(pad, px - 2.0), text, HORIZONTAL_ALIGNMENT_LEFT, -1, px, TEXT)
+	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
