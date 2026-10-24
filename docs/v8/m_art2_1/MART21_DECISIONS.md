@@ -128,3 +128,29 @@ that shape instead of a sampled one:
   and its bare-land samples skip tree tiles: 129 windowed checks pass.
 - Visual check (seasons strip, day 8 / 14 / 20 / 26 noon, tile (112, 103)): summer green, autumn oak ochre and birch
   yellow with pine unchanged, winter bare oak and birch with snow-tipped pines, spring lighter green.
+
+## D5 — the ¼× map, household rings, elder portraits (Part 3)
+
+- **Five classes at ¼×** (`mart21_trees_test.gd` §6, windowed, seed 0 tick 1, summer, camera on the map centre at ¼×,
+  the central half of every interior tile away from the HUD): forest (the baked canopy) rgb(0.24, 0.38, 0.16) over
+  843 tiles, meadow (the plain's ground) (0.29, 0.34, 0.26) over 2,682, bare earth (the clearing) (0.40, 0.33, 0.28)
+  over 65, rock (undug hill tops) (0.24, 0.22, 0.18) over 382, water (0.47, 0.57, 0.58) over 106 river tiles. Pairwise
+  CIE76 ΔE: forest–meadow 22.5, forest–earth 34.7, forest–rock 34.6, forest–water 41.2, meadow–earth 15.1,
+  meadow–rock 15.2, meadow–water 27.7, earth–rock 14.1, earth–water 29.6, rock–water 37.4; **min 14.1** (bar 10). D19's
+  `map_mode` tints needed no retuning after the trees, so none was made; the canopy is the forest class (tree tiles
+  leave the map tint, D4). Water tiles are sampled whatever their neighbours (rivers are one or two tiles wide).
+- **Household rings:** a household is a couple and the children of its members — an adult's key is the lower AgentId
+  of themselves and a living partner, a child's is their living mother's household, else their living father's, else
+  their own. The renderer needs kin links for that, so `get_agent_snapshot` gains three read-only columns `mothers`,
+  `fathers`, `partners` (`sim-bridge` `collect_kin_columns`, the `Kin` component; documented in snapshot_schema.md;
+  tested row-aligned with the snapshot and equal to each entity's `Kin` in `engine_appearance_ffi.rs`). No simulation
+  code changes (the gate's identity step proves it). The key's hash picks one of six hues `lod.household_ring_rgb`;
+  the LOD disc keeps its top-colour fill and draws its 1-px ring in that hue (MultiMesh custom data); a person with
+  no household keeps the ink ring. Recomputed only when the kin columns change. Tests: the rule on seven hand-built
+  people (a couple and their child, an orphan with a living father, a widower, a single parent and child), and the
+  live ¼× assignment (seed 0 tick 1: 10 founders, 10 households, 5 of the 6 colours).
+- **Elder portraits: dropped** (first in the goal's drop order). The portraits are opaque 128 × 128 RGB with painted
+  backgrounds, and for the fur-cloak looks the hair colour centres the sprite masks use (L* 21–35, e.g.
+  adult_F_fur_cloak_bun hair (20.9, 9.1, 16.0)) lie within ΔE ≈ 3 of the clothing centres ((23.7, 10.0, 18.5)): a Lab
+  clustered portrait mask would tint fur cloaks grey with the hair. Elders' sprites already go grey (M-ART2
+  `source_hair_lab`); grey portrait hair needs a source-authored hair mask from the art line (owner decision).

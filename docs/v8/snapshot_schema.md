@@ -132,7 +132,7 @@ an unknown channel. Keys: none (not a dictionary).
 the `#[func]` adds in the same row order: `collect_agent_ages_days`, `collect_agent_ages_years`,
 `collect_agent_infancy_and_pregnancy`, `collect_agent_colds` (`ffi/snapshot.rs`), `collect_agent_jobs`
 (`ffi/colony.rs`), `collect_agent_m5_columns` (`ffi/story.rs`), `collect_fleeing_column` (`ffi/neighbours.rs`) and
-`collect_appearance` (`ffi/appearance.rs`, M-ART2). One row per entity with `Agent` and `Position`, in hecs query order (archetype iteration: stable
+`collect_appearance` (`ffi/appearance.rs`, M-ART2) and `collect_kin_columns` (`ffi/family.rs`, M-ART2.1). One row per entity with `Agent` and `Position`, in hecs query order (archetype iteration: stable
 between two reads of an unchanged world, **not** sorted by id and not stable across ticks — join by `agent_ids` or
 `ids`).
 
@@ -169,6 +169,9 @@ between two reads of an unchanged world, **not** sorted by id and not stable acr
 | `sexes` | PackedByteArray | M-ART2: 0 male (also a person without a `Sex` component), 1 female (`Sex::female`) |
 | `look_ids` | PackedInt32Array | M-ART2: look index `((age × 2 + sex) × 3 + top) × 3 + hair` into the renderer's 36 logical looks (nested order age child/adult, sex M/F, top loincloth/hide wrap/fur cloak, hair short/long tied/bun); age from `life_stages` (child → 0, adult and elder → 1), top from `tops`, hair `(((agent_id × 2246822519) mod 2^32) >> 16) mod 3` |
 | `variants` | PackedByteArray | M-ART2: face variant 0–5, `h mod 6` with `h = (agent_id × 2654435761) mod 2^32`; an elder (`life_stages` 2) takes `[3, 4][h mod 2]` |
+| `mothers` | PackedInt64Array | M-ART2.1: recorded mother's AgentId (`Kin.mother`, kept after her death), -1 unknown or without `Kin` |
+| `fathers` | PackedInt64Array | M-ART2.1: recorded father's AgentId (`Kin.father`), -1 unknown or without `Kin` |
+| `partners` | PackedInt64Array | M-ART2.1: recorded partner's AgentId (`Kin.partner`), -1 none; the renderer's LOD household rings read these three (`collect_kin_columns`, `ffi/family.rs`) |
 
 A person sleeps when `states` is 3 and `target_kinds` is 3 (the agent layer's sleep frame; the text renderer's `z`).
 

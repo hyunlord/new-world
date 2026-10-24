@@ -1,7 +1,7 @@
 //! Read-only family lookup with entity-bit inputs and AgentId-valued links.
 
 use godot::prelude::*;
-use sim_core::components::{Agent, AgentId, BodyHealth, Kin, Sex};
+use sim_core::components::{Agent, AgentId, BodyHealth, Kin, Position, Sex};
 
 /// Family data for one existing agent; links use the snapshot's `agent_ids` domain.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
@@ -49,6 +49,22 @@ pub fn collect_agent_family(world: &hecs::World, entity_bits: u64) -> Option<Age
         partner: kin.partner,
         children,
     })
+}
+
+/// Every person's recorded mother, father and partner (AgentId, `None` unknown or without `Kin`), one row per entity
+/// with `Agent` and `Position` in `collect_agent_snapshot`'s order (M-ART2.1: the renderer groups people into
+/// households for the LOD marker rings). Pure: reads components only.
+pub fn collect_kin_columns(world: &hecs::World) -> Vec<[Option<AgentId>; 3]> {
+    world
+        .query::<(&Agent, &Position, Option<&Kin>)>()
+        .iter()
+        .map(|(_, (_, _, kin))| kin.map_or([None; 3], |k| [k.mother, k.father, k.partner]))
+        .collect()
+}
+
+/// An AgentId as the snapshot's signed bits (-1 for none).
+pub fn signed_or_none(id: Option<AgentId>) -> i64 {
+    id.map_or(-1, |id| i64::from_ne_bytes(id.to_ne_bytes()))
 }
 
 /// Marshal exactly six keys; absent links are -1 and children are packed i64s.

@@ -15,12 +15,16 @@
 #   a halo where people could be lost; MART2_DECISIONS D17). Sleepers sharing a tile fan out for drawing only.
 # LOD: below camera zoom `lod.people_below_zoom` bodies hide and this node draws each person as a filled circle of
 #   `lod.marker_px` SCREEN pixels in its top's colour (people/top_colours.json) with a 1-px ink ring, plus at
-#   `lod.glyph_zoom` an activity glyph (axe working, log carrying, zz sleeping, ! fleeing).
+#   `lod.glyph_zoom` an activity glyph (axe working, log carrying, zz sleeping, ! fleeing). The disc's ring is the
+#   person's household colour (M-ART2.1 §2.3): a household is a couple and the children of its members — an adult's
+#   key is the lower AgentId of themselves and a living partner, a child's is their living mother's household, else
+#   their living father's, else their own (`household_keys`, from the snapshot's `mothers` / `fathers` /
+#   `partners`); the key's hash picks one of `lod.household_ring_rgb`. Recomputed only when those columns change.
 # Marks: a sick person shows a small green badge, a fleeing one a "!" above the head (code-drawn); M toggles the mood
 #   overlay (each person tinted by `mood_bands`, StoryText.band_tint).
 # The drawn rect is what clicks hit (`entity_at`); positions tween between tiles over one move step.
 # Also feeds SettlementSelection.observe every frame (the inspector's village row; V8-0 DECISIONS D31).
-# Bridge methods: via SimReads get_agent_snapshot, get_world_info, get_society_snapshot, get_settlement_snapshot;
+# Bridge methods: via SimReads get_agent_snapshot (since M-ART2.1 also `mothers`, `fathers`, `partners`), get_world_info, get_society_snapshot, get_settlement_snapshot;
 #   signal world_reset.
 extends Node2D
 
@@ -34,6 +38,9 @@ const VARIANT_SHADER: Shader = preload("res://shaders/person_variant.gdshader")
 const STATE_CONSUMING: int = 3
 const TARGET_SLEEP: int = 3
 const TARGET_JOB: int = 9
+## Snapshot `life_stages` code of a child (bridge contract); the salt of the household colour hash.
+const LIFE_CHILD: int = 1
+const HOUSEHOLD_SALT: int = 11
 const MOOD_KEY: Key = KEY_M
 const INK: Color = Color8(35, 29, 23)
 const BADGE: Color = Color(0.45, 0.78, 0.36)
@@ -80,6 +87,7 @@ var _daylight: Node = null
 var _markers: LodMarkers = null
 var _ringed: Array[Person] = []
 var _marker_px: int = 10
+var _household_key: int = 0
 
 
 class Person:
@@ -98,6 +106,7 @@ class Person:
 	var look: int = -1
 	var frames: String = ""
 	var variant: int = -1
+	var household: int = -1
 	var elder: bool = false
 	var seen: int = 0
 	var bed: Vector2 = Vector2.ZERO
@@ -296,6 +305,8 @@ func _update(delta: float) -> void:
 	_selected_bits = int(inspector.call("get_selected_entity_bits")) if inspector != null and (inspector as Control).visible else -1
 	_zoom = _camera_zoom()
 	var lod: bool = _zoom < float(ArtData.param("lod.people_below_zoom", 1.0)) - 0.001
+	if lod:
+		_update_households(snap)
 	var any_sleep: bool = false
 	for i: int in n:
 		var key: int = bits[i]
@@ -454,23 +465,75 @@ func _refresh_markers() -> void:
 	var glyphs: bool = absf(_zoom - float(ArtData.param("lod.glyph_zoom", 0.5))) < 0.01
 	var points: PackedVector2Array = PackedVector2Array()
 	var colours: PackedColorArray = PackedColorArray()
+	var rings: PackedColorArray = PackedColorArray()
 	var ids: PackedInt32Array = PackedInt32Array()
+	var palette: Array = ArtData.param("lod.household_ring_rgb", [])
 	points.resize(_persons.size())
 	colours.resize(_persons.size())
+	rings.resize(_persons.size())
 	ids.resize(_persons.size())
 	var k: int = 0
 	_ringed.clear()
 	for person: Person in _persons.values():
 		points[k] = person.position
 		colours[k] = person.top_colour
+		rings[k] = _ring_colour(person.household, palette)
 		ids[k] = GLYPH_OF.get(person.activity, -1)
 		if person.selected or person.drafted:
 			_ringed.append(person)
 		k += 1
-	_markers.show_markers(points, colours, ids, px, _zoom, glyphs, _rgba("lod.ring_rgba", INK))
+	_markers.show_markers(points, colours, ids, px, _zoom, glyphs, _rgba("lod.ring_rgba", INK), rings)
 	_marker_px = px
 	queue_redraw()
 	last_draw_usec = Time.get_ticks_usec() - t0
+
+
+## The ring colour of household key `key` from `palette` (RGB 0–255 rows); alpha 0 (the ink ring) without either.
+static func _ring_colour(key: int, palette: Array) -> Color:
+	if key < 0 or palette.is_empty():
+		return Color(0, 0, 0, 0)
+	var row: Variant = palette[View.key_hash(key, 0, 0, HOUSEHOLD_SALT) % palette.size()]
+	if not (row is Array and (row as Array).size() == 3):
+		return Color(0, 0, 0, 0)
+	return Color8(int(row[0]), int(row[1]), int(row[2]))
+
+
+## The household key of every person in a snapshot (AgentId → key; see the header). Pure (tests).
+static func household_keys(ids: PackedInt64Array, stages: PackedByteArray, mothers: PackedInt64Array, fathers: PackedInt64Array, partners: PackedInt64Array) -> Dictionary:
+	var alive: Dictionary = {}
+	for id: int in ids:
+		alive[id] = true
+	var adult: Dictionary = {}
+	for i: int in ids.size():
+		var p: int = partners[i] if i < partners.size() else -1
+		adult[ids[i]] = mini(ids[i], p) if p >= 0 and alive.has(p) else ids[i]
+	var out: Dictionary = {}
+	for i: int in ids.size():
+		var key: int = adult[ids[i]]
+		if i < stages.size() and stages[i] == LIFE_CHILD:
+			var m: int = mothers[i] if i < mothers.size() else -1
+			var f: int = fathers[i] if i < fathers.size() else -1
+			key = adult[m] if alive.has(m) else (adult[f] if alive.has(f) else ids[i])
+		out[ids[i]] = key
+	return out
+
+
+func _update_households(snap: Dictionary) -> void:
+	var ids: PackedInt64Array = snap.get("agent_ids", PackedInt64Array())
+	var mothers: PackedInt64Array = snap.get("mothers", PackedInt64Array())
+	var fathers: PackedInt64Array = snap.get("fathers", PackedInt64Array())
+	var partners: PackedInt64Array = snap.get("partners", PackedInt64Array())
+	var key: int = hash([ids, mothers, fathers, partners])
+	if key == _household_key:
+		return
+	_household_key = key
+	if mothers.size() != ids.size() or partners.size() != ids.size():
+		for person: Person in _persons.values():
+			person.household = -1
+		return
+	var keys: Dictionary = household_keys(ids, snap.get("life_stages", PackedByteArray()), mothers, fathers, partners)
+	for person: Person in _persons.values():
+		person.household = int(keys.get(person.agent_id, -1))
 
 
 func _draw() -> void:

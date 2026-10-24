@@ -46,7 +46,7 @@ pub use economy::{
     levels_in_work_order, parse_economy, submit_economy, AgentEconomyRow, BillRow, EconomyCommand,
     PriorityRow, WorkshopRow,
 };
-pub use family::{collect_agent_family, AgentFamilyRow};
+pub use family::{collect_agent_family, collect_kin_columns, signed_or_none, AgentFamilyRow};
 pub use knowledge::{
     collect_agent_knowledge, collect_knowledge_waits, collect_teach_orders,
     collect_teach_suggestion, collect_tech, collect_tech_node, AgentKnowledgeView, KnowledgeRow,

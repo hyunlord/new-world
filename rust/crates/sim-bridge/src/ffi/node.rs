@@ -54,7 +54,9 @@ use super::economy::{
     EconomyCommand,
 };
 use super::engine_build::{advance_engine_ticks, build_game_engine, build_stress_engine};
-use super::family::{agent_family_to_dict, collect_agent_family};
+use super::family::{
+    agent_family_to_dict, collect_agent_family, collect_kin_columns, signed_or_none,
+};
 use super::knowledge::{
     agent_knowledge_to_dict, collect_agent_knowledge, collect_knowledge_waits,
     collect_teach_orders, collect_tech, collect_tech_node, submit_cancel_teach,
@@ -498,6 +500,12 @@ impl WorldSimNode {
         dict.set("sexes", PackedByteArray::from(sexes.as_slice()));
         dict.set("look_ids", PackedInt32Array::from(look_ids.as_slice()));
         dict.set("variants", PackedByteArray::from(variants.as_slice()));
+        // M-ART2.1: `mothers`, `fathers`, `partners` (AgentId, -1 none) in the same row order (`ffi/family.rs`).
+        let kin = collect_kin_columns(&self.engine.world);
+        for (key, k) in [("mothers", 0), ("fathers", 1), ("partners", 2)] {
+            let column: Vec<i64> = kin.iter().map(|r| signed_or_none(r[k])).collect();
+            dict.set(key, PackedInt64Array::from(column.as_slice()));
+        }
         dict
     }
 

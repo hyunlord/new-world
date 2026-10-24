@@ -1,6 +1,7 @@
 # lod_markers.gd (child "LodMarkers" of ColonyView/AgentLayer, made in code): the people's LOD markers (M-ART2 §3.5).
 # Below `lod.people_below_zoom` every person is one filled disc of `lod.marker_px` SCREEN pixels in their top's colour
-#   with a 1-px ink ring (`lod.ring_rgba`), and at `lod.glyph_zoom` a small activity glyph beside it (axe working, log
+#   with a 1-px ring in their household's colour (M-ART2.1 §2.3: agent_layer.gd picks it from
+#   `lod.household_ring_rgb`; a person without one keeps the ink ring `lod.ring_rgba`), and at `lod.glyph_zoom` a small activity glyph beside it (axe working, log
 #   carrying, zz sleeping, ! fleeing). Both are MultiMeshInstance2D (one draw each, the instance buffer written in one
 #   assignment per frame): MART2_DECISIONS D4's fallback step 2, taken after `draw_circle` per person cost ~7 ms of CPU
 #   and held the 1,000-person world under 30 FPS. The disc and glyph textures are code-drawn at the screen size (no
@@ -26,14 +27,15 @@ const MARKER_SHADER: String = """
 shader_type canvas_item;
 uniform vec4 ink : source_color = vec4(0.137, 0.114, 0.09, 1.0);
 varying vec4 v_colour;
-varying float v_cell;
+varying vec4 v_ring;
 void vertex() {
 	v_colour = COLOR;
-	v_cell = INSTANCE_CUSTOM.x;
+	v_ring = INSTANCE_CUSTOM;
 }
 void fragment() {
 	vec4 t = texture(TEXTURE, UV);
-	COLOR = vec4(mix(ink.rgb, v_colour.rgb, step(0.5, t.r)), t.a);
+	vec3 ring = v_ring.a > 0.5 ? v_ring.rgb : ink.rgb;
+	COLOR = vec4(mix(ring, v_colour.rgb, step(0.5, t.r)), t.a);
 }
 """
 const GLYPH_SHADER: String = """
@@ -118,9 +120,9 @@ func _glyph_atlas() -> Texture2D:
 	return ImageTexture.create_from_image(img)
 
 
-## Show one disc per point (world positions, colours) of `marker_px` screen pixels at camera zoom `zoom`, and a
-## glyph (index into GLYPHS, −1 none) beside each when `glyphs` is on.
-func show_markers(points: PackedVector2Array, colours: PackedColorArray, glyph_ids: PackedInt32Array, marker_px: int, zoom: float, glyphs: bool, ink: Color) -> void:
+## Show one disc per point (world positions, colours, ring colours — alpha 0 keeps the ink ring) of `marker_px` screen
+## pixels at camera zoom `zoom`, and a glyph (index into GLYPHS, −1 none) beside each when `glyphs` is on.
+func show_markers(points: PackedVector2Array, colours: PackedColorArray, glyph_ids: PackedInt32Array, marker_px: int, zoom: float, glyphs: bool, ink: Color, rings: PackedColorArray = PackedColorArray()) -> void:
 	visible = true
 	if marker_px != _disc_px or ink != _ink:
 		_disc_px = marker_px
@@ -143,6 +145,12 @@ func show_markers(points: PackedVector2Array, colours: PackedColorArray, glyph_i
 		buf[o + 9] = c.g
 		buf[o + 10] = c.b
 		buf[o + 11] = 1.0
+		if i < rings.size():
+			var ring: Color = rings[i]
+			buf[o + 12] = ring.r
+			buf[o + 13] = ring.g
+			buf[o + 14] = ring.b
+			buf[o + 15] = ring.a
 	var mm: MultiMesh = _discs.multimesh
 	if mm.instance_count != n:
 		mm.instance_count = n
@@ -171,6 +179,12 @@ func show_markers(points: PackedVector2Array, colours: PackedColorArray, glyph_i
 ## Hide both.
 func hide_markers() -> void:
 	visible = false
+
+
+## The ring colour of disc instance `i` (alpha 0 = the ink ring; tests).
+func ring_of(i: int) -> Color:
+	var mm: MultiMesh = _discs.multimesh
+	return mm.get_instance_custom_data(i) if i >= 0 and i < mm.instance_count else Color(0, 0, 0, 0)
 
 
 ## Instances shown (tests): [discs, glyphs].

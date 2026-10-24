@@ -12,6 +12,14 @@
 #   4. windowed (`-- --rendered`): each species' large summer frame drawn through its season material keeps canopy
 #      saturation ≥ 0.30 (masked pixels; trees are never tone-capped) and autumn moves an oak's canopy mean the
 #      way its Lab record says (b* up) while pine's stays; the alder's autumn differs from oak's (its own record).
+#   5. households (§2.3): agent_layer.gd `household_keys` on hand-built families (a couple, their child, an orphan
+#      child with a living father, a widow, a single) gives the keys worked out by hand; at ¼× every person gets a
+#      household and a ring colour from `lod.household_ring_rgb`, members of one household share it, and people of
+#      different households use more than one colour;
+#   6. windowed: the five ¼× map classes on the seed-0 screen (forest = tree tiles' canopy, meadow = the plain's ground,
+#      bare earth = the camp clearing, rock = undug hill tops, water), in summer, each the mean colour of the central
+#      half of ≥ 20 interior tiles (all eight neighbours of the same class; any river tile, rivers being 1–2 tiles wide)
+#      away from the HUD, differ pairwise by CIE76 ΔE ≥ 10.
 #   Prints one MART21_TREES line per check and MART21_TREES_DONE failures=N; exits 1 on any failure.
 #   `godot --headless --path . --script res://tools/v8/mart21_trees_test.gd [-- --rendered (windowed)]`
 # Bridge methods called: reset_world, advance_ticks (direct); the layers read the rest.
@@ -59,11 +67,14 @@ func _run() -> void:
 	await _check_seasons(trees, flora)
 	await _check_alder(trees, flora)
 	await _check_canopy(trees, ground)
+	_check_household_rule()
+	await _check_households()
 	if OS.get_cmdline_user_args().has("--rendered"):
 		if DisplayServer.get_name() == "headless":
 			_check("rendered_backend", false, "--rendered needs a window")
 		else:
 			await _check_rendered(trees, flora)
+			await _check_map_classes(ground)
 	else:
 		print("MART21_TREES SKIP rendered — run windowed with -- --rendered for canopy saturation and season colours")
 	trees.call("force_season", "", "")
@@ -280,3 +291,130 @@ func _check_rendered(trees: Node, flora: FloraResolver) -> void:
 		else:
 			ok = ok and absf(a.z) <= 2.0
 	_check("autumn_follows_records", ok and moved.size() >= 3, "summer → autumn canopy mean: %s" % ", ".join(moved))
+
+
+func _check_household_rule() -> void:
+	var agent_layer: GDScript = load("res://scripts/world/colony/agent_layer.gd")
+	# 1 & 2 a couple; 3 their child; 4 a child whose mother (9) is dead and father 5 lives; 5 a widower (partner 9
+	# dead); 6 single; 7 a child of 6 and an unknown father.
+	var ids: PackedInt64Array = PackedInt64Array([1, 2, 3, 4, 5, 6, 7])
+	var stages: PackedByteArray = PackedByteArray([0, 0, 1, 1, 0, 2, 1])
+	var mothers: PackedInt64Array = PackedInt64Array([-1, -1, 2, 9, -1, -1, 6])
+	var fathers: PackedInt64Array = PackedInt64Array([-1, -1, 1, 5, -1, -1, -1])
+	var partners: PackedInt64Array = PackedInt64Array([2, 1, -1, -1, 9, -1, -1])
+	var keys: Dictionary = agent_layer.call("household_keys", ids, stages, mothers, fathers, partners)
+	var want: Dictionary = {1: 1, 2: 1, 3: 1, 4: 5, 5: 5, 6: 6, 7: 6}
+	var bad: Array = []
+	for id: int in want.keys():
+		if int(keys.get(id, -99)) != int(want[id]):
+			bad.append("%d → %s (want %d)" % [id, keys.get(id, "none"), want[id]])
+	_check("household_rule", bad.is_empty(), "7 people, hand-worked keys; differences %s" % [bad])
+
+
+func _check_households() -> void:
+	var camera: Camera2D = _main.get_node("Camera2D") as Camera2D
+	var agents: Node = _main.get_node("ColonyView/AgentLayer")
+	camera.zoom = Vector2(0.25, 0.25)
+	camera.force_update_scroll()
+	await _frames(10)
+	var palette: Array = ArtData.param("lod.household_ring_rgb", [])
+	var by_household: Dictionary = {}
+	var colours: Dictionary = {}
+	var missing: int = 0
+	var persons: Dictionary = agents.get("_persons")
+	for person: Variant in persons.values():
+		var key: int = int((person as Object).get("household"))
+		var ring: Color = agents.call("_ring_colour", key, palette)
+		if key < 0 or ring.a < 0.5:
+			missing += 1
+			continue
+		if by_household.has(key) and not (by_household[key] as Color).is_equal_approx(ring):
+			missing += 1
+		by_household[key] = ring
+		colours[ring.to_html()] = true
+	_check("household_rings", persons.size() > 0 and missing == 0 and palette.size() == 6 and (by_household.size() < 2 or colours.size() >= 2), "%d people in %d households, %d ring colours of %d; %d without a consistent ring" % [persons.size(), by_household.size(), colours.size(), palette.size(), missing])
+	camera.zoom = Vector2.ONE
+	camera.force_update_scroll()
+	await _frames(5)
+
+
+func _check_map_classes(ground: Node) -> void:
+	var camera: Camera2D = _main.get_node("Camera2D") as Camera2D
+	var map: GroundBaker.GroundMap = ground.call("ground_map")
+	var ids: Array = ground.get("ground_ids")
+	var terrain: Dictionary = ArtData.bindings().get("terrain", {})
+	var plain: String = str(terrain.get("fallback", ""))
+	var clearing: String = str((terrain.get("clearing", {}) as Dictionary).get("ground", ""))
+	# A tile's class: 0 forest, 1 meadow, 2 bare earth, 3 rock, 4 water, -1 other.
+	var cls: Callable = func(x: int, y: int) -> int:
+		var g: int = map.at(x, y)
+		if g == GroundBaker.WATER:
+			return 4
+		if g < 0:
+			return -1
+		if map.is_rock(x, y):
+			return 3
+		if map.is_crisp(x, y):
+			return -1
+		if map.tree_at(x, y) > 0:
+			return 0
+		var id: String = str(ids[g]) if g < ids.size() else ""
+		return 1 if id == plain else (2 if id == clearing else -1)
+	var hearth: Vector2i = Vector2i(map.width >> 1, map.height >> 1)
+	(_main.get_node("ColonyView/TreeLayer") as Node).call("force_season", "summer", "summer", 1.0)
+	await _frames(3)
+	camera.zoom = Vector2(0.25, 0.25)
+	camera.position = View.tile_centre(hearth)
+	camera.force_update_scroll()
+	await _frames(150)
+	await RenderingServer.frame_post_draw
+	var shot: Image = root.get_viewport().get_texture().get_image()
+	shot.convert(Image.FORMAT_RGBA8)
+	var xf: Transform2D = root.get_viewport().get_canvas_transform()
+	var sums: Array = [Vector3.ZERO, Vector3.ZERO, Vector3.ZERO, Vector3.ZERO, Vector3.ZERO]
+	var counts: Array[int] = [0, 0, 0, 0, 0]
+	var tiles: Array[int] = [0, 0, 0, 0, 0]
+	for y: int in range(1, map.height - 1):
+		for x: int in range(1, map.width - 1):
+			var k: int = cls.call(x, y)
+			if k < 0:
+				continue
+			# Rivers are one or two tiles wide: a water tile's central half is water whatever its neighbours.
+			var interior: bool = true
+			if k != 4:
+				for d: Vector2i in [Vector2i(-1, -1), Vector2i(0, -1), Vector2i(1, -1), Vector2i(-1, 0), Vector2i(1, 0), Vector2i(-1, 1), Vector2i(0, 1), Vector2i(1, 1)]:
+					interior = interior and int(cls.call(x + d.x, y + d.y)) == k
+			if not interior:
+				continue
+			var a: Vector2 = xf * Vector2(x * TILE + 16, y * TILE + 16)
+			var b: Vector2 = xf * Vector2(x * TILE + 48, y * TILE + 48)
+			if a.x < 0 or a.y < 80 or b.x >= shot.get_width() or b.y >= shot.get_height() - 140:
+				continue
+			tiles[k] += 1
+			for py: int in range(floori(a.y), floori(b.y)):
+				for px: int in range(floori(a.x), floori(b.x)):
+					var c: Color = shot.get_pixel(px, py)
+					sums[k] += Vector3(c.r, c.g, c.b)
+					counts[k] += 1
+	var names: Array[String] = ["forest", "meadow", "earth", "rock", "water"]
+	var labs: Array[Vector3] = []
+	var means: PackedStringArray = PackedStringArray()
+	for k: int in 5:
+		var m: Vector3 = (sums[k] as Vector3) / maxf(1.0, counts[k])
+		labs.append(Tone.rgb_to_lab(m))
+		means.append("%s %d tiles rgb(%.2f,%.2f,%.2f)" % [names[k], tiles[k], m.x, m.y, m.z])
+	var worst: float = INF
+	var pair: String = ""
+	var all: PackedStringArray = PackedStringArray()
+	for i: int in 5:
+		for j: int in range(i + 1, 5):
+			var de: float = labs[i].distance_to(labs[j])
+			all.append("%s-%s %.1f" % [names[i], names[j], de])
+			if de < worst:
+				worst = de
+				pair = "%s/%s" % [names[i], names[j]]
+	var enough: bool = tiles.min() >= 20
+	_check("quarter_map_classes", enough and worst >= 10.0, "%s; pairwise ΔE %s; min %.1f (%s), bar 10" % [", ".join(means), ", ".join(all), worst, pair])
+	shot.save_png(OS.get_user_data_dir().path_join("mart21_quarter_map.png"))
+	camera.zoom = Vector2.ONE
+	camera.force_update_scroll()

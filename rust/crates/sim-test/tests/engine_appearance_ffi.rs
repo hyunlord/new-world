@@ -5,10 +5,13 @@
 //! (C2 agreement extended to appearance); the baseline world's columns are consistent.
 //!
 //! Expected values are computed here from the documented formula and constants (`data/appearance.ron`), not by
-//! calling the function under test.
-use sim_bridge::ffi::{collect_agent_snapshot, collect_appearance, AppearanceRow};
+//! calling the function under test. M-ART2.1 adds the kin columns (`mothers`, `fathers`, `partners`) the LOD
+//! household rings read: row-aligned with the agent snapshot and equal to each entity's `Kin` component.
+use sim_bridge::ffi::{
+    collect_agent_snapshot, collect_appearance, collect_kin_columns, AppearanceRow,
+};
 use sim_core::colony::people::Apparel;
-use sim_core::components::{Agent, Child, Elder, Position, Sex};
+use sim_core::components::{Agent, Child, Elder, Kin, Position, Sex};
 use sim_engine::SimEngine;
 use sim_systems::save;
 use sim_test::probe::ascii::{self, AsciiArgs};
@@ -333,4 +336,43 @@ fn the_baseline_rows_are_consistent() {
     assert_eq!(by_id(&rows), expected(&engine));
     // An empty world has no rows.
     assert!(collect_appearance(&hecs::World::new()).is_empty());
+}
+
+#[test]
+fn kin_columns_line_up_with_the_snapshot_and_the_kin_component() {
+    let mut engine = sim_test::baseline_engine(3);
+    let ticks_per_day = engine.resources.ticks_per_day.max(1);
+    // Run until the world holds both a recorded mother and a partner (births and pairings), at most 120 days.
+    let mut day = 0;
+    loop {
+        let kin = collect_kin_columns(&engine.world);
+        if kin.iter().any(|r| r[0].is_some()) && kin.iter().any(|r| r[2].is_some()) {
+            break;
+        }
+        assert!(day < 120, "no mother and partner recorded within 120 days");
+        for _ in 0..ticks_per_day {
+            engine.tick();
+        }
+        day += 1;
+    }
+    let rows = collect_agent_snapshot(&engine.world);
+    let kin = collect_kin_columns(&engine.world);
+    assert_eq!(rows.len(), kin.len());
+    assert!(rows.len() > 10, "a populated world: {} people", rows.len());
+    let mut with_kin = 0;
+    for (row, k) in rows.iter().zip(&kin) {
+        let entity = hecs::Entity::from_bits(row.entity_bits).expect("snapshot entity bits");
+        let expected = engine
+            .world
+            .get::<&Kin>(entity)
+            .map(|c| [c.mother, c.father, c.partner])
+            .unwrap_or([None; 3]);
+        if engine.world.get::<&Kin>(entity).is_ok() {
+            with_kin += 1;
+        }
+        assert_eq!(*k, expected, "kin of entity {}", row.entity_bits);
+        // The row is the same person as the snapshot row (Agent of that entity).
+        assert!(engine.world.get::<&Agent>(entity).is_ok());
+    }
+    assert!(with_kin > 0);
 }
