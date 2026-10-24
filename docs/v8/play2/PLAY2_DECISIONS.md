@@ -9,8 +9,8 @@
 1. COMPLETED: inspect play root, launcher and Desktop shortcut; record baseline headless/windowed behavior and timings.
 2. COMPLETED: reproduce dirty/offline failures; minimally repair launcher with regression verification.
 3. COMPLETED: verify windowed checklist and F12; rewrite Korean README and PLAY.md from source-backed keys.
-4. IN_PROGRESS: run shell/docs/headless checks; commit only allowed paths with Lore trailers.
-5. PENDING: full gate on frozen clean commit; inspect every step; publish fast-forward only if green.
+4. COMPLETED: run shell/docs/headless checks; commit only allowed paths with Lore trailers.
+5. IN_PROGRESS: full gate on frozen clean commit; inspect every step; publish fast-forward only if green.
 6. PENDING: Korean report, owner launcher delivery verification, safe cleanup, final remote verification.
 
 - D4: Require registered same-clone worktrees, no tracked/untracked edits, and branch ancestry before checkout, even at unchanged HEAD. Do not discard bytes or local commits. Isolated fake-engine regression suite first reproduced 14 failures in 26 checks; fixes passed 33 checks, including update-only and offline log persistence.
@@ -20,3 +20,5 @@
 - D8: Raw captures, logs, backup bytes and generated graft state live under `/Users/rexxa/work/play-data/`. No contact sheet replacement: game view is unchanged and docs/images is outside allowed paths. Pass decisions and lessons stay here rather than changing forbidden ADR/skill paths.
 - D9: Code review found exit-zero ERROR masking also on the normal windowed path. Add a failing windowed regression, then scan only output appended by that launch (not earlier first-import warnings). Baseline 42 checks/1 failure; final suite must pass all 42.
 - D10: Window audit retry succeeded: 79 checks/0 failures. UI-only setup now verifies chop count, stockpile acceptance and blueprint acceptance before waiting for a real wall. Do not relax the F12 visible-wall criterion to a toast-only check. No human visual/physical-keyboard acceptance inferred.
+- D11: Full gate at b05d31d39 was interrupted during debug tests after reproducing a real launcher defect: under pipefail, `printf large-output | grep -q` returned SIGPIPE instead of detecting an early ERROR. The 44-check regression failed two assertions before the fix. Make grep consume the full import stream. Interrupted gate is not PASS; logs retained in gate-play2. Only verified descendants of this session's gate PID 16027 were terminated, no foreign processes. Restart all 34 steps at the fixed commit under gate-play2-final.
+- D12: A report cannot contain its own Git SHA. Record tested implementation HEAD, exact gate results and remote output after the green implementation push; the subsequent report-only commit is identified separately and checked for unchanged launcher/game content and docs validity. Never present the report-only commit as the exact gate-tested SHA.

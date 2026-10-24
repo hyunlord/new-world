@@ -59,3 +59,5 @@
 ## 문서·전달 검증
 
 `bash tools/v8/check_docs.sh`는 `docs: PASS`. `bash -n` 통과, shellcheck는 설치되지 않아 미실행. `.command`는 셸에서 `--update-only`로 직접 실행하여 정상 종료했고, 로그 `/Users/rexxa/work/play-data/logs/main-20261025-010351-90597.log`에 fetch 1초, debug 증분 빌드 0초, import 4초가 기록됐다. Finder의 실행 확인과는 구별한다.
+
+추가 회귀: import 오류 뒤 40,000줄이 오면 `grep -q`의 조기 종료와 `pipefail` 때문에 오류를 놓쳤다. 수정 전 44개 중 2개 실패(`/Users/rexxa/work/play-data/play2/regression-long-before.txt`), 전체 스트림을 읽도록 보완했다. 최초 gate는 이 결함 발견 후 자체 검증 프로세스만 중단했으며 완료 판정하지 않는다. 최종 전체 실행 경로는 `/Users/rexxa/work/play-data/gate-play2-final/`이다.

@@ -221,7 +221,7 @@ if (( runs > 0 )); then
         printf '%s\n' "$out" >> "$LOG"
     done
     # A fresh tree's first import logs font errors; only the last run counts.
-    if (( code != 0 )) || printf '%s\n' "$out" | grep -Eq 'SCRIPT ERROR|(^|[[:space:]])ERROR:|Parse Error'; then
+    if (( code != 0 )) || printf '%s\n' "$out" | grep -E 'SCRIPT ERROR|(^|[[:space:]])ERROR:|Parse Error' > /dev/null; then
         say "play: 가져오기 실패(exit ${code}, SCRIPT ERROR $(printf '%s\n' "$out" | grep -c 'SCRIPT ERROR')줄) — ${LOG}"
         exit 1
     fi

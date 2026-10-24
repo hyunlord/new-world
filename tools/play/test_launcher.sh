@@ -21,7 +21,12 @@ cat > "$SANDBOX/bin/Godot" <<'GODOT'
 if [[ "${1:-}" == --version ]]; then echo 4.6.stable; exit 0; fi
 printf '%s\n' "$*" >> "$FAKE_CALLS"
 case " $* " in
-    *' --import '*) mkdir -p .godot; [[ "${FAKE_ERROR:-}" != import ]] || echo 'ERROR: injected import failure' ;;
+    *' --import '*)
+        mkdir -p .godot
+        [[ "${FAKE_ERROR:-}" != import ]] || echo 'ERROR: injected import failure'
+        if [[ "${FAKE_ERROR:-}" == long_import ]]; then
+            awk 'BEGIN { print "ERROR: injected long import failure"; for (i = 0; i < 40000; i++) print "filler" }'
+        fi ;;
     *) [[ "${FAKE_ERROR:-}" != headless ]] || echo 'ERROR: injected runtime failure' ;;
 esac
 exit 0
@@ -187,6 +192,12 @@ export FAKE_ERROR=import
 run_play main --headless-check
 check 'import ERROR with exit zero is failure' test "$CODE" -eq 1
 check 'failed import does not write success stamp' test ! -e "$PLAY_ROOT/main/.godot/play_import.stamp"
+
+fixture long_import_error
+export FAKE_ERROR=long_import
+run_play main --headless-check
+check 'early import ERROR in long output is failure' test "$CODE" -eq 1
+check 'long failed import does not write success stamp' test ! -e "$PLAY_ROOT/main/.godot/play_import.stamp"
 
 fixture runtime_error
 export FAKE_ERROR=headless
