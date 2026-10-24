@@ -705,10 +705,13 @@ mod tests {
         assert_eq!(ChronicleKind::MigrantsArrived.as_u8(), 38);
         assert_eq!(ChronicleKind::Eureka.as_u8(), 44);
         // M5.5: kinds 38–44 appended; 0–37 unchanged.
-        assert_eq!(ChronicleKind::ALL.len(), 45);
+        // M-UX: kind 45 appended; 0–44 unchanged.
+        assert_eq!(ChronicleKind::StewardAction.as_u8(), 45);
+        assert_eq!(ChronicleKind::StewardAction.as_str(), "steward_action");
+        assert_eq!(ChronicleKind::ALL.len(), 46);
         let names: std::collections::BTreeSet<&str> =
             ChronicleKind::ALL.iter().map(|k| k.as_str()).collect();
-        assert_eq!(names.len(), 45);
+        assert_eq!(names.len(), 46);
         assert_eq!(DepartCause::TopUp.as_u8(), 4);
     }
 

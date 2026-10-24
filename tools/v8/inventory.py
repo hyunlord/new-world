@@ -68,6 +68,7 @@ RULES = [
     ("CLAUDE.md", "KEEP", "rewritten as @AGENTS.md + Claude notes (10.5)", "goal 10.5"),
     ("README.md", "KEEP", "rewritten in Korean + English (9.1)", "goal 9.1"),
     ("CHANGELOG.md", "KEEP", "new in V8-0 (9.7)", "goal 9.7"),
+    ("DESIGN.md", "KEEP", "M-UX interface design system: theme, layout and interaction guidance", "DESIGN.md; docs/v8/mux/MUX_GOAL.md"),
     ("addons/", "DELETE", "harness MCP addon; project.godot has no [editor_plugins] section, nothing loads it", "grep editor_plugins project.godot → none; " + E_REACH),
     ("hooks/", "DELETE", "V7 git pre-commit harness hook", "goal 6.3"),
     ("icon.svg", "KEEP", "project icon (project.godot config/icon)", E_REACH),

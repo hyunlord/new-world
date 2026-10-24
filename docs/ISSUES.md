@@ -34,3 +34,5 @@ M-UX 작업 중인 누적 기록. Stage C에서 V8-0 이후 모든 보고서·�
 | ISS-028 | 초기 집사 알림의 행동 이름이 전역 번역 캐시 때문에 비어 보임 | M-UX UI10 시각88점 REVISE, D33 | bug | open | 현재 전달 상태에서 이름 조회; UI11 253검사와 8장 검토에서 이름 표시 확인; 최종 게이트 대기 | — |
 | ISS-029 | 영어 신생아 침상 경고의 제목이 잘려 원인·수량을 읽을 수 없음 | M-UX UI11 시각89점 REVISE, D33 | bug | open | 316/308px 및312/308px 실패 보존;274/308px 통과와 UI14 실제 수량 표시 확인; 게이트 대기 | — |
 | ISS-030 | 집사 주기별 집 배치 계획이 실제 debug 플레이를 멈추게 함 | M-UX active-perf-1, D29/D34, `D29_VERIFICATION.md` | perf | open | 원래 최대틱1.05초, D29 후0.50초, D34 후0.21초. D34 정상1x/4x 최대 프레임650/646ms(시작 포함), 반복73–99ms 지연 잔존; 두 debug 저장 동일·새 OFF 안전망 통과. 최종 게이트 대기이며 FPS 불변·해결로 판정하지 않음 | — |
+| ISS-031 | Chronicle 열거형 추가 뒤 안정성 시험의 전체 개수 기대값이 오래됨 | Stage A gate1 `6b0f572e4`, `chronicle::tests::discriminants_are_stable` | process | open | debug/release 각각2059통과·1실패·1제외: 기대45/실제46. 최소 수정은46개와 StewardAction 코드45·이름 명시; 새 전체 게이트 확인 전 미해결 | — |
+| ISS-032 | 최상위 DESIGN.md가 인벤토리 폐쇄 규칙과 표에서 빠짐 | Stage A gate1 inventory_closure:2221경로·1943행·유일한 미포함 DESIGN.md | process | open | KEEP 규칙1개와 표1행 최소 추가, 과거 행 보존; 새 전체 게이트 확인 전 미해결 | — |

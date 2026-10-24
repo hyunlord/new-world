@@ -569,6 +569,7 @@ are KEEP. `scripts/world/nature_renderer.gd` and `nature_canopy.gd` were ASK unt
 | `AGENTS.md` | KEEP | rewritten for V8 (10.5) | goal 10.5 |
 | `CHANGELOG.md` | KEEP | new in V8-0 (9.7) | goal 9.7 |
 | `CLAUDE.md` | KEEP | rewritten as @AGENTS.md + Claude notes (10.5) | goal 10.5 |
+| `DESIGN.md` | KEEP | M-UX interface design system: theme, layout and interaction guidance | DESIGN.md; docs/v8/mux/MUX_GOAL.md |
 | `README.md` | KEEP | rewritten in Korean + English (9.1) | goal 9.1 |
 | `addons/` | DELETE | harness MCP addon; project.godot has no [editor_plugins] section, nothing loads it | grep editor_plugins project.godot → none; tools/v8/gd_reach.py (keep-set closure, Part 1) |
 | `assets/` | MIXED | files inside: 174 ASK, 690 DELETE, 31 KEEP; see the file/exception rows. Directory rule: asset root | git ls-files at b1ca032f |
