@@ -70,6 +70,10 @@ func setup(world: Node, camera: Camera2D) -> void:
 		_canvas.tooltip_text = _text("UI_MUX_MINIMAP_HINT")
 		column.add_child(_canvas)
 		set_collapsed(false)
+	var locale: Node = get_node_or_null("/root/Locale")
+	if locale != null and not locale.is_connected("language_changed", _locale_changed):
+		locale.connect("language_changed", _locale_changed)
+	_locale_changed("")
 	if _world != null and _world.has_signal("world_reset") and not _world.is_connected("world_reset", _reset):
 		_world.connect("world_reset", _reset)
 
@@ -256,3 +260,8 @@ func _reset() -> void:
 func _text(key: String) -> String:
 	var locale: Node = get_node_or_null("/root/Locale")
 	return str(locale.call("ltr", key)) if locale != null else key
+
+func _locale_changed(_language: String) -> void:
+	_toggle.text = _text("UI_MUX_MINIMAP")
+	_canvas.tooltip_text = _text("UI_MUX_MINIMAP_HINT")
+	_toggle.tooltip_text = _text("UI_MUX_MINIMAP_EXPAND" if _collapsed else "UI_MUX_MINIMAP_COLLAPSE")

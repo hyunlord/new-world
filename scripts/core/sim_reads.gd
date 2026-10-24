@@ -19,6 +19,8 @@ class_name SimReads
 extends Node
 
 ## Emitted only after the explicit new-game command succeeds, never after loading a save.
+## Successful replacement receipt before the mutator returns; native world_reset follows deferred.
+signal world_replaced
 signal new_game_started
 
 const GETTERS: Array[String] = [
@@ -226,8 +228,9 @@ func mutate_raw(method: String, arguments: Array = []) -> Variant:
 	var result: Variant = _world.callv(method, arguments)
 	invalidate()
 	# Rust schedules these signals deferred; same-frame reads need fresh terrain now.
-	if method == "reset_world" or method == "reset_world_stress" or method == "load_world":
+	if method in ["reset_world", "reset_world_stress", "load_world"] and bool(result):
 		_on_world_reset()
+		world_replaced.emit()
 	if method == "reset_world" and bool(result):
 		new_game_started.emit()
 	return result

@@ -16,10 +16,17 @@ func setup(camera: Camera2D, catalog: RefCounted) -> void:
 	_catalog = catalog
 	if _buttons.is_empty():
 		_build()
+	var locale: Node = get_node_or_null("/root/Locale")
+	if locale != null and not locale.is_connected("language_changed", _locale_changed):
+		locale.connect("language_changed", _locale_changed)
+	_locale_changed("")
+	refresh_state()
+
+func _locale_changed(_language: String) -> void:
 	for action: String in _buttons:
 		var button: Button = _buttons[action]
 		button.tooltip_text = str(_catalog.call("tooltip", action)) if _catalog != null else ""
-	refresh_state()
+	button_for("home").text = _text("UI_MUX_CAMP")
 
 func _build() -> void:
 	theme = THEME

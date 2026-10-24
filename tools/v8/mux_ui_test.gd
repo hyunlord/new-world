@@ -5,10 +5,13 @@
 extends SceneTree
 
 const ArtData = preload("res://scripts/world/art/art_data.gd")
+const OrderBar = preload("res://scripts/ui/hud/order_bar.gd")
+const Economy = preload("res://scripts/ui/economy_text.gd")
 const Hud = preload("res://scripts/ui/mux/mux_hud.gd")
 const Store = preload("res://scripts/ui/mux/settings_store.gd")
 const AlertCases = preload("res://tools/v8/mux_alerts_test.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
+const Neighbours = preload("res://scripts/ui/neighbour_text.gd")
 const View = preload("res://scripts/world/colony/view.gd")
 var _main: Node
 var _hud: Hud
@@ -19,6 +22,8 @@ var _failures: int = 0
 var _out: String
 var _rows: Array[Dictionary] = []
 var _jump: Dictionary = {}
+var _live_routes: Dictionary = {}
+var _observe_routes: bool = false
 
 func _init() -> void:
 	call_deferred("_run")
@@ -30,7 +35,10 @@ func _check(label: String, passed: bool) -> void:
 	print("MUX_UI_%s %s" % ["PASS" if passed else "FAIL", label])
 
 func _frames(count: int = 3) -> void:
-	for _i: int in count: await process_frame
+	for _i: int in count:
+		await process_frame
+		if _observe_routes and is_instance_valid(_hud) and _hud.is_node_ready():
+			_observe_live_routes()
 
 func _mouse(point: Vector2, button: MouseButton, down: bool) -> void:
 	var event: InputEventMouseButton = InputEventMouseButton.new()
@@ -77,7 +85,13 @@ func _run() -> void:
 	_world = _main.get_node("WorldSim")
 	root.add_child(_main)
 	_camera.call("set_paused", true)
+	_check("attach establishes notification baseline before first tick", _hud._chronicle_cursor >= 0 and _hud._sequence == 0)
 	SimReads.mutate(_world, "advance_ticks", [1]) # Buildings register on their first simulation tick.
+	var first_state: Dictionary = _world.get_steward()
+	Chronicle.steward_labels = {} # Polling must use its own supplied snapshot, even before outer HUD processing.
+	_hud._poll_steward_notifications(first_state)
+	_check("first attach batch is retained before scheduled poll", _hud._sequence == int(first_state.get("sequence", 0)) and (_main.get_node("UI/OrderBar").get("_background_toasts") as Array).size() == int(first_state.get("sequence", 0)))
+	_check("first actual notifications include localized action labels without global cache", _queued_action_labels_valid(first_state))
 	await _frames(20)
 	_check("real HUD attached", _hud.is_inside_tree() and _hud.controls != null and _hud.minimap != null)
 	_check("isolated learning starts at camera", _hud.helper.current_id() == "camera")
@@ -93,7 +107,11 @@ func _run() -> void:
 	await _lesson_checks()
 	await _alert_checks()
 	await _tooltip_checks()
+	_notification_checks()
+	await _locale_checks()
 	await _steward_checks()
+	await _finish_live_routes()
+	await _notification_lifecycle_checks()
 	_panel_event_checks()
 	_check("at least forty actual assertions", _checks >= 40)
 	var report: FileAccess = FileAccess.open(_out.path_join("mux-ui-results.json"), FileAccess.WRITE)
@@ -265,6 +283,12 @@ func _alert_checks() -> void:
 		var facts: Dictionary = AlertCases._facts()
 		var row: Dictionary = (test_case["row"] as Dictionary).duplicate(true)
 		row["id"] = ids[0] if test_case["kind"] == "person" else row["id"]
+		if test_case["kind"] == "technique":
+			var tech_ids: PackedInt64Array = SimReads.read(_world, "get_tech").get("ids", PackedInt64Array())
+			_check(str(test_case["id"]) + " valid technique fixture", not tech_ids.is_empty())
+			if not tech_ids.is_empty():
+				row["id"] = tech_ids[0]
+				if row.has("node_id"): row["node_id"] = tech_ids[0]
 		row["x"] = 80
 		row["y"] = 82
 		facts[test_case["table"]] = [row]
@@ -279,6 +303,13 @@ func _alert_checks() -> void:
 		if test_case["kind"] == "person":
 			var inspector: Control = _main.get_node("UI/AgentInspectorPanel") as Control
 			_check(str(test_case["id"]) + " selects live person", inspector.visible and int(inspector.get("_selected_person")) == ids[0])
+		elif test_case["kind"] in ["tile", "animal"]:
+			var causal: Control = _main.get_node("UI/CausalPanel") as Control
+			var history: Container = causal.get("_history_container") as Container
+			var header: String = str(root.get_node("Locale").call("ltr", "UI_CAUSAL_TILE_HEADER")).replace("{x}", "80").replace("{y}", "82")
+			_check(str(test_case["id"]) + " selects exact causal tile", causal.visible and history.get_child_count() > 0 and (history.get_child(0) as Label).text == header)
+			if str(test_case["id"]) == "food_low":
+				await _capture("causal-alert-target")
 		elif test_case["kind"] == "technique":
 			var tech: Control = _main.get_node("UI/TechPanel") as Control
 			_check(str(test_case["id"]) + " selects technique", tech.visible and int(tech.call("selected_node")) == int(_jump.get("id", -1)))
@@ -301,6 +332,7 @@ func _tooltip_checks() -> void:
 		_check(panel_name + " instantiated buttons have localized tooltips", covered)
 
 func _steward_checks() -> void:
+	_observe_routes = true
 	for child: Node in _main.get_node("UI").get_children():
 		if child is Control and str(child.name).ends_with("Panel"): child.hide()
 	_hud.alerts.setup(_world)
@@ -334,6 +366,24 @@ func _steward_checks() -> void:
 			found = true
 			formatted = Chronicle.line(row, -1, root.get_node("Locale"), SimReads.read(_world, "get_world_info"))
 	_check("steward order exists in real chronicle", found)
+	var bar: Node = _main.get_node("UI/OrderBar")
+	bar.call("clear_background_toasts")
+	_hud._sequence = before
+	_hud._chronicle_cursor = 0
+	var expected: int = 0
+	for row: Dictionary in rows:
+		if int(row.get("kind", -1)) == 45 and int(row.get("value", -1)) > before:
+			expected += 1
+	for _page: int in range(32):
+		_hud._poll_steward_notifications(state)
+		if _hud._chronicle_cursor >= rows.size(): break
+	_check("every new real Steward record queued", (bar.get("_background_toasts") as Array).size() == expected and expected > 0)
+	_check("every queued actual notification includes localized action", _queued_action_labels_valid(state))
+	_hud._poll_steward_notifications(state)
+	_check("repeated chronicle poll does not duplicate", (bar.get("_background_toasts") as Array).size() == expected)
+	_hud._world_reset()
+	_hud._poll_steward_notifications(state)
+	_check("reset attach baseline does not flood history", (bar.get("_background_toasts") as Array).is_empty() and _hud._sequence == int(state.get("sequence", -1)))
 	_check("steward chronicle formatter gives localized sentence", formatted.contains(str(root.get_node("Locale").call("ltr", "MUX_STEWARD_ACTION"))) and not "MUX_" in formatted)
 	var chronicle: Control = _main.get_node("UI/ChroniclePanel") as Control
 	chronicle.show()
@@ -482,3 +532,200 @@ func _housing_evidence() -> Dictionary:
 # Temporary layout timing evidence; preserve the original assertion until the observed rectangles explain it.
 func _help_rect_diagnostic(phase: String) -> void:
 	print("MUX_HELP_RECT phase=%s process_frame=%d viewport=%s help=%s minimum=%s" % [phase, Engine.get_process_frames(), root.get_visible_rect(), _hud.help.get_global_rect(), _hud.help.get_combined_minimum_size()])
+
+func _notification_checks() -> void:
+	var bar: Node = _main.get_node("UI/OrderBar")
+	bar.set_process(false)
+	bar.call("clear_background_toasts")
+	bar.call("_process", 100.0)
+	bar.call("queue_background_toast", "first", 101)
+	bar.call("queue_background_toast", "second", 102)
+	bar.call("queue_background_toast", "first", 103)
+	bar.call("_process", 0.0)
+	_check("background first action visible", int(bar.get("_background_sequence")) == 101)
+	bar.call("show_toast", "player feedback")
+	_check("player feedback immediately replaces background", (bar.get("_toast") as Label).text == "player feedback")
+	bar.call("_process", 100.0)
+	_check("interrupted action resumes before next", int(bar.get("_background_sequence")) == 101)
+	bar.call("_process", 100.0)
+	_check("second action gets distinct visible toast", int(bar.get("_background_sequence")) == 102)
+	bar.call("_process", 100.0)
+	_check("same rule action retains distinct sequence", int(bar.get("_background_sequence")) == 103)
+	bar.call("clear_background_toasts")
+	_check("reset clears pending and visible background", (bar.get("_background_toasts") as Array).is_empty() and int(bar.get("_background_sequence")) == -1)
+	bar.set_process(true)
+
+func _locale_checks() -> void:
+	var locale: Node = root.get_node("Locale")
+	var original: String = str(locale.get("_current_lang"))
+	var bar: Node = _main.get_node("UI/OrderBar")
+	var old_mode: int = int(bar.call("current_mode"))
+	var tool: Node = bar.get("_tool")
+	var selected_kind: String = str(tool.get("build_kind"))
+	tool.call("set_build", selected_kind)
+	for language: String in ["en", "ko"]:
+		locale.call("set_language", language)
+		await _frames()
+		_orderbar_locale_assertions(language, selected_kind)
+		_check(language + " camp label refreshes", _hud.controls.button_for("home").text == str(locale.call("ltr", "UI_MUX_CAMP")))
+		_check(language + " camera tooltip refreshes", _hud.controls.button_for("home").tooltip_text == _hud.catalog.tooltip("home"))
+		_check(language + " minimap label refreshes", (_hud.minimap.get("_toggle") as Button).text == str(locale.call("ltr", "UI_MUX_MINIMAP")))
+		_check(language + " minimap hint refreshes", (_hud.minimap.get("_canvas") as Control).tooltip_text == str(locale.call("ltr", "UI_MUX_MINIMAP_HINT")))
+		for entry: Array in [["PrioritiesButton", "priorities"], ["TechButton", "tech"], ["NeighboursButton", "neighbours"]]:
+			_check(language + " action tooltip " + str(entry[1]), (_hud.find_child(str(entry[0]), true, false) as Button).tooltip_text == _hud.catalog.tooltip(str(entry[1])))
+		if language == "en":
+			for child: Node in _main.get_node("UI").get_children():
+				if child is Control and str(child.name).ends_with("Panel"): child.hide()
+			await _newborn_title_fit_check()
+			await _capture("english-controls")
+	locale.call("set_language", original)
+	bar.call("select_mode", old_mode)
+
+func _observe_live_routes() -> void:
+	# Snapshot identities are real; only the alert condition itself is injected.
+	var rooms: Dictionary = SimReads.read(_world, "get_rooms")
+	if not _live_routes.has("room") and not rooms.get("ids", []).is_empty():
+		_live_alert_route("storehouse_full", int(rooms["ids"][0]), Vector2i(rooms["centre_xs"][0], rooms["centre_ys"][0]))
+	var animals: Dictionary = SimReads.read(_world, "get_animals")
+	if not _live_routes.has("animal") and not animals.get("ids", []).is_empty():
+		_live_alert_route("wolves_approaching", int(animals["ids"][0]), Vector2i(animals["xs"][0], animals["ys"][0]))
+	var neighbours: Dictionary = SimReads.read(_world, "get_neighbours")
+	if not _live_routes.has("migrant"):
+		for wave: Dictionary in Neighbours.waves(neighbours):
+			if int(wave["state"]) == Neighbours.WAITING and int(wave["answer"]) == Neighbours.ANSWER_NONE:
+				_live_alert_route("migrants_waiting", int(wave["id"]), wave["tile"])
+				break
+	if not _live_routes.has("trader"):
+		for caravan: Dictionary in Neighbours.caravans(neighbours):
+			if int(caravan["state"]) == Neighbours.WAITING:
+				_live_alert_route("trader_present", int(caravan["id"]), caravan["tile"])
+				break
+
+func _live_alert_route(alert_id: String, identity: int, tile: Vector2i) -> void:
+	for test_case: Dictionary in AlertCases._cases():
+		if str(test_case["id"]) != alert_id: continue
+		var kind: String = str(test_case["kind"])
+		var facts: Dictionary = AlertCases._facts()
+		var row: Dictionary = (test_case["row"] as Dictionary).duplicate(true)
+		row.merge({"id": identity, "x": tile.x, "y": tile.y}, true)
+		facts[test_case["table"]] = [row]
+		_hud.alerts.refresh_from_facts(facts)
+		var button: Button = _hud.alerts.find_child(alert_id, true, false) as Button
+		_check("live " + kind + " alert exists", button != null)
+		if button == null: return
+		button.pressed.emit()
+		if kind == "animal":
+			var causal: Control = _main.get_node("UI/CausalPanel") as Control
+			var history: Container = causal.get("_history_container") as Container
+			var title: String = str(root.get_node("Locale").call("ltr", "UI_CAUSAL_TILE_HEADER")).replace("{x}", str(tile.x)).replace("{y}", str(tile.y))
+			_check("live animal routes exact causal tile", causal.visible and history.get_child_count() > 0 and (history.get_child(0) as Label).text == title)
+			var half_view: Vector2 = root.get_visible_rect().size / (2.0 * _camera.zoom.x)
+			_check("live animal alert brings tile into camera view", Rect2(_camera.position - half_view, half_view * 2.0).has_point(View.tile_centre(tile)))
+			_live_routes[kind] = identity
+			causal.hide()
+			return
+		var panel_name: String = {"room": "RoomPanel", "migrant": "MigrantPanel", "trader": "TradePanel"}[kind]
+		var getter: String = {"room": "current_room", "migrant": "shown_wave", "trader": "shown_caravan"}[kind]
+		var panel: Control = _main.get_node("UI/" + panel_name) as Control
+		_check("live " + kind + " alert selects exact identity", panel.visible and int(panel.call(getter)) == identity)
+		_check("live " + kind + " alert reaches camera tile", _camera.position.distance_to(View.tile_centre(tile)) < 2.0)
+		_live_routes[kind] = identity
+		panel.hide()
+
+func _finish_live_routes() -> void:
+	var info: Dictionary = SimReads.read(_world, "get_world_info")
+	var deadline: int = 30 * int(info.get("ticks_per_day", 1440))
+	for _batch: int in range(360):
+		if _live_routes.size() >= 4 or int(SimReads.read(_world, "get_time_snapshot").get("tick", 0)) >= deadline:
+			break
+		SimReads.mutate(_world, "advance_ticks", [120])
+		await _frames(1)
+	for kind: String in ["room", "migrant", "trader", "animal"]:
+		_check("real valid alert fixture reached: " + kind, _live_routes.has(kind))
+
+func _notification_lifecycle_checks() -> void:
+	_observe_routes = false
+	_hud.set_process(false)
+	var bar: Node = _main.get_node("UI/OrderBar")
+	bar.set_process(false)
+	SimReads.mutate(_world, "reset_world", [0])
+	SimReads.mutate(_world, "reset_world", [0])
+	_check("two same-frame resets have two pending native receipts", _hud._pending_native_resets == 2)
+	_check("reset callback establishes tick-zero notification baseline", _hud._chronicle_cursor >= 0 and _hud._sequence == 0)
+	SimReads.mutate(_world, "advance_ticks", [60])
+	var state: Dictionary = _world.get_steward()
+	_hud._poll_steward_notifications(state)
+	var expected: int = int(state.get("sequence", 0))
+	_check("first post-reset batch before polling remains queued", expected > 0 and (bar.get("_background_toasts") as Array).size() == expected)
+	await _frames()
+	_check("deferred reset receipts preserve new actions", _hud._pending_native_resets == 0 and (bar.get("_background_toasts") as Array).size() == expected)
+	var save_path: String = _out.path_join("notification-load.wsave")
+	_check("notification history save succeeds", bool(SimReads.mutate(_world, "save_world", [save_path])))
+	bar.call("queue_background_toast", "stale prior world", 99999)
+	_check("notification history load succeeds", bool(SimReads.mutate(_world, "load_world", [save_path])))
+	await _frames()
+	_hud._poll_steward_notifications(_world.get_steward())
+	_check("actual load baselines history and clears prior queue", (bar.get("_background_toasts") as Array).is_empty() and _hud._sequence == expected)
+	bar.call("queue_background_toast", "stale rollback", 99999)
+	_hud._sequence = expected + 1
+	_hud._poll_steward_notifications(_world.get_steward())
+	_check("sequence rollback clears stale background queue", (bar.get("_background_toasts") as Array).is_empty())
+	bar.call("queue_background_toast", "keep after failed load", 777)
+	var pending_before: int = _hud._pending_native_resets
+	_check("failed load keeps current world", not bool(SimReads.mutate(_world, "load_world", [_out.path_join("missing-notification-save.wsave")])))
+	_check("failed load does not baseline or consume reset receipt", _hud._pending_native_resets == pending_before and (bar.get("_background_toasts") as Array).size() == 1)
+	bar.call("clear_background_toasts")
+	bar.set_process(true)
+	_hud.set_process(true)
+
+func _queued_action_labels_valid(state: Dictionary) -> bool:
+	var labels: Dictionary = state.get("rules", {})
+	var prefix: String = str(root.get_node("Locale").call("ltr", "MUX_STEWARD_ACTION")) + " "
+	var queue: Array = _main.get_node("UI/OrderBar").get("_background_toasts")
+	if queue.is_empty(): return false
+	for notification: Dictionary in queue:
+		var text: String = str(notification.get("text", ""))
+		var matched: bool = false
+		for key: Variant in labels.values():
+			var action: String = str(root.get_node("Locale").call("ltr", str(key)))
+			if not action.strip_edges().is_empty() and action != str(key) and text == prefix + action:
+				matched = true
+		if not matched: return false
+	return true
+
+func _orderbar_locale_assertions(language: String, selected_kind: String) -> void:
+	var bar: Node = _main.get_node("UI/OrderBar")
+	var locale: Node = root.get_node("Locale")
+	var main_buttons: Array = bar.get("_buttons")
+	var build_buttons: Array = bar.get("_menu_buttons")
+	var gather_buttons: Array = bar.get("_dig_buttons")
+	var main_ok: bool = true
+	var build_ok: bool = true
+	var gather_ok: bool = true
+	for i: int in main_buttons.size():
+		var entry: Dictionary = OrderBar.MODES[i]
+		main_ok = main_ok and (main_buttons[i] as Button).text == "%s %s" % [OS.get_keycode_string(int(entry["hotkey"])), locale.call("ltr", str(entry["key"]))]
+	for i: int in build_buttons.size():
+		var kind: Dictionary = Economy.BUILD_KINDS[Economy.MENU_ORDER[i]]
+		build_ok = build_ok and (build_buttons[i] as Button).text == "%s %s" % [OrderBar.MENU_LABELS[i], locale.call("ltr", str(kind["key"]))]
+	for i: int in gather_buttons.size():
+		gather_ok = gather_ok and (gather_buttons[i] as Button).text == "%d %s" % [i + 1, locale.call("ltr", str(OrderBar.DIG_MENU[i]["key"]))]
+	_check(language + " all order buttons refresh", main_ok)
+	_check(language + " all build buttons refresh", build_ok)
+	_check(language + " all gather buttons refresh", gather_ok)
+	_check(language + " rooms label refreshes", (bar.get("_rooms_button") as Button).text == str(locale.call("ltr", "UI_ROOMS_TOGGLE")))
+	_check(language + " current build hint refreshes", (bar.get("_hint") as Label).text == OrderBar.build_hint(locale, Economy.build_code(selected_kind)))
+	_check(language + " language switch preserves mode and selected tool", int(bar.call("current_mode")) == OrderBar.BUILD_MODE and str((bar.get("_tool") as Node).get("build_kind")) == selected_kind)
+
+func _newborn_title_fit_check() -> void:
+	_hud.store.set_value("ui_scale", 1.0)
+	await _frames()
+	var button: Button = _hud.alerts.find_child("newborn_without_bed", true, false) as Button
+	_check("newborn alert available at 1x", button != null and _hud.alerts.scale.is_equal_approx(Vector2.ONE))
+	if button == null: return
+	var font: Font = button.get_theme_font("font")
+	var width: float = font.get_string_size(button.text, HORIZONTAL_ALIGNMENT_LEFT, -1, button.get_theme_font_size("font_size")).x
+	var available: float = button.size.x - button.get_theme_stylebox("normal").get_minimum_size().x
+	_check("English newborn title including count fits rendered button", width <= available)
+	_check("newborn tooltip retains household explanation", button.tooltip_text.contains(str(root.get_node("Locale").call("ltr", "MUX_ALERT_NEWBORN_WITHOUT_BED_WHY"))))
+	print("MUX_NEWBORN_TITLE_FIT text=%s text_px=%s available_px=%s" % [button.text, width, available])

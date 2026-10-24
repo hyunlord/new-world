@@ -944,7 +944,7 @@
 	"MUX_ALERT_MEAT_SPOILING": "Meat spoiling outside",
 	"MUX_ALERT_MEAT_SPOILING_WHY": "Meat outside stockpiles risks spoiling within a day, estimated from the global storage order.",
 	"MUX_ALERT_MEAT_SPOILING_FIX": "Check F2 stockpiles and hauling priority with P.",
-	"MUX_ALERT_NEWBORN_WITHOUT_BED": "Newborn household has no bed",
+	"MUX_ALERT_NEWBORN_WITHOUT_BED": "Newborn: no bed",
 	"MUX_ALERT_NEWBORN_WITHOUT_BED_WHY": "A household with a newborn has no assigned bed.",
 	"MUX_ALERT_NEWBORN_WITHOUT_BED_FIX": "Use F3 to place more beds in a roofed room.",
 	"UI_MUX_CAMP": "Camp",

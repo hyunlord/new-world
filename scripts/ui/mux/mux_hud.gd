@@ -1,4 +1,5 @@
 # M-UX screen coordinator: controls, alerts, learning, goals and recorded steward commands.
+# Direct bridge: get_steward (attach/reset baseline), get_chronicle_since (independent incremental notification cursor).
 # Bridge methods through SimReads: get_ui_facts, get_steward, cmd_set_steward and learning facts reads.
 extends Control
 
@@ -33,6 +34,8 @@ var _actions: HBoxContainer
 var _steward: OptionButton
 var _poll_left: float = 0.0
 var _sequence: int = -1
+var _chronicle_cursor: int = -1
+var _pending_native_resets: int = 0
 var _highlight: LessonHighlight
 var _help_button: Button
 var _goals_button: Button
@@ -112,10 +115,12 @@ func _ready() -> void:
 	_world.connect("world_reset", _world_reset)
 	var reads: Node = SimReads.resolve(_world)
 	if reads != null:
+		reads.connect("world_replaced", _world_replaced)
 		reads.connect("new_game_started", _new_game_preferences)
 	_locale_changed("")
 	_apply_preferences()
 	_new_game_preferences()
+	_baseline_notifications()
 	_layout.call_deferred()
 
 func _button(node_name: String, action: Callable) -> Button:
@@ -145,6 +150,7 @@ func _locale_changed(_language: String) -> void:
 	_settings_button.tooltip_text = _loc("MUX_SETTINGS_TITLE")
 	for child: Node in _actions.get_children():
 		if child is Button and child.has_meta("mux_control"):
+			(child as Button).tooltip_text = catalog.tooltip(str(child.get_meta("mux_control")))
 			for entry: Dictionary in catalog.entries:
 				if str(entry["id"]) == str(child.get_meta("mux_control")):
 					(child as Button).text = "%s (%s)" % [_loc(str(entry["text_key"])), Catalog.input_text(entry)]
@@ -193,9 +199,27 @@ func _set_steward(index: int) -> void:
 	SimReads.mutate(_world, "cmd_set_steward", [index != 3, index if index < 3 else 0])
 	_poll_left = 0.0
 
-func _world_reset() -> void:
-	_sequence = -1
+func _world_replaced() -> void:
+	_pending_native_resets += 1
+	_baseline_notifications()
 	_poll_left = 0.0
+
+func _world_reset() -> void:
+	if _pending_native_resets > 0:
+		_pending_native_resets -= 1
+		return
+	# Direct bridge replacement fallback; normal UI commands use SimReads receipts.
+	_baseline_notifications()
+	_poll_left = 0.0
+
+func _baseline_notifications() -> void:
+	var state: Dictionary = _world.get_steward()
+	var page: Dictionary = _world.get_chronicle_since(0, 1)
+	_sequence = int(state.get("sequence", 0))
+	_chronicle_cursor = int(page.get("total", 0))
+	var bar: Node = get_parent().get_node_or_null("OrderBar")
+	if bar != null:
+		bar.call("clear_background_toasts")
 
 func _new_game_preferences() -> void:
 	if not bool(store.value("steward_default")) and _world.has_method("cmd_set_steward"):
@@ -212,12 +236,7 @@ func _process(delta: float) -> void:
 		state = SimReads.read(_world, "get_steward")
 		ChronicleText.steward_labels = state.get("rules", {})
 		_steward.select(int(state.get("scope", 0)) if bool(state.get("enabled", false)) else 3)
-		var sequence: int = int(state.get("sequence", 0))
-		if _sequence >= 0 and sequence > _sequence:
-			var bar: Node = get_parent().get_node_or_null("OrderBar")
-			if bar != null:
-				bar.call("show_toast", _loc("MUX_STEWARD_ACTION") + " " + _loc(str(state.get("last_label", ""))))
-		_sequence = sequence
+		_poll_steward_notifications(state)
 	var facts: Dictionary = LearningFacts.collect(_world, state)
 	helper.update_facts(facts)
 	goals.update_facts(facts)
@@ -286,6 +305,30 @@ func jump_to(target: Dictionary) -> void:
 		if panel != null:
 			var history: Array = _world.call("get_tile_causal_history", tile.x, tile.y)
 			panel.call("display_history", history, tile.x, tile.y)
+			(panel as Control).show()
 
 func _loc(key: String) -> String:
 	return str(get_node("/root/Locale").call("ltr", key))
+
+func _poll_steward_notifications(state: Dictionary) -> void:
+	var sequence: int = int(state.get("sequence", 0))
+	if _chronicle_cursor >= 0 and sequence == _sequence:
+		return
+	var page: Dictionary = _world.get_chronicle_since(maxi(0, _chronicle_cursor), 1 if _chronicle_cursor < 0 else 512)
+	if _chronicle_cursor < 0 or sequence < _sequence:
+		# Attach/load baseline: old save history is already available in ChroniclePanel.
+		_baseline_notifications()
+		return
+	var bar: Node = get_parent().get_node_or_null("OrderBar")
+	if bar == null:
+		return # Retain the cursor until a destination exists.
+	var labels: Dictionary = state.get("rules", {})
+	for row: Dictionary in ChronicleText.rows(page):
+		if int(row.get("kind", -1)) != 45 or int(row.get("value", -1)) <= _sequence:
+			continue
+		_sequence = int(row["value"])
+		var key: String = str(labels.get(int(row["cause"]), "UI_UNKNOWN"))
+		if key.strip_edges().is_empty():
+			key = "UI_UNKNOWN"
+		bar.call("queue_background_toast", _loc("MUX_STEWARD_ACTION") + " " + _loc(key), _sequence)
+	_chronicle_cursor = int(page.get("next", _chronicle_cursor))

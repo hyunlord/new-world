@@ -538,7 +538,7 @@
     "MUX_ALERT_MIGRANTS_WAITING": "Migrants waiting",
     "MUX_ALERT_MIGRANTS_WAITING_FIX": "Press N to inspect and accept or decline the migrants.",
     "MUX_ALERT_MIGRANTS_WAITING_WHY": "Migrants await your decision. The steward does not decide.",
-    "MUX_ALERT_NEWBORN_WITHOUT_BED": "Newborn household has no bed",
+    "MUX_ALERT_NEWBORN_WITHOUT_BED": "Newborn: no bed",
     "MUX_ALERT_NEWBORN_WITHOUT_BED_FIX": "Use F3 to place more beds in a roofed room.",
     "MUX_ALERT_NEWBORN_WITHOUT_BED_WHY": "A household with a newborn has no assigned bed.",
     "MUX_ALERT_ORDERS_UNREACHABLE": "Unreachable work locations",

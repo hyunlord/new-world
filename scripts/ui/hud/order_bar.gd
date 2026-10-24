@@ -78,6 +78,8 @@ var _hint: Label
 var _toast: Label
 var _toast_panel: PanelContainer
 var _toast_left: float = 0.0
+var _background_toasts: Array[Dictionary] = []
+var _background_sequence: int = -1
 var _locale: Node = null
 var _world_sim: Node = null
 var _last_save: String = ""
@@ -163,7 +165,20 @@ func _ready() -> void:
 
 
 func _on_language_changed(_language: String) -> void:
+	for i: int in _buttons.size():
+		var entry: Dictionary = MODES[i]
+		_buttons[i].text = "%s %s" % [OS.get_keycode_string(int(entry["hotkey"])), _loc(str(entry["key"]))]
+	for i: int in _menu_buttons.size():
+		var kind: Dictionary = EconomyText.BUILD_KINDS[EconomyText.MENU_ORDER[i]]
+		_menu_buttons[i].text = "%s %s" % [MENU_LABELS[i], _loc(str(kind["key"]))]
+	for i: int in _dig_buttons.size():
+		_dig_buttons[i].text = "%d %s" % [i + 1, _loc(str(DIG_MENU[i]["key"]))]
+	_rooms_button.text = _loc("UI_ROOMS_TOGGLE")
 	_refresh_tooltips()
+	_on_mode_changed(current_mode())
+	_menu.size = Vector2.ZERO
+	_dig_menu.size = Vector2.ZERO
+	_place_bar.call_deferred()
 
 
 func _refresh_tooltips() -> void:
@@ -433,6 +448,22 @@ static func build_hint(locale: Node, code: int) -> String:
 
 ## Show `text` above the bar for a short while.
 func show_toast(text: String) -> void:
+	if _background_sequence >= 0:
+		_background_toasts.push_front({"text": _toast.text, "sequence": _background_sequence})
+		_background_sequence = -1
+	_display_toast(text)
+
+func queue_background_toast(text: String, sequence: int) -> void:
+	_background_toasts.append({"text": text, "sequence": sequence})
+
+func clear_background_toasts() -> void:
+	_background_toasts.clear()
+	if _background_sequence >= 0:
+		_toast_left = 0.0
+		_toast_panel.hide()
+	_background_sequence = -1
+
+func _display_toast(text: String) -> void:
 	_toast.text = text
 	_toast.tooltip_text = text
 	_toast.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -446,6 +477,11 @@ func _process(delta: float) -> void:
 		_toast_left -= delta
 		if _toast_left <= 0.0:
 			_toast_panel.visible = false
+			_background_sequence = -1
+	if _toast_left <= 0.0 and not _background_toasts.is_empty():
+		var notification: Dictionary = _background_toasts.pop_front()
+		_background_sequence = int(notification["sequence"])
+		_display_toast(str(notification["text"]))
 
 
 ## Save the world to user://saves/<seed>-<tick>.wsave; returns the res-style path, or "" on failure.
