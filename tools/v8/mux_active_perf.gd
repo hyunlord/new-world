@@ -1,6 +1,6 @@
 # M-UX active-world timing: real main scene, one ordinary engine tick per rendered frame.
 # Bridge methods via SimReads: reset_world, cmd_set_steward, advance_ticks, get_time_snapshot,
-# get_world_info, get_steward. No resource grants, person movement, or simulated timing results.
+# get_world_info, get_steward, save_world. No resource grants, person movement, or simulated timing results.
 # Windowed debug run after bridge build: godot --path . --script tools/v8/mux_active_perf.gd -- /external/dir [seed]
 extends SceneTree
 
@@ -148,6 +148,22 @@ func _phase(enabled: bool) -> void:
 	phase["post_draw_interval_summary_ms"] = _summary(intervals)
 	phase["end_tick"] = int(SimReads.read(_world, "get_time_snapshot").get("tick", -1))
 	phase["final_steward"] = steward
+	if bool(phase["complete"]):
+		var save_path: String = _out.path_join("active-%s-tick-%d.save" % [label, int(phase["end_tick"])])
+		var save_record: Dictionary = {"path": save_path, "tick": phase["end_tick"], "success": false, "scope": "Full debug world save after all measured samples; save cost excluded from timing summaries. No additional simulation ticks."}
+		phase["world_save"] = save_record
+		if FileAccess.file_exists(save_path):
+			_errors.append("refusing to overwrite world save: " + save_path)
+		elif not bool(SimReads.mutate(_world, "save_world", [save_path])):
+			_errors.append("post-measurement save_world failed: " + save_path)
+		else:
+			save_record["sha256"] = _required_hash(save_path)
+			var saved_tick: int = int(SimReads.read(_world, "get_time_snapshot").get("tick", -1))
+			save_record["tick_after_save"] = saved_tick
+			if saved_tick != int(phase["end_tick"]):
+				_errors.append("post-measurement save changed simulation tick")
+			save_record["success"] = _errors.is_empty()
+		phase["complete"] = _errors.is_empty()
 	_write_report()
 	print("MUX_ACTIVE_PERF phase=%s complete=%s ticks=%d advance_us=%s post_draw_ms=%s" % [label, phase["complete"], samples.size(), phase["advance_call_summary_usec"], phase["post_draw_interval_summary_ms"]])
 

@@ -441,7 +441,7 @@ fn house(
             heights
         })
         .collect();
-    locations.sort_by_key(|&(x, y, width, height)| {
+    locations.sort_by_cached_key(|&(x, y, width, height)| {
         (
             Reverse(
                 stock
