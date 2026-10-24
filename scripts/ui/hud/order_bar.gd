@@ -5,9 +5,11 @@
 #   blueprint and enter OrderTool's build mode with that footprint (while the menu is open, 1–4 choose, not the
 #   speed; F3 or Esc closes it); F7 (채석) is an area mode like 베기. Shows the mode's hint (with no
 #   mode: the order keys, P = priorities, Space = pause and Home/H = centre on the camp) and, on a backing panel above the
-#   bar, a short toast with each order's result (count with its noun, or the reject reason). Each button carries its
-#   12×12 icon from the colony sheet (scripts/world/colony/view.gd) drawn at 2× with nearest filtering; the active
-#   mode's button is pressed and its label gold. On macOS the idle hint reads "fn + F1–F4·F6" (the F-keys need fn).
+#   bar, a short toast with each order's result (count with its noun, or the reject reason). M-ART2: each mode button
+#   carries the imported sprite bindings.json `order_icons` names for its icon (fitted into 24 × 24; none when null);
+#   each build-menu entry the finished look of its blueprint (scripts/world/art/site_ghost.gd: a workshop, the
+#   bedroll, a hut ring, a wall / door / floor from the material system) fitted into 32 × 32; the active mode's button
+#   is pressed and its label gold. On macOS the idle hint reads "fn + F1–F4·F6" (the F-keys need fn).
 # M1.5 save/load: F5 saves the world to user://saves/<seed>-<tick>.wsave, F9 loads the last save of this session
 #   (else the newest file in user://saves); each shows a toast (UI_SAVE_DONE / UI_LOAD_DONE / UI_SAVE_FAILED /
 #   UI_LOAD_FAILED). The cancel order moved from F5 to F6 for this.
@@ -28,7 +30,8 @@
 extends Control
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
-const View = preload("res://scripts/world/colony/view.gd")
+const ArtData = preload("res://scripts/world/art/art_data.gd")
+const SiteGhost = preload("res://scripts/world/art/site_ghost.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const RoomPanel = preload("res://scripts/ui/panels/room_panel.gd")
 const BUILD_MODE: int = 3
@@ -195,7 +198,7 @@ func _build_menu() -> void:
 		button.focus_mode = Control.FOCUS_NONE
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.text = "%s %s" % [MENU_LABELS[i], _loc(str(kind["key"]))]
-		button.icon = _icon_fit(str(kind["sprite"]), 32)
+		button.icon = _build_icon(EconomyText.MENU_ORDER[i], 32)
 		button.pressed.connect(choose_build.bind(i))
 		column.add_child(button)
 		_menu_buttons.append(button)
@@ -305,32 +308,36 @@ static func _idle_hint() -> String:
 	return "UI_ORDER_HINT_IDLE_MAC" if OS.get_name() == "macOS" else "UI_ORDER_HINT_IDLE"
 
 
-## The sheet's 12×12 icon `name` as a 24×24 texture (nearest), or null.
+## The order icon `name` (an `icon` of MODES / DIG_MENU): bindings.json `order_icons[name]` names a manifest id,
+## drawn fitted into 24 × 24; null when the bindings give none.
 static func _icon(name: String) -> Texture2D:
-	var sheet: Texture2D = View.texture()
-	if sheet == null or not View.has(name):
+	var id: Variant = (ArtData.bindings().get("order_icons", {}) as Dictionary).get(name, null)
+	if not (id is String):
 		return null
-	var image: Image = sheet.get_image()
-	if image == null:
-		return null
-	var r: Rect2 = View.rect(name)
-	var region: Image = image.get_region(Rect2i(r))
-	region.resize(int(r.size.x) * 2, int(r.size.y) * 2, Image.INTERPOLATE_NEAREST)
-	return ImageTexture.create_from_image(region)
+	return _fit(ArtData.image(str(id)), 24)
 
 
-## The sheet sprite `name` scaled by a whole factor so its height is at most `height` (at least 1×), or null.
-static func _icon_fit(name: String, height: int) -> Texture2D:
-	var sheet: Texture2D = View.texture()
-	if sheet == null or not View.has(name):
-		return null
-	var image: Image = sheet.get_image()
+## The build-menu icon of blueprint `code`: its finished look (site_ghost.gd) fitted into `height` × `height`.
+static func _build_icon(code: int, height: int) -> Texture2D:
+	var look: Dictionary = SiteGhost.finished(code)
+	return _fit(look.get("image", null), height) if not look.is_empty() else null
+
+
+## `image` cropped to its opaque pixels and scaled (whole factors up, Lanczos down) into a `size` square; null if none.
+static func _fit(image: Image, size: int) -> Texture2D:
 	if image == null:
 		return null
-	var r: Rect2 = View.rect(name)
-	var region: Image = image.get_region(Rect2i(r))
-	var factor: int = maxi(1, floori(float(height) / r.size.y))
-	region.resize(int(r.size.x) * factor, int(r.size.y) * factor, Image.INTERPOLATE_NEAREST)
+	var used: Rect2i = image.get_used_rect()
+	if used.size.x <= 0 or used.size.y <= 0:
+		return null
+	var region: Image = image.get_region(used)
+	var longest: int = maxi(used.size.x, used.size.y)
+	if longest <= size:
+		var factor: int = maxi(1, floori(float(size) / longest))
+		region.resize(used.size.x * factor, used.size.y * factor, Image.INTERPOLATE_NEAREST)
+	else:
+		var k: float = float(size) / longest
+		region.resize(maxi(1, roundi(used.size.x * k)), maxi(1, roundi(used.size.y * k)), Image.INTERPOLATE_LANCZOS)
 	return ImageTexture.create_from_image(region)
 
 

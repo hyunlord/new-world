@@ -9,8 +9,8 @@
 # M3 (goal 9.1–9.3): the space kinds. Walls (log, stone) and packed floors are placed by drag — a plain drag is a
 #   line (`cmd_place_line`), Shift+drag a rectangle (`cmd_place_rect`; walls hollow, floors filled); doors and
 #   bedrolls are one click (`cmd_place_blueprint`). The ghost shows every tile `get_place_preview` returns (read only
-#   when the hovered tile, the drag or Shift changes): the kind's blueprint ghost where it fits, `ghost_refused`
-#   (red) where not; on release the toast says how many were placed and, when some or all were refused, how many and
+#   when the hovered tile, the drag or Shift changes): the kind's ghost where it fits, tinted red with a red frame
+#   where not; on release the toast says how many were placed and, when some or all were refused, how many and
 #   why. F8 파기 and F10 철거 are area modes (`cmd_designate_dig`, `cmd_designate_deconstruct`). With no mode and
 #   the room overlay (R) shown, a click on a room tile opens the room panel (UI/RoomPanel).
 # M4 (goal 9.5): CLAY (9) is an area mode like quarry (`cmd_designate_clay` on the clay banks in the rectangle),
@@ -24,6 +24,11 @@
 #   "3명 이동" / "3명 공격: 늑대"). A right click with nobody drafted does nothing.
 # M5.5 (goal §9): with no mode, a click on a caravan drawn by ColonyView/VisitorLayer opens the trade dialog
 #   (UI/TradePanel), on a migrant wave the migrant dialog (UI/MigrantPanel), before the person/workshop/tile clicks.
+# M-ART2 (§3.6): every tile ↔ world conversion goes through View (64-px tiles). A placement ghost is the finished
+#   thing through site_ghost.gd (a pale outline and a `sites.wash_alpha` wash): a workshop's or the bedroll's
+#   structure, a hut's ring of walls, and for walls / doors / floors the material system's resolved textures (a
+#   dragged run of walls is assembled as it will stand, so its tops join); a refused footprint or tile is tinted
+#   `sites.refused_rgba`. Frames are 2 screen pixels wide at every zoom. Drawn above everything (z 7).
 # Bridge methods: can_place_blueprint, get_place_preview, get_agent_detail, get_tile_causal_history (direct); via
 #   SimReads get_workshops, get_agent_snapshot, get_animals, get_drafted; via SimReads.mutate cmd_designate_chop,
 #   cmd_cancel_area, cmd_add_stockpile, cmd_remove_zone_area, cmd_place_blueprint, cmd_designate_quarry,
@@ -32,6 +37,8 @@
 extends Node2D
 
 const View = preload("res://scripts/world/colony/view.gd")
+const ArtData = preload("res://scripts/world/art/art_data.gd")
+const SiteGhost = preload("res://scripts/world/art/site_ghost.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
@@ -85,6 +92,8 @@ const TOAST_KEYS: Dictionary = {
 }
 const GHOST_OK: Color = Color(0.45, 0.95, 0.45, 0.85)
 const GHOST_BAD: Color = Color(0.95, 0.35, 0.3, 0.85)
+## The hovered tile's frame in an area mode.
+const HOVER: Color = Color(0.96, 0.94, 0.86, 0.85)
 
 signal mode_changed(mode: int)
 signal order_sent(command: String, result: Dictionary)
@@ -106,10 +115,13 @@ var _shift: bool = false
 ## M3: the last `get_place_preview` of the space kind being placed ({xs, ys, ok, reasons}) and what it was read for.
 var _preview: Dictionary = {}
 var _preview_key: Array = []
+## M-ART2: the preview's ghost pieces, rebuilt when the preview is re-read ([top-left, texture, fits, tile]).
+var _preview_draw: Array[Array] = []
 
 
 func _ready() -> void:
-	z_index = 6
+	z_as_relative = false
+	z_index = 7
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_world_sim = get_node_or_null("/root/Main/WorldSim")
 
@@ -120,6 +132,7 @@ func set_mode(new_mode: int) -> void:
 	_dragging = false
 	_preview = {}
 	_preview_key = []
+	_preview_draw.clear()
 	queue_redraw()
 	mode_changed.emit(mode)
 
@@ -495,6 +508,7 @@ func _refresh_ghost() -> void:
 		if key != _preview_key:
 			_preview_key = key
 			_preview = _world_sim.call("get_place_preview", build_kind, a.x, a.y, b.x, b.y, shape)
+			_build_preview_draw()
 		_ghost_ok = refused_count(_preview) == 0 and not (_preview.get("ok", PackedByteArray()) as PackedByteArray).is_empty()
 		queue_redraw()
 		return
@@ -586,50 +600,89 @@ func click_world(world_pos: Vector2, tile: Vector2i) -> void:
 
 
 func _draw() -> void:
+	var line: float = 2.0 / maxf(0.25, get_viewport().get_canvas_transform().x.x)
 	if mode == Mode.BUILD and EconomyText.is_space(EconomyText.build_code(build_kind)):
-		_draw_preview()
+		_draw_preview(line)
 	elif mode == Mode.BUILD:
-		var texture: Texture2D = View.texture()
-		if texture != null:
-			var origin: Vector2 = View.tile_to_world(build_origin(_hover))
-			var size: Vector2 = Vector2(build_size() * View.TILE)
-			var tint: Color = GHOST_OK if _ghost_ok else GHOST_BAD
-			if build_kind == "hut":
-				draw_texture_rect_region(texture, Rect2(origin, size), View.rect("hut_ghost_place"), tint)
-			else:
-				# M2 workshops: the building itself, tinted, inside its footprint frame.
-				draw_rect(Rect2(origin, size), Color(tint, 0.18))
-				draw_texture_rect_region(texture, Rect2(origin, size), View.rect(build_kind), Color(tint, 0.7))
-				draw_rect(Rect2(origin, size), tint, false, 1.0)
+		# The finished blueprint as a pale ghost on its footprint; red-tinted with a red footprint where it cannot go.
+		var origin: Vector2i = build_origin(_hover)
+		var size: Vector2i = build_size()
+		var rect: Rect2 = Rect2(View.tile_to_world(origin), Vector2(size * View.TILE))
+		var tint: Color = GHOST_OK if _ghost_ok else GHOST_BAD
+		draw_rect(rect, Color(tint, 0.10))
+		var code: int = EconomyText.build_code(build_kind)
+		var look: Dictionary = SiteGhost.finished(code)
+		if not look.is_empty():
+			var tex: Texture2D = SiteGhost.ghost("site:%d" % code, look["image"])
+			var base: Vector2 = SiteGhost.footprint_base(origin, size)
+			draw_texture(tex, (base - Vector2(look["base"] as Vector2i)).round(), Color.WHITE if _ghost_ok else _refused_tint())
+		draw_rect(rect, tint, false, line)
 	elif _dragging:
 		var a: Vector2i = Vector2i(mini(_drag_from.x, _drag_to.x), mini(_drag_from.y, _drag_to.y))
 		var b: Vector2i = Vector2i(maxi(_drag_from.x, _drag_to.x), maxi(_drag_from.y, _drag_to.y))
 		var rect: Rect2 = Rect2(View.tile_to_world(a), Vector2(b - a + Vector2i.ONE) * View.TILE)
 		var color: Color = RECT_COLORS.get(mode, Color.WHITE)
 		draw_rect(rect, Color(color, 0.18))
-		draw_rect(rect, color, false, 1.0)
+		draw_rect(rect, color, false, line)
 	elif mode != Mode.NONE:
-		var texture: Texture2D = View.texture()
-		if texture != null:
-			draw_texture_rect_region(texture, Rect2(View.tile_to_world(_hover), Vector2(View.TILE, View.TILE)), View.rect("hover"))
+		draw_rect(Rect2(View.tile_to_world(_hover), Vector2(View.TILE, View.TILE)), HOVER, false, line)
 
 
-## M3: every preview tile as the kind's blueprint ghost where it fits, `ghost_refused` where it does not.
-func _draw_preview() -> void:
-	var texture: Texture2D = View.texture()
-	if texture == null:
-		return
+## The red that marks a refused tile (render_params `sites.refused_rgba`).
+func _refused_tint() -> Color:
+	var v: Variant = ArtData.param("sites.refused_rgba", [235, 80, 64, 90])
+	return Color8(int(v[0]), int(v[1]), int(v[2]), int(v[3])) if v is Array and (v as Array).size() == 4 else Color(0.92, 0.31, 0.25, 0.35)
+
+
+## M3: the preview of a space kind: every tile as the finished piece's ghost (a run of walls joined as it will be
+## built, doors, floors, bedrolls); refused tiles tinted red with a red frame.
+func _draw_preview(line: float) -> void:
+	var refused: Color = _refused_tint()
+	for piece: Array in _preview_draw:
+		var tex: Texture2D = piece[1]
+		if tex != null:
+			draw_texture(tex, piece[0], Color.WHITE if bool(piece[2]) else Color(refused, 1.0))
+	for piece: Array in _preview_draw:
+		if not bool(piece[2]):
+			var t: Vector2i = piece[3]
+			var r: Rect2 = Rect2(View.tile_to_world(t), Vector2(View.TILE, View.TILE))
+			draw_rect(r, refused)
+			draw_rect(r, Color(refused, 1.0), false, line)
+
+
+## M3: the ghost pieces of the current preview: [top-left, texture, fits, tile].
+func _build_preview_draw() -> void:
+	_preview_draw.clear()
 	var code: int = EconomyText.build_code(build_kind)
-	var ghost: Rect2 = View.rect(str(EconomyText.BUILD_KINDS[code].get("ghost", "ghost_wall")))
-	var refused: Rect2 = View.rect("ghost_refused")
+	var row: Dictionary = SiteGhost.blueprint(code)
 	var xs: PackedInt32Array = _preview.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = _preview.get("ys", PackedInt32Array())
 	var ok: PackedByteArray = _preview.get("ok", PackedByteArray())
-	var tile: Vector2 = Vector2(View.TILE, View.TILE)
-	for i: int in mini(xs.size(), mini(ys.size(), ok.size())):
-		var dest: Rect2 = Rect2(View.tile_to_world(Vector2i(xs[i], ys[i])), tile)
-		if ok[i] != 0:
-			draw_texture_rect_region(texture, dest, ghost)
+	var n: int = mini(xs.size(), mini(ys.size(), ok.size()))
+	var kind: String = str(row.get("kind", ""))
+	var style: String = str(row.get("style", ""))
+	if kind == "wall":
+		var cells: Dictionary = {}
+		for i: int in n:
+			cells[Vector2i(xs[i], ys[i])] = style
+		var rows: Dictionary = SiteGhost.wall_rows(cells, {})
+		for i: int in n:
+			var t: Vector2i = Vector2i(xs[i], ys[i])
+			var img: Image = SiteGhost.wall_tile(rows, t)
+			var top_left: Vector2 = Vector2(t.x * View.TILE, t.y * View.TILE - SiteGhost.CAP)
+			_preview_draw.append([top_left, SiteGhost.ghost("", img) if img != null else null, ok[i] != 0, t])
+		return
+	for i: int in n:
+		var t: Vector2i = Vector2i(xs[i], ys[i])
+		var tex: Texture2D = null
+		var top_left: Vector2 = View.tile_to_world(t)
+		if kind == "floor":
+			var fl: Image = SiteGhost.floor_tile(style, t)
+			tex = SiteGhost.ghost("", fl) if fl != null else null
 		else:
-			draw_texture_rect_region(texture, dest, ghost, Color(1, 1, 1, 0.5))
-			draw_texture_rect_region(texture, dest, refused)
+			var look: Dictionary = SiteGhost.finished(code)
+			if not look.is_empty():
+				tex = SiteGhost.ghost("site:%d" % code, look["image"])
+				var fp: Vector2i = look.get("footprint", Vector2i.ONE) if bool(row.get("bed", false)) else Vector2i.ONE
+				top_left = SiteGhost.footprint_base(t, fp) - Vector2(look["base"] as Vector2i)
+		_preview_draw.append([top_left, tex, ok[i] != 0, t])

@@ -48,6 +48,7 @@ var _wood_label: Label
 var _wood_row: HBoxContainer
 var _logs_label: Label
 var _speed_label: Label
+var _zoom_label: Label
 var _display_speed: float = 1.0
 var _clock_icon: Sprite2D
 var _pause_icon: Control
@@ -146,6 +147,13 @@ func _ready() -> void:
 	var spacer: Control = Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	lower.add_child(spacer)
+	_zoom_label = Label.new()
+	_zoom_label.name = "Zoom"
+	_zoom_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	lower.add_child(_zoom_label)
+	var zoom_gap: Control = Control.new()
+	zoom_gap.custom_minimum_size.x = 16
+	lower.add_child(zoom_gap)
 	_pause_icon = ArtUI.icon(14)
 	lower.add_child(_pause_icon)
 	_speed_label = ArtUI.pair(lower, 15)
@@ -312,6 +320,10 @@ func _refresh() -> void:
 	if camera != null and camera.has_method("get_speed"):
 		_display_speed = float(camera.call("get_speed"))
 	_speed_label.text = _loc("UI_SPEED_PAUSED") if paused else _loc("HUD_SPEED_FMT") % str(int(_display_speed))
+	# M-ART2 (goal §3.6): the camera's zoom step ("확대 ½×").
+	var cam: Camera2D = camera as Camera2D
+	if cam != null:
+		_zoom_label.text = _loc("UI_ZOOM").replace("{zoom}", zoom_word(cam.zoom.x))
 	_pause_icon.modulate.a = 1.0 if paused else 0.35
 	_refresh_knowledge()
 	ArtUI.Library.apply(_clock_icon, "U1_10" if hour >= 21 or hour < 5 else "U1_09")
@@ -439,3 +451,16 @@ func _make_cold_icon() -> TextureRect:
 
 func get_death_total() -> int:
 	return _death_total
+
+
+## The zoom step as the HUD shows it: ¼×, ½×, 1×, 2× (other factors as a decimal).
+static func zoom_word(z: float) -> String:
+	for pair: Array in [[0.25, "¼×"], [0.5, "½×"], [1.0, "1×"], [2.0, "2×"]]:
+		if absf(z - float(pair[0])) < 0.01:
+			return str(pair[1])
+	return "%.2f×" % z
+
+
+## The zoom indicator's text (tests).
+func zoom_text() -> String:
+	return _zoom_label.text if _zoom_label != null else ""

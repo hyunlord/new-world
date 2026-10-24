@@ -37,7 +37,7 @@
 extends Control
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
-const Library = preload("res://scripts/world/art_sprite_library.gd")
+const ArtData = preload("res://scripts/world/art/art_data.gd")
 const PANEL_WIDTH := 360.0
 const Names = preload("res://scripts/ui/person_names.gd")
 const Porter = preload("res://scripts/world/porter_presentation.gd")
@@ -135,10 +135,10 @@ var _label_target: Label
 var _hunger_bar: ProgressBar
 var _thirst_bar: ProgressBar
 var _sleep_bar: ProgressBar
-var _portrait: Sprite2D
+var _portrait: TextureRect
+var _look_label: Label
 # M1: the colony view's person layers (skin, hair, tunic) copied at 6× (no V7 sprite in the colony view).
 var _portrait_box: Control
-var _portrait_layers: Array[Sprite2D] = []
 var _cold_label: Label
 var _carried_label: Label
 # M1 (9.6): the job line ("지금: …") from the snapshot's `jobs` column.
@@ -208,13 +208,19 @@ func _ready() -> void:
 	_label_id.theme_type_variation = &"Heading"
 	_porter_status = _make_label("")
 	_porter_status.hide()
-	var portrait_box: Control = Control.new()
+	var portrait_box: CenterContainer = CenterContainer.new()
 	portrait_box.custom_minimum_size = Vector2(128, 128)
 	_vbox.add_child(portrait_box)
-	_portrait = Sprite2D.new()
-	_portrait.position = Vector2(164, 120)
+	_portrait = TextureRect.new()
+	_portrait.name = "Portrait"
+	_portrait.custom_minimum_size = Vector2(128, 128)
+	_portrait.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
+	_portrait.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	portrait_box.add_child(_portrait)
 	_portrait_box = portrait_box
+	_look_label = _make_label("")
+	_look_label.name = "Look"
+	_look_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_label_age = _make_label("")
 	_label_age.visible = false
 	_village_label = _make_label("")
@@ -858,47 +864,29 @@ func _process(_delta: float) -> void:
 			show_person(_selected_person)
 
 
-func _update_portrait(agent_id: int) -> void:
-	var objects: Node = get_node_or_null("/root/Main/WorldObjects")
-	if objects == null:
-		_colony_portrait()
-		return
-	for child: Node in objects.get_children():
-		if child is Sprite2D and str(child.get_meta("art_kind", "")) == "agent" and int(child.get_meta("art_id", -1)) == agent_id:
-			var sprite: Sprite2D = child as Sprite2D
-			Library.apply(_portrait, str(sprite.get_meta("frame_id", "")))
-			Library.apply_variant(_portrait, sprite.get_meta("variant", {}))
-			_portrait.flip_h = sprite.flip_h
-			_portrait.scale = Vector2(4, 4)
-			return
-
-
-func _colony_portrait() -> void:
+## M-ART2 (goal §3.6): the person's portrait (the POLISH2 portrait of their look and face variant, 128 px) and the
+## look in words ("가죽 랩 · 묶은 머리 · 얼굴 3") from the people layer's drawn look (ColonyView/AgentLayer
+## person_look) and manifest.json; hidden when the person is not drawn.
+func _update_portrait(_agent_id: int) -> void:
 	var layer: Node = get_node_or_null("/root/Main/ColonyView/AgentLayer")
-	var person: Node = null
-	if layer != null:
-		for child: Node in layer.get_children():
-			if int(child.get("bits")) == _selected_entity_bits:
-				person = child
-	if person == null:
+	var look: Dictionary = layer.call("person_look", _selected_entity_bits) if layer != null and layer.has_method("person_look") else {}
+	if look.is_empty():
+		_portrait.texture = null
+		_look_label.text = ""
 		return
-	var sources: Array = [person.get("skin"), person.get("hair"), person.get("tunic")]
-	while _portrait_layers.size() < sources.size():
-		var sprite: Sprite2D = Sprite2D.new()
-		sprite.centered = true
-		sprite.region_enabled = true
-		sprite.scale = Vector2(6, 6)
-		sprite.position = Vector2(164, 64)
-		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		_portrait_box.add_child(sprite)
-		_portrait_layers.append(sprite)
-	for i: int in sources.size():
-		var src: Sprite2D = sources[i] as Sprite2D
-		if src == null:
-			continue
-		_portrait_layers[i].texture = src.texture
-		_portrait_layers[i].region_rect = src.region_rect
-		_portrait_layers[i].modulate = src.modulate
+	var variant: int = int(look.get("variant", 0))
+	var path: String = ArtData.portrait_path(str(look.get("frames", "")), "v%d" % (variant + 1))
+	_portrait.texture = ArtData.texture_at(path)
+	var row: Dictionary = ArtData.look(int(look.get("look", -1)))
+	var top: String = _loc("LOOK_TOP_" + str(row.get("top", "")).to_upper())
+	var hair: String = _loc("LOOK_HAIR_" + str(row.get("hair", "")).to_upper())
+	_look_label.text = str(_locale.call("trf", "UI_INSPECT_LOOK_FMT", {"top": top, "hair": hair, "face": variant + 1})) if _locale != null else "%s · %s" % [top, hair]
+
+
+## The portrait's texture path and the look line (for tests).
+func portrait_state() -> Dictionary:
+	return {"path": _portrait.texture.resource_path if _portrait.texture != null else "", "look": _look_label.text,
+		"size": _portrait.texture.get_size() if _portrait.texture != null else Vector2.ZERO}
 
 
 func _carried_food(agent_id: int) -> int:

@@ -17,6 +17,8 @@ extends Control
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
+## M-ART2 (goal §3.6): a 32-px item icon before each row's text (scripts/ui/item_icons.gd).
+const ItemIcons = preload("res://scripts/ui/item_icons.gd")
 ## Below the HUD's visitor banner (UI/StoryBanner), so the caravan's line stays visible.
 const PANEL_RECT: Rect2 = Rect2(360, 190, 1200, 0)
 const COLUMN_WIDTH: int = 576
@@ -39,6 +41,8 @@ var _read_key: Array = []
 var _rows_key: int = 0
 ## Picks: stock row "x,y" → count given; goods index → count taken.
 var _give: Dictionary = {}
+## The item kind of the row `_row` builds next (-1: no icon).
+var _row_kind: int = -1
 var _take: Dictionary = {}
 var _title: Label
 var _sub: Label
@@ -309,12 +313,14 @@ func _rebuild_rows() -> void:
 		_ours.add_child(_row_label(NeighbourText.ltr(_locale, "M55_TRADE_NO_STOCK"), MUTED))
 	for i: int in stock.size():
 		var row: Dictionary = stock[i]
+		_row_kind = int(row["kind"])
 		_ours.add_child(_row("Give_%d" % i, _row_text(row), "", true, str(row["key"]), int(row["count"])))
 	var goods: Array[Dictionary] = goods_rows()
 	if goods.is_empty():
 		_theirs.add_child(_row_label(NeighbourText.ltr(_locale, "M55_TRADE_NO_GOODS"), MUTED))
 	for row: Dictionary in goods:
 		var clue: String = NeighbourText.ltr(_locale, "M55_TRADE_UNKNOWN") if bool(row["unknown"]) else ""
+		_row_kind = int(row["kind"])
 		_theirs.add_child(_row("Take_%d" % int(row["index"]), _row_text(row), clue, false, int(row["index"]), int(row["count"])))
 
 
@@ -341,6 +347,8 @@ func _row(node_name: String, text: String, clue: String, give: bool, key: Varian
 	var line: HBoxContainer = HBoxContainer.new()
 	line.add_theme_constant_override("separation", 6)
 	box.add_child(line)
+	if _row_kind >= 0:
+		line.add_child(ItemIcons.icon(_row_kind))
 	var label: Label = Label.new()
 	label.name = "Text"
 	label.text = text
