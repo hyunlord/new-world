@@ -1,0 +1,161 @@
+{
+  "fixture": "art/flora/tests/test_alder.json",
+  "fixture_sha256": "0623c977e91ce10c950fc9a0d3535f0b31673fb42f36e4d531a57a9588e1b4c6",
+  "species_id": "test_alder",
+  "seasons": [
+    "spring",
+    "summer",
+    "autumn",
+    "winter"
+  ],
+  "resolved": [
+    {
+      "requested_id": "test_alder",
+      "species_id": "test_alder",
+      "habit": "deciduous",
+      "fallback_used": false,
+      "path": "art/flora/sprites/oak_large_v1.png",
+      "canopy_mask": "art/flora/masks/oak_large_v1.png",
+      "tint": {
+        "delta_lab": [
+          7.0,
+          -2.0,
+          4.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "anchor": [
+        96,
+        180
+      ],
+      "canvas": [
+        192,
+        192
+      ],
+      "map_canopy": "forest_summer",
+      "map_canopy_path": "art/flora/textures/canopy_mass.png",
+      "log_material": "test_alder"
+    },
+    {
+      "requested_id": "test_alder",
+      "species_id": "test_alder",
+      "habit": "deciduous",
+      "fallback_used": false,
+      "path": "art/flora/sprites/oak_large_v1.png",
+      "canopy_mask": "art/flora/masks/oak_large_v1.png",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "anchor": [
+        96,
+        180
+      ],
+      "canvas": [
+        192,
+        192
+      ],
+      "map_canopy": "forest_summer",
+      "map_canopy_path": "art/flora/textures/canopy_mass.png",
+      "log_material": "test_alder"
+    },
+    {
+      "requested_id": "test_alder",
+      "species_id": "test_alder",
+      "habit": "deciduous",
+      "fallback_used": false,
+      "path": "art/flora/sprites/oak_large_v1.png",
+      "canopy_mask": "art/flora/masks/oak_large_v1.png",
+      "tint": {
+        "delta_lab": [
+          2.0,
+          24.0,
+          16.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "anchor": [
+        96,
+        180
+      ],
+      "canvas": [
+        192,
+        192
+      ],
+      "map_canopy": "forest_summer",
+      "map_canopy_path": "art/flora/textures/canopy_mass.png",
+      "log_material": "test_alder"
+    },
+    {
+      "requested_id": "test_alder",
+      "species_id": "test_alder",
+      "habit": "deciduous",
+      "fallback_used": false,
+      "path": "art/flora/sprites/oak_large_bare.png",
+      "canopy_mask": "art/flora/masks/oak_large_bare.png",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "bare",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      },
+      "anchor": [
+        96,
+        180
+      ],
+      "canvas": [
+        192,
+        192
+      ],
+      "map_canopy": "forest_summer",
+      "map_canopy_path": "art/flora/textures/canopy_mass.png",
+      "log_material": "test_alder"
+    }
+  ],
+  "sha256": "43af861ff96191af09b99a8b05776dc1021fd0e82c58e91ed3ee03f55ca8844e",
+  "python_sha256": {
+    "art/flora/board_io.py": "5751eb2763d36f8e353d4a463aae4893bf626c4fdb8dc2292753e3442d85edee",
+    "art/flora/boards.py": "8851c84de52c76a10315aff60a85d3a991167901fb230a345c79d29d957f9af9",
+    "art/flora/bushes.py": "7ffe45656f9267993ff39948f320b0a82256547feee2b6bdd0c9ad43b59c833c",
+    "art/flora/canopy_texture.py": "38e9dcfe3adc2d9ac869c40682bbb43695ee9d4c54d5d8efb6715bff3faac18e",
+    "art/flora/check_assets.py": "21704f78ff38c24d0cddb9fe6403f6a140b48262119578e728dc9b81aecf0c2d",
+    "art/flora/check_bare.py": "bb9df0ea2e4e98d4b99dd799ae2f11e892a4c4cf8d10628a15a28f0e9a927ff5",
+    "art/flora/normalize.py": "a65f36f29b0a79867266ee638fb5950aef050db059971c7c69b74c9a962b6ad3",
+    "art/flora/provenance.py": "d6eaed4237f69cae2a68af059bd0f3a8577dde3fe8c47c5e81cb06e8b4e06f3f",
+    "art/flora/resolve_flora.py": "72673f755fea99b95e4429c710cf586ee415192c43c985adf06140c610c6fbb4",
+    "art/flora/scene_board.py": "2ceef01074671d94a81da3887d0757570f309871b5a00d6c6ebed1b0652eb86d",
+    "art/flora/schema.py": "0cfb1940ed303436c13204a800df8b568a54c094c52160984e21cbb8b7ae8ed0",
+    "art/flora/seasons.py": "df986efce450ea11fb8fc4dcd252259871b05eebda94e7f6fbbf6e7a284f9445",
+    "art/flora/summer.py": "3ad1427fce5ac15e2c9e1f6273222db81644c312192beabcab45fa48112f0ba5",
+    "art/flora/test_bare.py": "372468cecde8ace38cc39e1648e9afc21be01d9f482c8fa6402479c9058c90ee",
+    "art/flora/test_boards.py": "4f7a24b432468ac45859ea21fa1bb64e30dfe627de90b059b345b00aa359eb5e",
+    "art/flora/test_normalize.py": "883b369952e81cd7ebb26662979d1f1e9c4238d8586d138272cd6f2e6a5221b4",
+    "art/flora/test_provenance.py": "751fb9f449e24c78b294baf57adcff261e71e65fc7db933420ef1a2c633b911d",
+    "art/flora/test_resolve_flora.py": "cc04abb9364322804fa500a720378e8af6968839d431ce76473c09fb8b167125",
+    "art/flora/test_seasons.py": "77b230acfcfab4555bb930bc45e3dce0641baadfaf86ef75ea293c638180d90e",
+    "art/flora/test_summer.py": "2b7546f6370deda9838aeaa7497a4b6ae432325c34eaca1bbde295bbd999325a"
+  },
+  "owner_approval": "PENDING"
+}
