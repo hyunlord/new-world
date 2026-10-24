@@ -235,3 +235,68 @@ changed (and the tile north of each, whose hill face depends on it): 1.2 ms for 
   pixels in any skin mask and 0 polygon pixels in any skin or hair mask over all 340 frames, every skin pixel inside its
   regions, masks only shrink against the git originals, skin coverage ≥ 80 % (observed 99.72 %); each shown failing on
   a planted fur pixel and on a planted out-of-region pixel.
+
+## D15 — Things on the map (Part 4; the things worker's decisions, checked by the lead)
+
+- **Finished huts** are drawn from the bindings ring (`buildings.hut.ring`: the hut's wall/door ring around its 3×3),
+  because `get_space` carries no wall cells for a hut; a hut's bedrolls are not drawn separately inside it.
+- **Trees, nodes and items** are made only near the view (16×16-tile chunks, the ground's chunk grid), as nodes in
+  `ColonyView/World` so they y-sort with people; far chunks are freed.
+- **Map labels** are 24 screen px whatever the zoom (`labels.follow_camera`), on the dark backing box (craft rule 6).
+- **Hearth states**: unlit / firing / lit from the settlement's fire, each a manifest sprite; the lit one carries the
+  light flag (`buildings.*.light`) the daylight controller reads.
+- **Kills**: a carcass is not an animal; an item whose bindings row names `carcass_of` (the kill's meat and hide)
+  lying outside every stockpile zone draws that species' dead frame (`animals.codes[*].dead`) instead of its stack, so
+  a kill reads as a dead deer until it is hauled.
+- **Item stacks**: buckets 1 / 2–8 / 9+ (`items.bucket_limits`); a kind with `assets` names one sprite per bucket,
+  else `copies` repeats one sprite by `items.stack_layout`.
+- **Designation marks** are ink glyphs on a pale disc; **site ghosts** a pale wash plus an ink outline of the finished
+  sprite (`site_ghost.gd`).
+- **Visitors** (migrant waves, caravans) are route I people with an adult look picked by a keyed hash of the group;
+  traders carry; the pack is the `visitors.pack` item sprite.
+- **Trees** are one y-sorted sprite each (crown included), so a crown south of a person covers them as in the boards;
+  `tree_layer.under_canopy(t)` reports when a crown can hide a person on tile t, but nothing fades crowns in this pass
+  (a hidden person still shows their LOD marker below 1×); a crown fade is left
+  to the owner (report, "오너 결정 필요").
+- `tools/v8/verify_v8_0.gd` (M1's V8-0 screen check, not in the gate) still assumes 16-px tiles; it is M1 history,
+  kept as tooling of record and not ported (it would need the M1 renderer to mean anything).
+
+## D16 — What stays of the old art path
+
+- Deleted (Part 6): the M1 tile sheet and its generator (`tools/v8/gen_tiles.py`, its test, `assets/v8/tiles.png/json`),
+  `economy_text.gd`'s sheet names, and the porter drawing nothing called.
+- **Kept**: `scripts/world/art_sprite_library.gd` and `assets/art/atlas`, because the HUD's 32-px icons
+  (`art_ui.gd` → `ArtUI.icon`) and `wood_visuals.gd` (the settlement fire read the daylight controller uses) still use
+  them; they draw no map content. Moving the HUD icons to the manifest is M-EXT work (recorded in the report's limits).
+- Content names still in UI code (M-EXT debt, outside this pass's renderer): `economy_text.gd` `ITEM_NAMES` and
+  `MATERIAL_KEYS` (locale keys per item code), the `built_at` stone classification. The extensibility grep covers the
+  renderer (`scripts/world/`, shaders), which names no content.
+
+## D17 — People at night: a pale halo away from the fire
+
+- The goal (§3.5) asks the night tone to keep people's silhouettes separable: luminance contrast person vs ground
+  ≥ 0.15 on the night screen. The adopted night transform (the art line's `tone.py night_value`) multiplies people and
+  ground alike by 0.55, so a person's contrast at night away from a fire is about 0.55 × their day contrast. Measured
+  on the day-6 02:00 save (`tools/v8/mart2_ui_test.gd`, 10 people asleep in the walled shelter outside the hearth's
+  5-tile light): median 0.047 by the fill measure, below the bar; day 20 noon by day: median 0.147.
+- Fix: the project's craft rule 5 (worldsim-godot: "a halo where they could be lost: … at night away from a fire").
+  A person who is neither selected nor drafted gets the shader's 1-px outline in `people.night_halo_rgba`
+  (232, 226, 206) at alpha `people.night_halo_alpha` (0.8) × `DaylightController.dark_at(feet)` (the night factor
+  times one minus the strongest lit hearth's linear restore there), in 1/16 steps so the shader parameter changes
+  rarely. The people's own colours are untouched (goal §3.5: only the global value change touches them); the rim is
+  multiplied by the night tone like everything else. By day and inside the hearth light there is no halo.
+- Measure (now in the UI test): per person on the night screen, Rec.709 luminance means of the opaque frame pixels
+  (fill), the 1-px rim just outside the silhouette, and the uncovered ground 4–6 px outside; contrast = the larger of
+  |fill − ground| and |rim − ground|; the median over the people on screen must be ≥ 0.15. With the halo: median 0.204
+  (min 0.023 for a sleeper at the hearth's edge, where the light restores day contrast). The check fails without the
+  halo (`night_halo_alpha` 0: median 0.047).
+
+## D4 update — what was built
+
+- People are pooled `Node2D`s with one `ShaderMaterial` each (the variant tint as per-material uniforms set only on
+  change), not one material per look: per-person materials cost nothing measurable at 1× (≈ 30 people) and the
+  1,000-person world never draws bodies (LOD). LOD markers are fallback step 2, taken: `draw_circle` per person held
+  the 1,000-person world at 27 FPS at ½×; MultiMesh discs plus a glyph atlas gave 211 FPS (Part 6 commit).
+- Chunk and strip textures are reduced ½ or ¼ below 1× (re-textured 4 per frame): texture memory at ¼× fell from
+  546 MB to 87 MB.
+- Final FPS and memory numbers: Part 6's run, in the report.

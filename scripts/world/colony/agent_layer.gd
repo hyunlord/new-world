@@ -10,7 +10,9 @@
 #   is anchored by its canvas anchor ((40, 104) upright, (56, 72) asleep). The body's shader
 #   (shaders/person_variant.gdshader) recolours skin and hair through the frame's fixed mask by the variant's Lab
 #   shift (variant_transforms.json; elders get the grey hair target `people.grey_hair_rgb`) and draws the selection
-#   (yellow) or drafted (red) outline. Sleepers sharing a tile fan out for drawing only.
+#   (yellow) or drafted (red) outline; otherwise, at night away from a fire, the same 1-px outline in the pale
+#   `people.night_halo_rgba` at up to `people.night_halo_alpha` × DaylightController.dark_at(feet) (craft rule 5:
+#   a halo where people could be lost; MART2_DECISIONS D17). Sleepers sharing a tile fan out for drawing only.
 # LOD: below camera zoom `lod.people_below_zoom` bodies hide and this node draws each person as a filled circle of
 #   `lod.marker_px` SCREEN pixels in its top's colour (people/top_colours.json) with a 1-px ink ring, plus at
 #   `lod.glyph_zoom` an activity glyph (axe working, log carrying, zz sleeping, ! fleeing).
@@ -69,6 +71,11 @@ var _no_outline: Color = Color(0, 0, 0, 0)
 var _selection_rgba: Color = Color(0.94, 0.89, 0.67)
 var _drafted_rgba: Color = Color(0.77, 0.2, 0.16)
 var _outline_px: float = 1.0
+var _halo_rgba: Color = Color(0.91, 0.89, 0.81)
+var _halo_alpha: float = 0.0
+## Halo alpha steps (an outline change re-sets one shader parameter, so the halo moves in 1/HALO_STEPS steps).
+const HALO_STEPS: float = 16.0
+var _daylight: Node = null
 var _markers: LodMarkers = null
 var _ringed: Array[Person] = []
 var _marker_px: int = 10
@@ -115,6 +122,7 @@ func _ready() -> void:
 	add_child(_markers)
 	_load_people_data()
 	_world_sim = get_node_or_null("/root/Main/WorldSim")
+	_daylight = get_node_or_null("/root/Main/DaylightController")
 	if _world_sim != null:
 		_world_sim.connect("world_reset", _on_world_reset)
 
@@ -252,6 +260,8 @@ func _update(delta: float) -> void:
 		_selection_rgba = _rgba("people.selection_rgba", Color(0.94, 0.89, 0.67))
 		_drafted_rgba = _rgba("people.drafted_rgba", Color(0.77, 0.2, 0.16))
 		_outline_px = float(ArtData.param("people.outline_px", 1))
+		_halo_rgba = _rgba("people.night_halo_rgba", Color(0.91, 0.89, 0.81))
+		_halo_alpha = clampf(float(ArtData.param("people.night_halo_alpha", 0.0)), 0.0, 1.0)
 		for person: Person in _persons.values():
 			person.shadow.texture = _shadow_tex
 			person.outline = Color(-1, -1, -1, -1)
@@ -360,6 +370,10 @@ func _update(delta: float) -> void:
 			outline = _selection_rgba
 		elif person.drafted:
 			outline = _drafted_rgba
+		elif _halo_alpha > 0.0 and _daylight != null:
+			var a: float = roundf(_halo_alpha * float(_daylight.call("dark_at", person.position)) * HALO_STEPS) / HALO_STEPS
+			if a > 0.0:
+				outline = Color(_halo_rgba, a)
 		if outline != person.outline:
 			person.outline = outline
 			person.mat.set_shader_parameter("outline_color", outline)

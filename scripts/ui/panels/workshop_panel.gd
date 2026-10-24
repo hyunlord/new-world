@@ -18,6 +18,7 @@ const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
 ## M-ART2 (goal §3.6): each recipe button shows its output's 32-px icon (scripts/ui/item_icons.gd).
 const ItemIcons = preload("res://scripts/ui/item_icons.gd")
+const ArtData = preload("res://scripts/world/art/art_data.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
 const WAIT: Color = Color("e05a48")
@@ -286,7 +287,7 @@ func _fill_recipes(kind: int) -> void:
 		any = true
 		var text: String = "%s → %s ×%d" % [EconomyText.recipe(_locale, codes[i]), EconomyText.item(_locale, outputs[i]), amounts[i]]
 		var recipe: Button = _button("Recipe_%s" % names[i], text, _add_bill.bind(names[i]))
-		recipe.icon = ItemIcons.icon(outputs[i]).texture
+		recipe.icon = ArtData.texture(ItemIcons.asset_of(outputs[i]))
 		recipe.expand_icon = false
 		recipe.add_theme_constant_override("icon_max_width", 32)
 		recipe.set_meta("item_kind", outputs[i])

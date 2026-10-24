@@ -5,6 +5,8 @@
 #   settlement fire is lit carries an additive PointLight2D that restores value linearly to zero at
 #   `light.hearth_radius_tiles` (5) tiles, so the camp reads at night; its energy follows the night factor, so it is
 #   invisible by day. People and things keep their colours: only this global value change and the lights touch them.
+#   `dark_at(p)` tells the agent layer how dark it is where a person stands (the night factor where no lit hearth's
+#   light reaches), for the night halo (craft rule 5: a halo where people could be lost, at night away from a fire).
 #   `tint_at` / `night_factor_at` are static (the HUD's clock word and tests use the same curve).
 # Bridge methods: via SimReads get_time_snapshot, get_settlement_snapshot, get_building_snapshot; signal world_reset.
 extends Node2D
@@ -19,6 +21,7 @@ var _lights: Dictionary = {}
 var _light_texture: Texture2D = null
 var _light_radius: float = 0.0
 var _frame: int = 0
+var _night: float = 0.0
 
 
 func _ready() -> void:
@@ -83,6 +86,7 @@ func _update_daylight() -> void:
 	var hour: float = fposmod(float(snapshot.get("time_of_day", 12.0)), 24.0)
 	_modulate.color = tint_at(hour)
 	var night: float = night_factor_at(hour)
+	_night = night
 	var restore: Color = Color.WHITE - night_colour()
 	var settlements: Dictionary = SimReads.read(_world_sim, "get_settlement_snapshot")
 	for id: int in _lights.keys():
@@ -145,3 +149,15 @@ func lights() -> Array[Dictionary]:
 	for l: PointLight2D in _lights.values():
 		out.append({"tile": l.get_meta("tile", Vector2i.ZERO), "enabled": l.enabled, "energy": l.energy})
 	return out
+
+
+## How dark it is at world position `p`: the night factor (0 by day, 1 at full night) times one minus the strongest
+## lit hearth's linear restore there (0 at the hearth, 1 beyond its radius).
+func dark_at(p: Vector2) -> float:
+	if _night <= 0.0:
+		return 0.0
+	var lit: float = 0.0
+	for l: PointLight2D in _lights.values():
+		if l.enabled and _light_radius > 0.0:
+			lit = maxf(lit, clampf(1.0 - p.distance_to(l.position) / _light_radius, 0.0, 1.0))
+	return _night * (1.0 - lit)
