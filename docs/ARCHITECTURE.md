@@ -600,6 +600,8 @@ value × 0.55 with the blue shift, additive hearth PointLight2D within 5 tiles)
   does not change; `tools/v8/test_mart2_extensibility.py` (gate step 33) fails on a content literal in the renderer.
 - **Import**: `tools/v8/art_import.py` copies from the art line's commit by git object reads, bytes unchanged;
   `--verify` (gate step 31) checks every file's hash and size against the manifest.
+- **Snapshot schema v7** (`docs/v8/snapshot_schema.md`): `get_agent_snapshot` gains `sexes`, `look_ids`, `variants`;
+  `get_space` gains `wall_/floor_materials`, `_styles`, `_categories`.
 - **Appearance**: `look = ((age × 2 + sex) × 3 + top) × 3 + hair`, `variant` 0–5 (elders 3 or 4) from
   `sim-bridge/data/appearance.ron` and the AgentId; the probe's `--people-json` carries the same (renderer agreement,
   gate step 23).
