@@ -5,8 +5,9 @@
 //! (`sim_bridge::ffi::collect_*`): terrain (`get_terrain_snapshot`), the order
 //! overlay (`get_colony_overlay`: chop marks, zones, ground items, sites),
 //! buildings (`get_building_snapshot`), trees (`get_trees`), the agent
-//! snapshot with its job/carry columns (`get_agent_snapshot`) and the clock
-//! (`get_time_snapshot`). It never reads systems or engine state the bridge
+//! snapshot with its job/carry columns (`get_agent_snapshot`), the snapshot's
+//! M-ART2 appearance columns (`collect_appearance`: `--people-json`'s
+//! `appearance`, [`people_looks`]) and the clock (`get_time_snapshot`). It never reads systems or engine state the bridge
 //! does not expose. Stumps have no collector: like `tree_layer.gd`, the
 //! [`StumpTracker`] derives them from successive `get_trees` reads (a tree
 //! that disappears leaves a stump for [`STUMP_TICKS`]).
@@ -18,8 +19,9 @@
 //! ([`AsciiArgs`], [`run`]).
 use super::colony::{load_script, resolve, ScriptEntry};
 use sim_bridge::ffi::{
-    collect_agent_jobs, collect_agent_snapshot, collect_building_snapshot, collect_colony_overlay,
-    collect_terrain_snapshot, collect_time_snapshot, collect_trees, AgentSnapshotRow,
+    collect_agent_jobs, collect_agent_snapshot, collect_appearance, collect_building_snapshot,
+    collect_colony_overlay, collect_terrain_snapshot, collect_time_snapshot, collect_trees,
+    AgentSnapshotRow,
 };
 use sim_engine::SimEngine;
 use std::collections::{BTreeMap, BTreeSet};
@@ -149,6 +151,58 @@ pub fn people_tiles(engine: &SimEngine) -> Vec<Tile> {
         .collect();
     tiles.sort_unstable();
     tiles
+}
+
+/// One person as the text renderer lists it in `--people-json`'s `appearance` (M-ART2, C2 extended to
+/// appearance): AgentId, tile, sex (0 male, 1 female), look index and face variant — the columns
+/// `get_agent_snapshot` sends as `agent_ids`, `xs`, `ys`, `sexes`, `look_ids`, `variants`, from the same
+/// collectors (`collect_agent_snapshot`, `collect_appearance`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub struct PersonLook {
+    /// AgentId.
+    pub agent_id: u64,
+    /// Tile x.
+    pub x: u32,
+    /// Tile y.
+    pub y: u32,
+    /// 0 male, 1 female.
+    pub sex: u8,
+    /// Look index.
+    pub look: u32,
+    /// Face variant.
+    pub variant: u8,
+}
+
+/// Every person's look in AgentId order; `Err` when the two collectors' rows do not line up (a bridge bug).
+pub fn people_looks(engine: &SimEngine) -> Result<Vec<PersonLook>, String> {
+    let rows = collect_agent_snapshot(&engine.world);
+    let looks = collect_appearance(&engine.world);
+    if rows.len() != looks.len() {
+        return Err(format!(
+            "appearance rows {} != snapshot rows {}",
+            looks.len(),
+            rows.len()
+        ));
+    }
+    let mut out = Vec::with_capacity(rows.len());
+    for (row, look) in rows.iter().zip(&looks) {
+        if row.agent_id != look.agent_id {
+            return Err(format!(
+                "appearance row of agent {} beside snapshot row of agent {}",
+                look.agent_id, row.agent_id
+            ));
+        }
+        out.push(PersonLook {
+            agent_id: row.agent_id,
+            x: row.x,
+            y: row.y,
+            sex: look.sex,
+            look: look.look,
+            variant: look.variant,
+        });
+    }
+    out.sort_unstable();
+    Ok(out)
 }
 
 /// The full-map grid (row-major bytes) and its width/height.
@@ -420,11 +474,23 @@ pub fn run(args: &AsciiArgs) -> Result<(), String> {
     }
     if let Some(path) = &args.people_json {
         let tiles = people_tiles(&engine);
+        let looks = people_looks(&engine)?;
         let json = serde_json::json!({
             "seed": args.seed,
             "tick": collect_time_snapshot(&engine).tick,
             "count": tiles.len(),
             "people": tiles.iter().map(|t| [t.0, t.1]).collect::<Vec<_>>(),
+            "appearance": looks
+                .iter()
+                .map(|p| serde_json::json!({
+                    "agent_id": p.agent_id,
+                    "x": p.x,
+                    "y": p.y,
+                    "sex": p.sex,
+                    "look": p.look,
+                    "variant": p.variant,
+                }))
+                .collect::<Vec<_>>(),
         });
         std::fs::write(
             path,

@@ -9,9 +9,17 @@
 //! the shape), [`collect_space`] (walls, doors, floors, bedrolls and dug tiles,
 //! `(y, x)` order), [`collect_rooms`] (rooms by id, their tiles in `(x, y)`
 //! order) and [`collect_room_detail`] (one room's panel). Ids: `RoomId` (u32).
+//!
+//! M-ART2 (MART2_DECISIONS D6): every wall and floor row also carries a [`TileLook`] — the tile's `MaterialId`
+//! (`TileGrid::wall_material` / `floor_material`), the style name of the blueprint that built it (the
+//! `BlueprintKind` name in PascalCase: `LogWall`, `StoneWall`, `Door`, `PackedFloor`, as the art data's
+//! `sim_blueprints`; a dug hill tile's floor is [`DUG_FLOOR_STYLE`]) and the material's registry category
+//! (`ffi::material_category`), so the renderer resolves `(style, material)` and falls back by category.
+use super::material_category::category_label;
 use godot::prelude::*;
 use sim_core::colony::{BlueprintKind, Command, CommandResult, RejectReason};
 use sim_core::components::Position;
+use sim_core::material::MaterialId;
 use sim_core::rooms::RoomRole;
 use sim_engine::{SimEngine, SimResources};
 use sim_systems::commands::{check_blueprint, check_space, line_tiles, submit};
@@ -208,6 +216,44 @@ pub struct SpaceView {
     pub dug: Vec<(u32, u32)>,
     /// Ford tiles: shallow river tiles people wade (M4).
     pub fords: Vec<(u32, u32)>,
+    /// M-ART2: how each wall row is drawn, in `walls` order.
+    pub wall_looks: Vec<TileLook>,
+    /// M-ART2: how each floor row is drawn, in `floors` order.
+    pub floor_looks: Vec<TileLook>,
+}
+
+/// The style name of a dug hill tile's rock floor (no blueprint builds it; `floor_kinds` 1).
+pub const DUG_FLOOR_STYLE: &str = "DugFloor";
+
+/// What the renderer needs to resolve one built tile's look (M-ART2, MART2_DECISIONS D6).
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct TileLook {
+    /// The tile's material (`None` only for a tile without one).
+    pub material: Option<MaterialId>,
+    /// The style: the PascalCase name of the blueprint that built it ([`style_name`]) or [`DUG_FLOOR_STYLE`].
+    pub style: String,
+    /// The material's registry category name (`Stone`, `Wood`, …, `Mod`), `""` when unknown.
+    pub category: &'static str,
+}
+
+/// A blueprint's style name for the renderer: its stable name in PascalCase (`log_wall` → `LogWall`), so a
+/// new blueprint kind is named by its own data without a table here.
+pub fn style_name(kind: BlueprintKind) -> String {
+    kind.name()
+        .split('_')
+        .map(|word| {
+            let mut chars = word.chars();
+            chars.next().map_or_else(String::new, |first| {
+                first.to_ascii_uppercase().to_string() + chars.as_str()
+            })
+        })
+        .collect()
+}
+
+/// The material column value: the `MaterialId`'s u32 bit pattern as i32, `-1` for none (no registry
+/// material hashes to `0xFFFF_FFFF`; a test asserts it).
+pub fn material_column(material: Option<MaterialId>) -> i32 {
+    material.map_or(-1, |m| m.raw() as i32)
 }
 
 /// Every wall, door, floor, bedroll, dug tile and ford, `(y, x)` order (empty in the baseline).
@@ -224,22 +270,38 @@ pub fn collect_space(res: &SimResources) -> SpaceView {
         for x in 0..g.width {
             let i = g.idx(x, y);
             let t = (x, y);
-            if g.wall_material[i].is_some() {
-                let code = match built_at(res, t) {
-                    Some(Built::Door) => 2,
-                    Some(Built::StoneWall) => 1,
-                    _ => 0,
+            if let Some(material) = g.wall_material[i] {
+                let (code, kind) = match built_at(res, t) {
+                    Some(Built::Door) => (2, BlueprintKind::Door),
+                    Some(Built::StoneWall) => (1, BlueprintKind::StoneWall),
+                    _ => (0, BlueprintKind::LogWall),
                 };
                 view.walls.push((t, code));
+                view.wall_looks.push(TileLook {
+                    material: Some(material),
+                    style: style_name(kind),
+                    category: category_label(res, Some(material)),
+                });
             }
             if g.is_ford(i) {
                 view.fords.push(t);
             }
+            let floor = g.floor_material[i];
             if g.is_dug(i) {
                 view.dug.push(t);
                 view.floors.push((t, 1));
-            } else if g.floor_material[i].is_some() {
+                view.floor_looks.push(TileLook {
+                    material: floor,
+                    style: DUG_FLOOR_STYLE.to_string(),
+                    category: category_label(res, floor),
+                });
+            } else if floor.is_some() {
                 view.floors.push((t, 0));
+                view.floor_looks.push(TileLook {
+                    material: floor,
+                    style: style_name(BlueprintKind::PackedFloor),
+                    category: category_label(res, floor),
+                });
             }
         }
     }
@@ -268,6 +330,22 @@ pub(super) fn space_to_dict(v: &SpaceView) -> VarDictionary {
         "floor_kinds",
         int_col(v.floors.iter().map(|f| u32::from(f.1))),
     );
+    // M-ART2 (D6): material, style and category per wall and floor row.
+    let materials = |looks: &[TileLook]| -> PackedInt32Array {
+        let v: Vec<i32> = looks.iter().map(|l| material_column(l.material)).collect();
+        PackedInt32Array::from(v.as_slice())
+    };
+    let strings = |values: Vec<GString>| PackedStringArray::from(values.as_slice());
+    let styles =
+        |looks: &[TileLook]| strings(looks.iter().map(|l| GString::from(&l.style)).collect());
+    let categories =
+        |looks: &[TileLook]| strings(looks.iter().map(|l| GString::from(l.category)).collect());
+    dict.set("wall_materials", materials(&v.wall_looks));
+    dict.set("wall_styles", styles(&v.wall_looks));
+    dict.set("wall_categories", categories(&v.wall_looks));
+    dict.set("floor_materials", materials(&v.floor_looks));
+    dict.set("floor_styles", styles(&v.floor_looks));
+    dict.set("floor_categories", categories(&v.floor_looks));
     dict.set("bed_xs", int_col(v.beds.iter().map(|b| b.0)));
     dict.set("bed_ys", int_col(v.beds.iter().map(|b| b.1)));
     dict.set("dug_xs", int_col(v.dug.iter().map(|d| d.0)));

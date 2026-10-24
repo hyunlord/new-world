@@ -100,3 +100,49 @@ unambiguous. `wall_styles` carries the blueprint name that built the tile (`LogW
 `construction_styles.json`'s `sim_blueprints`), and `wall_categories` / `floor_categories` carry the material's
 registry category name, because the art loader contract (`ADDING_A_STYLE.md`, "M-ART2 loading contract") requires the
 category for a material the art data does not list.
+
+## D7 — The import (Part 1)
+
+- **Read from git objects, not the worktree.** `tools/v8/art_import.py` reads every file with `git cat-file --batch`
+  at the pinned commit, so a re-import needs only the commit (the art worktree is deleted at the end); bytes are
+  copied unchanged (PNG stays PNG). 664 files, 13.9 MB of the 40 MB budget (`--verify` is gate step `art_manifest`;
+  9 unit tests incl. negative cases and the look-grid = `appearance.ron` check).
+- **What "adopted" means per family** (D2): people = the 34 route I looks × S/E × 5 poses (340 frames; the art line's
+  2,040 baked variant frames are not imported — the game tints by shader, D9); portraits = POLISH2's 204 (look ×
+  variant, 128 px); items = the POLISH handoff list (`docs/v8/artpolish/HANDOFF_PATHS.md`, 22 items + ENV1's spoiled
+  meat) with the ENV1 anchors; structures and trees = the STRUCT set (`docs/v8/artstruct/assets.json` anchors and
+  footprints; door sprites are not imported — doors come from the material system); berry bushes = the ENV ground
+  catalog (the only bush art); ground = the six ENV ground textures, STRUCT's water, ENV1's snow overlay, STRUCT's
+  rock face and ford stones; animals = POLISH `try2` wolf and deer (anchors from `animal_manifest.json`); data =
+  the three material JSON and their schemas, `FACE_VARIANTS.json`, `variant_transforms.json`, the compositor's
+  `top_colours.json` (LOD marker colours).
+- **Not imported:** a contact shadow (no art asset exists; HANDOVER says draw a 28 × 8 ellipse — code-drawn,
+  `people.shadow_*` in the params), the 3.7 MB person anchor (only its measured luminance std, 0.170613, the value the
+  art line's `tone.person_limit` returns, is recorded in the manifest as the tone reference), the art line's masks
+  (rebuilt and fixed by `tools/v8/art_masks.py` from the commit, Part 4), archives, diagnostics, pipelines.
+- **Hand-written data next to the import:** `bindings.json` (sim codes → art ids, family fallbacks; ADR 0033: the
+  renderer names no content) and `render_params.json` (every tunable; F12 reload).
+
+## D8 — Bridge reads and appearance (Part 2; the Part 2 worker's decisions, checked by the lead)
+
+1. Categories need their own lookup: the game's worlds start with an empty `MaterialRegistry`, so the bridge asks
+   the live registry first, then an embedded copy of every `sim-core/data/material/**/*.ron` (built by
+   `sim-bridge/build.rs` from the directory, so a new material file needs no code; a test checks the count).
+2. `packed_earth` has no material file, so its category is `""`; the renderer falls back by style (no invented
+   category).
+3. Style names are the blueprint's own name in PascalCase (`log_wall` → `LogWall`), equal to the art data's
+   `sim_blueprints`; a dug tile has no blueprint and is `DugFloor` (documented constant); `wall_styles` uses the same
+   classification as `wall_kinds` (tested).
+4. Elder = snapshot life stage 2 (the art line used "age ≥ 50", which the snapshot does not carry); elders keep the
+   adult look and take variant 3 or 4 (the art line's v4, v5).
+5. A person without a `Sex` component counts as male; the hair hash uses its own multiplier and the high half of the
+   product, independent of the variant hash.
+6. A broken `appearance.ron` is refused without a panic: looks and variants go to 0, sexes stay correct.
+7. No `#[func]` was added (the bridge API list is unchanged at 97 methods, `bridge_api_m5_5.txt`); "bridge API list
+   v7" in the goal is covered by the snapshot schema's version 7.
+8. M-EXT debt found: `built_at` counts only granite and limestone as stone, so a stone wall of another stone would be
+   classed `LogWall` (simulation code, left as is).
+- Evidence: identity against `/Users/rexxa/work/m55-data/base/identity` — summary PASS (228,748 values, 0
+  differences), chronicle PASS (64 files), raw samples PASS, determinism PASS; fmt, clippy (all targets), the new tests
+  (engine_appearance_ffi 5, engine_space_ffi 4), sim-bridge 51, schema docs, check_docs all green
+  (`$DATA/part2_report.md`; each new test was seen failing under a deliberate break).

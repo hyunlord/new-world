@@ -63,6 +63,25 @@ class ArtImportTest(unittest.TestCase):
         self.assertEqual(manifest["looks"][0]["id"], "child_M_loincloth_short")
         self.assertEqual(manifest["looks"][35]["id"], "adult_F_fur_cloak_bun")
 
+    def test_look_grid_matches_the_bridge_appearance_rule(self) -> None:
+        """The manifest's look index is the bridge's `look_ids` (sim-bridge/data/appearance.ron): same axes, same order."""
+        import re
+        ron = (ROOT / "rust/crates/sim-bridge/data/appearance.ron").read_text()
+        grid = CONFIG["look_grid"]
+        for axis in ("ages", "sexes", "tops", "hairs"):
+            found = re.search(rf"^\s*{axis}:\s*\[([^\]]*)\]", ron, re.MULTILINE)
+            self.assertIsNotNone(found, axis)
+            assert found is not None
+            names = re.findall(r'"([^"]+)"', found.group(1))
+            self.assertEqual(names, grid[axis], axis)
+        manifest = json.loads((OUT / "manifest.json").read_text())
+        n = len(grid["sexes"]) * len(grid["tops"]) * len(grid["hairs"])
+        self.assertEqual(len(manifest["looks"]), len(grid["ages"]) * n)
+        for row in manifest["looks"]:
+            index = ((grid["ages"].index(row["age"]) * len(grid["sexes"]) + grid["sexes"].index(row["sex"]))
+                     * len(grid["tops"]) + grid["tops"].index(row["top"])) * len(grid["hairs"]) + grid["hairs"].index(row["hair"])
+            self.assertEqual(row["index"], index, row["id"])
+
     def test_frames_carry_the_template_anchor(self) -> None:
         manifest = json.loads((OUT / "manifest.json").read_text())
         for row in manifest["files"]:

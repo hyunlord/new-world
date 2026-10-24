@@ -1,0 +1,47 @@
+// M-ART2 appearance rule (MART2_GOAL 3.2; read by `sim-bridge/src/ffi/appearance.rs`, embedded with
+// `include_str!`, read strictly: `schema_version` must be 1 and an unknown field rejects the file; a rejected
+// file turns the look and variant columns to 0, never a panic).
+//
+// A person's look is a pure function of what the snapshot already says (life stage, sex, top) plus a hair style
+// hashed from the AgentId; the face variant is hashed from the AgentId too. Neither is simulation state (no save
+// change). The renderer maps the look index to a look id through its manifest, which lists the
+// len(ages) × len(sexes) × len(tops) × len(hairs) logical looks in exactly this nested order:
+//
+//     look = ((age * len(sexes) + sex) * len(tops) + top) * len(hairs) + hair
+//
+//     h       = (agent_id * variant_multiplier) mod 2^32
+//     variant = elder_variants[h mod len(elder_variants)]   for a life stage in elder_life_stages
+//             = h mod variants                               otherwise (children and adults)
+//     hair    = (((agent_id * hair_multiplier) mod 2^32) >> hair_shift) mod len(hairs)
+//
+// Sex index: 0 for a person without the female flag (also a person without a `Sex` component), 1 for a female.
+(
+    schema_version: 1,
+    // Age bands of the look list, by index.
+    ages: ["child", "adult"],
+    // Snapshot `life_stages` code -> age band index: 0 adult -> adult, 1 child -> child, 2 elder -> adult.
+    life_stage_age: {0: 1, 1: 0, 2: 1},
+    // The age band of an unknown life stage code.
+    default_age: 1,
+    // Life stage codes that pick an older face variant (elders: the adult look with an older face).
+    elder_life_stages: [2],
+    // Sex bands, by index: 0 male, 1 female.
+    sexes: ["M", "F"],
+    // Tops of the look list, by index.
+    tops: ["loincloth", "hide_wrap", "fur_cloak"],
+    // Snapshot `tops` code (`Top::code`) -> top index.
+    top_codes: {0: 0, 1: 1, 2: 2},
+    // The top index of an unknown top code.
+    default_top: 0,
+    // Hair styles of the look list, by index.
+    hairs: ["short", "long_tied", "bun"],
+    // Hair hash (independent of the variant hash: another multiplier and the high half of the product).
+    hair_multiplier: 2246822519,
+    hair_shift: 16,
+    // Face variant hash (Knuth's multiplicative constant).
+    variant_multiplier: 2654435761,
+    // Face variants per look (the art line's v1..v6, zero-based 0..5).
+    variants: 6,
+    // Zero-based variants an elder picks from (the art line's v4, v5 "older" faces).
+    elder_variants: [3, 4],
+)

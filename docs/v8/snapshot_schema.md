@@ -1,6 +1,6 @@
 # Snapshot schema — the bridge's read surface
 
-Schema version: 6 (M5.5: the neighbour reads `get_neighbours`, `get_wave`, `get_caravan`, the snapshot's `fleeing`, `get_agent_m5`'s `fleeing`, `get_year_summary`'s `migrants_joined`, `trades`, `eurekas` and chronicle kinds 38–44; M5: the story, animal and mood reads `get_story`, `get_animals`, `get_agent_m5`, `get_drafted`, `get_chronicle_why`, `get_year_summary`, `get_teach_suggestion`, the snapshot's `tops`, `mood_bands`, `drafted`, `sick` and the chronicle rows' `index` and links; M4 the knowledge reads `get_tech`, `get_tech_node`, `get_agent_knowledge`, `get_teach_orders`, `get_knowledge_waits`, `get_space`'s fords and the new item, recipe, blueprint, job and chronicle codes; M3 added built space, rooms, the place preview and the overlay's `item_covered`; M2 the economy reads and the overlay's node, mark and quality columns).
+Schema version: 7 (M-ART2: the snapshot's appearance columns `sexes`, `look_ids`, `variants` from `collect_appearance` (`ffi/appearance.rs`, rule file `rust/crates/sim-bridge/data/appearance.ron`) and `get_space`'s `wall_materials`, `wall_styles`, `wall_categories`, `floor_materials`, `floor_styles`, `floor_categories`; no getter added or removed. 6 — M5.5: the neighbour reads `get_neighbours`, `get_wave`, `get_caravan`, the snapshot's `fleeing`, `get_agent_m5`'s `fleeing`, `get_year_summary`'s `migrants_joined`, `trades`, `eurekas` and chronicle kinds 38–44; M5: the story, animal and mood reads `get_story`, `get_animals`, `get_agent_m5`, `get_drafted`, `get_chronicle_why`, `get_year_summary`, `get_teach_suggestion`, the snapshot's `tops`, `mood_bands`, `drafted`, `sick` and the chronicle rows' `index` and links; M4 the knowledge reads `get_tech`, `get_tech_node`, `get_agent_knowledge`, `get_teach_orders`, `get_knowledge_waits`, `get_space`'s fords and the new item, recipe, blueprint, job and chronicle codes; M3 added built space, rooms, the place preview and the overlay's `item_covered`; M2 the economy reads and the overlay's node, mark and quality columns).
 
 Every `#[func] fn get_*` that `WorldSimNode` (`rust/crates/sim-bridge/src/ffi/node.rs`) exposes to GDScript, with the
 keys it returns, their types, id spaces, units and row order, and the pure collector that backs it. A `#[func]` body
@@ -130,8 +130,9 @@ an unknown channel. Keys: none (not a dictionary).
 ### `get_agent_snapshot`
 `collect_agent_snapshot(&World) -> Vec<AgentSnapshotRow>` → `agent_rows_to_dict` (`ffi/snapshot.rs`), plus columns
 the `#[func]` adds in the same row order: `collect_agent_ages_days`, `collect_agent_ages_years`,
-`collect_agent_infancy_and_pregnancy`, `collect_agent_colds` (`ffi/snapshot.rs`) and `collect_agent_jobs`
-(`ffi/colony.rs`). One row per entity with `Agent` and `Position`, in hecs query order (archetype iteration: stable
+`collect_agent_infancy_and_pregnancy`, `collect_agent_colds` (`ffi/snapshot.rs`), `collect_agent_jobs`
+(`ffi/colony.rs`), `collect_agent_m5_columns` (`ffi/story.rs`), `collect_fleeing_column` (`ffi/neighbours.rs`) and
+`collect_appearance` (`ffi/appearance.rs`, M-ART2). One row per entity with `Agent` and `Position`, in hecs query order (archetype iteration: stable
 between two reads of an unchanged world, **not** sorted by id and not stable across ticks — join by `agent_ids` or
 `ids`).
 
@@ -165,8 +166,16 @@ between two reads of an unchanged world, **not** sorted by id and not stable acr
 | `drafted` | PackedByteArray | M5: 1 when drafted |
 | `sick` | PackedByteArray | M5: 1 when sick |
 | `fleeing` | PackedByteArray | M5.5: 1 when running from a wolf (`Fleeing`) |
+| `sexes` | PackedByteArray | M-ART2: 0 male (also a person without a `Sex` component), 1 female (`Sex::female`) |
+| `look_ids` | PackedInt32Array | M-ART2: look index `((age × 2 + sex) × 3 + top) × 3 + hair` into the renderer's 36 logical looks (nested order age child/adult, sex M/F, top loincloth/hide wrap/fur cloak, hair short/long tied/bun); age from `life_stages` (child → 0, adult and elder → 1), top from `tops`, hair `(((agent_id × 2246822519) mod 2^32) >> 16) mod 3` |
+| `variants` | PackedByteArray | M-ART2: face variant 0–5, `h mod 6` with `h = (agent_id × 2654435761) mod 2^32`; an elder (`life_stages` 2) takes `[3, 4][h mod 2]` |
 
 A person sleeps when `states` is 3 and `target_kinds` is 3 (the agent layer's sleep frame; the text renderer's `z`).
+
+Appearance (M-ART2, MART2_GOAL 3.2): hair and face variant are pure functions of the AgentId, not simulation state
+(nothing saved; the same person keeps them across save/load). Every list and constant above is data in
+`rust/crates/sim-bridge/data/appearance.ron` (schema 1, read strictly; a malformed file sends look 0 and variant 0 for
+everyone, `sexes` stays right). The text renderer's `--people-json` prints the same values (`appearance`, below).
 
 ### `get_agent_detail`
 `get_agent_detail(entity_bits)`: `collect_agent_detail(&World, entity_bits) -> AgentDetailRow` →
@@ -595,9 +604,15 @@ layer when `version` moves.
 | `wall_xs` | PackedInt32Array | wall or door tile x |
 | `wall_ys` | PackedInt32Array | wall or door tile y |
 | `wall_kinds` | PackedInt32Array | 0 log wall, 1 stone wall, 2 door |
+| `wall_materials` | PackedInt32Array | M-ART2: the tile's `MaterialId` (`TileGrid::wall_material`, a djb2 hash, not an index) as its u32 bit pattern in an i32 (read `v & 0xFFFFFFFF`); `-1` none (no known material hashes to `0xFFFFFFFF`) |
+| `wall_styles` | PackedStringArray | M-ART2: the blueprint that built it, its name in PascalCase: `LogWall`, `StoneWall`, `Door` (the art data's `sim_blueprints`); agrees with `wall_kinds` |
+| `wall_categories` | PackedStringArray | M-ART2: the material's registry category: `Stone`, `Wood`, `Animal`, `Mineral`, `Plant`, `Mod` (any `Mod(u8)`); `""` when unknown (live `material_registry`, else the sim-core material files embedded in the bridge, `ffi/material_category.rs`) |
 | `floor_xs` | PackedInt32Array | floor tile x |
 | `floor_ys` | PackedInt32Array | floor tile y |
 | `floor_kinds` | PackedInt32Array | 0 packed earth, 1 dug rock |
+| `floor_materials` | PackedInt32Array | M-ART2: `TileGrid::floor_material` as in `wall_materials` (`packed_earth` for a packed floor, the rock for a dug tile); `-1` none |
+| `floor_styles` | PackedStringArray | M-ART2: `PackedFloor` (`floor_kinds` 0) or `DugFloor` (`floor_kinds` 1: a dug hill tile, no blueprint) |
+| `floor_categories` | PackedStringArray | M-ART2: as `wall_categories` (`""` for `packed_earth`, which has no material file) |
 | `bed_xs` | PackedInt32Array | bedroll tile x |
 | `bed_ys` | PackedInt32Array | bedroll tile y |
 | `dug_xs` | PackedInt32Array | dug hill tile x |
@@ -1099,11 +1114,16 @@ reasons add `not_drafted`), the M5.5 orders `cmd_accept_migrants(wave)`, `cmd_de
 
 `rust/crates/sim-test/src/probe/ascii.rs` draws the colony as one character per tile, rows top to bottom, from the
 collectors above only (`collect_terrain_snapshot`, `collect_colony_overlay`, `collect_building_snapshot`,
-`collect_trees`, `collect_agent_snapshot`, `collect_agent_jobs`, `collect_time_snapshot`). Run it with
-`worldsim_probe --scene colony --seeds S..S+1 --ascii --tick T [--rect x,y,w,h] [--commands FILE] [--ascii-legend]
-[--out FILE] [--people-json FILE]`; `--tick T` renders after T completed ticks, applying the script's entries for
-ticks below T right before that tick's systems, as the colony probe does. `--rect` crops the full grid and is clipped
-to the map.
+`collect_trees`, `collect_agent_snapshot`, `collect_agent_jobs`, `collect_appearance`, `collect_time_snapshot`). Run
+it with `worldsim_probe --scene colony --seeds S..S+1 --ascii --tick T [--rect x,y,w,h] [--commands FILE]
+[--ascii-legend] [--out FILE] [--people-json FILE]`; `--tick T` renders after T completed ticks, applying the
+script's entries for ticks below T right before that tick's systems, as the colony probe does. `--rect` crops the full
+grid and is clipped to the map.
+
+`--people-json FILE` writes `{seed, tick, count, people, appearance}`: `people` is one `[x, y]` per person, sorted
+(compared with the Godot agent layer by `tools/v8/renderer_agreement.sh`); M-ART2 adds `appearance`, one
+`{agent_id, x, y, sex, look, variant}` per person in AgentId order — the snapshot's `agent_ids`, `xs`, `ys`, `sexes`,
+`look_ids`, `variants` from the same collectors (C2 agreement extended to appearance; `engine_appearance_ffi.rs`).
 
 Layer order, later wins: **terrain < marks/zones < items < buildings/sites < trees < people**.
 

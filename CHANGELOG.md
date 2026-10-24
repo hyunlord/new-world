@@ -5,6 +5,34 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## M-ART2 — in progress
+
+The adopted art in the real game (`docs/v8/m_art2/MART2_GOAL.md`). Entries are added per part.
+
+### Added
+- Part 2 (bridge reads; no simulation change, identity byte-identical): `get_agent_snapshot` columns `sexes`
+  (0 male, also without `Sex`; 1 female), `look_ids` (index into the 36 logical looks, nested age × sex × top × hair)
+  and `variants` (face variant 0–5; elders 3 or 4) from the pure collector `sim_bridge::ffi::collect_appearance`
+  (`ffi/appearance.rs`). Hair style and face variant are pure functions of the AgentId (not saved).
+- `rust/crates/sim-bridge/data/appearance.ron` (schema 1, read strictly with unknown fields rejected; a malformed file
+  sends look 0 / variant 0): the look axes, the life stage and top mappings, the hair and variant hash constants and
+  the elder variants.
+- `get_space` columns `wall_materials` / `floor_materials` (the `MaterialId` u32 bit pattern as i32, `-1` none),
+  `wall_styles` / `floor_styles` (the building blueprint's name in PascalCase: `LogWall`, `StoneWall`, `Door`,
+  `PackedFloor`; `DugFloor` for a dug hill tile) and `wall_categories` / `floor_categories` (the material's registry
+  category: `Stone`, `Wood`, `Animal`, `Mineral`, `Plant`, `Mod`; `""` unknown) — MART2_DECISIONS D6.
+- `ffi/material_category.rs` and `sim-bridge/build.rs`: the bridge embeds every `sim-core/data/material/**/*.ron` file
+  so a category resolves without the disk (the live `material_registry` is asked first; it is empty in today's worlds).
+- `worldsim_probe --ascii … --people-json` writes `appearance` (`agent_id`, `x`, `y`, `sex`, `look`, `variant` per
+  person) from the same collectors (C2 agreement extended to appearance).
+- Tests `engine_appearance_ffi.rs` (pure function across save/load and a twin, spread of hair and variants, elders and
+  children, the people JSON = the bridge, baseline) and two `engine_space_ffi.rs` tests (columns = `TileGrid`,
+  categories from the material files on disk, no material hashes to `0xFFFFFFFF`, baseline empty).
+
+### Changed
+- `docs/v8/snapshot_schema.md` schema version 7. The bridge `#[func]` list is unchanged (97 items,
+  `docs/v8/bridge_api_m5_5.txt`).
+
 ## M5.5 — 2026-10-24
 
 Neighbours and the M5 corrections (`docs/v8/m5_5/M55_GOAL.md`): two neighbours off the map send migrant waves who bring

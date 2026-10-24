@@ -34,6 +34,7 @@
 //! are non-stub forwardings.
 
 use super::activity::{activity_rows_to_dict, collect_activity_snapshot};
+use super::appearance::collect_appearance;
 use super::causal::{
     channel_from_i32, channel_key, collect_tile_causal_events, event_views_to_variant_array,
     try_collect_event_chain, try_collect_tile_causal_history,
@@ -488,6 +489,15 @@ impl WorldSimNode {
         // M5.5: `fleeing` (0/1) in the same row order.
         let fleeing = collect_fleeing_column(&self.engine.world);
         dict.set("fleeing", PackedByteArray::from(fleeing.as_slice()));
+        // M-ART2: `sexes` (0 male, 1 female), `look_ids` (index into the renderer's look list) and `variants`
+        // (face variant 0–5) in the same row order (`ffi/appearance.rs`, `data/appearance.ron`).
+        let looks = collect_appearance(&self.engine.world);
+        let sexes: Vec<u8> = looks.iter().map(|r| r.sex).collect();
+        let look_ids: Vec<i32> = looks.iter().map(|r| r.look as i32).collect();
+        let variants: Vec<u8> = looks.iter().map(|r| r.variant).collect();
+        dict.set("sexes", PackedByteArray::from(sexes.as_slice()));
+        dict.set("look_ids", PackedInt32Array::from(look_ids.as_slice()));
+        dict.set("variants", PackedByteArray::from(variants.as_slice()));
         dict
     }
 

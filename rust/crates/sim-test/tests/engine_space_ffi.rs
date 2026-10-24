@@ -1,6 +1,8 @@
 //! M3 bridge collectors (`sim_bridge::ffi::space`): the order path, the drag
 //! preview, built space, rooms, a room's panel and the inspector's bed line,
-//! on the colony world; their empty form in the baseline.
+//! on the colony world; their empty form in the baseline. M-ART2: the wall and
+//! floor material, style and category columns against `TileGrid` and the
+//! sim-core material files read from disk (MART2_DECISIONS D6).
 
 use sim_bridge::ffi::{
     collect_agent_economy, collect_colony_overlay, collect_colony_versions, collect_place_preview,
@@ -209,4 +211,241 @@ fn the_baseline_has_no_built_space_or_rooms() {
     let space = collect_space(&engine.resources);
     assert!(space.walls.is_empty() && space.floors.is_empty() && space.beds.is_empty());
     assert!(collect_rooms(&engine.resources).rows.is_empty());
+}
+
+/// Every sim-core material file's id → category name, read from disk here (independent of the bridge's
+/// embedded catalogue), with the number of files.
+fn disk_categories() -> (std::collections::BTreeMap<u32, &'static str>, usize) {
+    use sim_core::material::MaterialCategory as C;
+    let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../sim-core/data/material");
+    let mut out = std::collections::BTreeMap::new();
+    let mut files = 0;
+    let mut dirs: Vec<_> = std::fs::read_dir(&root)
+        .expect("material dir")
+        .map(|e| e.expect("entry").path())
+        .filter(|p| p.is_dir())
+        .collect();
+    dirs.sort();
+    for dir in dirs {
+        files += std::fs::read_dir(&dir)
+            .expect("dir")
+            .filter(|e| {
+                e.as_ref()
+                    .is_ok_and(|e| e.path().extension().is_some_and(|x| x == "ron"))
+            })
+            .count();
+        for def in sim_core::material::load_directory(&dir).expect("parses") {
+            let name = match def.category {
+                C::Stone => "Stone",
+                C::Wood => "Wood",
+                C::Animal => "Animal",
+                C::Mineral => "Mineral",
+                C::Plant => "Plant",
+                C::Mod(_) => "Mod",
+            };
+            out.insert(def.id.raw(), name);
+        }
+    }
+    (out, files)
+}
+
+#[test]
+fn wall_and_floor_looks_match_the_tile_grid() {
+    use sim_core::colony::materials::{GRANITE, LIMESTONE};
+    use sim_systems::runtime::jobs::space::{complete_site, dig, PACKED_EARTH};
+    let mut engine = sim_test::colony_engine(1);
+    for _ in 0..5 {
+        engine.tick();
+    }
+    let (x, y) = open_area(&engine, 6, 4);
+    for (kind, row) in [
+        ("log_wall", 0),
+        ("stone_wall", 1),
+        ("door", 2),
+        ("packed_floor", 3),
+    ] {
+        let r = submit_space(
+            &mut engine,
+            SpaceCommand::Line {
+                kind: kind.into(),
+                rect: (x as i32, (y + row) as i32, x as i32 + 4, (y + row) as i32),
+            },
+        );
+        assert_eq!((r.accepted, r.count), (true, 5), "{kind}");
+    }
+    let sites: Vec<hecs::Entity> = engine
+        .world
+        .query::<(&sim_core::colony::ColonySite,)>()
+        .iter()
+        .filter(|(_, (s,))| s.kind.is_space())
+        .map(|(e, _)| e)
+        .collect();
+    assert_eq!(sites.len(), 20);
+    for site in sites {
+        complete_site(&mut engine.world, &mut engine.resources, site);
+    }
+    // A stone wall of limestone (the other stone the colony knows), as the job layer would write it.
+    let lime = (x + 5, y + 1);
+    let i = engine.resources.tile_grid.idx(lime.0, lime.1);
+    engine.resources.tile_grid.wall_material[i] = Some(LIMESTONE);
+    // Dig three hill tiles (a rock floor of granite).
+    let hills: Vec<(u32, u32)> = {
+        let g = &engine.resources.tile_grid;
+        (0..g.height)
+            .flat_map(|ty| (0..g.width).map(move |tx| (tx, ty)))
+            .filter(|t| {
+                let i = g.idx(t.0, t.1);
+                g.terrain_type[i] == sim_core::TerrainType::Hill && !g.is_dug(i)
+            })
+            .take(3)
+            .collect()
+    };
+    assert_eq!(hills.len(), 3, "the colony map has hills");
+    for t in &hills {
+        assert!(dig(&mut engine.resources, *t));
+    }
+    let (disk, files) = disk_categories();
+    // The bridge embeds every material file of the directory (data only: a new file is picked up).
+    assert_eq!(
+        sim_bridge::ffi::material_category::embedded_file_count(),
+        files
+    );
+    assert!(files >= 100, "{files}");
+    let space = collect_space(&engine.resources);
+    assert_eq!(space.wall_looks.len(), space.walls.len());
+    assert_eq!(space.floor_looks.len(), space.floors.len());
+    let g = &engine.resources.tile_grid;
+    let mut styles = std::collections::BTreeSet::new();
+    for ((tile, code), look) in space.walls.iter().zip(&space.wall_looks) {
+        let i = g.idx(tile.0, tile.1);
+        assert_eq!(look.material, g.wall_material[i], "wall {tile:?}");
+        let raw = g.wall_material[i].expect("a wall row has a material").raw();
+        assert_eq!(sim_bridge::ffi::material_column(look.material), raw as i32);
+        let expected_style = if g.is_door(i) {
+            "Door"
+        } else if g.wall_material[i] == Some(GRANITE) || g.wall_material[i] == Some(LIMESTONE) {
+            "StoneWall"
+        } else {
+            "LogWall"
+        };
+        assert_eq!(look.style, expected_style, "wall {tile:?}");
+        let expected_code = match expected_style {
+            "Door" => 2,
+            "StoneWall" => 1,
+            _ => 0,
+        };
+        assert_eq!(
+            *code, expected_code,
+            "wall_kinds agrees with wall_styles at {tile:?}"
+        );
+        assert_eq!(
+            look.category,
+            disk.get(&raw).copied().unwrap_or(""),
+            "wall {tile:?}"
+        );
+        assert!(
+            !look.category.is_empty(),
+            "every wall material is known: {tile:?}"
+        );
+        styles.insert(look.style.clone());
+    }
+    for ((tile, code), look) in space.floors.iter().zip(&space.floor_looks) {
+        let i = g.idx(tile.0, tile.1);
+        assert_eq!(look.material, g.floor_material[i], "floor {tile:?}");
+        assert_eq!(
+            sim_bridge::ffi::material_column(look.material),
+            g.floor_material[i].map_or(-1, |m| m.raw() as i32)
+        );
+        let (style, kind) = if g.is_dug(i) {
+            ("DugFloor", 1)
+        } else {
+            ("PackedFloor", 0)
+        };
+        assert_eq!(
+            (look.style.as_str(), *code),
+            (style, kind),
+            "floor {tile:?}"
+        );
+        let raw = g.floor_material[i].map(|m| m.raw());
+        let expected = raw.and_then(|r| disk.get(&r).copied()).unwrap_or("");
+        assert_eq!(look.category, expected, "floor {tile:?}");
+        styles.insert(look.style.clone());
+    }
+    // Each built kind is listed with its art-data style name and the expected material.
+    assert_eq!(
+        styles.into_iter().collect::<Vec<_>>(),
+        vec!["Door", "DugFloor", "LogWall", "PackedFloor", "StoneWall"]
+    );
+    let looks_at = |t: (u32, u32)| {
+        space
+            .walls
+            .iter()
+            .position(|w| w.0 == t)
+            .map(|p| space.wall_looks[p].clone())
+    };
+    let stone = looks_at((x, y + 1)).expect("stone wall row");
+    assert_eq!((stone.material, stone.category), (Some(GRANITE), "Stone"));
+    let lime_look = looks_at(lime).expect("limestone wall row");
+    assert_eq!(
+        (lime_look.style.as_str(), lime_look.category),
+        ("StoneWall", "Stone")
+    );
+    let log = looks_at((x, y)).expect("log wall row");
+    assert_eq!((log.style.as_str(), log.category), ("LogWall", "Wood"));
+    let packed = space
+        .floors
+        .iter()
+        .position(|f| f.0 == (x, y + 3))
+        .map(|p| space.floor_looks[p].clone())
+        .expect("packed floor row");
+    // `packed_earth` has no material file: no category (the renderer falls back by style).
+    assert_eq!((packed.material, packed.category), (Some(PACKED_EARTH), ""));
+    let dug = space
+        .floors
+        .iter()
+        .position(|f| f.0 == hills[0])
+        .map(|p| space.floor_looks[p].clone())
+        .expect("dug floor row");
+    assert_eq!(
+        (dug.style.as_str(), dug.material, dug.category),
+        ("DugFloor", Some(GRANITE), "Stone")
+    );
+    // `-1` (none) is never a real material: no known id has the bit pattern 0xFFFF_FFFF.
+    assert_eq!(sim_bridge::ffi::material_column(None), -1);
+    let mut known: Vec<u32> = disk.keys().copied().collect();
+    known.extend(
+        sim_bridge::ffi::material_category::catalogue()
+            .keys()
+            .map(|m| m.raw()),
+    );
+    known.extend(
+        engine
+            .resources
+            .material_registry
+            .all_ids()
+            .map(|m| m.raw()),
+    );
+    known.extend(
+        engine
+            .resources
+            .colony
+            .materials
+            .by_id
+            .keys()
+            .map(|m| m.raw()),
+    );
+    known.push(PACKED_EARTH.raw());
+    assert!(known.len() > 100);
+    assert!(
+        known.iter().all(|r| *r != u32::MAX),
+        "a material hashes to 0xFFFFFFFF"
+    );
+}
+
+#[test]
+fn the_baseline_has_no_wall_or_floor_looks() {
+    let engine = sim_test::baseline_engine(0);
+    let space = collect_space(&engine.resources);
+    assert!(space.wall_looks.is_empty() && space.floor_looks.is_empty());
+    assert_eq!(space.wall_looks.len(), space.walls.len());
 }

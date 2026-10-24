@@ -15,6 +15,7 @@
 //! Godot dictionaries. Sim-test exercises the collectors directly.
 
 pub mod activity;
+pub mod appearance;
 pub mod causal;
 pub mod chronicle;
 pub mod colony;
@@ -22,6 +23,7 @@ pub mod economy;
 pub mod engine_build;
 pub mod family;
 pub mod knowledge;
+pub mod material_category;
 pub mod neighbours;
 pub mod node;
 pub mod reads_agent;
@@ -33,6 +35,7 @@ pub mod space;
 pub mod story;
 
 pub use activity::{collect_activity_snapshot, ActivitySnapshotRow};
+pub use appearance::{appearance_rule, collect_appearance, AppearanceRow, AppearanceRule};
 pub use colony::{
     can_place, clip_rect, collect_agent_jobs, collect_colony_overlay, collect_colony_versions,
     collect_trees, submit_blueprint, submit_rect, submit_tiles, ColonyOverlay, ColonyVersions,
@@ -49,13 +52,15 @@ pub use knowledge::{
     collect_teach_suggestion, collect_tech, collect_tech_node, AgentKnowledgeView, KnowledgeRow,
     TeachRow, TechNodeView, TechRow, TechView, WaitRow,
 };
+pub use material_category::{category_label, category_name, category_of};
 pub use neighbours::{
     collect_caravan, collect_fleeing_column, collect_neighbours, collect_wave, submit_neighbours,
     CaravanView, NeighbourCommand, NeighboursView, WaveView,
 };
 pub use space::{
-    collect_place_preview, collect_room_detail, collect_rooms, collect_space, submit_space,
-    PlacePreview, RoomDetail, RoomRow, RoomsView, SpaceCommand, SpaceView,
+    collect_place_preview, collect_room_detail, collect_rooms, collect_space, material_column,
+    style_name, submit_space, PlacePreview, RoomDetail, RoomRow, RoomsView, SpaceCommand,
+    SpaceView, TileLook, DUG_FLOOR_STYLE,
 };
 pub use story::{
     collect_agent_m5, collect_agent_m5_columns, collect_animals, collect_chronicle_why,
