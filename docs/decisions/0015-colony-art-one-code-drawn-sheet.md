@@ -37,3 +37,8 @@ batch. If real art arrives later, it replaces painters one by one behind the sam
 
 ## Source
 docs/v8/m1art/ART_GOAL.md §2, §5, §6; docs/v8/m1art/ART_DECISIONS.md D3–D16; docs/decisions/0002-view-b-top-down.md
+
+## Superseded (2026-10-24, M-ART2)
+The sheet path is deleted: `tools/v8/gen_tiles.py`, its test and `assets/v8/tiles.*` are gone (last at `29f720aa`). The colony
+is drawn from the adopted art at 64 px through manifests and the material resolver (ADR 0018, ADR 0033, ADR 0034). The
+craft rules this ADR set (`worldsim-godot`) still apply to anything drawn in code.

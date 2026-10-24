@@ -54,6 +54,14 @@ Status: accepted (M-ART2 Part 0, 2026-10-24; standing for every later pass).
 - Existing closed enums (`ItemKind`, `BlueprintKind`, `AnimalKind`, `Top`, `RoomRole`, `Modifier` …) stay until M-EXT;
   bridges translate their codes to data ids through binding files (`assets/v8art/bindings.json`) instead of code.
 - Reviews add one checklist item; passes record new debt in their DECISIONS.
+- **M-ART2, the first pass under this contract (2026-10-24):** the renderer (`scripts/world/**`) names no
+  content: `tools/v8/test_mart2_extensibility.py` (gate step 33) checks every string literal there against the manifest
+  ids, logical looks, material keys, style ids and the bindings' sim kind names, and every `16` in a tile-size position;
+  both checks fail on planted lines; a wall style and material added by data only
+  (`tools/v8/fixtures/data_only_wall.json`) resolves and renders (gate step 34). Debt recorded for M-EXT
+  (`docs/v8/m_art2/MART2_DECISIONS.md` D16): the HUD's 32-px icons still come from the old atlas
+  (`art_sprite_library.gd`), `economy_text.gd` maps item codes to locale keys by name, and `built_at` classifies stone
+  by name; the bridge's closed enums are translated through `bindings.json`.
 
 ## Date
 2026-10-24

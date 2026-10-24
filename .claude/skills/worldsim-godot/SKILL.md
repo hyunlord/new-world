@@ -20,7 +20,7 @@ GDScript draws, takes input and shows UI. The simulation is Rust (`rust/crates/`
 | tools | `tools/v8/gdscript_strict_check.sh`, `smoke.sh` + `smoke.gd`, `capture.gd`, `run_bounded.sh`; gate steps 2, 3, 8, 9, 17 (`test_locale_trf.gd`) and 20 (`uid_check`) in `tools/v8/gate.sh` |
 
 References: [file formats](references/file-formats.md) · [general Godot pitfalls](references/common-pitfalls.md) ·
-[UI-side patterns](references/architecture-patterns.md) · [rendering notes for M1](references/rendering-m1.md).
+[UI-side patterns](references/architecture-patterns.md) · [rendering notes for M1](references/rendering-m1.md) (history: the 16-px sheet renderer M-ART2 replaced).
 Not carried over from `.agents/skills/godot` (at tag `v7-final-art`): `godot4-physics-api.md` (3D physics; WorldSim has no physics bodies,
 and its `query.exclude = [self, body]` example is wrong in 4.x — `exclude` takes RIDs), the RPG templates
 (`assets/templates/*.gd`, `*.tres`) and the `validate_tscn.py`/`validate_tres.py` scripts (the headless import and
@@ -69,7 +69,7 @@ smoke are this repo's validators).
 - **Do** read every tunable from `assets/v8art/render_params.json` (F12 reloads it in debug builds), not from a `const`.
 
 ### Drawing and UI
-- **Do** keep nearest filtering, 1 texel = 1 world pixel, sprite scale 1 and integer zoom only (M1 camera: 1/2/3/4, default 2; `scripts/world/camera_controller.gd`). *Reason:* fractional scale and a 1.25× wheel step made villagers squashed and blurry.
+- **Do** keep 1 texel = 1 world pixel and sprite scale 1, and zoom only along the params ladder (`camera.zooms`: ¼, ½, 1, 2, default 1; `scripts/world/camera_controller.gd`): at 1× and 2× sprites are whole texels; below 1× people are LOD markers and ground chunks use ½/¼ textures, so no person is ever drawn at a fractional scale. *Reason:* fractional scale and a 1.25× wheel step made villagers squashed and blurry (V7); M-ART2's adopted art is painted for 1×.
 - **Do** capture per-instance tint in `vertex()` in `canvas_item` shaders. *Reason:* in 4.6 `COLOR` at `fragment()` is already multiplied by `TEXTURE`; capturing it there turned every agent green.
 - **Do** size pixel text in design pixels on the font's grid: Galmuri11 is a 12-px grid, so 12/24/36/48 px. *Reason:* a rule stated in screen pixels failed at 24/36 px and pushed Life text to 48 px, breaking layout.
 - **Do** derive visual variation from integer hashes of stable ids or tiles; no `randf()` in renderers. *Reason:* looks changed from run to run.
@@ -82,7 +82,7 @@ smoke are this repo's validators).
 - **Don't** use `self_modulate` when children must follow. *Reason:* it is not inherited; a child Label kept its colour.
 - **Do** measure every GDScript "optimisation" before keeping it. *Reason:* caching `get_meta`/`get_node_or_null` in GDScript made W500 19.5 % slower.
 
-### Pixel-art craft rules (M1-ART; `tools/v8/gen_tiles.py` and its tests enforce the measurable ones)
+### Craft rules (from M1-ART; the M1 sheet and `gen_tiles.py` are gone since M-ART2, the adopted art carries its own ink — rules 3–6 still hold for anything drawn in code)
 1. Every sprite has a 1-px dark outline `(20, 18, 16)` on its silhouette; ground tiles have none.
 2. Three to four values per material (shadow, base, light, highlight); no gradients, no anti-aliasing.
 3. Light from the top-left; cast shadows fall down-right, 1 px, in a darker ground colour, never black.
@@ -151,7 +151,7 @@ outline) made a forest read as green dots that hid the people and 34 logs read a
 
 ### 9. Drive the game with synthetic input (GUI tests)
 1. Windowed only (`--rendering-driver opengl3 --resolution 1920x1080`): `Input.parse_input_event` reaches `_unhandled_input` and GUI buttons as a real click does; `tools/v8/m1_gui_test.gd` is the model.
-2. Convert a tile to a screen point with `root.get_canvas_transform() * (Vector2(tile) * 16 + Vector2(8, 8))`.
+2. Convert a tile to a screen point with `root.get_viewport().get_canvas_transform() * View.tile_centre(tile)` (64-px tiles since M-ART2; never a literal tile size).
 3. A click is motion to the point, then press, then release, each followed by `await process_frame`; a drag adds motion events between press and release. Keys send press and release with both `keycode` and `physical_keycode`.
 4. After each step assert the effect through the bridge reads (`get_colony_overlay`, `get_trees`), never through the order tool's own state; pause with `P` while ordering so the clock does not move between steps.
 5. Save shots with the viewport texture after a frame (`await process_frame`), and print one PASS/FAIL sentinel line.
@@ -168,32 +168,36 @@ outline) made a forest read as green dots that hid the people and 34 logs read a
 3. `tools/play/WorldSim.command` (main) and `WorldSim-v7.command` (v7) are the double-click launchers; they follow a `~/Desktop` symlink back to the clone and keep Terminal open on a non-zero exit.
 4. `--seed`/`--speed` are passed only when the version's `scripts/` (outside `scripts/test/`) contain `"--seed"`/`"--speed"`; no version does today.
 
-### 11. Add or change a colony sprite (M1-ART)
-1. Paint it in `tools/v8/gen_tiles.py`: a painter returning an RGBA image, seeded by its own `rr(k)` with an
-   unused `k`; outline with `outline_alpha` or `OUTLINE`; register it in `build_sprites` with `add(section, name, im)`
-   (a ground tile goes in section "ground", 16×16, opaque). A person frame is an ASCII table (`ADULT`, `CHILD`,
-   `*_SLEEP`): each character maps to a layer (`LAYER`) and a grey value (`VALUE`); `figure_layers` splits it into
-   skin/hair/tunic/outline and derives the halo.
-2. Add the name and size to `SIZE` in `tools/v8/test_gen_tiles.py` (and to `OUTLINED` for an object).
-3. `python3 tools/v8/gen_tiles.py`, then `python3 -m unittest tools/v8/test_gen_tiles.py` (`test_committed_sheet_is_current`
-   fails until the sheet is regenerated).
-4. Re-import headless (the PNG changed; its `.import` is local), draw it with `View.rect(name)`; a ground tile must
-   also be in `terrain_layer.gd`'s TileSet name list.
-5. Look before capturing: compose the sprites with PIL in context (a few lines; M1-ART caught a hut floor erased by
-   its wall helper this way), then a windowed capture at 2× and 1×.
+### 11. Add or change colony art (M-ART2; `assets/v8art/ADDING_ART.md`)
+1. New art comes from an art line commit: add its path to the right list in `tools/v8/art_import.json` (role, id,
+   anchor/footprint for standing things), run `python3 tools/v8/art_import.py` (git object reads, bytes unchanged),
+   then `python3 tools/v8/art_import.py --verify` (gate step 31) and `python3 -m unittest tools/v8/test_art_import.py`.
+2. Bind it: a sim code → the new id in `assets/v8art/bindings.json` (items, buildings, animals, trees, nodes, …). A wall,
+   floor or door material or style is a material JSON + texture under `assets/v8art/materials/`, resolved by
+   `material_resolver.gd`; no code changes (gate step 33 fails on a content name in the renderer).
+3. A new person frame also needs its skin/hair mask: `python3 tools/v8/art_masks.py` (then `--check`).
+4. Re-import headless (new PNGs), run `tools/v8/mart2_ground_test.gd` / `mart2_people_test.gd` headless, then look:
+   `capture.gd --mart2-set` or a windowed run at 1× and 2×.
+5. Tunables (sizes, alphas, colours, thresholds) go in `assets/v8art/render_params.json`; check them live with F12.
 
-### 12. Turn one tile four ways; the water autotile
-- `set_cell(cell, 0, coords, alt)` takes the runtime transform flags in `alt`; for a tile drawn with its feature on
-  the NORTH side: north `0`, east `TRANSPOSE | FLIP_H`, south `FLIP_V`, west `TRANSPOSE` (`terrain_layer.gd`
-  `EDGE_TRANSFORMS`, the clearing's grass-dither edge).
-- Water (`terrain_layer.gd` `_water`): the 4-bit mask of land neighbours (N=1, E=2, S=4, W=8) picks `bank_<mask>`
-  (15 tiles, a sand lip on each land side); mask 0 with land on a diagonal picks `bank_in_<ne/nw/se/sw>`; land within
-  2 tiles gives `shallow_*`; the rest is `water_*` (deep).
+### 12. Ground, edges and water (M-ART2)
+- The ground is baked per 16×16-tile chunk on the CPU (`scripts/world/art/ground_baker.gd`) with native `Image` ops
+  only: a run of one ground in a row is one `blit_rect`; an edge is `blend_rect_mask` with a noise-dithered binary mask
+  (periodic in 256 px, 16 phases; a corner is the union of its side masks). Water is transparent in the chunk;
+  `shaders/ground_chunk.gdshader` draws it underneath. A per-pixel GDScript loop costs ~25 µs per 4 KB — never use one
+  in a bake.
+- Walls, doors and hill faces are per-row strips (`wall_baker.gd`) in the y-sorted `ColonyView/World`; a space change
+  rebakes only the chunks whose tiles changed (`ground_layer.gd` `_apply_space`).
 
 ## Lessons
 
 | date | symptom | root cause | fix | source |
 |---|---|---|---|---|
+| 2026-10-24 | The FPS runner's Godot died at once with exit 247 and no output after the release library was copied over the debug one | macOS kills (SIGKILL) a process that maps a signed dylib whose file was overwritten in place; `cp` over the file Godot loads keeps the inode and invalidates its code signature | replace, never overwrite, a library any process may load: `rm -f` then `cp`; restore the same way in a trap | `tools/v8/mart2_fps.sh` |
+| 2026-10-24 | Every person was tinted blue-white after the variant shader went in | a `sampler2D` uniform with no texture set reads white, so the mask said "skin and hair" for every pixel | guard optional samplers with a bool uniform (`has_mask`) and set it only when the texture exists | `shaders/person_variant.gdshader` |
+| 2026-10-24 | The 1,000-person world ran at 27 FPS at ½× with people drawn as LOD circles | one `draw_circle` per person per frame in `_draw` (~7 ms of CPU) plus per-person frame and shader work for hidden bodies | draw many identical markers as one `MultiMeshInstance2D` (instance buffer written in one assignment) and skip all body work while LOD is on: 211 FPS | `scripts/world/colony/lod_markers.gd` |
+| 2026-10-24 | The first ground chunk took 258 ms to bake and the ¼× view used 546 MB of textures | dither masks built per pixel in GDScript; full-resolution 1,024² chunk textures kept for a view that shows them at ¼ | precompute mask phase fields once and build masks with native ops (first bake 18 ms, steady ~2 ms); below 1× upload ½ or ¼ textures and scale the sprite (87 MB) | `scripts/world/art/ground_baker.gd`; `scripts/world/colony/ground_layer.gd` |
+| 2026-10-24 | Walls, trees and people drew in layer order instead of by depth (a person behind a wall drew over it) | y-sorting works only among siblings of one `y_sort_enabled` parent; each layer was its own Node2D | parent everything that stands (wall strips, doors, trees, structures, animals, people) to one y-sorted `ColonyView/World` at its base point; keep flat ground below it and marks above it | `scenes/main.tscn`; `scripts/world/colony/agent_layer.gd` |
 | 2026-10-23 | The inspector's 지식 tab cut off "60 % · 마지막으로 씀: 1일 전" at the panel edge; after making it wrap, Godot logged "Signal 'resized' is already connected" | a Label beside a fixed-width bar in an HBox inside a ScrollContainer with horizontal scrolling off is laid out wider than the panel; wrapped labels settle their height one layout pass later, so the V7 edge-padding code ran twice before the scroll resized and connected its one-shot handler twice | give such labels `AUTOWRAP_WORD_SMART` and `SIZE_EXPAND_FILL` and keep Hangul words whole with `Names.unbroken`; guard one-shot connects with `is_connected` when the caller can run again before the signal fires; look at every windowed shot | `scripts/ui/panels/agent_inspector_panel.gd`; `tools/v8/capture.gd` (`--m4-set`) |
 | 2026-10-22 | A windowed capture showed the map's hover label wherever the real OS cursor sat, not at the synthetic mouse events the script sent; the M3 storehouse hover never appeared | the hover reads the viewport's real mouse position each frame (`get_global_mouse_position`), which `Input.parse_input_event` does not move; drags and clicks use the events and work | for hover shots move the real cursor with `Input.warp_mouse` (windowed runs only; it moves the owner's cursor during the run); keep synthetic events for clicks and drags | `tools/v8/capture.gd` (`--m3-set`) |
 | 2026-05-27 | New `#[func]` methods "not found" in GDScript; renamed methods silently ran the old body | `cargo test` builds the test artefact, not the cdylib `rust/target/debug/libsim_bridge.dylib` that Godot loads | `cargo build -p sim-bridge` before launching Godot (gate step 2); compare the newest `sim-bridge/src` mtime with the dylib when in doubt | `0e69fa37`; `v7-final-art:CLAUDE.md` "Pipeline Stale-Dylib Guard" |
@@ -245,12 +249,12 @@ outline) made a forest read as green dots that hid the people and 34 logs read a
 | 2026-10-20 | Renaming an atlas PNG: `git mv` refused its `.png.import` ("not under version control") | every `*.import` except the Galmuri fonts is gitignored, so the import file is checkout-local | `git mv` the asset, plain `mv` its `.import`, fix `source_file` / `path` inside it, re-import headless; the old `.ctex` stays in `.godot/imported` until deleted | `docs/v8/V8_0_DECISIONS.md` D24; commit `4c30013a` |
 | 2026-10-20 | A windowed capture run (`tools/v8/capture.gd`) hung until its 600 s limit with no frame saved, right after `CameraController ready` | the display was idle-asleep; `caffeinate -i` keeps the system awake but not the display, and the window got no frames | run windowed captures under `caffeinate -u -d -t <secs>` (or with the display awake); a timeout with zero files means no frames, not a script bug | `docs/v8/V8_0_DECISIONS.md` D33 |
 | 2026-10-20 | The strict check failed three M1 scripts with `Identifier not found: Locale` although the game ran them fine | the strict check parses scripts without the project's autoloads, so the autoload name is not an identifier there | reach the autoload through the tree (`get_node("/root/Locale")`) as the other panels do, and use `preload("res://scripts/core/locale.gd")` for static helpers | `docs/v8/m1/M1_DECISIONS.md` D27; `scripts/world/colony/order_tool.gd` |
-| 2026-10-20 | The colony terrain showed no camp clearing on the first frame | the terrain layer drew in its first `_process`, before the first simulation tick; buildings (the hearth) are registered on tick 1, so the hearth read was empty | keep the layer pending and redraw until the snapshot it depends on is complete (`_pending = hearth.x < 0`) | `scripts/world/colony/terrain_layer.gd` |
+| 2026-10-20 | The colony terrain showed no camp clearing on the first frame | the terrain layer drew in its first `_process`, before the first simulation tick; buildings (the hearth) are registered on tick 1, so the hearth read was empty | keep the layer pending and redraw until the snapshot it depends on is complete (`_pending = hearth.x < 0`) | `29f720aa:scripts/world/colony/terrain_layer.gd` |
 | 2026-10-20 | U7 FPS read 119.99 at 2× zoom and 119.94 at 1× | the window is capped at the display refresh (120 Hz); the editor-path run loads `rust/target/debug/libsim_bridge.dylib` | report a capped FPS as "≥ bar, headroom unmeasured"; for a release measurement copy the release library to the debug path (check the SHA, restore after) | `docs/v8/m1/M1_EVALUATION.md` U7 |
 | 2026-10-21 | The chronicle panel (C) never showed "오두막이 완성됨" although `get_chronicle_since` held the HutBuilt row (kind 22) | `chronicle_panel.gd` keeps only the kinds in its `NOTABLE` list, and M1 added kind 22 to `chronicle_text.gd` but not to `NOTABLE` | add every new chronicle kind to `NOTABLE` and look at the panel in a windowed run (not fixed yet: a game change was out of V8-PLAY's scope) | `docs/v8/play/SCREEN_REPORT.md` P4; `scripts/ui/panels/chronicle_panel.gd` |
 | 2026-10-21 | Running the game for play: which library does it load? | the Godot editor binary always has the debug feature, so a non-exported run loads `.gdextension`'s `macos.debug` path (`rust/target/debug/…`), never the release one | build the profile `macos.debug` names (`tools/play.sh` reads it); measure release only by copying it to the debug path | `tools/play.sh`; `sim_bridge.gdextension` |
 | 2026-10-21 | A capture planned for "work in progress at tick 900" showed 23:00 with nobody carrying | the colony clock starts at 08:00 (tick 360 = 14:00) and the hut was finished at tick 766 | find the tick with a frameless scan pass, then `reset_world(seed)` and shoot the same world (same hut tick both passes); caption shots with the real tick and clock | `docs/v8/play/PLAY_DECISIONS.md` D2; `tools/v8/capture.gd` |
 | 2026-10-21 | The M1 forest read as rows of green dots and hid the people; the first M1-ART 1× impostor (16×16 crown per tile) brought the dots back | a tile map draws one 16×16 cell per tile, so crowns cannot overhang their neighbours; outlined crowns that fit their tile leave a gap and an outline ring around every tree | draw 24×24 crowns from y-ordered `Node2D` chunks below the people layer; at 1× drop only the shadows | `scripts/world/colony/tree_layer.gd`; `docs/v8/m1art/ART_DECISIONS.md` D8, D9 |
 | 2026-10-21 | At night several people on one shelter tile and three in the hut showed as one figure | the simulation puts every sleeper of a building on the building's tile | spread sleepers for drawing only (hut: its bedrolls; elsewhere a fan along y); the drawn rect stays the click target | `scripts/world/colony/agent_layer.gd` `_place_sleepers`; `docs/v8/m1art/ART_DECISIONS.md` D12 |
-| 2026-10-21 | A fresh blind tester named a child "a villager", a sleeper "a hearth stone" and the blueprint "a zone outline" (6/10) | the child was a slightly shorter adult; the sleep frame's eyes and belt read as a pattern; the ghost was a plain dashed square | children need child proportions (big head, small body, 10 px), sleepers a head and a blanket, a blueprint plan marks (hatched walls, door, faint furniture) | `tools/v8/gen_tiles.py` `CHILD`, `ADULT_SLEEP`, `hut_ghost`; `docs/v8/m1art/ART_REPORT.md` 8.2 |
+| 2026-10-21 | A fresh blind tester named a child "a villager", a sleeper "a hearth stone" and the blueprint "a zone outline" (6/10) | the child was a slightly shorter adult; the sleep frame's eyes and belt read as a pattern; the ghost was a plain dashed square | children need child proportions (big head, small body, 10 px), sleepers a head and a blanket, a blueprint plan marks (hatched walls, door, faint furniture) | `29f720aa:tools/v8/gen_tiles.py` `CHILD`, `ADULT_SLEEP`, `hut_ghost`; `docs/v8/m1art/ART_REPORT.md` 8.2 |
 | 2026-10-21 | The halo around fire-lit people turned into a bright orange box at night | the warm `modulate` (> 1) multiplies every child sprite, the halo included | show the halo only where a person would be lost (under a crown, dark and away from a fire), never on sleepers | `scripts/world/colony/agent_layer.gd`; `docs/v8/m1art/ART_DECISIONS.md` D13 |

@@ -72,7 +72,7 @@ Longer versions (assertion recipes, perf and contention protocol):
 3. For an order-sensitive fix, run the twin over many fresh engines (32) so hash-order luck cannot pass it.
 
 ### C. The gate (`tools/v8/gate.sh <log_dir> [--base-data DIR]`)
-Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration and exit code is `<log_dir>/gate.txt`. The gate passes only when every step except `perf` exits 0 (20 steps since M1, 21 since V8-PLAY, 25 since M1.5, 27 since M3, 28 since M4, 29 since M5, 30 since M5.5; `nav_bench` is report only too).
+Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration and exit code is `<log_dir>/gate.txt`. The gate passes only when every step except `perf` exits 0 (20 steps since M1, 21 since V8-PLAY, 25 since M1.5, 27 since M3, 28 since M4, 29 since M5, 30 since M5.5, 34 since M-ART2; `nav_bench` is report only too).
 
 | # | step | checks |
 |---|---|---|
@@ -98,7 +98,7 @@ Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration 
 | 20 | `uid_check` | `tools/v8/check_docs_helpers.py uid` (every Godot source has its committed `.uid`) |
 | 21 | `play_check` | `tools/v8/test_play.sh`: `tools/play.sh` exit codes (unknown version 3, no Godot 2, bad argument 4) and `--headless-check` of `main`, `m1`, `v7` (0 `SCRIPT ERROR` in 300 headless frames) |
 | 22 | `schema_docs` | `tools/v8/check_docs_helpers.py schema .`: every bridge getter and key is in `docs/v8/snapshot_schema.md` (C2) |
-| 23 | `renderer_agreement` | `tools/v8/renderer_agreement.sh`: the text renderer's people = the Godot agent layer's (seed 100, U-script, tick 900; C2) |
+| 23 | `renderer_agreement` | `tools/v8/renderer_agreement.sh`: the text renderer's people = the Godot agent layer's (seed 100, U-script, tick 900; C2); since M-ART2 also each person's look and face variant by AgentId |
 | 24 | `save_roundtrip` | `tools/v8/save_roundtrip.sh`: `save_load.rs` (colony seeds 0–7 save → load → tick = tick; C1) |
 | 25 | `bench` | `tools/v8/bench.sh`: the standing benchmark against `docs/perf/PERF_LEDGER.md` (> +10 % fails; ceilings report only; C3) |
 | 26 | `soak` | `tools/v8/soak.sh`: the economy soak fixture, colony seeds 0..4 × 20 days with `tools/v8/soak_script.json` (stone, flint, workshops, bills, axes, a house, a storehouse, a dug pocket; since M4 also 0 `KnowledgeLost`; since M5 with `--story no-beasts`): ledger and reservations exact every tick, 0 deaths, determinism (M3 goal 3.4) |
@@ -106,6 +106,10 @@ Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration 
 | 28 | `knowledge` | `cargo test --release -p sim-test --test colony_knowledge` + the loss fixture `tools/v8/m4_f10_script.json` (seeds 0..8, 4 days) scored by `docs/v8/m4/m4_score.py --f10`: 8/8 lose the doorway within 240 ticks of the kill, end Lost, and leave door orders waiting on it |
 | 29 | `story` | colony seeds 0..2 × 48 days with `tools/v8/m5_u_script.json` (no panic), scored by `docs/v8/m5/m5_score.py --story`: F1's schedule, 0 ledger and 0 reservation violation ticks on every seed |
 | 30 | `neighbours` | colony seeds 0..2 × 48 days with `tools/v8/m55_u_script.json`, scored by `docs/v8/m5_5/m55_score.py --neighbours`: two neighbours, waves 1 and 2 in their windows and accepted, ≥ 1 trade, 0 ledger (with traded in and out) and 0 reservation violation ticks |
+| 31 | `art_manifest` | `tools/v8/art_import.py --verify`: every file under `assets/v8art/` that the import manages matches the manifest's SHA-256 and size, and no managed file is missing or extra (M-ART2) |
+| 32 | `resolver_parity` | `tools/v8/resolver_parity.py --check` + `resolver_parity.gd`: the Godot material resolver returns the art line's `resolve.py` answers on the 30-case fixture |
+| 33 | `extensibility_grep` | `test_mart2_extensibility.py` (no content id and no 16-px tile size in `scripts/world/**` and the shaders; planted failures), `test_art_masks.py`, `test_art_import.py` (ADR 0033) |
+| 34 | `mart2_render` | `mart2_ground_test.gd` and `mart2_people_test.gd` headless: chunk bake determinism and the recorded hash, dithered edges, tone caps, banks, one-chunk rebake, data-only wall; appearance = bridge, anchors, LOD switch, params reload, tint |
 
 1. Commit first; run the gate on that head; do not touch the tree until it finishes (it records `head` and `dirty` in `gate.txt`).
 2. Read `gate.txt`, not only the exit code: test counts, perf WARN lines, determinism line.

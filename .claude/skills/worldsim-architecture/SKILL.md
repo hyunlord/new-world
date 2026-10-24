@@ -192,7 +192,7 @@ Full step lists with code skeletons: `references/procedures.md`.
 1. Add the `BlueprintKind` variant (`rust/crates/sim-core/src/colony/orders.rs`) with its `code`, `name`, `plan` (`MaterialNeeds` lines and work) and the predicates `is_space`/`is_wall`; pin the code in the unit test.
 2. Placement: `commands::check_space` decides each tile (one `RejectReason` per tile, never a silent drop); the line/rect commands take it automatically. A kind that blocks walking gets its arm in `runtime::nav::tile_cost` (site and built).
 3. Completion: `jobs::space::complete_site` writes the tile grid (and `colony.beds` for a bed), consumes the materials (ledger), calls `nav::refresh` and sets `colony.rooms_dirty`; `jobs::space::deconstruct` gives back half.
-4. Bridge: `BlueprintKind::name` is the order name `ffi/space.rs` parses; `get_space` columns, `docs/v8/snapshot_schema.md`, a sprite in `tools/v8/gen_tiles.py`, the build-menu key and locale keys.
+4. Bridge: `BlueprintKind::name` is the order name `ffi/space.rs` parses; `get_space` columns, `docs/v8/snapshot_schema.md`, its art bound in `assets/v8art/bindings.json` (imported through `tools/v8/art_import.json`), the build-menu key and locale keys.
 5. Tests in `colony_space.rs`: built from a stockpile with the ledger exact, refused where it must be, the nav map equal to a rebuild after it.
 
 ### K. Add a room role (M3)
@@ -227,7 +227,7 @@ Full step lists with code skeletons: `references/procedures.md`.
 2. Its steps (`AnimalState` codes are a bridge contract; add new ones at the end) and its fights through `colony.fights` (`Fighter::Animal`), resolved by `CombatSystem` (`wildlife/fight.rs`).
 3. What it leaves: items through the ledger helpers (`put_items`; new kinds by procedure G), a chronicle kind if the goal names one.
 4. Hunting it: `hunt::pick` and `WorkType::Hunt` (gated by `tracking`); its reservation key `ReserveKey::Animal`.
-5. Bridge: `get_animals` rows (kind code), a sprite in `tools/v8/gen_tiles.py`, the schema doc.
+5. Bridge: `get_animals` rows (kind code), its art bound in `assets/v8art/bindings.json` `animals`, the schema doc.
 6. Tests in `colony_wildlife.rs`: placement on reachable ground, the kill and its items in the ledger, fights resolve and end.
 
 ### P. Add a wearable or a piece of equipment (M5)

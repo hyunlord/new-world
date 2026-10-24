@@ -1,5 +1,8 @@
 # Rendering notes for M1 — tile layers and bulk drawing
 
+> History: this is the 16-px sheet renderer of M1–M5.5 (`29f720aa`). M-ART2 replaced it with 64-px CPU-baked ground
+> chunks and y-sorted nodes (`docs/ARCHITECTURE.md` section 14, ADR 0034); the measurements below still hold.
+
 What V7 measured about drawing many things in Godot 4.6, for the M1 renderer rebuild (new top-down tiles and
 sprites). Sources are paths at tag `v7-final-art` unless a commit is named.
 

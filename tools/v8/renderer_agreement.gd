@@ -4,9 +4,10 @@
 #   --seed, replay a concrete command log (the colony probe's --commands-out file: each entry applied when the
 #   world has completed exactly its tick, as the probe applies it right before that tick's systems), advance to
 #   --tick, let the agent layer (scripts/world/colony/agent_layer.gd) update until every walking person has
-#   finished its step tween, then write the tile of every person the layer draws to --out as JSON. The tiles come
-#   from the layer's own person nodes (drawn position minus the drawing-only sleeper spread `bed`, divided into
-#   16-px tiles), never from a fresh bridge read. Tooling only: the game never runs this script.
+#   finished its step tween, then write the tile, look and face variant of every person the layer draws to --out as
+#   JSON. The tiles come from the layer's own person nodes (drawn feet minus the drawing-only sleeper spread `bed`,
+#   divided into View.TILE-px tiles, 64 since M-ART2), never from a fresh bridge read. Tooling only: the game never
+#   runs this script.
 # Bridge methods called: via SimReads.mutate_raw reset_world, advance_ticks, cmd_designate_chop_tiles,
 #   cmd_designate_chop, cmd_cancel_area, cmd_add_stockpile, cmd_remove_zone_area, cmd_place_blueprint; directly
 #   get_time_snapshot (to check the reached tick).

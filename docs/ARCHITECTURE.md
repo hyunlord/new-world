@@ -26,7 +26,7 @@ sim-core  ←  sim-engine  ←  sim-systems  ←  sim-bridge  (GDExtension cdyli
 | sim-test | `rust/crates/sim-test/` | `worldsim_probe` (headless measurement, identity; `--scene colony` with `--commands` for scripted orders and replay), `worldsim_perf` (tick timing), `worldsim_systems` (the live system list), integration tests in `tests/` |
 
 Other folders: `scenes/main.tscn` (the only scene), `scripts/` (GDScript,
-section 6), `assets/` (fonts, theme, atlas, terrain sheets), `shaders/`,
+section 6), `assets/` (fonts, theme, the HUD icon atlas, `v8art/`: the adopted art with `manifest.json`, `bindings.json`, `render_params.json` — section 14), `shaders/`,
 `localization/` (section 7), `tools/v8/` (gate, identity, perf, smoke,
 capture, contact sheet, inventory, docs checks), `tools/play.sh` and `tools/play/` (play any version
 in its own worktree; the owner's double-click launchers), `docs/` (this file and the owner docs).
@@ -300,8 +300,8 @@ The full procedure with code skeletons is `.claude/skills/worldsim-architecture/
 | folder | contents |
 |---|---|
 | `scripts/core/` | `locale.gd` (autoload `Locale`), `sim_reads.gd` (`SimReads`: every bridge read), `settlement_selection.gd` (selected village) |
-| `scripts/world/colony/` | the M1 view (node `ColonyView` in `scenes/main.tscn`), drawn from one sheet (`assets/v8/tiles.png` + `tiles.json`, painted in code by `tools/v8/gen_tiles.py`, unit-tested by `tools/v8/test_gen_tiles.py`; M1-ART): `view.gd` (sheet rects and palettes, TileSet builder, tile/keyed hashes, the ground's value noise), `terrain_layer.gd` (noise-clustered grass, forest floor, eroded clearing with turned dither edges, water autotile: 4-bit land mask → `bank_<mask>`, diagonal → `bank_in_*`, then shallow, then deep; rock tops and cliffs), `tree_layer.gd` (24×24 crowns drawn by y-ordered 16×16-tile chunks, shadows except at 1×, stumps for a day, bushes), `building_layer.gd` (hut, lean-to, two-frame hearth; M3: walls by neighbour mask and doors at z 3, a z 1 child "Floors" for packed floors, dug rock and bedrolls, rebuilt when `get_space.version` moves), `overlay_layer.gd` (z 1 child: stockpile floors, log piles, blueprint ghosts; z 4: chop, quarry, dig and deconstruct marks, blueprint and space-site label and bar, hover count with "방: 창고 n" and "지붕 아래"), `room_layer.gd` (M3, child "Rooms" of the overlay: R toggles role tints at z 2 and room labels at z 4; keeps the tile → room index for clicks and the inspector), `agent_layer.gd` (people as layered sprites: halo, logs behind, skin/hair/tunic, outline, log in front, tool; stand/stride/sleep frames; sleepers on bedrolls; hit test), `order_tool.gd` (F1–F10 modes: chop, stockpile, build menu 1–9 — space kinds by drag line or Shift-rectangle with the `get_place_preview` ghost —, cancel, quarry, dig F8, deconstruct F10; drag rectangles, the `cmd_*` calls; F5/F9 stay save/load). Draw order by z: terrain 0, ground overlay, floors and stumps 1, canopy and room tints 2, buildings and walls 3, marks and room labels 4, people 5 |
-| `scripts/world/` | `camera_controller.gd` (zoom 1–4, pan, speed keys 1–4, pause), `daylight_controller.gd` (+ `wood_visuals.gd`), helpers the panels still use (`art_hash.gd`, `art_sprite_library.gd`, `porter_presentation.gd`) |
+| `scripts/world/colony/` | the colony view (node `ColonyView` in `scenes/main.tscn`; M-ART2, section 14): `view.gd` (TILE 64, the base point (tile_left + 32, tile_top + 43), tile/keyed hashes, value noise), `ground_layer.gd` (ground chunks, wall/door/hill-face strips, ford stones, water shader; the LRU chunk cache and incremental space rebake), `tree_layer.gd` (trees, stumps, bushes, deadwood by 16×16-tile chunk near the view), `building_layer.gd` (structures, huts by the bindings ring, workshops, hearth states, bedrolls), `overlay_layer.gd` (zones, item stacks by count bucket, carcasses, designation marks, site ghosts, labels), `room_layer.gd` (R: room tints and labels), `animal_layer.gd`, `visitor_layer.gd`, `agent_layer.gd` (route I people as feet-anchored nodes with the variant shader, selection/drafted outline and night halo, hit test) + `lod_markers.gd` (MultiMesh discs and activity glyphs below 1×), `order_tool.gd` (F1–F10 modes, drag lines and rectangles with the `get_place_preview` ghost at 64 px, the `cmd_*` calls). Everything that stands sorts by base y in the y-sorted child `ColonyView/World`; the ground chunks sit below it; marks and labels above |
+| `scripts/world/` | `art/` (M-ART2: `art_data.gd` manifest/bindings/params lookups and F12 reload, `material_resolver.gd`, `ground_baker.gd`, `wall_baker.gd`, `tone.gd`, `site_ghost.gd`), `camera_controller.gd` (zoom ladder ¼×–2× from the params, pan, speed keys 1–4, pause, F12), `daylight_controller.gd` (night CanvasModulate, hearth lights, `dark_at`; + `wood_visuals.gd`), helpers the panels still use (`art_hash.gd`, `art_sprite_library.gd` for the HUD's 32-px icons, `porter_presentation.gd`) |
 | `scripts/ui/hud/` | `hud_topbar.gd`, `order_bar.gd` (F1–F5 buttons and the order toast) |
 | `scripts/ui/panels/` | `chronicle_panel.gd`, `agent_inspector_panel.gd`, `causal_panel.gd`, `priority_panel.gd` (M2 work priorities, 7 work types since M3), `workshop_panel.gd` (M2 bills of the selected workshop), `room_panel.gd` (M3: a room's role dropdown → `cmd_set_room_role`, tiles, beds, doors, covered items; made by `order_bar.gd`), `art_ui.gd` (shared panel style) |
 | `scripts/ui/` | text helpers shared by panels (`chronicle_text.gd`, `person_names.gd`, `person_read_cache.gd`) |
@@ -565,4 +565,45 @@ bridge ffi/neighbours.rs (get_neighbours, get_wave, get_caravan, cmd_accept_migr
   `docs/v8/m5_5/m55_score.py` (F1–F10; `--neighbours` for the gate's step 30), `tools/v8/m55_u_script.json` and
   `m55_u_nodraft_script.json`; tests `colony_neighbours.rs`, `engine_neighbours_ffi.rs` and the M5.5 cases in
   `colony_story.rs`, `colony_wildlife.rs`, `colony_hides.rs`, `colony_mood.rs`.
+
+## 14. The renderer (M-ART2, ADR 0033–0034)
+
+The colony is drawn at 64-px tiles in one projection: a tile's base point is (tile_left + 32, tile_top + 43); a wall is
+a 16-px top over a 44-px face, so a wall row's strip covers [row_top − 16, row_top + 48). Data flow (ADR 0034):
+
+```
+bridge snapshots (get_terrain, get_space + materials/styles/categories, get_agent_snapshot + sexes/look_ids/variants,
+   get_trees, get_building_snapshot, get_colony_overlay, get_animals, get_neighbours, get_time_snapshot …)
+   ▼  resolution — data only, no content names in code (ADR 0033)
+assets/v8art/bindings.json   sim codes → art ids (terrain, space, buildings, workshops, items, animals, trees, nodes,
+                             blueprints, order icons, visitors, people, tones)
+assets/v8art/manifest.json   art id → file, role, SHA-256, size, anchor, footprint; the 36 logical looks
+scripts/world/art/material_resolver.gd   (style, material, category, kind) → top/face textures and tint (the art
+                             line's resolve.py order; schema $defs supply defaults; parity test vs resolve.py)
+   ▼  drawing
+GroundBaker   16×16-tile chunks (1,024² RGBA8) on the CPU with native Image ops; dithered blends, banks, ink; water
+              transparent → ground_chunk.gdshader draws water below; LRU (ground.chunk_cache_max), ½/¼ textures below 1×
+WallBaker     per-row strips (tops along the run, faces where the south is open, hill faces) in ColonyView/World
+layers        trees, structures, items, animals, visitors, people: nodes at their base point in the y-sorted World
+people        route I frame by activity, person_variant.gdshader (Lab shift through the fixed skin/hair mask),
+              outline for selection/drafted/night halo; LOD below 1× = lod_markers.gd (MultiMesh)
+   ▼  tone
+tone.gd (ENV1 ground cap at load, winter desaturation + snow, drought) · daylight_controller.gd (CanvasModulate
+value × 0.55 with the blue shift, additive hearth PointLight2D within 5 tiles)
+```
+
+- **Params**: every tunable is in `assets/v8art/render_params.json` (camera, ground, water, walls, people, lod, light,
+  season, zones, sites, labels, debug); `ArtData.reload_params()` on F12 in debug builds re-reads it and bumps
+  `params_version()`, which every layer watches.
+- **Adding content** (`assets/v8art/ADDING_ART.md`): a new wall material or style is a material JSON + texture; a new
+  item, animal or structure is a manifest row (via `tools/v8/art_import.json`) plus a bindings row. The renderer code
+  does not change; `tools/v8/test_mart2_extensibility.py` (gate step 33) fails on a content literal in the renderer.
+- **Import**: `tools/v8/art_import.py` copies from the art line's commit by git object reads, bytes unchanged;
+  `--verify` (gate step 31) checks every file's hash and size against the manifest.
+- **Appearance**: `look = ((age × 2 + sex) × 3 + top) × 3 + hair`, `variant` 0–5 (elders 3 or 4) from
+  `sim-bridge/data/appearance.ron` and the AgentId; the probe's `--people-json` carries the same (renderer agreement,
+  gate step 23).
+- **Tests**: `mart2_ground_test.gd` and `mart2_people_test.gd` (headless, gate step 34), `resolver_parity`
+  (gate step 32), `mart2_ui_test.gd` (windowed, run by hand: 40 checks), `capture.gd --mart2-set` (the owner set),
+  `mart2_fps.sh` (FPS budgets).
 

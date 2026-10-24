@@ -299,4 +299,12 @@ changed (and the tile north of each, whose hill face depends on it): 1.2 ms for 
   the 1,000-person world at 27 FPS at ½×; MultiMesh discs plus a glyph atlas gave 211 FPS (Part 6 commit).
 - Chunk and strip textures are reduced ½ or ¼ below 1× (re-textured 4 per frame): texture memory at ¼× fell from
   546 MB to 87 MB.
-- Final FPS and memory numbers: Part 6's run, in the report.
+- **Final measurements** (2026-10-24 11:1x KST, `tools/v8/mart2_fps.sh`, 30 s warm-up + 60 s, windowed 1920×1080,
+  vsync off, release library; raw `$DATA/fps/fps.jsonl`; 1-minute load 2.9–5.7, none contended): seed 0 day 20
+  (12 people) 1× **328.6 FPS**, ½× **238.2**, ¼× **120.65** (budget 120: met by 0.5 %; 2,252 draw calls, the whole
+  map's standing sprites); 1,000-person stress world ½× **186.8**, ¼× **173.5** (budget 60). Texture memory 265 MB at 1×,
+  176 MB at ½×, 87 MB at ¼× (budget 512). Chunk bakes (a one-off windowed script, not kept: `GroundLayer.bake_chunk_now`
+  over 144 chunks of the day-20 world, then 16 again; load ≈ 6): fresh median 1.8 ms, p90 2.4 ms, max 5.3 ms (1 of 144 over 4 ms); rebakes median 2.1 ms, max 3.7 ms
+  (budget 4 ms: met); a dig in the test applies space and rebakes in 1.4 ms. The first bake after a load reads 17.5 ms
+  (cold texture conversion, once per load) and the load's `warm()` 101 ms. The ¼× margin is thin: fallback step 3
+  (trees baked into chunks at ¼×) was not needed and is left for the owner's call (report).

@@ -1,6 +1,6 @@
 # ADR 0034 — The colony renderer's data flow: snapshot → resolution → chunks and sprites → tone
 
-Status: draft (M-ART2 Part 0, 2026-10-24); final in Part 7.
+Status: accepted (M-ART2, 2026-10-24; drafted in Part 0, final in Part 7 with the measured numbers).
 
 ## Context
 - The owner adopted, in order: route I whole-figure people (ART-PROD3), one projection with walls, hill faces, water
@@ -37,7 +37,14 @@ Every tunable lives in `assets/v8art/render_params.json`, reloaded with F12 in d
 ## Consequences
 - The M1 sheet path (`tools/v8/gen_tiles.py`, `assets/v8/tiles.*`, the sheet palettes in `view.gd`) is deleted.
 - Texture memory is bounded by the chunk cache (only chunks near the view are baked).
-- Final numbers (bake times, FPS, memory) are recorded here in Part 7.
+- People are pooled `Node2D`s with one `ShaderMaterial` each (uniforms set only on change); below 1× they are not
+  drawn and one MultiMesh draws every marker (`lod_markers.gd`); chunk and strip textures are ½ or ¼ size below 1×.
+- Measured (`docs/v8/m_art2/MART2_DECISIONS.md` D4 update; windowed 1920×1080, vsync off, release library, not
+  contended): seed 0 day 20 at 1× 328.6 FPS, ½× 238.2, ¼× 120.65 (budget 120); the 1,000-person world at ½× 186.8 and
+  ¼× 173.5 (budget 60); texture memory 265 / 176 / 87 MB at 1× / ½× / ¼× (budget 512); chunk bake median 1.8 ms,
+  rebake max 3.7 ms (budget 4), the first bake after a load 17.5 ms once. The ¼× view draws every standing sprite of
+  the map (2,252 draw calls) and has the thinnest margin; baking trees into the ¼× chunks is the next step if it misses.
+- People at night carry a pale halo away from a fire (D17), the one change to the art line's night transform.
 
 ## Date
 2026-10-24

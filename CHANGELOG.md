@@ -5,11 +5,26 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
-## M-ART2 — in progress
+## M-ART2 — 2026-10-24
 
-The adopted art in the real game (`docs/v8/m_art2/MART2_GOAL.md`). Entries are added per part.
+The adopted art in the real game (`docs/v8/m_art2/MART2_GOAL.md`, record `docs/v8/m_art2/MART2_DECISIONS.md`, report
+`docs/v8/m_art2/MART2_REPORT.md`): 64-px tiles in one projection, route I people with face variants, the material
+system for walls/floors/doors, ground/water/edges/hill faces by code, LOD markers, day/night/winter by tone, every
+renderer tunable in `assets/v8art/render_params.json`. No simulation change (identity byte-identical).
 
 ### Added
+- Part 0: ADR 0033 (the extensibility contract: kinds are data; the renderer names no content and resolves through
+  `assets/v8art/manifest.json`, `bindings.json` and the material resolver) and ADR 0034 (renderer data flow:
+  snapshot → resolution → chunks and sprites → tone); the extensibility checklist in `worldsim-architecture` and
+  "the renderer resolves through manifests" in `worldsim-godot`; AGENTS.md's first screen names the contract.
+- Part 1: `tools/v8/art_import.py` + `art_import.json` copy the adopted art from `v8/art-polish2` at `c8ed8608` by git
+  object reads (bytes unchanged, idempotent, `--check`, `--verify`) into `assets/v8art/` (664 files, 13.9 MB):
+  route I frames (36 looks, 340 frames), POLISH2 portraits (34 looks × 6 variants, 128 px), the material system JSON,
+  schemas and textures, ground and water textures, the snow overlay, trees and structures with anchors, items,
+  wolf and deer sheets, face variant and transform records, top colours; `manifest.json` (id, role, path, source,
+  SHA-256, size, anchor/footprint, the 36 logical looks with their two fallbacks) and `LICENSE.md`; hand-written
+  `bindings.json` (sim codes → art ids, one place to add content) and `render_params.json` (every tunable);
+  `assets/v8art/README.md` and `ADDING_ART.md`.
 - Part 2 (bridge reads; no simulation change, identity byte-identical): `get_agent_snapshot` columns `sexes`
   (0 male, also without `Sex`; 1 female), `look_ids` (index into the 36 logical looks, nested age × sex × top × hair)
   and `variants` (face variant 0–5; elders 3 or 4) from the pure collector `sim_bridge::ffi::collect_appearance`
@@ -28,10 +43,59 @@ The adopted art in the real game (`docs/v8/m_art2/MART2_GOAL.md`). Entries are a
 - Tests `engine_appearance_ffi.rs` (pure function across save/load and a twin, spread of hair and variants, elders and
   children, the people JSON = the bridge, baseline) and two `engine_space_ffi.rs` tests (columns = `TileGrid`,
   categories from the material files on disk, no material hashes to `0xFFFFFFFF`, baseline empty).
+- Part 3 (`scripts/world/art/`): `art_data.gd` (manifest, bindings and params lookups; F12 reload in debug builds with
+  the toast "렌더 설정 다시 읽음"), `material_resolver.gd` (a port of the art line's `resolve.py` with its loader
+  checks: style exact → blueprint → category default → document default; tint material → category → style),
+  `ground_baker.gd` (16×16-tile chunks of 1,024² px baked on the CPU with native `Image` ops: runs of one ground per
+  blit, 12-px noise-dithered blends, 10-px dithered banks into transparent water, displaced 2-px ink), `wall_baker.gd`
+  (walls.py option (b): tops along the run, faces only where the south is open, ends at face ends, hill faces),
+  `tone.gd` (ENV1 ground cap, winter desaturation and snow, drought, Lab shift, wall-top tone);
+  `scripts/world/colony/ground_layer.gd` (lazy LRU chunk cache, reduced-resolution textures below 1×, incremental
+  space rebake, doors as standing sprites, ford stones) and `shaders/ground_chunk.gdshader` (water under the chunk
+  alpha with drift).
+- Part 4: people as feet-anchored nodes in the y-sorted `ColonyView/World` (route I frame plan, E/W by flip, anchors
+  from the manifest); `shaders/person_variant.gdshader` (the art line's Lab shift per masked pixel, elders' grey hair,
+  ink protected, selection/drafted outline); `scripts/world/colony/lod_markers.gd` (below 1×: MultiMesh discs in the
+  top colour with an ink ring, activity glyphs at ½×); fixed skin/hair masks (`tools/v8/art_masks.py`, 340 RGBA masks
+  in `assets/v8art/people/masks/`, `skin_regions.json`); trees, structures, workshops, hearth states, items by count
+  bucket, carcasses, resource nodes, zones, designation marks, site ghosts (`scripts/world/art/site_ghost.gd`),
+  animals, visitors and rooms drawn from the bindings.
+- Night by tone: one `CanvasModulate` (value × 0.55 with the blue shift) and an additive `PointLight2D` per lit
+  hearth restoring value within 5 tiles; people away from a fire get a pale 1-px halo at night
+  (`people.night_halo_*`, MART2_DECISIONS D17).
+- Part 5 (UI): the inspector's 128-px portrait of the person's look and face variant and their look in words
+  (`LOOK_TOP_*`, `LOOK_HAIR_*`, `UI_INSPECT_LOOK_FMT`); the HUD zoom indicator (`UI_ZOOM`); 32-px item icons from the
+  bindings (`scripts/ui/item_icons.gd`) in the trade dialog and on workshop recipe buttons; order-bar icons and build
+  previews/site ghosts at 64 px.
+- Tests and gate steps: `tools/v8/mart2_ground_test.gd` (bake determinism and recorded hash, dithered edges that fail
+  with blending off, tone caps, banks, a dig rebakes one chunk, data-only wall by fixture), `mart2_people_test.gd`
+  (appearance = bridge, anchors in four facings, LOD switch, params reload, deterministic tint),
+  `mart2_ui_test.gd` (windowed, 40 checks), `test_art_import.py`, `test_art_masks.py`,
+  `test_mart2_extensibility.py` (no content literal and no 16-px tile size in the renderer, with planted failures),
+  `resolver_parity.py/.gd` (30 cases equal to the art line's `resolve.py`); gate steps 31 `art_manifest`,
+  32 `resolver_parity`, 33 `extensibility_grep`, 34 `mart2_render`, and appearance agreement inside step 23.
+- Tooling: `capture.gd --mart2-set` (`mart2_shots.gd`, 14 owner shots, each also saving its world),
+  `mart2_old_shots.gd` (the base renderer on the same saves), `mart2_fps.gd/.sh` (FPS, process and draw times,
+  texture memory; release library at the debug path, replaced not overwritten); `docs/images/mart2_contact_sheet.png`
+  and `docs/images/mart2_compare_sheet.png`, `docs/v8/m_art2/screens/SCREENS.md`.
 
 ### Changed
 - `docs/v8/snapshot_schema.md` schema version 7. The bridge `#[func]` list is unchanged (97 items,
   `docs/v8/bridge_api_m5_5.txt`).
+- `View.TILE` 16 → 64 with the base point (tile_left + 32, tile_top + 43); `scenes/main.tscn`: `GroundLayer` replaces
+  `TerrainLayer`, a y-sorted `ColonyView/World` holds walls, doors, trees, structures, animals and people.
+- Camera zoom ladder ¼×, ½×, 1×, 2× (default 1×) from the params, was 1–4× integer at 16 px.
+- `renderer_agreement` compares looks and variants by AgentId besides tiles (settles on `activity`).
+- Performance (MART2_DECISIONS D4 update; windowed, vsync off, release library): seed 0 day 20 at 1× 328.6 FPS, ½× 238.2,
+  ¼× 120.65; the 1,000-person world at ½× 186.8, ¼× 173.5; texture memory ≤ 265 MB; chunk rebake max 3.7 ms. The
+  simulation tick is unchanged (no Rust behaviour change; identity byte-identical).
+- The M1–M5 UI tests and `smoke.gd` use `View.TILE`.
+
+### Removed
+- `scripts/world/colony/terrain_layer.gd` (the 16-px terrain drawing).
+- The M1 tile sheet path: `tools/v8/gen_tiles.py`, `tools/v8/test_gen_tiles.py`, `assets/v8/tiles.png`,
+  `assets/v8/tiles.json`, `economy_text.gd` `ITEM_SPRITES`, and `porter_presentation.gd`'s 16-px pack icon and route
+  drawing (nothing called them).
 
 ## M5.5 — 2026-10-24
 
