@@ -53,3 +53,12 @@ These are frozen inputs for a separate compiler-profile experiment, not
 evidence that a future profile already preserves behavior. A8 held-out
 acceptance remains FAILED and policy remains frozen. Full gate/publication
 are still pending.
+
+## Subsequent evidence (after the p9 record)
+
+The automatic gameplay run subsequently completed in `gameplay-perf-1/`;
+D34's separate package-profile commit `78af5e245` completed a second run in
+`gameplay-perf-2/`. See [D34 verification](D34_VERIFICATION.md) for exact
+build scope, byte-identical debug saves, fresh OFF safety and remaining
+latency. The pending statements above describe the p9 evidence boundary;
+no original timing or acceptance failure is superseded.

@@ -102,7 +102,7 @@ M-ART2(`d796fcac`)가 채택된 아트를 게임에 넣었지만 두 가지가 �
   - 겨울 1일째 정오 저장은 가을→겨울 절반 섞인 모습이다(첫날 섞기).
 - 계절 띠: [docs/images/mart21_seasons.png](../../images/mart21_seasons.png)
   - 같은 숲(타일 (112, 103))을 여름·가을·겨울·봄 3일째 정오에 1×(윗줄)와 ¼×(아랫줄)로 보였다.
-- 현재 화면 모음: [docs/images/mart21_contact_sheet.png](../../images/mart21_contact_sheet.png) (12장, `mart2_contact_sheet.png` 대체).
+- 현재 화면 모음: [docs/images/mart21_contact_sheet.png](https://github.com/hyunlord/new-world/blob/67a6232ab41a4bf5051b11303bcac97543b111f0/docs/images/mart21_contact_sheet.png) (12장, `mart2_contact_sheet.png` 대체).
 
 ### 변경된 파일 목록 (커밋별)
 - `6d83f57e` (p0): `docs/v8/m_art2_1/MART21_GOAL.md`, `MART21_DECISIONS.md`.

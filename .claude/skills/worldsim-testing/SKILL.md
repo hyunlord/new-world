@@ -1,6 +1,6 @@
 ---
 name: worldsim-testing
-description: Use when testing or verifying any WorldSim change, before claiming "no behaviour change", "deterministic", "faster" or "done" — identity (tools/v8/identity.sh), determinism, the 30-step gate (tools/v8/gate.sh), the economy soak, perf comparison (tools/v8/perf.sh), test layout by domain on sim_test::baseline_engine, and how to write an assertion that can fail.
+description: Use when testing or verifying any WorldSim change, before claiming "no behaviour change", "deterministic", "faster" or "done" — identity (tools/v8/identity.sh), determinism, the 35-step gate (tools/v8/gate.sh), the economy soak, perf comparison (tools/v8/perf.sh), test layout by domain on sim_test::baseline_engine, and how to write an assertion that can fail.
 ---
 
 # WorldSim testing
@@ -31,7 +31,7 @@ headless specifics in `worldsim-godot`.
 - **Do** treat a natural mean more than +10 % over base as a WARN to investigate, and report it; perf is report-only in the gate. *Reason:* mean tick is the stable statistic; the step never blocks, so the report must say it.
 - **Don't** judge a change on p99 / p99.9 from three repeats. *Reason:* tails of a few runs are single-tick machine spikes (Pass 21 U6: per-repeat ratios ×1.023 / ×1.490 / ×0.516); report them as noise.
 - **Don't** compare timings taken under different host load, and never call a contended number a result. *Reason:* on the shared Mac one layer "cost" +62 % because the host load fell 176 → 36 between samples.
-- **Don't** use debug builds, debug dylibs or headless dummy-renderer timings as performance evidence. *Reason:* debug W500 was 51 ms against 29 ms release; the dummy renderer draws nothing.
+- **Don't** use debug builds, debug dylibs or headless dummy-renderer timings as release-budget or C3 performance evidence. *Reason:* debug W500 was 51 ms against 29 ms release; the dummy renderer draws nothing. To diagnose latency in the owner's actual debug launcher, measure that exact windowed build separately and label it debug gameplay evidence; retain assertions, build flags, source/binary hashes and startup spikes. It cannot replace release benchmarks.
 
 ### Benchmark, save, second renderer (M1.5, ADR 0016)
 - **Do** measure colony-scale cost with the standing benchmark (`worldsim_perf bench`, gate step `bench` = `tools/v8/bench.sh`): five colony scenes (N = 200/1,000/2,000, N = 200 with `tools/v8/bench_script.json`, N = 200 on 64²), each in its own process (clean RSS), 3 repeats, medians; the gate compares with the latest pass in `docs/perf/PERF_LEDGER.md` (> +10 % on tick mean, p99 or RSS/agent fails unless `--justified` quotes the CHANGELOG). *Reason:* C3; the natural `perf.sh` worlds hold 10–40 people and cannot show O(N²) work.
@@ -72,7 +72,7 @@ Longer versions (assertion recipes, perf and contention protocol):
 3. For an order-sensitive fix, run the twin over many fresh engines (32) so hash-order luck cannot pass it.
 
 ### C. The gate (`tools/v8/gate.sh <log_dir> [--base-data DIR]`)
-Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration and exit code is `<log_dir>/gate.txt`. The gate passes only when every step except `perf` exits 0 (20 steps since M1, 21 since V8-PLAY, 25 since M1.5, 27 since M3, 28 since M4, 29 since M5, 30 since M5.5, 34 since M-ART2; `nav_bench` is report only too).
+Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration and exit code is `<log_dir>/gate.txt`. The gate passes only when every step except `perf` exits 0 (20 steps since M1, 21 since V8-PLAY, 25 since M1.5, 27 since M3, 28 since M4, 29 since M5, 30 since M5.5, 34 since M-ART2, 35 since M-UX; `nav_bench` is report only too).
 
 | # | step | checks |
 |---|---|---|
@@ -110,6 +110,7 @@ Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration 
 | 32 | `resolver_parity` | `tools/v8/resolver_parity.py --check` + `resolver_parity.gd`: the Godot material resolver returns the art line's `resolve.py` answers on the 30-case fixture |
 | 33 | `extensibility_grep` | `test_mart2_extensibility.py` (no content id and no 16-px tile size in `scripts/world/**` and the shaders; planted failures), `test_art_masks.py`, `test_art_import.py` (ADR 0033) |
 | 34 | `mart2_render` | `mart2_ground_test.gd` and `mart2_people_test.gd` headless: chunk bake determinism and the recorded hash, dithered edges, tone caps, banks, one-chunk rebake, data-only wall; appearance = bridge, anchors, LOD switch, params reload, tint |
+| 35 | `steward` | `mux_steward.sh`: two seeds ×24 days ON, deterministic, ledger/reservations exact and no panics; separate from48-day held-out survival bars |
 
 1. Commit first; run the gate on that head; do not touch the tree until it finishes (it records `head` and `dirty` in `gate.txt`).
 2. Read `gate.txt`, not only the exit code: test counts, perf WARN lines, determinism line.
@@ -223,3 +224,8 @@ Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration 
 | 2026-10-22 | `engine_ascii.rs` failed late in M2 ("no carrier to check at tick 600") after several green targeted runs of the `colony_*` files | a colony behaviour change moved the moment the first loads are carried; a test outside the colony files pinned that moment, and the full suite was not run until the end | after a colony behaviour change run the whole `cargo test -p sim-test --no-fail-fast`, not only the files you touched; a test that needs an event should step to the first tick it happens instead of pinning a tick | `rust/crates/sim-test/tests/engine_ascii.rs`; `docs/v8/m2/M2_DECISIONS.md` D22 |
 | 2026-10-22 | M2 gate 1 failed only on `bench` (N = 1,000 ×1.14, N = 2,000 ×1.22) while every other step passed | the 1-minute load was 19.7 during the step against 3 when the ledger rows were measured; the baseline-only perf scene read ×1.83 in the same gate | before a gate, check `uptime` and start it in a quiet window (the bench step runs last, ~70 min in); read a red bench next to the step's recorded load and confirm with an interleaved base/candidate pair before touching code | `tools/v8/bench.sh`; `docs/v8/m2/M2_DECISIONS.md` D23 |
 
+
+| 2026-10-25 | Daytime water hue passed while GPU night and desaturated winter failed | Unequal RGB night tint rotates hue; a scalar luminance bound does not cover it | Test all seasonal prepared colors through actual night RGB multiplication and keep the old failing palette/tint as a negative control; verify actual GPU and fresh screenshots separately | `tools/v8/mart2_ground_test.gd`, MUX D20/D21 |
+| 2026-10-25 | A new default changed renderer agreement although both renderers were internally correct | Game reset enabled steward while the fixed probe fixture stayed OFF | Declare fixture mode through the ordinary command path before advancing; preserve the original mismatch negative control and do not weaken equality or regenerate goldens for setup drift | `docs/v8/mux/MUX_DECISIONS.md` D31 |
+| 2026-10-25 | A paused UI frame missed repeated 360-tick planner stalls in the real launcher | No simulation work occurred during the measured frames | Measure ordinary automatic 1x/4x cadence through planning boundaries as well as explicit tick diagnostics; keep debug gameplay separate from release C3. For compiler-profile changes verify effective assertions/overflow flags and compare full actual debug saves | `docs/v8/mux/D29_VERIFICATION.md`, `D34_VERIFICATION.md` |
+| 2026-10-25 | UI14 minimap process maximum311us plus draw maximum234us yielded a545us upper bound | The two maxima may belong to different frames | A sum below budget proves the sampled upper bound; a sum above budget is inconclusive about an actual same-frame overrun. Preserve it, rerun the registered dedicated measurement or instrument matched frame IDs; never subtract unrelated maxima | `docs/v8/mux/STAGE_A_REPORT.md` |

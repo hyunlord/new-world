@@ -1,0 +1,34 @@
+[
+  {
+    "file": "hud.png",
+    "caption": "새 화면 조작·미니맵·마을 알림"
+  },
+  {
+    "file": "help.png",
+    "caption": "한 데이터에서 만든 키·마우스 도움말"
+  },
+  {
+    "file": "alerts-synthetic-causes.png",
+    "caption": "시험용 알림 원인: 실제 카메라 이동 확인"
+  },
+  {
+    "file": "causal-alert-target.png",
+    "caption": "시험 알림 클릭: 인과 기록 패널과 대상 좌표"
+  },
+  {
+    "file": "lesson.png",
+    "caption": "학습 카드: 다음 행동과 조작 안내"
+  },
+  {
+    "file": "steward-housing-sites-tick-361.png",
+    "caption": "실제 시뮬레이션: 자동 건설 진행"
+  },
+  {
+    "file": "steward-completed-house-tick-2880.png",
+    "caption": "실제 시뮬레이션: 지붕·침대 완성"
+  },
+  {
+    "file": "english-controls.png",
+    "caption": "실시간 영어 전환: 조작·힌트·경고 수량"
+  }
+]
