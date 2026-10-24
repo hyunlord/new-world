@@ -1,0 +1,729 @@
+{
+  "schema_version": 1,
+  "source_commit": "c8ed86087c90ed5429716713e930cc5f6a9e1332",
+  "source_branch": "v8/art-polish2",
+  "out": "assets/v8art",
+  "managed_dirs": [
+    "people",
+    "materials",
+    "ground",
+    "structures",
+    "items",
+    "animals"
+  ],
+  "budget_bytes": 41943040,
+  "look_grid": {
+    "ages": [
+      "child",
+      "adult"
+    ],
+    "sexes": [
+      "M",
+      "F"
+    ],
+    "tops": [
+      "loincloth",
+      "hide_wrap",
+      "fur_cloak"
+    ],
+    "hairs": [
+      "short",
+      "long_tied",
+      "bun"
+    ],
+    "fallbacks": {
+      "adult_M_fur_cloak_long_tied": "adult_M_fur_cloak_bun",
+      "adult_M_hide_wrap_long_tied": "adult_M_hide_wrap_bun"
+    }
+  },
+  "people": {
+    "looks": [
+      "adult_F_fur_cloak_bun",
+      "adult_F_fur_cloak_long_tied",
+      "adult_F_fur_cloak_short",
+      "adult_F_hide_wrap_bun",
+      "adult_F_hide_wrap_long_tied",
+      "adult_F_hide_wrap_short",
+      "adult_F_loincloth_bun",
+      "adult_F_loincloth_long_tied",
+      "adult_F_loincloth_short",
+      "adult_M_fur_cloak_bun",
+      "adult_M_fur_cloak_short",
+      "adult_M_hide_wrap_bun",
+      "adult_M_hide_wrap_short",
+      "adult_M_loincloth_bun",
+      "adult_M_loincloth_long_tied",
+      "adult_M_loincloth_short",
+      "child_F_fur_cloak_bun",
+      "child_F_fur_cloak_long_tied",
+      "child_F_fur_cloak_short",
+      "child_F_hide_wrap_bun",
+      "child_F_hide_wrap_long_tied",
+      "child_F_hide_wrap_short",
+      "child_F_loincloth_bun",
+      "child_F_loincloth_long_tied",
+      "child_F_loincloth_short",
+      "child_M_fur_cloak_bun",
+      "child_M_fur_cloak_long_tied",
+      "child_M_fur_cloak_short",
+      "child_M_hide_wrap_bun",
+      "child_M_hide_wrap_long_tied",
+      "child_M_hide_wrap_short",
+      "child_M_loincloth_bun",
+      "child_M_loincloth_long_tied",
+      "child_M_loincloth_short"
+    ],
+    "facings": [
+      "S",
+      "E"
+    ],
+    "poses": [
+      "idle",
+      "walk_a",
+      "work_a",
+      "carry",
+      "sleep"
+    ],
+    "variants": [
+      "v1",
+      "v2",
+      "v3",
+      "v4",
+      "v5",
+      "v6"
+    ],
+    "frame_source": "art/character/route_i/{look}/{facing}/{pose}.png",
+    "frame_dest": "people/frames/{look}/{facing}/{pose}.png",
+    "portrait_source": "art/portrait/polish2/{look}/{variant}.png",
+    "portrait_dest": "people/portraits/{look}/{variant}.png",
+    "upright": {
+      "canvas": [
+        80,
+        112
+      ],
+      "anchor": [
+        40,
+        104
+      ]
+    },
+    "sleep": {
+      "canvas": [
+        112,
+        80
+      ],
+      "anchor": [
+        56,
+        72
+      ]
+    },
+    "sleep_poses": [
+      "sleep"
+    ],
+    "data": [
+      {
+        "id": "route_i_manifest",
+        "source": "art/character/route_i/MANIFEST.json",
+        "dest": "people/route_i_manifest.json"
+      },
+      {
+        "id": "face_variants",
+        "source": "art/character/FACE_VARIANTS.json",
+        "dest": "people/face_variants.json"
+      },
+      {
+        "id": "variant_transforms",
+        "source": "art/character/variant_transforms.json",
+        "dest": "people/variant_transforms.json"
+      },
+      {
+        "id": "top_colours",
+        "source": "art/compositor/top_colours.json",
+        "dest": "people/top_colours.json"
+      }
+    ]
+  },
+  "files": [
+    {
+      "role": "material_data",
+      "id": "construction_styles",
+      "source": "art/materials/construction_styles.json",
+      "dest": "materials/construction_styles.json"
+    },
+    {
+      "role": "material_data",
+      "id": "material_looks",
+      "source": "art/materials/material_looks.json",
+      "dest": "materials/material_looks.json"
+    },
+    {
+      "role": "material_data",
+      "id": "category_defaults",
+      "source": "art/materials/category_defaults.json",
+      "dest": "materials/category_defaults.json"
+    },
+    {
+      "role": "material_schema",
+      "id": "construction_styles_schema",
+      "source": "art/materials/construction_styles.schema.json",
+      "dest": "materials/construction_styles.schema.json"
+    },
+    {
+      "role": "material_schema",
+      "id": "material_looks_schema",
+      "source": "art/materials/material_looks.schema.json",
+      "dest": "materials/material_looks.schema.json"
+    },
+    {
+      "role": "material_schema",
+      "id": "category_defaults_schema",
+      "source": "art/materials/category_defaults.schema.json",
+      "dest": "materials/category_defaults.schema.json"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/drystone/door_closed.png",
+      "dest": "materials/textures/drystone/door_closed.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/drystone/door_open.png",
+      "dest": "materials/textures/drystone/door_open.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/drystone/end.png",
+      "dest": "materials/textures/drystone/end.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/drystone/face.png",
+      "dest": "materials/textures/drystone/face.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/drystone/junction.png",
+      "dest": "materials/textures/drystone/junction.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/drystone/top_ew.png",
+      "dest": "materials/textures/drystone/top_ew.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/drystone/top_ns.png",
+      "dest": "materials/textures/drystone/top_ns.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/fired_brick/door_closed.png",
+      "dest": "materials/textures/fired_brick/door_closed.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/fired_brick/door_open.png",
+      "dest": "materials/textures/fired_brick/door_open.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/fired_brick/end.png",
+      "dest": "materials/textures/fired_brick/end.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/fired_brick/face.png",
+      "dest": "materials/textures/fired_brick/face.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/fired_brick/junction.png",
+      "dest": "materials/textures/fired_brick/junction.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/fired_brick/top_ew.png",
+      "dest": "materials/textures/fired_brick/top_ew.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/fired_brick/top_ns.png",
+      "dest": "materials/textures/fired_brick/top_ns.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/log/door_closed.png",
+      "dest": "materials/textures/log/door_closed.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/log/door_open.png",
+      "dest": "materials/textures/log/door_open.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/log/end.png",
+      "dest": "materials/textures/log/end.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/log/face.png",
+      "dest": "materials/textures/log/face.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/log/junction.png",
+      "dest": "materials/textures/log/junction.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/log/top_ew.png",
+      "dest": "materials/textures/log/top_ew.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/log/top_ns.png",
+      "dest": "materials/textures/log/top_ns.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/mud_brick/door_closed.png",
+      "dest": "materials/textures/mud_brick/door_closed.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/mud_brick/door_open.png",
+      "dest": "materials/textures/mud_brick/door_open.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/mud_brick/end.png",
+      "dest": "materials/textures/mud_brick/end.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/mud_brick/face.png",
+      "dest": "materials/textures/mud_brick/face.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/mud_brick/junction.png",
+      "dest": "materials/textures/mud_brick/junction.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/mud_brick/top_ew.png",
+      "dest": "materials/textures/mud_brick/top_ew.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/mud_brick/top_ns.png",
+      "dest": "materials/textures/mud_brick/top_ns.png"
+    },
+    {
+      "role": "material_texture",
+      "source": "art/materials/textures/packed_earth/floor.png",
+      "dest": "materials/textures/packed_earth/floor.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "dark_grass",
+      "source": "art/style05/env/ground/dark_grass.png",
+      "dest": "ground/dark_grass.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "meadow",
+      "source": "art/style05/env/ground/meadow.png",
+      "dest": "ground/meadow.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "forest_floor",
+      "source": "art/style05/env/ground/forest_floor.png",
+      "dest": "ground/forest_floor.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "hill_rock",
+      "source": "art/style05/env/ground/hill_rock.png",
+      "dest": "ground/hill_rock.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "packed_earth_ground",
+      "source": "art/style05/env/ground/packed_earth.png",
+      "dest": "ground/packed_earth.png"
+    },
+    {
+      "role": "ground_texture",
+      "id": "river_bank",
+      "source": "art/style05/env/ground/river_bank.png",
+      "dest": "ground/river_bank.png"
+    },
+    {
+      "role": "water_texture",
+      "id": "water",
+      "source": "art/style05/struct/water.png",
+      "dest": "ground/water.png"
+    },
+    {
+      "role": "snow_overlay",
+      "id": "snow_overlay",
+      "source": "art/style05/env1/built/snow_overlay.png",
+      "dest": "ground/snow_overlay.png"
+    },
+    {
+      "role": "structure",
+      "id": "bedroll",
+      "source": "art/style05/struct/bedroll.png",
+      "dest": "structures/bedroll.png"
+    },
+    {
+      "role": "structure",
+      "id": "boulder_large",
+      "source": "art/style05/struct/boulder_large.png",
+      "dest": "structures/boulder_large.png"
+    },
+    {
+      "role": "structure",
+      "id": "boulder_small",
+      "source": "art/style05/struct/boulder_small.png",
+      "dest": "structures/boulder_small.png"
+    },
+    {
+      "role": "structure",
+      "id": "claybank_full",
+      "source": "art/style05/struct/claybank_full.png",
+      "dest": "structures/claybank_full.png"
+    },
+    {
+      "role": "structure",
+      "id": "claybank_depleted",
+      "source": "art/style05/struct/claybank_depleted.png",
+      "dest": "structures/claybank_depleted.png"
+    },
+    {
+      "role": "structure",
+      "id": "drying_rack_empty",
+      "source": "art/style05/struct/drying_rack_empty.png",
+      "dest": "structures/drying_rack_empty.png"
+    },
+    {
+      "role": "structure",
+      "id": "drying_rack_hide",
+      "source": "art/style05/struct/drying_rack_hide.png",
+      "dest": "structures/drying_rack_hide.png"
+    },
+    {
+      "role": "structure",
+      "id": "flint_outcrop",
+      "source": "art/style05/struct/flint_outcrop.png",
+      "dest": "structures/flint_outcrop.png"
+    },
+    {
+      "role": "structure",
+      "id": "grinding_stone",
+      "source": "art/style05/struct/grinding_stone.png",
+      "dest": "structures/grinding_stone.png"
+    },
+    {
+      "role": "structure",
+      "id": "hearth_1",
+      "source": "art/style05/struct/hearth_1.png",
+      "dest": "structures/hearth_1.png"
+    },
+    {
+      "role": "structure",
+      "id": "hearth_pots",
+      "source": "art/style05/struct/hearth_pots.png",
+      "dest": "structures/hearth_pots.png"
+    },
+    {
+      "role": "structure",
+      "id": "hearth_unlit",
+      "source": "art/style05/struct/hearth_unlit.png",
+      "dest": "structures/hearth_unlit.png"
+    },
+    {
+      "role": "structure",
+      "id": "knapping_spot",
+      "source": "art/style05/struct/knapping_spot.png",
+      "dest": "structures/knapping_spot.png"
+    },
+    {
+      "role": "structure",
+      "id": "lean_to",
+      "source": "art/style05/struct/lean_to.png",
+      "dest": "structures/lean_to.png"
+    },
+    {
+      "role": "structure",
+      "id": "pottery_bench",
+      "source": "art/style05/struct/pottery_bench.png",
+      "dest": "structures/pottery_bench.png"
+    },
+    {
+      "role": "structure",
+      "id": "stump",
+      "source": "art/style05/struct/stump.png",
+      "dest": "structures/stump.png"
+    },
+    {
+      "role": "structure",
+      "id": "woodworking_bench",
+      "source": "art/style05/struct/woodworking_bench.png",
+      "dest": "structures/woodworking_bench.png"
+    },
+    {
+      "role": "structure",
+      "id": "birch_large",
+      "source": "art/style05/struct/birch_large.png",
+      "dest": "structures/birch_large.png"
+    },
+    {
+      "role": "structure",
+      "id": "birch_small",
+      "source": "art/style05/struct/birch_small.png",
+      "dest": "structures/birch_small.png"
+    },
+    {
+      "role": "structure",
+      "id": "oak_large",
+      "source": "art/style05/struct/oak_large.png",
+      "dest": "structures/oak_large.png"
+    },
+    {
+      "role": "structure",
+      "id": "oak_small",
+      "source": "art/style05/struct/oak_small.png",
+      "dest": "structures/oak_small.png"
+    },
+    {
+      "role": "structure",
+      "id": "pine_large",
+      "source": "art/style05/struct/pine_large.png",
+      "dest": "structures/pine_large.png"
+    },
+    {
+      "role": "structure",
+      "id": "pine_small",
+      "source": "art/style05/struct/pine_small.png",
+      "dest": "structures/pine_small.png"
+    },
+    {
+      "role": "rock_face",
+      "id": "rock_face",
+      "source": "art/style05/struct/rock_face.png",
+      "dest": "structures/rock_face.png"
+    },
+    {
+      "role": "ford_stone",
+      "id": "ford_stone_1",
+      "source": "art/style05/struct/ford_stone_1.png",
+      "dest": "structures/ford_stone_1.png"
+    },
+    {
+      "role": "ford_stone",
+      "id": "ford_stone_2",
+      "source": "art/style05/struct/ford_stone_2.png",
+      "dest": "structures/ford_stone_2.png"
+    },
+    {
+      "role": "ford_stone",
+      "id": "ford_stone_3",
+      "source": "art/style05/struct/ford_stone_3.png",
+      "dest": "structures/ford_stone_3.png"
+    },
+    {
+      "role": "ford_stone",
+      "id": "ford_stone_4",
+      "source": "art/style05/struct/ford_stone_4.png",
+      "dest": "structures/ford_stone_4.png"
+    },
+    {
+      "role": "item",
+      "id": "firewood",
+      "source": "art/style05/polish/items/firewood_try3.png",
+      "dest": "items/firewood.png"
+    },
+    {
+      "role": "item",
+      "id": "ground_axe",
+      "source": "art/style05/polish/items/ground_axe_try3.png",
+      "dest": "items/ground_axe.png"
+    },
+    {
+      "role": "item",
+      "id": "spear",
+      "source": "art/style05/env1/items/spear.png",
+      "dest": "items/spear.png"
+    },
+    {
+      "role": "item",
+      "id": "cured_hide",
+      "source": "art/style05/polish/items/cured_hide_try2.png",
+      "dest": "items/cured_hide.png"
+    },
+    {
+      "role": "item",
+      "id": "hide_wrap",
+      "source": "art/style05/polish/items/hide_wrap_try2.png",
+      "dest": "items/hide_wrap.png"
+    },
+    {
+      "role": "item",
+      "id": "fur_cloak",
+      "source": "art/style05/polish/items/fur_cloak_try2.png",
+      "dest": "items/fur_cloak.png"
+    },
+    {
+      "role": "item",
+      "id": "wolf_hide",
+      "source": "art/style05/polish/items/wolf_hide_try2.png",
+      "dest": "items/wolf_hide.png"
+    },
+    {
+      "role": "item",
+      "id": "clay",
+      "source": "art/style05/polish/items/clay_try3.png",
+      "dest": "items/clay.png"
+    },
+    {
+      "role": "item",
+      "id": "raw_pot",
+      "source": "art/style05/polish/items/raw_pot_try2.png",
+      "dest": "items/raw_pot.png"
+    },
+    {
+      "role": "item",
+      "id": "clay_pot_empty",
+      "source": "art/style05/env1/items/clay_pot_empty.png",
+      "dest": "items/clay_pot_empty.png"
+    },
+    {
+      "role": "item",
+      "id": "clay_pot_filled",
+      "source": "art/style05/env1/items/clay_pot_filled.png",
+      "dest": "items/clay_pot_filled.png"
+    },
+    {
+      "role": "item",
+      "id": "meat",
+      "source": "art/style05/env1/items/meat.png",
+      "dest": "items/meat.png"
+    },
+    {
+      "role": "item",
+      "id": "meat_spoiled",
+      "source": "art/style05/env1/items/meat_spoiled.png",
+      "dest": "items/meat_spoiled.png"
+    },
+    {
+      "role": "item",
+      "id": "flint_nodule",
+      "source": "art/style05/polish/items/flint_nodule_try3.png",
+      "dest": "items/flint_nodule.png"
+    },
+    {
+      "role": "item",
+      "id": "log_pile_small",
+      "source": "art/style05/polish/items/log_pile_small_try1.png",
+      "dest": "items/log_pile_small.png"
+    },
+    {
+      "role": "item",
+      "id": "log_pile_medium",
+      "source": "art/style05/polish/items/log_pile_medium_try3.png",
+      "dest": "items/log_pile_medium.png"
+    },
+    {
+      "role": "item",
+      "id": "log_pile_large",
+      "source": "art/style05/polish/items/log_pile_large_try3.png",
+      "dest": "items/log_pile_large.png"
+    },
+    {
+      "role": "item",
+      "id": "stone_pile",
+      "source": "art/style05/env/items/stone_pile.png",
+      "dest": "items/stone_pile.png"
+    },
+    {
+      "role": "item",
+      "id": "flint_pile",
+      "source": "art/style05/polish/items/flint_pile_try3.png",
+      "dest": "items/flint_pile.png"
+    },
+    {
+      "role": "item",
+      "id": "flint_blade",
+      "source": "art/style05/polish/items/flint_blade_try3.png",
+      "dest": "items/flint_blade.png"
+    },
+    {
+      "role": "item",
+      "id": "stone_axe",
+      "source": "art/style05/polish/items/stone_axe_try1.png",
+      "dest": "items/stone_axe.png"
+    },
+    {
+      "role": "item",
+      "id": "hide",
+      "source": "art/style05/env/items/hide.png",
+      "dest": "items/hide.png"
+    },
+    {
+      "role": "item",
+      "id": "berry_basket",
+      "source": "art/style05/polish/items/berry_basket_try1.png",
+      "dest": "items/berry_basket.png"
+    },
+    {
+      "role": "plant",
+      "id": "berry_full",
+      "source": "art/style05/env/plants/berry_full.png",
+      "dest": "structures/berry_full.png"
+    },
+    {
+      "role": "plant",
+      "id": "berry_bare",
+      "source": "art/style05/env/plants/berry_bare.png",
+      "dest": "structures/berry_bare.png"
+    }
+  ],
+  "animals": {
+    "species": [
+      "wolf",
+      "deer"
+    ],
+    "facings": [
+      "S",
+      "E"
+    ],
+    "poses": {
+      "wolf": [
+        "stand",
+        "walk",
+        "run",
+        "attack",
+        "dead"
+      ],
+      "deer": [
+        "stand",
+        "walk",
+        "run",
+        "graze",
+        "dead"
+      ]
+    },
+    "source": "art/animal/polish/{species}/try2/{facing}/{pose}.png",
+    "dest": "animals/{species}/{facing}/{pose}.png",
+    "meta_source": "docs/v8/artpolish/animal_manifest.json"
+  },
+  "meta_sources": {
+    "structure": "docs/v8/artstruct/assets.json",
+    "item": "docs/v8/artenv1/items_manifest.json",
+    "ford_stone": "art/style05/struct/ford_stone_{n}.json",
+    "tone_reference": "art/style05/anchors/person.png"
+  }
+}

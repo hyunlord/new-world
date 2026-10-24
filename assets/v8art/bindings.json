@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "about": "Sim codes → art ids (ADR 0033). The renderer reads every content name from here and from manifest.json; scripts/world/** names none. Codes are the bridge contracts documented in docs/v8/snapshot_schema.md. An unknown code draws its family's `fallback`.",
+  "terrain": {
+    "fallback": "dark_grass",
+    "codes": [
+      {"code": 0, "sim": "Plain", "ground": "dark_grass"},
+      {"code": 1, "sim": "Forest", "ground": "forest_floor"},
+      {"code": 2, "sim": "Mountain", "ground": "hill_rock", "standing_face": true, "blocks": true},
+      {"code": 3, "sim": "Hill", "ground": "hill_rock", "standing_face": true, "blocks": true},
+      {"code": 4, "sim": "River", "water": true}
+    ],
+    "clearing": {"ground": "packed_earth_ground", "core_tiles": 4, "reach_tiles": 8},
+    "dug_ground": "hill_rock",
+    "face": "rock_face",
+    "water": "water",
+    "snow": "snow_overlay",
+    "ford_stones": ["ford_stone_1", "ford_stone_2", "ford_stone_3", "ford_stone_4"]
+  },
+  "space": {
+    "about": "get_space wall_styles / floor_styles carry blueprint names; the material resolver maps them through construction_styles.json sim_blueprints. A floor style the material data does not know but listed here draws this ground instead.",
+    "floor_grounds": [{"style": "DugFloor", "ground": "hill_rock"}],
+    "door_styles": ["Door"],
+    "bed": {"structure": "bedroll", "footprint": [2, 1]}
+  },
+  "buildings": {
+    "fallback": null,
+    "codes": [
+      {"code": 0, "sim": "Hearth", "structure": "hearth_1", "unlit": "hearth_unlit", "firing": "hearth_pots", "light": true},
+      {"code": 1, "sim": "Shelter", "structure": "lean_to"},
+      {"code": 2, "sim": "StockpileMarker", "structure": null},
+      {"code": 3, "sim": "Hut", "ring": {"size": [3, 3], "wall_style": "LogWall", "floor_style": "PackedFloor", "door": [1, 2]}}
+    ]
+  },
+  "workshops": {
+    "fallback": "knapping_spot",
+    "codes": [
+      {"code": 1, "sim": "KnappingSpot", "structure": "knapping_spot"},
+      {"code": 2, "sim": "WoodBench", "structure": "woodworking_bench"},
+      {"code": 3, "sim": "DryingRack", "structure": "drying_rack_empty", "working": "drying_rack_hide"},
+      {"code": 9, "sim": "GrindingStone", "structure": "grinding_stone"},
+      {"code": 10, "sim": "PotteryBench", "structure": "pottery_bench"},
+      {"code": 11, "sim": "HearthFire", "structure": null, "marks_hearth_firing": true}
+    ]
+  },
+  "nodes": {
+    "fallback": "boulder_small",
+    "codes": [
+      {"code": 0, "sim": "Boulder", "structure": "boulder_large", "depleted": "boulder_small", "depleted_below_permille": 500},
+      {"code": 1, "sim": "FlintOutcrop", "structure": "flint_outcrop"},
+      {"code": 2, "sim": "ClayBank", "structure": "claybank_full", "depleted": "claybank_depleted", "depleted_below_permille": 500}
+    ]
+  },
+  "resources": {
+    "codes": [
+      {"code": 0, "sim": "Bush", "structure": "berry_full", "depleted": "berry_bare", "depleted_below_permille": 1},
+      {"code": 3, "sim": "Deadwood", "item": "firewood"}
+    ]
+  },
+  "trees": {
+    "about": "The sim has no species; the renderer picks one per tile by a keyed hash on the world seed, weighted, and the size by a second hash.",
+    "species": [
+      {"weight": 5, "large": "oak_large", "small": "oak_small"},
+      {"weight": 3, "large": "birch_large", "small": "birch_small"},
+      {"weight": 2, "large": "pine_large", "small": "pine_small"}
+    ],
+    "large_permille": 600,
+    "stump": "stump",
+    "stump_ticks": 1440
+  },
+  "items": {
+    "about": "count buckets: 1, 2-8, 9+ (ENV1 stack_note); `copies` duplicates one sprite by the stack layout, `assets` names one sprite per bucket.",
+    "bucket_limits": [1, 8],
+    "fallback": "stone_pile",
+    "codes": [
+      {"code": 0, "sim": "Log", "assets": ["log_pile_small", "log_pile_medium", "log_pile_large"]},
+      {"code": 1, "sim": "Firewood", "asset": "firewood"},
+      {"code": 2, "sim": "Stone", "asset": "stone_pile"},
+      {"code": 3, "sim": "Flint", "asset": "flint_nodule", "many": "flint_pile"},
+      {"code": 4, "sim": "FlintBlade", "asset": "flint_blade"},
+      {"code": 5, "sim": "StoneAxe", "asset": "stone_axe"},
+      {"code": 6, "sim": "Hide", "asset": "hide", "carcass_of": "deer"},
+      {"code": 7, "sim": "Clay", "asset": "clay"},
+      {"code": 8, "sim": "RawPot", "asset": "raw_pot"},
+      {"code": 9, "sim": "ClayPot", "asset": "clay_pot_empty"},
+      {"code": 10, "sim": "GroundAxe", "asset": "ground_axe"},
+      {"code": 11, "sim": "Meat", "asset": "meat", "carcass_of": "deer", "spoiled": "meat_spoiled"},
+      {"code": 12, "sim": "CuredHide", "asset": "cured_hide"},
+      {"code": 13, "sim": "HideWrap", "asset": "hide_wrap"},
+      {"code": 14, "sim": "FurCloak", "asset": "fur_cloak"},
+      {"code": 15, "sim": "Spear", "asset": "spear"},
+      {"code": 16, "sim": "WolfHide", "asset": "wolf_hide", "carcass_of": "wolf"}
+    ],
+    "stack_layout": [[0, 0], [-9, -4], [9, -3], [-4, 5], [6, 6], [-13, 3], [13, 4], [0, -8], [2, 10]]
+  },
+  "animals": {
+    "fallback_code": 1,
+    "codes": [
+      {"code": 0, "sim": "Wolf", "species": "wolf", "lod_colour": [184, 67, 54],
+       "poses": {"0": "walk", "1": "run", "2": "stand", "3": "run", "4": "attack", "5": "run"}, "still": "stand", "dead": "dead"},
+      {"code": 1, "sim": "Deer", "species": "deer", "lod_colour": [194, 157, 97],
+       "poses": {"0": "graze", "1": "run", "2": "stand", "3": "walk", "4": "stand", "5": "run"}, "still": "stand", "dead": "dead"}
+    ]
+  },
+  "people": {
+    "about": "Look ids and variant pools come from manifest.json and people/face_variants.json; the bridge sends look_ids (index into manifest.looks) and variants (0-5).",
+    "pose_for_state": {"sleep": "sleep", "carry": "carry", "work": "work_a", "walk": "walk_a", "idle": "idle"},
+    "older_age_band": "older",
+    "grey_hair_rgb": [160, 155, 140]
+  }
+}

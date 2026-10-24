@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "default_styles": {
+    "wall": "log",
+    "floor": "packed_earth",
+    "door": "slab_door"
+  },
+  "styles": [
+    {
+      "id": "log",
+      "kind": "wall",
+      "era": "Stone Age",
+      "textures": {
+        "face": "art/materials/textures/log/face.png",
+        "top_ew": "art/materials/textures/log/top_ew.png",
+        "top_ns": "art/materials/textures/log/top_ns.png",
+        "end": "art/materials/textures/log/end.png",
+        "junction": "art/materials/textures/log/junction.png",
+        "door_closed": "art/materials/textures/log/door_closed.png",
+        "door_open": "art/materials/textures/log/door_open.png"
+      },
+      "top": {
+        "value": 0.75,
+        "saturation": 0.85,
+        "blur_px": 2,
+        "ink_edge_px": 2,
+        "width_px": 64,
+        "side_shadow": 0,
+        "orientation": "along_run"
+      },
+      "face": {
+        "height_px": 44
+      },
+      "ends": "art/materials/textures/log/end.png",
+      "corner": "art/materials/textures/log/junction.png",
+      "prompt_template": "wall",
+      "sim_blueprints": [
+        "LogWall"
+      ],
+      "default_tint": {
+        "dL": 0,
+        "da": 0,
+        "db": 0
+      }
+    },
+    {
+      "id": "drystone",
+      "kind": "wall",
+      "era": "Stone Age",
+      "textures": {
+        "face": "art/materials/textures/drystone/face.png",
+        "top_ew": "art/materials/textures/drystone/top_ew.png",
+        "top_ns": "art/materials/textures/drystone/top_ns.png",
+        "end": "art/materials/textures/drystone/end.png",
+        "junction": "art/materials/textures/drystone/junction.png",
+        "door_closed": "art/materials/textures/drystone/door_closed.png",
+        "door_open": "art/materials/textures/drystone/door_open.png"
+      },
+      "top": {
+        "value": 0.75,
+        "saturation": 0.85,
+        "blur_px": 2,
+        "ink_edge_px": 2,
+        "width_px": 64,
+        "side_shadow": 0,
+        "orientation": "along_run"
+      },
+      "face": {
+        "height_px": 44
+      },
+      "ends": "art/materials/textures/drystone/end.png",
+      "corner": "art/materials/textures/drystone/junction.png",
+      "prompt_template": "wall",
+      "sim_blueprints": [
+        "StoneWall"
+      ],
+      "default_tint": {
+        "dL": 0,
+        "da": 0,
+        "db": 0
+      }
+    },
+    {
+      "id": "packed_earth",
+      "kind": "floor",
+      "era": "Stone Age",
+      "textures": {
+        "floor": "art/materials/textures/packed_earth/floor.png"
+      },
+      "prompt_template": "floor",
+      "sim_blueprints": [
+        "PackedFloor"
+      ],
+      "default_tint": {
+        "dL": 0,
+        "da": 0,
+        "db": 0
+      }
+    },
+    {
+      "id": "slab_door",
+      "kind": "door",
+      "era": "Stone Age",
+      "textures": {
+        "door_closed": "art/materials/textures/log/door_closed.png",
+        "door_open": "art/materials/textures/log/door_open.png"
+      },
+      "prompt_template": "door",
+      "sim_blueprints": [
+        "Door"
+      ],
+      "default_tint": {
+        "dL": 0,
+        "da": 0,
+        "db": 0
+      }
+    },
+    {
+      "id": "inset_door",
+      "kind": "door",
+      "era": "Stone Age",
+      "textures": {
+        "door_closed": "art/materials/textures/drystone/door_closed.png",
+        "door_open": "art/materials/textures/drystone/door_open.png"
+      },
+      "prompt_template": "door",
+      "sim_blueprints": [],
+      "default_tint": {
+        "dL": 0,
+        "da": 0,
+        "db": 0
+      }
+    },
+    {
+      "id": "mud_brick",
+      "kind": "wall",
+      "era": "Neolithic",
+      "textures": {
+        "face": "art/materials/textures/mud_brick/face.png",
+        "top_ew": "art/materials/textures/mud_brick/top_ew.png",
+        "top_ns": "art/materials/textures/mud_brick/top_ns.png",
+        "end": "art/materials/textures/mud_brick/end.png",
+        "junction": "art/materials/textures/mud_brick/junction.png",
+        "door_closed": "art/materials/textures/mud_brick/door_closed.png",
+        "door_open": "art/materials/textures/mud_brick/door_open.png"
+      },
+      "top": {
+        "value": 0.75,
+        "saturation": 0.85,
+        "blur_px": 2,
+        "ink_edge_px": 2,
+        "width_px": 64,
+        "side_shadow": 0,
+        "orientation": "along_run"
+      },
+      "face": {
+        "height_px": 44
+      },
+      "ends": "art/materials/textures/mud_brick/end.png",
+      "corner": "art/materials/textures/mud_brick/junction.png",
+      "prompt_template": "wall",
+      "sim_blueprints": [],
+      "default_tint": {
+        "dL": 0,
+        "da": 0,
+        "db": 0
+      }
+    },
+    {
+      "id": "fired_brick",
+      "kind": "wall",
+      "era": "Bronze Age",
+      "textures": {
+        "face": "art/materials/textures/fired_brick/face.png",
+        "top_ew": "art/materials/textures/fired_brick/top_ew.png",
+        "top_ns": "art/materials/textures/fired_brick/top_ns.png",
+        "end": "art/materials/textures/fired_brick/end.png",
+        "junction": "art/materials/textures/fired_brick/junction.png",
+        "door_closed": "art/materials/textures/fired_brick/door_closed.png",
+        "door_open": "art/materials/textures/fired_brick/door_open.png"
+      },
+      "top": {
+        "value": 0.75,
+        "saturation": 0.85,
+        "blur_px": 2,
+        "ink_edge_px": 2,
+        "width_px": 64,
+        "side_shadow": 0,
+        "orientation": "along_run"
+      },
+      "face": {
+        "height_px": 44
+      },
+      "ends": "art/materials/textures/fired_brick/end.png",
+      "corner": "art/materials/textures/fired_brick/junction.png",
+      "prompt_template": "wall",
+      "sim_blueprints": [],
+      "default_tint": {
+        "dL": 0,
+        "da": 0,
+        "db": 0
+      }
+    }
+  ]
+}

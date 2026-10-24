@@ -1,0 +1,172 @@
+{
+  "adult_F_fur_cloak_bun": [
+    130,
+    86,
+    46
+  ],
+  "adult_F_fur_cloak_long_tied": [
+    153,
+    100,
+    56
+  ],
+  "adult_F_fur_cloak_short": [
+    154,
+    100,
+    52
+  ],
+  "adult_F_hide_wrap_bun": [
+    160,
+    108,
+    55
+  ],
+  "adult_F_hide_wrap_long_tied": [
+    160,
+    105,
+    53
+  ],
+  "adult_F_hide_wrap_short": [
+    166,
+    110,
+    56
+  ],
+  "adult_F_loincloth_bun": [
+    158,
+    109,
+    54
+  ],
+  "adult_F_loincloth_long_tied": [
+    156,
+    104,
+    55
+  ],
+  "adult_F_loincloth_short": [
+    158,
+    105,
+    51
+  ],
+  "adult_M_fur_cloak_bun": [
+    139,
+    88,
+    43
+  ],
+  "adult_M_fur_cloak_short": [
+    115,
+    78,
+    45
+  ],
+  "adult_M_hide_wrap_bun": [
+    156,
+    103,
+    48
+  ],
+  "adult_M_hide_wrap_short": [
+    164,
+    105,
+    45
+  ],
+  "adult_M_loincloth_bun": [
+    152,
+    98,
+    45
+  ],
+  "adult_M_loincloth_long_tied": [
+    151,
+    99,
+    43
+  ],
+  "adult_M_loincloth_short": [
+    149,
+    98,
+    48
+  ],
+  "child_F_fur_cloak_bun": [
+    154,
+    101,
+    44
+  ],
+  "child_F_fur_cloak_long_tied": [
+    161,
+    109,
+    54
+  ],
+  "child_F_fur_cloak_short": [
+    135,
+    86,
+    40
+  ],
+  "child_F_hide_wrap_bun": [
+    166,
+    108,
+    45
+  ],
+  "child_F_hide_wrap_long_tied": [
+    172,
+    110,
+    52
+  ],
+  "child_F_hide_wrap_short": [
+    154,
+    106,
+    51
+  ],
+  "child_F_loincloth_bun": [
+    153,
+    100,
+    51
+  ],
+  "child_F_loincloth_long_tied": [
+    165,
+    109,
+    61
+  ],
+  "child_F_loincloth_short": [
+    153,
+    94,
+    44
+  ],
+  "child_M_fur_cloak_bun": [
+    146,
+    103,
+    52
+  ],
+  "child_M_fur_cloak_long_tied": [
+    118,
+    81,
+    49
+  ],
+  "child_M_fur_cloak_short": [
+    143,
+    89,
+    43
+  ],
+  "child_M_hide_wrap_bun": [
+    166,
+    112,
+    55
+  ],
+  "child_M_hide_wrap_long_tied": [
+    162,
+    103,
+    47
+  ],
+  "child_M_hide_wrap_short": [
+    163,
+    104,
+    47
+  ],
+  "child_M_loincloth_bun": [
+    159,
+    113,
+    53
+  ],
+  "child_M_loincloth_long_tied": [
+    170,
+    110,
+    53
+  ],
+  "child_M_loincloth_short": [
+    160,
+    102,
+    53
+  ]
+}
