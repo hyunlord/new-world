@@ -19,6 +19,10 @@
 #   take the neighbouring land's texture where a rounded land corner reaches in. Two water tiles that touch only at a
 #   corner stay joined. Undug hill tops get the same rounding against open ground (`hill.edge_radius_px`, crisp, no
 #   dither, no ink), except at a corner whose upper row hangs a face (faces stay straight where they hang).
+# Canopy (M-ART2.1 §2.2, ¼× only, `canopy_on`): trees are baked into the chunk as the canopy-mass texture (sampled at
+#   world offsets, tinted per canopy style — a species in its season — by ground_layer.gd) over the union of tree tiles
+#   rounded by `trees.canopy_radius_px`, darkened inside `trees.canopy_edge_px` of the edge; uniform quadrants are one
+#   blit. It runs before the shores, so water still carves through it.
 #   Inputs are plain arrays (`GroundMap`), so the same bake runs headless in tests; the output is deterministic.
 # Bridge methods called: none.
 extends RefCounted
@@ -43,6 +47,8 @@ class GroundMap:
 	var rock: PackedByteArray = PackedByteArray()
 	## 1 = the tile hangs a face from its south edge.
 	var face: PackedByteArray = PackedByteArray()
+	## Canopy style + 1 of a tree standing on the tile (0 = no tree); read only by a canopy bake.
+	var tree: PackedInt32Array = PackedInt32Array()
 
 	func setup(w: int, h: int) -> void:
 		width = w
@@ -55,6 +61,8 @@ class GroundMap:
 		rock.fill(0)
 		face.resize(w * h)
 		face.fill(0)
+		tree.resize(w * h)
+		tree.fill(0)
 
 	func at(x: int, y: int) -> int:
 		if x < 0 or y < 0 or x >= width or y >= height:
@@ -69,6 +77,9 @@ class GroundMap:
 
 	func has_face(x: int, y: int) -> bool:
 		return x >= 0 and y >= 0 and x < width and y < height and face[y * width + x] == 1
+
+	func tree_at(x: int, y: int) -> int:
+		return tree[y * width + x] if x >= 0 and y >= 0 and x < width and y < height else 0
 
 
 var chunk_tiles: int = 16
@@ -86,6 +97,14 @@ var contour_soft: float = 6.0
 var hill_radius: float = TILE * 0.25
 ## Quadrant masks: key → [land mask, water mask, ink source, ink mask, has ink, any land, any water].
 var _shore: Dictionary = {}
+## The canopy bake (¼×): on/off for the next bake, rounding radius, darkened edge, and per style the pre-tiled
+## canopy image and its darkened copy (`set_canopies`).
+var canopy_on: bool = false
+var canopy_radius: float = 20.0
+var canopy_edge: float = 6.0
+var _canopy: Array[Image] = []
+var _canopy_edge: Array[Image] = []
+var _canopy_period: Array[int] = []
 var _clear: Image = null
 var _tmp_q: Image = null
 ## Pre-tiled ground images (period × period source repeated to cover a chunk plus one period), by ground index.
@@ -97,7 +116,7 @@ var _tmp: Image = null
 
 
 ## Configure from render_params.json's `ground`, `water` and `hill` sections (missing keys keep the defaults).
-func configure(ground: Dictionary, water: Dictionary, hill: Dictionary = {}) -> void:
+func configure(ground: Dictionary, water: Dictionary, hill: Dictionary = {}, trees: Dictionary = {}) -> void:
 	chunk_tiles = int(ground.get("chunk_tiles", chunk_tiles))
 	blend_px = int(ground.get("blend_px", blend_px))
 	blend_strength = float(ground.get("blend_strength", blend_strength))
@@ -114,6 +133,8 @@ func configure(ground: Dictionary, water: Dictionary, hill: Dictionary = {}) -> 
 	shore_radius = clampf(float(water.get("shore_radius_px", shore_radius)), 0.0, half - 1.0)
 	contour_soft = clampf(float(water.get("contour_soft_px", contour_soft)), 0.0, half * 0.5)
 	hill_radius = clampf(float(hill.get("edge_radius_px", hill_radius)), 0.0, half - 1.0)
+	canopy_radius = clampf(float(trees.get("canopy_radius_px", canopy_radius)), 0.0, half - 1.0)
+	canopy_edge = clampf(float(trees.get("canopy_edge_px", canopy_edge)), 0.0, half - 1.0)
 	_masks.clear()
 	_fields.clear()
 	_shore.clear()
@@ -136,6 +157,30 @@ func set_grounds(images: Array[Image]) -> void:
 	_tmp = Image.create(TILE, TILE, false, Image.FORMAT_RGBA8)
 	_tmp_q = Image.create(TILE >> 1, TILE >> 1, false, Image.FORMAT_RGBA8)
 	_clear = Image.create(TILE >> 1, TILE >> 1, false, Image.FORMAT_RGBA8)
+
+
+## Set the canopy styles (style index = GroundMap.tree − 1): each an RGBA8 image whose size is its period, and its
+## darkened copy for the canopy's edge.
+func set_canopies(images: Array[Image], edges: Array[Image]) -> void:
+	_canopy.clear()
+	_canopy_edge.clear()
+	_canopy_period.clear()
+	var span: int = chunk_tiles * TILE
+	for k: int in mini(images.size(), edges.size()):
+		var p: int = maxi(1, images[k].get_width())
+		var reps: int = ceili(float(span + p) / float(p))
+		for pair: Array in [[images[k], _canopy], [edges[k], _canopy_edge]]:
+			var tiled: Image = Image.create(p * reps, p * reps, false, Image.FORMAT_RGBA8)
+			for ry: int in reps:
+				for rx: int in reps:
+					tiled.blit_rect(pair[0], Rect2i(0, 0, p, p), Vector2i(rx * p, ry * p))
+			(pair[1] as Array).append(tiled)
+		_canopy_period.append(p)
+
+
+## Number of canopy styles set.
+func canopy_count() -> int:
+	return _canopy.size()
 
 
 ## The pre-tiled image of ground `index` (null when out of range).
@@ -196,7 +241,9 @@ func bake(map: GroundMap, cx: int, cy: int) -> Image:
 				var p: int = _period[n]
 				_tmp.blit_rect(_tiled[n], Rect2i(posmod(tx * TILE, p), posmod(ty * TILE, p), TILE, TILE), Vector2i.ZERO)
 				img.blend_rect_mask(_tmp, mask, Rect2i(0, 0, TILE, TILE), dst)
-	# 3. Rounded shores and hill edges, per tile quadrant.
+	# 3. The canopy (¼× only), then rounded shores and hill edges, per tile quadrant.
+	if canopy_on and not _canopy.is_empty():
+		_canopy_pass(map, img, x0, y0)
 	_round_edges(map, img, x0, y0, per)
 	return img
 
@@ -429,6 +476,55 @@ func _round_edges(map: GroundMap, img: Image, x0: int, y0: int, per: int) -> voi
 						_apply_quadrant(map, img, 1, q, rbits, 0, dst, world, x, y, sx, sy)
 
 
+## Canopy class of a tile: 1 a tree, 0 open land, −1 neither (water, crisp tiles, outside the map).
+func _tree_class(map: GroundMap, x: int, y: int) -> int:
+	var g: int = map.at(x, y)
+	if g < 0 or map.is_crisp(x, y):
+		return -1
+	return 1 if map.tree_at(x, y) > 0 else 0
+
+
+## The canopy over the chunk at tile (x0, y0): per quadrant, uniform tree quadrants one blit of the tile's style,
+## boundary quadrants the interior and edge masks (pair 2) with the tree's style (the tile's, else a neighbour's).
+func _canopy_pass(map: GroundMap, img: Image, x0: int, y0: int) -> void:
+	var half: int = TILE >> 1
+	var rect: Rect2i = Rect2i(0, 0, half, half)
+	for ty: int in chunk_tiles:
+		for tx: int in chunk_tiles:
+			var x: int = x0 + tx
+			var y: int = y0 + ty
+			var t: int = _tree_class(map, x, y)
+			if t < 0:
+				continue
+			for q: int in 4:
+				var sx: int = -1 if (q & 1) == 0 else 1
+				var sy: int = -1 if q < 2 else 1
+				var bits: int = _bits(t, _tree_class(map, x + sx, y), _tree_class(map, x, y + sy), _tree_class(map, x + sx, y + sy))
+				if bits == 0:
+					continue
+				var style: int = map.tree_at(x, y)
+				for nb: Vector2i in [Vector2i(x + sx, y), Vector2i(x, y + sy), Vector2i(x + sx, y + sy)]:
+					if style <= 0:
+						style = map.tree_at(nb.x, nb.y)
+				style -= 1
+				if style < 0 or style >= _canopy.size():
+					continue
+				var p: int = _canopy_period[style]
+				var world: Vector2i = Vector2i(x * TILE + (0 if sx < 0 else half), y * TILE + (0 if sy < 0 else half))
+				var dst: Vector2i = Vector2i(tx * TILE + (0 if sx < 0 else half), ty * TILE + (0 if sy < 0 else half))
+				var src: Rect2i = Rect2i(posmod(world.x, p), posmod(world.y, p), half, half)
+				if bits == 15:
+					img.blit_rect(_canopy[style], src, dst)
+					continue
+				var m: Array = _quadrant_masks(2, q, bits, 0)
+				if bool(m[6]):
+					_tmp_q.blit_rect(_canopy[style], src, Vector2i.ZERO)
+					img.blend_rect_mask(_tmp_q, m[1], rect, dst)
+				if bool(m[5]):
+					_tmp_q.blit_rect(_canopy_edge[style], src, Vector2i.ZERO)
+					img.blend_rect_mask(_tmp_q, m[0], rect, dst)
+
+
 ## The rounded field the bake uses at world pixel (wx, wy) — pair 0 shores (negative in water), pair 1 hill edges
 ## (negative on the hill top) — or INF where the pixel's quadrant has no boundary (tests measure the contour).
 func shore_distance(map: GroundMap, wx: int, wy: int, pair: int = 0) -> float:
@@ -479,6 +575,8 @@ func _apply_quadrant(map: GroundMap, img: Image, pair: int, q: int, bits: int, p
 
 
 ## [class-0 mask, class-1 mask, ink source, ink mask, has ink, any class 0, any class 1] of one quadrant (32 × 32).
+## Pair 2 (canopy) returns the edge band as "class 0" and the interior as "class 1"; pixels outside the canopy are in
+## neither.
 ## Pair 0 (shores) dithers: land where smoothstep(−soft, soft, s) > the tile's threshold, or inside the 10-px bank
 ## (the M-ART2 bank weight, measured from the rounded contour); ink where the land-side distance lies in
 ## [disp, disp + ink_px), disp = the noise at the nearest contour point × ink_displace_px. Pair 1 (hills) is crisp.
@@ -487,7 +585,7 @@ func _quadrant_masks(pair: int, q: int, bits: int, phase: int) -> Array:
 	if _shore.has(key):
 		return _shore[key]
 	var half: int = TILE >> 1
-	var r: float = shore_radius if pair == 0 else hill_radius
+	var r: float = shore_radius if pair == 0 else (hill_radius if pair == 1 else canopy_radius)
 	var sx: int = -1 if (q & 1) == 0 else 1
 	var sy: int = -1 if q < 2 else 1
 	var ox: int = 0 if sx < 0 else half
@@ -525,6 +623,11 @@ func _quadrant_masks(pair: int, q: int, bits: int, phase: int) -> Array:
 			var ink: float = 0.0
 			if pair == 1:
 				is1 = s1 < 0.0
+			elif pair == 2:
+				# Canopy: class 1 = the interior, class 0 = the darkened edge band; outside both, neither mask.
+				if s1 >= 0.0:
+					continue
+				is1 = s1 < -canopy_edge
 			else:
 				# The field is negative inside water, so it is the land-side distance itself.
 				var s: float = s1

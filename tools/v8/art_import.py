@@ -146,6 +146,39 @@ def plan(config: dict, git: GitReader) -> tuple[list[dict], dict]:
                 meta = {"canvas": base["canvas_px"], "anchor": [round(v) for v in base["anchor_px"]]}
         add(role, entry["source"], entry["dest"], ident, meta)
 
+    flora = config.get("flora")
+    if flora:
+        for entry in flora["data"]:
+            add("flora_data", entry["source"], entry["dest"], entry["id"])
+        for entry in flora.get("fixtures", []):
+            add("flora_fixture", entry["source"], entry["dest"], entry["id"])
+        catalogue = json.loads(git.read(flora["catalogue"]))
+        frames: dict[str, dict] = {}
+        masks: set[str] = set()
+
+        def frame(f: dict) -> None:
+            frames.setdefault(f["path"], {"canvas": f["canvas"], "anchor": f["anchor"]})
+            masks.add(f["canopy_mask"])
+
+        for species in catalogue["species"].values():
+            for size in species["sizes"].values():
+                for f in size["variants"] + size["bare"]:
+                    frame(f)
+            if species.get("stump"):
+                frame(species["stump"])
+
+        def dest_of(source: str) -> str:
+            if not source.startswith(flora["source_prefix"]):
+                raise ValueError(f"flora path outside {flora['source_prefix']}: {source}")
+            return flora["dest_prefix"] + source[len(flora["source_prefix"]):]
+
+        for source, meta in sorted(frames.items()):
+            add("flora_frame", source, dest_of(source), Path(source).stem, meta)
+        for source in sorted(masks):
+            add("flora_mask", source, dest_of(source), Path(source).stem + "_mask")
+        for source in sorted(set(catalogue["map_canopies"].values())):
+            add("flora_texture", source, dest_of(source), Path(source).stem)
+
     animals = config["animals"]
     frames = {f["image"]: f for f in json.loads(git.read(animals["meta_source"]))["frames"]}
     for species in animals["species"]:
@@ -276,6 +309,24 @@ def verify(out: Path, config: dict) -> list[str]:
     for look in manifest["looks"]:
         if look["frames"] not in frames:
             problems.append(f"look {look['id']} points at {look['frames']} which has no frames")
+    flora = config.get("flora")
+    if flora:
+        catalogue = json.loads((out / flora["data"][0]["dest"]).read_text())
+        named: set[str] = set(catalogue["map_canopies"].values())
+        for species in catalogue["species"].values():
+            for size in species["sizes"].values():
+                for f in size["variants"] + size["bare"]:
+                    named.update((f["path"], f["canopy_mask"]))
+            if species.get("stump"):
+                named.update((species["stump"]["path"], species["stump"]["canopy_mask"]))
+        for path in sorted(named - set(sources)):
+            problems.append(f"flora catalogue names a file the import lacks: {path}")
+        bound = json.loads((out / "bindings.json").read_text()).get("trees", {}).get("species", [])
+        for row in bound:
+            if row.get("species") not in catalogue["species"]:
+                problems.append(f"bindings.json trees.species names an unknown species: {row.get('species')}")
+        if not bound:
+            problems.append("bindings.json trees.species is empty")
     params = json.loads((out / "render_params.json").read_text())
     if params.get("schema_version") != 1:
         problems.append("render_params.json schema_version is not 1")

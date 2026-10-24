@@ -60,19 +60,19 @@
   },
   "resources": {
     "codes": [
-      {"code": 0, "sim": "Bush", "structure": "berry_full", "depleted": "berry_bare", "depleted_below_permille": 1},
+      {"code": 0, "sim": "Bush", "structure": "berry_bush_full", "depleted": "berry_bush_bare", "depleted_below_permille": 1, "flora_species": "berry"},
       {"code": 3, "sim": "Deadwood", "item": "firewood"}
     ]
   },
   "trees": {
-    "about": "The sim has no species; the renderer picks one per tile by a keyed hash on the world seed, weighted, and the size by a second hash.",
+    "about": "Trees resolve through the flora catalogue (assets/v8art/flora/species.json, ADR 0033; M-ART2.1 §2.2). The sim has no species yet: the renderer picks one per tile by a keyed hash on the world seed, weighted, and the size (large below large_permille) and variant by further hashes. M-EXT replaces the hash with the snapshot's species column (MART21_DECISIONS D4). `habit` is the habit an unknown species falls back to.",
     "species": [
-      {"weight": 5, "large": "oak_large", "small": "oak_small"},
-      {"weight": 3, "large": "birch_large", "small": "birch_small"},
-      {"weight": 2, "large": "pine_large", "small": "pine_small"}
+      {"weight": 5, "species": "oak"},
+      {"weight": 3, "species": "birch"},
+      {"weight": 2, "species": "pine"}
     ],
+    "habit": "deciduous",
     "large_permille": 600,
-    "stump": "stump",
     "stump_ticks": 1440
   },
   "items": {

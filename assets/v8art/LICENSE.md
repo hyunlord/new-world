@@ -6,4 +6,4 @@ project's own prompts and anchors, normalised by its own pipelines, and imported
 asset, font or texture is included. The hand-written data files (`bindings.json`, `render_params.json`) and the
 derived people masks (`people/masks/`, from `tools/v8/art_masks.py`) are this repository's own work.
 
-Source commit: `c8ed86087c90ed5429716713e930cc5f6a9e1332` (branch `v8/art-polish2`).
+Source commit: `f182769fe06b1cb60105e4d0bf127b6524277838` (branch `v8/art-trees`).

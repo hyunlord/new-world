@@ -1,0 +1,138 @@
+{
+  "$defs": {
+    "HabitDefault": {
+      "additionalProperties": false,
+      "properties": {
+        "fallback_species": {
+          "title": "Fallback Species",
+          "type": "string"
+        },
+        "seasons": {
+          "additionalProperties": {
+            "$ref": "#/$defs/SeasonTint"
+          },
+          "propertyNames": {
+            "enum": [
+              "spring",
+              "summer",
+              "autumn",
+              "winter"
+            ]
+          },
+          "title": "Seasons",
+          "type": "object"
+        }
+      },
+      "required": [
+        "fallback_species",
+        "seasons"
+      ],
+      "title": "HabitDefault",
+      "type": "object"
+    },
+    "SeasonTint": {
+      "additionalProperties": false,
+      "properties": {
+        "delta_lab": {
+          "default": [
+            0,
+            0,
+            0
+          ],
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Delta Lab",
+          "type": "array"
+        },
+        "frame": {
+          "default": "foliage",
+          "enum": [
+            "foliage",
+            "bare"
+          ],
+          "title": "Frame",
+          "type": "string"
+        },
+        "snow_cap": {
+          "$ref": "#/$defs/SnowCap",
+          "default": {
+            "depth_px": 0,
+            "alpha": 0.0
+          }
+        }
+      },
+      "title": "SeasonTint",
+      "type": "object"
+    },
+    "SnowCap": {
+      "additionalProperties": false,
+      "properties": {
+        "depth_px": {
+          "default": 0,
+          "maximum": 16,
+          "minimum": 0,
+          "title": "Depth Px",
+          "type": "integer"
+        },
+        "alpha": {
+          "default": 0,
+          "maximum": 0.7,
+          "minimum": 0,
+          "title": "Alpha",
+          "type": "number"
+        }
+      },
+      "title": "SnowCap",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "unknown_habit": {
+      "default": "deciduous",
+      "enum": [
+        "deciduous",
+        "evergreen",
+        "shrub"
+      ],
+      "title": "Unknown Habit",
+      "type": "string"
+    },
+    "habits": {
+      "additionalProperties": {
+        "$ref": "#/$defs/HabitDefault"
+      },
+      "propertyNames": {
+        "enum": [
+          "deciduous",
+          "evergreen",
+          "shrub"
+        ]
+      },
+      "title": "Habits",
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "habits"
+  ],
+  "title": "DefaultsDocument",
+  "type": "object"
+}

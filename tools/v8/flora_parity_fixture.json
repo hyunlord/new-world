@@ -1,0 +1,2197 @@
+{
+ "about": "Flora resolver parity cases (M-ART2.1 \u00a72.2): every catalogue species \u00d7 size \u00d7 season \u00d7 signed variant hashes (int32 extremes), an unknown species with no habit and with each habit, and the data-only fixture test_alder merged into the catalogue (as the art line's boards.py fixture_catalog does). Expected results come from the art line's resolve_flora.py (tools/v8/resolver_parity.py --generate).",
+ "cases": [
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 0
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 1
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 2
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 7
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": -1
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": -5
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 0
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 1
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 2
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 7
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": -1
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": -5
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 0
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 1
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 2
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 7
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": -1
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": -5
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 0
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 1
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 2
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 7
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": -1
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": -5
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 0
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 1
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 2
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 7
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": -1
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": -5
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 0
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 1
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 2
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 7
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": -1
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": -5
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 0
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 1
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 2
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 7
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": -1
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": -5
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 0
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 1
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 2
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 7
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": -1
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": -5
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 0
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 1
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 2
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 7
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": -1
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": -5
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 0
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 1
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 2
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 7
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": -1
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": -5
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 0
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 1
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 2
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 7
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": -1
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": -5
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 0
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 1
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 2
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 7
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": -1
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": -5
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "pine",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 0
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 1
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 2
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 7
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": -1
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": -5
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 0
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 1
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 2
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 7
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": -1
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": -5
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 0
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 1
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 2
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 7
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": -1
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": -5
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 0
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 1
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 2
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 7
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": -1
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": -5
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "pine",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 0
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 1
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 2
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 7
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": -1
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": -5
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 0
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 1
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 2
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 7
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": -1
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": -5
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 0
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 1
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 2
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 7
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": -1
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": -5
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 0
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 1
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 2
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 7
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": -1
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": -5
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "birch",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 0
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 1
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 2
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 7
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": -1
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": -5
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 0
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 1
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 2
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 7
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": -1
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": -5
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 0
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 1
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 2
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 7
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": -1
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": -5
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 0
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 1
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 2
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 7
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": -1
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": -5
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "birch",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 0
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 1
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 2
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 7
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": -1
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": -5
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 0
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 1
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 2
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 7
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": -1
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": -5
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 0
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 1
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 2
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 7
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": -1
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": -5
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 0
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 1
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 2
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 7
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": -1
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": -5
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "berry",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 0
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 1
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 2
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 7
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": -1
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": -5
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 0
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 1
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 2
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 7
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": -1
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": -5
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 0
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 1
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 2
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 7
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": -1
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": -5
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 0
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 1
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 2
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 7
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": -1
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": -5
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 2147483647
+  },
+  {
+   "species": "berry",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": -2147483648
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 0
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 3
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 0
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 3
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 0
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 3
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 0
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 3
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 0
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 3
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 0
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 3
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 0
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 3
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 0
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 3
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 0,
+   "habit": "deciduous"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 3,
+   "habit": "deciduous"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 0,
+   "habit": "deciduous"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 3,
+   "habit": "deciduous"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 0,
+   "habit": "deciduous"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 3,
+   "habit": "deciduous"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 0,
+   "habit": "deciduous"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 3,
+   "habit": "deciduous"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 0,
+   "habit": "deciduous"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 3,
+   "habit": "deciduous"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 0,
+   "habit": "deciduous"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 3,
+   "habit": "deciduous"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 0,
+   "habit": "deciduous"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 3,
+   "habit": "deciduous"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 0,
+   "habit": "deciduous"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 3,
+   "habit": "deciduous"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 0,
+   "habit": "evergreen"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 3,
+   "habit": "evergreen"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 0,
+   "habit": "evergreen"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 3,
+   "habit": "evergreen"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 0,
+   "habit": "evergreen"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 3,
+   "habit": "evergreen"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 0,
+   "habit": "evergreen"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 3,
+   "habit": "evergreen"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 0,
+   "habit": "evergreen"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 3,
+   "habit": "evergreen"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 0,
+   "habit": "evergreen"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 3,
+   "habit": "evergreen"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 0,
+   "habit": "evergreen"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 3,
+   "habit": "evergreen"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 0,
+   "habit": "evergreen"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 3,
+   "habit": "evergreen"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 0,
+   "habit": "shrub"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 3,
+   "habit": "shrub"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 0,
+   "habit": "shrub"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 3,
+   "habit": "shrub"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 0,
+   "habit": "shrub"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 3,
+   "habit": "shrub"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 0,
+   "habit": "shrub"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 3,
+   "habit": "shrub"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 0,
+   "habit": "shrub"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 3,
+   "habit": "shrub"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 0,
+   "habit": "shrub"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 3,
+   "habit": "shrub"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 0,
+   "habit": "shrub"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 3,
+   "habit": "shrub"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 0,
+   "habit": "shrub"
+  },
+  {
+   "species": "unknown_tree",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 3,
+   "habit": "shrub"
+  },
+  {
+   "species": "test_alder",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 0,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "test_alder",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 1,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "test_alder",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": -1,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "spring",
+   "variant_hash": 5,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "test_alder",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 0,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "test_alder",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 1,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "test_alder",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": -1,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "summer",
+   "variant_hash": 5,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "test_alder",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 0,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "test_alder",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 1,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "test_alder",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": -1,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "autumn",
+   "variant_hash": 5,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "test_alder",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 0,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "test_alder",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 1,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "test_alder",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": -1,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "oak",
+   "size": "small",
+   "season": "winter",
+   "variant_hash": 5,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "test_alder",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 0,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "test_alder",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 1,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "test_alder",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": -1,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "spring",
+   "variant_hash": 5,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "test_alder",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 0,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "test_alder",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 1,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "test_alder",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": -1,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "summer",
+   "variant_hash": 5,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "test_alder",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 0,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "test_alder",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 1,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "test_alder",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": -1,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "autumn",
+   "variant_hash": 5,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "test_alder",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 0,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "test_alder",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 1,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "test_alder",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": -1,
+   "fixture": "test_alder"
+  },
+  {
+   "species": "oak",
+   "size": "large",
+   "season": "winter",
+   "variant_hash": 5,
+   "fixture": "test_alder"
+  }
+ ]
+}

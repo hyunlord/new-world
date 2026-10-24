@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "source_commit": "c8ed86087c90ed5429716713e930cc5f6a9e1332",
-  "source_branch": "v8/art-polish2",
+  "source_commit": "f182769fe06b1cb60105e4d0bf127b6524277838",
+  "source_branch": "v8/art-trees",
   "out": "assets/v8art",
   "managed_dirs": [
     "people",
@@ -9,7 +9,8 @@
     "ground",
     "structures",
     "items",
-    "animals"
+    "animals",
+    "flora"
   ],
   "budget_bytes": 41943040,
   "look_grid": {
@@ -464,51 +465,9 @@
     },
     {
       "role": "structure",
-      "id": "stump",
-      "source": "art/style05/struct/stump.png",
-      "dest": "structures/stump.png"
-    },
-    {
-      "role": "structure",
       "id": "woodworking_bench",
       "source": "art/style05/struct/woodworking_bench.png",
       "dest": "structures/woodworking_bench.png"
-    },
-    {
-      "role": "structure",
-      "id": "birch_large",
-      "source": "art/style05/struct/birch_large.png",
-      "dest": "structures/birch_large.png"
-    },
-    {
-      "role": "structure",
-      "id": "birch_small",
-      "source": "art/style05/struct/birch_small.png",
-      "dest": "structures/birch_small.png"
-    },
-    {
-      "role": "structure",
-      "id": "oak_large",
-      "source": "art/style05/struct/oak_large.png",
-      "dest": "structures/oak_large.png"
-    },
-    {
-      "role": "structure",
-      "id": "oak_small",
-      "source": "art/style05/struct/oak_small.png",
-      "dest": "structures/oak_small.png"
-    },
-    {
-      "role": "structure",
-      "id": "pine_large",
-      "source": "art/style05/struct/pine_large.png",
-      "dest": "structures/pine_large.png"
-    },
-    {
-      "role": "structure",
-      "id": "pine_small",
-      "source": "art/style05/struct/pine_small.png",
-      "dest": "structures/pine_small.png"
     },
     {
       "role": "rock_face",
@@ -677,18 +636,6 @@
       "id": "berry_basket",
       "source": "art/style05/polish/items/berry_basket_try1.png",
       "dest": "items/berry_basket.png"
-    },
-    {
-      "role": "plant",
-      "id": "berry_full",
-      "source": "art/style05/env/plants/berry_full.png",
-      "dest": "structures/berry_full.png"
-    },
-    {
-      "role": "plant",
-      "id": "berry_bare",
-      "source": "art/style05/env/plants/berry_bare.png",
-      "dest": "structures/berry_bare.png"
     }
   ],
   "animals": {
@@ -725,5 +672,40 @@
     "item": "docs/v8/artenv1/items_manifest.json",
     "ford_stone": "art/style05/struct/ford_stone_{n}.json",
     "tone_reference": "art/style05/anchors/person.png"
+  },
+  "flora": {
+    "about": "ART-TREES (M-ART2.1 §2.2): the species catalogue and habit defaults with their schemas, every frame, mask and map canopy the catalogue names (ids: the file stem; masks: stem + _mask), and the data-only fixture test_alder (not in the catalogue).",
+    "data": [
+      {
+        "id": "flora_species",
+        "source": "art/flora/species.json",
+        "dest": "flora/species.json"
+      },
+      {
+        "id": "flora_habit_defaults",
+        "source": "art/flora/habit_defaults.json",
+        "dest": "flora/habit_defaults.json"
+      },
+      {
+        "id": "flora_species_schema",
+        "source": "art/flora/species.schema.json",
+        "dest": "flora/species.schema.json"
+      },
+      {
+        "id": "flora_habit_defaults_schema",
+        "source": "art/flora/habit_defaults.schema.json",
+        "dest": "flora/habit_defaults.schema.json"
+      }
+    ],
+    "catalogue": "art/flora/species.json",
+    "source_prefix": "art/flora/",
+    "dest_prefix": "flora/",
+    "fixtures": [
+      {
+        "id": "test_alder",
+        "source": "art/flora/tests/test_alder.json",
+        "dest": "flora/tests/test_alder.json"
+      }
+    ]
   }
 }

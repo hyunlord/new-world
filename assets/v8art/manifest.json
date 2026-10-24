@@ -469,6 +469,772 @@
    "source": "art/animal/polish/wolf/try2/S/walk.png"
   },
   {
+   "bytes": 3081,
+   "id": "flora_habit_defaults",
+   "path": "flora/habit_defaults.json",
+   "role": "flora_data",
+   "sha256": "2d375e2db9c0ba3db33f8dc5fa55dc1cda4391a38bcd849467c602744e2aeb6b",
+   "source": "art/flora/habit_defaults.json"
+  },
+  {
+   "bytes": 2847,
+   "id": "flora_habit_defaults_schema",
+   "path": "flora/habit_defaults.schema.json",
+   "role": "flora_data",
+   "sha256": "24881c3166c5f90331365dae602465fb3f3f51fdc773d235562b206d02e82ebf",
+   "source": "art/flora/habit_defaults.schema.json"
+  },
+  {
+   "bytes": 215,
+   "id": "berry_bush_bare_mask",
+   "path": "flora/masks/berry_bush_bare.png",
+   "role": "flora_mask",
+   "sha256": "268ca329c1dd56bdc50bb6bb956a9fc36771e549bfbdf7c629b5d6637eecc701",
+   "size": [
+    96,
+    96
+   ],
+   "source": "art/flora/masks/berry_bush_bare.png"
+  },
+  {
+   "bytes": 228,
+   "id": "berry_bush_full_mask",
+   "path": "flora/masks/berry_bush_full.png",
+   "role": "flora_mask",
+   "sha256": "c6ca0ea59d9802a9e09bfb48e77805ad13feb81f93e9782de0769dbd055b79e7",
+   "size": [
+    96,
+    96
+   ],
+   "source": "art/flora/masks/berry_bush_full.png"
+  },
+  {
+   "bytes": 116,
+   "id": "birch_large_bare_mask",
+   "path": "flora/masks/birch_large_bare.png",
+   "role": "flora_mask",
+   "sha256": "d47def74e608b221363559e1dfc571273eefcb417af8644b5d7578c47224dba6",
+   "size": [
+    192,
+    192
+   ],
+   "source": "art/flora/masks/birch_large_bare.png"
+  },
+  {
+   "bytes": 1579,
+   "id": "birch_large_v1_mask",
+   "path": "flora/masks/birch_large_v1.png",
+   "role": "flora_mask",
+   "sha256": "744c5e6a1a234f6ac8ca08b2c80a41916361a34f23f7f1507ab847e40e72eb2a",
+   "size": [
+    192,
+    192
+   ],
+   "source": "art/flora/masks/birch_large_v1.png"
+  },
+  {
+   "bytes": 1567,
+   "id": "birch_large_v2_mask",
+   "path": "flora/masks/birch_large_v2.png",
+   "role": "flora_mask",
+   "sha256": "79c46d1e540a412bcb55342795df92fadc23d3b314cbb9f5dd5adc40f2d9926e",
+   "size": [
+    192,
+    192
+   ],
+   "source": "art/flora/masks/birch_large_v2.png"
+  },
+  {
+   "bytes": 93,
+   "id": "birch_small_bare_mask",
+   "path": "flora/masks/birch_small_bare.png",
+   "role": "flora_mask",
+   "sha256": "2e78316b74bad44723a009a5c4d2ed21f139428a30ce6fea436e7512e1f1616f",
+   "size": [
+    128,
+    112
+   ],
+   "source": "art/flora/masks/birch_small_bare.png"
+  },
+  {
+   "bytes": 625,
+   "id": "birch_small_v1_mask",
+   "path": "flora/masks/birch_small_v1.png",
+   "role": "flora_mask",
+   "sha256": "078ad68c6eb98f2e877206aaa9144fa7637a06e8db83260fed7ce38daf147102",
+   "size": [
+    128,
+    112
+   ],
+   "source": "art/flora/masks/birch_small_v1.png"
+  },
+  {
+   "bytes": 541,
+   "id": "birch_small_v2_mask",
+   "path": "flora/masks/birch_small_v2.png",
+   "role": "flora_mask",
+   "sha256": "0bebc1e6d5ec2c4d454842d9f377d820a674ca5df448d19382f854fc54ca0b05",
+   "size": [
+    128,
+    112
+   ],
+   "source": "art/flora/masks/birch_small_v2.png"
+  },
+  {
+   "bytes": 83,
+   "id": "birch_stump_mask",
+   "path": "flora/masks/birch_stump.png",
+   "role": "flora_mask",
+   "sha256": "05ae4ed8657e98a06fb22560a86d3dd2dcfb85962a96ee82d6000a88471de30b",
+   "size": [
+    64,
+    48
+   ],
+   "source": "art/flora/masks/birch_stump.png"
+  },
+  {
+   "bytes": 116,
+   "id": "oak_large_bare_mask",
+   "path": "flora/masks/oak_large_bare.png",
+   "role": "flora_mask",
+   "sha256": "d47def74e608b221363559e1dfc571273eefcb417af8644b5d7578c47224dba6",
+   "size": [
+    192,
+    192
+   ],
+   "source": "art/flora/masks/oak_large_bare.png"
+  },
+  {
+   "bytes": 2364,
+   "id": "oak_large_v1_mask",
+   "path": "flora/masks/oak_large_v1.png",
+   "role": "flora_mask",
+   "sha256": "83bbed04aedbb28d80a4bd54cf5b0c916853880575054499f63a80fb98d7cf41",
+   "size": [
+    192,
+    192
+   ],
+   "source": "art/flora/masks/oak_large_v1.png"
+  },
+  {
+   "bytes": 1583,
+   "id": "oak_large_v2_mask",
+   "path": "flora/masks/oak_large_v2.png",
+   "role": "flora_mask",
+   "sha256": "cb43dadbb0e70a1002e8bc46e37b17f98c5f00c6f77a30589ce9f791a64dbed4",
+   "size": [
+    192,
+    192
+   ],
+   "source": "art/flora/masks/oak_large_v2.png"
+  },
+  {
+   "bytes": 93,
+   "id": "oak_small_bare_mask",
+   "path": "flora/masks/oak_small_bare.png",
+   "role": "flora_mask",
+   "sha256": "2e78316b74bad44723a009a5c4d2ed21f139428a30ce6fea436e7512e1f1616f",
+   "size": [
+    128,
+    112
+   ],
+   "source": "art/flora/masks/oak_small_bare.png"
+  },
+  {
+   "bytes": 769,
+   "id": "oak_small_v1_mask",
+   "path": "flora/masks/oak_small_v1.png",
+   "role": "flora_mask",
+   "sha256": "aed50a4c5445cee6efe02c4cc52bc607eca736c5f7b86fbadab22d6314e23d4a",
+   "size": [
+    128,
+    112
+   ],
+   "source": "art/flora/masks/oak_small_v1.png"
+  },
+  {
+   "bytes": 741,
+   "id": "oak_small_v2_mask",
+   "path": "flora/masks/oak_small_v2.png",
+   "role": "flora_mask",
+   "sha256": "20614eb9111a148e57ee79ab4c01a3e777c303d7a5e68c33b9fb95d2e1eda8a8",
+   "size": [
+    128,
+    112
+   ],
+   "source": "art/flora/masks/oak_small_v2.png"
+  },
+  {
+   "bytes": 83,
+   "id": "oak_stump_mask",
+   "path": "flora/masks/oak_stump.png",
+   "role": "flora_mask",
+   "sha256": "05ae4ed8657e98a06fb22560a86d3dd2dcfb85962a96ee82d6000a88471de30b",
+   "size": [
+    64,
+    48
+   ],
+   "source": "art/flora/masks/oak_stump.png"
+  },
+  {
+   "bytes": 1237,
+   "id": "pine_large_v1_mask",
+   "path": "flora/masks/pine_large_v1.png",
+   "role": "flora_mask",
+   "sha256": "9b0d55bce8477dd23df571182cea58eda0e3f83eeb2760dda6c7e8a85e2da01c",
+   "size": [
+    192,
+    192
+   ],
+   "source": "art/flora/masks/pine_large_v1.png"
+  },
+  {
+   "bytes": 1455,
+   "id": "pine_large_v2_mask",
+   "path": "flora/masks/pine_large_v2.png",
+   "role": "flora_mask",
+   "sha256": "275840a2428b2b3395996d8b74efdf6a44a955fb4442e21fd8d85ed89135adce",
+   "size": [
+    192,
+    192
+   ],
+   "source": "art/flora/masks/pine_large_v2.png"
+  },
+  {
+   "bytes": 561,
+   "id": "pine_small_v1_mask",
+   "path": "flora/masks/pine_small_v1.png",
+   "role": "flora_mask",
+   "sha256": "7c6e0eae18f6f3ae93212de3aa9f2bc94a6c69de9e71447ecb173af6ec770fbf",
+   "size": [
+    128,
+    112
+   ],
+   "source": "art/flora/masks/pine_small_v1.png"
+  },
+  {
+   "bytes": 548,
+   "id": "pine_small_v2_mask",
+   "path": "flora/masks/pine_small_v2.png",
+   "role": "flora_mask",
+   "sha256": "c2b3565822a9328ae08f5ccde352dc81310143709512fee8f21085e3ed7c6e7d",
+   "size": [
+    128,
+    112
+   ],
+   "source": "art/flora/masks/pine_small_v2.png"
+  },
+  {
+   "bytes": 83,
+   "id": "pine_stump_mask",
+   "path": "flora/masks/pine_stump.png",
+   "role": "flora_mask",
+   "sha256": "05ae4ed8657e98a06fb22560a86d3dd2dcfb85962a96ee82d6000a88471de30b",
+   "size": [
+    64,
+    48
+   ],
+   "source": "art/flora/masks/pine_stump.png"
+  },
+  {
+   "bytes": 12506,
+   "id": "flora_species",
+   "path": "flora/species.json",
+   "role": "flora_data",
+   "sha256": "da16002920a71fa2bdb6307d9997d328c1b9871a38fcb1d5dd403a113768d0f0",
+   "source": "art/flora/species.json"
+  },
+  {
+   "bytes": 5604,
+   "id": "flora_species_schema",
+   "path": "flora/species.schema.json",
+   "role": "flora_data",
+   "sha256": "6cfc9fd7d1339acb08055fd81776868a44478e55672d1e8b47a39a53f52589d6",
+   "source": "art/flora/species.schema.json"
+  },
+  {
+   "bytes": 2455,
+   "id": "berry_bush_bare",
+   "meta": {
+    "anchor": [
+     48,
+     80
+    ],
+    "canvas": [
+     96,
+     96
+    ]
+   },
+   "path": "flora/sprites/berry_bush_bare.png",
+   "role": "flora_frame",
+   "sha256": "b53ec07c09c2012656f8c058185017c7c5d4eb052d30011ae0b1097c92c21570",
+   "size": [
+    96,
+    96
+   ],
+   "source": "art/flora/sprites/berry_bush_bare.png"
+  },
+  {
+   "bytes": 2460,
+   "id": "berry_bush_full",
+   "meta": {
+    "anchor": [
+     48,
+     80
+    ],
+    "canvas": [
+     96,
+     96
+    ]
+   },
+   "path": "flora/sprites/berry_bush_full.png",
+   "role": "flora_frame",
+   "sha256": "c3afe09223b5ed332cee1129200948b1557742d5d377079761acb9a6fec74b31",
+   "size": [
+    96,
+    96
+   ],
+   "source": "art/flora/sprites/berry_bush_full.png"
+  },
+  {
+   "bytes": 15135,
+   "id": "birch_large_bare",
+   "meta": {
+    "anchor": [
+     96,
+     180
+    ],
+    "canvas": [
+     192,
+     192
+    ]
+   },
+   "path": "flora/sprites/birch_large_bare.png",
+   "role": "flora_frame",
+   "sha256": "2e8c1d1f097af463219ff3a3a47d3243cbf5f19d845076594a772b7f92f7ba7c",
+   "size": [
+    192,
+    192
+   ],
+   "source": "art/flora/sprites/birch_large_bare.png"
+  },
+  {
+   "bytes": 28930,
+   "id": "birch_large_v1",
+   "meta": {
+    "anchor": [
+     96,
+     180
+    ],
+    "canvas": [
+     192,
+     192
+    ]
+   },
+   "path": "flora/sprites/birch_large_v1.png",
+   "role": "flora_frame",
+   "sha256": "2683048c36fe7cd7f24cdcef5046f27ab87ca8d39db245448654ae83858fac5f",
+   "size": [
+    192,
+    192
+   ],
+   "source": "art/flora/sprites/birch_large_v1.png"
+  },
+  {
+   "bytes": 24963,
+   "id": "birch_large_v2",
+   "meta": {
+    "anchor": [
+     96,
+     180
+    ],
+    "canvas": [
+     192,
+     192
+    ]
+   },
+   "path": "flora/sprites/birch_large_v2.png",
+   "role": "flora_frame",
+   "sha256": "20edfbe6ba0486c3e3c35e60501da563739e402416e1b2a048bd5099028062f5",
+   "size": [
+    192,
+    192
+   ],
+   "source": "art/flora/sprites/birch_large_v2.png"
+  },
+  {
+   "bytes": 3974,
+   "id": "birch_small_bare",
+   "meta": {
+    "anchor": [
+     64,
+     100
+    ],
+    "canvas": [
+     128,
+     112
+    ]
+   },
+   "path": "flora/sprites/birch_small_bare.png",
+   "role": "flora_frame",
+   "sha256": "cb4ca010687e33d913e438285a6faf65e7dac230ab7727ad64ac906d6ecd7959",
+   "size": [
+    128,
+    112
+   ],
+   "source": "art/flora/sprites/birch_small_bare.png"
+  },
+  {
+   "bytes": 7928,
+   "id": "birch_small_v1",
+   "meta": {
+    "anchor": [
+     64,
+     100
+    ],
+    "canvas": [
+     128,
+     112
+    ]
+   },
+   "path": "flora/sprites/birch_small_v1.png",
+   "role": "flora_frame",
+   "sha256": "706e8919b579025a1762860f9fd485f97cc18c7f3e8740d67c526de79e9ce70d",
+   "size": [
+    128,
+    112
+   ],
+   "source": "art/flora/sprites/birch_small_v1.png"
+  },
+  {
+   "bytes": 7393,
+   "id": "birch_small_v2",
+   "meta": {
+    "anchor": [
+     64,
+     100
+    ],
+    "canvas": [
+     128,
+     112
+    ]
+   },
+   "path": "flora/sprites/birch_small_v2.png",
+   "role": "flora_frame",
+   "sha256": "10cd21c4737518042da9dbc0fe5b5560d9bdf30e8c4a2f360430e5e83f8606a5",
+   "size": [
+    128,
+    112
+   ],
+   "source": "art/flora/sprites/birch_small_v2.png"
+  },
+  {
+   "bytes": 1488,
+   "id": "birch_stump",
+   "meta": {
+    "anchor": [
+     32,
+     40
+    ],
+    "canvas": [
+     64,
+     48
+    ]
+   },
+   "path": "flora/sprites/birch_stump.png",
+   "role": "flora_frame",
+   "sha256": "68d94c5c5a2486e1bad814cacc227cacceabfe7cd2af8d0ffcd0e58f7815760b",
+   "size": [
+    64,
+    48
+   ],
+   "source": "art/flora/sprites/birch_stump.png"
+  },
+  {
+   "bytes": 36496,
+   "id": "oak_large_bare",
+   "meta": {
+    "anchor": [
+     96,
+     180
+    ],
+    "canvas": [
+     192,
+     192
+    ]
+   },
+   "path": "flora/sprites/oak_large_bare.png",
+   "role": "flora_frame",
+   "sha256": "42535527738429b4fc93ed92fed50b65a42630c5ecc17c59ec412a1b3ccc41ec",
+   "size": [
+    192,
+    192
+   ],
+   "source": "art/flora/sprites/oak_large_bare.png"
+  },
+  {
+   "bytes": 50152,
+   "id": "oak_large_v1",
+   "meta": {
+    "anchor": [
+     96,
+     180
+    ],
+    "canvas": [
+     192,
+     192
+    ]
+   },
+   "path": "flora/sprites/oak_large_v1.png",
+   "role": "flora_frame",
+   "sha256": "409c1005a4c4987a88a0e09b075ae5bce0b2dea90806a68e9d0f8989e1297cad",
+   "size": [
+    192,
+    192
+   ],
+   "source": "art/flora/sprites/oak_large_v1.png"
+  },
+  {
+   "bytes": 34340,
+   "id": "oak_large_v2",
+   "meta": {
+    "anchor": [
+     96,
+     180
+    ],
+    "canvas": [
+     192,
+     192
+    ]
+   },
+   "path": "flora/sprites/oak_large_v2.png",
+   "role": "flora_frame",
+   "sha256": "e2f99a16a2aec6ec0ce2d2a5184a2339a9538f3e0cda165225d8be3ed50e944e",
+   "size": [
+    192,
+    192
+   ],
+   "source": "art/flora/sprites/oak_large_v2.png"
+  },
+  {
+   "bytes": 9073,
+   "id": "oak_small_bare",
+   "meta": {
+    "anchor": [
+     64,
+     100
+    ],
+    "canvas": [
+     128,
+     112
+    ]
+   },
+   "path": "flora/sprites/oak_small_bare.png",
+   "role": "flora_frame",
+   "sha256": "3cf313970724c29399110a661cc207cb7b0361590307edda35951f5e827a55e2",
+   "size": [
+    128,
+    112
+   ],
+   "source": "art/flora/sprites/oak_small_bare.png"
+  },
+  {
+   "bytes": 12668,
+   "id": "oak_small_v1",
+   "meta": {
+    "anchor": [
+     64,
+     100
+    ],
+    "canvas": [
+     128,
+     112
+    ]
+   },
+   "path": "flora/sprites/oak_small_v1.png",
+   "role": "flora_frame",
+   "sha256": "38c6970cf65a5144291399da25068eec09c6209e826c5ccd244155b4e086773f",
+   "size": [
+    128,
+    112
+   ],
+   "source": "art/flora/sprites/oak_small_v1.png"
+  },
+  {
+   "bytes": 12368,
+   "id": "oak_small_v2",
+   "meta": {
+    "anchor": [
+     64,
+     100
+    ],
+    "canvas": [
+     128,
+     112
+    ]
+   },
+   "path": "flora/sprites/oak_small_v2.png",
+   "role": "flora_frame",
+   "sha256": "d1c32570e23ba1d60b521b4a31a4f5598e19b2e7f48e5f436fe60ba2a639df77",
+   "size": [
+    128,
+    112
+   ],
+   "source": "art/flora/sprites/oak_small_v2.png"
+  },
+  {
+   "bytes": 1419,
+   "id": "oak_stump",
+   "meta": {
+    "anchor": [
+     32,
+     40
+    ],
+    "canvas": [
+     64,
+     48
+    ]
+   },
+   "path": "flora/sprites/oak_stump.png",
+   "role": "flora_frame",
+   "sha256": "877f846df7de0e1492e3806caaf74aa9dc26b1c1cdebd1a4ab25bcd3ce210ac0",
+   "size": [
+    64,
+    48
+   ],
+   "source": "art/flora/sprites/oak_stump.png"
+  },
+  {
+   "bytes": 20337,
+   "id": "pine_large_v1",
+   "meta": {
+    "anchor": [
+     96,
+     180
+    ],
+    "canvas": [
+     192,
+     192
+    ]
+   },
+   "path": "flora/sprites/pine_large_v1.png",
+   "role": "flora_frame",
+   "sha256": "c69d226cebddcb92d5023fd820565d64fbabd1a92cb1e2fb285d89f6721d30e6",
+   "size": [
+    192,
+    192
+   ],
+   "source": "art/flora/sprites/pine_large_v1.png"
+  },
+  {
+   "bytes": 22824,
+   "id": "pine_large_v2",
+   "meta": {
+    "anchor": [
+     96,
+     180
+    ],
+    "canvas": [
+     192,
+     192
+    ]
+   },
+   "path": "flora/sprites/pine_large_v2.png",
+   "role": "flora_frame",
+   "sha256": "e315d6a347389ecf8fa948850683bf0c3a62064897ae802806e51eb3d8ce28cc",
+   "size": [
+    192,
+    192
+   ],
+   "source": "art/flora/sprites/pine_large_v2.png"
+  },
+  {
+   "bytes": 6231,
+   "id": "pine_small_v1",
+   "meta": {
+    "anchor": [
+     64,
+     100
+    ],
+    "canvas": [
+     128,
+     112
+    ]
+   },
+   "path": "flora/sprites/pine_small_v1.png",
+   "role": "flora_frame",
+   "sha256": "983f71a2a386f98cd12a990b2963b7672c1a4d7dfcdc84076c963f5b0b011b76",
+   "size": [
+    128,
+    112
+   ],
+   "source": "art/flora/sprites/pine_small_v1.png"
+  },
+  {
+   "bytes": 6994,
+   "id": "pine_small_v2",
+   "meta": {
+    "anchor": [
+     64,
+     100
+    ],
+    "canvas": [
+     128,
+     112
+    ]
+   },
+   "path": "flora/sprites/pine_small_v2.png",
+   "role": "flora_frame",
+   "sha256": "d0a8077b26ccc26fb028947d56a9254c210553862000cff79d9cb4676d46fe5c",
+   "size": [
+    128,
+    112
+   ],
+   "source": "art/flora/sprites/pine_small_v2.png"
+  },
+  {
+   "bytes": 1369,
+   "id": "pine_stump",
+   "meta": {
+    "anchor": [
+     32,
+     40
+    ],
+    "canvas": [
+     64,
+     48
+    ]
+   },
+   "path": "flora/sprites/pine_stump.png",
+   "role": "flora_frame",
+   "sha256": "a8596b13aed83b125bb5a16c768102982b730fb2c357be19eef14713b8224b30",
+   "size": [
+    64,
+    48
+   ],
+   "source": "art/flora/sprites/pine_stump.png"
+  },
+  {
+   "bytes": 2860,
+   "id": "test_alder",
+   "path": "flora/tests/test_alder.json",
+   "role": "flora_fixture",
+   "sha256": "0623c977e91ce10c950fc9a0d3535f0b31673fb42f36e4d531a57a9588e1b4c6",
+   "source": "art/flora/tests/test_alder.json"
+  },
+  {
+   "bytes": 173000,
+   "id": "canopy_mass",
+   "path": "flora/textures/canopy_mass.png",
+   "role": "flora_texture",
+   "sha256": "0ea100f685546ba537c21a68aa04cec52e09f6f39667a2f8fdf4835e12d51e54",
+   "size": [
+    256,
+    256
+   ],
+   "source": "art/flora/textures/canopy_mass.png"
+  },
+  {
    "bytes": 708547,
    "id": "dark_grass",
    "path": "ground/dark_grass.png",
@@ -11440,88 +12206,6 @@
    "source": "art/style05/struct/bedroll.png"
   },
   {
-   "bytes": 21167,
-   "id": "berry_bare",
-   "meta": {
-    "anchor": [
-     48,
-     69
-    ]
-   },
-   "path": "structures/berry_bare.png",
-   "role": "plant",
-   "sha256": "78f86ef2770f0d3f23ffc920c195c5a6b0df5075b1e1c58f555979eac324947b",
-   "size": [
-    96,
-    96
-   ],
-   "source": "art/style05/env/plants/berry_bare.png"
-  },
-  {
-   "bytes": 23422,
-   "id": "berry_full",
-   "meta": {
-    "anchor": [
-     48,
-     69
-    ]
-   },
-   "path": "structures/berry_full.png",
-   "role": "plant",
-   "sha256": "207e19060c9714802937ebba638ebf74b1dafdab673e1e472fd8440dff86ac5a",
-   "size": [
-    96,
-    96
-   ],
-   "source": "art/style05/env/plants/berry_full.png"
-  },
-  {
-   "bytes": 37396,
-   "id": "birch_large",
-   "meta": {
-    "anchor": [
-     54,
-     178
-    ],
-    "family": "plants",
-    "footprint": [
-     2,
-     2
-    ]
-   },
-   "path": "structures/birch_large.png",
-   "role": "structure",
-   "sha256": "e41b5552b2ca2d84e657c13a9a150ae9e38792b3edf398517e54277f17f1fa8c",
-   "size": [
-    108,
-    184
-   ],
-   "source": "art/style05/struct/birch_large.png"
-  },
-  {
-   "bytes": 17669,
-   "id": "birch_small",
-   "meta": {
-    "anchor": [
-     38,
-     139
-    ],
-    "family": "plants",
-    "footprint": [
-     2,
-     2
-    ]
-   },
-   "path": "structures/birch_small.png",
-   "role": "structure",
-   "sha256": "e0be91c597eaeaa47c7ff9e88d03be810d635d581a6d6739391b1be20c403eff",
-   "size": [
-    77,
-    144
-   ],
-   "source": "art/style05/struct/birch_small.png"
-  },
-  {
    "bytes": 4459,
    "id": "boulder_large",
    "meta": {
@@ -11893,98 +12577,6 @@
    "source": "art/style05/struct/lean_to.png"
   },
   {
-   "bytes": 62411,
-   "id": "oak_large",
-   "meta": {
-    "anchor": [
-     94,
-     180
-    ],
-    "family": "plants",
-    "footprint": [
-     2,
-     2
-    ]
-   },
-   "path": "structures/oak_large.png",
-   "role": "structure",
-   "sha256": "5f1866a7180b8c062f91235f48265f0d38a3e0662b5c1871534f48aeba719b11",
-   "size": [
-    188,
-    185
-   ],
-   "source": "art/style05/struct/oak_large.png"
-  },
-  {
-   "bytes": 26745,
-   "id": "oak_small",
-   "meta": {
-    "anchor": [
-     59,
-     139
-    ],
-    "family": "plants",
-    "footprint": [
-     2,
-     2
-    ]
-   },
-   "path": "structures/oak_small.png",
-   "role": "structure",
-   "sha256": "81fa383f8ae0f49a408272dea669c68133428a5a70b4c5d9810cb3bfdb0fd1ce",
-   "size": [
-    118,
-    144
-   ],
-   "source": "art/style05/struct/oak_small.png"
-  },
-  {
-   "bytes": 35481,
-   "id": "pine_large",
-   "meta": {
-    "anchor": [
-     55,
-     179
-    ],
-    "family": "plants",
-    "footprint": [
-     2,
-     2
-    ]
-   },
-   "path": "structures/pine_large.png",
-   "role": "structure",
-   "sha256": "6f1de07dd985109ab740724df58fc94b0ac1142e10c3cc0ad02b56d414a8e2fa",
-   "size": [
-    110,
-    184
-   ],
-   "source": "art/style05/struct/pine_large.png"
-  },
-  {
-   "bytes": 18366,
-   "id": "pine_small",
-   "meta": {
-    "anchor": [
-     37,
-     139
-    ],
-    "family": "plants",
-    "footprint": [
-     2,
-     2
-    ]
-   },
-   "path": "structures/pine_small.png",
-   "role": "structure",
-   "sha256": "7fc975a1cc06cdb8a79441e1f0c8418c4467eec7e5c412f7d0b029e1369dd565",
-   "size": [
-    74,
-    144
-   ],
-   "source": "art/style05/struct/pine_small.png"
-  },
-  {
    "bytes": 5383,
    "id": "pottery_bench",
    "meta": {
@@ -12025,29 +12617,6 @@
     44
    ],
    "source": "art/style05/struct/rock_face.png"
-  },
-  {
-   "bytes": 1728,
-   "id": "stump",
-   "meta": {
-    "anchor": [
-     16,
-     23
-    ],
-    "family": "plants",
-    "footprint": [
-     1,
-     1
-    ]
-   },
-   "path": "structures/stump.png",
-   "role": "structure",
-   "sha256": "8aff9c8c1ad102786bcc7c88d5dc609b56e89ad37c672f3f38f1e86514c3ecbc",
-   "size": [
-    33,
-    28
-   ],
-   "source": "art/style05/struct/stump.png"
   },
   {
    "bytes": 5142,
@@ -12483,12 +13052,12 @@
   ]
  },
  "schema_version": 1,
- "source_branch": "v8/art-polish2",
- "source_commit": "c8ed86087c90ed5429716713e930cc5f6a9e1332",
+ "source_branch": "v8/art-trees",
+ "source_commit": "f182769fe06b1cb60105e4d0bf127b6524277838",
  "tone_reference": {
   "person_luminance_std": 0.170613,
   "sha256": "5a1a8f99914e38cdf4810562a934542b360ae4d6afffb4dd5a1efa90da584675",
   "source": "art/style05/anchors/person.png"
  },
- "total_bytes": 13876494
+ "total_bytes": 14155684
 }

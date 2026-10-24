@@ -80,3 +80,51 @@ that shape instead of a sampled one:
   checks pass; smallest night luminance difference 0.1106 at 1×, 0.1145 at ¼×.
 - Ice tint (droppable, §2.1): dropped; winter keeps the same lift rule.
 - Fords: the four seed-0 ford tiles keep their 16 stones on water pixels; 2 ford-tile corners turn to land by rounding.
+
+## D4 — ART-TREES in the game: import, flora resolver, season shader, ¼× canopy bake (Part 2)
+
+- **Import:** `tools/v8/art_import.json` `source_commit` → `f182769f` (`v8/art-trees`); every previously imported file
+  is byte-identical (`art_import.py --check`: 0 differ; the manifest diff is the commit, the total and nine removed
+  rows). A `flora` section imports `art/flora/species.json`, `habit_defaults.json` and both schemas (role
+  `flora_data`), every frame, mask and map canopy the catalogue names (`flora_frame` id = stem with its anchor and
+  canvas, `flora_mask` id = stem + `_mask`, `flora_texture`), and the data-only fixture `tests/test_alder.json`
+  (`flora_fixture`, not in the catalogue) into `assets/v8art/flora/`: 705 files, 14.2 MB of the 40 MB budget.
+  `--verify` also checks that every catalogue path is imported and every bound species exists. The TRIAL2b tree,
+  stump and bush sprites (`structures/{oak,birch,pine}_{large,small}`, `stump`, `berry_full/bare`) are removed;
+  berry bushes bind the new ART-TREES bush frames (`berry_bush_full/bare`, 96 × 96, anchor (48, 80)).
+- **Resolver:** `scripts/world/art/flora_resolver.gd` ports `resolve_flora.py` (fallback by habit with the habit's own
+  season records, Python-style non-negative modulo, `requested_id` kept) and the schema's cross-checks as `problems`.
+  Parity (gate step `resolver_parity`): `tools/v8/flora_parity_fixture.json`, 352 cases — 4 species × 2 sizes ×
+  4 seasons × 8 signed hashes (int32 extremes), an unknown species with no habit and each habit, `test_alder` merged
+  as boards.py `fixture_catalog` does — against the art line's own `resolve_flora.py` at `f182769f`: 0 differences.
+  A planted mutant (unknown species taking the fallback's seasons) gives 8 differences.
+- **Species stays a keyed hash** (bindings `trees.species` weights 5/3/2 for oak/birch/pine; size by `large_permille`,
+  variant by a third salt): the simulation has no species. **M-EXT must replace the hash with the snapshot's species
+  column** (`TreeLayer.tree_species`), and the felled log's material with the same id (TREES_REPORT "M-EXT에 넘길 것").
+- **Season shader** (`shaders/tree_season.gdshader`): the CIELAB shift is applied per masked pixel in the shader,
+  exactly as `seasons.py` `apply_tint` and `person_variant.gdshader` do, rather than as precomputed RGB multipliers
+  (§2.2 says "as for faces"; the faces' shader is per-pixel Lab, so this is the same method, without a mean-colour
+  approximation). The snow band is `seasons.py` `snow_layer` (top support pixel per column + depth, within mask ∧
+  alpha, alpha floored to 178/255), made once per frame on the CPU. First day of a season: shift and snow alpha blend
+  by the day's fraction (quantised to 1/96), a frame change (deciduous into or out of winter) dissolves per pixel by a
+  hash; the world's first season starts unblended (no previous season was ever on screen). Materials are shared per
+  (frames, season pair); bushes take their species' tint through the same material (mask = frame id + `_mask`).
+- **¼× canopy bake:** at texture factor 4 only, each tree tile's quadrants carry the canopy-mass texture (world-sampled)
+  over the union of tree tiles rounded by `trees.canopy_radius_px` (20), darkened by `canopy_edge_value` (0.7) inside
+  `canopy_edge_px` (6) of the edge, before the shores (water still carves through). Per species and season the
+  canopy texture's mean is moved by the season's Lab record as an RGB multiplier on a ¼-size copy scaled back by
+  nearest (the ¼ texture keeps every texel; ~4 k pixels per style instead of 65 k); a deciduous winter uses its bare
+  frame's mean colour (leafless brown-grey mass, so the ¼× forest stays baked in winter: the art line's offline
+  compositor drew bare branch sprites instead, which would put ~80 % of the trees back as sprites). Tree tiles leave
+  the map tint at ¼× (the canopy is the forest's class colour). The ¼× canopy switches season at half blend; pine's
+  snow is not baked. The tree layer hides every sprite in a canopy chunk (`canopy_baked_at`, re-checked when
+  `canopy_version` moves). Seed 0 at ¼×: 3,123 tree sprites held, 0 drawn; 719 drawn again at 1×.
+- **Tests** (`tools/v8/mart21_trees_test.gd`, added to gate step 34): four seasons × 4 species × 2 sizes through
+  `make_plant` (frames from the right list, bare in winter for both deciduous species, snow exactly where recorded),
+  the data-only `test_alder` in four seasons with its own records, the ¼× canopy (tile hue 0.279 vs canopy texture
+  0.274, 0.099 at 1×) and hidden sprites. Windowed: summer canopy saturation 0.58–0.62 for every species (bar 0.30;
+  no tone cap), autumn b* shifts follow the records (oak +11.1 for +15, birch +25.6 for +32, pine 0.0 for 0,
+  test_alder +15.9 for +16). The M-ART2 rendered tree check now draws through `make_plant` in summer (identity tint)
+  and its bare-land samples skip tree tiles: 129 windowed checks pass.
+- Visual check (seasons strip, day 8 / 14 / 20 / 26 noon, tile (112, 103)): summer green, autumn oak ochre and birch
+  yellow with pine unchanged, winter bare oak and birch with snow-tipped pines, spring lighter green.

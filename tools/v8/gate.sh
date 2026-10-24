@@ -54,11 +54,14 @@
 #                        neighbours, waves 1 and 2 in their windows and accepted, a trade, ledger and reservations exact)
 #   31 art_manifest      tools/v8/art_import.py --verify: assets/v8art/ = its manifest (hashes, sizes, budget,
 #                        no unlisted file, every binding and material texture resolves; M-ART2 §3.3)
-#   32 resolver_parity   material_resolver.gd = the art line's resolve.py on tools/v8/resolver_parity_fixture.json
+#   32 resolver_parity   material_resolver.gd = the art line's resolve.py on tools/v8/resolver_parity_fixture.json;
+#                        since M-ART2.1 flora_resolver.gd = resolve_flora.py on tools/v8/flora_parity_fixture.json
 #   33 extensibility_grep no content id literal and no 16-px tile size in scripts/world/** (ADR 0033), the mask and
 #                        import tests (tools/v8/test_mart2_extensibility.py, test_art_masks.py, test_art_import.py)
 #   34 mart2_render      tools/v8/mart2_ground_test.gd and mart2_people_test.gd headless (chunk bake hash, edges,
-#                        banks, tone, one-chunk dig rebake, data-only wall; appearance, anchors, LOD, params reload)
+#                        banks, tone, one-chunk dig rebake, data-only wall; appearance, anchors, LOD, params reload);
+#                        since M-ART2.1 also rounded shores, water lift and texture, hill edges (ground test) and
+#                        tools/v8/mart21_trees_test.gd (four seasons per species, bare winter, data-only species, ¼× canopy)
 #   Since M-ART2 step 23 (renderer_agreement) also checks appearance: every person's look and face variant.
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
@@ -144,7 +147,7 @@ grep -E '^NEIGHBOURS' "$LOG/neighbours.log" | sed 's/^/   /' >> "$SUMMARY"
 step 31 art_manifest python3 tools/v8/art_import.py --verify
 step 32 resolver_parity bash -c 'bash tools/v8/run_bounded.sh 300 "$GODOT_BIN" --headless --path . --script res://tools/v8/resolver_parity.gd -- "$0/resolver_godot.json" && python3 tools/v8/resolver_parity.py --check "$0/resolver_godot.json"' "$LOG"
 step 33 extensibility_grep python3 -m unittest tools/v8/test_mart2_extensibility.py tools/v8/test_art_masks.py tools/v8/test_art_import.py
-step 34 mart2_render bash -c 'for t in mart2_ground_test mart2_people_test; do bash tools/v8/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --script res://tools/v8/$t.gd > "$0/$t.out" 2>&1; grep -E "^MART2_(GROUND|PEOPLE) (PASS|FAIL)|_DONE" "$0/$t.out"; grep -q "_DONE failures=0" "$0/$t.out" || exit 1; ! grep -q "SCRIPT ERROR" "$0/$t.out" || { grep "SCRIPT ERROR" "$0/$t.out" | head -5; exit 1; }; done' "$LOG"
+step 34 mart2_render bash -c 'for t in mart2_ground_test mart2_people_test mart21_trees_test; do bash tools/v8/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --script res://tools/v8/$t.gd > "$0/$t.out" 2>&1; grep -E "^MART21?_(GROUND|PEOPLE|TREES) (PASS|FAIL)|_DONE" "$0/$t.out"; grep -q "_DONE failures=0" "$0/$t.out" || exit 1; ! grep -q "SCRIPT ERROR" "$0/$t.out" || { grep "SCRIPT ERROR" "$0/$t.out" | head -5; exit 1; }; done' "$LOG"
 grep -E 'PASS|FAIL' "$LOG/resolver_parity.log" | tail -1 | sed 's/^/   /' >> "$SUMMARY"
 grep -cE '^MART2_(GROUND|PEOPLE) PASS' "$LOG/mart2_render.log" | awk '{print "   mart2_render checks passed", $1}' >> "$SUMMARY"
 echo "finished $(date '+%Y-%m-%d %H:%M:%S %Z') status $status" >> "$SUMMARY"

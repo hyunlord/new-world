@@ -27,6 +27,7 @@
   },
   "water": {"bank_px": 10, "bank_ink_px": 2, "bank_ink_dark": [0.20, 0.35], "ink_displace_px": 4, "drift_hz": 0.05, "drift_px": 6, "shore_radius_px": 22, "contour_soft_px": 6, "texture_lift": true, "minimum_land_luminance_difference": 0.10, "minimum_land_hue_distance": 0.12, "contrast_margin": 0.01, "map_mode_colour": [0.42, 0.62, 0.76], "map_mode_tint_strength": 0.3},
   "hill": {"edge_radius_px": 16},
+  "trees": {"quarter_canopy": true, "canopy_radius_px": 20, "canopy_edge_px": 6, "canopy_edge_value": 0.7},
   "walls": {"top_value": 0.80, "top_saturation": 0.85, "top_blur_px": 1, "ink_rgba": [20, 18, 16, 204], "face_px": 44, "cap_px": 16},
   "people": {"shadow_size": [28, 8], "shadow_alpha": 0.37, "bob_px": 1, "walk_hz": 4.0, "work_hz": 2.0, "selection_rgba": [240, 226, 170, 255], "drafted_rgba": [196, 52, 40, 255], "outline_px": 1, "drafted_outline_px": 2, "night_halo_rgba": [232, 226, 206, 255], "night_halo_alpha": 0.8},
   "lod": {"people_below_zoom": 1.0, "marker_px": {"0.5": 10, "0.25": 6}, "ring_rgba": [35, 29, 23, 255], "glyph_zoom": 0.5, "animal_marker_px": {"0.5": 10, "0.25": 6}},

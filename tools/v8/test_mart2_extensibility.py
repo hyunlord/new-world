@@ -2,7 +2,7 @@
 
 1. No string literal in `scripts/world/**/*.gd` (comments excluded) equals a content id: a manifest file id (and its
    look / species / pose parts), a logical look id, a material key, a construction style id, a ground or structure
-   id, or a sim kind name listed in `assets/v8art/bindings.json`. Content reaches the renderer only through
+   id, a sim kind name listed in `assets/v8art/bindings.json`, or (M-ART2.1) a flora species or map canopy id. Content reaches the renderer only through
    manifest.json, bindings.json and the material documents.
 2. No `16` (the M1 tile size) in a tile-size position — a factor or divisor (`* 16`, `16 *`, `/ 16`), `16.0`, or an
    argument of Vector2/Vector2i/Rect2/Rect2i — and no `TILE_SIZE` constant in `scripts/world/**/*.gd`; the world scale
@@ -24,7 +24,7 @@ STRING = re.compile(r'"((?:[^"\\]|\\.)*)"')
 # A 16 in a tile-size position: a factor or divisor, a float 16.0, or inside a Vector2/Vector2i/Rect2/Rect2i.
 SIXTEEN = re.compile(r"\*\s*16\b|\b16\s*\*|/\s*16\b|\b16\.0\b|(?:Vector2i?|Rect2i?)\([^)]*\b16\b")
 # Schema names, not content: texture roles of the material documents and the people/material data files.
-SCHEMA_ROLES = {"material_texture", "people_data", "material_data", "material_schema"}
+SCHEMA_ROLES = {"material_texture", "people_data", "material_data", "material_schema", "flora_data"}
 
 
 def content_ids() -> set[str]:
@@ -59,6 +59,10 @@ def content_ids() -> set[str]:
                 sims(v)
 
     sims(json.loads((ASSETS / "bindings.json").read_text()))
+    # M-ART2.1: flora species ids and map canopy ids are content (the renderer resolves them through the catalogue).
+    flora = json.loads((ASSETS / "flora/species.json").read_text())
+    ids.update(flora["species"])
+    ids.update(flora["map_canopies"])
     return {i for i in ids if i}
 
 

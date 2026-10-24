@@ -31,7 +31,7 @@
 #   Prints one MART2_GROUND line per check and MART2_GROUND_DONE failures=N; exits 1 on any failure.
 #   `godot --headless --path . --script res://tools/v8/mart2_ground_test.gd [-- --write]`
 #   Add `-- --rendered` without --headless for GPU readbacks at 2×, 1×, ½× and ¼×: source saturation must survive
-#   TreeLayer._standing; water must differ from every sampled land class by luminance ≥0.10 and circular HSV hue
+#   TreeLayer.make_plant in summer (the season tint is the identity then; M-ART2.1); water must differ from every sampled land class by luminance ≥0.10 and circular HSV hue
 #   ≥0.12 turns (43.2°), by day and at full night. `--cap-tree-control` deliberately caps test trees and must FAIL.
 #   Below 1× the source reference is sampled at the identical nearest-filter phase: minification alone changes a
 #   small crown's full-image mean. At 1× native fully opaque pixels are also checked; faint edge colours lose RGB
@@ -155,18 +155,25 @@ func _opaque_metrics(img: Image) -> Dictionary:
 
 
 func _check_rendered_trees(main: Node) -> void:
+	# M-ART2.1: trees resolve through the flora catalogue and a season material; in summer the season tint is the
+	# identity, so a tree drawn by the production path (TreeLayer.make_plant) must still match its source frame.
 	var layer: Node = main.get_node("ColonyView/TreeLayer")
-	var ids: Array[String] = []
+	layer.call("force_season", "summer", "summer", 1.0)
+	await process_frame
+	await process_frame
+	var flora: RefCounted = layer.call("flora")
+	var frames: Array[Dictionary] = []
 	for row: Dictionary in (ArtData.bindings().get("trees", {}) as Dictionary).get("species", []):
-		for key: String in ["large", "small"]:
-			var id: String = str(row.get(key, ""))
-			if id != "" and not ids.has(id):
-				ids.append(id)
-	_check("tree_source_count", ids.size() >= 6, "%d independently loaded standing-tree sources" % ids.size())
-	for id: String in ids:
+		for size: String in ["large", "small"]:
+			var r: Dictionary = flora.call("resolve", str(row.get("species", "")), size, "summer", 0)
+			if not r.is_empty():
+				frames.append({"species": str(row.get("species", "")), "size": size, "path": flora.call("res_path", str(r["path"])), "anchor": r["anchor"]})
+	_check("tree_source_count", frames.size() >= 6, "%d independently loaded standing-tree sources" % frames.size())
+	for f: Dictionary in frames:
+		var id: String = "%s_%s" % [f["species"], f["size"]]
 		# Bypass ArtData's mutable caches: the reference must still expose an accidental cached-image transform.
-		var reference: Texture2D = ResourceLoader.load(ArtData.path(id), "Texture2D", ResourceLoader.CACHE_MODE_IGNORE) as Texture2D
-		var sprite: Sprite2D = layer.call("_standing", id, Vector2(ArtData.anchor(id)))
+		var reference: Texture2D = ResourceLoader.load(str(f["path"]), "Texture2D", ResourceLoader.CACHE_MODE_IGNORE) as Texture2D
+		var sprite: Sprite2D = layer.call("make_plant", f["species"], f["size"], 0, "", Vector2(int(f["anchor"][0]), int(f["anchor"][1])))
 		if reference == null or sprite == null:
 			_check("tree_source_" + id, false, "missing imported source or production standing sprite")
 			continue
@@ -197,9 +204,11 @@ func _check_rendered_trees(main: Node) -> void:
 				_check("tree_native_opaque_" + id, int(actual_opaque["n"]) > 0 and int(native_opaque["n"]) > 0 and native_delta <= 0.02, "native opaque %.5f vs rendered opaque %.5f; delta %.5f ≤0.02; all alpha edges checked in the paired source render" % [native_opaque["sat"], actual_opaque["sat"], native_delta])
 		sprite.queue_free()
 		control.free()
+	layer.call("force_season", "", "")
 
 
-## One real tile of every ground class and water, preferring a same-class neighbourhood so edge dither is excluded.
+## One real tile of every ground class and water, preferring a same-class neighbourhood so edge dither is excluded;
+## never a tree tile (its ¼× canopy is not land).
 func _terrain_samples(map: GroundBaker.GroundMap) -> Dictionary:
 	var samples: Dictionary = {}
 	var interior: Dictionary = {}
@@ -207,6 +216,9 @@ func _terrain_samples(map: GroundBaker.GroundMap) -> Dictionary:
 		for x: int in range(1, map.width - 1):
 			var g: int = map.at(x, y)
 			if g < 0 and g != GroundBaker.WATER:
+				continue
+			# M-ART2.1: bare land only — a tree tile carries the ¼× canopy, which is neither capped nor map-tinted.
+			if map.tree_at(x, y) > 0:
 				continue
 			if not samples.has(g):
 				samples[g] = Vector2i(x, y)

@@ -22,9 +22,15 @@
 #   water in that chunk, at full night (the gap is divided by the night multiplier's weakest channel) and at every
 #   zoom's map tint, and its hue at least `water.minimum_land_hue_distance` turns away. Recomputed per tone (winter
 #   snow, drought) because the land means change with it.
+# Canopy (M-ART2.1 §2.2, ¼× only, `trees.quarter_canopy`): the tree tiles (get_trees, species by tree_layer.gd's hash)
+#   are a GroundMap layer; a chunk baked at texture factor 4 carries the canopy mass per species in its season
+#   (the canopy texture's mean moved by the season's Lab shift as an RGB multiplier — a bare winter frame's own mean
+#   for a deciduous tree — on a ¼-size copy scaled back by nearest, so the ¼ texture keeps every texel), its tiles
+#   leave the map tint, and the tree layer hides the sprites standing there (`canopy_baked_at`, `canopy_version`).
+#   A changed tree set rebakes the ¼× chunks it touches; the canopy follows the season pair at half blend.
 # Hooks for tests: `bake_counts` (chunk → bakes), `last_bake_usec`, `chunk_image(c)`, `ground_ids`.
 # Bridge methods: via SimReads get_terrain_snapshot, get_building_snapshot, get_space, get_world_info,
-#   get_time_snapshot, get_story, get_agent_snapshot; signal world_reset.
+#   get_time_snapshot, get_story, get_agent_snapshot, get_colony_versions, get_trees; signal world_reset.
 extends Node2D
 
 const View = preload("res://scripts/world/colony/view.gd")
@@ -33,6 +39,8 @@ const Tone = preload("res://scripts/world/art/tone.gd")
 const GroundBaker = preload("res://scripts/world/art/ground_baker.gd")
 const WallBaker = preload("res://scripts/world/art/wall_baker.gd")
 const MaterialResolver = preload("res://scripts/world/art/material_resolver.gd")
+const FloraResolver = preload("res://scripts/world/art/flora_resolver.gd")
+const TreeLayer = preload("res://scripts/world/colony/tree_layer.gd")
 const CHUNK_SHADER: Shader = preload("res://shaders/ground_chunk.gdshader")
 const TILE: int = View.TILE
 const STONE_SPOTS: Array[Vector2i] = [Vector2i(9, 38), Vector2i(24, 30), Vector2i(39, 35), Vector2i(54, 26)]
@@ -46,6 +54,8 @@ var worst_bake: Dictionary = {}
 var warm_usec: int = 0
 ## Ground ids by ground index.
 var ground_ids: Array[String] = []
+## Counts changes of which chunks carry the baked ¼× canopy (the tree layer re-checks its sprites when it moves).
+var canopy_version: int = 0
 
 var _world_sim: Node = null
 var _world: Node2D = null
@@ -94,6 +104,11 @@ var _clearing_id: String = ""
 var _clearing_core: int = 4
 var _clearing_reach: int = 8
 var _clearing_threshold: float = 0.8
+var _flora: FloraResolver = FloraResolver.new()
+var _trees_version: int = -2
+var _tree_cells: Dictionary = {}
+var _canopy_season: String = ""
+var _canopy_cache: Dictionary = {}
 
 
 func _ready() -> void:
@@ -106,6 +121,8 @@ func _ready() -> void:
 	add_child(_fords)
 	_resolver.load_imported()
 	_problems.append_array(_resolver.problems)
+	_flora.load_imported()
+	_problems.append_array(_flora.problems)
 	_world_sim = get_node_or_null("/root/Main/WorldSim")
 	if _world_sim != null:
 		_world_sim.connect("world_reset", _on_world_reset)
@@ -113,6 +130,8 @@ func _ready() -> void:
 
 func _on_world_reset() -> void:
 	_map = null
+	_trees_version = -2
+	_tree_cells.clear()
 	_space_version = -2
 	_hearth = Vector2i(-1000, -1000)
 	_drop_all()
@@ -233,12 +252,15 @@ func _process(_delta: float) -> void:
 		_apply_space(space)
 	if refresh:
 		_rebake_all()
+	_update_trees()
 	_ensure_visible()
 	_update_doors()
 
 
 func _configure() -> void:
-	_baker.configure(ArtData.param("ground", {}), ArtData.param("water", {}), ArtData.param("hill", {}))
+	_baker.configure(ArtData.param("ground", {}), ArtData.param("water", {}), ArtData.param("hill", {}), ArtData.param("trees", {}))
+	_canopy_cache.clear()
+	_canopy_season = ""
 	var t0: int = Time.get_ticks_usec()
 	_baker.warm()
 	warm_usec = Time.get_ticks_usec() - t0
@@ -281,6 +303,8 @@ func _build_map() -> bool:
 	_seed = int((SimReads.read(_world_sim, "get_world_info") as Dictionary).get("seed", 0))
 	_map = GroundBaker.GroundMap.new()
 	_map.setup(_w, _h)
+	_trees_version = -2
+	_tree_cells.clear()
 	_space_full = true
 	_space_dug = {}
 	_space_floors = {}
@@ -764,10 +788,11 @@ func _bake_chunk(c: Vector2i) -> void:
 	if _map == null:
 		return
 	var t0: int = Time.get_ticks_usec()
+	var f: int = _res_factor
+	_baker.canopy_on = f == 4 and _canopy_enabled()
 	var img: Image = _baker.bake(_map, c.x, c.y)
 	var t_compose: int = Time.get_ticks_usec()
 	var size: int = _baker.chunk_tiles * TILE
-	var f: int = _res_factor
 	var sprite: Sprite2D = _chunks.get(c, null)
 	if sprite == null:
 		sprite = Sprite2D.new()
@@ -776,7 +801,7 @@ func _bake_chunk(c: Vector2i) -> void:
 		add_child(sprite)
 		_chunks[c] = sprite
 	var chunk_material: ShaderMaterial = _material.duplicate() as ShaderMaterial
-	chunk_material.set_shader_parameter("terrain_tint_tex", _terrain_tint(c))
+	chunk_material.set_shader_parameter("terrain_tint_tex", _terrain_tint(c, _baker.canopy_on))
 	var lift: Array = water_lift(c)
 	_lifts[c] = lift
 	chunk_material.set_shader_parameter("water_lift", lift[0])
@@ -809,6 +834,8 @@ func _bake_chunk(c: Vector2i) -> void:
 			_world.add_child(strip)
 			strips.append(strip)
 	_strips[c] = strips
+	if int(_res_of.get(c, 0)) != f:
+		canopy_version += 1
 	_res_of[c] = f
 	bake_counts[c] = int(bake_counts.get(c, 0)) + 1
 	var t_end: int = Time.get_ticks_usec()
@@ -827,7 +854,7 @@ func _map_tint_strength() -> float:
 
 ## One colour per terrain tile plus its neighbours: filtering crosses chunk borders without a seam. Alpha opts
 ## a tile into the map tint; built floors and water opt out. Only the ground chunk shader consumes this texture.
-func _terrain_tint(c: Vector2i) -> ImageTexture:
+func _terrain_tint(c: Vector2i, canopy: bool = false) -> ImageTexture:
 	var size: int = _baker.chunk_tiles
 	var img: Image = Image.create(size + 2, size + 2, false, Image.FORMAT_RGBA8)
 	var mean_max: float = clampf(float(ArtData.param("ground.tone.mean_max", 0.38)), 0.0, 1.0)
@@ -838,10 +865,134 @@ func _terrain_tint(c: Vector2i) -> ImageTexture:
 			var tx: int = c.x * size + x
 			var ty: int = c.y * size + y
 			var index: int = _map.at(tx, ty)
-			if index < 0 or index >= ground_ids.size() or _map.is_crisp(tx, ty):
+			if index < 0 or index >= ground_ids.size() or _map.is_crisp(tx, ty) or (canopy and _map.tree_at(tx, ty) > 0):
 				continue
 			img.set_pixel(x + 1, y + 1, palette[index])
 	return ImageTexture.create_from_image(img)
+
+
+func _canopy_enabled() -> bool:
+	return bool(ArtData.param("trees.quarter_canopy", true))
+
+
+## Whether the chunk holding tile `cell` is drawn now with the baked ¼× canopy (its tree sprites are hidden).
+func canopy_baked_at(cell: Vector2i) -> bool:
+	if _map == null or not _canopy_enabled():
+		return false
+	var size: int = _baker.chunk_tiles
+	var c: Vector2i = Vector2i(floori(float(cell.x) / size), floori(float(cell.y) / size))
+	return _chunks.has(c) and int(_res_of.get(c, 1)) == 4
+
+
+## The tree tiles (GroundMap.tree = species style + 1) from get_trees when its version moves, and the season's
+## canopy styles when the drawn season changes; the ¼× chunks that change are rebaked.
+func _update_trees() -> void:
+	if _map == null:
+		return
+	var versions: Dictionary = SimReads.read(_world_sim, "get_colony_versions")
+	var version: int = int(versions.get("trees_version", -1))
+	var dirty: Dictionary = {}
+	var size: int = _baker.chunk_tiles
+	if version != _trees_version:
+		_trees_version = version
+		var styles: Dictionary = _species_styles()
+		var trees: Dictionary = SimReads.read(_world_sim, "get_trees")
+		var xs: PackedInt32Array = trees.get("xs", PackedInt32Array())
+		var ys: PackedInt32Array = trees.get("ys", PackedInt32Array())
+		var now: Dictionary = {}
+		for i: int in mini(xs.size(), ys.size()):
+			var t: Vector2i = Vector2i(xs[i], ys[i])
+			if t.x < 0 or t.y < 0 or t.x >= _w or t.y >= _h:
+				continue
+			now[t] = int(styles.get(TreeLayer.tree_species(_seed, t), 0))
+		for t: Vector2i in _union(_tree_cells, now):
+			if int(_tree_cells.get(t, 0)) != int(now.get(t, 0)):
+				_map.tree[t.y * _w + t.x] = int(now.get(t, 0))
+				_mark(dirty, t.x, t.y, size)
+		_tree_cells = now
+	var season: String = _season_for_canopy()
+	if season != _canopy_season:
+		_canopy_season = season
+		_prepare_canopies(season)
+		for c: Vector2i in _chunks.keys():
+			dirty[c] = true
+	for c: Vector2i in dirty.keys():
+		if _chunks.has(c) and int(_res_of.get(c, 1)) == 4:
+			_bake_chunk(c)
+
+
+## Species id → canopy style (1-based, bindings `trees.species` order).
+func _species_styles() -> Dictionary:
+	var out: Dictionary = {}
+	var k: int = 0
+	for row: Variant in (ArtData.bindings().get("trees", {}) as Dictionary).get("species", []):
+		k += 1
+		if row is Dictionary:
+			out[str((row as Dictionary).get("species", ""))] = k
+	return out
+
+
+## The season the ¼× canopy shows: the tree layer's season pair, switching at half blend.
+func _season_for_canopy() -> String:
+	var trees: Node = get_node_or_null("../TreeLayer")
+	if trees == null:
+		return ""
+	var pair: PackedStringArray = trees.call("season_pair")
+	if pair.size() != 2:
+		return ""
+	return pair[1] if float(trees.call("season_blend")) >= 0.5 else pair[0]
+
+
+## One canopy style per bound species in `season` (see the header), and its edge copy (`trees.canopy_edge_value`).
+func _prepare_canopies(season: String) -> void:
+	if _canopy_cache.has(season):
+		var cached: Array = _canopy_cache[season]
+		_baker.set_canopies(cached[0], cached[1])
+		return
+	var images: Array[Image] = []
+	var edges: Array[Image] = []
+	var cfg: Dictionary = ArtData.bindings().get("trees", {})
+	var habit: String = str(cfg.get("habit", ""))
+	var edge_value: float = clampf(float(ArtData.param("trees.canopy_edge_value", 0.7)), 0.0, 1.0)
+	for row: Variant in cfg.get("species", []):
+		var r: Dictionary = _flora.resolve(str((row as Dictionary).get("species", "")) if row is Dictionary else "", TreeLayer.SIZE_LARGE, season, 0, habit) if season != "" else {}
+		var src: Image = ArtData.image_at(FloraResolver.res_path(str(r.get("map_canopy_path", "")))) if not r.is_empty() else null
+		if src == null:
+			src = Image.create(TILE, TILE, false, Image.FORMAT_RGBA8)
+			src.fill(Color(0.2, 0.3, 0.15))
+		var mean: Color = Tone.mean_rgb(src, 7)
+		var target: Color = mean
+		if not r.is_empty():
+			var tint: Dictionary = r["tint"]
+			if str(tint["frame"]) != "foliage":
+				var bare: Image = ArtData.image_at(FloraResolver.res_path(str(r["path"])))
+				target = Tone.mean_rgb(bare, 1) if bare != null else mean
+			else:
+				var d: Array = tint["delta_lab"]
+				var lab: Vector3 = Tone.rgb_to_lab(Vector3(mean.r, mean.g, mean.b)) + Vector3(float(d[0]), float(d[1]), float(d[2]))
+				var rgb: Vector3 = Tone.lab_to_rgb(lab)
+				target = Color(rgb.x, rgb.y, rgb.z)
+		var mult: Vector3 = Vector3(target.r / maxf(mean.r, 1e-6), target.g / maxf(mean.g, 1e-6), target.b / maxf(mean.b, 1e-6))
+		var w: int = src.get_width()
+		var h: int = src.get_height()
+		var small: Image = src.duplicate()
+		small.convert(Image.FORMAT_RGBA8)
+		small.resize(maxi(1, w >> 2), maxi(1, h >> 2), Image.INTERPOLATE_BILINEAR)
+		var data: PackedByteArray = small.get_data()
+		var dark: PackedByteArray = data.duplicate()
+		for i: int in range(0, data.size(), 4):
+			for k: int in 3:
+				var v: float = clampf(data[i + k] * mult[k], 0.0, 255.0)
+				data[i + k] = int(roundf(v))
+				dark[i + k] = int(roundf(v * edge_value))
+			data[i + 3] = 255
+			dark[i + 3] = 255
+		for pair: Array in [[data, images], [dark, edges]]:
+			var img: Image = Image.create_from_data(small.get_width(), small.get_height(), false, Image.FORMAT_RGBA8, pair[0])
+			img.resize(w, h, Image.INTERPOLATE_NEAREST)
+			(pair[1] as Array).append(img)
+	_canopy_cache[season] = [images, edges]
+	_baker.set_canopies(images, edges)
 
 
 ## The map-mode colour per ground index (`ground.map_mode.tint_by_ground`, held under the tone caps); alpha 0 for a
