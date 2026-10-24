@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "branch": "v8/art-trees",
+  "report_and_boards_commit": "e243d80b274e8c9a141d46e85d5ae4b9099d6124",
+  "remote_sha_at_verification": "e243d80b274e8c9a141d46e85d5ae4b9099d6124",
+  "equal": true,
+  "command": "git ls-remote origin refs/heads/v8/art-trees",
+  "artifacts_sha256": {
+    "docs/v8/arttrees/TREES_REPORT.md": "908b2da553e1bebc4a6fa5545f461def8340b6f892c9eb71a4d623e4e2a24994",
+    "art/boards/trees_owner.png": "636b97e56a695227bca64a88c96cf6defaca3511843a639e1ecb29c2ae3115d9",
+    "art/boards/trees_scene.png": "7a35b425c40bf3291ae4d816174285d27df6c29853f6996f790c8b165e1e39f3",
+    "art/boards/trees_seasons_scene.png": "6a0dd5f858f5d21c9fb4eebd0ec149ff77f7a08fae3d8b1e20dcec59fe4d4f83",
+    "art/boards/test_alder_strip.png": "43af861ff96191af09b99a8b05776dc1021fd0e82c58e91ed3ee03f55ca8844e"
+  },
+  "owner_verdict": "PENDING",
+  "merged": false,
+  "note": "This evidence commit follows the verified report commit. Final branch HEAD is independently compared after publishing this record."
+}
