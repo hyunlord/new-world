@@ -8,9 +8,9 @@
 #   JSON. The tiles come from the layer's own person nodes (drawn feet minus the drawing-only sleeper spread `bed`,
 #   divided into View.TILE-px tiles, 64 since M-ART2), never from a fresh bridge read. Tooling only: the game never
 #   runs this script.
-# Bridge methods called: via SimReads.mutate_raw reset_world, advance_ticks, cmd_designate_chop_tiles,
+# Bridge methods called: via SimReads.mutate_raw reset_world, cmd_set_steward, advance_ticks, cmd_designate_chop_tiles,
 #   cmd_designate_chop, cmd_cancel_area, cmd_add_stockpile, cmd_remove_zone_area, cmd_place_blueprint; directly
-#   get_time_snapshot (to check the reached tick).
+#   get_time_snapshot (to check the reached tick), get_steward (the probe fixture is OFF).
 # usage: Godot --headless --path . --script res://tools/v8/renderer_agreement.gd -- \
 #          --out <abs json> --commands <abs commands json> [--seed 100] [--tick 900]
 # Output: the JSON file and one line "RENDERER_AGREEMENT_GODOT_DONE tick=T people=N settled=true|false";
@@ -68,11 +68,17 @@ func _run() -> void:
 		return
 	world.set("process_mode", Node.PROCESS_MODE_DISABLED)
 	reads.call("mutate_raw", "reset_world", [_seed])
+	var steward_command: Dictionary = reads.call("mutate_raw", "cmd_set_steward", [false, 0])
 	for _i: int in 10:
 		await process_frame
 	if _now(world) != 0:
 		_fail("reset_world(%d) left the clock at tick %d" % [_seed, _now(world)])
 		return
+	var steward: Dictionary = world.call("get_steward")
+	if not bool(steward_command.get("accepted", false)) or bool(steward.get("enabled", true)):
+		_fail("the probe's steward-OFF fixture was not established before replay")
+		return
+	print("RENDERER_AGREEMENT_STEWARD_OFF accepted=true tick=0")
 	for entry: Variant in log_entries:
 		if not entry is Dictionary:
 			_fail("a command log entry is not an object")

@@ -23,6 +23,7 @@ func _check(condition: bool, name_text: String) -> void:
 	print("MUX_LEARNING %s %s" % ["PASS" if condition else "FAIL", name_text])
 
 func _run() -> void:
+	_test_settings_isolation()
 	_test_facts()
 	await _test_observed_learning()
 	await _test_highlight()
@@ -153,6 +154,48 @@ func _run() -> void:
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(data_path))
 	print("MUX_LEARNING_DONE checks=%s failures=%s" % [checks, failures])
 	quit(1 if failures > 0 else 0)
+
+func _owner_settings_state() -> Dictionary:
+	var path: String = "user://settings.cfg"
+	var exists: bool = FileAccess.file_exists(path)
+	return {"exists": exists, "sha256": FileAccess.get_sha256(path) if exists else "", "modified": FileAccess.get_modified_time(path) if exists else 0}
+
+func _test_settings_isolation() -> void:
+	var owner_before: Dictionary = _owner_settings_state()
+	var had_override: bool = OS.has_environment("WORLDSIM_TEST_SETTINGS_DIR")
+	var previous_override: String = OS.get_environment("WORLDSIM_TEST_SETTINGS_DIR")
+	var directory: String = "/tmp/worldsim-mux-settings-%d-%d" % [OS.get_process_id(), Time.get_ticks_usec()]
+	var created: Error = DirAccess.make_dir_recursive_absolute(directory)
+	_check(created == OK, "isolated settings directory created")
+	if created != OK:
+		return
+	OS.unset_environment("WORLDSIM_TEST_SETTINGS_DIR")
+	_check(Store.resolve_path() == "user://settings.cfg", "production settings path unchanged without constructing owner store")
+	OS.set_environment("WORLDSIM_TEST_SETTINGS_DIR", directory)
+	var store: Store = Store.new()
+	var expected_path: String = directory.path_join("settings-%d.cfg" % OS.get_process_id())
+	_check(store.path == expected_path and store.last_error == OK, "default test store uses external per-process path")
+	_check(store.value("steward_default") == true, "isolated settings preserve production steward ON default")
+	_check(store.set_value("ui_scale", 1.25) and store.last_error == OK, "default test store persists settings")
+	_check(FileAccess.file_exists(expected_path) and Store.new().value("ui_scale") == 1.25, "default test store reloads isolated settings")
+	var progress_error: Error = store.save_progress(PackedStringArray(["camera"]), PackedStringArray(), {})
+	_check(progress_error == OK and Store.new().progress()["completed"].has("camera"), "learning progress persists only in isolated store")
+	var explicit_path: String = directory.path_join("explicit.cfg")
+	var explicit: Store = Store.new(explicit_path)
+	_check(explicit.path == explicit_path and explicit.value("ui_scale") == 1.0, "explicit constructor path wins without inheriting default test settings")
+	_check(explicit.set_value("ui_scale", 1.5) and Store.new(explicit_path).value("ui_scale") == 1.5, "explicit path persists independently")
+	_check(Store.new().value("ui_scale") == 1.25, "explicit store cannot overwrite default test store")
+	OS.set_environment("WORLDSIM_TEST_SETTINGS_DIR", "relative-settings-path")
+	var invalid: Store = Store.new()
+	_check(invalid.path.is_empty() and invalid.last_error == ERR_INVALID_PARAMETER, "invalid test override cannot fall back to owner settings")
+	if had_override:
+		OS.set_environment("WORLDSIM_TEST_SETTINGS_DIR", previous_override)
+	else:
+		OS.unset_environment("WORLDSIM_TEST_SETTINGS_DIR")
+	_check(_owner_settings_state() == owner_before, "owner settings presence bytes and modification time unchanged")
+	_check(DirAccess.remove_absolute(expected_path) == OK, "isolated default settings cleaned up")
+	_check(DirAccess.remove_absolute(explicit_path) == OK, "isolated explicit settings cleaned up")
+	_check(DirAccess.remove_absolute(directory) == OK, "isolated settings directory cleaned up")
 
 func _test_observed_learning() -> void:
 	var path: String = "user://mux-observed-test-%s.cfg" % OS.get_process_id()

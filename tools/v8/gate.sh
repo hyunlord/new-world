@@ -2,7 +2,7 @@
 # usage: gate.sh <log_dir> [--base-data DIR]
 #
 # V8 gate (V8-0 goal 11.1; M1 11.3 added steps 17-20; V8-PLAY 2.3 added step 21; M1.5 10.4 added steps
-# 22-25; M3 added steps 26-27; M4 added step 28; M5 added step 29; M5.5 added step 30; M-ART2 added steps 31-34). Thirty-four steps, each logged to <log_dir>/<step>.log
+# 22-25; M3 added steps 26-27; M4 added step 28; M5 added step 29; M5.5 added step 30; M-ART2 added steps 31-34; M-UX added step 35). Thirty-five steps, each logged to <log_dir>/<step>.log
 # with its start time, duration and exit code in <log_dir>/gate.txt. The
 # gate passes only when every step except `perf` and `nav_bench` (report only) exits 0.
 #    1 fmt               cargo fmt --all -- --check
@@ -62,6 +62,7 @@
 #                        banks, tone, one-chunk dig rebake, data-only wall; appearance, anchors, LOD, params reload);
 #                        since M-ART2.1 also rounded shores, water lift and texture, hill edges (ground test) and
 #                        tools/v8/mart21_trees_test.gd (four seasons per species, bare winter, data-only species, ¼× canopy)
+#   35 steward           two seeds × 24 days ON: deterministic, ledger/reservations exact, no panics
 #   Since M-ART2 step 23 (renderer_agreement) also checks appearance: every person's look and face variant.
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
@@ -71,6 +72,8 @@ BASE_DATA=/Users/rexxa/work/v8-0-data/base
 [[ "${2:-}" == --base-data ]] && BASE_DATA="$3"
 mkdir -p "$LOG"
 LOG="$(cd "$LOG" && pwd -P)"
+mkdir -p "$LOG/settings" || exit 1
+export WORLDSIM_TEST_SETTINGS_DIR="$LOG/settings"
 source tools/v8/godot_bin.sh
 export CARGO_BUILD_JOBS="${CARGO_BUILD_JOBS:-8}"
 SUMMARY="$LOG/gate.txt"
@@ -150,6 +153,7 @@ step 33 extensibility_grep python3 -m unittest tools/v8/test_mart2_extensibility
 step 34 mart2_render bash -c 'for t in mart2_ground_test mart2_people_test mart21_trees_test; do bash tools/v8/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --script res://tools/v8/$t.gd > "$0/$t.out" 2>&1; grep -E "^MART21?_(GROUND|PEOPLE|TREES) (PASS|FAIL)|_DONE" "$0/$t.out"; grep -q "_DONE failures=0" "$0/$t.out" || exit 1; ! grep -q "SCRIPT ERROR" "$0/$t.out" || { grep "SCRIPT ERROR" "$0/$t.out" | head -5; exit 1; }; done' "$LOG"
 grep -E 'PASS|FAIL' "$LOG/resolver_parity.log" | tail -1 | sed 's/^/   /' >> "$SUMMARY"
 grep -cE '^MART21?_(GROUND|PEOPLE|TREES) PASS' "$LOG/mart2_render.log" | awk '{print "   mart2_render checks passed", $1}' >> "$SUMMARY"
+step 35 steward bash tools/v8/mux_steward.sh "$LOG/steward"
 echo "finished $(date '+%Y-%m-%d %H:%M:%S %Z') status $status" >> "$SUMMARY"
 cat "$SUMMARY"
 exit "$status"

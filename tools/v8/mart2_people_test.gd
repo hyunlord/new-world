@@ -12,7 +12,8 @@
 #      user://) is reloaded through ArtData.reload_params (the F12 path) and ½× then shows sprites;
 #   5. the variant tint is deterministic: the shader parameters of a person are a pure function of (look, variant).
 #   Prints MART2_PEOPLE lines and MART2_PEOPLE_DONE failures=N; exits 1 on any failure.
-# Bridge methods called: reset_world, advance_ticks (direct); the layers read the rest.
+# Bridge methods called: reset_world, cmd_set_steward, get_steward, get_time_snapshot, advance_ticks (direct).
+# The historical seed-0 art fixture explicitly keeps the steward OFF; the layers read the rest.
 extends SceneTree
 
 const View = preload("res://scripts/world/colony/view.gd")
@@ -38,6 +39,14 @@ func _run() -> void:
 	await process_frame
 	world.call("reset_world", 0)
 	world.process_mode = Node.PROCESS_MODE_DISABLED
+	var steward_command: Dictionary = world.call("cmd_set_steward", false, 0)
+	var steward: Dictionary = world.call("get_steward")
+	var clock: Dictionary = world.call("get_time_snapshot")
+	var fixture_ready: bool = bool(steward_command.get("accepted", false)) and not bool(steward.get("enabled", true)) and int(clock.get("tick", -1)) == 0
+	_check("fixture_steward_off", fixture_ready, "ordinary OFF command accepted, state OFF at tick zero")
+	if not fixture_ready:
+		quit(1)
+		return
 	world.call("advance_ticks", 1)
 	for _i: int in 20:
 		await process_frame

@@ -27,7 +27,8 @@
 #      away from the HUD, differ pairwise by CIE76 ΔE ≥ 10.
 #   Prints one MART21_TREES line per check and MART21_TREES_DONE failures=N; exits 1 on any failure.
 #   `godot --headless --path . --script res://tools/v8/mart21_trees_test.gd [-- --rendered (windowed)]`
-# Bridge methods called: reset_world, advance_ticks (direct); the layers read the rest.
+# Bridge methods called: reset_world, reset_world_stress, cmd_set_steward, get_steward,
+# get_time_snapshot, advance_ticks (direct). Historical art fixtures keep the steward OFF.
 extends SceneTree
 
 const View = preload("res://scripts/world/colony/view.gd")
@@ -56,6 +57,15 @@ func _frames(n: int) -> void:
 		await process_frame
 
 
+func _disable_steward(world: Node) -> bool:
+	var command: Dictionary = world.call("cmd_set_steward", false, 0)
+	var steward: Dictionary = world.call("get_steward")
+	var clock: Dictionary = world.call("get_time_snapshot")
+	var ready: bool = bool(command.get("accepted", false)) and not bool(steward.get("enabled", true)) and int(clock.get("tick", -1)) == 0
+	_check("fixture_steward_off", ready, "ordinary OFF command accepted, state OFF at tick zero")
+	return ready
+
+
 func _run() -> void:
 	_main = (load("res://scenes/main.tscn") as PackedScene).instantiate()
 	root.add_child(_main)
@@ -63,6 +73,9 @@ func _run() -> void:
 	await process_frame
 	world.call("reset_world", 0)
 	world.process_mode = Node.PROCESS_MODE_DISABLED
+	if not _disable_steward(world):
+		quit(1)
+		return
 	world.call("advance_ticks", 1)
 	await _frames(20)
 	var trees: Node = _main.get_node("ColonyView/TreeLayer")
@@ -75,7 +88,10 @@ func _run() -> void:
 	_check_canopy_edges()
 	_check_season_state()
 	_check_household_rule()
-	await _check_households(world)
+	var households_ready: bool = await _check_households(world)
+	if not households_ready:
+		quit(1)
+		return
 	if OS.get_cmdline_user_args().has("--rendered"):
 		if DisplayServer.get_name() == "headless":
 			_check("rendered_backend", false, "--rendered needs a window")
@@ -325,7 +341,7 @@ func _check_household_rule() -> void:
 	_check("household_rule", bad.is_empty(), "7 people, hand-worked keys; differences %s" % [bad])
 
 
-func _check_households(world: Node) -> void:
+func _check_households(world: Node) -> bool:
 	var camera: Camera2D = _main.get_node("Camera2D") as Camera2D
 	var agents: Node = _main.get_node("ColonyView/AgentLayer")
 	camera.zoom = Vector2(0.25, 0.25)
@@ -333,6 +349,11 @@ func _check_households(world: Node) -> void:
 	await _frames(10)
 	# A second world after the colony one: households must follow the reset.
 	world.call("reset_world_stress", 0, 1000)
+	var steward: Dictionary = world.call("get_steward")
+	var stress_off: bool = not bool(steward.get("enabled", true))
+	_check("stress_steward_off", stress_off, "stress fixture retains its OFF default")
+	if not stress_off:
+		return false
 	world.call("advance_ticks", 1)
 	await _frames(20)
 	var markers: Node = agents.get_node("LodMarkers")
@@ -365,10 +386,13 @@ func _check_households(world: Node) -> void:
 	_check("household_rings", persons.size() >= 1000 and bad == 0 and colours.size() >= 2 and (paired == 0 or shared > 0), "stress world: %d people, %d with a partner, %d households, %d people sharing one, %d ring colours; %d without a consistent ring in %s" % [persons.size(), paired, by_household.size(), shared, colours.size(), bad, source])
 	# Back to the seed-0 colony for the map check.
 	world.call("reset_world", 0)
+	if not _disable_steward(world):
+		return false
 	world.call("advance_ticks", 1)
 	camera.zoom = Vector2.ONE
 	camera.force_update_scroll()
 	await _frames(20)
+	return true
 
 
 func _check_canopy_edges() -> void:

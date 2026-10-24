@@ -16,9 +16,19 @@ var _events: Dictionary = {}
 var _observed: PackedStringArray = []
 var _steward_observed: PackedStringArray = []
 
-func _init(file_path: String = "user://settings.cfg") -> void:
-	path = file_path
+func _init(file_path: String = "") -> void:
+	path = resolve_path(file_path)
 	load_settings()
+
+static func resolve_path(file_path: String = "") -> String:
+	if not file_path.is_empty():
+		return file_path
+	var test_dir: String = OS.get_environment("WORLDSIM_TEST_SETTINGS_DIR")
+	if test_dir.is_empty():
+		return "user://settings.cfg"
+	if not test_dir.is_absolute_path() or test_dir.begins_with("user://") or test_dir.begins_with("res://"):
+		return ""
+	return test_dir.path_join("settings-%d.cfg" % OS.get_process_id())
 
 func load_settings() -> Error:
 	_config = ConfigFile.new()
@@ -28,7 +38,7 @@ func load_settings() -> Error:
 	_events = {}
 	_observed = []
 	_steward_observed = []
-	last_error = _config.load(path)
+	last_error = ERR_INVALID_PARAMETER if path.is_empty() else _config.load(path)
 	if last_error == ERR_FILE_NOT_FOUND:
 		last_error = OK
 		return OK
@@ -77,7 +87,7 @@ func save_progress(completed: PackedStringArray, skipped: PackedStringArray, eve
 	return _persist()
 
 func _persist() -> Error:
-	last_error = _config.save(path)
+	last_error = ERR_INVALID_PARAMETER if path.is_empty() else _config.save(path)
 	if last_error != OK:
 		persistence_failed.emit(last_error)
 	return last_error

@@ -40,7 +40,8 @@
 #   Below 1× the source reference is sampled at the identical nearest-filter phase: minification alone changes a
 #   small crown's full-image mean. At 1× native fully opaque pixels are also checked; faint edge colours lose RGB
 #   precision when an RGBA8 transparent viewport premultiplies alpha, and remain covered by the source render pair.
-# Bridge methods called: reset_world, advance_ticks (direct); the layers read the rest.
+# Bridge methods called: reset_world, cmd_set_steward, get_steward, get_time_snapshot, advance_ticks (direct).
+# The historical seed-0 art fixture explicitly keeps the steward OFF; the layers read the rest.
 extends SceneTree
 
 const View = preload("res://scripts/world/colony/view.gd")
@@ -81,6 +82,14 @@ func _run() -> void:
 	await process_frame
 	world.call("reset_world", 0)
 	world.process_mode = Node.PROCESS_MODE_DISABLED
+	var steward_command: Dictionary = world.call("cmd_set_steward", false, 0)
+	var steward: Dictionary = world.call("get_steward")
+	var clock: Dictionary = world.call("get_time_snapshot")
+	var fixture_ready: bool = bool(steward_command.get("accepted", false)) and not bool(steward.get("enabled", true)) and int(clock.get("tick", -1)) == 0
+	_check("fixture_steward_off", fixture_ready, "ordinary OFF command accepted, state OFF at tick zero")
+	if not fixture_ready:
+		_finish()
+		return
 	world.call("advance_ticks", 1)
 	for _i: int in 20:
 		await process_frame
