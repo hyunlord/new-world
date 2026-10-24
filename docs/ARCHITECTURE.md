@@ -595,6 +595,10 @@ value × 0.55 with the blue shift, additive hearth PointLight2D within 5 tiles)
 - **Params**: every tunable is in `assets/v8art/render_params.json` (camera, ground, water, walls, people, lod, light,
   season, zones, sites, labels, debug); `ArtData.reload_params()` on F12 in debug builds re-reads it and bumps
   `params_version()`, which every layer watches.
+- **D19 terrain separation (ADR 0035)**: the ground-only ENV1 cap is mean luminance 0.38/saturation 0.30;
+  water has a separate blue contrast floor. `ground.map_mode` supplies terrain colours and weights after ½/¼
+  texture reduction. Standing trees retain their source textures. `mart2_ground_test.gd -- --rendered` verifies
+  actual GPU pixels; its headless mode explicitly skips these claims.
 - **Adding content** (`assets/v8art/ADDING_ART.md`): a new wall material or style is a material JSON + texture; a new
   item, animal or structure is a manifest row (via `tools/v8/art_import.json`) plus a bindings row. The renderer code
   does not change; `tools/v8/test_mart2_extensibility.py` (gate step 33) fails on a content literal in the renderer.

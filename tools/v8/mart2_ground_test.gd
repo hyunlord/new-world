@@ -1,4 +1,4 @@
-# mart2_ground_test.gd — headless tests of the M-ART2 ground, water, edges and built space (goal §8).
+# mart2_ground_test.gd — CPU and optional windowed pixel tests of the M-ART2 ground and trees (goal §8, D19).
 # Purpose: boots scenes/main.tscn on the colony world seed 0 (reset_world(0), the clock held and stepped to tick 1 so
 #   the hearth exists) and checks, on the real GroundLayer:
 #   1. chunk bake determinism: the hearth's chunk baked twice (the layer, then a fresh GroundBaker on the same map and
@@ -18,6 +18,12 @@
 #      the expected opaque coverage.
 #   Prints one MART2_GROUND line per check and MART2_GROUND_DONE failures=N; exits 1 on any failure.
 #   `godot --headless --path . --script res://tools/v8/mart2_ground_test.gd [-- --write]`
+#   Add `-- --rendered` without --headless for GPU readbacks at 2×, 1×, ½× and ¼×: source saturation must survive
+#   TreeLayer._standing; water must differ from every sampled land class by luminance ≥0.10 and circular HSV hue
+#   ≥0.12 turns (43.2°), by day and at full night. `--cap-tree-control` deliberately caps test trees and must FAIL.
+#   Below 1× the source reference is sampled at the identical nearest-filter phase: minification alone changes a
+#   small crown's full-image mean. At 1× native fully opaque pixels are also checked; faint edge colours lose RGB
+#   precision when an RGBA8 transparent viewport premultiplies alpha, and remain covered by the source render pair.
 # Bridge methods called: reset_world, advance_ticks (direct); the layers read the rest.
 extends SceneTree
 
@@ -27,6 +33,7 @@ const Tone = preload("res://scripts/world/art/tone.gd")
 const GroundBaker = preload("res://scripts/world/art/ground_baker.gd")
 const WallBaker = preload("res://scripts/world/art/wall_baker.gd")
 const MaterialResolver = preload("res://scripts/world/art/material_resolver.gd")
+const Daylight = preload("res://scripts/world/daylight_controller.gd")
 const HASHES: String = "res://tools/v8/mart2_chunk_hashes.json"
 const TILE: int = View.TILE
 
@@ -79,12 +86,241 @@ func _run() -> void:
 	_check_banks(layer, map, size)
 	_check_dig(layer, world, map, size)
 	_check_data_only()
+	if OS.get_cmdline_user_args().has("--rendered"):
+		if DisplayServer.get_name() == "headless":
+			_check("rendered_backend", false, "--rendered requires a window and GPU; the headless renderer supplies no pixels")
+		else:
+			main.process_mode = Node.PROCESS_MODE_DISABLED
+			await _check_rendered_trees(main)
+			await _check_rendered_terrain(main, layer, map, size)
+	else:
+		print("MART2_GROUND SKIP rendered_pixels — run windowed with -- --rendered; headless checks do not prove tree saturation or water contrast")
 	_finish()
 
 
 func _finish() -> void:
 	print("MART2_GROUND_DONE failures=%d" % _failures)
 	quit(1 if _failures > 0 else 0)
+
+
+## Render the supplied production sprite through its material in an isolated, transparent canvas. Canvas zoom
+## preserves MODEL_MATRIX/world sampling; the crop selects world pixels without moving the production sprite.
+func _read_pixels(sprite: Sprite2D, crop: Rect2, zoom: float, light: Color = Color.WHITE) -> Image:
+	var viewport: SubViewport = SubViewport.new()
+	viewport.size = Vector2i(ceili(crop.size.x * zoom), ceili(crop.size.y * zoom))
+	viewport.world_2d = World2D.new()
+	viewport.transparent_bg = true
+	viewport.disable_3d = true
+	viewport.canvas_item_default_texture_filter = Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_NEAREST
+	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	root.add_child(viewport)
+	viewport.canvas_transform = Transform2D(Vector2(zoom, 0.0), Vector2(0.0, zoom), -crop.position * zoom)
+	var tint: CanvasModulate = CanvasModulate.new()
+	tint.color = light
+	viewport.add_child(tint)
+	var copy: Sprite2D = sprite.duplicate() as Sprite2D
+	copy.texture_filter = sprite.get_texture_filter()
+	viewport.add_child(copy)
+	await process_frame
+	await RenderingServer.frame_post_draw
+	var img: Image = viewport.get_texture().get_image()
+	img.convert(Image.FORMAT_RGBA8)
+	viewport.queue_free()
+	return img
+
+
+func _opaque_metrics(img: Image) -> Dictionary:
+	var opaque: Image = img.duplicate()
+	var data: PackedByteArray = opaque.get_data()
+	for i: int in range(3, data.size(), 4):
+		if data[i] < 255:
+			data[i] = 0
+	opaque.set_data(opaque.get_width(), opaque.get_height(), false, Image.FORMAT_RGBA8, data)
+	return Tone.metrics(opaque)
+
+
+func _check_rendered_trees(main: Node) -> void:
+	var layer: Node = main.get_node("ColonyView/TreeLayer")
+	var ids: Array[String] = []
+	for row: Dictionary in (ArtData.bindings().get("trees", {}) as Dictionary).get("species", []):
+		for key: String in ["large", "small"]:
+			var id: String = str(row.get(key, ""))
+			if id != "" and not ids.has(id):
+				ids.append(id)
+	_check("tree_source_count", ids.size() >= 6, "%d independently loaded standing-tree sources" % ids.size())
+	for id: String in ids:
+		# Bypass ArtData's mutable caches: the reference must still expose an accidental cached-image transform.
+		var reference: Texture2D = ResourceLoader.load(ArtData.path(id), "Texture2D", ResourceLoader.CACHE_MODE_IGNORE) as Texture2D
+		var sprite: Sprite2D = layer.call("_standing", id, Vector2(ArtData.anchor(id)))
+		if reference == null or sprite == null:
+			_check("tree_source_" + id, false, "missing imported source or production standing sprite")
+			continue
+		var source: Image = reference.get_image()
+		if source.is_compressed():
+			source.decompress()
+		source.convert(Image.FORMAT_RGBA8)
+		var native: Dictionary = Tone.metrics(source)
+		var native_opaque: Dictionary = _opaque_metrics(source)
+		if OS.get_cmdline_user_args().has("--cap-tree-control"):
+			var cap: Dictionary = Tone.cap_ground(source, 0.17, 0.38, 0.25, 0.30)
+			sprite.texture = ImageTexture.create_from_image(cap["image"])
+		var control: Sprite2D = Sprite2D.new()
+		control.texture = reference
+		control.centered = false
+		control.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		var crop: Rect2 = Rect2(Vector2.ZERO, reference.get_size())
+		for zoom: float in [2.0, 1.0, 0.5, 0.25]:
+			var actual_image: Image = await _read_pixels(sprite, crop, zoom)
+			var actual: Dictionary = Tone.metrics(actual_image)
+			var expected: Dictionary = Tone.metrics(await _read_pixels(control, crop, zoom))
+			var delta: float = absf(float(actual["sat"]) - float(expected["sat"]))
+			var ok: bool = int(actual["n"]) > 0 and int(actual["n"]) == int(expected["n"]) and delta <= 0.02
+			_check("tree_saturation_%s_%.2fx" % [id, zoom], ok, "rendered %.5f, phase/alpha-matched source %.5f, raw native %.5f; delta %.5f ≤0.02 (%d pixels)" % [actual["sat"], expected["sat"], native["sat"], delta, actual["n"]])
+			if zoom == 1.0:
+				var actual_opaque: Dictionary = _opaque_metrics(actual_image)
+				var native_delta: float = absf(float(actual_opaque["sat"]) - float(native_opaque["sat"]))
+				_check("tree_native_opaque_" + id, int(actual_opaque["n"]) > 0 and int(native_opaque["n"]) > 0 and native_delta <= 0.02, "native opaque %.5f vs rendered opaque %.5f; delta %.5f ≤0.02; all alpha edges checked in the paired source render" % [native_opaque["sat"], actual_opaque["sat"], native_delta])
+		sprite.queue_free()
+		control.free()
+
+
+## One real tile of every ground class and water, preferring a same-class neighbourhood so edge dither is excluded.
+func _terrain_samples(map: GroundBaker.GroundMap) -> Dictionary:
+	var samples: Dictionary = {}
+	var interior: Dictionary = {}
+	for y: int in range(1, map.height - 1):
+		for x: int in range(1, map.width - 1):
+			var g: int = map.at(x, y)
+			if g < 0 and g != GroundBaker.WATER:
+				continue
+			if not samples.has(g):
+				samples[g] = Vector2i(x, y)
+			if not interior.has(g) and map.at(x - 1, y) == g and map.at(x + 1, y) == g and map.at(x, y - 1) == g and map.at(x, y + 1) == g:
+				samples[g] = Vector2i(x, y)
+				interior[g] = true
+	return samples
+
+
+func _mean_colour(img: Image) -> Color:
+	var sum: Vector3 = Vector3.ZERO
+	var count: int = 0
+	for y: int in img.get_height():
+		for x: int in img.get_width():
+			var c: Color = img.get_pixel(x, y)
+			if c.a > 0.0:
+				sum += Vector3(c.r, c.g, c.b)
+				count += 1
+	if count == 0:
+		return Color(0.0, 0.0, 0.0, 0.0)
+	sum /= count
+	return Color(sum.x, sum.y, sum.z, 1.0)
+
+
+func _hue_distance(a: Color, b: Color) -> float:
+	var distance: float = absf(a.h - b.h)
+	return minf(distance, 1.0 - distance)
+
+
+func _check_rendered_terrain(main: Node, layer: Node, map: GroundBaker.GroundMap, size: int) -> void:
+	var samples: Dictionary = _terrain_samples(map)
+	var minimum_luminance: float = maxf(0.10, float(ArtData.param("water.minimum_land_luminance_difference", 0.10)))
+	var minimum_hue: float = maxf(0.12, float(ArtData.param("water.minimum_land_hue_distance", 0.12)))
+	_check("terrain_sample_classes", samples.has(GroundBaker.WATER) and samples.size() >= 5, "%d real classes including water" % samples.size())
+	if not samples.has(GroundBaker.WATER):
+		return
+	var camera: Camera2D = main.get_node("Camera2D") as Camera2D
+	_check_zoom_tint_atomic(camera, layer)
+	var ids: Array = layer.get("ground_ids")
+	var keys: Array = samples.keys()
+	keys.sort()
+	for zoom: float in [2.0, 1.0, 0.5, 0.25]:
+		camera.zoom = Vector2(zoom, zoom)
+		camera.force_update_scroll()
+		layer.call("_ensure_visible")
+		var day: Dictionary = {}
+		var night: Dictionary = {}
+		for g: int in keys:
+			var tile: Vector2i = samples[g]
+			var chunk: Vector2i = Vector2i(floori(float(tile.x) / size), floori(float(tile.y) / size))
+			layer.call("bake_chunk_now", chunk)
+			var sprite: Sprite2D = (layer.get("_chunks") as Dictionary).get(chunk, null)
+			if sprite == null:
+				_check("terrain_sprite", false, "no real chunk for %s" % tile)
+				continue
+			# The central 32×32 world pixels exclude the 12px dither band and 10px riverbank at every zoom.
+			var crop: Rect2 = Rect2(Vector2(tile * TILE + Vector2i(16, 16)), Vector2(32, 32))
+			var day_image: Image = await _read_pixels(sprite, crop, zoom)
+			day[g] = _mean_colour(day_image)
+			night[g] = _mean_colour(await _read_pixels(sprite, crop, zoom, Daylight.night_colour()))
+			var factor: int = 1 if zoom >= 1.0 else (2 if zoom >= 0.5 else 4)
+			var expected_width: int = floori(float(size * TILE) / factor)
+			_check("reduced_texture_%d_%.2fx" % [g, zoom], sprite.texture.get_width() == expected_width, "texture %dpx, expected %dpx" % [sprite.texture.get_width(), expected_width])
+			if g >= 0:
+				var metrics: Dictionary = Tone.metrics(day_image)
+				_check("rendered_land_caps_%s_%.2fx" % [ids[g], zoom], int(metrics["n"]) > 0 and float(metrics["mean"]) <= 0.38 and float(metrics["sat"]) <= 0.30, "rendered tile interior Y %.5f ≤0.38, mean saturation %.5f ≤0.30" % [metrics["mean"], metrics["sat"]])
+			if g >= 0 and zoom < 1.0:
+				await _check_map_tint(sprite, crop, zoom, str(ids[g]), day[g], not map.is_crisp(tile.x, tile.y))
+		for light_name: String in ["day", "night"]:
+			var colours: Dictionary = day if light_name == "day" else night
+			if not colours.has(GroundBaker.WATER):
+				_check("water_pixels", false, "missing water readback")
+				continue
+			var water: Color = colours[GroundBaker.WATER]
+			for g: int in keys:
+				if g < 0 or not colours.has(g):
+					continue
+				var land: Color = colours[g]
+				var luminance_delta: float = absf(water.get_luminance() - land.get_luminance())
+				var hue_delta: float = _hue_distance(water, land)
+				_check("water_contrast_%s_%s_%.2fx" % [ids[g], light_name, zoom], water.a > 0.0 and land.a > 0.0 and water.s > 0.10 and luminance_delta >= minimum_luminance and hue_delta >= minimum_hue, "water Y=%.4f H=%.4f; land Y=%.4f H=%.4f; deltaY %.4f ≥%.3f, deltaH %.4f ≥%.3f turns" % [water.get_luminance(), water.h, land.get_luminance(), land.h, luminance_delta, minimum_luminance, hue_delta, minimum_hue])
+
+
+## Changing zoom must update palette weights on every cached chunk immediately, even while its texture awaits
+## the four-per-frame retexture queue; otherwise half/quarter-strength rectangles persist during zoom transitions.
+func _check_zoom_tint_atomic(camera: Camera2D, layer: Node) -> void:
+	var strengths: Dictionary = ArtData.param("ground.map_mode.tint_strength", {})
+	if not strengths.has("0.25"):
+		return
+	camera.zoom = Vector2(0.5, 0.5)
+	camera.force_update_scroll()
+	layer.call("_ensure_visible")
+	var cached: Dictionary = (layer.get("_chunks") as Dictionary).duplicate()
+	camera.zoom = Vector2(0.25, 0.25)
+	camera.force_update_scroll()
+	layer.call("_ensure_visible")
+	var expected: float = float(strengths["0.25"])
+	var pending: int = 0
+	var wrong: int = 0
+	var resolutions: Dictionary = layer.get("_res_of")
+	for c: Vector2i in cached.keys():
+		var sprite: Sprite2D = cached[c]
+		var material: ShaderMaterial = sprite.material as ShaderMaterial
+		if material == null or not is_equal_approx(float(material.get_shader_parameter("map_tint_strength")), expected):
+			wrong += 1
+		if int(resolutions.get(c, 1)) != 4:
+			pending += 1
+	_check("map_tint_atomic_zoom", cached.size() > 4 and pending > 0 and wrong == 0, "%d cached chunks, %d awaiting quarter textures; %d stale tint strengths (expected %.2f everywhere)" % [cached.size(), pending, wrong, expected])
+
+
+## Counterfactual readback: disabling only this chunk's map tint must move a configured class away from its colour.
+func _check_map_tint(sprite: Sprite2D, crop: Rect2, zoom: float, id: String, actual: Color, allowed: bool) -> void:
+	var palette: Dictionary = ArtData.param("ground.map_mode.tint_by_ground", {})
+	if not palette.has(id):
+		return
+	var rgb: Array = palette[id]
+	var target: Vector3 = Vector3(float(rgb[0]), float(rgb[1]), float(rgb[2]))
+	var control: Sprite2D = sprite.duplicate() as Sprite2D
+	var material: ShaderMaterial = sprite.material.duplicate() as ShaderMaterial
+	material.set_shader_parameter("map_tint_strength", 0.0)
+	control.material = material
+	var without: Color = _mean_colour(await _read_pixels(control, crop, zoom))
+	control.free()
+	var before: float = Vector3(without.r, without.g, without.b).distance_to(target)
+	var after: float = Vector3(actual.r, actual.g, actual.b).distance_to(target)
+	if allowed:
+		_check("map_tint_%s_%.2fx" % [id, zoom], actual.a > 0.0 and without.a > 0.0 and before - after > 0.005, "RGB distance to declared class colour %.4f → %.4f with map tint" % [before, after])
+	else:
+		_check("map_tint_excludes_crisp_%s_%.2fx" % [id, zoom], actual.a > 0.0 and actual.is_equal_approx(without), "crisp ground unchanged with map tint on/off: %s / %s" % [actual, without])
 
 
 func _hearth(world: Node) -> Vector2i:
@@ -213,7 +449,7 @@ func _check_dither(map: GroundBaker.GroundMap, c: Vector2i, img: Image, size: in
 	_check("edges_dithered", band_mixed > 0.08 and band_mixed < 0.6 and far_mixed == 0.0, "%d tiles with another ground east: %.2f of the 12-px band taken from it, %.2f of the far side" % [tested, band_mixed, far_mixed])
 
 
-func _check_tone(layer: Node, map: GroundBaker.GroundMap, c: Vector2i, img: Image, size: int) -> void:
+func _check_tone(layer: Node, _map: GroundBaker.GroundMap, c: Vector2i, img: Image, size: int) -> void:
 	var report: Array = layer.call("tone_report")
 	var failed: Array[String] = []
 	for r: Variant in report:

@@ -1,3 +1,28 @@
+# D19 current recapture — 2026-10-24
+
+Same 14 saved moments, ticks and camera positions as the preserved D18 set below. Real windowed OpenGL captures at 1920×1080; no simulation advance. Raw PNGs: `/Users/rexxa/work/mart2-data/d19/screens/`. The old-renderer PNGs are unchanged. Full hashes, save hashes and test logs: `../D19_EVIDENCE.json`. Curated comparison and contact sheets now show D19.
+
+| Shot | Tick | Zoom | D19 PNG SHA-256 (first 16) |
+|---|---:|---:|---|
+| `mart2_01_day6_noon_1x` | 7440.0 | 1.0 | `e7259db52695b345` |
+| `mart2_02_day6_noon_half` | 7440.0 | 0.5 | `f0e1d789cf9dcc65` |
+| `mart2_14_day6_noon_quarter` | 7440.0 | 0.25 | `b883374e4d85defb` |
+| `mart2_08_storehouse_2x` | 7440.0 | 2.0 | `941f2244e1c3e293` |
+| `mart2_09_dug_pocket_2x` | 7440.0 | 2.0 | `e8f7306150206031` |
+| `mart2_10_ford_2x` | 7440.0 | 2.0 | `0867daf6f1367561` |
+| `mart2_03_day6_night_1x` | 6840.0 | 1.0 | `93ced904925e48f7` |
+| `mart2_04_day6_night_half` | 6840.0 | 0.5 | `72b1510c9929f633` |
+| `mart2_07_house_sleepers_2x` | 6840.0 | 2.0 | `35c757852d173174` |
+| `mart2_05_winter_noon_1x` | 26160.0 | 1.0 | `d897677eb94e854c` |
+| `mart2_06_winter_noon_half` | 26160.0 | 0.5 | `a5d0d76ad56882ea` |
+| `mart2_11_workshop_workers_2x` | 7710.0 | 2.0 | `c9849a9487286f76` |
+| `mart2_12_wolf_attack_1x` | 19000.0 | 1.0 | `8105e5b3c15f10b1` |
+| `mart2_13_migrant_arrival_1x` | 16140.0 | 1.0 | `2fb4af9ed2ebe6f2` |
+
+## Preserved pre-D19 inventory
+
+The following table and commentary describe the earlier capture, not the current curated sheets.
+
 # M-ART2 screen set
 
 The owner set (goal §11), captured by `tools/v8/capture.gd --mart2-set` (`tools/v8/mart2_shots.gd`) on colony seed 0

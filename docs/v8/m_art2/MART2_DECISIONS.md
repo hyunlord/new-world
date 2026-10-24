@@ -351,3 +351,70 @@ Visual review (verdict "acceptable", no blockers):
   (budget 4 ms: met); a dig in the test applies space and rebakes in 1.4 ms. The first bake after a load reads 17.5 ms
   (cold texture conversion, once per load) and the load's `warm()` 101 ms. The ¼× margin is thin: fallback step 3
   (trees baked into chunks at ¼×) was not needed and is left for the owner's call (report).
+
+## D19 — terrain colour separation before the next gate (2026-10-24)
+
+The owner/planner rejected the comparison's grey/ochre terrain and nearly invisible river, especially at ¼×.
+This supersedes the original goal's conservative land targets of mean luminance 0.32 and mean saturation 0.22:
+the registered ENV1 maxima are **0.38 and 0.30**, keeping the person-relative texture contrast limit 0.25 and
+the 0.9 operating margin. The dated goal and D18's original review/FPS evidence remain unchanged.
+
+- **Ground only:** `GroundLayer._toned` handles ground images exclusively. Tree and canopy sprites use original
+  manifest textures; wall strips remain on their separate material path. Reducing a chunk to ½ or ¼ resolution
+  never includes standing trees.
+- **Map colours are data:** `ground.map_mode.tint_strength` supplies ½× and ¼× weights; `tint_by_ground` supplies
+  green forest/grass, brown bare earth and rock values. A small per-chunk palette texture is sampled after ground
+  texture reduction. Crisp wall/hill caps opt out; winter reduces the map weight to retain the snow treatment.
+- **Water is separate:** its blue target and low texture contrast are independent of the land cap. A luminance
+  floor above the land ceiling reserves **0.10** contrast even under the configured full-night multiplier.
+  Hue separation is measured as the circular distance of mean RGB's HSV hue, with a minimum **0.12 turns
+  (43.2°)**; this numerical hue bar is the implementation's explicit interpretation of the owner's hue-distance
+  requirement. Tests use opaque interior terrain pixels, excluding bank ink/dither, occluding sprites and lights.
+- **Tree diagnosis, not an invented cap leak:** all six imported standing-tree PNGs are byte-identical to the
+  adopted style05 source. In the prior noon screenshot, the upper-left oak's 681 visible fully opaque pixels
+  match the source exactly; mean saturation is 0.60665 in both (difference 0). The source foliage is yellow/olive
+  already. No compatible greener authored source was found. Original files and source hue remain untouched,
+  following the owner's source-preservation requirement. A separately offered foliage hue correction is not
+  applied without an owner choice; this repair does not claim the original olive foliage is newly green.
+- **Rendered regression:** `mart2_ground_test.gd -- --rendered` requires a real window/GPU and checks the actual
+  tree factory and ground material at 2×, 1×, ½× and ¼×. Tree mean saturation must match source within 0.02.
+  Below 1× the independent source control uses the same nearest sampling phase: native birch-small mean can
+  naturally shift by −0.02958 to +0.02148 at ¼× without a tone change. Native 1× fully opaque pixels are also
+  compared directly; low-alpha edge RGB incurs premultiplied RGBA8 quantisation, so all visible edge pixels are
+  checked against the independent source render instead of comparing incompatible encodings.
+  `--cap-tree-control` deliberately routes probe trees through the land cap and must fail. Headless runs explicitly
+  skip GPU claims.
+
+Validation and same-save recapture: **targeted checks PASS**. Machine-readable evidence and full hashes are in
+`D19_EVIDENCE.json`; raw logs/PNGs are under `$DATA/d19/`.
+
+- Windowed `mart2_ground_test --rendered`: **119 PASS, 0 FAIL, 0 engine/script errors**. All 24 tree/zoom pairs have
+  saturation difference 0 against the independent phase/alpha-matched rendered source; all six native opaque
+  comparisons also have difference 0. Water: 32 day/night/class/zoom comparisons, minimum luminance difference
+  **0.1346**, minimum circular hue distance **0.1499 turns**. These are class-interior samples in seed 0/tick 1,
+  not a claim about every bank, overlay or seasonal pixel.
+- Negative controls: the original renderer produces **28 water-contrast failures**; deliberate tree capping
+  produces **30 tree failures**. Both exit 1 without runtime errors. Logs retain the initial failures.
+- A new transient zoom defect was caught and fixed: 42 cached chunks, 38 still awaiting reduced textures,
+  **38 stale map tints before → 0 after**. Tint strength changes atomically across cached materials while texture
+  resizing remains bounded to four chunks/frame. The initial suspicion that persistent large rectangles were
+  chunk seams was disproved: all 77 cached chunks had the correct factor/strength; the rectangles are the existing
+  ochre hunt-zone overlay. Uniform reset/full rebake did not remove them; hiding the overlay did. Zone drawing is unchanged.
+- Headless ground and people tests PASS; strict checks on all three changed GDScripts PASS; UI **42/42** PASS
+  (including F12 reload); Python extensibility/import/mask tests **23/23** PASS; imported art **664/664** hashes PASS.
+- The intended cap change changes the seed0/tick1 hearth chunk hash from `866fa6a85180…` to `2bb6d230317d…`.
+  Original hash retained externally; independent fresh bake and repeat-run comparisons pass with the new fixture.
+- All **14** 1920×1080 windowed captures reuse the original saved world, tick, tile and zoom. The six old-renderer
+  comparison PNGs remain unchanged; current sheets and `screens/SCREENS.md` point to the D19 evidence.
+
+Pre-D19 sheets and renderer files remain under `$DATA/d19/before/`; original screenshots/saves remain under
+`$DATA/screens/`. Original script/viewport setup failures and diagnostic captures are retained as intermediate
+evidence. Independent code review found no blocking defect. The previous full gate at `32cd61a7` does not certify
+D19; **new full gate, FPS and owner visual acceptance are NOT_CLAIMED**. Per-chunk palette/material overhead must
+be included in the planned performance run.
+
+Independent visual verdict: **88/100, REVISE for the full visual brief**. Terrain separation, water readability
+at night and foreground visibility improved; no new blocking rendering artifact was seen. However, the unchanged
+source canopy remains yellow/olive, so a newly green forest is **not delivered**. Ground/water repair and tree
+source preservation are verified; a foliage palette change remains a separate owner choice. Smoke also passed
+with zero script errors, engine errors, locale warnings and raw keys.

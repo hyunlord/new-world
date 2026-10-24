@@ -7,6 +7,13 @@ tags `v7-final-sim` and `v7-final-art`.
 
 ## M-ART2 — 2026-10-24
 
+### D19 pre-gate terrain review
+- Changed: ground-only ENV1 maxima to mean luminance 0.38 and mean saturation 0.30; separate blue-water contrast
+  and per-terrain map tint controls in `render_params.json`. Standing-tree source files remain unchanged.
+- Added: real-GPU tree saturation and all-zoom water/class separation checks in `mart2_ground_test.gd -- --rendered`,
+  including a deliberately capped-tree negative control; ADR 0035 and the D19 evidence record.
+- Prior gate/FPS numbers below describe `32cd61a7`; they do not certify the D19 renderer revision.
+
 The adopted art in the real game (`docs/v8/m_art2/MART2_GOAL.md`, record `docs/v8/m_art2/MART2_DECISIONS.md`, report
 `docs/v8/m_art2/MART2_REPORT.md`): 64-px tiles in one projection, route I people with face variants, the material
 system for walls/floors/doors, ground/water/edges/hill faces by code, LOD markers, day/night/winter by tone, every

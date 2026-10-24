@@ -1,0 +1,553 @@
+{
+  "decision": "D19",
+  "original_renderer_commit": "32cd61a77cb26886be5f13b9924fa55b7d64cbe0",
+  "work_base_commit": "d796fcacd",
+  "full_gate": "NOT_RUN_FOR_D19",
+  "fps": "NOT_RUN_FOR_D19",
+  "raw_directory": "/Users/rexxa/work/mart2-data/d19",
+  "tree_hue": "Adopted style05 yellow/olive source preserved; no green recolour claimed",
+  "logs": {
+    "rendered-final.log": {
+      "path": "/Users/rexxa/work/mart2-data/d19/rendered-final.log",
+      "sha256": "4a3200bb116f03ae2e70c8e56efdc454ecfe04d28ad7b8638aa3f073b7ca8784",
+      "pass_count": 119,
+      "fail_count": 0,
+      "runtime_errors": 0
+    },
+    "tree-negative.log": {
+      "path": "/Users/rexxa/work/mart2-data/d19/tree-negative.log",
+      "sha256": "624ae79b7f9336d8e58d18cc8f8357b3ddaaf5211f9ee83763e3470da69082a4",
+      "pass_count": 89,
+      "fail_count": 30,
+      "runtime_errors": 0
+    },
+    "original-negative.log": {
+      "path": "/Users/rexxa/work/mart2-data/d19/original-negative.log",
+      "sha256": "6149b207b32bc460a49e0dc7df9486561ef793acedb6fb9cfd112c8226e68ac3",
+      "pass_count": 82,
+      "fail_count": 28,
+      "runtime_errors": 0
+    },
+    "mart2_ground_test.log": {
+      "path": "/Users/rexxa/work/mart2-data/d19/mart2_ground_test.log",
+      "sha256": "3891257a77752e067606a15a2c1081b333abc63994fdcbab5c174fce95acce90",
+      "pass_count": 10,
+      "fail_count": 0,
+      "runtime_errors": 0
+    },
+    "mart2_people_test.log": {
+      "path": "/Users/rexxa/work/mart2-data/d19/mart2_people_test.log",
+      "sha256": "a04db91c567b91f5b9a447adbd2b0e2042301bdbd269967b16e6f7b0ecb6a23d",
+      "pass_count": 6,
+      "fail_count": 0,
+      "runtime_errors": 0
+    },
+    "ui-test.log": {
+      "path": "/Users/rexxa/work/mart2-data/d19/ui-test.log",
+      "sha256": "163fae92aab45807e2cb953865ec93893b264574adff3648b12334d0336fd75b",
+      "pass_count": 42,
+      "fail_count": 0,
+      "runtime_errors": 0
+    },
+    "strict-final.log": {
+      "path": "/Users/rexxa/work/mart2-data/d19/strict-final.log",
+      "sha256": "b2e0e55dace500364affc1781c5d1324c6595576961936309c862217e9cf4a42",
+      "pass_count": 0,
+      "fail_count": 0,
+      "runtime_errors": 0
+    },
+    "python-tests.log": {
+      "path": "/Users/rexxa/work/mart2-data/d19/python-tests.log",
+      "sha256": "3d4e9f88e3283921f94008116902d28937bc899a6256aa8cfc4e144c55b0193e",
+      "pass_count": 0,
+      "fail_count": 0,
+      "runtime_errors": 0
+    },
+    "art-verify.log": {
+      "path": "/Users/rexxa/work/mart2-data/d19/art-verify.log",
+      "sha256": "0a866f72ec129361b574301dbe4419271936307f860690d31abc270d42ac9578",
+      "pass_count": 0,
+      "fail_count": 0,
+      "runtime_errors": 0
+    },
+    "capture-final.log": {
+      "path": "/Users/rexxa/work/mart2-data/d19/capture-final.log",
+      "sha256": "2613d7bd955b5fdbaf6988ef13d0838a4fda0e9e6f51816981c0aec66de83d20",
+      "pass_count": 0,
+      "fail_count": 0,
+      "runtime_errors": 0
+    }
+  },
+  "water_samples": [
+    {
+      "case": "water_contrast_dark_grass_day_2.00x",
+      "luminance_difference": 0.2615,
+      "hue_distance_turns": 0.431
+    },
+    {
+      "case": "water_contrast_hill_rock_day_2.00x",
+      "luminance_difference": 0.3958,
+      "hue_distance_turns": 0.4581
+    },
+    {
+      "case": "water_contrast_forest_floor_day_2.00x",
+      "luminance_difference": 0.2588,
+      "hue_distance_turns": 0.47
+    },
+    {
+      "case": "water_contrast_packed_earth_ground_day_2.00x",
+      "luminance_difference": 0.2557,
+      "hue_distance_turns": 0.4694
+    },
+    {
+      "case": "water_contrast_dark_grass_night_2.00x",
+      "luminance_difference": 0.1376,
+      "hue_distance_turns": 0.3585
+    },
+    {
+      "case": "water_contrast_hill_rock_night_2.00x",
+      "luminance_difference": 0.2062,
+      "hue_distance_turns": 0.3814
+    },
+    {
+      "case": "water_contrast_forest_floor_night_2.00x",
+      "luminance_difference": 0.1362,
+      "hue_distance_turns": 0.4758
+    },
+    {
+      "case": "water_contrast_packed_earth_ground_night_2.00x",
+      "luminance_difference": 0.1346,
+      "hue_distance_turns": 0.4746
+    },
+    {
+      "case": "water_contrast_dark_grass_day_1.00x",
+      "luminance_difference": 0.2615,
+      "hue_distance_turns": 0.431
+    },
+    {
+      "case": "water_contrast_hill_rock_day_1.00x",
+      "luminance_difference": 0.3958,
+      "hue_distance_turns": 0.4581
+    },
+    {
+      "case": "water_contrast_forest_floor_day_1.00x",
+      "luminance_difference": 0.2588,
+      "hue_distance_turns": 0.47
+    },
+    {
+      "case": "water_contrast_packed_earth_ground_day_1.00x",
+      "luminance_difference": 0.2557,
+      "hue_distance_turns": 0.4694
+    },
+    {
+      "case": "water_contrast_dark_grass_night_1.00x",
+      "luminance_difference": 0.1376,
+      "hue_distance_turns": 0.3585
+    },
+    {
+      "case": "water_contrast_hill_rock_night_1.00x",
+      "luminance_difference": 0.2062,
+      "hue_distance_turns": 0.3814
+    },
+    {
+      "case": "water_contrast_forest_floor_night_1.00x",
+      "luminance_difference": 0.1362,
+      "hue_distance_turns": 0.4758
+    },
+    {
+      "case": "water_contrast_packed_earth_ground_night_1.00x",
+      "luminance_difference": 0.1346,
+      "hue_distance_turns": 0.4746
+    },
+    {
+      "case": "water_contrast_dark_grass_day_0.50x",
+      "luminance_difference": 0.2631,
+      "hue_distance_turns": 0.3482
+    },
+    {
+      "case": "water_contrast_hill_rock_day_0.50x",
+      "luminance_difference": 0.3974,
+      "hue_distance_turns": 0.4579
+    },
+    {
+      "case": "water_contrast_forest_floor_day_0.50x",
+      "luminance_difference": 0.2813,
+      "hue_distance_turns": 0.3475
+    },
+    {
+      "case": "water_contrast_packed_earth_ground_day_0.50x",
+      "luminance_difference": 0.263,
+      "hue_distance_turns": 0.4893
+    },
+    {
+      "case": "water_contrast_dark_grass_night_0.50x",
+      "luminance_difference": 0.1383,
+      "hue_distance_turns": 0.2211
+    },
+    {
+      "case": "water_contrast_hill_rock_night_0.50x",
+      "luminance_difference": 0.2071,
+      "hue_distance_turns": 0.3835
+    },
+    {
+      "case": "water_contrast_forest_floor_night_0.50x",
+      "luminance_difference": 0.1476,
+      "hue_distance_turns": 0.1686
+    },
+    {
+      "case": "water_contrast_packed_earth_ground_night_0.50x",
+      "luminance_difference": 0.1388,
+      "hue_distance_turns": 0.4589
+    },
+    {
+      "case": "water_contrast_dark_grass_day_0.25x",
+      "luminance_difference": 0.2649,
+      "hue_distance_turns": 0.3019
+    },
+    {
+      "case": "water_contrast_hill_rock_day_0.25x",
+      "luminance_difference": 0.3982,
+      "hue_distance_turns": 0.4577
+    },
+    {
+      "case": "water_contrast_forest_floor_day_0.25x",
+      "luminance_difference": 0.296,
+      "hue_distance_turns": 0.2657
+    },
+    {
+      "case": "water_contrast_packed_earth_ground_day_0.25x",
+      "luminance_difference": 0.268,
+      "hue_distance_turns": 0.4991
+    },
+    {
+      "case": "water_contrast_dark_grass_night_0.25x",
+      "luminance_difference": 0.1386,
+      "hue_distance_turns": 0.1887
+    },
+    {
+      "case": "water_contrast_hill_rock_night_0.25x",
+      "luminance_difference": 0.2077,
+      "hue_distance_turns": 0.3875
+    },
+    {
+      "case": "water_contrast_forest_floor_night_0.25x",
+      "luminance_difference": 0.1543,
+      "hue_distance_turns": 0.1499
+    },
+    {
+      "case": "water_contrast_packed_earth_ground_night_0.25x",
+      "luminance_difference": 0.1414,
+      "hue_distance_turns": 0.4207
+    }
+  ],
+  "minimum_luminance_difference": 0.1346,
+  "minimum_hue_distance_turns": 0.1499,
+  "tree_source_proof": {
+    "tree_sources": [
+      {
+        "id": "oak_large",
+        "import_sha256": "5f1866a7180b8c062f91235f48265f0d38a3e0662b5c1871534f48aeba719b11",
+        "source_sha256": "5f1866a7180b8c062f91235f48265f0d38a3e0662b5c1871534f48aeba719b11",
+        "identical": true
+      },
+      {
+        "id": "oak_small",
+        "import_sha256": "81fa383f8ae0f49a408272dea669c68133428a5a70b4c5d9810cb3bfdb0fd1ce",
+        "source_sha256": "81fa383f8ae0f49a408272dea669c68133428a5a70b4c5d9810cb3bfdb0fd1ce",
+        "identical": true
+      },
+      {
+        "id": "birch_large",
+        "import_sha256": "e41b5552b2ca2d84e657c13a9a150ae9e38792b3edf398517e54277f17f1fa8c",
+        "source_sha256": "e41b5552b2ca2d84e657c13a9a150ae9e38792b3edf398517e54277f17f1fa8c",
+        "identical": true
+      },
+      {
+        "id": "birch_small",
+        "import_sha256": "e0be91c597eaeaa47c7ff9e88d03be810d635d581a6d6739391b1be20c403eff",
+        "source_sha256": "e0be91c597eaeaa47c7ff9e88d03be810d635d581a6d6739391b1be20c403eff",
+        "identical": true
+      },
+      {
+        "id": "pine_large",
+        "import_sha256": "6f1de07dd985109ab740724df58fc94b0ac1142e10c3cc0ad02b56d414a8e2fa",
+        "source_sha256": "6f1de07dd985109ab740724df58fc94b0ac1142e10c3cc0ad02b56d414a8e2fa",
+        "identical": true
+      },
+      {
+        "id": "pine_small",
+        "import_sha256": "7fc975a1cc06cdb8a79441e1f0c8418c4467eec7e5c412f7d0b029e1369dd565",
+        "source_sha256": "7fc975a1cc06cdb8a79441e1f0c8418c4467eec7e5c412f7d0b029e1369dd565",
+        "identical": true
+      }
+    ],
+    "old_capture_visible_opaque_pixels": 681,
+    "exact_rgb_pixels": 681,
+    "source_mean_saturation": 0.606649147442194,
+    "rendered_mean_saturation": 0.606649147442194
+  },
+  "captures": [
+    {
+      "name": "mart2_01_day6_noon_1x",
+      "tick": 7440.0,
+      "tile": [
+        91.0,
+        101.0
+      ],
+      "zoom": 1.0,
+      "path": "/Users/rexxa/work/mart2-data/d19/screens/mart2_01_day6_noon_1x.png",
+      "sha256": "e7259db52695b34533170ed9cb06b79322141bd6d7e9ac3e52bbdadb54260547",
+      "old_path": "/Users/rexxa/work/mart2-data/d19/screens/old_mart2_01_day6_noon_1x.png",
+      "old_sha256": "e1bcb072bb918917138d0f30c0d47e87d616c08d998a7730f1358affa93bae5e",
+      "save_path": "/Users/rexxa/work/mart2-data/screens/mart2_01_day6_noon_1x.wsave",
+      "save_sha256": "07639a624f9a28abcc28e042d9b3ba52690fb0693252b4dfb1b07326d4737a0e"
+    },
+    {
+      "name": "mart2_02_day6_noon_half",
+      "tick": 7440.0,
+      "tile": [
+        91.0,
+        101.0
+      ],
+      "zoom": 0.5,
+      "path": "/Users/rexxa/work/mart2-data/d19/screens/mart2_02_day6_noon_half.png",
+      "sha256": "f0e1d789cf9dcc65a0b1e284d8cbe1e8bb9cc6906e3061090b7d42cfd42bc6ea",
+      "old_path": "/Users/rexxa/work/mart2-data/d19/screens/old_mart2_02_day6_noon_half.png",
+      "old_sha256": "196a1c52a1728c88609ae38f33ae1cb23456e6e520b195b10964f9592810c97a",
+      "save_path": "/Users/rexxa/work/mart2-data/screens/mart2_02_day6_noon_half.wsave",
+      "save_sha256": "07639a624f9a28abcc28e042d9b3ba52690fb0693252b4dfb1b07326d4737a0e"
+    },
+    {
+      "name": "mart2_14_day6_noon_quarter",
+      "tick": 7440.0,
+      "tile": [
+        91.0,
+        101.0
+      ],
+      "zoom": 0.25,
+      "path": "/Users/rexxa/work/mart2-data/d19/screens/mart2_14_day6_noon_quarter.png",
+      "sha256": "b883374e4d85defb4733a8ebe1b5bc9923b9cc1037b49ab22ccfdb07d4486ffa",
+      "old_path": "/Users/rexxa/work/mart2-data/d19/screens/old_mart2_14_day6_noon_quarter.png",
+      "old_sha256": "e1903f81d4730926dd1d0163ebd294990bcf296f69e93f89cffe16b8c5673944",
+      "save_path": "/Users/rexxa/work/mart2-data/screens/mart2_14_day6_noon_quarter.wsave",
+      "save_sha256": "07639a624f9a28abcc28e042d9b3ba52690fb0693252b4dfb1b07326d4737a0e"
+    },
+    {
+      "name": "mart2_08_storehouse_2x",
+      "tick": 7440.0,
+      "tile": [
+        103.0,
+        97.0
+      ],
+      "zoom": 2.0,
+      "path": "/Users/rexxa/work/mart2-data/d19/screens/mart2_08_storehouse_2x.png",
+      "sha256": "941f2244e1c3e2937543cf88e99163658dcb8683d769e2eb9288ca3295933aa3",
+      "old_path": "/Users/rexxa/work/mart2-data/d19/screens/old_mart2_08_storehouse_2x.png",
+      "old_sha256": "683d0553768ebcf2a4f23a549d5526180881c0b3608418a2cc7601d71def22f6",
+      "save_path": "/Users/rexxa/work/mart2-data/screens/mart2_08_storehouse_2x.wsave",
+      "save_sha256": "07639a624f9a28abcc28e042d9b3ba52690fb0693252b4dfb1b07326d4737a0e"
+    },
+    {
+      "name": "mart2_09_dug_pocket_2x",
+      "tick": 7440.0,
+      "tile": [
+        80.0,
+        85.0
+      ],
+      "zoom": 2.0,
+      "path": "/Users/rexxa/work/mart2-data/d19/screens/mart2_09_dug_pocket_2x.png",
+      "sha256": "e8f7306150206031b782bb79653901f0cb70abe3972dadd7363e8949d73062c8",
+      "old_path": "/Users/rexxa/work/mart2-data/d19/screens/old_mart2_09_dug_pocket_2x.png",
+      "old_sha256": "2f08f041ca28e44b5d324fdac11b5bc124acafcc5b0c1b6534cda31b88957b8d",
+      "save_path": "/Users/rexxa/work/mart2-data/screens/mart2_09_dug_pocket_2x.wsave",
+      "save_sha256": "07639a624f9a28abcc28e042d9b3ba52690fb0693252b4dfb1b07326d4737a0e"
+    },
+    {
+      "name": "mart2_10_ford_2x",
+      "tick": 7440.0,
+      "tile": [
+        87.0,
+        100.0
+      ],
+      "zoom": 2.0,
+      "path": "/Users/rexxa/work/mart2-data/d19/screens/mart2_10_ford_2x.png",
+      "sha256": "0867daf6f1367561eea874ecfb7df2bfa710e87979698ad3374e3961042abbb7",
+      "old_path": "/Users/rexxa/work/mart2-data/d19/screens/old_mart2_10_ford_2x.png",
+      "old_sha256": "938081c7b40b25bd333c5acce36b992480d2e5faa52278cb8e059bd6142834e4",
+      "save_path": "/Users/rexxa/work/mart2-data/screens/mart2_10_ford_2x.wsave",
+      "save_sha256": "07639a624f9a28abcc28e042d9b3ba52690fb0693252b4dfb1b07326d4737a0e"
+    },
+    {
+      "name": "mart2_03_day6_night_1x",
+      "tick": 6840.0,
+      "tile": [
+        91.0,
+        101.0
+      ],
+      "zoom": 1.0,
+      "path": "/Users/rexxa/work/mart2-data/d19/screens/mart2_03_day6_night_1x.png",
+      "sha256": "93ced904925e48f7a5d99903499527ab538785707b1af1ed6e085aeb1bc08856",
+      "old_path": "/Users/rexxa/work/mart2-data/d19/screens/old_mart2_03_day6_night_1x.png",
+      "old_sha256": "2adb499247333b0ecbbbf670a00cba2233d7df125df13c4a8e9b490a09db707a",
+      "save_path": "/Users/rexxa/work/mart2-data/screens/mart2_03_day6_night_1x.wsave",
+      "save_sha256": "465c910aee0fa05b53ca2c470edb23814189f2ded8434a234c62e8a043fd7b7c"
+    },
+    {
+      "name": "mart2_04_day6_night_half",
+      "tick": 6840.0,
+      "tile": [
+        91.0,
+        101.0
+      ],
+      "zoom": 0.5,
+      "path": "/Users/rexxa/work/mart2-data/d19/screens/mart2_04_day6_night_half.png",
+      "sha256": "72b1510c9929f633accee8fce4fc7d28426a0cfc28aae966efaa427faaa8e709",
+      "old_path": "/Users/rexxa/work/mart2-data/d19/screens/old_mart2_04_day6_night_half.png",
+      "old_sha256": "70c42412c6aec78df257ab766c0c6c12b7a6ac4689e351ae1de9a99966e7ccbf",
+      "save_path": "/Users/rexxa/work/mart2-data/screens/mart2_04_day6_night_half.wsave",
+      "save_sha256": "465c910aee0fa05b53ca2c470edb23814189f2ded8434a234c62e8a043fd7b7c"
+    },
+    {
+      "name": "mart2_07_house_sleepers_2x",
+      "tick": 6840.0,
+      "tile": [
+        84.0,
+        107.0
+      ],
+      "zoom": 2.0,
+      "path": "/Users/rexxa/work/mart2-data/d19/screens/mart2_07_house_sleepers_2x.png",
+      "sha256": "35c757852d173174fd04d5a08ddc380e48c205a5a2852b6d7fe8d81a9304a58c",
+      "old_path": "/Users/rexxa/work/mart2-data/d19/screens/old_mart2_07_house_sleepers_2x.png",
+      "old_sha256": "f8e36858a78dcf629e6cf3871f16279f3d2b26c6c59be88ca3861cf336178828",
+      "save_path": "/Users/rexxa/work/mart2-data/screens/mart2_07_house_sleepers_2x.wsave",
+      "save_sha256": "465c910aee0fa05b53ca2c470edb23814189f2ded8434a234c62e8a043fd7b7c"
+    },
+    {
+      "name": "mart2_05_winter_noon_1x",
+      "tick": 26160.0,
+      "tile": [
+        91.0,
+        101.0
+      ],
+      "zoom": 1.0,
+      "path": "/Users/rexxa/work/mart2-data/d19/screens/mart2_05_winter_noon_1x.png",
+      "sha256": "d897677eb94e854ca12d3e45594a87748fd644e68757d2d817fb5db0d18ec1c4",
+      "old_path": "/Users/rexxa/work/mart2-data/d19/screens/old_mart2_05_winter_noon_1x.png",
+      "old_sha256": "8d91e9e2ae7b69a8446e0c701b2df89997eaa59c220ffd47f40cb672047741ef",
+      "save_path": "/Users/rexxa/work/mart2-data/screens/mart2_05_winter_noon_1x.wsave",
+      "save_sha256": "ee79d87c2ca08302c51bd1ed3a7f1528ede3e2dff92a9dddd7a5f99189b42633"
+    },
+    {
+      "name": "mart2_06_winter_noon_half",
+      "tick": 26160.0,
+      "tile": [
+        91.0,
+        101.0
+      ],
+      "zoom": 0.5,
+      "path": "/Users/rexxa/work/mart2-data/d19/screens/mart2_06_winter_noon_half.png",
+      "sha256": "a5d0d76ad56882eaca1735c64748892450c9df58a8145e2fff1366bd97cd218c",
+      "old_path": "/Users/rexxa/work/mart2-data/d19/screens/old_mart2_06_winter_noon_half.png",
+      "old_sha256": "4da3c32770a67ac730289a633153ffc031934a8c4fba575f8629437dca85ce05",
+      "save_path": "/Users/rexxa/work/mart2-data/screens/mart2_06_winter_noon_half.wsave",
+      "save_sha256": "ee79d87c2ca08302c51bd1ed3a7f1528ede3e2dff92a9dddd7a5f99189b42633"
+    },
+    {
+      "name": "mart2_11_workshop_workers_2x",
+      "tick": 7710.0,
+      "tile": [
+        90.0,
+        103.0
+      ],
+      "zoom": 2.0,
+      "path": "/Users/rexxa/work/mart2-data/d19/screens/mart2_11_workshop_workers_2x.png",
+      "sha256": "c9849a9487286f765b17e3cfbc48f0120694f0bb304257969ef72fcc4c255d45",
+      "old_path": "/Users/rexxa/work/mart2-data/d19/screens/old_mart2_11_workshop_workers_2x.png",
+      "old_sha256": "a1541ddb6b296707a526e4f143560799f50ad0cf580baf0a64846fbd87bec3ef",
+      "save_path": "/Users/rexxa/work/mart2-data/screens/mart2_11_workshop_workers_2x.wsave",
+      "save_sha256": "6e971875473a4413c0c44ad8b103884ea7a183a8be931bb7939146972b4db64c"
+    },
+    {
+      "name": "mart2_12_wolf_attack_1x",
+      "tick": 19000.0,
+      "tile": [
+        83.0,
+        91.0
+      ],
+      "zoom": 1.0,
+      "path": "/Users/rexxa/work/mart2-data/d19/screens/mart2_12_wolf_attack_1x.png",
+      "sha256": "8105e5b3c15f10b1818b1b0c18a9cf2f900cbea63c90fadea7a7c4c1100de109",
+      "old_path": "/Users/rexxa/work/mart2-data/d19/screens/old_mart2_12_wolf_attack_1x.png",
+      "old_sha256": "430bd8f1162a4a97fcce54cad678e88a5d3c553d63c07f26a90c8b76a329840e",
+      "save_path": "/Users/rexxa/work/mart2-data/screens/mart2_12_wolf_attack_1x.wsave",
+      "save_sha256": "c02479c41ab997772666e3d5f354973652cfc57993df62738820483dd683fa4d"
+    },
+    {
+      "name": "mart2_13_migrant_arrival_1x",
+      "tick": 16140.0,
+      "tile": [
+        91.0,
+        96.0
+      ],
+      "zoom": 1.0,
+      "path": "/Users/rexxa/work/mart2-data/d19/screens/mart2_13_migrant_arrival_1x.png",
+      "sha256": "2fb4af9ed2ebe6f2dd441e24f8274996a22d99ab86729dd66468d00367313105",
+      "old_path": "/Users/rexxa/work/mart2-data/d19/screens/old_mart2_13_migrant_arrival_1x.png",
+      "old_sha256": "47ac0a6e390bd54f114dd96ba34ace0826f2b71bb2a0b08b46a263099fbd1bdd",
+      "save_path": "/Users/rexxa/work/mart2-data/screens/mart2_13_migrant_arrival_1x.wsave",
+      "save_sha256": "4d1eeb6aac06d559dae1adf8c6c6f11c9f2aa0ffd94c5e9eb005a9568c442297"
+    }
+  ],
+  "chunk_hash_before": {
+    "about": "SHA-256 of the hearth chunk's baked RGBA8 bytes (mart2_ground_test.gd); rewrite with -- --write after an intended change",
+    "seed0_tick1_chunk_5_6": "866fa6a8518007a2da07ef049c3fcc261bfc9b61afe13c1fc3962ddc36c22f5a"
+  },
+  "chunk_hash_after": {
+    "about": "SHA-256 of the hearth chunk's baked RGBA8 bytes (mart2_ground_test.gd); rewrite with -- --write after an intended change",
+    "seed0_tick1_chunk_5_6": "2bb6d230317d52eb04ca6bcb8316f82e2af2111e6383b25d66c8176bfcb70919"
+  },
+  "visual_verdict": {
+    "score": 88,
+    "verdict": "revise",
+    "category_match": true,
+    "differences": [
+      "Green land, brown clearing, blue water and dark rock now separate at reduced zoom",
+      "Water remains legible at night and people remain visible",
+      "Source-preserved canopy remains yellow/olive; a newly green forest is not delivered",
+      "Persistent rectangles are existing hunt-zone overlays, not chunk seams"
+    ],
+    "suggestions": [
+      "Retain terrain repair and source-preservation checks",
+      "Obtain a separate owner choice before foliage hue correction"
+    ],
+    "reasoning": "Terrain legibility and source preservation are verified, but the full visual brief remains unresolved because the adopted source canopy is olive.",
+    "threshold": 90,
+    "threshold_pass": false,
+    "next_actions": [
+      "Owner choice on foliage hue correction",
+      "Run the next full gate and FPS on the changed renderer"
+    ],
+    "reference_images": [
+      "/Users/rexxa/work/mart2-data/d19/before/mart2_compare_sheet.png"
+    ],
+    "generated_screenshot": "/Users/rexxa/work/new-world-pass4/docs/images/mart2_compare_sheet.png"
+  },
+  "code_review": "PASS: no blocking correctness, lifecycle or cache finding; performance and source-mean measurement limits retained.",
+  "verified_file_sha256": {
+    "assets/v8art/render_params.json": "74c0ae9907dc3af9c138562574d967a20e503108deb495c2cdde2841b03ff736",
+    "scripts/world/art/tone.gd": "2a565d71a2926f0f68c9f032dcb3161f09bba769ee5d835037d0a9d90773dfbf",
+    "scripts/world/colony/ground_layer.gd": "f5faf0035cb24fdaa7fcbd088ce3fa8eef154a25f5b72878562fd42b890be1ff",
+    "shaders/ground_chunk.gdshader": "2daeea0eecac6111e03af2c1494ed8e59578a63377bc8a4fe5cd5d31d02646b8",
+    "tools/v8/mart2_ground_test.gd": "f849c0abf32e52784e4ec94aeaf56332230bd22e04466ce48f5e6a23bb26fe85",
+    "tools/v8/mart2_chunk_hashes.json": "5ddf4f26f1fe44701463566f4216e0d040f1725928f41b254d5615e10683d9b2",
+    "docs/images/mart2_compare_sheet.png": "34ad86896b5da480f99516a76bee299d43b34b5a7a66f9a62ffb41baedddb825",
+    "docs/images/mart2_contact_sheet.png": "a9b81ae0b391fd046cf52135aff2f2f74d57db91dc02c660f1124e7418e93669"
+  },
+  "smoke": {
+    "path": "/Users/rexxa/work/mart2-data/d19/smoke-runner.log",
+    "script_errors": 0,
+    "engine_errors": 0,
+    "locale_warnings": 0,
+    "raw_keys": 0
+  }
+}
