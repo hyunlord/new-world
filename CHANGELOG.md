@@ -5,6 +5,59 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## M-ART2.1 — 2026-10-24
+
+The in-game look finished before M-EXT (`docs/v8/m_art2_1/MART21_GOAL.md`, record `MART21_DECISIONS.md`, report
+`MART21_REPORT.md`): textured water with rounded shores, ART-TREES' summer-green species with seasons, the ¼× map with
+baked canopy, household rings on the LOD markers, and D19 (`a1c20220`) brought through a gate. No simulation change
+(identity byte-identical); one bridge read (three snapshot columns).
+
+### Added
+- Rounded shores and hill edges (`scripts/world/art/ground_baker.gd`): the water outline is the closed-form signed
+  distance field of the water tiles opened and closed by a disc of `water.shore_radius_px` (22) — straight shores on
+  the tile edge, quarter circles at steps, diagonal water kept joined — cached as 32 × 32 quadrant masks per
+  (quadrant, 2 × 2 pattern, noise phase) and applied with native blits; coverage `water.contour_soft_px` (6) dithered,
+  the 10-px bank and 2-px ink following the contour; undug hill tops round against open ground (`hill.edge_radius_px`
+  16) except where a face hangs (D2).
+- Water lift (`ground_layer.gd` `water_lift`, `shaders/ground_chunk.gdshader` `water_lift`): per chunk an RGB offset on
+  the unchanged 05 water texture so its mean clears every land ground touching water by 0.10 luminance at full night
+  and 0.12 turns of hue, at every zoom's map tint, recomputed per tone (D3).
+- ART-TREES import (`tools/v8/art_import.json` `source_commit` `f182769f`, `flora` section; `assets/v8art/flora/`): the
+  species catalogue and habit defaults with schemas, 21 frames, 21 canopy masks, the canopy-mass texture and the
+  data-only fixture `tests/test_alder.json`; `art_import.py --verify` checks catalogue paths and bound species (D4).
+- `scripts/world/art/flora_resolver.gd`: the port of `resolve_flora.py`; parity on 352 cases
+  (`tools/v8/flora_parity_fixture.json`, expected from the art line's own resolver) in gate step `resolver_parity`.
+- `shaders/tree_season.gdshader`: per-pixel CIELAB season shift on the canopy mask, bare winter frames for deciduous
+  trees, the snow cap band, a first-day-of-season blend with a per-pixel dissolve between frames.
+- ¼× canopy bake (`ground_baker.gd` `_canopy_pass`, `ground_layer.gd` `_prepare_canopies`): at texture factor 4 tree
+  tiles carry the season-tinted canopy mass, darkened at the edge; the tree layer hides their sprites
+  (`trees.quarter_canopy`, `canopy_radius_px`, `canopy_edge_px`, `canopy_edge_value`).
+- Household rings on the LOD markers (`agent_layer.gd` `household_keys`, `lod_markers.gd` ring colour per instance,
+  `lod.household_ring_rgb` six hues) from three new read-only `get_agent_snapshot` columns `mothers`, `fathers`,
+  `partners` (`sim-bridge` `collect_kin_columns`; snapshot_schema.md) (D5).
+- Tests: `mart2_ground_test.gd` §7–8 (L-shaped river radius, straight edge, bank follows contour, hill corners, water
+  texture std, contrast by day / winter / drought, fords, the step instrument along water edges);
+  `tools/v8/mart21_trees_test.gd` (four seasons per species, bare winter, the data-only species, ¼× canopy and
+  hidden sprites, households; windowed canopy saturation, autumn records, the five ¼× map classes' ΔE) in gate step
+  `mart2_render`; `engine_appearance_ffi.rs` `kin_columns_line_up_with_the_snapshot_and_the_kin_component`;
+  `tools/v8/mart21_shots.gd` (the compare set and the seasons strip from saves).
+
+### Changed
+- Trees resolve (species, size, season, variant) through the flora catalogue; bindings `trees.species` names species
+  ids by weight (still a keyed hash: M-EXT replaces it with the snapshot's species column); stumps are the felled
+  species' stump; berry bushes use the ART-TREES bush frames with their species' season tint.
+- `render_params.json`: `water` gains `shore_radius_px`, `contour_soft_px`, `texture_lift`, `map_mode_colour`
+  (replacing `colour`; `texture_std` removed); new `hill` and `trees` sections; `lod.household_ring_rgb`.
+- The M-ART2 rendered tree check draws through `TreeLayer.make_plant` in summer; bare-land samples skip tree tiles.
+- `docs/images/mart2_compare_sheet.png` now shows old · M-ART2 · M-ART2.1 for six scenes; `docs/images/mart21_seasons.png`
+  added; `docs/images/mart21_contact_sheet.png` replaces `mart2_contact_sheet.png`.
+
+### Removed
+- D19's flat water recolour (`tone.gd` `water_colour`, 18 lines; `water.colour`, `water.texture_std`).
+- The TRIAL2b tree, stump and bush sprites (`assets/v8art/structures/{oak,birch,pine}_{large,small}.png`, `stump.png`,
+  `berry_full.png`, `berry_bare.png`; at `v8/art-polish2` `c8ed8608`) and `tree_layer.gd` `tree_id` / `_tree_cfg`.
+- The old straight bank and ink masks (`ground_baker.gd` `_ink_pair`, the water-side `_side_mask` path).
+
 ## M-ART2 — 2026-10-24
 
 ### D19 pre-gate terrain review

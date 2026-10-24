@@ -188,11 +188,33 @@ outline) made a forest read as green dots that hid the people and 34 logs read a
   in a bake.
 - Walls, doors and hill faces are per-row strips (`wall_baker.gd`) in the y-sorted `ColonyView/World`; a space change
   rebakes only the chunks whose tiles changed (`ground_layer.gd` `_apply_space`).
+- Shores and hill edges (M-ART2.1): the outline is a closed-form signed distance field per tile quadrant
+  (`ground_baker.gd` `shore_field`: a line, a rounded quarter plane, or a diagonal pair with both class-0 corners
+  rounded), valid because the radius is under half a tile. Masks are cached per (pair, quadrant, 2 × 2 pattern, noise
+  phase) and blitted natively; to change the shape, change `shore_field` and the params, never add a per-pixel loop
+  to `bake`. `shore_distance(map, wx, wy, pair)` is the probe tests measure the contour with. The field is negative
+  inside class 1 (water, hill top, canopy): it already is the land-side distance.
+- Water is the unchanged 05 texture plus a per-chunk `water_lift` uniform (`ground_layer.gd` `water_lift`): change the
+  contrast rule there, never recolour the texture.
+- Trees (M-ART2.1): `flora_resolver.gd` resolves (species, size, season, variant) from `assets/v8art/flora/`;
+  `tree_layer.gd` `make_plant` is the one sprite path (tests draw through it); `shaders/tree_season.gdshader` does the
+  per-pixel Lab shift, bare-frame dissolve and snow band; `force_season(from, to, blend)` pins a season for tests
+  and captures. At ¼× `ground_baker.gd` `_canopy_pass` bakes the canopy into the chunk and the tree layer hides the
+  sprites of chunks where `GroundLayer.canopy_baked_at` is true.
+
+### 13. Capture the compare set and a seasons strip from saves (M-ART2.1)
+1. `"$GODOT_BIN" --path . --rendering-driver opengl3 --resolution 1920x1080 --script res://tools/v8/mart21_shots.gd --
+   --set <dir with mart2_set.json> --out <dir>` replays every saved shot (same tick, tile, zoom) with this renderer.
+2. `--seasons <save> --tile x,y --out <dir>` advances one save to noon of day 3 in each season and saves the tile at
+   1× and the map centre at ¼×.
+3. Lay them out with `tools/v8/contact_sheet.py --columns N` (three columns for old · previous · new).
 
 ## Lessons
 
 | date | symptom | root cause | fix | source |
 |---|---|---|---|---|
+| 2026-10-24 | Every shore quadrant mask came out empty on one side although the field was right | `var target: PackedByteArray = m1 if is1 else m0` copies: packed arrays are values in GDScript, so writes to `target` never reached `m1` / `m0` | write each packed buffer through its own name (`if is1: m1[i] = 255 else: m0[i] = 255`) | `scripts/world/art/ground_baker.gd` `_quadrant_masks` |
+| 2026-10-24 | A new shader had no `.uid` while `check_docs_helpers.py uid` passed | Godot writes a `.uid` only when it imports the file, and the check looks at tracked sources only | after adding a `.gd` or `.gdshader`, run the headless import again and stage the new `.uid` with it | `shaders/tree_season.gdshader.uid` |
 | 2026-10-24 | The FPS runner's Godot died at once with exit 247 and no output after the release library was copied over the debug one | macOS kills (SIGKILL) a process that maps a signed dylib whose file was overwritten in place; `cp` over the file Godot loads keeps the inode and invalidates its code signature | replace, never overwrite, a library any process may load: `rm -f` then `cp`; restore the same way in a trap | `tools/v8/mart2_fps.sh` |
 | 2026-10-24 | Every person was tinted blue-white after the variant shader went in | a `sampler2D` uniform with no texture set reads white, so the mask said "skin and hair" for every pixel | guard optional samplers with a bool uniform (`has_mask`) and set it only when the texture exists | `shaders/person_variant.gdshader` |
 | 2026-10-24 | The 1,000-person world ran at 27 FPS at ½× with people drawn as LOD circles | one `draw_circle` per person per frame in `_draw` (~7 ms of CPU) plus per-person frame and shader work for hidden bodies | draw many identical markers as one `MultiMeshInstance2D` (instance buffer written in one assignment) and skip all body work while LOD is on: 211 FPS | `scripts/world/colony/lod_markers.gd` |

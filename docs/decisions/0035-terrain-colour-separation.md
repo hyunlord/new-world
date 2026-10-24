@@ -1,6 +1,7 @@
 # ADR 0035 — Keep terrain classes readable independently of texture contrast
 
-Status: accepted for implementation (M-ART2 D19, 2026-10-24).
+Status: accepted for implementation (M-ART2 D19, 2026-10-24). The flat water colour is superseded by the per-chunk
+lift on the unchanged water texture (ADR 0034 addendum, M-ART2.1 D3, 2026-10-24); the land caps and map tints stand.
 
 ## Context
 

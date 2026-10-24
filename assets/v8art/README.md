@@ -11,7 +11,10 @@ three files marked *hand-written*.
 | `people/face_variants.json`, `people/variant_transforms.json`, `people/top_colours.json`, `people/route_i_manifest.json` | face variant plan, per-variant Lab shifts, LOD marker colours, route I manifest | import |
 | `people/masks/<look>/<facing>/<pose>.png`, `people/masks/MASKS.json`, `people/masks/skin_regions.json` | the fixed skin (R) and hair (G) masks and their regions | `tools/v8/art_masks.py` |
 | `materials/*.json`, `materials/textures/<style>/*.png` | the material system: construction styles, simulation materials, category defaults, their JSON Schemas, wall/door/floor textures | import |
-| `ground/`, `structures/`, `items/`, `animals/` | ground textures, water, snow; standing structures, trees, bushes, ford stones, rock face; items; wolf and deer frames | import |
+| `ground/`, `structures/`, `items/`, `animals/` | ground textures, water, snow; standing structures, ford stones, rock face; items; wolf and deer frames | import |
+| `flora/species.json`, `flora/habit_defaults.json` (+ schemas) | the flora catalogue (M-ART2.1, ART-TREES): per species its habit, frames by size (foliage variants and bare winter frames), stump, four season records (CIELAB shift, frame, snow cap), map canopy, log material; habit defaults and fallbacks — read by `scripts/world/art/flora_resolver.gd` | import |
+| `flora/sprites/`, `flora/masks/`, `flora/textures/canopy_mass.png` | tree, stump and bush frames (manifest id = file stem), their canopy masks (id = stem + `_mask`), the ¼× canopy-mass texture | import |
+| `flora/tests/test_alder.json` | ART-TREES' data-only species (not in the catalogue; `mart21_trees_test.gd` adds it by data) | import |
 | `bindings.json` | *hand-written*: sim codes → art ids (terrain, space, tones, buildings, workshops, nodes, resources, trees, items, animals, blueprints, order icons, people) | this repo |
 | `render_params.json` | *hand-written*: every renderer tunable; F12 reloads it in a debug build | this repo |
 | `LICENSE.md` | origin: all made in this project | import |
@@ -27,12 +30,14 @@ three files marked *hand-written*.
 4. If the people frames or the art line's masks changed: `python3 tools/v8/art_masks.py` (then `--check`).
 5. `python3 tools/v8/art_import.py --verify` (gate step `art_manifest`), `python3 -m unittest
    tools/v8/test_art_import.py tools/v8/test_art_masks.py tools/v8/test_mart2_extensibility.py`.
-6. If the material documents changed: `python3 tools/v8/resolver_parity.py --generate` (runs that commit's
-   `resolve.py`), then the gate step `resolver_parity`.
+6. If the material or flora documents changed: `python3 tools/v8/resolver_parity.py --generate` (runs that commit's
+   `resolve.py` and `resolve_flora.py`), then the gate step `resolver_parity`. The flora files are not listed one by
+   one: the import copies every path the catalogue names (`flora` section of the config).
 7. Bindings: a new kind needs a `bindings.json` row (and nothing in `scripts/world/**`); an id the bindings name that
    the manifest lacks fails `--verify`.
 8. Re-import in Godot (`--import`, twice on a fresh tree), then `tools/v8/mart2_ground_test.gd`,
    `tools/v8/mart2_people_test.gd` and a windowed look (`capture.gd --mart2-set`).
 9. Stay within the 40 MB budget (`budget_bytes` in the config; `--verify` checks it).
 
-How to add a kind by data: [ADDING_ART.md](ADDING_ART.md).
+How to add a kind by data: [ADDING_ART.md](ADDING_ART.md). A new tree species is a catalogue record on the art line
+(`art/flora/ADDING_A_SPECIES.md` there) plus a `bindings.json` `trees.species` weight here; no code changes.

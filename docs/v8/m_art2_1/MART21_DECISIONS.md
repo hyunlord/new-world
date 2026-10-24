@@ -154,3 +154,19 @@ that shape instead of a sampled one:
   adult_F_fur_cloak_bun hair (20.9, 9.1, 16.0)) lie within ΔE ≈ 3 of the clothing centres ((23.7, 10.0, 18.5)): a Lab
   clustered portrait mask would tint fur cloaks grey with the hair. Elders' sprites already go grey (M-ART2
   `source_hair_lab`); grey portrait hair needs a source-authored hair mask from the art line (owner decision).
+
+## D6 — screens: compare sheet, seasons strip, contact sheet (Part 4)
+
+- **Compare sheet** (`docs/images/mart2_compare_sheet.png`, manifest `docs/v8/m_art2_1/compare_sheet_mart21.json`, 3
+  columns): the same six scenes as M-ART2's sheet — old renderer · M-ART2 D19 · M-ART2.1 — from the same saves
+  (`/Users/rexxa/work/mart2-data/screens/*.wsave`, the D19 frames from `mart2-data/d19/screens/`), recaptured with
+  `tools/v8/mart21_shots.gd --set` (same tick, tile, zoom; windowed opengl3 1920×1080). The saved "first winter noon"
+  is winter day 1, so its trees show the autumn → winter dissolve at half blend (caption says so).
+- **Seasons strip** (`docs/images/mart21_seasons.png`, manifest `seasons_mart21.json`, 4 columns): the day-6 save
+  advanced to noon on day 3 of summer, autumn, winter and spring (ticks 11760, 20400, 29040, 37680), the forest east of
+  the camp (tile (112, 103)) at 1× and the map centre at ¼×.
+- **Contact sheet:** `docs/images/mart21_contact_sheet.png` (12 shots, manifest `contact_sheet_mart21.json`) replaces
+  `mart2_contact_sheet.png` (deleted; it lives at `d796fcac`); README points at it.
+- Running `--set` and `--seasons` in one process stalled the seasons' advance after the set's last save (the migrant
+  dialog's world) until the 20-minute bound; the seasons alone take 3 min 21 s. They run as two processes.
+- Raw PNGs: `$DATA/shots2/`, `$DATA/seasons2/`, the staged copies in `$DATA/sheet/`.

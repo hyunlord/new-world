@@ -5,7 +5,9 @@
 #   this renderer, plus mart21_set.json {name, tick, tile, zoom, season, blend}. `--seasons <save> --tile x,y --out
 #   <dir>` loads one save and advances the clock (advance_ticks; saves are the probe's colony seed 0) to noon on day 3
 #   of each season in calendar order, saving `season_<n>_<name>_1x.png` and `_quarter.png` (the tile at 1× and the
-#   map centre at ¼×) and seasons.json. `--frames N` overrides the settle frames. Prints MART21_SHOTS_DONE n=<shots>.
+#   map centre at ¼×) and seasons.json. `--frames N` overrides the settle frames. Run `--set` and `--seasons` as two
+#   processes: after the set's last save (the migrant dialog) the seasons' advance stalled past a 20-minute bound,
+#   while the seasons alone take ~3 minutes (MART21_DECISIONS D6). Prints MART21_SHOTS_DONE n=<shots>.
 #   `Godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script res://tools/v8/mart21_shots.gd -- ...`
 # Bridge methods called: load_world, advance_ticks (direct); via SimReads get_time_snapshot, get_world_info.
 extends SceneTree

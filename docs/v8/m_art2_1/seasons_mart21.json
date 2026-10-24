@@ -1,0 +1,34 @@
+[
+ {
+  "file": "season_0_summer_1x.png",
+  "caption": "여름 3일째 정오, 1× — 같은 숲"
+ },
+ {
+  "file": "season_1_autumn_1x.png",
+  "caption": "가을 3일째 정오, 1× — 같은 숲"
+ },
+ {
+  "file": "season_2_winter_1x.png",
+  "caption": "겨울 3일째 정오, 1× — 같은 숲"
+ },
+ {
+  "file": "season_3_spring_1x.png",
+  "caption": "봄 3일째 정오, 1× — 같은 숲"
+ },
+ {
+  "file": "season_0_summer_quarter.png",
+  "caption": "여름 3일째 정오, ¼× — 수관 덩어리"
+ },
+ {
+  "file": "season_1_autumn_quarter.png",
+  "caption": "가을 3일째 정오, ¼× — 수관 덩어리"
+ },
+ {
+  "file": "season_2_winter_quarter.png",
+  "caption": "겨울 3일째 정오, ¼× — 수관 덩어리"
+ },
+ {
+  "file": "season_3_spring_quarter.png",
+  "caption": "봄 3일째 정오, ¼× — 수관 덩어리"
+ }
+]

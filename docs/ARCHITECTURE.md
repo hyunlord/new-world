@@ -300,8 +300,8 @@ The full procedure with code skeletons is `.claude/skills/worldsim-architecture/
 | folder | contents |
 |---|---|
 | `scripts/core/` | `locale.gd` (autoload `Locale`), `sim_reads.gd` (`SimReads`: every bridge read), `settlement_selection.gd` (selected village) |
-| `scripts/world/colony/` | the colony view (node `ColonyView` in `scenes/main.tscn`; M-ART2, section 14): `view.gd` (TILE 64, the base point (tile_left + 32, tile_top + 43), tile/keyed hashes, value noise), `ground_layer.gd` (ground chunks, wall/door/hill-face strips, ford stones, water shader; the LRU chunk cache and incremental space rebake), `tree_layer.gd` (trees, stumps, bushes, deadwood by 16×16-tile chunk near the view), `building_layer.gd` (structures, huts by the bindings ring, workshops, hearth states, bedrolls), `overlay_layer.gd` (zones, item stacks by count bucket, carcasses, designation marks, site ghosts, labels), `room_layer.gd` (R: room tints and labels), `animal_layer.gd`, `visitor_layer.gd`, `agent_layer.gd` (route I people as feet-anchored nodes with the variant shader, selection/drafted outline and night halo, hit test) + `lod_markers.gd` (MultiMesh discs and activity glyphs below 1×), `order_tool.gd` (F1–F10 modes, drag lines and rectangles with the `get_place_preview` ghost at 64 px, the `cmd_*` calls). Everything that stands sorts by base y in the y-sorted child `ColonyView/World`; the ground chunks sit below it; marks and labels above |
-| `scripts/world/` | `art/` (M-ART2: `art_data.gd` manifest/bindings/params lookups and F12 reload, `material_resolver.gd`, `ground_baker.gd`, `wall_baker.gd`, `tone.gd`, `site_ghost.gd`), `camera_controller.gd` (zoom ladder ¼×–2× from the params, pan, speed keys 1–4, pause, F12), `daylight_controller.gd` (night CanvasModulate, hearth lights, `dark_at`; + `wood_visuals.gd`), helpers the panels still use (`art_hash.gd`, `art_sprite_library.gd` for the HUD's 32-px icons, `porter_presentation.gd`) |
+| `scripts/world/colony/` | the colony view (node `ColonyView` in `scenes/main.tscn`; M-ART2, section 14): `view.gd` (TILE 64, the base point (tile_left + 32, tile_top + 43), tile/keyed hashes, value noise), `ground_layer.gd` (ground chunks, wall/door/hill-face strips, ford stones, water shader; the LRU chunk cache and incremental space rebake), `tree_layer.gd` (trees through the flora catalogue with the season shader, stumps, bushes, deadwood by 16×16-tile chunk near the view; hidden where the ¼× chunk carries the canopy), `building_layer.gd` (structures, huts by the bindings ring, workshops, hearth states, bedrolls), `overlay_layer.gd` (zones, item stacks by count bucket, carcasses, designation marks, site ghosts, labels), `room_layer.gd` (R: room tints and labels), `animal_layer.gd`, `visitor_layer.gd`, `agent_layer.gd` (route I people as feet-anchored nodes with the variant shader, selection/drafted outline and night halo, hit test) + `lod_markers.gd` (MultiMesh discs and activity glyphs below 1×), `order_tool.gd` (F1–F10 modes, drag lines and rectangles with the `get_place_preview` ghost at 64 px, the `cmd_*` calls). Everything that stands sorts by base y in the y-sorted child `ColonyView/World`; the ground chunks sit below it; marks and labels above |
+| `scripts/world/` | `art/` (M-ART2: `art_data.gd` manifest/bindings/params lookups and F12 reload, `material_resolver.gd`, `flora_resolver.gd` (M-ART2.1), `ground_baker.gd`, `wall_baker.gd`, `tone.gd`, `site_ghost.gd`), `camera_controller.gd` (zoom ladder ¼×–2× from the params, pan, speed keys 1–4, pause, F12), `daylight_controller.gd` (night CanvasModulate, hearth lights, `dark_at`; + `wood_visuals.gd`), helpers the panels still use (`art_hash.gd`, `art_sprite_library.gd` for the HUD's 32-px icons, `porter_presentation.gd`) |
 | `scripts/ui/hud/` | `hud_topbar.gd`, `order_bar.gd` (F1–F5 buttons and the order toast) |
 | `scripts/ui/panels/` | `chronicle_panel.gd`, `agent_inspector_panel.gd`, `causal_panel.gd`, `priority_panel.gd` (M2 work priorities, 7 work types since M3), `workshop_panel.gd` (M2 bills of the selected workshop), `room_panel.gd` (M3: a room's role dropdown → `cmd_set_room_role`, tiles, beds, doors, covered items; made by `order_bar.gd`), `art_ui.gd` (shared panel style) |
 | `scripts/ui/` | text helpers shared by panels (`chronicle_text.gd`, `person_names.gd`, `person_read_cache.gd`) |
@@ -580,13 +580,18 @@ assets/v8art/bindings.json   sim codes → art ids (terrain, space, buildings, w
 assets/v8art/manifest.json   art id → file, role, SHA-256, size, anchor, footprint; the 36 logical looks
 scripts/world/art/material_resolver.gd   (style, material, category, kind) → top/face textures and tint (the art
                              line's resolve.py order; schema $defs supply defaults; parity test vs resolve.py)
+assets/v8art/flora/ + flora_resolver.gd  (species, size, season, variant) → frame, canopy mask, season tint, anchor
+                             (resolve_flora.py port, parity test; species by keyed hash until the sim has one)
    ▼  drawing
-GroundBaker   16×16-tile chunks (1,024² RGBA8) on the CPU with native Image ops; dithered blends, banks, ink; water
-              transparent → ground_chunk.gdshader draws water below; LRU (ground.chunk_cache_max), ½/¼ textures below 1×
+GroundBaker   16×16-tile chunks (1,024² RGBA8) on the CPU with native Image ops; dithered blends; rounded shores and
+              hill edges from a closed-form field per tile quadrant (cached masks), banks and ink on the contour; water
+              transparent → ground_chunk.gdshader draws the 05 water below with a per-chunk lift; at ¼× the trees'
+              canopy mass baked in; LRU (ground.chunk_cache_max), ½/¼ textures below 1×
 WallBaker     per-row strips (tops along the run, faces where the south is open, hill faces) in ColonyView/World
-layers        trees, structures, items, animals, visitors, people: nodes at their base point in the y-sorted World
+layers        trees (tree_season.gdshader: season Lab shift, bare winter, snow; hidden at ¼×), structures, items,
+              animals, visitors, people: nodes at their base point in the y-sorted World
 people        route I frame by activity, person_variant.gdshader (Lab shift through the fixed skin/hair mask),
-              outline for selection/drafted/night halo; LOD below 1× = lod_markers.gd (MultiMesh)
+              outline for selection/drafted/night halo; LOD below 1× = lod_markers.gd (MultiMesh; ring = household)
    ▼  tone
 tone.gd (ENV1 ground cap at load, winter desaturation + snow, drought) · daylight_controller.gd (CanvasModulate
 value × 0.55 with the blue shift, additive hearth PointLight2D within 5 tiles)

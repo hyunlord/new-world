@@ -53,3 +53,28 @@ Every tunable lives in `assets/v8art/render_params.json`, reloaded with F12 in d
 docs/v8/m_art2/MART2_GOAL.md §3.2–§3.5, §4; docs/v8/m_art2/MART2_DECISIONS.md; branch `v8/art-struct` (`b6baa73f`):
 docs/v8/artstruct/STRUCT_REPORT.md; branch `v8/art-polish2` (`c8ed8608`): docs/v8/artpolish2/POLISH2_REPORT.md,
 art/compositor/walls.py, art/compositor/edges.py, art/materials/resolve.py
+
+## Addendum — M-ART2.1 (2026-10-24)
+
+Three additions to the data flow, each resolved through data as above (`docs/v8/m_art2_1/MART21_DECISIONS.md` D2–D5):
+
+- **Rounded shores (and hill edges) are baked from a closed-form field.** The water outline is the zero level of the
+  signed distance field of the water-tile union opened and closed by a disc of `water.shore_radius_px`; as the
+  radius is under half a tile, each pixel's field depends only on the 2 × 2 tiles around its tile quadrant's corner,
+  so it is exact in closed form and cached as quadrant masks per (quadrant, pattern, noise phase); the chunk applies
+  them with native blits, keeping the "no per-pixel GDScript in a bake" rule. Chunk invalidation is unchanged: a
+  changed tile marks its eight neighbour chunks, which covers every quadrant that reads it. The water texture is
+  drawn unchanged under the chunk with a per-chunk lift for the contrast rule (this replaces ADR 0035's flat water
+  colour; its land caps and map tints stand).
+- **Flora resolves through its own catalogue.** `assets/v8art/flora/species.json` and `habit_defaults.json`, imported
+  from the art line, are read by `flora_resolver.gd`, a port of the art line's `resolve_flora.py` held equal to it by
+  a parity fixture in the gate. The renderer asks it for (species, size, season, variant) and draws the frame through
+  a season material (per-pixel CIELAB shift on the canopy mask, bare winter frames, snow band, first-day blend). The
+  species still comes from a keyed hash until the simulation has one.
+- **At ¼× trees are ground.** A chunk textured at factor 4 bakes the season-tinted canopy-mass texture over the tree
+  tiles (rounded, darkened at the edge) and the tree sprites standing there are hidden; at ½× and above trees stand
+  as sprites. This was the planned fallback for the ¼× frame budget (ADR text above, "the next step if it misses").
+
+Alternatives: a sampled EDT per chunk with an apron (the goal's sketch) gives the same contour with ~1.5 px sampling
+error and a per-chunk GDScript cost; drawing the shore in the chunk shader would leave the headless tests without
+pixels. Trees kept as sprites at ¼× hold the view near its 120 FPS floor (M-ART2: 120.65).
