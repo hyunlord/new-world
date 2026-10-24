@@ -1,0 +1,1165 @@
+{
+  "schema_version": 1,
+  "assets": [
+    {
+      "id": "oak_large_v1",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-c2867ebe-ac22-4d9c-8ca4-85c2979ca99b.png",
+      "source_sha256": "6ee226fb759410c93e6f8299e9887f0e02458989267a8909e75d36e1fa01911f",
+      "preserved_original": "/Users/rexxa/work/arttrees-data/originals/oak_large_v1_try1_6ee226fb7594.png",
+      "output": "art/flora/sprites/oak_large_v1.png",
+      "output_sha256": "4c1197d4a17c7b81b84b8b88501fdc8b0103d0dd5843c95f7a49762863f207f9",
+      "transform_reference": "oak_large_v1",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          64,
+          89,
+          1202,
+          1183
+        ],
+        "scale": 0.14678899082568808,
+        "scaled_canvas": [
+          167,
+          161
+        ],
+        "offset": [
+          13,
+          21
+        ],
+        "output_canvas": [
+          192,
+          192
+        ],
+        "anchor": [
+          96,
+          180
+        ],
+        "target_height": 160
+      },
+      "source_opaque_pixels_outside_crop": 0,
+      "output_opaque_bbox": [
+        13,
+        21,
+        180,
+        181
+      ],
+      "operations": [
+        "alpha>=128 bbox with 2px fringe from reference summer v1 or self",
+        "uniform whole-object LANCZOS reduction",
+        "transparent canvas padding at registered D2 anchor",
+        "bare uses exactly the paired summer crop, scale and translation"
+      ],
+      "provenance": {
+        "id": "oak_large_v1",
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-c2867ebe-ac22-4d9c-8ca4-85c2979ca99b.png",
+        "attempt": 1,
+        "prompt": "Create ONE isolated mature oak tree sprite, variant 1, for WorldSim. Transparent background. Hand ink contour and muted watercolor wash, matching supplied stone age game references. Reference 1 establishes front three-quarter standing projection about 20 degrees down and person height 56px; reference 2 gives architectural ink/wash style only. This oak is 160px tall on a 192x192 native canvas, root contact at (96,180), top at y21. Render at this small native scale, no giant detailed illustration. Broad irregular rounded crown, asymmetrical left bough, SUMMER GREEN foliage: mid #507A38, light #759C4B, dark #30532B; no yellow ochre foliage. Foliage ends above y125 so lower 30% contains only trunk and roots. Warm brown visible branching trunk, sturdy connected roots. Upper LEFT lit, lower RIGHT shade. Single connected silhouette, generous transparent margin, no clipping. No shadow, ground, grass, text, panel, human or border. Front three-quarter, NOT top-down canopy.",
+        "visual": "Connected mature oak, visible trunk/roots, slight olive canopy; inspect normalized hue."
+      },
+      "acceptance": "NOT_CLAIMED"
+    },
+    {
+      "id": "oak_large_v2",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-328c7b86-5a92-410c-8a53-36935994ca57.png",
+      "source_sha256": "57ebc44620fb9023bf1553a20de27de10cc1f20d342d8a7e0d6e55819c441bd1",
+      "preserved_original": "/Users/rexxa/work/arttrees-data/originals/oak_large_v2_try1_57ebc44620fb.png",
+      "output": "art/flora/sprites/oak_large_v2.png",
+      "output_sha256": "2e2627915f120f6adb3c96a314056de1af1b674de45a2a8272d7128365df58fa",
+      "transform_reference": "oak_large_v2",
+      "transform": {
+        "source_canvas": [
+          1003,
+          1568
+        ],
+        "crop": [
+          8,
+          108,
+          998,
+          1461
+        ],
+        "scale": 0.11860637509266123,
+        "scaled_canvas": [
+          117,
+          160
+        ],
+        "offset": [
+          38,
+          21
+        ],
+        "output_canvas": [
+          192,
+          192
+        ],
+        "anchor": [
+          96,
+          180
+        ],
+        "target_height": 160
+      },
+      "source_opaque_pixels_outside_crop": 0,
+      "output_opaque_bbox": [
+        38,
+        21,
+        155,
+        181
+      ],
+      "operations": [
+        "alpha>=128 bbox with 2px fringe from reference summer v1 or self",
+        "uniform whole-object LANCZOS reduction",
+        "transparent canvas padding at registered D2 anchor",
+        "bare uses exactly the paired summer crop, scale and translation"
+      ],
+      "provenance": {
+        "id": "oak_large_v2",
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-328c7b86-5a92-410c-8a53-36935994ca57.png",
+        "attempt": 1,
+        "prompt": "ONE isolated mature 160px tall oak tree sprite, shape variant 2. Broad rounded lobed crown, rugged brown trunk. Asymmetric crown leaning right with shorter left bough, distinct silhouette. Match reference 1 route I ink and watercolor game sprite style and 20 degree downward front three-quarter projection; reference 2 structure style only. SUMMER GREEN #507A38 mid #759C4B light #30532B shadow, absolutely no yellow or autumn foliage. Upper left illumination with lower-right deep shade. Crown confined to upper 65 percent, bottom 35 percent ONLY exposed trunk and connected roots. Entire tree in frame with margin. Transparent background. No ground, shadow, text, people, borders or detached leaves. Fine dark ink outlines, simple wash masses readable after whole-object scale down. Person scale is 56px.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-328c7b86-5a92-410c-8a53-36935994ca57.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      "acceptance": "NOT_CLAIMED"
+    },
+    {
+      "id": "oak_small_v1",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-d43432fd-4da4-4989-bba1-dc2d5acaf60c.png",
+      "source_sha256": "6a192240a9ea89a3bef37944ebb0f620eebdc8bdf503f96c369248328a0f5f0e",
+      "preserved_original": "/Users/rexxa/work/arttrees-data/originals/oak_small_v1_try1_6a192240a9ea.png",
+      "output": "art/flora/sprites/oak_small_v1.png",
+      "output_sha256": "4ad77018009592a1d5e94bdde5aed54abf6d3a6ef57dc617510efd3aae37f3a5",
+      "transform_reference": "oak_small_v1",
+      "transform": {
+        "source_canvas": [
+          1212,
+          1297
+        ],
+        "crop": [
+          18,
+          28,
+          1199,
+          1256
+        ],
+        "scale": 0.06535947712418301,
+        "scaled_canvas": [
+          77,
+          80
+        ],
+        "offset": [
+          26,
+          21
+        ],
+        "output_canvas": [
+          128,
+          112
+        ],
+        "anchor": [
+          64,
+          100
+        ],
+        "target_height": 80
+      },
+      "source_opaque_pixels_outside_crop": 0,
+      "output_opaque_bbox": [
+        26,
+        21,
+        103,
+        101
+      ],
+      "operations": [
+        "alpha>=128 bbox with 2px fringe from reference summer v1 or self",
+        "uniform whole-object LANCZOS reduction",
+        "transparent canvas padding at registered D2 anchor",
+        "bare uses exactly the paired summer crop, scale and translation"
+      ],
+      "provenance": {
+        "id": "oak_small_v1",
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-d43432fd-4da4-4989-bba1-dc2d5acaf60c.png",
+        "attempt": 1,
+        "prompt": "ONE isolated young 80px tall oak tree sprite, shape variant 1. Broad rounded lobed crown, rugged brown trunk. Asymmetric left bough, balanced strong central trunk. Match reference 1 route I ink and watercolor game sprite style and 20 degree downward front three-quarter projection; reference 2 structure style only. SUMMER GREEN #507A38 mid #759C4B light #30532B shadow, absolutely no yellow or autumn foliage. Upper left illumination with lower-right deep shade. Crown confined to upper 65 percent, bottom 35 percent ONLY exposed trunk and connected roots. Entire tree in frame with margin. Transparent background. No ground, shadow, text, people, borders or detached leaves. Fine dark ink outlines, simple wash masses readable after whole-object scale down. Person scale is 56px.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-d43432fd-4da4-4989-bba1-dc2d5acaf60c.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      "acceptance": "NOT_CLAIMED"
+    },
+    {
+      "id": "oak_small_v2",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-c664b99a-d21d-47f6-8975-7318fe27d837.png",
+      "source_sha256": "280332527638d50889916c56c903175cd0a47594f72f3ef0eff82b7fe0ac7d9f",
+      "preserved_original": "/Users/rexxa/work/arttrees-data/originals/oak_small_v2_try1_280332527638.png",
+      "output": "art/flora/sprites/oak_small_v2.png",
+      "output_sha256": "74d1d33d740a69882cfec71e028bf5b3367ca869df3348e9daccb0c1b836b034",
+      "transform_reference": "oak_small_v2",
+      "transform": {
+        "source_canvas": [
+          1266,
+          1242
+        ],
+        "crop": [
+          115,
+          39,
+          1213,
+          1194
+        ],
+        "scale": 0.06950477845351868,
+        "scaled_canvas": [
+          76,
+          80
+        ],
+        "offset": [
+          27,
+          21
+        ],
+        "output_canvas": [
+          128,
+          112
+        ],
+        "anchor": [
+          64,
+          100
+        ],
+        "target_height": 80
+      },
+      "source_opaque_pixels_outside_crop": 0,
+      "output_opaque_bbox": [
+        27,
+        21,
+        103,
+        101
+      ],
+      "operations": [
+        "alpha>=128 bbox with 2px fringe from reference summer v1 or self",
+        "uniform whole-object LANCZOS reduction",
+        "transparent canvas padding at registered D2 anchor",
+        "bare uses exactly the paired summer crop, scale and translation"
+      ],
+      "provenance": {
+        "id": "oak_small_v2",
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-c664b99a-d21d-47f6-8975-7318fe27d837.png",
+        "attempt": 1,
+        "prompt": "ONE isolated young 80px tall oak tree sprite, shape variant 2. Broad rounded lobed crown, rugged brown trunk. Asymmetric crown leaning right with shorter left bough, distinct silhouette. Match reference 1 route I ink and watercolor game sprite style and 20 degree downward front three-quarter projection; reference 2 structure style only. SUMMER GREEN #507A38 mid #759C4B light #30532B shadow, absolutely no yellow or autumn foliage. Upper left illumination with lower-right deep shade. Crown confined to upper 65 percent, bottom 35 percent ONLY exposed trunk and connected roots. Entire tree in frame with margin. Transparent background. No ground, shadow, text, people, borders or detached leaves. Fine dark ink outlines, simple wash masses readable after whole-object scale down. Person scale is 56px.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-c664b99a-d21d-47f6-8975-7318fe27d837.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      "acceptance": "NOT_CLAIMED"
+    },
+    {
+      "id": "pine_large_v1",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-676a0232-9bd9-4b51-8d25-26df9847db45.png",
+      "source_sha256": "f1c15c363e83a8ebec55f0fc77ad308d50c1ccdb90e3c5f3c3eb815800bdf3b6",
+      "preserved_original": "/Users/rexxa/work/arttrees-data/originals/pine_large_v1_try1_f1c15c363e83.png",
+      "output": "art/flora/sprites/pine_large_v1.png",
+      "output_sha256": "87a3f8c2171767db53199d1ad9b0410ebee4f1918d820c3e088eee8aea62e6a9",
+      "transform_reference": "pine_large_v1",
+      "transform": {
+        "source_canvas": [
+          1003,
+          1568
+        ],
+        "crop": [
+          110,
+          18,
+          893,
+          1553
+        ],
+        "scale": 0.10450685826257348,
+        "scaled_canvas": [
+          82,
+          160
+        ],
+        "offset": [
+          56,
+          21
+        ],
+        "output_canvas": [
+          192,
+          192
+        ],
+        "anchor": [
+          96,
+          180
+        ],
+        "target_height": 160
+      },
+      "source_opaque_pixels_outside_crop": 0,
+      "output_opaque_bbox": [
+        57,
+        22,
+        137,
+        181
+      ],
+      "operations": [
+        "alpha>=128 bbox with 2px fringe from reference summer v1 or self",
+        "uniform whole-object LANCZOS reduction",
+        "transparent canvas padding at registered D2 anchor",
+        "bare uses exactly the paired summer crop, scale and translation"
+      ],
+      "provenance": {
+        "id": "pine_large_v1",
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-676a0232-9bd9-4b51-8d25-26df9847db45.png",
+        "attempt": 1,
+        "prompt": "ONE isolated mature 160px tall pine tree sprite, shape variant 1. Conical layered evergreen needles, clearly exposed straight trunk. Asymmetric left bough, balanced strong central trunk. Match reference 1 route I ink and watercolor game sprite style and 20 degree downward front three-quarter projection; reference 2 structure style only. SUMMER GREEN #507A38 mid #759C4B light #30532B shadow, absolutely no yellow or autumn foliage. Upper left illumination with lower-right deep shade. Crown confined to upper 65 percent, bottom 35 percent ONLY exposed trunk and connected roots. Entire tree in frame with margin. Transparent background. No ground, shadow, text, people, borders or detached leaves. Fine dark ink outlines, simple wash masses readable after whole-object scale down. Person scale is 56px.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-676a0232-9bd9-4b51-8d25-26df9847db45.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      "acceptance": "NOT_CLAIMED"
+    },
+    {
+      "id": "oak_stump",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-d32bf52b-93be-4b7d-b7fd-58f585b269d8.png",
+      "source_sha256": "1db1d86a264bc10fef92247d52ba595e42aa91b49afe2edd05b3140ffda8d92a",
+      "preserved_original": "/Users/rexxa/work/arttrees-data/originals/oak_stump_try1_1db1d86a264b.png",
+      "output": "art/flora/sprites/oak_stump.png",
+      "output_sha256": "877f846df7de0e1492e3806caaf74aa9dc26b1c1cdebd1a4ab25bcd3ce210ac0",
+      "transform_reference": "oak_stump",
+      "transform": {
+        "source_canvas": [
+          1364,
+          1153
+        ],
+        "crop": [
+          302,
+          245,
+          1058,
+          941
+        ],
+        "scale": 0.028901734104046242,
+        "scaled_canvas": [
+          22,
+          20
+        ],
+        "offset": [
+          22,
+          21
+        ],
+        "output_canvas": [
+          64,
+          48
+        ],
+        "anchor": [
+          32,
+          40
+        ],
+        "target_height": 20
+      },
+      "source_opaque_pixels_outside_crop": 0,
+      "output_opaque_bbox": [
+        22,
+        21,
+        44,
+        41
+      ],
+      "operations": [
+        "alpha>=128 bbox with 2px fringe from reference summer v1 or self",
+        "uniform whole-object LANCZOS reduction",
+        "transparent canvas padding at registered D2 anchor",
+        "bare uses exactly the paired summer crop, scale and translation"
+      ],
+      "provenance": {
+        "id": "oak_stump",
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-d32bf52b-93be-4b7d-b7fd-58f585b269d8.png",
+        "attempt": 1,
+        "prompt": "ONE isolated small oak tree stump sprite, front three-quarter about20degrees down. Rugged dark brown bark, sawn broken circular top with subtle growth rings, connected roots. Ink and watercolor wash matching references. Upper LEFT lit, lower RIGHT darker. Transparent background. Only stump, no ground, grass, shadow, text. Entire silhouette with generous margins. Native game height20px compared with reference adult56px.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-d32bf52b-93be-4b7d-b7fd-58f585b269d8.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      "acceptance": "NOT_CLAIMED"
+    },
+    {
+      "id": "pine_stump",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-7b31dd7b-3ddf-4078-82cd-32e043d3a2e0.png",
+      "source_sha256": "2ef9069e20192510070fcb2dc7a1ec303dc3a961f01e43c6ec19379d73ad5952",
+      "preserved_original": "/Users/rexxa/work/arttrees-data/originals/pine_stump_try1_2ef9069e2019.png",
+      "output": "art/flora/sprites/pine_stump.png",
+      "output_sha256": "a8596b13aed83b125bb5a16c768102982b730fb2c357be19eef14713b8224b30",
+      "transform_reference": "pine_stump",
+      "transform": {
+        "source_canvas": [
+          1339,
+          1175
+        ],
+        "crop": [
+          342,
+          252,
+          998,
+          897
+        ],
+        "scale": 0.031201248049921998,
+        "scaled_canvas": [
+          20,
+          20
+        ],
+        "offset": [
+          23,
+          21
+        ],
+        "output_canvas": [
+          64,
+          48
+        ],
+        "anchor": [
+          32,
+          40
+        ],
+        "target_height": 20
+      },
+      "source_opaque_pixels_outside_crop": 0,
+      "output_opaque_bbox": [
+        23,
+        21,
+        43,
+        41
+      ],
+      "operations": [
+        "alpha>=128 bbox with 2px fringe from reference summer v1 or self",
+        "uniform whole-object LANCZOS reduction",
+        "transparent canvas padding at registered D2 anchor",
+        "bare uses exactly the paired summer crop, scale and translation"
+      ],
+      "provenance": {
+        "id": "pine_stump",
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-7b31dd7b-3ddf-4078-82cd-32e043d3a2e0.png",
+        "attempt": 1,
+        "prompt": "ONE isolated small pine tree stump sprite, front three-quarter about20degrees down. Reddish flaky bark, sawn broken circular top with subtle growth rings, connected roots. Ink and watercolor wash matching references. Upper LEFT lit, lower RIGHT darker. Transparent background. Only stump, no ground, grass, shadow, text. Entire silhouette with generous margins. Native game height20px compared with reference adult56px.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-7b31dd7b-3ddf-4078-82cd-32e043d3a2e0.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      "acceptance": "NOT_CLAIMED"
+    },
+    {
+      "id": "birch_stump",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-a37b5fda-14e0-4dec-bd39-eeb279989cfa.png",
+      "source_sha256": "0526b238de9c57b55c78f78abd44c9ff033d702b6d9c1f3634c47a369a936705",
+      "preserved_original": "/Users/rexxa/work/arttrees-data/originals/birch_stump_try1_0526b238de9c.png",
+      "output": "art/flora/sprites/birch_stump.png",
+      "output_sha256": "68d94c5c5a2486e1bad814cacc227cacceabfe7cd2af8d0ffcd0e58f7815760b",
+      "transform_reference": "birch_stump",
+      "transform": {
+        "source_canvas": [
+          1374,
+          1145
+        ],
+        "crop": [
+          231,
+          203,
+          1143,
+          973
+        ],
+        "scale": 0.02610966057441253,
+        "scaled_canvas": [
+          24,
+          20
+        ],
+        "offset": [
+          21,
+          21
+        ],
+        "output_canvas": [
+          64,
+          48
+        ],
+        "anchor": [
+          32,
+          40
+        ],
+        "target_height": 20
+      },
+      "source_opaque_pixels_outside_crop": 0,
+      "output_opaque_bbox": [
+        21,
+        21,
+        45,
+        41
+      ],
+      "operations": [
+        "alpha>=128 bbox with 2px fringe from reference summer v1 or self",
+        "uniform whole-object LANCZOS reduction",
+        "transparent canvas padding at registered D2 anchor",
+        "bare uses exactly the paired summer crop, scale and translation"
+      ],
+      "provenance": {
+        "id": "birch_stump",
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-a37b5fda-14e0-4dec-bd39-eeb279989cfa.png",
+        "attempt": 1,
+        "prompt": "ONE isolated small birch tree stump sprite, front three-quarter about20degrees down. White bark with black flecks, sawn broken circular top with subtle growth rings, connected roots. Ink and watercolor wash matching references. Upper LEFT lit, lower RIGHT darker. Transparent background. Only stump, no ground, grass, shadow, text. Entire silhouette with generous margins. Native game height20px compared with reference adult56px.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-a37b5fda-14e0-4dec-bd39-eeb279989cfa.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      "acceptance": "NOT_CLAIMED"
+    },
+    {
+      "id": "pine_large_v2",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-3ee55190-1b68-4de7-95e6-62ab759700d4.png",
+      "source_sha256": "3ba88483e590a680ac921246666e110c59b355a8ad876ac43c22b3d7147ac079",
+      "preserved_original": "/Users/rexxa/work/arttrees-data/originals/pine_large_v2_try1_3ba88483e590.png",
+      "output": "art/flora/sprites/pine_large_v2.png",
+      "output_sha256": "1c2c3bb4812e59dfbb5c967e1b3d1e70ea9f7a847cf1f0d5edb4142d974ee32e",
+      "transform_reference": "pine_large_v2",
+      "transform": {
+        "source_canvas": [
+          1003,
+          1568
+        ],
+        "crop": [
+          96,
+          7,
+          985,
+          1551
+        ],
+        "scale": 0.1038961038961039,
+        "scaled_canvas": [
+          92,
+          160
+        ],
+        "offset": [
+          51,
+          21
+        ],
+        "output_canvas": [
+          192,
+          192
+        ],
+        "anchor": [
+          96,
+          180
+        ],
+        "target_height": 160
+      },
+      "source_opaque_pixels_outside_crop": 0,
+      "output_opaque_bbox": [
+        52,
+        22,
+        142,
+        181
+      ],
+      "operations": [
+        "alpha>=128 bbox with 2px fringe from reference summer v1 or self",
+        "uniform whole-object LANCZOS reduction",
+        "transparent canvas padding at registered D2 anchor",
+        "bare uses exactly the paired summer crop, scale and translation"
+      ],
+      "provenance": {
+        "id": "pine_large_v2",
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-3ee55190-1b68-4de7-95e6-62ab759700d4.png",
+        "attempt": 1,
+        "prompt": "ONE isolated mature pine tree sprite, shape variant 2. Conical evergreen, layered deep GREEN needle boughs, reddish straight trunk. Right-leaning crown, shorter left branch; distinct asymmetric silhouette. Game sprite hand ink and watercolor style. Reference 1 route I person sheet establishes 20-degree-down FRONT three-quarter projection; reference 2 structure for ink wash style. Tree scale 160px vs person56px. Crown occupies ONLY UPPER 60% of tree, lowest40% exposed trunk/roots, no low leaves. Genuine forest SUMMER GREEN mid #507A38, highlight #759C4B, shadow #30532B, NOT ochre or yellow olive. Strong upper LEFT illumination, lower RIGHT shade. Entire single connected tree with transparent margins. TRANSPARENT background, no ground patch, shadow, label, people or border. Readable simple wash masses when reduced to native game scale.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-3ee55190-1b68-4de7-95e6-62ab759700d4.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      "acceptance": "NOT_CLAIMED"
+    },
+    {
+      "id": "pine_small_v1",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-a3f70887-4e4c-44d1-9951-d4960dbdeb51.png",
+      "source_sha256": "e55d2025d306c8bc5dd72902f5733654f5799c343c600c6ca8698f62e4cf8f9f",
+      "preserved_original": "/Users/rexxa/work/arttrees-data/originals/pine_small_v1_try1_e55d2025d306.png",
+      "output": "art/flora/sprites/pine_small_v1.png",
+      "output_sha256": "d733515867a756f288a2f5673aa76923b7b28802b4e5babb0ae0443570110de7",
+      "transform_reference": "pine_small_v1",
+      "transform": {
+        "source_canvas": [
+          1024,
+          1536
+        ],
+        "crop": [
+          164,
+          38,
+          866,
+          1480
+        ],
+        "scale": 0.055632823365785816,
+        "scaled_canvas": [
+          39,
+          80
+        ],
+        "offset": [
+          45,
+          22
+        ],
+        "output_canvas": [
+          128,
+          112
+        ],
+        "anchor": [
+          64,
+          100
+        ],
+        "target_height": 80
+      },
+      "source_opaque_pixels_outside_crop": 0,
+      "output_opaque_bbox": [
+        45,
+        22,
+        84,
+        101
+      ],
+      "operations": [
+        "alpha>=128 bbox with 2px fringe from reference summer v1 or self",
+        "uniform whole-object LANCZOS reduction",
+        "transparent canvas padding at registered D2 anchor",
+        "bare uses exactly the paired summer crop, scale and translation"
+      ],
+      "provenance": {
+        "id": "pine_small_v1",
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-a3f70887-4e4c-44d1-9951-d4960dbdeb51.png",
+        "attempt": 1,
+        "prompt": "ONE isolated young small pine tree sprite, shape variant 1. Conical evergreen, layered deep GREEN needle boughs, reddish straight trunk. Left-reaching crown, upright trunk. Game sprite hand ink and watercolor style. Reference 1 route I person sheet establishes 20-degree-down FRONT three-quarter projection; reference 2 structure for ink wash style. Tree scale80px vs person56px. Crown occupies ONLY UPPER 60% of tree, lowest40% exposed trunk/roots, no low leaves. Genuine forest SUMMER GREEN mid #507A38, highlight #759C4B, shadow #30532B, NOT ochre or yellow olive. Strong upper LEFT illumination, lower RIGHT shade. Entire single connected tree with transparent margins. TRANSPARENT background, no ground patch, shadow, label, people or border. Readable simple wash masses when reduced to native game scale.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-a3f70887-4e4c-44d1-9951-d4960dbdeb51.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      "acceptance": "NOT_CLAIMED"
+    },
+    {
+      "id": "pine_small_v2",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-59043596-6b8e-474c-a0bd-f95de89bf084.png",
+      "source_sha256": "823ac08842c29fd54177cf1465d38c647bfb0bba39e64d03d02d0e0acc602f6f",
+      "preserved_original": "/Users/rexxa/work/arttrees-data/originals/pine_small_v2_try1_823ac08842c2.png",
+      "output": "art/flora/sprites/pine_small_v2.png",
+      "output_sha256": "7b4586924958690eacab74abf653005e2e5f88753161498b0f55c2175fb41a29",
+      "transform_reference": "pine_small_v2",
+      "transform": {
+        "source_canvas": [
+          1306,
+          1205
+        ],
+        "crop": [
+          400,
+          25,
+          997,
+          1178
+        ],
+        "scale": 0.06962576153176675,
+        "scaled_canvas": [
+          42,
+          80
+        ],
+        "offset": [
+          44,
+          21
+        ],
+        "output_canvas": [
+          128,
+          112
+        ],
+        "anchor": [
+          64,
+          100
+        ],
+        "target_height": 80
+      },
+      "source_opaque_pixels_outside_crop": 0,
+      "output_opaque_bbox": [
+        44,
+        21,
+        85,
+        101
+      ],
+      "operations": [
+        "alpha>=128 bbox with 2px fringe from reference summer v1 or self",
+        "uniform whole-object LANCZOS reduction",
+        "transparent canvas padding at registered D2 anchor",
+        "bare uses exactly the paired summer crop, scale and translation"
+      ],
+      "provenance": {
+        "id": "pine_small_v2",
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-59043596-6b8e-474c-a0bd-f95de89bf084.png",
+        "attempt": 1,
+        "prompt": "ONE isolated young small pine tree sprite, shape variant 2. Conical evergreen, layered deep GREEN needle boughs, reddish straight trunk. Right-leaning crown, shorter left branch; distinct asymmetric silhouette. Game sprite hand ink and watercolor style. Reference 1 route I person sheet establishes 20-degree-down FRONT three-quarter projection; reference 2 structure for ink wash style. Tree scale80px vs person56px. Crown occupies ONLY UPPER 60% of tree, lowest40% exposed trunk/roots, no low leaves. Genuine forest SUMMER GREEN mid #507A38, highlight #759C4B, shadow #30532B, NOT ochre or yellow olive. Strong upper LEFT illumination, lower RIGHT shade. Entire single connected tree with transparent margins. TRANSPARENT background, no ground patch, shadow, label, people or border. Readable simple wash masses when reduced to native game scale.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-59043596-6b8e-474c-a0bd-f95de89bf084.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      "acceptance": "NOT_CLAIMED"
+    },
+    {
+      "id": "birch_large_v1",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-dc8b66f5-8647-414d-b0a0-e3d819bdf655.png",
+      "source_sha256": "562fb1182cb1f115d2ad66dcbb3ea23464e23c4764124c04045520ac315bdf9b",
+      "preserved_original": "/Users/rexxa/work/arttrees-data/originals/birch_large_v1_try1_562fb1182cb1.png",
+      "output": "art/flora/sprites/birch_large_v1.png",
+      "output_sha256": "5de91b2e0d070d098c4557276b3820ba24458fd3f77e1433ce50625c317ad9b9",
+      "transform_reference": "birch_large_v1",
+      "transform": {
+        "source_canvas": [
+          1003,
+          1568
+        ],
+        "crop": [
+          14,
+          22,
+          991,
+          1548
+        ],
+        "scale": 0.10512483574244415,
+        "scaled_canvas": [
+          103,
+          160
+        ],
+        "offset": [
+          45,
+          21
+        ],
+        "output_canvas": [
+          192,
+          192
+        ],
+        "anchor": [
+          96,
+          180
+        ],
+        "target_height": 160
+      },
+      "source_opaque_pixels_outside_crop": 0,
+      "output_opaque_bbox": [
+        45,
+        21,
+        148,
+        181
+      ],
+      "operations": [
+        "alpha>=128 bbox with 2px fringe from reference summer v1 or self",
+        "uniform whole-object LANCZOS reduction",
+        "transparent canvas padding at registered D2 anchor",
+        "bare uses exactly the paired summer crop, scale and translation"
+      ],
+      "provenance": {
+        "id": "birch_large_v1",
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-dc8b66f5-8647-414d-b0a0-e3d819bdf655.png",
+        "attempt": 1,
+        "prompt": "ONE isolated mature birch tree sprite, shape variant 1. Slender WHITE bark trunk with dark flecks, delicate rounded open GREEN crown. Left-reaching crown, upright trunk. Game sprite hand ink and watercolor style. Reference 1 route I person sheet establishes 20-degree-down FRONT three-quarter projection; reference 2 structure for ink wash style. Tree scale 160px vs person56px. Crown occupies ONLY UPPER 60% of tree, lowest40% exposed trunk/roots, no low leaves. Genuine forest SUMMER GREEN mid #507A38, highlight #759C4B, shadow #30532B, NOT ochre or yellow olive. Strong upper LEFT illumination, lower RIGHT shade. Entire single connected tree with transparent margins. TRANSPARENT background, no ground patch, shadow, label, people or border. Readable simple wash masses when reduced to native game scale.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-dc8b66f5-8647-414d-b0a0-e3d819bdf655.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      "acceptance": "NOT_CLAIMED"
+    },
+    {
+      "id": "birch_large_v2",
+      "attempt": 1,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-b9e9acf8-2020-4f32-b91c-9b8ebb9b8aa1.png",
+      "source_sha256": "832add38b57da1895f2f27dd85625604dc5ba0fe21902c7bcb7ade23797cb044",
+      "preserved_original": "/Users/rexxa/work/arttrees-data/originals/birch_large_v2_try1_832add38b57d.png",
+      "output": "art/flora/sprites/birch_large_v2.png",
+      "output_sha256": "d5abf129f9bbd187f86a8fcf155021303c7d6d9f310de93b0fef113048c1e717",
+      "transform_reference": "birch_large_v2",
+      "transform": {
+        "source_canvas": [
+          1024,
+          1536
+        ],
+        "crop": [
+          72,
+          12,
+          988,
+          1507
+        ],
+        "scale": 0.10731052984574112,
+        "scaled_canvas": [
+          98,
+          160
+        ],
+        "offset": [
+          48,
+          22
+        ],
+        "output_canvas": [
+          192,
+          192
+        ],
+        "anchor": [
+          96,
+          180
+        ],
+        "target_height": 160
+      },
+      "source_opaque_pixels_outside_crop": 0,
+      "output_opaque_bbox": [
+        48,
+        22,
+        146,
+        181
+      ],
+      "operations": [
+        "alpha>=128 bbox with 2px fringe from reference summer v1 or self",
+        "uniform whole-object LANCZOS reduction",
+        "transparent canvas padding at registered D2 anchor",
+        "bare uses exactly the paired summer crop, scale and translation"
+      ],
+      "provenance": {
+        "id": "birch_large_v2",
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-b9e9acf8-2020-4f32-b91c-9b8ebb9b8aa1.png",
+        "attempt": 1,
+        "prompt": "ONE isolated mature birch tree sprite, shape variant 2. Slender WHITE bark trunk with dark flecks, delicate rounded open GREEN crown. Right-leaning crown, shorter left branch; distinct asymmetric silhouette. Game sprite hand ink and watercolor style. Reference 1 route I person sheet establishes 20-degree-down FRONT three-quarter projection; reference 2 structure for ink wash style. Tree scale 160px vs person56px. Crown occupies ONLY UPPER 60% of tree, lowest40% exposed trunk/roots, no low leaves. Genuine forest SUMMER GREEN mid #507A38, highlight #759C4B, shadow #30532B, NOT ochre or yellow olive. Strong upper LEFT illumination, lower RIGHT shade. Entire single connected tree with transparent margins. TRANSPARENT background, no ground patch, shadow, label, people or border. Readable simple wash masses when reduced to native game scale.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-b9e9acf8-2020-4f32-b91c-9b8ebb9b8aa1.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      },
+      "acceptance": "NOT_CLAIMED"
+    },
+    {
+      "id": "birch_small_v1",
+      "attempt": 2,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-a8d1d7e6-bd94-4b11-965f-36df13e36adc.png",
+      "source_sha256": "cefdfb016c1a5112e0f8654cd7b4e288b217c314a04fb0be563b0471f0a103fe",
+      "preserved_original": "/Users/rexxa/work/arttrees-data/originals/birch_small_v1_try2_cefdfb016c1a.png",
+      "output": "art/flora/sprites/birch_small_v1.png",
+      "output_sha256": "17be17d1c35945b7f5e6ae261ef2a58882cf51b6eeb8257ee5a95f077f0eab67",
+      "transform_reference": "birch_small_v1",
+      "transform": {
+        "source_canvas": [
+          1261,
+          1247
+        ],
+        "crop": [
+          286,
+          53,
+          1003,
+          1196
+        ],
+        "scale": 0.07023705004389816,
+        "scaled_canvas": [
+          50,
+          80
+        ],
+        "offset": [
+          40,
+          21
+        ],
+        "output_canvas": [
+          128,
+          112
+        ],
+        "anchor": [
+          64,
+          100
+        ],
+        "target_height": 80
+      },
+      "source_opaque_pixels_outside_crop": 0,
+      "output_opaque_bbox": [
+        40,
+        21,
+        90,
+        101
+      ],
+      "operations": [
+        "alpha>=128 bbox with 2px fringe from reference summer v1 or self",
+        "uniform whole-object LANCZOS reduction",
+        "transparent canvas padding at registered D2 anchor",
+        "bare uses exactly the paired summer crop, scale and translation"
+      ],
+      "provenance": {
+        "id": "birch_small_v1",
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-a8d1d7e6-bd94-4b11-965f-36df13e36adc.png",
+        "attempt": 2,
+        "prompt": "Repair this exact summer birch game sprite for tiny 80px rendering. Keep identical canvas dimensions, tree position, trunk/root silhouette, color and lighting. ALL branch and leaf groups must be THICKLY connected to trunk or crown. Remove dangling isolated thin sprigs near lower canopy, thicken connections, consolidate foliage into simple big leafy masses with clear connected boughs. No separate floating pixels or leaves; no thin detached flecks. Preserve lower40% bare white trunk. Transparent background. Summer GREEN, fine ink watercolor, not yellow.",
+        "reference": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-eea8b3f8-e559-4828-8824-0a866d903cda.png"
+      },
+      "acceptance": "NOT_CLAIMED"
+    },
+    {
+      "id": "birch_small_v2",
+      "attempt": 2,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-f52a9a3a-951b-41f1-bad9-067bca473400.png",
+      "source_sha256": "c65408bd622957fba5f760df11f892af40bde1cafa490e84d48db9c5aa0b75ff",
+      "preserved_original": "/Users/rexxa/work/arttrees-data/originals/birch_small_v2_try2_c65408bd6229.png",
+      "output": "art/flora/sprites/birch_small_v2.png",
+      "output_sha256": "774b4a27bec4d8ff41edcba4c059b891723dbd41ab17fa62f0dead20bb6a08e7",
+      "transform_reference": "birch_small_v2",
+      "transform": {
+        "source_canvas": [
+          1024,
+          1536
+        ],
+        "crop": [
+          120,
+          47,
+          972,
+          1476
+        ],
+        "scale": 0.056140350877192984,
+        "scaled_canvas": [
+          48,
+          80
+        ],
+        "offset": [
+          41,
+          22
+        ],
+        "output_canvas": [
+          128,
+          112
+        ],
+        "anchor": [
+          64,
+          100
+        ],
+        "target_height": 80
+      },
+      "source_opaque_pixels_outside_crop": 0,
+      "output_opaque_bbox": [
+        41,
+        22,
+        89,
+        101
+      ],
+      "operations": [
+        "alpha>=128 bbox with 2px fringe from reference summer v1 or self",
+        "uniform whole-object LANCZOS reduction",
+        "transparent canvas padding at registered D2 anchor",
+        "bare uses exactly the paired summer crop, scale and translation"
+      ],
+      "provenance": {
+        "id": "birch_small_v2",
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-f52a9a3a-951b-41f1-bad9-067bca473400.png",
+        "attempt": 2,
+        "prompt": "Repair summer birch variant for tiny 80px rendering. Maintain EXACT tree canvas, size, root/trunk location and right-leaning silhouette. Consolidate canopy into large simple connected green masses, all bough connections thick enough to survive reduction. No isolated leaf flecks or dangling thin sprigs, NO floating leaves. Lower40% only exposed trunk and roots. Dark fine ink and watercolor, upper-left light, transparent. Summer green not yellow.",
+        "reference": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-87819879-2856-436e-b6f4-97eaddffcefa.png"
+      },
+      "acceptance": "NOT_CLAIMED"
+    },
+    {
+      "id": "oak_large_bare",
+      "attempt": 2,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-abeb59d2-4939-43b7-a854-6bfa8d758b02.png",
+      "source_sha256": "83d9ae1267bd0db259f946d53608764c846f831134b924944eb666350a4065ed",
+      "preserved_original": "/Users/rexxa/work/arttrees-data/originals/oak_large_bare_try2_83d9ae1267bd.png",
+      "output": "art/flora/sprites/oak_large_bare.png",
+      "output_sha256": "42535527738429b4fc93ed92fed50b65a42630c5ecc17c59ec412a1b3ccc41ec",
+      "transform_reference": "oak_large_v1",
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          64,
+          89,
+          1202,
+          1183
+        ],
+        "scale": 0.14678899082568808,
+        "scaled_canvas": [
+          167,
+          161
+        ],
+        "offset": [
+          13,
+          21
+        ],
+        "output_canvas": [
+          192,
+          192
+        ],
+        "anchor": [
+          96,
+          180
+        ],
+        "target_height": 160
+      },
+      "source_opaque_pixels_outside_crop": 0,
+      "output_opaque_bbox": [
+        15,
+        24,
+        176,
+        182
+      ],
+      "operations": [
+        "alpha>=128 bbox with 2px fringe from reference summer v1 or self",
+        "uniform whole-object LANCZOS reduction",
+        "transparent canvas padding at registered D2 anchor",
+        "bare uses exactly the paired summer crop, scale and translation"
+      ],
+      "provenance": {
+        "id": "oak_large_bare",
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-abeb59d2-4939-43b7-a854-6bfa8d758b02.png",
+        "attempt": 2,
+        "prompt": "Turn this tree into BARE WINTER form for a small 160px GAME SPRITE. Keep EXACT full canvas, trunk/root silhouette and their original pixel coordinates. Remove ALL leaves. Replace crown with only 12 strong THICK connected branches and a few short stubby twigs. Every branch joins solidly to trunk; branch width should survive an 8x reduction, NO hairline twigs, NO floating tips, NO fine mesh or brown canopy. Transparent empty gaps dominate upper half. Preserve existing lower exposed trunk and roots exactly. Same brown bark, ink/watercolor and upper-left light. Absolutely NO glow, shadow, ground or foliage.",
+        "reference": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-c2867ebe-ac22-4d9c-8ca4-85c2979ca99b.png"
+      },
+      "acceptance": "NOT_CLAIMED"
+    },
+    {
+      "id": "oak_small_bare",
+      "attempt": 3,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-01bf77fd-c5e3-46c5-84d7-19df053ca6b0.png",
+      "source_sha256": "02e2424fd20c6988352d88b009a9461e7c4b6073fb1799f6da226718fac49853",
+      "preserved_original": "/Users/rexxa/work/arttrees-data/originals/oak_small_bare_try3_02e2424fd20c.png",
+      "output": "art/flora/sprites/oak_small_bare.png",
+      "output_sha256": "3cf313970724c29399110a661cc207cb7b0361590307edda35951f5e827a55e2",
+      "transform_reference": "oak_small_v1",
+      "transform": {
+        "source_canvas": [
+          1212,
+          1297
+        ],
+        "crop": [
+          18,
+          28,
+          1199,
+          1256
+        ],
+        "scale": 0.06535947712418301,
+        "scaled_canvas": [
+          77,
+          80
+        ],
+        "offset": [
+          26,
+          21
+        ],
+        "output_canvas": [
+          128,
+          112
+        ],
+        "anchor": [
+          64,
+          100
+        ],
+        "target_height": 80
+      },
+      "source_opaque_pixels_outside_crop": 0,
+      "output_opaque_bbox": [
+        29,
+        26,
+        100,
+        101
+      ],
+      "operations": [
+        "alpha>=128 bbox with 2px fringe from reference summer v1 or self",
+        "uniform whole-object LANCZOS reduction",
+        "transparent canvas padding at registered D2 anchor",
+        "bare uses exactly the paired summer crop, scale and translation"
+      ],
+      "provenance": {
+        "id": "oak_small_bare",
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-01bf77fd-c5e3-46c5-84d7-19df053ca6b0.png",
+        "attempt": 3,
+        "prompt": "Create winter version of IMAGE1 small oak. Preserve image1 exact canvas dimensions, trunk/root scale and pixel placement. Follow IMAGE2's bare branch design: only STURDY thick connected wooden boughs with blunt tips, ZERO delicate twiglets or fine hairline branches. Upper crown should be mostly empty TRANSPARENT space with 8 thick branch forks. Remove all leaves. Keep lower trunk and roots unchanged from IMAGE1, NOT IMAGE2. This is an80px game sprite and each branch must remain visibly connected when reduced. Brown bark ink watercolor upper-left illumination. No ground, no shadow, no glow.",
+        "reference": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-d43432fd-4da4-4989-bba1-dc2d5acaf60c.png",
+        "branch_reference": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-abeb59d2-4939-43b7-a854-6bfa8d758b02.png"
+      },
+      "acceptance": "NOT_CLAIMED"
+    },
+    {
+      "id": "birch_large_bare",
+      "attempt": 2,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-22a74acf-ed43-4a11-936d-6e2c152b5aba.png",
+      "source_sha256": "0168ebe8c4bcb1736e049f30f65c4f2d8933a0d99eaba1b95eeb54c55e2cc988",
+      "preserved_original": "/Users/rexxa/work/arttrees-data/originals/birch_large_bare_try2_0168ebe8c4bc.png",
+      "output": "art/flora/sprites/birch_large_bare.png",
+      "output_sha256": "2e8c1d1f097af463219ff3a3a47d3243cbf5f19d845076594a772b7f92f7ba7c",
+      "transform_reference": "birch_large_v1",
+      "transform": {
+        "source_canvas": [
+          1003,
+          1568
+        ],
+        "crop": [
+          14,
+          22,
+          991,
+          1548
+        ],
+        "scale": 0.10512483574244415,
+        "scaled_canvas": [
+          103,
+          160
+        ],
+        "offset": [
+          45,
+          21
+        ],
+        "output_canvas": [
+          192,
+          192
+        ],
+        "anchor": [
+          96,
+          180
+        ],
+        "target_height": 160
+      },
+      "source_opaque_pixels_outside_crop": 0,
+      "output_opaque_bbox": [
+        64,
+        24,
+        146,
+        181
+      ],
+      "operations": [
+        "alpha>=128 bbox with 2px fringe from reference summer v1 or self",
+        "uniform whole-object LANCZOS reduction",
+        "transparent canvas padding at registered D2 anchor",
+        "bare uses exactly the paired summer crop, scale and translation"
+      ],
+      "provenance": {
+        "id": "birch_large_bare",
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-22a74acf-ed43-4a11-936d-6e2c152b5aba.png",
+        "attempt": 2,
+        "prompt": "EDIT ONLY UPPER TREE into a very sparse WINTER BARE silhouette. Keep the white trunk and roots EXACTLY unchanged in shape, color, canvas position and size. ERASE every leafy or fuzzy crown mass completely. Draw only 8 to 12 sturdy bare branches attached solidly to trunk, a few short thick twigs; HUGE clear transparent spaces. No leaf texture, NO fine hairline mesh, NO brown or grey fuzz. This must read as bare branches at 80px, like a simple inked game icon, not a detailed botanical illustration. Keep original canvas dimensions and root base position; never recenter. Transparent background, no glow, ground or shadow.",
+        "reference": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-dc8b66f5-8647-414d-b0a0-e3d819bdf655.png"
+      },
+      "acceptance": "NOT_CLAIMED"
+    },
+    {
+      "id": "birch_small_bare",
+      "attempt": 3,
+      "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-b38a4a3a-3ab3-4fee-9f86-8aa87a1bc47f.png",
+      "source_sha256": "b79fdeed941e017b91e938d7b079a126742600b9564527abd55290cd7763b25e",
+      "preserved_original": "/Users/rexxa/work/arttrees-data/originals/birch_small_bare_try3_b79fdeed941e.png",
+      "output": "art/flora/sprites/birch_small_bare.png",
+      "output_sha256": "cb4ca010687e33d913e438285a6faf65e7dac230ab7727ad64ac906d6ecd7959",
+      "transform_reference": "birch_small_v1",
+      "transform": {
+        "source_canvas": [
+          1261,
+          1247
+        ],
+        "crop": [
+          286,
+          53,
+          1003,
+          1196
+        ],
+        "scale": 0.07023705004389816,
+        "scaled_canvas": [
+          50,
+          80
+        ],
+        "offset": [
+          40,
+          21
+        ],
+        "output_canvas": [
+          128,
+          112
+        ],
+        "anchor": [
+          64,
+          100
+        ],
+        "target_height": 80
+      },
+      "source_opaque_pixels_outside_crop": 0,
+      "output_opaque_bbox": [
+        52,
+        26,
+        89,
+        101
+      ],
+      "operations": [
+        "alpha>=128 bbox with 2px fringe from reference summer v1 or self",
+        "uniform whole-object LANCZOS reduction",
+        "transparent canvas padding at registered D2 anchor",
+        "bare uses exactly the paired summer crop, scale and translation"
+      ],
+      "provenance": {
+        "id": "birch_small_bare",
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-b38a4a3a-3ab3-4fee-9f86-8aa87a1bc47f.png",
+        "attempt": 3,
+        "prompt": "Using this EXACT revised small birch as the edit target, preserve its exact canvas, tree scale, pixel position, white trunk and ALL roots identically. Convert only leafy upper crown into WINTER BARE tree: remove ALL foliage, show only 6 to 8 thick solid white/brown branches connected to trunk, blunt sturdy tips. Absolutely NO small twiglets or fine hairline branches; every bough thick enough to stay connected at native80px. Vast transparent space between the sparse thick branches. Lower half of tree including trunk and roots MUST retain original exact shape and pixel location. No recenter, no zoom. Ink watercolor, upper-left light, transparent background, no glow, shadow or ground.",
+        "reference": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-a8d1d7e6-bd94-4b11-965f-36df13e36adc.png"
+      },
+      "acceptance": "NOT_CLAIMED"
+    }
+  ]
+}

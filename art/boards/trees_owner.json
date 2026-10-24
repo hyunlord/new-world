@@ -1,0 +1,3277 @@
+{
+  "cases": [
+    {
+      "species_id": "birch",
+      "size": "small",
+      "variant": 0,
+      "season": "spring",
+      "scale": 1,
+      "path": "art/flora/sprites/birch_small_v1.png",
+      "mask": "art/flora/masks/birch_small_v1.png",
+      "origin": [
+        50,
+        224
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        163,
+        220
+      ],
+      "source_sha256": "706e8919b579025a1762860f9fd485f97cc18c7f3e8740d67c526de79e9ce70d",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "small",
+      "variant": 0,
+      "season": "spring",
+      "scale": 2,
+      "path": "art/flora/sprites/birch_small_v1.png",
+      "mask": "art/flora/masks/birch_small_v1.png",
+      "origin": [
+        356,
+        124
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        582,
+        116
+      ],
+      "source_sha256": "706e8919b579025a1762860f9fd485f97cc18c7f3e8740d67c526de79e9ce70d",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "small",
+      "variant": 0,
+      "season": "summer",
+      "scale": 1,
+      "path": "art/flora/sprites/birch_small_v1.png",
+      "mask": "art/flora/masks/birch_small_v1.png",
+      "origin": [
+        866,
+        224
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        979,
+        220
+      ],
+      "source_sha256": "706e8919b579025a1762860f9fd485f97cc18c7f3e8740d67c526de79e9ce70d",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "small",
+      "variant": 0,
+      "season": "summer",
+      "scale": 2,
+      "path": "art/flora/sprites/birch_small_v1.png",
+      "mask": "art/flora/masks/birch_small_v1.png",
+      "origin": [
+        1172,
+        124
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        1398,
+        116
+      ],
+      "source_sha256": "706e8919b579025a1762860f9fd485f97cc18c7f3e8740d67c526de79e9ce70d",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "small",
+      "variant": 0,
+      "season": "autumn",
+      "scale": 1,
+      "path": "art/flora/sprites/birch_small_v1.png",
+      "mask": "art/flora/masks/birch_small_v1.png",
+      "origin": [
+        1682,
+        224
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        1795,
+        220
+      ],
+      "source_sha256": "706e8919b579025a1762860f9fd485f97cc18c7f3e8740d67c526de79e9ce70d",
+      "tint": {
+        "delta_lab": [
+          8.0,
+          10.0,
+          32.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "small",
+      "variant": 0,
+      "season": "autumn",
+      "scale": 2,
+      "path": "art/flora/sprites/birch_small_v1.png",
+      "mask": "art/flora/masks/birch_small_v1.png",
+      "origin": [
+        1988,
+        124
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        2214,
+        116
+      ],
+      "source_sha256": "706e8919b579025a1762860f9fd485f97cc18c7f3e8740d67c526de79e9ce70d",
+      "tint": {
+        "delta_lab": [
+          8.0,
+          10.0,
+          32.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "small",
+      "variant": 0,
+      "season": "winter",
+      "scale": 1,
+      "path": "art/flora/sprites/birch_small_bare.png",
+      "mask": "art/flora/masks/birch_small_bare.png",
+      "origin": [
+        2498,
+        224
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        2611,
+        220
+      ],
+      "source_sha256": "cb4ca010687e33d913e438285a6faf65e7dac230ab7727ad64ac906d6ecd7959",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "bare",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "small",
+      "variant": 0,
+      "season": "winter",
+      "scale": 2,
+      "path": "art/flora/sprites/birch_small_bare.png",
+      "mask": "art/flora/masks/birch_small_bare.png",
+      "origin": [
+        2804,
+        124
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        3030,
+        116
+      ],
+      "source_sha256": "cb4ca010687e33d913e438285a6faf65e7dac230ab7727ad64ac906d6ecd7959",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "bare",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "small",
+      "variant": 1,
+      "season": "spring",
+      "scale": 1,
+      "path": "art/flora/sprites/birch_small_v2.png",
+      "mask": "art/flora/masks/birch_small_v2.png",
+      "origin": [
+        50,
+        512
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        163,
+        508
+      ],
+      "source_sha256": "10cd21c4737518042da9dbc0fe5b5560d9bdf30e8c4a2f360430e5e83f8606a5",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "small",
+      "variant": 1,
+      "season": "spring",
+      "scale": 2,
+      "path": "art/flora/sprites/birch_small_v2.png",
+      "mask": "art/flora/masks/birch_small_v2.png",
+      "origin": [
+        356,
+        412
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        582,
+        404
+      ],
+      "source_sha256": "10cd21c4737518042da9dbc0fe5b5560d9bdf30e8c4a2f360430e5e83f8606a5",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "small",
+      "variant": 1,
+      "season": "summer",
+      "scale": 1,
+      "path": "art/flora/sprites/birch_small_v2.png",
+      "mask": "art/flora/masks/birch_small_v2.png",
+      "origin": [
+        866,
+        512
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        979,
+        508
+      ],
+      "source_sha256": "10cd21c4737518042da9dbc0fe5b5560d9bdf30e8c4a2f360430e5e83f8606a5",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "small",
+      "variant": 1,
+      "season": "summer",
+      "scale": 2,
+      "path": "art/flora/sprites/birch_small_v2.png",
+      "mask": "art/flora/masks/birch_small_v2.png",
+      "origin": [
+        1172,
+        412
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        1398,
+        404
+      ],
+      "source_sha256": "10cd21c4737518042da9dbc0fe5b5560d9bdf30e8c4a2f360430e5e83f8606a5",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "small",
+      "variant": 1,
+      "season": "autumn",
+      "scale": 1,
+      "path": "art/flora/sprites/birch_small_v2.png",
+      "mask": "art/flora/masks/birch_small_v2.png",
+      "origin": [
+        1682,
+        512
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        1795,
+        508
+      ],
+      "source_sha256": "10cd21c4737518042da9dbc0fe5b5560d9bdf30e8c4a2f360430e5e83f8606a5",
+      "tint": {
+        "delta_lab": [
+          8.0,
+          10.0,
+          32.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "small",
+      "variant": 1,
+      "season": "autumn",
+      "scale": 2,
+      "path": "art/flora/sprites/birch_small_v2.png",
+      "mask": "art/flora/masks/birch_small_v2.png",
+      "origin": [
+        1988,
+        412
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        2214,
+        404
+      ],
+      "source_sha256": "10cd21c4737518042da9dbc0fe5b5560d9bdf30e8c4a2f360430e5e83f8606a5",
+      "tint": {
+        "delta_lab": [
+          8.0,
+          10.0,
+          32.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "small",
+      "variant": 1,
+      "season": "winter",
+      "scale": 1,
+      "path": "art/flora/sprites/birch_small_bare.png",
+      "mask": "art/flora/masks/birch_small_bare.png",
+      "origin": [
+        2498,
+        512
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        2611,
+        508
+      ],
+      "source_sha256": "cb4ca010687e33d913e438285a6faf65e7dac230ab7727ad64ac906d6ecd7959",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "bare",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "small",
+      "variant": 1,
+      "season": "winter",
+      "scale": 2,
+      "path": "art/flora/sprites/birch_small_bare.png",
+      "mask": "art/flora/masks/birch_small_bare.png",
+      "origin": [
+        2804,
+        412
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        3030,
+        404
+      ],
+      "source_sha256": "cb4ca010687e33d913e438285a6faf65e7dac230ab7727ad64ac906d6ecd7959",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "bare",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "large",
+      "variant": 0,
+      "season": "spring",
+      "scale": 1,
+      "path": "art/flora/sprites/birch_large_v1.png",
+      "mask": "art/flora/masks/birch_large_v1.png",
+      "origin": [
+        18,
+        880
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        195,
+        956
+      ],
+      "source_sha256": "2683048c36fe7cd7f24cdcef5046f27ab87ca8d39db245448654ae83858fac5f",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "large",
+      "variant": 0,
+      "season": "spring",
+      "scale": 2,
+      "path": "art/flora/sprites/birch_large_v1.png",
+      "mask": "art/flora/masks/birch_large_v1.png",
+      "origin": [
+        292,
+        700
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        646,
+        852
+      ],
+      "source_sha256": "2683048c36fe7cd7f24cdcef5046f27ab87ca8d39db245448654ae83858fac5f",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "large",
+      "variant": 0,
+      "season": "summer",
+      "scale": 1,
+      "path": "art/flora/sprites/birch_large_v1.png",
+      "mask": "art/flora/masks/birch_large_v1.png",
+      "origin": [
+        834,
+        880
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        1011,
+        956
+      ],
+      "source_sha256": "2683048c36fe7cd7f24cdcef5046f27ab87ca8d39db245448654ae83858fac5f",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "large",
+      "variant": 0,
+      "season": "summer",
+      "scale": 2,
+      "path": "art/flora/sprites/birch_large_v1.png",
+      "mask": "art/flora/masks/birch_large_v1.png",
+      "origin": [
+        1108,
+        700
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        1462,
+        852
+      ],
+      "source_sha256": "2683048c36fe7cd7f24cdcef5046f27ab87ca8d39db245448654ae83858fac5f",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "large",
+      "variant": 0,
+      "season": "autumn",
+      "scale": 1,
+      "path": "art/flora/sprites/birch_large_v1.png",
+      "mask": "art/flora/masks/birch_large_v1.png",
+      "origin": [
+        1650,
+        880
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        1827,
+        956
+      ],
+      "source_sha256": "2683048c36fe7cd7f24cdcef5046f27ab87ca8d39db245448654ae83858fac5f",
+      "tint": {
+        "delta_lab": [
+          8.0,
+          10.0,
+          32.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "large",
+      "variant": 0,
+      "season": "autumn",
+      "scale": 2,
+      "path": "art/flora/sprites/birch_large_v1.png",
+      "mask": "art/flora/masks/birch_large_v1.png",
+      "origin": [
+        1924,
+        700
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        2278,
+        852
+      ],
+      "source_sha256": "2683048c36fe7cd7f24cdcef5046f27ab87ca8d39db245448654ae83858fac5f",
+      "tint": {
+        "delta_lab": [
+          8.0,
+          10.0,
+          32.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "large",
+      "variant": 0,
+      "season": "winter",
+      "scale": 1,
+      "path": "art/flora/sprites/birch_large_bare.png",
+      "mask": "art/flora/masks/birch_large_bare.png",
+      "origin": [
+        2466,
+        880
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        2643,
+        956
+      ],
+      "source_sha256": "2e8c1d1f097af463219ff3a3a47d3243cbf5f19d845076594a772b7f92f7ba7c",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "bare",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "large",
+      "variant": 0,
+      "season": "winter",
+      "scale": 2,
+      "path": "art/flora/sprites/birch_large_bare.png",
+      "mask": "art/flora/masks/birch_large_bare.png",
+      "origin": [
+        2740,
+        700
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        3094,
+        852
+      ],
+      "source_sha256": "2e8c1d1f097af463219ff3a3a47d3243cbf5f19d845076594a772b7f92f7ba7c",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "bare",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "large",
+      "variant": 1,
+      "season": "spring",
+      "scale": 1,
+      "path": "art/flora/sprites/birch_large_v2.png",
+      "mask": "art/flora/masks/birch_large_v2.png",
+      "origin": [
+        18,
+        1328
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        195,
+        1404
+      ],
+      "source_sha256": "20edfbe6ba0486c3e3c35e60501da563739e402416e1b2a048bd5099028062f5",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "large",
+      "variant": 1,
+      "season": "spring",
+      "scale": 2,
+      "path": "art/flora/sprites/birch_large_v2.png",
+      "mask": "art/flora/masks/birch_large_v2.png",
+      "origin": [
+        292,
+        1148
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        646,
+        1300
+      ],
+      "source_sha256": "20edfbe6ba0486c3e3c35e60501da563739e402416e1b2a048bd5099028062f5",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "large",
+      "variant": 1,
+      "season": "summer",
+      "scale": 1,
+      "path": "art/flora/sprites/birch_large_v2.png",
+      "mask": "art/flora/masks/birch_large_v2.png",
+      "origin": [
+        834,
+        1328
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        1011,
+        1404
+      ],
+      "source_sha256": "20edfbe6ba0486c3e3c35e60501da563739e402416e1b2a048bd5099028062f5",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "large",
+      "variant": 1,
+      "season": "summer",
+      "scale": 2,
+      "path": "art/flora/sprites/birch_large_v2.png",
+      "mask": "art/flora/masks/birch_large_v2.png",
+      "origin": [
+        1108,
+        1148
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        1462,
+        1300
+      ],
+      "source_sha256": "20edfbe6ba0486c3e3c35e60501da563739e402416e1b2a048bd5099028062f5",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "large",
+      "variant": 1,
+      "season": "autumn",
+      "scale": 1,
+      "path": "art/flora/sprites/birch_large_v2.png",
+      "mask": "art/flora/masks/birch_large_v2.png",
+      "origin": [
+        1650,
+        1328
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        1827,
+        1404
+      ],
+      "source_sha256": "20edfbe6ba0486c3e3c35e60501da563739e402416e1b2a048bd5099028062f5",
+      "tint": {
+        "delta_lab": [
+          8.0,
+          10.0,
+          32.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "large",
+      "variant": 1,
+      "season": "autumn",
+      "scale": 2,
+      "path": "art/flora/sprites/birch_large_v2.png",
+      "mask": "art/flora/masks/birch_large_v2.png",
+      "origin": [
+        1924,
+        1148
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        2278,
+        1300
+      ],
+      "source_sha256": "20edfbe6ba0486c3e3c35e60501da563739e402416e1b2a048bd5099028062f5",
+      "tint": {
+        "delta_lab": [
+          8.0,
+          10.0,
+          32.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "large",
+      "variant": 1,
+      "season": "winter",
+      "scale": 1,
+      "path": "art/flora/sprites/birch_large_bare.png",
+      "mask": "art/flora/masks/birch_large_bare.png",
+      "origin": [
+        2466,
+        1328
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        2643,
+        1404
+      ],
+      "source_sha256": "2e8c1d1f097af463219ff3a3a47d3243cbf5f19d845076594a772b7f92f7ba7c",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "bare",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "birch",
+      "size": "large",
+      "variant": 1,
+      "season": "winter",
+      "scale": 2,
+      "path": "art/flora/sprites/birch_large_bare.png",
+      "mask": "art/flora/masks/birch_large_bare.png",
+      "origin": [
+        2740,
+        1148
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        3094,
+        1300
+      ],
+      "source_sha256": "2e8c1d1f097af463219ff3a3a47d3243cbf5f19d845076594a772b7f92f7ba7c",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "bare",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "small",
+      "variant": 0,
+      "season": "spring",
+      "scale": 1,
+      "path": "art/flora/sprites/oak_small_v1.png",
+      "mask": "art/flora/masks/oak_small_v1.png",
+      "origin": [
+        50,
+        1696
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        163,
+        1692
+      ],
+      "source_sha256": "38c6970cf65a5144291399da25068eec09c6209e826c5ccd244155b4e086773f",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "small",
+      "variant": 0,
+      "season": "spring",
+      "scale": 2,
+      "path": "art/flora/sprites/oak_small_v1.png",
+      "mask": "art/flora/masks/oak_small_v1.png",
+      "origin": [
+        356,
+        1596
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        582,
+        1588
+      ],
+      "source_sha256": "38c6970cf65a5144291399da25068eec09c6209e826c5ccd244155b4e086773f",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "small",
+      "variant": 0,
+      "season": "summer",
+      "scale": 1,
+      "path": "art/flora/sprites/oak_small_v1.png",
+      "mask": "art/flora/masks/oak_small_v1.png",
+      "origin": [
+        866,
+        1696
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        979,
+        1692
+      ],
+      "source_sha256": "38c6970cf65a5144291399da25068eec09c6209e826c5ccd244155b4e086773f",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "small",
+      "variant": 0,
+      "season": "summer",
+      "scale": 2,
+      "path": "art/flora/sprites/oak_small_v1.png",
+      "mask": "art/flora/masks/oak_small_v1.png",
+      "origin": [
+        1172,
+        1596
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        1398,
+        1588
+      ],
+      "source_sha256": "38c6970cf65a5144291399da25068eec09c6209e826c5ccd244155b4e086773f",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "small",
+      "variant": 0,
+      "season": "autumn",
+      "scale": 1,
+      "path": "art/flora/sprites/oak_small_v1.png",
+      "mask": "art/flora/masks/oak_small_v1.png",
+      "origin": [
+        1682,
+        1696
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        1795,
+        1692
+      ],
+      "source_sha256": "38c6970cf65a5144291399da25068eec09c6209e826c5ccd244155b4e086773f",
+      "tint": {
+        "delta_lab": [
+          -8.0,
+          35.0,
+          15.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "small",
+      "variant": 0,
+      "season": "autumn",
+      "scale": 2,
+      "path": "art/flora/sprites/oak_small_v1.png",
+      "mask": "art/flora/masks/oak_small_v1.png",
+      "origin": [
+        1988,
+        1596
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        2214,
+        1588
+      ],
+      "source_sha256": "38c6970cf65a5144291399da25068eec09c6209e826c5ccd244155b4e086773f",
+      "tint": {
+        "delta_lab": [
+          -8.0,
+          35.0,
+          15.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "small",
+      "variant": 0,
+      "season": "winter",
+      "scale": 1,
+      "path": "art/flora/sprites/oak_small_bare.png",
+      "mask": "art/flora/masks/oak_small_bare.png",
+      "origin": [
+        2498,
+        1696
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        2611,
+        1692
+      ],
+      "source_sha256": "3cf313970724c29399110a661cc207cb7b0361590307edda35951f5e827a55e2",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "bare",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "small",
+      "variant": 0,
+      "season": "winter",
+      "scale": 2,
+      "path": "art/flora/sprites/oak_small_bare.png",
+      "mask": "art/flora/masks/oak_small_bare.png",
+      "origin": [
+        2804,
+        1596
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        3030,
+        1588
+      ],
+      "source_sha256": "3cf313970724c29399110a661cc207cb7b0361590307edda35951f5e827a55e2",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "bare",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "small",
+      "variant": 1,
+      "season": "spring",
+      "scale": 1,
+      "path": "art/flora/sprites/oak_small_v2.png",
+      "mask": "art/flora/masks/oak_small_v2.png",
+      "origin": [
+        50,
+        1984
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        163,
+        1980
+      ],
+      "source_sha256": "d1c32570e23ba1d60b521b4a31a4f5598e19b2e7f48e5f436fe60ba2a639df77",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "small",
+      "variant": 1,
+      "season": "spring",
+      "scale": 2,
+      "path": "art/flora/sprites/oak_small_v2.png",
+      "mask": "art/flora/masks/oak_small_v2.png",
+      "origin": [
+        356,
+        1884
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        582,
+        1876
+      ],
+      "source_sha256": "d1c32570e23ba1d60b521b4a31a4f5598e19b2e7f48e5f436fe60ba2a639df77",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "small",
+      "variant": 1,
+      "season": "summer",
+      "scale": 1,
+      "path": "art/flora/sprites/oak_small_v2.png",
+      "mask": "art/flora/masks/oak_small_v2.png",
+      "origin": [
+        866,
+        1984
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        979,
+        1980
+      ],
+      "source_sha256": "d1c32570e23ba1d60b521b4a31a4f5598e19b2e7f48e5f436fe60ba2a639df77",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "small",
+      "variant": 1,
+      "season": "summer",
+      "scale": 2,
+      "path": "art/flora/sprites/oak_small_v2.png",
+      "mask": "art/flora/masks/oak_small_v2.png",
+      "origin": [
+        1172,
+        1884
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        1398,
+        1876
+      ],
+      "source_sha256": "d1c32570e23ba1d60b521b4a31a4f5598e19b2e7f48e5f436fe60ba2a639df77",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "small",
+      "variant": 1,
+      "season": "autumn",
+      "scale": 1,
+      "path": "art/flora/sprites/oak_small_v2.png",
+      "mask": "art/flora/masks/oak_small_v2.png",
+      "origin": [
+        1682,
+        1984
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        1795,
+        1980
+      ],
+      "source_sha256": "d1c32570e23ba1d60b521b4a31a4f5598e19b2e7f48e5f436fe60ba2a639df77",
+      "tint": {
+        "delta_lab": [
+          -8.0,
+          35.0,
+          15.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "small",
+      "variant": 1,
+      "season": "autumn",
+      "scale": 2,
+      "path": "art/flora/sprites/oak_small_v2.png",
+      "mask": "art/flora/masks/oak_small_v2.png",
+      "origin": [
+        1988,
+        1884
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        2214,
+        1876
+      ],
+      "source_sha256": "d1c32570e23ba1d60b521b4a31a4f5598e19b2e7f48e5f436fe60ba2a639df77",
+      "tint": {
+        "delta_lab": [
+          -8.0,
+          35.0,
+          15.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "small",
+      "variant": 1,
+      "season": "winter",
+      "scale": 1,
+      "path": "art/flora/sprites/oak_small_bare.png",
+      "mask": "art/flora/masks/oak_small_bare.png",
+      "origin": [
+        2498,
+        1984
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        2611,
+        1980
+      ],
+      "source_sha256": "3cf313970724c29399110a661cc207cb7b0361590307edda35951f5e827a55e2",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "bare",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "small",
+      "variant": 1,
+      "season": "winter",
+      "scale": 2,
+      "path": "art/flora/sprites/oak_small_bare.png",
+      "mask": "art/flora/masks/oak_small_bare.png",
+      "origin": [
+        2804,
+        1884
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        3030,
+        1876
+      ],
+      "source_sha256": "3cf313970724c29399110a661cc207cb7b0361590307edda35951f5e827a55e2",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "bare",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "large",
+      "variant": 0,
+      "season": "spring",
+      "scale": 1,
+      "path": "art/flora/sprites/oak_large_v1.png",
+      "mask": "art/flora/masks/oak_large_v1.png",
+      "origin": [
+        18,
+        2352
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        195,
+        2428
+      ],
+      "source_sha256": "409c1005a4c4987a88a0e09b075ae5bce0b2dea90806a68e9d0f8989e1297cad",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "large",
+      "variant": 0,
+      "season": "spring",
+      "scale": 2,
+      "path": "art/flora/sprites/oak_large_v1.png",
+      "mask": "art/flora/masks/oak_large_v1.png",
+      "origin": [
+        292,
+        2172
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        646,
+        2324
+      ],
+      "source_sha256": "409c1005a4c4987a88a0e09b075ae5bce0b2dea90806a68e9d0f8989e1297cad",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "large",
+      "variant": 0,
+      "season": "summer",
+      "scale": 1,
+      "path": "art/flora/sprites/oak_large_v1.png",
+      "mask": "art/flora/masks/oak_large_v1.png",
+      "origin": [
+        834,
+        2352
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        1011,
+        2428
+      ],
+      "source_sha256": "409c1005a4c4987a88a0e09b075ae5bce0b2dea90806a68e9d0f8989e1297cad",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "large",
+      "variant": 0,
+      "season": "summer",
+      "scale": 2,
+      "path": "art/flora/sprites/oak_large_v1.png",
+      "mask": "art/flora/masks/oak_large_v1.png",
+      "origin": [
+        1108,
+        2172
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        1462,
+        2324
+      ],
+      "source_sha256": "409c1005a4c4987a88a0e09b075ae5bce0b2dea90806a68e9d0f8989e1297cad",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "large",
+      "variant": 0,
+      "season": "autumn",
+      "scale": 1,
+      "path": "art/flora/sprites/oak_large_v1.png",
+      "mask": "art/flora/masks/oak_large_v1.png",
+      "origin": [
+        1650,
+        2352
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        1827,
+        2428
+      ],
+      "source_sha256": "409c1005a4c4987a88a0e09b075ae5bce0b2dea90806a68e9d0f8989e1297cad",
+      "tint": {
+        "delta_lab": [
+          -8.0,
+          35.0,
+          15.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "large",
+      "variant": 0,
+      "season": "autumn",
+      "scale": 2,
+      "path": "art/flora/sprites/oak_large_v1.png",
+      "mask": "art/flora/masks/oak_large_v1.png",
+      "origin": [
+        1924,
+        2172
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        2278,
+        2324
+      ],
+      "source_sha256": "409c1005a4c4987a88a0e09b075ae5bce0b2dea90806a68e9d0f8989e1297cad",
+      "tint": {
+        "delta_lab": [
+          -8.0,
+          35.0,
+          15.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "large",
+      "variant": 0,
+      "season": "winter",
+      "scale": 1,
+      "path": "art/flora/sprites/oak_large_bare.png",
+      "mask": "art/flora/masks/oak_large_bare.png",
+      "origin": [
+        2466,
+        2352
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        2643,
+        2428
+      ],
+      "source_sha256": "42535527738429b4fc93ed92fed50b65a42630c5ecc17c59ec412a1b3ccc41ec",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "bare",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "large",
+      "variant": 0,
+      "season": "winter",
+      "scale": 2,
+      "path": "art/flora/sprites/oak_large_bare.png",
+      "mask": "art/flora/masks/oak_large_bare.png",
+      "origin": [
+        2740,
+        2172
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        3094,
+        2324
+      ],
+      "source_sha256": "42535527738429b4fc93ed92fed50b65a42630c5ecc17c59ec412a1b3ccc41ec",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "bare",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "large",
+      "variant": 1,
+      "season": "spring",
+      "scale": 1,
+      "path": "art/flora/sprites/oak_large_v2.png",
+      "mask": "art/flora/masks/oak_large_v2.png",
+      "origin": [
+        18,
+        2800
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        195,
+        2876
+      ],
+      "source_sha256": "e2f99a16a2aec6ec0ce2d2a5184a2339a9538f3e0cda165225d8be3ed50e944e",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "large",
+      "variant": 1,
+      "season": "spring",
+      "scale": 2,
+      "path": "art/flora/sprites/oak_large_v2.png",
+      "mask": "art/flora/masks/oak_large_v2.png",
+      "origin": [
+        292,
+        2620
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        646,
+        2772
+      ],
+      "source_sha256": "e2f99a16a2aec6ec0ce2d2a5184a2339a9538f3e0cda165225d8be3ed50e944e",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "large",
+      "variant": 1,
+      "season": "summer",
+      "scale": 1,
+      "path": "art/flora/sprites/oak_large_v2.png",
+      "mask": "art/flora/masks/oak_large_v2.png",
+      "origin": [
+        834,
+        2800
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        1011,
+        2876
+      ],
+      "source_sha256": "e2f99a16a2aec6ec0ce2d2a5184a2339a9538f3e0cda165225d8be3ed50e944e",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "large",
+      "variant": 1,
+      "season": "summer",
+      "scale": 2,
+      "path": "art/flora/sprites/oak_large_v2.png",
+      "mask": "art/flora/masks/oak_large_v2.png",
+      "origin": [
+        1108,
+        2620
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        1462,
+        2772
+      ],
+      "source_sha256": "e2f99a16a2aec6ec0ce2d2a5184a2339a9538f3e0cda165225d8be3ed50e944e",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "large",
+      "variant": 1,
+      "season": "autumn",
+      "scale": 1,
+      "path": "art/flora/sprites/oak_large_v2.png",
+      "mask": "art/flora/masks/oak_large_v2.png",
+      "origin": [
+        1650,
+        2800
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        1827,
+        2876
+      ],
+      "source_sha256": "e2f99a16a2aec6ec0ce2d2a5184a2339a9538f3e0cda165225d8be3ed50e944e",
+      "tint": {
+        "delta_lab": [
+          -8.0,
+          35.0,
+          15.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "large",
+      "variant": 1,
+      "season": "autumn",
+      "scale": 2,
+      "path": "art/flora/sprites/oak_large_v2.png",
+      "mask": "art/flora/masks/oak_large_v2.png",
+      "origin": [
+        1924,
+        2620
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        2278,
+        2772
+      ],
+      "source_sha256": "e2f99a16a2aec6ec0ce2d2a5184a2339a9538f3e0cda165225d8be3ed50e944e",
+      "tint": {
+        "delta_lab": [
+          -8.0,
+          35.0,
+          15.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "large",
+      "variant": 1,
+      "season": "winter",
+      "scale": 1,
+      "path": "art/flora/sprites/oak_large_bare.png",
+      "mask": "art/flora/masks/oak_large_bare.png",
+      "origin": [
+        2466,
+        2800
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        2643,
+        2876
+      ],
+      "source_sha256": "42535527738429b4fc93ed92fed50b65a42630c5ecc17c59ec412a1b3ccc41ec",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "bare",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "oak",
+      "size": "large",
+      "variant": 1,
+      "season": "winter",
+      "scale": 2,
+      "path": "art/flora/sprites/oak_large_bare.png",
+      "mask": "art/flora/masks/oak_large_bare.png",
+      "origin": [
+        2740,
+        2620
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        3094,
+        2772
+      ],
+      "source_sha256": "42535527738429b4fc93ed92fed50b65a42630c5ecc17c59ec412a1b3ccc41ec",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "bare",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "small",
+      "variant": 0,
+      "season": "spring",
+      "scale": 1,
+      "path": "art/flora/sprites/pine_small_v1.png",
+      "mask": "art/flora/masks/pine_small_v1.png",
+      "origin": [
+        50,
+        3168
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        163,
+        3164
+      ],
+      "source_sha256": "983f71a2a386f98cd12a990b2963b7672c1a4d7dfcdc84076c963f5b0b011b76",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "small",
+      "variant": 0,
+      "season": "spring",
+      "scale": 2,
+      "path": "art/flora/sprites/pine_small_v1.png",
+      "mask": "art/flora/masks/pine_small_v1.png",
+      "origin": [
+        356,
+        3068
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        582,
+        3060
+      ],
+      "source_sha256": "983f71a2a386f98cd12a990b2963b7672c1a4d7dfcdc84076c963f5b0b011b76",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "small",
+      "variant": 0,
+      "season": "summer",
+      "scale": 1,
+      "path": "art/flora/sprites/pine_small_v1.png",
+      "mask": "art/flora/masks/pine_small_v1.png",
+      "origin": [
+        866,
+        3168
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        979,
+        3164
+      ],
+      "source_sha256": "983f71a2a386f98cd12a990b2963b7672c1a4d7dfcdc84076c963f5b0b011b76",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "small",
+      "variant": 0,
+      "season": "summer",
+      "scale": 2,
+      "path": "art/flora/sprites/pine_small_v1.png",
+      "mask": "art/flora/masks/pine_small_v1.png",
+      "origin": [
+        1172,
+        3068
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        1398,
+        3060
+      ],
+      "source_sha256": "983f71a2a386f98cd12a990b2963b7672c1a4d7dfcdc84076c963f5b0b011b76",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "small",
+      "variant": 0,
+      "season": "autumn",
+      "scale": 1,
+      "path": "art/flora/sprites/pine_small_v1.png",
+      "mask": "art/flora/masks/pine_small_v1.png",
+      "origin": [
+        1682,
+        3168
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        1795,
+        3164
+      ],
+      "source_sha256": "983f71a2a386f98cd12a990b2963b7672c1a4d7dfcdc84076c963f5b0b011b76",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "small",
+      "variant": 0,
+      "season": "autumn",
+      "scale": 2,
+      "path": "art/flora/sprites/pine_small_v1.png",
+      "mask": "art/flora/masks/pine_small_v1.png",
+      "origin": [
+        1988,
+        3068
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        2214,
+        3060
+      ],
+      "source_sha256": "983f71a2a386f98cd12a990b2963b7672c1a4d7dfcdc84076c963f5b0b011b76",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "small",
+      "variant": 0,
+      "season": "winter",
+      "scale": 1,
+      "path": "art/flora/sprites/pine_small_v1.png",
+      "mask": "art/flora/masks/pine_small_v1.png",
+      "origin": [
+        2498,
+        3168
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        2611,
+        3164
+      ],
+      "source_sha256": "983f71a2a386f98cd12a990b2963b7672c1a4d7dfcdc84076c963f5b0b011b76",
+      "tint": {
+        "delta_lab": [
+          -8.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 3,
+          "alpha": 0.7
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "small",
+      "variant": 0,
+      "season": "winter",
+      "scale": 2,
+      "path": "art/flora/sprites/pine_small_v1.png",
+      "mask": "art/flora/masks/pine_small_v1.png",
+      "origin": [
+        2804,
+        3068
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        3030,
+        3060
+      ],
+      "source_sha256": "983f71a2a386f98cd12a990b2963b7672c1a4d7dfcdc84076c963f5b0b011b76",
+      "tint": {
+        "delta_lab": [
+          -8.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 3,
+          "alpha": 0.7
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "small",
+      "variant": 1,
+      "season": "spring",
+      "scale": 1,
+      "path": "art/flora/sprites/pine_small_v2.png",
+      "mask": "art/flora/masks/pine_small_v2.png",
+      "origin": [
+        50,
+        3456
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        163,
+        3452
+      ],
+      "source_sha256": "d0a8077b26ccc26fb028947d56a9254c210553862000cff79d9cb4676d46fe5c",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "small",
+      "variant": 1,
+      "season": "spring",
+      "scale": 2,
+      "path": "art/flora/sprites/pine_small_v2.png",
+      "mask": "art/flora/masks/pine_small_v2.png",
+      "origin": [
+        356,
+        3356
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        582,
+        3348
+      ],
+      "source_sha256": "d0a8077b26ccc26fb028947d56a9254c210553862000cff79d9cb4676d46fe5c",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "small",
+      "variant": 1,
+      "season": "summer",
+      "scale": 1,
+      "path": "art/flora/sprites/pine_small_v2.png",
+      "mask": "art/flora/masks/pine_small_v2.png",
+      "origin": [
+        866,
+        3456
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        979,
+        3452
+      ],
+      "source_sha256": "d0a8077b26ccc26fb028947d56a9254c210553862000cff79d9cb4676d46fe5c",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "small",
+      "variant": 1,
+      "season": "summer",
+      "scale": 2,
+      "path": "art/flora/sprites/pine_small_v2.png",
+      "mask": "art/flora/masks/pine_small_v2.png",
+      "origin": [
+        1172,
+        3356
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        1398,
+        3348
+      ],
+      "source_sha256": "d0a8077b26ccc26fb028947d56a9254c210553862000cff79d9cb4676d46fe5c",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "small",
+      "variant": 1,
+      "season": "autumn",
+      "scale": 1,
+      "path": "art/flora/sprites/pine_small_v2.png",
+      "mask": "art/flora/masks/pine_small_v2.png",
+      "origin": [
+        1682,
+        3456
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        1795,
+        3452
+      ],
+      "source_sha256": "d0a8077b26ccc26fb028947d56a9254c210553862000cff79d9cb4676d46fe5c",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "small",
+      "variant": 1,
+      "season": "autumn",
+      "scale": 2,
+      "path": "art/flora/sprites/pine_small_v2.png",
+      "mask": "art/flora/masks/pine_small_v2.png",
+      "origin": [
+        1988,
+        3356
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        2214,
+        3348
+      ],
+      "source_sha256": "d0a8077b26ccc26fb028947d56a9254c210553862000cff79d9cb4676d46fe5c",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "small",
+      "variant": 1,
+      "season": "winter",
+      "scale": 1,
+      "path": "art/flora/sprites/pine_small_v2.png",
+      "mask": "art/flora/masks/pine_small_v2.png",
+      "origin": [
+        2498,
+        3456
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        2611,
+        3452
+      ],
+      "source_sha256": "d0a8077b26ccc26fb028947d56a9254c210553862000cff79d9cb4676d46fe5c",
+      "tint": {
+        "delta_lab": [
+          -8.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 3,
+          "alpha": 0.7
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "small",
+      "variant": 1,
+      "season": "winter",
+      "scale": 2,
+      "path": "art/flora/sprites/pine_small_v2.png",
+      "mask": "art/flora/masks/pine_small_v2.png",
+      "origin": [
+        2804,
+        3356
+      ],
+      "anchor": [
+        64,
+        100
+      ],
+      "person_origin": [
+        3030,
+        3348
+      ],
+      "source_sha256": "d0a8077b26ccc26fb028947d56a9254c210553862000cff79d9cb4676d46fe5c",
+      "tint": {
+        "delta_lab": [
+          -8.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 3,
+          "alpha": 0.7
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "large",
+      "variant": 0,
+      "season": "spring",
+      "scale": 1,
+      "path": "art/flora/sprites/pine_large_v1.png",
+      "mask": "art/flora/masks/pine_large_v1.png",
+      "origin": [
+        18,
+        3824
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        195,
+        3900
+      ],
+      "source_sha256": "c69d226cebddcb92d5023fd820565d64fbabd1a92cb1e2fb285d89f6721d30e6",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "large",
+      "variant": 0,
+      "season": "spring",
+      "scale": 2,
+      "path": "art/flora/sprites/pine_large_v1.png",
+      "mask": "art/flora/masks/pine_large_v1.png",
+      "origin": [
+        292,
+        3644
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        646,
+        3796
+      ],
+      "source_sha256": "c69d226cebddcb92d5023fd820565d64fbabd1a92cb1e2fb285d89f6721d30e6",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "large",
+      "variant": 0,
+      "season": "summer",
+      "scale": 1,
+      "path": "art/flora/sprites/pine_large_v1.png",
+      "mask": "art/flora/masks/pine_large_v1.png",
+      "origin": [
+        834,
+        3824
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        1011,
+        3900
+      ],
+      "source_sha256": "c69d226cebddcb92d5023fd820565d64fbabd1a92cb1e2fb285d89f6721d30e6",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "large",
+      "variant": 0,
+      "season": "summer",
+      "scale": 2,
+      "path": "art/flora/sprites/pine_large_v1.png",
+      "mask": "art/flora/masks/pine_large_v1.png",
+      "origin": [
+        1108,
+        3644
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        1462,
+        3796
+      ],
+      "source_sha256": "c69d226cebddcb92d5023fd820565d64fbabd1a92cb1e2fb285d89f6721d30e6",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "large",
+      "variant": 0,
+      "season": "autumn",
+      "scale": 1,
+      "path": "art/flora/sprites/pine_large_v1.png",
+      "mask": "art/flora/masks/pine_large_v1.png",
+      "origin": [
+        1650,
+        3824
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        1827,
+        3900
+      ],
+      "source_sha256": "c69d226cebddcb92d5023fd820565d64fbabd1a92cb1e2fb285d89f6721d30e6",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "large",
+      "variant": 0,
+      "season": "autumn",
+      "scale": 2,
+      "path": "art/flora/sprites/pine_large_v1.png",
+      "mask": "art/flora/masks/pine_large_v1.png",
+      "origin": [
+        1924,
+        3644
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        2278,
+        3796
+      ],
+      "source_sha256": "c69d226cebddcb92d5023fd820565d64fbabd1a92cb1e2fb285d89f6721d30e6",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "large",
+      "variant": 0,
+      "season": "winter",
+      "scale": 1,
+      "path": "art/flora/sprites/pine_large_v1.png",
+      "mask": "art/flora/masks/pine_large_v1.png",
+      "origin": [
+        2466,
+        3824
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        2643,
+        3900
+      ],
+      "source_sha256": "c69d226cebddcb92d5023fd820565d64fbabd1a92cb1e2fb285d89f6721d30e6",
+      "tint": {
+        "delta_lab": [
+          -8.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 3,
+          "alpha": 0.7
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "large",
+      "variant": 0,
+      "season": "winter",
+      "scale": 2,
+      "path": "art/flora/sprites/pine_large_v1.png",
+      "mask": "art/flora/masks/pine_large_v1.png",
+      "origin": [
+        2740,
+        3644
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        3094,
+        3796
+      ],
+      "source_sha256": "c69d226cebddcb92d5023fd820565d64fbabd1a92cb1e2fb285d89f6721d30e6",
+      "tint": {
+        "delta_lab": [
+          -8.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 3,
+          "alpha": 0.7
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "large",
+      "variant": 1,
+      "season": "spring",
+      "scale": 1,
+      "path": "art/flora/sprites/pine_large_v2.png",
+      "mask": "art/flora/masks/pine_large_v2.png",
+      "origin": [
+        18,
+        4272
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        195,
+        4348
+      ],
+      "source_sha256": "e315d6a347389ecf8fa948850683bf0c3a62064897ae802806e51eb3d8ce28cc",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "large",
+      "variant": 1,
+      "season": "spring",
+      "scale": 2,
+      "path": "art/flora/sprites/pine_large_v2.png",
+      "mask": "art/flora/masks/pine_large_v2.png",
+      "origin": [
+        292,
+        4092
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        646,
+        4244
+      ],
+      "source_sha256": "e315d6a347389ecf8fa948850683bf0c3a62064897ae802806e51eb3d8ce28cc",
+      "tint": {
+        "delta_lab": [
+          6.0,
+          0.0,
+          6.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "large",
+      "variant": 1,
+      "season": "summer",
+      "scale": 1,
+      "path": "art/flora/sprites/pine_large_v2.png",
+      "mask": "art/flora/masks/pine_large_v2.png",
+      "origin": [
+        834,
+        4272
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        1011,
+        4348
+      ],
+      "source_sha256": "e315d6a347389ecf8fa948850683bf0c3a62064897ae802806e51eb3d8ce28cc",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "large",
+      "variant": 1,
+      "season": "summer",
+      "scale": 2,
+      "path": "art/flora/sprites/pine_large_v2.png",
+      "mask": "art/flora/masks/pine_large_v2.png",
+      "origin": [
+        1108,
+        4092
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        1462,
+        4244
+      ],
+      "source_sha256": "e315d6a347389ecf8fa948850683bf0c3a62064897ae802806e51eb3d8ce28cc",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "large",
+      "variant": 1,
+      "season": "autumn",
+      "scale": 1,
+      "path": "art/flora/sprites/pine_large_v2.png",
+      "mask": "art/flora/masks/pine_large_v2.png",
+      "origin": [
+        1650,
+        4272
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        1827,
+        4348
+      ],
+      "source_sha256": "e315d6a347389ecf8fa948850683bf0c3a62064897ae802806e51eb3d8ce28cc",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "large",
+      "variant": 1,
+      "season": "autumn",
+      "scale": 2,
+      "path": "art/flora/sprites/pine_large_v2.png",
+      "mask": "art/flora/masks/pine_large_v2.png",
+      "origin": [
+        1924,
+        4092
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        2278,
+        4244
+      ],
+      "source_sha256": "e315d6a347389ecf8fa948850683bf0c3a62064897ae802806e51eb3d8ce28cc",
+      "tint": {
+        "delta_lab": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 0,
+          "alpha": 0.0
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "large",
+      "variant": 1,
+      "season": "winter",
+      "scale": 1,
+      "path": "art/flora/sprites/pine_large_v2.png",
+      "mask": "art/flora/masks/pine_large_v2.png",
+      "origin": [
+        2466,
+        4272
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        2643,
+        4348
+      ],
+      "source_sha256": "e315d6a347389ecf8fa948850683bf0c3a62064897ae802806e51eb3d8ce28cc",
+      "tint": {
+        "delta_lab": [
+          -8.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 3,
+          "alpha": 0.7
+        }
+      }
+    },
+    {
+      "species_id": "pine",
+      "size": "large",
+      "variant": 1,
+      "season": "winter",
+      "scale": 2,
+      "path": "art/flora/sprites/pine_large_v2.png",
+      "mask": "art/flora/masks/pine_large_v2.png",
+      "origin": [
+        2740,
+        4092
+      ],
+      "anchor": [
+        96,
+        180
+      ],
+      "person_origin": [
+        3094,
+        4244
+      ],
+      "source_sha256": "e315d6a347389ecf8fa948850683bf0c3a62064897ae802806e51eb3d8ce28cc",
+      "tint": {
+        "delta_lab": [
+          -8.0,
+          0.0,
+          0.0
+        ],
+        "frame": "foliage",
+        "snow_cap": {
+          "depth_px": 3,
+          "alpha": 0.7
+        }
+      }
+    }
+  ],
+  "person": "art/character/route_i/adult_M_fur_cloak_bun/S/idle.png",
+  "person_sha256": "a98c1b8271c9373c1ad7ad2a9f1d3f48fb4f37f2fd27a32c4d6c535ffda90208",
+  "sha256": "636b97e56a695227bca64a88c96cf6defaca3511843a639e1ecb29c2ae3115d9",
+  "size": [
+    3264,
+    4496
+  ],
+  "background": "calm uniform meadow RGB 139,155,105",
+  "owner_approval": "PENDING"
+}

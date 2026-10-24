@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "id": "forest_summer",
+  "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-068c3a0b-72fc-4f75-8556-0fadae22c6ef.png",
+  "source_sha256": "8be171e57d5ca509e1a26d20f3d455a3811dd26a18f9f52716b49311835bda3a",
+  "source_canvas": [
+    1254,
+    1254
+  ],
+  "preserved_original": "/Users/rexxa/work/arttrees-data/originals/canopy_mass_8be171e57d5c.png",
+  "output": "art/flora/textures/canopy_mass.png",
+  "output_sha256": "0ea100f685546ba537c21a68aa04cec52e09f6f39667a2f8fdf4835e12d51e54",
+  "canvas": [
+    256,
+    256
+  ],
+  "canopy_mask": "art/flora/masks/canopy_mass.png",
+  "mask_sha256": "2403f224b587f25aa62a343ee70939d49f7a8dc09c23d13642626475ad457cb9",
+  "operations": [
+    "whole-frame LANCZOS resize to256x256; no crops or patching",
+    "masked Lab chroma translation to palette mean only when native summer check fails"
+  ],
+  "before_resize": {
+    "path": "/Users/rexxa/work/arttrees-data/originals/canopy_mass_resize_8be171e57d5c.png",
+    "sha256": "8cc4f1db296369bc2820583c4a284fb55043a07c56b03c2d13a1aef7efda4b41"
+  },
+  "summer_transform": {
+    "delta_lab": [
+      0.0,
+      -3.2548656307245523,
+      -6.512404723676276
+    ],
+    "target_rgb": [
+      80,
+      122,
+      56
+    ],
+    "alpha_unchanged": true,
+    "unmasked_unchanged": true,
+    "before": {
+      "mean_hue_degrees": 85.24744611411508,
+      "mean_saturation": 0.6813382703619304,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": false
+    }
+  },
+  "repeat_diagnostic": "/Users/rexxa/work/arttrees-data/canopy_mass_repeat_2x2.png",
+  "repeat_diagnostic_sha256": "fc8410cbd49511b50478931debeea5d6d6c3720eae944e03475fe844a6926514",
+  "seam_x": {
+    "width": 256,
+    "height": 256,
+    "interior_p95": 17.463802083333334,
+    "join_columns": [
+      256,
+      512,
+      768
+    ],
+    "join_mad": [
+      15.125,
+      15.125,
+      15.125
+    ],
+    "limit": 20.083372395833333,
+    "passed": true
+  },
+  "seam_y": {
+    "width": 256,
+    "height": 256,
+    "interior_p95": 17.12122395833333,
+    "join_columns": [
+      256,
+      512,
+      768
+    ],
+    "join_mad": [
+      17.760416666666668,
+      17.760416666666668,
+      17.760416666666668
+    ],
+    "limit": 19.68940755208333,
+    "passed": true
+  },
+  "summer_green": {
+    "mean_hue_degrees": 101.68993929949777,
+    "mean_saturation": 0.5720279309697494,
+    "palette_hue_range_degrees": [
+      88.88888888888891,
+      112.5
+    ],
+    "passed": true
+  },
+  "opaque": true,
+  "numeric_pass": true,
+  "visual_repeat_verdict": {
+    "status": "PASS_AGENT_REVIEW",
+    "image": "/Users/rexxa/work/arttrees-data/canopy_mass_repeat_2x2.png",
+    "reading": "2x2 repetition inspected at native 512px: no visible straight join at x=256 or y=256; dense green canopy masses retain irregular ink/wash texture. Owner acceptance remains pending."
+  },
+  "owner_verdict": "PENDING"
+}

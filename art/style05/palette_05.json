@@ -294,5 +294,21 @@
       ]
     },
     "purpose": "POLISH2 masked Lab tint targets; original judging palette remains unchanged"
-  }
+  },
+  "foliage_summer_mid": [
+    80,
+    122,
+    56
+  ],
+  "foliage_summer_light": [
+    117,
+    156,
+    75
+  ],
+  "foliage_summer_dark": [
+    48,
+    83,
+    43
+  ],
+  "foliage_summer_purpose": "ART-TREES canonical canopy judging colors; Lab clustering also recognizes original olive foliage entries 9,12,15,17,18,19. Existing judging palette unchanged."
 }

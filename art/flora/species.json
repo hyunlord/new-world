@@ -1,0 +1,561 @@
+{
+  "schema_version": 1,
+  "species": {
+    "oak": {
+      "id": "oak",
+      "habit": "deciduous",
+      "sizes": {
+        "small": {
+          "variants": [
+            {
+              "path": "art/flora/sprites/oak_small_v1.png",
+              "canopy_mask": "art/flora/masks/oak_small_v1.png",
+              "canvas": [
+                128,
+                112
+              ],
+              "anchor": [
+                64,
+                100
+              ]
+            },
+            {
+              "path": "art/flora/sprites/oak_small_v2.png",
+              "canopy_mask": "art/flora/masks/oak_small_v2.png",
+              "canvas": [
+                128,
+                112
+              ],
+              "anchor": [
+                64,
+                100
+              ]
+            }
+          ],
+          "bare": [
+            {
+              "path": "art/flora/sprites/oak_small_bare.png",
+              "canopy_mask": "art/flora/masks/oak_small_bare.png",
+              "canvas": [
+                128,
+                112
+              ],
+              "anchor": [
+                64,
+                100
+              ]
+            }
+          ]
+        },
+        "large": {
+          "variants": [
+            {
+              "path": "art/flora/sprites/oak_large_v1.png",
+              "canopy_mask": "art/flora/masks/oak_large_v1.png",
+              "canvas": [
+                192,
+                192
+              ],
+              "anchor": [
+                96,
+                180
+              ]
+            },
+            {
+              "path": "art/flora/sprites/oak_large_v2.png",
+              "canopy_mask": "art/flora/masks/oak_large_v2.png",
+              "canvas": [
+                192,
+                192
+              ],
+              "anchor": [
+                96,
+                180
+              ]
+            }
+          ],
+          "bare": [
+            {
+              "path": "art/flora/sprites/oak_large_bare.png",
+              "canopy_mask": "art/flora/masks/oak_large_bare.png",
+              "canvas": [
+                192,
+                192
+              ],
+              "anchor": [
+                96,
+                180
+              ]
+            }
+          ]
+        }
+      },
+      "stump": {
+        "path": "art/flora/sprites/oak_stump.png",
+        "canopy_mask": "art/flora/masks/oak_stump.png",
+        "canvas": [
+          64,
+          48
+        ],
+        "anchor": [
+          32,
+          40
+        ]
+      },
+      "seasons": {
+        "spring": {
+          "delta_lab": [
+            6,
+            0,
+            6
+          ],
+          "frame": "foliage",
+          "snow_cap": {
+            "depth_px": 0,
+            "alpha": 0
+          }
+        },
+        "summer": {
+          "delta_lab": [
+            0,
+            0,
+            0
+          ],
+          "frame": "foliage",
+          "snow_cap": {
+            "depth_px": 0,
+            "alpha": 0
+          }
+        },
+        "autumn": {
+          "delta_lab": [
+            -8,
+            35,
+            15
+          ],
+          "frame": "foliage",
+          "snow_cap": {
+            "depth_px": 0,
+            "alpha": 0
+          }
+        },
+        "winter": {
+          "delta_lab": [
+            0,
+            0,
+            0
+          ],
+          "frame": "bare",
+          "snow_cap": {
+            "depth_px": 0,
+            "alpha": 0
+          }
+        }
+      },
+      "map_canopy": "forest_summer",
+      "log_material": "oak"
+    },
+    "pine": {
+      "id": "pine",
+      "habit": "evergreen",
+      "sizes": {
+        "small": {
+          "variants": [
+            {
+              "path": "art/flora/sprites/pine_small_v1.png",
+              "canopy_mask": "art/flora/masks/pine_small_v1.png",
+              "canvas": [
+                128,
+                112
+              ],
+              "anchor": [
+                64,
+                100
+              ]
+            },
+            {
+              "path": "art/flora/sprites/pine_small_v2.png",
+              "canopy_mask": "art/flora/masks/pine_small_v2.png",
+              "canvas": [
+                128,
+                112
+              ],
+              "anchor": [
+                64,
+                100
+              ]
+            }
+          ],
+          "bare": []
+        },
+        "large": {
+          "variants": [
+            {
+              "path": "art/flora/sprites/pine_large_v1.png",
+              "canopy_mask": "art/flora/masks/pine_large_v1.png",
+              "canvas": [
+                192,
+                192
+              ],
+              "anchor": [
+                96,
+                180
+              ]
+            },
+            {
+              "path": "art/flora/sprites/pine_large_v2.png",
+              "canopy_mask": "art/flora/masks/pine_large_v2.png",
+              "canvas": [
+                192,
+                192
+              ],
+              "anchor": [
+                96,
+                180
+              ]
+            }
+          ],
+          "bare": []
+        }
+      },
+      "stump": {
+        "path": "art/flora/sprites/pine_stump.png",
+        "canopy_mask": "art/flora/masks/pine_stump.png",
+        "canvas": [
+          64,
+          48
+        ],
+        "anchor": [
+          32,
+          40
+        ]
+      },
+      "seasons": {
+        "spring": {
+          "delta_lab": [
+            6,
+            0,
+            6
+          ],
+          "frame": "foliage",
+          "snow_cap": {
+            "depth_px": 0,
+            "alpha": 0
+          }
+        },
+        "summer": {
+          "delta_lab": [
+            0,
+            0,
+            0
+          ],
+          "frame": "foliage",
+          "snow_cap": {
+            "depth_px": 0,
+            "alpha": 0
+          }
+        },
+        "autumn": {
+          "delta_lab": [
+            0,
+            0,
+            0
+          ],
+          "frame": "foliage",
+          "snow_cap": {
+            "depth_px": 0,
+            "alpha": 0
+          }
+        },
+        "winter": {
+          "delta_lab": [
+            -8,
+            0,
+            0
+          ],
+          "frame": "foliage",
+          "snow_cap": {
+            "depth_px": 3,
+            "alpha": 0.7
+          }
+        }
+      },
+      "map_canopy": "forest_summer",
+      "log_material": "pine"
+    },
+    "birch": {
+      "id": "birch",
+      "habit": "deciduous",
+      "sizes": {
+        "small": {
+          "variants": [
+            {
+              "path": "art/flora/sprites/birch_small_v1.png",
+              "canopy_mask": "art/flora/masks/birch_small_v1.png",
+              "canvas": [
+                128,
+                112
+              ],
+              "anchor": [
+                64,
+                100
+              ]
+            },
+            {
+              "path": "art/flora/sprites/birch_small_v2.png",
+              "canopy_mask": "art/flora/masks/birch_small_v2.png",
+              "canvas": [
+                128,
+                112
+              ],
+              "anchor": [
+                64,
+                100
+              ]
+            }
+          ],
+          "bare": [
+            {
+              "path": "art/flora/sprites/birch_small_bare.png",
+              "canopy_mask": "art/flora/masks/birch_small_bare.png",
+              "canvas": [
+                128,
+                112
+              ],
+              "anchor": [
+                64,
+                100
+              ]
+            }
+          ]
+        },
+        "large": {
+          "variants": [
+            {
+              "path": "art/flora/sprites/birch_large_v1.png",
+              "canopy_mask": "art/flora/masks/birch_large_v1.png",
+              "canvas": [
+                192,
+                192
+              ],
+              "anchor": [
+                96,
+                180
+              ]
+            },
+            {
+              "path": "art/flora/sprites/birch_large_v2.png",
+              "canopy_mask": "art/flora/masks/birch_large_v2.png",
+              "canvas": [
+                192,
+                192
+              ],
+              "anchor": [
+                96,
+                180
+              ]
+            }
+          ],
+          "bare": [
+            {
+              "path": "art/flora/sprites/birch_large_bare.png",
+              "canopy_mask": "art/flora/masks/birch_large_bare.png",
+              "canvas": [
+                192,
+                192
+              ],
+              "anchor": [
+                96,
+                180
+              ]
+            }
+          ]
+        }
+      },
+      "stump": {
+        "path": "art/flora/sprites/birch_stump.png",
+        "canopy_mask": "art/flora/masks/birch_stump.png",
+        "canvas": [
+          64,
+          48
+        ],
+        "anchor": [
+          32,
+          40
+        ]
+      },
+      "seasons": {
+        "spring": {
+          "delta_lab": [
+            6,
+            0,
+            6
+          ],
+          "frame": "foliage",
+          "snow_cap": {
+            "depth_px": 0,
+            "alpha": 0
+          }
+        },
+        "summer": {
+          "delta_lab": [
+            0,
+            0,
+            0
+          ],
+          "frame": "foliage",
+          "snow_cap": {
+            "depth_px": 0,
+            "alpha": 0
+          }
+        },
+        "autumn": {
+          "delta_lab": [
+            8,
+            10,
+            32
+          ],
+          "frame": "foliage",
+          "snow_cap": {
+            "depth_px": 0,
+            "alpha": 0
+          }
+        },
+        "winter": {
+          "delta_lab": [
+            0,
+            0,
+            0
+          ],
+          "frame": "bare",
+          "snow_cap": {
+            "depth_px": 0,
+            "alpha": 0
+          }
+        }
+      },
+      "map_canopy": "forest_summer",
+      "log_material": "birch"
+    },
+    "berry": {
+      "id": "berry",
+      "habit": "shrub",
+      "sizes": {
+        "small": {
+          "variants": [
+            {
+              "path": "art/flora/sprites/berry_bush_full.png",
+              "canopy_mask": "art/flora/masks/berry_bush_full.png",
+              "canvas": [
+                96,
+                96
+              ],
+              "anchor": [
+                48,
+                80
+              ]
+            },
+            {
+              "path": "art/flora/sprites/berry_bush_bare.png",
+              "canopy_mask": "art/flora/masks/berry_bush_bare.png",
+              "canvas": [
+                96,
+                96
+              ],
+              "anchor": [
+                48,
+                80
+              ]
+            }
+          ],
+          "bare": []
+        },
+        "large": {
+          "variants": [
+            {
+              "path": "art/flora/sprites/berry_bush_full.png",
+              "canopy_mask": "art/flora/masks/berry_bush_full.png",
+              "canvas": [
+                96,
+                96
+              ],
+              "anchor": [
+                48,
+                80
+              ]
+            },
+            {
+              "path": "art/flora/sprites/berry_bush_bare.png",
+              "canopy_mask": "art/flora/masks/berry_bush_bare.png",
+              "canvas": [
+                96,
+                96
+              ],
+              "anchor": [
+                48,
+                80
+              ]
+            }
+          ],
+          "bare": []
+        }
+      },
+      "stump": null,
+      "seasons": {
+        "spring": {
+          "delta_lab": [
+            6,
+            0,
+            6
+          ],
+          "frame": "foliage",
+          "snow_cap": {
+            "depth_px": 0,
+            "alpha": 0
+          }
+        },
+        "summer": {
+          "delta_lab": [
+            0,
+            0,
+            0
+          ],
+          "frame": "foliage",
+          "snow_cap": {
+            "depth_px": 0,
+            "alpha": 0
+          }
+        },
+        "autumn": {
+          "delta_lab": [
+            0,
+            0,
+            0
+          ],
+          "frame": "foliage",
+          "snow_cap": {
+            "depth_px": 0,
+            "alpha": 0
+          }
+        },
+        "winter": {
+          "delta_lab": [
+            -8,
+            0,
+            0
+          ],
+          "frame": "foliage",
+          "snow_cap": {
+            "depth_px": 0,
+            "alpha": 0
+          }
+        }
+      },
+      "map_canopy": "forest_summer",
+      "log_material": null
+    }
+  },
+  "map_canopies": {
+    "forest_summer": "art/flora/textures/canopy_mass.png"
+  }
+}

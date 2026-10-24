@@ -1,0 +1,780 @@
+{
+  "status": "REGENERATED_BOTH_NUMERIC_PASS_OWNER_PENDING",
+  "height_band_note": "Diagnostic only 1..96: no shrub height target in goal. Original sidecar anchor48,69 retained; no geometry changed. Visual judgment fails independently of height.",
+  "assets": [
+    {
+      "path": "art/style05/env/plants/berry_full.png",
+      "sha256": "207e19060c9714802937ebba638ebf74b1dafdab673e1e472fd8440dff86ac5a",
+      "projection_diagnostic": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          69
+        ],
+        "height_band": [
+          1,
+          96
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 5517,
+        "base_row": 93,
+        "base_error": 24,
+        "height": 92,
+        "gradient_x": -0.8696885741626793,
+        "gradient_y": -0.37525948325358854,
+        "light_angle_degrees": 203.33957921292765,
+        "base_passed": false,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_verdict": "FAIL_PLAN_VIEW",
+      "reading": "Round canopy viewed vertically from above; base/trunk not readable in front three-quarter. berry_bare means fruitless, not leafless.",
+      "source_prompt": "View vertically from above"
+    },
+    {
+      "path": "art/style05/env/plants/berry_bare.png",
+      "sha256": "78f86ef2770f0d3f23ffc920c195c5a6b0df5075b1e1c58f555979eac324947b",
+      "projection_diagnostic": {
+        "family": "shrub",
+        "anchor": [
+          48,
+          69
+        ],
+        "height_band": [
+          1,
+          96
+        ],
+        "height_band_override": true,
+        "opaque_pixels": 4736,
+        "base_row": 91,
+        "base_error": 22,
+        "height": 89,
+        "gradient_x": -1.431444233807267,
+        "gradient_y": -0.6527320533092391,
+        "light_angle_degrees": 204.51276984673262,
+        "base_passed": false,
+        "height_passed": true,
+        "light_passed": true,
+        "passed": false
+      },
+      "visual_verdict": "FAIL_PLAN_VIEW",
+      "reading": "Round canopy viewed vertically from above; base/trunk not readable in front three-quarter. berry_bare means fruitless, not leafless.",
+      "source_prompt": "View vertically from above"
+    }
+  ],
+  "regenerated": [
+    {
+      "id": "berry_bush_full",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try1.png",
+      "source_sha256": "b50cd357ddce56e2e9596051edf929fe6882e1db429e4412d6b40f525c352322",
+      "preserved_original": "/Users/rexxa/work/arttrees-data/originals/berry_bush_full_try1_b50cd357ddce.png",
+      "provenance": {
+        "id": "berry_bush_full",
+        "attempt": 1,
+        "source": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try1.png",
+        "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cf0-5228-75f3-993f-7e7f69750277/exec-dc676076-067e-42c0-ad0c-6c3a738deba7.png",
+        "prompt": "Use case: stylized-concept. Generate ONE berry shrub game sprite, full of red berry clusters. Input image1 route I people is scale and front-three-quarter camera reference; input image2 hut is restrained fine ink/wash and upper-left-light reference only, NOT its overhead camera. Camera must be front three-quarter, 20 degrees down, clearly looking at the FRONT SIDES of leaves and woody stems, NOT plan view and NOT a round disk viewed overhead. A compact upright young berry bush with a visible short branching woody base and roots below the leaf crown. Crown occupies upper 65 percent of silhouette; lower 35 percent shows brown stems without green leaves. Healthy summer leaves RGB around #507A38, lighter #759C4B, darker #30532B, visible modest red berries. Stylized natural ink and muted watercolor wash, upper-left brighter and lower-right shaded, no photoreal gloss. Final use is 32 px silhouette height on96x96 canvas base anchor48,80: keep readable simple masses. Generate at your native larger resolution with complete silhouette centered and generous transparent margin, we will uniformly reduce the whole object. Real transparent RGBA background, no ground, shadow, grass, detached leaves, labels, border, or people. One connected complete plant.",
+        "references": [
+          "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png"
+        ],
+        "transparent_background": true
+      },
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          165,
+          145,
+          1104,
+          1097
+        ],
+        "scale": 0.03375527426160337,
+        "scaled_canvas": [
+          32,
+          32
+        ],
+        "offset": [
+          33,
+          49
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 32
+      },
+      "before_tone_path": "/Users/rexxa/work/arttrees-data/originals/berry_bush_full_try1_normalized.png",
+      "before_tone_sha256": "274a9ac9e8eb6aeb4fee0cb594de7d8b8e95835dc0a04a9318f76ee3632e8e72",
+      "summer_before": {
+        "mean_hue_degrees": 64.81949050074344,
+        "mean_saturation": 0.5702566681550086,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": false
+      },
+      "delta_lab": [
+        0.0,
+        -16.490435399057574,
+        -3.4426508785781635
+      ],
+      "alpha_unchanged": true,
+      "unmasked_unchanged": true,
+      "checks": {
+        "path": "art/flora/sprites/berry_bush_full.png",
+        "sha256": "f29f3054d391553c0e15f3d208e3f2746135e6df8fbe48f45499b6ae42b9522b",
+        "mask_path": "art/flora/masks/berry_bush_full.png",
+        "mask_sha256": "459e0fa2a5f6bacee6b200904bdb47ff8736b32d9274af761e0b1af78b7aa4b5",
+        "canvas_matches": true,
+        "projection": {
+          "family": "tree",
+          "anchor": [
+            48,
+            80
+          ],
+          "height_band": [
+            24,
+            40
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 558,
+          "base_row": 80,
+          "base_error": 0,
+          "height": 32,
+          "gradient_x": -4.360749003984064,
+          "gradient_y": -2.8461584158415842,
+          "light_angle_degrees": 213.13154059284594,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "structure": {
+          "components_alpha128": 1,
+          "clipping_alpha16": false,
+          "passed": true,
+          "components_alpha16": 1,
+          "detached_pixels_alpha128": 0
+        },
+        "mask": {
+          "trunk_box_fraction": 0.09137931034482759,
+          "foliage_cluster_coverage": 1.0,
+          "mask_pixels": 430,
+          "foliage_pixels": 430,
+          "passed": false,
+          "foliage_gate_applicable": true
+        },
+        "summer_green": {
+          "mean_hue_degrees": 103.37404400399254,
+          "mean_saturation": 0.5961658549987758,
+          "palette_hue_range_degrees": [
+            88.88888888888891,
+            112.5
+          ],
+          "passed": true
+        },
+        "passed": false
+      },
+      "visual_verdict": "FRONT_THREE_QUARTER_NUMERIC_MASK_REJECTED",
+      "semantic_note": "bare means fruit-depleted but leafy, not winter branches",
+      "reference_hashes": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587"
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+          "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e"
+        }
+      ],
+      "visual_reading": "Upright branching woody shrub, visible front stems and leaf faces; not an overhead canopy disk. Full has red berry clusters; bare retains leaves without fruit. Long exposed stems remain an owner style judgment."
+    },
+    {
+      "id": "berry_bush_full",
+      "attempt": 2,
+      "source": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try2.png",
+      "source_sha256": "59a2b394fd3f9953ac8537d6208b0098c66e68fd2d7206db77a00413fe362a34",
+      "preserved_original": "/Users/rexxa/work/arttrees-data/originals/berry_bush_full_try2_59a2b394fd3f.png",
+      "provenance": {
+        "id": "berry_bush_full",
+        "attempt": 2,
+        "source": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try2.png",
+        "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cf0-5228-75f3-993f-7e7f69750277/exec-8cd058e1-7cf5-495c-8045-f358c7cb483a.png",
+        "prompt": "Use case: precise-object-edit. Edit image1 berry shrub. Important structural correction: keep a compact leafy berry crown ONLY IN THE UPPER HALF of the complete plant silhouette. The LOWER HALF must contain ONLY visible brown woody shoots, trunks and roots with NO green leaves and NO fruit. Raise all low branches into the upper canopy; create a modest leggy natural gooseberry bush form, not a tree. This clean open woody lower half is necessary for a32px tall sprite. Keep front three-quarter camera20 degrees down, fine ink/wash Style05, clear upper-left light and dark lower right. Healthy summer leaves #507A38 #759C4B #30532B and restrained red berry clusters confined upper crown. Input2 person sheet sets camera and scale, input3 hut style/light only. Complete one connected isolated plant with transparent background, no ground, shadow, text or detached specks. Preserve generous margin. No plan view. Ensure lower50percent silhouette is entirely leaf-free WOOD and no green tones on bark.",
+        "references": [
+          "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try1.png",
+          "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png"
+        ],
+        "transparent_background": true
+      },
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          142,
+          94,
+          1139,
+          1155
+        ],
+        "scale": 0.030274361400189215,
+        "scaled_canvas": [
+          30,
+          32
+        ],
+        "offset": [
+          34,
+          49
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 32
+      },
+      "before_tone_path": "/Users/rexxa/work/arttrees-data/originals/berry_bush_full_try2_normalized.png",
+      "before_tone_sha256": "ac80c4c53e5b2150236d3f8fb4c8b5c721c56efadd3f9e588171d4f3583ad929",
+      "summer_before": {
+        "mean_hue_degrees": 66.70678785339912,
+        "mean_saturation": 0.6298255675967757,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": false
+      },
+      "delta_lab": [
+        0.0,
+        -14.634845243877391,
+        -5.8474935418966965
+      ],
+      "alpha_unchanged": true,
+      "unmasked_unchanged": true,
+      "checks": {
+        "path": "art/flora/sprites/berry_bush_full.png",
+        "sha256": "2b7541304b25c3a27f3a6a3e26b915be7766a3c3113a616253961c8b63625ef0",
+        "mask_path": "art/flora/masks/berry_bush_full.png",
+        "mask_sha256": "77891035e47567d6b39aed0996ea1ae3a74859b17fb4db8987bee33911189119",
+        "canvas_matches": true,
+        "projection": {
+          "family": "tree",
+          "anchor": [
+            48,
+            80
+          ],
+          "height_band": [
+            24,
+            40
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 487,
+          "base_row": 80,
+          "base_error": 0,
+          "height": 32,
+          "gradient_x": -4.7651337995338,
+          "gradient_y": -3.6533976958525334,
+          "light_angle_degrees": 217.47715227437254,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "structure": {
+          "components_alpha128": 1,
+          "clipping_alpha16": false,
+          "passed": true,
+          "components_alpha16": 1,
+          "detached_pixels_alpha128": 0
+        },
+        "mask": {
+          "trunk_box_fraction": 0.025,
+          "foliage_cluster_coverage": 1.0,
+          "mask_pixels": 333,
+          "foliage_pixels": 333,
+          "passed": false,
+          "foliage_gate_applicable": true
+        },
+        "summer_green": {
+          "mean_hue_degrees": 103.07939337316542,
+          "mean_saturation": 0.5938641160816673,
+          "palette_hue_range_degrees": [
+            88.88888888888891,
+            112.5
+          ],
+          "passed": true
+        },
+        "passed": false
+      },
+      "visual_verdict": "FRONT_THREE_QUARTER_NUMERIC_MASK_REJECTED",
+      "semantic_note": "bare means fruit-depleted but leafy, not winter branches",
+      "reference_hashes": [
+        {
+          "path": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try1.png",
+          "sha256": "b50cd357ddce56e2e9596051edf929fe6882e1db429e4412d6b40f525c352322"
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587"
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+          "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e"
+        }
+      ],
+      "visual_reading": "Upright branching woody shrub, visible front stems and leaf faces; not an overhead canopy disk. Full has red berry clusters; bare retains leaves without fruit. Long exposed stems remain an owner style judgment."
+    },
+    {
+      "id": "berry_bush_bare",
+      "attempt": 1,
+      "source": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_bare_try1.png",
+      "source_sha256": "dabf77fce701e8ac232d61807710b329b51b20a6e806e5745da396df09c2fc95",
+      "preserved_original": "/Users/rexxa/work/arttrees-data/originals/berry_bush_bare_try1_dabf77fce701.png",
+      "provenance": {
+        "id": "berry_bush_bare",
+        "attempt": 1,
+        "source": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_bare_try1.png",
+        "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cf0-5228-75f3-993f-7e7f69750277/exec-7ce06ce7-52ce-4041-89c6-86369d3fabe5.png",
+        "prompt": "Use case: precise-object-edit. Edit ONLY the berry bush in image1: remove every red fruit/berry cluster, leaving a harvested fruitless shrub. Keep green leaves: this is bare of FRUIT, not winter and not leafless. Preserve the entire woody stem/root arrangement, leaf crown silhouette, front-three-quarter camera about20 degrees down, upper-left lighting, ink/wash style, canvas dimensions, location and transparent alpha background. Fill former fruit positions naturally with existing leafy bush anatomy, no added plants. Image2 route I person sheet is scale reference only; image3 hut is style/light reference only, do not copy its overhead view. Healthy summer greens around #507A38, #759C4B, #30532B. One complete connected plant, roots visible, no ground/cast shadow/grass/text. Final game silhouette32px, preserve simple legible masses. No scene or person.",
+        "references": [
+          "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try1.png",
+          "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png"
+        ],
+        "transparent_background": true
+      },
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          103,
+          82,
+          1172,
+          1164
+        ],
+        "scale": 0.029684601113172542,
+        "scaled_canvas": [
+          32,
+          32
+        ],
+        "offset": [
+          33,
+          49
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 32
+      },
+      "before_tone_path": "/Users/rexxa/work/arttrees-data/originals/berry_bush_bare_try1_normalized.png",
+      "before_tone_sha256": "912e3a03144f09ef76479af7d1514ec9ae2dec032693a0b05395c8940052c072",
+      "summer_before": {
+        "mean_hue_degrees": 64.63213696419128,
+        "mean_saturation": 0.5564679108981427,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": false
+      },
+      "delta_lab": [
+        0.0,
+        -16.065972608877917,
+        -3.9664636564910296
+      ],
+      "alpha_unchanged": true,
+      "unmasked_unchanged": true,
+      "checks": {
+        "path": "art/flora/sprites/berry_bush_bare.png",
+        "sha256": "c9741d87a62e3285ed801fec3be7fd62a441c250d8e21158086d95a709779aff",
+        "mask_path": "art/flora/masks/berry_bush_bare.png",
+        "mask_sha256": "d80809e562262292b76013d10eaef0186b2533d41adc0a71ddb924e9c32b3519",
+        "canvas_matches": true,
+        "projection": {
+          "family": "tree",
+          "anchor": [
+            48,
+            80
+          ],
+          "height_band": [
+            24,
+            40
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 572,
+          "base_row": 80,
+          "base_error": 0,
+          "height": 32,
+          "gradient_x": -3.6980568702290073,
+          "gradient_y": -3.015229601518026,
+          "light_angle_degrees": 219.19225798241217,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "structure": {
+          "components_alpha128": 1,
+          "clipping_alpha16": false,
+          "passed": true,
+          "components_alpha16": 1,
+          "detached_pixels_alpha128": 0
+        },
+        "mask": {
+          "trunk_box_fraction": 0.10517241379310345,
+          "foliage_cluster_coverage": 1.0,
+          "mask_pixels": 495,
+          "foliage_pixels": 495,
+          "passed": false,
+          "foliage_gate_applicable": true
+        },
+        "summer_green": {
+          "mean_hue_degrees": 103.0386120924022,
+          "mean_saturation": 0.5609436027335077,
+          "palette_hue_range_degrees": [
+            88.88888888888891,
+            112.5
+          ],
+          "passed": true
+        },
+        "passed": false
+      },
+      "visual_verdict": "FRONT_THREE_QUARTER_NUMERIC_MASK_REJECTED",
+      "semantic_note": "bare means fruit-depleted but leafy, not winter branches",
+      "reference_hashes": [
+        {
+          "path": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try1.png",
+          "sha256": "b50cd357ddce56e2e9596051edf929fe6882e1db429e4412d6b40f525c352322"
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587"
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+          "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e"
+        }
+      ],
+      "visual_reading": "Upright branching woody shrub, visible front stems and leaf faces; not an overhead canopy disk. Full has red berry clusters; bare retains leaves without fruit. Long exposed stems remain an owner style judgment."
+    },
+    {
+      "id": "berry_bush_full",
+      "attempt": 3,
+      "source": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try3.png",
+      "source_sha256": "ecf2e625d518c2cff4ede8fe318e709a35faceebf383860b20349d3ca6e7f89e",
+      "preserved_original": "/Users/rexxa/work/arttrees-data/originals/berry_bush_full_try3_ecf2e625d518.png",
+      "provenance": {
+        "id": "berry_bush_full",
+        "attempt": 3,
+        "source": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try3.png",
+        "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cf0-5228-75f3-993f-7e7f69750277/exec-cc16a1f8-0531-4462-9337-ac65b3525cae.png",
+        "prompt": "Use case: precise-object-edit. Correct this isolated front-three-quarter berry shrub sprite. Make the bare brown woody stem area much taller: LOWER60percent of the complete plant height is ONLY exposed brown woody branching stems and roots. ALL green leaves and ALL red berries must be confined to the TOP40percent of the overall silhouette. The top leaf crown should be a small flat rounded cap with NO downward hanging leaves and NO lateral low twigs bearing leaves. Keep multi-stem shrub anatomy, not single-trunk tree. Camera20degrees down from frontal view, fine ink restrained watercolor, strong upper-left light. Green palette #507A38 #759C4B #30532B, brown trunks without any green. True transparent RGBA, one connected plant, complete roots, no shadows/ground/text/no detached specks. Reference image1 previous candidate must be structurally changed as specified, image2 person for scale, image3 hut for fine-ink style. Preserve style while making the bare twig scaffold take clearly more than half the total height.",
+        "references": [
+          "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try2.png",
+          "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png"
+        ],
+        "transparent_background": true
+      },
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          191,
+          9,
+          1068,
+          1239
+        ],
+        "scale": 0.026101141924959218,
+        "scaled_canvas": [
+          23,
+          32
+        ],
+        "offset": [
+          37,
+          49
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 32
+      },
+      "before_tone_path": "/Users/rexxa/work/arttrees-data/originals/berry_bush_full_try3_normalized.png",
+      "before_tone_sha256": "29cfebc64c0fda8662d432ec45ab077fe14b62c1b965891ec597c8a2c50ccd9b",
+      "summer_before": {
+        "mean_hue_degrees": 66.58815480498427,
+        "mean_saturation": 0.6178811608261743,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": false
+      },
+      "delta_lab": [
+        0.0,
+        -14.78589213594058,
+        -5.160945358701198
+      ],
+      "alpha_unchanged": true,
+      "unmasked_unchanged": true,
+      "checks": {
+        "path": "art/flora/sprites/berry_bush_full.png",
+        "sha256": "c3afe09223b5ed332cee1129200948b1557742d5d377079761acb9a6fec74b31",
+        "mask_path": "art/flora/masks/berry_bush_full.png",
+        "mask_sha256": "c6ca0ea59d9802a9e09bfb48e77805ad13feb81f93e9782de0769dbd055b79e7",
+        "canvas_matches": true,
+        "projection": {
+          "family": "tree",
+          "anchor": [
+            48,
+            80
+          ],
+          "height_band": [
+            24,
+            40
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 346,
+          "base_row": 80,
+          "base_error": 0,
+          "height": 32,
+          "gradient_x": -5.656173758865248,
+          "gradient_y": -2.995226885245901,
+          "light_angle_degrees": 207.90345763655853,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "structure": {
+          "components_alpha128": 1,
+          "clipping_alpha16": false,
+          "passed": true,
+          "components_alpha16": 1,
+          "detached_pixels_alpha128": 0
+        },
+        "mask": {
+          "trunk_box_fraction": 0.00603448275862069,
+          "foliage_cluster_coverage": 1.0,
+          "mask_pixels": 186,
+          "foliage_pixels": 186,
+          "passed": true,
+          "foliage_gate_applicable": true
+        },
+        "summer_green": {
+          "mean_hue_degrees": 102.16021664265187,
+          "mean_saturation": 0.5863800490628766,
+          "palette_hue_range_degrees": [
+            88.88888888888891,
+            112.5
+          ],
+          "passed": true
+        },
+        "passed": true
+      },
+      "visual_verdict": "PASS_FRONT_THREE_QUARTER",
+      "semantic_note": "bare means fruit-depleted but leafy, not winter branches",
+      "reference_hashes": [
+        {
+          "path": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try2.png",
+          "sha256": "59a2b394fd3f9953ac8537d6208b0098c66e68fd2d7206db77a00413fe362a34"
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587"
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+          "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e"
+        }
+      ],
+      "visual_reading": "Upright branching woody shrub, visible front stems and leaf faces; not an overhead canopy disk. Full has red berry clusters; bare retains leaves without fruit. Long exposed stems remain an owner style judgment."
+    },
+    {
+      "id": "berry_bush_bare",
+      "attempt": 2,
+      "source": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_bare_try2.png",
+      "source_sha256": "46df9c58c9bde1afd634b8c1441376c02de2cf040b42ac97a42ecb49c024ef79",
+      "preserved_original": "/Users/rexxa/work/arttrees-data/originals/berry_bush_bare_try2_46df9c58c9bd.png",
+      "provenance": {
+        "id": "berry_bush_bare",
+        "attempt": 2,
+        "source": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_bare_try2.png",
+        "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cf0-5228-75f3-993f-7e7f69750277/exec-f477fdf4-f70a-4486-833a-69f13f2e251a.png",
+        "prompt": "Use case: precise-object-edit. From image1 remove ONLY all red berries. This is the same harvested fruitless berry shrub, still leafy. Preserve EXACTLY the woody multi-stem scaffold, roots, complete silhouette, upper-only leaf crown and transparent canvas registration. The leafy crown occupies TOP40percent and LOWER60percent is ONLY brown leaf-free stems. DO NOT add low leaves or lengthen foliage downward. Keep every original stem/root position and camera, upper-left light, fine ink watercolor wash. Image2 person and image3 hut are scale/style only. Green leaves #507A38 #759C4B #30532B. No green bark, no ground/shadow/text/new elements. One connected isolated plant, genuine transparent background. Change just fruit availability.",
+        "references": [
+          "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try3.png",
+          "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png"
+        ],
+        "transparent_background": true
+      },
+      "transform": {
+        "source_canvas": [
+          1254,
+          1254
+        ],
+        "crop": [
+          189,
+          8,
+          1069,
+          1239
+        ],
+        "scale": 0.026079869600651995,
+        "scaled_canvas": [
+          23,
+          32
+        ],
+        "offset": [
+          37,
+          49
+        ],
+        "output_canvas": [
+          96,
+          96
+        ],
+        "anchor": [
+          48,
+          80
+        ],
+        "target_height": 32
+      },
+      "before_tone_path": "/Users/rexxa/work/arttrees-data/originals/berry_bush_bare_try2_normalized.png",
+      "before_tone_sha256": "5614bfec3a4d7ed7b39dace14adf4c7a2cffe46f3cb3a93cfccc521b38640d97",
+      "summer_before": {
+        "mean_hue_degrees": 65.76641594165339,
+        "mean_saturation": 0.590051749529435,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": false
+      },
+      "delta_lab": [
+        0.0,
+        -15.89596572544621,
+        -2.6421816601635015
+      ],
+      "alpha_unchanged": true,
+      "unmasked_unchanged": true,
+      "checks": {
+        "path": "art/flora/sprites/berry_bush_bare.png",
+        "sha256": "b53ec07c09c2012656f8c058185017c7c5d4eb052d30011ae0b1097c92c21570",
+        "mask_path": "art/flora/masks/berry_bush_bare.png",
+        "mask_sha256": "268ca329c1dd56bdc50bb6bb956a9fc36771e549bfbdf7c629b5d6637eecc701",
+        "canvas_matches": true,
+        "projection": {
+          "family": "tree",
+          "anchor": [
+            48,
+            80
+          ],
+          "height_band": [
+            24,
+            40
+          ],
+          "height_band_override": true,
+          "opaque_pixels": 352,
+          "base_row": 80,
+          "base_error": 0,
+          "height": 32,
+          "gradient_x": -5.438646206896552,
+          "gradient_y": -2.905008441558442,
+          "light_angle_degrees": 208.10853982689073,
+          "base_passed": true,
+          "height_passed": true,
+          "light_passed": true,
+          "passed": true
+        },
+        "structure": {
+          "components_alpha128": 1,
+          "clipping_alpha16": false,
+          "passed": true,
+          "components_alpha16": 1,
+          "detached_pixels_alpha128": 0
+        },
+        "mask": {
+          "trunk_box_fraction": 0.009482758620689655,
+          "foliage_cluster_coverage": 1.0,
+          "mask_pixels": 220,
+          "foliage_pixels": 220,
+          "passed": true,
+          "foliage_gate_applicable": true
+        },
+        "summer_green": {
+          "mean_hue_degrees": 102.24002620831496,
+          "mean_saturation": 0.5968217259765376,
+          "palette_hue_range_degrees": [
+            88.88888888888891,
+            112.5
+          ],
+          "passed": true
+        },
+        "passed": true
+      },
+      "visual_verdict": "PASS_FRONT_THREE_QUARTER",
+      "semantic_note": "bare means fruit-depleted but leafy, not winter branches",
+      "reference_hashes": [
+        {
+          "path": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try3.png",
+          "sha256": "ecf2e625d518c2cff4ede8fe318e709a35faceebf383860b20349d3ca6e7f89e"
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587"
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+          "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e"
+        }
+      ],
+      "visual_reading": "Upright branching woody shrub, visible front stems and leaf faces; not an overhead canopy disk. Full has red berry clusters; bare retains leaves without fruit. Long exposed stems remain an owner style judgment."
+    }
+  ],
+  "production_geometry": {
+    "canvas": [
+      96,
+      96
+    ],
+    "anchor": [
+      48,
+      80
+    ],
+    "height": 32
+  },
+  "production_geometry_note": "Registered before generation: shrub32px silhouette, numeric band24..40,96x96 canvas,anchor48,80. Whole-object uniform reduction only.",
+  "selected": {
+    "berry_bush_full": 3,
+    "berry_bush_bare": 2
+  },
+  "generation_calls": 5
+}

@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "unknown_habit": "deciduous",
+  "habits": {
+    "deciduous": {
+      "fallback_species": "oak",
+      "seasons": {
+        "spring": {
+          "delta_lab": [
+            6,
+            0,
+            6
+          ],
+          "frame": "foliage",
+          "snow_cap": {
+            "depth_px": 0,
+            "alpha": 0
+          }
+        },
+        "summer": {
+          "delta_lab": [
+            0,
+            0,
+            0
+          ],
+          "frame": "foliage",
+          "snow_cap": {
+            "depth_px": 0,
+            "alpha": 0
+          }
+        },
+        "autumn": {
+          "delta_lab": [
+            0,
+            18,
+            25
+          ],
+          "frame": "foliage",
+          "snow_cap": {
+            "depth_px": 0,
+            "alpha": 0
+          }
+        },
+        "winter": {
+          "delta_lab": [
+            0,
+            0,
+            0
+          ],
+          "frame": "bare",
+          "snow_cap": {
+            "depth_px": 0,
+            "alpha": 0
+          }
+        }
+      }
+    },
+    "evergreen": {
+      "fallback_species": "pine",
+      "seasons": {
+        "spring": {
+          "delta_lab": [
+            6,
+            0,
+            6
+          ],
+          "frame": "foliage",
+          "snow_cap": {
+            "depth_px": 0,
+            "alpha": 0
+          }
+        },
+        "summer": {
+          "delta_lab": [
+            0,
+            0,
+            0
+          ],
+          "frame": "foliage",
+          "snow_cap": {
+            "depth_px": 0,
+            "alpha": 0
+          }
+        },
+        "autumn": {
+          "delta_lab": [
+            0,
+            0,
+            0
+          ],
+          "frame": "foliage",
+          "snow_cap": {
+            "depth_px": 0,
+            "alpha": 0
+          }
+        },
+        "winter": {
+          "delta_lab": [
+            -8,
+            0,
+            0
+          ],
+          "frame": "foliage",
+          "snow_cap": {
+            "depth_px": 3,
+            "alpha": 0.7
+          }
+        }
+      }
+    },
+    "shrub": {
+      "fallback_species": "berry",
+      "seasons": {
+        "spring": {
+          "delta_lab": [
+            6,
+            0,
+            6
+          ],
+          "frame": "foliage",
+          "snow_cap": {
+            "depth_px": 0,
+            "alpha": 0
+          }
+        },
+        "summer": {
+          "delta_lab": [
+            0,
+            0,
+            0
+          ],
+          "frame": "foliage",
+          "snow_cap": {
+            "depth_px": 0,
+            "alpha": 0
+          }
+        },
+        "autumn": {
+          "delta_lab": [
+            0,
+            0,
+            0
+          ],
+          "frame": "foliage",
+          "snow_cap": {
+            "depth_px": 0,
+            "alpha": 0
+          }
+        },
+        "winter": {
+          "delta_lab": [
+            -8,
+            0,
+            0
+          ],
+          "frame": "foliage",
+          "snow_cap": {
+            "depth_px": 0,
+            "alpha": 0
+          }
+        }
+      }
+    }
+  }
+}

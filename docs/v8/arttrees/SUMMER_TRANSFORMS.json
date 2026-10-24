@@ -1,0 +1,525 @@
+{
+  "method": "Selected canopy only: retain L*, translate mean a*,b* to foliage_summer_mid. Identity when the original already passes. No resampling, alpha edit, pixel painting or geometry change.",
+  "assets": [
+    {
+      "path": "art/flora/sprites/oak_small_v1.png",
+      "before_sha256": "4ad77018009592a1d5e94bdde5aed54abf6d3a6ef57dc617510efd3aae37f3a5",
+      "after_sha256": "38c6970cf65a5144291399da25068eec09c6209e826c5ccd244155b4e086773f",
+      "preserved_before": "/Users/rexxa/work/arttrees-data/pre_summer/oak_small_v1_4ad77018009592a1d5e94bdde5aed54abf6d3a6ef57dc617510efd3aae37f3a5.png",
+      "mask_sha256": "fdab78defabf9ba40219de7f416e70cff469808da52556163954de4f003f4d8b",
+      "delta_lab": [
+        0.0,
+        -11.32682397678807,
+        -4.175996331478217
+      ],
+      "target_rgb": [
+        80,
+        122,
+        56
+      ],
+      "before": {
+        "mean_hue_degrees": 73.61298352071897,
+        "mean_saturation": 0.6033420030737284,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": false
+      },
+      "after": {
+        "mean_hue_degrees": 103.1230117473454,
+        "mean_saturation": 0.5762470233450305,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": true
+      },
+      "alpha_unchanged": true,
+      "unmasked_unchanged": true
+    },
+    {
+      "path": "art/flora/sprites/oak_small_v2.png",
+      "before_sha256": "74d1d33d740a69882cfec71e028bf5b3367ca869df3348e9daccb0c1b836b034",
+      "after_sha256": "d1c32570e23ba1d60b521b4a31a4f5598e19b2e7f48e5f436fe60ba2a639df77",
+      "preserved_before": "/Users/rexxa/work/arttrees-data/pre_summer/oak_small_v2_74d1d33d740a69882cfec71e028bf5b3367ca869df3348e9daccb0c1b836b034.png",
+      "mask_sha256": "13c53466d445dd5d105d538e2588f1625d08e6cf7d44ae20aa6f159eb8e06b50",
+      "delta_lab": [
+        0.0,
+        -10.689413585276238,
+        -3.1542304257474214
+      ],
+      "target_rgb": [
+        80,
+        122,
+        56
+      ],
+      "before": {
+        "mean_hue_degrees": 75.39107943142261,
+        "mean_saturation": 0.6139080131698905,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": false
+      },
+      "after": {
+        "mean_hue_degrees": 102.47453795276017,
+        "mean_saturation": 0.5919849475420045,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": true
+      },
+      "alpha_unchanged": true,
+      "unmasked_unchanged": true
+    },
+    {
+      "path": "art/flora/sprites/oak_large_v1.png",
+      "before_sha256": "4c1197d4a17c7b81b84b8b88501fdc8b0103d0dd5843c95f7a49762863f207f9",
+      "after_sha256": "409c1005a4c4987a88a0e09b075ae5bce0b2dea90806a68e9d0f8989e1297cad",
+      "preserved_before": "/Users/rexxa/work/arttrees-data/pre_summer/oak_large_v1_4c1197d4a17c7b81b84b8b88501fdc8b0103d0dd5843c95f7a49762863f207f9.png",
+      "mask_sha256": "d969e03c9abea41d6c9a8a899941b6a9a982649bd1e518ec7be069e56a05abe2",
+      "delta_lab": [
+        0.0,
+        -15.551828027532748,
+        -1.1318731211998028
+      ],
+      "target_rgb": [
+        80,
+        122,
+        56
+      ],
+      "before": {
+        "mean_hue_degrees": 67.6788263935314,
+        "mean_saturation": 0.5705459982584677,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": false
+      },
+      "after": {
+        "mean_hue_degrees": 103.10889637072967,
+        "mean_saturation": 0.6061602007619566,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": true
+      },
+      "alpha_unchanged": true,
+      "unmasked_unchanged": true
+    },
+    {
+      "path": "art/flora/sprites/oak_large_v2.png",
+      "before_sha256": "2e2627915f120f6adb3c96a314056de1af1b674de45a2a8272d7128365df58fa",
+      "after_sha256": "e2f99a16a2aec6ec0ce2d2a5184a2339a9538f3e0cda165225d8be3ed50e944e",
+      "preserved_before": "/Users/rexxa/work/arttrees-data/pre_summer/oak_large_v2_2e2627915f120f6adb3c96a314056de1af1b674de45a2a8272d7128365df58fa.png",
+      "mask_sha256": "40d98f9c7133821c08646d8cee514db73a376216e7e30be4f7ed0b5f3715bfcb",
+      "delta_lab": [
+        0.0,
+        -10.423382860688381,
+        -1.5524296835355003
+      ],
+      "target_rgb": [
+        80,
+        122,
+        56
+      ],
+      "before": {
+        "mean_hue_degrees": 77.74227711882543,
+        "mean_saturation": 0.5862799963651758,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": false
+      },
+      "after": {
+        "mean_hue_degrees": 102.87233455153083,
+        "mean_saturation": 0.5959570841526671,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": true
+      },
+      "alpha_unchanged": true,
+      "unmasked_unchanged": true
+    },
+    {
+      "path": "art/flora/sprites/pine_small_v1.png",
+      "before_sha256": "d733515867a756f288a2f5673aa76923b7b28802b4e5babb0ae0443570110de7",
+      "after_sha256": "983f71a2a386f98cd12a990b2963b7672c1a4d7dfcdc84076c963f5b0b011b76",
+      "preserved_before": "/Users/rexxa/work/arttrees-data/pre_summer/pine_small_v1_d733515867a756f288a2f5673aa76923b7b28802b4e5babb0ae0443570110de7.png",
+      "mask_sha256": "b3a37763c16a737dbcab2427e073b91eda38252d7e6b79b3fbd8374a4494e8c9",
+      "delta_lab": [
+        0.0,
+        -13.63701843685124,
+        -0.0387382687641562
+      ],
+      "target_rgb": [
+        80,
+        122,
+        56
+      ],
+      "before": {
+        "mean_hue_degrees": 74.18192630636116,
+        "mean_saturation": 0.545292837719601,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": false
+      },
+      "after": {
+        "mean_hue_degrees": 104.46507969452914,
+        "mean_saturation": 0.6179537581451076,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": true
+      },
+      "alpha_unchanged": true,
+      "unmasked_unchanged": true
+    },
+    {
+      "path": "art/flora/sprites/pine_small_v2.png",
+      "before_sha256": "7b4586924958690eacab74abf653005e2e5f88753161498b0f55c2175fb41a29",
+      "after_sha256": "d0a8077b26ccc26fb028947d56a9254c210553862000cff79d9cb4676d46fe5c",
+      "preserved_before": "/Users/rexxa/work/arttrees-data/pre_summer/pine_small_v2_7b4586924958690eacab74abf653005e2e5f88753161498b0f55c2175fb41a29.png",
+      "mask_sha256": "be346ac7bdb6e225be1696156d110eeb9b96777d5bce9a82ab39a55d50b906ca",
+      "delta_lab": [
+        0.0,
+        -14.777768584532256,
+        1.570925855356485
+      ],
+      "target_rgb": [
+        80,
+        122,
+        56
+      ],
+      "before": {
+        "mean_hue_degrees": 71.64814604994552,
+        "mean_saturation": 0.5532415811346465,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": false
+      },
+      "after": {
+        "mean_hue_degrees": 102.94294578234182,
+        "mean_saturation": 0.643357096853582,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": true
+      },
+      "alpha_unchanged": true,
+      "unmasked_unchanged": true
+    },
+    {
+      "path": "art/flora/sprites/pine_large_v1.png",
+      "before_sha256": "87a3f8c2171767db53199d1ad9b0410ebee4f1918d820c3e088eee8aea62e6a9",
+      "after_sha256": "c69d226cebddcb92d5023fd820565d64fbabd1a92cb1e2fb285d89f6721d30e6",
+      "preserved_before": "/Users/rexxa/work/arttrees-data/pre_summer/pine_large_v1_87a3f8c2171767db53199d1ad9b0410ebee4f1918d820c3e088eee8aea62e6a9.png",
+      "mask_sha256": "e159b5dec5238c747427e5440c711c316d6fe261276293142eab545916299b3a",
+      "delta_lab": [
+        0.0,
+        -12.875570077725909,
+        -0.8379766901218275
+      ],
+      "target_rgb": [
+        80,
+        122,
+        56
+      ],
+      "before": {
+        "mean_hue_degrees": 72.9273237835393,
+        "mean_saturation": 0.5764677282129164,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": false
+      },
+      "after": {
+        "mean_hue_degrees": 102.71881204131836,
+        "mean_saturation": 0.5994568795018717,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": true
+      },
+      "alpha_unchanged": true,
+      "unmasked_unchanged": true
+    },
+    {
+      "path": "art/flora/sprites/pine_large_v2.png",
+      "before_sha256": "1c2c3bb4812e59dfbb5c967e1b3d1e70ea9f7a847cf1f0d5edb4142d974ee32e",
+      "after_sha256": "e315d6a347389ecf8fa948850683bf0c3a62064897ae802806e51eb3d8ce28cc",
+      "preserved_before": "/Users/rexxa/work/arttrees-data/pre_summer/pine_large_v2_1c2c3bb4812e59dfbb5c967e1b3d1e70ea9f7a847cf1f0d5edb4142d974ee32e.png",
+      "mask_sha256": "7b3efa76129da139f7b74c788ba6b091068ebf71f3c23579f2b13dc5cb0c5dde",
+      "delta_lab": [
+        0.0,
+        -13.053606699811029,
+        1.117079961627752
+      ],
+      "target_rgb": [
+        80,
+        122,
+        56
+      ],
+      "before": {
+        "mean_hue_degrees": 74.97965565799537,
+        "mean_saturation": 0.5594865352273147,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": false
+      },
+      "after": {
+        "mean_hue_degrees": 102.70987780716638,
+        "mean_saturation": 0.6208386146441571,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": true
+      },
+      "alpha_unchanged": true,
+      "unmasked_unchanged": true
+    },
+    {
+      "path": "art/flora/sprites/birch_small_v1.png",
+      "before_sha256": "17be17d1c35945b7f5e6ae261ef2a58882cf51b6eeb8257ee5a95f077f0eab67",
+      "after_sha256": "706e8919b579025a1762860f9fd485f97cc18c7f3e8740d67c526de79e9ce70d",
+      "preserved_before": "/Users/rexxa/work/arttrees-data/pre_summer/birch_small_v1_17be17d1c35945b7f5e6ae261ef2a58882cf51b6eeb8257ee5a95f077f0eab67.png",
+      "mask_sha256": "3a7e3cdb9ed664ad096ce5d6de949f0337b710b93a67eeb7c8976654dc460e39",
+      "delta_lab": [
+        0.0,
+        -8.044443828755018,
+        -5.216422746877882
+      ],
+      "target_rgb": [
+        80,
+        122,
+        56
+      ],
+      "before": {
+        "mean_hue_degrees": 79.46921703529031,
+        "mean_saturation": 0.6069347998415615,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": false
+      },
+      "after": {
+        "mean_hue_degrees": 106.11085372009296,
+        "mean_saturation": 0.5775113521230911,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": true
+      },
+      "alpha_unchanged": true,
+      "unmasked_unchanged": true
+    },
+    {
+      "path": "art/flora/sprites/birch_small_v2.png",
+      "before_sha256": "774b4a27bec4d8ff41edcba4c059b891723dbd41ab17fa62f0dead20bb6a08e7",
+      "after_sha256": "10cd21c4737518042da9dbc0fe5b5560d9bdf30e8c4a2f360430e5e83f8606a5",
+      "preserved_before": "/Users/rexxa/work/arttrees-data/pre_summer/birch_small_v2_774b4a27bec4d8ff41edcba4c059b891723dbd41ab17fa62f0dead20bb6a08e7.png",
+      "mask_sha256": "d0f98174011fbd6bccf2f089fae99788fc5b6942f24b92d80d3fbc5934c37ead",
+      "delta_lab": [
+        0.0,
+        -7.256239840216828,
+        -2.274630278290644
+      ],
+      "target_rgb": [
+        80,
+        122,
+        56
+      ],
+      "before": {
+        "mean_hue_degrees": 84.37573659676164,
+        "mean_saturation": 0.5952363153808425,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": false
+      },
+      "after": {
+        "mean_hue_degrees": 105.33012894679717,
+        "mean_saturation": 0.601930233753579,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": true
+      },
+      "alpha_unchanged": true,
+      "unmasked_unchanged": true
+    },
+    {
+      "path": "art/flora/sprites/birch_large_v1.png",
+      "before_sha256": "5de91b2e0d070d098c4557276b3820ba24458fd3f77e1433ce50625c317ad9b9",
+      "after_sha256": "2683048c36fe7cd7f24cdcef5046f27ab87ca8d39db245448654ae83858fac5f",
+      "preserved_before": "/Users/rexxa/work/arttrees-data/pre_summer/birch_large_v1_5de91b2e0d070d098c4557276b3820ba24458fd3f77e1433ce50625c317ad9b9.png",
+      "mask_sha256": "c5dab6f43c91669224f2d5ae0774e9ab7ee242b5361bd76958fbfd8069f91210",
+      "delta_lab": [
+        0.0,
+        -9.258767464049903,
+        -3.7320096037111483
+      ],
+      "target_rgb": [
+        80,
+        122,
+        56
+      ],
+      "before": {
+        "mean_hue_degrees": 78.30480190871936,
+        "mean_saturation": 0.6047674343087928,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": false
+      },
+      "after": {
+        "mean_hue_degrees": 104.58627577748304,
+        "mean_saturation": 0.590252728708558,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": true
+      },
+      "alpha_unchanged": true,
+      "unmasked_unchanged": true
+    },
+    {
+      "path": "art/flora/sprites/birch_large_v2.png",
+      "before_sha256": "d5abf129f9bbd187f86a8fcf155021303c7d6d9f310de93b0fef113048c1e717",
+      "after_sha256": "20edfbe6ba0486c3e3c35e60501da563739e402416e1b2a048bd5099028062f5",
+      "preserved_before": "/Users/rexxa/work/arttrees-data/pre_summer/birch_large_v2_d5abf129f9bbd187f86a8fcf155021303c7d6d9f310de93b0fef113048c1e717.png",
+      "mask_sha256": "5fbea342692e6a235c6b54fe871e9485ac797ab3c8bbad17d0b92463d4923e7d",
+      "delta_lab": [
+        0.0,
+        -12.724088416500033,
+        -0.030021301486772956
+      ],
+      "target_rgb": [
+        80,
+        122,
+        56
+      ],
+      "before": {
+        "mean_hue_degrees": 75.25286530307469,
+        "mean_saturation": 0.5742208735939341,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": false
+      },
+      "after": {
+        "mean_hue_degrees": 104.03548993386312,
+        "mean_saturation": 0.628746673271086,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": true
+      },
+      "alpha_unchanged": true,
+      "unmasked_unchanged": true
+    }
+  ],
+  "superseded": [
+    {
+      "path": "art/flora/sprites/birch_small_v1.png",
+      "before_sha256": "2cf0588e4b4299f7f357b0b5b71de1157949f98d3314743fe2e7e0c8fa46fa51",
+      "after_sha256": "74046ee6e0b462d7c807e78d6b43ffa096fec8ffc899c21e1c830adc91956380",
+      "preserved_before": "/Users/rexxa/work/arttrees-data/pre_summer/birch_small_v1_2cf0588e4b4299f7f357b0b5b71de1157949f98d3314743fe2e7e0c8fa46fa51.png",
+      "mask_sha256": "3a0ae72c65d174bbb14ad4df4487aa65e8ef276d0b16cdba6d454393370d5185",
+      "delta_lab": [
+        0.0,
+        -13.108600313203134,
+        -0.16215401317736067
+      ],
+      "target_rgb": [
+        80,
+        122,
+        56
+      ],
+      "before": {
+        "mean_hue_degrees": 73.27376049595478,
+        "mean_saturation": 0.5629488392718076,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": false
+      },
+      "after": {
+        "mean_hue_degrees": 103.72557952003666,
+        "mean_saturation": 0.6080074039620782,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": true
+      },
+      "alpha_unchanged": true,
+      "unmasked_unchanged": true
+    },
+    {
+      "path": "art/flora/sprites/birch_small_v2.png",
+      "before_sha256": "4c6a68c4cb4be9ef7a034b189d5925e7e461335e35c61c4d8023e4cdd71b3fd4",
+      "after_sha256": "c997f0cd66a7dcbe8df5338662b43302dff22206b2535b515532fae1a9f39a0d",
+      "preserved_before": "/Users/rexxa/work/arttrees-data/pre_summer/birch_small_v2_4c6a68c4cb4be9ef7a034b189d5925e7e461335e35c61c4d8023e4cdd71b3fd4.png",
+      "mask_sha256": "38fc83c101f17eec9c55f9a14885c8c27656664c66b5a9a131e70440f1b47572",
+      "delta_lab": [
+        0.0,
+        -13.243369166411277,
+        0.1424038983182605
+      ],
+      "target_rgb": [
+        80,
+        122,
+        56
+      ],
+      "before": {
+        "mean_hue_degrees": 73.39973193610862,
+        "mean_saturation": 0.5845410574659587,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": false
+      },
+      "after": {
+        "mean_hue_degrees": 103.20684988164986,
+        "mean_saturation": 0.6321958489798742,
+        "palette_hue_range_degrees": [
+          88.88888888888891,
+          112.5
+        ],
+        "passed": true
+      },
+      "alpha_unchanged": true,
+      "unmasked_unchanged": true
+    }
+  ]
+}

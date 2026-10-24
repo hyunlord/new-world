@@ -1,0 +1,166 @@
+{
+  "sha256": "6a0dd5f858f5d21c9fb4eebd0ec149ff77f7a08fae3d8b1e20dcec59fe4d4f83",
+  "dimensions": [
+    1296,
+    964
+  ],
+  "reference_commit": "d796fcacd23d03959e2bd1046f69581a9b1fc637",
+  "reference_path": "docs/images/mart2_compare_sheet.png",
+  "reference_crops": [
+    [
+      976,
+      8,
+      1936,
+      548
+    ],
+    [
+      976,
+      3068,
+      1936,
+      3608
+    ]
+  ],
+  "reference_panel_inner_crops": [
+    [
+      240,
+      80,
+      960,
+      520
+    ],
+    [
+      80,
+      40,
+      880,
+      500
+    ]
+  ],
+  "scene": "art/compositor/scenes/scene_day6_noon.json",
+  "scene_sha256": "7b33293b070f15dddb5f7fc36f4e3762f7ecc0cac066cf67c3f2563ff7c5f346",
+  "renders": [
+    {
+      "scene": "art/compositor/scenes/scene_day6_noon.json",
+      "tick": 7440,
+      "season_preview": "spring",
+      "zoom": 1,
+      "tree_count": 10303,
+      "camera_center": [
+        99,
+        101
+      ],
+      "source_camp": [
+        91,
+        101
+      ],
+      "camera_note": "1x pans 8 tiles east to include forest and camp; quarter retains camp center",
+      "dense_mass_cells": 0,
+      "source_population": 10,
+      "tree_assignment": "sorted species; coordinate xor hash; size/hash variant; art-only, not simulated species",
+      "overlay": "art/compositor/scenes/m5_overlay.json",
+      "owner_approval": "PENDING",
+      "depth": "base y then x; base offset 11px within 64px tile"
+    },
+    {
+      "scene": "art/compositor/scenes/scene_day6_noon.json",
+      "tick": 7440,
+      "season_preview": "summer",
+      "zoom": 1,
+      "tree_count": 10303,
+      "camera_center": [
+        99,
+        101
+      ],
+      "source_camp": [
+        91,
+        101
+      ],
+      "camera_note": "1x pans 8 tiles east to include forest and camp; quarter retains camp center",
+      "dense_mass_cells": 0,
+      "source_population": 10,
+      "tree_assignment": "sorted species; coordinate xor hash; size/hash variant; art-only, not simulated species",
+      "overlay": "art/compositor/scenes/m5_overlay.json",
+      "owner_approval": "PENDING",
+      "depth": "base y then x; base offset 11px within 64px tile"
+    },
+    {
+      "scene": "art/compositor/scenes/scene_day6_noon.json",
+      "tick": 7440,
+      "season_preview": "autumn",
+      "zoom": 1,
+      "tree_count": 10303,
+      "camera_center": [
+        99,
+        101
+      ],
+      "source_camp": [
+        91,
+        101
+      ],
+      "camera_note": "1x pans 8 tiles east to include forest and camp; quarter retains camp center",
+      "dense_mass_cells": 0,
+      "source_population": 10,
+      "tree_assignment": "sorted species; coordinate xor hash; size/hash variant; art-only, not simulated species",
+      "overlay": "art/compositor/scenes/m5_overlay.json",
+      "owner_approval": "PENDING",
+      "depth": "base y then x; base offset 11px within 64px tile"
+    },
+    {
+      "scene": "art/compositor/scenes/scene_day6_noon.json",
+      "tick": 7440,
+      "season_preview": "winter",
+      "zoom": 1,
+      "tree_count": 10303,
+      "camera_center": [
+        99,
+        101
+      ],
+      "source_camp": [
+        91,
+        101
+      ],
+      "camera_note": "1x pans 8 tiles east to include forest and camp; quarter retains camp center",
+      "dense_mass_cells": 0,
+      "source_population": 10,
+      "tree_assignment": "sorted species; coordinate xor hash; size/hash variant; art-only, not simulated species",
+      "overlay": "art/compositor/scenes/m5_overlay.json",
+      "owner_approval": "PENDING",
+      "depth": "base y then x; base offset 11px within 64px tile"
+    },
+    {
+      "scene": "art/compositor/scenes/scene_day6_noon.json",
+      "tick": 7440,
+      "season_preview": "summer",
+      "zoom": 0.25,
+      "tree_count": 10303,
+      "camera_center": [
+        91,
+        101
+      ],
+      "source_camp": [
+        91,
+        101
+      ],
+      "camera_note": "1x pans 8 tiles east to include forest and camp; quarter retains camp center",
+      "dense_mass_cells": 10124,
+      "source_population": 10,
+      "tree_assignment": "sorted species; coordinate xor hash; size/hash variant; art-only, not simulated species",
+      "overlay": "art/compositor/scenes/m5_overlay.json",
+      "owner_approval": "PENDING",
+      "depth": "base y then x; base offset 11px within 64px tile"
+    }
+  ],
+  "native_scene_crop": [
+    784,
+    352,
+    1408,
+    784
+  ],
+  "quarter_crop": [
+    320,
+    180,
+    1280,
+    720
+  ],
+  "crop_reason": "1.5MB cap; fixed forest/camp ROI; no native-pixel downsampling",
+  "full_native_renders": "/Users/rexxa/work/arttrees-data/boards",
+  "owner_approval": "PENDING"
+}

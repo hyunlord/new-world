@@ -1,0 +1,195 @@
+{
+  "method": "Lower30% full canvas silhouette at alpha128; exact alpha both full box and visible union. No invented IoU acceptance threshold; exact preservation is not implied by sharing a transform.",
+  "diagnostic_board": "/Users/rexxa/work/arttrees-data/bare_pairs_3a2130403c832b74.png",
+  "diagnostic_board_sha256": "3a2130403c832b74689a5882730714b00984ac0916e2c18d39fde025706a293f",
+  "pairs": [
+    {
+      "bare_id": "oak_large_bare",
+      "attempt": 2,
+      "summer_path": "art/flora/sprites/oak_large_v1.png",
+      "bare_path": "art/flora/sprites/oak_large_bare.png",
+      "summer_sha256": "409c1005a4c4987a88a0e09b075ae5bce0b2dea90806a68e9d0f8989e1297cad",
+      "bare_sha256": "42535527738429b4fc93ed92fed50b65a42630c5ecc17c59ec412a1b3ccc41ec",
+      "summer_raw_sha256": "6ee226fb759410c93e6f8299e9887f0e02458989267a8909e75d36e1fa01911f",
+      "bare_raw_sha256": "83d9ae1267bd0db259f946d53608764c846f831134b924944eb666350a4065ed",
+      "raw_hashes_match_ledger": true,
+      "source_canvas_matches": true,
+      "identical_registered_transform": true,
+      "summer_alpha_reproduced_from_raw": true,
+      "bare_alpha_reproduced_from_raw": true,
+      "declared_anchor": [
+        96,
+        180
+      ],
+      "summer_base_anchor_error": 0,
+      "bare_base_anchor_error": 1,
+      "silhouette": {
+        "lower_box_y": 134,
+        "lower_alpha128_intersection": 1522,
+        "lower_alpha128_union": 1586,
+        "lower_alpha128_iou": 0.9596469104665826,
+        "lower_alpha_bytes_exact_fraction": 0.8790409482758621,
+        "lower_alpha_bytes_exact_on_visible_union_fraction": 0.3613086770981508,
+        "summer_base_row": 180,
+        "bare_base_row": 181,
+        "base_delta_px": 1,
+        "summer_root_span_at_base": [
+          113,
+          114
+        ],
+        "bare_root_span_at_base": [
+          114,
+          114
+        ],
+        "exact_lower_silhouette": false
+      },
+      "visual": {
+        "bare_sha256": "42535527738429b4fc93ed92fed50b65a42630c5ecc17c59ec412a1b3ccc41ec",
+        "summer_sha256": "409c1005a4c4987a88a0e09b075ae5bce0b2dea90806a68e9d0f8989e1297cad",
+        "reading": "Method: direct inspection of hash-bound paired board at native1x and nearest-neighbor2x, comparing upper branches/open gaps separately from lower trunk/root silhouette. Large oak has clear open transparent branch forks, no residual leafy mass, and recognizable broad trunk/root fan matching summer v1 closely. Root tip differs by one base row; lower silhouette IoU0.960. Generated contours/alpha are not exactly preserved; owner verdict pending.",
+        "exact_preservation_claimed": false
+      }
+    },
+    {
+      "bare_id": "oak_small_bare",
+      "attempt": 3,
+      "summer_path": "art/flora/sprites/oak_small_v1.png",
+      "bare_path": "art/flora/sprites/oak_small_bare.png",
+      "summer_sha256": "38c6970cf65a5144291399da25068eec09c6209e826c5ccd244155b4e086773f",
+      "bare_sha256": "3cf313970724c29399110a661cc207cb7b0361590307edda35951f5e827a55e2",
+      "summer_raw_sha256": "6a192240a9ea89a3bef37944ebb0f620eebdc8bdf503f96c369248328a0f5f0e",
+      "bare_raw_sha256": "02e2424fd20c6988352d88b009a9461e7c4b6073fb1799f6da226718fac49853",
+      "raw_hashes_match_ledger": true,
+      "source_canvas_matches": true,
+      "identical_registered_transform": true,
+      "summer_alpha_reproduced_from_raw": true,
+      "bare_alpha_reproduced_from_raw": true,
+      "declared_anchor": [
+        64,
+        100
+      ],
+      "summer_base_anchor_error": 0,
+      "bare_base_anchor_error": 0,
+      "silhouette": {
+        "lower_box_y": 78,
+        "lower_alpha128_intersection": 253,
+        "lower_alpha128_union": 341,
+        "lower_alpha128_iou": 0.7419354838709677,
+        "lower_alpha_bytes_exact_fraction": 0.8968290441176471,
+        "lower_alpha_bytes_exact_on_visible_union_fraction": 0.08924949290060852,
+        "summer_base_row": 100,
+        "bare_base_row": 100,
+        "base_delta_px": 0,
+        "summer_root_span_at_base": [
+          63,
+          64
+        ],
+        "bare_root_span_at_base": [
+          64,
+          65
+        ],
+        "exact_lower_silhouette": false
+      },
+      "visual": {
+        "bare_sha256": "3cf313970724c29399110a661cc207cb7b0361590307edda35951f5e827a55e2",
+        "summer_sha256": "38c6970cf65a5144291399da25068eec09c6209e826c5ccd244155b4e086773f",
+        "reading": "Method: direct inspection of hash-bound paired board at native1x and nearest-neighbor2x. Small oak now reads as thick connected bare boughs with clear gaps at1x; no hairline twig haze or leaf mass. Lower trunk/base remains recognizable and base aligned, but root spread and trunk contour are noticeably redrawn relative to summer (IoU0.742), so this is not the exact same trunk silhouette. This seasonal shape change needs owner judgment.",
+        "exact_preservation_claimed": false
+      }
+    },
+    {
+      "bare_id": "birch_large_bare",
+      "attempt": 2,
+      "summer_path": "art/flora/sprites/birch_large_v1.png",
+      "bare_path": "art/flora/sprites/birch_large_bare.png",
+      "summer_sha256": "2683048c36fe7cd7f24cdcef5046f27ab87ca8d39db245448654ae83858fac5f",
+      "bare_sha256": "2e8c1d1f097af463219ff3a3a47d3243cbf5f19d845076594a772b7f92f7ba7c",
+      "summer_raw_sha256": "562fb1182cb1f115d2ad66dcbb3ea23464e23c4764124c04045520ac315bdf9b",
+      "bare_raw_sha256": "0168ebe8c4bcb1736e049f30f65c4f2d8933a0d99eaba1b95eeb54c55e2cc988",
+      "raw_hashes_match_ledger": true,
+      "source_canvas_matches": true,
+      "identical_registered_transform": true,
+      "summer_alpha_reproduced_from_raw": true,
+      "bare_alpha_reproduced_from_raw": true,
+      "declared_anchor": [
+        96,
+        180
+      ],
+      "summer_base_anchor_error": 0,
+      "bare_base_anchor_error": 0,
+      "silhouette": {
+        "lower_box_y": 134,
+        "lower_alpha128_intersection": 609,
+        "lower_alpha128_union": 622,
+        "lower_alpha128_iou": 0.9790996784565916,
+        "lower_alpha_bytes_exact_fraction": 0.9383979885057471,
+        "lower_alpha_bytes_exact_on_visible_union_fraction": 0.2444933920704846,
+        "summer_base_row": 180,
+        "bare_base_row": 180,
+        "base_delta_px": 0,
+        "summer_root_span_at_base": [
+          110,
+          110
+        ],
+        "bare_root_span_at_base": [
+          110,
+          110
+        ],
+        "exact_lower_silhouette": false
+      },
+      "visual": {
+        "bare_sha256": "2e8c1d1f097af463219ff3a3a47d3243cbf5f19d845076594a772b7f92f7ba7c",
+        "summer_sha256": "2683048c36fe7cd7f24cdcef5046f27ab87ca8d39db245448654ae83858fac5f",
+        "reading": "Method: direct inspection of hash-bound paired board at native1x and nearest-neighbor2x. Large birch has sparse open branch tiers and visible gaps rather than a fuzzy crown; white marked trunk, bend and root fan align closely with summer v1 (IoU0.979, base delta0). Upper branch design is generated reconstruction, not a leaf-removal guarantee, and alpha bytes are not identical. Owner verdict pending.",
+        "exact_preservation_claimed": false
+      }
+    },
+    {
+      "bare_id": "birch_small_bare",
+      "attempt": 3,
+      "summer_path": "art/flora/sprites/birch_small_v1.png",
+      "bare_path": "art/flora/sprites/birch_small_bare.png",
+      "summer_sha256": "706e8919b579025a1762860f9fd485f97cc18c7f3e8740d67c526de79e9ce70d",
+      "bare_sha256": "cb4ca010687e33d913e438285a6faf65e7dac230ab7727ad64ac906d6ecd7959",
+      "summer_raw_sha256": "cefdfb016c1a5112e0f8654cd7b4e288b217c314a04fb0be563b0471f0a103fe",
+      "bare_raw_sha256": "b79fdeed941e017b91e938d7b079a126742600b9564527abd55290cd7763b25e",
+      "raw_hashes_match_ledger": true,
+      "source_canvas_matches": true,
+      "identical_registered_transform": true,
+      "summer_alpha_reproduced_from_raw": true,
+      "bare_alpha_reproduced_from_raw": true,
+      "declared_anchor": [
+        64,
+        100
+      ],
+      "summer_base_anchor_error": 0,
+      "bare_base_anchor_error": 0,
+      "silhouette": {
+        "lower_box_y": 78,
+        "lower_alpha128_intersection": 91,
+        "lower_alpha128_union": 141,
+        "lower_alpha128_iou": 0.6453900709219859,
+        "lower_alpha_bytes_exact_fraction": 0.9409466911764706,
+        "lower_alpha_bytes_exact_on_visible_union_fraction": 0.041044776119402986,
+        "summer_base_row": 100,
+        "bare_base_row": 100,
+        "base_delta_px": 0,
+        "summer_root_span_at_base": [
+          78,
+          78
+        ],
+        "bare_root_span_at_base": [
+          79,
+          79
+        ],
+        "exact_lower_silhouette": false
+      },
+      "visual": {
+        "bare_sha256": "cb4ca010687e33d913e438285a6faf65e7dac230ab7727ad64ac906d6ecd7959",
+        "summer_sha256": "706e8919b579025a1762860f9fd485f97cc18c7f3e8740d67c526de79e9ce70d",
+        "reading": "Method: direct inspection of hash-bound paired board at native1x and nearest-neighbor2x. Small birch has very sparse sturdy open branches, clearly leafless at1x, white upright trunk and retained root-ground location. Its thin trunk/root contour differs materially at native pixels (IoU0.645 despite same base row); shape is recognizable but exact same silhouette requirement is not proven. Coarser sparse branch design and lower-trunk variation need explicit owner judgment.",
+        "exact_preservation_claimed": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,2090 @@
+[
+  {
+    "path": "art/flora/sprites/oak_small_v1.png",
+    "sha256": "4ad77018009592a1d5e94bdde5aed54abf6d3a6ef57dc617510efd3aae37f3a5",
+    "mask_path": "art/flora/masks/oak_small_v1.png",
+    "mask_sha256": "f9e05b739bed323672937260b864ad521f2a88b2988bce7a546f2c402cad3ab7",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        64,
+        100
+      ],
+      "height_band": [
+        64,
+        96
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 2942,
+      "base_row": 100,
+      "base_error": 0,
+      "height": 80,
+      "gradient_x": -1.7755333333333334,
+      "gradient_y": -1.9496999999999998,
+      "light_angle_degrees": 227.67681313834987,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 0,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.011312217194570135,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 1983,
+      "foliage_pixels": 1983,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer_green": {
+      "mean_hue_degrees": 73.61298352071897,
+      "mean_saturation": 0.6033420030737284,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": false
+    },
+    "passed": false
+  },
+  {
+    "path": "art/flora/sprites/oak_small_v2.png",
+    "sha256": "74d1d33d740a69882cfec71e028bf5b3367ca869df3348e9daccb0c1b836b034",
+    "mask_path": "art/flora/masks/oak_small_v2.png",
+    "mask_sha256": "3ff9e3cf48634dab91da7219d01c8614f0ef1773fdfc6df573e3577a07bddd4a",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        64,
+        100
+      ],
+      "height_band": [
+        64,
+        96
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 2758,
+      "base_row": 100,
+      "base_error": 0,
+      "height": 80,
+      "gradient_x": -1.3617119783616694,
+      "gradient_y": -1.632142315137437,
+      "light_angle_degrees": 230.16143385855472,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 0,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.010746606334841629,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 1527,
+      "foliage_pixels": 1527,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer_green": {
+      "mean_hue_degrees": 75.39107943142261,
+      "mean_saturation": 0.6139080131698905,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": false
+    },
+    "passed": false
+  },
+  {
+    "path": "art/flora/sprites/oak_small_bare.png",
+    "sha256": "24e7d3219b2ebe543c34b1eb17c81ddc3b86239877abce16d43c878232c5bb0f",
+    "mask_path": "art/flora/masks/oak_small_bare.png",
+    "mask_sha256": "2e78316b74bad44723a009a5c4d2ed21f139428a30ce6fea436e7512e1f1616f",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        64,
+        100
+      ],
+      "height_band": [
+        64,
+        96
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 1045,
+      "base_row": 100,
+      "base_error": 0,
+      "height": 74,
+      "gradient_x": -6.60632373540856,
+      "gradient_y": -3.1026682864450135,
+      "light_angle_degrees": 205.15715640449588,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 10,
+      "clipping_alpha16": false,
+      "passed": false,
+      "components_alpha16": 0,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.0,
+      "foliage_cluster_coverage": 0.0,
+      "mask_pixels": 0,
+      "foliage_pixels": 50,
+      "passed": true,
+      "foliage_gate_applicable": false
+    },
+    "summer_green": null,
+    "passed": false
+  },
+  {
+    "path": "art/flora/sprites/oak_large_v1.png",
+    "sha256": "4c1197d4a17c7b81b84b8b88501fdc8b0103d0dd5843c95f7a49762863f207f9",
+    "mask_path": "art/flora/masks/oak_large_v1.png",
+    "mask_sha256": "75a3e14de87a8a8e88b693d4e69788ebe64aa213b0f182f5bef9baa4d17b3047",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        96,
+        180
+      ],
+      "height_band": [
+        128,
+        192
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 13922,
+      "base_row": 180,
+      "base_error": 0,
+      "height": 160,
+      "gradient_x": -0.4489395941342023,
+      "gradient_y": -0.400288520938521,
+      "light_angle_degrees": 221.72118998952715,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 0,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.005305039787798408,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 7979,
+      "foliage_pixels": 7979,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer_green": {
+      "mean_hue_degrees": 67.6788263935314,
+      "mean_saturation": 0.5705459982584677,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": false
+    },
+    "passed": false
+  },
+  {
+    "path": "art/flora/sprites/oak_large_v2.png",
+    "sha256": "2e2627915f120f6adb3c96a314056de1af1b674de45a2a8272d7128365df58fa",
+    "mask_path": "art/flora/masks/oak_large_v2.png",
+    "mask_sha256": "cdb0106eefdf3d1828203b7406d58d11fbb72bb15ffeaa2af45154c12a661d6e",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        96,
+        180
+      ],
+      "height_band": [
+        128,
+        192
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 9002,
+      "base_row": 180,
+      "base_error": 0,
+      "height": 160,
+      "gradient_x": -0.5426360198316614,
+      "gradient_y": -0.6706553629218678,
+      "light_angle_degrees": 231.0232257001456,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 0,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.009725906277630416,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 4566,
+      "foliage_pixels": 4566,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer_green": {
+      "mean_hue_degrees": 77.74227711882543,
+      "mean_saturation": 0.5862799963651758,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": false
+    },
+    "passed": false
+  },
+  {
+    "path": "art/flora/sprites/oak_large_bare.png",
+    "sha256": "2dfbf78df775dabef1331534aee14e436036719cbd2651f9b3870e4a7276da77",
+    "mask_path": "art/flora/masks/oak_large_bare.png",
+    "mask_sha256": "d47def74e608b221363559e1dfc571273eefcb417af8644b5d7578c47224dba6",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        96,
+        180
+      ],
+      "height_band": [
+        128,
+        192
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 6152,
+      "base_row": 181,
+      "base_error": 1,
+      "height": 157,
+      "gradient_x": -3.2430494435612083,
+      "gradient_y": -1.9544627838104642,
+      "light_angle_degrees": 211.07577445432332,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 36,
+      "clipping_alpha16": false,
+      "passed": false,
+      "components_alpha16": 0,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.0,
+      "foliage_cluster_coverage": 0.0,
+      "mask_pixels": 0,
+      "foliage_pixels": 355,
+      "passed": true,
+      "foliage_gate_applicable": false
+    },
+    "summer_green": null,
+    "passed": false
+  },
+  {
+    "path": "art/flora/sprites/oak_stump.png",
+    "sha256": "877f846df7de0e1492e3806caaf74aa9dc26b1c1cdebd1a4ab25bcd3ce210ac0",
+    "mask_path": "art/flora/masks/oak_stump.png",
+    "mask_sha256": "05ae4ed8657e98a06fb22560a86d3dd2dcfb85962a96ee82d6000a88471de30b",
+    "canvas_matches": true,
+    "projection": {
+      "family": "stump",
+      "anchor": [
+        32,
+        40
+      ],
+      "height_band": [
+        14,
+        24
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 229,
+      "base_row": 40,
+      "base_error": 0,
+      "height": 20,
+      "gradient_x": -3.8323,
+      "gradient_y": -5.067630845771144,
+      "light_angle_degrees": 232.90229519740365,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 0,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.0,
+      "foliage_cluster_coverage": 0.0,
+      "mask_pixels": 0,
+      "foliage_pixels": 13,
+      "passed": true,
+      "foliage_gate_applicable": false
+    },
+    "summer_green": null,
+    "passed": true
+  },
+  {
+    "path": "art/flora/sprites/pine_small_v1.png",
+    "sha256": "d733515867a756f288a2f5673aa76923b7b28802b4e5babb0ae0443570110de7",
+    "mask_path": "art/flora/masks/pine_small_v1.png",
+    "mask_sha256": "d6eb2b22617670dd8e33af1e6ceee8fadf37205563abda22eff4790df84cdade",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        64,
+        100
+      ],
+      "height_band": [
+        64,
+        96
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 1143,
+      "base_row": 100,
+      "base_error": 0,
+      "height": 79,
+      "gradient_x": -4.206796545105566,
+      "gradient_y": -2.869531988472623,
+      "light_angle_degrees": 214.29860533195813,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 0,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.007918552036199095,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 707,
+      "foliage_pixels": 707,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer_green": {
+      "mean_hue_degrees": 74.18192630636116,
+      "mean_saturation": 0.545292837719601,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": false
+    },
+    "passed": false
+  },
+  {
+    "path": "art/flora/sprites/pine_small_v2.png",
+    "sha256": "7b4586924958690eacab74abf653005e2e5f88753161498b0f55c2175fb41a29",
+    "mask_path": "art/flora/masks/pine_small_v2.png",
+    "mask_sha256": "fcc1448e0403aaf9d896beb77eee9d12c85089b655b18d5f5b402a246cca6347",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        64,
+        100
+      ],
+      "height_band": [
+        64,
+        96
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 1265,
+      "base_row": 100,
+      "base_error": 0,
+      "height": 80,
+      "gradient_x": -3.0000343859649115,
+      "gradient_y": -3.4247626666666666,
+      "light_angle_degrees": 228.78218648817654,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 0,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.007352941176470588,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 628,
+      "foliage_pixels": 628,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer_green": {
+      "mean_hue_degrees": 71.64814604994552,
+      "mean_saturation": 0.5532415811346465,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": false
+    },
+    "passed": false
+  },
+  {
+    "path": "art/flora/sprites/pine_large_v1.png",
+    "sha256": "87a3f8c2171767db53199d1ad9b0410ebee4f1918d820c3e088eee8aea62e6a9",
+    "mask_path": "art/flora/masks/pine_large_v1.png",
+    "mask_sha256": "7a3540b2c6a8580d8a28d5dc7fa4c99aa677775e4d9dcb6e27fec615a6eaeeed",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        96,
+        180
+      ],
+      "height_band": [
+        128,
+        192
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 4604,
+      "base_row": 180,
+      "base_error": 0,
+      "height": 159,
+      "gradient_x": -1.7056431933548684,
+      "gradient_y": -1.3675441495499652,
+      "light_angle_degrees": 218.721809277029,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 0,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.008841732979664015,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 2114,
+      "foliage_pixels": 2114,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer_green": {
+      "mean_hue_degrees": 72.9273237835393,
+      "mean_saturation": 0.5764677282129164,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": false
+    },
+    "passed": false
+  },
+  {
+    "path": "art/flora/sprites/pine_large_v2.png",
+    "sha256": "1c2c3bb4812e59dfbb5c967e1b3d1e70ea9f7a847cf1f0d5edb4142d974ee32e",
+    "mask_path": "art/flora/masks/pine_large_v2.png",
+    "mask_sha256": "53c40fba40cc0913cd27021bb2029dc14586c96b5b068983a1cc74a9b36d6d63",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        96,
+        180
+      ],
+      "height_band": [
+        128,
+        192
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 5365,
+      "base_row": 180,
+      "base_error": 0,
+      "height": 159,
+      "gradient_x": -0.7946675856636471,
+      "gradient_y": -1.4283897061723525,
+      "light_angle_degrees": 240.91114633875813,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 0,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.009062776304155614,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 2734,
+      "foliage_pixels": 2734,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer_green": {
+      "mean_hue_degrees": 74.97965565799537,
+      "mean_saturation": 0.5594865352273147,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": false
+    },
+    "passed": false
+  },
+  {
+    "path": "art/flora/sprites/pine_stump.png",
+    "sha256": "a8596b13aed83b125bb5a16c768102982b730fb2c357be19eef14713b8224b30",
+    "mask_path": "art/flora/masks/pine_stump.png",
+    "mask_sha256": "05ae4ed8657e98a06fb22560a86d3dd2dcfb85962a96ee82d6000a88471de30b",
+    "canvas_matches": true,
+    "projection": {
+      "family": "stump",
+      "anchor": [
+        32,
+        40
+      ],
+      "height_band": [
+        14,
+        24
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 217,
+      "base_row": 40,
+      "base_error": 0,
+      "height": 20,
+      "gradient_x": -5.49680618556701,
+      "gradient_y": -4.836137499999999,
+      "light_angle_degrees": 221.34159713779994,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 0,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.0,
+      "foliage_cluster_coverage": 0.0,
+      "mask_pixels": 0,
+      "foliage_pixels": 11,
+      "passed": true,
+      "foliage_gate_applicable": false
+    },
+    "summer_green": null,
+    "passed": true
+  },
+  {
+    "path": "art/flora/sprites/birch_small_v1.png",
+    "sha256": "2cf0588e4b4299f7f357b0b5b71de1157949f98d3314743fe2e7e0c8fa46fa51",
+    "mask_path": "art/flora/masks/birch_small_v1.png",
+    "mask_sha256": "e4e1d0d84596ed0d5fa5be1dadab06bf08ff1373c8b11a4f5c311acc0c7baf5c",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        64,
+        100
+      ],
+      "height_band": [
+        64,
+        96
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 1509,
+      "base_row": 100,
+      "base_error": 0,
+      "height": 80,
+      "gradient_x": -4.093007698113207,
+      "gradient_y": -1.68771317715959,
+      "light_angle_degrees": 202.40834127328313,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 2,
+      "clipping_alpha16": false,
+      "passed": false,
+      "components_alpha16": 0,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.008484162895927601,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 1278,
+      "foliage_pixels": 1278,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer_green": {
+      "mean_hue_degrees": 73.27376049595478,
+      "mean_saturation": 0.5629488392718076,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": false
+    },
+    "passed": false
+  },
+  {
+    "path": "art/flora/sprites/birch_small_v2.png",
+    "sha256": "4c6a68c4cb4be9ef7a034b189d5925e7e461335e35c61c4d8023e4cdd71b3fd4",
+    "mask_path": "art/flora/masks/birch_small_v2.png",
+    "mask_sha256": "4e60c1b69e1d410089fc22d96548322d12214da7e733d1e4e7a83581123b7289",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        64,
+        100
+      ],
+      "height_band": [
+        64,
+        96
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 1174,
+      "base_row": 100,
+      "base_error": 0,
+      "height": 79,
+      "gradient_x": -5.824731370558375,
+      "gradient_y": -2.656625900681597,
+      "light_angle_degrees": 204.5174514230972,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 2,
+      "clipping_alpha16": false,
+      "passed": false,
+      "components_alpha16": 0,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.003959276018099547,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 943,
+      "foliage_pixels": 943,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer_green": {
+      "mean_hue_degrees": 73.39973193610862,
+      "mean_saturation": 0.5845410574659587,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": false
+    },
+    "passed": false
+  },
+  {
+    "path": "art/flora/sprites/birch_large_v1.png",
+    "sha256": "5de91b2e0d070d098c4557276b3820ba24458fd3f77e1433ce50625c317ad9b9",
+    "mask_path": "art/flora/masks/birch_large_v1.png",
+    "mask_sha256": "77763f1eebad79e2b84d38ca452e6c9c4a96e8fb9c60e112cdba5d0b0571fc16",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        96,
+        180
+      ],
+      "height_band": [
+        128,
+        192
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 6435,
+      "base_row": 180,
+      "base_error": 0,
+      "height": 160,
+      "gradient_x": -1.5706090848363392,
+      "gradient_y": -1.2576112266798745,
+      "light_angle_degrees": 218.6848007407793,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 0,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.006631299734748011,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 4734,
+      "foliage_pixels": 4734,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer_green": {
+      "mean_hue_degrees": 78.30480190871936,
+      "mean_saturation": 0.6047674343087928,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": false
+    },
+    "passed": false
+  },
+  {
+    "path": "art/flora/sprites/birch_large_v2.png",
+    "sha256": "d5abf129f9bbd187f86a8fcf155021303c7d6d9f310de93b0fef113048c1e717",
+    "mask_path": "art/flora/masks/birch_large_v2.png",
+    "mask_sha256": "5788a8afc2d4228795251274d9ec1ce588ee202a16ae52a6dac486d89b6a1b44",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        96,
+        180
+      ],
+      "height_band": [
+        128,
+        192
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 5236,
+      "base_row": 180,
+      "base_error": 0,
+      "height": 159,
+      "gradient_x": -1.9460369346733668,
+      "gradient_y": -1.496042990267136,
+      "light_angle_degrees": 217.55178356949284,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 0,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.011715296198054819,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 4216,
+      "foliage_pixels": 4216,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer_green": {
+      "mean_hue_degrees": 75.25286530307469,
+      "mean_saturation": 0.5742208735939341,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": false
+    },
+    "passed": false
+  },
+  {
+    "path": "art/flora/sprites/birch_stump.png",
+    "sha256": "68d94c5c5a2486e1bad814cacc227cacceabfe7cd2af8d0ffcd0e58f7815760b",
+    "mask_path": "art/flora/masks/birch_stump.png",
+    "mask_sha256": "05ae4ed8657e98a06fb22560a86d3dd2dcfb85962a96ee82d6000a88471de30b",
+    "canvas_matches": true,
+    "projection": {
+      "family": "stump",
+      "anchor": [
+        32,
+        40
+      ],
+      "height_band": [
+        14,
+        24
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 228,
+      "base_row": 40,
+      "base_error": 0,
+      "height": 20,
+      "gradient_x": -4.815741747572815,
+      "gradient_y": -4.631719402985074,
+      "light_angle_degrees": 223.88410543872607,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 0,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.0,
+      "foliage_cluster_coverage": 0.0,
+      "mask_pixels": 0,
+      "foliage_pixels": 7,
+      "passed": true,
+      "foliage_gate_applicable": false
+    },
+    "summer_green": null,
+    "passed": true
+  },
+  {
+    "path": "art/flora/sprites/oak_small_v1.png",
+    "sha256": "38c6970cf65a5144291399da25068eec09c6209e826c5ccd244155b4e086773f",
+    "mask_path": "art/flora/masks/oak_small_v1.png",
+    "mask_sha256": "aed50a4c5445cee6efe02c4cc52bc607eca736c5f7b86fbadab22d6314e23d4a",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        64,
+        100
+      ],
+      "height_band": [
+        64,
+        96
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 2942,
+      "base_row": 100,
+      "base_error": 0,
+      "height": 80,
+      "gradient_x": -1.7802173663437388,
+      "gradient_y": -1.941892213410238,
+      "light_angle_degrees": 227.48715601912522,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 1,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.009615384615384616,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 1980,
+      "foliage_pixels": 1980,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer_green": {
+      "mean_hue_degrees": 103.1230117473454,
+      "mean_saturation": 0.5762470233450305,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": true
+    },
+    "passed": true
+  },
+  {
+    "path": "art/flora/sprites/oak_small_v2.png",
+    "sha256": "d1c32570e23ba1d60b521b4a31a4f5598e19b2e7f48e5f436fe60ba2a639df77",
+    "mask_path": "art/flora/masks/oak_small_v2.png",
+    "mask_sha256": "20614eb9111a148e57ee79ab4c01a3e777c303d7a5e68c33b9fb95d2e1eda8a8",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        64,
+        100
+      ],
+      "height_band": [
+        64,
+        96
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 2758,
+      "base_row": 100,
+      "base_error": 0,
+      "height": 80,
+      "gradient_x": -1.3473024729520866,
+      "gradient_y": -1.6105379790940766,
+      "light_angle_degrees": 230.0856878142258,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 1,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.00904977375565611,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 1524,
+      "foliage_pixels": 1524,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer_green": {
+      "mean_hue_degrees": 102.47453795276017,
+      "mean_saturation": 0.5919849475420045,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": true
+    },
+    "passed": true
+  },
+  {
+    "path": "art/flora/sprites/oak_large_v1.png",
+    "sha256": "409c1005a4c4987a88a0e09b075ae5bce0b2dea90806a68e9d0f8989e1297cad",
+    "mask_path": "art/flora/masks/oak_large_v1.png",
+    "mask_sha256": "83bbed04aedbb28d80a4bd54cf5b0c916853880575054499f63a80fb98d7cf41",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        96,
+        180
+      ],
+      "height_band": [
+        128,
+        192
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 13922,
+      "base_row": 180,
+      "base_error": 0,
+      "height": 160,
+      "gradient_x": -0.4468718263960894,
+      "gradient_y": -0.3922471190971191,
+      "light_angle_degrees": 221.2754322289747,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 1,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.005305039787798408,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 7953,
+      "foliage_pixels": 7953,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer_green": {
+      "mean_hue_degrees": 103.10889637072967,
+      "mean_saturation": 0.6061602007619566,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": true
+    },
+    "passed": true
+  },
+  {
+    "path": "art/flora/sprites/oak_large_v2.png",
+    "sha256": "e2f99a16a2aec6ec0ce2d2a5184a2339a9538f3e0cda165225d8be3ed50e944e",
+    "mask_path": "art/flora/masks/oak_large_v2.png",
+    "mask_sha256": "cb43dadbb0e70a1002e8bc46e37b17f98c5f00c6f77a30589ce9f791a64dbed4",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        96,
+        180
+      ],
+      "height_band": [
+        128,
+        192
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 9002,
+      "base_row": 180,
+      "base_error": 0,
+      "height": 160,
+      "gradient_x": -0.5370474115069755,
+      "gradient_y": -0.65925337494221,
+      "light_angle_degrees": 230.83271518316792,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 1,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.007515473032714412,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 4549,
+      "foliage_pixels": 4549,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer_green": {
+      "mean_hue_degrees": 102.87233455153083,
+      "mean_saturation": 0.5959570841526671,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": true
+    },
+    "passed": true
+  },
+  {
+    "path": "art/flora/sprites/pine_small_v1.png",
+    "sha256": "983f71a2a386f98cd12a990b2963b7672c1a4d7dfcdc84076c963f5b0b011b76",
+    "mask_path": "art/flora/masks/pine_small_v1.png",
+    "mask_sha256": "7c6e0eae18f6f3ae93212de3aa9f2bc94a6c69de9e71447ecb173af6ec770fbf",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        64,
+        100
+      ],
+      "height_band": [
+        64,
+        96
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 1143,
+      "base_row": 100,
+      "base_error": 0,
+      "height": 79,
+      "gradient_x": -4.188743761996161,
+      "gradient_y": -2.856880691642651,
+      "light_angle_degrees": 214.29545774228635,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 1,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.007352941176470588,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 699,
+      "foliage_pixels": 699,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer_green": {
+      "mean_hue_degrees": 104.46507969452914,
+      "mean_saturation": 0.6179537581451076,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": true
+    },
+    "passed": true
+  },
+  {
+    "path": "art/flora/sprites/pine_small_v2.png",
+    "sha256": "d0a8077b26ccc26fb028947d56a9254c210553862000cff79d9cb4676d46fe5c",
+    "mask_path": "art/flora/masks/pine_small_v2.png",
+    "mask_sha256": "c2b3565822a9328ae08f5ccde352dc81310143709512fee8f21085e3ed7c6e7d",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        64,
+        100
+      ],
+      "height_band": [
+        64,
+        96
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 1265,
+      "base_row": 100,
+      "base_error": 0,
+      "height": 80,
+      "gradient_x": -2.948947894736842,
+      "gradient_y": -3.3742990222222224,
+      "light_angle_degrees": 228.84836543621523,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 1,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.007352941176470588,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 627,
+      "foliage_pixels": 627,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer_green": {
+      "mean_hue_degrees": 102.94294578234182,
+      "mean_saturation": 0.643357096853582,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": true
+    },
+    "passed": true
+  },
+  {
+    "path": "art/flora/sprites/pine_large_v1.png",
+    "sha256": "c69d226cebddcb92d5023fd820565d64fbabd1a92cb1e2fb285d89f6721d30e6",
+    "mask_path": "art/flora/masks/pine_large_v1.png",
+    "mask_sha256": "9b0d55bce8477dd23df571182cea58eda0e3f83eeb2760dda6c7e8a85e2da01c",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        96,
+        180
+      ],
+      "height_band": [
+        128,
+        192
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 4604,
+      "base_row": 180,
+      "base_error": 0,
+      "height": 159,
+      "gradient_x": -1.6743923396400553,
+      "gradient_y": -1.349082067851373,
+      "light_angle_degrees": 218.85889436108937,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 1,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.006852343059239611,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 2095,
+      "foliage_pixels": 2095,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer_green": {
+      "mean_hue_degrees": 102.71881204131836,
+      "mean_saturation": 0.5994568795018717,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": true
+    },
+    "passed": true
+  },
+  {
+    "path": "art/flora/sprites/pine_large_v2.png",
+    "sha256": "e315d6a347389ecf8fa948850683bf0c3a62064897ae802806e51eb3d8ce28cc",
+    "mask_path": "art/flora/masks/pine_large_v2.png",
+    "mask_sha256": "275840a2428b2b3395996d8b74efdf6a44a955fb4442e21fd8d85ed89135adce",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        96,
+        180
+      ],
+      "height_band": [
+        128,
+        192
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 5365,
+      "base_row": 180,
+      "base_error": 0,
+      "height": 159,
+      "gradient_x": -0.775312957857424,
+      "gradient_y": -1.388755353973575,
+      "light_angle_degrees": 240.8262939926061,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 1,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.009062776304155614,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 2724,
+      "foliage_pixels": 2724,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer_green": {
+      "mean_hue_degrees": 102.70987780716638,
+      "mean_saturation": 0.6208386146441571,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": true
+    },
+    "passed": true
+  },
+  {
+    "path": "art/flora/sprites/birch_small_v1.png",
+    "sha256": "74046ee6e0b462d7c807e78d6b43ffa096fec8ffc899c21e1c830adc91956380",
+    "mask_path": "art/flora/masks/birch_small_v1.png",
+    "mask_sha256": "5492db692d555e4e20ff442afa644173a6131c44714d1fb3c93201b379bba76d",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        64,
+        100
+      ],
+      "height_band": [
+        64,
+        96
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 1509,
+      "base_row": 100,
+      "base_error": 0,
+      "height": 80,
+      "gradient_x": -4.111270037735848,
+      "gradient_y": -1.690467496339678,
+      "light_angle_degrees": 202.3514308012945,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 2,
+      "clipping_alpha16": false,
+      "passed": false,
+      "components_alpha16": 1,
+      "detached_pixels_alpha128": 5
+    },
+    "mask": {
+      "trunk_box_fraction": 0.005656108597285068,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 1264,
+      "foliage_pixels": 1264,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer_green": {
+      "mean_hue_degrees": 103.72557952003666,
+      "mean_saturation": 0.6080074039620782,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": true
+    },
+    "passed": false
+  },
+  {
+    "path": "art/flora/sprites/birch_small_v2.png",
+    "sha256": "c997f0cd66a7dcbe8df5338662b43302dff22206b2535b515532fae1a9f39a0d",
+    "mask_path": "art/flora/masks/birch_small_v2.png",
+    "mask_sha256": "254647e57d97b08106e9398d98210a568f7634245a4307a2856665852b6a22be",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        64,
+        100
+      ],
+      "height_band": [
+        64,
+        96
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 1174,
+      "base_row": 100,
+      "base_error": 0,
+      "height": 79,
+      "gradient_x": -5.868767918781725,
+      "gradient_y": -2.6496619279454716,
+      "light_angle_degrees": 204.29847219167095,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 2,
+      "clipping_alpha16": false,
+      "passed": false,
+      "components_alpha16": 1,
+      "detached_pixels_alpha128": 1
+    },
+    "mask": {
+      "trunk_box_fraction": 0.003959276018099547,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 935,
+      "foliage_pixels": 935,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer_green": {
+      "mean_hue_degrees": 103.20684988164986,
+      "mean_saturation": 0.6321958489798742,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": true
+    },
+    "passed": false
+  },
+  {
+    "path": "art/flora/sprites/birch_small_bare.png",
+    "sha256": "f539f54b8980704fab130f8b10ad9b6e5e83bf2aaf8fc34460976317b914008f",
+    "mask_path": "art/flora/masks/birch_small_bare.png",
+    "mask_sha256": "2e78316b74bad44723a009a5c4d2ed21f139428a30ce6fea436e7512e1f1616f",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        64,
+        100
+      ],
+      "height_band": [
+        64,
+        96
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 359,
+      "base_row": 100,
+      "base_error": 0,
+      "height": 75,
+      "gradient_x": -12.279876555023925,
+      "gradient_y": -1.3934186991869917,
+      "light_angle_degrees": 186.47376032926869,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 15,
+      "clipping_alpha16": false,
+      "passed": false,
+      "components_alpha16": 1,
+      "detached_pixels_alpha128": 23
+    },
+    "mask": {
+      "trunk_box_fraction": 0.0,
+      "foliage_cluster_coverage": 0.0,
+      "mask_pixels": 0,
+      "foliage_pixels": 56,
+      "passed": true,
+      "foliage_gate_applicable": false
+    },
+    "summer_green": null,
+    "passed": false
+  },
+  {
+    "path": "art/flora/sprites/birch_large_v1.png",
+    "sha256": "2683048c36fe7cd7f24cdcef5046f27ab87ca8d39db245448654ae83858fac5f",
+    "mask_path": "art/flora/masks/birch_large_v1.png",
+    "mask_sha256": "744c5e6a1a234f6ac8ca08b2c80a41916361a34f23f7f1507ab847e40e72eb2a",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        96,
+        180
+      ],
+      "height_band": [
+        128,
+        192
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 6435,
+      "base_row": 180,
+      "base_error": 0,
+      "height": 160,
+      "gradient_x": -1.5780453573814295,
+      "gradient_y": -1.2618294205052003,
+      "light_angle_degrees": 218.6463703000814,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 1,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.003757736516357206,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 4688,
+      "foliage_pixels": 4688,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer_green": {
+      "mean_hue_degrees": 104.58627577748304,
+      "mean_saturation": 0.590252728708558,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": true
+    },
+    "passed": true
+  },
+  {
+    "path": "art/flora/sprites/birch_large_v2.png",
+    "sha256": "20edfbe6ba0486c3e3c35e60501da563739e402416e1b2a048bd5099028062f5",
+    "mask_path": "art/flora/masks/birch_large_v2.png",
+    "mask_sha256": "79c46d1e540a412bcb55342795df92fadc23d3b314cbb9f5dd5adc40f2d9926e",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        96,
+        180
+      ],
+      "height_band": [
+        128,
+        192
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 5236,
+      "base_row": 180,
+      "base_error": 0,
+      "height": 159,
+      "gradient_x": -1.9711477805695141,
+      "gradient_y": -1.4943888589770138,
+      "light_angle_degrees": 217.16690536542865,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 1,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.011715296198054819,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 4201,
+      "foliage_pixels": 4201,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer_green": {
+      "mean_hue_degrees": 104.03548993386312,
+      "mean_saturation": 0.628746673271086,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": true
+    },
+    "passed": true
+  },
+  {
+    "path": "art/flora/sprites/birch_large_bare.png",
+    "sha256": "ae9b9bbaa1be76b247f416d97b5b6d5ede02792da24d77227ed3c21acc4d62ed",
+    "mask_path": "art/flora/masks/birch_large_bare.png",
+    "mask_sha256": "d47def74e608b221363559e1dfc571273eefcb417af8644b5d7578c47224dba6",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        96,
+        180
+      ],
+      "height_band": [
+        128,
+        192
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 1944,
+      "base_row": 180,
+      "base_error": 0,
+      "height": 155,
+      "gradient_x": -3.045675239398085,
+      "gradient_y": -4.790716797900262,
+      "light_angle_degrees": 237.5540350373833,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 41,
+      "clipping_alpha16": false,
+      "passed": false,
+      "components_alpha16": 1,
+      "detached_pixels_alpha128": 67
+    },
+    "mask": {
+      "trunk_box_fraction": 0.0,
+      "foliage_cluster_coverage": 0.0,
+      "mask_pixels": 0,
+      "foliage_pixels": 214,
+      "passed": true,
+      "foliage_gate_applicable": false
+    },
+    "summer_green": null,
+    "passed": false
+  },
+  {
+    "path": "art/flora/sprites/oak_small_bare.png",
+    "sha256": "6940a5b9b4de16bb8a3f93960fcd210a2bbf2c6fe6840f73f5be3710d5f171ef",
+    "mask_path": "art/flora/masks/oak_small_bare.png",
+    "mask_sha256": "2e78316b74bad44723a009a5c4d2ed21f139428a30ce6fea436e7512e1f1616f",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        64,
+        100
+      ],
+      "height_band": [
+        64,
+        96
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 1068,
+      "base_row": 100,
+      "base_error": 0,
+      "height": 78,
+      "gradient_x": -10.441993718592967,
+      "gradient_y": -6.931489245982695,
+      "light_angle_degrees": 213.5765642658899,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 12,
+      "clipping_alpha16": false,
+      "passed": false,
+      "components_alpha16": 1,
+      "detached_pixels_alpha128": 14
+    },
+    "mask": {
+      "trunk_box_fraction": 0.0,
+      "foliage_cluster_coverage": 0.0,
+      "mask_pixels": 0,
+      "foliage_pixels": 163,
+      "passed": true,
+      "foliage_gate_applicable": false
+    },
+    "summer_green": null,
+    "passed": false
+  },
+  {
+    "path": "art/flora/sprites/birch_small_v1.png",
+    "sha256": "706e8919b579025a1762860f9fd485f97cc18c7f3e8740d67c526de79e9ce70d",
+    "mask_path": "art/flora/masks/birch_small_v1.png",
+    "mask_sha256": "078ad68c6eb98f2e877206aaa9144fa7637a06e8db83260fed7ce38daf147102",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        64,
+        100
+      ],
+      "height_band": [
+        64,
+        96
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 1689,
+      "base_row": 100,
+      "base_error": 0,
+      "height": 80,
+      "gradient_x": -2.9963481155778897,
+      "gradient_y": -1.2628741154562382,
+      "light_angle_degrees": 202.8540166911656,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 1,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.004524886877828055,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 1377,
+      "foliage_pixels": 1377,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer_green": {
+      "mean_hue_degrees": 106.11085372009296,
+      "mean_saturation": 0.5775113521230911,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": true
+    },
+    "passed": true
+  },
+  {
+    "path": "art/flora/sprites/birch_small_v2.png",
+    "sha256": "10cd21c4737518042da9dbc0fe5b5560d9bdf30e8c4a2f360430e5e83f8606a5",
+    "mask_path": "art/flora/masks/birch_small_v2.png",
+    "mask_sha256": "0bebc1e6d5ec2c4d454842d9f377d820a674ca5df448d19382f854fc54ca0b05",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        64,
+        100
+      ],
+      "height_band": [
+        64,
+        96
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 1418,
+      "base_row": 100,
+      "base_error": 0,
+      "height": 79,
+      "gradient_x": -3.9196565891472868,
+      "gradient_y": -2.596332978723404,
+      "light_angle_degrees": 213.52000811080077,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 1,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.0022624434389140274,
+      "foliage_cluster_coverage": 1.0,
+      "mask_pixels": 1002,
+      "foliage_pixels": 1002,
+      "passed": true,
+      "foliage_gate_applicable": true
+    },
+    "summer_green": {
+      "mean_hue_degrees": 105.33012894679717,
+      "mean_saturation": 0.601930233753579,
+      "palette_hue_range_degrees": [
+        88.88888888888891,
+        112.5
+      ],
+      "passed": true
+    },
+    "passed": true
+  },
+  {
+    "path": "art/flora/sprites/birch_small_bare.png",
+    "sha256": "bcd3c9fdc39b89ad6aa2c63383a189bdbef0e8493df09e09b6df83cbd5194175",
+    "mask_path": "art/flora/masks/birch_small_bare.png",
+    "mask_sha256": "2e78316b74bad44723a009a5c4d2ed21f139428a30ce6fea436e7512e1f1616f",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        64,
+        100
+      ],
+      "height_band": [
+        64,
+        96
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 364,
+      "base_row": 100,
+      "base_error": 0,
+      "height": 76,
+      "gradient_x": -12.098330476190474,
+      "gradient_y": -0.5707560784313727,
+      "light_angle_degrees": 182.70100789546441,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 18,
+      "clipping_alpha16": false,
+      "passed": false,
+      "components_alpha16": 1,
+      "detached_pixels_alpha128": 22
+    },
+    "mask": {
+      "trunk_box_fraction": 0.0,
+      "foliage_cluster_coverage": 0.0,
+      "mask_pixels": 0,
+      "foliage_pixels": 51,
+      "passed": true,
+      "foliage_gate_applicable": false
+    },
+    "summer_green": null,
+    "passed": false
+  },
+  {
+    "path": "art/flora/sprites/oak_large_bare.png",
+    "sha256": "42535527738429b4fc93ed92fed50b65a42630c5ecc17c59ec412a1b3ccc41ec",
+    "mask_path": "art/flora/masks/oak_large_bare.png",
+    "mask_sha256": "d47def74e608b221363559e1dfc571273eefcb417af8644b5d7578c47224dba6",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        96,
+        180
+      ],
+      "height_band": [
+        128,
+        192
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 6212,
+      "base_row": 181,
+      "base_error": 1,
+      "height": 158,
+      "gradient_x": -5.00172606038821,
+      "gradient_y": -4.201882319152755,
+      "light_angle_degrees": 220.033163436886,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 1,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.0,
+      "foliage_cluster_coverage": 0.0,
+      "mask_pixels": 0,
+      "foliage_pixels": 406,
+      "passed": true,
+      "foliage_gate_applicable": false
+    },
+    "summer_green": null,
+    "passed": true
+  },
+  {
+    "path": "art/flora/sprites/birch_small_bare.png",
+    "sha256": "919ae3968c7eb39820290f2d2f9334da6d588027d1b3136feeb0cc5fa00fd6c8",
+    "mask_path": "art/flora/masks/birch_small_bare.png",
+    "mask_sha256": "2e78316b74bad44723a009a5c4d2ed21f139428a30ce6fea436e7512e1f1616f",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        64,
+        100
+      ],
+      "height_band": [
+        64,
+        96
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 453,
+      "base_row": 100,
+      "base_error": 0,
+      "height": 77,
+      "gradient_x": -10.035752173913043,
+      "gradient_y": -2.0406603174603175,
+      "light_angle_degrees": 191.49376908281104,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 7,
+      "clipping_alpha16": false,
+      "passed": false,
+      "components_alpha16": 1,
+      "detached_pixels_alpha128": 10
+    },
+    "mask": {
+      "trunk_box_fraction": 0.0,
+      "foliage_cluster_coverage": 0.0,
+      "mask_pixels": 0,
+      "foliage_pixels": 55,
+      "passed": true,
+      "foliage_gate_applicable": false
+    },
+    "summer_green": null,
+    "passed": false
+  },
+  {
+    "path": "art/flora/sprites/birch_large_bare.png",
+    "sha256": "2e8c1d1f097af463219ff3a3a47d3243cbf5f19d845076594a772b7f92f7ba7c",
+    "mask_path": "art/flora/masks/birch_large_bare.png",
+    "mask_sha256": "d47def74e608b221363559e1dfc571273eefcb417af8644b5d7578c47224dba6",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        96,
+        180
+      ],
+      "height_band": [
+        128,
+        192
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 2053,
+      "base_row": 180,
+      "base_error": 0,
+      "height": 157,
+      "gradient_x": -2.70025024691358,
+      "gradient_y": -5.985049528301887,
+      "light_angle_degrees": 245.71672711508458,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 1,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.0,
+      "foliage_cluster_coverage": 0.0,
+      "mask_pixels": 0,
+      "foliage_pixels": 173,
+      "passed": true,
+      "foliage_gate_applicable": false
+    },
+    "summer_green": null,
+    "passed": true
+  },
+  {
+    "path": "art/flora/sprites/oak_small_bare.png",
+    "sha256": "3cf313970724c29399110a661cc207cb7b0361590307edda35951f5e827a55e2",
+    "mask_path": "art/flora/masks/oak_small_bare.png",
+    "mask_sha256": "2e78316b74bad44723a009a5c4d2ed21f139428a30ce6fea436e7512e1f1616f",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        64,
+        100
+      ],
+      "height_band": [
+        64,
+        96
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 1254,
+      "base_row": 100,
+      "base_error": 0,
+      "height": 75,
+      "gradient_x": -7.328663619047618,
+      "gradient_y": -7.0817008579599605,
+      "light_angle_degrees": 224.0181692581477,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 1,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.0,
+      "foliage_cluster_coverage": 0.0,
+      "mask_pixels": 0,
+      "foliage_pixels": 132,
+      "passed": true,
+      "foliage_gate_applicable": false
+    },
+    "summer_green": null,
+    "passed": true
+  },
+  {
+    "path": "art/flora/sprites/birch_small_bare.png",
+    "sha256": "cb4ca010687e33d913e438285a6faf65e7dac230ab7727ad64ac906d6ecd7959",
+    "mask_path": "art/flora/masks/birch_small_bare.png",
+    "mask_sha256": "2e78316b74bad44723a009a5c4d2ed21f139428a30ce6fea436e7512e1f1616f",
+    "canvas_matches": true,
+    "projection": {
+      "family": "tree",
+      "anchor": [
+        64,
+        100
+      ],
+      "height_band": [
+        64,
+        96
+      ],
+      "height_band_override": true,
+      "opaque_pixels": 433,
+      "base_row": 100,
+      "base_error": 0,
+      "height": 75,
+      "gradient_x": -11.019229431438127,
+      "gradient_y": -8.555713119533527,
+      "light_angle_degrees": 217.82700830432466,
+      "base_passed": true,
+      "height_passed": true,
+      "light_passed": true,
+      "passed": true
+    },
+    "structure": {
+      "components_alpha128": 1,
+      "clipping_alpha16": false,
+      "passed": true,
+      "components_alpha16": 1,
+      "detached_pixels_alpha128": 0
+    },
+    "mask": {
+      "trunk_box_fraction": 0.0,
+      "foliage_cluster_coverage": 0.0,
+      "mask_pixels": 0,
+      "foliage_pixels": 60,
+      "passed": true,
+      "foliage_gate_applicable": false
+    },
+    "summer_green": null,
+    "passed": true
+  }
+]

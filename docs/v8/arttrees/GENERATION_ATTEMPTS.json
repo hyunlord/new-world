@@ -1,0 +1,1123 @@
+{
+  "schema_version": 1,
+  "total_recorded_calls": 33,
+  "generation_budget": 120,
+  "calls_by_asset": {
+    "berry_bush_bare": 2,
+    "berry_bush_full": 3,
+    "birch_large_bare": 2,
+    "birch_large_v1": 1,
+    "birch_large_v2": 1,
+    "birch_small_bare": 3,
+    "birch_small_v1": 2,
+    "birch_small_v2": 2,
+    "birch_stump": 1,
+    "canopy_mass": 1,
+    "oak_large_bare": 2,
+    "oak_large_v1": 1,
+    "oak_large_v2": 1,
+    "oak_small_bare": 3,
+    "oak_small_v1": 1,
+    "oak_small_v2": 1,
+    "oak_stump": 1,
+    "pine_large_v1": 1,
+    "pine_large_v2": 1,
+    "pine_small_v1": 1,
+    "pine_small_v2": 1,
+    "pine_stump": 1
+  },
+  "maximum_attempt": 3,
+  "all_attempts_lte3": true,
+  "within_generation_budget": true,
+  "all_originals_preserved": true,
+  "ledger_inputs": [
+    {
+      "path": "/Users/rexxa/work/arttrees-data/generation_attempts.json",
+      "sha256": "3ed1b87622cacd26028349e7ceba82895d45f2d06eb58c88a6d7edea98bd37b6",
+      "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/generation_attempts_3ed1b87622cacd26.json",
+      "byte_count": 43487
+    },
+    {
+      "path": "/Users/rexxa/work/arttrees-data/bush_generation_attempts.json",
+      "sha256": "22ec3250ff3ff5feb769f11b1c24368bf4b35a0effbffe3473b21423f35cb91c",
+      "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/bush_generation_attempts_22ec3250ff3ff5fe.json",
+      "byte_count": 8217
+    },
+    {
+      "path": "/Users/rexxa/work/arttrees-data/generation_reference_policy.json",
+      "sha256": "7859ee59a39827a49867757ef378a02cc0e2d5371d78c55f26896f1f5a952559",
+      "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/generation_reference_policy_7859ee59a39827a4.json",
+      "byte_count": 5570
+    }
+  ],
+  "attempts": [
+    {
+      "id": "oak_large_v1",
+      "attempt": 1,
+      "generation_output_id": "exec-c2867ebe-ac22-4d9c-8ca4-85c2979ca99b",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-c2867ebe-ac22-4d9c-8ca4-85c2979ca99b.png",
+        "sha256": "6ee226fb759410c93e6f8299e9887f0e02458989267a8909e75d36e1fa01911f",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-c2867ebe-ac22-4d9c-8ca4-85c2979ca99b_6ee226fb759410c9.png",
+        "byte_count": 1930514
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/route_i_sheet_1x_dd2f202d6f2f09ae.png",
+          "byte_count": 338663
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+          "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/hut_23cd439c13f23efc.png",
+          "byte_count": 3934071
+        }
+      ],
+      "reference_evidence": "Parent confirmed actual tool attachment list in agent message; canopy mass had no attached images.",
+      "original_record": {
+        "id": "oak_large_v1",
+        "attempt": 1,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-c2867ebe-ac22-4d9c-8ca4-85c2979ca99b.png",
+        "prompt": "Create ONE isolated mature oak tree sprite, variant 1, for WorldSim. Transparent background. Hand ink contour and muted watercolor wash, matching supplied stone age game references. Reference 1 establishes front three-quarter standing projection about 20 degrees down and person height 56px; reference 2 gives architectural ink/wash style only. This oak is 160px tall on a 192x192 native canvas, root contact at (96,180), top at y21. Render at this small native scale, no giant detailed illustration. Broad irregular rounded crown, asymmetrical left bough, SUMMER GREEN foliage: mid #507A38, light #759C4B, dark #30532B; no yellow ochre foliage. Foliage ends above y125 so lower 30% contains only trunk and roots. Warm brown visible branching trunk, sturdy connected roots. Upper LEFT lit, lower RIGHT shade. Single connected silhouette, generous transparent margin, no clipping. No shadow, ground, grass, text, panel, human or border. Front three-quarter, NOT top-down canopy.",
+        "visual": "Connected mature oak, visible trunk/roots, slight olive canopy; inspect normalized hue."
+      }
+    },
+    {
+      "id": "oak_large_v2",
+      "attempt": 1,
+      "generation_output_id": "exec-328c7b86-5a92-410c-8a53-36935994ca57",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-328c7b86-5a92-410c-8a53-36935994ca57.png",
+        "sha256": "57ebc44620fb9023bf1553a20de27de10cc1f20d342d8a7e0d6e55819c441bd1",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-328c7b86-5a92-410c-8a53-36935994ca57_57ebc44620fb9023.png",
+        "byte_count": 1831690
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/route_i_sheet_1x_dd2f202d6f2f09ae.png",
+          "byte_count": 338663
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+          "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/hut_23cd439c13f23efc.png",
+          "byte_count": 3934071
+        }
+      ],
+      "reference_evidence": "Parent confirmed actual tool attachment list in agent message; canopy mass had no attached images.",
+      "original_record": {
+        "id": "oak_large_v2",
+        "attempt": 1,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-328c7b86-5a92-410c-8a53-36935994ca57.png",
+        "prompt": "ONE isolated mature 160px tall oak tree sprite, shape variant 2. Broad rounded lobed crown, rugged brown trunk. Asymmetric crown leaning right with shorter left bough, distinct silhouette. Match reference 1 route I ink and watercolor game sprite style and 20 degree downward front three-quarter projection; reference 2 structure style only. SUMMER GREEN #507A38 mid #759C4B light #30532B shadow, absolutely no yellow or autumn foliage. Upper left illumination with lower-right deep shade. Crown confined to upper 65 percent, bottom 35 percent ONLY exposed trunk and connected roots. Entire tree in frame with margin. Transparent background. No ground, shadow, text, people, borders or detached leaves. Fine dark ink outlines, simple wash masses readable after whole-object scale down. Person scale is 56px.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-328c7b86-5a92-410c-8a53-36935994ca57.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      }
+    },
+    {
+      "id": "oak_small_v1",
+      "attempt": 1,
+      "generation_output_id": "exec-d43432fd-4da4-4989-bba1-dc2d5acaf60c",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-d43432fd-4da4-4989-bba1-dc2d5acaf60c.png",
+        "sha256": "6a192240a9ea89a3bef37944ebb0f620eebdc8bdf503f96c369248328a0f5f0e",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-d43432fd-4da4-4989-bba1-dc2d5acaf60c_6a192240a9ea89a3.png",
+        "byte_count": 1947907
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/route_i_sheet_1x_dd2f202d6f2f09ae.png",
+          "byte_count": 338663
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+          "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/hut_23cd439c13f23efc.png",
+          "byte_count": 3934071
+        }
+      ],
+      "reference_evidence": "Parent confirmed actual tool attachment list in agent message; canopy mass had no attached images.",
+      "original_record": {
+        "id": "oak_small_v1",
+        "attempt": 1,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-d43432fd-4da4-4989-bba1-dc2d5acaf60c.png",
+        "prompt": "ONE isolated young 80px tall oak tree sprite, shape variant 1. Broad rounded lobed crown, rugged brown trunk. Asymmetric left bough, balanced strong central trunk. Match reference 1 route I ink and watercolor game sprite style and 20 degree downward front three-quarter projection; reference 2 structure style only. SUMMER GREEN #507A38 mid #759C4B light #30532B shadow, absolutely no yellow or autumn foliage. Upper left illumination with lower-right deep shade. Crown confined to upper 65 percent, bottom 35 percent ONLY exposed trunk and connected roots. Entire tree in frame with margin. Transparent background. No ground, shadow, text, people, borders or detached leaves. Fine dark ink outlines, simple wash masses readable after whole-object scale down. Person scale is 56px.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-d43432fd-4da4-4989-bba1-dc2d5acaf60c.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      }
+    },
+    {
+      "id": "oak_small_v2",
+      "attempt": 1,
+      "generation_output_id": "exec-c664b99a-d21d-47f6-8975-7318fe27d837",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-c664b99a-d21d-47f6-8975-7318fe27d837.png",
+        "sha256": "280332527638d50889916c56c903175cd0a47594f72f3ef0eff82b7fe0ac7d9f",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-c664b99a-d21d-47f6-8975-7318fe27d837_280332527638d508.png",
+        "byte_count": 1694667
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/route_i_sheet_1x_dd2f202d6f2f09ae.png",
+          "byte_count": 338663
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+          "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/hut_23cd439c13f23efc.png",
+          "byte_count": 3934071
+        }
+      ],
+      "reference_evidence": "Parent confirmed actual tool attachment list in agent message; canopy mass had no attached images.",
+      "original_record": {
+        "id": "oak_small_v2",
+        "attempt": 1,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-c664b99a-d21d-47f6-8975-7318fe27d837.png",
+        "prompt": "ONE isolated young 80px tall oak tree sprite, shape variant 2. Broad rounded lobed crown, rugged brown trunk. Asymmetric crown leaning right with shorter left bough, distinct silhouette. Match reference 1 route I ink and watercolor game sprite style and 20 degree downward front three-quarter projection; reference 2 structure style only. SUMMER GREEN #507A38 mid #759C4B light #30532B shadow, absolutely no yellow or autumn foliage. Upper left illumination with lower-right deep shade. Crown confined to upper 65 percent, bottom 35 percent ONLY exposed trunk and connected roots. Entire tree in frame with margin. Transparent background. No ground, shadow, text, people, borders or detached leaves. Fine dark ink outlines, simple wash masses readable after whole-object scale down. Person scale is 56px.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-c664b99a-d21d-47f6-8975-7318fe27d837.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      }
+    },
+    {
+      "id": "pine_large_v1",
+      "attempt": 1,
+      "generation_output_id": "exec-676a0232-9bd9-4b51-8d25-26df9847db45",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-676a0232-9bd9-4b51-8d25-26df9847db45.png",
+        "sha256": "f1c15c363e83a8ebec55f0fc77ad308d50c1ccdb90e3c5f3c3eb815800bdf3b6",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-676a0232-9bd9-4b51-8d25-26df9847db45_f1c15c363e83a8eb.png",
+        "byte_count": 1273524
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/route_i_sheet_1x_dd2f202d6f2f09ae.png",
+          "byte_count": 338663
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+          "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/hut_23cd439c13f23efc.png",
+          "byte_count": 3934071
+        }
+      ],
+      "reference_evidence": "Parent confirmed actual tool attachment list in agent message; canopy mass had no attached images.",
+      "original_record": {
+        "id": "pine_large_v1",
+        "attempt": 1,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-676a0232-9bd9-4b51-8d25-26df9847db45.png",
+        "prompt": "ONE isolated mature 160px tall pine tree sprite, shape variant 1. Conical layered evergreen needles, clearly exposed straight trunk. Asymmetric left bough, balanced strong central trunk. Match reference 1 route I ink and watercolor game sprite style and 20 degree downward front three-quarter projection; reference 2 structure style only. SUMMER GREEN #507A38 mid #759C4B light #30532B shadow, absolutely no yellow or autumn foliage. Upper left illumination with lower-right deep shade. Crown confined to upper 65 percent, bottom 35 percent ONLY exposed trunk and connected roots. Entire tree in frame with margin. Transparent background. No ground, shadow, text, people, borders or detached leaves. Fine dark ink outlines, simple wash masses readable after whole-object scale down. Person scale is 56px.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-676a0232-9bd9-4b51-8d25-26df9847db45.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      }
+    },
+    {
+      "id": "oak_stump",
+      "attempt": 1,
+      "generation_output_id": "exec-d32bf52b-93be-4b7d-b7fd-58f585b269d8",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-d32bf52b-93be-4b7d-b7fd-58f585b269d8.png",
+        "sha256": "1db1d86a264bc10fef92247d52ba595e42aa91b49afe2edd05b3140ffda8d92a",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-d32bf52b-93be-4b7d-b7fd-58f585b269d8_1db1d86a264bc10f.png",
+        "byte_count": 793326
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/route_i_sheet_1x_dd2f202d6f2f09ae.png",
+          "byte_count": 338663
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+          "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/hut_23cd439c13f23efc.png",
+          "byte_count": 3934071
+        }
+      ],
+      "reference_evidence": "Parent confirmed actual tool attachment list in agent message; canopy mass had no attached images.",
+      "original_record": {
+        "id": "oak_stump",
+        "attempt": 1,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-d32bf52b-93be-4b7d-b7fd-58f585b269d8.png",
+        "prompt": "ONE isolated small oak tree stump sprite, front three-quarter about20degrees down. Rugged dark brown bark, sawn broken circular top with subtle growth rings, connected roots. Ink and watercolor wash matching references. Upper LEFT lit, lower RIGHT darker. Transparent background. Only stump, no ground, grass, shadow, text. Entire silhouette with generous margins. Native game height20px compared with reference adult56px.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-d32bf52b-93be-4b7d-b7fd-58f585b269d8.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      }
+    },
+    {
+      "id": "pine_stump",
+      "attempt": 1,
+      "generation_output_id": "exec-7b31dd7b-3ddf-4078-82cd-32e043d3a2e0",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-7b31dd7b-3ddf-4078-82cd-32e043d3a2e0.png",
+        "sha256": "2ef9069e20192510070fcb2dc7a1ec303dc3a961f01e43c6ec19379d73ad5952",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-7b31dd7b-3ddf-4078-82cd-32e043d3a2e0_2ef9069e20192510.png",
+        "byte_count": 697146
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/route_i_sheet_1x_dd2f202d6f2f09ae.png",
+          "byte_count": 338663
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+          "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/hut_23cd439c13f23efc.png",
+          "byte_count": 3934071
+        }
+      ],
+      "reference_evidence": "Parent confirmed actual tool attachment list in agent message; canopy mass had no attached images.",
+      "original_record": {
+        "id": "pine_stump",
+        "attempt": 1,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-7b31dd7b-3ddf-4078-82cd-32e043d3a2e0.png",
+        "prompt": "ONE isolated small pine tree stump sprite, front three-quarter about20degrees down. Reddish flaky bark, sawn broken circular top with subtle growth rings, connected roots. Ink and watercolor wash matching references. Upper LEFT lit, lower RIGHT darker. Transparent background. Only stump, no ground, grass, shadow, text. Entire silhouette with generous margins. Native game height20px compared with reference adult56px.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-7b31dd7b-3ddf-4078-82cd-32e043d3a2e0.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      }
+    },
+    {
+      "id": "birch_stump",
+      "attempt": 1,
+      "generation_output_id": "exec-a37b5fda-14e0-4dec-bd39-eeb279989cfa",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-a37b5fda-14e0-4dec-bd39-eeb279989cfa.png",
+        "sha256": "0526b238de9c57b55c78f78abd44c9ff033d702b6d9c1f3634c47a369a936705",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-a37b5fda-14e0-4dec-bd39-eeb279989cfa_0526b238de9c57b5.png",
+        "byte_count": 990649
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/route_i_sheet_1x_dd2f202d6f2f09ae.png",
+          "byte_count": 338663
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+          "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/hut_23cd439c13f23efc.png",
+          "byte_count": 3934071
+        }
+      ],
+      "reference_evidence": "Parent confirmed actual tool attachment list in agent message; canopy mass had no attached images.",
+      "original_record": {
+        "id": "birch_stump",
+        "attempt": 1,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-a37b5fda-14e0-4dec-bd39-eeb279989cfa.png",
+        "prompt": "ONE isolated small birch tree stump sprite, front three-quarter about20degrees down. White bark with black flecks, sawn broken circular top with subtle growth rings, connected roots. Ink and watercolor wash matching references. Upper LEFT lit, lower RIGHT darker. Transparent background. Only stump, no ground, grass, shadow, text. Entire silhouette with generous margins. Native game height20px compared with reference adult56px.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-a37b5fda-14e0-4dec-bd39-eeb279989cfa.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      }
+    },
+    {
+      "id": "canopy_mass",
+      "attempt": 1,
+      "generation_output_id": "exec-068c3a0b-72fc-4f75-8556-0fadae22c6ef",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-068c3a0b-72fc-4f75-8556-0fadae22c6ef.png",
+        "sha256": "8be171e57d5ca509e1a26d20f3d455a3811dd26a18f9f52716b49311835bda3a",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-068c3a0b-72fc-4f75-8556-0fadae22c6ef_8be171e57d5ca509.png",
+        "byte_count": 3606629
+      },
+      "references": [],
+      "reference_evidence": "Parent confirmed actual tool attachment list in agent message; canopy mass had no attached images.",
+      "original_record": {
+        "id": "canopy_mass",
+        "attempt": 1,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-068c3a0b-72fc-4f75-8556-0fadae22c6ef.png",
+        "prompt": "Seamless repeating forest CANOPY texture, top down, watercolor wash with fine brown-black ink clusters, dense overlapping crowns, summer GREEN mid #507A38 light #759C4B dark #30532B. No trunks, bare dirt, shadows cast on ground, borders, labels, landscape perspective. Uniform density through all four edges. 256x256 native game texture, readable broad canopy masses. Organic small-scale variation, visibly forest greener and darker than calm meadow. Tileable seamless on both axes. Match hand-painted stone-age game style.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-068c3a0b-72fc-4f75-8556-0fadae22c6ef.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      }
+    },
+    {
+      "id": "pine_large_v2",
+      "attempt": 1,
+      "generation_output_id": "exec-3ee55190-1b68-4de7-95e6-62ab759700d4",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-3ee55190-1b68-4de7-95e6-62ab759700d4.png",
+        "sha256": "3ba88483e590a680ac921246666e110c59b355a8ad876ac43c22b3d7147ac079",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-3ee55190-1b68-4de7-95e6-62ab759700d4_3ba88483e590a680.png",
+        "byte_count": 1495955
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/route_i_sheet_1x_dd2f202d6f2f09ae.png",
+          "byte_count": 338663
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+          "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/hut_23cd439c13f23efc.png",
+          "byte_count": 3934071
+        }
+      ],
+      "reference_evidence": "Parent confirmed actual tool attachment list in agent message; canopy mass had no attached images.",
+      "original_record": {
+        "id": "pine_large_v2",
+        "attempt": 1,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-3ee55190-1b68-4de7-95e6-62ab759700d4.png",
+        "prompt": "ONE isolated mature pine tree sprite, shape variant 2. Conical evergreen, layered deep GREEN needle boughs, reddish straight trunk. Right-leaning crown, shorter left branch; distinct asymmetric silhouette. Game sprite hand ink and watercolor style. Reference 1 route I person sheet establishes 20-degree-down FRONT three-quarter projection; reference 2 structure for ink wash style. Tree scale 160px vs person56px. Crown occupies ONLY UPPER 60% of tree, lowest40% exposed trunk/roots, no low leaves. Genuine forest SUMMER GREEN mid #507A38, highlight #759C4B, shadow #30532B, NOT ochre or yellow olive. Strong upper LEFT illumination, lower RIGHT shade. Entire single connected tree with transparent margins. TRANSPARENT background, no ground patch, shadow, label, people or border. Readable simple wash masses when reduced to native game scale.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-3ee55190-1b68-4de7-95e6-62ab759700d4.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      }
+    },
+    {
+      "id": "pine_small_v1",
+      "attempt": 1,
+      "generation_output_id": "exec-a3f70887-4e4c-44d1-9951-d4960dbdeb51",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-a3f70887-4e4c-44d1-9951-d4960dbdeb51.png",
+        "sha256": "e55d2025d306c8bc5dd72902f5733654f5799c343c600c6ca8698f62e4cf8f9f",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-a3f70887-4e4c-44d1-9951-d4960dbdeb51_e55d2025d306c8bc.png",
+        "byte_count": 1816928
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/route_i_sheet_1x_dd2f202d6f2f09ae.png",
+          "byte_count": 338663
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+          "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/hut_23cd439c13f23efc.png",
+          "byte_count": 3934071
+        }
+      ],
+      "reference_evidence": "Parent confirmed actual tool attachment list in agent message; canopy mass had no attached images.",
+      "original_record": {
+        "id": "pine_small_v1",
+        "attempt": 1,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-a3f70887-4e4c-44d1-9951-d4960dbdeb51.png",
+        "prompt": "ONE isolated young small pine tree sprite, shape variant 1. Conical evergreen, layered deep GREEN needle boughs, reddish straight trunk. Left-reaching crown, upright trunk. Game sprite hand ink and watercolor style. Reference 1 route I person sheet establishes 20-degree-down FRONT three-quarter projection; reference 2 structure for ink wash style. Tree scale80px vs person56px. Crown occupies ONLY UPPER 60% of tree, lowest40% exposed trunk/roots, no low leaves. Genuine forest SUMMER GREEN mid #507A38, highlight #759C4B, shadow #30532B, NOT ochre or yellow olive. Strong upper LEFT illumination, lower RIGHT shade. Entire single connected tree with transparent margins. TRANSPARENT background, no ground patch, shadow, label, people or border. Readable simple wash masses when reduced to native game scale.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-a3f70887-4e4c-44d1-9951-d4960dbdeb51.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      }
+    },
+    {
+      "id": "pine_small_v2",
+      "attempt": 1,
+      "generation_output_id": "exec-59043596-6b8e-474c-a0bd-f95de89bf084",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-59043596-6b8e-474c-a0bd-f95de89bf084.png",
+        "sha256": "823ac08842c29fd54177cf1465d38c647bfb0bba39e64d03d02d0e0acc602f6f",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-59043596-6b8e-474c-a0bd-f95de89bf084_823ac08842c29fd5.png",
+        "byte_count": 849655
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/route_i_sheet_1x_dd2f202d6f2f09ae.png",
+          "byte_count": 338663
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+          "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/hut_23cd439c13f23efc.png",
+          "byte_count": 3934071
+        }
+      ],
+      "reference_evidence": "Parent confirmed actual tool attachment list in agent message; canopy mass had no attached images.",
+      "original_record": {
+        "id": "pine_small_v2",
+        "attempt": 1,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-59043596-6b8e-474c-a0bd-f95de89bf084.png",
+        "prompt": "ONE isolated young small pine tree sprite, shape variant 2. Conical evergreen, layered deep GREEN needle boughs, reddish straight trunk. Right-leaning crown, shorter left branch; distinct asymmetric silhouette. Game sprite hand ink and watercolor style. Reference 1 route I person sheet establishes 20-degree-down FRONT three-quarter projection; reference 2 structure for ink wash style. Tree scale80px vs person56px. Crown occupies ONLY UPPER 60% of tree, lowest40% exposed trunk/roots, no low leaves. Genuine forest SUMMER GREEN mid #507A38, highlight #759C4B, shadow #30532B, NOT ochre or yellow olive. Strong upper LEFT illumination, lower RIGHT shade. Entire single connected tree with transparent margins. TRANSPARENT background, no ground patch, shadow, label, people or border. Readable simple wash masses when reduced to native game scale.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-59043596-6b8e-474c-a0bd-f95de89bf084.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      }
+    },
+    {
+      "id": "birch_large_v1",
+      "attempt": 1,
+      "generation_output_id": "exec-dc8b66f5-8647-414d-b0a0-e3d819bdf655",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-dc8b66f5-8647-414d-b0a0-e3d819bdf655.png",
+        "sha256": "562fb1182cb1f115d2ad66dcbb3ea23464e23c4764124c04045520ac315bdf9b",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-dc8b66f5-8647-414d-b0a0-e3d819bdf655_562fb1182cb1f115.png",
+        "byte_count": 1896197
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/route_i_sheet_1x_dd2f202d6f2f09ae.png",
+          "byte_count": 338663
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+          "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/hut_23cd439c13f23efc.png",
+          "byte_count": 3934071
+        }
+      ],
+      "reference_evidence": "Parent confirmed actual tool attachment list in agent message; canopy mass had no attached images.",
+      "original_record": {
+        "id": "birch_large_v1",
+        "attempt": 1,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-dc8b66f5-8647-414d-b0a0-e3d819bdf655.png",
+        "prompt": "ONE isolated mature birch tree sprite, shape variant 1. Slender WHITE bark trunk with dark flecks, delicate rounded open GREEN crown. Left-reaching crown, upright trunk. Game sprite hand ink and watercolor style. Reference 1 route I person sheet establishes 20-degree-down FRONT three-quarter projection; reference 2 structure for ink wash style. Tree scale 160px vs person56px. Crown occupies ONLY UPPER 60% of tree, lowest40% exposed trunk/roots, no low leaves. Genuine forest SUMMER GREEN mid #507A38, highlight #759C4B, shadow #30532B, NOT ochre or yellow olive. Strong upper LEFT illumination, lower RIGHT shade. Entire single connected tree with transparent margins. TRANSPARENT background, no ground patch, shadow, label, people or border. Readable simple wash masses when reduced to native game scale.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-dc8b66f5-8647-414d-b0a0-e3d819bdf655.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      }
+    },
+    {
+      "id": "birch_large_v2",
+      "attempt": 1,
+      "generation_output_id": "exec-b9e9acf8-2020-4f32-b91c-9b8ebb9b8aa1",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-b9e9acf8-2020-4f32-b91c-9b8ebb9b8aa1.png",
+        "sha256": "832add38b57da1895f2f27dd85625604dc5ba0fe21902c7bcb7ade23797cb044",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-b9e9acf8-2020-4f32-b91c-9b8ebb9b8aa1_832add38b57da189.png",
+        "byte_count": 2166073
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/route_i_sheet_1x_dd2f202d6f2f09ae.png",
+          "byte_count": 338663
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+          "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/hut_23cd439c13f23efc.png",
+          "byte_count": 3934071
+        }
+      ],
+      "reference_evidence": "Parent confirmed actual tool attachment list in agent message; canopy mass had no attached images.",
+      "original_record": {
+        "id": "birch_large_v2",
+        "attempt": 1,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-b9e9acf8-2020-4f32-b91c-9b8ebb9b8aa1.png",
+        "prompt": "ONE isolated mature birch tree sprite, shape variant 2. Slender WHITE bark trunk with dark flecks, delicate rounded open GREEN crown. Right-leaning crown, shorter left branch; distinct asymmetric silhouette. Game sprite hand ink and watercolor style. Reference 1 route I person sheet establishes 20-degree-down FRONT three-quarter projection; reference 2 structure for ink wash style. Tree scale 160px vs person56px. Crown occupies ONLY UPPER 60% of tree, lowest40% exposed trunk/roots, no low leaves. Genuine forest SUMMER GREEN mid #507A38, highlight #759C4B, shadow #30532B, NOT ochre or yellow olive. Strong upper LEFT illumination, lower RIGHT shade. Entire single connected tree with transparent margins. TRANSPARENT background, no ground patch, shadow, label, people or border. Readable simple wash masses when reduced to native game scale.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-b9e9acf8-2020-4f32-b91c-9b8ebb9b8aa1.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      }
+    },
+    {
+      "id": "birch_small_v1",
+      "attempt": 1,
+      "generation_output_id": "exec-eea8b3f8-e559-4828-8824-0a866d903cda",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-eea8b3f8-e559-4828-8824-0a866d903cda.png",
+        "sha256": "f755a257a07c5557d095f7329591ca856b41cd8f360e0e1f2e3d47179cdd9d4b",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-eea8b3f8-e559-4828-8824-0a866d903cda_f755a257a07c5557.png",
+        "byte_count": 1012694
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/route_i_sheet_1x_dd2f202d6f2f09ae.png",
+          "byte_count": 338663
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+          "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/hut_23cd439c13f23efc.png",
+          "byte_count": 3934071
+        }
+      ],
+      "reference_evidence": "Parent confirmed actual tool attachment list in agent message; canopy mass had no attached images.",
+      "original_record": {
+        "id": "birch_small_v1",
+        "attempt": 1,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-eea8b3f8-e559-4828-8824-0a866d903cda.png",
+        "prompt": "ONE isolated young small birch tree sprite, shape variant 1. Slender WHITE bark trunk with dark flecks, delicate rounded open GREEN crown. Left-reaching crown, upright trunk. Game sprite hand ink and watercolor style. Reference 1 route I person sheet establishes 20-degree-down FRONT three-quarter projection; reference 2 structure for ink wash style. Tree scale80px vs person56px. Crown occupies ONLY UPPER 60% of tree, lowest40% exposed trunk/roots, no low leaves. Genuine forest SUMMER GREEN mid #507A38, highlight #759C4B, shadow #30532B, NOT ochre or yellow olive. Strong upper LEFT illumination, lower RIGHT shade. Entire single connected tree with transparent margins. TRANSPARENT background, no ground patch, shadow, label, people or border. Readable simple wash masses when reduced to native game scale.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-eea8b3f8-e559-4828-8824-0a866d903cda.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      }
+    },
+    {
+      "id": "birch_small_v2",
+      "attempt": 1,
+      "generation_output_id": "exec-87819879-2856-436e-b6f4-97eaddffcefa",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-87819879-2856-436e-b6f4-97eaddffcefa.png",
+        "sha256": "85ef52f979bd049d5f90c63d4d17bccd32959b965c21aef547b05cd1978ba059",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-87819879-2856-436e-b6f4-97eaddffcefa_85ef52f979bd049d.png",
+        "byte_count": 1924913
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/route_i_sheet_1x_dd2f202d6f2f09ae.png",
+          "byte_count": 338663
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+          "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/hut_23cd439c13f23efc.png",
+          "byte_count": 3934071
+        }
+      ],
+      "reference_evidence": "Parent confirmed actual tool attachment list in agent message; canopy mass had no attached images.",
+      "original_record": {
+        "id": "birch_small_v2",
+        "attempt": 1,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-87819879-2856-436e-b6f4-97eaddffcefa.png",
+        "prompt": "ONE isolated young small birch tree sprite, shape variant 2. Slender WHITE bark trunk with dark flecks, delicate rounded open GREEN crown. Right-leaning crown, shorter left branch; distinct asymmetric silhouette. Game sprite hand ink and watercolor style. Reference 1 route I person sheet establishes 20-degree-down FRONT three-quarter projection; reference 2 structure for ink wash style. Tree scale80px vs person56px. Crown occupies ONLY UPPER 60% of tree, lowest40% exposed trunk/roots, no low leaves. Genuine forest SUMMER GREEN mid #507A38, highlight #759C4B, shadow #30532B, NOT ochre or yellow olive. Strong upper LEFT illumination, lower RIGHT shade. Entire single connected tree with transparent margins. TRANSPARENT background, no ground patch, shadow, label, people or border. Readable simple wash masses when reduced to native game scale.",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-87819879-2856-436e-b6f4-97eaddffcefa.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      }
+    },
+    {
+      "id": "oak_large_bare",
+      "attempt": 1,
+      "generation_output_id": "exec-ec84a3f2-b17e-4fde-b76b-4af7ff1bcc67",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-ec84a3f2-b17e-4fde-b76b-4af7ff1bcc67.png",
+        "sha256": "a638cb2137f2e12e2223048f1d5e3b1c92548f0909babb0e29e90a41d1c8ce8f",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-ec84a3f2-b17e-4fde-b76b-4af7ff1bcc67_a638cb2137f2e12e.png",
+        "byte_count": 1958157
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-c2867ebe-ac22-4d9c-8ca4-85c2979ca99b.png",
+          "sha256": "6ee226fb759410c93e6f8299e9887f0e02458989267a8909e75d36e1fa01911f",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-c2867ebe-ac22-4d9c-8ca4-85c2979ca99b_6ee226fb759410c9.png",
+          "byte_count": 1930514
+        }
+      ],
+      "reference_evidence": "Original per-call reference and optional branch_reference fields.",
+      "original_record": {
+        "id": "oak_large_bare",
+        "attempt": 1,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-ec84a3f2-b17e-4fde-b76b-4af7ff1bcc67.png",
+        "prompt": "Edit this exact tree into its BARE WINTER form. Remove ALL leaves, reveal natural fine bare twigs in the existing crown area. Preserve the EXACT original image canvas dimensions, scale, position, trunk and root silhouette, bark coloring and all visible woody branches; no recentering, no zoom, no new ground, no shadow. The trunk and roots in the lower 35% must remain identical in shape and position. Keep upper-left illumination and fine ink watercolor style. Transparent background. Only a bare deciduous tree, absolutely no foliage or snow. Branch tips must stay inside original crown extent.",
+        "reference": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-c2867ebe-ac22-4d9c-8ca4-85c2979ca99b.png",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-ec84a3f2-b17e-4fde-b76b-4af7ff1bcc67.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      }
+    },
+    {
+      "id": "oak_small_bare",
+      "attempt": 1,
+      "generation_output_id": "exec-d7ce9a55-31a2-4f43-b226-9a3860c4364b",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-d7ce9a55-31a2-4f43-b226-9a3860c4364b.png",
+        "sha256": "e845e1afab602f359d9aae9476d1b89ab7392e7e90f300addd786cf5998c24e6",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-d7ce9a55-31a2-4f43-b226-9a3860c4364b_e845e1afab602f35.png",
+        "byte_count": 2282880
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-d43432fd-4da4-4989-bba1-dc2d5acaf60c.png",
+          "sha256": "6a192240a9ea89a3bef37944ebb0f620eebdc8bdf503f96c369248328a0f5f0e",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-d43432fd-4da4-4989-bba1-dc2d5acaf60c_6a192240a9ea89a3.png",
+          "byte_count": 1947907
+        }
+      ],
+      "reference_evidence": "Original per-call reference and optional branch_reference fields.",
+      "original_record": {
+        "id": "oak_small_bare",
+        "attempt": 1,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-d7ce9a55-31a2-4f43-b226-9a3860c4364b.png",
+        "prompt": "Edit this exact tree into its BARE WINTER form. Remove ALL leaves, reveal natural fine bare twigs in the existing crown area. Preserve the EXACT original image canvas dimensions, scale, position, trunk and root silhouette, bark coloring and all visible woody branches; no recentering, no zoom, no new ground, no shadow. The trunk and roots in the lower 35% must remain identical in shape and position. Keep upper-left illumination and fine ink watercolor style. Transparent background. Only a bare deciduous tree, absolutely no foliage or snow. Branch tips must stay inside original crown extent.",
+        "reference": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-d43432fd-4da4-4989-bba1-dc2d5acaf60c.png",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-d7ce9a55-31a2-4f43-b226-9a3860c4364b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      }
+    },
+    {
+      "id": "birch_large_bare",
+      "attempt": 1,
+      "generation_output_id": "exec-b877e0a5-ede4-4f8c-b268-60b169688db1",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-b877e0a5-ede4-4f8c-b268-60b169688db1.png",
+        "sha256": "7760f0fddaab9ab19228ac6dbf6bc4056bc7afe09681add3e96410f3403fb37e",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-b877e0a5-ede4-4f8c-b268-60b169688db1_7760f0fddaab9ab1.png",
+        "byte_count": 1726432
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-dc8b66f5-8647-414d-b0a0-e3d819bdf655.png",
+          "sha256": "562fb1182cb1f115d2ad66dcbb3ea23464e23c4764124c04045520ac315bdf9b",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-dc8b66f5-8647-414d-b0a0-e3d819bdf655_562fb1182cb1f115.png",
+          "byte_count": 1896197
+        }
+      ],
+      "reference_evidence": "Original per-call reference and optional branch_reference fields.",
+      "original_record": {
+        "id": "birch_large_bare",
+        "attempt": 1,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-b877e0a5-ede4-4f8c-b268-60b169688db1.png",
+        "prompt": "Edit the reference birch into its BARE WINTER form. Remove ALL leaves, revealing fine twig branching. Preserve EXACT canvas dimensions, original tree scale, original pixel positions, white bark trunk and root silhouette, all visible existing woody branches. Do NOT recenter or zoom. Lower exposed trunk and roots must stay the identical shape and position. Match the same ink watercolor, upper-left light. Transparent background, NO snow or ground or shadow. Branch tips within original leafy crown boundary; no clipping.",
+        "reference": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-dc8b66f5-8647-414d-b0a0-e3d819bdf655.png",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-b877e0a5-ede4-4f8c-b268-60b169688db1.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      }
+    },
+    {
+      "id": "birch_small_bare",
+      "attempt": 1,
+      "generation_output_id": "exec-09a3fb72-fda0-4988-b2fd-0e316f7f6cc7",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-09a3fb72-fda0-4988-b2fd-0e316f7f6cc7.png",
+        "sha256": "024ccf825c9809351184aa21ebb84adbd6c6c73817c32355088ed79202cd9d16",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-09a3fb72-fda0-4988-b2fd-0e316f7f6cc7_024ccf825c980935.png",
+        "byte_count": 1094046
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-eea8b3f8-e559-4828-8824-0a866d903cda.png",
+          "sha256": "f755a257a07c5557d095f7329591ca856b41cd8f360e0e1f2e3d47179cdd9d4b",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-eea8b3f8-e559-4828-8824-0a866d903cda_f755a257a07c5557.png",
+          "byte_count": 1012694
+        }
+      ],
+      "reference_evidence": "Original per-call reference and optional branch_reference fields.",
+      "original_record": {
+        "id": "birch_small_bare",
+        "attempt": 1,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-09a3fb72-fda0-4988-b2fd-0e316f7f6cc7.png",
+        "prompt": "Edit the reference birch into its BARE WINTER form. Remove ALL leaves, revealing fine twig branching. Preserve EXACT canvas dimensions, original tree scale, original pixel positions, white bark trunk and root silhouette, all visible existing woody branches. Do NOT recenter or zoom. Lower exposed trunk and roots must stay the identical shape and position. Match the same ink watercolor, upper-left light. Transparent background, NO snow or ground or shadow. Branch tips within original leafy crown boundary; no clipping.",
+        "reference": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-eea8b3f8-e559-4828-8824-0a866d903cda.png",
+        "output_hint": "Generated images are saved to /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613 as /Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-09a3fb72-fda0-4988-b2fd-0e316f7f6cc7.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+      }
+    },
+    {
+      "id": "birch_small_v1",
+      "attempt": 2,
+      "generation_output_id": "exec-a8d1d7e6-bd94-4b11-965f-36df13e36adc",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-a8d1d7e6-bd94-4b11-965f-36df13e36adc.png",
+        "sha256": "cefdfb016c1a5112e0f8654cd7b4e288b217c314a04fb0be563b0471f0a103fe",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-a8d1d7e6-bd94-4b11-965f-36df13e36adc_cefdfb016c1a5112.png",
+        "byte_count": 985258
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-eea8b3f8-e559-4828-8824-0a866d903cda.png",
+          "sha256": "f755a257a07c5557d095f7329591ca856b41cd8f360e0e1f2e3d47179cdd9d4b",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-eea8b3f8-e559-4828-8824-0a866d903cda_f755a257a07c5557.png",
+          "byte_count": 1012694
+        }
+      ],
+      "reference_evidence": "Original per-call reference and optional branch_reference fields.",
+      "original_record": {
+        "id": "birch_small_v1",
+        "attempt": 2,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-a8d1d7e6-bd94-4b11-965f-36df13e36adc.png",
+        "prompt": "Repair this exact summer birch game sprite for tiny 80px rendering. Keep identical canvas dimensions, tree position, trunk/root silhouette, color and lighting. ALL branch and leaf groups must be THICKLY connected to trunk or crown. Remove dangling isolated thin sprigs near lower canopy, thicken connections, consolidate foliage into simple big leafy masses with clear connected boughs. No separate floating pixels or leaves; no thin detached flecks. Preserve lower40% bare white trunk. Transparent background. Summer GREEN, fine ink watercolor, not yellow.",
+        "reference": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-eea8b3f8-e559-4828-8824-0a866d903cda.png"
+      }
+    },
+    {
+      "id": "birch_small_v2",
+      "attempt": 2,
+      "generation_output_id": "exec-f52a9a3a-951b-41f1-bad9-067bca473400",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-f52a9a3a-951b-41f1-bad9-067bca473400.png",
+        "sha256": "c65408bd622957fba5f760df11f892af40bde1cafa490e84d48db9c5aa0b75ff",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-f52a9a3a-951b-41f1-bad9-067bca473400_c65408bd622957fb.png",
+        "byte_count": 1953949
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-87819879-2856-436e-b6f4-97eaddffcefa.png",
+          "sha256": "85ef52f979bd049d5f90c63d4d17bccd32959b965c21aef547b05cd1978ba059",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-87819879-2856-436e-b6f4-97eaddffcefa_85ef52f979bd049d.png",
+          "byte_count": 1924913
+        }
+      ],
+      "reference_evidence": "Original per-call reference and optional branch_reference fields.",
+      "original_record": {
+        "id": "birch_small_v2",
+        "attempt": 2,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-f52a9a3a-951b-41f1-bad9-067bca473400.png",
+        "prompt": "Repair summer birch variant for tiny 80px rendering. Maintain EXACT tree canvas, size, root/trunk location and right-leaning silhouette. Consolidate canopy into large simple connected green masses, all bough connections thick enough to survive reduction. No isolated leaf flecks or dangling thin sprigs, NO floating leaves. Lower40% only exposed trunk and roots. Dark fine ink and watercolor, upper-left light, transparent. Summer green not yellow.",
+        "reference": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-87819879-2856-436e-b6f4-97eaddffcefa.png"
+      }
+    },
+    {
+      "id": "oak_small_bare",
+      "attempt": 2,
+      "generation_output_id": "exec-bd5b7a33-d5b6-4e79-a7f7-eaaaac2977af",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-bd5b7a33-d5b6-4e79-a7f7-eaaaac2977af.png",
+        "sha256": "768ace75339ba25a4e877fea2e5110eb31b81140a77071247517ed6d5eb3d027",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-bd5b7a33-d5b6-4e79-a7f7-eaaaac2977af_768ace75339ba25a.png",
+        "byte_count": 1186263
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-d43432fd-4da4-4989-bba1-dc2d5acaf60c.png",
+          "sha256": "6a192240a9ea89a3bef37944ebb0f620eebdc8bdf503f96c369248328a0f5f0e",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-d43432fd-4da4-4989-bba1-dc2d5acaf60c_6a192240a9ea89a3.png",
+          "byte_count": 1947907
+        }
+      ],
+      "reference_evidence": "Original per-call reference and optional branch_reference fields.",
+      "original_record": {
+        "id": "oak_small_bare",
+        "attempt": 2,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-bd5b7a33-d5b6-4e79-a7f7-eaaaac2977af.png",
+        "prompt": "Make a BARE WINTER oak from this exact reference. Preserve original canvas dimensions and EXACT trunk/root pixels, size and placement. Remove the whole leafy crown. Above the preserved trunk draw ONLY 10 to 15 clearly spaced thick leafless branches with a few short twigs, huge open transparent gaps between branches. Sparse branching silhouette visible at80px, NOT dense network, NOT brown fuzzy canopy. NO leaves, NO brown canopy mass, NO fine hairs, no backdrop, no shadow. Main branches stay attached. Identical woody trunk and root silhouette in lower35%. Upper-left lighting, ink watercolor.",
+        "reference": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-d43432fd-4da4-4989-bba1-dc2d5acaf60c.png"
+      }
+    },
+    {
+      "id": "oak_large_bare",
+      "attempt": 2,
+      "generation_output_id": "exec-abeb59d2-4939-43b7-a854-6bfa8d758b02",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-abeb59d2-4939-43b7-a854-6bfa8d758b02.png",
+        "sha256": "83d9ae1267bd0db259f946d53608764c846f831134b924944eb666350a4065ed",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-abeb59d2-4939-43b7-a854-6bfa8d758b02_83d9ae1267bd0db2.png",
+        "byte_count": 1163223
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-c2867ebe-ac22-4d9c-8ca4-85c2979ca99b.png",
+          "sha256": "6ee226fb759410c93e6f8299e9887f0e02458989267a8909e75d36e1fa01911f",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-c2867ebe-ac22-4d9c-8ca4-85c2979ca99b_6ee226fb759410c9.png",
+          "byte_count": 1930514
+        }
+      ],
+      "reference_evidence": "Original per-call reference and optional branch_reference fields.",
+      "original_record": {
+        "id": "oak_large_bare",
+        "attempt": 2,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-abeb59d2-4939-43b7-a854-6bfa8d758b02.png",
+        "prompt": "Turn this tree into BARE WINTER form for a small 160px GAME SPRITE. Keep EXACT full canvas, trunk/root silhouette and their original pixel coordinates. Remove ALL leaves. Replace crown with only 12 strong THICK connected branches and a few short stubby twigs. Every branch joins solidly to trunk; branch width should survive an 8x reduction, NO hairline twigs, NO floating tips, NO fine mesh or brown canopy. Transparent empty gaps dominate upper half. Preserve existing lower exposed trunk and roots exactly. Same brown bark, ink/watercolor and upper-left light. Absolutely NO glow, shadow, ground or foliage.",
+        "reference": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-c2867ebe-ac22-4d9c-8ca4-85c2979ca99b.png"
+      }
+    },
+    {
+      "id": "birch_large_bare",
+      "attempt": 2,
+      "generation_output_id": "exec-22a74acf-ed43-4a11-936d-6e2c152b5aba",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-22a74acf-ed43-4a11-936d-6e2c152b5aba.png",
+        "sha256": "0168ebe8c4bcb1736e049f30f65c4f2d8933a0d99eaba1b95eeb54c55e2cc988",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-22a74acf-ed43-4a11-936d-6e2c152b5aba_0168ebe8c4bcb173.png",
+        "byte_count": 757473
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-dc8b66f5-8647-414d-b0a0-e3d819bdf655.png",
+          "sha256": "562fb1182cb1f115d2ad66dcbb3ea23464e23c4764124c04045520ac315bdf9b",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-dc8b66f5-8647-414d-b0a0-e3d819bdf655_562fb1182cb1f115.png",
+          "byte_count": 1896197
+        }
+      ],
+      "reference_evidence": "Original per-call reference and optional branch_reference fields.",
+      "original_record": {
+        "id": "birch_large_bare",
+        "attempt": 2,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-22a74acf-ed43-4a11-936d-6e2c152b5aba.png",
+        "prompt": "EDIT ONLY UPPER TREE into a very sparse WINTER BARE silhouette. Keep the white trunk and roots EXACTLY unchanged in shape, color, canvas position and size. ERASE every leafy or fuzzy crown mass completely. Draw only 8 to 12 sturdy bare branches attached solidly to trunk, a few short thick twigs; HUGE clear transparent spaces. No leaf texture, NO fine hairline mesh, NO brown or grey fuzz. This must read as bare branches at 80px, like a simple inked game icon, not a detailed botanical illustration. Keep original canvas dimensions and root base position; never recenter. Transparent background, no glow, ground or shadow.",
+        "reference": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-dc8b66f5-8647-414d-b0a0-e3d819bdf655.png"
+      }
+    },
+    {
+      "id": "birch_small_bare",
+      "attempt": 2,
+      "generation_output_id": "exec-d9cf3408-e069-478e-a894-32841e003121",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-d9cf3408-e069-478e-a894-32841e003121.png",
+        "sha256": "f9a50b3daf5ccae727310553888ce7779388b4ea115cc4ce11d90119257bf7f1",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-d9cf3408-e069-478e-a894-32841e003121_f9a50b3daf5ccae7.png",
+        "byte_count": 476791
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-eea8b3f8-e559-4828-8824-0a866d903cda.png",
+          "sha256": "f755a257a07c5557d095f7329591ca856b41cd8f360e0e1f2e3d47179cdd9d4b",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-eea8b3f8-e559-4828-8824-0a866d903cda_f755a257a07c5557.png",
+          "byte_count": 1012694
+        }
+      ],
+      "reference_evidence": "Original per-call reference and optional branch_reference fields.",
+      "original_record": {
+        "id": "birch_small_bare",
+        "attempt": 2,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-d9cf3408-e069-478e-a894-32841e003121.png",
+        "prompt": "EDIT ONLY UPPER TREE into a very sparse WINTER BARE silhouette. Keep the white trunk and roots EXACTLY unchanged in shape, color, canvas position and size. ERASE every leafy or fuzzy crown mass completely. Draw only 8 to 12 sturdy bare branches attached solidly to trunk, a few short thick twigs; HUGE clear transparent spaces. No leaf texture, NO fine hairline mesh, NO brown or grey fuzz. This must read as bare branches at 80px, like a simple inked game icon, not a detailed botanical illustration. Keep original canvas dimensions and root base position; never recenter. Transparent background, no glow, ground or shadow.",
+        "reference": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-eea8b3f8-e559-4828-8824-0a866d903cda.png"
+      }
+    },
+    {
+      "id": "oak_small_bare",
+      "attempt": 3,
+      "generation_output_id": "exec-01bf77fd-c5e3-46c5-84d7-19df053ca6b0",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-01bf77fd-c5e3-46c5-84d7-19df053ca6b0.png",
+        "sha256": "02e2424fd20c6988352d88b009a9461e7c4b6073fb1799f6da226718fac49853",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-01bf77fd-c5e3-46c5-84d7-19df053ca6b0_02e2424fd20c6988.png",
+        "byte_count": 1033057
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-d43432fd-4da4-4989-bba1-dc2d5acaf60c.png",
+          "sha256": "6a192240a9ea89a3bef37944ebb0f620eebdc8bdf503f96c369248328a0f5f0e",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-d43432fd-4da4-4989-bba1-dc2d5acaf60c_6a192240a9ea89a3.png",
+          "byte_count": 1947907
+        },
+        {
+          "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-abeb59d2-4939-43b7-a854-6bfa8d758b02.png",
+          "sha256": "83d9ae1267bd0db259f946d53608764c846f831134b924944eb666350a4065ed",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-abeb59d2-4939-43b7-a854-6bfa8d758b02_83d9ae1267bd0db2.png",
+          "byte_count": 1163223
+        }
+      ],
+      "reference_evidence": "Original per-call reference and optional branch_reference fields.",
+      "original_record": {
+        "id": "oak_small_bare",
+        "attempt": 3,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-01bf77fd-c5e3-46c5-84d7-19df053ca6b0.png",
+        "prompt": "Create winter version of IMAGE1 small oak. Preserve image1 exact canvas dimensions, trunk/root scale and pixel placement. Follow IMAGE2's bare branch design: only STURDY thick connected wooden boughs with blunt tips, ZERO delicate twiglets or fine hairline branches. Upper crown should be mostly empty TRANSPARENT space with 8 thick branch forks. Remove all leaves. Keep lower trunk and roots unchanged from IMAGE1, NOT IMAGE2. This is an80px game sprite and each branch must remain visibly connected when reduced. Brown bark ink watercolor upper-left illumination. No ground, no shadow, no glow.",
+        "reference": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-d43432fd-4da4-4989-bba1-dc2d5acaf60c.png",
+        "branch_reference": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-abeb59d2-4939-43b7-a854-6bfa8d758b02.png"
+      }
+    },
+    {
+      "id": "birch_small_bare",
+      "attempt": 3,
+      "generation_output_id": "exec-b38a4a3a-3ab3-4fee-9f86-8aa87a1bc47f",
+      "source": {
+        "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-b38a4a3a-3ab3-4fee-9f86-8aa87a1bc47f.png",
+        "sha256": "b79fdeed941e017b91e938d7b079a126742600b9564527abd55290cd7763b25e",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-b38a4a3a-3ab3-4fee-9f86-8aa87a1bc47f_b79fdeed941e017b.png",
+        "byte_count": 379188
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-a8d1d7e6-bd94-4b11-965f-36df13e36adc.png",
+          "sha256": "cefdfb016c1a5112e0f8654cd7b4e288b217c314a04fb0be563b0471f0a103fe",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/exec-a8d1d7e6-bd94-4b11-965f-36df13e36adc_cefdfb016c1a5112.png",
+          "byte_count": 985258
+        }
+      ],
+      "reference_evidence": "Original per-call reference and optional branch_reference fields.",
+      "original_record": {
+        "id": "birch_small_bare",
+        "attempt": 3,
+        "source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-b38a4a3a-3ab3-4fee-9f86-8aa87a1bc47f.png",
+        "prompt": "Using this EXACT revised small birch as the edit target, preserve its exact canvas, tree scale, pixel position, white trunk and ALL roots identically. Convert only leafy upper crown into WINTER BARE tree: remove ALL foliage, show only 6 to 8 thick solid white/brown branches connected to trunk, blunt sturdy tips. Absolutely NO small twiglets or fine hairline branches; every bough thick enough to stay connected at native80px. Vast transparent space between the sparse thick branches. Lower half of tree including trunk and roots MUST retain original exact shape and pixel location. No recenter, no zoom. Ink watercolor, upper-left light, transparent background, no glow, shadow or ground.",
+        "reference": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cef-b36c-7980-bc0d-f7594efdc613/exec-a8d1d7e6-bd94-4b11-965f-36df13e36adc.png"
+      }
+    },
+    {
+      "id": "berry_bush_full",
+      "attempt": 1,
+      "generation_output_id": "exec-dc676076-067e-42c0-ad0c-6c3a738deba7",
+      "source": {
+        "path": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try1.png",
+        "sha256": "b50cd357ddce56e2e9596051edf929fe6882e1db429e4412d6b40f525c352322",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/berry_bush_full_try1_b50cd357ddce56e2.png",
+        "byte_count": 1448526
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/route_i_sheet_1x_dd2f202d6f2f09ae.png",
+          "byte_count": 338663
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+          "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/hut_23cd439c13f23efc.png",
+          "byte_count": 3934071
+        }
+      ],
+      "reference_evidence": "Original per-call references list, preserved verbatim in original_record.",
+      "original_record": {
+        "id": "berry_bush_full",
+        "attempt": 1,
+        "source": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try1.png",
+        "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cf0-5228-75f3-993f-7e7f69750277/exec-dc676076-067e-42c0-ad0c-6c3a738deba7.png",
+        "prompt": "Use case: stylized-concept. Generate ONE berry shrub game sprite, full of red berry clusters. Input image1 route I people is scale and front-three-quarter camera reference; input image2 hut is restrained fine ink/wash and upper-left-light reference only, NOT its overhead camera. Camera must be front three-quarter, 20 degrees down, clearly looking at the FRONT SIDES of leaves and woody stems, NOT plan view and NOT a round disk viewed overhead. A compact upright young berry bush with a visible short branching woody base and roots below the leaf crown. Crown occupies upper 65 percent of silhouette; lower 35 percent shows brown stems without green leaves. Healthy summer leaves RGB around #507A38, lighter #759C4B, darker #30532B, visible modest red berries. Stylized natural ink and muted watercolor wash, upper-left brighter and lower-right shaded, no photoreal gloss. Final use is 32 px silhouette height on96x96 canvas base anchor48,80: keep readable simple masses. Generate at your native larger resolution with complete silhouette centered and generous transparent margin, we will uniformly reduce the whole object. Real transparent RGBA background, no ground, shadow, grass, detached leaves, labels, border, or people. One connected complete plant.",
+        "references": [
+          "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png"
+        ],
+        "transparent_background": true
+      }
+    },
+    {
+      "id": "berry_bush_bare",
+      "attempt": 1,
+      "generation_output_id": "exec-7ce06ce7-52ce-4041-89c6-86369d3fabe5",
+      "source": {
+        "path": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_bare_try1.png",
+        "sha256": "dabf77fce701e8ac232d61807710b329b51b20a6e806e5745da396df09c2fc95",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/berry_bush_bare_try1_dabf77fce701e8ac.png",
+        "byte_count": 1736175
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try1.png",
+          "sha256": "b50cd357ddce56e2e9596051edf929fe6882e1db429e4412d6b40f525c352322",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/berry_bush_full_try1_b50cd357ddce56e2.png",
+          "byte_count": 1448526
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/route_i_sheet_1x_dd2f202d6f2f09ae.png",
+          "byte_count": 338663
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+          "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/hut_23cd439c13f23efc.png",
+          "byte_count": 3934071
+        }
+      ],
+      "reference_evidence": "Original per-call references list, preserved verbatim in original_record.",
+      "original_record": {
+        "id": "berry_bush_bare",
+        "attempt": 1,
+        "source": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_bare_try1.png",
+        "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cf0-5228-75f3-993f-7e7f69750277/exec-7ce06ce7-52ce-4041-89c6-86369d3fabe5.png",
+        "prompt": "Use case: precise-object-edit. Edit ONLY the berry bush in image1: remove every red fruit/berry cluster, leaving a harvested fruitless shrub. Keep green leaves: this is bare of FRUIT, not winter and not leafless. Preserve the entire woody stem/root arrangement, leaf crown silhouette, front-three-quarter camera about20 degrees down, upper-left lighting, ink/wash style, canvas dimensions, location and transparent alpha background. Fill former fruit positions naturally with existing leafy bush anatomy, no added plants. Image2 route I person sheet is scale reference only; image3 hut is style/light reference only, do not copy its overhead view. Healthy summer greens around #507A38, #759C4B, #30532B. One complete connected plant, roots visible, no ground/cast shadow/grass/text. Final game silhouette32px, preserve simple legible masses. No scene or person.",
+        "references": [
+          "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try1.png",
+          "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png"
+        ],
+        "transparent_background": true
+      }
+    },
+    {
+      "id": "berry_bush_full",
+      "attempt": 2,
+      "generation_output_id": "exec-8cd058e1-7cf5-495c-8045-f358c7cb483a",
+      "source": {
+        "path": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try2.png",
+        "sha256": "59a2b394fd3f9953ac8537d6208b0098c66e68fd2d7206db77a00413fe362a34",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/berry_bush_full_try2_59a2b394fd3f9953.png",
+        "byte_count": 1555873
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try1.png",
+          "sha256": "b50cd357ddce56e2e9596051edf929fe6882e1db429e4412d6b40f525c352322",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/berry_bush_full_try1_b50cd357ddce56e2.png",
+          "byte_count": 1448526
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/route_i_sheet_1x_dd2f202d6f2f09ae.png",
+          "byte_count": 338663
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+          "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/hut_23cd439c13f23efc.png",
+          "byte_count": 3934071
+        }
+      ],
+      "reference_evidence": "Original per-call references list, preserved verbatim in original_record.",
+      "original_record": {
+        "id": "berry_bush_full",
+        "attempt": 2,
+        "source": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try2.png",
+        "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cf0-5228-75f3-993f-7e7f69750277/exec-8cd058e1-7cf5-495c-8045-f358c7cb483a.png",
+        "prompt": "Use case: precise-object-edit. Edit image1 berry shrub. Important structural correction: keep a compact leafy berry crown ONLY IN THE UPPER HALF of the complete plant silhouette. The LOWER HALF must contain ONLY visible brown woody shoots, trunks and roots with NO green leaves and NO fruit. Raise all low branches into the upper canopy; create a modest leggy natural gooseberry bush form, not a tree. This clean open woody lower half is necessary for a32px tall sprite. Keep front three-quarter camera20 degrees down, fine ink/wash Style05, clear upper-left light and dark lower right. Healthy summer leaves #507A38 #759C4B #30532B and restrained red berry clusters confined upper crown. Input2 person sheet sets camera and scale, input3 hut style/light only. Complete one connected isolated plant with transparent background, no ground, shadow, text or detached specks. Preserve generous margin. No plan view. Ensure lower50percent silhouette is entirely leaf-free WOOD and no green tones on bark.",
+        "references": [
+          "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try1.png",
+          "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png"
+        ],
+        "transparent_background": true
+      }
+    },
+    {
+      "id": "berry_bush_full",
+      "attempt": 3,
+      "generation_output_id": "exec-cc16a1f8-0531-4462-9337-ac65b3525cae",
+      "source": {
+        "path": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try3.png",
+        "sha256": "ecf2e625d518c2cff4ede8fe318e709a35faceebf383860b20349d3ca6e7f89e",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/berry_bush_full_try3_ecf2e625d518c2cf.png",
+        "byte_count": 1554430
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try2.png",
+          "sha256": "59a2b394fd3f9953ac8537d6208b0098c66e68fd2d7206db77a00413fe362a34",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/berry_bush_full_try2_59a2b394fd3f9953.png",
+          "byte_count": 1555873
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/route_i_sheet_1x_dd2f202d6f2f09ae.png",
+          "byte_count": 338663
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+          "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/hut_23cd439c13f23efc.png",
+          "byte_count": 3934071
+        }
+      ],
+      "reference_evidence": "Original per-call references list, preserved verbatim in original_record.",
+      "original_record": {
+        "id": "berry_bush_full",
+        "attempt": 3,
+        "source": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try3.png",
+        "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cf0-5228-75f3-993f-7e7f69750277/exec-cc16a1f8-0531-4462-9337-ac65b3525cae.png",
+        "prompt": "Use case: precise-object-edit. Correct this isolated front-three-quarter berry shrub sprite. Make the bare brown woody stem area much taller: LOWER60percent of the complete plant height is ONLY exposed brown woody branching stems and roots. ALL green leaves and ALL red berries must be confined to the TOP40percent of the overall silhouette. The top leaf crown should be a small flat rounded cap with NO downward hanging leaves and NO lateral low twigs bearing leaves. Keep multi-stem shrub anatomy, not single-trunk tree. Camera20degrees down from frontal view, fine ink restrained watercolor, strong upper-left light. Green palette #507A38 #759C4B #30532B, brown trunks without any green. True transparent RGBA, one connected plant, complete roots, no shadows/ground/text/no detached specks. Reference image1 previous candidate must be structurally changed as specified, image2 person for scale, image3 hut for fine-ink style. Preserve style while making the bare twig scaffold take clearly more than half the total height.",
+        "references": [
+          "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try2.png",
+          "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png"
+        ],
+        "transparent_background": true
+      }
+    },
+    {
+      "id": "berry_bush_bare",
+      "attempt": 2,
+      "generation_output_id": "exec-f477fdf4-f70a-4486-833a-69f13f2e251a",
+      "source": {
+        "path": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_bare_try2.png",
+        "sha256": "46df9c58c9bde1afd634b8c1441376c02de2cf040b42ac97a42ecb49c024ef79",
+        "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/berry_bush_bare_try2_46df9c58c9bde1af.png",
+        "byte_count": 1471908
+      },
+      "references": [
+        {
+          "path": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try3.png",
+          "sha256": "ecf2e625d518c2cff4ede8fe318e709a35faceebf383860b20349d3ca6e7f89e",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/berry_bush_full_try3_ecf2e625d518c2cf.png",
+          "byte_count": 1554430
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "sha256": "dd2f202d6f2f09ae9d1947997749f0982f794f699e0f5777703b31d5270e1587",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/route_i_sheet_1x_dd2f202d6f2f09ae.png",
+          "byte_count": 338663
+        },
+        {
+          "path": "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png",
+          "sha256": "23cd439c13f23efc918d15a9928cbf430612ac1fc93031d53b3b5a2cb088861e",
+          "preserved_path": "/Users/rexxa/work/arttrees-data/all_attempts/hut_23cd439c13f23efc.png",
+          "byte_count": 3934071
+        }
+      ],
+      "reference_evidence": "Original per-call references list, preserved verbatim in original_record.",
+      "original_record": {
+        "id": "berry_bush_bare",
+        "attempt": 2,
+        "source": "/Users/rexxa/work/arttrees-data/bushes/berry_bush_bare_try2.png",
+        "generated_source": "/Users/rexxa/Library/Application Support/orca/codex-accounts/54be5844-95fd-4c46-925c-75327ccd186a/home/generated_images/01a16cf0-5228-75f3-993f-7e7f69750277/exec-f477fdf4-f70a-4486-833a-69f13f2e251a.png",
+        "prompt": "Use case: precise-object-edit. From image1 remove ONLY all red berries. This is the same harvested fruitless berry shrub, still leafy. Preserve EXACTLY the woody multi-stem scaffold, roots, complete silhouette, upper-only leaf crown and transparent canvas registration. The leafy crown occupies TOP40percent and LOWER60percent is ONLY brown leaf-free stems. DO NOT add low leaves or lengthen foliage downward. Keep every original stem/root position and camera, upper-left light, fine ink watercolor wash. Image2 person and image3 hut are scale/style only. Green leaves #507A38 #759C4B #30532B. No green bark, no ground/shadow/text/new elements. One connected isolated plant, genuine transparent background. Change just fruit availability.",
+        "references": [
+          "/Users/rexxa/work/arttrees-data/bushes/berry_bush_full_try3.png",
+          "/Users/rexxa/work/new-world-art-prod/art/character/boards/route_i_sheet_1x.png",
+          "/Users/rexxa/work/new-world-art-prod/art/style05/anchors/hut.png"
+        ],
+        "transparent_background": true
+      }
+    }
+  ]
+}

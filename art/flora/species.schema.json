@@ -1,0 +1,262 @@
+{
+  "$defs": {
+    "Frame": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "pattern": "^art/(?!.*\\.\\.)(?!.*//)[A-Za-z0-9_./-]+\\.png$",
+          "title": "Path",
+          "type": "string"
+        },
+        "canopy_mask": {
+          "pattern": "^art/(?!.*\\.\\.)(?!.*//)[A-Za-z0-9_./-]+\\.png$",
+          "title": "Canopy Mask",
+          "type": "string"
+        },
+        "anchor": {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "Anchor",
+          "type": "array"
+        },
+        "canvas": {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "Canvas",
+          "type": "array"
+        }
+      },
+      "required": [
+        "path",
+        "canopy_mask",
+        "anchor",
+        "canvas"
+      ],
+      "title": "Frame",
+      "type": "object"
+    },
+    "SeasonTint": {
+      "additionalProperties": false,
+      "properties": {
+        "delta_lab": {
+          "default": [
+            0,
+            0,
+            0
+          ],
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Delta Lab",
+          "type": "array"
+        },
+        "frame": {
+          "default": "foliage",
+          "enum": [
+            "foliage",
+            "bare"
+          ],
+          "title": "Frame",
+          "type": "string"
+        },
+        "snow_cap": {
+          "$ref": "#/$defs/SnowCap",
+          "default": {
+            "depth_px": 0,
+            "alpha": 0.0
+          }
+        }
+      },
+      "title": "SeasonTint",
+      "type": "object"
+    },
+    "SizeFrames": {
+      "additionalProperties": false,
+      "properties": {
+        "variants": {
+          "items": {
+            "$ref": "#/$defs/Frame"
+          },
+          "minItems": 1,
+          "title": "Variants",
+          "type": "array"
+        },
+        "bare": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Frame"
+          },
+          "title": "Bare",
+          "type": "array"
+        }
+      },
+      "required": [
+        "variants"
+      ],
+      "title": "SizeFrames",
+      "type": "object"
+    },
+    "SnowCap": {
+      "additionalProperties": false,
+      "properties": {
+        "depth_px": {
+          "default": 0,
+          "maximum": 16,
+          "minimum": 0,
+          "title": "Depth Px",
+          "type": "integer"
+        },
+        "alpha": {
+          "default": 0,
+          "maximum": 0.7,
+          "minimum": 0,
+          "title": "Alpha",
+          "type": "number"
+        }
+      },
+      "title": "SnowCap",
+      "type": "object"
+    },
+    "Species": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "habit": {
+          "enum": [
+            "deciduous",
+            "evergreen",
+            "shrub"
+          ],
+          "title": "Habit",
+          "type": "string"
+        },
+        "sizes": {
+          "additionalProperties": {
+            "$ref": "#/$defs/SizeFrames"
+          },
+          "propertyNames": {
+            "enum": [
+              "small",
+              "large"
+            ]
+          },
+          "title": "Sizes",
+          "type": "object"
+        },
+        "stump": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Frame"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "seasons": {
+          "additionalProperties": {
+            "$ref": "#/$defs/SeasonTint"
+          },
+          "propertyNames": {
+            "enum": [
+              "spring",
+              "summer",
+              "autumn",
+              "winter"
+            ]
+          },
+          "title": "Seasons",
+          "type": "object"
+        },
+        "map_canopy": {
+          "minLength": 1,
+          "title": "Map Canopy",
+          "type": "string"
+        },
+        "log_material": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Log Material"
+        }
+      },
+      "required": [
+        "id",
+        "habit",
+        "sizes",
+        "stump",
+        "seasons",
+        "map_canopy",
+        "log_material"
+      ],
+      "title": "Species",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "species": {
+      "additionalProperties": {
+        "$ref": "#/$defs/Species"
+      },
+      "minProperties": 1,
+      "title": "Species",
+      "type": "object"
+    },
+    "map_canopies": {
+      "additionalProperties": {
+        "pattern": "^art/(?!.*\\.\\.)(?!.*//)[A-Za-z0-9_./-]+\\.png$",
+        "type": "string"
+      },
+      "title": "Map Canopies",
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "species",
+    "map_canopies"
+  ],
+  "title": "SpeciesDocument",
+  "type": "object"
+}
