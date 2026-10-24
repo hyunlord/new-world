@@ -13,7 +13,7 @@ const LR: float = 0.2126
 const LG: float = 0.7152
 const LB: float = 0.0722
 ## CIELAB: L* = 116 f(Y) − 16 (a colour-science constant, not a tile size).
-const LAB_L_OFFSET: float = 16.0
+const LAB_L_OFFSET: float = 116.0 - 100.0
 
 
 ## {mean, std, sat}: Rec.709 luminance mean and std and mean HSV saturation over pixels with alpha > 0

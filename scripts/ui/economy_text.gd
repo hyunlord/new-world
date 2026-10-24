@@ -31,10 +31,6 @@ const ITEM_FMT_KEYS: Array[String] = ["ITEM_LOG_FMT", "ITEM_FIREWOOD_FMT", "ITEM
 ## Bridge item names by `ItemKind::code` (discovery conditions name items by them).
 const ITEM_NAMES: Array[String] = ["log", "firewood", "stone", "flint", "flint_blade", "stone_axe", "hide", "clay", "raw_pot", "clay_pot", "ground_axe",
 	"meat", "cured_hide", "hide_wrap", "fur_cloak", "spear", "wolf_hide"]
-## The overlay sprite per item kind (logs use the log piles by count).
-const ITEM_SPRITES: Array[String] = ["logs_s", "item_firewood", "item_stone", "item_flint", "item_blade", "item_axe", "item_hide",
-	"item_clay", "item_raw_pot", "item_clay_pot", "item_ground_axe",
-	"carcass", "item_cured_hide", "item_hide_wrap", "item_fur_cloak", "item_spear", "item_wolf_hide"]
 const MATERIAL_KEYS: Dictionary = {
 	"flint": "MATERIAL_FLINT", "chert": "MATERIAL_CHERT", "granite": "MATERIAL_GRANITE",
 	"limestone": "MATERIAL_LIMESTONE", "oak": "MATERIAL_OAK", "clay": "MATERIAL_CLAY",

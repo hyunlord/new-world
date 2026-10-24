@@ -111,7 +111,8 @@ func _run() -> void:
 		people.append([tile.x, tile.y])
 		detail.append({"agent_id": int(person.get("agent_id")), "tile": [tile.x, tile.y],
 			"layer_tile": [(person.get("tile") as Vector2i).x, (person.get("tile") as Vector2i).y],
-			"frame": str(person.get("frame")), "bed": [bed.x, bed.y]})
+			"frame": str(person.get("pose")), "bed": [bed.x, bed.y],
+			"look": int(person.get("look")), "variant": int(person.get("variant"))})
 	people.sort()
 	detail.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a["agent_id"]) < int(b["agent_id"]))
 	var out: Dictionary = {"seed": _seed, "tick": _now(world), "count": people.size(), "people": people,
@@ -144,7 +145,7 @@ func _all_settled(agents: Node) -> bool:
 		return false
 	for key: Variant in persons.keys():
 		var person: Node2D = persons[key] as Node2D
-		if str(person.get("frame")) != "sleep" and float(person.get("elapsed")) < float(person.get("duration")):
+		if str(person.get("activity")) != "sleep" and float(person.get("elapsed")) < float(person.get("duration")):
 			return false
 	return true
 

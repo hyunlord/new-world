@@ -10,7 +10,8 @@
 #   3. tools/v8/renderer_agreement.gd boots res://scenes/main.tscn headless, replays those concrete commands
 #      through the bridge's cmd_* methods, advances to tick 900 and dumps the tiles of the people the agent
 #      layer draws;
-#   4. the two multisets of tiles are compared.
+#   4. the two multisets of tiles are compared, and (M-ART2) every person's look and face variant by AgentId
+#      (appearance agreement: the text renderer's `appearance` rows = what the agent layer draws).
 # Prints `RENDERER_AGREEMENT PASS n=<people>` (exit 0) or `RENDERER_AGREEMENT FAIL <reason>` with the
 # differences (exit 1). Logs and intermediate files go to <log_dir> (keep it outside the repository).
 # RENDERER_AGREEMENT_TICK=T checks tick T instead of 900 (T > 360, after the U-script orders; at most 1440).
@@ -81,8 +82,18 @@ only_text = sorted((a - b).elements())
 only_godot = sorted((b - a).elements())
 if only_text or only_godot:
     problems.append(f"text {n} people, godot {sum(b.values())}; only in text {only_text}; only in godot {only_godot}")
+# M-ART2 (goal 3.2): appearance agreement — every person's look and face variant drawn by the Godot agent layer equal
+# the text renderer's (both from sim_bridge::ffi::collect_appearance), by AgentId.
+looks_text = {int(r["agent_id"]): (int(r["look"]), int(r["variant"])) for r in text.get("appearance", [])}
+looks_godot = {int(r["agent_id"]): (int(r["look"]), int(r["variant"])) for r in godot.get("detail", []) if "look" in r}
+if not looks_text:
+    problems.append("no appearance rows in the text renderer's people JSON")
+appearance_bad = sorted(k for k in set(looks_text) | set(looks_godot) if looks_text.get(k) != looks_godot.get(k))
+if appearance_bad:
+    problems.append(f"appearance differs for {len(appearance_bad)} people: " + ", ".join(
+        f"{k}: text {looks_text.get(k)} godot {looks_godot.get(k)}" for k in appearance_bad[:5]))
 if problems:
     print("RENDERER_AGREEMENT FAIL " + "; ".join(problems))
     raise SystemExit(1)
-print(f"RENDERER_AGREEMENT PASS n={n} tiles={len(a)} tick={tick}")
+print(f"RENDERER_AGREEMENT PASS n={n} tiles={len(a)} tick={tick} appearance={len(looks_text)} agree")
 PY

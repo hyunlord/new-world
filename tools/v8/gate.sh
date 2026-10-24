@@ -2,7 +2,7 @@
 # usage: gate.sh <log_dir> [--base-data DIR]
 #
 # V8 gate (V8-0 goal 11.1; M1 11.3 added steps 17-20; V8-PLAY 2.3 added step 21; M1.5 10.4 added steps
-# 22-25; M3 added steps 26-27; M4 added step 28; M5 added step 29; M5.5 added step 30). Thirty steps, each logged to <log_dir>/<step>.log
+# 22-25; M3 added steps 26-27; M4 added step 28; M5 added step 29; M5.5 added step 30; M-ART2 added steps 31-34). Thirty-four steps, each logged to <log_dir>/<step>.log
 # with its start time, duration and exit code in <log_dir>/gate.txt. The
 # gate passes only when every step except `perf` and `nav_bench` (report only) exits 0.
 #    1 fmt               cargo fmt --all -- --check
@@ -52,6 +52,14 @@
 #   30 neighbours        the neighbours fixture (M5.5 goal §11): colony seeds 0..2 × 48 days with
 #                        tools/v8/m55_u_script.json, scored by docs/v8/m5_5/m55_score.py --neighbours (two
 #                        neighbours, waves 1 and 2 in their windows and accepted, a trade, ledger and reservations exact)
+#   31 art_manifest      tools/v8/art_import.py --verify: assets/v8art/ = its manifest (hashes, sizes, budget,
+#                        no unlisted file, every binding and material texture resolves; M-ART2 §3.3)
+#   32 resolver_parity   material_resolver.gd = the art line's resolve.py on tools/v8/resolver_parity_fixture.json
+#   33 extensibility_grep no content id literal and no 16-px tile size in scripts/world/** (ADR 0033), the mask and
+#                        import tests (tools/v8/test_mart2_extensibility.py, test_art_masks.py, test_art_import.py)
+#   34 mart2_render      tools/v8/mart2_ground_test.gd and mart2_people_test.gd headless (chunk bake hash, edges,
+#                        banks, tone, one-chunk dig rebake, data-only wall; appearance, anchors, LOD, params reload)
+#   Since M-ART2 step 23 (renderer_agreement) also checks appearance: every person's look and face variant.
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
@@ -132,6 +140,13 @@ grep -E '^STORY' "$LOG/story.log" | sed 's/^/   /' >> "$SUMMARY"
 # in and out) and reservations exact every tick.
 step 30 neighbours bash -c 'rust/target/release/worldsim_probe --scene colony --seeds 0..2 --days 48 --workers 2 --commands tools/v8/m55_u_script.json --out "$0/neighbours" > /dev/null && python3 docs/v8/m5_5/m55_score.py --neighbours "$0/neighbours/summary.json"' "$LOG"
 grep -E '^NEIGHBOURS' "$LOG/neighbours.log" | sed 's/^/   /' >> "$SUMMARY"
+# M-ART2 (goal §11): the imported art, the material resolver, the extensibility grep and the renderer tests.
+step 31 art_manifest python3 tools/v8/art_import.py --verify
+step 32 resolver_parity bash -c 'bash tools/v8/run_bounded.sh 300 "$GODOT_BIN" --headless --path . --script res://tools/v8/resolver_parity.gd -- "$0/resolver_godot.json" && python3 tools/v8/resolver_parity.py --check "$0/resolver_godot.json"' "$LOG"
+step 33 extensibility_grep python3 -m unittest tools/v8/test_mart2_extensibility.py tools/v8/test_art_masks.py tools/v8/test_art_import.py
+step 34 mart2_render bash -c 'for t in mart2_ground_test mart2_people_test; do bash tools/v8/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --script res://tools/v8/$t.gd > "$0/$t.out" 2>&1; grep -E "^MART2_(GROUND|PEOPLE) (PASS|FAIL)|_DONE" "$0/$t.out"; grep -q "_DONE failures=0" "$0/$t.out" || exit 1; ! grep -q "SCRIPT ERROR" "$0/$t.out" || { grep "SCRIPT ERROR" "$0/$t.out" | head -5; exit 1; }; done' "$LOG"
+grep -E 'PASS|FAIL' "$LOG/resolver_parity.log" | tail -1 | sed 's/^/   /' >> "$SUMMARY"
+grep -cE '^MART2_(GROUND|PEOPLE) PASS' "$LOG/mart2_render.log" | awk '{print "   mart2_render checks passed", $1}' >> "$SUMMARY"
 echo "finished $(date '+%Y-%m-%d %H:%M:%S %Z') status $status" >> "$SUMMARY"
 cat "$SUMMARY"
 exit "$status"

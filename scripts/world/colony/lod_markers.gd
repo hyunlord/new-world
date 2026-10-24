@@ -11,6 +11,8 @@ extends Node2D
 
 const INK: Color = Color8(35, 29, 23)
 const GLYPH_PX: int = 14
+## Floats per MultiMesh instance in the buffer: a 2D transform (8), a colour (4), custom data (4).
+const FLOATS_PER_INSTANCE: int = 16
 ## Glyph bitmaps, GLYPH_PX × GLYPH_PX: '#' ink, 'a' light, 'b' mid, '.' empty. Order = glyph index: work, carry, sleep, flee.
 const GLYPHS: Array = [
 	["..........###.", ".........#aaa#", "........#aaaa#", ".......#aaaa#.", "......##bb##..", ".....#bb#.....", "....#bb#......", "...#bb#.......", "..#bb#........", ".#bb#.........", "#bb#..........", "#b#...........", ".#............", ".............."],
@@ -128,11 +130,11 @@ func show_markers(points: PackedVector2Array, colours: PackedColorArray, glyph_i
 	var scale: float = float(marker_px) / maxf(zoom, 0.01)
 	var n: int = mini(points.size(), colours.size())
 	var buf: PackedFloat32Array = PackedFloat32Array()
-	buf.resize(n * 16)
+	buf.resize(n * FLOATS_PER_INSTANCE)
 	for i: int in n:
 		var p: Vector2 = points[i]
 		var c: Color = colours[i]
-		var o: int = i * 16
+		var o: int = i * FLOATS_PER_INSTANCE
 		buf[o] = scale
 		buf[o + 3] = p.x
 		buf[o + 5] = scale

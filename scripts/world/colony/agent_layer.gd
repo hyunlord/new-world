@@ -35,6 +35,8 @@ const TARGET_JOB: int = 9
 const MOOD_KEY: Key = KEY_M
 const INK: Color = Color8(35, 29, 23)
 const BADGE: Color = Color(0.45, 0.78, 0.36)
+## The contact shadow's colour (the compositor's (16, 15, 12)).
+const SHADOW_RGB: Color = Color8(16, 15, 12)
 const FLEE_MARK: Color = Color(0.94, 0.75, 0.25)
 const LodMarkers = preload("res://scripts/world/colony/lod_markers.gd")
 ## Activity → glyph index of lod_markers.gd (axe working, log carrying, zz sleeping, ! fleeing).
@@ -146,7 +148,7 @@ func _make_shadow() -> void:
 			var dx: float = (x + 0.5 - w * 0.5) / (w * 0.5)
 			var dy: float = (y + 0.5 - h * 0.5) / (h * 0.5)
 			if dx * dx + dy * dy <= 1.0:
-				img.set_pixel(x, y, Color(16.0 / 255.0, 15.0 / 255.0, 12.0 / 255.0, alpha))
+				img.set_pixel(x, y, Color(SHADOW_RGB, alpha))
 	_shadow_tex = ImageTexture.create_from_image(img)
 
 

@@ -94,10 +94,12 @@
 #          [--m5-set --load <abs save file> [--m5-shots 1,2,3,4,5,6,7,8]] [--m55-set [<abs dir>]]
 extends SceneTree
 
-const TILE: float = 16.0
+## The world scale of the colony view (scripts/world/colony/view.gd `TILE`; 64 since M-ART2).
+const TILE: float = 64.0
 const OverlaySuffix = preload("res://scripts/world/colony/overlay_layer.gd")
 const ChronicleText = preload("res://scripts/ui/chronicle_text.gd")
 const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
+const Mart2Shots = preload("res://tools/v8/mart2_shots.gd")
 
 var _out: String = ""
 var _tick: int = 1440
@@ -111,6 +113,8 @@ var _m55_set: bool = false
 var _m5_shots: PackedStringArray = PackedStringArray(["1", "2", "3", "4", "5", "6", "7", "8"])
 var _load: String = ""
 var _record: Dictionary = {}
+var _mart2_set: bool = false
+var _mart2_saves: Dictionary = {}
 
 
 func _init() -> void:
@@ -140,6 +144,10 @@ func _init() -> void:
 			_m5_shots = args[i + 1].split(",")
 		elif args[i] == "--load" and i + 1 < args.size():
 			_load = args[i + 1]
+		elif args[i] == "--mart2-set":
+			_mart2_set = true
+		elif args[i] in ["--day", "--night", "--winter"] and i + 1 < args.size():
+			_mart2_saves[args[i].substr(2)] = args[i + 1]
 	call_deferred("_run")
 
 
@@ -174,6 +182,15 @@ func _run() -> void:
 		return
 	if _m55_set:
 		await _m55_shots(main, world, camera)
+		return
+	if _mart2_set:
+		if _mart2_saves.size() != 3:
+			push_error("capture: --mart2-set needs --day, --night and --winter save files")
+			quit(2)
+			return
+		await Mart2Shots.new().run(self, main, _mart2_saves, _out)
+		print("MART2_SET_DONE")
+		quit(0)
 		return
 	var now: int = int((world.call("get_time_snapshot") as Dictionary).get("tick", 0))
 	if _tick > now:
