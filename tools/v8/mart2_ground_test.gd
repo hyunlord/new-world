@@ -25,12 +25,13 @@
 #      off the baked pixels themselves trace the quarter circle at all four corners of a 2 × 2 pond (±2 px), and a
 #      baker that has already made canopy masks (¼×) bakes a river chunk byte-identically to a fresh baker (the
 #      mask cache keeps shore, hill and canopy masks apart; review finding 1);
-#   8. water: the uploaded water texture is the 05 texture itself (luminance std = the source's, ≥ 0.06), the lift
-#      clips < 1 % of its pixels; on every seed-0 chunk with water, the baked land beside water against the lifted
-#      water mean differs by ≥ 0.10 luminance at full night (day difference × the night multiplier's weakest
-#      channel) and ≥ 0.12 turns of hue, by day, in winter and in drought (min values printed); the ford stones lie on
+#   8. water: the uploaded water texture is the 05 texture itself (luminance std = the source's, ≥ 0.06), bounded attenuation
+#      clips < 1 % of its pixels; on every seed-0 chunk with water, the baked land beside water against the darkened
+#      water mean is lower by ≥ 0.10 luminance at full night (day difference × the night multiplier's weakest
+#      channel, also checked after full RGB night tint) and ≥ 0.12 turns of hue in both day and night, across
+#      summer, winter and drought (min values printed); the ford stones lie on
 #      water pixels of the rounded shore; no run of more than 24 identical luminance steps along any water edge of
-#      the river chunks (the STRUCT instrument on the chunk composited over the lifted water).
+#      the river chunks (the STRUCT instrument on the chunk composited over the darkened water).
 #   Prints one MART2_GROUND line per check and MART2_GROUND_DONE failures=N; exits 1 on any failure.
 #   `godot --headless --path . --script res://tools/v8/mart2_ground_test.gd [-- --write]`
 #   Add `-- --rendered` without --headless for GPU readbacks at 2×, 1×, ½× and ¼×: source saturation must survive
@@ -302,7 +303,7 @@ func _check_rendered_terrain(main: Node, layer: Node, map: GroundBaker.GroundMap
 				if g < 0 or not colours.has(g):
 					continue
 				var land: Color = colours[g]
-				var luminance_delta: float = absf(water.get_luminance() - land.get_luminance())
+				var luminance_delta: float = (land.get_luminance() - water.get_luminance())
 				var hue_delta: float = _hue_distance(water, land)
 				_check("water_contrast_%s_%s_%.2fx" % [ids[g], light_name, zoom], water.a > 0.0 and land.a > 0.0 and water.s > 0.10 and luminance_delta >= minimum_luminance and hue_delta >= minimum_hue, "water Y=%.4f H=%.4f; land Y=%.4f H=%.4f; deltaY %.4f ≥%.3f, deltaH %.4f ≥%.3f turns" % [water.get_luminance(), water.h, land.get_luminance(), land.h, luminance_delta, minimum_luminance, hue_delta, minimum_hue])
 
@@ -496,10 +497,11 @@ func _check_tone(layer: Node, _map: GroundBaker.GroundMap, c: Vector2i, img: Ima
 
 
 func _check_banks(layer: Node, map: GroundBaker.GroundMap, size: int) -> void:
-	# The first river tile with land to its west, its chunk baked.
+	# Cartesian width measurements require a straight shoreline through all three neighboring rows.
+	var baker: GroundBaker = layer.call("baker")
 	for y: int in map.height:
 		for x: int in range(1, map.width):
-			if posmod(x, size) == 0 or map.at(x, y) != GroundBaker.WATER or map.at(x - 1, y) < 0 or map.is_crisp(x - 1, y) or map.at(x + 1, y) != GroundBaker.WATER:
+			if posmod(x, size) == 0 or not _straight_bank(baker, map, x, y):
 				continue
 			var c: Vector2i = Vector2i(floori(float(x) / size), floori(float(y) / size))
 			layer.call("bake_chunk_now", c)
@@ -527,7 +529,17 @@ func _check_banks(layer: Node, map: GroundBaker.GroundMap, size: int) -> void:
 			inner /= 40.0 * 12.0
 			_check("water_bank", near > 40 and near < 360 and far == 0 and edge < inner * 0.95, "river tile %s: %d opaque bank px in the 10-px band, %d beyond it; land edge band luminance %.3f vs interior %.3f (ink)" % [Vector2i(x, y), near, far, edge, inner])
 			return
-	_check("water_bank", false, "no river tile with land to its west")
+	_check("water_bank", false, "no straight 3x3 west-land/east-water shoreline fixture")
+
+
+func _straight_bank(baker: GroundBaker, map: GroundBaker.GroundMap, x: int, y: int) -> bool:
+	for dy: int in [-1, 0, 1]:
+		if baker._water_class(map, x - 1, y + dy) != 0:
+			return false
+		for dx: int in [0, 1]:
+			if baker._water_class(map, x + dx, y + dy) != 1:
+				return false
+	return true
 
 
 func _check_dig(layer: Node, world: Node, map: GroundBaker.GroundMap, size: int) -> void:
@@ -673,6 +685,9 @@ func _synthetic_baker() -> GroundBaker:
 func _check_shores_synthetic() -> void:
 	var b: GroundBaker = _synthetic_baker()
 	var r: float = float(ArtData.param("water.shore_radius_px", 22))
+	# Regression from seed0 tile(81,1), pixel(20,51): the old Cartesian far band intersects this rounded bank.
+	var corner_sample: float = GroundBaker.shore_field(1, 20.5, 12.5, r)
+	_check("rounded_corner_sample_inside_bank", corner_sample < 0.0 and corner_sample > -float(b.bank_px), "radius %.0f corner sample SDF %.6f belongs inside the unchanged %d-px bank" % [r, corner_sample, b.bank_px])
 	var m: GroundBaker.GroundMap = GroundBaker.GroundMap.new()
 	m.setup(8, 8)
 	m.ground.fill(0)
@@ -872,21 +887,32 @@ func _check_water(layer: Node, world: Node, map: GroundBaker.GroundMap, size: in
 					has = has or map.at(tx, ty) == GroundBaker.WATER
 			if has:
 				chunks.append(Vector2i(cx, cy))
+	var night_colour: Color = Daylight.night_colour()
 	var weakest: float = float(layer.call("night_weakest"))
+	# GPU run 1's half-zoom rock RGB: the blue night tint rotates this warm, low-saturation sample.
+	var rock_sample: Color = Color(0.2993, 0.2826, 0.2513)
+	var old_water: Color = Color(0.015, 0.05, 0.12)
+	# Freeze the rejected lighting as well as its palette: current night tint must not rescue this control.
+	var old_night_colour: Color = Color(0.473, 0.517, 0.594)
+	var old_night_gap: float = _hue_distance(old_water * old_night_colour, rock_sample * old_night_colour)
+	_check("water_night_hue_negative_control", _hue_distance(old_water, rock_sample) >= 0.12 and old_night_gap < 0.12, "historical palette/lighting passes daytime hue but fails actual RGB night hue: %.4f <0.12" % old_night_gap)
 	for tone: String in ["day", "winter", "drought"]:
 		if tone != "day":
 			layer.call("force_tone", tone)
 		var min_night: float = INF
 		var min_hue: float = INF
+		var hue_min_sample: String = ""
+		var day_hue_range: Vector2 = Vector2(INF, -INF)
+		var night_hue_range: Vector2 = Vector2(INF, -INF)
 		var clipped: float = 0.0
 		var measured: int = 0
 		var data: PackedByteArray = up_img.get_data()
 		for c: Vector2i in chunks:
 			layer.call("bake_chunk_now", c)
 			var img: Image = layer.call("chunk_image", c)
-			var lift: Vector3 = ((layer.call("water_lifts") as Dictionary).get(c, [Vector3.ZERO]) as Array)[0]
+			var gain: Vector3 = layer.call("water_gain")
 			var water: Color = Tone.mean_rgb(up_img)
-			water = Color(clampf(water.r + lift.x, 0, 1), clampf(water.g + lift.y, 0, 1), clampf(water.b + lift.z, 0, 1))
+			water = Color(clampf(water.r * gain.x, 0, 1), clampf(water.g * gain.y, 0, 1), clampf(water.b * gain.z, 0, 1))
 			# Land pixels of tiles beside water (8-neighbourhood), read from the baked chunk itself.
 			var by_ground: Dictionary = {}
 			for ty: int in range(c.y * size, c.y * size + size):
@@ -909,16 +935,33 @@ func _check_water(layer: Node, world: Node, map: GroundBaker.GroundMap, size: in
 					sum += Vector3(col.r, col.g, col.b)
 				sum /= float((by_ground[g] as Array).size())
 				var land: Color = Color(sum.x, sum.y, sum.z)
-				min_night = minf(min_night, absf(water.get_luminance() - land.get_luminance()) * weakest)
-				var dh: float = absf(water.h - land.h)
-				min_hue = minf(min_hue, minf(dh, 1.0 - dh))
+				var night_land: Color = land * night_colour
+				var night_water: Color = water * night_colour
+				min_night = minf(min_night, (land.get_luminance() - water.get_luminance()) * weakest)
+				min_night = minf(min_night, night_land.get_luminance() - night_water.get_luminance())
+				var day_gap: float = _hue_distance(water, land)
+				var night_gap: float = _hue_distance(night_water, night_land)
+				var sample_gap: float = minf(day_gap, night_gap)
+				var ground_ids: Array = layer.get("ground_ids")
+				var class_id: String = str(ground_ids[g]) if g < ground_ids.size() else str(g)
+				var sample: String = "tone=%s chunk=%s class=%s day_land=(%.8f,%.8f,%.8f) night_land=(%.8f,%.8f,%.8f) day_water=(%.8f,%.8f,%.8f) night_water=(%.8f,%.8f,%.8f) dayH=%.6f nightH=%.6f waterH=%.6f/%.6f gap=%.6f/%.6f" % [tone, c, class_id, land.r, land.g, land.b, night_land.r, night_land.g, night_land.b, water.r, water.g, water.b, night_water.r, night_water.g, night_water.b, land.h, night_land.h, water.h, night_water.h, day_gap, night_gap]
+				if "--water-hue-diagnostics" in OS.get_cmdline_user_args():
+					print("MART2_WATER_SAMPLE ", sample)
+				if sample_gap < min_hue:
+					min_hue = sample_gap
+					hue_min_sample = sample
+				day_hue_range.x = minf(day_hue_range.x, land.h)
+				day_hue_range.y = maxf(day_hue_range.y, land.h)
+				night_hue_range.x = minf(night_hue_range.x, night_land.h)
+				night_hue_range.y = maxf(night_hue_range.y, night_land.h)
 				measured += 1
 			var over: int = 0
 			for i: int in range(0, data.size(), 4):
-				if data[i] / 255.0 + lift.x > 1.0 or data[i + 1] / 255.0 + lift.y > 1.0 or data[i + 2] / 255.0 + lift.z > 1.0:
+				if data[i] / 255.0 * gain.x > 1.0 or data[i + 1] / 255.0 * gain.y > 1.0 or data[i + 2] / 255.0 * gain.z > 1.0:
 					over += 1
 			clipped = maxf(clipped, float(over) / (data.size() / 4.0))
-		_check("water_contrast_%s" % tone, measured > 0 and min_night >= 0.10 and min_hue >= 0.12 and clipped < 0.01, "%d chunks with water, %d land classes beside water: min luminance difference at full night %.4f (≥ 0.10), min hue distance %.4f turns (≥ 0.12), lifted texture clipped %.4f (< 0.01)" % [chunks.size(), measured, min_night, min_hue, clipped])
+		print("MART2_WATER_EXTREMA tone=%s day_land_hue=%s night_land_hue=%s minimum: %s" % [tone, day_hue_range, night_hue_range, hue_min_sample])
+		_check("water_contrast_%s" % tone, measured > 0 and min_night >= 0.10 and min_hue >= 0.12 and clipped < 0.01, "%d chunks with water, %d land classes beside water: min luminance difference at full night %.4f (≥ 0.10), min day/night hue distance %.4f turns (≥ 0.12), attenuated texture clipped %.4f (< 0.01)" % [chunks.size(), measured, min_night, min_hue, clipped])
 	layer.call("force_tone", "day")
 	_check_fords(layer, world, map, size)
 	_check_water_steps(layer, map, size, chunks, up_img)
@@ -957,7 +1000,7 @@ func _check_water_steps(layer: Node, map: GroundBaker.GroundMap, size: int, chun
 	for c: Vector2i in chunks.slice(0, 6):
 		layer.call("bake_chunk_now", c)
 		var img: Image = (layer.call("chunk_image", c) as Image).duplicate()
-		var lift: Vector3 = ((layer.call("water_lifts") as Dictionary).get(c, [Vector3.ZERO]) as Array)[0]
+		var gain: Vector3 = layer.call("water_gain")
 		var x0: int = c.x * size
 		var y0: int = c.y * size
 		for y: int in img.get_height():
@@ -965,7 +1008,7 @@ func _check_water_steps(layer: Node, map: GroundBaker.GroundMap, size: int, chun
 				var col: Color = img.get_pixel(x, y)
 				if col.a < 1.0:
 					var w: Color = water.get_pixel(posmod(x0 * TILE + x, p), posmod(y0 * TILE + y, p))
-					w = Color(clampf(w.r + lift.x, 0, 1), clampf(w.g + lift.y, 0, 1), clampf(w.b + lift.z, 0, 1))
+					w = Color(clampf(w.r * gain.x, 0, 1), clampf(w.g * gain.y, 0, 1), clampf(w.b * gain.z, 0, 1))
 					img.set_pixel(x, y, w.lerp(Color(col, 1.0), col.a))
 		for vertical: bool in [true, false]:
 			for line: int in range(1, size):
@@ -985,4 +1028,4 @@ func _check_water_steps(layer: Node, map: GroundBaker.GroundMap, size: int, chun
 						var start: Vector2i = Vector2i(line * TILE, run_start * TILE) if vertical else Vector2i(run_start * TILE, line * TILE)
 						worst = maxi(worst, _longest_step_run(img, start, (along - run_start) * TILE, vertical))
 						run_start = -1
-	_check("water_edges_not_square", runs > 0 and worst <= 24, "%d water-edge runs in %d river chunks (composited over the lifted water): longest identical luminance step run %d px (bar 24)" % [runs, mini(6, chunks.size()), worst])
+	_check("water_edges_not_square", runs > 0 and worst <= 24, "%d water-edge runs in %d river chunks (composited over the darkened water): longest identical luminance step run %d px (bar 24)" % [runs, mini(6, chunks.size()), worst])

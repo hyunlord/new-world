@@ -8,7 +8,7 @@
 #   are cached per (side set, 4 × 4 tile phase). Only native Image ops run per chunk (MART2_DECISIONS D4).
 # Shores (M-ART2.1 §2.1, MART21_DECISIONS D2): the water outline is the zero level of a signed distance field of the
 #   water tiles with every corner rounded — the opening and closing of the tile union by a disc of radius
-#   `water.shore_radius_px` (22): a straight shore stays on the tile edge, a 90° step becomes a quarter circle. As the
+#   `water.shore_radius_px` (32): a straight shore stays on the tile edge, a 90° step becomes a quarter circle. As the
 #   radius is under half a tile, a pixel's field depends only on the 2 × 2 tiles around its tile quadrant's corner, so
 #   it is evaluated in closed form (straight lines and rounded quadrants) per (quadrant, 2 × 2 pattern, noise phase)
 #   and cached as 32 × 32 masks; the chunk applies them with native blits (a two-tile apron is implicit: every tile
@@ -92,7 +92,7 @@ var ink_displace: int = 4
 var noise_seed: int = 5005
 var noise_period: int = 256
 ## Shore and hill-edge rounding (render_params `water.shore_radius_px`, `water.contour_soft_px`, `hill.edge_radius_px`).
-var shore_radius: float = 22.0
+var shore_radius: float = 32.0
 var contour_soft: float = 6.0
 var hill_radius: float = TILE * 0.25
 ## Quadrant masks: key → [land mask, water mask, ink source, ink mask, has ink, any land, any water].
@@ -130,7 +130,7 @@ func configure(ground: Dictionary, water: Dictionary, hill: Dictionary = {}, tre
 		ink_dark = Vector2(float(dark[0]), float(dark[1]))
 	# The rounding stays inside a tile quadrant (the closed form below assumes it), so radii are clamped to it.
 	var half: float = float(TILE) * 0.5
-	shore_radius = clampf(float(water.get("shore_radius_px", shore_radius)), 0.0, half - 1.0)
+	shore_radius = clampf(float(water.get("shore_radius_px", shore_radius)), 0.0, half)
 	contour_soft = clampf(float(water.get("contour_soft_px", contour_soft)), 0.0, half * 0.5)
 	hill_radius = clampf(float(hill.get("edge_radius_px", hill_radius)), 0.0, half - 1.0)
 	canopy_radius = clampf(float(trees.get("canopy_radius_px", canopy_radius)), 0.0, half - 1.0)
@@ -359,12 +359,12 @@ func shore_mask_count() -> int:
 	return _shore.size()
 
 
-## Shore class of a tile: 1 water, 0 open land, −1 neither (crisp land, outside the map).
+## Shore class: 1 water, 0 natural land including rock, −1 constructed crisp land/outside.
 func _water_class(map: GroundMap, x: int, y: int) -> int:
 	var g: int = map.at(x, y)
 	if g == WATER:
 		return 1
-	if g < 0 or map.is_crisp(x, y):
+	if g < 0 or (map.is_crisp(x, y) and not map.is_rock(x, y)):
 		return -1
 	return 0
 
@@ -464,6 +464,7 @@ func _round_edges(map: GroundMap, img: Image, x0: int, y0: int, per: int) -> voi
 			if g < 0:
 				continue
 			if rock[i] == 1:
+				wc[at] = 0
 				rc[at] = 1
 				any_r = true
 			elif crisp[i] == 0:

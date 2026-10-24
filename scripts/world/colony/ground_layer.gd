@@ -12,16 +12,12 @@
 # Rebaking: when `get_space`'s version moves, the tiles whose ground, crispness or wall changed mark their chunks
 #   (and a neighbour chunk when the tile is on its border, since blends read one tile across) and only those rebake;
 #   a season or drought change and an F12 params reload rebake every cached chunk.
-# Tone: ground textures are resampled to `ground.texture_period_px`, seasoned (winter, drought), snowed (winter)
-#   and capped (tone.gd `cap_ground`, the ENV1 targets) once per tone state. Below 1× a data-driven per-terrain tint
-#   is applied by the chunk shader after texture reduction; neither that tint nor the ground cap touches wall strips,
-#   tree sprites or canopies (MART2 D19).
-# Water (M-ART2.1 §2.1, MART21_DECISIONS D3): the 05 water texture is drawn with its own texture (no recolour); each
-#   chunk's shader adds a lift to it — a grey offset, and a hue offset only when the hue would sit too close — so the
-#   water's mean stays `water.minimum_land_luminance_difference` above the mean of every land ground that touches
-#   water in that chunk, at full night (the gap is divided by the night multiplier's weakest channel) and at every
-#   zoom's map tint, and its hue at least `water.minimum_land_hue_distance` turns away. Recomputed per tone (winter
-#   snow, drought) because the land means change with it.
+# Tone: ground textures are resampled, season-toned and capped once per tone state, then given a neutral
+#   luminance floor after material value factors. The floor makes dark-water night contrast feasible (M-UX D9).
+#   Below 1× a data-driven terrain tint follows reduction; standing sprites remain independent.
+# Water: source pixels remain unchanged on upload. Bounded channel attenuation produces the configured dark-blue
+#   mean without clipping; water_lift reports signed land-minus-water contrast at every map tint for the gate.
+# Snow: a world-space shader field (>=512 px, alpha<=0.45) with cached tree-base/wall occupancy masks.
 # Canopy (M-ART2.1 §2.2, ¼× only, `trees.quarter_canopy`): the tree tiles (get_trees, species by tree_layer.gd's hash)
 #   are a GroundMap layer; a chunk baked at texture factor 4 carries the canopy mass per species in its season
 #   (the season's Lab shift per pixel, as the 1× sprites get it — a deciduous winter uses its bare frame's mean colour
@@ -367,7 +363,7 @@ func _prepare_grounds() -> void:
 		if _material != null:
 			_material.set_shader_parameter("water_tex", _water_tex)
 			_material.set_shader_parameter("water_period", float(water.get_width()))
-			var rgb: Array = ArtData.param("water.map_mode_colour", [0.42, 0.62, 0.76])
+			var rgb: Array = ArtData.param("water.map_mode_colour", [0.015, 0.05, 0.12])
 			if rgb.size() == 3:
 				_material.set_shader_parameter("water_colour", Vector3(float(rgb[0]), float(rgb[1]), float(rgb[2])))
 			_material.set_shader_parameter("water_map_tint_strength", float(ArtData.param("water.map_mode_tint_strength", 0.3)))
@@ -375,7 +371,7 @@ func _prepare_grounds() -> void:
 
 ## The weakest channel of the full-night multiplier: a luminance difference shrinks at most by this factor at night.
 static func night_weakest() -> float:
-	var night: Array = ArtData.param("light.night_tint", [0.86, 0.94, 1.08])
+	var night: Array = ArtData.param("light.night_tint", [0.86, 0.94, 0.96])
 	var weakest: float = clampf(float(ArtData.param("light.night_value", 0.55)), 0.01, 1.0)
 	if night.size() == 3:
 		weakest *= minf(1.0, minf(float(night[0]), minf(float(night[1]), float(night[2]))))
@@ -389,8 +385,8 @@ func _strengths() -> Array[float]:
 	return [0.0, clampf(float(strengths.get("0.5", 0.0)) * winter, 0.0, 1.0), clampf(float(strengths.get("0.25", 0.0)) * winter, 0.0, 1.0)]
 
 
-## The water lift of chunk `c` (D3): [lift (Vector3), min luminance difference by day, min hue distance] against
-## every land ground touching water in the chunk, over the three zoom tints; the zero lift when no land touches water.
+## Compatibility report: [zero legacy offset, signed land-minus-water day luminance, hue distance].
+## Measures every adjacent ground and all map tints; the shader now uses bounded water_gain instead of an offset.
 func water_lift(c: Vector2i) -> Array:
 	var size: int = _baker.chunk_tiles
 	var touching: Dictionary = {}
@@ -403,11 +399,9 @@ func water_lift(c: Vector2i) -> Array:
 					var g: int = _map.at(tx + dx, ty + dy)
 					if g >= 0 and g < _ground_means.size():
 						touching[g] = not _map.is_crisp(tx + dx, ty + dy) or bool(touching.get(g, false))
-	if touching.is_empty() or not bool(ArtData.param("water.texture_lift", true)):
+	if touching.is_empty():
 		return [Vector3.ZERO, INF, INF]
-	var gap: float = float(ArtData.param("water.minimum_land_luminance_difference", 0.10)) / night_weakest() + float(ArtData.param("water.contrast_margin", 0.01))
-	var min_hue: float = float(ArtData.param("water.minimum_land_hue_distance", 0.12)) + float(ArtData.param("water.contrast_margin", 0.01))
-	var rgb: Array = ArtData.param("water.map_mode_colour", [0.42, 0.62, 0.76])
+	var rgb: Array = ArtData.param("water.map_mode_colour", [0.015, 0.05, 0.12])
 	var map_colour: Color = Color(float(rgb[0]), float(rgb[1]), float(rgb[2])) if rgb.size() == 3 else _water_mean
 	var water_strength: float = float(ArtData.param("water.map_mode_tint_strength", 0.3))
 	var palette: Array[Color] = _palette()
@@ -419,46 +413,22 @@ func water_lift(c: Vector2i) -> Array:
 			var s: float = strengths[k] if bool(touching[g]) and g < palette.size() and palette[g].a > 0.0 else 0.0
 			lands.append(_ground_means[g].lerp(Color(palette[g], 1.0) if g < palette.size() else _ground_means[g], s))
 			weights.append(strengths[k] * water_strength)
-	# Hue: when the water's mean hue sits too close to a land's, move the mean (an RGB offset at the water's own
-	# saturation and value) to the nearest hue that is far enough from every land.
-	var mean: Color = _water_mean
-	var worst_hue: float = INF
-	for land: Color in lands:
-		worst_hue = minf(worst_hue, _hue_distance(mean, land))
-	var offset: Vector3 = Vector3.ZERO
-	if worst_hue < min_hue:
-		var best: float = mean.h
-		for step: int in range(1, 101):
-			for turn: float in [1.0, -1.0]:
-				var h: float = fposmod(mean.h + turn * step * 0.005, 1.0)
-				var ok: bool = true
-				for land: Color in lands:
-					ok = ok and _hue_distance(Color.from_hsv(h, mean.s, mean.v), land) >= min_hue
-				if ok:
-					best = h
-					break
-			if best != mean.h:
-				break
-		var moved: Color = Color.from_hsv(best, mean.s, mean.v)
-		offset = Vector3(moved.r - mean.r, moved.g - mean.g, moved.b - mean.b)
-		mean = moved
-	# Value: a grey offset (hue-neutral) so that every zoom's mixed water clears every zoom's land by the gap.
-	var y0: float = Tone.LR * mean.r + Tone.LG * mean.g + Tone.LB * mean.b
-	var yc: float = Tone.LR * map_colour.r + Tone.LG * map_colour.g + Tone.LB * map_colour.b
-	var grey: float = 0.0
-	for i: int in lands.size():
-		var a: float = clampf(weights[i], 0.0, 0.99)
-		var y_land: float = Tone.LR * lands[i].r + Tone.LG * lands[i].g + Tone.LB * lands[i].b
-		grey = maxf(grey, (y_land + gap - a * yc) / (1.0 - a) - y0)
-	offset += Vector3(grey, grey, grey)
-	var lifted: Color = Color(clampf(_water_mean.r + offset.x, 0.0, 1.0), clampf(_water_mean.g + offset.y, 0.0, 1.0), clampf(_water_mean.b + offset.z, 0.0, 1.0))
+	# Multiplicative channels preserve the source texture without clipping its dark pixels.
+	var gain: Vector3 = water_gain()
+	var shown_mean: Color = Color(_water_mean.r * gain.x, _water_mean.g * gain.y, _water_mean.b * gain.z)
 	var min_dy: float = INF
 	var min_dh: float = INF
 	for i: int in lands.size():
-		var shown: Color = lifted.lerp(map_colour, clampf(weights[i], 0.0, 1.0))
-		min_dy = minf(min_dy, absf(shown.get_luminance() - lands[i].get_luminance()))
+		var shown: Color = shown_mean.lerp(map_colour, clampf(weights[i], 0.0, 1.0))
+		min_dy = minf(min_dy, lands[i].get_luminance() - shown.get_luminance())
 		min_dh = minf(min_dh, _hue_distance(shown, lands[i]))
-	return [offset, min_dy, min_dh]
+	return [Vector3.ZERO, min_dy, min_dh]
+
+
+## Per-channel attenuation only: source art remains unchanged, no RGB clipping is introduced.
+func water_gain() -> Vector3:
+	var rgb: Array = ArtData.param("water.mean_colour", [0.015, 0.05, 0.12])
+	return Vector3(clampf(float(rgb[0]) / maxf(_water_mean.r, 0.001), 0.0, 1.0), clampf(float(rgb[1]) / maxf(_water_mean.g, 0.001), 0.0, 1.0), clampf(float(rgb[2]) / maxf(_water_mean.b, 0.001), 0.0, 1.0))
 
 
 static func _hue_distance(a: Color, b: Color) -> float:
@@ -466,7 +436,7 @@ static func _hue_distance(a: Color, b: Color) -> float:
 	return minf(d, 1.0 - d)
 
 
-## The water's last computed lift per baked chunk (tests and the report): chunk → [lift, min ΔY by day, min ΔH].
+## The signed water-contrast reports by baked chunk (legacy water_lifts API retained for tooling).
 func water_lifts() -> Dictionary:
 	return _lifts
 
@@ -504,15 +474,27 @@ func _ground_image(id: String, period: int, tone: Dictionary, season: Dictionary
 	var value: float = float((ArtData.param("ground.value_by_ground", {}) as Dictionary).get(id, 1.0))
 	if absf(value - 1.0) > 0.001:
 		img.adjust_bcs(clampf(value, 0.0, 1.0), 1.0, 1.0)
-	return img
+	return _ground_floor(img)
+
+
+## Neutral lift after material value factors keeps the signed night-water contrast feasible (M-UX D9).
+func _ground_floor(src: Image) -> Image:
+	var minimum: float = float(ArtData.param("ground.tone.mean_min", 0.28))
+	var lift: float = maxf(0.0, minimum - Tone.mean_rgb(src, 1).get_luminance())
+	if lift <= 0.0:
+		return src
+	var bytes: PackedByteArray = src.get_data()
+	var amount: int = ceili(lift * 255.0)
+	for i: int in range(0, bytes.size(), 4):
+		for channel: int in 3:
+			bytes[i + channel] = mini(255, int(bytes[i + channel]) + amount)
+	return Image.create_from_data(src.get_width(), src.get_height(), false, Image.FORMAT_RGBA8, bytes)
 
 
 func _toned(src: Image, tone: Dictionary, season: Dictionary, person_std: float) -> Image:
 	var img: Image = src
 	if _tone == "winter":
 		img = Tone.season(img, "winter", float(season.get("winter_saturation", 0.35)))
-		var snow: Image = ArtData.image(str(ArtData.bindings().get("terrain", {}).get("snow", "")))
-		img = Tone.add_snow(img, snow, float(season.get("snow_alpha", 0.6)))
 	elif _tone == "drought":
 		img = Tone.season(img, "drought", float(season.get("drought_mix", 0.35)), season.get("drought_tint", []))
 	var r: Dictionary = Tone.cap_ground(img, person_std, float(tone.get("mean_max", 0.38)), float(tone.get("std_ratio", 0.25)), float(tone.get("saturation_max", 0.30)), float(tone.get("margin", 0.9)))
@@ -808,7 +790,13 @@ func _bake_chunk(c: Vector2i) -> void:
 	chunk_material.set_shader_parameter("terrain_tint_tex", _terrain_tint(c, _baker.canopy_on))
 	var lift: Array = water_lift(c)
 	_lifts[c] = lift
-	chunk_material.set_shader_parameter("water_lift", lift[0])
+	chunk_material.set_shader_parameter("water_gain", water_gain())
+	chunk_material.set_shader_parameter("snow_mask_tex", snow_mask(c))
+	chunk_material.set_shader_parameter("snow_alpha", clampf(float(ArtData.param("season.snow_alpha", 0.45)), 0.0, 0.45) if _tone == "winter" else 0.0)
+	chunk_material.set_shader_parameter("snow_feature_px", maxf(512.0, float(ArtData.param("season.snow_feature_px", 512.0))))
+	chunk_material.set_shader_parameter("snow_drift_strength", clampf(float(ArtData.param("season.snow_drift_strength", 0.7)), 0.0, 1.0))
+	var snow_rgb: Array = ArtData.param("season.snow_colour", [0.78, 0.82, 0.86])
+	chunk_material.set_shader_parameter("snow_colour", Vector3(float(snow_rgb[0]), float(snow_rgb[1]), float(snow_rgb[2])))
 	chunk_material.set_shader_parameter("chunk_tiles", float(_baker.chunk_tiles))
 	chunk_material.set_shader_parameter("map_tint_strength", _map_tint_strength())
 	sprite.material = chunk_material
@@ -848,6 +836,19 @@ func _bake_chunk(c: Vector2i) -> void:
 	last_bake_usec = t_end - t0
 	if last_bake_usec >= worst_bake.get("total", 0):
 		worst_bake = {"total": last_bake_usec, "compose": t_compose - t0, "upload": t_upload - t_compose, "strips": t_end - t_upload, "chunk": c, "rows": strips.size(), "factor": f}
+
+
+## Neighbor-padded occupancy, rebuilt with the chunk: R tree bases, G walls, B exposed natural ground.
+## Uses existing cached tree and structure data; no additional bridge read or per-frame image work.
+func snow_mask(c: Vector2i) -> ImageTexture:
+	var size: int = _baker.chunk_tiles
+	var img: Image = Image.create(size + 2, size + 2, false, Image.FORMAT_RGBA8)
+	for y: int in range(-1, size + 1):
+		for x: int in range(-1, size + 1):
+			var tile: Vector2i = c * size + Vector2i(x, y)
+			var exposed: bool = _map.at(tile.x, tile.y) >= 0 and (not _map.is_crisp(tile.x, tile.y) or _map.is_rock(tile.x, tile.y))
+			img.set_pixel(x + 1, y + 1, Color(float(_map.tree_at(tile.x, tile.y) > 0), float(_walls.occupancy.has(tile) and not _walls.openings.has(tile)), float(exposed), 1.0))
+	return ImageTexture.create_from_image(img)
 
 
 func _map_tint_strength() -> float:
@@ -925,7 +926,7 @@ func _update_trees() -> void:
 		for c: Vector2i in _chunks.keys():
 			dirty[c] = true
 	for c: Vector2i in dirty.keys():
-		if _chunks.has(c) and int(_res_of.get(c, 1)) == 4:
+		if _chunks.has(c) and (int(_res_of.get(c, 1)) == 4 or _tone == "winter"):
 			_bake_chunk(c)
 
 
@@ -1028,7 +1029,8 @@ func _palette() -> Array[Color]:
 			var luminance: float = Tone.LR * colour.r + Tone.LG * colour.g + Tone.LB * colour.b
 			var value: float = minf(1.0, mean_max / maxf(luminance, 1e-12))
 			colour = Color(colour.r * value, colour.g * value, colour.b * value, 1.0)
-		palette.append(colour)
+		var lift: float = maxf(0.0, float(ArtData.param("ground.tone.mean_min", 0.28)) - colour.get_luminance())
+		palette.append(Color(colour.r + lift, colour.g + lift, colour.b + lift, colour.a))
 	return palette
 
 

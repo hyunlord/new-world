@@ -56,7 +56,7 @@ static func _pair(path: String, fallback: Vector2) -> Vector2:
 ## The full-night CanvasModulate colour (value × blue shift).
 static func night_colour() -> Color:
 	var value: float = float(ArtData.param("light.night_value", 0.55))
-	var t: Variant = ArtData.param("light.night_tint", [0.86, 0.94, 1.08])
+	var t: Variant = ArtData.param("light.night_tint", [0.86, 0.94, 0.96])
 	if t is Array and (t as Array).size() == 3:
 		return Color(clampf(value * float(t[0]), 0.0, 1.0), clampf(value * float(t[1]), 0.0, 1.0), clampf(value * float(t[2]), 0.0, 1.0))
 	return Color(value, value, value)

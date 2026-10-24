@@ -1,0 +1,50 @@
+[
+  {
+    "file": "river_day_day_1.00.png",
+    "caption": "여름 낮 1.00×: 강물·물가·나무"
+  },
+  {
+    "file": "river_day_day_0.25.png",
+    "caption": "여름 낮 0.25×: 강물·물가·나무"
+  },
+  {
+    "file": "river_day_night_1.00.png",
+    "caption": "여름 밤 1.00×: 강물·물가·나무"
+  },
+  {
+    "file": "river_day_night_0.25.png",
+    "caption": "여름 밤 0.25×: 강물·물가·나무"
+  },
+  {
+    "file": "river_winter_day_1.00.png",
+    "caption": "겨울 낮 1.00×: 강물·물가·나무"
+  },
+  {
+    "file": "river_winter_day_0.25.png",
+    "caption": "겨울 낮 0.25×: 강물·물가·나무"
+  },
+  {
+    "file": "river_winter_night_1.00.png",
+    "caption": "겨울 밤 1.00×: 강물·물가·나무"
+  },
+  {
+    "file": "river_winter_night_0.25.png",
+    "caption": "겨울 밤 0.25×: 강물·물가·나무"
+  },
+  {
+    "file": "drift_fixture_winter_day_1.00.png",
+    "caption": "렌더 전용 벽·나무 눈 시험 / 낮 1.00×"
+  },
+  {
+    "file": "drift_fixture_winter_day_0.25.png",
+    "caption": "렌더 전용 벽·나무 눈 시험 / 낮 0.25×"
+  },
+  {
+    "file": "drift_fixture_winter_night_1.00.png",
+    "caption": "렌더 전용 벽·나무 눈 시험 / 밤 1.00×"
+  },
+  {
+    "file": "drift_fixture_winter_night_0.25.png",
+    "caption": "렌더 전용 벽·나무 눈 시험 / 밤 0.25×"
+  }
+]
