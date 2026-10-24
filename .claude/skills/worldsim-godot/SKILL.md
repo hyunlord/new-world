@@ -59,6 +59,15 @@ smoke are this repo's validators).
 - **Do** start every `.gd` with a comment block: purpose, bridge methods called (AGENTS.md). *Reason:* a reader sees which bridge methods a file touches without reading all of it; tools strip comments, so this is for people and agents.
 - **Do** keep `INTEGER_DIVISION`, unused parameters/variables/signals at zero (prefix unused parameters with `_`; `@warning_ignore("integer_division")` only where an exact integer quotient is meant). *Reason:* the strict check promotes these warnings to errors.
 
+### The renderer resolves through manifests (ADR 0033, 0034)
+- **Don't** write an item, material, style, look, animal or structure name in `scripts/world/**`. *Reason:* the gate
+  greps that tree for every id in `assets/v8art/manifest.json` and the material JSON; a name in code is a kind that
+  cannot be added by data (owner directive 2026-10-24).
+- **Do** map a sim code to art through data: `assets/v8art/bindings.json` (item kind, building kind, animal kind,
+  top → asset ids), the material resolver for `(style, material)`, the manifest for frames, anchors and canvases.
+  An unknown code draws its category default or the manifest's `fallback` asset, never nothing and never an error.
+- **Do** read every tunable from `assets/v8art/render_params.json` (F12 reloads it in debug builds), not from a `const`.
+
 ### Drawing and UI
 - **Do** keep nearest filtering, 1 texel = 1 world pixel, sprite scale 1 and integer zoom only (M1 camera: 1/2/3/4, default 2; `scripts/world/camera_controller.gd`). *Reason:* fractional scale and a 1.25× wheel step made villagers squashed and blurry.
 - **Do** capture per-instance tint in `vertex()` in `canvas_item` shaders. *Reason:* in 4.6 `COLOR` at `fragment()` is already multiplied by `TEXTURE`; capturing it there turned every agent green.

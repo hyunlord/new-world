@@ -123,6 +123,17 @@
     unnatural — the projection is mixed. **ART-STRUCT** runs on `v8/art-struct` (not yet pushed when this was
     written): one projection, walls and edges drawn by code. Route I stays the people standard (ART-PROD3). This
     line does not merge or touch any art branch.
+  - **Adopted (M-ART2 Part 0, 2026-10-24; `docs/v8/m_art2/MART2_DECISIONS.md` D2).** The owner adopted, all read from
+    `v8/art-polish2` at `c8ed8608` (which carries the whole lineage): **route I** whole-figure people (ART-PROD3
+    `159ef0f9`, 34/36 looks, planner/owner D4 of 2026-10-23); **one projection** — ground from above, everything
+    standing in the same front 3/4, walls, hill faces, water and edges drawn by code (ART-STRUCT `b6baa73f`, owner
+    2026-10-24 "ㅇㅇ ㅇㅋ"); the **material system** (construction styles × simulation materials × category defaults,
+    ART-POLISH2) with **wall tops option (b)** along the run, sharper than rendered; **face variants v1** (six per look,
+    matching sprite tints, the skin mask to be fixed so it never tints clothing); **portraits** (128 px per look ×
+    variant), **items**, and **deer and wolf** (ART-POLISH `18ac947b` handoff list, POLISH2). Roofs are not drawn; the
+    N facing reuses S. The cut-out rig of the original decision is superseded by route I's whole figures with
+    per-person face variants. M-ART2 installs all of it in the game (ADR 0034) under the extensibility contract
+    (ADR 0033).
 ## Date
 2026-10-22
 

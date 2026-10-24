@@ -6,6 +6,13 @@ GDScript only for drawing, input and UI. Direction: [docs/VISION.md](docs/VISION
 Structure: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). This file is canonical
 for every coding agent; `CLAUDE.md` imports it.
 
+**Extensibility contract (ADR 0033, standing owner directive 2026-10-24):** kinds are data, behaviour is code.
+Content (items, materials, styles, recipes, knowledge, apparel, looks, animals, pressures, eras, labels) lives in
+versioned data with a registry, a resolver and a category fallback; code branches on tags and categories, never on a
+content name; no new content enum (an unavoidable one is listed as M-EXT debt in the pass's DECISIONS); every family
+gets a "data only" test; every review checks for new hard-coded content names (`scripts/world/**` is grepped for
+manifest ids in the gate).
+
 ## Branches and pushing
 
 - Work and commit on **`v8/wip`**. Push with an explicit target: `git push origin v8/wip`, then check `git ls-remote origin v8/wip` equals local HEAD.

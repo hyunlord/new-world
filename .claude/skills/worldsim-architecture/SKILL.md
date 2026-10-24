@@ -104,6 +104,18 @@ registration order), then advances the clock. 1,440 ticks = 1 game day
 - **Do** start every kept `.gd` with a comment block giving its purpose and the bridge methods it calls. *Reason:* the bridge surface must be findable from the GDScript side.
 - **Do** report every `src` file over 1,200 lines in the pass report (Procedure C). *Reason:* size is tracked, not a failure; splits are pure moves done on purpose, never by drive-by refactor.
 
+### The extensibility checklist (ADR 0033)
+Before a change that adds or touches content, answer each with yes (or record the debt in the pass's DECISIONS):
+1. Is the new kind an entry in a versioned data file (RON in the sim, JSON in assets), read strictly (schema version,
+   unknown fields rejected, ids unique), with a unit test that parses the embedded file?
+2. Does code match it by a tag, category or capability from that data — no `match` on its name, no new closed enum?
+3. Does an unknown entry fall back to its category default instead of failing?
+4. Is there a "data only" test that adds an entry by a fixture file alone and shows it resolved and used?
+5. Are the UI labels, icons and menu rows generated from the registry?
+6. If a saved type changed: `FORMAT_VERSION` bumped and a migration or a documented refusal?
+7. Does the review report list every new hard-coded content name and content enum (none allowed) and the old ones
+   left as M-EXT debt?
+
 ## Procedures
 
 Full step lists with code skeletons: `references/procedures.md`.
