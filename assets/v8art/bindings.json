@@ -11,7 +11,7 @@
       {"code": 4, "sim": "River", "water": true}
     ],
     "clearing": {"ground": "packed_earth_ground", "core_tiles": 4, "reach_tiles": 8},
-    "dug_ground": "hill_rock",
+    "dug_ground": "packed_earth_ground",
     "face": "rock_face",
     "water": "river_water",
     "snow": "snow_overlay",
@@ -19,7 +19,7 @@
   },
   "space": {
     "about": "get_space wall_styles / floor_styles carry blueprint names; the material resolver maps them through construction_styles.json sim_blueprints. A floor style the material data does not know but listed here draws this ground instead.",
-    "floor_grounds": [{"style": "DugFloor", "ground": "hill_rock"}],
+    "floor_grounds": [{"style": "DugFloor", "ground": "packed_earth_ground"}],
     "door_styles": ["Door"],
     "wall_kind_styles": ["LogWall", "StoneWall", "Door"],
     "floor_kind_styles": ["PackedFloor", "DugFloor"],

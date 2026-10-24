@@ -70,9 +70,9 @@ renderer tunable in `assets/v8art/render_params.json`. No simulation change (ide
 - Tests and gate steps: `tools/v8/mart2_ground_test.gd` (bake determinism and recorded hash, dithered edges that fail
   with blending off, tone caps, banks, a dig rebakes one chunk, data-only wall by fixture), `mart2_people_test.gd`
   (appearance = bridge, anchors in four facings, LOD switch, params reload, deterministic tint),
-  `mart2_ui_test.gd` (windowed, 40 checks), `test_art_import.py`, `test_art_masks.py`,
+  `mart2_ui_test.gd` (windowed, 42 checks), `test_art_import.py`, `test_art_masks.py`,
   `test_mart2_extensibility.py` (no content literal and no 16-px tile size in the renderer, with planted failures),
-  `resolver_parity.py/.gd` (30 cases equal to the art line's `resolve.py`); gate steps 31 `art_manifest`,
+  `resolver_parity.py/.gd` (39 cases equal to the art line's `resolve.py`); gate steps 31 `art_manifest`,
   32 `resolver_parity`, 33 `extensibility_grep`, 34 `mart2_render`, and appearance agreement inside step 23.
 - Tooling: `capture.gd --mart2-set` (`mart2_shots.gd`, 14 owner shots, each also saving its world),
   `mart2_old_shots.gd` (the base renderer on the same saves), `mart2_fps.gd/.sh` (FPS, process and draw times,
@@ -86,6 +86,9 @@ renderer tunable in `assets/v8art/render_params.json`. No simulation change (ide
   `TerrainLayer`, a y-sorted `ColonyView/World` holds walls, doors, trees, structures, animals and people.
 - Camera zoom ladder ¼×, ½×, 1×, 2× (default 1×) from the params, was 1–4× integer at 16 px.
 - `renderer_agreement` compares looks and variants by AgentId besides tiles (settles on `activity`).
+- Review fixes (MART2_DECISIONS D18): an F12 reload or a season/drought change re-applies the built space before
+  rebaking (walls no longer vanish, hill caps follow the tone); a space change rebakes all eight neighbour chunks; hill
+  tops darker by `ground.value_by_ground`; dug floors drawn as packed earth; drafted outline 2 px.
 - Performance (MART2_DECISIONS D4 update; windowed, vsync off, release library): seed 0 day 20 at 1× 328.6 FPS, ½× 238.2,
   ¼× 120.65; the 1,000-person world at ½× 186.8, ¼× 173.5; texture memory ≤ 265 MB; chunk rebake max 3.7 ms. The
   simulation tick is unchanged (no Rust behaviour change; identity byte-identical).

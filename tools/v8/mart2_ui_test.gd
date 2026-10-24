@@ -271,9 +271,14 @@ func _zoom_and_lod() -> void:
 
 
 func _params_reload() -> void:
+	var ground: Node = _main.get_node("ColonyView/GroundLayer")
+	var strips_before: int = int(ground.call("strip_count"))
 	var version: int = ArtData.params_version()
 	await _key(KEY_F12)
 	await _frames(2)
+	var sets: int = (ground.call("wall_baker").get("sets") as Dictionary).size()
+	_check("f12_keeps_walls", strips_before > 0 and int(ground.call("strip_count")) == strips_before and sets > 0, "wall/hill strips %d → %d, wall sets %d" % [strips_before, int(ground.call("strip_count")), sets])
+	_check("f12_refreshes_hill_cap", bool(ground.call("hill_cap_is_current")), "hill cap = the re-prepared hill ground")
 	var toast: String = str(_camera.call("toast_text"))
 	_check("f12_rereads_params", ArtData.params_version() == version + 1, "version %d → %d" % [version, ArtData.params_version()])
 	_check("f12_toast", toast == "렌더 설정 다시 읽음", "toast '%s'" % toast)

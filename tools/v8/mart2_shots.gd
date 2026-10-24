@@ -24,6 +24,8 @@ const ROLE_STOREHOUSE: int = 2
 const STATE_CONSUMING: int = 3
 const TARGET_JOB: int = 9
 const WAVE_WAITING: int = 1
+## Tiles the migrant shot's camera sits north of the hearth, so the hearth and the waiting migrants show below the dialog.
+const MIGRANT_FRAME_DY: float = -5.0
 
 var tree: SceneTree
 var main: Node
@@ -243,4 +245,5 @@ func _migrant_shot() -> void:
 		if found:
 			break
 		await _advance(60)
-	await _shot("mart2_13_migrant_arrival_1x", Vector2(h), 1.0, "이주민 도착 (1×)" + ("" if found else " — 30일 안에 오지 않음"))
+	# The migrant dialog covers the screen's middle band: frame the camp MIGRANT_FRAME_DY tiles below the centre.
+	await _shot("mart2_13_migrant_arrival_1x", Vector2(h) + Vector2(0, MIGRANT_FRAME_DY), 1.0, "이주민 도착 (1×) — 대화창 아래 모닥불 곁에 이주민" + ("" if found else " — 30일 안에 오지 않음"))

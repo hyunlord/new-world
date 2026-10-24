@@ -269,8 +269,12 @@ changed (and the tile north of each, whose hill face depends on it): 1.2 ms for 
   (`art_ui.gd` → `ArtUI.icon`) and `wood_visuals.gd` (the settlement fire read the daylight controller uses) still use
   them; they draw no map content. Moving the HUD icons to the manifest is M-EXT work (recorded in the report's limits).
 - Content names still in UI code (M-EXT debt, outside this pass's renderer): `economy_text.gd` `ITEM_NAMES` and
-  `MATERIAL_KEYS` (locale keys per item code), the `built_at` stone classification. The extensibility grep covers the
-  renderer (`scripts/world/`, shaders), which names no content.
+  `MATERIAL_KEYS` (locale keys per item code), the `built_at` stone classification; in `scripts/world/colony/
+  order_tool.gd` the M1 blueprint order names (`"hut"` as the default build kind and the toast's hut exception), which
+  are snake_case command names outside the grep's id set. The extensibility grep checks double-quoted string literals
+  in `scripts/world/**/*.gd` against the manifest, look, material, style and bindings ids; it does not read shaders
+  (which hold no ids) or UI scripts, and it misses single-quoted strings, concatenated or formatted ids and ids inside
+  paths (code review S4). Widening it is M-EXT work.
 
 ## D17 — People at night: a pale halo away from the fire
 
@@ -290,6 +294,45 @@ changed (and the tile north of each, whose hill face depends on it): 1.2 ms for 
   |fill − ground| and |rim − ground|; the median over the people on screen must be ≥ 0.15. With the halo: median 0.204
   (min 0.023 for a sleeper at the hearth's edge, where the light restores day contrast). The check fails without the
   halo (`night_halo_alpha` 0: median 0.047).
+
+## D18 — Review dispositions (Part 7)
+
+Two fresh reviewers, each with a file report (`$DATA/reviews/code_review.md`, `$DATA/reviews/visual_review.md`).
+
+Code review (verdict "request changes"):
+- **B1 (blocker, fixed):** `agent_layer.gd`'s `const HALO_STEPS: float = 16.0` matched the no-16-px-tile grep, so gate
+  steps 16 and 33 were red at `bab5ec4a` (the p5 commit came after step 33 was added and the step was not re-run).
+  Now an `int`. Lesson: run the gate's Python steps after every commit that touches `scripts/world/`.
+- **S1 (fixed):** an F12 reload cleared the wall texture sets and rebaked before re-applying the space, so built walls
+  vanished until the next space change. **S2 (fixed):** after a tone change (season, drought) or F12 the hill-face
+  cap kept the previous tone's image. Both: a reload or tone change now re-applies the space in full (sets, hill cap,
+  faces rebuilt) before rebaking. New checks in `mart2_ui_test.gd`: `f12_keeps_walls` (95 → 95 strips, sets 1) and
+  `f12_refreshes_hill_cap`; both fail with the old path (95 → 82 strips, sets 0).
+- **S3 (fixed):** a wall's end piece reads its diagonal south neighbours, but a change marked only the 4-neighbour
+  chunks; `_mark` now marks all eight (the dig test still rebakes exactly one chunk for an interior tile).
+- **S4 (recorded):** the grep's limits and the order tool's blueprint names are listed in D16 as M-EXT debt.
+- **S5 (fixed in part):** the parity fixture grows from 30 to 39 cases (a caller category against a known material's
+  own; exact styles asked for another kind). Mutating `material_resolver.gd` now fails parity for "exact match
+  ignores kind" (15 differences) and "caller category overrides" (5). Not covered, because the art line's data has no
+  case for them: an exact style id that is also another style's blueprint, and `texture_override` (no material has
+  one); a fixture material for them would diverge from the art line's documents.
+- **Notes (recorded, not changed):** the animal flip offset is latent (all anchors centred); every space change
+  re-resolves all walls (11.7 µs each); zooming out to an unseen area bakes every new chunk in one frame (estimate:
+  ≈ 40 chunks × 1.8 ms ≈ 70 ms once; not measured); ford sprites recreated on space changes; elder portraits have no
+  grey hair (the portraits are the art line's per-variant files).
+
+Visual review (verdict "acceptable", no blockers):
+- **Hills read as plain ground (fixed):** the ENV1 cap brought `hill_rock` to dark grass's mean (78, 73, 62 vs
+  80, 76, 62), so only the south-edge cliffs showed, as floating slabs at ½× and ¼×. `ground.value_by_ground`
+  (render params, data; applied after the cap, so the ENV1 maxima still hold) darkens hill tops to 0.6: the rock mass
+  reads as in the old renderer and in STRUCT's board, where hill interiors are rock ground.
+- **The dug pocket did not read as a room (fixed):** dug floors used the same hill rock; the art line draws dug cells
+  as a floor asset, so `bindings.json` now maps `DugFloor` and `dug_ground` to `packed_earth_ground`.
+- **Drafted outline faint at 1× (fixed):** `people.drafted_outline_px` 2 (selection and halo stay 1 px).
+- **Migrant dialog covered the migrants (fixed):** the shot frames the camp 5 tiles below the centre.
+- **Notes kept:** LOD markers share the tan top colour of most looks and can sit on items; glyphs ≈ 12×7 px; no LOD
+  halo at night; a map label cut at the screen edge; elders' grey reads blue-grey; bedrolls look like sticks (as in the
+  boards); the storehouse's north wall under the HUD in the 2× shot.
 
 ## D4 update — what was built
 

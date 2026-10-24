@@ -604,6 +604,6 @@ value × 0.55 with the blue shift, additive hearth PointLight2D within 5 tiles)
   `sim-bridge/data/appearance.ron` and the AgentId; the probe's `--people-json` carries the same (renderer agreement,
   gate step 23).
 - **Tests**: `mart2_ground_test.gd` and `mart2_people_test.gd` (headless, gate step 34), `resolver_parity`
-  (gate step 32), `mart2_ui_test.gd` (windowed, run by hand: 40 checks), `capture.gd --mart2-set` (the owner set),
+  (gate step 32), `mart2_ui_test.gd` (windowed, run by hand: 42 checks), `capture.gd --mart2-set` (the owner set),
   `mart2_fps.sh` (FPS budgets).
 

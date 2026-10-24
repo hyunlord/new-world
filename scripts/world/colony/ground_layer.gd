@@ -159,6 +159,24 @@ func bake_chunk_now(c: Vector2i) -> void:
 	_touch(c)
 
 
+## Whether the hill-face cap is the current tone's tiled hill ground (tests: a tone or params change must refresh it).
+func hill_cap_is_current() -> bool:
+	var cap_id: String = ""
+	for r: Variant in (ArtData.bindings().get("terrain", {}) as Dictionary).get("codes", []):
+		if r is Dictionary and bool((r as Dictionary).get("standing_face", false)):
+			cap_id = str((r as Dictionary).get("ground", ""))
+			break
+	return cap_id != "" and _ground_index.has(cap_id) and _walls.hill_cap == _baker.tiled(_ground_index[cap_id])
+
+
+## Wall and hill-face row strips drawn now (tests).
+func strip_count() -> int:
+	var n: int = 0
+	for strips: Variant in _strips.values():
+		n += (strips as Array).size()
+	return n
+
+
 ## Apply a `get_space`-shaped dictionary (tests drive a dig through the same path as a real space change).
 func apply_space(space: Dictionary) -> void:
 	_apply_space(space)
@@ -180,20 +198,28 @@ func _process(_delta: float) -> void:
 		_map = null
 		if not _build_map():
 			return
+	# A parameter reload (F12) or a tone change (season, drought) re-prepares the grounds and the wall sets; the space
+	# is then applied in full (wall sets, hill caps and faces rebuilt from the new textures) and every cached chunk
+	# rebaked.
+	var refresh: bool = false
 	if _params_version != ArtData.params_version():
 		_params_version = ArtData.params_version()
 		_configure()
-		_rebake_all()
+		refresh = true
 	var tone: String = _tone_now()
 	if tone != _tone:
 		_tone = tone
 		_prepare_grounds()
-		_rebake_all()
+		refresh = true
 	var space: Dictionary = SimReads.read(_world_sim, "get_space")
 	var version: int = int(space.get("version", -1))
-	if version != _space_version:
+	if version != _space_version or refresh:
 		_space_version = version
+		if refresh:
+			_space_full = true
 		_apply_space(space)
+	if refresh:
+		_rebake_all()
 	_ensure_visible()
 	_update_doors()
 
@@ -317,7 +343,13 @@ func _ground_image(id: String, period: int, tone: Dictionary, season: Dictionary
 	img.convert(Image.FORMAT_RGBA8)
 	if not native and period > 0 and img.get_width() != period:
 		img.resize(period, period, Image.INTERPOLATE_LANCZOS)
-	return _toned(img, tone, season, person_std, true)
+	img = _toned(img, tone, season, person_std, true)
+	# `ground.value_by_ground` (data): a value factor after the cap, so a raised ground (hill rock) reads as a mass
+	# against the calm ground around it (MART2_DECISIONS D18); the ENV1 caps are maxima, a darker ground stays inside.
+	var value: float = float((ArtData.param("ground.value_by_ground", {}) as Dictionary).get(id, 1.0))
+	if absf(value - 1.0) > 0.001:
+		img.adjust_bcs(clampf(value, 0.0, 1.0), 1.0, 1.0)
+	return img
 
 
 func _toned(src: Image, tone: Dictionary, season: Dictionary, person_std: float, cap: bool) -> Image:
@@ -443,7 +475,9 @@ func _union(a: Dictionary, b: Dictionary) -> Array:
 
 
 func _mark(dirty: Dictionary, x: int, y: int, size: int) -> void:
-	for d: Vector2i in [Vector2i.ZERO, Vector2i(-1, 0), Vector2i(1, 0), Vector2i(0, -1), Vector2i(0, 1)]:
+	# All eight neighbours: blends reach across edges, and a wall's end cap reads its diagonal south neighbours.
+	for d: Vector2i in [Vector2i.ZERO, Vector2i(-1, 0), Vector2i(1, 0), Vector2i(0, -1), Vector2i(0, 1),
+			Vector2i(-1, -1), Vector2i(1, -1), Vector2i(-1, 1), Vector2i(1, 1)]:
 		var nx: int = x + d.x
 		var ny: int = y + d.y
 		if nx < 0 or ny < 0 or nx >= _w or ny >= _h:

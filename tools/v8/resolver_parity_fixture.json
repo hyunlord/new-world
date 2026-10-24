@@ -1,5 +1,5 @@
 {
-  "about": "Resolver parity cases (M-ART2 §3.4): known styles and blueprints, string keys and raw u32 ids, tinted materials, unknown materials with and without a category, unknown styles, every kind. The expected results come from the art line's resolve.py (tools/v8/resolver_parity.py --generate).",
+  "about": "Resolver parity cases (M-ART2 §3.4): known styles and blueprints, string keys and raw u32 ids, tinted materials, unknown materials with and without a category, unknown styles, every kind; since the code review also a caller category against a known material's own, and exact styles asked for another kind. The expected results come from the art line's resolve.py (tools/v8/resolver_parity.py --generate).",
   "cases": [
     {"style": "log", "material": "oak"},
     {"style": "log", "material": "pine"},
@@ -30,6 +30,15 @@
     {"style": "Door", "material": "granite", "kind": "door"},
     {"style": "inset_door", "material": "limestone", "kind": "door"},
     {"style": "no_such_style", "material": "granite", "kind": "door"},
-    {"style": "no_such_style", "material": "unknown_plant", "category": "Plant", "kind": "door"}
+    {"style": "no_such_style", "material": "unknown_plant", "category": "Plant", "kind": "door"},
+    {"style": "no_such_style", "material": "granite", "category": "Wood"},
+    {"style": "log", "material": "oak", "category": "Stone"},
+    {"style": "no_such_style", "material": "clay", "category": "Stone", "kind": "floor"},
+    {"style": "log", "material": "oak", "kind": "floor"},
+    {"style": "log", "material": "oak", "kind": "door"},
+    {"style": "packed_earth", "material": "clay", "kind": "wall"},
+    {"style": "drystone", "material": "granite", "kind": "door"},
+    {"style": "inset_door", "material": "oak", "kind": "wall"},
+    {"style": "LogWall", "material": "granite", "kind": "floor"}
   ]
 }
