@@ -5,6 +5,10 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+## M-UX + REVIEW — 2026-10-25 (in progress)
+### Added
+- Frozen staged owner contract (`docs/v8/mux/MUX_GOAL.md`, `ee10a4ea2`), execution decisions and initial issue registry. No stage is accepted or published yet.
+
 - Changed (V8-PLAY2, 2026-10-25): protect launcher worktrees and embedded-data builds; add preparation-only mode and current Korean play/key guide (`docs/v8/play2/PLAY2_REPORT.md`).
 ## M-ART2.1 — 2026-10-24
 

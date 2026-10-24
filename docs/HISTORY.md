@@ -167,3 +167,4 @@
 - 2026-10-24 — 지움: TRIAL2b 나무·그루터기·덤불 그림 9장(`assets/v8art/structures/`, `v8/art-polish2` `c8ed8608`에 있다), D19의 평평한 물 색칠(`tone.gd` `water_colour`); `docs/images/mart2_contact_sheet.png`는 `mart21_contact_sheet.png`로 교체(`d796fcac`에 있다).
 
 - 2026-10-25 — V8-PLAY2 실행기 보호·최신 조작 안내와 창 입력 검증 (`docs/v8/play2/PLAY2_REPORT.md`); 바탕화면 연결은 오너 명령으로 남김.
+- 2026-10-25 — M-UX + REVIEW 시작: 전용 v8/mux 작업 트리에 오너 목표 원문 보존 (`ee10a4ea2`, `docs/v8/mux/MUX_GOAL.md`); Stage A/B/C 구현·게이트·게시 전이며 이슈 기록을 시작함.
