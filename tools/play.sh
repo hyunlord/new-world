@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # tools/play.sh — play any version of WorldSim with one command (V8-PLAY goal 2.1).
 #
-# usage: tools/play.sh [version] [--seed N] [--speed 1-4] [--no-build] [--headless-check] [-- godot args…]
+# usage: tools/play.sh [version] [--seed N] [--speed 1-4] [--no-build] [--headless-check|--update-only] [-- godot args…]
 #   version: main (default, = v8/main), wip, m1, v8-0, v7, or any commit/tag/branch
 #
 # 1. Godot: $GODOT_BIN if set; else the path in tools/v8/godot_bin.sh; else Spotlight
@@ -9,8 +9,8 @@
 # 2. The version gets its own worktree under $PLAY_ROOT/<name> (git worktree add --detach from
 #    this clone, after a fetch); an existing one is reused and fast-forwarded when the version is
 #    a branch. This checkout itself is never used for playing.
-# 3. Build sim-bridge in that worktree when a Rust source, Cargo.toml or Cargo.lock is newer than
-#    the library the .gdextension makes the Godot editor binary load (macos.debug → debug build).
+# 3. Ask cargo to incrementally build sim-bridge in that worktree (including embedded data and
+#    deleted inputs), using the library profile selected by macos.debug in .gdextension.
 # 4. Import headless when .godot/ is missing (twice) or older than assets/ scripts/ scenes/ shaders/.
 # 5. Launch windowed at 1920x1080 (--seed/--speed only when the version's scripts read them).
 # 6. Log to $PLAY_DATA/logs/<version>-<timestamp>.log.
@@ -37,6 +37,7 @@ seed=""
 speed=""
 build=1
 headless=0
+update_only=0
 version_set=0
 extra=()
 while (( $# > 0 )); do
@@ -50,6 +51,7 @@ while (( $# > 0 )); do
             speed="$2"; shift 2 ;;
         --no-build) build=0; shift ;;
         --headless-check) headless=1; shift ;;
+        --update-only) update_only=1; shift ;;
         --) shift; extra=("$@"); break ;;
         -*) echo "play: 모르는 옵션 $1" >&2; usage >&2; exit 4 ;;
         *)
@@ -57,6 +59,13 @@ while (( $# > 0 )); do
             version="$1"; version_set=1; shift ;;
     esac
 done
+case "$version" in
+    .|..) echo "play: 잘못된 버전 이름 '$version'" >&2; exit 4 ;;
+esac
+if (( headless == 1 && update_only == 1 )); then
+    echo 'play: --headless-check와 --update-only는 함께 쓸 수 없습니다' >&2
+    exit 4
+fi
 
 # --- 1. Godot -----------------------------------------------------------------------------------
 resolve_godot() {
@@ -86,7 +95,13 @@ case "$godot_version" in
 esac
 
 # --- 2. Version → worktree ----------------------------------------------------------------------
-git -C "$REPO" fetch -q origin 2>/dev/null || echo "play: git fetch 실패 — 마지막으로 받아 둔 원격 상태를 씁니다" >&2
+fetch_started=$(date +%s)
+fetch_state=ok
+if ! git -C "$REPO" fetch -q origin 2>/dev/null; then
+    fetch_state=offline
+    echo "play: git fetch 실패 — 마지막으로 받아 둔 원격 상태를 씁니다" >&2
+fi
+fetch_secs=$(( $(date +%s) - fetch_started ))
 branch=""
 case "$version" in
     main) target="origin/v8/main"; branch="$target"; name="main" ;;
@@ -110,19 +125,37 @@ fi
 short="$(git -C "$REPO" rev-parse --short "$commit")"
 
 mkdir -p "$PLAY_DATA/logs" "$PLAY_ROOT" || { echo "play: $PLAY_DATA 또는 ${PLAY_ROOT}를 만들 수 없습니다" >&2; exit 1; }
-LOG="$PLAY_DATA/logs/$name-$(date '+%Y%m%d-%H%M%S').log"
+LOG="$PLAY_DATA/logs/$name-$(date '+%Y%m%d-%H%M%S')-$$.log"
 : > "$LOG"
 say() { echo "$*" | tee -a "$LOG"; }
 say "play: 로그 $LOG"
 { echo "[play] version $version → $target = $commit"; echo "[play] godot $GODOT"; } >> "$LOG"
+say "play: fetch ${fetch_state} (${fetch_secs}초)"
+[[ "$fetch_state" == offline ]] && say "play: git fetch 실패 — 마지막으로 받아 둔 원격 상태를 씁니다"
 
 WT="$PLAY_ROOT/$name"
+worktree_started=$(date +%s)
 fresh=0
 if [[ -e "$WT/.git" ]]; then
+    repo_common="$(git -C "$REPO" rev-parse --git-common-dir)"
+    wt_common="$(git -C "$WT" rev-parse --git-common-dir 2>/dev/null)" || { say "play: 작업 트리 확인 실패: $WT"; exit 1; }
+    repo_common="$(cd "$REPO" && cd "$repo_common" && pwd -P)"
+    wt_common="$(cd "$WT" && cd "$wt_common" && pwd -P)"
+    if [[ "$repo_common" != "$wt_common" ]] || ! git -C "$REPO" worktree list --porcelain | grep -Fxq "worktree $(cd "$WT" && pwd -P)"; then
+        say "play: 이 클론에 등록된 작업 트리가 아닙니다: $WT — 변경하지 않았습니다"
+        exit 1
+    fi
+    dirty="$(git -C "$WT" status --porcelain --untracked-files=all)" || { say "play: 작업 트리 상태 확인 실패: $WT"; exit 1; }
+    if [[ -n "$dirty" ]]; then
+        say "play: 로컬 수정 또는 미추적 파일이 있습니다: $WT — 보존하고 실행을 중단합니다"
+        printf '%s\n' "$dirty" | tee -a "$LOG"
+        exit 1
+    fi
     head="$(git -C "$WT" rev-parse HEAD 2>/dev/null)"
     if [[ "$head" != "$commit" ]]; then
         if [[ -n "$branch" ]] && ! git -C "$WT" merge-base --is-ancestor "$head" "$commit" 2>/dev/null; then
-            say "play: ${WT}의 ${head}는 ${branch}의 조상이 아닙니다 — 그대로 ${commit}으로 옮깁니다"
+            say "play: ${WT}의 ${head}는 ${branch}의 조상이 아닙니다 — fast-forward 불가; 변경하지 않았습니다"
+            exit 1
         fi
         git -C "$WT" checkout -q --detach "$commit" >> "$LOG" 2>&1 || { say "play: ${WT}를 ${short}로 옮기지 못했습니다 (로컬 수정이 있나요?)"; exit 1; }
         say "play: 작업 트리 $WT → $short"
@@ -135,6 +168,7 @@ else
     fresh=1
     say "play: 새 작업 트리 $WT ($short)"
 fi
+say "play: 작업 트리 준비 $(( $(date +%s) - worktree_started ))초"
 # rust/Cargo.lock is gitignored: give a new worktree this clone's lock so it does not resolve newer crates.
 if [[ ! -f "$WT/rust/Cargo.lock" && -f "$REPO/rust/Cargo.lock" ]]; then
     cp "$REPO/rust/Cargo.lock" "$WT/rust/Cargo.lock"
@@ -150,25 +184,17 @@ case "$lib_path" in
 esac
 build_state="생략"
 build_secs=0
-needs_build=0
-if [[ ! -f "$lib_path" ]]; then
-    needs_build=1
-elif [[ -n "$(find rust -path rust/target -prune -o -type f \( -name '*.rs' -o -name Cargo.toml -o -name Cargo.lock \) -newer "$lib_path" -print 2>/dev/null | head -1)" ]]; then
-    needs_build=1
-fi
 if (( build == 0 )); then
     build_state="생략(--no-build)"
     [[ -f "$lib_path" ]] || { say "play: --no-build인데 ${lib_path}가 없습니다"; exit 1; }
-elif (( needs_build == 1 )); then
+else
     command -v cargo > /dev/null 2>&1 || { say "play: Rust(cargo)가 없습니다 — https://rustup.rs 의 설치 명령을 터미널에 붙여 넣어 설치한 뒤 다시 실행하세요"; exit 1; }
     [[ "$profile" == debug ]] && say "play: Godot 편집기 실행 파일은 .gdextension의 macos.debug($lib_path)를 읽으므로 release가 아니라 debug로 빌드합니다"
-    say "play: cargo build -p sim-bridge ${cargo_flags[*]+${cargo_flags[*]}} … (처음에는 수십 초~몇 분, 그동안 화면에 아무것도 안 나옵니다)"
+    say "play: cargo build -p sim-bridge ${cargo_flags[*]+${cargo_flags[*]}} … (증분 확인; 처음에는 수십 초~몇 분)"
     started=$(date +%s)
     (cd rust && cargo build -p sim-bridge ${cargo_flags[@]+"${cargo_flags[@]}"}) >> "$LOG" 2>&1 || { say "play: 빌드 실패 — $LOG"; exit 1; }
     build_secs=$(( $(date +%s) - started ))
     build_state="완료(${profile}, ${build_secs}초)"
-else
-    say "play: 빌드 생략 — ${lib_path}가 Rust 소스보다 새것입니다"
 fi
 
 # --- 4. Import ----------------------------------------------------------------------------------
@@ -195,7 +221,7 @@ if (( runs > 0 )); then
         printf '%s\n' "$out" >> "$LOG"
     done
     # A fresh tree's first import logs font errors; only the last run counts.
-    if (( code != 0 )) || printf '%s\n' "$out" | grep -q 'SCRIPT ERROR'; then
+    if (( code != 0 )) || printf '%s\n' "$out" | grep -Eq 'SCRIPT ERROR|(^|[[:space:]])ERROR:|Parse Error'; then
         say "play: 가져오기 실패(exit ${code}, SCRIPT ERROR $(printf '%s\n' "$out" | grep -c 'SCRIPT ERROR')줄) — ${LOG}"
         exit 1
     fi
@@ -203,6 +229,10 @@ if (( runs > 0 )); then
     import_state="완료(${runs}회, $(( $(date +%s) - started ))초)"
 else
     say "play: 가져오기 생략 — .godot/가 최신입니다"
+fi
+if (( update_only == 1 )); then
+    say "play: 준비 완료 · 커밋 $short · 빌드 $build_state · 가져오기 $import_state (창 실행 생략)"
+    exit 0
 fi
 
 # --- 5./7. Launch or headless check -------------------------------------------------------------
@@ -228,16 +258,21 @@ if (( headless == 1 )); then
     out="$(bash "$BOUNDED" 600 "$GODOT" "${args[@]}" 2>&1)"
     code=$?
     printf '%s\n' "$out" >> "$LOG"
-    errors=$(printf '%s\n' "$out" | grep -c 'SCRIPT ERROR')
-    say "play: 헤드리스 확인 exit $code, SCRIPT ERROR ${errors}줄"
+    errors=$(printf '%s\n' "$out" | grep -Ec 'SCRIPT ERROR|(^|[[:space:]])ERROR:|Parse Error')
+    say "play: 헤드리스 확인 exit $code, ERROR ${errors}줄"
     (( code == 0 && errors == 0 )) && { say "play: 헤드리스 확인 통과"; exit 0; }
     say "play: 헤드리스 확인 실패 — $LOG"
     exit 1
 fi
 say "play: 게임 창을 엽니다 (창을 닫으면 끝납니다)"
 echo "[play] launch $(date '+%H:%M:%S') $GODOT ${args[*]}" >> "$LOG"
+launch_line=$(( $(wc -l < "$LOG") + 1 ))
 "$GODOT" "${args[@]}" >> "$LOG" 2>&1
 code=$?
+errors=$(tail -n "+$launch_line" "$LOG" | grep -Ec 'SCRIPT ERROR|(^|[[:space:]])ERROR:|Parse Error')
 say "play: 게임 종료 (exit $code)"
-(( code == 0 )) || exit 1
+if (( code != 0 || errors != 0 )); then
+    say "play: 게임 실행 실패 (ERROR ${errors}줄) — $LOG"
+    exit 1
+fi
 exit 0

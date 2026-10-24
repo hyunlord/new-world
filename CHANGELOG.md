@@ -5,6 +5,7 @@ Older history (pre-V7, V7, revitalize passes 1–21, art passes 1–13b, world-m
 WM-1–6) is summarised in [docs/HISTORY.md](docs/HISTORY.md); the full record is at
 tags `v7-final-sim` and `v7-final-art`.
 
+- Changed (V8-PLAY2, 2026-10-25): protect launcher worktrees and embedded-data builds; add preparation-only mode and current Korean play/key guide (`docs/v8/play2/PLAY2_REPORT.md`).
 ## M-ART2.1 — 2026-10-24
 
 The in-game look finished before M-EXT (`docs/v8/m_art2_1/MART21_GOAL.md`, record `MART21_DECISIONS.md`, report
