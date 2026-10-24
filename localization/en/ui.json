@@ -713,5 +713,15 @@
 	"M55_CHRON_GIFT_FMT": "Gave {neighbour} a gift (worth {give})",
 	"M55_CHRON_TRADER_LEFT_FMT": "Traders from {neighbour} left",
 	"M55_CHRON_EUREKA_FMT": "{person} discovered {node} from a clue: {item}!",
-	"M55_YEAR_EXTRA_FMT": " · migrants {migrants} · trades {trades} · clues {eurekas}"
+	"M55_YEAR_EXTRA_FMT": " · migrants {migrants} · trades {trades} · clues {eurekas}",
+	"UI_RENDER_PARAMS_RELOADED": "Render settings reloaded",
+	"UI_RENDER_PARAMS_BROKEN": "Render settings unreadable — kept the old values",
+	"UI_ZOOM": "Zoom {zoom}",
+	"LOOK_TOP_LOINCLOTH": "Loincloth",
+	"LOOK_TOP_HIDE_WRAP": "Hide wrap",
+	"LOOK_TOP_FUR_CLOAK": "Fur cloak",
+	"LOOK_HAIR_SHORT": "Short hair",
+	"LOOK_HAIR_LONG_TIED": "Long tied hair",
+	"LOOK_HAIR_BUN": "Bun",
+	"UI_INSPECT_LOOK_FMT": "{top} · {hair} · face {face}"
 }

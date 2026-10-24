@@ -554,7 +554,7 @@
   },
   {
    "bytes": 142443,
-   "id": "water",
+   "id": "river_water",
    "path": "ground/water.png",
    "role": "water_texture",
    "sha256": "f2cf14875133f48f501351881ab97b6c97b99ec160fc3723ec7ff64fea558965",

@@ -1,7 +1,7 @@
 [gd_scene load_steps=20 format=3 uid="uid://v7init"]
 
 [ext_resource type="Script" path="res://scripts/core/sim_reads.gd" id="1_sim_reads"]
-[ext_resource type="Script" path="res://scripts/world/colony/terrain_layer.gd" id="2_terrain"]
+[ext_resource type="Script" path="res://scripts/world/colony/ground_layer.gd" id="2_ground"]
 [ext_resource type="Script" path="res://scripts/world/colony/tree_layer.gd" id="3_trees"]
 [ext_resource type="Script" path="res://scripts/world/colony/building_layer.gd" id="4_buildings"]
 [ext_resource type="Script" path="res://scripts/world/colony/overlay_layer.gd" id="5_overlay"]
@@ -27,10 +27,13 @@ script = ExtResource("1_sim_reads")
 
 [node name="ColonyView" type="Node2D" parent="."]
 
-[node name="TerrainLayer" type="TileMapLayer" parent="ColonyView"]
-script = ExtResource("2_terrain")
+[node name="GroundLayer" type="Node2D" parent="ColonyView"]
+script = ExtResource("2_ground")
 
-[node name="TreeLayer" type="TileMapLayer" parent="ColonyView"]
+[node name="World" type="Node2D" parent="ColonyView"]
+y_sort_enabled = true
+
+[node name="TreeLayer" type="Node2D" parent="ColonyView"]
 script = ExtResource("3_trees")
 
 [node name="BuildingLayer" type="Node2D" parent="ColonyView"]

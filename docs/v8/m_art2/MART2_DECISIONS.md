@@ -146,3 +146,92 @@ category for a material the art data does not list.
   differences), chronicle PASS (64 files), raw samples PASS, determinism PASS; fmt, clippy (all targets), the new tests
   (engine_appearance_ffi 5, engine_space_ffi 4), sim-bridge 51, schema docs, check_docs all green
   (`$DATA/part2_report.md`; each new test was seen failing under a deliberate break).
+
+## D9 — Variant tint: the art line's Lab shift in the shader, not RGB multipliers
+
+- The goal says "the variant's Lab-derived target colours precomputed to RGB multipliers". The approved sprites are the
+  art line's baked frames, made by a per-pixel CIELAB shift (`variant_transforms.json`: one `skin_delta_lab` and one
+  `hair_delta_lab` per look × variant, L* ≤ 18 and alpha ≤ 127 protected). A single RGB multiplier per region cannot
+  reproduce a Lab shift across the region's light and dark pixels (it scales shadows and highlights by the same
+  factor, shifting hue where the Lab shift does not), so the shader (`shaders/person_variant.gdshader`) does the same
+  sRGB → Lab → shift → sRGB per masked pixel with the record's deltas — the "precomputed" part is the deltas. Cost: a
+  few dozen ALU ops per masked pixel of ~30–200 people at 1× (bodies hide below 1×). The numbers come straight from the
+  imported record (tested: `mart2_people_test.gd` `variant_tint_deterministic` compares every person's shader
+  parameters with the record read independently).
+- Elders (life stage 2) get the grey hair target `bindings.people.grey_hair_rgb` (the art line's H4, 160/155/140) as
+  a Lab delta from the look's source hair Lab, on top of their older face variant (goal §2: "an older face variant +
+  grey hair tint").
+- A frame without a fixed mask is drawn untinted (`has_mask` false); a missing mask texture must never tint the whole
+  figure (the first windowed run did exactly that: a sampler without a texture reads white).
+
+## D10 — Walls, doors and hill faces in the y-sorted world; people as feet-anchored nodes
+
+- Each chunk's walls and hill faces are baked into one strip per tile row (1,024 × 64: the 16-px cap above the row,
+  the 44-px face, a joined N–S top reaching 48 px down) and stand in `ColonyView/World` (y-sorted) at the row's base
+  y (`tile_top + 43`), so a person north of a wall is covered by its face and cap and one south of it covers the wall
+  (PROJECTION.md's rule). Doors stand there as their own sprites (open while a person is on the tile).
+- Layer nodes keep their old paths (`ColonyView/AgentLayer` …; UI scripts reference them) and parent their sprites
+  to `ColonyView/World`; one y-sort scope holds walls, people, animals, trees, structures and items, all at z 0.
+- A person node sits at its feet (the base point); the frame is offset by −anchor (mirrored for W), so the anchor
+  pixel lands on the feet in every facing (tested in four facings).
+
+## D11 — The edge instrument and a check that can fail
+
+ART-STRUCT's registered instrument (no run of more than 24 identical non-zero luminance steps across a boundary)
+passes square edges between two textured grounds — the steps vary pixel by pixel. Shown on the real hearth chunk:
+with `blend_px` 0 it read 1 px (pass) while the edges were square. `mart2_ground_test.gd` keeps the instrument (goal
+§8) and adds `edges_dithered`: in a tile whose east neighbour is another ground, 8–60 % of its 12-px band must differ
+from its own texture (taken from the neighbour) and its far side none; it read 0.26 / 0.00 and failed (0.00) with
+blending off.
+
+## D12 — Space changes rebake incrementally
+
+The first version recomputed all 36,864 tiles of the ground map on every `get_space` version change (75 ms, a hitch
+at every wall finished or tile dug). `_apply_space` now recomputes only the tiles whose dug, floor or wall state
+changed (and the tile north of each, whose hill face depends on it): 1.2 ms for a dig including the one chunk rebake
+(`dig_rebakes_one_chunk`: exactly the dug tile's chunk is rebaked, 1.1–1.3 ms headless).
+
+## D13 — The owner screen set, the old renderer, and where images live
+
+- Scenes come from colony seed 0 saves written by the probe with `tools/v8/m55_u_script.json` (the M5.5 script: a
+  house, a storehouse, a dug pocket, workshops, drafting, migrants): day 6 noon (tick 7,440), day 6 02:00 (6,840),
+  first winter noon (26,160; the colony season is 6 days), and day 20 noon (27,600) for the FPS runs. Every shot also
+  saves the world at its exact moment; `tools/v8/mart2_old_shots.gd`, run in the base worktree (`29f720aa`, the M1
+  sheet renderer), loads those saves and frames the same world area (old zoom = new zoom × 4) — the comparison is the
+  identical moment, the drafting and all (saves are compatible: no simulation change).
+- `check_docs.sh` allows no binary under `docs/` except ≤ 12 images in `docs/images/`, while the goal names
+  `docs/v8/m_art2/screens/`. The PNGs therefore go to `docs/images/` as two sheets — `mart2_contact_sheet.png` (the new
+  renderer set, replacing `m55_contact_sheet.png`) and `mart2_compare_sheet.png` (old vs new per scene) — and
+  `docs/v8/m_art2/screens/SCREENS.md` lists every shot (caption, tick, zoom, SHA-256 of the raw PNG kept in
+  `$DATA/screens/`).
+
+## D14 — The skin mask fix: what it found and what it does
+
+- `tools/v8/art_masks.py` rebuilds one RGBA mask per frame (R skin, G hair; 340 files, 136 KB) from the art line's
+  last masks at `c8ed8608` (read through git) and the source-authored geometry (`*_SOURCE_ENVELOPES.json`,
+  `variant_anatomy.json`). A skin pixel is removed if it lies in a garment or prop polygon, if its colour's nearest
+  centre (k-means over each look's garment-polygon interiors vs trusted skin and hair centres) is a clothing centre,
+  or if it lies outside the frame's skin regions; a hair pixel by the polygon and colour rules. Pixels are never added.
+- **Finding:** the masks at `c8ed8608` (the art line's v3 revision) already had 0 skin or hair pixels inside garment
+  or prop polygons; with them, an S3 tint matches the art line's baked v3 frames within one level and the fur cloaks
+  do not darken (`$DATA/masks_sheet.png`: six fur-cloak looks, S idle and E work_a, old vs new mask). The darkened
+  cloaks the owner saw came from an earlier revision (POLISH2's v5 put six fur/hem pixels into the masks; later
+  revisions removed them). The figure of a deep-brown-skinned person in a dark-brown cloak still reads darker overall —
+  a contrast of colours, not a mask defect; recorded for the owner.
+- So the fix is a guard: it removes 177 skin pixels by colour (dark borders where skin meets hair, cloak or a carried
+  log; a few on child frames' logs, whose envelopes have no prop polygons) and 3 by region (armpit pixels under a
+  raised arm), 63,672 → 63,492 skin pixels (99.72 %), 54 hair pixels; the largest loss in one frame is 5.7 %.
+- **Regions** (TEMPLATE_V3 defines none; the art line's boxes exist only for S idle and the 8 owner frames): computed
+  per frame from the source geometry and template constants, never from the masks — head (the hair envelope's box,
+  extended down by the neck rows of the owner supports: adult 5, child 8), legs (hip row to the foot line: adult 82,
+  child 92), arms (a shoulder band down to the head box's bottom; left and right of a torso core in S, the figure right
+  of the head box's left edge in E), sleep (head left; arms 30 %, legs the last 45 % of the body length), and a torso
+  region only for the bare-chested tops (loincloth, hide wrap; the goal's "face/forearm/leg boxes" would leave a
+  loincloth chest untinted, a visible two-tone body). Stored in `assets/v8art/people/masks/skin_regions.json`.
+- Colour guards: a clothing centre within ΔE 12 of a skin centre is not used (tan hide and skin shadow share colours:
+  without the guard the colour rule removed 23.5 % of skin, mostly limb shading); hair guard ΔE 8 (dark fur and dark
+  hair share colours; without it 13 % of hair went as speckles).
+- Tests (`tools/v8/test_art_masks.py`, 9, in gate step 16): files and sizes, `--check` idempotent, 0 clothing-cluster
+  pixels in any skin mask and 0 polygon pixels in any skin or hair mask over all 340 frames, every skin pixel inside its
+  regions, masks only shrink against the git originals, skin coverage ≥ 80 % (observed 99.72 %); each shown failing on
+  a planted fur pixel and on a planted out-of-region pixel.

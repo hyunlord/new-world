@@ -1,6 +1,9 @@
-# camera_controller.gd (Camera2D in scenes/main.tscn): the M1 colony camera and the simulation speed keys.
-# Integer zoom only (1×/2×/3×/4×, default 2×) with the wheel, `-` and `=`; pan with WASD / arrows and a
-#   middle-button drag; starts centred on the camp hearth, and Home or H centres on it again (C is the chronicle,
+# camera_controller.gd (Camera2D in scenes/main.tscn): the colony camera and the simulation speed keys.
+# M-ART2: zoom steps from assets/v8art/render_params.json `camera.zooms` (¼×, ½×, 1×, 2×; default `camera.default_zoom`
+#   1×) with the wheel, `-` and `=`; below 1× the people and animals become LOD markers (agent_layer.gd); pan with
+#   WASD / arrows (`camera.pan_px_per_second` screen pixels a second, so the same screen speed at every zoom) and a
+#   middle-button drag; in debug builds F12 re-reads render_params.json (ArtData.reload_params) and shows the toast
+#   "렌더 설정 다시 읽음" (UI_RENDER_PARAMS_RELOADED) for two seconds; starts centred on the camp hearth, and Home or H centres on it again (C is the chronicle,
 #   order_bar.gd shows the hint); bounds = the map plus a 4-tile margin. Keys 1–4 set
 #   the speed 1×–4× (12/24/36/48 ticks per second, ADR 0004); Space (or Pause) pauses by disabling the WorldSim
 #   node (M2: P opens the work-priority table, priority_panel.gd). M5: while the inspector shows a living person, D
@@ -10,9 +13,8 @@
 extends Camera2D
 
 const View = preload("res://scripts/world/colony/view.gd")
-const ZOOM_STEPS: Array[float] = [1.0, 2.0, 3.0, 4.0]
-const ZOOM_DEFAULT: float = 2.0
-const PAN_PIXELS_PER_SECOND: float = 900.0
+const ArtData = preload("res://scripts/world/art/art_data.gd")
+const TOAST_SECONDS: float = 2.0
 const MARGIN_TILES: int = 4
 const SPEED_KEYS: Dictionary = {KEY_1: 1.0, KEY_2: 2.0, KEY_3: 3.0, KEY_4: 4.0}
 # Centre on the camp: Home, or H for keyboards without a Home key (C opens the chronicle).
@@ -26,10 +28,25 @@ var _paused: bool = false
 var _speed: float = 1.0
 var _dragging: bool = false
 var _center_pending: bool = true
+var _toast: Label = null
+var _toast_left: float = 0.0
+
+
+## The zoom ladder (camera zoom factors, ascending) from render_params.json.
+func zoom_steps() -> Array[float]:
+	var out: Array[float] = []
+	var raw: Variant = ArtData.param("camera.zooms", [0.25, 0.5, 1.0, 2.0])
+	if raw is Array:
+		for z: Variant in raw:
+			out.append(clampf(float(z), 0.05, 8.0))
+	if out.is_empty():
+		out.append(1.0)
+	out.sort()
+	return out
 
 
 func _ready() -> void:
-	zoom = Vector2.ONE * ZOOM_DEFAULT
+	zoom = Vector2.ONE * float(ArtData.param("camera.default_zoom", 1.0))
 	position_smoothing_enabled = false
 	_world_sim = get_node_or_null("/root/Main/WorldSim")
 	if _world_sim != null:
@@ -87,6 +104,39 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif SPEED_KEYS.has(key.keycode):
 			set_speed(float(SPEED_KEYS[key.keycode]))
 			get_viewport().set_input_as_handled()
+		elif key.keycode == KEY_F12 and OS.is_debug_build():
+			reload_render_params()
+			get_viewport().set_input_as_handled()
+
+
+## Re-read render_params.json and show the toast (F12 in debug builds). Returns whether the file parsed.
+func reload_render_params() -> bool:
+	var ok: bool = ArtData.reload_params()
+	var locale: Node = get_node_or_null("/root/Locale")
+	var text: String = str(locale.call("ltr", "UI_RENDER_PARAMS_RELOADED" if ok else "UI_RENDER_PARAMS_BROKEN")) if locale != null else ""
+	var ui: Node = get_node_or_null("/root/Main/UI")
+	if ui != null:
+		if _toast == null:
+			_toast = Label.new()
+			_toast.name = "RenderToast"
+			_toast.add_theme_font_size_override("font_size", 24)
+			_toast.position = Vector2(24, 140)
+			_toast.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			var back: StyleBoxFlat = StyleBoxFlat.new()
+			back.bg_color = Color(0.094, 0.082, 0.075, 0.92)
+			back.set_content_margin_all(8)
+			_toast.add_theme_stylebox_override("normal", back)
+			ui.add_child(_toast)
+		_toast.text = text
+		_toast.visible = true
+		_toast_left = TOAST_SECONDS
+	step_zoom(0)
+	return ok
+
+
+## The toast's text while it shows ("" when hidden; for tests).
+func toast_text() -> String:
+	return _toast.text if _toast != null and _toast.visible else ""
 
 
 ## Set the speed multiplier (1–4) on the bridge.
@@ -96,13 +146,15 @@ func set_speed(speed: float) -> void:
 		_world_sim.call("set_sim_speed", _speed)
 
 
-## Step the integer zoom ladder by `direction` (+1 in, -1 out).
+## Step the zoom ladder by `direction` (+1 in, -1 out; 0 snaps to the nearest step).
 func step_zoom(direction: int) -> void:
-	var index: int = ZOOM_STEPS.find(zoom.x)
-	if index < 0:
-		index = 1
-	index = clampi(index + direction, 0, ZOOM_STEPS.size() - 1)
-	zoom = Vector2.ONE * ZOOM_STEPS[index]
+	var steps: Array[float] = zoom_steps()
+	var index: int = 0
+	for k: int in steps.size():
+		if absf(steps[k] - zoom.x) < absf(steps[index] - zoom.x):
+			index = k
+	index = clampi(index + direction, 0, steps.size() - 1)
+	zoom = Vector2.ONE * steps[index]
 	_clamp_position()
 
 
@@ -119,6 +171,9 @@ func _toggle_pause() -> void:
 
 
 func _process(delta: float) -> void:
+	if _toast != null and _toast.visible:
+		_toast_left -= delta
+		_toast.visible = _toast_left > 0.0
 	if _center_pending:
 		_center_on_camp()
 	var direction: Vector2 = Vector2.ZERO
@@ -131,7 +186,7 @@ func _process(delta: float) -> void:
 	if Input.is_key_pressed(KEY_S) or Input.is_key_pressed(KEY_DOWN):
 		direction.y += 1.0
 	if direction != Vector2.ZERO:
-		position += direction * PAN_PIXELS_PER_SECOND * delta / zoom.x
+		position += direction * float(ArtData.param("camera.pan_px_per_second", 900.0)) * delta / zoom.x
 		_clamp_position()
 
 
@@ -156,7 +211,7 @@ func center_on_camp() -> void:
 	_center_on_camp()
 
 
-## Centre on the camp hearth (building kind 0); stays pending until the hearth exists.
+## Centre on the camp hearth (the building whose binding gives light); stays pending until it exists.
 func _center_on_camp() -> void:
 	if _world_sim == null:
 		return
@@ -165,7 +220,7 @@ func _center_on_camp() -> void:
 	var xs: PackedInt32Array = buildings.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = buildings.get("ys", PackedInt32Array())
 	for i: int in mini(kinds.size(), mini(xs.size(), ys.size())):
-		if kinds[i] == 0:
+		if bool(ArtData.binding("buildings", kinds[i]).get("light", false)):
 			center_on_tile(Vector2i(xs[i], ys[i]))
 			_center_pending = false
 			return

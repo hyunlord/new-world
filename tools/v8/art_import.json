@@ -362,7 +362,7 @@
     },
     {
       "role": "water_texture",
-      "id": "water",
+      "id": "river_water",
       "source": "art/style05/struct/water.png",
       "dest": "ground/water.png"
     },

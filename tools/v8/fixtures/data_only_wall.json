@@ -1,0 +1,6 @@
+{
+  "about": "M-ART2 data-only test (goal §3.4): a material and a blueprint the shipped data does not have, added by data alone. The test merges these into the imported documents in memory and must render a wall through the unchanged resolver and wall baker.",
+  "materials": [{"id": "test_river_mud", "category": "Mineral", "sim_id": 4242424242, "tint": {"dL": -6, "da": 2, "db": 4}}],
+  "blueprints": {"mud_brick": ["TestMudBrickWall"]},
+  "expect": {"style_id": "mud_brick", "material_key": "test_river_mud", "tint_source": "material", "style_source": "blueprint"}
+}

@@ -4,7 +4,7 @@
   "terrain": {
     "fallback": "dark_grass",
     "codes": [
-      {"code": 0, "sim": "Plain", "ground": "dark_grass"},
+      {"code": 0, "sim": "Plain", "ground": "dark_grass", "clearing_ok": true},
       {"code": 1, "sim": "Forest", "ground": "forest_floor"},
       {"code": 2, "sim": "Mountain", "ground": "hill_rock", "standing_face": true, "blocks": true},
       {"code": 3, "sim": "Hill", "ground": "hill_rock", "standing_face": true, "blocks": true},
@@ -13,7 +13,7 @@
     "clearing": {"ground": "packed_earth_ground", "core_tiles": 4, "reach_tiles": 8},
     "dug_ground": "hill_rock",
     "face": "rock_face",
-    "water": "water",
+    "water": "river_water",
     "snow": "snow_overlay",
     "ford_stones": ["ford_stone_1", "ford_stone_2", "ford_stone_3", "ford_stone_4"]
   },
@@ -21,7 +21,14 @@
     "about": "get_space wall_styles / floor_styles carry blueprint names; the material resolver maps them through construction_styles.json sim_blueprints. A floor style the material data does not know but listed here draws this ground instead.",
     "floor_grounds": [{"style": "DugFloor", "ground": "hill_rock"}],
     "door_styles": ["Door"],
+    "wall_kind_styles": ["LogWall", "StoneWall", "Door"],
+    "floor_kind_styles": ["PackedFloor", "DugFloor"],
     "bed": {"structure": "bedroll", "footprint": [2, 1]}
+  },
+  "tones": {
+    "about": "Which ground tone a season code (get_time_snapshot `season`) or an active pressure (get_story `names`) selects; anything else is day.",
+    "seasons": {"3": "winter"},
+    "pressures": {"drought": "drought"}
   },
   "buildings": {
     "fallback": null,
@@ -29,7 +36,7 @@
       {"code": 0, "sim": "Hearth", "structure": "hearth_1", "unlit": "hearth_unlit", "firing": "hearth_pots", "light": true},
       {"code": 1, "sim": "Shelter", "structure": "lean_to"},
       {"code": 2, "sim": "StockpileMarker", "structure": null},
-      {"code": 3, "sim": "Hut", "ring": {"size": [3, 3], "wall_style": "LogWall", "floor_style": "PackedFloor", "door": [1, 2]}}
+      {"code": 3, "sim": "Hut", "ring": {"size": [3, 3], "wall_style": "LogWall", "floor_style": "PackedFloor", "door": [1, 2], "door_style": "Door"}}
     ]
   },
   "workshops": {
@@ -46,9 +53,9 @@
   "nodes": {
     "fallback": "boulder_small",
     "codes": [
-      {"code": 0, "sim": "Boulder", "structure": "boulder_large", "depleted": "boulder_small", "depleted_below_permille": 500},
-      {"code": 1, "sim": "FlintOutcrop", "structure": "flint_outcrop"},
-      {"code": 2, "sim": "ClayBank", "structure": "claybank_full", "depleted": "claybank_depleted", "depleted_below_permille": 500}
+      {"code": 0, "sim": "Boulder", "structure": "boulder_large", "depleted": "boulder_small", "depleted_below_permille": 500, "name_key": "NODE_BOULDER", "yields": 2},
+      {"code": 1, "sim": "FlintOutcrop", "structure": "flint_outcrop", "name_key": "NODE_FLINT_OUTCROP", "yields": 3},
+      {"code": 2, "sim": "ClayBank", "structure": "claybank_full", "depleted": "claybank_depleted", "depleted_below_permille": 500, "name_key": "NODE_CLAY_BANK", "yields": 7}
     ]
   },
   "resources": {
@@ -97,10 +104,45 @@
     "fallback_code": 1,
     "codes": [
       {"code": 0, "sim": "Wolf", "species": "wolf", "lod_colour": [184, 67, 54],
-       "poses": {"0": "walk", "1": "run", "2": "stand", "3": "run", "4": "attack", "5": "run"}, "still": "stand", "dead": "dead"},
+       "poses": {"0": "walk", "1": "run", "2": "stand", "3": "run", "4": "attack", "5": "run"}, "still": "stand", "dead": "dead", "moving": ["walk", "run"]},
       {"code": 1, "sim": "Deer", "species": "deer", "lod_colour": [194, 157, 97],
-       "poses": {"0": "graze", "1": "run", "2": "stand", "3": "walk", "4": "stand", "5": "run"}, "still": "stand", "dead": "dead"}
+       "poses": {"0": "graze", "1": "run", "2": "stand", "3": "walk", "4": "stand", "5": "run"}, "still": "stand", "dead": "dead", "moving": ["walk", "run"]}
     ]
+  },
+  "blueprints": {
+    "about": "BlueprintKind codes (get_colony_overlay site_kinds, get_workshops kinds, the order tool's build kinds) → what the finished thing is, for site ghosts, placement previews and build-menu icons (scripts/world/art/site_ghost.gd). `workshop` names a workshops code, `building` a buildings code (a hut's ring), `style` + `kind` a material-system blueprint, `bed` the space.bed structure.",
+    "codes": [
+      {"code": 0, "sim": "Hut", "building": 3},
+      {"code": 1, "sim": "KnappingSpot", "workshop": 1},
+      {"code": 2, "sim": "WoodBench", "workshop": 2},
+      {"code": 3, "sim": "DryingRack", "workshop": 3},
+      {"code": 4, "sim": "LogWall", "style": "LogWall", "kind": "wall"},
+      {"code": 5, "sim": "StoneWall", "style": "StoneWall", "kind": "wall"},
+      {"code": 6, "sim": "Door", "style": "Door", "kind": "door"},
+      {"code": 7, "sim": "PackedFloor", "style": "PackedFloor", "kind": "floor"},
+      {"code": 8, "sim": "Bedroll", "bed": true},
+      {"code": 9, "sim": "GrindingStone", "workshop": 9},
+      {"code": 10, "sim": "PotteryBench", "workshop": 10},
+      {"code": 11, "sim": "HearthFire", "building": 0}
+    ]
+  },
+  "order_icons": {
+    "about": "Order bar mode icons (order_bar.gd MODES / DIG_MENU `icon` names) → manifest ids; null draws no icon. Build-menu icons are the finished blueprint (blueprints above).",
+    "icon_chop": "stone_axe",
+    "icon_stockpile": "log_pile_small",
+    "icon_build": "lean_to",
+    "icon_remove": null,
+    "icon_cancel": null,
+    "icon_quarry": "stone_pile",
+    "icon_dig": "boulder_small",
+    "icon_deconstruct": null,
+    "icon_hunt": "spear"
+  },
+  "visitors": {
+    "about": "Migrant waves and caravans (get_neighbours) are drawn as route I people: a look per person by a keyed hash of the group number among the looks whose age is listed; traders carry; the pack is an item sprite.",
+    "look_ages": ["adult"],
+    "pack": "hide",
+    "lod_colour": [196, 182, 150]
   },
   "people": {
     "about": "Look ids and variant pools come from manifest.json and people/face_variants.json; the bridge sends look_ids (index into manifest.looks) and variants (0-5).",

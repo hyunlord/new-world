@@ -713,5 +713,15 @@
 	"M55_CHRON_GIFT_FMT": "{neighbour}에 선물을 주었다 (값 {give})",
 	"M55_CHRON_TRADER_LEFT_FMT": "{neighbour} 교역 무리가 떠났다",
 	"M55_CHRON_EUREKA_FMT": "{person}가 {item} 보고 {node} 발견했다! (단서)",
-	"M55_YEAR_EXTRA_FMT": " · 이주 {migrants} · 거래 {trades} · 단서 {eurekas}"
+	"M55_YEAR_EXTRA_FMT": " · 이주 {migrants} · 거래 {trades} · 단서 {eurekas}",
+	"UI_RENDER_PARAMS_RELOADED": "렌더 설정 다시 읽음",
+	"UI_RENDER_PARAMS_BROKEN": "렌더 설정을 읽을 수 없음 — 이전 값 유지",
+	"UI_ZOOM": "확대 {zoom}",
+	"LOOK_TOP_LOINCLOTH": "허리 두르개",
+	"LOOK_TOP_HIDE_WRAP": "가죽 랩",
+	"LOOK_TOP_FUR_CLOAK": "털망토",
+	"LOOK_HAIR_SHORT": "짧은 머리",
+	"LOOK_HAIR_LONG_TIED": "묶은 머리",
+	"LOOK_HAIR_BUN": "틀어 올린 머리",
+	"UI_INSPECT_LOOK_FMT": "{top} · {hair} · 얼굴 {face}"
 }

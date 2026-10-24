@@ -1,0 +1,1248 @@
+{
+ "generated_by": "tools/v8/resolver_parity.py",
+ "results": [
+  {
+   "case": {
+    "material": "oak",
+    "style": "log"
+   },
+   "result": {
+    "category": "Wood",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "wall",
+    "material_key": "oak",
+    "style_id": "log",
+    "style_source": "style",
+    "textures": {
+     "door_closed": "art/materials/textures/log/door_closed.png",
+     "door_open": "art/materials/textures/log/door_open.png",
+     "end": "art/materials/textures/log/end.png",
+     "face": "art/materials/textures/log/face.png",
+     "floor": null,
+     "junction": "art/materials/textures/log/junction.png",
+     "top_ew": "art/materials/textures/log/top_ew.png",
+     "top_ns": "art/materials/textures/log/top_ns.png"
+    },
+    "tint": {
+     "dL": 0.0,
+     "da": 0.0,
+     "db": 0.0
+    },
+    "tint_source": "material",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "material": "pine",
+    "style": "log"
+   },
+   "result": {
+    "category": "Wood",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "wall",
+    "material_key": "pine",
+    "style_id": "log",
+    "style_source": "style",
+    "textures": {
+     "door_closed": "art/materials/textures/log/door_closed.png",
+     "door_open": "art/materials/textures/log/door_open.png",
+     "end": "art/materials/textures/log/end.png",
+     "face": "art/materials/textures/log/face.png",
+     "floor": null,
+     "junction": "art/materials/textures/log/junction.png",
+     "top_ew": "art/materials/textures/log/top_ew.png",
+     "top_ns": "art/materials/textures/log/top_ns.png"
+    },
+    "tint": {
+     "dL": 5.0,
+     "da": -2.0,
+     "db": 8.0
+    },
+    "tint_source": "material",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "material": "granite",
+    "style": "drystone"
+   },
+   "result": {
+    "category": "Stone",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "wall",
+    "material_key": "granite",
+    "style_id": "drystone",
+    "style_source": "style",
+    "textures": {
+     "door_closed": "art/materials/textures/drystone/door_closed.png",
+     "door_open": "art/materials/textures/drystone/door_open.png",
+     "end": "art/materials/textures/drystone/end.png",
+     "face": "art/materials/textures/drystone/face.png",
+     "floor": null,
+     "junction": "art/materials/textures/drystone/junction.png",
+     "top_ew": "art/materials/textures/drystone/top_ew.png",
+     "top_ns": "art/materials/textures/drystone/top_ns.png"
+    },
+    "tint": {
+     "dL": 0.0,
+     "da": 0.0,
+     "db": 0.0
+    },
+    "tint_source": "material",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "material": "sandstone",
+    "style": "drystone"
+   },
+   "result": {
+    "category": "Stone",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "wall",
+    "material_key": "sandstone",
+    "style_id": "drystone",
+    "style_source": "style",
+    "textures": {
+     "door_closed": "art/materials/textures/drystone/door_closed.png",
+     "door_open": "art/materials/textures/drystone/door_open.png",
+     "end": "art/materials/textures/drystone/end.png",
+     "face": "art/materials/textures/drystone/face.png",
+     "floor": null,
+     "junction": "art/materials/textures/drystone/junction.png",
+     "top_ew": "art/materials/textures/drystone/top_ew.png",
+     "top_ns": "art/materials/textures/drystone/top_ns.png"
+    },
+    "tint": {
+     "dL": 10.0,
+     "da": 5.0,
+     "db": 12.0
+    },
+    "tint_source": "material",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "material": "limestone",
+    "style": "drystone"
+   },
+   "result": {
+    "category": "Stone",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "wall",
+    "material_key": "limestone",
+    "style_id": "drystone",
+    "style_source": "style",
+    "textures": {
+     "door_closed": "art/materials/textures/drystone/door_closed.png",
+     "door_open": "art/materials/textures/drystone/door_open.png",
+     "end": "art/materials/textures/drystone/end.png",
+     "face": "art/materials/textures/drystone/face.png",
+     "floor": null,
+     "junction": "art/materials/textures/drystone/junction.png",
+     "top_ew": "art/materials/textures/drystone/top_ew.png",
+     "top_ns": "art/materials/textures/drystone/top_ns.png"
+    },
+    "tint": {
+     "dL": 14.0,
+     "da": 1.0,
+     "db": 5.0
+    },
+    "tint_source": "material",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "material": "clay",
+    "style": "mud_brick"
+   },
+   "result": {
+    "category": "Mineral",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "wall",
+    "material_key": "clay",
+    "style_id": "mud_brick",
+    "style_source": "style",
+    "textures": {
+     "door_closed": "art/materials/textures/mud_brick/door_closed.png",
+     "door_open": "art/materials/textures/mud_brick/door_open.png",
+     "end": "art/materials/textures/mud_brick/end.png",
+     "face": "art/materials/textures/mud_brick/face.png",
+     "floor": null,
+     "junction": "art/materials/textures/mud_brick/junction.png",
+     "top_ew": "art/materials/textures/mud_brick/top_ew.png",
+     "top_ns": "art/materials/textures/mud_brick/top_ns.png"
+    },
+    "tint": {
+     "dL": 0.0,
+     "da": 0.0,
+     "db": 0.0
+    },
+    "tint_source": "category",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "material": "clay",
+    "style": "fired_brick"
+   },
+   "result": {
+    "category": "Mineral",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "wall",
+    "material_key": "clay",
+    "style_id": "fired_brick",
+    "style_source": "style",
+    "textures": {
+     "door_closed": "art/materials/textures/fired_brick/door_closed.png",
+     "door_open": "art/materials/textures/fired_brick/door_open.png",
+     "end": "art/materials/textures/fired_brick/end.png",
+     "face": "art/materials/textures/fired_brick/face.png",
+     "floor": null,
+     "junction": "art/materials/textures/fired_brick/junction.png",
+     "top_ew": "art/materials/textures/fired_brick/top_ew.png",
+     "top_ns": "art/materials/textures/fired_brick/top_ns.png"
+    },
+    "tint": {
+     "dL": 0.0,
+     "da": 0.0,
+     "db": 0.0
+    },
+    "tint_source": "category",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "material": "oak",
+    "style": "LogWall"
+   },
+   "result": {
+    "category": "Wood",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "wall",
+    "material_key": "oak",
+    "style_id": "log",
+    "style_source": "blueprint",
+    "textures": {
+     "door_closed": "art/materials/textures/log/door_closed.png",
+     "door_open": "art/materials/textures/log/door_open.png",
+     "end": "art/materials/textures/log/end.png",
+     "face": "art/materials/textures/log/face.png",
+     "floor": null,
+     "junction": "art/materials/textures/log/junction.png",
+     "top_ew": "art/materials/textures/log/top_ew.png",
+     "top_ns": "art/materials/textures/log/top_ns.png"
+    },
+    "tint": {
+     "dL": 0.0,
+     "da": 0.0,
+     "db": 0.0
+    },
+    "tint_source": "material",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "material": "granite",
+    "style": "StoneWall"
+   },
+   "result": {
+    "category": "Stone",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "wall",
+    "material_key": "granite",
+    "style_id": "drystone",
+    "style_source": "blueprint",
+    "textures": {
+     "door_closed": "art/materials/textures/drystone/door_closed.png",
+     "door_open": "art/materials/textures/drystone/door_open.png",
+     "end": "art/materials/textures/drystone/end.png",
+     "face": "art/materials/textures/drystone/face.png",
+     "floor": null,
+     "junction": "art/materials/textures/drystone/junction.png",
+     "top_ew": "art/materials/textures/drystone/top_ew.png",
+     "top_ns": "art/materials/textures/drystone/top_ns.png"
+    },
+    "tint": {
+     "dL": 0.0,
+     "da": 0.0,
+     "db": 0.0
+    },
+    "tint_source": "material",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "material": 193501184,
+    "style": "LogWall"
+   },
+   "result": {
+    "category": "Wood",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "wall",
+    "material_key": "oak",
+    "style_id": "log",
+    "style_source": "blueprint",
+    "textures": {
+     "door_closed": "art/materials/textures/log/door_closed.png",
+     "door_open": "art/materials/textures/log/door_open.png",
+     "end": "art/materials/textures/log/end.png",
+     "face": "art/materials/textures/log/face.png",
+     "floor": null,
+     "junction": "art/materials/textures/log/junction.png",
+     "top_ew": "art/materials/textures/log/top_ew.png",
+     "top_ns": "art/materials/textures/log/top_ns.png"
+    },
+    "tint": {
+     "dL": 0.0,
+     "da": 0.0,
+     "db": 0.0
+    },
+    "tint_source": "material",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "material": 225677135,
+    "style": "StoneWall"
+   },
+   "result": {
+    "category": "Stone",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "wall",
+    "material_key": "granite",
+    "style_id": "drystone",
+    "style_source": "blueprint",
+    "textures": {
+     "door_closed": "art/materials/textures/drystone/door_closed.png",
+     "door_open": "art/materials/textures/drystone/door_open.png",
+     "end": "art/materials/textures/drystone/end.png",
+     "face": "art/materials/textures/drystone/face.png",
+     "floor": null,
+     "junction": "art/materials/textures/drystone/junction.png",
+     "top_ew": "art/materials/textures/drystone/top_ew.png",
+     "top_ns": "art/materials/textures/drystone/top_ns.png"
+    },
+    "tint": {
+     "dL": 0.0,
+     "da": 0.0,
+     "db": 0.0
+    },
+    "tint_source": "material",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "material": 3089363381,
+    "style": "StoneWall"
+   },
+   "result": {
+    "category": "Stone",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "wall",
+    "material_key": "limestone",
+    "style_id": "drystone",
+    "style_source": "blueprint",
+    "textures": {
+     "door_closed": "art/materials/textures/drystone/door_closed.png",
+     "door_open": "art/materials/textures/drystone/door_open.png",
+     "end": "art/materials/textures/drystone/end.png",
+     "face": "art/materials/textures/drystone/face.png",
+     "floor": null,
+     "junction": "art/materials/textures/drystone/junction.png",
+     "top_ew": "art/materials/textures/drystone/top_ew.png",
+     "top_ns": "art/materials/textures/drystone/top_ns.png"
+    },
+    "tint": {
+     "dL": 14.0,
+     "da": 1.0,
+     "db": 5.0
+    },
+    "tint_source": "material",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "material": "granite",
+    "style": "no_such_style"
+   },
+   "result": {
+    "category": "Stone",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "wall",
+    "material_key": "granite",
+    "style_id": "drystone",
+    "style_source": "category",
+    "textures": {
+     "door_closed": "art/materials/textures/drystone/door_closed.png",
+     "door_open": "art/materials/textures/drystone/door_open.png",
+     "end": "art/materials/textures/drystone/end.png",
+     "face": "art/materials/textures/drystone/face.png",
+     "floor": null,
+     "junction": "art/materials/textures/drystone/junction.png",
+     "top_ew": "art/materials/textures/drystone/top_ew.png",
+     "top_ns": "art/materials/textures/drystone/top_ns.png"
+    },
+    "tint": {
+     "dL": 0.0,
+     "da": 0.0,
+     "db": 0.0
+    },
+    "tint_source": "material",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "material": "oak",
+    "style": "no_such_style"
+   },
+   "result": {
+    "category": "Wood",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "wall",
+    "material_key": "oak",
+    "style_id": "log",
+    "style_source": "category",
+    "textures": {
+     "door_closed": "art/materials/textures/log/door_closed.png",
+     "door_open": "art/materials/textures/log/door_open.png",
+     "end": "art/materials/textures/log/end.png",
+     "face": "art/materials/textures/log/face.png",
+     "floor": null,
+     "junction": "art/materials/textures/log/junction.png",
+     "top_ew": "art/materials/textures/log/top_ew.png",
+     "top_ns": "art/materials/textures/log/top_ns.png"
+    },
+    "tint": {
+     "dL": 0.0,
+     "da": 0.0,
+     "db": 0.0
+    },
+    "tint_source": "material",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "material": "bone",
+    "style": "no_such_style"
+   },
+   "result": {
+    "category": "Animal",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "wall",
+    "material_key": "bone",
+    "style_id": "log",
+    "style_source": "category",
+    "textures": {
+     "door_closed": "art/materials/textures/log/door_closed.png",
+     "door_open": "art/materials/textures/log/door_open.png",
+     "end": "art/materials/textures/log/end.png",
+     "face": "art/materials/textures/log/face.png",
+     "floor": null,
+     "junction": "art/materials/textures/log/junction.png",
+     "top_ew": "art/materials/textures/log/top_ew.png",
+     "top_ns": "art/materials/textures/log/top_ns.png"
+    },
+    "tint": {
+     "dL": 0.0,
+     "da": 0.0,
+     "db": 0.0
+    },
+    "tint_source": "category",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "material": "clay",
+    "style": "no_such_style"
+   },
+   "result": {
+    "category": "Mineral",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "wall",
+    "material_key": "clay",
+    "style_id": "drystone",
+    "style_source": "category",
+    "textures": {
+     "door_closed": "art/materials/textures/drystone/door_closed.png",
+     "door_open": "art/materials/textures/drystone/door_open.png",
+     "end": "art/materials/textures/drystone/end.png",
+     "face": "art/materials/textures/drystone/face.png",
+     "floor": null,
+     "junction": "art/materials/textures/drystone/junction.png",
+     "top_ew": "art/materials/textures/drystone/top_ew.png",
+     "top_ns": "art/materials/textures/drystone/top_ns.png"
+    },
+    "tint": {
+     "dL": 0.0,
+     "da": 0.0,
+     "db": 0.0
+    },
+    "tint_source": "category",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "category": "Wood",
+    "material": "unknown_wood",
+    "style": "no_such_style"
+   },
+   "result": {
+    "category": "Wood",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "wall",
+    "material_key": null,
+    "style_id": "log",
+    "style_source": "category",
+    "textures": {
+     "door_closed": "art/materials/textures/log/door_closed.png",
+     "door_open": "art/materials/textures/log/door_open.png",
+     "end": "art/materials/textures/log/end.png",
+     "face": "art/materials/textures/log/face.png",
+     "floor": null,
+     "junction": "art/materials/textures/log/junction.png",
+     "top_ew": "art/materials/textures/log/top_ew.png",
+     "top_ns": "art/materials/textures/log/top_ns.png"
+    },
+    "tint": {
+     "dL": 0.0,
+     "da": 0.0,
+     "db": 0.0
+    },
+    "tint_source": "category",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "category": "Stone",
+    "material": "unknown_stone",
+    "style": "no_such_style"
+   },
+   "result": {
+    "category": "Stone",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "wall",
+    "material_key": null,
+    "style_id": "drystone",
+    "style_source": "category",
+    "textures": {
+     "door_closed": "art/materials/textures/drystone/door_closed.png",
+     "door_open": "art/materials/textures/drystone/door_open.png",
+     "end": "art/materials/textures/drystone/end.png",
+     "face": "art/materials/textures/drystone/face.png",
+     "floor": null,
+     "junction": "art/materials/textures/drystone/junction.png",
+     "top_ew": "art/materials/textures/drystone/top_ew.png",
+     "top_ns": "art/materials/textures/drystone/top_ns.png"
+    },
+    "tint": {
+     "dL": 0.0,
+     "da": 0.0,
+     "db": 0.0
+    },
+    "tint_source": "category",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "category": "Mod",
+    "material": "unknown_mod",
+    "style": "no_such_style"
+   },
+   "result": {
+    "category": "Mod",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "wall",
+    "material_key": null,
+    "style_id": "log",
+    "style_source": "category",
+    "textures": {
+     "door_closed": "art/materials/textures/log/door_closed.png",
+     "door_open": "art/materials/textures/log/door_open.png",
+     "end": "art/materials/textures/log/end.png",
+     "face": "art/materials/textures/log/face.png",
+     "floor": null,
+     "junction": "art/materials/textures/log/junction.png",
+     "top_ew": "art/materials/textures/log/top_ew.png",
+     "top_ns": "art/materials/textures/log/top_ns.png"
+    },
+    "tint": {
+     "dL": 0.0,
+     "da": 0.0,
+     "db": 0.0
+    },
+    "tint_source": "category",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "material": "unknown_none",
+    "style": "no_such_style"
+   },
+   "result": {
+    "category": null,
+    "face": {
+     "height_px": 44
+    },
+    "kind": "wall",
+    "material_key": null,
+    "style_id": "log",
+    "style_source": "default",
+    "textures": {
+     "door_closed": "art/materials/textures/log/door_closed.png",
+     "door_open": "art/materials/textures/log/door_open.png",
+     "end": "art/materials/textures/log/end.png",
+     "face": "art/materials/textures/log/face.png",
+     "floor": null,
+     "junction": "art/materials/textures/log/junction.png",
+     "top_ew": "art/materials/textures/log/top_ew.png",
+     "top_ns": "art/materials/textures/log/top_ns.png"
+    },
+    "tint": {
+     "dL": 0.0,
+     "da": 0.0,
+     "db": 0.0
+    },
+    "tint_source": "style",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "material": "unknown_none",
+    "style": "log"
+   },
+   "result": {
+    "category": null,
+    "face": {
+     "height_px": 44
+    },
+    "kind": "wall",
+    "material_key": null,
+    "style_id": "log",
+    "style_source": "style",
+    "textures": {
+     "door_closed": "art/materials/textures/log/door_closed.png",
+     "door_open": "art/materials/textures/log/door_open.png",
+     "end": "art/materials/textures/log/end.png",
+     "face": "art/materials/textures/log/face.png",
+     "floor": null,
+     "junction": "art/materials/textures/log/junction.png",
+     "top_ew": "art/materials/textures/log/top_ew.png",
+     "top_ns": "art/materials/textures/log/top_ns.png"
+    },
+    "tint": {
+     "dL": 0.0,
+     "da": 0.0,
+     "db": 0.0
+    },
+    "tint_source": "style",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "material": 12345,
+    "style": "log"
+   },
+   "result": {
+    "category": null,
+    "face": {
+     "height_px": 44
+    },
+    "kind": "wall",
+    "material_key": null,
+    "style_id": "log",
+    "style_source": "style",
+    "textures": {
+     "door_closed": "art/materials/textures/log/door_closed.png",
+     "door_open": "art/materials/textures/log/door_open.png",
+     "end": "art/materials/textures/log/end.png",
+     "face": "art/materials/textures/log/face.png",
+     "floor": null,
+     "junction": "art/materials/textures/log/junction.png",
+     "top_ew": "art/materials/textures/log/top_ew.png",
+     "top_ns": "art/materials/textures/log/top_ns.png"
+    },
+    "tint": {
+     "dL": 0.0,
+     "da": 0.0,
+     "db": 0.0
+    },
+    "tint_source": "style",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "kind": "floor",
+    "material": "oak",
+    "style": "PackedFloor"
+   },
+   "result": {
+    "category": "Wood",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "floor",
+    "material_key": "oak",
+    "style_id": "packed_earth",
+    "style_source": "blueprint",
+    "textures": {
+     "door_closed": null,
+     "door_open": null,
+     "end": null,
+     "face": null,
+     "floor": "art/materials/textures/packed_earth/floor.png",
+     "junction": null,
+     "top_ew": null,
+     "top_ns": null
+    },
+    "tint": {
+     "dL": 0.0,
+     "da": 0.0,
+     "db": 0.0
+    },
+    "tint_source": "material",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "kind": "floor",
+    "material": "clay",
+    "style": "packed_earth"
+   },
+   "result": {
+    "category": "Mineral",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "floor",
+    "material_key": "clay",
+    "style_id": "packed_earth",
+    "style_source": "style",
+    "textures": {
+     "door_closed": null,
+     "door_open": null,
+     "end": null,
+     "face": null,
+     "floor": "art/materials/textures/packed_earth/floor.png",
+     "junction": null,
+     "top_ew": null,
+     "top_ns": null
+    },
+    "tint": {
+     "dL": 0.0,
+     "da": 0.0,
+     "db": 0.0
+    },
+    "tint_source": "category",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "kind": "floor",
+    "material": "granite",
+    "style": "DugFloor"
+   },
+   "result": {
+    "category": "Stone",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "floor",
+    "material_key": "granite",
+    "style_id": "packed_earth",
+    "style_source": "category",
+    "textures": {
+     "door_closed": null,
+     "door_open": null,
+     "end": null,
+     "face": null,
+     "floor": "art/materials/textures/packed_earth/floor.png",
+     "junction": null,
+     "top_ew": null,
+     "top_ns": null
+    },
+    "tint": {
+     "dL": 0.0,
+     "da": 0.0,
+     "db": 0.0
+    },
+    "tint_source": "material",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "kind": "door",
+    "material": "oak",
+    "style": "Door"
+   },
+   "result": {
+    "category": "Wood",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "door",
+    "material_key": "oak",
+    "style_id": "slab_door",
+    "style_source": "blueprint",
+    "textures": {
+     "door_closed": "art/materials/textures/log/door_closed.png",
+     "door_open": "art/materials/textures/log/door_open.png",
+     "end": null,
+     "face": null,
+     "floor": null,
+     "junction": null,
+     "top_ew": null,
+     "top_ns": null
+    },
+    "tint": {
+     "dL": 0.0,
+     "da": 0.0,
+     "db": 0.0
+    },
+    "tint_source": "material",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "kind": "door",
+    "material": "granite",
+    "style": "Door"
+   },
+   "result": {
+    "category": "Stone",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "door",
+    "material_key": "granite",
+    "style_id": "slab_door",
+    "style_source": "blueprint",
+    "textures": {
+     "door_closed": "art/materials/textures/log/door_closed.png",
+     "door_open": "art/materials/textures/log/door_open.png",
+     "end": null,
+     "face": null,
+     "floor": null,
+     "junction": null,
+     "top_ew": null,
+     "top_ns": null
+    },
+    "tint": {
+     "dL": 0.0,
+     "da": 0.0,
+     "db": 0.0
+    },
+    "tint_source": "material",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "kind": "door",
+    "material": "limestone",
+    "style": "inset_door"
+   },
+   "result": {
+    "category": "Stone",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "door",
+    "material_key": "limestone",
+    "style_id": "inset_door",
+    "style_source": "style",
+    "textures": {
+     "door_closed": "art/materials/textures/drystone/door_closed.png",
+     "door_open": "art/materials/textures/drystone/door_open.png",
+     "end": null,
+     "face": null,
+     "floor": null,
+     "junction": null,
+     "top_ew": null,
+     "top_ns": null
+    },
+    "tint": {
+     "dL": 14.0,
+     "da": 1.0,
+     "db": 5.0
+    },
+    "tint_source": "material",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "kind": "door",
+    "material": "granite",
+    "style": "no_such_style"
+   },
+   "result": {
+    "category": "Stone",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "door",
+    "material_key": "granite",
+    "style_id": "inset_door",
+    "style_source": "category",
+    "textures": {
+     "door_closed": "art/materials/textures/drystone/door_closed.png",
+     "door_open": "art/materials/textures/drystone/door_open.png",
+     "end": null,
+     "face": null,
+     "floor": null,
+     "junction": null,
+     "top_ew": null,
+     "top_ns": null
+    },
+    "tint": {
+     "dL": 0.0,
+     "da": 0.0,
+     "db": 0.0
+    },
+    "tint_source": "material",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  },
+  {
+   "case": {
+    "category": "Plant",
+    "kind": "door",
+    "material": "unknown_plant",
+    "style": "no_such_style"
+   },
+   "result": {
+    "category": "Plant",
+    "face": {
+     "height_px": 44
+    },
+    "kind": "door",
+    "material_key": null,
+    "style_id": "slab_door",
+    "style_source": "category",
+    "textures": {
+     "door_closed": "art/materials/textures/log/door_closed.png",
+     "door_open": "art/materials/textures/log/door_open.png",
+     "end": null,
+     "face": null,
+     "floor": null,
+     "junction": null,
+     "top_ew": null,
+     "top_ns": null
+    },
+    "tint": {
+     "dL": 0.0,
+     "da": 0.0,
+     "db": 0.0
+    },
+    "tint_source": "category",
+    "top": {
+     "blur_px": 2.0,
+     "ink_edge_px": 2,
+     "orientation": "along_run",
+     "saturation": 0.85,
+     "side_shadow": 0.0,
+     "value": 0.75,
+     "width_px": 64
+    }
+   }
+  }
+ ],
+ "source_commit": "c8ed86087c90ed5429716713e930cc5f6a9e1332"
+}

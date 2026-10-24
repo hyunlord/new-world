@@ -1,73 +1,16 @@
-# view.gd — shared constants of the M1 colony view (scripts/world/colony/).
-# Purpose: the tile size, tile <-> world conversions, the M1-ART sheet (assets/v8/tiles.png + tiles.json, drawn by
-#   tools/v8/gen_tiles.py) as named rects plus its palettes (tunics, hairs, elder hair, skin, halo), TileSets built
-#   from it, a stable tile hash and the value noise that clusters the ground (the mock-up's `value_noise`, keyed
-#   on the world seed instead of a random generator). Tile (x, y) covers world pixels [x*16, x*16+16) ×
-#   [y*16, y*16+16); the map's top-left is the world origin.
+# view.gd — the colony view's world scale and integer noise (scripts/world/colony/).
+# Purpose: the one world scale (TILE = 64 world pixels per tile, ADR 0034; the M-ART2 projection: the ground from
+#   above, everything standing in the same front 3/4), tile <-> world conversions, the standing base point of a tile
+#   (`base_point`: where a person's feet or a structure's anchor sits, (tile_left + 32, tile_top + 43)), a stable tile
+#   hash and the value noise that clusters the camp clearing (keyed on the world seed, never randf()). Tile (x, y)
+#   covers world pixels [x*64, x*64+64) × [y*64, y*64+64); the map's top-left is the world origin. What is drawn where
+#   lives in data (assets/v8art/), read by scripts/world/art/art_data.gd.
 # Bridge methods called: none.
 extends RefCounted
 
-const TILE: int = 16
-const ATLAS_PNG: String = "res://assets/v8/tiles.png"
-const ATLAS_JSON: String = "res://assets/v8/tiles.json"
-
-static var _rects: Dictionary = {}
-static var _palettes: Dictionary = {}
-static var _texture: Texture2D = null
-
-
-static func _load() -> void:
-	if not _rects.is_empty():
-		return
-	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(ATLAS_JSON))
-	if parsed is Dictionary:
-		var tiles: Variant = (parsed as Dictionary).get("tiles", {})
-		if tiles is Dictionary:
-			for name: String in (tiles as Dictionary).keys():
-				var r: Variant = tiles[name]
-				if r is Array and (r as Array).size() == 4:
-					_rects[name] = Rect2i(int(r[0]), int(r[1]), int(r[2]), int(r[3]))
-		var palettes: Variant = (parsed as Dictionary).get("palettes", {})
-		if palettes is Dictionary:
-			_palettes = palettes
-	_texture = load(ATLAS_PNG) as Texture2D
-
-
-## The atlas texture.
-static func texture() -> Texture2D:
-	_load()
-	return _texture
-
-
-## The atlas rect of sprite `name` (empty when unknown).
-static func rect(name: String) -> Rect2:
-	_load()
-	return Rect2(_rects.get(name, Rect2i()))
-
-
-## Whether the atlas has a sprite called `name`.
-static func has(name: String) -> bool:
-	_load()
-	return _rects.has(name)
-
-
-## A palette colour list from the sheet (`tunics`, `hairs`); white when missing.
-static func palette(key: String) -> Array[Color]:
-	_load()
-	var out: Array[Color] = []
-	var raw: Variant = _palettes.get(key, [])
-	if raw is Array:
-		for h: Variant in raw:
-			out.append(Color(str(h)))
-	if out.is_empty():
-		out.append(Color.WHITE)
-	return out
-
-
-## A single palette colour from the sheet (`skin`, `elder_hair`, `halo`); white when missing.
-static func colour(key: String) -> Color:
-	_load()
-	return Color(str(_palettes.get(key, "ffffff")))
+const TILE: int = 64
+## The standing base inside a tile: feet and anchors sit in the tile's lower third (STRUCT PROJECTION.md).
+const BASE: Vector2i = Vector2i(32, 43)
 
 
 ## Top-left world position of tile `t`.
@@ -80,27 +23,14 @@ static func world_to_tile(p: Vector2) -> Vector2i:
 	return Vector2i(floori(p.x / float(TILE)), floori(p.y / float(TILE)))
 
 
-## A TileSet with one atlas source holding the 16×16 tiles `names`; returns
-## {"tileset": TileSet, "coords": {name: Vector2i atlas coords}}.
-static func tileset(names: Array) -> Dictionary:
-	_load()
-	var atlas: TileSetAtlasSource = TileSetAtlasSource.new()
-	atlas.texture = _texture
-	atlas.texture_region_size = Vector2i(TILE, TILE)
-	var coords: Dictionary = {}
-	for name: String in names:
-		if not _rects.has(name):
-			continue
-		var r: Rect2i = _rects[name]
-		@warning_ignore("integer_division")
-		var cell: Vector2i = Vector2i(r.position.x / TILE, r.position.y / TILE)
-		if not atlas.has_tile(cell):
-			atlas.create_tile(cell)
-		coords[name] = cell
-	var tiles: TileSet = TileSet.new()
-	tiles.tile_size = Vector2i(TILE, TILE)
-	tiles.add_source(atlas, 0)
-	return {"tileset": tiles, "coords": coords}
+## The world point where a standing thing on tile `t` touches the ground.
+static func base_point(t: Vector2i) -> Vector2:
+	return Vector2(t.x * TILE + BASE.x, t.y * TILE + BASE.y)
+
+
+## The centre of tile `t` in world pixels.
+static func tile_centre(t: Vector2i) -> Vector2:
+	return Vector2(t.x * TILE + TILE * 0.5, t.y * TILE + TILE * 0.5)
 
 
 ## A stable small hash of a tile (for variants; never randf()).
@@ -118,8 +48,7 @@ static func key_hash(seed: int, x: int, y: int, salt: int) -> int:
 	return h & 0x7fffffff
 
 
-## Smooth value noise in [0, 1): a lattice of hashed values every `scale` tiles, interpolated with smoothstep
-## (the mock-up's value_noise).
+## Smooth value noise in [0, 1): a lattice of hashed values every `scale` tiles, interpolated with smoothstep.
 static func value_noise(seed: int, x: int, y: int, scale: int, salt: int) -> float:
 	@warning_ignore("integer_division")
 	var gx: int = x / scale
@@ -136,6 +65,6 @@ static func value_noise(seed: int, x: int, y: int, scale: int, salt: int) -> flo
 	return lerpf(lerpf(a, b, tx), lerpf(c, d, tx), ty)
 
 
-## The ground's cluster noise: 0.65 × coarse (9 tiles) + 0.35 × fine (4 tiles), as the mock-up mixes them.
+## The clearing's cluster noise: 0.65 × coarse (9 tiles) + 0.35 × fine (4 tiles).
 static func cluster_noise(seed: int, x: int, y: int) -> float:
 	return 0.65 * value_noise(seed, x, y, 9, 1) + 0.35 * value_noise(seed, x, y, 4, 2)
