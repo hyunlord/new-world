@@ -10,7 +10,8 @@ tags `v7-final-sim` and `v7-final-art`.
 The in-game look finished before M-EXT (`docs/v8/m_art2_1/MART21_GOAL.md`, record `MART21_DECISIONS.md`, report
 `MART21_REPORT.md`): textured water with rounded shores, ART-TREES' summer-green species with seasons, the ¼× map with
 baked canopy, household rings on the LOD markers, and D19 (`a1c20220`) brought through a gate. No simulation change
-(identity byte-identical); one bridge read (three snapshot columns).
+(identity byte-identical); one bridge read (three snapshot columns). Gate: 34 of 34 at `3a51636d` (bench ×0.983–×0.992,
+alloc/agent +0 B); FPS 1× 290.2, ½× 190.2, ¼× 242.8, 1,000 people ½× 149.1 and ¼× 137.5.
 
 ### Added
 - Rounded shores and hill edges (`scripts/world/art/ground_baker.gd`): the water outline is the closed-form signed

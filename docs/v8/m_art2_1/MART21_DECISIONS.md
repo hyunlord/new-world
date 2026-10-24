@@ -242,3 +242,13 @@ no Godot or cargo). Verdict: one blocker, two majors, the rest minor. Dispositio
   per chunk at first and was cut to ~1.2 ms (packed-array reads, one blit per run of interior tree tiles). The SDF
   (shore) path costs no measurable median at 1× (2.2 → 2.5 ms against D2's pre-review numbers on a different load),
   so the goal's fallback (a 2×-upsampled SDF) was not needed.
+
+## D9 — the final gate and the fast-forward (Part 4)
+
+`BENCH_PASS=M-ART2.1 bash tools/v8/gate.sh $DATA/gate1 --base-data /Users/rexxa/work/m55-data/base/identity` on
+`3a51636d` (dirty 0), nothing else run in the checkout meanwhile: **34 of 34 steps exit 0** (20:23:57–22:02:53 KST,
+status 0). Tests 2,025 + 2,025, identity and determinism PASS, perf OK, bench PASS at load 4.00 (×0.983–×0.995 on
+every scene; the Part 0 gate's N = 2,000 failure was contention, D1), resolver parity 39 + 352 cases, mart2_render 38
+checks. `v8/wip` pushed and `origin/v8/main` fast-forwarded `d796fcac` → `3a51636d` (ls-remote: both at
+`3a51636df1eb…`); the "M-ART2.1" ledger rows come from this gate (`bench_ledger.py append --gate-log`). The report and
+docs follow in a docs-only commit, and `v8/main` is fast-forwarded to it.
