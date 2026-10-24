@@ -17,7 +17,7 @@
 - `tools/play.sh main --headless-check`: exit 0, SCRIPT ERROR 0줄. main HEAD를 f0b759fe2로 갱신. debug 빌드 3초, import 1회 4초. 기존 실행기에 fetch/checkout 개별 타이머가 없어 해당 시간은 미측정. 로그 `/Users/rexxa/work/play-data/logs/main-20261025-005656.log`.
 - Godot: `/Users/rexxa/Downloads/Godot.app/Contents/MacOS/Godot`, 4.6.stable.official.89cea1439. `.gdextension`의 macos.debug는 `rust/target/debug/libsim_bridge.dylib`를 읽는다.
 - 창 실행: `tools/play.sh main -- --quit-after 2400`, 1920×1080, Metal 4.0 Forward+, Apple M4 Max. exit 0. 빌드/import 모두 생략. 로그 `/Users/rexxa/work/play-data/logs/main-20261025-005722.log`.
-- OS 화면 캡처 `screencapture`는 `could not create image from display`로 실패. System Events 조회도 -600으로 실패. 이 결과를 화면 확인 성공으로 취급하지 않는다. 실제 viewport 캡처와 입력 하네스로 별도 검증 중.
+- OS 화면 캡처 `screencapture`는 `could not create image from display`로 실패. System Events 조회도 -600으로 실패. 이 결과를 화면 확인 성공으로 취급하지 않는다. 아래 실제 viewport 캡처와 입력 하네스로 별도 검증했다.
 
 ## 실행기 격리 회귀 시험
 
@@ -61,3 +61,5 @@
 `bash tools/v8/check_docs.sh`는 `docs: PASS`. `bash -n` 통과, shellcheck는 설치되지 않아 미실행. `.command`는 셸에서 `--update-only`로 직접 실행하여 정상 종료했고, 로그 `/Users/rexxa/work/play-data/logs/main-20261025-010351-90597.log`에 fetch 1초, debug 증분 빌드 0초, import 4초가 기록됐다. Finder의 실행 확인과는 구별한다.
 
 추가 회귀: import 오류 뒤 40,000줄이 오면 `grep -q`의 조기 종료와 `pipefail` 때문에 오류를 놓쳤다. 수정 전 44개 중 2개 실패(`/Users/rexxa/work/play-data/play2/regression-long-before.txt`), 전체 스트림을 읽도록 보완했다. 최초 gate는 이 결함 발견 후 자체 검증 프로세스만 중단했으며 완료 판정하지 않는다. 최종 전체 실행 경로는 `/Users/rexxa/work/play-data/gate-play2-final/`이다.
+
+최종 회귀 44개/실패 0, 전체 gate 34단계 exit 0 및 status 0(72d2db1f, dirty 0). 원격 게시 후 오너 실행기는 main을 같은 SHA로 갱신했고 헤드리스·창 실행 exit 0, 두 체크아웃의 tools/play.sh 바이트 일치를 확인했다. 02:29 헤드리스 로그에는 fetch/작업 트리/증분 빌드 각각 0초, import 생략이 기록됐고 02:30 창 실행의 fetch는 1초였다. 원본 로그와 최종 원격 확인은 PLAY2_REPORT.md에서 찾을 수 있다. 최종 독립 소스 재검토에서도 앞선 창 오류 누락 지적이 해결됐고 추가 중대 문제는 발견되지 않았다.

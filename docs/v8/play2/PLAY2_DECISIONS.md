@@ -10,8 +10,8 @@
 2. COMPLETED: reproduce dirty/offline failures; minimally repair launcher with regression verification.
 3. COMPLETED: verify windowed checklist and F12; rewrite Korean README and PLAY.md from source-backed keys.
 4. COMPLETED: run shell/docs/headless checks; commit only allowed paths with Lore trailers.
-5. IN_PROGRESS: full gate on frozen clean commit; inspect every step; publish fast-forward only if green.
-6. PENDING: Korean report, owner launcher delivery verification, safe cleanup, final remote verification.
+5. COMPLETED: full gate on frozen clean 72d2db1f: all 34 steps exit 0, status 0; fast-forward published to both remote branches.
+6. COMPLETED: Korean report and owner launcher delivery verified (headless/window exit 0, launcher byte parity); retain clean durable checkout. Final publication receipt is external play-data/play2/delivery-final.txt so this record does not invent its own commit SHA.
 
 - D4: Require registered same-clone worktrees, no tracked/untracked edits, and branch ancestry before checkout, even at unchanged HEAD. Do not discard bytes or local commits. Isolated fake-engine regression suite first reproduced 14 failures in 26 checks; fixes passed 33 checks, including update-only and offline log persistence.
 - D5: Delegate incremental dependency tracking to Cargo on every normal launch, instead of an incomplete mtime filter. `.ron` files are compiled via `include_str!`; modification and deletion each reproduced a skipped build (41-check suite, 2 failures). This removes the source-extension heuristic; `--no-build` remains explicit opt-out. No Rust changes.
