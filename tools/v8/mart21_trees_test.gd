@@ -12,10 +12,15 @@
 #   4. windowed (`-- --rendered`): each species' large summer frame drawn through its season material keeps canopy
 #      saturation ≥ 0.30 (masked pixels; trees are never tone-capped) and autumn moves an oak's canopy mean the
 #      way its Lab record says (b* up) while pine's stays; the alder's autumn differs from oak's (its own record).
+#   3b. the canopy edge on a synthetic map: an isolated tree tile is interior colour at its centre, the darkened edge
+#      colour 2 px inside each of its four sides, and ground at each of its four corners (rounded away);
+#   3c. TreeLayer.season_state on hand-worked calendar snapshots (first season unblended, a season's first day blended
+#      by the hour, the previous season by code);
 #   5. households (§2.3): agent_layer.gd `household_keys` on hand-built families (a couple, their child, an orphan
 #      child with a living father, a widow, a single) gives the keys worked out by hand; at ¼× every person gets a
-#      household and a ring colour from `lod.household_ring_rgb`, members of one household share it, and people of
-#      different households use more than one colour;
+#      household and a ring colour from `lod.household_ring_rgb` read back from the LOD markers' instance data, on the
+#      1,000-person stress world loaded after the colony (a reset must not leave stale households): members of one
+#      household share the colour, and more than one colour is in use;
 #   6. windowed: the five ¼× map classes on the seed-0 screen (forest = tree tiles' canopy, meadow = the plain's ground,
 #      bare earth = the camp clearing, rock = undug hill tops, water), in summer, each the mean colour of the central
 #      half of ≥ 20 interior tiles (all eight neighbours of the same class; any river tile, rivers being 1–2 tiles wide)
@@ -67,14 +72,18 @@ func _run() -> void:
 	await _check_seasons(trees, flora)
 	await _check_alder(trees, flora)
 	await _check_canopy(trees, ground)
+	_check_canopy_edges()
+	_check_season_state()
 	_check_household_rule()
-	await _check_households()
+	await _check_households(world)
 	if OS.get_cmdline_user_args().has("--rendered"):
 		if DisplayServer.get_name() == "headless":
 			_check("rendered_backend", false, "--rendered needs a window")
 		else:
 			await _check_rendered(trees, flora)
-			await _check_map_classes(ground)
+			await _check_map_classes(ground, "summer", true)
+			await _check_map_classes(ground, "autumn", false)
+			await _check_map_classes(ground, "winter", false)
 	else:
 		print("MART21_TREES SKIP rendered — run windowed with -- --rendered for canopy saturation and season colours")
 	trees.call("force_season", "", "")
@@ -147,6 +156,11 @@ func _check_alder(trees: Node, flora: FloraResolver) -> void:
 			var got: Vector3 = m.get_shader_parameter("delta_to") if m != null else Vector3(INF, 0, 0)
 			if got.is_equal_approx(Vector3(float(want[0]), float(want[1]), float(want[2]))):
 				own += 1
+			# Its winter draws its own bare frame (the fixture's path, not the catalogue's oak record).
+			if str((((record as Dictionary)["seasons"] as Dictionary)[seasons[k]] as Dictionary).get("frame", "foliage")) == "bare":
+				var bare: String = FloraResolver.res_path(str(((((record as Dictionary)["sizes"] as Dictionary)["large"] as Dictionary)["bare"] as Array)[0]["path"]))
+				if _path(s) != bare:
+					own -= 1
 			s.free()
 	_check("data_only_species", not in_catalogue and added and drawn == seasons.size() and own == seasons.size(), "%s not in the catalogue, added by data: %s; drawn in %d/%d seasons, its own Lab record in %d" % [id, added, drawn, seasons.size(), own])
 
@@ -311,34 +325,106 @@ func _check_household_rule() -> void:
 	_check("household_rule", bad.is_empty(), "7 people, hand-worked keys; differences %s" % [bad])
 
 
-func _check_households() -> void:
+func _check_households(world: Node) -> void:
 	var camera: Camera2D = _main.get_node("Camera2D") as Camera2D
 	var agents: Node = _main.get_node("ColonyView/AgentLayer")
 	camera.zoom = Vector2(0.25, 0.25)
 	camera.force_update_scroll()
 	await _frames(10)
-	var palette: Array = ArtData.param("lod.household_ring_rgb", [])
+	# A second world after the colony one: households must follow the reset.
+	world.call("reset_world_stress", 0, 1000)
+	world.call("advance_ticks", 1)
+	await _frames(20)
+	var markers: Node = agents.get_node("LodMarkers")
+	var snap: Dictionary = SimReads.read(world, "get_agent_snapshot")
+	var partners: PackedInt64Array = snap.get("partners", PackedInt64Array())
+	var paired: int = 0
+	for p: int in partners:
+		paired += 1 if p >= 0 else 0
+	# The markers' instance order is the agent layer's person order.
+	var persons: Array = (agents.get("_persons") as Dictionary).values()
 	var by_household: Dictionary = {}
 	var colours: Dictionary = {}
-	var missing: int = 0
-	var persons: Dictionary = agents.get("_persons")
-	for person: Variant in persons.values():
-		var key: int = int((person as Object).get("household"))
-		var ring: Color = agents.call("_ring_colour", key, palette)
+	var shared: int = 0
+	var bad: int = 0
+	for i: int in persons.size():
+		var key: int = int(agents.call("household_of", int((persons[i] as Object).get("agent_id"))))
+		# The dummy renderer returns one constant for every MultiMesh custom-data read (not observable headless):
+		# headless reads the colour the layer hands the markers, a window reads the markers' instance data.
+		var ring: Color = agents.call("_ring_colour", key, ArtData.param("lod.household_ring_rgb", [])) if DisplayServer.get_name() == "headless" else markers.call("ring_of", i)
 		if key < 0 or ring.a < 0.5:
-			missing += 1
+			bad += 1
 			continue
-		if by_household.has(key) and not (by_household[key] as Color).is_equal_approx(ring):
-			missing += 1
+		if by_household.has(key):
+			shared += 1
+			if not (by_household[key] as Color).is_equal_approx(ring):
+				bad += 1
 		by_household[key] = ring
 		colours[ring.to_html()] = true
-	_check("household_rings", persons.size() > 0 and missing == 0 and palette.size() == 6 and (by_household.size() < 2 or colours.size() >= 2), "%d people in %d households, %d ring colours of %d; %d without a consistent ring" % [persons.size(), by_household.size(), colours.size(), palette.size(), missing])
+	var source: String = "the layer's colours (headless: marker readback not observable)" if DisplayServer.get_name() == "headless" else "the marker instance data"
+	_check("household_rings", persons.size() >= 1000 and bad == 0 and colours.size() >= 2 and (paired == 0 or shared > 0), "stress world: %d people, %d with a partner, %d households, %d people sharing one, %d ring colours; %d without a consistent ring in %s" % [persons.size(), paired, by_household.size(), shared, colours.size(), bad, source])
+	# Back to the seed-0 colony for the map check.
+	world.call("reset_world", 0)
+	world.call("advance_ticks", 1)
 	camera.zoom = Vector2.ONE
 	camera.force_update_scroll()
-	await _frames(5)
+	await _frames(20)
 
 
-func _check_map_classes(ground: Node) -> void:
+func _check_canopy_edges() -> void:
+	var b: GroundBaker = GroundBaker.new()
+	var g: Dictionary = (ArtData.param("ground", {}) as Dictionary).duplicate()
+	g["chunk_tiles"] = 8
+	b.configure(g, ArtData.param("water", {}), ArtData.param("hill", {}), ArtData.param("trees", {}))
+	var land: Image = Image.create(128, 128, false, Image.FORMAT_RGBA8)
+	land.fill(Color(0.5, 0.4, 0.3))
+	b.set_grounds([land])
+	var inner: Image = Image.create(64, 64, false, Image.FORMAT_RGBA8)
+	inner.fill(Color(0.1, 0.6, 0.1))
+	var edge: Image = Image.create(64, 64, false, Image.FORMAT_RGBA8)
+	edge.fill(Color(0.05, 0.3, 0.05))
+	b.set_canopies([inner], [edge])
+	b.canopy_on = true
+	var m: GroundBaker.GroundMap = GroundBaker.GroundMap.new()
+	m.setup(8, 8)
+	m.ground.fill(0)
+	m.tree[3 * 8 + 3] = 1
+	var img: Image = b.bake(m, 0, 0)
+	var o: Vector2i = Vector2i(3 * TILE, 3 * TILE)
+	var near: Callable = func(p: Vector2i, c: Color) -> bool:
+		var q: Color = img.get_pixelv(p)
+		return absf(q.r - c.r) < 0.02 and absf(q.g - c.g) < 0.02 and absf(q.b - c.b) < 0.02
+	var ok: Array[String] = []
+	if near.call(o + Vector2i(32, 32), inner.get_pixel(0, 0)):
+		ok.append("centre")
+	for side: Array in [["N", Vector2i(32, 2)], ["E", Vector2i(61, 32)], ["S", Vector2i(32, 61)], ["W", Vector2i(2, 32)]]:
+		if near.call(o + (side[1] as Vector2i), edge.get_pixel(0, 0)):
+			ok.append("edge " + str(side[0]))
+	for corner: Array in [["NW", Vector2i(1, 1)], ["NE", Vector2i(62, 1)], ["SW", Vector2i(1, 62)], ["SE", Vector2i(62, 62)]]:
+		if near.call(o + (corner[1] as Vector2i), land.get_pixel(0, 0)):
+			ok.append("ground " + str(corner[0]))
+	_check("canopy_edges_all_sides", ok.size() == 9, "isolated tree tile: %s (9 expected)" % [ok])
+
+
+func _check_season_state() -> void:
+	var tree_layer: GDScript = load("res://scripts/world/colony/tree_layer.gd")
+	var names: Array[String] = ["spring", "summer", "autumn", "winter"]
+	var cases: Array = [
+		[{"season": 0, "day_of_season": 1, "day_index": 0, "days_per_season": 6, "time_of_day": 8.0}, "winter|spring", 1.0],
+		[{"season": 1, "day_of_season": 1, "day_index": 6, "days_per_season": 6, "time_of_day": 6.0}, "spring|summer", 0.25],
+		[{"season": 1, "day_of_season": 2, "day_index": 7, "days_per_season": 6, "time_of_day": 1.0}, "spring|summer", 1.0],
+		[{"season": 3, "day_of_season": 1, "day_index": 18, "days_per_season": 6, "time_of_day": 12.0}, "autumn|winter", 0.5],
+		[{"season": 0, "day_of_season": 1, "day_index": 24, "days_per_season": 6, "time_of_day": 18.0}, "winter|spring", 0.75],
+	]
+	var bad: Array = []
+	for c: Array in cases:
+		var got: Array = tree_layer.call("season_state", c[0], names)
+		if got.size() != 2 or str(got[0]) != str(c[1]) or absf(float(got[1]) - float(c[2])) > 1e-6:
+			bad.append("%s → %s (want %s %.2f)" % [c[0], got, c[1], c[2]])
+	_check("season_state", bad.is_empty(), "%d calendar cases; differences %s" % [cases.size(), bad])
+
+
+func _check_map_classes(ground: Node, season: String, gated: bool) -> void:
 	var camera: Camera2D = _main.get_node("Camera2D") as Camera2D
 	var map: GroundBaker.GroundMap = ground.call("ground_map")
 	var ids: Array = ground.get("ground_ids")
@@ -361,7 +447,7 @@ func _check_map_classes(ground: Node) -> void:
 		var id: String = str(ids[g]) if g < ids.size() else ""
 		return 1 if id == plain else (2 if id == clearing else -1)
 	var hearth: Vector2i = Vector2i(map.width >> 1, map.height >> 1)
-	(_main.get_node("ColonyView/TreeLayer") as Node).call("force_season", "summer", "summer", 1.0)
+	(_main.get_node("ColonyView/TreeLayer") as Node).call("force_season", season, season, 1.0)
 	await _frames(3)
 	camera.zoom = Vector2(0.25, 0.25)
 	camera.position = View.tile_centre(hearth)
@@ -414,7 +500,11 @@ func _check_map_classes(ground: Node) -> void:
 				worst = de
 				pair = "%s/%s" % [names[i], names[j]]
 	var enough: bool = tiles.min() >= 20
-	_check("quarter_map_classes", enough and worst >= 10.0, "%s; pairwise ΔE %s; min %.1f (%s), bar 10" % [", ".join(means), ", ".join(all), worst, pair])
-	shot.save_png(OS.get_user_data_dir().path_join("mart21_quarter_map.png"))
+	var line: String = "%s: %s; pairwise ΔE %s; min %.1f (%s), bar 10" % [season, ", ".join(means), ", ".join(all), worst, pair]
+	if gated:
+		_check("quarter_map_classes", enough and worst >= 10.0, line)
+	else:
+		print("MART21_TREES INFO quarter_map_classes_%s — %s (ground tone stays the day tone here: forced seasons move the trees only)" % [season, line])
+	shot.save_png(OS.get_user_data_dir().path_join("mart21_quarter_map_%s.png" % season))
 	camera.zoom = Vector2.ONE
 	camera.force_update_scroll()

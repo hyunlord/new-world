@@ -24,7 +24,13 @@ recorded here with its reason. Raw data lives in `/Users/rexxa/work/mart21-data/
   `Cargo.lock` copied in) so Part 1 can proceed in this checkout meanwhile:
   `BENCH_PASS=M-ART2.1 bash tools/v8/gate.sh $DATA/gate0 --base-data /Users/rexxa/work/m55-data/base/identity`
   (the M-ART2 base). Host load at start 9.2 (contended; this pass's own work runs beside it), so a red `bench`
-  there is read as contention unless the final gate repeats it. Result: PENDING.
+  there is read as contention unless the final gate repeats it. **Result (17:29–18:48 KST, `$DATA/gate0/gate.txt`,
+  head `a1c20220`, dirty 0): 33 of 34 steps pass; `bench` fails** — N = 2,000 tick mean 4,611.8 → 5,264.0 µs (×1.141)
+  and p99 10,999 → 18,252 µs (×1.659); every other scene within 10 % (N = 200 ×1.014, N = 1,000 ×1.027, scripted
+  ×1.000, 64² ×1.025, wolves ×1.040), alloc/agent 1,871 B unchanged, all ceilings pass. D19 changes no Rust, and this
+  session's windowed captures ran during the step (admission read 1-minute load 7.78 after 30 s), so it is read as
+  contention; the final gate (nothing else running) decides. perf (report only) WARN quick ×1.146; tests 2,024 + 2,024
+  passed, identity and determinism PASS, debug tests took 2,741 s under load.
 
 ## D2 — rounded shores and hill edges: a closed-form field per tile quadrant (Part 1)
 
@@ -170,3 +176,69 @@ that shape instead of a sampled one:
 - Running `--set` and `--seasons` in one process stalled the seasons' advance after the set's last save (the migrant
   dialog's world) until the 20-minute bound; the seasons alone take 3 min 21 s. They run as two processes.
 - Raw PNGs: `$DATA/shots2/`, `$DATA/seasons2/`, the staged copies in `$DATA/sheet/`.
+
+## D7 — review (Part 4): one fresh read-only subagent, findings and dispositions
+
+Report: `/Users/rexxa/work/mart21-data/reviews/review.md` (reviewed `a1c20220..d101a472`, brief + diff + screens; it ran
+no Godot or cargo). Verdict: one blocker, two majors, the rest minor. Dispositions:
+
+1. **Blocker, fixed:** the quadrant-mask cache key `pair | (q << 1) | (bits << 3) | (phase << 7)` let pair 2 (canopy)
+   collide with the quadrant bit and with shore masks, so canopy quadrants used mirrored or shore masks and a chunk's
+   bake depended on zoom history. Key now `pair | (q << 2) | (bits << 4) | (phase << 8)`. New test
+   `mask_cache_isolation` (a baker that made canopy masks bakes a river chunk byte-identically to a fresh one, and the
+   reverse); shown failing with the old key (both hashes differ), passing with the new. The earlier ¼× captures and
+   the summer square canopy corners came from this; recaptured.
+2. **Major, fixed:** household rings were assigned to the people that existed when the kin columns last changed and
+   the change key survived a world reset, so new people and reloaded worlds kept the ink ring (the ¼× compare shot
+   had no household pixels). Keys are now kept by AgentId (`_household_of`), looked up at every marker refresh, and
+   cleared on `world_reset`. The test now loads the 1,000-person stress world after the colony and reads the ring from
+   the markers' instance data in a window (6 colours, 0 inconsistent); headless the dummy renderer returns a constant
+   for MultiMesh custom data, so headless reads the layer's colours and says so.
+3. **Major, owner decision:** ART-TREES' berry bush frames hold ~23 × 32 px of art in a 96 × 96 canvas (the old bush
+   filled ~96 × 94): bushes read as saplings and keep red berries in winter (the shrub record keeps foliage). Kept as
+   adopted (the art line's frames, imported unchanged); listed under "오너 결정 필요".
+4. **Minor, fixed:** in a frame dissolve each frame now keeps its own season's shift and snow (falling leaves stay
+   autumn, bare branches stay bare); the same frame in both seasons still blends.
+5. **Minor, fixed:** the ¼× canopy's season colour is now the exact per-pixel Lab shift on the ¼ copy (the 1×
+   sprites' method), not a mean-based RGB multiplier; winter's bare mass is the bare frame's mean modulated by the
+   texture's luminance. The autumn ¼× forest stays ochre (rgb 0.36, 0.32, 0.03): that is the oak record (+35 a*,
+   +15 b*), now matching 1×. Five-class ΔE (windowed, information): autumn min 14.1, winter min 11.9 (forest/earth).
+6. **Minor, open (recorded):** the water lift is one uniform per chunk, so two chunks whose banks touch different land
+   could meet at a seam across a river; not seen on seed 0 (flat profile). A map-wide lift is the fix if it shows.
+7. **Minor, fixed:** tree sprites are hidden only in chunks whose texture actually carries a baked canopy
+   (`_canopy_of`), never when no canopy style exists yet (first frames, a flora load failure).
+8. **Tests, strengthened:** `shore_pixels_quarter_circles` measures the radius on baked pixels (dither, bank and ink
+   off) at all four corners of a pond (20 rays, 21.8–22.8 px); `canopy_edges_all_sides` (an isolated tree tile:
+   interior, edge band on all four sides, ground at all four corners); `season_state` (the calendar → season pair and
+   first-day blend, five hand-worked snapshots; `force_season` bypasses it elsewhere); the data-only species' winter
+   draws its own bare frame; the gate summary counts the trees test. Still windowed-only (by design, as in M-ART2):
+   canopy saturation, autumn records, five classes, marker instance data.
+9. **Minor, fixed:** the flora resolver now checks schema.py's remaining rules (bare frames and a bare winter exactly
+   for deciduous, a tree's log material = id with a stump, anchors inside canvases, `unknown_habit` default); the
+   calendar's season names come from bindings `trees.season_by_code` (the bridge's 0 spring … 3 winter), not JSON key
+   order; a dissolve happens only between frames of one canvas and anchor; a bush's mask is looked up in the
+   catalogue by its frame's path instead of built by string concatenation.
+10. **Nits:** the ¼× tint halo around forests is fixed (canopy tiles keep their ground's colour with alpha 0 in the
+   tint texture). Left as recorded: the bank and corner fills take the first open neighbour's plain ground; at a
+   crisp/water/land corner the land corner can stay square while the water rounds; a season change re-makes every
+   held tree sprite and rebakes cached ¼× chunks in one frame (a hitch at midnight of a season's first day); the
+   lift's night bound assumes water − land ≥ 0 per channel (true on seed 0); `_tone == "winter"` branches predate
+   this pass.
+
+## D8 — performance (Part 4, after the review fixes)
+
+- **FPS** (`tools/v8/mart2_fps.sh`, M-ART2's method: the day-20 save `mart2-data/saves/seed0_t27600.wsave`, 30 s warm-up
+  + 60 s, windowed 1920×1080, vsync off, release library at the debug path; `$DATA/fps4/fps.jsonl`, 20:1x KST, every
+  run uncontended, 1-minute load 5.1–7.6): seed 0 day 20 at **1× 290.2**, **½× 190.2**, **¼× 242.8** (budget 120; ¼×
+  target 180: met — M-ART2 read 120.65 there, the canopy bake removed the standing trees: draw calls 538); 1,000
+  people **½× 149.1**, **¼× 137.5** (budget 60). Texture memory 268 / 179 / 90 MB (budget 512). Against M-ART2's
+  numbers ½× fell 238.2 → 190.2 and the stress world 186.8 → 149.1 / 173.5 → 137.5 (budgets met; ½× now draws every
+  tree through the season material, and M-ART2's numbers were taken at load 2.9–5.7). Two earlier runs (`fps1`
+  ¼×, `fps3` 1×) drew 0 frames in their 60 s (the window stopped drawing while the process ran; `fps3` started at
+  load 15): not measurements; their other runs agree with `fps4` (¼× 241.7 / 245.1).
+- **Chunk bake** (headless, CPU only, `$DATA/dbg/bake_timing.gd`, all 144 chunks of seed 0 twice, load 6.6–7.5):
+  rebake median **2.48–2.54 ms at 1×** (p90 3.1–3.3), **3.95–3.99 ms at ¼× with the canopy** (p90 5.1; budget ≤ 4 ms
+  median: met, without margin); the first bake after a load ~26 ms (masks made once). The canopy pass was ~3.3 ms
+  per chunk at first and was cut to ~1.2 ms (packed-array reads, one blit per run of interior tree tiles). The SDF
+  (shore) path costs no measurable median at 1× (2.2 → 2.5 ms against D2's pre-review numbers on a different load),
+  so the goal's fallback (a 2×-upsampled SDF) was not needed.

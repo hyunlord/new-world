@@ -88,6 +88,8 @@ var _markers: LodMarkers = null
 var _ringed: Array[Person] = []
 var _marker_px: int = 10
 var _household_key: int = 0
+## AgentId → household key from the last kin columns (looked up when markers refresh, so new people get theirs).
+var _household_of: Dictionary = {}
 
 
 class Person:
@@ -106,7 +108,6 @@ class Person:
 	var look: int = -1
 	var frames: String = ""
 	var variant: int = -1
-	var household: int = -1
 	var elder: bool = false
 	var seen: int = 0
 	var bed: Vector2 = Vector2.ZERO
@@ -141,6 +142,8 @@ func _on_world_reset() -> void:
 	for person: Person in _persons.values():
 		person.queue_free()
 	_persons.clear()
+	_household_key = 0
+	_household_of = {}
 
 
 func _load_people_data() -> void:
@@ -477,7 +480,7 @@ func _refresh_markers() -> void:
 	for person: Person in _persons.values():
 		points[k] = person.position
 		colours[k] = person.top_colour
-		rings[k] = _ring_colour(person.household, palette)
+		rings[k] = _ring_colour(int(_household_of.get(person.agent_id, -1)), palette)
 		ids[k] = GLYPH_OF.get(person.activity, -1)
 		if person.selected or person.drafted:
 			_ringed.append(person)
@@ -528,12 +531,14 @@ func _update_households(snap: Dictionary) -> void:
 		return
 	_household_key = key
 	if mothers.size() != ids.size() or partners.size() != ids.size():
-		for person: Person in _persons.values():
-			person.household = -1
+		_household_of = {}
 		return
-	var keys: Dictionary = household_keys(ids, snap.get("life_stages", PackedByteArray()), mothers, fathers, partners)
-	for person: Person in _persons.values():
-		person.household = int(keys.get(person.agent_id, -1))
+	_household_of = household_keys(ids, snap.get("life_stages", PackedByteArray()), mothers, fathers, partners)
+
+
+## The household key of a person (−1 without one; tests).
+func household_of(agent_id: int) -> int:
+	return int(_household_of.get(agent_id, -1))
 
 
 func _draw() -> void:

@@ -24,9 +24,10 @@
 #   snow, drought) because the land means change with it.
 # Canopy (M-ART2.1 §2.2, ¼× only, `trees.quarter_canopy`): the tree tiles (get_trees, species by tree_layer.gd's hash)
 #   are a GroundMap layer; a chunk baked at texture factor 4 carries the canopy mass per species in its season
-#   (the canopy texture's mean moved by the season's Lab shift as an RGB multiplier — a bare winter frame's own mean
-#   for a deciduous tree — on a ¼-size copy scaled back by nearest, so the ¼ texture keeps every texel), its tiles
-#   leave the map tint, and the tree layer hides the sprites standing there (`canopy_baked_at`, `canopy_version`).
+#   (the season's Lab shift per pixel, as the 1× sprites get it — a deciduous winter uses its bare frame's mean colour
+#   modulated by the texture's luminance — on a ¼-size copy scaled back by nearest, so the ¼ texture keeps every
+#   texel), its tiles leave the map tint, and the tree layer hides the sprites standing there only where a canopy was
+#   actually baked (`canopy_baked_at`, `canopy_version`).
 #   A changed tree set rebakes the ¼× chunks it touches; the canopy follows the season pair at half blend.
 # Hooks for tests: `bake_counts` (chunk → bakes), `last_bake_usec`, `chunk_image(c)`, `ground_ids`.
 # Bridge methods: via SimReads get_terrain_snapshot, get_building_snapshot, get_space, get_world_info,
@@ -95,6 +96,8 @@ var keep_images: bool = false
 ## The texture resolution factor in use (1, 2, 4) and the factor each cached chunk was textured at.
 var _res_factor: int = 1
 var _res_of: Dictionary = {}
+## Chunks whose current texture carries the baked ¼× canopy (the tree layer hides their sprites only then).
+var _canopy_of: Dictionary = {}
 const RETEXTURE_PER_FRAME: int = 4
 ## The built space last applied (dug tiles, floor tile → ground id) and whether the next apply covers every tile.
 var _space_dug: Dictionary = {}
@@ -158,6 +161,7 @@ func _drop_chunk(c: Vector2i) -> void:
 	_strips.erase(c)
 	_images.erase(c)
 	_res_of.erase(c)
+	_canopy_of.erase(c)
 
 
 ## The baked ground image of chunk `c` (null when it is not cached).
@@ -789,7 +793,7 @@ func _bake_chunk(c: Vector2i) -> void:
 		return
 	var t0: int = Time.get_ticks_usec()
 	var f: int = _res_factor
-	_baker.canopy_on = f == 4 and _canopy_enabled()
+	_baker.canopy_on = f == 4 and _canopy_enabled() and _baker.canopy_count() > 0
 	var img: Image = _baker.bake(_map, c.x, c.y)
 	var t_compose: int = Time.get_ticks_usec()
 	var size: int = _baker.chunk_tiles * TILE
@@ -834,9 +838,11 @@ func _bake_chunk(c: Vector2i) -> void:
 			_world.add_child(strip)
 			strips.append(strip)
 	_strips[c] = strips
-	if int(_res_of.get(c, 0)) != f:
+	var baked: bool = _baker.canopy_on and _baker.canopy_count() > 0
+	if int(_res_of.get(c, 0)) != f or bool(_canopy_of.get(c, false)) != baked:
 		canopy_version += 1
 	_res_of[c] = f
+	_canopy_of[c] = baked
 	bake_counts[c] = int(bake_counts.get(c, 0)) + 1
 	var t_end: int = Time.get_ticks_usec()
 	last_bake_usec = t_end - t0
@@ -865,9 +871,11 @@ func _terrain_tint(c: Vector2i, canopy: bool = false) -> ImageTexture:
 			var tx: int = c.x * size + x
 			var ty: int = c.y * size + y
 			var index: int = _map.at(tx, ty)
-			if index < 0 or index >= ground_ids.size() or _map.is_crisp(tx, ty) or (canopy and _map.tree_at(tx, ty) > 0):
+			if index < 0 or index >= ground_ids.size() or _map.is_crisp(tx, ty):
 				continue
-			img.set_pixel(x + 1, y + 1, palette[index])
+			# A ¼× canopy tile opts out of the tint (alpha 0) but keeps its ground's colour, so the linear filter
+			# does not pull the neutral fill into the meadow around a forest.
+			img.set_pixel(x + 1, y + 1, Color(palette[index], 0.0) if canopy and _map.tree_at(tx, ty) > 0 else palette[index])
 	return ImageTexture.create_from_image(img)
 
 
@@ -881,7 +889,7 @@ func canopy_baked_at(cell: Vector2i) -> bool:
 		return false
 	var size: int = _baker.chunk_tiles
 	var c: Vector2i = Vector2i(floori(float(cell.x) / size), floori(float(cell.y) / size))
-	return _chunks.has(c) and int(_res_of.get(c, 1)) == 4
+	return _chunks.has(c) and bool(_canopy_of.get(c, false))
 
 
 ## The tree tiles (GroundMap.tree = species style + 1) from get_trees when its version moves, and the season's
@@ -960,31 +968,26 @@ func _prepare_canopies(season: String) -> void:
 		if src == null:
 			src = Image.create(TILE, TILE, false, Image.FORMAT_RGBA8)
 			src.fill(Color(0.2, 0.3, 0.15))
-		var mean: Color = Tone.mean_rgb(src, 7)
-		var target: Color = mean
-		if not r.is_empty():
-			var tint: Dictionary = r["tint"]
-			if str(tint["frame"]) != "foliage":
-				var bare: Image = ArtData.image_at(FloraResolver.res_path(str(r["path"])))
-				target = Tone.mean_rgb(bare, 1) if bare != null else mean
-			else:
-				var d: Array = tint["delta_lab"]
-				var lab: Vector3 = Tone.rgb_to_lab(Vector3(mean.r, mean.g, mean.b)) + Vector3(float(d[0]), float(d[1]), float(d[2]))
-				var rgb: Vector3 = Tone.lab_to_rgb(lab)
-				target = Color(rgb.x, rgb.y, rgb.z)
-		var mult: Vector3 = Vector3(target.r / maxf(mean.r, 1e-6), target.g / maxf(mean.g, 1e-6), target.b / maxf(mean.b, 1e-6))
 		var w: int = src.get_width()
 		var h: int = src.get_height()
 		var small: Image = src.duplicate()
 		small.convert(Image.FORMAT_RGBA8)
 		small.resize(maxi(1, w >> 2), maxi(1, h >> 2), Image.INTERPOLATE_BILINEAR)
+		if not r.is_empty():
+			var tint: Dictionary = r["tint"]
+			if str(tint["frame"]) != "foliage":
+				# Leafless: the bare frame's mean colour, modulated by the canopy texture's own luminance (texture kept).
+				var bare: Image = ArtData.image_at(FloraResolver.res_path(str(r["path"])))
+				small = _bare_mass(small, Tone.mean_rgb(bare, 1) if bare != null else Tone.mean_rgb(small, 1))
+			else:
+				# The season's CIELAB shift per pixel, exactly as the 1× sprites get it (seasons.py), on the ¼ copy.
+				var d: Array = tint["delta_lab"]
+				small = Tone.lab_shift(small, float(d[0]), float(d[1]), float(d[2]))
 		var data: PackedByteArray = small.get_data()
 		var dark: PackedByteArray = data.duplicate()
 		for i: int in range(0, data.size(), 4):
 			for k: int in 3:
-				var v: float = clampf(data[i + k] * mult[k], 0.0, 255.0)
-				data[i + k] = int(roundf(v))
-				dark[i + k] = int(roundf(v * edge_value))
+				dark[i + k] = int(roundf(data[i + k] * edge_value))
 			data[i + 3] = 255
 			dark[i + 3] = 255
 		for pair: Array in [[data, images], [dark, edges]]:
@@ -993,6 +996,19 @@ func _prepare_canopies(season: String) -> void:
 			(pair[1] as Array).append(img)
 	_canopy_cache[season] = [images, edges]
 	_baker.set_canopies(images, edges)
+
+
+## `img` recoloured to `colour` scaled by each pixel's luminance relative to the image's mean (a leafless mass).
+static func _bare_mass(img: Image, colour: Color) -> Image:
+	var out: Image = img.duplicate()
+	var mean: float = maxf(1e-6, float(Tone.metrics(out)["mean"]))
+	var data: PackedByteArray = out.get_data()
+	for i: int in range(0, data.size(), 4):
+		var l: float = (Tone.LR * data[i] + Tone.LG * data[i + 1] + Tone.LB * data[i + 2]) / 255.0 / mean
+		data[i] = int(roundf(clampf(colour.r * l, 0.0, 1.0) * 255.0))
+		data[i + 1] = int(roundf(clampf(colour.g * l, 0.0, 1.0) * 255.0))
+		data[i + 2] = int(roundf(clampf(colour.b * l, 0.0, 1.0) * 255.0))
+	return Image.create_from_data(out.get_width(), out.get_height(), false, Image.FORMAT_RGBA8, data)
 
 
 ## The map-mode colour per ground index (`ground.map_mode.tint_by_ground`, held under the tone caps); alpha 0 for a

@@ -72,6 +72,7 @@
       {"weight": 2, "species": "pine"}
     ],
     "habit": "deciduous",
+    "season_by_code": ["spring", "summer", "autumn", "winter"],
     "large_permille": 600,
     "stump_ticks": 1440
   },

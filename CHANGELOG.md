@@ -49,6 +49,11 @@ baked canopy, household rings on the LOD markers, and D19 (`a1c20220`) brought t
 - `render_params.json`: `water` gains `shore_radius_px`, `contour_soft_px`, `texture_lift`, `map_mode_colour`
   (replacing `colour`; `texture_std` removed); new `hill` and `trees` sections; `lod.household_ring_rgb`.
 - The M-ART2 rendered tree check draws through `TreeLayer.make_plant` in summer; bare-land samples skip tree tiles.
+- Review fixes (MART21_DECISIONS D7): the quadrant-mask cache key (canopy and shore masks collided; new
+  `mask_cache_isolation` test), household keys kept by AgentId and cleared on reset, a dissolve keeps each frame's
+  own season, the ¼× canopy tinted by exact per-pixel Lab, sprites hidden only where a canopy was baked, schema.py's
+  remaining rules in the flora resolver, season names by code from bindings `trees.season_by_code`, no tint halo
+  around ¼× forests; new tests `shore_pixels_quarter_circles`, `canopy_edges_all_sides`, `season_state`.
 - `docs/images/mart2_compare_sheet.png` now shows old · M-ART2 · M-ART2.1 for six scenes; `docs/images/mart21_seasons.png`
   added; `docs/images/mart21_contact_sheet.png` replaces `mart2_contact_sheet.png`.
 

@@ -4,9 +4,9 @@
 // (`snow_mask`: the band below each column's top canopy pixel, made by tree_layer.gd from the mask, as seasons.py
 // `snow_layer`) mixes toward white by the season's snow alpha. In the first day of a season the shift and the snow
 // alpha blend from the previous season's (`blend` 0 → 1); when the two seasons draw different frames (a deciduous
-// tree into or out of winter) the previous frame (`alt_tex`, same canvas) dissolves into this one by a per-pixel
-// hash below `blend`. Per-instance tint is captured in vertex() (a 4.6 canvas_item rule: COLOR in fragment() is
-// already multiplied by TEXTURE).
+// tree into or out of winter) the previous frame (`alt_tex`, same canvas and anchor) dissolves into this one by a
+// per-pixel hash below `blend`, each frame keeping its own season's shift and snow. Per-instance tint is captured in
+// vertex() (a 4.6 canvas_item rule: COLOR in fragment() is already multiplied by TEXTURE).
 shader_type canvas_item;
 
 uniform sampler2D canopy_mask : filter_nearest;
@@ -81,12 +81,14 @@ void fragment() {
 	bool use_alt = has_alt && pixel_hash(px) >= blend;
 	vec4 c = use_alt ? texture(alt_tex, UV) : texture(TEXTURE, UV);
 	bool masked = use_alt ? (has_alt_mask && texture(alt_mask, UV).r > 0.5) : (has_mask && texture(canopy_mask, UV).r > 0.5);
-	vec3 delta = mix(delta_from, delta_to, blend);
+	// In a dissolve each frame keeps its own season's record (falling leaves stay autumn, branches stay bare); the
+	// same frame in both seasons blends between them.
+	vec3 delta = has_alt ? (use_alt ? delta_from : delta_to) : mix(delta_from, delta_to, blend);
 	if (masked && c.a > 0.0 && dot(delta, delta) > 0.0) {
 		c.rgb = lab_to_rgb(rgb_to_lab(c.rgb) + delta);
 	}
 	float band = use_alt ? (has_alt_snow ? texture(alt_snow, UV).r : 0.0) : (has_snow ? texture(snow_mask, UV).r : 0.0);
-	float snow = band * mix(snow_from, snow_to, blend);
+	float snow = band * (has_alt ? (use_alt ? snow_from : snow_to) : mix(snow_from, snow_to, blend));
 	c.rgb = mix(c.rgb, vec3(1.0), snow);
 	COLOR = c * v_tint;
 }

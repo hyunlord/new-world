@@ -149,7 +149,7 @@ step 32 resolver_parity bash -c 'bash tools/v8/run_bounded.sh 300 "$GODOT_BIN" -
 step 33 extensibility_grep python3 -m unittest tools/v8/test_mart2_extensibility.py tools/v8/test_art_masks.py tools/v8/test_art_import.py
 step 34 mart2_render bash -c 'for t in mart2_ground_test mart2_people_test mart21_trees_test; do bash tools/v8/run_bounded.sh 600 "$GODOT_BIN" --headless --path . --script res://tools/v8/$t.gd > "$0/$t.out" 2>&1; grep -E "^MART21?_(GROUND|PEOPLE|TREES) (PASS|FAIL)|_DONE" "$0/$t.out"; grep -q "_DONE failures=0" "$0/$t.out" || exit 1; ! grep -q "SCRIPT ERROR" "$0/$t.out" || { grep "SCRIPT ERROR" "$0/$t.out" | head -5; exit 1; }; done' "$LOG"
 grep -E 'PASS|FAIL' "$LOG/resolver_parity.log" | tail -1 | sed 's/^/   /' >> "$SUMMARY"
-grep -cE '^MART2_(GROUND|PEOPLE) PASS' "$LOG/mart2_render.log" | awk '{print "   mart2_render checks passed", $1}' >> "$SUMMARY"
+grep -cE '^MART21?_(GROUND|PEOPLE|TREES) PASS' "$LOG/mart2_render.log" | awk '{print "   mart2_render checks passed", $1}' >> "$SUMMARY"
 echo "finished $(date '+%Y-%m-%d %H:%M:%S %Z') status $status" >> "$SUMMARY"
 cat "$SUMMARY"
 exit "$status"

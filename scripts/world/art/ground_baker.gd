@@ -437,16 +437,38 @@ func _round_edges(map: GroundMap, img: Image, x0: int, y0: int, per: int) -> voi
 	var rc: PackedInt32Array = PackedInt32Array()
 	wc.resize(n * n)
 	rc.resize(n * n)
+	wc.fill(-1)
+	rc.fill(-1)
 	var any_w: bool = false
 	var any_r: bool = false
+	# The same classes as _water_class / _rock_class, read from the packed arrays directly (no call per tile).
+	var ground: PackedInt32Array = map.ground
+	var crisp: PackedByteArray = map.crisp
+	var rock: PackedByteArray = map.rock
+	var w: int = map.width
 	for ly: int in n:
+		var y: int = y0 + ly - 1
+		if y < 0 or y >= map.height:
+			continue
 		for lx: int in n:
-			var a: int = _water_class(map, x0 + lx - 1, y0 + ly - 1)
-			var b: int = _rock_class(map, x0 + lx - 1, y0 + ly - 1)
-			wc[ly * n + lx] = a
-			rc[ly * n + lx] = b
-			any_w = any_w or a == 1
-			any_r = any_r or b == 1
+			var x: int = x0 + lx - 1
+			if x < 0 or x >= w:
+				continue
+			var i: int = y * w + x
+			var at: int = ly * n + lx
+			var g: int = ground[i]
+			if g == WATER:
+				wc[at] = 1
+				any_w = true
+				continue
+			if g < 0:
+				continue
+			if rock[i] == 1:
+				rc[at] = 1
+				any_r = true
+			elif crisp[i] == 0:
+				wc[at] = 0
+				rc[at] = 0
 	if not any_w and not any_r:
 		return
 	var half: int = TILE >> 1
@@ -484,45 +506,102 @@ func _tree_class(map: GroundMap, x: int, y: int) -> int:
 	return 1 if map.tree_at(x, y) > 0 else 0
 
 
-## The canopy over the chunk at tile (x0, y0): per quadrant, uniform tree quadrants one blit of the tile's style,
-## boundary quadrants the interior and edge masks (pair 2) with the tree's style (the tile's, else a neighbour's).
+## The canopy over the chunk at tile (x0, y0). Classes and styles are read once with a one-tile apron; a row's run of
+## interior tree tiles (all eight neighbours trees) of one style is one blit; the rest go quadrant by quadrant —
+## uniform tree quadrants one blit of the tile's style, boundary quadrants the interior and edge masks (pair 2) with
+## the tree's style (the tile's, else a neighbour's).
 func _canopy_pass(map: GroundMap, img: Image, x0: int, y0: int) -> void:
 	var half: int = TILE >> 1
 	var rect: Rect2i = Rect2i(0, 0, half, half)
+	var n: int = chunk_tiles + 2
+	var tc: PackedInt32Array = PackedInt32Array()
+	var ts: PackedInt32Array = PackedInt32Array()
+	tc.resize(n * n)
+	ts.resize(n * n)
+	tc.fill(-1)
+	var any: bool = false
+	# The map's packed arrays read directly (a function call per tile costs as much as the rest of this loop).
+	var ground: PackedInt32Array = map.ground
+	var crisp: PackedByteArray = map.crisp
+	var trees: PackedInt32Array = map.tree
+	var w: int = map.width
+	for ly: int in n:
+		var y: int = y0 + ly - 1
+		if y < 0 or y >= map.height:
+			continue
+		for lx: int in n:
+			var x: int = x0 + lx - 1
+			if x < 0 or x >= w:
+				continue
+			var i: int = y * w + x
+			var at: int = ly * n + lx
+			ts[at] = trees[i]
+			if ground[i] < 0 or crisp[i] == 1:
+				continue
+			tc[at] = 1 if trees[i] > 0 else 0
+			any = any or trees[i] > 0
+	if not any:
+		return
+	var nb: Array[int] = [-n - 1, -n, -n + 1, -1, 1, n - 1, n, n + 1]
 	for ty: int in chunk_tiles:
-		for tx: int in chunk_tiles:
+		var tx: int = 0
+		while tx < chunk_tiles:
+			var c: int = (ty + 1) * n + tx + 1
+			var t: int = tc[c]
+			if t < 0:
+				tx += 1
+				continue
+			# A run of interior tree tiles of one style: one blit.
+			var end: int = tx
+			while end < chunk_tiles:
+				var e: int = (ty + 1) * n + end + 1
+				if tc[e] != 1 or ts[e] != ts[c]:
+					break
+				var inner: bool = true
+				for d: int in nb:
+					inner = inner and tc[e + d] == 1
+				if not inner:
+					break
+				end += 1
+			var style: int = ts[c] - 1
+			if end > tx and style >= 0 and style < _canopy.size():
+				var p: int = _canopy_period[style]
+				img.blit_rect(_canopy[style], Rect2i(posmod((x0 + tx) * TILE, p), posmod((y0 + ty) * TILE, p), (end - tx) * TILE, TILE), Vector2i(tx * TILE, ty * TILE))
+				tx = end
+				continue
 			var x: int = x0 + tx
 			var y: int = y0 + ty
-			var t: int = _tree_class(map, x, y)
-			if t < 0:
-				continue
 			for q: int in 4:
 				var sx: int = -1 if (q & 1) == 0 else 1
 				var sy: int = -1 if q < 2 else 1
-				var bits: int = _bits(t, _tree_class(map, x + sx, y), _tree_class(map, x, y + sy), _tree_class(map, x + sx, y + sy))
+				var ch: int = c + sx
+				var cv: int = c + sy * n
+				var cd: int = c + sx + sy * n
+				var bits: int = _bits(t, tc[ch], tc[cv], tc[cd])
 				if bits == 0:
 					continue
-				var style: int = map.tree_at(x, y)
-				for nb: Vector2i in [Vector2i(x + sx, y), Vector2i(x, y + sy), Vector2i(x + sx, y + sy)]:
-					if style <= 0:
-						style = map.tree_at(nb.x, nb.y)
-				style -= 1
-				if style < 0 or style >= _canopy.size():
+				var st: int = ts[c]
+				for o: int in [ch, cv, cd]:
+					if st <= 0:
+						st = ts[o]
+				st -= 1
+				if st < 0 or st >= _canopy.size():
 					continue
-				var p: int = _canopy_period[style]
+				var p: int = _canopy_period[st]
 				var world: Vector2i = Vector2i(x * TILE + (0 if sx < 0 else half), y * TILE + (0 if sy < 0 else half))
 				var dst: Vector2i = Vector2i(tx * TILE + (0 if sx < 0 else half), ty * TILE + (0 if sy < 0 else half))
 				var src: Rect2i = Rect2i(posmod(world.x, p), posmod(world.y, p), half, half)
 				if bits == 15:
-					img.blit_rect(_canopy[style], src, dst)
+					img.blit_rect(_canopy[st], src, dst)
 					continue
 				var m: Array = _quadrant_masks(2, q, bits, 0)
 				if bool(m[6]):
-					_tmp_q.blit_rect(_canopy[style], src, Vector2i.ZERO)
+					_tmp_q.blit_rect(_canopy[st], src, Vector2i.ZERO)
 					img.blend_rect_mask(_tmp_q, m[1], rect, dst)
 				if bool(m[5]):
-					_tmp_q.blit_rect(_canopy_edge[style], src, Vector2i.ZERO)
+					_tmp_q.blit_rect(_canopy_edge[st], src, Vector2i.ZERO)
 					img.blend_rect_mask(_tmp_q, m[0], rect, dst)
+			tx += 1
 
 
 ## The rounded field the bake uses at world pixel (wx, wy) — pair 0 shores (negative in water), pair 1 hill edges
@@ -581,7 +660,9 @@ func _apply_quadrant(map: GroundMap, img: Image, pair: int, q: int, bits: int, p
 ## (the M-ART2 bank weight, measured from the rounded contour); ink where the land-side distance lies in
 ## [disp, disp + ink_px), disp = the noise at the nearest contour point × ink_displace_px. Pair 1 (hills) is crisp.
 func _quadrant_masks(pair: int, q: int, bits: int, phase: int) -> Array:
-	var key: int = pair | (q << 1) | (bits << 3) | (phase << 7)
+	# pair (0–2) takes two bits, the quadrant two, the pattern four; the phase above them (MART21 D7: a one-bit pair
+	# made canopy and shore masks collide).
+	var key: int = pair | (q << 2) | (bits << 4) | (phase << 8)
 	if _shore.has(key):
 		return _shore[key]
 	var half: int = TILE >> 1

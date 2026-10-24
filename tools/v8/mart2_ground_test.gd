@@ -21,7 +21,10 @@
 #      straight shore's contour stays on the tile edge (±1 px); in the baked image the visible edge (5 × 5 land
 #      fraction 0.5) keeps the same offset from the contour at the corner arc as along the straight shore (±3 px:
 #      the bank follows the contour; a square corner would sit ~7 px further out); hill tops round against open
-#      ground (`hill.edge_radius_px`, crisp) except at a corner whose upper row hangs a face;
+#      ground (`hill.edge_radius_px`, crisp) except at a corner whose upper row hangs a face; with dither, bank and ink
+#      off the baked pixels themselves trace the quarter circle at all four corners of a 2 × 2 pond (±2 px), and a
+#      baker that has already made canopy masks (¼×) bakes a river chunk byte-identically to a fresh baker (the
+#      mask cache keeps shore, hill and canopy masks apart; review finding 1);
 #   8. water: the uploaded water texture is the 05 texture itself (luminance std = the source's, ≥ 0.06), the lift
 #      clips < 1 % of its pixels; on every seed-0 chunk with water, the baked land beside water against the lifted
 #      water mean differs by ≥ 0.10 luminance at full night (day difference × the night multiplier's weakest
@@ -99,6 +102,8 @@ func _run() -> void:
 	_check_dig(layer, world, map, size)
 	_check_data_only()
 	_check_shores_synthetic()
+	_check_shore_pixels()
+	_check_mask_cache_isolation()
 	_check_hills_synthetic()
 	_check_water(layer, world, map, size)
 	if OS.get_cmdline_user_args().has("--rendered"):
@@ -711,6 +716,87 @@ func _check_shores_synthetic() -> void:
 	var square_offset: float = r * sqrt(2.0) - _mean(arc)
 	_check("shore_bank_follows_contour", absf(arc_offset - straight_offset) <= 3.0, "visible edge %.1f px into the water along the straight shore, %.1f px at the rounded corner (±3; a square corner would read %.1f)" % [straight_offset, arc_offset, square_offset])
 	img.save_png(OS.get_user_data_dir().path_join("mart21_shore_l.png"))
+
+
+## A pond of 2 × 2 water tiles at (3..4, 3..4) on an 8 × 8 land map, baked with no dither, bank or ink: the opaque /
+## transparent boundary itself is the contour. Each of the four outer corners must be a quarter circle of the radius.
+func _check_shore_pixels() -> void:
+	var b: GroundBaker = GroundBaker.new()
+	var ground: Dictionary = (ArtData.param("ground", {}) as Dictionary).duplicate()
+	ground["chunk_tiles"] = 8
+	var water: Dictionary = (ArtData.param("water", {}) as Dictionary).duplicate()
+	water["contour_soft_px"] = 0
+	water["bank_px"] = 0
+	water["bank_ink_px"] = 0
+	b.configure(ground, water, ArtData.param("hill", {}))
+	var a: Image = Image.create(128, 128, false, Image.FORMAT_RGBA8)
+	a.fill(Color(0.40, 0.50, 0.20))
+	b.set_grounds([a])
+	var r: float = float(ArtData.param("water.shore_radius_px", 22))
+	var m: GroundBaker.GroundMap = GroundBaker.GroundMap.new()
+	m.setup(8, 8)
+	m.ground.fill(0)
+	for y: int in range(3, 5):
+		for x: int in range(3, 5):
+			m.ground[y * 8 + x] = GroundBaker.WATER
+	var img: Image = b.bake(m, 0, 0)
+	var worst: float = 0.0
+	var radii: Array[float] = []
+	# Corner, direction into the pond: NW (192, 192) → (+, +), NE (320, 192) → (−, +), SW (192, 320), SE (320, 320).
+	for corner: Array in [[Vector2(3, 3), Vector2(1, 1)], [Vector2(5, 3), Vector2(-1, 1)], [Vector2(3, 5), Vector2(1, -1)], [Vector2(5, 5), Vector2(-1, -1)]]:
+		var centre: Vector2 = (corner[0] as Vector2) * TILE + (corner[1] as Vector2) * r
+		for k: int in 5:
+			var t: float = deg_to_rad(10.0 + k * 17.5)
+			var out: Vector2 = Vector2(-(corner[1] as Vector2).x * cos(t), -(corner[1] as Vector2).y * sin(t))
+			var reach: float = INF
+			for step: int in range(0, 160):
+				var p: Vector2 = centre + out * (step * 0.25)
+				if img.get_pixel(floori(p.x), floori(p.y)).a > 0.5:
+					reach = step * 0.25
+					break
+			radii.append(reach)
+			worst = maxf(worst, absf(reach - r))
+	_check("shore_pixels_quarter_circles", worst <= 2.0, "baked water edge at the four pond corners, 5 rays each: %s (expected %.0f ±2 px; worst %.2f)" % [_fmt(radii), r, worst])
+
+
+## Canopy masks (pair 2) made first, then a river chunk: identical to a fresh baker's bake of the same chunk.
+func _check_mask_cache_isolation() -> void:
+	var make: Callable = func() -> GroundBaker:
+		var bk: GroundBaker = _synthetic_baker()
+		var grey: Image = Image.create(64, 64, false, Image.FORMAT_RGBA8)
+		grey.fill(Color(0.2, 0.4, 0.1))
+		var dark: Image = grey.duplicate()
+		dark.fill(Color(0.1, 0.2, 0.05))
+		bk.set_canopies([grey], [dark])
+		return bk
+	var m: GroundBaker.GroundMap = GroundBaker.GroundMap.new()
+	m.setup(16, 8)
+	m.ground.fill(0)
+	# Chunk (0, 0): a forest with edges in every orientation; chunk (1, 0): a river with corners in every orientation.
+	for y: int in range(2, 6):
+		for x: int in range(2, 6):
+			if (x + y) % 3 != 0:
+				m.tree[y * 16 + x] = 1
+	for y: int in range(0, 8):
+		m.ground[y * 16 + 11] = GroundBaker.WATER
+	for x: int in range(9, 14):
+		m.ground[4 * 16 + x] = GroundBaker.WATER
+	var used: GroundBaker = make.call()
+	used.canopy_on = true
+	used.bake(m, 0, 0)
+	used.canopy_on = false
+	var after: Image = used.bake(m, 1, 0)
+	var fresh: GroundBaker = make.call()
+	var clean: Image = fresh.bake(m, 1, 0)
+	# And the other order: a river first, then the canopy.
+	var used2: GroundBaker = make.call()
+	used2.bake(m, 1, 0)
+	used2.canopy_on = true
+	var canopy_after: Image = used2.bake(m, 0, 0)
+	var fresh2: GroundBaker = make.call()
+	fresh2.canopy_on = true
+	var canopy_clean: Image = fresh2.bake(m, 0, 0)
+	_check("mask_cache_isolation", _sha(after) == _sha(clean) and _sha(canopy_after) == _sha(canopy_clean), "river chunk after canopy masks %s = fresh %s; canopy chunk after shore masks %s = fresh %s" % [_sha(after).substr(0, 12), _sha(clean).substr(0, 12), _sha(canopy_after).substr(0, 12), _sha(canopy_clean).substr(0, 12)])
 
 
 func _check_hills_synthetic() -> void:

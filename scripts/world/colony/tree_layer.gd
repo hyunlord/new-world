@@ -24,7 +24,8 @@
 #   stand the same way; they are re-synced when the resource amounts change.
 # `under_canopy(t)` tells the agent layer when a crown can hide a person on tile t: a tree on t, or on the tile left of,
 #   at or right of t's column up to two rows south of it (the tree sorts later and its crown rises ~3 tiles).
-# Berry bushes take their species' season tint (bindings `resources` `flora_species`; the mask is the frame id + "_mask").
+# Berry bushes take their species' season tint (bindings `resources` `flora_species`; the frame's mask from the
+#   catalogue entry with that frame's path).
 # Bridge methods: via SimReads get_colony_versions, get_trees, get_resource_snapshot, get_time_snapshot,
 #   get_world_info; signal world_reset.
 extends Node2D
@@ -145,21 +146,35 @@ func _process(_delta: float) -> void:
 
 ## The season pair and blend from the calendar; true when the pair changed. Materials get the new blend.
 func _update_season() -> bool:
-	var t: Dictionary = SimReads.read(_world_sim, "get_time_snapshot")
-	var names: Array[String] = _flora.seasons()
-	if names.is_empty():
-		return false
 	if _forced_pair != "":
 		return _set_season(_forced_pair, _forced_blend)
+	var state: Array = season_state(SimReads.read(_world_sim, "get_time_snapshot"), season_names())
+	if state.is_empty():
+		return false
+	return _set_season(str(state[0]), float(state[1]))
+
+
+## The catalogue's season names by the calendar's season code (bindings `trees.season_by_code`, the bridge's
+## `season` contract 0 spring … 3 winter; the catalogue's own order when the binding is missing).
+func season_names() -> Array[String]:
+	var out: Array[String] = []
+	for n: Variant in (ArtData.bindings().get("trees", {}) as Dictionary).get("season_by_code", []):
+		if _flora.seasons().has(str(n)):
+			out.append(str(n))
+	return out if out.size() == _flora.seasons().size() else _flora.seasons()
+
+
+## ["from|to", blend] for a time snapshot: the season by code and the one before it; blend = the fraction of the
+## first day of a season (0 at its midnight, 1 from the second day), except in the world's first season, which has
+## no previous season on screen (the calendar starts on day 1 of a season). [] without seasons. Pure (tests).
+static func season_state(t: Dictionary, names: Array[String]) -> Array:
+	if names.is_empty() or int(t.get("days_per_season", 0)) <= 0:
+		return [] if names.is_empty() else ["%s|%s" % [names[0], names[0]], 1.0]
 	var code: int = clampi(int(t.get("season", 0)), 0, names.size() - 1)
-	var to: String = names[code]
-	var from: String = names[posmod(code - 1, names.size())]
 	var blend: float = 1.0
-	var day_of_season: int = int(t.get("day_of_season", 0))
-	# The world's first season has no previous one on screen; afterwards the first day of a season blends.
-	if day_of_season == 1 and int(t.get("day_index", 0)) >= int(t.get("days_per_season", 0)):
+	if int(t.get("day_of_season", 0)) == 1 and int(t.get("day_index", 0)) >= int(t.get("days_per_season", 0)):
 		blend = clampf(float(t.get("time_of_day", 24.0)) / 24.0, 0.0, 1.0)
-	return _set_season("%s|%s" % [from, to], blend)
+	return ["%s|%s" % [names[posmod(code - 1, names.size())], names[code]], blend]
 
 
 ## Force the drawn season pair ("" to follow the calendar again); tests and captures. Applied on the next frame.
@@ -369,7 +384,9 @@ func make_plant(species: String, size: String, variant: int, habit: String, base
 
 ## The shared season material of a frame pair (current season `to`, previous `from`).
 func _season_material(to: Dictionary, from: Dictionary) -> ShaderMaterial:
-	var alt: bool = str(from["path"]) != str(to["path"])
+	# A dissolve between two frames samples both at the same UV: only frames of one canvas and anchor dissolve; any
+	# other pair draws the current season's frame (it was resolved for `to`).
+	var alt: bool = str(from["path"]) != str(to["path"]) and str(from.get("canvas", [])) == str(to.get("canvas", [])) and str(from.get("anchor", [])) == str(to.get("anchor", []))
 	var key: String = "%s|%s|%s|%s" % [to["path"], from["path"] if alt else "", str(to["tint"]), str(from["tint"])]
 	if _materials.has(key):
 		return _materials[key]
@@ -551,7 +568,7 @@ func _bush_material(id: String, species: String) -> ShaderMaterial:
 	if to.is_empty():
 		return null
 	var source: String = str(ArtData.row(id).get("source", ""))
-	var mask_source: String = str(ArtData.row(id + "_mask").get("source", ""))
+	var mask_source: String = _flora.mask_of(source)
 	to = to.duplicate()
 	to["path"] = source
 	to["canopy_mask"] = mask_source
