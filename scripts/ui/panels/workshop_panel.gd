@@ -14,6 +14,8 @@
 #   cmd_remove_bill, cmd_set_bill_mode, cmd_move_bill, cmd_set_bill_suspended; signal world_reset.
 extends Control
 
+const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
+
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
 ## M-ART2 (goal §3.6): each recipe button shows its output's 32-px icon (scripts/ui/item_icons.gd).
@@ -88,6 +90,8 @@ func _loc(key: String) -> String:
 
 func _button(node_name: String, text: String, action: Callable) -> Button:
 	var button: Button = Button.new()
+	var tooltip_keys: Dictionary = {"Minus": "MUX_TIP_QUANTITY_LESS", "Plus": "MUX_TIP_QUANTITY_MORE", "Up": "MUX_TIP_BILL_UP", "Down": "MUX_TIP_BILL_DOWN"}
+	PanelTooltips.attach(button, "close" if node_name == "Close" else "", str(tooltip_keys.get(node_name.get_slice("_", 0), "")))
 	button.name = node_name
 	button.text = text
 	button.focus_mode = Control.FOCUS_NONE

@@ -1,0 +1,381 @@
+{
+  "schema_version": 1,
+  "controls": [
+    {
+      "id": "pan",
+      "input": "두 손가락 스크롤 / WASD / 방향키",
+      "text_key": "MUX_CONTROL_PAN",
+      "group": "camera",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_PAN"
+    },
+    {
+      "id": "drag_pan",
+      "input": "왼쪽 드래그 (도구 없음) / 오른쪽·가운데 드래그",
+      "text_key": "MUX_CONTROL_DRAG_PAN",
+      "group": "camera",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_DRAG_PAN"
+    },
+    {
+      "id": "zoom_in",
+      "input": "핀치 / 휠 위 / = / 숫자패드 +",
+      "text_key": "MUX_CONTROL_ZOOM_IN",
+      "group": "camera",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_ZOOM_IN"
+    },
+    {
+      "id": "zoom_out",
+      "input": "핀치 / 휠 아래 / - / 숫자패드 -",
+      "text_key": "MUX_CONTROL_ZOOM_OUT",
+      "group": "camera",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_ZOOM_OUT"
+    },
+    {
+      "id": "home",
+      "input": "H / Home",
+      "text_key": "MUX_CONTROL_HOME",
+      "group": "camera",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_HOME"
+    },
+    {
+      "id": "fullscreen",
+      "input": "Ctrl+Cmd+F",
+      "text_key": "MUX_CONTROL_FULLSCREEN",
+      "group": "camera",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_FULLSCREEN"
+    },
+    {
+      "id": "pause",
+      "input": "Space / Pause",
+      "text_key": "MUX_CONTROL_PAUSE",
+      "group": "time",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_PAUSE"
+    },
+    {
+      "id": "speed_1",
+      "input": "1",
+      "text_key": "MUX_CONTROL_SPEED_1",
+      "group": "time",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_SPEED_1"
+    },
+    {
+      "id": "speed_2",
+      "input": "2",
+      "text_key": "MUX_CONTROL_SPEED_2",
+      "group": "time",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_SPEED_2"
+    },
+    {
+      "id": "speed_3",
+      "input": "3",
+      "text_key": "MUX_CONTROL_SPEED_3",
+      "group": "time",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_SPEED_3"
+    },
+    {
+      "id": "speed_4",
+      "input": "4",
+      "text_key": "MUX_CONTROL_SPEED_4",
+      "group": "time",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_SPEED_4"
+    },
+    {
+      "id": "select",
+      "input": "왼쪽 클릭",
+      "text_key": "MUX_CONTROL_SELECT",
+      "group": "orders",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_SELECT"
+    },
+    {
+      "id": "order_area",
+      "input": "왼쪽 드래그 (도구 선택)",
+      "text_key": "MUX_CONTROL_ORDER_AREA",
+      "group": "orders",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_ORDER_AREA"
+    },
+    {
+      "id": "order_rectangle",
+      "input": "Shift+드래그",
+      "text_key": "MUX_CONTROL_ORDER_RECTANGLE",
+      "group": "orders",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_ORDER_RECTANGLE"
+    },
+    {
+      "id": "cancel_tool",
+      "input": "오른쪽 클릭 / Esc",
+      "text_key": "MUX_CONTROL_CANCEL_TOOL",
+      "group": "orders",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_CANCEL_TOOL"
+    },
+    {
+      "id": "draft_order",
+      "input": "오른쪽 클릭 (도구 없음)",
+      "text_key": "MUX_CONTROL_DRAFT_ORDER",
+      "group": "orders",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_DRAFT_ORDER"
+    },
+    {
+      "id": "chop",
+      "input": "F1",
+      "text_key": "MUX_CONTROL_CHOP",
+      "group": "orders",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_CHOP"
+    },
+    {
+      "id": "stockpile",
+      "input": "F2",
+      "text_key": "MUX_CONTROL_STOCKPILE",
+      "group": "orders",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_STOCKPILE"
+    },
+    {
+      "id": "build",
+      "input": "F3",
+      "text_key": "MUX_CONTROL_BUILD",
+      "group": "orders",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_BUILD"
+    },
+    {
+      "id": "remove_zone",
+      "input": "F4",
+      "text_key": "MUX_CONTROL_REMOVE_ZONE",
+      "group": "orders",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_REMOVE_ZONE"
+    },
+    {
+      "id": "save",
+      "input": "F5",
+      "text_key": "MUX_CONTROL_SAVE",
+      "group": "orders",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_SAVE"
+    },
+    {
+      "id": "cancel_order",
+      "input": "F6",
+      "text_key": "MUX_CONTROL_CANCEL_ORDER",
+      "group": "orders",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_CANCEL_ORDER"
+    },
+    {
+      "id": "gather",
+      "input": "F7",
+      "text_key": "MUX_CONTROL_GATHER",
+      "group": "orders",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_GATHER"
+    },
+    {
+      "id": "dig",
+      "input": "F8",
+      "text_key": "MUX_CONTROL_DIG",
+      "group": "orders",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_DIG"
+    },
+    {
+      "id": "load",
+      "input": "F9",
+      "text_key": "MUX_CONTROL_LOAD",
+      "group": "orders",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_LOAD"
+    },
+    {
+      "id": "deconstruct",
+      "input": "F10",
+      "text_key": "MUX_CONTROL_DECONSTRUCT",
+      "group": "orders",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_DECONSTRUCT"
+    },
+    {
+      "id": "render_reload",
+      "input": "F12",
+      "text_key": "MUX_CONTROL_RENDER_RELOAD",
+      "group": "view",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_RENDER_RELOAD"
+    },
+    {
+      "id": "chronicle",
+      "input": "C",
+      "text_key": "MUX_CONTROL_CHRONICLE",
+      "group": "view",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_CHRONICLE"
+    },
+    {
+      "id": "causal",
+      "input": "Q",
+      "text_key": "MUX_CONTROL_CAUSAL",
+      "group": "view",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_CAUSAL"
+    },
+    {
+      "id": "priorities",
+      "input": "P",
+      "text_key": "MUX_CONTROL_PRIORITIES",
+      "group": "view",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_PRIORITIES"
+    },
+    {
+      "id": "tech",
+      "input": "T",
+      "text_key": "MUX_CONTROL_TECH",
+      "group": "view",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_TECH"
+    },
+    {
+      "id": "teach",
+      "input": "K",
+      "text_key": "MUX_CONTROL_TEACH",
+      "group": "view",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_TEACH"
+    },
+    {
+      "id": "neighbours",
+      "input": "N",
+      "text_key": "MUX_CONTROL_NEIGHBOURS",
+      "group": "view",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_NEIGHBOURS"
+    },
+    {
+      "id": "rooms",
+      "input": "R",
+      "text_key": "MUX_CONTROL_ROOMS",
+      "group": "view",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_ROOMS"
+    },
+    {
+      "id": "draft",
+      "input": "D (사람 선택)",
+      "text_key": "MUX_CONTROL_DRAFT",
+      "group": "view",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_DRAFT"
+    },
+    {
+      "id": "mood",
+      "input": "M",
+      "text_key": "MUX_CONTROL_MOOD",
+      "group": "view",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_MOOD"
+    },
+    {
+      "id": "language",
+      "input": "L",
+      "text_key": "MUX_CONTROL_LANGUAGE",
+      "group": "view",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_LANGUAGE"
+    },
+    {
+      "id": "help",
+      "input": "/ / ? 버튼",
+      "text_key": "MUX_CONTROL_HELP",
+      "group": "view",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_HELP"
+    },
+    {
+      "id": "goals",
+      "input": "G",
+      "text_key": "MUX_CONTROL_GOALS",
+      "group": "view",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_GOALS"
+    },
+    {
+      "id": "close",
+      "input": "Esc",
+      "text_key": "MUX_CONTROL_CLOSE",
+      "group": "view",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_CLOSE"
+    },
+    {
+      "id": "copy",
+      "input": "Cmd+C (선택한 이름)",
+      "text_key": "MUX_CONTROL_COPY",
+      "group": "view",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_COPY"
+    },
+    {
+      "id": "minimap",
+      "input": "미니맵 클릭·드래그",
+      "text_key": "MUX_CONTROL_MINIMAP",
+      "group": "camera",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_MINIMAP"
+    },
+    {
+      "id": "settings",
+      "input": "설정 버튼",
+      "text_key": "MUX_CONTROL_SETTINGS",
+      "group": "view",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_SETTINGS"
+    },
+    {
+      "id": "steward",
+      "input": "마을 스스로 버튼",
+      "text_key": "MUX_CONTROL_STEWARD",
+      "group": "orders",
+      "source": "docs/v8/play2/KEYS.md; docs/v8/mux/MUX_GOAL.md A1-A4",
+      "input_key": "MUX_INPUT_STEWARD"
+    },
+    {
+      "id": "menu_build",
+      "input": "F3 뒤 1–9 / 0 / -",
+      "text_key": "MUX_CONTROL_MENU_BUILD",
+      "group": "orders",
+      "source": "scripts/ui/hud/order_bar.gd",
+      "input_key": "MUX_INPUT_MENU_BUILD"
+    },
+    {
+      "id": "menu_gather",
+      "input": "F7 뒤 1 / 2 / 3 / 4",
+      "text_key": "MUX_CONTROL_MENU_GATHER",
+      "group": "orders",
+      "source": "scripts/ui/hud/order_bar.gd",
+      "input_key": "MUX_INPUT_MENU_GATHER"
+    },
+    {
+      "id": "ui_activate",
+      "input": "왼쪽 클릭",
+      "text_key": "MUX_CONTROL_UI_ACTIVATE",
+      "group": "panels",
+      "source": "scripts/ui/panels/panel_tooltips.gd",
+      "input_key": "MUX_INPUT_UI_ACTIVATE"
+    }
+  ]
+}

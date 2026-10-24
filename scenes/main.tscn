@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://v7init"]
+[gd_scene load_steps=21 format=3 uid="uid://v7init"]
 
 [ext_resource type="Script" path="res://scripts/core/sim_reads.gd" id="1_sim_reads"]
 [ext_resource type="Script" path="res://scripts/world/colony/ground_layer.gd" id="2_ground"]
@@ -17,6 +17,7 @@
 [ext_resource type="Script" path="res://scripts/ui/panels/workshop_panel.gd" id="15_workshop"]
 [ext_resource type="Script" path="res://scripts/ui/panels/priority_panel.gd" id="16_priority"]
 [ext_resource type="Script" path="res://scripts/world/colony/animal_layer.gd" id="17_animals"]
+[ext_resource type="Script" path="res://scripts/ui/mux/mux_hud.gd" id="18_mux"]
 
 [node name="Main" type="Node2D"]
 
@@ -82,3 +83,6 @@ script = ExtResource("16_priority")
 
 [node name="OrderBar" type="Control" parent="UI"]
 script = ExtResource("14_order_bar")
+
+[node name="MuxHud" type="Control" parent="UI"]
+script = ExtResource("18_mux")

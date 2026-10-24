@@ -106,10 +106,10 @@ def _strip_tests(text):
 
 
 def _ffi_functions(root):
-    """Every non-test `fn` in src/ffi/*.rs: name -> (parameter names, body text)."""
+    """Every non-test `fn` in src/ffi/**/*.rs: name -> (parameter names, body text)."""
     import bridge_api
     fns = {}
-    for path in sorted(Path(root, FFI_DIR).glob("*.rs")):
+    for path in sorted(Path(root, FFI_DIR).rglob("*.rs")):
         text = _strip_tests(path.read_text())
         for m in FN_RE.finditer(text):
             try:

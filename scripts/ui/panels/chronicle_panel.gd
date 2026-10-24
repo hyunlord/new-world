@@ -15,6 +15,8 @@
 # Bridge methods: get_chronicle_since, get_year_summary (direct); via SimReads get_time_snapshot, get_world_info,
 #   get_neighbours; signal world_reset.
 extends Control
+
+const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
@@ -22,7 +24,7 @@ const WhyPanel = preload("res://scripts/ui/panels/why_panel.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
 const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
 const NOTABLE: Array[int] = [0, 2, 11, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37,
-	38, 39, 40, 41, 42, 43, 44]
+	38, 39, 40, 41, 42, 43, 44, 45]
 ## M5: the kind groups of the filter (0 = all): 압력, 사냥·늑대, 다툼·기분, 지식, 삶 (every other notable kind).
 const FILTER_KEYS: Array[String] = ["M5_FILTER_ALL", "M5_FILTER_PRESSURE", "M5_FILTER_HUNT", "M5_FILTER_MOOD", "M5_FILTER_KNOWLEDGE", "M5_FILTER_LIFE"]
 const FILTER_KINDS: Array = [[], [29, 30, 36, 37], [31, 34, 35], [19, 32, 33], [24, 25, 26, 27, 28, 44], []]
@@ -70,11 +72,13 @@ func _ready() -> void:
 	filters.add_theme_constant_override("separation", 8)
 	box.add_child(filters)
 	_filter_box = OptionButton.new()
+	PanelTooltips.attach(_filter_box, "chronicle", "MUX_TIP_CHRONICLE_FILTER")
 	_filter_box.name = "KindFilter"
 	_filter_box.focus_mode = Control.FOCUS_NONE
 	_filter_box.item_selected.connect(set_filter)
 	filters.add_child(_filter_box)
 	_person_button = Button.new()
+	PanelTooltips.attach(_person_button, "chronicle")
 	_person_button.name = "PersonFilter"
 	_person_button.toggle_mode = true
 	_person_button.focus_mode = Control.FOCUS_NONE

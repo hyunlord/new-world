@@ -1,0 +1,204 @@
+{
+  "schema_version": 1,
+  "lessons": [
+    {
+      "id": "camera",
+      "title_key": "MUX_LESSON_CAMERA",
+      "body_key": "MUX_LESSON_CAMERA_BODY",
+      "trigger": {
+        "always": true
+      },
+      "completion": {
+        "all": [
+          {
+            "event": "camera_moved"
+          },
+          {
+            "event": "camera_zoomed"
+          },
+          {
+            "event": "minimap_used"
+          }
+        ]
+      },
+      "highlight": "minimap",
+      "steward_key": "MUX_LESSON_CAMERA_STEWARD",
+      "steward_rule": "none"
+    },
+    {
+      "id": "speed",
+      "title_key": "MUX_LESSON_SPEED",
+      "body_key": "MUX_LESSON_SPEED_BODY",
+      "trigger": {
+        "always": true
+      },
+      "completion": {
+        "event": "speed_changed"
+      },
+      "highlight": "speed_controls",
+      "steward_key": "MUX_LESSON_SPEED_STEWARD",
+      "steward_rule": "none"
+    },
+    {
+      "id": "person",
+      "title_key": "MUX_LESSON_PERSON",
+      "body_key": "MUX_LESSON_PERSON_BODY",
+      "trigger": {
+        "always": true
+      },
+      "completion": {
+        "event": "person_selected"
+      },
+      "highlight": "people",
+      "steward_key": "MUX_LESSON_PERSON_STEWARD",
+      "steward_rule": "none"
+    },
+    {
+      "id": "stockpile",
+      "title_key": "MUX_LESSON_STOCKPILE",
+      "body_key": "MUX_LESSON_STOCKPILE_BODY",
+      "trigger": {
+        "always": true
+      },
+      "completion": {
+        "fact": "stockpile_exists"
+      },
+      "highlight": "stockpile",
+      "steward_key": "MUX_LESSON_STOCKPILE_STEWARD",
+      "steward_rule": "1"
+    },
+    {
+      "id": "chop",
+      "title_key": "MUX_LESSON_CHOP",
+      "body_key": "MUX_LESSON_CHOP_BODY",
+      "trigger": {
+        "always": true
+      },
+      "completion": {
+        "fact": "chop_marked"
+      },
+      "highlight": "chop",
+      "steward_key": "MUX_LESSON_CHOP_STEWARD",
+      "steward_rule": "2"
+    },
+    {
+      "id": "house",
+      "title_key": "MUX_LESSON_HOUSE",
+      "body_key": "MUX_LESSON_HOUSE_BODY",
+      "trigger": {
+        "always": true
+      },
+      "completion": {
+        "fact": "house_beds_ready"
+      },
+      "highlight": "build",
+      "steward_key": "MUX_LESSON_HOUSE_STEWARD",
+      "steward_rule": "3"
+    },
+    {
+      "id": "priorities",
+      "title_key": "MUX_LESSON_PRIORITIES",
+      "body_key": "MUX_LESSON_PRIORITIES_BODY",
+      "trigger": {
+        "always": true
+      },
+      "completion": {
+        "event": "priorities_opened"
+      },
+      "highlight": "priorities",
+      "steward_key": "MUX_LESSON_PRIORITIES_STEWARD",
+      "steward_rule": "none"
+    },
+    {
+      "id": "bills",
+      "title_key": "MUX_LESSON_BILLS",
+      "body_key": "MUX_LESSON_BILLS_BODY",
+      "trigger": {
+        "always": true
+      },
+      "completion": {
+        "fact": "workshop_bill_exists"
+      },
+      "highlight": "workshops",
+      "steward_key": "MUX_LESSON_BILLS_STEWARD",
+      "steward_rule": "4"
+    },
+    {
+      "id": "rooms",
+      "title_key": "MUX_LESSON_ROOMS",
+      "body_key": "MUX_LESSON_ROOMS_BODY",
+      "trigger": {
+        "always": true
+      },
+      "completion": {
+        "event": "rooms_opened"
+      },
+      "highlight": "rooms",
+      "steward_key": "MUX_LESSON_ROOMS_STEWARD",
+      "steward_rule": "none"
+    },
+    {
+      "id": "teaching",
+      "title_key": "MUX_LESSON_TEACHING",
+      "body_key": "MUX_LESSON_TEACHING_BODY",
+      "trigger": {
+        "always": true
+      },
+      "completion": {
+        "all": [
+          {
+            "event": "tech_opened"
+          },
+          {
+            "fact": "taught_technique"
+          }
+        ]
+      },
+      "highlight": "tech",
+      "steward_key": "MUX_LESSON_TEACHING_STEWARD",
+      "steward_rule": "6"
+    },
+    {
+      "id": "alerts",
+      "title_key": "MUX_LESSON_ALERTS",
+      "body_key": "MUX_LESSON_ALERTS_BODY",
+      "trigger": {
+        "always": true
+      },
+      "completion": {
+        "event": "alerts_used"
+      },
+      "highlight": "alerts",
+      "steward_key": "MUX_LESSON_ALERTS_STEWARD",
+      "steward_rule": "none"
+    },
+    {
+      "id": "drafting",
+      "title_key": "MUX_LESSON_DRAFTING",
+      "body_key": "MUX_LESSON_DRAFTING_BODY",
+      "trigger": {
+        "fact": "wolves_seen"
+      },
+      "completion": {
+        "fact": "drafted"
+      },
+      "highlight": "people",
+      "steward_key": "MUX_LESSON_DRAFTING_STEWARD",
+      "steward_rule": "none"
+    },
+    {
+      "id": "neighbours",
+      "title_key": "MUX_LESSON_NEIGHBOURS",
+      "body_key": "MUX_LESSON_NEIGHBOURS_BODY",
+      "trigger": {
+        "fact": "migrants_seen"
+      },
+      "completion": {
+        "event": "neighbours_opened"
+      },
+      "highlight": "neighbours",
+      "steward_key": "MUX_LESSON_NEIGHBOURS_STEWARD",
+      "steward_rule": "none"
+    }
+  ]
+}

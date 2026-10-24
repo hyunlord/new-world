@@ -18,6 +18,7 @@
 #   winter_severity, year_index), get_resource_snapshot, get_tallies, get_colony_overlay, get_tech.
 extends Control
 
+const ControlsCatalog = preload("res://scripts/ui/mux/controls_catalog.gd")
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
@@ -32,6 +33,7 @@ const QUIET_COLOR: Color = Color("c8b89a")
 
 const HUD_MARGIN: int = 12
 const HUD_SEPARATION: int = 16
+var _controls: ControlsCatalog = ControlsCatalog.new()
 var _world_sim: Node = null
 var _shelters_label: Label
 var _agents_label: Label
@@ -151,9 +153,7 @@ func _ready() -> void:
 	_zoom_label.name = "Zoom"
 	_zoom_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	lower.add_child(_zoom_label)
-	var zoom_gap: Control = Control.new()
-	zoom_gap.custom_minimum_size.x = 16
-	lower.add_child(zoom_gap)
+	_zoom_label.hide() # Kept for existing zoom_text() consumers; MapControls owns the visible level.
 	_pause_icon = ArtUI.icon(14)
 	lower.add_child(_pause_icon)
 	_speed_label = ArtUI.pair(lower, 15)
@@ -171,6 +171,41 @@ func _ready() -> void:
 	# (HUD instantiated before SimBridge registers) does not spam logs.
 
 	_refresh()
+	_refresh_tooltips()
+	if _locale != null:
+		_locale.connect("language_changed", _on_language_changed)
+
+
+func _on_language_changed(_language: String) -> void:
+	_refresh_tooltips()
+
+
+func _refresh_tooltips() -> void:
+	for entry: Array in [[_clock_label, "MUX_TIP_CALENDAR", "language"], [_agents_label, "MUX_TIP_POPULATION", "select"],
+			[_settlements_label, "MUX_TIP_SETTLEMENTS", "home"], [_shelters_label, "MUX_TIP_SHELTERS", "build"],
+			[_sites_label, "MUX_TIP_SITES", "build"], [_winter_label, "MUX_TIP_WINTER", ""],
+			[_wood_label, "MUX_TIP_FIREWOOD", "stockpile"], [_logs_label, "MUX_TIP_LOGS", "chop"],
+			[_cold_label, "MUX_TIP_COLD", "select"], [_cold_icon, "MUX_TIP_COLD", "select"],
+			[_era_label, "MUX_TIP_ERA", "tech"], [_risk_button, "MUX_TIP_TECH_RISK", "tech"],
+			[_warn_label, "MUX_TIP_TECH_RISK", "teach"]]:
+		_set_tip(entry[0], _loc(str(entry[1])) + ("\n" + _controls.tooltip(str(entry[2])) if str(entry[2]) != "" else ""))
+	var keys: Array[String] = ["MUX_TIP_FOOD", "MUX_TIP_BERRIES", "MUX_TIP_BIRTHS", "MUX_TIP_DEATHS"]
+	for i: int in _resource_labels.size():
+		_set_tip(_resource_labels[i], _loc(keys[i]) + "\n" + _controls.tooltip("stockpile" if i < 2 else "chronicle"))
+	_set_tip(_pause_icon, _controls.tooltip("pause"))
+	var speeds: PackedStringArray = PackedStringArray()
+	for i: int in range(1, 5): speeds.append(_controls.tooltip("speed_%d" % i))
+	_set_tip(_speed_label, "\n".join(speeds))
+
+
+func _set_tip(control: Control, text: String) -> void:
+	control.tooltip_text = text
+	control.mouse_filter = Control.MOUSE_FILTER_STOP
+	if control is Label and control.get_index() > 0:
+		var icon: Control = control.get_parent().get_child(control.get_index() - 1) as Control
+		if icon != null and icon.custom_minimum_size == Vector2(32, 32):
+			icon.tooltip_text = text
+			icon.mouse_filter = Control.MOUSE_FILTER_STOP
 
 
 func _unhandled_input(event: InputEvent) -> void:

@@ -17,6 +17,8 @@
 #   get_time_snapshot, get_neighbours; signal world_reset.
 extends Control
 
+const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
+
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
@@ -88,6 +90,7 @@ func _ready() -> void:
 	_hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(_hint)
 	_close = Button.new()
+	PanelTooltips.attach(_close, "close")
 	_close.name = "Close"
 	_close.focus_mode = Control.FOCUS_NONE
 	_close.pressed.connect(close)
@@ -135,6 +138,7 @@ func _ready() -> void:
 	_detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	detail_scroll.add_child(_detail)
 	_teach = Button.new()
+	PanelTooltips.attach(_teach, "tech")
 	_teach.name = "Teach"
 	_teach.focus_mode = Control.FOCUS_NONE
 	_teach.pressed.connect(_open_teach)
@@ -267,6 +271,7 @@ func _card(row: Dictionary, tech: Dictionary) -> Button:
 	card.button_pressed = id == _selected
 	card.custom_minimum_size = CARD_SIZE
 	card.tooltip_text = "%s · %s" % [KnowledgeText.node_name(_locale, id, tech), KnowledgeText.status(_locale, code)]
+	PanelTooltips.attach(card, "tech")
 	card.pressed.connect(select_node.bind(id))
 	var colour: Color = KnowledgeText.status_color(code)
 	for state: String in ["normal", "hover", "pressed", "hover_pressed", "disabled"]:

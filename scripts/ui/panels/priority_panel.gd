@@ -15,6 +15,8 @@
 #   world_reset.
 extends Control
 
+const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
+
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
@@ -69,6 +71,7 @@ func _ready() -> void:
 	_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(_title)
 	_dress = Button.new()
+	PanelTooltips.attach(_dress, "priorities")
 	_dress.name = "DressOrder"
 	_dress.toggle_mode = true
 	_dress.focus_mode = Control.FOCUS_NONE
@@ -96,6 +99,7 @@ func _ready() -> void:
 
 func _button(node_name: String, action: Callable) -> Button:
 	var button: Button = Button.new()
+	PanelTooltips.attach(button, "priorities", "MUX_TIP_PRIORITY_CYCLE" if node_name.begins_with("Cell_") else "")
 	button.name = node_name
 	button.focus_mode = Control.FOCUS_NONE
 	button.pressed.connect(action)

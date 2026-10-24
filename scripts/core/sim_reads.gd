@@ -18,6 +18,9 @@
 class_name SimReads
 extends Node
 
+## Emitted only after the explicit new-game command succeeds, never after loading a save.
+signal new_game_started
+
 const GETTERS: Array[String] = [
 	"get_agent_snapshot", "get_settlement_snapshot", "get_construction_snapshot",
 	"get_building_snapshot", "get_resource_snapshot", "get_time_snapshot",
@@ -34,11 +37,11 @@ const GETTERS: Array[String] = [
 	# M5: the storyteller's pressures and banner numbers; the animals and hunt zones; the drafted people.
 	"get_story", "get_animals", "get_drafted",
 	# M5.5: the two neighbours, their migrant waves and caravans, the eureka clues and the tallies.
-	"get_neighbours",
+	"get_neighbours", "get_ui_facts", "get_steward",
 ]
 ## Read once per simulation tick (M4: the knowledge reads change only when a tick runs or a command is sent).
 const TICK_GETTERS: Array[String] = ["get_porter_snapshot", "get_settlement_relations", "get_tech", "get_teach_orders", "get_knowledge_waits",
-	"get_story", "get_animals", "get_drafted"]
+	"get_story", "get_animals", "get_drafted", "get_ui_facts", "get_steward"]
 const MUTATORS: Array[String] = [
 	"advance_ticks", "reset_world", "reset_world_stress",
 	"on_building_placed",
@@ -58,7 +61,7 @@ const MUTATORS: Array[String] = [
 	# M5.5 orders (migrant waves, barter with a caravan).
 	"cmd_accept_migrants", "cmd_decline_migrants", "cmd_trade",
 	# M1.5 save files: save_world(path) -> bool, load_world(path) -> bool (a load replaces the world).
-	"save_world", "load_world",
+	"save_world", "load_world", "cmd_set_steward",
 ]
 var _world: Node
 var _cache: Dictionary = {}
@@ -225,6 +228,8 @@ func mutate_raw(method: String, arguments: Array = []) -> Variant:
 	# Rust schedules these signals deferred; same-frame reads need fresh terrain now.
 	if method == "reset_world" or method == "reset_world_stress" or method == "load_world":
 		_on_world_reset()
+	if method == "reset_world" and bool(result):
+		new_game_started.emit()
 	return result
 
 func frame_call_counts() -> Dictionary:

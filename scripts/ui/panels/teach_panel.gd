@@ -14,6 +14,8 @@
 #   get_teach_orders, get_time_snapshot; via SimReads.mutate cmd_order_teach, cmd_cancel_teach; signal world_reset.
 extends Control
 
+const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
+
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
@@ -66,6 +68,7 @@ func _ready() -> void:
 	_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(_title)
 	_close = Button.new()
+	PanelTooltips.attach(_close, "close")
 	_close.name = "Close"
 	_close.focus_mode = Control.FOCUS_NONE
 	_close.pressed.connect(close)
@@ -79,6 +82,7 @@ func _ready() -> void:
 	actions.add_theme_constant_override("separation", 16)
 	column.add_child(actions)
 	_order = Button.new()
+	PanelTooltips.attach(_order, "teach")
 	_order.name = "Order"
 	_order.focus_mode = Control.FOCUS_NONE
 	_order.pressed.connect(submit)
@@ -110,6 +114,7 @@ func _row(column: VBoxContainer, node_name: String) -> OptionButton:
 	row.add_child(label)
 	_labels.append(label)
 	var option: OptionButton = OptionButton.new()
+	PanelTooltips.attach(option, "teach", "MUX_TIP_TEACH_OPTION")
 	option.name = node_name
 	option.focus_mode = Control.FOCUS_NONE
 	option.custom_minimum_size.x = 560
@@ -395,6 +400,7 @@ func _fill_orders(orders: Dictionary, tech: Dictionary) -> void:
 		info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(info)
 		var cancel_button: Button = Button.new()
+		PanelTooltips.attach(cancel_button, "teach")
 		cancel_button.name = "Cancel"
 		cancel_button.focus_mode = Control.FOCUS_NONE
 		cancel_button.text = _loc("M4_TEACH_CANCEL")

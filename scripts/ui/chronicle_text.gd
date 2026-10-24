@@ -30,7 +30,8 @@ const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
 const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
 ## The last chronicle kind this text knows (M5.5: 44 Eureka).
-const LAST_KIND: int = 44
+const LAST_KIND: int = 45
+static var steward_labels: Dictionary = {}
 ## M5 adds `index` (the entry's chronicle index) and its "→" link columns (absent in older reads: -1).
 const COLUMNS: Array[String] = ["tick", "kind", "subject", "other", "third", "settlement", "settlement2", "cause", "value",
 	"index", "link", "link_entry", "link_code"]
@@ -149,6 +150,7 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 		24, 25, 26, 27, 28: return knowledge_sentence(row, locale)
 		29, 30, 31, 32, 33, 34, 35, 36, 37: return story_sentence(row, locale)
 		38, 39, 40, 41, 42, 43, 44: return neighbour_sentence(row, locale)
+		45: return loc(locale, "MUX_STEWARD_ACTION") + " " + loc(locale, str(steward_labels.get(cause, "UI_UNKNOWN")))
 	return ""
 
 

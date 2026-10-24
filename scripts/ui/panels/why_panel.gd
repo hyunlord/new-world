@@ -7,6 +7,8 @@
 # Bridge methods: get_chronicle_why (direct, once per open); via SimReads get_world_info; signal world_reset.
 extends Control
 
+const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
+
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const Chronicle = preload("res://scripts/ui/chronicle_text.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
@@ -42,6 +44,7 @@ func _ready() -> void:
 	_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(_title)
 	_close = Button.new()
+	PanelTooltips.attach(_close, "close")
 	_close.name = "Close"
 	_close.focus_mode = Control.FOCUS_NONE
 	_close.pressed.connect(close)

@@ -11,6 +11,7 @@ Source of runtime tokens: `assets/ui/worldsim_theme.tres` and `scripts/ui/panels
 | Role | Existing token/value | Use |
 |---|---|---|
 | Panel | Theme panel bg `Color(0.063, 0.043, 0.012, 0.92)` | Map overlays |
+| Foreground help | Theme panel color with alpha1.0 | Prevent underlying text interference |
 | Border | Theme panel border `Color(0.161, 0.149, 0.129, 1)` | Two-pixel frame |
 | Text | Theme Label font_color `Color(0.933, 0.918, 0.824, 1)` | Body and controls |
 | Heading | Theme Heading font_color `Color(0.745, 0.549, 0.400, 1)` | Panel titles |
@@ -26,7 +27,7 @@ Galmuri11 body and Galmuri11-Bold headings at 24 design pixels; Galmuri9 `SmallN
 
 ## 4. Spacing and layout
 
-Base spacing 4 design pixels; panel margins horizontal 12, vertical 8; row gaps 8 or 16; icons 32. Use Containers for child geometry. Bottom-right controls remain visible, minimap 200×200 above them, right-edge alerts above the minimap, bottom-left learning card above the order bar. Help opens from the top-right. Preserve a clear map area and avoid overlap at screen-fitting window sizes. UI scale settings adjust the interface consistently.
+Base spacing 4 design pixels; panel margins horizontal 12, vertical 8; row gaps 8 or 16; icons 32. Use Containers for child geometry. Bottom-right controls remain visible, minimap 200×200 above them, right-edge alerts above the minimap, bottom-left learning card above the order bar. Help opens from the top-right. Preserve a clear map area and avoid overlap at screen-fitting window sizes. UI scale settings adjust the interface consistently. Fixed-size legacy canvases cap their effective scale to the available screen; the layout report records requested and effective values. The helper yields to open order menus, and lesson outlines yield to foreground dialogs.
 
 ## 5. Components
 

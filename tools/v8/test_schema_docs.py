@@ -210,6 +210,80 @@ class SchemaDocsTest(unittest.TestCase):
         _, problems = helpers.schema_problems(root)
         self.assertEqual(problems, [f"{helpers.SCHEMA_DOC} does not exist"])
 
+    def nested_fixture(self) -> Path:
+        """Mirror MUX's qualified serializers and nested ui_facts module layout."""
+        root = self.fixture()
+        ffi = root / "rust/crates/sim-bridge/src/ffi"
+        node = ffi / "node.rs"
+        node.write_text(node.read_text() + '''
+#[godot_api]
+impl WorldSimNode {
+    #[func]
+    fn get_ui_facts(&self) -> VarDictionary {
+        super::ui_facts::ui_facts_to_dict(&facts())
+    }
+    #[func]
+    fn get_steward(&self) -> VarDictionary {
+        super::steward::steward_to_dict(&state())
+    }
+}
+''')
+        (ffi / "ui_facts").mkdir()
+        (ffi / "ui_facts/mod.rs").write_text("pub(super) use marshal::ui_facts_to_dict;")
+        (ffi / "ui_facts/marshal.rs").write_text('''
+pub(in crate::ffi) fn ui_facts_to_dict(v: &Facts) -> VarDictionary {
+    let mut d = VarDictionary::new();
+    d.set("people", people_to_dict(&v.people));
+    d.set("tech", super::super::things::thing_to_dict(&v.tech));
+    d
+}
+fn people_to_dict(rows: &[Person]) -> VarDictionary {
+    let mut d = VarDictionary::new();
+    d.set("hps", rows.hps);
+    d.set("entity_ids", rows.entity_ids);
+    d
+}
+''')
+        (ffi / "steward.rs").write_text('''
+pub(super) fn steward_to_dict(v: &State) -> VarDictionary {
+    let mut d = VarDictionary::new();
+    d.set("enabled", v.enabled);
+    d.set("rules", v.rules);
+    d
+}
+''')
+        doc = root / helpers.SCHEMA_DOC
+        doc.write_text(doc.read_text() + '''
+### `get_ui_facts`
+| `people` | Dictionary |
+| `tech` | Dictionary |
+| `hps` | PackedFloat64Array |
+| `entity_ids` | PackedInt64Array |
+| `ids` | PackedInt64Array |
+| `xs` | PackedInt32Array |
+| `ages` | PackedInt32Array |
+| `kinds` | PackedInt32Array |
+### `get_steward`
+| `enabled` | bool |
+| `rules` | Dictionary |
+''')
+        return root
+
+    def test_qualified_builders_follow_nested_modules(self) -> None:
+        root = self.nested_fixture()
+        extracted, problems = helpers.schema_problems(root)
+        self.assertEqual(problems, [])
+        self.assertEqual(extracted["get_ui_facts"][1],
+                         ["ages", "entity_ids", "hps", "ids", "kinds", "people", "tech", "xs"])
+        self.assertEqual(extracted["get_steward"][1], ["enabled", "rules"])
+
+    def test_nested_missing_key_fails(self) -> None:
+        root = self.nested_fixture()
+        doc = root / helpers.SCHEMA_DOC
+        doc.write_text(doc.read_text().replace("| `hps` | PackedFloat64Array |\n", ""))
+        _, problems = helpers.schema_problems(root)
+        self.assertEqual(problems, ["absent key: get_ui_facts.hps"])
+
     def test_live_schema_doc_matches_the_bridge(self):
         extracted, problems = helpers.schema_problems(ROOT)
         self.assertEqual(problems, [])

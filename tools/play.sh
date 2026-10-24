@@ -12,7 +12,7 @@
 # 3. Ask cargo to incrementally build sim-bridge in that worktree (including embedded data and
 #    deleted inputs), using the library profile selected by macos.debug in .gdextension.
 # 4. Import headless when .godot/ is missing (twice) or older than assets/ scripts/ scenes/ shaders/.
-# 5. Launch windowed at 1920x1080 (--seed/--speed only when the version's scripts read them).
+# 5. Launch windowed; M-UX fits the actual window to the screen's usable area.
 # 6. Log to $PLAY_DATA/logs/<version>-<timestamp>.log.
 # 7. --headless-check: steps 1-4, then a 300-frame headless run; exit 0 only with 0 SCRIPT ERROR.
 # Exit codes: 0 ok, 1 build/import/smoke failed, worktree problem or Godot crashed, 2 Godot not found,
@@ -247,7 +247,7 @@ fi
 if (( headless == 1 )); then
     args=(--headless --path . --quit-after 300)
 else
-    args=(--path . --resolution 1920x1080)
+    args=(--path .)
 fi
 args+=(${extra[@]+"${extra[@]}"})
 (( ${#godot_user[@]} > 0 )) && args+=(-- "${godot_user[@]}")

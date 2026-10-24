@@ -29,6 +29,7 @@
 #   emits world_reset, which every layer already rebuilds on). The orders themselves go through OrderTool.
 extends Control
 
+const ControlsCatalog = preload("res://scripts/ui/mux/controls_catalog.gd")
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const SiteGhost = preload("res://scripts/world/art/site_ghost.gd")
@@ -36,14 +37,14 @@ const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const RoomPanel = preload("res://scripts/ui/panels/room_panel.gd")
 const BUILD_MODE: int = 3
 const MODES: Array[Dictionary] = [
-	{"mode": 1, "key": "UI_ORDER_CHOP", "hotkey": KEY_F1, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_chop"},
-	{"mode": 2, "key": "UI_ORDER_STOCKPILE", "hotkey": KEY_F2, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_stockpile"},
-	{"mode": BUILD_MODE, "key": "UI_ORDER_BUILD", "hotkey": KEY_F3, "hint": "UI_ORDER_HINT_PLACE", "icon": "icon_build"},
-	{"mode": 4, "key": "UI_ORDER_REMOVE_ZONE", "hotkey": KEY_F4, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_remove"},
-	{"mode": 5, "key": "UI_ORDER_CANCEL", "hotkey": KEY_F6, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_cancel"},
-	{"mode": 6, "key": "UI_ORDER_QUARRY", "hotkey": KEY_F7, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_quarry"},
-	{"mode": 7, "key": "UI_ORDER_DIG", "hotkey": KEY_F8, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_dig"},
-	{"mode": 8, "key": "UI_ORDER_DECONSTRUCT", "hotkey": KEY_F10, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_deconstruct"},
+	{"mode": 1, "key": "UI_ORDER_CHOP", "control": "chop", "hotkey": KEY_F1, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_chop"},
+	{"mode": 2, "key": "UI_ORDER_STOCKPILE", "control": "stockpile", "hotkey": KEY_F2, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_stockpile"},
+	{"mode": BUILD_MODE, "key": "UI_ORDER_BUILD", "control": "build", "hotkey": KEY_F3, "hint": "UI_ORDER_HINT_PLACE", "icon": "icon_build"},
+	{"mode": 4, "key": "UI_ORDER_REMOVE_ZONE", "control": "remove_zone", "hotkey": KEY_F4, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_remove"},
+	{"mode": 5, "key": "UI_ORDER_CANCEL", "control": "cancel_order", "hotkey": KEY_F6, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_cancel"},
+	{"mode": 6, "key": "UI_ORDER_QUARRY", "control": "gather", "hotkey": KEY_F7, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_quarry"},
+	{"mode": 7, "key": "UI_ORDER_DIG", "control": "dig", "hotkey": KEY_F8, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_dig"},
+	{"mode": 8, "key": "UI_ORDER_DECONSTRUCT", "control": "deconstruct", "hotkey": KEY_F10, "hint": "UI_ORDER_HINT_AREA", "icon": "icon_deconstruct"},
 ]
 ## The build menu's keys, in EconomyText.MENU_ORDER order (M4: 0 and - after 1–9).
 const MENU_KEYS: Array[Key] = [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0, KEY_MINUS]
@@ -70,6 +71,7 @@ const SAVE_KEY: Key = KEY_F5
 const LOAD_KEY: Key = KEY_F9
 const SAVE_DIR: String = "user://saves"
 
+var _controls: ControlsCatalog = ControlsCatalog.new()
 var _tool: Node = null
 var _buttons: Array[Button] = []
 var _hint: Label
@@ -150,11 +152,30 @@ func _ready() -> void:
 	_rooms = get_node_or_null("/root/Main/ColonyView/OverlayLayer/Rooms")
 	if _rooms != null:
 		_rooms.connect("toggled", _on_rooms_toggled)
+	_refresh_tooltips()
+	if _locale != null:
+		_locale.connect("language_changed", _on_language_changed)
 	_place_bar.call_deferred()
 	if get_parent() != null and get_parent().get_node_or_null("RoomPanel") == null:
 		var room_panel: Control = RoomPanel.new()
 		room_panel.name = "RoomPanel"
 		get_parent().add_child.call_deferred(room_panel)
+
+
+func _on_language_changed(_language: String) -> void:
+	_refresh_tooltips()
+
+
+func _refresh_tooltips() -> void:
+	for i: int in _buttons.size():
+		_buttons[i].tooltip_text = _controls.tooltip(str(MODES[i]["control"]))
+	_rooms_button.tooltip_text = _controls.tooltip("rooms")
+	for i: int in _menu_buttons.size():
+		_menu_buttons[i].tooltip_text = "%s\n%s" % [build_hint(_locale, EconomyText.MENU_ORDER[i]), _controls.tooltip("menu_build")]
+	for i: int in _dig_buttons.size():
+		_dig_buttons[i].tooltip_text = "%s\n%s" % [_loc(str(DIG_MENU[i]["key"])), _controls.tooltip("menu_gather")]
+	_hint.mouse_filter = Control.MOUSE_FILTER_STOP
+	_hint.tooltip_text = "%s\n%s" % [_controls.tooltip("order_area"), _controls.tooltip("cancel_tool")]
 
 
 ## Keep the bar 12 px above the screen's bottom (its height is known only after layout) and the toast above it.
@@ -413,6 +434,8 @@ static func build_hint(locale: Node, code: int) -> String:
 ## Show `text` above the bar for a short while.
 func show_toast(text: String) -> void:
 	_toast.text = text
+	_toast.tooltip_text = text
+	_toast.mouse_filter = Control.MOUSE_FILTER_STOP
 	_toast_panel.visible = true
 	_toast_panel.size = Vector2.ZERO
 	_toast_left = TOAST_SECONDS

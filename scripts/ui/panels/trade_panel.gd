@@ -14,6 +14,8 @@
 #   get_time_snapshot; via SimReads.mutate cmd_trade; signal world_reset.
 extends Control
 
+const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
+
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
@@ -125,6 +127,8 @@ func _label(parent: Control, colour: Color) -> Label:
 
 func _button(parent: Control, node_name: String) -> Button:
 	var button: Button = Button.new()
+	var tooltip_keys: Dictionary = {"Minus": "MUX_TIP_QUANTITY_LESS", "Plus": "MUX_TIP_QUANTITY_MORE"}
+	PanelTooltips.attach(button, "neighbours", str(tooltip_keys.get(node_name, "")))
 	button.name = node_name
 	button.focus_mode = Control.FOCUS_NONE
 	parent.add_child(button)

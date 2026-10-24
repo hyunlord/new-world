@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "goals": [
+    {
+      "id": "stockpile",
+      "text_key": "MUX_GOAL_STOCKPILE",
+      "completion": {
+        "fact": "stockpile_exists"
+      },
+      "group": "first_year"
+    },
+    {
+      "id": "house",
+      "text_key": "MUX_GOAL_HOUSE",
+      "completion": {
+        "fact": "house_beds_ready"
+      },
+      "group": "first_year"
+    },
+    {
+      "id": "firewood",
+      "text_key": "MUX_GOAL_FIREWOOD",
+      "completion": {
+        "fact": "winter_firewood_ready"
+      },
+      "group": "first_year"
+    },
+    {
+      "id": "winter",
+      "text_key": "MUX_GOAL_WINTER",
+      "completion": {
+        "fact": "first_winter_all_alive"
+      },
+      "group": "first_year"
+    },
+    {
+      "id": "teaching",
+      "text_key": "MUX_GOAL_TEACHING",
+      "completion": {
+        "fact": "taught_technique"
+      },
+      "group": "first_year"
+    }
+  ]
+}

@@ -1,0 +1,420 @@
+{
+  "schema_version": 1,
+  "fallback_severity": "notice",
+  "fallback_jump_target": "tile",
+  "severities": {
+    "danger": {
+      "icon": "!",
+      "color": "e78165",
+      "rank": 0
+    },
+    "warning": {
+      "icon": "!",
+      "color": "d8a050",
+      "rank": 1
+    },
+    "notice": {
+      "icon": "i",
+      "color": "f2e6c8",
+      "rank": 2
+    }
+  },
+  "conditions": {
+    "food_low": {
+      "collection": "settlements",
+      "predicates": [
+        {
+          "field": "food",
+          "op": "lt",
+          "rhs_field": "daily_food_need",
+          "multiplier": 3
+        }
+      ]
+    },
+    "firewood_low": {
+      "collection": "settlements",
+      "predicates": [
+        {
+          "field": "winter_days",
+          "op": "gt",
+          "value": 0
+        },
+        {
+          "field": "firewood",
+          "op": "lt",
+          "rhs_field": "daily_firewood_need",
+          "multiplier": 1,
+          "factor_field": "winter_days"
+        }
+      ]
+    },
+    "sleeping_outside": {
+      "collection": "people",
+      "predicates": [
+        {
+          "field": "sleeping",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "roofed",
+          "op": "eq",
+          "value": false
+        }
+      ]
+    },
+    "stockpile_missing": {
+      "collection": "settlements",
+      "predicates": [
+        {
+          "field": "stockpile_cells",
+          "op": "eq",
+          "value": 0
+        }
+      ]
+    },
+    "storehouse_full": {
+      "collection": "storehouses",
+      "predicates": [
+        {
+          "field": "role",
+          "op": "eq",
+          "value": 2
+        },
+        {
+          "field": "capacity",
+          "op": "gt",
+          "value": 0
+        },
+        {
+          "field": "used",
+          "op": "gte",
+          "rhs_field": "capacity",
+          "multiplier": 1
+        }
+      ]
+    },
+    "idle_adults": {
+      "collection": "people",
+      "predicates": [
+        {
+          "field": "adult",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "working",
+          "op": "eq",
+          "value": false
+        },
+        {
+          "field": "sleeping",
+          "op": "eq",
+          "value": false
+        },
+        {
+          "field": "drafted",
+          "op": "eq",
+          "value": false
+        },
+        {
+          "field": "sick",
+          "op": "eq",
+          "value": false
+        },
+        {
+          "field": "breakdown",
+          "op": "eq",
+          "value": false
+        }
+      ]
+    },
+    "orders_unreachable": {
+      "collection": "unreachable_orders",
+      "predicates": []
+    },
+    "knowledge_waiting": {
+      "collection": "knowledge_waits",
+      "predicates": []
+    },
+    "technique_at_risk": {
+      "collection": "techniques",
+      "predicates": [
+        {
+          "field": "practitioners",
+          "op": "eq",
+          "value": 1
+        }
+      ]
+    },
+    "wolves_approaching": {
+      "collection": "animals",
+      "predicates": [
+        {
+          "field": "kind",
+          "op": "eq",
+          "value": 0
+        },
+        {
+          "field": "distance_to_camp",
+          "op": "lte",
+          "value": 12
+        }
+      ]
+    },
+    "migrants_waiting": {
+      "collection": "migrants",
+      "predicates": [
+        {
+          "field": "waiting",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    "trader_present": {
+      "collection": "traders",
+      "predicates": [
+        {
+          "field": "present",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    "person_sick": {
+      "collection": "people",
+      "predicates": [
+        {
+          "field": "sick",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    "person_breakdown": {
+      "collection": "people",
+      "predicates": [
+        {
+          "field": "breakdown",
+          "op": "eq",
+          "value": true
+        }
+      ]
+    },
+    "person_injured": {
+      "collection": "people",
+      "predicates": [
+        {
+          "field": "hp",
+          "op": "gte",
+          "value": 0
+        },
+        {
+          "field": "hp",
+          "op": "lt",
+          "value": 50
+        }
+      ]
+    },
+    "meat_spoiling": {
+      "collection": "stacks",
+      "predicates": [
+        {
+          "field": "kind",
+          "op": "eq",
+          "value": 11
+        },
+        {
+          "field": "in_stockpile",
+          "op": "eq",
+          "value": false
+        },
+        {
+          "field": "spoil_ticks_left",
+          "op": "lte",
+          "value": 1440
+        },
+        {
+          "field": "count",
+          "op": "gt",
+          "value": 0
+        }
+      ]
+    },
+    "newborn_without_bed": {
+      "collection": "households",
+      "predicates": [
+        {
+          "field": "newborns",
+          "op": "gt",
+          "value": 0
+        },
+        {
+          "field": "beds",
+          "op": "eq",
+          "value": 0
+        }
+      ]
+    }
+  },
+  "alerts": [
+    {
+      "id": "food_low",
+      "condition_id": "food_low",
+      "severity": "warning",
+      "text_key": "MUX_ALERT_FOOD_LOW",
+      "explanation_key": "MUX_ALERT_FOOD_LOW_WHY",
+      "fix_key": "MUX_ALERT_FOOD_LOW_FIX",
+      "jump_target": "tile"
+    },
+    {
+      "id": "firewood_low",
+      "condition_id": "firewood_low",
+      "severity": "warning",
+      "text_key": "MUX_ALERT_FIREWOOD_LOW",
+      "explanation_key": "MUX_ALERT_FIREWOOD_LOW_WHY",
+      "fix_key": "MUX_ALERT_FIREWOOD_LOW_FIX",
+      "jump_target": "tile"
+    },
+    {
+      "id": "sleeping_outside",
+      "condition_id": "sleeping_outside",
+      "severity": "warning",
+      "text_key": "MUX_ALERT_SLEEPING_OUTSIDE",
+      "explanation_key": "MUX_ALERT_SLEEPING_OUTSIDE_WHY",
+      "fix_key": "MUX_ALERT_SLEEPING_OUTSIDE_FIX",
+      "jump_target": "person"
+    },
+    {
+      "id": "stockpile_missing",
+      "condition_id": "stockpile_missing",
+      "severity": "notice",
+      "text_key": "MUX_ALERT_STOCKPILE_MISSING",
+      "explanation_key": "MUX_ALERT_STOCKPILE_MISSING_WHY",
+      "fix_key": "MUX_ALERT_STOCKPILE_MISSING_FIX",
+      "jump_target": "tile"
+    },
+    {
+      "id": "storehouse_full",
+      "condition_id": "storehouse_full",
+      "severity": "warning",
+      "text_key": "MUX_ALERT_STOREHOUSE_FULL",
+      "explanation_key": "MUX_ALERT_STOREHOUSE_FULL_WHY",
+      "fix_key": "MUX_ALERT_STOREHOUSE_FULL_FIX",
+      "jump_target": "room"
+    },
+    {
+      "id": "idle_adults",
+      "condition_id": "idle_adults",
+      "severity": "notice",
+      "text_key": "MUX_ALERT_IDLE_ADULTS",
+      "explanation_key": "MUX_ALERT_IDLE_ADULTS_WHY",
+      "fix_key": "MUX_ALERT_IDLE_ADULTS_FIX",
+      "jump_target": "person"
+    },
+    {
+      "id": "orders_unreachable",
+      "condition_id": "orders_unreachable",
+      "severity": "warning",
+      "text_key": "MUX_ALERT_ORDERS_UNREACHABLE",
+      "explanation_key": "MUX_ALERT_ORDERS_UNREACHABLE_WHY",
+      "fix_key": "MUX_ALERT_ORDERS_UNREACHABLE_FIX",
+      "jump_target": "tile"
+    },
+    {
+      "id": "knowledge_waiting",
+      "condition_id": "knowledge_waiting",
+      "severity": "warning",
+      "text_key": "MUX_ALERT_KNOWLEDGE_WAITING",
+      "explanation_key": "MUX_ALERT_KNOWLEDGE_WAITING_WHY",
+      "fix_key": "MUX_ALERT_KNOWLEDGE_WAITING_FIX",
+      "jump_target": "technique"
+    },
+    {
+      "id": "technique_at_risk",
+      "condition_id": "technique_at_risk",
+      "severity": "warning",
+      "text_key": "MUX_ALERT_TECHNIQUE_AT_RISK",
+      "explanation_key": "MUX_ALERT_TECHNIQUE_AT_RISK_WHY",
+      "fix_key": "MUX_ALERT_TECHNIQUE_AT_RISK_FIX",
+      "jump_target": "technique"
+    },
+    {
+      "id": "wolves_approaching",
+      "condition_id": "wolves_approaching",
+      "severity": "danger",
+      "text_key": "MUX_ALERT_WOLVES_APPROACHING",
+      "explanation_key": "MUX_ALERT_WOLVES_APPROACHING_WHY",
+      "fix_key": "MUX_ALERT_WOLVES_APPROACHING_FIX",
+      "jump_target": "animal"
+    },
+    {
+      "id": "migrants_waiting",
+      "condition_id": "migrants_waiting",
+      "severity": "notice",
+      "text_key": "MUX_ALERT_MIGRANTS_WAITING",
+      "explanation_key": "MUX_ALERT_MIGRANTS_WAITING_WHY",
+      "fix_key": "MUX_ALERT_MIGRANTS_WAITING_FIX",
+      "jump_target": "migrant"
+    },
+    {
+      "id": "trader_present",
+      "condition_id": "trader_present",
+      "severity": "notice",
+      "text_key": "MUX_ALERT_TRADER_PRESENT",
+      "explanation_key": "MUX_ALERT_TRADER_PRESENT_WHY",
+      "fix_key": "MUX_ALERT_TRADER_PRESENT_FIX",
+      "jump_target": "trader"
+    },
+    {
+      "id": "person_sick",
+      "condition_id": "person_sick",
+      "severity": "warning",
+      "text_key": "MUX_ALERT_PERSON_SICK",
+      "explanation_key": "MUX_ALERT_PERSON_SICK_WHY",
+      "fix_key": "MUX_ALERT_PERSON_SICK_FIX",
+      "jump_target": "person"
+    },
+    {
+      "id": "person_breakdown",
+      "condition_id": "person_breakdown",
+      "severity": "danger",
+      "text_key": "MUX_ALERT_PERSON_BREAKDOWN",
+      "explanation_key": "MUX_ALERT_PERSON_BREAKDOWN_WHY",
+      "fix_key": "MUX_ALERT_PERSON_BREAKDOWN_FIX",
+      "jump_target": "person"
+    },
+    {
+      "id": "person_injured",
+      "condition_id": "person_injured",
+      "severity": "danger",
+      "text_key": "MUX_ALERT_PERSON_INJURED",
+      "explanation_key": "MUX_ALERT_PERSON_INJURED_WHY",
+      "fix_key": "MUX_ALERT_PERSON_INJURED_FIX",
+      "jump_target": "person"
+    },
+    {
+      "id": "meat_spoiling",
+      "condition_id": "meat_spoiling",
+      "severity": "warning",
+      "text_key": "MUX_ALERT_MEAT_SPOILING",
+      "explanation_key": "MUX_ALERT_MEAT_SPOILING_WHY",
+      "fix_key": "MUX_ALERT_MEAT_SPOILING_FIX",
+      "jump_target": "tile"
+    },
+    {
+      "id": "newborn_without_bed",
+      "condition_id": "newborn_without_bed",
+      "severity": "warning",
+      "text_key": "MUX_ALERT_NEWBORN_WITHOUT_BED",
+      "explanation_key": "MUX_ALERT_NEWBORN_WITHOUT_BED_WHY",
+      "fix_key": "MUX_ALERT_NEWBORN_WITHOUT_BED_FIX",
+      "jump_target": "person"
+    }
+  ],
+  "fact_selectors": {
+    "spoilable_kind": 11,
+    "spoil_horizon_ticks": 1440
+  }
+}

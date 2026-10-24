@@ -10,6 +10,8 @@
 #   get_world_info; via SimReads.mutate cmd_accept_migrants, cmd_decline_migrants; signal world_reset.
 extends Control
 
+const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
+
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
@@ -90,6 +92,7 @@ func _label(parent: Control, colour: Color) -> Label:
 
 func _button(parent: Control, node_name: String, action: Callable) -> Button:
 	var button: Button = Button.new()
+	PanelTooltips.attach(button, "neighbours")
 	button.name = node_name
 	button.focus_mode = Control.FOCUS_NONE
 	button.pressed.connect(func() -> void: action.call())

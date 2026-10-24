@@ -393,13 +393,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		var button: InputEventMouseButton = event
 		_set_shift(button.shift_pressed)
 		_track(button.position)
-		if button.button_index == MOUSE_BUTTON_RIGHT and button.pressed and mode != Mode.NONE:
-			set_mode(Mode.NONE)
-			get_viewport().set_input_as_handled()
-		elif button.button_index == MOUSE_BUTTON_RIGHT and button.pressed and _world_sim != null:
-			if not draft_order_at(_hover_world, _hover).is_empty():
-				get_viewport().set_input_as_handled()
-		elif button.button_index == MOUSE_BUTTON_LEFT:
+		if button.button_index == MOUSE_BUTTON_LEFT and mode != Mode.NONE:
 			_left(button.pressed)
 	elif event is InputEventKey and event.pressed and not event.echo:
 		var key: InputEventKey = event
@@ -410,6 +404,18 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 	if event is InputEventKey and (event as InputEventKey).keycode == KEY_SHIFT and not event.is_echo():
 		_set_shift(event.is_pressed())
+
+
+## The camera calls this only after a map press/release that did not become a pan.
+func map_click(button: MouseButton, screen: Vector2) -> void:
+	_track(screen)
+	if button == MOUSE_BUTTON_RIGHT:
+		if mode != Mode.NONE:
+			set_mode(Mode.NONE)
+		elif _world_sim != null:
+			draft_order_at(_hover_world, _hover)
+	elif button == MOUSE_BUTTON_LEFT and mode == Mode.NONE:
+		_click(_hover)
 
 
 ## M3: follow Shift; a space drag re-reads its preview when the shape changes.

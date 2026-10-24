@@ -36,6 +36,8 @@
 # M5.5 (goal §9): under the draft line, "도망 중: 늑대" while the person flees (get_agent_m5 `fleeing`).
 extends Control
 
+const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
+
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const ArtData = preload("res://scripts/world/art/art_data.gd")
 const PANEL_WIDTH := 360.0
@@ -278,6 +280,7 @@ func _ready() -> void:
 	_life_text.meta_clicked.connect(_follow_link)
 	_vbox.add_child(_life_text)
 	_life_more = Button.new()
+	PanelTooltips.attach(_life_more, "select")
 	_life_more.pressed.connect(_expand_life)
 	_vbox.add_child(_life_more)
 	var bottom_padding := Control.new()
@@ -465,6 +468,7 @@ func _make_knowledge_tab() -> void:
 	var group: ButtonGroup = ButtonGroup.new()
 	for tab: int in [TAB_INFO, TAB_KNOWLEDGE, TAB_STORY]:
 		var button: Button = Button.new()
+		PanelTooltips.attach(button, "select")
 		button.name = "Tab_%d" % tab
 		button.toggle_mode = true
 		button.button_group = group
@@ -999,6 +1003,7 @@ func _make_personal_sections() -> void:
 			_family_children = Label.new()
 			_family_box.add_child(_family_children)
 		var button := Button.new()
+		PanelTooltips.attach(button, "select")
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
 		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

@@ -9,6 +9,8 @@
 #   signal world_reset.
 extends Control
 
+const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
+
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
 const EconomyText = preload("res://scripts/ui/economy_text.gd")
 const RoomLayer = preload("res://scripts/world/colony/room_layer.gd")
@@ -53,6 +55,7 @@ func _ready() -> void:
 	_role_label = Label.new()
 	row.add_child(_role_label)
 	_role = OptionButton.new()
+	PanelTooltips.attach(_role, "rooms", "MUX_TIP_ROOM_ROLE")
 	_role.name = "RoleChoice"
 	_role.focus_mode = Control.FOCUS_NONE
 	for key: String in CHOICE_KEYS:
@@ -69,6 +72,7 @@ func _ready() -> void:
 	_why.add_theme_color_override("font_color", MUTED)
 	column.add_child(_why)
 	_close = Button.new()
+	PanelTooltips.attach(_close, "close")
 	_close.focus_mode = Control.FOCUS_NONE
 	_close.pressed.connect(close)
 	column.add_child(_close)
