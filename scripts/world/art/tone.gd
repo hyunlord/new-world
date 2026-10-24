@@ -86,21 +86,20 @@ static func cap_ground(src: Image, person_std: float, mean_max: float, std_ratio
 	return {"image": final, "before": before, "after": after, "contrast": contrast, "chroma": low, "passed": passed}
 
 
-## Recolour a water texture around `colour`, retaining only its small luminance variation. Water has its own
-## contrast floor against land (D19), rather than the land-only ENV1 ceiling. The source image is never changed.
-static func water_colour(src: Image, colour: Color, std_max: float) -> Image:
-	var img: Image = src.duplicate()
-	img.convert(Image.FORMAT_RGBA8)
-	var before: Dictionary = metrics(img)
-	var contrast: float = minf(1.0, std_max / maxf(float(before["std"]), 1e-12))
+## Mean RGB (alpha 1) over pixels with alpha > 0 (every `stride`-th pixel); black when there are none.
+static func mean_rgb(img: Image, stride: int = 1) -> Color:
 	var data: PackedByteArray = img.get_data()
-	for i: int in range(0, data.size(), 4):
-		var gray: float = (LR * data[i] + LG * data[i + 1] + LB * data[i + 2]) / 255.0
-		var delta: float = (gray - float(before["mean"])) * contrast
-		data[i] = int(roundf(clampf(colour.r + delta, 0.0, 1.0) * 255.0))
-		data[i + 1] = int(roundf(clampf(colour.g + delta, 0.0, 1.0) * 255.0))
-		data[i + 2] = int(roundf(clampf(colour.b + delta, 0.0, 1.0) * 255.0))
-	return Image.create_from_data(img.get_width(), img.get_height(), false, Image.FORMAT_RGBA8, data)
+	var n: int = 0
+	var sum: Vector3 = Vector3.ZERO
+	for i: int in range(0, data.size(), 4 * maxi(1, stride)):
+		if data[i + 3] == 0:
+			continue
+		sum += Vector3(data[i], data[i + 1], data[i + 2])
+		n += 1
+	if n == 0:
+		return Color.BLACK
+	sum /= 255.0 * n
+	return Color(sum.x, sum.y, sum.z, 1.0)
 
 
 ## Winter (`mix` = kept saturation, 0.35) or drought (`tint` toward ochre at `mix`); other kinds return a copy.

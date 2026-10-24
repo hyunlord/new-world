@@ -3,11 +3,22 @@
 #   offsets (textures pre-tiled once so a run of equal tiles in a row is one native blit), the noise-dithered 12-px
 #   blend between different grounds (edges.py `render_tile`: fixed-seed value noise, the maximum of the edge weights at
 #   corners, half strength so two grounds meet halfway; MART2_DECISIONS D5: a pixel takes the neighbour's texture when
-#   weight × strength > a hashed threshold, because Godot's mask blend is binary), water tiles left transparent except
-#   the 10-px dithered bank where land erodes into the water (the chunk's shader draws the water texture beneath), a
-#   2-px ink stroke on the land side of a bank, displaced 0–4 px by the noise (edges.py `_bank_ink`). Crisp tiles (walls,
-#   undug hill) neither blend nor are blended into, so floors stay crisp against walls. The noise is periodic in 256 px,
-#   so masks are cached per (side set, 4 × 4 tile phase). Only native Image ops run per chunk (MART2_DECISIONS D4).
+#   weight × strength > a hashed threshold, because Godot's mask blend is binary). Crisp tiles (walls, undug hill)
+#   neither blend nor are blended into, so floors stay crisp against walls. The noise is periodic in 256 px, so masks
+#   are cached per (side set, 4 × 4 tile phase). Only native Image ops run per chunk (MART2_DECISIONS D4).
+# Shores (M-ART2.1 §2.1, MART21_DECISIONS D2): the water outline is the zero level of a signed distance field of the
+#   water tiles with every corner rounded — the opening and closing of the tile union by a disc of radius
+#   `water.shore_radius_px` (22): a straight shore stays on the tile edge, a 90° step becomes a quarter circle. As the
+#   radius is under half a tile, a pixel's field depends only on the 2 × 2 tiles around its tile quadrant's corner, so
+#   it is evaluated in closed form (straight lines and rounded quadrants) per (quadrant, 2 × 2 pattern, noise phase)
+#   and cached as 32 × 32 masks; the chunk applies them with native blits (a two-tile apron is implicit: every tile
+#   reads its eight neighbours from the whole map). Land coverage is smoothstep(−soft, soft, s) dithered against the
+#   tile's hashed threshold (craft rule 2: no anti-aliasing), the 10-px bank dithers land into the water side, and a
+#   2-px ink stroke on the land side, displaced 0–4 px by the noise at the nearest contour point, follows the same
+#   contour. Water tiles are transparent where the field says water (the chunk shader draws the water beneath) and
+#   take the neighbouring land's texture where a rounded land corner reaches in. Two water tiles that touch only at a
+#   corner stay joined. Undug hill tops get the same rounding against open ground (`hill.edge_radius_px`, crisp, no
+#   dither, no ink), except at a corner whose upper row hangs a face (faces stay straight where they hang).
 #   Inputs are plain arrays (`GroundMap`), so the same bake runs headless in tests; the output is deterministic.
 # Bridge methods called: none.
 extends RefCounted
@@ -28,6 +39,10 @@ class GroundMap:
 	var height: int = 0
 	var ground: PackedInt32Array = PackedInt32Array()
 	var crisp: PackedByteArray = PackedByteArray()
+	## 1 = an undug hill top that rounds against open ground (crisp too).
+	var rock: PackedByteArray = PackedByteArray()
+	## 1 = the tile hangs a face from its south edge.
+	var face: PackedByteArray = PackedByteArray()
 
 	func setup(w: int, h: int) -> void:
 		width = w
@@ -36,6 +51,10 @@ class GroundMap:
 		ground.fill(VOID)
 		crisp.resize(w * h)
 		crisp.fill(0)
+		rock.resize(w * h)
+		rock.fill(0)
+		face.resize(w * h)
+		face.fill(0)
 
 	func at(x: int, y: int) -> int:
 		if x < 0 or y < 0 or x >= width or y >= height:
@@ -44,6 +63,12 @@ class GroundMap:
 
 	func is_crisp(x: int, y: int) -> bool:
 		return x >= 0 and y >= 0 and x < width and y < height and crisp[y * width + x] == 1
+
+	func is_rock(x: int, y: int) -> bool:
+		return x >= 0 and y >= 0 and x < width and y < height and rock[y * width + x] == 1
+
+	func has_face(x: int, y: int) -> bool:
+		return x >= 0 and y >= 0 and x < width and y < height and face[y * width + x] == 1
 
 
 var chunk_tiles: int = 16
@@ -55,17 +80,24 @@ var ink_dark: Vector2 = Vector2(0.20, 0.35)
 var ink_displace: int = 4
 var noise_seed: int = 5005
 var noise_period: int = 256
+## Shore and hill-edge rounding (render_params `water.shore_radius_px`, `water.contour_soft_px`, `hill.edge_radius_px`).
+var shore_radius: float = 22.0
+var contour_soft: float = 6.0
+var hill_radius: float = TILE * 0.25
+## Quadrant masks: key → [land mask, water mask, ink source, ink mask, has ink, any land, any water].
+var _shore: Dictionary = {}
+var _clear: Image = null
+var _tmp_q: Image = null
 ## Pre-tiled ground images (period × period source repeated to cover a chunk plus one period), by ground index.
 var _tiled: Array[Image] = []
 var _period: Array[int] = []
 var _masks: Dictionary = {}
-var _ink: Dictionary = {}
 var _fields: Dictionary = {}
 var _tmp: Image = null
 
 
-## Configure from render_params.json's `ground` and `water` sections (missing keys keep the defaults).
-func configure(ground: Dictionary, water: Dictionary) -> void:
+## Configure from render_params.json's `ground`, `water` and `hill` sections (missing keys keep the defaults).
+func configure(ground: Dictionary, water: Dictionary, hill: Dictionary = {}) -> void:
 	chunk_tiles = int(ground.get("chunk_tiles", chunk_tiles))
 	blend_px = int(ground.get("blend_px", blend_px))
 	blend_strength = float(ground.get("blend_strength", blend_strength))
@@ -77,9 +109,14 @@ func configure(ground: Dictionary, water: Dictionary) -> void:
 	var dark: Variant = water.get("bank_ink_dark", null)
 	if dark is Array and (dark as Array).size() == 2:
 		ink_dark = Vector2(float(dark[0]), float(dark[1]))
+	# The rounding stays inside a tile quadrant (the closed form below assumes it), so radii are clamped to it.
+	var half: float = float(TILE) * 0.5
+	shore_radius = clampf(float(water.get("shore_radius_px", shore_radius)), 0.0, half - 1.0)
+	contour_soft = clampf(float(water.get("contour_soft_px", contour_soft)), 0.0, half * 0.5)
+	hill_radius = clampf(float(hill.get("edge_radius_px", hill_radius)), 0.0, half - 1.0)
 	_masks.clear()
-	_ink.clear()
 	_fields.clear()
+	_shore.clear()
 
 
 ## Set the ground textures, in ground-index order (each an RGBA8 image whose size is its period).
@@ -97,6 +134,8 @@ func set_grounds(images: Array[Image]) -> void:
 		_tiled.append(tiled)
 		_period.append(p)
 	_tmp = Image.create(TILE, TILE, false, Image.FORMAT_RGBA8)
+	_tmp_q = Image.create(TILE >> 1, TILE >> 1, false, Image.FORMAT_RGBA8)
+	_clear = Image.create(TILE >> 1, TILE >> 1, false, Image.FORMAT_RGBA8)
 
 
 ## The pre-tiled image of ground `index` (null when out of range).
@@ -133,41 +172,32 @@ func bake(map: GroundMap, cx: int, cy: int) -> Image:
 				var src: Rect2i = Rect2i(posmod(tx * TILE, p), posmod(ty * TILE, p), (end - tx) * TILE, TILE)
 				img.blit_rect(_tiled[g], src, Vector2i((tx - x0) * TILE, (ty - y0) * TILE))
 			tx = end
-	# 2. Edges: dithered blends between grounds, banks into water, ink on the land side.
+	# 2. Edges between land grounds: dithered blends (water and crisp neighbours take no part).
+	var per: int = floori(float(noise_period) / TILE)
 	for ty: int in range(y0, y0 + chunk_tiles):
 		for tx: int in range(x0, x0 + chunk_tiles):
 			var g: int = map.at(tx, ty)
-			if g == VOID or map.is_crisp(tx, ty):
+			if g < 0 or map.is_crisp(tx, ty):
 				continue
 			var dst: Vector2i = Vector2i((tx - x0) * TILE, (ty - y0) * TILE)
-			var per: int = floori(float(noise_period) / TILE)
 			var phase: int = posmod(tx, per) + posmod(ty, per) * per
 			var groups: Dictionary = {}
-			var ink_bits: int = 0
 			for s: int in 4:
 				var nx: int = tx + SIDES[s].x
 				var ny: int = ty + SIDES[s].y
 				var n: int = map.at(nx, ny)
-				if n == VOID or n == g:
-					continue
-				if n == WATER:
-					if not map.is_crisp(nx, ny):
-						ink_bits |= 1 << s
-					continue
-				if map.is_crisp(nx, ny):
+				if n < 0 or n == g or map.is_crisp(nx, ny):
 					continue
 				groups[n] = int(groups.get(n, 0)) | (1 << s)
 			for n: int in groups.keys():
-				if n < 0 or n >= _tiled.size():
+				if n >= _tiled.size():
 					continue
-				var water: bool = g == WATER
-				var mask: Image = _mask(int(groups[n]), phase, water)
+				var mask: Image = _mask(int(groups[n]), phase, false)
 				var p: int = _period[n]
 				_tmp.blit_rect(_tiled[n], Rect2i(posmod(tx * TILE, p), posmod(ty * TILE, p), TILE, TILE), Vector2i.ZERO)
 				img.blend_rect_mask(_tmp, mask, Rect2i(0, 0, TILE, TILE), dst)
-			if ink_bits != 0 and g >= 0:
-				var pair: Array = _ink_pair(ink_bits, phase)
-				img.blend_rect_mask(pair[0], pair[1], Rect2i(0, 0, TILE, TILE), dst)
+	# 3. Rounded shores and hill edges, per tile quadrant.
+	_round_edges(map, img, x0, y0, per)
 	return img
 
 
@@ -269,43 +299,273 @@ func _side_mask(side: int, phase: int, water: bool) -> Image:
 
 
 ## Compute every phase's fields and every single-side mask now (a world load), so no bake pays for them later.
+## Shore and hill-edge quadrant masks are made on first use (most of the 900 possible keys never occur).
 func warm() -> void:
 	var phases: int = floori(float(noise_period) / TILE) * floori(float(noise_period) / TILE)
 	for phase: int in phases:
 		for side: int in 4:
 			_side_mask(side, phase, false)
-			_side_mask(side, phase, true)
 
 
-## [ink source (black with the stroke's alpha), stroke mask] for the water sides `bits` of a land tile.
-func _ink_pair(bits: int, phase: int) -> Array:
-	var key: int = bits | (phase << 4)
-	if _ink.has(key):
-		return _ink[key]
-	var noise: PackedFloat32Array = _phase_fields(phase)[0]
-	var src: PackedByteArray = PackedByteArray()
-	src.resize(TILE * TILE * 4)
-	var mask: PackedByteArray = PackedByteArray()
-	mask.resize(TILE * TILE * 4)
-	for y: int in TILE:
-		for x: int in TILE:
-			var strength: float = 0.0
-			for s: int in 4:
-				if bits & (1 << s) == 0:
-					continue
-				var d: int = y if s == 0 else (TILE - 1 - x if s == 1 else (TILE - 1 - y if s == 2 else x))
-				if d > ink_displace + ink_px:
-					continue
-				# The displacement follows the noise along the edge (edges.py: the noise row/column at that edge).
-				var along: float = noise[x] if s == 0 else (noise[y * TILE + TILE - 1] if s == 1 else (noise[(TILE - 1) * TILE + x] if s == 2 else noise[y * TILE]))
-				var disp: int = int(roundf(along * ink_displace))
-				if d >= disp and d < disp + ink_px:
-					strength = maxf(strength, ink_dark.x + (ink_dark.y - ink_dark.x) * noise[y * TILE + x])
-			var i: int = (y * TILE + x) * 4
-			if strength > 0.0:
-				src[i + 3] = int(roundf(strength * 255.0))
-				mask[i + 3] = 255
-				mask[i] = 255
-	var pair: Array = [Image.create_from_data(TILE, TILE, false, Image.FORMAT_RGBA8, src), Image.create_from_data(TILE, TILE, false, Image.FORMAT_RGBA8, mask)]
-	_ink[key] = pair
-	return pair
+## Number of cached shore and hill-edge quadrant masks (tests, timing).
+func shore_mask_count() -> int:
+	return _shore.size()
+
+
+## Shore class of a tile: 1 water, 0 open land, −1 neither (crisp land, outside the map).
+func _water_class(map: GroundMap, x: int, y: int) -> int:
+	var g: int = map.at(x, y)
+	if g == WATER:
+		return 1
+	if g < 0 or map.is_crisp(x, y):
+		return -1
+	return 0
+
+
+## Hill-edge class of a tile: 1 undug hill top, 0 open land, −1 neither (water, walls, outside the map).
+func _rock_class(map: GroundMap, x: int, y: int) -> int:
+	var g: int = map.at(x, y)
+	if g < 0:
+		return -1
+	if map.is_rock(x, y):
+		return 1
+	if map.is_crisp(x, y):
+		return -1
+	return 0
+
+
+## The 2 × 2 pattern of a quadrant: bit 0 the tile, 1 its horizontal, 2 its vertical, 3 its diagonal neighbour
+## (1 = class 1). A neighbour of neither class counts as the tile's own class, so it neither rounds nor banks.
+static func _bits(t: int, h: int, v: int, d: int) -> int:
+	h = t if h < 0 else h
+	v = t if v < 0 else v
+	d = t if d < 0 else d
+	return t | (h << 1) | (v << 2) | (d << 3)
+
+
+## Signed distance of the quarter plane {xq > 0, yq > 0} with its corner rounded by radius r (negative inside).
+static func _rounded(xq: float, yq: float, r: float) -> float:
+	var a: float = r - xq
+	var b: float = r - yq
+	return Vector2(maxf(a, 0.0), maxf(b, 0.0)).length() + minf(maxf(a, b), 0.0) - r
+
+
+## The rounded field of class 1 at (X, Y): X, Y > 0 are the distances from the quadrant's corner lines into the tile
+## (the tile is X > 0, Y > 0; its horizontal neighbour X < 0; its vertical neighbour Y < 0). Negative inside class 1.
+## Straight boundaries are exact lines; an odd quadrant out is a rounded corner (convex for its class, concave for
+## the other); a diagonal pair keeps class 1 joined and rounds the two class-0 corners.
+static func shore_field(bits: int, x: float, y: float, r: float) -> float:
+	var t: int = bits & 1
+	var h: int = (bits >> 1) & 1
+	var v: int = (bits >> 2) & 1
+	var d: int = (bits >> 3) & 1
+	if t == h and v == d and t != v:
+		return -y if t == 1 else y
+	if t == v and h == d and t != h:
+		return -x if t == 1 else x
+	if t == d and h == v:
+		var s0: float
+		if t == 1:
+			s0 = minf(_rounded(-x, y, r), _rounded(x, -y, r))
+		else:
+			s0 = minf(_rounded(x, y, r), _rounded(-x, -y, r))
+		return -s0
+	var odd: int = 1 if t + h + v + d == 1 else 0
+	var dq: float
+	if t == odd:
+		dq = _rounded(x, y, r)
+	elif h == odd:
+		dq = _rounded(-x, y, r)
+	elif v == odd:
+		dq = _rounded(x, -y, r)
+	else:
+		dq = _rounded(-x, -y, r)
+	return dq if odd == 1 else -dq
+
+
+## Rounded shores (pair 0) and hill edges (pair 1) of the chunk at tile (x0, y0): quadrant masks applied natively.
+func _round_edges(map: GroundMap, img: Image, x0: int, y0: int, per: int) -> void:
+	var n: int = chunk_tiles + 2
+	var wc: PackedInt32Array = PackedInt32Array()
+	var rc: PackedInt32Array = PackedInt32Array()
+	wc.resize(n * n)
+	rc.resize(n * n)
+	var any_w: bool = false
+	var any_r: bool = false
+	for ly: int in n:
+		for lx: int in n:
+			var a: int = _water_class(map, x0 + lx - 1, y0 + ly - 1)
+			var b: int = _rock_class(map, x0 + lx - 1, y0 + ly - 1)
+			wc[ly * n + lx] = a
+			rc[ly * n + lx] = b
+			any_w = any_w or a == 1
+			any_r = any_r or b == 1
+	if not any_w and not any_r:
+		return
+	var half: int = TILE >> 1
+	for ty: int in chunk_tiles:
+		for tx: int in chunk_tiles:
+			var c: int = (ty + 1) * n + tx + 1
+			var x: int = x0 + tx
+			var y: int = y0 + ty
+			var phase: int = posmod(x, per) + posmod(y, per) * per
+			for q: int in 4:
+				var sx: int = -1 if (q & 1) == 0 else 1
+				var sy: int = -1 if q < 2 else 1
+				var cells: Array[int] = [c, c + sx, c + sy * n, c + sx + sy * n]
+				var dst: Vector2i = Vector2i(tx * TILE + (0 if sx < 0 else half), ty * TILE + (0 if sy < 0 else half))
+				var world: Vector2i = Vector2i(x * TILE + (0 if sx < 0 else half), y * TILE + (0 if sy < 0 else half))
+				if any_w and wc[c] >= 0:
+					var bits: int = _bits(wc[c], wc[cells[1]], wc[cells[2]], wc[cells[3]])
+					if bits != 0 and bits != 15:
+						_apply_quadrant(map, img, 0, q, bits, phase, dst, world, x, y, sx, sy)
+				if any_r and rc[c] >= 0:
+					# Faces stay straight where they hang: skip a corner whose upper row hangs a face.
+					var upper: int = y - 1 if sy < 0 else y
+					if map.has_face(x, upper) or map.has_face(x + sx, upper):
+						continue
+					var rbits: int = _bits(rc[c], rc[cells[1]], rc[cells[2]], rc[cells[3]])
+					if rbits != 0 and rbits != 15:
+						_apply_quadrant(map, img, 1, q, rbits, 0, dst, world, x, y, sx, sy)
+
+
+## The rounded field the bake uses at world pixel (wx, wy) — pair 0 shores (negative in water), pair 1 hill edges
+## (negative on the hill top) — or INF where the pixel's quadrant has no boundary (tests measure the contour).
+func shore_distance(map: GroundMap, wx: int, wy: int, pair: int = 0) -> float:
+	var x: int = floori(float(wx) / TILE)
+	var y: int = floori(float(wy) / TILE)
+	var px: int = wx - x * TILE
+	var py: int = wy - y * TILE
+	var half: int = TILE >> 1
+	var sx: int = -1 if px < half else 1
+	var sy: int = -1 if py < half else 1
+	var cls: Callable = _water_class if pair == 0 else _rock_class
+	var t: int = cls.call(map, x, y)
+	if t < 0:
+		return INF
+	var bits: int = _bits(t, cls.call(map, x + sx, y), cls.call(map, x, y + sy), cls.call(map, x + sx, y + sy))
+	if bits == 0 or bits == 15:
+		return INF
+	var lx: float = (float(px) + 0.5) if sx < 0 else (float(TILE - px) - 0.5)
+	var ly: float = (float(py) + 0.5) if sy < 0 else (float(TILE - py) - 0.5)
+	return shore_field(bits, lx, ly, shore_radius if pair == 0 else hill_radius)
+
+
+## One quadrant: the other class's pixels become transparent (a land tile's water) or take the neighbour's texture
+## (a water tile's land, a hill top's open ground, open ground's hill top); then the shore's ink.
+func _apply_quadrant(map: GroundMap, img: Image, pair: int, q: int, bits: int, phase: int, dst: Vector2i, world: Vector2i, x: int, y: int, sx: int, sy: int) -> void:
+	var m: Array = _quadrant_masks(pair, q, bits, phase)
+	var own: int = bits & 1
+	var other: int = 1 - own
+	var rect: Rect2i = Rect2i(0, 0, TILE >> 1, TILE >> 1)
+	var mask: Image = m[1] if other == 1 else m[0]
+	var present: bool = bool(m[6]) if other == 1 else bool(m[5])
+	if present:
+		if pair == 0 and other == 1:
+			img.blit_rect_mask(_clear, mask, rect, dst)
+		else:
+			var g: int = -1
+			for nb: Vector2i in [Vector2i(x + sx, y), Vector2i(x, y + sy), Vector2i(x + sx, y + sy)]:
+				var k: int = _water_class(map, nb.x, nb.y) if pair == 0 else _rock_class(map, nb.x, nb.y)
+				if k == other:
+					g = map.at(nb.x, nb.y)
+					break
+			if g >= 0 and g < _tiled.size():
+				var p: int = _period[g]
+				_tmp_q.blit_rect(_tiled[g], Rect2i(posmod(world.x, p), posmod(world.y, p), TILE >> 1, TILE >> 1), Vector2i.ZERO)
+				img.blend_rect_mask(_tmp_q, mask, rect, dst)
+	if bool(m[4]):
+		img.blend_rect_mask(m[2], m[3], rect, dst)
+
+
+## [class-0 mask, class-1 mask, ink source, ink mask, has ink, any class 0, any class 1] of one quadrant (32 × 32).
+## Pair 0 (shores) dithers: land where smoothstep(−soft, soft, s) > the tile's threshold, or inside the 10-px bank
+## (the M-ART2 bank weight, measured from the rounded contour); ink where the land-side distance lies in
+## [disp, disp + ink_px), disp = the noise at the nearest contour point × ink_displace_px. Pair 1 (hills) is crisp.
+func _quadrant_masks(pair: int, q: int, bits: int, phase: int) -> Array:
+	var key: int = pair | (q << 1) | (bits << 3) | (phase << 7)
+	if _shore.has(key):
+		return _shore[key]
+	var half: int = TILE >> 1
+	var r: float = shore_radius if pair == 0 else hill_radius
+	var sx: int = -1 if (q & 1) == 0 else 1
+	var sy: int = -1 if q < 2 else 1
+	var ox: int = 0 if sx < 0 else half
+	var oy: int = 0 if sy < 0 else half
+	var per_row: int = floori(float(noise_period) / TILE)
+	var nox: int = (phase % per_row) * TILE
+	var noy: int = floori(float(phase) / per_row) * TILE
+	var noise: PackedFloat32Array = PackedFloat32Array()
+	var thresh: PackedFloat32Array = PackedFloat32Array()
+	if pair == 0:
+		var fields: Array = _phase_fields(phase)
+		noise = fields[0]
+		thresh = fields[1]
+	var m0: PackedByteArray = PackedByteArray()
+	var m1: PackedByteArray = PackedByteArray()
+	var isrc: PackedByteArray = PackedByteArray()
+	var imask: PackedByteArray = PackedByteArray()
+	m0.resize(half * half * 4)
+	m1.resize(half * half * 4)
+	isrc.resize(half * half * 4)
+	imask.resize(half * half * 4)
+	var has_ink: bool = false
+	var any0: bool = false
+	var any1: bool = false
+	var dirx: float = 1.0 if sx < 0 else -1.0
+	var diry: float = 1.0 if sy < 0 else -1.0
+	for qy: int in half:
+		for qx: int in half:
+			var px: int = ox + qx
+			var py: int = oy + qy
+			var lx: float = (float(px) + 0.5) if sx < 0 else (float(TILE - px) - 0.5)
+			var ly: float = (float(py) + 0.5) if sy < 0 else (float(TILE - py) - 0.5)
+			var s1: float = shore_field(bits, lx, ly, r)
+			var is1: bool
+			var ink: float = 0.0
+			if pair == 1:
+				is1 = s1 < 0.0
+			else:
+				# The field is negative inside water, so it is the land-side distance itself.
+				var s: float = s1
+				var p: int = py * TILE + px
+				var t: float = thresh[p]
+				var land: bool = (smoothstep(-contour_soft, contour_soft, s) > t) if contour_soft > 0.0 else s > 0.0
+				if not land and s < 0.0 and -s < float(bank_px):
+					land = clampf((float(bank_px) + s) / float(bank_px) + (noise[p] - 0.5) * 0.6, 0.0, 1.0) > t
+				if s >= 0.0 and s < float(ink_displace + ink_px):
+					# The stroke's displacement is the noise at the nearest contour point (s along −∇s).
+					var gx: float = (shore_field(bits, lx + 0.5, ly, r) - shore_field(bits, lx - 0.5, ly, r))
+					var gy: float = (shore_field(bits, lx, ly + 0.5, r) - shore_field(bits, lx, ly - 0.5, r))
+					var g: Vector2 = Vector2(gx * dirx, gy * diry)
+					if g.length() > 0.0:
+						g = g.normalized()
+					var cx: int = floori(float(px) + 0.5 - s * g.x)
+					var cy: int = floori(float(py) + 0.5 - s * g.y)
+					var disp: int = int(roundf(_noise(nox + cx, noy + cy) * ink_displace))
+					var dpx: int = floori(s)
+					if dpx >= disp and dpx < disp + ink_px:
+						ink = ink_dark.x + (ink_dark.y - ink_dark.x) * noise[p]
+						land = true
+				is1 = not land
+			var i: int = (qy * half + qx) * 4
+			# Packed arrays are values in GDScript: write each buffer by its own name.
+			if is1:
+				m1[i] = 255
+				m1[i + 3] = 255
+			else:
+				m0[i] = 255
+				m0[i + 3] = 255
+			any1 = any1 or is1
+			any0 = any0 or not is1
+			if ink > 0.0:
+				isrc[i + 3] = int(roundf(ink * 255.0))
+				imask[i] = 255
+				imask[i + 3] = 255
+				has_ink = true
+	var out: Array = [Image.create_from_data(half, half, false, Image.FORMAT_RGBA8, m0),
+		Image.create_from_data(half, half, false, Image.FORMAT_RGBA8, m1),
+		Image.create_from_data(half, half, false, Image.FORMAT_RGBA8, isrc),
+		Image.create_from_data(half, half, false, Image.FORMAT_RGBA8, imask), has_ink, any0, any1]
+	_shore[key] = out
+	return out

@@ -16,6 +16,18 @@
 #   6. the data-only wall: tools/v8/fixtures/data_only_wall.json adds a material and a blueprint by data; the unchanged
 #      resolver resolves them to the expected style and the unchanged wall baker draws a 3 × 3 room whose strips have
 #      the expected opaque coverage.
+#   7. rounded shores (M-ART2.1 §5): a synthetic L-shaped river — the field's contour at the outer (convex) and inner
+#      (concave) corner is a quarter circle of `water.shore_radius_px` (±3 px; rays from the expected centre), a
+#      straight shore's contour stays on the tile edge (±1 px); in the baked image the visible edge (5 × 5 land
+#      fraction 0.5) keeps the same offset from the contour at the corner arc as along the straight shore (±3 px:
+#      the bank follows the contour; a square corner would sit ~7 px further out); hill tops round against open
+#      ground (`hill.edge_radius_px`, crisp) except at a corner whose upper row hangs a face;
+#   8. water: the uploaded water texture is the 05 texture itself (luminance std = the source's, ≥ 0.06), the lift
+#      clips < 1 % of its pixels; on every seed-0 chunk with water, the baked land beside water against the lifted
+#      water mean differs by ≥ 0.10 luminance at full night (day difference × the night multiplier's weakest
+#      channel) and ≥ 0.12 turns of hue, by day, in winter and in drought (min values printed); the ford stones lie on
+#      water pixels of the rounded shore; no run of more than 24 identical luminance steps along any water edge of
+#      the river chunks (the STRUCT instrument on the chunk composited over the lifted water).
 #   Prints one MART2_GROUND line per check and MART2_GROUND_DONE failures=N; exits 1 on any failure.
 #   `godot --headless --path . --script res://tools/v8/mart2_ground_test.gd [-- --write]`
 #   Add `-- --rendered` without --headless for GPU readbacks at 2×, 1×, ½× and ¼×: source saturation must survive
@@ -86,6 +98,9 @@ func _run() -> void:
 	_check_banks(layer, map, size)
 	_check_dig(layer, world, map, size)
 	_check_data_only()
+	_check_shores_synthetic()
+	_check_hills_synthetic()
+	_check_water(layer, world, map, size)
 	if OS.get_cmdline_user_args().has("--rendered"):
 		if DisplayServer.get_name() == "headless":
 			_check("rendered_backend", false, "--rendered requires a window and GPU; the headless renderer supplies no pixels")
@@ -335,7 +350,7 @@ func _hearth(world: Node) -> Vector2i:
 func _check_determinism(layer: Node, map: GroundBaker.GroundMap, c: Vector2i, img: Image, write: bool) -> void:
 	var fresh: GroundBaker = GroundBaker.new()
 	var used: GroundBaker = layer.call("baker")
-	fresh.configure(ArtData.param("ground", {}), ArtData.param("water", {}))
+	fresh.configure(ArtData.param("ground", {}), ArtData.param("water", {}), ArtData.param("hill", {}))
 	var images: Array[Image] = []
 	for k: int in used.ground_count():
 		var t: Image = used.tiled(k)
@@ -585,3 +600,291 @@ func _check_data_only() -> void:
 		var want: float = 0.45 if ty == 4 else (0.40 if ty == 5 else 0.55)
 		ok = ok and float(opaque) / total >= want
 	_check("data_only_wall_renders", ok, "texture set %s; strip coverage %s; problems %s" % [(r.get("textures", {}) as Dictionary).get("face", ""), coverage, probs])
+
+
+## Fraction of land (opaque) pixels in the 5 × 5 box around (x, y).
+func _land_fraction(img: Image, x: int, y: int) -> float:
+	var n: int = 0
+	var land: int = 0
+	for dy: int in range(-2, 3):
+		for dx: int in range(-2, 3):
+			var px: int = x + dx
+			var py: int = y + dy
+			if px < 0 or py < 0 or px >= img.get_width() or py >= img.get_height():
+				continue
+			n += 1
+			if img.get_pixel(px, py).a > 0.5:
+				land += 1
+	return float(land) / maxf(1.0, float(n))
+
+
+## Distance from `centre` along `dir` to the first sign change of the baker's field (sampled every 0.25 px).
+func _field_radius(baker: GroundBaker, map: GroundBaker.GroundMap, centre: Vector2, dir: Vector2, pair: int) -> float:
+	var prev: float = baker.shore_distance(map, floori(centre.x), floori(centre.y), pair)
+	for k: int in range(1, 240):
+		var p: Vector2 = centre + dir * (k * 0.25)
+		var d: float = baker.shore_distance(map, floori(p.x), floori(p.y), pair)
+		if d != INF and prev != INF and signf(d) != signf(prev):
+			return k * 0.25
+		prev = d
+	return INF
+
+
+## Distance from `centre` along `dir` to where the image's land fraction first crosses 0.5 (going from `inside_land`).
+func _image_radius(img: Image, centre: Vector2, dir: Vector2, inside_land: bool) -> float:
+	for k: int in range(0, 80):
+		var p: Vector2 = centre + dir * float(k)
+		var f: float = _land_fraction(img, floori(p.x), floori(p.y))
+		if (f > 0.5) != inside_land:
+			return float(k)
+	return INF
+
+
+func _synthetic_baker() -> GroundBaker:
+	var b: GroundBaker = GroundBaker.new()
+	var ground: Dictionary = (ArtData.param("ground", {}) as Dictionary).duplicate()
+	ground["chunk_tiles"] = 8
+	b.configure(ground, ArtData.param("water", {}), ArtData.param("hill", {}))
+	var a: Image = Image.create(128, 128, false, Image.FORMAT_RGBA8)
+	a.fill(Color(0.40, 0.50, 0.20))
+	var c: Image = Image.create(128, 128, false, Image.FORMAT_RGBA8)
+	c.fill(Color(0.55, 0.45, 0.35))
+	b.set_grounds([a, c])
+	return b
+
+
+func _check_shores_synthetic() -> void:
+	var b: GroundBaker = _synthetic_baker()
+	var r: float = float(ArtData.param("water.shore_radius_px", 22))
+	var m: GroundBaker.GroundMap = GroundBaker.GroundMap.new()
+	m.setup(8, 8)
+	m.ground.fill(0)
+	# The L: a vertical river in column 2 (rows 0–5) turning east along row 5 to the map's edge.
+	for y: int in range(0, 6):
+		m.ground[y * 8 + 2] = GroundBaker.WATER
+	for x: int in range(2, 8):
+		m.ground[5 * 8 + x] = GroundBaker.WATER
+	var img: Image = b.bake(m, 0, 0)
+	# Outer corner: tile (2, 5)'s south-west corner (128, 384), a convex water corner centred r inside the water.
+	var outer: Vector2 = Vector2(2 * TILE + r, 6 * TILE - r)
+	# Inner corner: tile (3, 4)'s south-west corner (192, 320), a convex land corner centred r inside the land.
+	var inner: Vector2 = Vector2(3 * TILE + r, 5 * TILE - r)
+	var radii: Array[float] = []
+	var worst: float = 0.0
+	for k: int in 7:
+		var a: float = deg_to_rad(15.0 + k * 10.0)
+		var to_outer: Vector2 = Vector2(-cos(a), sin(a))
+		var to_inner: Vector2 = Vector2(-cos(a), sin(a))
+		var ro: float = _field_radius(b, m, outer, to_outer, 0)
+		var ri: float = _field_radius(b, m, inner, to_inner, 0)
+		radii.append(ro)
+		radii.append(ri)
+		worst = maxf(worst, maxf(absf(ro - r), absf(ri - r)))
+	_check("shore_quarter_circle", worst <= 3.0, "contour radius at the outer and inner corner along 7 rays each: %s (expected %.0f ±3 px; worst %.2f)" % [_fmt(radii), r, worst])
+	# A straight shore: tile (2, 2) water, (1, 2) land — the contour on x = 128 for every row away from corners.
+	var straight_worst: float = 0.0
+	var offsets: Array[float] = []
+	for y: int in range(2 * TILE + 8, 3 * TILE - 8, 4):
+		var x_field: float = _field_radius(b, m, Vector2(2 * TILE - 20, y + 0.5), Vector2.RIGHT, 0) + 2 * TILE - 20
+		straight_worst = maxf(straight_worst, absf(x_field - 2 * TILE))
+		offsets.append(_image_radius(img, Vector2(2 * TILE - 20, y), Vector2.RIGHT, true) - 20.0)
+	_check("shore_straight_on_tile_edge", straight_worst <= 1.0, "straight shore contour within %.2f px of the tile edge x = %d (bar 1)" % [straight_worst, 2 * TILE])
+	var straight_offset: float = _mean(offsets)
+	# The visible edge (land fraction 0.5) at the outer arc against the straight shore's offset (bank into water).
+	var arc: Array[float] = []
+	for k: int in 5:
+		var a: float = deg_to_rad(25.0 + k * 10.0)
+		arc.append(_image_radius(img, outer, Vector2(-cos(a), sin(a)), false))
+	var arc_offset: float = r - _mean(arc)
+	var square_offset: float = r * sqrt(2.0) - _mean(arc)
+	_check("shore_bank_follows_contour", absf(arc_offset - straight_offset) <= 3.0, "visible edge %.1f px into the water along the straight shore, %.1f px at the rounded corner (±3; a square corner would read %.1f)" % [straight_offset, arc_offset, square_offset])
+	img.save_png(OS.get_user_data_dir().path_join("mart21_shore_l.png"))
+
+
+func _check_hills_synthetic() -> void:
+	var b: GroundBaker = _synthetic_baker()
+	var r: float = float(ArtData.param("hill.edge_radius_px", 16))
+	var m: GroundBaker.GroundMap = GroundBaker.GroundMap.new()
+	m.setup(8, 8)
+	m.ground.fill(0)
+	for y: int in range(2, 5):
+		for x: int in range(2, 5):
+			var i: int = y * 8 + x
+			m.ground[i] = 1
+			m.crisp[i] = 1
+			m.rock[i] = 1
+			if y == 4:
+				m.face[i] = 1
+	var img: Image = b.bake(m, 0, 0)
+	var rock: Color = Color(0.55, 0.45, 0.35)
+	# North-west top corner (128, 128): rounded with radius r around (128 + r, 128 + r).
+	var centre: Vector2 = Vector2(2 * TILE + r, 2 * TILE + r)
+	var dir: Vector2 = Vector2(-1, -1).normalized()
+	var reach: float = INF
+	for k: int in range(0, 40):
+		var p: Vector2 = centre + dir * float(k)
+		if not _near_colour(img.get_pixel(floori(p.x), floori(p.y)), rock):
+			reach = float(k)
+			break
+	# South-west corner (128, 320) hangs a face: the top stays square there.
+	var square: bool = _near_colour(img.get_pixel(2 * TILE + 1, 5 * TILE - 2), rock)
+	_check("hill_top_rounded", absf(reach - r) <= 3.0 and square, "north-west top corner: rock ends %.0f px from the arc centre along the diagonal (expected %.0f ±3; a square corner reads %.1f); face corner square: %s" % [reach, r, r * sqrt(2.0), square])
+
+
+## RGBA8 quantises a fill colour by up to 1/510 per channel.
+func _near_colour(a: Color, b: Color) -> bool:
+	return absf(a.r - b.r) < 0.01 and absf(a.g - b.g) < 0.01 and absf(a.b - b.b) < 0.01 and a.a > 0.5
+
+
+func _mean(xs: Array[float]) -> float:
+	var t: float = 0.0
+	var n: int = 0
+	for v: float in xs:
+		if v != INF:
+			t += v
+			n += 1
+	return t / n if n > 0 else INF
+
+
+func _fmt(xs: Array[float]) -> String:
+	var out: PackedStringArray = PackedStringArray()
+	for v: float in xs:
+		out.append("%.1f" % v)
+	return ", ".join(out)
+
+
+func _check_water(layer: Node, world: Node, map: GroundBaker.GroundMap, size: int) -> void:
+	var water_src: Image = ArtData.image(str((ArtData.bindings().get("terrain", {}) as Dictionary).get("water", "")))
+	var material: ShaderMaterial = layer.get("_material")
+	var uploaded: Texture2D = material.get_shader_parameter("water_tex") if material != null else null
+	var up_img: Image = uploaded.get_image() if uploaded != null else null
+	if water_src == null or up_img == null:
+		_check("water_texture", false, "no water texture")
+		return
+	up_img.convert(Image.FORMAT_RGBA8)
+	var src_std: float = float(Tone.metrics(water_src)["std"])
+	var up_std: float = float(Tone.metrics(up_img)["std"])
+	_check("water_texture_restored", absf(src_std - up_std) < 0.001 and up_std >= 0.06, "uploaded water luminance std %.4f = the 05 texture's %.4f (≥ 0.06; M-ART2 D19 compressed it to 0.025)" % [up_std, src_std])
+	var chunks: Array[Vector2i] = []
+	for cy: int in ceili(float(map.height) / size):
+		for cx: int in ceili(float(map.width) / size):
+			var has: bool = false
+			for ty: int in range(cy * size, mini(map.height, cy * size + size)):
+				for tx: int in range(cx * size, mini(map.width, cx * size + size)):
+					has = has or map.at(tx, ty) == GroundBaker.WATER
+			if has:
+				chunks.append(Vector2i(cx, cy))
+	var weakest: float = float(layer.call("night_weakest"))
+	for tone: String in ["day", "winter", "drought"]:
+		if tone != "day":
+			layer.call("force_tone", tone)
+		var min_night: float = INF
+		var min_hue: float = INF
+		var clipped: float = 0.0
+		var measured: int = 0
+		var data: PackedByteArray = up_img.get_data()
+		for c: Vector2i in chunks:
+			layer.call("bake_chunk_now", c)
+			var img: Image = layer.call("chunk_image", c)
+			var lift: Vector3 = ((layer.call("water_lifts") as Dictionary).get(c, [Vector3.ZERO]) as Array)[0]
+			var water: Color = Tone.mean_rgb(up_img)
+			water = Color(clampf(water.r + lift.x, 0, 1), clampf(water.g + lift.y, 0, 1), clampf(water.b + lift.z, 0, 1))
+			# Land pixels of tiles beside water (8-neighbourhood), read from the baked chunk itself.
+			var by_ground: Dictionary = {}
+			for ty: int in range(c.y * size, c.y * size + size):
+				for tx: int in range(c.x * size, c.x * size + size):
+					var g: int = map.at(tx, ty)
+					if g < 0:
+						continue
+					var beside: bool = false
+					for d: Vector2i in [Vector2i(-1, -1), Vector2i(0, -1), Vector2i(1, -1), Vector2i(-1, 0), Vector2i(1, 0), Vector2i(-1, 1), Vector2i(0, 1), Vector2i(1, 1)]:
+						beside = beside or map.at(tx + d.x, ty + d.y) == GroundBaker.WATER
+					if not beside:
+						continue
+					var tile: Image = img.get_region(Rect2i((tx - c.x * size) * TILE + 16, (ty - c.y * size) * TILE + 16, 32, 32))
+					if not by_ground.has(g):
+						by_ground[g] = []
+					(by_ground[g] as Array).append(Tone.mean_rgb(tile))
+			for g: int in by_ground.keys():
+				var sum: Vector3 = Vector3.ZERO
+				for col: Color in by_ground[g]:
+					sum += Vector3(col.r, col.g, col.b)
+				sum /= float((by_ground[g] as Array).size())
+				var land: Color = Color(sum.x, sum.y, sum.z)
+				min_night = minf(min_night, absf(water.get_luminance() - land.get_luminance()) * weakest)
+				var dh: float = absf(water.h - land.h)
+				min_hue = minf(min_hue, minf(dh, 1.0 - dh))
+				measured += 1
+			var over: int = 0
+			for i: int in range(0, data.size(), 4):
+				if data[i] / 255.0 + lift.x > 1.0 or data[i + 1] / 255.0 + lift.y > 1.0 or data[i + 2] / 255.0 + lift.z > 1.0:
+					over += 1
+			clipped = maxf(clipped, float(over) / (data.size() / 4.0))
+		_check("water_contrast_%s" % tone, measured > 0 and min_night >= 0.10 and min_hue >= 0.12 and clipped < 0.01, "%d chunks with water, %d land classes beside water: min luminance difference at full night %.4f (≥ 0.10), min hue distance %.4f turns (≥ 0.12), lifted texture clipped %.4f (< 0.01)" % [chunks.size(), measured, min_night, min_hue, clipped])
+	layer.call("force_tone", "day")
+	_check_fords(layer, world, map, size)
+	_check_water_steps(layer, map, size, chunks, up_img)
+
+
+func _check_fords(layer: Node, world: Node, map: GroundBaker.GroundMap, size: int) -> void:
+	var space: Dictionary = SimReads.read(world, "get_space")
+	var xs: PackedInt32Array = space.get("ford_xs", PackedInt32Array())
+	var ys: PackedInt32Array = space.get("ford_ys", PackedInt32Array())
+	var spots: Array = layer.get("STONE_SPOTS")
+	var total: int = 0
+	var on_water: int = 0
+	var rounded: int = 0
+	for i: int in mini(xs.size(), ys.size()):
+		var t: Vector2i = Vector2i(xs[i], ys[i])
+		var c: Vector2i = Vector2i(floori(float(t.x) / size), floori(float(t.y) / size))
+		layer.call("bake_chunk_now", c)
+		var img: Image = layer.call("chunk_image", c)
+		for spot: Variant in spots:
+			var p: Vector2i = (t - c * size) * TILE + (spot as Vector2i)
+			total += 1
+			if img.get_pixelv(p).a < 0.5:
+				on_water += 1
+		var b: GroundBaker = layer.call("baker")
+		for corner: Vector2i in [Vector2i(2, 2), Vector2i(61, 2), Vector2i(2, 61), Vector2i(61, 61)]:
+			var d: float = b.shore_distance(map, t.x * TILE + corner.x, t.y * TILE + corner.y, 0)
+			if d != INF and d > 0.0:
+				rounded += 1
+	_check("fords_on_rounded_water", total > 0 and on_water * 10 >= total * 9, "%d ford tiles: %d of %d stone spots on water pixels (≥ 90 %%); %d ford-tile corners turned to land by rounding" % [xs.size(), on_water, total, rounded])
+
+
+func _check_water_steps(layer: Node, map: GroundBaker.GroundMap, size: int, chunks: Array[Vector2i], water: Image) -> void:
+	var worst: int = 0
+	var runs: int = 0
+	var p: int = water.get_width()
+	for c: Vector2i in chunks.slice(0, 6):
+		layer.call("bake_chunk_now", c)
+		var img: Image = (layer.call("chunk_image", c) as Image).duplicate()
+		var lift: Vector3 = ((layer.call("water_lifts") as Dictionary).get(c, [Vector3.ZERO]) as Array)[0]
+		var x0: int = c.x * size
+		var y0: int = c.y * size
+		for y: int in img.get_height():
+			for x: int in img.get_width():
+				var col: Color = img.get_pixel(x, y)
+				if col.a < 1.0:
+					var w: Color = water.get_pixel(posmod(x0 * TILE + x, p), posmod(y0 * TILE + y, p))
+					w = Color(clampf(w.r + lift.x, 0, 1), clampf(w.g + lift.y, 0, 1), clampf(w.b + lift.z, 0, 1))
+					img.set_pixel(x, y, w.lerp(Color(col, 1.0), col.a))
+		for vertical: bool in [true, false]:
+			for line: int in range(1, size):
+				var run_start: int = -1
+				for along: int in range(0, size + 1):
+					var ok: bool = false
+					if along < size:
+						var a: Vector2i = Vector2i(x0 + line - 1, y0 + along) if vertical else Vector2i(x0 + along, y0 + line - 1)
+						var b: Vector2i = a + (Vector2i(1, 0) if vertical else Vector2i(0, 1))
+						var wa: bool = map.at(a.x, a.y) == GroundBaker.WATER
+						var wb: bool = map.at(b.x, b.y) == GroundBaker.WATER
+						ok = wa != wb and map.at(a.x, a.y) != GroundBaker.VOID and map.at(b.x, b.y) != GroundBaker.VOID
+					if ok and run_start < 0:
+						run_start = along
+					elif not ok and run_start >= 0:
+						runs += 1
+						var start: Vector2i = Vector2i(line * TILE, run_start * TILE) if vertical else Vector2i(run_start * TILE, line * TILE)
+						worst = maxi(worst, _longest_step_run(img, start, (along - run_start) * TILE, vertical))
+						run_start = -1
+	_check("water_edges_not_square", runs > 0 and worst <= 24, "%d water-edge runs in %d river chunks (composited over the lifted water): longest identical luminance step run %d px (bar 24)" % [runs, mini(6, chunks.size()), worst])

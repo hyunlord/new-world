@@ -13,9 +13,15 @@
 #   (and a neighbour chunk when the tile is on its border, since blends read one tile across) and only those rebake;
 #   a season or drought change and an F12 params reload rebake every cached chunk.
 # Tone: ground textures are resampled to `ground.texture_period_px`, seasoned (winter, drought), snowed (winter)
-#   and capped (tone.gd `cap_ground`, the ENV1 targets) once per tone state. Water has a separate blue contrast floor.
-#   Below 1× a data-driven per-terrain tint is applied by the chunk shader after texture reduction; neither that
-#   tint nor the ground cap touches wall strips, tree sprites or canopies (D19).
+#   and capped (tone.gd `cap_ground`, the ENV1 targets) once per tone state. Below 1× a data-driven per-terrain tint
+#   is applied by the chunk shader after texture reduction; neither that tint nor the ground cap touches wall strips,
+#   tree sprites or canopies (MART2 D19).
+# Water (M-ART2.1 §2.1, MART21_DECISIONS D3): the 05 water texture is drawn with its own texture (no recolour); each
+#   chunk's shader adds a lift to it — a grey offset, and a hue offset only when the hue would sit too close — so the
+#   water's mean stays `water.minimum_land_luminance_difference` above the mean of every land ground that touches
+#   water in that chunk, at full night (the gap is divided by the night multiplier's weakest channel) and at every
+#   zoom's map tint, and its hue at least `water.minimum_land_hue_distance` turns away. Recomputed per tone (winter
+#   snow, drought) because the land means change with it.
 # Hooks for tests: `bake_counts` (chunk → bakes), `last_bake_usec`, `chunk_image(c)`, `ground_ids`.
 # Bridge methods: via SimReads get_terrain_snapshot, get_building_snapshot, get_space, get_world_info,
 #   get_time_snapshot, get_story, get_agent_snapshot; signal world_reset.
@@ -64,7 +70,11 @@ var _lru: Array[Vector2i] = []
 var _doors: Dictionary = {}
 var _door_tex: Dictionary = {}
 var _water_tex: ImageTexture = null
-var _water_colour_target: Color = Color.WHITE
+## The water texture's mean colour, and per ground index the prepared texture's mean colour (the lift's inputs).
+var _water_mean: Color = Color.BLACK
+var _ground_means: Array[Color] = []
+## Chunk → [lift (Vector3), min luminance difference (day), min hue distance] of its last bake (tests, the report).
+var _lifts: Dictionary = {}
 var _material: ShaderMaterial = null
 var _problems: Array[String] = []
 var _grounds_dirty: bool = false
@@ -228,7 +238,7 @@ func _process(_delta: float) -> void:
 
 
 func _configure() -> void:
-	_baker.configure(ArtData.param("ground", {}), ArtData.param("water", {}))
+	_baker.configure(ArtData.param("ground", {}), ArtData.param("water", {}), ArtData.param("hill", {}))
 	var t0: int = Time.get_ticks_usec()
 	_baker.warm()
 	warm_usec = Time.get_ticks_usec() - t0
@@ -315,37 +325,131 @@ func _prepare_grounds() -> void:
 	var person_std: float = float((ArtData.manifest().get("tone_reference", {}) as Dictionary).get("person_luminance_std", 0.17))
 	var images: Array[Image] = []
 	_tone_report.clear()
+	_ground_means.clear()
 	for id: String in ground_ids:
-		images.append(_ground_image(id, period, tone, season, person_std))
+		var prepared: Image = _ground_image(id, period, tone, season, person_std)
+		images.append(prepared)
+		_ground_means.append(Tone.mean_rgb(prepared, 3))
 		_tone_report.append({"id": id, "passed": _last_cap.get("passed", false), "after": _last_cap.get("after", {})})
 	_baker.set_grounds(images)
 	var water: Image = ArtData.image(str(ArtData.bindings().get("terrain", {}).get("water", "")))
 	if water != null:
-		_water_colour_target = _water_colour(tone)
-		water = Tone.water_colour(water, _water_colour_target, float(ArtData.param("water.texture_std", 0.025)))
+		_water_mean = Tone.mean_rgb(water, 1)
 		_water_tex = ImageTexture.create_from_image(water)
 		if _material != null:
 			_material.set_shader_parameter("water_tex", _water_tex)
 			_material.set_shader_parameter("water_period", float(water.get_width()))
-			_material.set_shader_parameter("water_colour", Vector3(_water_colour_target.r, _water_colour_target.g, _water_colour_target.b))
+			var rgb: Array = ArtData.param("water.map_mode_colour", [0.42, 0.62, 0.76])
+			if rgb.size() == 3:
+				_material.set_shader_parameter("water_colour", Vector3(float(rgb[0]), float(rgb[1]), float(rgb[2])))
 			_material.set_shader_parameter("water_map_tint_strength", float(ArtData.param("water.map_mode_tint_strength", 0.3)))
 
 
-## Bright water remains at least the configured luminance distance above the land ceiling, including full night.
-## A common grey offset preserves the configured blue chroma; the contrast allowance is data, not an asset name.
-func _water_colour(tone: Dictionary) -> Color:
-	var rgb: Array = ArtData.param("water.colour", [0.42, 0.62, 0.76])
-	var colour: Color = Color(float(rgb[0]), float(rgb[1]), float(rgb[2])) if rgb.size() == 3 else Color.WHITE
+## The weakest channel of the full-night multiplier: a luminance difference shrinks at most by this factor at night.
+static func night_weakest() -> float:
 	var night: Array = ArtData.param("light.night_tint", [0.86, 0.94, 1.08])
 	var weakest: float = clampf(float(ArtData.param("light.night_value", 0.55)), 0.01, 1.0)
 	if night.size() == 3:
 		weakest *= minf(1.0, minf(float(night[0]), minf(float(night[1]), float(night[2]))))
-	var land_max: float = float(tone.get("mean_max", 0.38))
-	var gap: float = float(ArtData.param("water.minimum_land_luminance_difference", 0.10))
-	var target: float = land_max + gap / maxf(0.01, weakest) + float(ArtData.param("water.contrast_margin", 0.01))
-	var current: float = Tone.LR * colour.r + Tone.LG * colour.g + Tone.LB * colour.b
-	var shift: float = maxf(0.0, target - current)
-	return Color(clampf(colour.r + shift, 0.0, 1.0), clampf(colour.g + shift, 0.0, 1.0), clampf(colour.b + shift, 0.0, 1.0))
+	return weakest
+
+
+## The map-tint strength of the land at each texture factor (1, 2, 4) under the current tone.
+func _strengths() -> Array[float]:
+	var strengths: Dictionary = ArtData.param("ground.map_mode.tint_strength", {})
+	var winter: float = float(ArtData.param("ground.map_mode.winter_strength", 0.25)) if _tone == "winter" else 1.0
+	return [0.0, clampf(float(strengths.get("0.5", 0.0)) * winter, 0.0, 1.0), clampf(float(strengths.get("0.25", 0.0)) * winter, 0.0, 1.0)]
+
+
+## The water lift of chunk `c` (D3): [lift (Vector3), min luminance difference by day, min hue distance] against
+## every land ground touching water in the chunk, over the three zoom tints; the zero lift when no land touches water.
+func water_lift(c: Vector2i) -> Array:
+	var size: int = _baker.chunk_tiles
+	var touching: Dictionary = {}
+	for ty: int in range(c.y * size, c.y * size + size):
+		for tx: int in range(c.x * size, c.x * size + size):
+			if _map.at(tx, ty) != GroundBaker.WATER:
+				continue
+			for dy: int in range(-1, 2):
+				for dx: int in range(-1, 2):
+					var g: int = _map.at(tx + dx, ty + dy)
+					if g >= 0 and g < _ground_means.size():
+						touching[g] = not _map.is_crisp(tx + dx, ty + dy) or bool(touching.get(g, false))
+	if touching.is_empty() or not bool(ArtData.param("water.texture_lift", true)):
+		return [Vector3.ZERO, INF, INF]
+	var gap: float = float(ArtData.param("water.minimum_land_luminance_difference", 0.10)) / night_weakest() + float(ArtData.param("water.contrast_margin", 0.01))
+	var min_hue: float = float(ArtData.param("water.minimum_land_hue_distance", 0.12)) + float(ArtData.param("water.contrast_margin", 0.01))
+	var rgb: Array = ArtData.param("water.map_mode_colour", [0.42, 0.62, 0.76])
+	var map_colour: Color = Color(float(rgb[0]), float(rgb[1]), float(rgb[2])) if rgb.size() == 3 else _water_mean
+	var water_strength: float = float(ArtData.param("water.map_mode_tint_strength", 0.3))
+	var palette: Array[Color] = _palette()
+	var strengths: Array[float] = _strengths()
+	var lands: Array[Color] = []
+	var weights: Array[float] = []
+	for g: int in touching.keys():
+		for k: int in strengths.size():
+			var s: float = strengths[k] if bool(touching[g]) and g < palette.size() and palette[g].a > 0.0 else 0.0
+			lands.append(_ground_means[g].lerp(Color(palette[g], 1.0) if g < palette.size() else _ground_means[g], s))
+			weights.append(strengths[k] * water_strength)
+	# Hue: when the water's mean hue sits too close to a land's, move the mean (an RGB offset at the water's own
+	# saturation and value) to the nearest hue that is far enough from every land.
+	var mean: Color = _water_mean
+	var worst_hue: float = INF
+	for land: Color in lands:
+		worst_hue = minf(worst_hue, _hue_distance(mean, land))
+	var offset: Vector3 = Vector3.ZERO
+	if worst_hue < min_hue:
+		var best: float = mean.h
+		for step: int in range(1, 101):
+			for turn: float in [1.0, -1.0]:
+				var h: float = fposmod(mean.h + turn * step * 0.005, 1.0)
+				var ok: bool = true
+				for land: Color in lands:
+					ok = ok and _hue_distance(Color.from_hsv(h, mean.s, mean.v), land) >= min_hue
+				if ok:
+					best = h
+					break
+			if best != mean.h:
+				break
+		var moved: Color = Color.from_hsv(best, mean.s, mean.v)
+		offset = Vector3(moved.r - mean.r, moved.g - mean.g, moved.b - mean.b)
+		mean = moved
+	# Value: a grey offset (hue-neutral) so that every zoom's mixed water clears every zoom's land by the gap.
+	var y0: float = Tone.LR * mean.r + Tone.LG * mean.g + Tone.LB * mean.b
+	var yc: float = Tone.LR * map_colour.r + Tone.LG * map_colour.g + Tone.LB * map_colour.b
+	var grey: float = 0.0
+	for i: int in lands.size():
+		var a: float = clampf(weights[i], 0.0, 0.99)
+		var y_land: float = Tone.LR * lands[i].r + Tone.LG * lands[i].g + Tone.LB * lands[i].b
+		grey = maxf(grey, (y_land + gap - a * yc) / (1.0 - a) - y0)
+	offset += Vector3(grey, grey, grey)
+	var lifted: Color = Color(clampf(_water_mean.r + offset.x, 0.0, 1.0), clampf(_water_mean.g + offset.y, 0.0, 1.0), clampf(_water_mean.b + offset.z, 0.0, 1.0))
+	var min_dy: float = INF
+	var min_dh: float = INF
+	for i: int in lands.size():
+		var shown: Color = lifted.lerp(map_colour, clampf(weights[i], 0.0, 1.0))
+		min_dy = minf(min_dy, absf(shown.get_luminance() - lands[i].get_luminance()))
+		min_dh = minf(min_dh, _hue_distance(shown, lands[i]))
+	return [offset, min_dy, min_dh]
+
+
+static func _hue_distance(a: Color, b: Color) -> float:
+	var d: float = absf(a.h - b.h)
+	return minf(d, 1.0 - d)
+
+
+## The water's last computed lift per baked chunk (tests and the report): chunk → [lift, min ΔY by day, min ΔH].
+func water_lifts() -> Dictionary:
+	return _lifts
+
+
+## Re-prepare the grounds under tone `name` ("day", "winter", "drought") and rebake the cache (tests and captures).
+func force_tone(name: String) -> void:
+	_tone = name
+	_prepare_grounds()
+	_space_full = true
+	_apply_space(SimReads.read(_world_sim, "get_space"))
+	_rebake_all()
 
 
 func _ground_image(id: String, period: int, tone: Dictionary, season: Dictionary, person_std: float) -> Image:
@@ -440,8 +544,9 @@ func _apply_space(space: Dictionary) -> void:
 		var before: int = _map.ground[i]
 		var before_crisp: int = _map.crisp[i]
 		var had_face: bool = faces.has(t)
+		var before_rock: int = _map.rock[i]
 		_compute_tile(t, terrain_cfg, dug, floors, walls, faces)
-		if before != _map.ground[i] or before_crisp != _map.crisp[i] or had_face != faces.has(t) or old_walls.has(t) != walls.has(t) or str(old_sets.get(t, "")) != str(_walls.cell_set.get(t, "")) or old_open.has(t) != _walls.openings.has(t):
+		if before != _map.ground[i] or before_crisp != _map.crisp[i] or before_rock != _map.rock[i] or had_face != faces.has(t) or old_walls.has(t) != walls.has(t) or str(old_sets.get(t, "")) != str(_walls.cell_set.get(t, "")) or old_open.has(t) != _walls.openings.has(t):
 			_mark(dirty, t.x, t.y, size)
 	_walls.faces = faces
 	if _grounds_dirty:
@@ -467,6 +572,7 @@ func _compute_tile(t: Vector2i, terrain_cfg: Dictionary, dug: Dictionary, floors
 	var row: Dictionary = _terrain_row(_terrain[i])
 	var g: int
 	var crisp: int = 0
+	var rock: int = 0
 	faces.erase(t)
 	if bool(row.get("water", false)):
 		g = GroundBaker.WATER
@@ -478,6 +584,7 @@ func _compute_tile(t: Vector2i, terrain_cfg: Dictionary, dug: Dictionary, floors
 		g = _index_of(str(row.get("ground", terrain_cfg.get("fallback", ""))))
 		if bool(row.get("blocks", false)):
 			crisp = 1
+			rock = 1
 			var south: Vector2i = t + Vector2i(0, 1)
 			if t.y + 1 < _h and bool(row.get("standing_face", false)) and (dug.has(south) or not _blocking(i + _w)) and not walls.has(south):
 				faces[t] = true
@@ -485,8 +592,11 @@ func _compute_tile(t: Vector2i, terrain_cfg: Dictionary, dug: Dictionary, floors
 			g = _index_of(_clearing_id)
 	if walls.has(t):
 		crisp = 1
+		rock = 0
 	_map.ground[i] = g
 	_map.crisp[i] = crisp
+	_map.rock[i] = rock
+	_map.face[i] = 1 if faces.has(t) else 0
 
 
 func _union(a: Dictionary, b: Dictionary) -> Array:
@@ -667,6 +777,9 @@ func _bake_chunk(c: Vector2i) -> void:
 		_chunks[c] = sprite
 	var chunk_material: ShaderMaterial = _material.duplicate() as ShaderMaterial
 	chunk_material.set_shader_parameter("terrain_tint_tex", _terrain_tint(c))
+	var lift: Array = water_lift(c)
+	_lifts[c] = lift
+	chunk_material.set_shader_parameter("water_lift", lift[0])
 	chunk_material.set_shader_parameter("chunk_tiles", float(_baker.chunk_tiles))
 	chunk_material.set_shader_parameter("map_tint_strength", _map_tint_strength())
 	sprite.material = chunk_material
@@ -718,9 +831,25 @@ func _terrain_tint(c: Vector2i) -> ImageTexture:
 	var size: int = _baker.chunk_tiles
 	var img: Image = Image.create(size + 2, size + 2, false, Image.FORMAT_RGBA8)
 	var mean_max: float = clampf(float(ArtData.param("ground.tone.mean_max", 0.38)), 0.0, 1.0)
+	img.fill(Color(mean_max * 0.9, mean_max * 0.9, mean_max * 0.9, 0.0))
+	var palette: Array[Color] = _palette()
+	for y: int in range(-1, size + 1):
+		for x: int in range(-1, size + 1):
+			var tx: int = c.x * size + x
+			var ty: int = c.y * size + y
+			var index: int = _map.at(tx, ty)
+			if index < 0 or index >= ground_ids.size() or _map.is_crisp(tx, ty):
+				continue
+			img.set_pixel(x + 1, y + 1, palette[index])
+	return ImageTexture.create_from_image(img)
+
+
+## The map-mode colour per ground index (`ground.map_mode.tint_by_ground`, held under the tone caps); alpha 0 for a
+## ground with no declared colour.
+func _palette() -> Array[Color]:
+	var mean_max: float = clampf(float(ArtData.param("ground.tone.mean_max", 0.38)), 0.0, 1.0)
 	var saturation_max: float = clampf(float(ArtData.param("ground.tone.saturation_max", 0.30)), 0.0, 1.0)
 	var neutral: Color = Color(mean_max * 0.9, mean_max * 0.9, mean_max * 0.9, 0.0)
-	img.fill(neutral)
 	var colours: Dictionary = ArtData.param("ground.map_mode.tint_by_ground", {})
 	var palette: Array[Color] = []
 	for id: String in ground_ids:
@@ -731,17 +860,9 @@ func _terrain_tint(c: Vector2i) -> ImageTexture:
 			colour = Color.from_hsv(colour.h, minf(colour.s, saturation_max), colour.v)
 			var luminance: float = Tone.LR * colour.r + Tone.LG * colour.g + Tone.LB * colour.b
 			var value: float = minf(1.0, mean_max / maxf(luminance, 1e-12))
-			colour = Color(colour.r * value, colour.g * value, colour.b * value)
+			colour = Color(colour.r * value, colour.g * value, colour.b * value, 1.0)
 		palette.append(colour)
-	for y: int in range(-1, size + 1):
-		for x: int in range(-1, size + 1):
-			var tx: int = c.x * size + x
-			var ty: int = c.y * size + y
-			var index: int = _map.at(tx, ty)
-			if index < 0 or index >= ground_ids.size() or _map.is_crisp(tx, ty):
-				continue
-			img.set_pixel(x + 1, y + 1, palette[index])
-	return ImageTexture.create_from_image(img)
+	return palette
 
 
 ## `img` reduced by `f` (1 = itself): below 1× a chunk is drawn at the screen's resolution (½ or ¼ size, scaled

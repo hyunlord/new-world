@@ -1,7 +1,9 @@
-// ground_chunk.gdshader — one baked ground chunk over the water (M-ART2, MART2_DECISIONS D5).
+// ground_chunk.gdshader — one baked ground chunk over the water (M-ART2, MART2_DECISIONS D5; M-ART2.1 D3).
 // The chunk texture is opaque on land and transparent on water and its dithered bank; beneath it this shader draws
-// the seamless water texture sampled with world offsets (so it continues across chunks) and a gentle drift
-// (`drift_hz` cycles per second around a `drift_px` circle). World position comes from MODEL_MATRIX in vertex().
+// the seamless 05 water texture sampled with world offsets (so it continues across chunks) and a gentle drift
+// (`drift_hz` cycles per second around a `drift_px` circle), plus the chunk's `water_lift` (an RGB offset that keeps
+// the texture's own variation while moving its mean clear of the land beside it; ground_layer.gd `water_lift`).
+// Below 1× land and water mix toward their map-mode colours. World position comes from MODEL_MATRIX in vertex().
 shader_type canvas_item;
 
 uniform sampler2D water_tex : repeat_enable, filter_nearest;
@@ -13,6 +15,7 @@ uniform sampler2D terrain_tint_tex : filter_linear;
 uniform float chunk_tiles = 16.0;
 uniform float map_tint_strength = 0.0;
 uniform vec3 water_colour = vec3(0.42, 0.62, 0.76);
+uniform vec3 water_lift = vec3(0.0);
 uniform float water_map_tint_strength = 0.3;
 
 varying vec2 world_pos;
@@ -31,6 +34,7 @@ void fragment() {
 	float phase = 6.28318530718 * drift_hz * TIME;
 	vec2 drift = drift_px * vec2(cos(phase), sin(phase));
 	vec4 water = texture(water_tex, (floor(world_pos) + drift) / water_period);
+	water.rgb = clamp(water.rgb + water_lift, vec3(0.0), vec3(1.0));
 	water.rgb = mix(water.rgb, water_colour, map_tint_strength * water_map_tint_strength);
 	COLOR = vec4(mix(water.rgb, land.rgb, land.a), 1.0);
 }
