@@ -33,6 +33,7 @@ mod routine_trace;
 mod runner;
 mod seasons_forage;
 pub mod space;
+mod steward;
 mod summary;
 mod winter_severity;
 mod wood_work;

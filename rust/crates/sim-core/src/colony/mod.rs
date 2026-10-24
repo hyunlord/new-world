@@ -18,6 +18,7 @@ pub mod neighbours;
 mod orders;
 pub mod people;
 pub mod skills;
+pub mod steward;
 pub mod story;
 pub mod values;
 pub mod wildlife;

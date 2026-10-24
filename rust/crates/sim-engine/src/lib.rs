@@ -354,6 +354,10 @@ pub struct SimResources {
     /// Current tick — refreshed by [`SimEngine::tick`] before systems run.
     pub current_tick: u64,
 
+    /// Saved separately in the v7 body so the v6 resource layout stays readable.
+    #[serde(skip)]
+    pub steward: sim_core::colony::steward::StewardState,
+
     /// FFI-originated building placement events, drained each tick by
     /// `BuildingStampSystem`. Pushed by `sim_bridge::WorldSimNode::on_building_placed`
     /// (which delegates to `sim_bridge::ffi::enqueue_building_placed`).
@@ -749,6 +753,7 @@ impl SimResources {
             material_registry: registry,
             material_blocking_cache: blocking_cache,
             current_tick: 0,
+            steward: Default::default(),
             building_event_queue: VecDeque::new(),
             causal_log: CausalLogStorage::new(),
             next_event_id: AtomicU64::new(0),

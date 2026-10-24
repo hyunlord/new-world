@@ -78,6 +78,8 @@ pub struct ColonyArgs {
     pub story: String,
     /// M5.5: `--neighbours on|off` — the neighbours, migrants and caravans on (the default) or off (the control).
     pub neighbours: String,
+    /// Explicit automatic assistant opt-in; probes default to off.
+    pub steward: bool,
 }
 
 impl ColonyArgs {
@@ -96,6 +98,7 @@ impl ColonyArgs {
             save_out: None,
             story: "on".into(),
             neighbours: "on".into(),
+            steward: false,
         };
         let mut args = args.into_iter();
         while let Some(flag) = args.next() {
@@ -127,6 +130,9 @@ impl ColonyArgs {
                 "--save-out" => parsed.save_out = Some(value.into()),
                 "--story" if matches!(value.as_str(), "on" | "off" | "no-beasts") => {
                     parsed.story = value
+                }
+                "--steward" if matches!(value.as_str(), "on" | "off") => {
+                    parsed.steward = value == "on"
                 }
                 "--neighbours" if matches!(value.as_str(), "on" | "off") => {
                     parsed.neighbours = value
@@ -859,6 +865,26 @@ pub fn resolve(
     spec: &Value,
     pending_avoid: &mut Vec<(u32, u32)>,
 ) -> Result<Vec<Command>, String> {
+    if spec["source"].as_str() == Some("Steward") {
+        if spec["phase"].as_str() != Some("after_assignment") {
+            return Err("Steward source requires after_assignment phase".into());
+        }
+        let rule = u16::try_from(spec["rule"].as_u64().ok_or("Steward source needs rule")?)
+            .map_err(|_| "invalid rule")?;
+        let mut inner = spec.clone();
+        if let Some(object) = inner.as_object_mut() {
+            object.remove("source");
+        }
+        return resolve(engine, &inner, pending_avoid).map(|commands| {
+            commands
+                .into_iter()
+                .map(|command| Command::Steward {
+                    rule,
+                    command: Box::new(command),
+                })
+                .collect()
+        });
+    }
     let name = spec["cmd"].as_str().ok_or("every entry needs a cmd")?;
     let rect = |s: &Value| -> Result<(u32, u32, u32, u32), String> {
         Ok((
@@ -1365,6 +1391,15 @@ pub fn resolve(
             let (x0, y0, x1, y1) = rect(spec)?;
             vec![Command::CancelHunt { x0, y0, x1, y1 }]
         }
+        ("set_steward", None) => vec![Command::SetSteward {
+            on: spec["on"].as_bool().ok_or("set_steward needs on")?,
+            scope: match spec["scope"].as_str().unwrap_or("all") {
+                "all" => sim_core::colony::steward::StewardScope::All,
+                "housing" => sim_core::colony::steward::StewardScope::Housing,
+                "food" => sim_core::colony::steward::StewardScope::Food,
+                _ => return Err("invalid steward scope".into()),
+            },
+        }],
         ("set_dress_order", None) => vec![Command::SetDressOrder {
             on: spec["on"].as_bool().unwrap_or(true),
         }],
@@ -1410,7 +1445,18 @@ fn mode_name(mode: BillMode) -> &'static str {
 
 /// A command as a concrete script entry.
 pub fn command_json(tick: u64, cmd: &Command) -> Value {
+    if let Command::Steward { rule, command } = cmd {
+        let mut v = command_json(tick, command);
+        v["source"] = json!("Steward");
+        v["phase"] = json!("after_assignment");
+        v["rule"] = json!(rule);
+        return v;
+    }
     let mut v = match cmd {
+        Command::Steward { .. } => return Value::Null,
+        Command::SetSteward { on, scope } => {
+            json!({"on": on, "scope": match scope { sim_core::colony::steward::StewardScope::All => "all", sim_core::colony::steward::StewardScope::Housing => "housing", sim_core::colony::steward::StewardScope::Food => "food" }})
+        }
         Command::DesignateChop { x0, y0, x1, y1 }
         | Command::DesignateQuarry { x0, y0, x1, y1 }
         | Command::DesignateDig { x0, y0, x1, y1 }
@@ -1539,7 +1585,7 @@ pub fn colony_fingerprint(engine: &SimEngine) -> String {
         .map(|(_, (a, p, j, k))| (a.id, j.copied(), k.copied(), (p.x, p.y)))
         .collect();
     jobs.sort_by_key(|row| row.0);
-    let text = format!(
+    let mut text = format!(
         "{:?}|{:?}|{:?}|{:?}|{:?}|{:?}|{:?}|{:?}|{:?}|{:?}|{}|{:?}|{:?}|{:?}",
         c.trees.keys().collect::<Vec<_>>(),
         c.designations,
@@ -1557,6 +1603,12 @@ pub fn colony_fingerprint(engine: &SimEngine) -> String {
         // M5.5: the neighbours and their visitors.
         c.neighbours,
     );
+    if engine.resources.steward.enabled || !engine.resources.steward.owned.is_empty() {
+        let mut state = engine.resources.steward.clone();
+        state.replay = false;
+        state.pending.clear();
+        text.push_str(&format!("|{state:?}"));
+    }
     format!("{}-{:016x}", super::fingerprint(engine), fnv(&text))
 }
 
@@ -1626,6 +1678,21 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
     let mut twin = args
         .check_determinism
         .then(|| probe_world(seed, &args.story, &args.neighbours));
+    let replay = script
+        .iter()
+        .any(|entry| entry.spec["source"].as_str() == Some("Steward"));
+    for e in std::iter::once(&mut engine).chain(twin.iter_mut()) {
+        e.resources.steward.replay = replay;
+        if args.steward && !replay {
+            submit(
+                e,
+                Command::SetSteward {
+                    on: true,
+                    scope: sim_core::colony::steward::StewardScope::All,
+                },
+            );
+        }
+    }
     let total = args.days * DAY;
     let mut next = 0usize;
     let mut placed_tick: Option<u64> = None;
@@ -1643,6 +1710,7 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
     let mut knowledge = super::knowledge::KnowledgeWatch::new();
     let mut m5 = super::m5::M5Watch::new();
     let mut m55 = super::m55::M55Watch::new();
+    let mut steward_watch = args.steward.then(super::steward::StewardWatch::default);
     let mut waiting: Vec<usize> = Vec::new();
     // `"every_days"` entries: (tick of the next application, entry), M3.
     let mut repeats: Vec<(u64, usize)> = Vec::new();
@@ -1671,6 +1739,13 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
                 repeats.push((tick + days * DAY, i));
             }
             for cmd in resolve(&engine, &script[i].spec, &mut avoid)? {
+                if matches!(cmd, Command::Steward { .. }) {
+                    engine.resources.steward.pending.push((tick, cmd.clone()));
+                    if let Some(t) = twin.as_mut() {
+                        t.resources.steward.pending.push((tick, cmd));
+                    }
+                    continue;
+                }
                 let result = submit(&mut engine, cmd.clone());
                 if let Some(t) = twin.as_mut() {
                     if submit(t, cmd.clone()) != result {
@@ -1703,6 +1778,9 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
                 }
             }
         }
+        if let Some(watch) = steward_watch.as_mut() {
+            watch.before_tick(&engine);
+        }
         let started = Instant::now();
         engine.tick();
         tick_ns.push(started.elapsed().as_nanos() as u64);
@@ -1712,6 +1790,9 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
         knowledge.after_tick(&engine);
         m5.after_tick(&engine);
         m55.after_tick(&engine);
+        if let Some(watch) = steward_watch.as_mut() {
+            watch.after_tick(&engine);
+        }
         if let Some(t) = twin.as_mut() {
             t.tick();
         }
@@ -1833,6 +1914,9 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
     summary["m4"] = knowledge.report(&engine);
     summary["m5"] = m5.report(&engine);
     summary["m55"] = m55.report(&engine);
+    if let Some(watch) = steward_watch {
+        summary["mux"] = watch.report(&engine);
+    }
     let mut sorted = tick_ns.clone();
     sorted.sort_unstable();
     let mean = tick_ns.iter().sum::<u64>() as f64 / tick_ns.len().max(1) as f64 / 1e6;
@@ -2008,6 +2092,7 @@ mod tests {
             save_out: None,
             story: "on".into(),
             neighbours: "on".into(),
+            steward: false,
         };
         run(&first).expect("scripted run");
         let replay = ColonyArgs {
@@ -2049,6 +2134,7 @@ mod tests {
             save_out: None,
             story: "on".into(),
             neighbours: "on".into(),
+            steward: false,
         };
         run(&first).expect("scripted run");
         let replay = ColonyArgs {

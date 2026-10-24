@@ -27,6 +27,7 @@ pub mod resource_regen;
 pub mod rooms;
 pub mod settlement;
 pub mod social;
+pub mod steward;
 pub mod story;
 pub mod survival;
 pub mod wildlife;

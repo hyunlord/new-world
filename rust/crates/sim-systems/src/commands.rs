@@ -32,7 +32,13 @@ type Tile = (u32, u32);
 
 /// The tiles of the rectangle with corners `(x0, y0)`, `(x1, y1)` that lie on
 /// the map, in `(y, x)` order; `None` when none does.
-fn rect_tiles(res: &SimResources, x0: u32, y0: u32, x1: u32, y1: u32) -> Option<Vec<Tile>> {
+pub(crate) fn rect_tiles(
+    res: &SimResources,
+    x0: u32,
+    y0: u32,
+    x1: u32,
+    y1: u32,
+) -> Option<Vec<Tile>> {
     let (w, h) = (res.tile_grid.width, res.tile_grid.height);
     let (lx, hx) = (x0.min(x1), x0.max(x1).min(w.saturating_sub(1)));
     let (ly, hy) = (y0.min(y1), y0.max(y1).min(h.saturating_sub(1)));
@@ -81,8 +87,22 @@ fn counted(count: usize) -> CommandResult {
 /// Apply `cmd` to the world and return what it did (goal 6.3). Does not log;
 /// see [`submit`].
 pub fn apply_command(world: &mut World, res: &mut SimResources, cmd: Command) -> CommandResult {
+    apply_at(world, res, cmd, res.current_tick)
+}
+
+fn apply_at(world: &mut World, res: &mut SimResources, cmd: Command, tick: u64) -> CommandResult {
+    let source = matches!(cmd, Command::Steward { .. });
+    let protection = if source {
+        None
+    } else {
+        crate::runtime::steward::lifecycle::prepare_player(res, &cmd, tick)
+    };
     let result = apply_inner(world, res, cmd);
-    if !result.accepted {
+    if result.accepted {
+        if let Some(protection) = protection {
+            crate::runtime::steward::lifecycle::protect_player(res, protection);
+        }
+    } else {
         res.colony.tallies.commands_rejected += 1;
     }
     result
@@ -93,6 +113,25 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
         return CommandResult::rejected(RejectReason::NoColony);
     };
     match cmd {
+        Command::SetSteward { on, scope } => {
+            res.steward.enabled = on;
+            res.steward.scope = scope;
+            CommandResult::ok(1)
+        }
+        Command::Steward { rule, command } => {
+            if matches!(
+                *command,
+                Command::Steward { .. } | Command::SetSteward { .. }
+            ) {
+                return CommandResult::rejected(RejectReason::Unknown);
+            }
+            let targets = crate::runtime::steward::lifecycle::targets(res, &command);
+            let result = apply_inner(world, res, (*command).clone());
+            if result.accepted {
+                crate::runtime::steward::lifecycle::accepted(res, rule, *command, targets);
+            }
+            result
+        }
         Command::DesignateChop { x0, y0, x1, y1 } => match rect_tiles(res, x0, y0, x1, y1) {
             None => CommandResult::rejected(RejectReason::OutOfMap),
             Some(tiles) => marked(designate(res, &tiles)),
@@ -660,7 +699,7 @@ fn set_work_priority(
 /// Apply `cmd` before the engine's next tick and append it to the command log.
 pub fn submit(engine: &mut SimEngine, cmd: Command) -> CommandResult {
     let tick = engine.current_tick();
-    let result = apply_command(&mut engine.world, &mut engine.resources, cmd.clone());
+    let result = apply_at(&mut engine.world, &mut engine.resources, cmd.clone(), tick);
     engine.resources.colony.command_log.push(CommandRecord {
         tick,
         command: cmd,
@@ -1078,6 +1117,17 @@ pub fn check_space(
     kind: BlueprintKind,
     tile: Tile,
 ) -> Result<(), RejectReason> {
+    check_space_after_tree_clear(res, people, kind, tile, false)
+}
+
+/// Read-only future preview; only a harvested tree may be ignored. Final commands use check_space.
+pub(crate) fn check_space_after_tree_clear(
+    res: &SimResources,
+    people: &BTreeSet<Tile>,
+    kind: BlueprintKind,
+    tile: Tile,
+    tree_cleared: bool,
+) -> Result<(), RejectReason> {
     let grid = &res.tile_grid;
     if tile.0 >= grid.width || tile.1 >= grid.height {
         return Err(RejectReason::OutOfMap);
@@ -1110,7 +1160,7 @@ pub fn check_space(
         .colony
         .reservations
         .contains_key(&sim_core::colony::ReserveKey::Work(tile));
-    if res.colony.trees.contains_key(&tile)
+    if (!tree_cleared && res.colony.trees.contains_key(&tile))
         || res.colony.nodes.contains_key(&tile)
         || under_building(res, tile)
         || work_tile

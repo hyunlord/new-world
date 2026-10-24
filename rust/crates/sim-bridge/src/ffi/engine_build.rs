@@ -125,7 +125,15 @@ pub fn build_stress_engine(seed: u64, agents: u32) -> SimEngine {
 /// Pure (no Godot) so tests can check it; `WorldSimNode::init` and
 /// `reset_world` call it.
 pub fn build_game_engine(seed: u64) -> SimEngine {
-    build_world_with(&WorldGenConfig::colony(seed), WorldRules::colony(seed))
+    let mut engine = build_world_with(&WorldGenConfig::colony(seed), WorldRules::colony(seed));
+    sim_systems::commands::submit(
+        &mut engine,
+        sim_core::colony::Command::SetSteward {
+            on: true,
+            scope: sim_core::colony::steward::StewardScope::All,
+        },
+    );
+    engine
 }
 
 /// P4-γ bootstrap: spawn `BOOTSTRAP_AGENT_AXIS²` agents on a deterministic
@@ -292,6 +300,8 @@ mod revitalize_tooling_tests {
         );
         assert_eq!(engine.resources.world_seed, 20_261_010);
         assert_eq!(super::DEFAULT_GAME_SEED, 20_261_010);
+        assert!(engine.resources.steward.enabled);
+        assert!(!super::build_stress_engine(1, 30).resources.steward.enabled);
     }
 
     #[test]

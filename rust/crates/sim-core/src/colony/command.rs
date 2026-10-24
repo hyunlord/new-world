@@ -316,6 +316,20 @@ pub enum Command {
         /// What the colony takes: `(goods index, count)`.
         take: Vec<(u16, u16)>,
     },
+    /// Player-selected automatic order policy.
+    SetSteward {
+        /// Whether automatic planning is enabled.
+        on: bool,
+        /// Allowed order families.
+        scope: super::steward::StewardScope,
+    },
+    /// Ordinary command issued by the steward at the after-assignment phase.
+    Steward {
+        /// Versioned data rule id.
+        rule: u16,
+        /// Ordinary command, never another envelope or policy change.
+        command: Box<Command>,
+    },
 }
 
 impl Command {
@@ -356,6 +370,8 @@ impl Command {
             Self::AcceptMigrants { .. } => "accept_migrants",
             Self::DeclineMigrants { .. } => "decline_migrants",
             Self::Trade { .. } => "trade",
+            Self::SetSteward { .. } => "set_steward",
+            Self::Steward { .. } => "steward",
         }
     }
 }

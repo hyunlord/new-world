@@ -32,7 +32,12 @@ pub mod relations;
 pub mod save;
 pub mod snapshot;
 pub mod space;
+pub mod steward;
 pub mod story;
+pub mod ui_facts;
+
+pub use steward::{collect_steward, submit_set_steward, StewardView};
+pub use ui_facts::{collect_ui_facts, UiFacts};
 
 pub use activity::{collect_activity_snapshot, ActivitySnapshotRow};
 pub use appearance::{appearance_rule, collect_appearance, AppearanceRow, AppearanceRule};

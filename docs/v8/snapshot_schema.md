@@ -1,6 +1,6 @@
 # Snapshot schema — the bridge's read surface
 
-Schema version: 7 (M-ART2: the snapshot's appearance columns `sexes`, `look_ids`, `variants` from `collect_appearance` (`ffi/appearance.rs`, rule file `rust/crates/sim-bridge/data/appearance.ron`) and `get_space`'s `wall_materials`, `wall_styles`, `wall_categories`, `floor_materials`, `floor_styles`, `floor_categories`; no getter added or removed. 6 — M5.5: the neighbour reads `get_neighbours`, `get_wave`, `get_caravan`, the snapshot's `fleeing`, `get_agent_m5`'s `fleeing`, `get_year_summary`'s `migrants_joined`, `trades`, `eurekas` and chronicle kinds 38–44; M5: the story, animal and mood reads `get_story`, `get_animals`, `get_agent_m5`, `get_drafted`, `get_chronicle_why`, `get_year_summary`, `get_teach_suggestion`, the snapshot's `tops`, `mood_bands`, `drafted`, `sick` and the chronicle rows' `index` and links; M4 the knowledge reads `get_tech`, `get_tech_node`, `get_agent_knowledge`, `get_teach_orders`, `get_knowledge_waits`, `get_space`'s fords and the new item, recipe, blueprint, job and chronicle codes; M3 added built space, rooms, the place preview and the overlay's `item_covered`; M2 the economy reads and the overlay's node, mark and quality columns).
+Schema version: 8 (M-UX adds `get_ui_facts`, `get_steward`, and the logged `cmd_set_steward` mode command. 7 — M-ART2: the snapshot's appearance columns `sexes`, `look_ids`, `variants` from `collect_appearance` (`ffi/appearance.rs`, rule file `rust/crates/sim-bridge/data/appearance.ron`) and `get_space`'s `wall_materials`, `wall_styles`, `wall_categories`, `floor_materials`, `floor_styles`, `floor_categories`; no getter added or removed. 6 — M5.5: the neighbour reads `get_neighbours`, `get_wave`, `get_caravan`, the snapshot's `fleeing`, `get_agent_m5`'s `fleeing`, `get_year_summary`'s `migrants_joined`, `trades`, `eurekas` and chronicle kinds 38–44; M5: the story, animal and mood reads `get_story`, `get_animals`, `get_agent_m5`, `get_drafted`, `get_chronicle_why`, `get_year_summary`, `get_teach_suggestion`, the snapshot's `tops`, `mood_bands`, `drafted`, `sick` and the chronicle rows' `index` and links; M4 the knowledge reads `get_tech`, `get_tech_node`, `get_agent_knowledge`, `get_teach_orders`, `get_knowledge_waits`, `get_space`'s fords and the new item, recipe, blueprint, job and chronicle codes; M3 added built space, rooms, the place preview and the overlay's `item_covered`; M2 the economy reads and the overlay's node, mark and quality columns).
 
 Every `#[func] fn get_*` that `WorldSimNode` (`rust/crates/sim-bridge/src/ffi/node.rs`) exposes to GDScript, with the
 keys it returns, their types, id spaces, units and row order, and the pure collector that backs it. A `#[func]` body
@@ -1112,6 +1112,266 @@ reasons add `not_drafted`), the M5.5 orders `cmd_accept_migrants(wave)`, `cmd_de
 `advance_ticks(n) -> int` (the final absolute tick, at most 200,000 per call); `reset_world(seed)`,
 `reset_world_stress(seed, agents)`; `on_building_placed(x, y, radius) -> bool`; `set_sim_speed(speed)`; the signal
 `world_reset`.
+
+
+## M-UX bulk UI facts and steward
+
+### `get_ui_facts`
+`collect_ui_facts(&World, &SimResources) -> UiFacts` (`ffi/ui_facts/mod.rs`), marshalled by
+`ffi/ui_facts/marshal.rs`. This is a read-only bulk observer: it does not advance systems, refresh mutable
+simulation caches, consume RNG, or issue orders. `schema_version` is this getter's local format version,
+independent of this document's version. Non-colony worlds retain clock metadata with `enabled=false` and
+empty fact tables. UI thresholds and content classification are not embedded in this read.
+
+| key | type | meaning |
+|---|---|---|
+| `schema_version` | int | 1 |
+| `enabled` | bool | colony rules active |
+| `tick` | int | completed simulation tick; saturated at i64 maximum |
+| `day` | int | zero-based display day including clock offset |
+| `ticks_per_day` | int | configured ticks per simulation day |
+| `clock_offset_ticks` | int | display clock offset |
+| `season` | int | season index, -1 when absent |
+| `season_day` | int | one-based season day, 0 when absent |
+| `days_per_season` | int | configured season duration |
+| `meat_spoil_days` | int | display-day lifetime, -1 when wildlife rules absent |
+| `taught_count` | int | durable completed-teaching count |
+| `wolves_spawned` | int | durable spawned count, not current nearby animals |
+| `migrant_waves_arrived` | int | accepted + declined + unanswered + currently waiting waves |
+| `first_winter_all_alive` | bool | a seasonal first calendar year has ended with no recorded death during that year; later deaths do not revoke it |
+| `people` | Dictionary | living people; columns below, ascending AgentId |
+| `settlements` | Dictionary | stock and authoritative needs; ascending SettlementId |
+| `stockpile_tiles` | Dictionary | storage cells; zone id then (x,y) |
+| `stacks` | Dictionary | ground stacks in native (x,y) spoilage-allocation order |
+| `unreachable` | Dictionary | unexpired avoidance records for extant orders, worker id then target tile |
+| `meat_lots` | Dictionary | global FIFO creation-day/count lots; not ages attached to individual stacks |
+| `tech` | Dictionary | exactly the `get_tech` dictionary |
+| `waits` | Dictionary | exactly `get_knowledge_waits`, ordered by kind, a, b, node |
+| `neighbours` | Dictionary | exactly `get_neighbours` |
+| `animals` | Dictionary | exactly `get_animals`; raw kind/state codes |
+| `rooms` | Dictionary | exactly `get_rooms`; raw role codes |
+| `story` | Dictionary | exactly `get_story` |
+| `workshops` | Dictionary | exactly `get_workshops` |
+
+**`people` columns.** `PackedByteArray` flags are 0/1. Missing optional identities and coordinates are -1;
+AgentId and entity bits are distinct, transported using their signed 64-bit bit pattern.
+
+| key | type | meaning |
+|---|---|---|
+| `ids` | PackedInt64Array | AgentId |
+| `entity_ids` | PackedInt64Array | signed hecs entity bits, used by inspector selection |
+| `household_ids` | PackedInt64Array | minimum living AgentId in the authoritative settlement household; own AgentId outside one |
+| `xs` | PackedInt64Array | current tile x |
+| `ys` | PackedInt64Array | current tile y |
+| `hps` | PackedFloat64Array | current BodyHealth hp, -1 when absent |
+| `max_hps` | PackedFloat64Array | maximum hp, -1 when absent |
+| `children` | PackedByteArray | Child component present |
+| `infants` | PackedByteArray | configured infant age window applies |
+| `born_ticks` | PackedInt64Array | Child birth tick, -1 for absent component |
+| `idle` | PackedByteArray | FSM Idle, separate from job/incapacity flags |
+| `sleeping` | PackedByteArray | FSM consuming Sleep |
+| `roofed` | PackedByteArray | current tile lies in a roofed room |
+| `bed_xs` | PackedInt64Array | assigned bed tile x, -1 without a bed |
+| `bed_ys` | PackedInt64Array | assigned bed tile y, -1 without a bed |
+| `has_job` | PackedByteArray | Job component present |
+| `drafted` | PackedByteArray | Drafted component present |
+| `sick` | PackedByteArray | Sick component present |
+| `breakdown` | PackedByteArray | recorded breakdown includes current display day |
+| `nights` | PackedInt64Array | raw Mood night flags, 0 without Mood |
+| `mothers` | PackedInt64Array | recorded mother AgentId, -1 absent |
+| `fathers` | PackedInt64Array | recorded father AgentId, -1 absent |
+| `partners` | PackedInt64Array | recorded partner AgentId, -1 absent |
+
+**`settlements` columns.** Food/wood include stock plus living members' carried amounts.
+
+| key | type | meaning |
+|---|---|---|
+| `ids` | PackedInt64Array | SettlementId |
+| `xs` | PackedInt64Array | formation anchor x |
+| `ys` | PackedInt64Array | formation anchor y |
+| `food` | PackedInt64Array | food in hand |
+| `food_need` | PackedFloat64Array | authoritative daily food consumption |
+| `wood` | PackedInt64Array | wood in hand |
+| `wood_target` | PackedFloat64Array | seasonal preparation target, 0 when absent |
+| `winter_wood_need` | PackedFloat64Array | daily winter burn before future unknown severity |
+
+**`stockpile_tiles` columns.** Room ids and role codes are -1 outside a room.
+
+| key | type | meaning |
+|---|---|---|
+| `zones` | PackedInt64Array | owning zone id |
+| `xs` | PackedInt64Array | tile x |
+| `ys` | PackedInt64Array | tile y |
+| `can_hold` | PackedByteArray | terrain/occupancy permit storage, 0/1 |
+| `rooms` | PackedInt64Array | room id or -1 |
+| `room_roles` | PackedInt64Array | raw room role or -1 |
+| `roofed` | PackedByteArray | room has roof, 0/1 |
+
+**`stacks` columns.** Reserved stacks are skipped by spoilage; classification uses raw item codes.
+
+| key | type | meaning |
+|---|---|---|
+| `xs` | PackedInt64Array | tile x |
+| `ys` | PackedInt64Array | tile y |
+| `kinds` | PackedInt64Array | item kind code |
+| `counts` | PackedInt64Array | stack quantity |
+| `capacities` | PackedInt64Array | authoritative kind capacity under active rules |
+| `reserved` | PackedByteArray | stack reserved by a job, 0/1 |
+| `zones` | PackedInt64Array | stockpile zone id, -1 outside zones |
+
+**`unreachable` columns.** Records are retained only while `until_ticks > tick` and a designation,
+construction site, or unfinished unsuspended workshop bill still targets that tile.
+
+| key | type | meaning |
+|---|---|---|
+| `agent_ids` | PackedInt64Array | worker AgentId |
+| `xs` | PackedInt64Array | target x |
+| `ys` | PackedInt64Array | target y |
+| `until_ticks` | PackedInt64Array | exclusive avoidance expiry |
+
+**`meat_lots` columns.** Rows retain simulator FIFO order; use alongside native-order ground stacks,
+not as a row-wise join to stacks.
+
+| key | type | meaning |
+|---|---|---|
+| `days` | PackedInt64Array | creation display day |
+| `counts` | PackedInt64Array | lot quantity |
+
+**Reused nested field index.** Each path below has exactly the type, units, row ordering and nested shape
+of the corresponding getter linked in the top-level table; these are nested fields, not extra root keys.
+The static checker compares the union of literal keys, including nested builders.
+
+| key | nested path(s); full contract above |
+|---|---|
+| `a` | `waits.a` |
+| `adults` | `tech.adults` |
+| `at_risk` | `tech.at_risk` |
+| `attitudes` | `neighbours.attitudes` |
+| `b` | `waits.b` |
+| `beds` | `rooms.beds` |
+| `bill_active` | `workshops.bill_active` |
+| `bill_auto` | `workshops.bill_auto` |
+| `bill_counts` | `workshops.bill_counts` |
+| `bill_done` | `workshops.bill_done` |
+| `bill_ids` | `workshops.bill_ids` |
+| `bill_modes` | `workshops.bill_modes` |
+| `bill_recipes` | `workshops.bill_recipes` |
+| `bill_shops` | `workshops.bill_shops` |
+| `bill_suspended` | `workshops.bill_suspended` |
+| `caravan_ids` | `neighbours.caravan_ids` |
+| `caravan_leaves` | `neighbours.caravan_leaves` |
+| `caravan_neighbours` | `neighbours.caravan_neighbours` |
+| `caravan_states` | `neighbours.caravan_states` |
+| `caravan_trades` | `neighbours.caravan_trades` |
+| `caravan_x` | `neighbours.caravan_x` |
+| `caravan_y` | `neighbours.caravan_y` |
+| `centre_xs` | `rooms.centre_xs` |
+| `centre_ys` | `rooms.centre_ys` |
+| `clue_items` | `neighbours.clue_items` |
+| `clue_nodes` | `neighbours.clue_nodes` |
+| `conditions_met` | `tech.conditions_met` |
+| `days_of` | `story.days_of` |
+| `deaths` | `story.deaths` |
+| `distance_days` | `neighbours.distance_days` |
+| `doors` | `rooms.doors` |
+| `dress_order` | `story.dress_order` |
+| `dug` | `rooms.dug` |
+| `edges` | `neighbours.edges` |
+| `end_days` | `story.end_days` |
+| `ended` | `story.ended` |
+| `era` | `tech.era` |
+| `eras` | `tech.eras` |
+| `eurekas` | `neighbours.eurekas` |
+| `firewood` | `story.firewood` |
+| `firewood_day_need` | `story.firewood_day_need` |
+| `first_names` | `tech.first_names` |
+| `gifts` | `neighbours.gifts` |
+| `holders` | `tech.holders` |
+| `hps` | `animals.hps` |
+| `hs` | `workshops.hs` |
+| `huntable` | `animals.huntable` |
+| `ids` | `tech.ids`, `neighbours.ids`, `animals.ids`, `rooms.ids`, `workshops.ids` |
+| `intensities` | `story.intensities` |
+| `kinds` | `waits.kinds`, `animals.kinds`, `story.kinds`, `workshops.kinds` |
+| `lanes` | `tech.lanes` |
+| `last_contact` | `neighbours.last_contact` |
+| `marked` | `animals.marked` |
+| `marker_weights` | `tech.marker_weights` |
+| `migrants_joined` | `neighbours.migrants_joined` |
+| `name_keys` | `tech.name_keys`, `neighbours.name_keys` |
+| `names` | `tech.names`, `story.names` |
+| `nodes` | `waits.nodes` |
+| `now` | `neighbours.now` |
+| `on` | `story.on` |
+| `overridden` | `rooms.overridden` |
+| `pack_size` | `story.pack_size` |
+| `populations` | `neighbours.populations` |
+| `practitioners` | `tech.practitioners` |
+| `prereq_from` | `tech.prereq_from` |
+| `prereq_to` | `tech.prereq_to` |
+| `progress` | `tech.progress` |
+| `role_names` | `rooms.role_names` |
+| `roles` | `rooms.roles` |
+| `roofed` | `rooms.roofed` |
+| `rumoured` | `neighbours.rumoured` |
+| `shelf_counts` | `workshops.shelf_counts` |
+| `shelf_kinds` | `workshops.shelf_kinds` |
+| `shelf_shops` | `workshops.shelf_shops` |
+| `sick` | `story.sick` |
+| `start_days` | `story.start_days` |
+| `states` | `animals.states` |
+| `statuses` | `tech.statuses` |
+| `subjects` | `story.subjects` |
+| `thresholds` | `tech.thresholds` |
+| `tile_rooms` | `rooms.tile_rooms` |
+| `tile_xs` | `rooms.tile_xs` |
+| `tile_ys` | `rooms.tile_ys` |
+| `tiles` | `rooms.tiles` |
+| `trades` | `neighbours.trades` |
+| `version` | `tech.version`, `neighbours.version`, `animals.version`, `rooms.version`, `story.version` |
+| `wave_answers` | `neighbours.wave_answers` |
+| `wave_deadline` | `neighbours.wave_deadline` |
+| `wave_ids` | `neighbours.wave_ids` |
+| `wave_neighbours` | `neighbours.wave_neighbours` |
+| `wave_sizes` | `neighbours.wave_sizes` |
+| `wave_states` | `neighbours.wave_states` |
+| `wave_x` | `neighbours.wave_x` |
+| `wave_y` | `neighbours.wave_y` |
+| `wolves` | `story.wolves` |
+| `wolves_x` | `story.wolves_x` |
+| `wolves_y` | `story.wolves_y` |
+| `work_xs` | `workshops.work_xs` |
+| `work_ys` | `workshops.work_ys` |
+| `ws` | `workshops.ws` |
+| `xs` | `animals.xs`, `workshops.xs` |
+| `ys` | `animals.ys`, `workshops.ys` |
+| `zones` | `animals.zones` |
+
+### `get_steward`
+`collect_steward(&SimResources) -> StewardView` (`ffi/steward.rs`). Persisted mode and accepted-order
+provenance, never inferred task completion. Rules are loaded from data; missing rule data yields empty labels.
+
+| key | type | meaning |
+|---|---|---|
+| `enabled` | bool | automatic planning enabled |
+| `scope` | int | 0 all, 1 housing, 2 food |
+| `sequence` | int | accepted automatic-action sequence, saturated at i64 maximum |
+| `last_rule` | int | most recent successful rule id, -1 before any action |
+| `last_tick` | int | tick of last accepted action, saturated at i64 maximum |
+| `last_label` | String | localization key for last rule, empty if unavailable |
+| `accepted_rules` | PackedInt32Array | distinct rule ids with retained accepted-order provenance, ascending |
+| `rules` | Dictionary[int,String] | configured rule id → localization key, inserted in ascending id order; dynamic numeric keys |
+
+### `cmd_set_steward(on: bool, scope: int)`
+Mode command, not a read. `submit_set_steward` parses scope 0/1/2 and sends `Command::SetSteward` through
+the ordinary logged command path. An out-of-range or unknown scope rejects with `reason="unknown"`
+without submitting a command. The result is the shared `result_to_dict` contract (`ffi/colony.rs`).
+
+| key | type | meaning |
+|---|---|---|
+| `accepted` | bool | command accepted |
+| `count` | int | command result count |
+| `reason` | String | empty on success, rejection reason otherwise |
 
 ## Text renderer glyphs
 

@@ -1,0 +1,8 @@
+(schema_version: 1, rules: [
+ (id: 1, label: "MUX_STEWARD_RULE_1", scope: All, cooldown: 1440, condition: NoStockpile, action: Stockpile(base_cells: 6, divisor: 2)),
+ (id: 2, label: "MUX_STEWARD_RULE_2", scope: All, cooldown: 360, condition: WoodDeficit, action: Wood(items: [Log, Firewood], days: 12, camp_radius: 4, batch: 32)),
+ (id: 3, label: "MUX_STEWARD_RULE_3", scope: Housing, cooldown: 1440, condition: Unsheltered, action: House(wall: LogWall, door: Door, bed: Bedroll, max_beds: 16, service_cells: 8, completion_role: Some(Bedroom))),
+ (id: 4, label: "MUX_STEWARD_RULE_4", scope: All, cooldown: 360, condition: Production, action: Bills(recipes: [(HaftAxe, 2), (KnapBlade, 4)], winter_recipe: SplitFirewood, days: 12)),
+ (id: 5, label: "MUX_STEWARD_RULE_5", scope: Food, cooldown: 1440, condition: FoodDeficit, action: Hunt(item: Meat, animal: Deer, knowledge: "tracking", days: 3, radius: 5)),
+ (id: 6, label: "MUX_STEWARD_RULE_6", scope: All, cooldown: 1440, condition: KnowledgeRisk, action: Teach),
+])

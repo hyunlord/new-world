@@ -148,11 +148,13 @@ pub enum ChronicleKind {
     /// M5.5: a discovery helped by an artifact; subject = the discoverer; cause = the artifact's `ItemKind::code`;
     /// value = the knowledge node id.
     Eureka = 44,
+    /// Automatic ordinary order; cause is its data rule id, value its sequence.
+    StewardAction = 45,
 }
 
 impl ChronicleKind {
     /// Every kind in discriminant order.
-    pub const ALL: [ChronicleKind; 45] = [
+    pub const ALL: [ChronicleKind; 46] = [
         Self::Born,
         Self::FoundingMember,
         Self::Paired,
@@ -198,6 +200,7 @@ impl ChronicleKind {
         Self::Traded,
         Self::TraderLeft,
         Self::Eureka,
+        Self::StewardAction,
     ];
 
     /// Stable numeric discriminant.
@@ -253,6 +256,7 @@ impl ChronicleKind {
             Self::Traded => "traded",
             Self::TraderLeft => "trader_left",
             Self::Eureka => "eureka",
+            Self::StewardAction => "steward_action",
         }
     }
 }

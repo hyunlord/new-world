@@ -31,6 +31,7 @@ func WorldSimNode.cmd_set_bill_mode
 func WorldSimNode.cmd_set_bill_suspended
 func WorldSimNode.cmd_set_dress_order
 func WorldSimNode.cmd_set_room_role
+func WorldSimNode.cmd_set_steward
 func WorldSimNode.cmd_set_work_priority
 func WorldSimNode.cmd_trade
 func WorldSimNode.cmd_undraft_all
@@ -71,6 +72,7 @@ func WorldSimNode.get_settlement_relations
 func WorldSimNode.get_settlement_snapshot
 func WorldSimNode.get_society_snapshot
 func WorldSimNode.get_space
+func WorldSimNode.get_steward
 func WorldSimNode.get_story
 func WorldSimNode.get_tallies
 func WorldSimNode.get_teach_orders
@@ -83,6 +85,7 @@ func WorldSimNode.get_tile_causal_history
 func WorldSimNode.get_tile_detail
 func WorldSimNode.get_time_snapshot
 func WorldSimNode.get_trees
+func WorldSimNode.get_ui_facts
 func WorldSimNode.get_wave
 func WorldSimNode.get_work_priorities
 func WorldSimNode.get_workshops

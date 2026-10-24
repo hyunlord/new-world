@@ -785,6 +785,31 @@ impl WorldSimNode {
         tech_to_dict(&collect_tech(&self.engine.world, &self.engine.resources))
     }
 
+    /// MUX bulk raw facts for data-driven UI alerts and lessons; read-only.
+    #[func]
+    fn get_ui_facts(&self) -> VarDictionary {
+        super::ui_facts::ui_facts_to_dict(&super::ui_facts::collect_ui_facts(
+            &self.engine.world,
+            &self.engine.resources,
+        ))
+    }
+
+    /// Persisted steward mode and accepted-action provenance.
+    #[func]
+    fn get_steward(&self) -> VarDictionary {
+        super::steward::steward_to_dict(&super::steward::collect_steward(&self.engine.resources))
+    }
+
+    /// Change steward scope through the ordinary logged command path.
+    #[func]
+    fn cmd_set_steward(&mut self, on: bool, scope: i64) -> VarDictionary {
+        result_to_dict(super::steward::submit_set_steward(
+            &mut self.engine,
+            on,
+            scope,
+        ))
+    }
+
     /// M4: one node's detail — holders with proficiency, who could learn it,
     /// discovery conditions (met or not) and what it gates.
     #[func]

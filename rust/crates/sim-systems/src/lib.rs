@@ -344,6 +344,7 @@ pub fn register_story_systems(engine: &mut SimEngine) {
 pub fn register_job_systems(engine: &mut SimEngine) {
     engine.register_system(Box::new(runtime::jobs::BillSystem::new()));
     engine.register_system(Box::new(runtime::jobs::JobAssignSystem::new()));
+    engine.register_system(Box::new(runtime::steward::StewardSystem));
     engine.register_system(Box::new(runtime::jobs::JobExecuteSystem::new()));
     engine.register_system(Box::new(runtime::jobs::HearthFeedSystem::new()));
     engine.register_system(Box::new(runtime::rooms::RoomSystem::new()));

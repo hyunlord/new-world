@@ -48,7 +48,7 @@ pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 /// 5 = M5 (the storyteller, `Sick`, `Apparel`, new item and chronicle kinds,
 /// the chronicle's cause table, animals, fights, drafting, mood, bonds); 6 = M5.5 (`Fleeing`, neighbours,
 /// migrants, caravans, the trade ledger, need samples, new chronicle kinds and the knowledge source `Migrant`).
-pub const FORMAT_VERSION: u32 = 6;
+pub const FORMAT_VERSION: u32 = 7;
 
 /// Upper bound for one decode (guards against corrupt length prefixes).
 const DECODE_LIMIT: u64 = 1 << 31;
@@ -118,15 +118,26 @@ struct BodyRef<'a> {
     resources: &'a SimResources,
     world: &'a world::WorldSave,
     systems: &'a [(String, Vec<u8>)],
+    steward: &'a sim_core::colony::steward::StewardState,
 }
 
 /// The body after the header, as read (same fields, same order).
+#[derive(Deserialize)]
+struct LegacyBody {
+    current_tick: u64,
+    resources: SimResources,
+    world: world::WorldSave,
+    systems: Vec<(String, Vec<u8>)>,
+}
+
+/// V7 appends optional assistant state after the frozen v6 body fields.
 #[derive(Deserialize)]
 struct Body {
     current_tick: u64,
     resources: SimResources,
     world: world::WorldSave,
     systems: Vec<(String, Vec<u8>)>,
+    steward: sim_core::colony::steward::StewardState,
 }
 
 /// Save `engine` to bytes. Two saves of one state are byte-identical.
@@ -143,6 +154,7 @@ pub fn save(engine: &mut SimEngine) -> Result<Vec<u8>, SaveError> {
         resources: &engine.resources,
         world: &world,
         systems: &systems,
+        steward: &engine.resources.steward,
     };
     let mut out = Vec::with_capacity(1 << 20);
     out.extend_from_slice(&MAGIC);
@@ -164,8 +176,22 @@ pub fn load_with(
     bytes: &[u8],
     register: impl FnOnce(&mut SimEngine),
 ) -> Result<SimEngine, SaveError> {
-    let body: Body = decode(read_header(bytes)?).map_err(SaveError::Decode)?;
+    let encoded = read_header(bytes)?;
+    let legacy = bytes.get(MAGIC.len()..MAGIC.len() + 4) == Some(6u32.to_le_bytes().as_slice());
+    let mut body: Body = if legacy {
+        let old: LegacyBody = decode(encoded).map_err(SaveError::Decode)?;
+        Body {
+            current_tick: old.current_tick,
+            resources: old.resources,
+            world: old.world,
+            systems: old.systems,
+            steward: Default::default(),
+        }
+    } else {
+        decode(encoded).map_err(SaveError::Decode)?
+    };
     let mut resources = body.resources;
+    resources.steward = body.steward;
     resources.material_blocking_cache = MaterialBlockingCache::build(&resources.material_registry);
     // M3: the colony's cost map is derived (not saved); build it now so a
     // command applied before the first tick sees the same regions as an
@@ -174,6 +200,21 @@ pub fn load_with(
     let world = world::build(&body.world).map_err(SaveError::World)?;
     let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
     register(&mut engine);
+    if legacy {
+        let registered = engine.system_states().map_err(SaveError::Systems)?;
+        if let Some(index) = registered
+            .iter()
+            .position(|(name, _)| name == "StewardSystem")
+        {
+            if index > body.systems.len() {
+                return Err(SaveError::Systems(
+                    "v6 system list is shorter than the migration insertion point".into(),
+                ));
+            }
+            body.systems
+                .insert(index, ("StewardSystem".into(), Vec::new()));
+        }
+    }
     engine
         .install_saved(world, resources, body.current_tick, &body.systems)
         .map_err(SaveError::Systems)?;
@@ -192,7 +233,7 @@ fn read_header(bytes: &[u8]) -> Result<&[u8], SaveError> {
     let mut word = [0u8; 4];
     word.copy_from_slice(version);
     let found = u32::from_le_bytes(word);
-    if found != FORMAT_VERSION {
+    if found != FORMAT_VERSION && found != 6 {
         return Err(SaveError::Version {
             found,
             expected: FORMAT_VERSION,

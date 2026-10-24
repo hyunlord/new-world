@@ -88,6 +88,14 @@ impl FireSystem {
     }
 }
 
+/// Apply the authoritative active-pressure fuel multiplier with the fire's rounding.
+pub fn effective_burn_per_hour(resources: &SimResources, per_hour: u32) -> u32 {
+    crate::runtime::story::active(resources, sim_core::colony::story::PressureKind::ColdSnap)
+        .map_or(per_hour, |s| {
+            (u64::from(per_hour) * u64::from(s.snap_burn_permille)).div_ceil(1000) as u32
+        })
+}
+
 impl RuntimeSystem for FireSystem {
     fn name(&self) -> &str {
         "FireSystem"
@@ -117,9 +125,7 @@ impl RuntimeSystem for FireSystem {
             sim_core::colony::story::PressureKind::ColdSnap,
         );
         let normal = per_hour;
-        let per_hour = snap.map_or(per_hour, |s| {
-            (u64::from(per_hour) * u64::from(s.snap_burn_permille)).div_ceil(1000) as u32
-        });
+        let per_hour = effective_burn_per_hour(resources, per_hour);
         let now = resources.current_tick;
         let mut ids: Vec<SettlementId> = resources.settlements.keys().copied().collect();
         ids.sort_unstable();
