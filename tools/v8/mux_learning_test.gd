@@ -242,8 +242,38 @@ func _test_facts() -> void:
 	people["roofed"] = [1]
 	_check(not Facts.beds_ready(people, rooms), "person under roof does not prove roofed bed")
 	_check(not Facts.beds_ready({}, {}), "empty population cannot complete housing")
-	_check(Facts.winter_wood_ready({"ids": [1], "wood": [20], "winter_wood_need": [20.0]}), "wood meets real winter requirement")
-	_check(not Facts.winter_wood_ready({"ids": [1, 2], "wood": [20, 4], "winter_wood_need": [20.0, 5.0]}), "each settlement needs winter wood")
+	var winter: Dictionary = {"season": 2, "season_day": 1, "days_per_season": 12, "story": {"firewood": 20}, "settlements": {"ids": [1], "wood": [999], "winter_wood_need": [20.0]}}
+	_check(not Facts.winter_wood_ready(winter), "one daily ration cannot prepare a multi-day winter")
+	_check(not Facts.from_snapshots(winter, {})["winter_firewood_ready"], "goal cannot substitute settlement stock for usable whole-winter fuel")
+	winter["story"]["firewood"] = 240
+	winter["settlements"]["wood"] = [0]
+	_check(Facts.winter_wood_ready(winter), "exact whole-winter usable story fuel suffices despite settlement wood")
+	_check(Facts.from_snapshots(winter, {})["winter_firewood_ready"], "goal fact receives full calendar and usable supply")
+	winter["settlements"] = {"ids": [1, 2], "winter_wood_need": [20.0, 21.0]}
+	_check(not Facts.winter_wood_ready(winter), "each settlement needs its whole-winter requirement")
+	winter["story"]["firewood"] = 491
+	_check(not Facts.winter_wood_ready(winter), "one unit below combined settlement requirement is insufficient")
+	winter["story"]["firewood"] = 492
+	_check(Facts.winter_wood_ready(winter), "exact summed settlement winter requirement suffices")
+	winter["settlements"] = {"ids": [1], "winter_wood_need": [0.0]}
+	_check(not Facts.winter_wood_ready(winter), "zero winter requirement does not award preparation")
+	winter["settlements"] = {"ids": [1]}
+	_check(not Facts.winter_wood_ready(winter), "missing winter requirement is unknown not complete")
+	winter["settlements"] = {"ids": [1], "winter_wood_need": [20.0]}
+	winter["story"] = {}
+	_check(not Facts.winter_wood_ready(winter), "missing usable supply does not award preparation")
+	winter["story"] = {"firewood": 240}
+	winter.erase("season")
+	_check(not Facts.winter_wood_ready(winter), "missing calendar does not award preparation")
+	winter["season"] = 3
+	winter["season_day"] = 10
+	winter["story"]["firewood"] = 60
+	_check(Facts.winter_wood_ready(winter), "winter remaining days include current day like alert")
+	winter["story"]["firewood"] = 59
+	_check(not Facts.winter_wood_ready(winter), "one unit below remaining-winter requirement is insufficient")
+	winter["days_per_season"] = 0
+	_check(not Facts.winter_wood_ready(winter), "zero winter duration does not award preparation")
+	_check(not Facts.winter_wood_ready({}), "missing settlement cannot complete winter preparation")
 	var bulk: Dictionary = {"people": people, "taught_count": 1, "story": {"wolves": 1}, "stockpile_tiles": {"zones": [8]}, "first_winter_all_alive": true}
 	var facts: Dictionary = Facts.from_snapshots(bulk, {"designation_kinds": [0]})
 	_check(facts["stockpile_exists"] and facts["chop_marked"], "actual stockpile and chop designation facts")

@@ -17,7 +17,7 @@ static func from_snapshots(bulk: Dictionary, overlay: Dictionary, steward: Dicti
 		"chop_marked": overlay.get("designation_kinds", []).has(0),
 		"house_beds_ready": beds_ready(people, bulk.get("rooms", {})),
 		"workshop_bill_exists": not shops.get("bill_ids", []).is_empty(),
-		"winter_firewood_ready": winter_wood_ready(bulk.get("settlements", {})),
+		"winter_firewood_ready": winter_wood_ready(bulk),
 		"first_winter_all_alive": bulk.get("first_winter_all_alive", false) == true,
 		"taught_technique": int(bulk.get("taught_count", 0)) > 0,
 		"drafted": people.get("drafted", []).has(1),
@@ -53,16 +53,30 @@ static func beds_ready(people: Dictionary, rooms: Dictionary) -> bool:
 			return false
 	return true
 
-static func winter_wood_ready(settlements: Dictionary) -> bool:
+static func winter_wood_ready(bulk: Dictionary) -> bool:
+	var settlements: Dictionary = bulk.get("settlements", {})
+	var story: Dictionary = bulk.get("story", {})
 	var ids: Variant = settlements.get("ids", [])
-	var wood: Variant = settlements.get("wood", [])
 	var need: Variant = settlements.get("winter_wood_need", [])
-	if ids.is_empty() or wood.size() != ids.size() or need.size() != ids.size():
+	if ids.is_empty() or need.size() != ids.size() or not story.has("firewood"):
 		return false
+	if not bulk.has_all(["season", "season_day", "days_per_season"]):
+		return false
+	var season: int = int(bulk["season"])
+	var days: int = int(bulk["days_per_season"])
+	if season < 0 or days <= 0:
+		return false
+	# Match the alert adapter: full upcoming winter, or remaining days including today.
+	var winter_days: int = maxi(0, days - int(bulk["season_day"]) + 1) if season == 3 else days
+	if winter_days <= 0:
+		return false
+	var daily_need: float = 0.0
 	for i: int in ids.size():
-		if float(need[i]) <= 0.0 or float(wood[i]) < float(need[i]):
+		# No configured/known positive requirement means no preparation achievement.
+		if float(need[i]) <= 0.0:
 			return false
-	return true
+		daily_need += float(need[i])
+	return float(story["firewood"]) >= daily_need * winter_days
 
 static func era_markers(tech: Dictionary) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []

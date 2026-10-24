@@ -61,9 +61,13 @@ static func adapt(raw: Dictionary) -> Dictionary:
 	var winter_days: int = 0
 	if int(raw["season"]) >= 0:
 		winter_days = maxi(0, int(raw["days_per_season"]) - int(raw["season_day"]) + 1) if int(raw["season"]) == 3 else int(raw["days_per_season"])
+	# Usable story fuel is global, so every jump cause must compare it with global demand.
+	var daily_firewood_need: float = 0.0
+	for requirement: float in settlements["winter_wood_need"]:
+		daily_firewood_need += maxf(0.0, requirement)
 	for i: int in settlements["ids"].size():
 		var row: Dictionary = _row(settlements["ids"][i], settlements["xs"][i], settlements["ys"][i])
-		row.merge({"food": settlements["food"][i], "daily_food_need": settlements["food_need"][i], "firewood": raw["story"]["firewood"], "daily_firewood_need": settlements["winter_wood_need"][i], "winter_days": winter_days, "stockpile_cells": cells})
+		row.merge({"food": settlements["food"][i], "daily_food_need": settlements["food_need"][i], "firewood": raw["story"]["firewood"], "daily_firewood_need": daily_firewood_need, "winter_days": winter_days, "stockpile_cells": cells})
 		out["settlements"].append(row)
 	var people: Dictionary = raw["people"]
 	for i: int in people["ids"].size():

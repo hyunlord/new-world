@@ -290,6 +290,22 @@ func _test_raw_adapter(registry: Dictionary) -> void:
 	raw["enabled"] = false
 	_check("disabled colony evaluates empty", evaluator.evaluate(Adapter.adapt(raw)) and evaluator.active_alerts().is_empty())
 
+	var winter: Dictionary = _raw_empty()
+	_append_raw(winter, "settlements", {"ids": 1, "xs": 10, "ys": 12, "winter_wood_need": 2})
+	_append_raw(winter, "settlements", {"ids": 2, "xs": 30, "ys": 32, "winter_wood_need": 3})
+	winter = _packed(winter)
+	winter["story"]["firewood"] = 19
+	facts = Adapter.adapt(winter)
+	_check("each settlement alert row uses aggregate daily fuel demand", facts["settlements"][0]["daily_firewood_need"] == 5.0 and facts["settlements"][1]["daily_firewood_need"] == 5.0)
+	_check("aggregate alert rows retain authoritative shared usable supply", facts["settlements"][0]["firewood"] == 19 and facts["settlements"][1]["firewood"] == 19)
+	_check("combined winter deficit evaluates", evaluator.evaluate(facts))
+	_check("fuel sufficient per settlement but one short globally still alerts", _has(evaluator, "firewood_low"))
+	var first_winter_target: Dictionary = evaluator.next_target("firewood_low")
+	_check("global fuel shortage retains both settlement jump causes", first_winter_target.get("id") == 1 and evaluator.next_target("firewood_low").get("id") == 2)
+	winter["story"]["firewood"] = 20
+	_check("exact combined winter fuel boundary evaluates", evaluator.evaluate(Adapter.adapt(winter)))
+	_check("exact combined winter fuel boundary clears warning", not _has(evaluator, "firewood_low"))
+
 
 func _test_household_counts(registry: Dictionary) -> void:
 	var evaluator: Evaluator = Evaluator.new()
