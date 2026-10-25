@@ -78,6 +78,7 @@ pub(super) fn build(
     let mut recipes: RecipeFile = parse(&base, "recipes.ron")?;
     schema(items.schema_version, "items")?;
     schema(blueprints.schema_version, "blueprints")?;
+    let base_materials = blueprints.materials.iter().cloned().collect();
     schema(recipes.schema_version, "recipes")?;
     if extension.contains_key("items.ron") {
         let extra: ItemFile = parse(&extension, "items.ron")?;
@@ -153,7 +154,9 @@ pub(super) fn build(
             ));
         }
     }
+    let flora = load_flora::build(&base, &extension, &base_materials, &materials)?;
     let mut catalog = Catalog {
+        flora,
         animals: Vec::new(),
         pressures: Vec::new(),
         animal_index: Index::default(),

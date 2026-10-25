@@ -55,7 +55,7 @@ Codex reads the same skills through `.agents/skills/<name>` (symlinks).
 ## The gate
 
 ```bash
-bash tools/v8/gate.sh <log_dir>        # 35 steps; every step except perf and nav_bench must pass
+bash tools/v8/gate.sh <log_dir>        # 36 steps; every step except perf and nav_bench must pass
 ```
 
 Steps: fmt, bridge build, Godot import, tests (debug, release), clippy
@@ -63,7 +63,7 @@ Steps: fmt, bridge build, Godot import, tests (debug, release), clippy
 identity, determinism, perf (report only), bridge API, docs check,
 inventory closure, Python unit tests, M1 tests, colony determinism,
 command replay, `.uid` check, play check (`tools/v8/test_play.sh`), and since M1.5 (ADR 0016) snapshot schema
-docs, renderer agreement, save round trip and the standing benchmark against `docs/perf/PERF_LEDGER.md`, since M3 the economy soak (`tools/v8/soak.sh`, since M4 also 0 `KnowledgeLost`) and the nav benchmark (report only), since M4 the knowledge step (the knowledge tests and the F10 loss fixture), since M5 the story step (two worlds × 48 days with the storyteller: F1's schedule, ledger and reservations exact; the soak runs without beasts), and since M5.5 the neighbours step (two worlds × 48 days: waves 1 and 2 accepted, a trade, ledger exact with the traded terms) and the bench's RSS outer bound (ADR 0016 amendment), and since M-ART2 (ADR 0033) the art manifest check, resolver parity with the art line, the extensibility grep tests and the headless renderer tests (plus appearance agreement inside renderer agreement), and since M-UX the steward fixture (two seeds ×24 days ON: deterministic, exact ledger and reservations, no panics). Rebuild the bridge (`cargo build -p
+docs, renderer agreement, save round trip and the standing benchmark against `docs/perf/PERF_LEDGER.md`, since M3 the economy soak (`tools/v8/soak.sh`, since M4 also 0 `KnowledgeLost`) and the nav benchmark (report only), since M4 the knowledge step (the knowledge tests and the F10 loss fixture), since M5 the story step (two worlds × 48 days with the storyteller: F1's schedule, ledger and reservations exact; the soak runs without beasts), and since M5.5 the neighbours step (two worlds × 48 days: waves 1 and 2 accepted, a trade, ledger exact with the traded terms) and the bench's RSS outer bound (ADR 0016 amendment), and since M-ART2 (ADR 0033) the art manifest check, resolver parity with the art line, the extensibility grep tests and the headless renderer tests (plus appearance agreement inside renderer agreement), and since M-UX the steward fixture (two seeds ×24 days ON: deterministic, exact ledger and reservations, no panics), and Stage B adds `data_only_ext` (seven-family selected pack plus real-scene headless UI). Rebuild the bridge (`cargo build -p
 sim-bridge`) before any Godot run — `cargo test` does not refresh the library
 Godot loads.
 

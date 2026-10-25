@@ -414,7 +414,10 @@ fn step(
             }
             match job.kind {
                 JobKind::Chop { tree } => {
-                    fell(res, tree);
+                    if !fell(res, tree) {
+                        cancel(world, res, entity, CancelReason::TargetGone);
+                        return;
+                    }
                     if rule.economy.is_some() {
                         craft::train(world, entity, SkillKind::Chop, u32::from(job.amount));
                         use_axe(world, res, rule, id, entity, pos);
@@ -663,10 +666,20 @@ fn walk(
 }
 
 /// A felled tree: gone with its mark, its logs on its tile (7.3).
-fn fell(res: &mut SimResources, tree: (u32, u32)) {
-    let Some(felled) = res.colony.trees.remove(&tree) else {
-        return;
+fn fell(res: &mut SimResources, tree: (u32, u32)) -> bool {
+    let Some(material) = res.content_state.tree_material(tree) else {
+        return false;
     };
+    let flora = sim_core::colony::content::installed_or_bundled().flora();
+    if flora.species_by_material(material).is_none()
+        || res.colony.materials.stats(material).is_none()
+    {
+        return false;
+    }
+    let Some(felled) = res.colony.trees.remove(&tree) else {
+        return false;
+    };
+    res.content_state.forget_tree_material(tree);
     res.colony.designations.remove(&tree);
     res.colony.touch(true);
     res.colony.tallies.trees_felled += 1;
@@ -677,9 +690,10 @@ fn fell(res: &mut SimResources, tree: (u32, u32)) {
     put_items(
         res,
         tree,
-        ItemSpec::raw(ItemKind::role("tree_output"), Some(OAK)),
+        ItemSpec::raw(ItemKind::role("tree_output"), Some(material)),
         logs,
     );
+    true
 }
 
 /// Work ticks of one deadwood batch (M2 goal 3.8).
@@ -898,5 +912,27 @@ impl RuntimeSystem for JobExecuteSystem {
                 resources.current_tick
             );
         }
+    }
+}
+
+#[cfg(test)]
+mod tree_identity_tests {
+    use super::*;
+    #[test]
+    fn invalid_tree_identity_cannot_destroy_tree_or_credit_logs() {
+        let mut res = SimResources::new(8, 8, sim_core::MaterialRegistry::new());
+        res.colony
+            .trees
+            .insert((2, 2), sim_core::colony::Tree { logs: 4 });
+        assert!(!fell(&mut res, (2, 2)));
+        assert_eq!(res.colony.trees[&(2, 2)].logs, 4);
+        assert!(res.colony.ground_items.is_empty());
+        res.content_state.tree_material_default =
+            Some(sim_core::material::MaterialId::from_str_hash("unknown"));
+        assert!(!fell(&mut res, (2, 2)));
+        assert!(res.colony.trees.contains_key(&(2, 2)));
+        res.content_state.tree_material_default = Some(OAK);
+        assert!(!fell(&mut res, (2, 2)), "missing saved stats");
+        assert!(res.colony.trees.contains_key(&(2, 2)));
     }
 }

@@ -50,6 +50,28 @@ pub fn worker(engine: &mut SimEngine, x: u32, y: u32) -> Entity {
 
 /// Plant a tree with `logs` logs at `tile`.
 pub fn plant(engine: &mut SimEngine, tile: (u32, u32), logs: u8) {
+    let material = sim_core::colony::content::installed_or_bundled()
+        .flora()
+        .default_material();
+    for (id, entry) in sim_core::colony::ColonyMaterials::load().by_id {
+        engine
+            .resources
+            .colony
+            .materials
+            .by_id
+            .entry(id)
+            .or_insert(entry);
+    }
+    engine
+        .resources
+        .content_state
+        .tree_material_default
+        .get_or_insert(material);
+    engine
+        .resources
+        .content_state
+        .record_tree_material(tile, material)
+        .expect("fixture tree default");
     engine.resources.colony.trees.insert(tile, Tree { logs });
 }
 

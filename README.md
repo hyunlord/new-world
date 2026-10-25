@@ -11,7 +11,7 @@
 
 > 현재 정착지는 방과 창고, 제작·작업 우선순위, 기술 전승, 징집, 이주민·교역을 갖춘 정착지다. 기본 확대는 1×이고 64px 타일과 채택된 사람·자연 아트를 쓴다. 아래의 첫 플레이 순서와 전체 조작표로 시작한다.
 
-**지금 화면:** [M-UX 화면 모음](docs/images/mux_contact_sheet.png)과 [물·물가·겨울 눈 비교](docs/images/mux_compare_sheet.png), 검증 범위는 [Stage A 보고](docs/v8/mux/STAGE_A_REPORT.md)에서 확인한다. Stage A 기술 gate2는 `f38d488f43156145a44898671e77b26b3ee6c496`에서 35/35 통과했으며, 이 문서 준비 시점(2026-10-25 09:07 KST 이후)에는 보고 커밋의 gate3·게시가 **PENDING / NOT_PUBLISHED**다. A8 수용은 **FAILED**, 물리 트랙패드 검증은 미완료이며, ISS030의 반복 73–99ms·시작 포함 최대 약 650/646ms 지연은 남아 있다(미니맵 345µs 상한은 정지 tick1 장면만의 결과이며 전체 UI/FPS 판정이 아니다).
+**지금 화면:** [M-EXT 나무·재료 화면6장](docs/images/mux_contact_sheet.png)과 [물·물가·겨울 눈 비교](docs/images/mux_compare_sheet.png). [Stage A 보고](docs/v8/mux/STAGE_A_REPORT.md)의 기술 gate3는 `ca9f531ca6ef700ca223d99dba14d834b94b45da`에서 clean35/35 통과하고 2026-10-25 10:30 KST에 게시됐다. 이후 Stage B는 [나무 검증](docs/v8/mux/B5_VERIFICATION.md)과 [고정 B4 평가](docs/v8/mux/B4_HELDOUT_VERIFICATION.md)를 확보했으며 전체 gate·게시는 대기다. A8 수용은 **FAILED**, 물리 트랙패드 검증은 미완료이며, ISS030의 반복73–99ms·시작 포함 최대 약650/646ms 지연은 남아 있다(미니맵345µs 상한은 정지 tick1 장면만의 결과이며 전체 UI/FPS 판정이 아니다).
 
 ## 빌드와 실행
 

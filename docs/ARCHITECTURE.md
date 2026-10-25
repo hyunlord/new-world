@@ -332,10 +332,10 @@ The simulation contract binds every pass; each clause has its gate step.
   `SimResources.spatial`: the colony job searches' indexes (ground stacks, zone cells, chop marks), rebuilt when
   `ColonyState::overlay_version` changes, and the agents' index, built on demand once per tick
   (`SpatialIndex::agents_at`). Derived state: never saved.
-- **Benchmark** (`worldsim_perf bench`): five scenes on `WorldGenConfig::colony_stress(15100, N, side)` under
+- **Benchmark** (`worldsim_perf bench`): six scenes on `WorldGenConfig::colony_stress(15100, N, side)` under
   `WorldRules::colony`, each in its own process for a clean resident size, 1,440 warm-up and 2,880 profiled
   ticks, 3 repeats, medians; fed like `quick`. `bench-summarise` merges interleaved sessions of two binaries.
-- **Save files** (`rust/crates/sim-systems/src/save/`): magic `WORLDSIM`, `FORMAT_VERSION`, then a catalog-revision envelope before typed body decoding (format9, ADR0038). The body includes the tick, all persisted `SimResources` (hash collections in key order), the hecs world (archetypes in creation order, entity ids and generations, allocator free list), each system's `save_state`, Steward state and sparse content identity. Explicit format6/7 readers retain historical field widths and indexes; format8 accepts only the frozen bundled core checkpoint revision. Novel illness provenance is sparse agent-keyed state, validated against live Sick components before load returns and removed on recovery or death.
+- **Save files** (`rust/crates/sim-systems/src/save/`): magic `WORLDSIM`, `FORMAT_VERSION`, then a catalog-revision envelope before typed body decoding (format10, ADR0038/0044). The body includes the tick, all persisted `SimResources` (hash collections in key order), the hecs world (archetypes in creation order, entity ids and generations, allocator free list), each system's `save_state`, Steward state and sparse content identity. Explicit format6/7 readers retain historical field widths and indexes; format8 and format9 each accept only their frozen bundled checkpoint revision. Format10 appends a persisted tree-material default and sparse standing-tree overrides; legacy6–9 trees migrate to historical oak without species rerolls, and only missing validated embedded wood stats are added. Novel illness provenance is sparse agent-keyed state, validated against live Sick components before load returns and removed on recovery or death.
 
 ## 9. Items and jobs (M2, ADR 0019, ADR 0020)
 
@@ -581,7 +581,7 @@ assets/v8art/manifest.json   art id → file, role, SHA-256, size, anchor, footp
 scripts/world/art/material_resolver.gd   (style, material, category, kind) → top/face textures and tint (the art
                              line's resolve.py order; schema $defs supply defaults; parity test vs resolve.py)
 assets/v8art/flora/ + flora_resolver.gd  (species, size, season, variant) → frame, canopy mask, season tint, anchor
-                             (resolve_flora.py port, parity test; species by keyed hash until the sim has one)
+                             (resolve_flora.py port, parity test; species from authoritative saved get_trees column)
    ▼  drawing
 GroundBaker   16×16-tile chunks (1,024² RGBA8) on the CPU with native Image ops; dithered blends; rounded shores and
               hill edges from a closed-form field per tile quadrant (cached masks), banks and ink on the contour; water
@@ -625,7 +625,7 @@ value × 0.55 with the blue shift, additive hearth PointLight2D within 5 tiles)
 
 The CLI's `sim-test/src/content_boot.rs` and bridge's `ffi/content_boot.rs` acquire selected source bytes before typed rules or engine construction. `scripts/core/main_bootstrap.gd` invokes the controlled factory and presentation preflight before main children attach. `scripts/ui/content_context.gd` exposes registry metadata to UI consumers. Full-width content columns use PackedInt64Array; mechanical state codes remain separate. Door classification is an explicit `get_space` flag, independent of its style name.
 
-`colony/content_state.rs` retains sparse novel completed blueprint/style identities per physical layer and selected non-default cutters. Historical worlds retain their prior physical/material projections and empty sparse state. `save/content_validation.rs` rejects mismatched layers, styles, bounds and capabilities rather than repairing them silently. Frozen resource and Chronicle readers live in `sim-engine/src/legacy_v7.rs` and `sim-core/src/chronicle/legacy_v7.rs`; they preserve historical field order and indexes directly.
+`colony/content_state.rs` retains sparse novel completed blueprint/style identities per physical layer and selected non-default cutters. Historical worlds retain their prior completed physical/material projections and empty completed/cutter maps; migrated standing trees now retain historical oak through an explicit persisted tree-material default. `save/content_validation.rs` rejects mismatched layers, styles, bounds and capabilities rather than repairing them silently. Flora membership/distributions in `rust/crates/sim-core/data/colony/flora.ron` resolve existing physical Wood identities; worldgen uses an independent keyed draw while preserving placement and log yields. Felling and renderer reads consume the saved default/override, never a current-data reroll. Frozen resource and Chronicle readers live in `sim-engine/src/legacy_v7.rs` and `sim-core/src/chronicle/legacy_v7.rs`; they preserve historical field order and indexes directly.
 
 Selected source revision includes exact logical source names and bytes, including supplied presentation files. It is an identity checksum, not authentication. Replacing a selected pack requires a fresh process; unknown or mismatched saves fail before typed decoding. Bundled render-parameter F12 reload remains independent of the frozen selected extension sources. See `docs/decisions/0038-immutable-content-catalog.md` for compatibility limits and the required per-commit safety net.
 

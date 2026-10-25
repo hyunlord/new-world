@@ -137,6 +137,8 @@ fn source_commands_replay_after_assignment_without_duplicate_planning() {
 
 #[test]
 fn rule_data_accepts_a_new_identity_without_code_changes() {
+    sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+        .expect("explicit content boot before typed rule parsing");
     let text = include_str!("../../sim-core/data/colony/steward.ron");
     let changed = text
         .replace("id: 1,", "id: 71,")
@@ -347,6 +349,7 @@ fn terrain_boundary_home_roofs_existing_stock_through_ordinary_construction() {
             if x.abs_diff(hearth.0).max(y.abs_diff(hearth.1)) <= 8 {
                 engine.resources.colony.nodes.remove(&(x, y));
                 engine.resources.colony.trees.remove(&(x, y));
+                engine.resources.content_state.forget_tree_material((x, y));
             }
         }
     }

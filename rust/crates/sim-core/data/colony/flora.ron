@@ -1,0 +1,18 @@
+// Admitted physical Wood identities and authored elevation distributions (ADR 0044).
+(
+    schema_version: 1,
+    default_material: "oak",
+    species: [(material: "oak"), (material: "pine"), (material: "birch")],
+    distributions: [
+        (terrain: forest, elevation: (0, 159), weights: [
+            (material: "oak", weight: 600),
+            (material: "pine", weight: 250),
+            (material: "birch", weight: 150),
+        ]),
+        (terrain: forest, elevation: (160, 255), weights: [
+            (material: "oak", weight: 200),
+            (material: "pine", weight: 650),
+            (material: "birch", weight: 150),
+        ]),
+    ],
+)

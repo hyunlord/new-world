@@ -18,7 +18,7 @@
 # Water: source pixels remain unchanged on upload. Bounded channel attenuation produces the configured dark-blue
 #   mean without clipping; water_lift reports signed land-minus-water contrast at every map tint for the gate.
 # Snow: a world-space shader field (>=512 px, alpha<=0.45) with cached tree-base/wall occupancy masks.
-# Canopy (M-ART2.1 §2.2, ¼× only, `trees.quarter_canopy`): the tree tiles (get_trees, species by tree_layer.gd's hash)
+# Canopy (M-ART2.1 §2.2, ¼× only, `trees.quarter_canopy`): the tree tiles (get_trees, persisted material species)
 #   are a GroundMap layer; a chunk baked at texture factor 4 carries the canopy mass per species in its season
 #   (the season's Lab shift per pixel, as the 1× sprites get it — a deciduous winter uses its bare frame's mean colour
 #   modulated by the texture's luminance — on a ¼-size copy scaled back by nearest, so the ¼ texture keeps every
@@ -108,6 +108,8 @@ var _trees_version: int = -2
 var _tree_cells: Dictionary = {}
 var _canopy_season: String = ""
 var _canopy_cache: Dictionary = {}
+## Bound roster plus authoritative extra identities; resolver handles their habit fallback.
+var _canopy_species: Array[String] = []
 
 
 func _ready() -> void:
@@ -131,6 +133,9 @@ func _on_world_reset() -> void:
 	_map = null
 	_trees_version = -2
 	_tree_cells.clear()
+	_canopy_species.clear()
+	_canopy_cache.clear()
+	_canopy_season = ""
 	_space_version = -2
 	_hearth = Vector2i(-1000, -1000)
 	_drop_all()
@@ -904,17 +909,27 @@ func _update_trees() -> void:
 	var dirty: Dictionary = {}
 	var size: int = _baker.chunk_tiles
 	if version != _trees_version:
-		_trees_version = version
 		var styles: Dictionary = _species_styles()
 		var trees: Dictionary = SimReads.read(_world_sim, "get_trees")
 		var xs: PackedInt32Array = trees.get("xs", PackedInt32Array())
 		var ys: PackedInt32Array = trees.get("ys", PackedInt32Array())
+		var species: PackedStringArray = trees.get("species", PackedStringArray())
+		if xs.size() != ys.size() or xs.size() != species.size() or species.has(""):
+			push_error("get_trees requires aligned nonempty species identities")
+			return
+		_trees_version = version
+		for identity: String in species:
+			if not styles.has(identity):
+				_canopy_species.append(identity)
+				styles[identity] = _canopy_species.size()
+				_canopy_cache.clear()
+				_canopy_season = ""
 		var now: Dictionary = {}
-		for i: int in mini(xs.size(), ys.size()):
+		for i: int in xs.size():
 			var t: Vector2i = Vector2i(xs[i], ys[i])
 			if t.x < 0 or t.y < 0 or t.x >= _w or t.y >= _h:
 				continue
-			now[t] = int(styles.get(TreeLayer.tree_species(_seed, t), 0))
+			now[t] = int(styles[species[i]])
 		for t: Vector2i in _union(_tree_cells, now):
 			if int(_tree_cells.get(t, 0)) != int(now.get(t, 0)):
 				_map.tree[t.y * _w + t.x] = int(now.get(t, 0))
@@ -933,12 +948,13 @@ func _update_trees() -> void:
 
 ## Species id → canopy style (1-based, bindings `trees.species` order).
 func _species_styles() -> Dictionary:
+	if _canopy_species.is_empty():
+		for row: Variant in (ArtData.bindings().get("trees", {}) as Dictionary).get("species", []):
+			if row is Dictionary:
+				_canopy_species.append(str((row as Dictionary)["species"]))
 	var out: Dictionary = {}
-	var k: int = 0
-	for row: Variant in (ArtData.bindings().get("trees", {}) as Dictionary).get("species", []):
-		k += 1
-		if row is Dictionary:
-			out[str((row as Dictionary).get("species", ""))] = k
+	for i: int in _canopy_species.size():
+		out[_canopy_species[i]] = i + 1
 	return out
 
 
@@ -964,8 +980,8 @@ func _prepare_canopies(season: String) -> void:
 	var cfg: Dictionary = ArtData.bindings().get("trees", {})
 	var habit: String = str(cfg.get("habit", ""))
 	var edge_value: float = clampf(float(ArtData.param("trees.canopy_edge_value", 0.7)), 0.0, 1.0)
-	for row: Variant in cfg.get("species", []):
-		var r: Dictionary = _flora.resolve(str((row as Dictionary).get("species", "")) if row is Dictionary else "", TreeLayer.SIZE_LARGE, season, 0, habit) if season != "" else {}
+	for identity: String in _canopy_species:
+		var r: Dictionary = _flora.resolve(identity, TreeLayer.SIZE_LARGE, season, 0, habit) if season != "" else {}
 		var src: Image = ArtData.image_at(FloraResolver.res_path(str(r.get("map_canopy_path", "")))) if not r.is_empty() else null
 		if src == null:
 			src = Image.create(TILE, TILE, false, Image.FORMAT_RGBA8)

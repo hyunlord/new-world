@@ -614,15 +614,16 @@ frame.
 | `rooms_version` | int | M3: `colony.rooms_version`, bumped when the rooms or their roles change |
 
 ### `get_trees`
-`collect_trees(&SimResources)` → `trees_to_dict` (`ffi/colony.rs`). Every standing tree in `(x, y)` order (sorted by
+`collect_tree_snapshot(&SimResources)` → `trees_to_dict` (`ffi/colony.rs`). Every standing tree in `(x, y)` order (sorted by
 x, then y). Stumps are not in the simulation: `tree_layer.gd` (and the text renderer's `StumpTracker`) derive them
-from successive reads.
+from successive reads. The visual stump retains the removed tree’s last authoritative species. Coordinate-only ASCII clients retain `collect_trees`; Godot species comes from persisted ContentState and saved material names, never a coordinate hash.
 
 | key | type | meaning |
 |---|---|---|
 | `version` | int | `trees_version` of this read |
 | `xs` | PackedInt32Array | tile x |
 | `ys` | PackedInt32Array | tile y |
+| `species` | PackedStringArray | canonical saved wood-material name, aligned with xs/ys; empty exposes invalid identity |
 
 ### `get_colony_overlay`
 `collect_colony_overlay(&World, &SimResources) -> ColonyOverlay` → `overlay_to_dict` (`ffi/colony.rs`). Four row

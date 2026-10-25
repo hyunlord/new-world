@@ -104,6 +104,8 @@ pub const STREAM_RELATIONS: u64 = 0x5245_4C41_5449_4F4E;
 
 /// M1: logs a tree yields, keyed `(seed, STREAM_TREE_LOGS, x, y)` ("tree_logs").
 pub const STREAM_TREE_LOGS: u64 = 0x5452_4545_4C4F_4753;
+/// Standing tree material, keyed by its admitted coordinates.
+pub const STREAM_TREE_SPECIES: u64 = 0x5452_4545_5350_4543;
 /// M1: the colony world's bushes beyond the camp ring (shuffle; slot = 0).
 pub const STREAM_COLONY_BUSH: u64 = 0x434F_4C42_5553_485F;
 /// M1: the colony world's deadwood beyond the camp band (shuffle; slot = terrain pass).
@@ -153,7 +155,7 @@ pub const STREAM_NEIGHBOURS: u64 = 0x4E45_4947_4842_4F52;
 pub const STREAM_TRADE: u64 = 0x5452_4144_4552_5321;
 
 /// Every stream constant, for the distinctness test and the inventory.
-pub const STREAMS: [u64; 38] = [
+pub const STREAMS: [u64; 39] = [
     STREAM_MOVE_PAUSE,
     STREAM_MOVE_DX,
     STREAM_MOVE_DY,
@@ -177,6 +179,7 @@ pub const STREAMS: [u64; 38] = [
     STREAM_SEX,
     STREAM_RELATIONS,
     STREAM_TREE_LOGS,
+    STREAM_TREE_SPECIES,
     STREAM_COLONY_BUSH,
     STREAM_COLONY_WOOD,
     STREAM_COLONY_FOUNDER_FIX,

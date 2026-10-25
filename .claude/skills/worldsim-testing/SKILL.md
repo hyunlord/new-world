@@ -1,6 +1,6 @@
 ---
 name: worldsim-testing
-description: Use when testing or verifying any WorldSim change, before claiming "no behaviour change", "deterministic", "faster" or "done" — identity (tools/v8/identity.sh), determinism, the 35-step gate (tools/v8/gate.sh), the economy soak, perf comparison (tools/v8/perf.sh), test layout by domain on sim_test::baseline_engine, and how to write an assertion that can fail.
+description: Use when testing or verifying any WorldSim change, before claiming "no behaviour change", "deterministic", "faster" or "done" — identity (tools/v8/identity.sh), determinism, the 36-step gate (tools/v8/gate.sh), the economy soak, perf comparison (tools/v8/perf.sh), test layout by domain on sim_test::baseline_engine, and how to write an assertion that can fail.
 ---
 
 # WorldSim testing
@@ -236,3 +236,11 @@ Each step logs to `<log_dir>/<step>.log`; the summary with start time, duration 
 
 | 2026-10-25 | Four population boundary cases failed positive membership before testing the cap | A fresh tick0 colony had no Settlement; the fixture assumed one existed | Establish a real settlement and assert positive membership before interpreting red policy failures; preserve the malformed-fixture run separately | MUX D40/ISS290; `rust/crates/sim-test/tests/b4_population/support.rs` |
 | 2026-10-25 | Controlled craft rows differed only in the correctly changed commit-linked arithmetic manifest hash | A paired comparison treated provenance identity as invariant arithmetic | Verify each identity against its own frozen manifest, then compare every non-identity field exactly; preserve the failed full-row comparison and never exclude numeric inputs or outputs | MUX D41/ISS293; `docs/v8/mux/B4_T_VERIFICATION.md` |
+| 2026-10-25 | A steward data-only test passed in earlier suites but failed alone with content catalogue not installed | The test called the typed parser without explicit catalogue bootstrap and depended on another test's process-global initialization | Give each parser test its required explicit boot, reproduce it alone in a fresh test process, and retain separate negative tests that require unbooted parsing to fail; do not make the production parser initialize globals to hide fixture order | MUX ISS301; `rust/crates/sim-test/tests/colony_steward.rs`; `rust/crates/sim-core/tests/recipe_registry.rs` |
+
+### Window fixture focus after loading worlds
+A controlled capture must settle deferred camp centering, apply requested zoom before calling center_on_tile (its clamp uses current zoom), and record actual projected target plus engine screen center. A non-null visible CanvasItem can still be offscreen or occluded by neighboring crowns. Retain failed captures, define unobscured screen bounds from the real HUD, and inspect pixels separately. If ordinary commands stage a clearer follow-up, preserve the initial view and disclose commands/ticks; never treat hidden foliage or dictionary identity as normal rendered acceptance.
+
+Source: `tools/v8/b5_tree_visual.gd`; D44 visual evidence addenda and ISS302 in `docs/ISSUES.md`.
+
+| 2026-10-25 | A product freeze missed ignored Cargo.lock | git tracked/untracked --exclude-standard excludes dependency resolution input | Hash the lock separately before and after a --locked build; bind binary hashes and preserve any earlier missing pre-build evidence | `docs/v8/mux/B5_VERIFICATION.md`; ISS304 |

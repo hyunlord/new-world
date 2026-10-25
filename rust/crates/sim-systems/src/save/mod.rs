@@ -29,6 +29,7 @@
 //! therefore the loaded engine; the round-trip tests prove it ticks the same.
 
 mod content_validation;
+mod legacy_v9;
 pub mod world;
 
 #[cfg(test)]
@@ -51,7 +52,7 @@ use sim_engine::{SimEngine, SimResources};
 /// The first eight bytes of every save file.
 pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 
-/// Save format version; historical versions 6, 7 and 8 are migrated. Bump it
+/// Save format version; historical versions 6, 7, 8 and 9 are migrated. Bump it
 /// whenever a saved type or the layout changes. 2 = M2 (item specs, nodes,
 /// workshops and bills, multi-line material needs, tools, skills, priorities);
 /// 3 = M3 (door and dug tile columns, navigation paths, space sites, rooms);
@@ -63,7 +64,7 @@ pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 /// 7 = optional Steward state; 8 = catalog-bound envelope, full-width content
 /// codes and Chronicle causes, sparse completed-construction/tool identity;
 /// 9 = full-width pressure provenance and persistent novel illness origins.
-pub const FORMAT_VERSION: u32 = 9;
+pub const FORMAT_VERSION: u32 = 10;
 
 /// Upper bound for one decode (guards against corrupt length prefixes).
 const DECODE_LIMIT: u64 = 1 << 31;
@@ -171,6 +172,8 @@ impl From<LegacyContentStateV8> for sim_core::colony::content_state::ContentStat
             completed: old.completed,
             workshop_cutters: old.workshop_cutters,
             illness_origins: Default::default(),
+            tree_material_default: None,
+            tree_materials: Default::default(),
         }
     }
 }
@@ -251,7 +254,8 @@ pub fn load_with(
     let legacy = version == Some(6u32.to_le_bytes().as_slice());
     let legacy_v7 = version == Some(7u32.to_le_bytes().as_slice());
     let legacy_v8 = version == Some(8u32.to_le_bytes().as_slice());
-    if legacy || legacy_v7 || legacy_v8 {
+    let legacy_v9 = version == Some(9u32.to_le_bytes().as_slice());
+    if legacy || legacy_v7 || legacy_v8 || legacy_v9 {
         sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
             .map_err(|error| SaveError::Decode(error.to_string()))?;
     }
@@ -295,6 +299,23 @@ pub fn load_with(
                 steward: old.steward,
                 content_state: old.content_state.into(),
             }
+        } else if legacy_v9 {
+            if envelope.revision != legacy_v9::REVISION {
+                return Err(SaveError::Decode(format!(
+                    "unsupported format9 content revision {}",
+                    envelope.revision
+                )));
+            }
+            let old: legacy_v9::LegacyBodyV9 =
+                decode(&envelope.payload).map_err(SaveError::Decode)?;
+            Body {
+                current_tick: old.current_tick,
+                resources: old.resources,
+                world: old.world,
+                systems: old.systems,
+                steward: old.steward,
+                content_state: old.content_state.into(),
+            }
         } else {
             if envelope.revision != catalog.revision() {
                 return Err(SaveError::Decode(format!(
@@ -309,6 +330,9 @@ pub fn load_with(
     let mut resources = body.resources;
     resources.steward = body.steward;
     resources.content_state = body.content_state;
+    if legacy || legacy_v7 || legacy_v8 || legacy_v9 {
+        legacy_v9::migrate_trees(&mut resources).map_err(SaveError::Decode)?;
+    }
     content_validation::validate(&resources).map_err(SaveError::Decode)?;
     resources.material_blocking_cache = MaterialBlockingCache::build(&resources.material_registry);
     // M3: the colony's cost map is derived (not saved); build it now so a
@@ -352,7 +376,7 @@ fn read_header(bytes: &[u8]) -> Result<&[u8], SaveError> {
     let mut word = [0u8; 4];
     word.copy_from_slice(version);
     let found = u32::from_le_bytes(word);
-    if found != FORMAT_VERSION && found != 6 && found != 7 && found != 8 {
+    if found != FORMAT_VERSION && found != 6 && found != 7 && found != 8 && found != 9 {
         return Err(SaveError::Version {
             found,
             expected: FORMAT_VERSION,
@@ -453,5 +477,40 @@ mod tests {
         ok.extend_from_slice(&FORMAT_VERSION.to_le_bytes());
         ok.push(7);
         assert_eq!(read_header(&ok), Ok(&[7u8][..]));
+    }
+    #[test]
+    fn format9_rejects_nonallowlisted_revision_before_decoding_body() {
+        let envelope = Envelope {
+            revision: "unregistered-old-pack".into(),
+            payload: vec![255],
+        };
+        let mut bytes = MAGIC.to_vec();
+        bytes.extend_from_slice(&9u32.to_le_bytes());
+        bytes.extend_from_slice(&encode(&envelope).expect("envelope"));
+        let error = load(&bytes).err().expect("unknown legacy revision");
+        assert!(
+            error
+                .to_string()
+                .contains("unsupported format9 content revision"),
+            "{error}"
+        );
+    }
+    #[test]
+    fn allowlisted_format9_revision_reaches_and_rejects_malformed_body() {
+        let envelope = Envelope {
+            revision: legacy_v9::REVISION.into(),
+            payload: vec![255],
+        };
+        let mut bytes = MAGIC.to_vec();
+        bytes.extend_from_slice(&9u32.to_le_bytes());
+        bytes.extend_from_slice(&encode(&envelope).expect("envelope"));
+        let error = load(&bytes).err().expect("malformed legacy body");
+        assert!(matches!(error, SaveError::Decode(_)));
+        assert!(
+            !error
+                .to_string()
+                .contains("unsupported format9 content revision"),
+            "{error}"
+        );
     }
 }

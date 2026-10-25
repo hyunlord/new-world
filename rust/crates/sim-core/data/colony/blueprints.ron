@@ -2,7 +2,7 @@
 (
     schema_version: 1,
     roles: {"default": "hut", "legacy_wall": "log_wall", "legacy_stone_wall": "stone_wall", "legacy_door": "door", "legacy_floor": "packed_floor", "legacy_bed": "bedroll", "worldgen_hearth": "hearth_fire"},
-    materials: ["granite", "limestone", "flint", "chert", "oak", "clay", "packed_earth"],
+    materials: ["granite", "limestone", "flint", "chert", "oak", "pine", "birch", "clay", "packed_earth"],
     material_roles: {"legacy_floor": "packed_earth", "excavated_rock": "granite", "default_wood": "oak", "default_stone": "granite"},
     historical_stone_wall_materials: ["granite", "limestone"],
     blueprints: [

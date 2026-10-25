@@ -45,8 +45,8 @@ pub use activity::{collect_activity_snapshot, ActivitySnapshotRow};
 pub use appearance::{appearance_rule, collect_appearance, AppearanceRow, AppearanceRule};
 pub use colony::{
     can_place, clip_rect, collect_agent_jobs, collect_colony_overlay, collect_colony_versions,
-    collect_trees, submit_blueprint, submit_rect, submit_tiles, ColonyOverlay, ColonyVersions,
-    OverlaySite, RectCommand,
+    collect_tree_snapshot, collect_trees, submit_blueprint, submit_rect, submit_tiles,
+    ColonyOverlay, ColonyVersions, OverlaySite, RectCommand, TreeSnapshot,
 };
 pub use economy::{
     collect_agent_economy, collect_recipes, collect_work_priorities, collect_workshops,

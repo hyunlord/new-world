@@ -14,7 +14,7 @@ use sim_core::colony::{ColonyMaterials, NodeKind, ResourceNode, Tree};
 use sim_core::components::{Agent, BuildingKind, Child, Elder, Life};
 use sim_core::rng::{
     keyed_below, STREAM_BOULDER, STREAM_COLONY_BUSH, STREAM_COLONY_FOUNDER_FIX, STREAM_COLONY_WOOD,
-    STREAM_OUTCROP, STREAM_TREE_LOGS,
+    STREAM_OUTCROP, STREAM_TREE_LOGS, STREAM_TREE_SPECIES,
 };
 use sim_core::TerrainType;
 use sim_engine::{SimEngine, SimResources};
@@ -686,9 +686,28 @@ pub fn ensure_adults(cfg: &WorldGenConfig, gen: &ColonyGen, engine: &mut SimEngi
 /// bush, a deadwood spot, a water source or a building (goal 6.2), with
 /// `tree_logs_min + keyed_below(seed, STREAM_TREE_LOGS, x, y, 0, 0, span)` logs.
 fn trees(cfg: &WorldGenConfig, gen: &ColonyGen, r: &mut SimResources, camp: Tile) {
+    let flora = sim_core::colony::content::installed_or_bundled().flora();
+    if let Err(error) = trees_with_flora(cfg, gen, r, camp, flora) {
+        panic!("tree population invariant: {error}");
+    }
+}
+
+fn trees_with_flora(
+    cfg: &WorldGenConfig,
+    gen: &ColonyGen,
+    r: &mut SimResources,
+    camp: Tile,
+    flora: &sim_core::colony::content::FloraCatalog,
+) -> Result<(), String> {
     let Some(rule) = r.rules.colony else {
-        return;
+        return Ok(());
     };
+    if r.content_state.tree_material_default.is_none() {
+        if !r.colony.trees.is_empty() || !r.content_state.tree_materials.is_empty() {
+            return Err("populated tree state has no material default".into());
+        }
+        r.content_state.tree_material_default = Some(flora.default_material());
+    }
     let lo = rule.tree_logs_min.min(rule.tree_logs_max);
     let span = u64::from(rule.tree_logs_max.max(lo) - lo) + 1;
     for p in tiles(r) {
@@ -711,7 +730,171 @@ fn trees(cfg: &WorldGenConfig, gen: &ColonyGen, r: &mut SimResources, camp: Tile
                 0,
                 span,
             ) as u8;
+        let elevation = r.tile_grid.elevation[r.tile_grid.idx(p.0, p.1)];
+        let band = flora
+            .distribution(TerrainType::Forest, elevation)
+            .ok_or_else(|| format!("missing forest flora band at {p:?}"))?;
+        let draw = keyed_below(
+            cfg.seed,
+            STREAM_TREE_SPECIES,
+            u64::from(p.0),
+            u64::from(p.1),
+            0,
+            0,
+            band.total_weight(),
+        );
+        let material = band
+            .select(draw)
+            .ok_or_else(|| format!("invalid flora draw at {p:?}"))?;
+        r.content_state
+            .record_tree_material(p, material)
+            .map_err(str::to_owned)?;
         r.colony.trees.insert(p, Tree { logs });
     }
     r.colony.touch(true);
+    Ok(())
+}
+
+#[cfg(test)]
+mod flora_population_tests {
+    use super::*;
+    use sim_core::colony::content::{Catalog, NamedSource, RawSources};
+    use sim_core::material::MaterialId;
+    use sim_core::rules::ColonyRule;
+
+    #[test]
+    fn restricted_member_addition_uses_real_population_without_moving_trees_or_changing_logs() {
+        let mut base = RawSources::bundled();
+        base.sources.iter_mut().find(|s| s.name == "flora.ron").expect("flora").bytes = br#"(schema_version:1,default_material:"oak",species:[(material:"oak"),(material:"birch")],distributions:[(terrain:forest,elevation:(0,255),weights:[(material:"oak",weight:3),(material:"birch",weight:1)])])"#.to_vec();
+        let original = Catalog::from_sources(base.clone(), None).expect("restricted base");
+        let extension = RawSources { sources: vec![NamedSource { name: "flora".into(), bytes: br#"(schema_version:1,species:[(material:"pine")],replace_distributions:Some([(terrain:forest,elevation:(0,255),weights:[(material:"pine",weight:1)])]))"#.to_vec() }] };
+        let extended = Catalog::from_sources(base, Some(extension)).expect("member addition");
+        let pine = MaterialId::from_str_hash("pine");
+        assert!(original.flora().species_by_material(pine).is_none());
+        assert!(extended.flora().species_by_material(pine).is_some());
+        let cfg = WorldGenConfig::colony(37);
+        let gen = ColonyGen {
+            clearing_radius: 1,
+            ..cfg.colony.expect("colony")
+        };
+        let populate = |flora| {
+            let mut r = SimResources::new(16, 16, sim_core::MaterialRegistry::new());
+            r.rules.colony = Some(ColonyRule::M3);
+            r.tile_grid.terrain_type.fill(TerrainType::Forest);
+            for i in 0..r.tile_grid.elevation.len() {
+                r.tile_grid.elevation[i] = i as u8;
+            }
+            trees_with_flora(&cfg, &gen, &mut r, (0, 0), flora).expect("population");
+            r
+        };
+        let before = populate(original.flora());
+        let after = populate(extended.flora());
+        let again = populate(extended.flora());
+        assert_eq!(after.content_state, again.content_state);
+        assert_eq!(before.colony.trees.len(), 252);
+        assert_eq!(
+            before.colony.trees.keys().collect::<Vec<_>>(),
+            after.colony.trees.keys().collect::<Vec<_>>()
+        );
+        let rule = ColonyRule::M3;
+        for (&tile, tree) in &after.colony.trees {
+            assert_eq!(before.colony.trees[&tile].logs, tree.logs);
+            assert_eq!(
+                tree.logs,
+                rule.tree_logs_min
+                    + keyed_below(
+                        cfg.seed,
+                        STREAM_TREE_LOGS,
+                        u64::from(tile.0),
+                        u64::from(tile.1),
+                        0,
+                        0,
+                        u64::from(rule.tree_logs_max - rule.tree_logs_min) + 1
+                    ) as u8
+            );
+            assert_eq!(after.content_state.tree_material(tile), Some(pine));
+            assert_ne!(before.content_state.tree_material(tile), Some(pine));
+        }
+        // Continue the exact extended-population resource value, without copying or
+        // inserting a tree, through ordinary commands and the normal job systems.
+        let mut engine = SimEngine::new(16, 16, sim_core::MaterialRegistry::new());
+        engine.resources = after;
+        engine.resources.colony.materials = ColonyMaterials::load();
+        engine.resources.rules.agent.move_interval_ticks = 1;
+        engine.register_system(Box::new(crate::runtime::agent::AgentMovementSystem::new()));
+        engine.register_system(Box::new(crate::runtime::jobs::JobAssignSystem::new()));
+        engine.register_system(Box::new(crate::runtime::jobs::JobExecuteSystem::new()));
+        engine.register_system(Box::new(
+            crate::runtime::construction::ConstructionSystem::new(),
+        ));
+        let worker = engine.spawn_agent(0, 0);
+        engine
+            .world
+            .insert(
+                worker,
+                (
+                    crate::runtime::agent::MovementRng::new(7),
+                    sim_core::components::AgentState::Idle,
+                ),
+            )
+            .expect("worker components");
+        crate::runtime::nav::ensure(&mut engine.resources);
+        let tree = (2, 0);
+        let yield_logs = engine.resources.colony.trees[&tree].logs;
+        assert!(
+            crate::commands::submit(
+                &mut engine,
+                sim_core::colony::Command::DesignateChopTiles { tiles: vec![tree] }
+            )
+            .accepted
+        );
+        for _ in 0..1000 {
+            if !engine.resources.colony.trees.contains_key(&tree) {
+                break;
+            }
+            engine.tick();
+            crate::runtime::jobs::invariants::check(&engine.world, &engine.resources)
+                .expect("chop conservation");
+        }
+        assert!(!engine.resources.colony.trees.contains_key(&tree));
+        let logs = engine.resources.colony.ground_items[&tree];
+        assert_eq!(
+            (logs.material, logs.count),
+            (Some(pine), u16::from(yield_logs))
+        );
+        assert!(
+            crate::commands::submit(
+                &mut engine,
+                sim_core::colony::Command::PlaceBlueprint {
+                    kind: sim_core::colony::BlueprintKind::LogWall,
+                    x: 0,
+                    y: 1
+                }
+            )
+            .accepted
+        );
+        let wall = engine.resources.tile_grid.idx(0, 1);
+        for _ in 0..1000 {
+            if engine.resources.tile_grid.wall_material[wall].is_some() {
+                break;
+            }
+            engine.tick();
+            crate::runtime::jobs::invariants::check(&engine.world, &engine.resources)
+                .expect("wall conservation");
+        }
+        assert_eq!(engine.resources.tile_grid.wall_material[wall], Some(pine));
+    }
+    #[test]
+    fn populated_tree_without_default_is_a_reported_invariant_error() {
+        let cfg = WorldGenConfig::colony(1);
+        let mut r = SimResources::new(4, 4, sim_core::MaterialRegistry::new());
+        r.rules.colony = Some(ColonyRule::M3);
+        r.colony.trees.insert((2, 2), Tree { logs: 3 });
+        let flora = sim_core::colony::content::installed_or_bundled().flora();
+        assert!(
+            trees_with_flora(&cfg, &cfg.colony.expect("colony"), &mut r, (0, 0), flora).is_err()
+        );
+        assert_eq!(r.colony.trees[&(2, 2)].logs, 3);
+        assert!(r.content_state.tree_material_default.is_none());
+    }
 }

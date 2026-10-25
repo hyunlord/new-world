@@ -207,3 +207,5 @@
 - 2026-10-25 — M-UX Stage B T(ADR0042/D41): 성인·최근 수행자와 데이터 희귀 정책으로 교역 가중치30/10/1 적용. 경계15·기존 이웃16·저장7·과거 이행4 및 선택 팩 시험 통과. 원본 identity228748/0, OFF9개 중3동일·6교역/경제 차이 기록, 불변식0. T `54a55a421` 이후 BPT commit-linked 보정8×48 VALID(제작1644), 전체 B gate·게시 대기.
 
 - 2026-10-25 — M-EXT B4 H(ADR0043/D42): 비축 우선 뒤 실제 화덕 주변 고기 운반, 기존 pickup/walk/drop/feed·취소 보존 재사용. 변경 전4통과/3예상실패→최종23통과와 기존 회귀33통과. 원본 identity228748/0·OFF2동일/7차이·불변식0, 보정8×48 VALID이나 자연 운반 종료107개 UNRESOLVED를 성공 배달로 세지 않는다. 전체 B gate·홀드아웃·게시 대기([검증](v8/mux/B4_H_VERIFICATION.md)).
+
+- 2026-10-25 — M-EXT B4 고정4빌드×32시드×48일 종료16:41 KST: 관측 VALID·F4/F9 모두 PASS(F4a 전부31/32, F9a30/30/29/30), ledger/reservation 위반0. P 자연 상한 개입0, H 화덕 운반 시작99개이나 자연 종료는 UNRESOLVED이므로 일률적 개선·성공 배달을 주장하지 않는다. 전체 B gate·게시 전([홀드아웃 보고](v8/mux/B4_HELDOUT_VERIFICATION.md)).

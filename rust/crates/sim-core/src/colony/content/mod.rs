@@ -4,11 +4,14 @@ pub mod defs;
 #[cfg(test)]
 mod ecology_tests;
 mod error;
+#[cfg(test)]
+mod flora_tests;
 pub mod host;
 pub mod ids;
 mod index;
 mod load;
 mod load_ecology;
+mod load_flora;
 mod raw_blueprint;
 mod raw_item;
 mod raw_recipe;
@@ -35,6 +38,7 @@ use std::collections::{BTreeMap, BTreeSet};
 /// Fully validated, immutable selected definitions and derived knowledge data.
 #[derive(Debug)]
 pub struct Catalog {
+    flora: FloraCatalog,
     animals: Vec<AnimalDef>,
     pressures: Vec<PressureDef>,
     animal_index: Index,
@@ -105,6 +109,10 @@ macro_rules! family_access {
     };
 }
 impl Catalog {
+    /// Validated flora membership and generation distributions.
+    pub fn flora(&self) -> &FloraCatalog {
+        &self.flora
+    }
     /// Pure local construction; never installs or reads global definitions.
     pub fn from_sources(
         base: RawSources,

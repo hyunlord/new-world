@@ -213,18 +213,15 @@
     ]
   },
   "trees": {
-    "about": "Trees resolve through the flora catalogue (assets/v8art/flora/species.json, ADR 0033; M-ART2.1 §2.2). The sim has no species yet: the renderer picks one per tile by a keyed hash on the world seed, weighted, and the size (large below large_permille) and variant by further hashes. M-EXT replaces the hash with the snapshot's species column (MART21_DECISIONS D4). `habit` is the habit an unknown species falls back to.",
+    "about": "Trees resolve through the flora catalogue (assets/v8art/flora/species.json, ADR 0033; M-ART2.1 §2.2). Species comes from the persisted material identity in get_trees. This roster sets canopy style order only; size (large below large_permille) and variant retain independent hashes. `habit` is the habit an unknown species falls back to.",
     "species": [
       {
-        "weight": 5,
         "species": "oak"
       },
       {
-        "weight": 3,
         "species": "birch"
       },
       {
-        "weight": 2,
         "species": "pine"
       }
     ],

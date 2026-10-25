@@ -176,7 +176,7 @@ D31(`d0c7f2b04`)은 기본 설정 경로에만 선택적 `WORLDSIM_TEST_SETTINGS
 
 D32(`f1532878b`)는 목표와 알림 모두에서 전역 사용 가능 장작을 정착지별 양수 일일 필요량의 합계 × 겨울 일수와 비교한다. 하루치만 있거나 전체 필요량보다 1개 부족한 경우를 통과시키지 않는다. 최신 학습 128개·알림 254개 검사는 이 경계 회귀를 포함한다. D33(`c20e1fdee`)의 알림·언어·원인 패널 수정은 위 UI14·scale5·strict5와 별도 소스 검토로 확인했다.
 
-현재 문서 화면은 [UI14 HUD 8장](../../images/mux_contact_sheet.png)과 [렌더러 비교 12장](../../images/mux_compare_sheet.png)이다. 렌더러 시트 마지막 4장은 실제 건설이 아닌 render-only 눈 fixture로 명시했다. 이전 [mart21 화면 모음](https://github.com/hyunlord/new-world/blob/67a6232ab41a4bf5051b11303bcac97543b111f0/docs/images/mart21_contact_sheet.png)은 기준 커밋 `67a6232a`에 보존한다.
+현재 문서 화면은 [UI14 HUD 8장](https://github.com/hyunlord/new-world/blob/ca9f531ca6ef700ca223d99dba14d834b94b45da/docs/images/mux_contact_sheet.png)과 [렌더러 비교 12장](../../images/mux_compare_sheet.png)이다. 렌더러 시트 마지막 4장은 실제 건설이 아닌 render-only 눈 fixture로 명시했다. 이전 [mart21 화면 모음](https://github.com/hyunlord/new-world/blob/67a6232ab41a4bf5051b11303bcac97543b111f0/docs/images/mart21_contact_sheet.png)은 기준 커밋 `67a6232a`에 보존한다.
 
 ## 게시 조건과 남은 수용 한계
 

@@ -146,14 +146,47 @@ pub fn collect_trees(resources: &SimResources) -> (u64, Vec<(u32, u32)>) {
     )
 }
 
-pub(super) fn trees_to_dict(trees: (u64, Vec<(u32, u32)>)) -> VarDictionary {
-    let (version, tiles) = trees;
+/// Authoritative standing trees in stable tile order, with aligned saved material names.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct TreeSnapshot {
+    /// Tree change counter.
+    pub version: u64,
+    /// Standing tile coordinates in `(x, y)` order.
+    pub tiles: Vec<(u32, u32)>,
+    /// Canonical saved material names; empty exposes invalid state without guessing.
+    pub species: Vec<String>,
+}
+
+/// Read persisted tree identities, never a current distribution or renderer hash.
+pub fn collect_tree_snapshot(resources: &SimResources) -> TreeSnapshot {
+    let mut tiles = Vec::with_capacity(resources.colony.trees.len());
+    let mut species = Vec::with_capacity(resources.colony.trees.len());
+    for &tile in resources.colony.trees.keys() {
+        tiles.push(tile);
+        species.push(
+            resources
+                .content_state
+                .tree_material(tile)
+                .map_or("", |material| resources.colony.materials.name(material))
+                .to_owned(),
+        );
+    }
+    TreeSnapshot {
+        version: resources.colony.trees_version,
+        tiles,
+        species,
+    }
+}
+
+pub(super) fn trees_to_dict(trees: TreeSnapshot) -> VarDictionary {
     let mut dict = VarDictionary::new();
-    dict.set("version", version as i64);
-    let xs: Vec<i32> = tiles.iter().map(|t| t.0 as i32).collect();
-    let ys: Vec<i32> = tiles.iter().map(|t| t.1 as i32).collect();
+    dict.set("version", trees.version as i64);
+    let xs: Vec<i32> = trees.tiles.iter().map(|t| t.0 as i32).collect();
+    let ys: Vec<i32> = trees.tiles.iter().map(|t| t.1 as i32).collect();
+    let species: Vec<GString> = trees.species.iter().map(GString::from).collect();
     dict.set("xs", PackedInt32Array::from(xs.as_slice()));
     dict.set("ys", PackedInt32Array::from(ys.as_slice()));
+    dict.set("species", PackedStringArray::from(species.as_slice()));
     dict
 }
 

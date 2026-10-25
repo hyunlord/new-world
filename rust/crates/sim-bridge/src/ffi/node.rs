@@ -44,9 +44,9 @@ use super::chronicle::{
     collect_settlement_chronicle, person_to_dict, rows_to_dict,
 };
 use super::colony::{
-    can_place, collect_agent_jobs, collect_colony_overlay, collect_colony_versions, collect_trees,
-    overlay_to_dict, result_to_dict, submit_blueprint, submit_rect, submit_tiles, trees_to_dict,
-    versions_to_dict, RectCommand,
+    can_place, collect_agent_jobs, collect_colony_overlay, collect_colony_versions,
+    collect_tree_snapshot, overlay_to_dict, result_to_dict, submit_blueprint, submit_rect,
+    submit_tiles, trees_to_dict, versions_to_dict, RectCommand,
 };
 use super::economy::{
     agent_economy_to_dict, collect_agent_economy, collect_recipes, collect_work_priorities,
@@ -1131,10 +1131,10 @@ impl WorldSimNode {
         ))
     }
 
-    /// M1: every standing tree as `{version, xs, ys}` in `(x, y)` order.
+    /// M1: every standing tree as `{version, xs, ys, species}` in `(x, y)` order.
     #[func]
     fn get_trees(&self) -> VarDictionary {
-        trees_to_dict(collect_trees(&self.engine.resources))
+        trees_to_dict(collect_tree_snapshot(&self.engine.resources))
     }
 
     /// M1: the order overlay as `{version, designation_xs/ys, zone_ids,

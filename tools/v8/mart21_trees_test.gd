@@ -222,7 +222,7 @@ func _check_canopy(trees: Node, ground: Node) -> void:
 			quarter += 1
 	ground.call("bake_chunk_now", c)
 	var at4: Color = _tile_mean(ground.call("chunk_image", c), cell, c, size)
-	var canopy_img: Image = ArtData.image_at(FloraResolver.res_path(str((trees.call("flora") as FloraResolver).resolve(str((ArtData.bindings()["trees"]["species"][0] as Dictionary)["species"]), "large", "summer", 0)["map_canopy_path"])))
+	var canopy_img: Image = ArtData.image_at(FloraResolver.res_path(str((trees.call("flora") as FloraResolver).resolve(str((trees.get("_trees") as Dictionary)[cell]), "large", "summer", 0)["map_canopy_path"])))
 	var canopy_mean: Color = Tone.mean_rgb(canopy_img, 3)
 	var hue: float = absf(at4.h - canopy_mean.h)
 	hue = minf(hue, 1.0 - hue)

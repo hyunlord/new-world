@@ -1,3 +1,84 @@
+# M-UX Stage B 코드 검토 — 최종 B5 소스 갱신
+
+**B5 집중 Rust·strict clippy·창54검사 통과 / 전체 B gate·게시 미완료.** 포착 `2026-10-25T17:06:50.527470+09:00`, HEAD `7577f8af08b233ab436d4301f88543d150b72295` + dirty source. 이 문서는 final source-refresh 후보이며 제품 완료 판정이 아니다. 변경 중인 작업 트리를 읽고 파일 SHA를 즉시 재확인했다(변경0경로). 별도 build/test/Godot/perf는 실행하지 않았다.
+
+## 이전 초안의 stale provenance
+
+이전 draft는 `2026-10-25T16:03:21.363891+09:00`, HEAD `7577f8af08b233ab436d4301f88543d150b72295` 기준이다. HEAD 변경 여부: **False**. HEAD가 같아도 dirty bytes는 달라질 수 있다. 이전 current manifest 대비 added0, changed1, removed0경로이며 정확한 경로·이전/현재 SHA는 새 JSON의 두 snapshot에 보존했다. 이전 UNCOMPILED current 표현과 이전 LOC/hotspot 표를 이 앞부분으로 대체한다. 이전 SHA는 당시 bytes에 대해서만 유효하다.
+
+기존 저장소 CODE_REVIEW 앞부분의12:50/76f572f 기준·113 raw enum·최신 save14/core372 등은 역사적 실행 범위다. 현재 B5 결과로 재표시하지 말고 dated history로 보존한다. 이전 전체 조사 appendix와 원래 PASS/FAIL 기록은 삭제하지 않는다.
+
+## 동일 방법의 owner-facing 비교
+
+셀은 **파일 / 물리 LOC / raw enum**. GOAL base=`67a6232ab41a4bf5051b11303bcac97543b111f0`, published A=`ca9f531ca6ef700ca223d99dba14d834b94b45da`, H=`bdbd4fb2ea9c5b446648778ea7b0b2da14635049`. 역사 열은 기존 git-blob manifest를 그대로 보존했고 현재 열만 재수집했다. `3828938` initial-survey committed base는 JSON의 별도 역사 참고이며 GOAL before 값이 아니다.
+
+| 범위 | GOAL67a6232 | 게시 A | H/pre-B5 | 현재 B5 dirty |
+|---|---:|---:|---:|---:|
+| core | 88 / 22,101 / 72 | 91 / 22,413 / 76 | 133 / 27,049 / 87 | 136 / 27,690 / 87 |
+| engine | 1 / 1,441 / 0 | 1 / 1,446 / 0 | 2 / 1,844 / 0 | 2 / 1,844 / 0 |
+| systems | 94 / 35,554 / 9 | 99 / 37,518 / 9 | 105 / 40,020 / 18 | 106 / 40,466 / 18 |
+| bridge | 21 / 10,251 / 6 | 27 / 10,990 / 6 | 30 / 11,396 / 6 | 30 / 11,429 / 6 |
+| sim-test | 148 / 87,600 / 4 | 152 / 89,058 / 4 | 183 / 95,991 / 8 | 185 / 96,499 / 8 |
+| scripts | 51 / 15,999 / 1 | 67 / 18,841 / 1 | 70 / 19,388 / 1 | 70 / 19,391 / 1 |
+
+LOC=`len(text.splitlines())`, 주석·빈 줄·inline test 포함. 동일 정규식 `^\s*(?:pub(?:\([^)]*\))?\s+)?enum\s+([A-Za-z_]\w*)`로 선언을 집계한다. cfg(test) 제거·매크로 확장·타입 해석 없음. raw enum은 production content enum 수가 아니다. named Rust source 범위와 scripts만 집계했고 heldout-named paths/data는 열지 않았다. 새로운 전체 correctness audit이나 의미 기반 match census가 아니다.
+
+## B5 소스와 실행 증거 경계
+
+`b5/focused-first-receipt.json`의 core/flora_population/tree_identity/save/b5_flora/tree_snapshot은 모두 exit0이며 core389 unit+38 integration-parent, save23, B5flora6parent+1child, snapshot3 등 범위를 명시한다. `regression-second/clippy.exit`는0이다. `B5_VERIFICATION.md:36`은 ISS301의 catalog boot 누락을 시험 준비에서 수정한 뒤 단독1·steward9/1ignored·data_only_ext2 및 child·save_load7·historical4·workspace all-targets strict clippy와 bridge build 통과를 기록한다. 이는 기존 receipt/doc를 읽은 결과이며 이 작업에서 다시 실행하지 않았다. 첫 실패는 보존한다. 이 실행들이 현재 모든 dirty SHA를 검증했다는 확대 해석은 하지 않는다.
+
+B5는 저장된 Wood MaterialId/default+tile overrides → worldgen/felling → bridge species column → renderer 경로를 추가했다. 독립 renderer species hash만 사용하는 pre-B5 설명은 현재 소스에 맞지 않는다. size/variant 등 시각 hash와 simulation identity는 구분한다. format9 legacy reader/migration과 새 시험 소스도 포함한다. 실제 pixel acceptance·전체 gate·최종 성능은 root가 별도 해당 receipt로 확정한다. 문서의 부분 PASS를 모든 표면 PASS로 합치지 않는다.
+
+다섯 ItemKind/BlueprintKind/RecipeKind/PressureKind/AnimalKind는 private-u32 open ID다. PressureMechanic/AnimalMechanic/blueprint·recipe 행동 분류, GoodsPolicy, legacy wire/test enum을 새 콘텐츠 enum으로 묶지 않는다. 현재 raw declaration 수가 같아도 사용처가 모두 같다는 뜻은 아니다. Top 두 저장 슬롯, Designation, knowledge32노드, fuel1:1 제약은 별도 잔여 부채다. 새로운 종 fixture는 기존 물리 pine의 flora 분포/구성원 추가이며 임의 새 물리 재료나 네 번째 species가 검증됐다는 뜻이 아니다.
+
+## 현재 1,200 LOC 초과 소스
+
+물리 크기 목록이며 측정된 성능 병목 순위가 아니다. JSON에 각 SHA와 enum 위치를 기록했다.
+
+| 경로 | LOC |
+|---|---:|
+| `rust/crates/sim-systems/src/runtime/decision/system.rs` | 3,487 |
+| `rust/crates/sim-test/tests/relations_social_system.rs` | 2,937 |
+| `rust/crates/sim-test/tests/engine_influence_channels.rs` | 2,451 |
+| `rust/crates/sim-test/tests/settlement_migration.rs` | 2,448 |
+| `rust/crates/sim-test/tests/settlement_resource_scarcity.rs` | 2,356 |
+| `rust/crates/sim-test/src/probe/colony.rs` | 2,248 |
+| `rust/crates/sim-test/tests/agents_memory_system.rs` | 1,985 |
+| `rust/crates/sim-test/tests/determinism.rs` | 1,797 |
+| `rust/crates/sim-test/tests/settlement_system.rs` | 1,697 |
+| `rust/crates/sim-test/tests/chronicle_combat.rs` | 1,616 |
+| `rust/crates/sim-systems/src/runtime/settlement/settlement_system.rs` | 1,571 |
+| `rust/crates/sim-test/tests/settlement_stockpile.rs` | 1,475 |
+| `rust/crates/sim-test/tests/settlement_construction.rs` | 1,460 |
+| `rust/crates/sim-engine/src/lib.rs` | 1,455 |
+| `rust/crates/sim-test/tests/settlement_fission.rs` | 1,445 |
+| `rust/crates/sim-bridge/src/ffi/node.rs` | 1,394 |
+| `rust/crates/sim-test/src/perf.rs` | 1,390 |
+| `rust/crates/sim-systems/src/runtime/jobs/assign.rs` | 1,361 |
+| `rust/crates/sim-test/tests/chronicle_settlement.rs` | 1,322 |
+| `rust/crates/sim-systems/src/commands.rs` | 1,293 |
+| `rust/crates/sim-test/tests/relations_rule.rs` | 1,263 |
+| `scripts/ui/panels/agent_inspector_panel.gd` | 1,244 |
+| `rust/crates/sim-bridge/src/ffi/snapshot.rs` | 1,238 |
+| `rust/crates/sim-systems/src/runtime/steward/planning.rs` | 1,234 |
+| `rust/crates/sim-test/tests/agents_combat.rs` | 1,234 |
+| `rust/crates/sim-test/tests/settlement_seasons.rs` | 1,233 |
+| `rust/crates/sim-test/tests/agents_sleep.rs` | 1,222 |
+| `rust/crates/sim-test/tests/settlement_gather.rs` | 1,220 |
+| `rust/crates/sim-test/tests/colony_knowledge.rs` | 1,203 |
+
+## 보존·후속 경계
+
+B4 네 frozen build의 평가와 B5 구현을 혼합하지 않는다. B4 판단·D44·성능은 root의 해당 evidence를 따른다. Stage A의 과거 profile71.007724%를 현재 성능으로 옮기지 않는다. Stage C dead-code 실행 여부는 최종 소스에서 별도 확인하며, settlement/daylight·world_0 UI15bindings·palette/assets·baseline/V7/research·역사 기록은 보호한다. A8 실패, 물리 트랙패드 미검증, UI 및 ISS283 이력은 이 집계로 해결되지 않는다.
+
+통합 시 기존 current front를 dated historical subsection으로 보존하고 이 draft를 대체 앞부분으로 사용한다. root 최종 commit/gate/binary receipt에 맞춰 다시 상태를 묶어야 한다. 이 draft는 gate 통과·게시 승인·성능 개선·행동 동일성 주장이 아니다.
+
+실제 창 후속: 일반 벌목·운반으로 가림을 제거한 원래 그루터기, 실제 두 번째 pine벽과 oak대조를 확인했다. [B5 기록](../mux/B5_VERIFICATION.md)의 실패 이력과 통제 조건을 따른다. 구현 담당 검토자의 픽셀 검토는 소유자 승인이나 독립 맹검 판독이 아니다.
+
+---
+
+# 역사적 중간 검토: 12:50 KST 및 초기 조사
+
 # 코드 검토 2026-10 — B1 조사와 Stage B 구현 중간 검증
 
 **B1 검토 문서 통합 / Stage B IN_PROGRESS / 전체 gate·게시 미완료.** 갱신: **2026-10-25 12:50 KST**. 기준 HEAD는 안전망을 통과한 압력·동물 확장 `76f572fffeb2a2312eb823c9e04a49b9bfc45927`이며 아래 현재 집계는 그 위의 **미커밋 작업 트리**다. 이 문서는 구현 완료나 삭제 승인이 아니다.
@@ -458,7 +539,7 @@ ARCHITECTURE의97 API items 설명(:225), Steward Writes `?`(:179), offset 생�
 
 위 후보 작성 시점의 PENDING 표는 역사적 상태다. 다음 세 검사를 실제 수행했다. Stage B 변경 소스 재검토와 전체 게이트는 여전히 PENDING이다.
 
-- Stage A clean `ca9f531ca6ef700ca223d99dba14d834b94b94b45da`: gate3 35/35 exit0, 10:29:24 KST 종료; 10:30:05 KST wip/main fast-forward 게시 확인. `stage-a-publication.json` 및 `gate-stage-a-3/receipt.json`.
+- Stage A clean `ca9f531ca6ef700ca223d99dba14d834b94b45da`: gate3 35/35 exit0, 10:29:24 KST 종료; 10:30:05 KST wip/main fast-forward 게시 확인. `stage-a-publication.json` 및 `gate-stage-a-3/receipt.json`.
 - 같은 소스에서 `cargo clippy --workspace --all-targets -- -W dead_code` exit0, 24.48초. 원문 `stage-b/review/clippy-dead-code.log`. 경고 없음은 미사용 데이터/GDScript 증명이 아니다.
 - `rustup toolchain list`는 stable/1.93.1만, cargo 명령 목록에 udeps 없음. nightly/udeps는 NOT_RUN; 새 도구를 설치하지 않았다.
 - frozen Stage A release `worldsim_perf stress --seeds 15100..15101 --agents 1000 --side 64 --days 1 --feed fed --rules baseline`: 1,440ticks(steady1,380), mean0.88171087ms, p99.9 1.667ms, max1.687ms, alive1,000. AgentDecisionSystem steady863.994297ms, 626.082824µs/call, tick time의 **71.007724%**. 단일 seed/1일 fed stress 표본이며 전체 게임/장기 프레임 성능 주장이 아니다. `stage-b/review/b1-tool-receipt.json`에 원문 해시와 설정/결과를 기록했다.
@@ -466,3 +547,6 @@ ARCHITECTURE의97 API items 설명(:225), Steward Writes `?`(:179), offset 생�
 ## B6 두 도메인 추출 현재 검증
 
 ADR0039/D38에 따라 resource snapshot facade1481→1238줄과 child256줄, decision 본체3494→3487줄(새 회귀46줄 포함)과 child114줄을 분리했다. 기본 소비 세 동작만 옮기며 GatherFood/Idle/routine은 유지한다. 전체 LOC 감소나 실행속도 개선 주장은 없다. 수정 전 bridge51/decision21/통합128, 신규 야간 경계1, 수정 후 bridge51/decision22/통합128 및 strict clippy/fmt가 통과했다. 실제 렌더러 일치도 사람10명·외형10개로 통과했다. 최종 새 바이너리 identity/OFF/ON은 실행 중이다. 첫 clippy 실패와 LSP Transport closed는 ISS285/284로 구분한다([단위 검증](../mux/B6_VERIFICATION.md)).
+
+### A source identifier correction (ISS303)
+An external draft and performance runbook duplicated `b94` in the displayed A SHA. The actual A is `ca9f531ca6ef700ca223d99dba14d834b94b45da`. Both metrics manifests already used the correct identifier; a fresh437-blob OID/SHA/LOC/enum comparison found zero mismatches. External `b1-final-a-sha-correction.md/.json` preserves the typo locations and verification; prior draft hashes remain historical.

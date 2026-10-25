@@ -3,10 +3,8 @@
 # Every tree of get_trees is a standing Sprite2D in the y-sorted ColonyView/World (position = the tile's base point
 #   (tile_left + 32, tile_top + 43) plus a ±2 px jitter, offset = −anchor, so trunks sort with people, walls and
 #   structures by base y). Trees resolve through the flora catalogue (flora_resolver.gd, assets/v8art/flora/,
-#   M-ART2.1 §2.2): (species, size, season, variant) → frame, canopy mask, anchor and season tint. The simulation has
-#   no species yet: a keyed hash of (x, y) on the world seed picks one of bindings.json `trees.species` by weight, a
-#   second hash the size (`large_permille`), a third the variant (MART21_DECISIONS D4: M-EXT replaces the hash with
-#   the snapshot's species column).
+#   M-ART2.1 §2.2): (species, size, season, variant) → frame, canopy mask, anchor and season tint. Species is the
+#   persisted material name in get_trees; keyed hashes still choose size and variant independently.
 # Seasons: the calendar's season (get_time_snapshot `season`, named by the catalogue's season order) drives
 #   shaders/tree_season.gdshader per frame: the canopy's Lab shift, a deciduous tree's bare winter frame, an
 #   evergreen's snow cap (a band below each column's top canopy pixel, as seasons.py). During the first day of a season
@@ -36,7 +34,6 @@ const FloraResolver = preload("res://scripts/world/art/flora_resolver.gd")
 const SEASON_SHADER: Shader = preload("res://shaders/tree_season.gdshader")
 ## Crown reach for `under_canopy`: rows south of the person a tree can stand and still cover them.
 const CROWN_ROWS: int = 2
-const SALT_SPECIES: int = 7
 const SALT_SIZE: int = 8
 const SALT_JITTER: int = 9
 const SALT_VARIANT: int = 10
@@ -52,11 +49,11 @@ var _world_sim: Node = null
 var _world: Node2D = null
 var _version: int = -1
 var _seed: int = 0
-## Tile → true for every standing tree.
+## Tile → authoritative species for every standing tree.
 var _trees: Dictionary = {}
 ## Tile → Sprite2D of a standing tree.
 var _tree_sprites: Dictionary = {}
-## Tile → tick the tree was seen felled.
+## Tile → {tick, species} remembered when the tree was seen felled.
 var _stumps: Dictionary = {}
 ## Tile → Sprite2D of a stump / bush / deadwood ("nature").
 var _nature_sprites: Dictionary = {}
@@ -124,8 +121,8 @@ func _process(_delta: float) -> void:
 			n.queue_free()
 		_nature_sprites.clear()
 	if version != _version:
-		_rebuild_trees(_version >= 0)
-		_version = version
+		if _rebuild_trees(_version >= 0):
+			_version = version
 	elif window_moved:
 		_sync_trees()
 		_nature_key = -1
@@ -261,26 +258,35 @@ func _now() -> int:
 	return int((SimReads.read(_world_sim, "get_time_snapshot") as Dictionary).get("tick", 0))
 
 
-func _rebuild_trees(diff: bool) -> void:
+func _rebuild_trees(diff: bool) -> bool:
 	_seed = int((SimReads.read(_world_sim, "get_world_info") as Dictionary).get("seed", 0))
 	var trees: Dictionary = SimReads.read(_world_sim, "get_trees")
 	var xs: PackedInt32Array = trees.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = trees.get("ys", PackedInt32Array())
+	var species: PackedStringArray = trees.get("species", PackedStringArray())
+	if xs.size() != ys.size() or xs.size() != species.size() or species.has(""):
+		push_error("get_trees requires aligned nonempty species identities")
+		return false
 	var now: Dictionary = {}
-	for i: int in mini(xs.size(), ys.size()):
-		now[Vector2i(xs[i], ys[i])] = true
+	for i: int in xs.size():
+		now[Vector2i(xs[i], ys[i])] = species[i]
 	var tick: int = _now()
 	for cell: Vector2i in _trees.keys():
 		if not now.has(cell) and diff:
-			_stumps[cell] = tick
+			_stumps[cell] = {"tick": tick, "species": str(_trees[cell])}
 	for cell: Vector2i in now.keys():
 		_stumps.erase(cell)
+		if _tree_sprites.has(cell) and str(_trees.get(cell, "")) != str(now[cell]):
+			(_tree_sprites[cell] as Node).queue_free()
+			_tree_sprites.erase(cell)
 	_trees = now
 	if not diff:
 		for cell: Vector2i in _tree_sprites.keys():
 			(_tree_sprites[cell] as Node).queue_free()
 		_tree_sprites.clear()
 	_sync_trees()
+	_nature_key = -1
+	return true
 
 
 ## Visible chunk window (view + one chunk); recomputes `_live` (keeping chunks within one more chunk). True if moved.
@@ -322,25 +328,6 @@ func _sync_trees() -> void:
 					s.visible = false
 
 
-## The species id of tile `cell` on world `seed` (bindings `trees.species` by weight; "" when none is bound).
-static func tree_species(seed: int, cell: Vector2i) -> String:
-	var cfg: Dictionary = ArtData.bindings().get("trees", {})
-	var species: Array = cfg.get("species", [])
-	var total: int = 0
-	for row: Variant in species:
-		if row is Dictionary:
-			total += maxi(0, int((row as Dictionary).get("weight", 1)))
-	if total <= 0:
-		return ""
-	var pick: int = View.key_hash(seed, cell.x, cell.y, SALT_SPECIES) % total
-	for row: Variant in species:
-		if row is Dictionary:
-			pick -= maxi(0, int((row as Dictionary).get("weight", 1)))
-			if pick < 0:
-				return str((row as Dictionary).get("species", ""))
-	return ""
-
-
 ## The size name of tile `cell` on world `seed` (large below `trees.large_permille`).
 static func tree_size(seed: int, cell: Vector2i) -> String:
 	var cfg: Dictionary = ArtData.bindings().get("trees", {})
@@ -355,7 +342,7 @@ static func tree_variant(seed: int, cell: Vector2i) -> int:
 ## The standing sprite of the tree on `cell`, resolved for the season pair drawn now.
 func _tree(cell: Vector2i) -> Sprite2D:
 	var habit: String = str((ArtData.bindings().get("trees", {}) as Dictionary).get("habit", ""))
-	return make_plant(tree_species(_seed, cell), tree_size(_seed, cell), tree_variant(_seed, cell), habit, View.base_point(cell) + _jitter(cell))
+	return make_plant(str(_trees[cell]), tree_size(_seed, cell), tree_variant(_seed, cell), habit, View.base_point(cell) + _jitter(cell))
 
 
 ## A standing plant of `species` (resolved through the catalogue for the season pair) at world point `base`; null when
@@ -483,7 +470,7 @@ func _expire_stumps() -> void:
 	var tick: int = _now()
 	var ttl: int = int((ArtData.bindings().get("trees", {}) as Dictionary).get("stump_ticks", 1440))
 	for cell: Vector2i in _stumps.keys():
-		if tick - int(_stumps[cell]) >= ttl or tick < int(_stumps[cell]):
+		if tick - int((_stumps[cell] as Dictionary)["tick"]) >= ttl or tick < int((_stumps[cell] as Dictionary)["tick"]):
 			_stumps.erase(cell)
 
 
@@ -494,7 +481,7 @@ func _sync_nature() -> void:
 	for cell: Vector2i in _stumps.keys():
 		if _live.has(_chunk_of(cell)):
 			# The felled tree's own species' stump (its habit fallback's when the species has none).
-			wanted[cell] = STUMP_KEY + tree_species(_seed, cell)
+			wanted[cell] = STUMP_KEY + str((_stumps[cell] as Dictionary)["species"])
 	var xs: PackedInt32Array = _resources.get("xs", PackedInt32Array())
 	var ys: PackedInt32Array = _resources.get("ys", PackedInt32Array())
 	var kinds: PackedInt32Array = _resources.get("kinds", PackedInt32Array())

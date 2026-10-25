@@ -6,6 +6,7 @@ use sim_engine::SimResources;
 
 /// Reject inconsistent sparse state rather than repairing identities during load.
 pub(super) fn validate(resources: &SimResources) -> Result<(), String> {
+    validate_trees(resources)?;
     let catalog = installed().map_err(|error| error.to_string())?;
     let grid = &resources.tile_grid;
     for (&(tile, layer), identity) in &resources.content_state.completed {
@@ -97,6 +98,47 @@ pub(super) fn validate_illness(res: &SimResources, world: &hecs::World) -> Resul
                 "illness origin for agent {agent} has no live Sick component"
             ));
         }
+    }
+    Ok(())
+}
+
+/// Validate persisted identities without re-running the flora selection policy.
+fn validate_trees(resources: &SimResources) -> Result<(), String> {
+    let state = &resources.content_state;
+    let flora = sim_core::colony::content::installed_or_bundled().flora();
+    let valid_material = |material| {
+        let species = flora
+            .species_by_material(material)
+            .ok_or_else(|| format!("tree material {material:?} is not admitted flora"))?;
+        if resources.colony.materials.stats(material).is_none()
+            || resources.colony.materials.name(material) != species.name
+        {
+            return Err(format!(
+                "tree material {material:?} lacks canonical saved stats"
+            ));
+        }
+        Ok(())
+    };
+    match state.tree_material_default {
+        Some(default) => valid_material(default)?,
+        None if !resources.colony.trees.is_empty() || !state.tree_materials.is_empty() => {
+            return Err("standing trees or overrides require a saved default".into());
+        }
+        None => {}
+    }
+    for (&tile, &material) in &state.tree_materials {
+        if tile.0 >= resources.tile_grid.width
+            || tile.1 >= resources.tile_grid.height
+            || !resources.colony.trees.contains_key(&tile)
+        {
+            return Err(format!(
+                "tree material override has no in-bounds tree at {tile:?}"
+            ));
+        }
+        if Some(material) == state.tree_material_default {
+            return Err(format!("redundant tree material override at {tile:?}"));
+        }
+        valid_material(material)?;
     }
     Ok(())
 }
@@ -253,5 +295,36 @@ mod tests {
         assert!(validate(&res)
             .expect_err("not cutter")
             .contains("not a cutter"));
+    }
+    #[test]
+    fn tree_identity_rejects_missing_unknown_redundant_or_dangling_entries() {
+        let mut res = resources();
+        let oak = MaterialId::from_str_hash("oak");
+        let pine = MaterialId::from_str_hash("pine");
+        res.colony.materials = sim_core::colony::ColonyMaterials::load();
+        res.colony
+            .trees
+            .insert((1, 1), sim_core::colony::Tree { logs: 3 });
+        assert!(validate(&res).is_err());
+        res.content_state.tree_material_default = Some(oak);
+        assert_eq!(validate(&res), Ok(()));
+        for (tile, material) in [
+            ((1, 1), oak),
+            ((8, 0), pine),
+            ((2, 2), pine),
+            ((1, 1), MaterialId::from_str_hash("flint")),
+            ((1, 1), MaterialId::from_str_hash("unknown")),
+        ] {
+            res.content_state.tree_materials.insert(tile, material);
+            assert!(validate(&res).is_err(), "{tile:?} {material:?}");
+            res.content_state.tree_materials.clear();
+        }
+        res.content_state.tree_materials.insert((1, 1), pine);
+        assert_eq!(validate(&res), Ok(()));
+        res.colony.materials.by_id.remove(&pine);
+        assert!(validate(&res).is_err());
+        res.colony.materials = sim_core::colony::ColonyMaterials::load();
+        res.colony.materials.by_id.get_mut(&pine).expect("pine").0 = "oak".into();
+        assert!(validate(&res).is_err());
     }
 }

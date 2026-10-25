@@ -961,6 +961,7 @@ mod shared_home_tests {
             }
             // Completed-harvest fixture retains natural terrain, nodes and fixed buildings.
             e.resources.colony.trees.clear();
+            e.resources.content_state.tree_materials.clear();
             let hearth = hearth_tiles(&e.resources)[0];
             for (_, p) in e.world.query::<&mut Position>().iter() {
                 p.x = hearth.0;
@@ -1059,6 +1060,7 @@ mod shared_home_tests {
         }
         // Isolate preparation from which naturally generated template currently ranks first.
         engine.resources.colony.trees.clear();
+        engine.resources.content_state.tree_materials.clear();
         let hearth = hearth_tiles(&engine.resources)[0];
         // Preparation is independent of transient person clearance, covered separately above.
         for (_, position) in engine.world.query::<&mut Position>().iter() {
@@ -1130,6 +1132,7 @@ mod shared_home_tests {
         // Completed-harvest fixture: only the designated trees have disappeared.
         for tile in tiles {
             engine.resources.colony.trees.remove(&tile);
+            engine.resources.content_state.forget_tree_material(tile);
             engine.resources.colony.designations.remove(&tile);
         }
         let house = plan(&engine.world, &engine.resources, &rules.rules[2]);
@@ -1152,6 +1155,7 @@ mod shared_home_tests {
         );
         // Clear, level-ground fixture isolates enclosure preference from site availability.
         engine.resources.colony.trees.clear();
+        engine.resources.content_state.tree_materials.clear();
         engine.resources.colony.nodes.clear();
         let hearth = hearth_tiles(&engine.resources)[0];
         for (_, position) in engine.world.query::<&mut Position>().iter() {

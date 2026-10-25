@@ -9,19 +9,48 @@
 //! disk and the table is the same on every machine. The baseline world never
 //! builds it.
 use serde::{Deserialize, Serialize};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 use crate::material::{parse_ron_str, MaterialDef, MaterialId};
 
 /// The material files the colony uses (granite and limestone boulders, flint
-/// and chert outcrops, oak logs).
-const FILES: [&str; 5] = [
+/// and chert outcrops, admitted wood logs).
+const FILES: [&str; 7] = [
     include_str!("../../data/material/stone/granite.ron"),
     include_str!("../../data/material/stone/limestone.ron"),
     include_str!("../../data/material/stone/flint.ron"),
     include_str!("../../data/material/stone/chert.ron"),
     include_str!("../../data/material/wood/oak.ron"),
+    include_str!("../../data/material/wood/pine.ron"),
+    include_str!("../../data/material/wood/birch.ron"),
 ];
+
+/// Parse only the fixed embedded colony definitions, rejecting malformed identities.
+/// Catalog construction and legacy migration share this physical capability boundary.
+pub fn embedded_definitions() -> Result<Vec<MaterialDef>, String> {
+    let mut definitions = Vec::new();
+    let mut names = BTreeSet::new();
+    let mut ids = BTreeSet::new();
+    for text in FILES {
+        let parsed = parse_ron_str(text).map_err(|error| error.to_string())?;
+        if parsed.len() != 1 {
+            return Err("each embedded material file must define exactly one material".into());
+        }
+        for definition in parsed {
+            let name = definition.name.to_lowercase();
+            if name.is_empty()
+                || name.trim() != name
+                || definition.id != MaterialId::from_str_hash(&name)
+                || !names.insert(name)
+                || !ids.insert(definition.id)
+            {
+                return Err("invalid or duplicate embedded material identity".into());
+            }
+            definitions.push(definition);
+        }
+    }
+    Ok(definitions)
+}
 
 /// A material's run-time numbers, permille of each property's range.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -95,7 +124,7 @@ pub const CHERT: MaterialId = MaterialId::from_str_hash("chert");
 pub const GRANITE: MaterialId = MaterialId::from_str_hash("granite");
 /// `limestone` (grass boulders).
 pub const LIMESTONE: MaterialId = MaterialId::from_str_hash("limestone");
-/// `oak` (every log until trees have species).
+/// Historical `oak` identity retained by legacy save migration.
 pub const OAK: MaterialId = MaterialId::from_str_hash("oak");
 /// `clay` (river-bank clay, M4; no stats file: no craft reads its hardness).
 pub const CLAY: MaterialId = MaterialId::from_str_hash("clay");
@@ -110,7 +139,7 @@ mod tests {
             assert_eq!(parse_ron_str(text).map(|d| d.len()).unwrap_or(0), 1);
         }
         let table = ColonyMaterials::load();
-        assert_eq!(table.by_id.len(), 5);
+        assert_eq!(table.by_id.len(), 7);
         // flint.ron: hardness 7.0, density 2600, workability 0.5, flammability 0.
         let flint = table.stats(FLINT).unwrap_or(MaterialStats {
             hardness: 0,
