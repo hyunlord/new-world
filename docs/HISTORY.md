@@ -246,3 +246,5 @@
 - 2026-10-25 — MUX C 후보 삭제: 사용하지 않는 wood frame helper8개와 ArtSpriteLibrary127줄·UID. 원본은 게시 B `5e20c65a1d52ba2a96a6e524614d3a7679f31a44`에 남는다. 실제 daylight·UI15atlas연결·자산·V7은 보존하며 C 안전망/전체 gate 대기 ([검증](v8/mux/C_CLEANUP_VERIFICATION.md)).
 
 - 2026-10-25 — MUX C 정리 커밋 `93a99ce161ea51d7a729e918698b87238995d820`의 원본 identity228748값 차이0·Chronicle64·OFF/ON20비교 동일을 확인했다. 이슈311건과 교훈25개를 통합하며 과거 FAIL·미확보 증거·오너 판단 대기를 보존한다. GitHub 등록과 전체 C gate·게시 대기.
+
+- 2026-10-25 — MUX C 이슈 원장의 미해결105건을 GitHub#513–#617에 등록하고 전체 본문·라벨·번호 일치와 기존#59불변을20:46:16 KST 확인했다. 두 차례 목록 지연 안전중단과 중복 없는 복구를ISS312·교훈26에 보존한다. 원장312건, 전체 C gate·게시 대기.

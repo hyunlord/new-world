@@ -591,3 +591,4 @@ are gone from the bridge.
 ### MUX Stage C records (2026-10-25)
 - Added complete311-row issue history and25 linked lessons; historical gate/report and art adoption boundaries remain distinct.
 - Changed seven named issue statuses after published B proof;105 unresolved rows await GitHub mirrors. C cleanup safety passed at93a99ce16.
+- Added verified GitHub mirrors for105 OPEN rows (#513–#617), protected existing#59, and ISS312/lesson26 for safe read-after-write recovery. Registry now312:175fixed/105open/30deferred/2won't fix.

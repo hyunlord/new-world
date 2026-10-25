@@ -193,3 +193,7 @@ ISS311은 역사적 process 위반으로 won't fix이며 오너에게 보고했�
 각 검증 문서의 결과는 커밋된 기록을 인용한 것이며 이번 편집에서 재실행한 결과가 아니다. B6/O/P/T/H의 후속 기록과 B gate2 36/36·게시 영수증을 반영했다. C1 삭제 후 안전망은93a99ce16에서 원본 identity 및20 literal 비교를 완료했고, C 전체 gate·게시·물리 입력·오너 수락은 완료로 기입하지 않았다. 당시 정본 누적 수는 이슈 원장에 보존하고 여기에는 서로 다른 시점의 수를 현재 합계처럼 나열하지 않는다.
 
 C wrapper 후속 실행: 2026-10-25 20:22:05 KST completed=true·20/20동일·failures=[]·exit0을 확인했다([C 검증](v8/mux/C_CLEANUP_VERIFICATION.md)). 순수 guard 검사, 실제 capture, 전체 gate는 각각 다른 증거다.
+
+## 26. 생성 성공과 목록 반영은 같은 순간이 아니다 — ISS312
+
+GitHub 등록 첫 두 번은 실제#513/#514가 생성됐지만 즉시 목록에 나타나지 않아 안전 중단했다. pending 기록을 지우거나 새 journal로 재시도하지 않았다. 반환 canonical URL·번호를 영속화하고 직접 GET으로 검증하도록 보완했으며 불확실한 응답에는 제한된 읽기 재시도만 허용했다. 원본 재현 포함12 mock 그룹과 실제105건 등록·독립 전체 대조를 구분한다. 기존#59는 내용·수정 시각 모두 불변이다. [검증](v8/mux/C_GITHUB_VERIFICATION.md), [예방 규칙](../.claude/skills/worldsim-testing/SKILL.md#external-publication-read-after-write-verification).
