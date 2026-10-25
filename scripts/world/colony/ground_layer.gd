@@ -47,6 +47,11 @@ var bake_counts: Dictionary = {}
 ## Microseconds of the last chunk bake (ground + strips + upload), and the slowest bake's breakdown.
 var last_bake_usec: int = 0
 var worst_bake: Dictionary = {}
+## Opt-in append-only receipts; retained across world resets, unlike bake_counts.
+var capture_bake_events: bool = false
+var bake_capture_context: String = "runtime"
+var bake_events: Array[Dictionary] = []
+var _bake_reset_epoch: int = 0
 var _mux2_profile: bool = OS.get_environment("WORLDSIM_MUX2_PROFILE") == "1"
 var _mux2_frame: int = -1
 var _mux2_usec: Dictionary = {}
@@ -71,6 +76,9 @@ var _h: int = 0
 var _seed: int = 0
 var _hearth: Vector2i = Vector2i(-1000, -1000)
 var _space_version: int = -2
+var _wall_cache_version: int = -1
+var _wall_warm_pending: bool = false
+var _wall_warmup: Dictionary = {"complete": false, "reason": "not started"}
 var _tone: String = ""
 var _params_version: int = -1
 var _chunks: Dictionary = {}
@@ -133,6 +141,7 @@ func _ready() -> void:
 
 
 func _on_world_reset() -> void:
+	_bake_reset_epoch += 1
 	_map = null
 	_trees_version = -2
 	_tree_cells.clear()
@@ -243,11 +252,18 @@ func mux2_frame_timings() -> Dictionary:
 	return {"status": "MEASURED", "frame": _mux2_frame, "usec": _mux2_usec.duplicate()}
 
 
+func mux2_wall_warmup_report() -> Dictionary:
+	var report: Dictionary = _wall_warmup.duplicate()
+	report["current_unique_appearances"] = _walls.prepared_set_count()
+	report["cache_misses"] = _walls.prepared_misses
+	return report
+
+
 func _mux2_sync_frame() -> void:
 	var frame: int = Engine.get_process_frames()
 	if frame != _mux2_frame:
 		_mux2_frame = frame
-		_mux2_usec = {"process": 0, "chunk_bakes": 0, "compose": 0, "upload": 0, "strips": 0}
+		_mux2_usec = {"process": 0, "chunk_bakes": 0, "compose": 0, "upload": 0, "strips": 0, "space_read": 0, "apply_space": 0, "wall_prepare": 0, "prepare_grounds": 0, "trees": 0, "visible": 0, "doors": 0, "wall_warmup": 0}
 
 
 func _mux2_record(metric: String, elapsed: int) -> void:
@@ -258,6 +274,13 @@ func _mux2_record(metric: String, elapsed: int) -> void:
 func _process_ground(_delta: float) -> void:
 	if _world_sim == null:
 		return
+	# Defer until active gameplay, so measured startup includes preparation rather than hiding it while paused.
+	# Processing is inherited Node state, not a simulation bridge getter.
+	var simulation_node: Node = _world_sim
+	if _wall_warm_pending and simulation_node.process_mode == Node.PROCESS_MODE_INHERIT and simulation_node.is_processing():
+		_wall_warm_pending = false
+		_wall_warmup = _walls.warm_catalog(_resolver, ArtData.param("walls", {}), _problems)
+		if _mux2_profile: _mux2_record("wall_warmup", int(_wall_warmup["elapsed_usec"]))
 	if _map == null and not _build_map():
 		return
 	if _hearth.x < 0 and _hearth_now().x >= 0:
@@ -279,7 +302,9 @@ func _process_ground(_delta: float) -> void:
 		_tone = tone
 		_prepare_grounds()
 		refresh = true
+	var read_started: int = Time.get_ticks_usec() if _mux2_profile else 0
 	var space: Dictionary = SimReads.read(_world_sim, "get_space")
+	if _mux2_profile: _mux2_record("space_read", Time.get_ticks_usec() - read_started)
 	var version: int = int(space.get("version", -1))
 	if version != _space_version or refresh:
 		_space_version = version
@@ -288,9 +313,15 @@ func _process_ground(_delta: float) -> void:
 		_apply_space(space)
 	if refresh:
 		_rebake_all()
+	var trees_started: int = Time.get_ticks_usec() if _mux2_profile else 0
 	_update_trees()
+	if _mux2_profile: _mux2_record("trees", Time.get_ticks_usec() - trees_started)
+	var visible_started: int = Time.get_ticks_usec() if _mux2_profile else 0
 	_ensure_visible()
+	if _mux2_profile: _mux2_record("visible", Time.get_ticks_usec() - visible_started)
+	var doors_started: int = Time.get_ticks_usec() if _mux2_profile else 0
 	_update_doors()
+	if _mux2_profile: _mux2_record("doors", Time.get_ticks_usec() - doors_started)
 
 
 func _configure() -> void:
@@ -305,6 +336,10 @@ func _configure() -> void:
 	if ink is Array and (ink as Array).size() == 4:
 		_walls.ink = Color8(int(ink[0]), int(ink[1]), int(ink[2]), int(ink[3]))
 	_walls.sets.clear()
+	if _wall_cache_version != ArtData.params_version():
+		_wall_cache_version = ArtData.params_version()
+		_walls.clear_prepared_sets()
+		_wall_warm_pending = true
 	_door_tex.clear()
 	if _material == null:
 		_material = ShaderMaterial.new()
@@ -379,6 +414,12 @@ func _index_of(id: String) -> int:
 
 
 func _prepare_grounds() -> void:
+	var started: int = Time.get_ticks_usec() if _mux2_profile else 0
+	_prepare_grounds_body()
+	if _mux2_profile: _mux2_record("prepare_grounds", Time.get_ticks_usec() - started)
+
+
+func _prepare_grounds_body() -> void:
 	var period: int = int(ArtData.param("ground.texture_period_px", 128))
 	var tone: Dictionary = ArtData.param("ground.tone", {})
 	var season: Dictionary = ArtData.param("season", {})
@@ -548,6 +589,12 @@ func _blocking(i: int) -> bool:
 
 ## Rebuild the space-dependent parts of the map, find what changed and rebake those chunks.
 func _apply_space(space: Dictionary) -> void:
+	var started: int = Time.get_ticks_usec() if _mux2_profile else 0
+	_apply_space_body(space)
+	if _mux2_profile: _mux2_record("apply_space", Time.get_ticks_usec() - started)
+
+
+func _apply_space_body(space: Dictionary) -> void:
 	var terrain_cfg: Dictionary = ArtData.bindings().get("terrain", {})
 	var dug: Dictionary = {}
 	for i: int in mini((space.get("dug_xs", PackedInt32Array()) as PackedInt32Array).size(), (space.get("dug_ys", PackedInt32Array()) as PackedInt32Array).size()):
@@ -734,7 +781,9 @@ func _wall_cells(space: Dictionary) -> Dictionary:
 		var key: String = "%s|%s|%s" % [str(r.get("style_id", "")), str(r.get("material_key", "")), str(r.get("tint", {}))]
 		if not _walls.sets.has(key):
 			var probs: Array[String] = []
-			_walls.sets[key] = WallBaker.prepare_set(r, top_override, probs)
+			var prepare_started: int = Time.get_ticks_usec() if _mux2_profile else 0
+			_walls.sets[key] = _walls.prepare_cached(r, top_override, probs)
+			if _mux2_profile: _mux2_record("wall_prepare", Time.get_ticks_usec() - prepare_started)
 			_problems.append_array(probs)
 		cell_set[t] = key
 	_walls.occupancy = occupancy
@@ -811,6 +860,9 @@ func _bake_chunk(c: Vector2i) -> void:
 	if _map == null:
 		return
 	var t0: int = Time.get_ticks_usec()
+	var previous_bakes: int = int(bake_counts.get(c, 0)) if capture_bake_events else 0
+	var resident_before: bool = _chunks.has(c) if capture_bake_events else false
+	var masks_before: int = _baker.shore_mask_count() if capture_bake_events else 0
 	var f: int = _res_factor
 	_baker.canopy_on = f == 4 and _canopy_enabled() and _baker.canopy_count() > 0
 	var img: Image = _baker.bake(_map, c.x, c.y)
@@ -878,6 +930,14 @@ func _bake_chunk(c: Vector2i) -> void:
 		_mux2_record("strips", t_end - t_upload)
 	if last_bake_usec >= worst_bake.get("total", 0):
 		worst_bake = {"total": last_bake_usec, "compose": t_compose - t0, "upload": t_upload - t_compose, "strips": t_end - t_upload, "chunk": c, "rows": strips.size(), "factor": f}
+	if capture_bake_events:
+		bake_events.append({"sequence": bake_events.size(), "start_usec": t0, "end_usec": t_end,
+			"frame": Engine.get_process_frames(), "reset_epoch": _bake_reset_epoch, "context": bake_capture_context,
+			"chunk": [c.x, c.y], "factor": f, "map_size": [_map.width, _map.height],
+			"kind": "fresh" if previous_bakes == 0 else "rebake", "previous_bakes": previous_bakes,
+			"resident_before": resident_before, "new_shore_masks": _baker.shore_mask_count() - masks_before,
+			"total_usec": t_end - t0, "compose_usec": t_compose - t0, "upload_usec": t_upload - t_compose,
+			"strips_usec": t_end - t_upload, "compose_upload_usec": t_upload - t0, "strip_rows": strips.size()})
 
 
 ## Neighbor-padded occupancy, rebuilt with the chunk: R tree bases, G walls, B exposed natural ground.

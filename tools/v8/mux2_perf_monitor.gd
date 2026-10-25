@@ -1,25 +1,61 @@
 # M-UX2 frame evidence helpers: strict stall scoring and read-only script/engine telemetry.
-# Bridge methods: none. SimReads counters are sampled after the rendered frame, without a new getter.
+# Bridge methods: mux2_native_timings (optional diagnostic only). SimReads counters are sampled after the rendered frame, without a new getter.
 extends RefCounted
 
 const WARMUP_SECONDS: float = 10.0
 const MEASURE_SECONDS: float = 300.0
 const TOTAL_SECONDS: float = WARMUP_SECONDS + MEASURE_SECONDS
 const MINUTES: int = 5
-const REQUIRED_TIMINGS: Dictionary = {"ground": ["process", "chunk_bakes", "compose", "upload", "strips"], "alerts": ["process", "poll", "rebuild"], "steward_hud": ["process", "steward", "facts", "learning", "layout"]}
+const REQUIRED_TIMINGS: Dictionary = {"buildings": ["process", "draw", "rebuild", "huts", "floor_prepare", "door_prepare"], "ground": ["process", "chunk_bakes", "compose", "upload", "strips", "space_read", "apply_space", "wall_prepare", "prepare_grounds", "trees", "visible", "doors", "wall_warmup"], "alerts": ["process", "poll", "rebuild"], "steward_hud": ["process", "steward", "facts", "learning", "layout"]}
 var _minimap: Node
 var _reads: Node
+var _world: Node
+var _native_previous: Dictionary = {}
 var _timed_nodes: Dictionary = {}
 var _previous_minimap_usec: int = 0
 var _invalid: Dictionary = {}
+var _tree: SceneTree
+var _process_usec: int = -1
+var _pre_draw_usec: int = -1
+var _last_post_usec: int = -1
+var _wall_warmup_observed_usec: int = 0
+
 
 func setup(main: Node) -> void:
+	_tree = main.get_tree()
+	_tree.process_frame.connect(_on_process_frame)
+	RenderingServer.frame_pre_draw.connect(_on_pre_draw)
 	_minimap = main.get_node("UI/MuxHud/MapDock/Minimap")
 	_reads = main.get_node("SimReads")
+	_world = main.get_node("WorldSim")
+	if _world.has_method("mux2_native_timings"):
+		_native_previous = _world.call("mux2_native_timings")
 	_previous_minimap_usec = int(_minimap.get("_total_usec"))
-	_timed_nodes = {"ground": main.get_node("ColonyView/GroundLayer"), "alerts": main.get_node("UI/MuxHud/Alerts"), "steward_hud": main.get_node("UI/MuxHud")}
+	_timed_nodes = {"buildings": main.get_node("ColonyView/BuildingLayer"), "ground": main.get_node("ColonyView/GroundLayer"), "alerts": main.get_node("UI/MuxHud/Alerts"), "steward_hud": main.get_node("UI/MuxHud")}
 
-func sample() -> Dictionary:
+func begin_sampling(post_draw_usec: int) -> void:
+	_last_post_usec = post_draw_usec
+
+func finish() -> void:
+	if _tree.process_frame.is_connected(_on_process_frame): _tree.process_frame.disconnect(_on_process_frame)
+	if RenderingServer.frame_pre_draw.is_connected(_on_pre_draw): RenderingServer.frame_pre_draw.disconnect(_on_pre_draw)
+
+func _on_process_frame() -> void:
+	_process_usec = Time.get_ticks_usec()
+
+func _on_pre_draw() -> void:
+	_pre_draw_usec = Time.get_ticks_usec()
+
+func _phase_sample(post_draw_usec: int) -> Dictionary:
+	var previous: int = _last_post_usec
+	_last_post_usec = post_draw_usec
+	if previous < 0 or _process_usec < previous or _pre_draw_usec < _process_usec or post_draw_usec < _pre_draw_usec:
+		_invalid["frame_phases"] = "Missing or unordered frame signals"
+		return {"status": "INVALID", "previous_post_usec": previous, "process_usec": _process_usec, "pre_draw_usec": _pre_draw_usec, "post_draw_usec": post_draw_usec}
+	return {"status": "MEASURED", "post_to_process_usec": _process_usec - previous,
+		"process_to_pre_draw_usec": _pre_draw_usec - _process_usec, "pre_to_post_draw_usec": post_draw_usec - _pre_draw_usec}
+
+func sample(post_draw_usec: int) -> Dictionary:
 	var frame: int = Engine.get_process_frames()
 	var minimap_total: int = int(_minimap.get("_total_usec"))
 	var result: Dictionary = {
@@ -47,6 +83,11 @@ func sample() -> Dictionary:
 		else:
 			result[label] = {"status": "NOT_MEASURED", "reason": "mux2_frame_timings instrumentation absent"}
 			_invalid[label] = "Instrumentation absent"
+	var ground_values: Dictionary = (result["ground"] as Dictionary).get("usec", {})
+	_wall_warmup_observed_usec += int(ground_values.get("wall_warmup", 0))
+	result["frame_phases"] = _phase_sample(post_draw_usec)
+	result["freeze"] = _freeze_sample(frame)
+	result["native"] = _native_sample(frame)
 	return result
 
 func _valid_timing(label: String, timing: Dictionary, frame: int) -> bool:
@@ -54,10 +95,73 @@ func _valid_timing(label: String, timing: Dictionary, frame: int) -> bool:
 	var values: Dictionary = timing.get("usec", {})
 	for metric: String in REQUIRED_TIMINGS[label]:
 		if typeof(values.get(metric)) != TYPE_INT or int(values[metric]) < 0: return false
+	if label == "buildings":
+		var counts: Dictionary = timing.get("counts", {})
+		for metric: String in ["sprite_creates", "sprite_frees", "texture_requests"]:
+			if typeof(counts.get(metric)) != TYPE_INT or int(counts[metric]) < 0: return false
+		if not timing.get("texture_ids") is Array: return false
 	return true
 
+func _freeze_sample(frame: int) -> Dictionary:
+	if not _reads.has_method("mux2_freeze_timings"):
+		_invalid["freeze"] = "Missing freeze instrumentation"
+		return {"status": "NOT_MEASURED"}
+	var timing: Dictionary = _reads.call("mux2_freeze_timings")
+	if str(timing.get("status", "")) != "MEASURED" or int(timing.get("frame", -1)) != frame or not _numeric_values(timing.get("usec", null)):
+		_invalid["freeze"] = "Disabled, stale or invalid freeze timing"
+	return timing
+
+func _numeric_values(value: Variant) -> bool:
+	if not value is Dictionary: return false
+	for key: Variant in value:
+		if typeof(value[key]) != TYPE_INT or int(value[key]) < 0: return false
+	return true
+
+func _native_valid(timing: Dictionary, frame: int) -> bool:
+	if str(timing.get("status", "")) != "MEASURED" or int(timing.get("frame", -1)) != frame: return false
+	for metric: String in ["epoch", "frame_ticks", "executed_ticks"]:
+		if typeof(timing.get(metric)) != TYPE_INT or int(timing[metric]) < 0: return false
+	var totals: Variant = timing.get("totals_ns", null)
+	var systems: Variant = timing.get("systems_ns", null)
+	if not _numeric_values(totals) or not _numeric_values(systems) or (systems as Dictionary).is_empty(): return false
+	for metric: String in ["process", "tick", "prune", "process_residual", "tick_residual"]:
+		if not (totals as Dictionary).has(metric): return false
+	return true
+
+func _native_sample(frame: int) -> Dictionary:
+	if not _world.has_method("mux2_native_timings"):
+		_invalid["native"] = "Native instrumentation absent"
+		return {"status": "NOT_MEASURED"}
+	var timing: Dictionary = _world.call("mux2_native_timings")
+	if not _native_valid(timing, frame):
+		_invalid["native"] = "Disabled, stale or invalid native timing"
+		return timing
+	var previous: Dictionary = _native_previous
+	_native_previous = timing
+	if int(previous.get("epoch", -1)) != int(timing["epoch"]):
+		_invalid["native"] = "Counter epoch changed during arm"
+		return {"status": "RESET", "frame": frame, "epoch": timing["epoch"]}
+	var result: Dictionary = {"status": "MEASURED", "frame": frame, "epoch": timing["epoch"], "frame_ticks": timing["frame_ticks"], "executed_ticks": timing["executed_ticks"]}
+	for category: String in ["totals_ns", "systems_ns"]:
+		var delta: Dictionary = {}
+		var before: Dictionary = previous.get(category, {})
+		var now: Dictionary = timing[category]
+		for metric: String in now:
+			if not before.has(metric) or int(now[metric]) < int(before[metric]):
+				_invalid["native"] = "Missing or regressed cumulative counter"
+				return {"status": "INVALID", "frame": frame}
+			delta[metric] = float(int(now[metric]) - int(before[metric])) / 1000.0
+		result[category.replace("_ns", "_usec")] = delta
+	return result
+
 func coverage() -> Dictionary:
-	var result: Dictionary = {"minimap_process": "MEASURED", "sim_reads_raw_getters": "MEASURED", "complete": _invalid.is_empty(), "invalid": _invalid.duplicate()}
+	var warmup: Dictionary = _timed_nodes["ground"].call("mux2_wall_warmup_report")
+	if int(warmup.get("elapsed_usec", 0)) > _wall_warmup_observed_usec:
+		_invalid["wall_warmup"] = "Warmup ran outside sampled frames"
+	var native: Dictionary = _world.call("mux2_native_timings") if _world.has_method("mux2_native_timings") else {}
+	if not _native_valid(native, Engine.get_process_frames()): _invalid["native"] = "Native coverage unavailable"
+	_freeze_sample(Engine.get_process_frames())
+	var result: Dictionary = {"wall_warmup_observed_usec": _wall_warmup_observed_usec, "frame_phases": "MEASURED" if not _invalid.has("frame_phases") else "NOT_MEASURED", "native": "MEASURED" if not _invalid.has("native") else "NOT_MEASURED", "freeze": "MEASURED" if not _invalid.has("freeze") else "NOT_MEASURED", "minimap_process": "MEASURED", "sim_reads_raw_getters": "MEASURED", "complete": _invalid.is_empty(), "invalid": _invalid.duplicate()}
 	for label: String in _timed_nodes:
 		var node: Node = _timed_nodes[label]
 		var available: bool = node.has_method("mux2_frame_timings")

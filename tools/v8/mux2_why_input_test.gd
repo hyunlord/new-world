@@ -84,6 +84,9 @@ func run() -> void:
 	if panel.visible:
 		check("recorded popup screen width",panel.size.x * panel.scale.x <= 420.5)
 		check("recorded popup half screen height",panel.size.y * panel.scale.y <= root.get_visible_rect().size.y * 0.5 + 0.5)
+	await _placement_regression(panel, camera, tile)
+	panel.call("open_tile", tile)
+	await frames()
 	var key := InputEventKey.new()
 	key.keycode = KEY_ESCAPE
 	key.physical_keycode = KEY_ESCAPE
@@ -165,3 +168,68 @@ func run() -> void:
 	tool.call("set_mode",0)
 	print("MUX2_WHY_DONE failures=%d checks=%d" % [failures,checks])
 	quit(1 if failures else 0)
+
+# Independent traversal reports actual visible panel/button rectangles, not the placement helper's output.
+func _popup_intersections(node: Node, popup: Control, rectangle: Rect2, hits: Array[String]) -> void:
+	if node == popup or (node is CanvasItem and not (node as CanvasItem).is_visible_in_tree()):
+		return
+	if node is Panel or node is PanelContainer or node is BaseButton:
+		var control: Control = node as Control
+		var actual: Rect2 = control.get_global_transform_with_canvas() * Rect2(Vector2.ZERO, control.size)
+		if actual.has_area() and actual.intersects(rectangle):
+			hits.append(str(control.get_path()))
+	for child: Node in node.get_children():
+		_popup_intersections(child, popup, rectangle, hits)
+
+
+func _placement_regression(panel: Control, camera: Camera2D, tile: Vector2i) -> void:
+	var saved_camera: Vector2 = camera.position
+	var camera_processing: bool = camera.is_processing()
+	camera.set_process(false)
+	var store: RefCounted = main.get_node("UI/MuxHud").get("store")
+	var saved_scale: float = float(store.call("value", "ui_scale"))
+	# MuxHud owns this instance inside MapDock; use its verified public property.
+	var minimap: Control = main.get_node("UI/MuxHud").get("minimap") as Control
+	check("placement minimap fixture exists and is visible", minimap != null and minimap.is_visible_in_tree())
+	if minimap == null or not minimap.is_visible_in_tree():
+		camera.set_process(camera_processing)
+		return
+	for factor: float in [1.0, 1.25]:
+		store.call("set_value", "ui_scale", factor)
+		panel.hide()
+		await frames(12)
+		var obstacle: Rect2 = minimap.get_global_transform_with_canvas() * Rect2(Vector2.ZERO, minimap.size)
+		# A room/item Why caller can anchor under the minimap: the old flipped popup overlaps its lower half.
+		var desired: Vector2 = Vector2(obstacle.end.x - 8.0, obstacle.end.y - 24.0)
+		var current: Vector2 = root.get_canvas_transform() * View.tile_centre(tile)
+		camera.position += (current - desired) / camera.zoom
+		camera.call("_clamp_position")
+		await frames(8)
+		panel.call("open_tile", tile)
+		await frames(12)
+		var rectangle: Rect2 = panel.get_global_transform_with_canvas() * Rect2(Vector2.ZERO, panel.size)
+		var hits: Array[String] = []
+		_popup_intersections(main.get_node("UI"), panel, rectangle, hits)
+		print("MUX2_WHY_PLACEMENT " + JSON.stringify({"scale": factor, "popup": str(rectangle), "minimap": str(obstacle), "intersections": hits}))
+		check("placement scale%s real history visible" % factor, panel.visible)
+		check("placement scale%s original size limits" % factor, rectangle.size.x <= 420.5 and rectangle.size.y <= root.get_visible_rect().size.y * 0.5 + 0.5)
+		check("placement scale%s remains in viewport" % factor, root.get_visible_rect().encloses(rectangle))
+		check("placement scale%s clears actual visible controls" % factor, hits.is_empty())
+		if DisplayServer.get_name() != "headless":
+			var directory: String = "/Users/rexxa/work/mux2-data/ui-why-placement/run-%d" % OS.get_process_id()
+			DirAccess.make_dir_recursive_absolute(directory)
+			await RenderingServer.frame_post_draw
+			check("placement capture scale%s" % factor, root.get_texture().get_image().save_png(directory.path_join("why-placement-%s.png" % factor)) == OK)
+	panel.hide()
+	store.call("set_value", "ui_scale", saved_scale)
+	camera.position = saved_camera
+	camera.set_process(camera_processing)
+	await frames(12)
+	# Full-screen visible occluder: no fit is possible, so retain bounded content and expose exhaustion.
+	if panel.has_method("_place_popup"):
+		var area: Vector2 = root.get_visible_rect().size
+		var obstacles: Array[Rect2] = [Rect2(Vector2.ZERO, area)]
+		var placed: Vector2 = panel.call("_place_popup", Vector2(20, 20), Vector2(200, 100), area, obstacles)
+		check("saturated viewport reports exhausted bounded fallback", bool(panel.get("_placement_exhausted")) and Rect2(Vector2.ZERO, area).encloses(Rect2(placed, Vector2(200, 100))))
+	else:
+		check("saturated viewport reports exhausted bounded fallback", false)

@@ -15,7 +15,8 @@
 #   a halo where people could be lost; MART2_DECISIONS D17). Sleepers sharing a tile fan out for drawing only.
 # LOD: at or below camera zoom `lod.marker_zoom_max` bodies hide; half zoom retains route-I figures and shadows.
 #   Half bodies draw above scenery with a pale contour; overlapping true art is translucent. Exact coincident feet
-#   get a full-snapshot count badge above the figures; repeated inspection clicks cycle those stable identities.
+#   get full-snapshot count annotations; colliding label/body footprints coalesce into aggregate counts.
+#   Badge inspection cycles aggregate identities; body inspection stays within its original exact-foot group.
 #   At quarter zoom `lod.marker_fill_px` SCREEN pixels in top colour have bright, household and dark-outline rings, plus at
 #   `lod.glyph_zoom` an activity glyph (axe working, log carrying, zz sleeping, ! fleeing). The disc's ring is the
 #   person's household colour (M-ART2.1 §2.3): a household is a couple and the children of its members — an adult's
@@ -62,6 +63,8 @@ signal mood_toggled(on: bool)
 ## Microseconds of the last frame's update and of the last LOD marker draw (performance reports).
 var last_process_usec: int = 0
 var last_draw_usec: int = 0
+var mux2_render_profile: Dictionary = {}
+var _render_profiling: bool = OS.get_environment("WORLDSIM_MUX2_RENDER_PROFILE") == "1"
 
 var _world_sim: Node = null
 var _world: Node2D = null
@@ -97,9 +100,32 @@ var _half_rim_px: float = 1.0
 var _half_overlap_alpha: float = 0.8
 var _opaque_rects: Dictionary = {}
 var _coincident_badges: Array[Dictionary] = []
+var _coincident_groups: Array[Dictionary] = []
+var badge_layout_exhausted: int = 0
+var _badge_leaders: BadgeLeaders
 var _household_key: int = 0
 ## AgentId → household key from the last kin columns (looked up when markers refresh, so new people get theirs).
 var _household_of: Dictionary = {}
+
+
+class BadgeLeaders:
+	extends Node2D
+	var segments: PackedVector2Array = PackedVector2Array()
+	var light: Color = Color.WHITE
+	var scale_width: float = 1.0
+	var aggregate_segments: PackedVector2Array = PackedVector2Array()
+	var active_segments: PackedVector2Array = PackedVector2Array()
+	var extent_style: Dictionary = {}
+
+	func _draw() -> void:
+		for entry: Dictionary in [{"points": aggregate_segments, "active": false}, {"points": active_segments, "active": true}]:
+			var points: PackedVector2Array = entry["points"]
+			if not points.is_empty():
+				draw_multiline(points, extent_style["dark"], float(extent_style["dark_width"]) * scale_width)
+				draw_multiline(points, extent_style["active_light"] if bool(entry["active"]) else extent_style["light"], float(extent_style["light_width"]) * scale_width)
+		if not segments.is_empty():
+			draw_multiline(segments, Color8(35, 29, 23), 2.0 * scale_width)
+			draw_multiline(segments, light, scale_width)
 
 
 class Person:
@@ -145,6 +171,11 @@ func _ready() -> void:
 	marker_material.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
 	material = marker_material
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_badge_leaders = BadgeLeaders.new()
+	_badge_leaders.z_as_relative = false
+	_badge_leaders.z_index = 4093
+	_badge_leaders.material = marker_material
+	add_child(_badge_leaders)
 	_world = get_node_or_null("../World")
 	_font = load("res://assets/fonts/galmuri/Galmuri11.ttf") as Font
 	_markers = LodMarkers.new()
@@ -161,7 +192,7 @@ func _on_world_reset() -> void:
 	for person: Person in _persons.values():
 		person.queue_free()
 	_persons.clear()
-	_coincident_badges.clear()
+	_clear_coincident_badges()
 	queue_redraw()
 	_household_key = 0
 	_household_of = {}
@@ -262,16 +293,25 @@ func _set_appearance(person: Person, look: int, variant: int, elder: bool) -> vo
 
 
 func _set_frame(person: Person, pose: String, bob: int) -> void:
+	_set_frame_cached(person, pose, bob, {})
+
+
+func _set_frame_cached(person: Person, pose: String, bob: int, resources: Dictionary) -> void:
 	var facing: String = "E" if person.facing == "E" else "S"
-	if person.pose != "%s/%s" % [facing, pose]:
-		person.pose = "%s/%s" % [facing, pose]
-		var tex: Texture2D = ArtData.texture_at(ArtData.frame_path(person.frames, facing, pose))
-		person.body.texture = tex
-		var mask: Texture2D = _mask(person.frames, facing, pose)
+	var pose_key: String = "%s/%s" % [facing, pose]
+	if person.pose != pose_key:
+		person.pose = pose_key
+		var key: String = "%s/%s/%s" % [person.frames, facing, pose]
+		if not resources.has(key):
+			var tex: Texture2D = ArtData.texture_at(ArtData.frame_path(person.frames, facing, pose))
+			var resolved_mask: Texture2D = _mask(person.frames, facing, pose)
+			resources[key] = {"texture": tex, "mask": resolved_mask, "anchor": ArtData.anchor(key)}
+		var frame: Dictionary = resources[key]
+		person.body.texture = frame["texture"]
+		var mask: Texture2D = frame["mask"]
 		person.mat.set_shader_parameter("mask_tex", mask)
 		person.mat.set_shader_parameter("has_mask", mask != null)
-		var a: Vector2i = ArtData.anchor("%s/%s/%s" % [person.frames, facing, pose])
-		person.body.set_meta("anchor", a)
+		person.body.set_meta("anchor", frame["anchor"])
 	var anchor: Vector2i = person.body.get_meta("anchor", Vector2i(40, 104))
 	person.body.flip_h = person.west and facing == "E"
 	var w: int = person.body.texture.get_width() if person.body.texture != null else 80
@@ -283,11 +323,29 @@ func _process(delta: float) -> void:
 	if _world_sim == null:
 		return
 	var t0: int = Time.get_ticks_usec()
+	if _render_profiling:
+		mux2_render_profile = {"frame": Engine.get_process_frames(), "people": _persons.size()}
+		MarkerLayout.reset_profile()
 	_update(delta)
 	last_process_usec = Time.get_ticks_usec() - t0
+	if _render_profiling:
+		mux2_render_profile["update_total_usec"] = last_process_usec
+		mux2_render_profile["badges"] = _coincident_badges.size()
+		mux2_render_profile["layout_searches"] = MarkerLayout.profile_rows.duplicate(true)
+		mux2_render_profile["layout_geometry"] = MarkerLayout.profile_geometry.duplicate(true)
+		mux2_render_profile["profile_copy_usec"] = Time.get_ticks_usec() - t0 - last_process_usec
+
+
+func _profile_span(label: String, started: int) -> int:
+	if not _render_profiling:
+		return 0
+	var now: int = Time.get_ticks_usec()
+	mux2_render_profile[label] = int(mux2_render_profile.get(label, 0)) + now - started
+	return now
 
 
 func _update(delta: float) -> void:
+	var phase: int = Time.get_ticks_usec() if _render_profiling else 0
 	if _params_version != ArtData.params_version():
 		_params_version = ArtData.params_version()
 		_make_shadow()
@@ -334,6 +392,11 @@ func _update(delta: float) -> void:
 	var lod: bool = _zoom <= float(ArtData.param("lod.marker_zoom_max", 0.25)) + 0.001
 	if lod:
 		_update_households(snap)
+	phase = _profile_span("params_snapshot_usec", phase)
+	var phase_walk: bool = fmod(_clock * walk_hz, 1.0) >= 0.5
+	var phase_work: bool = fmod(_clock * work_hz, 1.0) >= 0.5
+	var readable: bool = _zoom < 1.0 and not lod
+	var frame_resources: Dictionary = {}
 	var any_sleep: bool = false
 	for i: int in n:
 		var key: int = bits[i]
@@ -363,7 +426,6 @@ func _update(delta: float) -> void:
 		var moving: bool = person.elapsed < person.duration
 		var carrying: bool = not asleep and i < carries.size() and carries[i] > 0
 		var working: bool = not moving and i < states.size() and i < targets.size() and states[i] == STATE_CONSUMING and targets[i] == TARGET_JOB
-		var phase_walk: bool = fmod(_clock * walk_hz, 1.0) >= 0.5
 		var pose: String
 		var bob: int = 0
 		if asleep:
@@ -379,7 +441,7 @@ func _update(delta: float) -> void:
 			bob = bob_px if phase_walk else 0
 			person.activity = "walk"
 		elif working:
-			pose = "work_a" if fmod(_clock * work_hz, 1.0) >= 0.5 else "idle"
+			pose = "work_a" if phase_work else "idle"
 			person.activity = "work"
 		else:
 			pose = "idle"
@@ -404,8 +466,7 @@ func _update(delta: float) -> void:
 		if lod:
 			# Markers only (drawn by this node): no frame, mask or shader work for a hidden body.
 			continue
-		_set_frame(person, pose, bob)
-		var readable: bool = _zoom < 1.0 and not lod
+		_set_frame_cached(person, pose, bob, frame_resources)
 		if person.readable != readable:
 			person.readable = readable
 			person.mat.shader = _half_shader if readable else VARIANT_SHADER
@@ -432,6 +493,7 @@ func _update(delta: float) -> void:
 			if readable:
 				width = maxf(width, _half_rim_px / maxf(_zoom, 0.01))
 			person.mat.set_shader_parameter("outline_px", width)
+	phase = _profile_span("person_reconcile_usec", phase)
 	for key: int in _persons.keys():
 		var person: Person = _persons[key]
 		if person.seen != _frame:
@@ -446,23 +508,24 @@ func _update(delta: float) -> void:
 			person.position = person.from_pos.lerp(person.to_pos, person.elapsed / person.duration).round()
 		else:
 			person.position = person.to_pos
+	phase = _profile_span("cleanup_placement_usec", phase)
 	if not lod and _zoom < 1.0:
 		_show_overlapping_figures()
 	elif not _coincident_badges.is_empty():
-		_coincident_badges.clear()
+		_clear_coincident_badges()
 		queue_redraw()
 	if lod or _lod:
 		_lod = lod
 		_refresh_markers()
 	_lod = lod
+	_profile_span("half_or_lod_total_usec", phase)
 
 
 ## At half zoom, let genuine coincident art show through; bodies keep their original feet and shadows.
 ## Cache opaque frame extents and use tile-size spatial buckets, avoiding all-pairs work at population1000.
 func _show_overlapping_figures() -> void:
-	var buckets: Dictionary = {}
+	var started: int = Time.get_ticks_usec() if _render_profiling else 0
 	var rectangles: Dictionary = {}
-	var overlaps: Dictionary = {}
 	for person: Person in _persons.values():
 		var texture: Texture2D = person.body.texture
 		if texture == null:
@@ -478,25 +541,28 @@ func _show_overlapping_figures() -> void:
 			used.position.x = texture.get_width() - used.end.x
 		var rectangle: Rect2 = Rect2(person.position + person.body.offset + Vector2(used.position), Vector2(used.size))
 		rectangles[person.bits] = rectangle
-		var first: Vector2i = Vector2i((rectangle.position / float(View.TILE)).floor())
-		var last: Vector2i = Vector2i((rectangle.end / float(View.TILE)).floor())
-		for y: int in range(first.y, last.y + 1):
-			for x: int in range(first.x, last.x + 1):
-				var cell: Vector2i = Vector2i(x, y)
-				for other: int in buckets.get(cell, []):
-					if rectangle.intersects(rectangles[other]):
-						overlaps[person.bits] = true
-						overlaps[other] = true
-				if not buckets.has(cell):
-					buckets[cell] = []
-				buckets[cell].append(person.bits)
+	var overlaps: Dictionary = MarkerLayout.overlapping_people(rectangles, float(View.TILE))
 	for person: Person in _persons.values():
 		person.body.self_modulate = Color(1, 1, 1, _half_overlap_alpha if overlaps.has(person.bits) else 1.0)
+	started = _profile_span("overlap_alpha_usec", started)
 	_update_coincident_badges(rectangles)
+	_profile_span("badges_total_usec", started)
 
 
 ## Counts come from the full person snapshot, never body visibility. Counterfactual body hides cannot alter a badge.
+func _clear_coincident_badges() -> void:
+	_coincident_badges.clear()
+	_coincident_groups.clear()
+	badge_layout_exhausted = 0
+	if _badge_leaders != null:
+		_badge_leaders.segments.clear()
+		_badge_leaders.aggregate_segments.clear()
+		_badge_leaders.active_segments.clear()
+		_badge_leaders.queue_redraw()
+
+
 func _update_coincident_badges(rectangles: Dictionary) -> void:
+	var phase: int = Time.get_ticks_usec() if _render_profiling else 0
 	var groups: Dictionary = {}
 	for person: Person in _persons.values():
 		var cell: Vector2i = Vector2i((person.position * _zoom).round())
@@ -506,9 +572,10 @@ func _update_coincident_badges(rectangles: Dictionary) -> void:
 	var has_group: bool = false
 	for group: Array in groups.values():
 		has_group = has_group or group.size() > 1
+	phase = _profile_span("badge_grouping_usec", phase)
 	if not has_group:
 		if not _coincident_badges.is_empty():
-			_coincident_badges.clear()
+			_clear_coincident_badges()
 			queue_redraw()
 		return
 	var badges: Array[Dictionary] = []
@@ -517,36 +584,165 @@ func _update_coincident_badges(rectangles: Dictionary) -> void:
 	var blocked: Array[Rect2] = []
 	for rectangle: Rect2 in rectangles.values():
 		blocked.append(canvas * rectangle)
+	var ui_rectangles: Array[Rect2] = []
 	var ui: Node = get_node_or_null("/root/Main/UI")
 	if ui != null:
-		MarkerLayout.ui_rects(ui, blocked)
+		MarkerLayout.ui_rects(ui, ui_rectangles)
+	blocked.append_array(ui_rectangles)
+	var unique_blocked: Array[Rect2] = []
+	var seen_blocked: Dictionary = {}
+	for rectangle: Rect2 in blocked:
+		if not seen_blocked.has(rectangle):
+			seen_blocked[rectangle] = true
+			unique_blocked.append(rectangle)
+	blocked = unique_blocked
+	var badge_index: Dictionary = MarkerLayout.badge_index(blocked)
+	phase = _profile_span("badge_obstacles_usec", phase)
+	var descriptors: Array[Dictionary] = []
+	var agent_ids: Dictionary = {}
+	var maximum_size: Vector2 = Vector2.ONE
+	var font_px: int = int(ArtData.param("labels.font_px", 24))
+	var label_pad: float = floorf(float(font_px) / 4.0)
+	var label_inverse: float = 1.0 / maxf(_zoom, 0.01) if bool(ArtData.param("labels.follow_camera", true)) else 1.0
+	var text_sizes: Dictionary = {}
 	for group: Array in groups.values():
 		if group.size() < 2:
 			continue
 		var members: Array[int] = []
 		for bits: int in group:
 			members.append(bits)
+			agent_ids[bits] = (_persons[bits] as Person).agent_id
 		members.sort_custom(func(a: int, b: int) -> bool: return (_persons[a] as Person).agent_id < (_persons[b] as Person).agent_id)
-		var bounds: Rect2 = rectangles.get(members[0], drawn_rect(members[0]))
+		var bounds: Rect2 = rectangles[members[0]] if rectangles.has(members[0]) else drawn_rect(members[0])
 		for bits: int in members:
-			bounds = bounds.merge(rectangles.get(bits, drawn_rect(bits)))
+			bounds = bounds.merge(rectangles[bits] if rectangles.has(bits) else drawn_rect(bits))
 		var text: String = str(members.size())
-		var px: int = int(ArtData.param("labels.font_px", 24))
-		var pad: float = floorf(float(px) / 4.0)
-		var size: Vector2 = _font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, px) if _font != null else Vector2(px, px)
-		var inv: float = 1.0 / maxf(_zoom, 0.01) if bool(ArtData.param("labels.follow_camera", true)) else 1.0
-		var local_size: Vector2 = Vector2(size.x + pad * 2.0, px + pad) * inv
-		var screen_size: Vector2 = (canvas * Rect2(Vector2.ZERO, local_size)).size
-		var figure: Rect2 = canvas * bounds
-		var placed: Rect2 = MarkerLayout.badge(figure, screen_size, get_viewport_rect(), blocked)
-		blocked.append(placed)
-		var anchor: Vector2 = inverse * Vector2(placed.get_center().x, placed.end.y)
-		var badge_rect: Rect2 = inverse * placed
-		var leader: PackedVector2Array = MarkerLayout.badge_leader(figure, placed)
-		badges.append({"members": members, "anchor": anchor, "text": text, "rect": badge_rect, "leader_from": inverse * leader[0], "leader_to": inverse * leader[1]})
+		descriptors.append({"key": int(agent_ids[members[0]]), "members": members, "text": text, "size": _badge_screen_size(text, canvas, font_px, label_pad, label_inverse, text_sizes), "figure": canvas * bounds})
+	descriptors.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a["key"]) < int(b["key"]))
+	_coincident_groups = descriptors.duplicate()
+	phase = _profile_span("badge_prepare_usec", phase)
+	descriptors = MarkerLayout.aggregate_badges(descriptors, agent_ids)
+	var extent_style: Dictionary = _aggregate_style()
+	var extent_counters: Dictionary = {"source_rectangles": 0} if _render_profiling else {}
+	var extent_started: int = Time.get_ticks_usec() if _render_profiling else 0
+	for descriptor: Dictionary in descriptors:
+		descriptor["text"] = _aggregate_text(descriptor)
+		descriptor["scope"] = MarkerLayout.aggregate_contours(descriptor["source_figures"], float(extent_style["padding"]), extent_counters) if (descriptor["source_groups"] as Array).size() > 1 else PackedVector2Array()
+		descriptor["size"] = _badge_screen_size(str(descriptor["text"]), canvas, font_px, label_pad, label_inverse, text_sizes)
+		maximum_size = maximum_size.max(descriptor["size"])
+	if _render_profiling:
+		extent_counters["build_usec"] = Time.get_ticks_usec() - extent_started
+		extent_counters["cache_reuses"] = 0
+		mux2_render_profile["badge_source_groups"] = _coincident_groups.size()
+		mux2_render_profile["badge_aggregate_groups"] = descriptors.size()
+		mux2_render_profile["badge_source_members"] = agent_ids.size()
+		var aggregate_members: int = 0
+		var membership: Array[Dictionary] = []
+		for descriptor: Dictionary in descriptors:
+			aggregate_members += (descriptor["members"] as Array).size()
+			membership.append({"members": descriptor["members"], "source_groups": descriptor["source_groups"]})
+		mux2_render_profile["badge_aggregate_members"] = aggregate_members
+		mux2_render_profile["badge_memberships"] = membership
+	phase = _profile_span("badge_aggregate_usec", phase)
+	var grid: Dictionary = MarkerLayout.badge_grid(maximum_size, get_viewport_rect(), blocked)
+	phase = _profile_span("badge_grid_usec", phase)
+	for descriptor: Dictionary in descriptors:
+		var figure: Rect2 = descriptor["figure"]
+		var exhausted_before: int = int(grid["exhausted"])
+		var placed: Rect2 = MarkerLayout.badge_packed(figure, descriptor["size"], get_viewport_rect(), badge_index, grid)
+		MarkerLayout.badge_index_add(badge_index, placed)
+		var aggregate: bool = (descriptor["source_groups"] as Array).size() > 1
+		var leader: PackedVector2Array = MarkerLayout.aggregate_leader(descriptor["scope"], placed) if aggregate else MarkerLayout.badge_leader(figure, placed)
+		if leader.is_empty():
+			leader = PackedVector2Array([placed.get_center(), placed.get_center()])
+			if _render_profiling:
+				mux2_render_profile["empty_aggregate_scopes"] = int(mux2_render_profile.get("empty_aggregate_scopes", 0)) + 1
+		badges.append({"members": descriptor["members"], "member_count": (descriptor["members"] as Array).size(), "aggregate": aggregate, "screen_scope": descriptor["scope"], "source_groups": descriptor["source_groups"], "anchor": inverse * Vector2(placed.get_center().x, placed.end.y), "text": descriptor["text"], "rect": inverse * placed, "leader_from": inverse * leader[0], "leader_to": inverse * leader[1], "screen_leader": leader, "exhausted": int(grid["exhausted"]) != exhausted_before})
+	phase = _profile_span("badge_layout_usec", phase)
+	var segments: PackedVector2Array = PackedVector2Array()
+	var aggregate_segments: PackedVector2Array = PackedVector2Array()
+	var active_segments: PackedVector2Array = PackedVector2Array()
+	var half_stroke: float = maxf(float(extent_style["dark_width"]), float(extent_style["light_width"])) * 0.5
+	var has_aggregate: bool = false
+	for badge: Dictionary in badges:
+		has_aggregate = has_aggregate or bool(badge["aggregate"])
+	var common_rectangles: Array[Rect2] = []
+	for rectangle: Rect2 in ui_rectangles:
+		common_rectangles.append(rectangle.grow(float(extent_style["ui_clearance"]) + half_stroke))
+	for badge: Dictionary in badges:
+		common_rectangles.append((canvas * (badge["rect"] as Rect2)).grow(float(extent_style["ui_clearance"]) + half_stroke))
+	var common_index: Dictionary = MarkerLayout.badge_index(common_rectangles)
+	var body_obstacles: Dictionary = MarkerLayout.aggregate_body_obstacles(rectangles, canvas, float(extent_style["body_clearance"]) + half_stroke) if has_aggregate else {}
+	var mouse: Vector2 = get_local_mouse_position()
+	var mouse_ui: bool = false
+	for rectangle: Rect2 in ui_rectangles:
+		mouse_ui = mouse_ui or rectangle.has_point(canvas * mouse)
+	for badge: Dictionary in badges:
+		var leader: PackedVector2Array = badge["screen_leader"]
+		var clipped: PackedVector2Array = MarkerLayout.clipped_leader(leader[0], leader[1], badge_index)
+		if bool(badge["aggregate"]):
+			clipped = MarkerLayout.clipped_aggregate(clipped, get_viewport_rect().grow(-half_stroke), common_index, body_obstacles, badge["members"], extent_counters)
+			clipped.append_array(MarkerLayout.clipped_aggregate(badge["screen_scope"], get_viewport_rect().grow(-half_stroke), common_index, body_obstacles, badge["members"], extent_counters))
+			badge["active"] = (badge["members"] as Array).has(_selected_bits) or (not mouse_ui and (badge["rect"] as Rect2).has_point(mouse))
+			for point: Vector2 in clipped:
+				if bool(badge["active"]):
+					active_segments.append(inverse * point)
+				else:
+					aggregate_segments.append(inverse * point)
+		else:
+			for point: Vector2 in clipped:
+				segments.append(inverse * point)
+	if _render_profiling:
+		mux2_render_profile["aggregate_extent"] = extent_counters
+	badge_layout_exhausted = int(grid["exhausted"])
+	if _render_profiling:
+		mux2_render_profile["badge_layout_exhausted"] = badge_layout_exhausted
+	if _badge_leaders != null:
+		var width: float = 1.0 / maxf(_zoom, 0.01)
+		if _badge_leaders.segments != segments or _badge_leaders.light != _half_rim or _badge_leaders.scale_width != width or _badge_leaders.aggregate_segments != aggregate_segments or _badge_leaders.active_segments != active_segments or _badge_leaders.extent_style != extent_style:
+			_badge_leaders.segments = segments
+			_badge_leaders.aggregate_segments = aggregate_segments
+			_badge_leaders.active_segments = active_segments
+			_badge_leaders.extent_style = extent_style
+			_badge_leaders.light = _half_rim
+			_badge_leaders.scale_width = width
+			_badge_leaders.queue_redraw()
+			queue_redraw()
 	if badges != _coincident_badges:
 		_coincident_badges = badges
 		queue_redraw()
+	_profile_span("badge_leader_clip_usec", phase)
+
+
+## Presentation only: each source is an exact-foot group; every member remains counted.
+func _aggregate_text(descriptor: Dictionary) -> String:
+	var count: int = (descriptor["members"] as Array).size()
+	var groups: int = (descriptor["source_groups"] as Array).size()
+	if groups <= 1:
+		return str(count)
+	var locale: Node = get_node_or_null("/root/Locale")
+	return str(locale.call("trf", "UI_COINCIDENT_AGGREGATE_FMT", {"groups": groups, "people": count})) if locale != null else str(count)
+
+
+## Re-read every invocation, so F12, UI font and camera changes need no geometry cache invalidation.
+func _aggregate_style() -> Dictionary:
+	return {"padding": maxf(0.0, float(ArtData.param("labels.aggregate.padding_px", 2.0))),
+		"dark_width": maxf(0.0, float(ArtData.param("labels.aggregate.dark_width_px", 3.0))),
+		"light_width": maxf(0.0, float(ArtData.param("labels.aggregate.light_width_px", 1.0))),
+		"dark": _rgba("labels.aggregate.dark_rgba", Color8(35, 29, 23, 210)),
+		"light": _rgba("labels.aggregate.light_rgba", Color8(184, 216, 224, 220)),
+		"active_light": _rgba("labels.aggregate.active_light_rgba", Color8(220, 244, 250, 255)),
+		"ui_clearance": maxf(0.0, float(ArtData.param("labels.aggregate.ui_clearance_px", 2.0))),
+		"body_clearance": maxf(0.0, float(ArtData.param("labels.aggregate.body_clearance_px", 1.0)))}
+
+
+func _badge_screen_size(text: String, canvas: Transform2D, px: int, pad: float, inv: float, sizes: Dictionary) -> Vector2:
+	if sizes.has(text):
+		return sizes[text]
+	var size: Vector2 = _font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, px) if _font != null else Vector2(px, px)
+	var screen_size: Vector2 = (canvas * Rect2(Vector2.ZERO, Vector2(size.x + pad * 2.0, px + pad) * inv)).size
+	sizes[text] = screen_size
+	return screen_size
 
 
 func _rgba(path: String, fallback: Color) -> Color:
@@ -684,9 +880,11 @@ func _draw() -> void:
 	if not _lod:
 		if _zoom < 1.0 and _font != null:
 			for badge: Dictionary in _coincident_badges:
-				draw_line(badge["leader_from"], badge["leader_to"], INK, 2.0 / maxf(_zoom, 0.01))
-				draw_line(badge["leader_from"], badge["leader_to"], _half_rim, 1.0 / maxf(_zoom, 0.01))
 				OverlayLabel.draw_label(self, _font, str(badge["text"]), badge["anchor"], _zoom)
+				if bool(badge.get("aggregate", false)):
+					var style: Dictionary = _badge_leaders.extent_style
+					var width: float = float(style["light_width"]) / maxf(_zoom, 0.01)
+					draw_rect((badge["rect"] as Rect2).grow(-width * 0.5), style["active_light"] if bool(badge.get("active", false)) else style["light"], false, width)
 		return
 	var onepx: float = 1.0 / maxf(_zoom, 0.01)
 	var r: float = _marker_px * 0.5 * onepx
@@ -741,12 +939,14 @@ func drawn_rect(bits: int) -> Rect2:
 func entity_at(p: Vector2, cycle_selection: bool = false) -> int:
 	if cycle_selection and not _lod and _zoom < 1.0:
 		for badge: Dictionary in _coincident_badges:
-			var members: Array[int] = badge["members"]
-			var hit: bool = (badge["rect"] as Rect2).has_point(p)
-			for bits: int in members:
-				hit = hit or drawn_rect(bits).has_point(p)
-			if hit:
+			if (badge["rect"] as Rect2).has_point(p):
+				var members: Array[int] = badge["members"]
 				return members[(members.find(_selected_bits) + 1) % members.size()]
+		for group: Dictionary in _coincident_groups:
+			var members: Array[int] = group["members"]
+			for bits: int in members:
+				if drawn_rect(bits).has_point(p):
+					return members[(members.find(_selected_bits) + 1) % members.size()]
 	var best: int = -1
 	var best_y: float = -INF
 	for person: Person in _persons.values():

@@ -3,6 +3,8 @@
 extends SceneTree
 
 const Agents = preload("res://scripts/world/colony/agent_layer.gd")
+const Layout = preload("res://scripts/world/colony/marker_layout.gd")
+const ArtData = preload("res://scripts/world/art/art_data.gd")
 var _checks: int = 0
 var _failures: int = 0
 
@@ -33,10 +35,48 @@ func _person(bits: int, agent_id: int, at: Vector2) -> Agents.Person:
 	return person
 
 
+## Seed a real clipping result to make stale draw-state observable even when a nearby badge needs no leader.
+func _seed_leader(agents: Node2D) -> bool:
+	var layer: Node2D = agents.get("_badge_leaders") as Node2D
+	var segments: PackedVector2Array = Layout.clipped_leader(Vector2(10, 10), Vector2(50, 10), {})
+	layer.set("segments", segments)
+	layer.queue_redraw()
+	return not (layer.get("segments") as PackedVector2Array).is_empty()
+
+
+func _zoom_transition(zoom: float) -> void:
+	var camera: Camera2D = Camera2D.new()
+	root.add_child(camera)
+	camera.zoom = Vector2.ONE * zoom
+	camera.make_current()
+	var agents: Node2D = Agents.new()
+	root.add_child(agents)
+	agents.set("_zoom", 0.5)
+	var first: Agents.Person = _person(200, 20, Vector2(400, 400))
+	var second: Agents.Person = _person(100, 10, Vector2(400, 400))
+	agents.add_child(first)
+	agents.add_child(second)
+	agents.set("_persons", {200: first, 100: second})
+	agents.call("_show_overlapping_figures")
+	_check("zoom_%.2f_fixture_has_badge_and_leader" % zoom, not (agents.get("_coincident_badges") as Array).is_empty() and _seed_leader(agents))
+	# The empty read-only snapshot removes fixture people; the actual _update zoom branch must clear cached draws.
+	agents.set("_params_version", ArtData.params_version())
+	agents.call("_update", 0.0)
+	_check("zoom_%.2f_used_actual_camera_transition" % zoom, is_equal_approx(float(agents.get("_zoom")), zoom) and bool(agents.get("_lod")) == (zoom == 0.25))
+	var layer: Node2D = agents.get("_badge_leaders") as Node2D
+	_check("zoom_%.2f_clears_badges_and_leader_segments" % zoom, (agents.get("_coincident_badges") as Array).is_empty() and (layer.get("segments") as PackedVector2Array).is_empty())
+	agents.free()
+	camera.free()
+
+
 func _run() -> void:
 	var agents: Node2D = Agents.new()
 	root.add_child(agents)
 	agents.set("_zoom", 0.5)
+	var leader_layer: Node2D = agents.get("_badge_leaders") as Node2D
+	_check("leader_draw_child_owned_by_agents", leader_layer != null and leader_layer.get_parent() == agents)
+	_check("leader_layer_above_scenery_below_half_bodies", not leader_layer.z_as_relative and leader_layer.z_index == 4093 and agents.z_index == 4095)
+	_check("leader_material_unshaded", leader_layer.material is CanvasItemMaterial and (leader_layer.material as CanvasItemMaterial).light_mode == CanvasItemMaterial.LIGHT_MODE_UNSHADED)
 	var first: Agents.Person = _person(200, 20, Vector2(400, 400))
 	var second: Agents.Person = _person(100, 10, Vector2(400, 400))
 	var separate: Agents.Person = _person(300, 30, Vector2(700, 500))
@@ -74,9 +114,18 @@ func _run() -> void:
 	_check("badge_avoids_neighboring_person", not moved.intersects(neighbor))
 	_check("badge_stays_inside_viewport", agents.get_viewport_rect().encloses(moved))
 	_check("displaced_badge_keeps_group_members", badges[0]["members"] == [100, 200])
+	_check("separation_fixture_has_leader", _seed_leader(agents))
 	second.position = Vector2(440, 400)
 	agents.call("_show_overlapping_figures")
 	_check("badge_disappears_when_group_separates", (agents.get("_coincident_badges") as Array).is_empty())
+	_check("group_separation_clears_leader_segments", (leader_layer.get("segments") as PackedVector2Array).is_empty())
+	second.position = first.position
+	agents.call("_show_overlapping_figures")
+	_check("world_reset_fixture_has_badge_and_leader", not (agents.get("_coincident_badges") as Array).is_empty() and _seed_leader(agents))
+	agents.call("_on_world_reset")
+	_check("world_reset_clears_badges_and_leader_segments", (agents.get("_coincident_badges") as Array).is_empty() and (leader_layer.get("segments") as PackedVector2Array).is_empty())
 	agents.free()
+	_zoom_transition(0.25)
+	_zoom_transition(1.0)
 	print("MUX2_COINCIDENT_DONE checks=%d failures=%d" % [_checks, _failures])
 	quit(0 if _failures == 0 else 1)

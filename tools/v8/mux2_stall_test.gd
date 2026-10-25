@@ -1,5 +1,5 @@
 # M-UX2 normal debug gameplay stall measurement: seed 0, steward ON, zoom 1 and 0.5.
-# Bridge methods: reset_world, cmd_set_steward, get_time_snapshot, get_steward, get_agent_snapshot.
+# Bridge methods: reset_world, cmd_set_steward, get_time_snapshot, get_steward, get_agent_snapshot. Monitor optionally calls mux2_native_timings.
 # Automatic accumulator stays active. Windowed only; each arm has 10 startup + 300 measured seconds.
 extends SceneTree
 
@@ -8,7 +8,7 @@ const Store = preload("res://scripts/ui/mux/settings_store.gd")
 const MAX_SECONDS: float = 900.0
 const SOURCE_PATHS: Array[String] = [
 	"tools/v8/mux2_stall_test.gd", "tools/v8/mux2_perf_monitor.gd", "project.godot", "sim_bridge.gdextension", "rust/Cargo.toml", "rust/Cargo.lock",
-	"scripts/core/sim_reads.gd", "scripts/world/camera_controller.gd", "scripts/world/colony/ground_layer.gd", "scripts/world/art/ground_baker.gd",
+	"scripts/core/sim_reads.gd", "scripts/world/camera_controller.gd", "scripts/world/colony/ground_layer.gd", "scripts/world/art/ground_baker.gd", "scripts/world/art/wall_baker.gd", "scripts/world/colony/building_layer.gd",
 	"scripts/ui/mux/minimap.gd", "scripts/ui/mux/alerts_panel.gd", "scripts/ui/mux/alert_evaluator.gd", "scripts/ui/mux/mux_hud.gd", "scripts/ui/mux/learning_facts.gd",
 	"rust/crates/sim-bridge/src/ffi/node.rs", "rust/crates/sim-systems/src/runtime/steward/mod.rs", "rust/crates/sim-core/data/colony/steward.ron",
 ]
@@ -20,6 +20,7 @@ var _camera: Camera2D
 var _errors: Array[String] = []
 var _report: Dictionary = {}
 var _finished: bool = false
+var _diagnostic: bool = false
 
 func _init() -> void:
 	call_deferred("_run")
@@ -31,8 +32,11 @@ func _run() -> void:
 		print("MUX2_STALL_SELF_TEST failures=%s" % [_errors])
 		quit(0 if _errors.is_empty() else 1)
 		return
+	if args.size() == 2 and args[1] == "--diagnostic-120":
+		_diagnostic = true
+		args.resize(1)
 	if args.size() != 1:
-		push_error("usage: mux2_stall_test.gd -- /absolute/external/new-output-directory")
+		push_error("usage: mux2_stall_test.gd -- /absolute/external/new-output-directory [--diagnostic-120]")
 		quit(1)
 		return
 	_out = args[0]
@@ -50,6 +54,7 @@ func _run() -> void:
 		quit(1)
 		return
 	_report = {"started_utc": Time.get_datetime_string_from_system(true), "seed": 0, "speed": 1, "steward_enabled": true, "arms": [], "errors": _errors, "complete": false, "pass": false,
+		"purpose": "diagnostic_120_seconds_zoom1" if _diagnostic else "acceptance_5_minutes_each_zoom",
 		"environment": _environment(), "source_sha256": _hashes(), "bridge": _bridge(),
 		"measurement": "RenderingServer.frame_post_draw wall-clock intervals. Fresh seed 0 per zoom. No manual ticks; all ordinary UI and camera processing stays enabled. No frame cap or vsync override.",
 		"limits": "Selected source paths and configured library on disk are hashed, not process memory. Parent must freeze entire checkout. Performance monitors can lag and are corroboration, not exclusive CPU attribution. Nested timings must not be summed. Sampling overhead is included in subsequent frame intervals; file output occurs after pausing each arm.",
@@ -61,7 +66,10 @@ func _run() -> void:
 	auto_accept_quit = false
 	root.close_requested.connect(_closed)
 	create_timer(MAX_SECONDS).timeout.connect(_timed_out)
-	for zoom_level: float in [1.0, 0.5]:
+	var zoom_levels: Array[float] = [1.0, 0.5]
+	if _diagnostic:
+		zoom_levels = [1.0]
+	for zoom_level: float in zoom_levels:
 		await _phase(zoom_level)
 		if not _errors.is_empty(): break
 	if _hashes() != _report["source_sha256"] or _bridge() != _report["bridge"]:
@@ -108,18 +116,21 @@ func _phase(zoom_level: float) -> void:
 	var monitor: Monitor = Monitor.new()
 	monitor.setup(_main)
 	var samples: Array[Dictionary] = []
-	var arm: Dictionary = {"zoom": zoom_level, "samples": samples, "instrumentation": monitor.coverage(), "start_tick": _tick(), "population_start": _population(), "view": _view(), "complete": false}
+	# Paused preparation disables WorldSim processing; native frame coverage starts with the first measured frame.
+	var arm: Dictionary = {"zoom": zoom_level, "samples": samples, "instrumentation": {"complete": false, "status": "NOT_SAMPLED"}, "start_tick": _tick(), "population_start": _population(), "view": _view(), "complete": false}
 	(_report["arms"] as Array).append(arm)
 	var previous: int = Time.get_ticks_usec()
+	monitor.begin_sampling(previous)
 	var started: int = previous
 	var previous_tick: int = _tick()
 	_camera.call("set_paused", false)
-	while float(previous - started) / 1000000.0 < Monitor.TOTAL_SECONDS:
+	var required_seconds: float = 120.0 if _diagnostic else Monitor.TOTAL_SECONDS
+	while float(previous - started) / 1000000.0 < required_seconds:
 		await RenderingServer.frame_post_draw
 		var drawn: int = Time.get_ticks_usec()
 		var sample_start: int = drawn
 		var tick: int = _tick()
-		var row: Dictionary = {"elapsed_seconds": float(drawn - started) / 1000000.0, "interval_ms": float(drawn - previous) / 1000.0, "post_draw_usec": drawn, "tick": tick, "ticks_advanced": tick - previous_tick, "telemetry": monitor.sample()}
+		var row: Dictionary = {"elapsed_seconds": float(drawn - started) / 1000000.0, "interval_ms": float(drawn - previous) / 1000.0, "post_draw_usec": drawn, "tick": tick, "ticks_advanced": tick - previous_tick, "telemetry": monitor.sample(drawn)}
 		samples.append(row)
 		# The normal first-tick camp centering is part of startup, not a camera fault.
 		if float(row["elapsed_seconds"]) <= Monitor.WARMUP_SECONDS: arm["view"] = _view()
@@ -133,12 +144,15 @@ func _phase(zoom_level: float) -> void:
 	var elapsed: float = float(previous - started) / 1000000.0
 	arm["score"] = Monitor.score(samples, elapsed)
 	arm["instrumentation"] = monitor.coverage()
+	monitor.finish()
+	arm["wall_warmup"] = _main.get_node("ColonyView/GroundLayer").call("mux2_wall_warmup_report")
 	arm["end_tick"] = _tick()
 	arm["population_end"] = _population()
 	arm["observed_ticks_per_second"] = float(int(arm["end_tick"]) - int(arm["start_tick"])) / maxf(elapsed, 0.001)
 	var state: Dictionary = _world.get_steward()
 	arm["final_steward"] = state
-	arm["complete"] = bool(arm["score"]["complete"]) and bool(state.get("enabled", false)) and _errors.is_empty() and int(arm["end_tick"]) > int(arm["start_tick"])
+	arm["capture_complete"] = elapsed >= required_seconds and bool(state.get("enabled", false)) and _errors.is_empty() and int(arm["end_tick"]) > int(arm["start_tick"])
+	arm["complete"] = bool(arm["score"]["complete"]) and bool(arm["capture_complete"])
 	_write_report()
 	print("MUX2_STALL_ARM zoom=%s complete=%s pass=%s >50=%s >33/min=%s" % [zoom_level, arm["complete"], arm["score"]["pass"], arm["score"]["post_warmup_over50"], arm["score"]["over33_per_minute"]])
 
@@ -195,11 +209,14 @@ func _finish() -> void:
 	_report["bar_pass"] = complete and passed
 	_report["profile_complete"] = complete and profiled
 	_report["pass"] = complete and passed and profiled
+	var diagnostic_complete: bool = _diagnostic and arms.size() == 1 and _errors.is_empty() and bool(arms[0].get("capture_complete", false)) and bool((arms[0].get("instrumentation", {}) as Dictionary).get("complete", false))
+	_report["diagnostic_complete"] = diagnostic_complete
 	_report["finished_utc"] = Time.get_datetime_string_from_system(true)
 	if not _write_report():
 		_report["pass"] = false
+		diagnostic_complete = false
 	print("MUX2_STALL_DONE complete=%s pass=%s errors=%s evidence=%s" % [complete, _report["pass"], _errors, _out.path_join("stall-report.json")])
-	quit(0 if bool(_report["pass"]) else 1)
+	quit(0 if diagnostic_complete or bool(_report["pass"]) else 1)
 
 func _write_report() -> bool:
 	var file: FileAccess = FileAccess.open(_out.path_join("stall-report.json"), FileAccess.WRITE)

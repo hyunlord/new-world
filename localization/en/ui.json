@@ -1,4 +1,5 @@
 {
+	"UI_COINCIDENT_AGGREGATE_FMT": "{groups} groups·{people} people",
 	"UI_DECEASED": "Deceased",
 	"UI_POPULATION": "Pop",
 	"UI_HUNGER": "Hunger",

@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 1020,
+    "active_key_count": 1021,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 1020,
+    "key_count": 1021,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "ko",
@@ -881,6 +881,7 @@
     "UI_CHRONICLE_MORE_FMT": "이전 기록 %d개",
     "UI_CHRONICLE_TITLE": "연대기",
     "UI_CLOSE": "닫기",
+    "UI_COINCIDENT_AGGREGATE_FMT": "{groups}무리·{people}명",
     "UI_COMBAT_HP_AFTER": "이후 HP",
     "UI_DEAD": "사망",
     "UI_DEATHS": "사망",

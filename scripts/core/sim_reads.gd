@@ -76,6 +76,8 @@ var _terrain_valid: bool = false
 var _frame: int = -1
 var _counts: Dictionary = {}
 var _usec: Dictionary = {}
+var _mux2_profile: bool = OS.get_environment("WORLDSIM_MUX2_PROFILE") == "1"
+var _freeze_usec: Dictionary = {}
 
 static func resolve(world: Node) -> Node:
 	if not is_instance_valid(world) or world.get_parent() == null:
@@ -145,6 +147,7 @@ func _sync_frame() -> void:
 		_cache.clear()
 		_counts.clear()
 		_usec.clear()
+		_freeze_usec.clear()
 
 func invalidate() -> void:
 	_cache.clear()
@@ -186,7 +189,9 @@ func read_raw(raw_getter: String) -> Dictionary:
 	_counts[raw_getter] = int(_counts.get(raw_getter, 0)) + 1
 	_usec[raw_getter] = int(_usec.get(raw_getter, 0)) + elapsed
 	var snapshot: Dictionary = result if result is Dictionary else {}
+	var freeze_started: int = Time.get_ticks_usec() if _mux2_profile else 0
 	_freeze(snapshot)
+	if _mux2_profile: _freeze_usec[raw_getter] = int(_freeze_usec.get(raw_getter, 0)) + Time.get_ticks_usec() - freeze_started
 	if raw_getter == "get_content_catalog":
 		_catalog = snapshot
 	elif raw_getter == "get_terrain_snapshot":
@@ -248,6 +253,11 @@ func frame_call_counts() -> Dictionary:
 func frame_call_usec() -> Dictionary:
 	_sync_frame()
 	return _usec.duplicate()
+
+func mux2_freeze_timings() -> Dictionary:
+	if not _mux2_profile: return {"status": "DISABLED"}
+	_sync_frame()
+	return {"status": "MEASURED", "frame": _frame, "usec": _freeze_usec.duplicate()}
 
 func frame_id() -> int:
 	_sync_frame()

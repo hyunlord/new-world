@@ -65,12 +65,12 @@ func _run() -> void:
 	_inspector = _main.get_node("UI/AgentInspectorPanel") as Control
 	_world.process_mode = Node.PROCESS_MODE_DISABLED
 	_camera.call("set_paused", true)
-	for zoom: float in [0.5, 0.25]:
+	for zoom: float in [1.0, 0.5, 0.25]:
 		await _states(save, zoom)
 	var after: Dictionary = _provenance(save)
 	var changed: Array[String] = Provenance.changes(before["hashes"], after["hashes"])
 	_check("immutable_inputs", changed.is_empty())
-	_check("four_real_framebuffer_crops", _shots.size() == 4)
+	_check("six_real_framebuffer_crops", _shots.size() == 6)
 	var passed: bool = true
 	for check: Dictionary in _checks:
 		passed = passed and bool(check["pass"])
@@ -110,9 +110,9 @@ func _states(save: String, zoom: float) -> void:
 	var selected: Image = await _capture()
 	var yellow: int = _colour_pixels(selected, plain, _rgba("people.selection_rgba"), zoom)
 	_check("selected_pixels_%.2f" % zoom, yellow >= 8)
-	_save_shot("%s-selected" % ("half" if zoom == 0.5 else "quarter"), selected, zoom, {"selected_pixels": yellow})
+	_save_shot("%s-selected" % ("full" if zoom == 1.0 else ("half" if zoom == 0.5 else "quarter")), selected, zoom, {"selected_pixels": yellow})
 	var reference: Image = selected
-	if zoom == 0.5:
+	if zoom >= 0.5:
 		_inspector.call("close")
 		await _frames(6)
 		reference = await _capture()
@@ -130,7 +130,7 @@ func _states(save: String, zoom: float) -> void:
 		var retained: int = _colour_pixels(drafted, plain, _rgba("people.selection_rgba"), zoom)
 		detail["selected_pixels"] = retained
 		_check("quarter_combined_selection_retained", retained >= 8 and _inspector.visible and int(_inspector.call("get_selected_entity_bits")) == _bits)
-	_save_shot("half-drafted" if zoom == 0.5 else "quarter-selected-drafted", drafted, zoom, detail)
+	_save_shot("%s-drafted" % ("full" if zoom == 1.0 else "half") if zoom >= 0.5 else "quarter-selected-drafted", drafted, zoom, detail)
 
 
 func _choose_adult() -> bool:

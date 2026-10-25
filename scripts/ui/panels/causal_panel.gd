@@ -2,6 +2,8 @@
 # Bridge: get_tile_causal_history directly; get_knowledge_waits/get_colony_overlay through SimReads.
 extends Control
 
+const PopupObstacles = preload("res://scripts/world/colony/marker_layout.gd")
+
 const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
@@ -56,6 +58,7 @@ var _panel: PanelContainer
 var _column: VBoxContainer
 var _scroll: ScrollContainer
 var _anchor_tile: Vector2i
+var _placement_exhausted: bool = false
 
 func _ready() -> void:
 	visible = false
@@ -147,6 +150,53 @@ func _fit() -> void:
 	if position.x + size.x * factor > area.x - 12.0:
 		position.x = point.x - size.x * factor - 16.0
 	position = position.clamp(Vector2(12,12), (area - size * factor - Vector2(12,12)).max(Vector2(12,12)))
+	var blocked: Array[Rect2] = []
+	for sibling: Node in get_parent().get_children():
+		if sibling != self:
+			PopupObstacles.ui_rects(sibling, blocked)
+	position = _place_popup(position, size * factor, area, blocked)
+
+## Preserve the tile-side preference, moving only as far as visible UI requires.
+## For each obstacle-edge y row, merged forbidden x intervals give every legal horizontal gap.
+func _place_popup(preferred: Vector2, extent: Vector2, area: Vector2, obstacles: Array[Rect2]) -> Vector2:
+	var minimum: Vector2 = Vector2(12, 12)
+	var maximum: Vector2 = (area - extent - minimum).max(minimum)
+	preferred = preferred.clamp(minimum, maximum)
+	var rows: Array[float] = [preferred.y, minimum.y, maximum.y]
+	var blocked: Array[Rect2] = []
+	for obstacle: Rect2 in obstacles:
+		var rectangle: Rect2 = obstacle.grow(6.0)
+		blocked.append(rectangle)
+		for y: float in [rectangle.position.y - extent.y, rectangle.end.y]:
+			if y >= minimum.y and y <= maximum.y and not rows.has(y):
+				rows.append(y)
+	var best: Vector2 = preferred
+	var distance: float = INF
+	for y: float in rows:
+		var intervals: Array[Vector2] = []
+		for rectangle: Rect2 in blocked:
+			if y < rectangle.end.y and y + extent.y > rectangle.position.y:
+				intervals.append(Vector2(rectangle.position.x - extent.x, rectangle.end.x))
+		intervals.sort_custom(func(a: Vector2, b: Vector2) -> bool: return a.x < b.x)
+		var gaps: Array[Vector2] = []
+		var cursor: float = minimum.x
+		for interval: Vector2 in intervals:
+			if interval.y <= cursor or interval.x >= maximum.x:
+				continue
+			if interval.x >= cursor:
+				gaps.append(Vector2(cursor, minf(interval.x, maximum.x)))
+			cursor = maxf(cursor, interval.y)
+		if cursor <= maximum.x:
+			gaps.append(Vector2(cursor, maximum.x))
+		for gap: Vector2 in gaps:
+			var candidate: Vector2 = Vector2(clampf(preferred.x, gap.x, gap.y), y)
+			var cost: float = candidate.distance_squared_to(preferred)
+			if cost < distance:
+				distance = cost
+				best = candidate
+	_placement_exhausted = distance == INF
+	# A saturated viewport keeps the existing bounded popup and reports failure; never hide its content.
+	return best
 
 func _process(_delta: float) -> void:
 	if visible:

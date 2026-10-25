@@ -70,6 +70,74 @@ static func prepare_set(resolved: Dictionary, top_override: Dictionary, out_prob
 	return out
 
 
+## Exact prepared images shared only inside this baker; callers draw but do not mutate these images.
+var _prepared_sets: Dictionary = {}
+var prepared_misses: int = 0
+
+func clear_prepared_sets() -> void:
+	_prepared_sets.clear()
+	prepared_misses = 0
+
+func prepared_set_count() -> int:
+	return _prepared_sets.size()
+
+## The cache key includes effective pixel inputs, not material names. Image identity changes on ArtData.clear().
+static func _preparation_key(resolved: Dictionary, top_override: Dictionary) -> String:
+	var tex: Dictionary = resolved.get("textures", {})
+	var tint: Dictionary = resolved.get("tint", {})
+	var top: Dictionary = resolved.get("top", {})
+	var inputs: Array = [float(tint.get("dL", 0)), float(tint.get("da", 0)), float(tint.get("db", 0)),
+		float(top_override.get("top_value", top.get("value", 0.75))),
+		float(top_override.get("top_saturation", top.get("saturation", 0.85))),
+		float(top_override.get("top_blur_px", top.get("blur_px", 2)))]
+	for role: String in SIZES:
+		var path: String = MaterialResolver.res_path(str(tex.get(role, "")))
+		var img: Image = ArtData.image_at(path)
+		inputs.append([role, path, img.get_instance_id() if img != null else 0])
+	return JSON.stringify(inputs)
+
+func prepare_cached(resolved: Dictionary, top_override: Dictionary, out_problems: Array[String]) -> Dictionary:
+	var key: String = _preparation_key(resolved, top_override)
+	if _prepared_sets.has(key): return _prepared_sets[key]
+	var prepared: Dictionary = prepare_set(resolved, top_override, out_problems)
+	if not prepared.is_empty():
+		_prepared_sets[key] = prepared
+		prepared_misses += 1
+	return prepared
+
+## Warm the current registry's distinct appearances, with explicit work/time bounds for larger future catalogs.
+## Missing or over-budget appearances retain the exact synchronous fallback; the report never calls that complete.
+func warm_catalog(resolver: MaterialResolver, top_override: Dictionary, out_problems: Array[String]) -> Dictionary:
+	var started: int = Time.get_ticks_usec()
+	var candidates: int = 0
+	var complete: bool = true
+	var reason: String = "complete"
+	var materials: Array = [""]
+	for material: Dictionary in resolver.materials: materials.append(material.get("id", ""))
+	var categories: Array[String] = [""]
+	for category: Dictionary in resolver.categories: categories.append(str(category.get("category", category.get("id", ""))))
+	for style: Dictionary in resolver.styles:
+		if str(style.get("kind", "")) != "wall": continue
+		for index: int in materials.size() + categories.size():
+			if candidates >= 4096 or _prepared_sets.size() >= 128 or Time.get_ticks_usec() - started >= 5000000:
+				complete = false
+				reason = "candidate, appearance or five-second warmup budget reached"
+				break
+			var resolved: Dictionary
+			if index < materials.size():
+				resolved = resolver.resolve(str(style.get("id", "")), materials[index], "", "wall")
+			else:
+				resolved = resolver.resolve(str(style.get("id", "")), "", categories[index - materials.size()], "wall")
+			candidates += 1
+			if prepare_cached(resolved, top_override, out_problems).is_empty():
+				complete = false
+				reason = "invalid texture input"
+				break
+		if not complete: break
+	return {"complete": complete, "reason": reason, "candidates": candidates, "unique_appearances": _prepared_sets.size(),
+		"elapsed_usec": Time.get_ticks_usec() - started, "max_candidates": 4096, "max_appearances": 128, "budget_usec": 5000000}
+
+
 func _ink() -> Image:
 	if _ink_img == null:
 		_ink_img = Image.create(TILE, TILE, false, Image.FORMAT_RGBA8)

@@ -1,6 +1,6 @@
 {
   "meta": {
-    "active_key_count": 1020,
+    "active_key_count": 1021,
     "categories_order": [
       "ui",
       "buildings"
@@ -11,7 +11,7 @@
     "embed_keys": false,
     "fallback_locale": "en",
     "include_sources": false,
-    "key_count": 1020,
+    "key_count": 1021,
     "key_owners_path": "key_owners.json",
     "key_registry_path": "key_registry.json",
     "locale": "en",
@@ -881,6 +881,7 @@
     "UI_CHRONICLE_MORE_FMT": "%d earlier entries",
     "UI_CHRONICLE_TITLE": "Chronicle",
     "UI_CLOSE": "Close",
+    "UI_COINCIDENT_AGGREGATE_FMT": "{groups} groups·{people} people",
     "UI_COMBAT_HP_AFTER": "HP after",
     "UI_DEAD": "Dead",
     "UI_DEATHS": "Deaths",

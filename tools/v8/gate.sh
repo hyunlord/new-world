@@ -2,7 +2,7 @@
 # usage: gate.sh <log_dir> [--base-data DIR]
 #
 # V8 gate (V8-0 goal 11.1; M1 11.3 added steps 17-20; V8-PLAY 2.3 added step 21; M1.5 10.4 added steps
-# 22-25; M3 added steps 26-27; M4 added step 28; M5 added step 29; M5.5 added step 30; M-ART2 added steps 31-34; M-UX added step 35). Thirty-six steps, each logged to <log_dir>/<step>.log
+# 22-25; M3 added steps 26-27; M4 added step 28; M5 added step 29; M5.5 added step 30; M-ART2 added steps 31-34; M-UX added step 35). Forty-one steps, each logged to <log_dir>/<step>.log
 # with its start time, duration and exit code in <log_dir>/gate.txt. The
 # gate passes only when every step except `perf` and `nav_bench` (report only) exits 0.
 #    1 fmt               cargo fmt --all -- --check
@@ -19,7 +19,7 @@
 #   11 determinism       probe --check-determinism, seeds 0..4
 #   12 perf              tools/v8/perf.sh + perf_summary.py --compare (report only;
 #                        > +10 % mean is a WARN)
-#   13 bridge_api        tools/v8/bridge_api.py --check docs/v8/bridge_api_mux.txt
+#   13 bridge_api        tools/v8/bridge_api.py --check docs/v8/bridge_api_mux2.txt
 #   14 docs              tools/v8/check_docs.sh
 #   15 inventory_closure tools/v8/inventory.py check docs/v8/V8_0_INVENTORY.md
 #   16 python_unittest   python3 -m unittest discover -s tools/v8 -p 'test_*.py'
@@ -64,10 +64,21 @@
 #                        tools/v8/mart21_trees_test.gd (four seasons per species, bare winter, data-only species, ¼× canopy)
 #   35 steward           two seeds × 24 days ON: deterministic, ledger/reservations exact, no panics
 #   36 data_only_ext     seven-family selected-pack simulation and headless real-scene UI (M-UX B3)
+#   37 mux2_defence      defence/replay/flight/fuel plus genuine format10 migration
+#   38 mux2_oracles      visibility negative controls, marker/overlap/wall-cache and stall scorer
+#   39 mux2_visibility   fresh current-policy saves and actual eight-scene GPU acceptance
+#   40 mux2_why          actual windowed 30-check input and screenshot acceptance
+#   41 mux2_stall_receipt full two-arm windowed timing receipt bound to current content/binary
 #   Since M-ART2 step 23 (renderer_agreement) also checks appearance: every person's look and face variant.
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
+# Hold the lane before any build, import, test, profiler or Godot process starts.
+# The launcher passes its locked descriptor through bash; nested captures reuse it.
+if [[ -z "${WORLDSIM_MUX2_LANE_FD:-}" ]]; then
+    exec python3 tools/v8/mux2_gate_lock.py -- bash "$ROOT/tools/v8/gate.sh" "$@"
+fi
+python3 tools/v8/mux2_gate_lock.py --check || exit 1
 LOG="${1:?usage: gate.sh <log_dir> [--base-data DIR]}"
 BASE_DATA=/Users/rexxa/work/v8-0-data/base
 [[ "${2:-}" == --base-data ]] && BASE_DATA="$3"
@@ -108,7 +119,7 @@ step 11 determinism bash -c 'cd rust && cargo build --release -p sim-test --bin 
 grep -q 'DETERMINISM PASS' "$LOG/determinism.log" || { echo "   determinism: no DETERMINISM PASS line" >> "$SUMMARY"; status=1; }
 step 12 perf bash -c '(cd rust && cargo build --release -p sim-test) && bash tools/v8/perf.sh rust/target/release "$0/perf" candidate > /dev/null && python3 tools/v8/perf_summary.py --compare "$1/perf/perf_summary.json" "$0/perf/perf_summary.json"' "$LOG" "$BASE_DATA"
 grep -E 'WARN|OK \(' "$LOG/perf.log" | sed 's/^/   /' >> "$SUMMARY"
-step 13 bridge_api python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_mux.txt
+step 13 bridge_api python3 tools/v8/bridge_api.py . --check docs/v8/bridge_api_mux2.txt
 step 14 docs bash tools/v8/check_docs.sh
 step 15 inventory_closure python3 tools/v8/inventory.py check docs/v8/V8_0_INVENTORY.md
 step 16 python_unittest python3 -m unittest discover -s tools/v8 -p 'test_*.py'
@@ -156,6 +167,12 @@ grep -E 'PASS|FAIL' "$LOG/resolver_parity.log" | tail -1 | sed 's/^/   /' >> "$S
 grep -cE '^MART21?_(GROUND|PEOPLE|TREES) PASS' "$LOG/mart2_render.log" | awk '{print "   mart2_render checks passed", $1}' >> "$SUMMARY"
 step 35 steward bash tools/v8/mux_steward.sh "$LOG/steward"
 step 36 data_only_ext bash tools/v8/data_only_ext.sh "$LOG/data_only_ext"
+# All builds finish before the serialized M-UX2 GPU lane. Missing/stale timing evidence fails.
+step 37 mux2_defence bash tools/v8/mux2_gate_checks.sh defence "$LOG/mux2-defence"
+step 38 mux2_oracles bash tools/v8/mux2_gate_checks.sh oracles "$LOG/mux2-oracles"
+step 39 mux2_visibility python3 tools/v8/mux2_gate_receipts.py capture --kind visibility --out "$LOG/mux2-visibility" --godot "$GODOT_BIN"
+step 40 mux2_why python3 tools/v8/mux2_gate_receipts.py capture --kind why --out "$LOG/mux2-why" --godot "$GODOT_BIN"
+step 41 mux2_stall_receipt python3 tools/v8/mux2_gate_receipts.py verify --kind stall --receipt "${MUX2_STALL_RECEIPT:-/missing/mux2-stall-receipt.json}"
 echo "finished $(date '+%Y-%m-%d %H:%M:%S %Z') status $status" >> "$SUMMARY"
 cat "$SUMMARY"
 exit "$status"
