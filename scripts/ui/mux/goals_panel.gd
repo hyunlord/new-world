@@ -34,7 +34,7 @@ func _ready() -> void:
 	row.add_child(_close)
 	for _goal: Dictionary in goals:
 		var label: Label = Label.new()
-		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		label.autowrap_mode = TextServer.AUTOWRAP_WORD
 		label.custom_minimum_size.x = 520
 		column.add_child(label)
 		_labels.append(label)
@@ -46,7 +46,7 @@ func _ready() -> void:
 	_progress.custom_minimum_size.y = 20
 	column.add_child(_progress)
 	_markers = Label.new()
-	_markers.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_markers.autowrap_mode = TextServer.AUTOWRAP_WORD
 	column.add_child(_markers)
 	var locale: Node = get_node_or_null("/root/Locale")
 	if locale != null:

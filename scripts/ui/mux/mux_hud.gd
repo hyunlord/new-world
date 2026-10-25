@@ -1,7 +1,9 @@
 # M-UX screen coordinator: controls, alerts, learning, goals and recorded steward commands.
 # Direct bridge: get_steward (attach/reset baseline), get_chronicle_since (independent incremental notification cursor).
-# Bridge methods through SimReads: get_ui_facts, get_steward, cmd_set_steward and learning facts reads.
+# Bridge methods through SimReads: get_ui_facts, get_steward, cmd_set_steward, cmd_set_steward_defence and learning facts reads.
 extends Control
+
+const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
 
 const Catalog = preload("res://scripts/ui/mux/controls_catalog.gd")
 const Store = preload("res://scripts/ui/mux/settings_store.gd")
@@ -37,6 +39,7 @@ var _sequence: int = -1
 var _chronicle_cursor: int = -1
 var _pending_native_resets: int = 0
 var _highlight: LessonHighlight
+var _why_button: Button
 var _help_button: Button
 var _goals_button: Button
 var _settings_button: Button
@@ -93,6 +96,8 @@ func _ready() -> void:
 	settings.name = "Settings"
 	settings.setup(store)
 	add_child(settings)
+	settings.defence_toggled.connect(_set_defence)
+	_why_button = _button("WhyButton", func() -> void: get_node("/root/Main/ColonyView/OrderTool").call("select_why"))
 	_goals_button = _button("GoalsButton", goals.toggle_panel)
 	_settings_button = _button("SettingsButton", settings.toggle_panel)
 	_help_button = _button("HelpButton", help.toggle_panel)
@@ -143,7 +148,13 @@ func _locale_changed(_language: String) -> void:
 	_steward.clear()
 	for key: String in ["MUX_STEWARD_ALL", "MUX_STEWARD_HOUSING", "MUX_STEWARD_FOOD", "MUX_STEWARD_OFF"]:
 		_steward.add_item(_loc(key))
-	_steward.select(maxi(0, selected))
+	_steward.add_separator()
+	_steward.add_item(_loc("MUX_STEWARD_DEFENCE"))
+	_steward.get_popup().set_item_as_checkable(5, true)
+	_steward.select(clampi(selected, 0, 3))
+	_why_button.toggle_mode = true
+	_why_button.text = _loc("MUX_WHY")
+	_why_button.tooltip_text = catalog.tooltip("why")
 	_steward.tooltip_text = _loc("MUX_STEWARD_TIP")
 	_help_button.text = "?"
 	_help_button.tooltip_text = catalog.tooltip("help")
@@ -207,7 +218,16 @@ func _apply_preferences() -> void:
 	_layout.call_deferred()
 
 func _set_steward(index: int) -> void:
+	if index == 5:
+		var current: Dictionary = SimReads.read(_world, "get_steward")
+		_set_defence(not bool(current.get("defence_enabled", true)))
+		_steward.select(int(current.get("scope", 0)) if bool(current.get("enabled", false)) else 3)
+		return
 	SimReads.mutate(_world, "cmd_set_steward", [index != 3, index if index < 3 else 0])
+	_poll_left = 0.0
+
+func _set_defence(on: bool) -> void:
+	SimReads.mutate(_world, "cmd_set_steward_defence", [on])
 	_poll_left = 0.0
 
 func _world_replaced() -> void:
@@ -272,10 +292,13 @@ func _process_hud(delta: float) -> void:
 		state = SimReads.read(_world, "get_steward")
 		ChronicleText.steward_labels = state.get("rules", {})
 		_steward.select(int(state.get("scope", 0)) if bool(state.get("enabled", false)) else 3)
+		_steward.get_popup().set_item_checked(5, bool(state.get("defence_enabled", true)))
+		settings.set_defence_state(bool(state.get("defence_enabled", true)))
 		_poll_steward_notifications(state)
 	if _mux2_profile:
 		_mux2_record("steward", Time.get_ticks_usec() - started)
 		started = Time.get_ticks_usec()
+	_why_button.set_pressed_no_signal(bool(get_node("/root/Main/ColonyView/OrderTool").get("why_selecting")))
 	var facts: Dictionary = LearningFacts.collect(_world, state)
 	if _mux2_profile:
 		_mux2_record("facts", Time.get_ticks_usec() - started)
@@ -343,15 +366,10 @@ func jump_to(target: Dictionary) -> void:
 		if panel != null:
 			panel.call("open_wave" if kind == "migrant" else "open_caravan", int(target.get("id", -1)))
 	else:
-		var tile: Vector2i = Vector2i(int(target.get("x", 0)), int(target.get("y", 0)))
-		var panel: Node = get_parent().get_node_or_null("CausalPanel")
-		if panel != null:
-			var history: Array = _world.call("get_tile_causal_history", tile.x, tile.y)
-			panel.call("display_history", history, tile.x, tile.y)
-			(panel as Control).show()
+		pass # Tile alerts navigate; opening an explanation requires an explicit why action.
 
 func _loc(key: String) -> String:
-	return str(get_node("/root/Locale").call("ltr", key))
+	return KoreanText.words(str(get_node("/root/Locale").call("ltr", key)))
 
 func _poll_steward_notifications(state: Dictionary) -> void:
 	var sequence: int = int(state.get("sequence", 0))
@@ -367,6 +385,9 @@ func _poll_steward_notifications(state: Dictionary) -> void:
 		return # Retain the cursor until a destination exists.
 	var labels: Dictionary = state.get("rules", {})
 	for row: Dictionary in ChronicleText.rows(page):
+		if int(row.get("kind", -1)) == 46:
+			bar.call("queue_background_toast", _loc("MUX_STEWARD_DEFENCE_ACTION").format({"count": int(row.get("value", 0))}), int(row.get("index", 0)))
+			continue
 		if int(row.get("kind", -1)) != 45 or int(row.get("value", -1)) <= _sequence:
 			continue
 		_sequence = int(row["value"])
@@ -375,3 +396,5 @@ func _poll_steward_notifications(state: Dictionary) -> void:
 			key = "UI_UNKNOWN"
 		bar.call("queue_background_toast", _loc("MUX_STEWARD_ACTION") + " " + _loc(key), _sequence)
 	_chronicle_cursor = int(page.get("next", _chronicle_cursor))
+	if _chronicle_cursor >= int(page.get("total", _chronicle_cursor)):
+		_sequence = sequence

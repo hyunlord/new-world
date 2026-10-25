@@ -128,6 +128,7 @@ func _ready() -> void:
 
 ## Enter `new_mode` (Mode.NONE leaves any mode).
 func set_mode(new_mode: int) -> void:
+	why_selecting = false
 	mode = new_mode
 	_dragging = false
 	_preview = {}
@@ -393,11 +394,14 @@ func _unhandled_input(event: InputEvent) -> void:
 		var button: InputEventMouseButton = event
 		_set_shift(button.shift_pressed)
 		_track(button.position)
-		if button.button_index == MOUSE_BUTTON_LEFT and mode != Mode.NONE:
+		if button.button_index == MOUSE_BUTTON_LEFT and mode != Mode.NONE and not button.alt_pressed:
 			_left(button.pressed)
 	elif event is InputEventKey and event.pressed and not event.echo:
 		var key: InputEventKey = event
-		if key.keycode == KEY_ESCAPE and mode != Mode.NONE:
+		if key.keycode == KEY_ESCAPE and why_selecting:
+			why_selecting = false
+			get_viewport().set_input_as_handled()
+		elif key.keycode == KEY_ESCAPE and mode != Mode.NONE:
 			set_mode(Mode.NONE)
 			get_viewport().set_input_as_handled()
 		elif key.keycode == DRAFT_KEY and not toggle_draft_selected().is_empty():
@@ -407,15 +411,34 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 ## The camera calls this only after a map press/release that did not become a pan.
-func map_click(button: MouseButton, screen: Vector2) -> void:
+var why_selecting: bool = false
+
+func select_why() -> void:
+	var enabled: bool = not why_selecting
+	set_mode(Mode.NONE)
+	why_selecting = enabled
+
+func show_why(tile: Vector2i) -> void:
+	var panel: Node = get_node_or_null("/root/Main/UI/CausalPanel")
+	if panel != null:
+		panel.call("open_tile", tile)
+
+func map_click(button: MouseButton, screen: Vector2, alt: bool = false) -> void:
 	_track(screen)
 	if button == MOUSE_BUTTON_RIGHT:
+		if why_selecting:
+			why_selecting = false
+			return
 		if mode != Mode.NONE:
 			set_mode(Mode.NONE)
 		elif _world_sim != null:
 			draft_order_at(_hover_world, _hover)
-	elif button == MOUSE_BUTTON_LEFT and mode == Mode.NONE:
-		_click(_hover)
+	elif button == MOUSE_BUTTON_LEFT and (mode == Mode.NONE or alt):
+		if alt or why_selecting:
+			why_selecting = false
+			show_why(_hover)
+		else:
+			_click(_hover)
 
 
 ## M3: follow Shift; a space drag re-reads its preview when the shape changes.
@@ -598,11 +621,19 @@ func click_world(world_pos: Vector2, tile: Vector2i) -> void:
 		if causal != null:
 			causal.visible = false
 		return
-	var history: Array = _world_sim.call("get_tile_causal_history", tile.x, tile.y)
-	var panel: Node = get_node_or_null("/root/Main/UI/CausalPanel")
-	if panel != null and panel.has_method("display_history"):
-		panel.call("display_history", history, tile.x, tile.y)
-		(panel as CanvasItem).visible = true
+	var overlay: Dictionary = SimReads.read(_world_sim, "get_colony_overlay")
+	var xs: PackedInt32Array = overlay.get("item_xs", PackedInt32Array())
+	var ys: PackedInt32Array = overlay.get("item_ys", PackedInt32Array())
+	for i: int in mini(xs.size(), ys.size()):
+		if Vector2i(xs[i], ys[i]) == tile:
+			var item_panel: Node = get_node_or_null("/root/Main/UI/ItemPanel")
+			if item_panel == null:
+				item_panel = load("res://scripts/ui/panels/item_panel.gd").new()
+				item_panel.name = "ItemPanel"
+				get_node("/root/Main/UI").add_child(item_panel)
+			item_panel.call("display_tile", tile)
+			return
+
 
 
 func _draw() -> void:

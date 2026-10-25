@@ -4,7 +4,7 @@ extends Node
 
 const MARGIN: float = 12.0
 const GAP: float = 8.0
-const PANELS: Array[String] = ["CausalPanel", "ChroniclePanel", "AgentInspectorPanel", "WorkshopPanel", "PriorityPanel", "TechPanel", "TeachPanel", "RoomPanel", "NeighboursPanel", "MigrantPanel", "TradePanel", "WhyPanel"]
+const PANELS: Array[String] = ["ItemPanel", "ChroniclePanel", "AgentInspectorPanel", "WorkshopPanel", "PriorityPanel", "TechPanel", "TeachPanel", "RoomPanel", "NeighboursPanel", "MigrantPanel", "TradePanel", "WhyPanel"]
 const CENTERED: Array[String] = ["PriorityPanel", "TechPanel", "TeachPanel", "NeighboursPanel", "MigrantPanel", "TradePanel"]
 
 var _ui: Node

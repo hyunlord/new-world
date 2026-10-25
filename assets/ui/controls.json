@@ -376,6 +376,14 @@
       "group": "panels",
       "source": "scripts/ui/panels/panel_tooltips.gd",
       "input_key": "MUX_INPUT_UI_ACTIVATE"
+    },
+    {
+      "id": "why",
+      "input": "왜? 도구 / Option·Alt 클릭",
+      "text_key": "MUX_CONTROL_WHY",
+      "group": "view",
+      "source": "docs/v8/mux2/MUX2_GOAL.md",
+      "input_key": "MUX_INPUT_WHY"
     }
   ]
 }

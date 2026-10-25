@@ -2,6 +2,8 @@
 # Bridge methods: none; conditions consume facts supplied by the read-only UI coordinator.
 extends RefCounted
 
+const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
+
 const Content = preload("res://scripts/ui/content_context.gd")
 
 const PATH: String = "res://assets/ui/controls.json"
@@ -35,7 +37,7 @@ static func _text(key: String, translator: Callable) -> String:
 		return str(translator.call(key))
 	var tree: SceneTree = Engine.get_main_loop() as SceneTree
 	var locale: Node = tree.root.get_node_or_null("Locale") if tree != null else null
-	return str(locale.call("ltr", key)) if locale != null else key
+	return KoreanText.words(str(locale.call("ltr", key))) if locale != null else key
 
 static func read_registry(path: String, family: String, fields: Array) -> Dictionary:
 	var frozen: Dictionary = Content.document(family)

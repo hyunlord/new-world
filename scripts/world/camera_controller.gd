@@ -42,6 +42,7 @@ var _pointer_button: MouseButton = MOUSE_BUTTON_NONE
 var _pointer_origin: Vector2 = Vector2.ZERO
 var _pointer_last: Vector2 = Vector2.ZERO
 var _pointer_dragged: bool = false
+var _pointer_alt: bool = false
 var _zoom_from: float = 1.0
 var _zoom_target: float = 1.0
 var _zoom_elapsed: float = ZOOM_SECONDS
@@ -136,8 +137,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif button.button_index == MOUSE_BUTTON_WHEEL_DOWN and button.pressed:
 			step_zoom(-1, button.position)
 			get_viewport().set_input_as_handled()
-		elif button.pressed and _can_pan_with(button.button_index):
+		elif button.pressed and (_can_pan_with(button.button_index) or (button.button_index == MOUSE_BUTTON_LEFT and button.alt_pressed)):
 			_pointer_button = button.button_index
+			_pointer_alt = button.alt_pressed
 			_pointer_origin = button.position
 			_pointer_last = button.position
 			_pointer_dragged = false
@@ -188,7 +190,7 @@ func _input(event: InputEvent) -> void:
 			if clicked and get_viewport().gui_get_hovered_control() == null:
 				var tool: Node = get_node_or_null("/root/Main/ColonyView/OrderTool")
 				if tool != null:
-					tool.call("map_click", button.button_index, button.position)
+					tool.call("map_click", button.button_index, button.position, _pointer_alt)
 			get_viewport().set_input_as_handled()
 
 

@@ -127,7 +127,7 @@ func _run() -> void:
 	_button(MOUSE_BUTTON_LEFT, false, point)
 	await _frames()
 	var inspector: Control = _main.get_node("UI/AgentInspectorPanel") as Control
-	_check("left click opens an inspector", causal.visible or inspector.visible)
+	_check("ordinary click never opens causal popup", not causal.visible)
 	causal.hide()
 	inspector.hide()
 	_tool.call("set_mode", Tool.Mode.CHOP)

@@ -64,7 +64,7 @@ const MUTATORS: Array[String] = [
 	# M5.5 orders (migrant waves, barter with a caravan).
 	"cmd_accept_migrants", "cmd_decline_migrants", "cmd_trade",
 	# M1.5 save files: save_world(path) -> bool, load_world(path) -> bool (a load replaces the world).
-	"save_world", "load_world", "cmd_set_steward",
+	"save_world", "load_world", "cmd_set_steward", "cmd_set_steward_defence",
 ]
 var _world: Node
 var _cache: Dictionary = {}

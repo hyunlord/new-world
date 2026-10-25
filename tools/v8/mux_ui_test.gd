@@ -317,9 +317,7 @@ func _alert_checks() -> void:
 			_check(str(test_case["id"]) + " selects live person", inspector.visible and int(inspector.get("_selected_person")) == ids[0])
 		elif test_case["kind"] in ["tile", "animal"]:
 			var causal: Control = _main.get_node("UI/CausalPanel") as Control
-			var history: Container = causal.get("_history_container") as Container
-			var header: String = str(root.get_node("Locale").call("ltr", "UI_CAUSAL_TILE_HEADER")).replace("{x}", "80").replace("{y}", "82")
-			_check(str(test_case["id"]) + " selects exact causal tile", causal.visible and history.get_child_count() > 0 and (history.get_child(0) as Label).text == header)
+			_check(str(test_case["id"]) + " navigates without opening why", not causal.visible)
 			if str(test_case["id"]) == "food_low":
 				await _capture("causal-alert-target")
 		elif test_case["kind"] == "technique":
@@ -396,12 +394,12 @@ func _steward_checks() -> void:
 	_hud._world_reset()
 	_hud._poll_steward_notifications(state)
 	_check("reset attach baseline does not flood history", (bar.get("_background_toasts") as Array).is_empty() and _hud._sequence == int(state.get("sequence", -1)))
-	_check("steward chronicle formatter gives localized sentence", formatted.contains(str(root.get_node("Locale").call("ltr", "MUX_STEWARD_ACTION"))) and not "MUX_" in formatted)
+	_check("steward chronicle formatter gives localized sentence", formatted.replace("\u2060", "").contains(str(root.get_node("Locale").call("ltr", "MUX_STEWARD_ACTION"))) and not "MUX_" in formatted)
 	var chronicle: Control = _main.get_node("UI/ChroniclePanel") as Control
 	chronicle.show()
 	chronicle.call("_process", 0.0)
 	chronicle.call("_refresh")
-	_check("chronicle panel includes steward line", str(chronicle.call("plain_text")).contains(str(root.get_node("Locale").call("ltr", "MUX_STEWARD_ACTION"))))
+	_check("chronicle panel includes steward line", str(chronicle.call("plain_text")).replace("\u2060", "").contains(str(root.get_node("Locale").call("ltr", "MUX_STEWARD_ACTION"))))
 	chronicle.hide()
 	var housing: Dictionary = _housing_evidence()
 	while not bool(housing["has_wall_and_bed_plans"]) and int(housing["tick"]) < 14400:
@@ -630,9 +628,7 @@ func _live_alert_route(alert_id: String, identity: int, tile: Vector2i) -> void:
 		button.pressed.emit()
 		if kind == "animal":
 			var causal: Control = _main.get_node("UI/CausalPanel") as Control
-			var history: Container = causal.get("_history_container") as Container
-			var title: String = str(root.get_node("Locale").call("ltr", "UI_CAUSAL_TILE_HEADER")).replace("{x}", str(tile.x)).replace("{y}", str(tile.y))
-			_check("live animal routes exact causal tile", causal.visible and history.get_child_count() > 0 and (history.get_child(0) as Label).text == title)
+			_check("live animal navigates without opening why", not causal.visible)
 			var half_view: Vector2 = root.get_visible_rect().size / (2.0 * _camera.zoom.x)
 			_check("live animal alert brings tile into camera view", Rect2(_camera.position - half_view, half_view * 2.0).has_point(View.tile_centre(tile)))
 			_live_routes[kind] = identity
@@ -722,9 +718,15 @@ func _queued_action_labels_valid(state: Dictionary) -> bool:
 	for notification: Dictionary in queue:
 		var text: String = str(notification.get("text", ""))
 		var matched: bool = false
+		var defence_template: String = str(root.get_node("Locale").call("ltr", "MUX_STEWARD_DEFENCE_ACTION"))
+		var parts: PackedStringArray = defence_template.split("{count}")
+		var plain: String = text.replace("\u2060", "")
+		if parts.size() == 2 and plain.begins_with(parts[0]) and plain.ends_with(parts[1]):
+			var count: String = plain.trim_prefix(parts[0]).trim_suffix(parts[1])
+			matched = count.is_valid_int() and int(count) > 0 and defence_template.format({"count": int(count)}) == plain
 		for key: Variant in labels.values():
 			var action: String = str(root.get_node("Locale").call("ltr", str(key)))
-			if not action.strip_edges().is_empty() and action != str(key) and text == prefix + action:
+			if not action.strip_edges().is_empty() and action != str(key) and text.replace("\u2060", "") == prefix + action:
 				matched = true
 		if not matched: return false
 	return true

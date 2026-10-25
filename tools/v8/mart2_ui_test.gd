@@ -3,7 +3,7 @@
 #   with the clock stopped, checks as a player would: a click on a person opens the inspector with that person's
 #   POLISH2 portrait (128 px, their look folder and face variant) and the look in words; clicking a second person
 #   changes it; the selected and the drafted outline; the HUD zoom indicator through the wheel and the keys (1×, ½×, ¼×,
-#   2×) and the LOD markers below 1×; F12 re-reads render_params.json, shows "렌더 설정 다시 읽음" and hides it; every
+#   2×), half-scale figures and quarter-scale markers; F12 re-reads render_params.json, shows "렌더 설정 다시 읽음" and hides it; every
 #   item kind and every order-bar icon resolves to imported art; workshop recipe buttons carry their output's icon;
 #   the order tool's hover, footprint and wall-drag preview work on 64-px tiles with 64-px ghost pieces; at night the
 #   global tone is the night colour (value × 0.55 with the blue shift), the hearth light is on (off by day), and people
@@ -195,8 +195,9 @@ func _people_and_portraits() -> void:
 	var locale: Node = root.get_node_or_null("Locale")
 	var top_word: String = str(locale.call("ltr", "LOOK_TOP_" + str(row.get("top", "")).to_upper())) if locale != null else ""
 	var hair_word: String = str(locale.call("ltr", "LOOK_HAIR_" + str(row.get("hair", "")).to_upper())) if locale != null else ""
-	_check("look_line_names_the_top", top_word != "" and not top_word.begins_with("LOOK_") and str(state["look"]).contains(top_word), "line '%s', top '%s'" % [state["look"], top_word])
-	_check("look_line_names_the_hair", hair_word != "" and not hair_word.begins_with("LOOK_") and str(state["look"]).contains(hair_word), "hair '%s'" % hair_word)
+	var semantic_look: String = str(state["look"]).replace("\u2060", "")
+	_check("look_line_names_the_top", top_word != "" and not top_word.begins_with("LOOK_") and semantic_look.contains(top_word.replace("\u2060", "")), "line '%s', top '%s'" % [state["look"], top_word])
+	_check("look_line_names_the_hair", hair_word != "" and not hair_word.begins_with("LOOK_") and semantic_look.contains(hair_word.replace("\u2060", "")), "hair '%s'" % hair_word)
 	_check("look_line_names_the_face", str(state["look"]).contains(str(int(look["variant"]) + 1)), "face %d" % (int(look["variant"]) + 1))
 	var sel: Color = _outline(first)
 	_check("selected_outline", sel.a > 0.0, "outline %s" % sel)
@@ -254,11 +255,13 @@ func _zoom_and_lod() -> void:
 		await _frames(4)
 		_check("wheel_out_to_%s" % str(z[1]), absf(_camera.zoom.x - float(z[0])) < 0.001 and str(hud.call("zoom_text")).contains(str(z[1])), "zoom %.2f, '%s'" % [_camera.zoom.x, hud.call("zoom_text")])
 		var counts: Array = markers.call("counts")
-		_check("lod_markers_at_%s" % str(z[1]), bool(_agents.call("lod_active")) and int(counts[0]) == int(_agents.call("person_count")), "lod %s, markers %s of %d people" % [_agents.call("lod_active"), counts, _agents.call("person_count")])
-		if absf(float(z[0]) - 0.5) < 0.01:
+		var marker_mode: bool = float(z[0]) == 0.25
+		_check("lod_at_%s" % str(z[1]), bool(_agents.call("lod_active")) == marker_mode and int(counts[0]) == (int(_agents.call("person_count")) if marker_mode else 0), "lod %s, markers %s of %d people" % [_agents.call("lod_active"), counts, _agents.call("person_count")])
+		if marker_mode:
 			var expected: int = _glyph_people()
-			_check("activity_glyphs_at_½×", int(counts[1]) == expected, "glyphs %d, people working/carrying/asleep/fleeing %d" % [int(counts[1]), expected])
-			await _shot("mart2_ui_02_half_lod.png")
+			_check("activity_glyphs_at_¼×", int(counts[1]) == expected, "glyphs %d, people working/carrying/asleep/fleeing %d" % [int(counts[1]), expected])
+		else:
+			await _shot("mart2_ui_02_half_figures.png")
 	for _k: int in 3:
 		await _key(KEY_EQUAL)
 	await _frames(4)
@@ -420,11 +423,11 @@ func _night(path: String) -> void:
 		on += 1 if bool(l["enabled"]) else 0
 	_check("hearth_light_on_at_night", on > 0, "%d of %d lights on" % [on, lights.size()])
 	await _shot("mart2_ui_03_night.png")
-	_camera.zoom = Vector2(0.5, 0.5)
+	_camera.zoom = Vector2(0.25, 0.25)
 	await _frames(4)
 	var sleepers: int = _glyph_people()
 	var night_glyphs: int = int((_agents.get_node("LodMarkers").call("counts") as Array)[1])
-	_check("sleep_glyphs_at_night_½×", sleepers > 0 and night_glyphs == sleepers, "glyphs %d for %d people with a glyph activity" % [night_glyphs, sleepers])
+	_check("sleep_glyphs_at_night_¼×", sleepers > 0 and night_glyphs == sleepers, "glyphs %d for %d people with a glyph activity" % [night_glyphs, sleepers])
 	_camera.zoom = Vector2.ONE
 	await _frames(6)
 	var night: Array = await _separability("night")

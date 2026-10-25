@@ -44,10 +44,10 @@ func _ready() -> void:
 	column.add_child(_title)
 	_body = Label.new()
 	_body.custom_minimum_size.x = 416
-	_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_body.autowrap_mode = TextServer.AUTOWRAP_WORD
 	column.add_child(_body)
 	_status = Label.new()
-	_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_status.autowrap_mode = TextServer.AUTOWRAP_WORD
 	column.add_child(_status)
 	var buttons: HBoxContainer = HBoxContainer.new()
 	buttons.add_theme_constant_override("separation", 8)

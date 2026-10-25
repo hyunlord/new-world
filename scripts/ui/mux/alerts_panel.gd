@@ -2,6 +2,8 @@
 # Bridge methods: get_ui_facts via SimReads at most twice per second; world_reset signal.
 extends PanelContainer
 
+const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
+
 signal jump_requested(target: Dictionary)
 signal alert_activated(id: String)
 
@@ -68,7 +70,7 @@ func _ready() -> void:
 	_title.theme_type_variation = &"Heading"
 	column.add_child(_title)
 	_status = Label.new()
-	_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_status.autowrap_mode = TextServer.AUTOWRAP_WORD
 	column.add_child(_status)
 	_scroll = ScrollContainer.new()
 	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -129,7 +131,7 @@ func _read_facts() -> Dictionary:
 
 
 func _tr(key: String) -> String:
-	return str(_locale.call("ltr", key)) if _locale != null else key
+	return KoreanText.words(str(_locale.call("ltr", key))) if _locale != null else key
 
 
 func _language_changed(_language: String) -> void:
@@ -182,7 +184,9 @@ func _add_alert(alert: Dictionary) -> void:
 	button.name = str(alert["id"])
 	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	button.clip_text = true
+	button.clip_text = false
+	button.autowrap_mode = TextServer.AUTOWRAP_WORD
+	button.custom_minimum_size.x = 280.0
 	button.custom_minimum_size.y = 40.0
 	button.text = "%s %s" % [alert["icon"], _tr("MUX_ALERTS_COUNT").format({"title": _tr(alert["text_key"]), "count": alert["count"]})]
 	button.add_theme_color_override("font_color", Color(alert["color"]))

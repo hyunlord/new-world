@@ -22,6 +22,8 @@
 # Bridge methods: none (formats chronicle rows and world info its callers read: ticks_per_day, ticks_per_year,
 #   clock_offset_ticks from get_world_info).
 extends RefCounted
+
+const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
 const LocaleScript = preload("res://scripts/core/locale.gd")
 const Names = preload("res://scripts/ui/person_names.gd")
 const Selection = preload("res://scripts/core/settlement_selection.gd")
@@ -30,7 +32,7 @@ const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
 const NeighbourText = preload("res://scripts/ui/neighbour_text.gd")
 ## The last chronicle kind this text knows (M5.5: 44 Eureka).
-const LAST_KIND: int = 45
+const LAST_KIND: int = 46
 static var steward_labels: Dictionary = {}
 ## M5 adds `index` (the entry's chronicle index) and its "→" link columns (absent in older reads: -1).
 const COLUMNS: Array[String] = ["tick", "kind", "subject", "other", "third", "settlement", "settlement2", "cause", "value",
@@ -42,7 +44,7 @@ static func language(locale: Node) -> String:
 	return str(locale.get("_current_lang")) if locale != null else "en"
 
 static func loc(locale: Node, key: String) -> String:
-	return str(locale.call("ltr", key)) if locale != null else key
+	return KoreanText.words(str(locale.call("ltr", key))) if locale != null else key
 
 static func day(tick: int, info: Dictionary) -> int:
 	return floori(float(tick + int(info.get("clock_offset_ticks", 0))) / float(maxi(1, int(info.get("ticks_per_day", 1))))) + 1
@@ -150,6 +152,7 @@ static func sentence(row: Dictionary, viewed: int, locale: Node, info: Dictionar
 		24, 25, 26, 27, 28: return knowledge_sentence(row, locale)
 		29, 30, 31, 32, 33, 34, 35, 36, 37: return story_sentence(row, locale)
 		38, 39, 40, 41, 42, 43, 44: return neighbour_sentence(row, locale)
+		46: return loc(locale, "MUX_STEWARD_DEFENCE_ACTION").format({"count": value})
 		45: return loc(locale, "MUX_STEWARD_ACTION") + " " + loc(locale, str(steward_labels.get(cause, "UI_UNKNOWN")))
 	return ""
 

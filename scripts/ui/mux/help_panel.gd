@@ -34,7 +34,7 @@ func _ready() -> void:
 	_close.pressed.connect(hide)
 	heading.add_child(_close)
 	_note = Label.new()
-	_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_note.autowrap_mode = TextServer.AUTOWRAP_WORD
 	column.add_child(_note)
 	_scroll = ScrollContainer.new()
 	_scroll.name = "ControlsScroll"
@@ -97,13 +97,13 @@ func _refresh() -> void:
 		var input: Label = Label.new()
 		input.text = Catalog.input_text(entry)
 		input.custom_minimum_size.x = 360
-		input.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		input.autowrap_mode = TextServer.AUTOWRAP_WORD
 		_rows.add_child(input)
 		var action: Label = Label.new()
 		action.text = Catalog._text(str(entry["text_key"]), Callable())
 		action.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		action.custom_minimum_size.x = 540
-		action.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		action.autowrap_mode = TextServer.AUTOWRAP_WORD
 		_rows.add_child(action)
 	center_in_viewport.call_deferred()
 

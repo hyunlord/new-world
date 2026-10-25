@@ -5,9 +5,11 @@
 #   (지붕 있음 / 지붕 없음 / 판 굴), the doors (or "문이 없어 들어갈 수 없음"), the items under its roof, the people
 #   asleep in it now and the "why?" line "침실 · 지붕 있음 · 침대 4 · 추위 보호 · 잠이 빨리 회복".
 # Re-read once per tick while open (get_room_detail takes an argument, so it is called directly, never per frame).
-# Bridge methods: get_room_detail (direct); via SimReads get_time_snapshot; via SimReads.mutate cmd_set_room_role;
+# Bridge methods: get_room_detail (direct); via SimReads get_time_snapshot, get_rooms; via SimReads.mutate cmd_set_room_role;
 #   signal world_reset.
 extends Control
+
+const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
 
 const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
 
@@ -63,14 +65,19 @@ func _ready() -> void:
 	_role.item_selected.connect(choose_role)
 	row.add_child(_role)
 	_lines = Label.new()
-	_lines.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_lines.autowrap_mode = TextServer.AUTOWRAP_WORD
 	_lines.custom_minimum_size.x = PANEL_WIDTH - 32
 	column.add_child(_lines)
 	_why = Label.new()
-	_why.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_why.autowrap_mode = TextServer.AUTOWRAP_WORD
 	_why.custom_minimum_size.x = PANEL_WIDTH - 32
 	_why.add_theme_color_override("font_color", MUTED)
 	column.add_child(_why)
+	var why_button := Button.new()
+	why_button.name = "Why"
+	why_button.text = _loc("MUX_WHY")
+	why_button.pressed.connect(_open_tile_why)
+	column.add_child(why_button)
 	_close = Button.new()
 	PanelTooltips.attach(_close, "close")
 	_close.focus_mode = Control.FOCUS_NONE
@@ -79,7 +86,7 @@ func _ready() -> void:
 
 
 func _loc(key: String) -> String:
-	return EconomyText.ltr(_locale, key)
+	return KoreanText.words(EconomyText.ltr(_locale, key))
 
 
 ## Open the panel on room `id`.
@@ -147,8 +154,8 @@ func refresh() -> void:
 		EconomyText.trf(_locale, "UI_ROOM_COVERED_FMT", {"count": int(_detail.get("covered", 0))}),
 		EconomyText.trf(_locale, "UI_ROOM_SLEEPERS_FMT", {"count": int(_detail.get("sleepers", 0))}),
 	]
-	_lines.text = "\n".join(lines)
-	_why.text = why_line(role_code, info, beds, _locale)
+	_lines.text = KoreanText.words("\n".join(lines))
+	_why.text = KoreanText.words(why_line(role_code, info, beds, _locale))
 	_close.text = _loc("UI_CLOSE")
 
 
@@ -187,3 +194,12 @@ func choose_role(index: int) -> Dictionary:
 		bar.call("show_toast", text)
 	_tick = -1
 	return data
+
+func _open_tile_why() -> void:
+	var rooms: Dictionary = SimReads.read(_world_sim, "get_rooms")
+	var ids: PackedInt32Array = rooms.get("ids", PackedInt32Array())
+	var row: int = ids.find(_room)
+	var xs: PackedInt32Array = rooms.get("centre_xs", PackedInt32Array())
+	var ys: PackedInt32Array = rooms.get("centre_ys", PackedInt32Array())
+	if row >= 0 and row < mini(xs.size(), ys.size()):
+		get_node("../CausalPanel").call("open_tile", Vector2i(xs[row], ys[row]))

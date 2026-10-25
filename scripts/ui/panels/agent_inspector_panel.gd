@@ -36,6 +36,8 @@
 # M5.5 (goal §9): under the draft line, "도망 중: 늑대" while the person flees (get_agent_m5 `fleeing`).
 extends Control
 
+const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
+
 const PanelTooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
 
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
@@ -227,6 +229,11 @@ func _ready() -> void:
 	_label_age.visible = false
 	_village_label = _make_label("")
 	_label_pos = _make_label("")
+	var why_button := Button.new()
+	why_button.name = "Why"
+	why_button.text = _loc("MUX_WHY")
+	why_button.pressed.connect(_open_tile_why)
+	_vbox.add_child(why_button)
 	_label_state = _make_label("")
 	_label_target = _make_label("")
 	_hunger_bar = _make_bar(_loc("UI_HUNGER"))
@@ -269,6 +276,7 @@ func _ready() -> void:
 	_life_heading = _make_label("")
 	_life_heading.theme_type_variation = &"Heading"
 	_life_text = RichTextLabel.new()
+	_life_text.autowrap_mode = TextServer.AUTOWRAP_WORD
 	Names.prepare_rich_text(_life_text)
 	_life_text.add_theme_font_size_override("normal_font_size", 24)
 	_life_text.add_theme_font_size_override("bold_font_size", 24)
@@ -359,7 +367,7 @@ func _text_line_bands(node: Node) -> Array[Vector2]:
 func _make_label(text: String) -> Label:
 	var lbl: Label = Label.new()
 	lbl.text = text
-	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD
 	lbl.custom_minimum_size.x = 332
 	_vbox.add_child(lbl)
 	return lbl
@@ -490,6 +498,7 @@ func _make_knowledge_tab() -> void:
 	_vbox.add_child(_story_box)
 	_vbox.move_child(_story_box, _knowledge_box.get_index() + 1)
 	_story_text = RichTextLabel.new()
+	_story_text.autowrap_mode = TextServer.AUTOWRAP_WORD
 	Names.prepare_rich_text(_story_text)
 	_story_text.add_theme_font_size_override("normal_font_size", 24)
 	_story_text.add_theme_font_size_override("bold_font_size", 24)
@@ -590,7 +599,7 @@ func _refresh_m5(agent_id: int) -> void:
 		for label: Label in labels:
 			label.hide()
 		return
-	_mood_label.text = StoryText.mood_line(_locale, _m5)
+	_mood_label.text = KoreanText.words(StoryText.mood_line(_locale, _m5))
 	_mood_label.visible = _mood_label.text != ""
 	_mood_label.add_theme_color_override("font_color", StoryText.band_color(int(_m5.get("band", 0))))
 	_top_label.text = StoryText.apparel_line(_locale, _m5)
@@ -668,7 +677,7 @@ func _refresh_knowledge() -> void:
 			words[w] = Names.unbroken(words[w])
 		note.text = " ".join(words)
 		note.add_theme_color_override("font_color", Color("c8b89a"))
-		note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		note.autowrap_mode = TextServer.AUTOWRAP_WORD
 		note.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(note)
 		_knowledge_box.add_child(row)
@@ -676,8 +685,8 @@ func _refresh_knowledge() -> void:
 
 func _knowledge_label(text: String, colour: Color) -> Label:
 	var label: Label = Label.new()
-	label.text = text
-	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.text = KoreanText.words(text)
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD
 	label.custom_minimum_size.x = 332
 	label.add_theme_color_override("font_color", colour)
 	_knowledge_box.add_child(label)
@@ -842,7 +851,7 @@ func get_selected_entity_bits() -> int:
 
 
 func _loc(key: String) -> String:
-	return _locale.ltr(key) if _locale != null else key
+	return KoreanText.words(_locale.ltr(key)) if _locale != null else key
 
 
 func _resolve_entity_bits(agent_id: int) -> int:
@@ -884,7 +893,7 @@ func _update_portrait(_agent_id: int) -> void:
 	var row: Dictionary = ArtData.look(int(look.get("look", -1)))
 	var top: String = _loc("LOOK_TOP_" + str(row.get("top", "")).to_upper())
 	var hair: String = _loc("LOOK_HAIR_" + str(row.get("hair", "")).to_upper())
-	_look_label.text = str(_locale.call("trf", "UI_INSPECT_LOOK_FMT", {"top": top, "hair": hair, "face": variant + 1})) if _locale != null else "%s · %s" % [top, hair]
+	_look_label.text = KoreanText.words(str(_locale.call("trf", "UI_INSPECT_LOOK_FMT", {"top": top, "hair": hair, "face": variant + 1})) if _locale != null else "%s · %s" % [top, hair])
 
 
 ## The portrait's texture path and the look line (for tests).
@@ -1006,7 +1015,7 @@ func _make_personal_sections() -> void:
 		PanelTooltips.attach(button, "select")
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
-		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		button.autowrap_mode = TextServer.AUTOWRAP_WORD
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.pressed.connect(_select_family_member.bind(button))
 		_family_buttons.append(button)
@@ -1242,3 +1251,10 @@ func _target_text(target_kind: int, activity: Dictionary) -> String:
 	if target_kind == 8:
 		return (_loc("INSPECTOR_TARGET_ACTIVITY_PLACE_FMT") % [activity["x"], activity["y"]]) if not activity.is_empty() else _loc("UI_UNKNOWN")
 	return _loc(TARGET_LABELS[target_kind]) if target_kind >= 0 and target_kind < TARGET_LABELS.size() else _loc("UI_UNKNOWN")
+
+func _open_tile_why() -> void:
+	if _world_sim == null or _selected_entity_bits < 0:
+		return
+	var detail: Dictionary = _world_sim.get_agent_detail(_selected_entity_bits)
+	if bool(detail.get("found", false)):
+		get_node("../CausalPanel").call("open_tile", Vector2i(int(detail.get("x",0)), int(detail.get("y",0))))

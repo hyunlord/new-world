@@ -1,27 +1,42 @@
-# causal_panel.gd (UI/CausalPanel in scenes/main.tscn): Q-toggled "why?" panel listing a tile's causal events;
-#   world_renderer.gd pushes the history in through display_history() after a tile click.
-# CausalPanel — "왜?" UI panel (V7 Phase 3-γ, γ-2-α scaffold).
-# γ-2-α scope: empty panel scaffold + Q-key toggle.
-# γ-2-β (separate land) will wire SimBridge.get_tile_causal_history /
-# get_event_chain into the body and add tile-click activation.
-#
-# Mount: scenes/main.tscn → UI (CanvasLayer) → CausalPanel (Control + this script).
-# Default visibility: hidden. Q toggles via _unhandled_input.
-# M4 (goal 9.6): when a building site or a work mark on the tile waits for a practitioner, the first line after the
-#   header is "기다리는 중: 문 만들기를 아는 사람이 없음" (get_knowledge_waits kinds 1 site / 2 mark by tile; a site's
-#   footprint from get_colony_overlay).
-# Bridge methods: via SimReads get_knowledge_waits, get_colony_overlay (M4 wait line); the tile history is passed in
-#   by order_tool.gd.
+# Explicit tile explanation: bounded, anchored popup; empty requests show a two-second toast.
+# Bridge: get_tile_causal_history directly; get_knowledge_waits/get_colony_overlay through SimReads.
 extends Control
 
+const KoreanText = preload("res://scripts/ui/mux/korean_text.gd")
+
 const ArtUI = preload("res://scripts/ui/panels/art_ui.gd")
+const View = preload("res://scripts/world/colony/view.gd")
+const Content = preload("res://scripts/ui/content_context.gd")
+const StoryText = preload("res://scripts/ui/story_text.gd")
+
 const KnowledgeText = preload("res://scripts/ui/knowledge_text.gd")
 
 const PANEL_TITLE_KEY := "UI_CAUSAL_PANEL_TITLE"
-const PANEL_PLACEHOLDER_KEY := "UI_CAUSAL_PANEL_PLACEHOLDER"
-const PANEL_WIDTH := 620.0
-const PANEL_HEIGHT := 480.0
-const PANEL_MARGIN := 16.0
+const PANEL_WIDTH := 420.0
+const EVENT_LABEL_KEYS: Dictionary = {
+	"construction_started": "UI_CAUSAL_EVENT_CONSTRUCTION_STARTED",
+	"construction_completed": "UI_CAUSAL_EVENT_CONSTRUCTION_COMPLETED",
+	"social_interaction_started": "UI_CAUSAL_EVENT_SOCIAL_STARTED",
+	"social_interaction_completed": "UI_CAUSAL_EVENT_SOCIAL_COMPLETED",
+	"agent_born": "UI_BIRTHS",
+	"settlement_formed": "UI_CAUSAL_EVENT_SETTLEMENT_FORMED",
+	"settlement_dissolved": "UI_CAUSAL_EVENT_SETTLEMENT_DISSOLVED",
+}
+const DEATH_REASON_KEYS: Dictionary = {
+	"starvation": "CHRON_DEATH_STARVATION",
+	"dehydration": "CHRON_DEATH_DEHYDRATION",
+	"combat": "CHRON_DEATH_COMBAT",
+	"old_age": "CHRON_DEATH_OLD_AGE",
+	"exposure": "CHRON_DEATH_EXPOSURE",
+}
+const DECISION_REASON_KEYS: Dictionary = {
+	"hunger_threshold_breach": "UI_CAUSAL_REASON_HUNGER",
+	"thirst_threshold_breach": "UI_CAUSAL_REASON_THIRST",
+	"fatigue_threshold_breach": "UI_CAUSAL_REASON_FATIGUE",
+	"construction_reason": "UI_CAUSAL_REASON_CONSTRUCTION",
+	"social_reason": "UI_CAUSAL_REASON_SOCIAL",
+	"settlement_reason": "UI_CAUSAL_REASON_SETTLEMENT",
+}
 
 # V7 Phase 9-δ — FFI dict-key constants declared at file scope so the combat
 # match arms (scanned by harness Assertion 8 for hardcoded alphabetic
@@ -36,78 +51,118 @@ const _NOT_APPLICABLE_GLYPH := "—"           # em-dash — non-alphabetic, no
                                              # locale lookup required
 
 var _title_label: Label
-var _placeholder_label: Label
 var _history_container: VBoxContainer
+var _panel: PanelContainer
+var _column: VBoxContainer
+var _scroll: ScrollContainer
+var _anchor_tile: Vector2i
 
 func _ready() -> void:
 	visible = false
-	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_build_layout()
-
-func _build_layout() -> void:
-	position = Vector2(12, 124)
-	size = Vector2(PANEL_WIDTH, PANEL_HEIGHT)
-	ArtUI.panel(self, Rect2(Vector2.ZERO, size))
-
+	mouse_filter = Control.MOUSE_FILTER_STOP
+	_panel = ArtUI.panel(self, Rect2())
+	_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	_column = VBoxContainer.new()
+	_column.add_theme_constant_override("separation", 8)
+	_panel.add_child(_column)
+	var heading := HBoxContainer.new()
+	_column.add_child(heading)
 	_title_label = Label.new()
-	_title_label.text = _ltr(PANEL_TITLE_KEY)
-	_title_label.position = Vector2(12.0, 8.0)
-	add_child(_title_label)
-
-	_placeholder_label = Label.new()
-	_placeholder_label.text = _ltr(PANEL_PLACEHOLDER_KEY)
-	_placeholder_label.position = Vector2(12.0, 40.0)
-	_placeholder_label.clip_text = true
-	_placeholder_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_placeholder_label.size = Vector2(PANEL_WIDTH - 24.0, 76.0)
-	add_child(_placeholder_label)
-	_placeholder_label.set_deferred("size", Vector2(PANEL_WIDTH - 24.0, 76.0))
-
-	var scroll: ScrollContainer = ScrollContainer.new()
-	scroll.position = Vector2(12, 128)
-	scroll.size = Vector2(PANEL_WIDTH - 24, PANEL_HEIGHT - 144)
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	add_child(scroll)
+	_title_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	heading.add_child(_title_label)
+	var close_button := Button.new()
+	close_button.name = "Close"
+	close_button.text = "×"
+	close_button.tooltip_text = _ltr("MUX_CLOSE") + " (Esc)"
+	close_button.pressed.connect(hide)
+	heading.add_child(close_button)
+	_scroll = ScrollContainer.new()
+	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_column.add_child(_scroll)
 	_history_container = VBoxContainer.new()
-	_history_container.position = Vector2(12.0, 128.0)
-	_history_container.size = Vector2(PANEL_WIDTH - 24.0, PANEL_HEIGHT - 144.0)
-	_history_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_history_container.position = Vector2.ZERO
 	_history_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	scroll.add_child(_history_container)
+	_history_container.add_theme_constant_override("separation", 8)
+	_scroll.add_child(_history_container)
+	get_node("/root/Main/WorldSim").connect("world_reset", _reset)
+
+func _reset() -> void:
+	hide()
+
+func open_tile(tile: Vector2i) -> void:
+	var world: Node = get_node_or_null("/root/Main/WorldSim")
+	if world != null:
+		display_history(world.get_tile_causal_history(tile.x, tile.y), tile.x, tile.y)
 
 func display_history(history: Array, tile_x: int, tile_y: int) -> void:
 	if _history_container == null:
 		return
-	for child in _history_container.get_children():
+	_anchor_tile = Vector2i(tile_x, tile_y)
+	var wait: String = wait_text(_anchor_tile)
+	if history.is_empty() and wait.is_empty():
+		hide()
+		get_node("../OrderBar").call("show_toast", _ltr("MUX_WHY_EMPTY"))
+		return
+	for child: Node in _history_container.get_children():
 		_history_container.remove_child(child)
 		child.queue_free()
-	var header := Label.new()
-	var tmpl := _ltr("UI_CAUSAL_TILE_HEADER")
-	header.text = tmpl.replace("{x}", str(tile_x)).replace("{y}", str(tile_y))
-	_history_container.add_child(header)
-	var wait: String = wait_text(Vector2i(tile_x, tile_y))
-	if wait != "":
-		var wait_label := Label.new()
+	_title_label.text = _ltr(PANEL_TITLE_KEY)
+	_add_line(_ltr("UI_CAUSAL_TILE_HEADER").format({"x": tile_x, "y": tile_y}))
+	if not wait.is_empty():
+		var wait_label: Label = _add_line(wait)
 		wait_label.name = "Wait"
-		wait_label.text = wait
-		wait_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		wait_label.custom_minimum_size.x = 570
 		wait_label.add_theme_color_override("font_color", Color("e05a48"))
-		_history_container.add_child(wait_label)
-	if history.is_empty():
-		var empty := Label.new()
-		empty.text = _ltr("UI_CAUSAL_NO_HISTORY")
-		_history_container.add_child(empty)
+	for event: Variant in history:
+		if event is Dictionary:
+			_add_line(_format_event(event))
+	get_parent().move_child(self, get_parent().get_child_count() - 1)
+	show()
+	_fit()
+	_fit.call_deferred()
+
+func _add_line(text: String) -> Label:
+	var label := Label.new()
+	label.text = KoreanText.words(text)
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_history_container.add_child(label)
+	return label
+
+func _fit() -> void:
+	if not visible:
 		return
-	for ev in history:
-		if not (ev is Dictionary):
-			continue
-		var lbl := Label.new()
-		lbl.text = _format_event(ev as Dictionary)
-		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		lbl.custom_minimum_size.x = 570
-		_history_container.add_child(lbl)
+	var area: Vector2 = get_viewport_rect().size
+	var hud: Node = get_node_or_null("../MuxHud")
+	var factor: float = float(hud.get("store").value("ui_scale")) if hud != null else 1.0
+	scale = Vector2.ONE * factor
+	var width: float = minf(PANEL_WIDTH, area.x - 24.0) / factor
+	_scroll.custom_minimum_size.x = width - 24.0
+	_scroll.size.x = width - 24.0
+	_history_container.size.x = width - 48.0
+	var body_height: float = _history_container.get_combined_minimum_size().y
+	_scroll.custom_minimum_size.y = minf(body_height, maxf(40.0, area.y * 0.5 / factor - 80.0))
+	_panel.size = Vector2(width, 0)
+	size = _panel.size
+	var point: Vector2 = get_viewport().get_canvas_transform() * View.tile_centre(_anchor_tile)
+	position = Vector2(point.x + 16.0, point.y - size.y * factor * 0.5)
+	if position.x + size.x * factor > area.x - 12.0:
+		position.x = point.x - size.x * factor - 16.0
+	position = position.clamp(Vector2(12,12), (area - size * factor - Vector2(12,12)).max(Vector2(12,12)))
+
+func _process(_delta: float) -> void:
+	if visible:
+		_fit()
+
+func _input(event: InputEvent) -> void:
+	if not visible:
+		return
+	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
+		hide()
+		get_viewport().set_input_as_handled()
+	elif event is InputEventMouseButton and event.pressed and not get_global_rect().has_point(event.position):
+		hide()
+
+func is_panel_visible() -> bool:
+	return visible
 
 ## M4: "기다리는 중: … 아는 사람이 없음" for a site or mark on `tile` waiting for a practitioner, else "".
 func wait_text(tile: Vector2i) -> String:
@@ -120,9 +175,15 @@ func wait_text(tile: Vector2i) -> String:
 func _format_event(ev: Dictionary) -> String:
 	var kind: String = ev.get("kind", "?")
 	var tick: int = int(ev.get("tick", 0))
-	var kind_label: String = "?"
+	var kind_label: String = _ltr(str(EVENT_LABEL_KEYS.get(kind, "UI_CAUSAL_EVENT_OTHER")))
 	var extra: String = ""
 	match kind:
+		"agent_died":
+			kind_label = _ltr("CHRON_DIED_NO_AGE_FMT") % _ltr(str(DEATH_REASON_KEYS.get(str(ev.get("reason", "")), "UI_UNKNOWN")))
+		"pressure_cause":
+			var pressure_code: int = Content.code("pressures", str(ev.get("reason", "")))
+			var pressure_name: String = StoryText.pressure(get_node_or_null("/root/Locale"), pressure_code)
+			kind_label = _ltr("M5_WHY_PRESSURE_FMT").format({"name": pressure_name})
 		"building_placed":
 			kind_label = _ltr("UI_CAUSAL_EVENT_BUILDING_PLACED")
 			var radius: int = int(ev.get("radius", 0))
@@ -149,7 +210,7 @@ func _format_event(ev: Dictionary) -> String:
 			else:
 				kind_label = _ltr("UI_CAUSAL_EVENT_AGENT_DECISION")
 				if reason != "":
-					extra = " (" + reason + ")"
+					extra = " (" + _ltr(str(DECISION_REASON_KEYS.get(reason, "UI_UNKNOWN"))) + ")"
 		"memory_recalled":
 			# V7 Phase 8-δ — pick the CASCADE-labelled variant when the
 			# trigger is `cascade_bias` (Phase 8-β scope); otherwise fall
@@ -235,19 +296,5 @@ func _channel_name(idx: int) -> String:
 func _ltr(key: String) -> String:
 	var locale := get_node_or_null("/root/Locale")
 	if locale != null and locale.has_method("ltr"):
-		return locale.call("ltr", key)
+		return KoreanText.words(str(locale.call("ltr", key)))
 	return key
-
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and not event.echo:
-		if event.keycode == KEY_Q:
-			toggle_visible()
-
-func toggle_visible() -> void:
-	visible = not visible
-	var chronicle: Control = get_node_or_null("../ChroniclePanel") as Control
-	if visible and chronicle != null:
-		chronicle.hide()
-
-func is_panel_visible() -> bool:
-	return visible

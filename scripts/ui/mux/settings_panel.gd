@@ -2,6 +2,9 @@
 # Bridge methods: none. The coordinator applies store.changed to camera and UI scale.
 extends PanelContainer
 
+signal defence_toggled(on: bool)
+var _defence: CheckButton
+
 const Catalog = preload("res://scripts/ui/mux/controls_catalog.gd")
 const Tooltips = preload("res://scripts/ui/panels/panel_tooltips.gd")
 const Store = preload("res://scripts/ui/mux/settings_store.gd")
@@ -39,6 +42,10 @@ func _ready() -> void:
 		column.add_child(check)
 		_checks[key] = check
 		Tooltips.attach(check, "", str(BOOLEAN_KEYS[key]))
+	_defence = CheckButton.new()
+	_defence.name = "StewardDefence"
+	_defence.toggled.connect(func(on: bool) -> void: defence_toggled.emit(on))
+	column.add_child(_defence)
 	var scale_row: HBoxContainer = HBoxContainer.new()
 	column.add_child(scale_row)
 	_scale_label = Label.new()
@@ -53,10 +60,10 @@ func _ready() -> void:
 	Tooltips.attach(_scale, "", "MUX_SETTING_UI_SCALE")
 	_note = Label.new()
 	_note.custom_minimum_size.x = 520
-	_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_note.autowrap_mode = TextServer.AUTOWRAP_WORD
 	column.add_child(_note)
 	_error = Label.new()
-	_error.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_error.autowrap_mode = TextServer.AUTOWRAP_WORD
 	column.add_child(_error)
 	var locale: Node = get_node_or_null("/root/Locale")
 	if locale != null:
@@ -98,6 +105,8 @@ func _refresh() -> void:
 	_close.text = _loc("MUX_CLOSE")
 	_close.tooltip_text = "Esc"
 	_scale_label.text = _loc("MUX_SETTING_UI_SCALE")
+	_defence.text = _loc("MUX_STEWARD_DEFENCE")
+	_defence.tooltip_text = _loc("MUX_STEWARD_DEFENCE_TIP")
 	_note.text = _loc("MUX_SETTING_STEWARD_NOTE")
 	for key: String in BOOLEAN_KEYS:
 		var check: CheckButton = _checks[key]
@@ -114,3 +123,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 
 static func _loc(key: String) -> String:
 	return Catalog._text(key, Callable())
+
+func set_defence_state(on: bool) -> void:
+	if _defence != null:
+		_defence.set_pressed_no_signal(on)
