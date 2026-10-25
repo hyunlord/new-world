@@ -594,3 +594,5 @@ are gone from the bridge.
 - Added verified GitHub mirrors for105 OPEN rows (#513–#617), protected existing#59, and ISS312/lesson26 for safe read-after-write recovery. Registry now312:175fixed/105open/30deferred/2won't fix.
 - Added C full gate1 proof (36/36 at8ea4baa49), preserving natural tail-latency increase as ISS313 OPEN; registry313 with106 OPEN.
 - Added GitHub#618 for ISS313; all106 OPEN mappings verified without altering the original105 issue bodies or existing#59.
+
+- Recorded C gate2 FAIL35/36 atbcea734a (standing n200/side64 p99), fixed-schedule six-run diagnosis, ISS314 OPEN and lesson27. No product/threshold/ledger change; final clean documentation head requires a new full gate. Registry314:175fixed/107open/30deferred/2won't fix.

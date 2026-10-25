@@ -9,3 +9,7 @@ Natural performance mean0.2538→0.2748ms×1.082, p990.5110→0.5803ms×1.136, p
 Standing benchmark passed all six ceilings; allocator/agent1870B, RSS/agent2148.1244B≤5120, RSS/tile86.5B≤128. Nav128.9µs/tick≤600, whole tick2239.5µs, unreachable0. Raw external directory `/Users/rexxa/work/mux-data/gate-stage-c-1/`; receipt SHA256 `ebd3e081e1916ff3a9be57c015c4fa97e6157598797f3552130f80b9f417ad9a`.
 
 This is the measured C predecessor, not a future documentation commit's gate. Subsequent report/issue-link edits must remain documentation-only and their final clean HEAD must run the full gate before publishing. Actual final HEAD/ref equality and own-worktree removal are recorded in external `stage-c-publication.json` and `stage-c-worktree-removal.json` plus the final owner message; this document cannot contain its own future commit hash without rewriting history.
+
+## Later final-head failure
+
+C gate2 at `bcea734ae63f47cf2de605dba407808b9d1340de` subsequently failed35/36, bench only. The gate1 success above remains its own historical result and does not authorize publishing that failed descendant. [Gate2 failure and fixed-schedule diagnosis](C_GATE2_DIAGNOSTIC.md) records exact limits, ISS314 OPEN and D49's next verification boundary.

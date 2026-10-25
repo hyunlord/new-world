@@ -1,6 +1,6 @@
 ## 구현 완료 보고 — M-UX + 검토
 
-**Stage A·B 게시 완료 / C gate1 36/36 PASS / A8 수용 FAILED 유지.** C 정리·안전망·원장313건·교훈26개를 마쳤다. 미해결106건은 GitHub#513–#618에 등록·검증했고, C gate1의 꼬리 지연 관측ISS313을 포함한다. C gate1은 깨끗한 `8ea4baa49b9c8f144d5b47f0b4cc6e2656cf7f37`에서2026-10-25 21:56:53 KST 종료했다. 이 보고서를 포함한 문서 마감 HEAD도 전체 게이트를 통과한 후에만 게시한다. 최종 게시·원격 일치·작업 트리 제거의 실제 결과는 최종 메시지와 외부 완료 영수증에 기록한다. 이전 실패와 오너 수용 미확인 상태는 기술 게이트와 구분한다.
+**Stage A·B 게시 완료 / C gate1 PASS·gate2 35/36 FAIL / A8 수용 FAILED 유지.** C 정리·안전망·원장314건·교훈27개를 기록했다. 기존 미해결106건은 GitHub#513–#618에 등록·검증했고, gate2의 벤치마크 실패ISS314로 OPEN107건이 됐다(추가 GitHub 연결 대기). C gate1은 깨끗한 `8ea4baa49b9c8f144d5b47f0b4cc6e2656cf7f37`에서2026-10-25 21:56:53 KST 종료했다. 이 보고서를 포함한 문서 마감 HEAD도 전체 게이트를 통과한 후에만 게시한다. 최종 게시·원격 일치·작업 트리 제거의 실제 결과는 최종 메시지와 외부 완료 영수증에 기록한다. 이전 실패와 오너 수용 미확인 상태는 기술 게이트와 구분한다.
 
 ### 구현 의도
 
@@ -54,13 +54,13 @@ C p1 `93a99ce161ea51d7a729e918698b87238995d820`에서 wood_visuals의 외부 호
 
 외부 `stage-c/cleanup/focused-receipt.json`은 명시적 bridge build, 두 번 import, strict69파일, Python133 및 실제 mux_ui_test 창284검사/0실패의 exit0을 기록한다.8PNG 독립 검토는 HUD/action icons·daylight world·minimap·panels·sites/집 렌더가 보임을 확인했다. 정확한 삭제 전 paired captures가 없어 pixel identity는 미입증이고 night/all-species blind/절대시각 PASS·오너 수용은 주장하지 않는다. ISS274한국어 wrap·ISS275신생아 알림 clip은 그대로 관찰됐다. [C cleanup 검증](https://github.com/hyunlord/new-world/blob/7bce14c96c479e7e391c5a4716f92b8889a0b30d/docs/v8/mux/C_CLEANUP_VERIFICATION.md). 후속 C safety는 p1에서 **PASS**:20/20 literal 비교,228748공유값/0차이,64Chronicle/19683항목,2519 frozen files,completed=true·failures=[]·runner exit0. receipt는 `stage-c-safety-1/capture/receipt.json`, SHA256 `d3d822ecb02a78c79930b2171c785dd1545b44dc198ab9c389de13dbfb7dc661`이다. 이는 full C gate나 오너 수용을 뜻하지 않는다: C gate1 36/36 PASS; 문서 마감 HEAD의 gate/게시 절차는 별도.
 
-p2 `7bce14c96c479e7e391c5a4716f92b8889a0b30d`는311건을 통합했고, 후속 등록 과정ISS312를 더해 현재 **313고유 이슈: fixed175 / open106 / deferred30 / won't fix2**다. 공개001–032·예약033–268·후속ID를 유지하고 삭제/재사용하지 않았다. 이전 p10 준비집합의304고유(fixed161/open110/deferred32/won't fix1)는 당시 날짜의 역사적 초안 수이며 현재 분모가 아니다. 기존302/159fixed 또는300/113OPEN/GH113초안도 현재 합계로 쓰지 않는다. 상태는 실제 행313개를 다시 세어 확인했다.
+p2 `7bce14c96c479e7e391c5a4716f92b8889a0b30d`는311건을 통합했고, 후속 등록 과정ISS312를 더해 현재 **314고유 이슈: fixed175 / open107 / deferred30 / won't fix2**다. 공개001–032·예약033–268·후속ID를 유지하고 삭제/재사용하지 않았다. 이전 p10 준비집합의304고유(fixed161/open110/deferred32/won't fix1)는 당시 날짜의 역사적 초안 수이며 현재 분모가 아니다. 기존302/159fixed 또는300/113OPEN/GH113초안도 현재 합계로 쓰지 않는다. 상태는 실제 행314개를 다시 세어 확인했다.
 
 ISS305/306/308/309/310의 시험수리와 ISS307 외부 wrapper guard, ISS311 제목 위반을 구분한다. ISS311은 역사적 process won't fix로 원SHA/제목을 유지하며 승인 없는 amend/rebase를 하지 않는다. 7개 한정 결함의 종결은 원장에 범위와 근거를 보존하며, 제품 전체·과거 실패·오너 수용의 일괄 해결을 뜻하지 않는다.
 
 GitHub는 최초105건 #513–#617에 후속ISS313 [#618](https://github.com/hyunlord/new-world/issues/618)을 더해 **미해결106건 #513–#618**을 등록했다. 원장에 각 번호를 되썼고, 전체 목록의 ID·번호·본문SHA·라벨·상태를 독립 대조했다. 중복0, 기존#59의 내용과 수정 시각은 불변이다. 첫 두 생성 후 목록 반영 지연으로 중단한 기록은 보존했다. 동일 journal로 복구하고 반환URL·번호 직접 조회로 검증했으며 생성 요청을 중복하지 않았다. ISS312는 이 과정의 수정 완료 기록이다. ISS313은 원인 미확인 tail-latency 관측으로#618에 등록했고 원장에 번호를 기록했다. 전체106건을 다시 대조했으며 기존105건의 본문을 바꾸지 않았다. [검증](C_GITHUB_VERIFICATION.md), [전체 이슈 원장](../../ISSUES.md).
 
-p2에서25개, 후속ISS312로 총26개 교훈과 HISTORY/archive 포인터·기존 testing/pitfalls 예방 규칙을 설치했다. 내용은 관측기는 제품 동작을 바꾸지 않아야 하고, fixed fixture와 자연 결과는 서로 다른 증거다. 시험 설정은 외부 경로를 명시하고, source/binary/ignored lock provenance를 빌드 전에 묶으며, 그림의 bounded 판정·오너 승인을 구별한다. SHA object 해소·UNRESOLVED terminal 분리·interrupt 완료 guard·commit subject 검증 규칙을 포함한다. 교훈은 [LESSONS.md](../../LESSONS.md)에 설치된 예방 규칙과 연결했다. C gate1 문서검사와 전체36단계를 통과했고, 최종 문서 커밋의 gate·게시는 완료 영수증으로 구분한다.
+p2에서25개, 후속ISS312·ISS314로 총27개 교훈과 HISTORY/archive 포인터·기존 testing/pitfalls 예방 규칙을 설치했다. 내용은 관측기는 제품 동작을 바꾸지 않아야 하고, fixed fixture와 자연 결과는 서로 다른 증거다. 시험 설정은 외부 경로를 명시하고, source/binary/ignored lock provenance를 빌드 전에 묶으며, 그림의 bounded 판정·오너 승인을 구별한다. SHA object 해소·UNRESOLVED terminal 분리·interrupt 완료 guard·commit subject 검증 규칙을 포함한다. 교훈은 [LESSONS.md](../../LESSONS.md)에 설치된 예방 규칙과 연결했다. C gate1 문서검사와 전체36단계를 통과했고, 최종 문서 커밋의 gate·게시는 완료 영수증으로 구분한다.
 
 ### 안전망 (각 리팩터링 커밋의 identity·fixture 결과)
 
@@ -83,6 +83,8 @@ p2에서25개, 후속ISS312로 총26개 교훈과 HISTORY/archive 포인터·기
 Chronicle/raw 비교에는 기존 git_sha 제외·정규화 계약이 있고, literal summary/command/save byte비교와 구별한다. B5 최초 lock 사전SHA 누락은 ISS304로 보존했다. 후속 `--locked` 재빌드는 lock 전후SHA와 frozen probe/perf 동일성을 확인했지만 최초 공백을 지우지 않는다. B5의 OFF/ON 변화는 누적 정책·재료 동작 변경이며 A8 재수용이나 모든 차이의 단일 원인 증명이 아니다. p11은 이전2123 source freeze를 덮어쓰지 않았다. 생산 입력은 그대로지만 다섯 시험경로가 달라졌으므로 전체 test-source tree가 literal 동일하다는 주장은 하지 않는다. 이전 OFF/ON/perf는 원래 freeze/binary에 묶여 있으며 새 실행으로 재표시하지 않는다. C p1 identity/fixture는20/20literal·원본228748/0·64Chronicle19683으로 **PASS**다. 후속 p2는문서/skill9경로 변경이므로 이 사실을 p2 전체 소스의 재실행으로 주장하지 않는다. C gate1은8ea4baa49에서36/36 통과했다. 문서 마감 후에도 실행 입력이 같음을 별도 대조한다.
 
 ### 성능 (틱 비용, UI 프레임 비용)
+
+C gate2 natural 평균0.2643ms(×1.041), p990.5370ms(×1.051), p99.90.6455ms(×1.063), quick평균0.3895ms(×1.053). 원본 fingerprint동일·평균 기준 통과. 별도 standing bench는 두 p99 기준 실패이며6절대상한만 통과했다. 후속 진단과 원래 실패의 의미를 섞지 않는다.
 
 동일 세션 paired N1000/side64/fed/baseline/seed15100/1일, A/B·B/A·A/B3쌍은60warmup+1380steady·alive1000·fingerprint 일치,load1=5.34–5.47(<8)였다. A mean0.799614/0.804600/0.796570ms, B0.794064/0.777605/0.792465ms; B/A 중앙값mean0.99306,p990.95778,p99.90.99307,max0.97182. B decision share69.26/69.34/69.37%. 과거 A 단일 profile mean0.881711ms/share71.007724%는 별도 조건의 원래 기록이다. [B 보고 성능](https://github.com/hyunlord/new-world/blob/7bce14c96c479e7e391c5a4716f92b8889a0b30d/docs/v8/mux/STAGE_B_REPORT.md), `/Users/rexxa/work/mux-data/stage-b/final-performance-1/`.
 
@@ -130,10 +132,15 @@ UI는 정지 tick1 미니맵345µs 상한과 UI14 545µs 불확정 이력을 구
 | C | [7bce14c96](https://github.com/hyunlord/new-world/commit/7bce14c96c479e7e391c5a4716f92b8889a0b30d) | v8-mux(C p2): Preserve unresolved history and evidence before issue publication | 9경로; 9 files changed, 518 insertions(+), 20 deletions(-) |
 | C | [8ea4baa49](https://github.com/hyunlord/new-world/commit/8ea4baa49b9c8f144d5b47f0b4cc6e2656cf7f37) | v8-mux(C p3): Make every unresolved issue traceable without losing failed evidence | 8경로; 8 files changed, 306 insertions(+), 108 deletions(-) |
 | C | [d113e2c98](https://github.com/hyunlord/new-world/commit/d113e2c9827c78cdf527432929bcac70e9c8b58a) | v8-mux(C p4): Preserve the green gate and unresolved tail latency before publication | 9경로; 9 files changed, 42 insertions(+), 19 deletions(-) |
+| C | [bcea734ae](https://github.com/hyunlord/new-world/commit/bcea734ae63f47cf2de605dba407808b9d1340de) | v8-mux(C p5): Finish the owner record with every open issue linked | 6경로;14삽입/7삭제; gate2 bench FAIL 보존 |
+
+
+C gate2는35/36·exit1이다. n200 p99×1.136·side64 p99×1.122의 원래 실패를 보존했다. 고정6회 교차 진단에서18장면의 결과는 같지만 첫 쌍 혼잡·tail 변동이 있어 원인 확정 불가다. ISS314 OPEN, 기준·장부·제품 변경 없이 새 전체 gate를 별도로 기록한다. [실패와 진단](C_GATE2_DIAGNOSTIC.md).
 
 ### 확인된 제한사항
 
 - A8 FAILED, 물리 입력 NOT_VERIFIED, 오너 수용 미주장. B4 통과는 모든 자연 생산 개선이나 독립 factorial 효과가 아니다.
+- ISS314 상시 bench 두 p99 실패와 진단 한계는 OPEN으로 보존하며, focused 진단을 gate 통과로 쓰지 않는다.
 - ISS313 natural p99.9 증가 관측은 원인 미확인 OPEN이며 UI 지연과 같은 원인으로 단정하지 않는다.
 - ISS030 반복 debug 지연, ISS274 한국어 줄바꿈, ISS275 침상경고 잘림은 OPEN.
 - ISS277 직접 StoryRule1000초과 underflow는 소스상 확인·실행 재현 미수행; ISS283 공유 설정 사고의 원래 변경범위/복원은 백업 없어 불명. ISS284 LSP Transport closed로 LSP clean 미주장.
@@ -156,7 +163,7 @@ baseline/V7 연구 분리는 **보존 상태에서 별도 결정 필요**다. St
 | C p1 cleanup | `93a99ce161ea51d7a729e918698b87238995d820` | 집중·창 및 safety PASS(20/20literal·원본identity). 후속C gate1 36/36 통과; 최종문서 HEAD gate·게시 별도 |
 | C gate1 | `8ea4baa49b9c8f144d5b47f0b4cc6e2656cf7f37` | **PASS exit0,36/36**,20:48:29–21:56:53 KST; debug/release각2228/0/5. source/lock변경0. natural tail 증가 기록 유지 |
 
-문서 마감 커밋은 동일한36단계를 다시 실행한 뒤 게시한다. 실제 최종 HEAD/원격 ref/작업 트리 제거 결과는 외부 `stage-c-publication.json`·`stage-c-worktree-removal.json` 및 최종 오너 메시지에 남긴다. 보고서 자체의 미래 SHA를 만들려고 amend하거나 검증 이력을 다시 쓰지 않는다.
+C gate2는 `bcea734ae63f47cf2de605dba407808b9d1340de`에서22:01:41–23:09:33 KST35/36·exit1이다. debug2228/0/5·release2227/0/5, 소스/lock 변경0, bench만 실패했다. 문서 마감 커밋은 동일한36단계를 다시 실행한 뒤 게시한다. 실제 최종 HEAD/원격 ref/작업 트리 제거 결과는 외부 `stage-c-publication.json`·`stage-c-worktree-removal.json` 및 최종 오너 메시지에 남긴다. 보고서 자체의 미래 SHA를 만들려고 amend하거나 검증 이력을 다시 쓰지 않는다.
 
 ### 오너가 할 일 (실행 한 줄: /Users/rexxa/work/new-world-play2-dev/tools/play.sh main)
 

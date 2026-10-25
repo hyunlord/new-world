@@ -484,3 +484,12 @@ B gate2/publication and independent C status review authorize seven scoped closu
 ## D48 — Retain the tail-latency observation without retroactive tuning
 
 C gate1 at8ea4baa49 passed36/36, but natural p99/p99.9 rose1.136×/2.400× versus the original baseline in this session. Existing mean criterion passed1.082×. Record ISS313 OPEN, preserve raw logs and distinguish source effect from unmeasured execution-condition effects. Do not retune behavior, lower thresholds, rerun until green or claim unchanged UI speed. The final docs-only head receives its required full gate; its measurements are additional evidence and do not erase gate1. Add one GitHub issue for this new OPEN row while preserving the105 earlier issues and their fixed publication anchor.
+
+
+## D49 — Preserve the standing benchmark failure and bound its diagnosis
+
+C gate2 on clean bcea734ae63f47cf2de605dba407808b9d1340de ended35/36, status1 at23:09:33 KST. Only bench failed: n200 p99×1.136, side64 p99×1.122 against unchanged M-ART2.1 ledger. All six absolute ceilings passed. Admission6.23/end7.00 are below8; do not attribute failure to contention from later nav load8.06. Source/lock drift0; gate1→2 changes are nine documentation paths only.
+
+Before executing, root registered exactly six full-six-scene bench invocations B5/current in AB/BA/AB order under external stage-c/bench-diagnostic-1/preregistration.json. Preserve all results and the first A load10.48→7.38; this is not a uniformly quiet comparison. All18 paired outcomes match; median current/B5 mean ratios0.993741–1.024005, p99 ratios0.989773–1.031128. The current side64 p99 varied530/524/651µs. This establishes neither a product regression nor an environmental cause, and does not replace the failed gate.
+
+Record ISS314 OPEN and lesson27. No runtime changes, threshold relaxation, ledger update, BENCH_JUSTIFIED waiver or outcome-based diagnostic retries. After the failure/issue documentation commits, authorize one fresh complete gate3 on the clean final head with unchanged gate settings. If it fails, preserve the failure and investigate before any further execution; never publish on a focused diagnostic. The Stage C four-hour target may be exceeded to retain the required exact-head gate; the32-hour hard stop remains unchanged.

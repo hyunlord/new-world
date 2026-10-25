@@ -197,3 +197,8 @@ C wrapper 후속 실행: 2026-10-25 20:22:05 KST completed=true·20/20동일·fa
 ## 26. 생성 성공과 목록 반영은 같은 순간이 아니다 — ISS312
 
 GitHub 등록 첫 두 번은 실제#513/#514가 생성됐지만 즉시 목록에 나타나지 않아 안전 중단했다. pending 기록을 지우거나 새 journal로 재시도하지 않았다. 반환 canonical URL·번호를 영속화하고 직접 GET으로 검증하도록 보완했으며 불확실한 응답에는 제한된 읽기 재시도만 허용했다. 원본 재현 포함12 mock 그룹과 실제105건 등록·독립 전체 대조를 구분한다. 기존#59는 내용·수정 시각 모두 불변이다. [검증](v8/mux/C_GITHUB_VERIFICATION.md), [예방 규칙](../.claude/skills/worldsim-testing/SKILL.md#external-publication-read-after-write-verification).
+
+
+## 27. 조용한 진입과 짧은 tail 비교만으로 원인을 확정하지 않는다 — ISS314
+
+C gate2는 부하6.23으로 진입하고7.00으로 종료했지만 두 p99 기준에 실패했다. 인접 단계의 부하8.06을 그 실패의 원인으로 전용하지 않는다. 원본35/36 실패와 고정 여섯 교차 실행을 모두 보존하고, 첫 비교의10.48 부하·서로 다른 빌드 정체성·tail 변동을 명시한다. 진단은 전체 gate나 원인 증명이 아니다. 기준·장부를 바꾸지 않고 최종 문서 HEAD의 새 전체 gate를 별도로 기록한다. 설치 규칙: [Bounded benchmark diagnosis](../.claude/skills/worldsim-testing/SKILL.md#bounded-benchmark-diagnosis); 근거: [C gate2 진단](v8/mux/C_GATE2_DIAGNOSTIC.md).

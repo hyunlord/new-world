@@ -263,3 +263,7 @@ Before creating a MUX commit, read the exact first line from the prepared messag
 
 ### External publication read-after-write verification
 A successful create may precede list visibility. Durably record the pending identity before creation and the returned canonical URL/number immediately after success; verify by direct read, exact title/body/category and stable marker. On uncertain delivery use bounded read-only reconciliation, never blind create retries. Reuse the same immutable manifest and journal; preserve failed runs and protect unrelated existing issues. A previous completion flag is not a fresh process success: require current exit0 and an independent final bijection check. Source: MUX ISS312; C_GITHUB_VERIFICATION.md.
+
+
+### Bounded benchmark diagnosis
+Quiet admission below the existing load ceiling is not proof of stable execution conditions, and a later step's load is not the failed benchmark's load. Preserve the exact failing gate, source/lock hashes and every per-repeat value. Before a diagnostic, register a fixed interleaved schedule, binary hashes and comparison scope; keep every run, including contended pairs, and never rerun until a desired result appears. Separate unchanged-source evidence, equal simulation outcomes and timing observations from causal attribution. Focused comparisons do not authorize publication, threshold/ledger changes or a justification waiver; a new clean-head full gate is distinct evidence and cannot erase the first failure. Source: MUX D49, ISS314 and docs/LESSONS.md section27.
