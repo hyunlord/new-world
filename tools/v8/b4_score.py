@@ -635,6 +635,8 @@ def check_natural(data: Record, arithmetic: Record, metadata: Record, manifest_h
             "population_observations": {
                 "accept_command_attempts": sum("AcceptMigrants" in r["command"] for r in receipts),
                 "accept_command_rejected": sum("AcceptMigrants" in r["command"] and not r["result"]["accepted"] for r in receipts),
+                "capacity_blocked": sum("AcceptMigrants" in r["command"] and not r["result"]["accepted"]
+                                        and r["result"]["reason"] == "blocked" for r in receipts),
                 "arrival_acceptance_cleared": sum(r["outcome"] == "acceptance_cleared_waiting" for r in data["wave_transitions"]),
                 "arrival_population_limit": "tick boundary only; exact intra-tick admission belongs to controlled P tests"},
             "purchase_receipts": purchases, "observed_haul_starts": len(starts),

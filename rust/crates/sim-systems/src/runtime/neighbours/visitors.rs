@@ -177,8 +177,11 @@ impl RuntimeSystem for VisitorSystem {
                                 .value((i64::from(w.id) << 8) | count),
                         );
                         // Accepted on the way (review F3): they join now, at the hearth.
-                        if w.answer == Some(WaveAnswer::Accepted) {
-                            super::join::accept(world, res, w.id);
+                        if w.answer == Some(WaveAnswer::Accepted)
+                            && super::join::accept(world, res, w.id)
+                                == Err(super::join::AcceptError::PopulationCap)
+                        {
+                            res.colony.neighbours.waves[i].answer = None;
                         }
                     }
                     res.colony.neighbours.version += 1;

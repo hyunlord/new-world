@@ -159,19 +159,41 @@ pub fn migrant_top() -> Option<(ItemKind, Top)> {
         .and_then(|kind| Top::of_item(kind).map(|top| (kind, top)))
 }
 
-/// Accept wave `wave` (its number): every person joins; returns how many, or `None` when no wave of that number
-/// waits at the hearth or is on its way. A wave still on its way keeps walking with the answer noted and joins when it
-/// reaches the hearth (`VisitorSystem`; review F3: never at the map edge).
-pub fn accept(world: &mut World, res: &mut SimResources, wave: u32) -> Option<u32> {
-    let index = res.colony.neighbours.waves.iter().position(|w| {
-        w.id == wave && matches!(w.state, VisitState::Waiting { .. } | VisitState::Arriving)
-    })?;
+/// Why a whole migrant wave cannot be admitted now.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AcceptError {
+    /// No wave of this number is arriving or waiting.
+    NoVisitor,
+    /// The current live population and whole wave exceed available capacity.
+    PopulationCap,
+}
+
+/// Accept a whole wave against current all-Agent capacity; early answers reserve no slots.
+/// Travelling waves retain their answer until VisitorSystem rechecks admission at arrival.
+pub fn accept(world: &mut World, res: &mut SimResources, wave: u32) -> Result<u32, AcceptError> {
+    let index = res
+        .colony
+        .neighbours
+        .waves
+        .iter()
+        .position(|w| {
+            w.id == wave && matches!(w.state, VisitState::Waiting { .. } | VisitState::Arriving)
+        })
+        .ok_or(AcceptError::NoVisitor)?;
+    let cap = super::rule(res)
+        .ok_or(AcceptError::NoVisitor)?
+        .population_cap;
+    let population = world.query::<&Agent>().iter().count() as u128;
+    let size = res.colony.neighbours.waves[index].people.len() as u128;
+    if cap == 0 || population + size > u128::from(cap) {
+        return Err(AcceptError::PopulationCap);
+    }
     let w = res.colony.neighbours.waves[index].clone();
     if w.state == VisitState::Arriving {
         let nb = &mut res.colony.neighbours;
         nb.waves[index].answer = Some(WaveAnswer::Accepted);
         nb.version += 1;
-        return Some(w.people.len() as u32);
+        return Ok(w.people.len() as u32);
     }
     let tiles = free_tiles(res, w.pos, w.people.len());
     let mut ids = Vec::new();
@@ -210,7 +232,7 @@ pub fn accept(world: &mut World, res: &mut SimResources, wave: u32) -> Option<u3
         entry = entry.subject(*first);
     }
     res.chronicle.push(entry);
-    Some(count)
+    Ok(count)
 }
 
 /// Decline wave `wave`: it walks away and its neighbour's attitude drops; `false` when no such wave waits or arrives.

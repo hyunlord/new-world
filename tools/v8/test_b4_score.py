@@ -177,6 +177,24 @@ class NaturalTests(unittest.TestCase):
     def check(self, report):
         return score.check_natural(report, arithmetic(), META, HASH, require_steward=False)
 
+    def test_capacity_blocked_counts_only_rejected_accept_migrants(self):
+        report = natural()
+        cases = [({"AcceptMigrants": {"wave": 1}}, False, "blocked"),
+                 ({"AcceptMigrants": {"wave": 2}}, False, "no_visitor"),
+                 ({"AcceptMigrants": {"wave": 3}}, True, None),
+                 ({"DeclineMigrants": {"wave": 4}}, False, "blocked")]
+        report["command_receipts"] = [
+            {"ordinal": ordinal, "upcoming_tick": 10, "command": command,
+             "result": {"accepted": accepted, "count": int(accepted), "reason": reason},
+             "population_before": 39, "population_after": 39,
+             "wave_id": ordinal + 1, "wave_size": 2, "wave_before": None, "wave_after": None}
+            for ordinal, (command, accepted, reason) in enumerate(cases)]
+        observations = self.check(report)["population_observations"]
+        self.assertEqual(observations["capacity_blocked"], 1)
+        self.assertEqual(observations["accept_command_attempts"], 3)
+        self.assertEqual(observations["accept_command_rejected"], 2)
+        self.assertEqual(observations["arrival_acceptance_cleared"], 0)
+
     def test_deceased_crafter_retains_completion(self):
         result = self.check(natural(events=[event(alive=False)]))
         self.assertEqual(result["craft_count"], 1)

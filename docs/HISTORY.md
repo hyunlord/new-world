@@ -199,3 +199,5 @@
 - 2026-10-25 — M-EXT B6 자원 snapshot과 Food/Water/Sleep 도메인 추출: 전후 focused bridge51·decision21→22·통합128, 실제 renderer 일치 및 identity228748값 차이0·OFF9·ON요약/명령8개 동일. 제품2087해시 불변; 첫 clippy 실패 수정과 LSP 불가 ISS284 보존. 전체 B gate·게시 전([검증](v8/mux/B6_VERIFICATION.md), ADR0039/D38).
 
 - 2026-10-25 — M-EXT B4 정책 변경 전 관측·산술 사전등록([ADR0040](decisions/0040-measure-policy-changes-with-read-only-observers.md), D39). 보정8시드×48일의 제작1773건과 제어 cold2304행·craft32건 독립 재계산 일치; tick100/4000 저장·명령 동일성 확인. 최초 fixture ID가정·lint 실패 보존. 최종 identity228748차이0·OFF9·ON요약/명령8개·48일 관측OFF/ON·저장4000 동일. 최초 ON 입력 오류와 정확한 재실행 기록 보존; 홀드아웃 미실행·B 게시 대기([검증](v8/mux/B4_O_VERIFICATION.md)).
+
+- 2026-10-25 — M-EXT B4 P 이주 수락·도착 때 전체 인구 상한 재확인 단위 검증([ADR0041](decisions/0041-admit-whole-migrant-waves-at-current-capacity.md), D40). 변경 전 경계3통과/7예상실패→변경 후10통과, 기존 이웃16·FFI2·저장7·시스템5 및 scorer36/정적검사 통과. 최초 fixture 전제 오류 ISS290·거절 문구 ISS291 보존; 고정 BP 보정8×48 VALID(정원 거절0·일별 인구 최대30), 기준선228748차이0·OFF9요약 literal 동일·2105제품해시 불변; 전체 B gate·게시 대기([검증](v8/mux/B4_P_VERIFICATION.md)).

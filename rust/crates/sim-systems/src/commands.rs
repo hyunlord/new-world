@@ -497,8 +497,13 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
         }
         Command::AcceptMigrants { wave } => {
             match crate::runtime::neighbours::join::accept(world, res, wave) {
-                Some(n) => CommandResult::ok(n),
-                None => CommandResult::rejected(RejectReason::NoVisitor),
+                Ok(n) => CommandResult::ok(n),
+                Err(crate::runtime::neighbours::join::AcceptError::NoVisitor) => {
+                    CommandResult::rejected(RejectReason::NoVisitor)
+                }
+                Err(crate::runtime::neighbours::join::AcceptError::PopulationCap) => {
+                    CommandResult::rejected(RejectReason::Blocked)
+                }
             }
         }
         Command::DeclineMigrants { wave } => {

@@ -69,3 +69,6 @@ M-UX 작업 중인 누적 기록. Stage C에서 V8-0 이후 모든 보고서·�
 
 | ISS-288 | B4 O의 steward ON 비교에 기준에 없던 M5.5 명령 스크립트를 추가함 | M-EXT O o-on1-differences.json, 2026-10-25 | process | fixed | 기존 기준은 플레이어 명령 없는 ON 실행인데 --commands를 추가해30882경로 차이 발생. 실패 출력·입력 구성·독립 감사 보존. 원래 no-script ON2에서 요약·명령8개 literal 동일; 소스·golden 변경 없음 | — |
 | ISS-289 | B4 O 첫 release 빌드를 저장소 루트에서 실행해 Cargo.toml을 찾지 못함 | M-EXT O o-probe-build-first.log | process | fixed | 소스 변경 없이 rust/에서 재실행해6.34초 빌드 성공, 최종 재빌드6.19초 exit0. 최초 작업 디렉터리 오류 로그 보존 | — |
+
+| ISS-290 | P 경계 fixture가 tick0 세계에 settlement가 있다고 가정함 | M-EXT P p-tests-before-first.log, D40 | process | fixed | 첫 target은 컴파일됐으나10시험 실패; 정상 수용4경로가 membership 검증에서 막힘. 실제 hearth의 Settlement·member_agents를 명시 준비한 둘째 B0 실행에서 정상3통과/정책실패7 분리 확인. membership/grants 검증은 유지하고 두 원문 보존 | — |
+| ISS-291 | 이주 수용 인원 초과 거절이 일반 장애물 문구로 표시됨 | P 독립 검토:37; O pinned migrant_panel:234 | design | open | 인구 상한 거절이 기존 blocked를 사용하고 이주 창이 일반 장애물 문구를 표시함. EN “Something is in the way” / KO “무언가 막고 있음”. 거절 결과와 열린 창은 유지되므로 수용·저장 정확성 차단 결함 아님. P 동작은 현재 미커밋; source review이며 실제 UI 실행 재현은 미수행. 수용 명령 문맥의 전용 문구·번역을 후속 검토하고 전역 blocked 문구는 다른 배치 용도가 있어 바꾸지 않음. | [O UI](https://github.com/hyunlord/new-world/blob/f0d5140a257628a6aeb470deb12ea8c6787fa286/scripts/ui/panels/migrant_panel.gd#L234) · `/Users/rexxa/work/mux-data/stage-b/b4/p-independent-review.md` |
