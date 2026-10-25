@@ -214,10 +214,11 @@ fn original_pine_chops_delivers_builds_and_continues_across_both_save_boundaries
 }
 
 #[test]
-fn actual_h_format9_fixture_loads_as_oak_then_resaves_as_format10() {
-    let Ok(path) = std::env::var("WORLDSIM_B5_LEGACY9") else {
-        return;
-    };
+#[ignore = "requires genuine H format9 save through WORLDSIM_B5_LEGACY9"]
+fn actual_h_format9_fixture_loads_as_oak_then_resaves_as_current_format() {
+    sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
+        .expect("bundled catalogue before historical decoding");
+    let path = std::env::var("WORLDSIM_B5_LEGACY9").expect("required genuine H format9 fixture");
     let bytes = std::fs::read(path).expect("required actual H fixture");
     assert_eq!(&bytes[8..12], &9u32.to_le_bytes());
     let mut engine = save::load(&bytes).expect("historical format9 fixture");
@@ -231,8 +232,8 @@ fn actual_h_format9_fixture_loads_as_oak_then_resaves_as_format10() {
     assert!(engine.resources.content_state.tree_materials.is_empty());
     assert!(engine.resources.colony.materials.stats(PINE).is_some());
     let new = save_bytes(&mut engine);
-    assert_eq!(&new[8..12], &10u32.to_le_bytes());
-    let mut twin = save::load(&new).expect("migrated format10");
+    assert_eq!(&new[8..12], &save::FORMAT_VERSION.to_le_bytes());
+    let mut twin = save::load(&new).expect("migrated current format");
     for _ in 0..24 {
         tick(&mut engine);
         tick(&mut twin);

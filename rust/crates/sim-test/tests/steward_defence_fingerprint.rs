@@ -9,8 +9,10 @@ fn planted_defence_state_differences_are_detected_while_overall_steward_is_off()
     assert!(engine.resources.steward.owned.is_empty());
     let baseline = colony_fingerprint(&engine);
     let mut variants = Vec::new();
-    let mut state = DefenceState::default();
-    state.enabled = false;
+    let state = DefenceState {
+        enabled: false,
+        ..Default::default()
+    };
     variants.push(("policy", state));
     let mut state = DefenceState::default();
     state.owned_ids.insert(17);
@@ -18,17 +20,25 @@ fn planted_defence_state_differences_are_detected_while_overall_steward_is_off()
     let mut state = DefenceState::default();
     state.manual_until.insert(17, 1440);
     variants.push(("manual deadline", state));
-    let mut state = DefenceState::default();
-    state.quiet_since = Some(60);
+    let state = DefenceState {
+        quiet_since: Some(60),
+        ..Default::default()
+    };
     variants.push(("quiet deadline", state));
-    let mut state = DefenceState::default();
-    state.retired_pack = Some(42);
+    let state = DefenceState {
+        retired_pack: Some(42),
+        ..Default::default()
+    };
     variants.push(("retired pack", state));
-    let mut state = DefenceState::default();
-    state.responded_pack = Some(42);
+    let state = DefenceState {
+        responded_pack: Some(42),
+        ..Default::default()
+    };
     variants.push(("response ownership", state));
-    let mut state = DefenceState::default();
-    state.last_count = 4;
+    let state = DefenceState {
+        last_count: 4,
+        ..Default::default()
+    };
     variants.push(("batch count", state));
     for (name, state) in variants {
         engine.resources.steward.defence = state;

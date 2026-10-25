@@ -173,27 +173,38 @@ struct Regions {
 impl Regions {
     fn compute(map: &CostMap) -> Vec<u32> {
         let mut labels = vec![0u32; map.cost.len()];
+        let width = map.width as usize;
         let mut next = 1u32;
-        let mut queue: VecDeque<Tile> = VecDeque::new();
-        for y in 0..map.height {
-            for x in 0..map.width {
-                let i = (y as usize) * (map.width as usize) + (x as usize);
-                if labels[i] != 0 || map.cost[i] == IMPASSABLE {
-                    continue;
-                }
-                labels[i] = next;
-                queue.push_back((x, y));
-                while let Some(t) = queue.pop_front() {
-                    for n in map.steps_from(t) {
-                        let j = (n.1 as usize) * (map.width as usize) + (n.0 as usize);
-                        if labels[j] == 0 {
-                            labels[j] = next;
-                            queue.push_back(n);
-                        }
-                    }
-                }
-                next += 1;
+        let mut queue: VecDeque<usize> = VecDeque::new();
+        for seed in 0..map.cost.len() {
+            if labels[seed] != 0 || map.cost[seed] == IMPASSABLE {
+                continue;
             }
+            labels[seed] = next;
+            queue.push_back(seed);
+            while let Some(i) = queue.pop_front() {
+                let x = i % width;
+                let mut visit = |j: usize| {
+                    if labels[j] == 0 && map.cost[j] != IMPASSABLE {
+                        labels[j] = next;
+                        queue.push_back(j);
+                    }
+                };
+                // Legal diagonals already connect through passable cardinal neighbours.
+                if i >= width {
+                    visit(i - width);
+                }
+                if x > 0 {
+                    visit(i - 1);
+                }
+                if x + 1 < width {
+                    visit(i + 1);
+                }
+                if i + width < map.cost.len() {
+                    visit(i + width);
+                }
+            }
+            next += 1;
         }
         labels
     }
@@ -791,3 +802,7 @@ mod tests {
         }
     }
 }
+
+#[cfg(test)]
+#[path = "nav_regions_tests.rs"]
+mod region_optimization_tests;

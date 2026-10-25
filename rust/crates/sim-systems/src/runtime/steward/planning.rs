@@ -11,19 +11,63 @@ use sim_core::components::{Agent, Child, Life, Position, Temperament};
 use sim_engine::SimResources;
 use std::{cmp::Reverse, collections::BTreeSet};
 #[cfg(test)]
+#[path = "house_preparation_tests.rs"]
+mod house_preparation_tests;
+#[cfg(test)]
 #[path = "housing_tests.rs"]
 mod housing_tests;
 type Tile = (u32, u32);
 fn distance(a: Tile, b: Tile) -> u32 {
     a.0.abs_diff(b.0).max(a.1.abs_diff(b.1))
 }
-fn candidates(res: &SimResources, hearth: Tile) -> Vec<Tile> {
-    let mut tiles: Vec<_> = (1..res.tile_grid.height.saturating_sub(1))
+fn interior_tiles(res: &SimResources) -> Vec<Tile> {
+    (1..res.tile_grid.height.saturating_sub(1))
         .flat_map(|y| (1..res.tile_grid.width.saturating_sub(1)).map(move |x| (x, y)))
-        .collect();
+        .collect()
+}
+fn candidates(res: &SimResources, hearth: Tile) -> Vec<Tile> {
+    let mut tiles = interior_tiles(res);
     tiles.sort_by_key(|&(x, y)| (distance((x, y), hearth), y, x));
     tiles
 }
+
+fn bills_locations(
+    res: &SimResources,
+    hearth: Tile,
+    footprint_size: Option<Tile>,
+    locations: Vec<Tile>,
+) -> impl Iterator<Item = Tile> {
+    let mut locations = locations.into_iter();
+    let mut ranked = footprint_size.map(|size| {
+        let decorated: Vec<_> = locations
+            .by_ref()
+            .enumerate()
+            .map(|(ordinal, (x, y))| {
+                let key = {
+                    let work = sim_core::colony::workshop::work_tile_of((x, y), size);
+                    let usable = res.colony.zone_of_tile.contains_key(&work)
+                        || distance(work, hearth)
+                            <= crate::runtime::jobs::hearth::HEARTH_PILE_REACH;
+                    (
+                        !usable,
+                        !crate::runtime::rooms::roofed(res, work),
+                        distance(work, hearth),
+                        distance((x, y), hearth),
+                        y,
+                        x,
+                    )
+                };
+                Reverse((key, ordinal, (x, y)))
+            })
+            .collect();
+        std::collections::BinaryHeap::from(decorated)
+    });
+    std::iter::from_fn(move || match ranked.as_mut() {
+        Some(heap) => heap.pop().map(|Reverse((_, _, tile))| tile),
+        None => locations.next(),
+    })
+}
+
 fn permitted(res: &SimResources, tile: Tile) -> bool {
     !res.steward
         .vetoed(&Target::Tile(tile.0, tile.1), res.current_tick)
@@ -144,6 +188,7 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
             winter_recipe,
             days,
         } => {
+            let mut profile = BillsProfile::new(res.current_tick);
             let mut reserved_house = None;
             let mut wanted = recipes.clone();
             wanted.push((
@@ -151,7 +196,9 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
                 u16::try_from(u32::from(*days).saturating_mul(winter_daily_fuel(res)))
                     .unwrap_or(u16::MAX),
             ));
+            profile.phase(1);
             let mut out = super::production::inputs(world, res, hearth, &wanted);
+            profile.phase(0);
             let mut pending = BTreeSet::new();
             for (recipe, target) in wanted {
                 let Some(def) = recipe.recipe() else {
@@ -192,6 +239,8 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
                     .any(|(_, s)| def.supports_workshop(s.kind))
                     && pending.insert(def.workshop)
                 {
+                    profile.attempt();
+                    profile.phase(2);
                     let reserved_house = reserved_house.get_or_insert_with(|| {
                         sim_core::colony::steward::rules()
                             .ok()
@@ -204,37 +253,33 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
                             .map(|rule| house(world, res, hearth, &rule.action, true).reserved)
                             .unwrap_or_default()
                     });
-                    let mut locations = candidates(res, hearth);
-                    if let Some(colony_rule) = res.rules.colony {
-                        let (size, _, _) = def.workshop.plan(&colony_rule);
-                        locations.sort_by_cached_key(|&(x, y)| {
-                            let work = sim_core::colony::workshop::work_tile_of((x, y), size);
-                            let usable = res.colony.zone_of_tile.contains_key(&work)
-                                || distance(work, hearth)
-                                    <= crate::runtime::jobs::hearth::HEARTH_PILE_REACH;
-                            (
-                                !usable,
-                                !crate::runtime::rooms::roofed(res, work),
-                                distance(work, hearth),
-                                distance((x, y), hearth),
-                                y,
-                                x,
-                            )
-                        });
-                    }
-                    if let Some((x, y)) = locations.into_iter().find(|&t| {
-                        let avoids_house = res.rules.colony.is_some_and(|rule| {
-                            let (size, _, _) = def.workshop.plan(&rule);
+                    profile.phase(3);
+                    let footprint_size = res.rules.colony.map(|rule| def.workshop.plan(&rule).0);
+                    let locations = if footprint_size.is_some() {
+                        interior_tiles(res)
+                    } else {
+                        candidates(res, hearth)
+                    };
+                    profile.candidates(locations.len());
+                    profile.phase(4);
+                    let mut locations = bills_locations(res, hearth, footprint_size, locations);
+                    profile.phase(5);
+                    let location = locations.find(|&t| {
+                        profile.visit();
+                        let avoids_house = footprint_size.is_some_and(|size| {
                             !reserved_house
                                 .contains(&sim_core::colony::workshop::work_tile_of(t, size))
                                 && (t.1..t.1 + size.1).all(|y| {
                                     (t.0..t.0 + size.0).all(|x| !reserved_house.contains(&(x, y)))
                                 })
                         });
-                        avoids_house
-                            && permitted(res, t)
-                            && check_blueprint(res, def.workshop, t.0, t.1).is_ok()
-                    }) {
+                        avoids_house && permitted(res, t) && {
+                            profile.check();
+                            check_blueprint(res, def.workshop, t.0, t.1).is_ok()
+                        }
+                    });
+                    profile.phase(0);
+                    if let Some((x, y)) = location {
                         // One missing workshop per interval avoids overlapping speculative footprints.
                         out.push(Command::PlaceBlueprint {
                             kind: def.workshop,
@@ -308,6 +353,130 @@ struct HousePlan {
     commands: Vec<Command>,
     reserved: BTreeSet<Tile>,
 }
+fn house_capacity(
+    res: &SimResources,
+    bed: sim_core::colony::BlueprintKind,
+) -> (Vec<usize>, Vec<usize>) {
+    let stride = res.tile_grid.width as usize + 1;
+    let size = stride * (res.tile_grid.height as usize + 1);
+    let mut capacity = vec![0usize; size];
+    let mut stock_capacity = vec![0usize; size];
+    let floor = bed.definition().completion == sim_core::colony::content::CompletionCategory::Floor;
+    let mut blocked = vec![false; res.tile_grid.len()];
+    // With no people, cleared trees, and can_hold_items below, these are exactly
+    // the remaining placement-preview blockers. Only Work reservations block.
+    for tile in res
+        .colony
+        .nodes
+        .keys()
+        .copied()
+        .chain(res.colony.workshops.values().map(|shop| shop.work_tile()))
+        .chain(res.colony.site_work_tiles.values().copied())
+        .chain(res.colony.reservations.keys().filter_map(|key| match key {
+            sim_core::colony::ReserveKey::Work(tile) => Some(*tile),
+            _ => None,
+        }))
+        .chain(res.colony.beds.keys().copied().filter(|_| !floor))
+    {
+        if tile.0 < res.tile_grid.width && tile.1 < res.tile_grid.height {
+            blocked[res.tile_grid.idx(tile.0, tile.1)] = true;
+        }
+    }
+    // Exactly camp_reaches' invariant gate; use the building hearth, not the settlement anchor.
+    let camp_region = if res.rules.colony.and_then(|r| r.space).is_some() && res.nav.is_built() {
+        crate::worldgen::colony::hearth(res)
+            .map(|hearth| res.nav.region_of(hearth))
+            .filter(|&region| region != 0)
+    } else {
+        None
+    };
+    for yy in 0..res.tile_grid.height {
+        let mut row = 0usize;
+        let mut stock_row = 0usize;
+        for xx in 0..res.tile_grid.width {
+            let tile = (xx, yy);
+            let stocked = res.colony.zone_of_tile.contains_key(&tile);
+            stock_row += usize::from(stocked);
+            row += usize::from(
+                !stocked
+                    && !blocked[res.tile_grid.idx(xx, yy)]
+                    && (!floor
+                        || res.tile_grid.floor_material[res.tile_grid.idx(xx, yy)].is_none())
+                    && can_hold_items(res, tile)
+                    && !res.steward.vetoed(&Target::Tile(xx, yy), res.current_tick)
+                    && camp_region.is_none_or(|region| res.nav.reaches(region, tile)),
+            );
+            let i = (yy as usize + 1) * stride + xx as usize + 1;
+            capacity[i] = capacity[i - stride] + row;
+            stock_capacity[i] = stock_capacity[i - stride] + stock_row;
+        }
+    }
+    (capacity, stock_capacity)
+}
+
+fn rectangle_count(
+    prefix: &[usize],
+    stride: usize,
+    x: u32,
+    y: u32,
+    width: u32,
+    height: u32,
+) -> usize {
+    let left = x as usize + 1;
+    let top = y as usize + 1;
+    let right = left + width as usize;
+    let bottom = top + height as usize;
+    prefix[bottom * stride + right] + prefix[top * stride + left]
+        - prefix[top * stride + right]
+        - prefix[bottom * stride + left]
+}
+
+fn house_origins(res: &SimResources, width: u32) -> BTreeSet<(u32, u32, u32)> {
+    (1..res.tile_grid.width.saturating_sub(1))
+        .flat_map(|x| (1..res.tile_grid.height.saturating_sub(1)).map(move |y| (x, y, width)))
+        .collect()
+}
+
+type HouseRank = (Reverse<usize>, bool, u32, u32, u32, u32, u32);
+fn house_rank(
+    stock_capacity: &[usize],
+    stride: usize,
+    hearth: Tile,
+    location: (u32, u32, u32, u32),
+) -> HouseRank {
+    let (x, y, width, height) = location;
+    (
+        Reverse(rectangle_count(stock_capacity, stride, x, y, width, height)),
+        !(hearth.0 > x && hearth.0 <= x + width && hearth.1 > y && hearth.1 <= y + height),
+        width * height,
+        distance((x + width / 2, y + height / 2), hearth),
+        y,
+        x,
+        width,
+    )
+}
+
+fn house_locations(
+    locations: Vec<(u32, u32, u32, u32)>,
+    stock_capacity: &[usize],
+    stride: usize,
+    hearth: Tile,
+) -> impl Iterator<Item = (u32, u32, u32, u32)> {
+    let decorated: Vec<_> = locations
+        .into_iter()
+        .enumerate()
+        .map(|(ordinal, location)| {
+            Reverse((
+                house_rank(stock_capacity, stride, hearth, location),
+                ordinal,
+                location,
+            ))
+        })
+        .collect();
+    let mut ranked = std::collections::BinaryHeap::from(decorated);
+    std::iter::from_fn(move || ranked.pop().map(|Reverse((_, _, location))| location))
+}
+
 fn house(
     world: &World,
     res: &SimResources,
@@ -382,37 +551,13 @@ fn house(
     profile.phase(1);
     // Prefix counts make candidate capacity checks constant-time, independent of envelope area.
     let stride = res.tile_grid.width as usize + 1;
-    let mut capacity = vec![0usize; stride * (res.tile_grid.height as usize + 1)];
-    for yy in 0..res.tile_grid.height {
-        let mut row = 0usize;
-        for xx in 0..res.tile_grid.width {
-            let tile = (xx, yy);
-            row += usize::from(
-                !res.colony.zone_of_tile.contains_key(&tile)
-                    && permitted(res, tile)
-                    && can_hold_items(res, tile)
-                    && crate::commands::check_space_after_tree_clear(res, &people, bed, tile, true)
-                        .is_ok(),
-            );
-            let i = (yy as usize + 1) * stride + xx as usize + 1;
-            capacity[i] = capacity[i - stride] + row;
-        }
-    }
+    let (capacity, stock_capacity) = house_capacity(res, bed);
     let free_cells = |x: u32, y: u32, width: u32, height: u32| {
-        let left = x as usize + 1;
-        let top = y as usize + 1;
-        let right = left + width as usize;
-        let bottom = top + height as usize;
-        capacity[bottom * stride + right] + capacity[top * stride + left]
-            - capacity[top * stride + right]
-            - capacity[bottom * stride + left]
+        rectangle_count(&capacity, stride, x, y, width, height)
     };
     profile.phase(2);
     let mut local_origins = BTreeSet::new();
-    let mut origins: BTreeSet<_> = candidates(res, hearth)
-        .into_iter()
-        .map(|(x, y)| (x, y, width))
-        .collect();
+    let mut origins = house_origins(res, width);
     // Adjacent aspect ratios search around service anchors; the original ratio retains its global fallback.
     for candidate_width in [width.saturating_sub(1).max(2), width, width + 1] {
         for anchor in stock.iter().copied().chain(std::iter::once(hearth)) {
@@ -428,7 +573,7 @@ fn house(
             }
         }
     }
-    let mut locations: Vec<_> = origins
+    let locations: Vec<_> = origins
         .into_iter()
         .flat_map(|(x, y, width)| {
             let mut heights = Vec::new();
@@ -453,22 +598,7 @@ fn house(
         .collect();
     profile.phase(3);
     profile.candidates(locations.len());
-    locations.sort_by_cached_key(|&(x, y, width, height)| {
-        (
-            Reverse(
-                stock
-                    .iter()
-                    .filter(|&&tile| inside(tile, x, y, width, height))
-                    .count(),
-            ),
-            !inside(hearth, x, y, width, height),
-            width * height,
-            distance((x + width / 2, y + height / 2), hearth),
-            y,
-            x,
-            width,
-        )
-    });
+    let locations = house_locations(locations, &stock_capacity, stride, hearth);
     profile.phase(4);
     let camp_radius = sim_core::colony::steward::rules()
         .ok()
@@ -1333,3 +1463,82 @@ mod shared_home_tests {
 #[cfg(test)]
 #[path = "bills_optimization_tests.rs"]
 mod bills_optimization_tests;
+
+// Optional planner-only telemetry; no clock/counter affects returned commands.
+struct BillsSample {
+    tick: u64,
+    start: std::time::Instant,
+    last: std::time::Instant,
+    phase: usize,
+    times: [u64; 6],
+    attempts: usize,
+    candidates: usize,
+    visited: usize,
+    checks: usize,
+}
+struct BillsProfile(Option<BillsSample>);
+impl BillsProfile {
+    fn new(tick: u64) -> Self {
+        if std::env::var("WORLDSIM_MUX2_PROFILE").as_deref() != Ok("1") {
+            return Self(None);
+        }
+        let now = std::time::Instant::now();
+        Self(Some(BillsSample {
+            tick,
+            start: now,
+            last: now,
+            phase: 0,
+            times: [0; 6],
+            attempts: 0,
+            candidates: 0,
+            visited: 0,
+            checks: 0,
+        }))
+    }
+    fn phase(&mut self, next: usize) {
+        if let Some(sample) = self.0.as_mut() {
+            sample.close();
+            sample.phase = next.min(sample.times.len() - 1);
+        }
+    }
+    fn attempt(&mut self) {
+        if let Some(sample) = self.0.as_mut() {
+            sample.attempts += 1;
+        }
+    }
+    fn candidates(&mut self, count: usize) {
+        if let Some(sample) = self.0.as_mut() {
+            sample.candidates += count;
+        }
+    }
+    fn visit(&mut self) {
+        if let Some(sample) = self.0.as_mut() {
+            sample.visited += 1;
+        }
+    }
+    fn check(&mut self) {
+        if let Some(sample) = self.0.as_mut() {
+            sample.checks += 1;
+        }
+    }
+}
+impl BillsSample {
+    fn close(&mut self) {
+        let now = std::time::Instant::now();
+        self.times[self.phase] = self.times[self.phase].saturating_add(
+            u64::try_from(now.duration_since(self.last).as_nanos()).unwrap_or(u64::MAX),
+        );
+        self.last = now;
+    }
+}
+impl Drop for BillsProfile {
+    fn drop(&mut self) {
+        let Some(sample) = self.0.as_mut() else {
+            return;
+        };
+        sample.close();
+        let total =
+            u64::try_from(sample.last.duration_since(sample.start).as_nanos()).unwrap_or(u64::MAX);
+        eprintln!("MUX2_BILLS_PROFILE {{\"tick\":{},\"total_ns\":{},\"other_ns\":{},\"inputs_ns\":{},\"reserve_ns\":{},\"generation_ns\":{},\"ranking_ns\":{},\"search_ns\":{},\"attempts\":{},\"candidates\":{},\"visited\":{},\"blueprint_checks\":{}}}", sample.tick, total, sample.times[0], sample.times[1], sample.times[2], sample.times[3], sample.times[4], sample.times[5], sample.attempts, sample.candidates, sample.visited, sample.checks);
+    }
+}

@@ -1392,7 +1392,7 @@ fn sleep_due(world: &World, res: &SimResources, entity: Entity) -> bool {
     let rest = n::person_night_rest(
         res.rules.agent.night_rest,
         res.rules.agent.temperament,
-        temperament.as_ref().map(|value| &**value),
+        temperament.as_deref(),
         day_tick,
     );
     let threshold = rest.map_or(n::FATIGUE_THRESHOLD, |rule| rule.fatigue_threshold);
@@ -1400,7 +1400,7 @@ fn sleep_due(world: &World, res: &SimResources, entity: Entity) -> bool {
     n::actionable_need_with_fatigue_threshold(
         None,
         None,
-        sleep.as_ref().map(|value| &**value),
+        sleep.as_deref(),
         n::NeedAvailability {
             food: false,
             water: false,
