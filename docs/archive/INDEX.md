@@ -66,4 +66,22 @@ Not deleted material: the art track's work lives on side branches that are never
 | `v8/art-trial4` | `9f9c6d6b` | ART-TRIAL4: code-drawn pawns (`route_p`: head, capsule body, hair, top and item layers from a data spec, 4× raster + ink pass), template v2, PawnLab; `docs/v8/arttrial4/` (report `TRIAL4_REPORT.md`, `TRIAL4_DECISIONS.md`, `EVIDENCE_INDEX.md`); raw data in `/Users/rexxa/work/arttrial4-data/` | done, not adopted (S1, D1, P1 PASS; R1 readability and S2 revision limit FAIL); owner rejected the look and parked people art (2026-10-22); `route_p` is the placeholder |
 
 
+## Later art snapshots and adoption boundaries (2026-10-25)
+
+These are locally verified immutable report/decision objects, not a new remote publication audit. PROD1/2/3 share a branch but name different historical snapshots. Later adoption does not retroactively erase original FAIL, PARTIAL, NOT_VERIFIABLE or an explicit owner waiver. Read a pinned document with `git show <fullsha>:<path>`.
+
+| Branch / pass | Snapshot | Report / decisions | Original result and later boundary |
+|---|---|---|---|
+| `v8/art-trial5` / ART-TRIAL5 | `9122b9b1c5e4c28d8dd8ff8a0413bd85963a225d` | `docs/v8/arttrial5/TRIAL5_REPORT.md` / `docs/v8/arttrial5/TRIAL5_DECISIONS.md` | FAIL; 144회, 수락 시트/납품 프레임0. I-1 생산 승인과 최종 채택은 별개. |
+| `v8/art-prod1` / ART-PROD1 | `eb428ce232df77c720eb1cd756e43a891d9dd8a9` | `docs/v8/artprod1/PROD1_REPORT.md` / `docs/v8/artprod1/PROD1_DECISIONS.md` | FAIL / 미채택; 13/36(성인13/18·어린이0/18), S1/S2/R1/P1 실패. |
+| `v8/art-prod1` / ART-PROD2 | `c63eb72b198f7cd213be5bb5dfd0fe4cc2339b73` | `docs/v8/artprod2/PROD2_REPORT.md` / `docs/v8/artprod2/PROD2_DECISIONS.md` | S1 FAIL / 미채택26/36; R1/P1 통과가 전체 채택은 아님. |
+| `v8/art-prod1` / ART-PROD3 | `159ef0f9a1cfb7ee9e6005e85d5388d677e07fa8` | `docs/v8/artprod3/PROD3_REPORT.md` / `docs/v8/artprod3/PROD3_DECISIONS.md` | D4 오너 면제로 route I 채택34/36; 성인16/18의 원래17 기준 FAIL과 재실행 byte 차이 보존. |
+| `v8/art-env1` / ART-ENV1 | `429a18000266483ee40d756840d68b08840313c5` | `docs/v8/artenv1/ENV1_REPORT.md` / `docs/v8/artenv1/ENV1_DECISIONS.md` | PARTIAL / 전체 PASS 불가; 장면 가독성 FAIL, provenance PARTIAL, 게임 통합·오너 승인 아님. |
+| `v8/art-struct` / ART-STRUCT | `b6baa73f1f64983fee6aea08ed783a038ba2a4ce` | `docs/v8/artstruct/STRUCT_REPORT.md` / `docs/v8/artstruct/STRUCT_DECISIONS.md` | 원 보고서 오너 판단 대기. 이후 M-ART2 D2는 STRUCT 방향 채택 기록; 전 자산·기존 수치 FAIL의 면제 아님. |
+| `v8/art-polish` / ART-POLISH | `18ac947b45963ecb54e2c4a2b1b7692d13ecfafb` | `docs/v8/artpolish/POLISH_REPORT.md` / `docs/v8/artpolish/POLISH_DECISIONS.md` | 오너 판단 대기·아이템 게이트 FAIL; 통합 타입 검사0errors/14warnings NOT_GREEN. 이후 M-ART2 D2의 선택적 사용 별도. |
+| `v8/art-polish2` / ART-POLISH2 | `c8ed86087c90ed5429716713e930cc5f6a9e1332` | `docs/v8/artpolish2/POLISH2_REPORT.md` / `docs/v8/artpolish2/POLISH2_DECISIONS.md` | 게시 완료 / PARTIAL_FAIL / 원 보고서 오너 판단 대기. 최종 맹검 FAIL·마스크 NOT_VERIFIABLE 보존; 이후 M-ART2 D2 top(b)/face v1 선택 별도. |
+| `v8/art-trees` / ART-TREES | `f182769fe06b1cb60105e4d0bf127b6524277838` | `docs/v8/arttrees/TREES_REPORT.md` / `docs/v8/arttrees/TREES_DECISIONS.md` | 원 보고서 오너 판단 대기; 42tests/0errors/62warnings, 스타일 음성대조 실패. M-ART2.1 D1/D4 게임 도입과 원 아트 판정 분리. |
+
+Follow-up selective adoption: [M-ART2 D2](../v8/m_art2/MART2_DECISIONS.md) and [M-ART2.1 D1/D4](../v8/m_art2_1/MART21_DECISIONS.md). These decisions do not waive every original asset or numerical failure. Commit date and later integration/owner-decision date are distinct; existing HISTORY dates are not rewritten from commit timestamps.
+
 M-UX replaces `docs/images/mart21_contact_sheet.png` with `mux_contact_sheet.png`; the former sheet remains at commit `67a6232ab41a4bf5051b11303bcac97543b111f0` (`git show <sha>:docs/images/mart21_contact_sheet.png`). Its original manifest and pass report remain in `docs/v8/m_art2_1/`. Historical comparison/season sheets remain because their reports still use them.

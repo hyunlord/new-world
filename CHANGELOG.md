@@ -587,3 +587,7 @@ are gone from the bridge.
 - `sim-test`: 202 → 110 files (world-model recorder, ablation scenes, pass scaffolding, version-delta tests); `sim-bridge` test fixtures of 135 MB (art kernels).
 - Assets: 888 → 198 files (15.0 → 12.9 MiB); shaders 11 → 3; scenes 3 → 1; localization 47 → 8 files and 5,287 → 156 keys (the Fluent sources and the key-owner policy).
 - Whole tree: 20,299 files / 2,533 MiB → 714 files / 18.5 MiB (at the gate commit `672fffef`). Everything removed is at tag `v7-final-art`.
+
+### MUX Stage C records (2026-10-25)
+- Added complete311-row issue history and25 linked lessons; historical gate/report and art adoption boundaries remain distinct.
+- Changed seven named issue statuses after published B proof;105 unresolved rows await GitHub mirrors. C cleanup safety passed at93a99ce16.

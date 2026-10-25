@@ -73,6 +73,27 @@
 - WM-5 · 10-18~19 · `0f5ee066` — CRN/CT 저자 방식 재학습, 순차 다중 개입 분할; 결과 없음.
 - WM-6 · 10-20~ · `58cf8611` (wip `f096e13a`) — v2x 기록(세계 1,600, 일화 7,576), 학습 곡선, 개입 전 관측값 비선형 모델; 사전등록 판정 "관측값으로 학습 가능"(closure 0.449). DGX에서 계속.
 
+## 과거 V8 gate 객체 포인터
+
+아래 SHA는 로컬 commit 객체로 해소한 당시 gate 대상이다. 보고서 링크는 현재 보존된 보고서이며, 보고서 작성이 gate 이후인 경우 그 gate commit 안에는 보고서 파일이 없다. gate SHA와 보고서 blob의 시점을 동일시하지 않는다. 결과·종료 시각은 각 보고서의 기록이며 재실행·원격 최신 게시·오너 수락 확인이 아니다. 이후 실패·면제·미검증 조건은 원 보고서 그대로 유지한다.
+
+| 구간 | full commit | 원 보고서 |
+|---|---|---|
+| V8-0 | `672fffefc6897993dd6f2db20570f7740c5b7727` | [보고서](v8/V8_0_REPORT.md) |
+| M1 | `6ea195691ad1d65d976007c7e7826732d1581ff6` | [보고서](v8/m1/M1_REPORT.md) |
+| M1-ART | `2f7016216ecad63b37777a49b003e7d9efca11f1` | [보고서](v8/m1art/ART_REPORT.md) |
+| V8-PLAY | `761fd5e25548eab605348ce4e59d03d5e912bb9f` | [보고서](v8/play/PLAY_REPORT.md) |
+| M1.5 | `cdd4a775027fcf10600afa709fa38e90b2e2b0df` | [보고서](v8/m1_5/M1_5_REPORT.md) |
+| M2 | `c0af2eb74c12afa3d4b6a3d0926efcb16fbed599` | [보고서](v8/m2/M2_REPORT.md) |
+| M3 | `bf16de16fa6de830c296108949d6e6ed083b0e97` | [보고서](v8/m3/M3_REPORT.md) |
+| M4 | `941410fc3c8094c36366653952d9c464b4f957b3` | [보고서](v8/m4/M4_REPORT.md) |
+| M5 | `ef1bf3b78411343335b5ff6f7150f4a6e4a377d3` | [보고서](v8/m5/M5_REPORT.md) |
+| M5.5 | `ae443aa4a498680ef56211faa6b993533019a6d2` | [보고서](v8/m5_5/M55_REPORT.md) |
+| M-ART2 | `32cd61a77cb26886be5f13b9924fa55b7d64cbe0` | [보고서](v8/m_art2/MART2_REPORT.md) |
+| M-ART2.1 | `3a51636df1eb4ea06fdac870fa7f5ab86de03b47` | [보고서](v8/m_art2_1/MART21_REPORT.md) |
+| V8-PLAY2 | `72d2db1ffff59490f6212e55a6eec7010e7b5bd5` | [보고서](v8/play2/PLAY2_REPORT.md) |
+| M-UX A | `ca9f531ca6ef700ca223d99dba14d834b94b45da` | [보고서](v8/mux/STAGE_A_REPORT.md) |
+
 ## V8 결정 (2026-10-20)
 
 - 2026-10-20 — 오너가 방향을 바꿈: 신 게임에서 드워프 포트리스식 석기시대 정착지 경영 시뮬레이션으로. 원본 `docs/v8/V8_DIRECTION.md`, 저장소판 [VISION.md](VISION.md), 결정 [decisions/](decisions/). 연구 트랙(`game_v19`, WM)은 영향 없음.
@@ -97,6 +118,10 @@
 
 - 2026-10-21 — M1 화면을 목업처럼 다시 그렸다: 코드로 그린 시트 하나(`tools/v8/gen_tiles.py`), 덩어리진 숲, 오두막·움막·통나무 더미, 테두리 있는 사람과 잠자는 자세 (`2f701621`). 시뮬레이션은 그대로(identity 통과).
 - 2026-10-21 — 지움: 임시 타일셋 `assets/v8/temp/`(2파일)와 `tools/v8/gen_temp_tiles.py`(540줄), 커밋 `bba3110e`(V8-PLAY)에 남아 있다.
+
+## V8-PLAY 실행과 관찰 (2026-10-21)
+
+- 2026-10-21 — 실행기·버전 선택·창 캡처와 플레이 관찰을 정리했다. 게임 코드는 바꾸지 않았다. gate `761fd5e25548eab605348ce4e59d03d5e912bb9f`에서 11:11:32–12:07:06 KST,21단계 status0을 기록했다([보고서](v8/play/PLAY_REPORT.md), [결정](v8/play/PLAY_DECISIONS.md)). 보고서의 UI 문제와 밤/완성 시각 차이는 유지하며 모든 화면 문제 해결을 뜻하지 않는다.
 
 ## M1.5 달력과 계약 (2026-10-22)
 
@@ -140,6 +165,9 @@
 - 2026-10-23 — 아트 기록: ART-TRIAL5(`v8/art-trial5` `9122b9b1`)가 실패로 끝났다 — 오너가 고른 I-1 모습으로 144회 생성, 수락 0; 사람 그림은 계속 보류.
 - 2026-10-23 — 아트 기록 정정(M5 Part 0): ART-PROD1(`v8/art-prod1` `eb428ce2`)이 경로 I(전신 시트)로 성인 13/18 모습을 수락했다(어린이 0/18, 잠자는 자세 규칙에서만 실패; 판정 FAIL이라 표준 채택은 아직). "사람 그림 보류"를 철회한다 — 사람은 경로 I이고 ART-PROD2가 마무리 중이다.
 - 2026-10-23 — 지움: `docs/images/m3_contact_sheet.png`(1장), M4 대조 시트로 교체; M3 시트는 M4 전 `v8/main`(`5da079d3`)에 있다.
+
+## M5 이야기꾼과 생존 압력 (2026-10-23)
+
 - 2026-10-23 — (게이트 통과 커밋 `ef1bf3b7`) 바깥에서 압력이 온다(ADR 0027): 이야기꾼이 계절마다 한파·가뭄·늑대·병을 정해 보낸다(처음 12일과 첫 겨울 이틀은 봐 준다). 한파에는 장작이 두 배로 들고, 가뭄에는 풀이 덜 자라며, 병은 같은 침실에서 옮는다.
 - 2026-10-23 — 늑대가 오면 사람을 징집(D 키)해 창으로 맞선다(ADR 0028); 사슴 무리를 사냥해 고기와 가죽을 얻는다. 가죽은 건조대에서 칼(부싯돌 날, 8번 쓰면 닳음)로 손질해 가죽 옷이 되고, 추위를 덜 타는 사람이 아니라 가장 추위를 타는 사람부터 입는다(ADR 0029).
 - 2026-10-23 — 사람마다 기분이 생겼다(ADR 0030): 춥게 잠, 배고픔, 가족의 죽음, 압력이 기분을 내리고, 우울하면 다투며, 아주 나쁘면 하루 일손을 놓는다. 연대기의 다툼·싸움·실의·압력 끝에는 "→ 왜?"가 붙어 원인을 따라간다.
@@ -191,7 +219,7 @@
 
 - 2026-10-25 — M-UX Stage A gate2 기술 통과(p12 `f38d488f43156145a44898671e77b26b3ee6c496`, clean,09:07:08 KST,exit0):35/35단계 exit0, debug/release 각각2060통과·0실패·1제외. gate1 실패는 보존하고 ISS031/032를 p12 수정·gate2로 닫았다. 공개28건은 구현 결함 범위에서 fixed,003/006/009/030은 open; 물리NOT_VERIFIED·A8FAILED·잔여지연은 유지한다. 문서 준비 시점 p13 보고 HEAD gate3·게시 대기이며 미래 통과를 주장하지 않는다(영수증 `/Users/rexxa/work/mux-data/gate-stage-a-2/gate.txt`, [이슈](ISSUES.md)).
 
-- 2026-10-25 — M-UX Stage A p13 `ca9f531ca6ef700ca223d99dba14d834b94b94b45da` clean gate3가10:29:24 KST35/35 exit0으로 종료했고10:30:05 KST v8/wip·v8/main fast-forward 게시를 확인했다. 이전 실패·A8FAILED·물리입력 미검증은 유지한다. Stage B는 데이터 레지스트리와 명시적 저장 마이그레이션 통합 중이며 core372·save15·역사적 저장연속실행3 시험 통과는 부분 증거다. 전체 안전망·B3·Stage B 게이트/게시 대기([D36](v8/mux/MUX_DECISIONS.md)).
+- 2026-10-25 — M-UX Stage A p13 `ca9f531ca6ef700ca223d99dba14d834b94b45da` clean gate3가10:29:24 KST35/35 exit0으로 종료했고10:30:05 KST v8/wip·v8/main fast-forward 게시를 확인했다. 이전 실패·A8FAILED·물리입력 미검증은 유지한다. Stage B는 데이터 레지스트리와 명시적 저장 마이그레이션 통합 중이며 core372·save15·역사적 저장연속실행3 시험 통과는 부분 증거다. 전체 안전망·B3·Stage B 게이트/게시 대기([D36](v8/mux/MUX_DECISIONS.md)).
 
 - 2026-10-25 — M-UX Stage B core `e90b7bb86` 커밋: items/blueprints/recipes와 명시적 카탈로그·format8 이행. 최종 safety2 기준선228748값 차이0·OFF9요약·ON8시드 요약/명령8개 literal 동일. 미게시이며 후속 압력·동물/format9/B3 검증 중: 과거 저장4·novel illness1·windowed pack40/0 통과와 시각 실패 수정 기록은 전체 Stage B gate를 대신하지 않는다. 공유 시험 설정 누락 ISS283도 별도 보존([검토](v8/review/CODE_REVIEW_2026-10.md)).
 - 2026-10-25 — M-EXT 압력·동물 데이터와 일곱 계열 실제 확장 시험 단위 검증: 기준선228748값 차이0·OFF9요약·ON8시드 요약/명령8개 동일, 과거 저장4·core378·새 질병/포식자 실제 경로 통과. 창 UI284·팩40·격리M543·배율220 검사 통과; 전체 B 게시와 기존 시각·설정 사고 해결은 별개([검증](v8/mux/B_ECOLOGY_VERIFICATION.md), D37).
@@ -216,3 +244,5 @@
 
 - 2026-10-25 — MUX B gate2 `5e20c65a1d52ba2a96a6e524614d3a7679f31a44`,18:49:48–19:54:54 KST,36/36 status0; debug2228/0/5·release2227/0/5(로그 집계). wip/main fast-forward 및 원격 SHA 일치를 확인했다. 첫 gate31/36 FAIL과 A8 실패는 보존한다 ([Stage B 보고](v8/mux/STAGE_B_REPORT.md)).
 - 2026-10-25 — MUX C 후보 삭제: 사용하지 않는 wood frame helper8개와 ArtSpriteLibrary127줄·UID. 원본은 게시 B `5e20c65a1d52ba2a96a6e524614d3a7679f31a44`에 남는다. 실제 daylight·UI15atlas연결·자산·V7은 보존하며 C 안전망/전체 gate 대기 ([검증](v8/mux/C_CLEANUP_VERIFICATION.md)).
+
+- 2026-10-25 — MUX C 정리 커밋 `93a99ce161ea51d7a729e918698b87238995d820`의 원본 identity228748값 차이0·Chronicle64·OFF/ON20비교 동일을 확인했다. 이슈311건과 교훈25개를 통합하며 과거 FAIL·미확보 증거·오너 판단 대기를 보존한다. GitHub 등록과 전체 C gate·게시 대기.
