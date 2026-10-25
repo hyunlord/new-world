@@ -65,3 +65,21 @@ Additional review exposed stock matching downgrading a constrained defender to a
 The documentation system-table generator implicitly invoked a release build in the child lane. It finished before these measurements; no diagnostic2 performance capture overlapped a build. Future table refreshes use the already-captured systems JSON.
 
 D8 verification update: rank-constrained feasible matching passes17 defence tests and2,058 exhaustive small-graph optima plus reversed-input determinism; the same results pass after splitting the pure solver into a bounded child module. Raw logs defence-green4.log and defence-green5-split.log. The slow planner optimization has a separately executed frozen eager-reference comparison before edits (16generated fixtures); it is not part of this policy correction.
+
+## D9 — Calibration1 and independent visual findings stay visible
+
+Calibration1 was frozen before execution (policy481b486880a2b211750e16bf1ea5a95b4f14e99ac0d71b1541cfa1616b9863af, source7e8bdfc50 plus recorded preserving Bills optimization, probe b29ec05f044d0532fd44c96d983a4dd5a06ec2eba89b5ed293b2a70088f477e8). The complete8×48-day ON run has no source/binary drift: stock8/8, physical housing5/8, winter8/8, fuel2/8, alive8/8, wolf-death bar8/8, ledger8/8. It FAILS the aggregate calibration bars and is retained. No held-out world has been accessed.
+
+Fuel splits into protected exposed2, depleted exposed2 (seeds3/5), and not-exposed4. Prior MUX decision D10 and original scorer explicitly require cold-snap exposure; keep that rule and fixed denominators. Do not count absence as protection, force events, or change schedules. Actual depleted worlds are near-total fuel use, distinct from historical90loose fuel: further diagnosis is required. Same frozen-policy diagnostic reruns of3/5 with saves are provenance investigations, not hidden tuning rounds.
+
+Housing1/4/5 passes old natural-enclosure shelter checks but never the independent physical-wall oracle. Root new regressions fail2/2 before policy repair. Correct housing selection/counting rather than weakening the required oracle. This is another intentional policy change for the next allowed calibration round.
+
+Candidate3 visibility passes all8 real-GPU scenes with unchanged inputs and half minima109/78/136/84, quarter minima318/384. Independent visual review remains REVISE: coincident people share one apparent silhouette despite each passing attribution. Add a truthful overlap-count/selection cue without moving their anchors, replacing figures or crediting changing badge pixels. UI independent review also found readable-layout but unknown `?` cause labels and insufficient on-screen Look coverage at1.25; fixes await recapture. Numeric passes do not erase either visual finding.
+
+Wall preparation cache passes exact reference pixel comparisons for unchanged/tint/parameter/reload/invalidation cases. Diagnostic3 has two remaining >50ms frames: Steward96.716ms and an unattributed77.887ms frame whose native/ground/building CPU spans are small. Its3.758s wall warmup occurred before the measurement clock because Node.is_processing ignored disabled process mode. Preserve the failed protocol; require effective active mode and measured-warmup validation next. No final performance acceptance is claimed.
+
+## D10 — Isolate the preserving planner optimization
+
+Before physical housing and sleep-eligibility changes, root froze both probe binaries around only the Bills lazy reservation and cached-key changes. Full independent captures both validate9OFF fixtures and baseline determinism; compare reports228,748 shared values/0 differences/0 one-sided paths,64 Chronicle files equal, raw digests equal, and all9 colony summaries byte-identical. External steward-optimization-safety-{before,after,compare} retain inputs, binaries and every output.
+
+The p4 index uses precisely that frozen production planning source; later housing edits stay in the working tree for a separate intentional-policy commit. The pre/post reference test source is retained in calibration1's frozen source and is extracted into a reusable child module in the next commit. No working-tree changes are discarded. Optional phase telemetry and renderer warmup remain separate pending runtime work; the performance bar is not claimed.

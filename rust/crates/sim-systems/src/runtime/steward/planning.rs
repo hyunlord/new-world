@@ -141,16 +141,7 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
             winter_recipe,
             days,
         } => {
-            let reserved_house = sim_core::colony::steward::rules()
-                .ok()
-                .and_then(|data| {
-                    data.rules.iter().find(|rule| {
-                        matches!(rule.action, Action::House { .. })
-                            && res.steward.scope.permits(rule.scope)
-                    })
-                })
-                .map(|rule| house(world, res, hearth, &rule.action, true).reserved)
-                .unwrap_or_default();
+            let mut reserved_house = None;
             let mut wanted = recipes.clone();
             wanted.push((
                 *winter_recipe,
@@ -198,10 +189,22 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
                     .any(|(_, s)| def.supports_workshop(s.kind))
                     && pending.insert(def.workshop)
                 {
+                    let reserved_house = reserved_house.get_or_insert_with(|| {
+                        sim_core::colony::steward::rules()
+                            .ok()
+                            .and_then(|data| {
+                                data.rules.iter().find(|rule| {
+                                    matches!(rule.action, Action::House { .. })
+                                        && res.steward.scope.permits(rule.scope)
+                                })
+                            })
+                            .map(|rule| house(world, res, hearth, &rule.action, true).reserved)
+                            .unwrap_or_default()
+                    });
                     let mut locations = candidates(res, hearth);
                     if let Some(colony_rule) = res.rules.colony {
                         let (size, _, _) = def.workshop.plan(&colony_rule);
-                        locations.sort_by_key(|&(x, y)| {
+                        locations.sort_by_cached_key(|&(x, y)| {
                             let work = sim_core::colony::workshop::work_tile_of((x, y), size);
                             let usable = res.colony.zone_of_tile.contains_key(&work)
                                 || distance(work, hearth)

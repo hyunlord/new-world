@@ -16,6 +16,7 @@ tags `v7-final-sim` and `v7-final-art`.
 - Optional native/script frame profiling, including system/prune/snapshot-freeze timing; simulation never reads it. The original debug baseline fails the stall bar at both zooms; no improvement claim yet.
 
 ### Changed
+- Avoid repeated house reservation search after workshops exist and cache deterministic workshop sort keys. Frozen before/after binaries preserve all228,748 baseline values,64 Chronicle files and all9 steward-OFF colony summaries;16 controlled reference scenarios also match. This does not establish the final frame-time bar.
 - Flight chooses reachable safe roofs using actual routes and speeds, rechecks every30ticks, and uses a defended hearth only as fallback. Pending bites cannot kill a person after roof entry. Flee/wildlife24 focused tests pass.
 - Fuel hauling precedes competing work at the worker's same Haul priority while preserving higher priorities, Haul=0 and existing jobs. Historical seed5 reproduced90loose fuel with reachable capacity and repeated Hunt/Chop selection; expanded regressions change4fail/7pass to11pass.
 - These are intentional colony-policy changes: expect different orders, survival, fuel stocks and colony fingerprints, including OFF colonies affected by flight/hauling. Baseline identity and broader comparisons remain pending; do not call them behavior-preserving.
