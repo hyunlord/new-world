@@ -1,6 +1,6 @@
 # Snapshot schema — the bridge's read surface
 
-Schema version: 10 — M-UX Stage B adds pressure/animal catalogue metadata, actual pressure banner identity and species presentation columns. Schema 9 introduced the immutable core catalogue, factory preflight, full-width content columns and mechanical door flags. Catalogue DTO version remains 1; it is independent of this document version.
+Schema version: 11 — M-UX2 adds independent defence state/command and the optional native timing diagnostic. Version 10 — M-UX Stage B adds pressure/animal catalogue metadata, actual pressure banner identity and species presentation columns. Schema 9 introduced the immutable core catalogue, factory preflight, full-width content columns and mechanical door flags. Catalogue DTO version remains 1; it is independent of this document version.
 
 History: 8 (M-UX adds `get_ui_facts`, `get_steward`, and the logged `cmd_set_steward` mode command. 7 — M-ART2: the snapshot's appearance columns `sexes`, `look_ids`, `variants` from `collect_appearance` (`ffi/appearance.rs`, rule file `rust/crates/sim-bridge/data/appearance.ron`) and `get_space`'s `wall_materials`, `wall_styles`, `wall_categories`, `floor_materials`, `floor_styles`, `floor_categories`; no getter added or removed. 6 — M5.5: the neighbour reads `get_neighbours`, `get_wave`, `get_caravan`, the snapshot's `fleeing`, `get_agent_m5`'s `fleeing`, `get_year_summary`'s `migrants_joined`, `trades`, `eurekas` and chronicle kinds 38–44; M5: the story, animal and mood reads `get_story`, `get_animals`, `get_agent_m5`, `get_drafted`, `get_chronicle_why`, `get_year_summary`, `get_teach_suggestion`, the snapshot's `tops`, `mood_bands`, `drafted`, `sick` and the chronicle rows' `index` and links; M4 the knowledge reads `get_tech`, `get_tech_node`, `get_agent_knowledge`, `get_teach_orders`, `get_knowledge_waits`, `get_space`'s fords and the new item, recipe, blueprint, job and chronicle codes; M3 added built space, rooms, the place preview and the overlay's `item_covered`; M2 the economy reads and the overlay's node, mark and quality columns).
 
@@ -1432,12 +1432,15 @@ provenance, never inferred task completion. Rules are loaded from data; missing 
 | key | type | meaning |
 |---|---|---|
 | `enabled` | bool | automatic planning enabled |
+| `defence_enabled` | bool | independent defence policy toggle; defaults true, requires overall enabled |
+| `defence_count` | int | actual accepted count in the most recent recruitment batch |
+| `defence_active_count` | int | currently steward-owned defender ids, saturated at i64 maximum |
 | `scope` | int | 0 all, 1 housing, 2 food |
 | `sequence` | int | accepted automatic-action sequence, saturated at i64 maximum |
 | `last_rule` | int | most recent successful rule id, -1 before any action |
 | `last_tick` | int | tick of last accepted action, saturated at i64 maximum |
 | `last_label` | String | localization key for last rule, empty if unavailable |
-| `accepted_rules` | PackedInt32Array | distinct rule ids with retained accepted-order provenance, ascending |
+| `accepted_rules` | PackedInt32Array | distinct rule ids with retained accepted-order provenance, including defence after a nonzero recruitment batch, ascending |
 | `rules` | Dictionary[int,String] | configured rule id → localization key, inserted in ascending id order; dynamic numeric keys |
 
 ### `cmd_set_steward(on: bool, scope: int)`
@@ -1450,6 +1453,35 @@ without submitting a command. The result is the shared `result_to_dict` contract
 | `accepted` | bool | command accepted |
 | `count` | int | command result count |
 | `reason` | String | empty on success, rejection reason otherwise |
+
+### `cmd_set_steward_defence(on: bool)`
+Mode command, not a read. `submit_set_steward_defence` forwards appended
+`Command::SetStewardDefence { on }` through the ordinary command log. It changes
+only the independent defence toggle, leaving the scope codes 0/1/2 unchanged.
+Returns the shared `{accepted: bool, count: int, reason: String}` command result.
+
+### `mux2_native_timings()` — optional diagnostic
+Read-only profiling method in `ffi/node.rs`, enabled only when the node is created
+with `WORLDSIM_MUX2_PROFILE=1`. This is not a simulation policy API or a cached
+`get_*` snapshot. Disabled returns only `status="DISABLED"`. Enabled returns:
+
+| key | type | meaning |
+|---|---|---|
+| `status` | String | `"MEASURED"` when instrumentation is enabled |
+| `epoch` | int | counter generation; increments on engine replacement or system-count reset |
+| `frame` | int | Godot process frame last sampled; -1 before first process |
+| `frame_ticks` | int | ticks executed in that process frame |
+| `executed_ticks` | int | cumulative profiled ticks in this epoch |
+| `totals_ns` | Dictionary[String,int] | cumulative nanoseconds: `process`, `tick`, `prune`, `process_residual` (process minus tick), `tick_residual` (tick minus systems and prune); subtraction saturates at zero |
+| `systems_ns` | Dictionary[String,int] | runtime system name to cumulative measured nanoseconds |
+
+Difference counters only within one epoch. Instrumentation does not become save
+state or a simulation input; residual time is unattributed, not a claim about GC
+or a particular script. Timings cover the native process loop, not all rendering.
+
+M-UX2 appends Chronicle kind **46 `StewardDefence`**: `value` is the actual
+new recruitment batch count, `cause` is the data-defined rule id. Existing kind
+45 `StewardAction` continues to carry its monotonically increasing sequence.
 
 ## Text renderer glyphs
 

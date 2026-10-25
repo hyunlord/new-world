@@ -11,7 +11,7 @@ tags `v7-final-sim` and `v7-final-art`.
 - Records: scope, frozen dependency input and unchanged acceptance bars are in `docs/v8/mux2/MUX2_DECISIONS.md`. Prior M-UX failures remain historical evidence.
 
 ### Added
-- Independent default-on steward defence, fast approach response, player-intent protection and deterministic physical-weapon assignment. Save11 freezes v7–10 layouts; Chronicle46 carries actual batch count. Focused defence16, fingerprint1, actual v10 migration1 covering4saves and legacy-wire1 pass; full gate and natural-world acceptance remain pending.
+- Independent default-on steward defence, fast approach response, player-intent protection and deterministic physical-weapon assignment. Save11 freezes v7–10 layouts; Chronicle46 carries actual batch count. Focused defence17 plus2,058 exhaustive matching cases, fingerprint1, actual v10 migration1 covering4saves and legacy-wire1 pass; full gate and natural-world acceptance remain pending.
 - Opt-in immutable M-UX2 observation, exact transient fatal-animal provenance, physical-wall housing checks and paired ON/OFF scorer. Observer4 and scorer14 focused tests pass. Both32-world arms must match frozen provenance; only ON thresholds govern acceptance. No held-out results yet.
 - Optional native/script frame profiling, including system/prune/snapshot-freeze timing; simulation never reads it. The original debug baseline fails the stall bar at both zooms; no improvement claim yet.
 

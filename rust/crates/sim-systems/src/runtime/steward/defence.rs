@@ -1,6 +1,7 @@
 //! Priority 122, interval 1: react to approaching predators before civilian flight.
-//! Reads: people, health, weapons, wildlife and defence policy. Writes: ordinary
-//! draft commands, owned defender ids and quiet-window state. Events: StewardDefence.
+//! Reads: people, health, weapons, wildlife and defence policy.
+//! Writes: ordinary draft commands, owned defender ids and quiet-window state.
+//! Events: StewardDefence.
 use crate::runtime::jobs::items::chebyshev;
 use hecs::World;
 use sim_core::chronicle::{ChronicleEntry, ChronicleKind};

@@ -267,3 +267,11 @@ A successful create may precede list visibility. Durably record the pending iden
 
 ### Bounded benchmark diagnosis
 Quiet admission below the existing load ceiling is not proof of stable execution conditions, and a later step's load is not the failed benchmark's load. Preserve the exact failing gate, source/lock hashes and every per-repeat value. Before a diagnostic, register a fixed interleaved schedule, binary hashes and comparison scope; keep every run, including contended pairs, and never rerun until a desired result appears. Separate unchanged-source evidence, equal simulation outcomes and timing observations from causal attribution. Focused comparisons do not authorize publication, threshold/ledger changes or a justification waiver; a new clean-head full gate is distinct evidence and cannot erase the first failure. Source: MUX D49, ISS314 and docs/LESSONS.md section27.
+
+
+### M-UX2 evidence prerequisites
+
+| date | symptom | root cause | fix | source |
+|---|---|---|---|---|
+| 2026-10-26 | Genuine format10 migration fixtures failed before decoding could be assessed | the standalone test process had not installed the content catalogue | bootstrap the intended bundled catalogue before loading old-binary saves; retain the failed fixture run separately from migration results | `rust/crates/sim-test/tests/steward_defence_migration.rs` |
+| 2026-10-26 | Candidate GPU captures could not establish which bridge binary produced them | a concurrent Cargo build could replace the on-disk library while Godot was running | serialize builds and captures; freeze inputs and hash the bridge plus relevant sources at both endpoints, rejecting mutations; endpoint equality alone does not replace serialization | `tools/v8/mux2_visibility_provenance.gd`; `docs/v8/mux2/MUX2_DECISIONS.md` D7 |

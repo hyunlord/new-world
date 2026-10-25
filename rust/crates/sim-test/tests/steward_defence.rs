@@ -874,3 +874,94 @@ fn final_team_prefers_four_spears_over_reassignment_to_three_spears_and_an_axe()
         Some((24, 24))
     );
 }
+
+#[test]
+fn free_farther_spear_prevents_downgrading_a_constrained_defender_to_an_axe() {
+    use sim_core::nav::{CostMap, COST_PLAIN};
+    let mut engine = armed_colony();
+    let people = adults(&engine);
+    assert!(people.len() >= 4);
+    let mut map = CostMap::new(
+        engine.resources.tile_grid.width,
+        engine.resources.tile_grid.height,
+    );
+    for y in 0..engine.resources.tile_grid.height {
+        for x in 0..engine.resources.tile_grid.width {
+            map.set((x, y), COST_PLAIN);
+        }
+    }
+    engine.resources.nav.install(map);
+    engine
+        .resources
+        .rules
+        .colony
+        .as_mut()
+        .expect("colony")
+        .wildlife
+        .as_mut()
+        .expect("wildlife")
+        .arm_reach = 12;
+    for (index, (_, entity)) in people.iter().enumerate() {
+        engine
+            .world
+            .get::<&mut BodyHealth>(*entity)
+            .expect("health")
+            .hp = match index {
+            0 => 100.0,
+            1 => 90.0,
+            2 | 3 => 100.0,
+            _ => 49.0,
+        };
+    }
+    let flexible = people[0].1;
+    let constrained = people[1].1;
+    engine
+        .world
+        .remove_one::<Tool>(flexible)
+        .expect("unarm flexible");
+    engine
+        .world
+        .remove_one::<Tool>(constrained)
+        .expect("unarm constrained");
+    for (entity, x) in [(flexible, 24), (constrained, 12)] {
+        let mut pos = engine.world.get::<&mut Position>(entity).expect("position");
+        pos.x = x;
+        pos.y = 24;
+    }
+    engine.resources.colony.ground_items.clear();
+    for tile in [(24, 24), (36, 24)] {
+        engine.resources.colony.ground_items.insert(
+            tile,
+            sim_core::colony::ItemStack::of(ItemSpec::raw(ItemKind::Spear, None), 1),
+        );
+    }
+    // B can also reach this axe. A must use the free farther spear instead
+    // of moving B off its only spear merely to take the nearer stack.
+    engine.resources.colony.ground_items.insert(
+        (12, 24),
+        sim_core::colony::ItemStack::of(ItemSpec::raw(ItemKind::StoneAxe, None), 1),
+    );
+    incoming(&mut engine);
+    defence_tick(&mut engine, 10);
+    assert_eq!(
+        engine.resources.steward.defence.owned_ids.len(),
+        4,
+        "all four weapon-capable adults must still be selected"
+    );
+    assert_eq!(
+        engine
+            .world
+            .get::<&Drafted>(flexible)
+            .expect("flexible defender")
+            .arming,
+        Some((36, 24))
+    );
+    assert_eq!(
+        engine
+            .world
+            .get::<&Drafted>(constrained)
+            .expect("constrained defender")
+            .arming,
+        Some((24, 24))
+    );
+}
