@@ -1,7 +1,7 @@
 //! Persisted steward mode, provenance and cancellation vetoes (save-body extension v7).
 use crate::colony::Command;
 use serde::{Deserialize, Serialize};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 /// Which automatic action families the player permits.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
@@ -84,10 +84,44 @@ pub struct StewardState {
     pub replay: bool,
     /// Source commands waiting for the after-assignment phase, in log order.
     pub pending: Vec<(u64, Command)>,
+    /// Independent defence policy and per-person ownership.
+    pub defence: DefenceState,
 }
 impl StewardState {
     /// Whether a target is still protected by the player's cancellation.
     pub fn vetoed(&self, target: &Target, tick: u64) -> bool {
         self.vetoes.get(target).is_some_and(|until| tick < *until)
+    }
+}
+
+/// Saved defence ownership; manual orders override automation for one day.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct DefenceState {
+    /// Enabled by default; the overall steward switch still gates automation.
+    pub enabled: bool,
+    /// Only these people may be automatically released or redirected.
+    pub owned_ids: BTreeSet<u64>,
+    /// Explicit player orders remain protected until this exclusive tick.
+    pub manual_until: BTreeMap<u64, u64>,
+    /// First tick without a nearby threat after deployment.
+    pub quiet_since: Option<u64>,
+    /// Pack identity whose quiet timeout has already released defenders.
+    pub retired_pack: Option<u32>,
+    /// Pack for which the current approach response already recruited once.
+    pub responded_pack: Option<u32>,
+    /// Actual count in the most recent recruitment batch.
+    pub last_count: u16,
+}
+impl Default for DefenceState {
+    fn default() -> Self {
+        Self {
+            enabled: true,
+            owned_ids: BTreeSet::new(),
+            manual_until: BTreeMap::new(),
+            quiet_since: None,
+            retired_pack: None,
+            responded_pack: None,
+            last_count: 0,
+        }
     }
 }

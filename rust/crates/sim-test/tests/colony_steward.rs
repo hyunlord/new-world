@@ -145,7 +145,7 @@ fn rule_data_accepts_a_new_identity_without_code_changes() {
         .replace("base_cells: 6", "base_cells: 7");
     let data = parse_rules(&changed).expect("data-only rule variant");
     assert_eq!(data.rules[0].id, 71);
-    assert_eq!(data.rules.len(), 6);
+    assert_eq!(data.rules.len(), 7);
 }
 
 #[test]

@@ -29,6 +29,7 @@
 //! therefore the loaded engine; the round-trip tests prove it ticks the same.
 
 mod content_validation;
+mod legacy_steward;
 mod legacy_v9;
 pub mod world;
 
@@ -52,7 +53,7 @@ use sim_engine::{SimEngine, SimResources};
 /// The first eight bytes of every save file.
 pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 
-/// Save format version; historical versions 6, 7, 8 and 9 are migrated. Bump it
+/// Save format version; historical versions 6 through 10 are migrated. Bump it
 /// whenever a saved type or the layout changes. 2 = M2 (item specs, nodes,
 /// workshops and bills, multi-line material needs, tools, skills, priorities);
 /// 3 = M3 (door and dug tile columns, navigation paths, space sites, rooms);
@@ -63,8 +64,9 @@ pub const MAGIC: [u8; 8] = *b"WORLDSIM";
 /// migrants, caravans, the trade ledger, need samples, new chronicle kinds and the knowledge source `Migrant`);
 /// 7 = optional Steward state; 8 = catalog-bound envelope, full-width content
 /// codes and Chronicle causes, sparse completed-construction/tool identity;
-/// 9 = full-width pressure provenance and persistent novel illness origins.
-pub const FORMAT_VERSION: u32 = 10;
+/// 9 = full-width pressure provenance and persistent novel illness origins;
+/// 10 = tree material identity; 11 = independent steward defence and ownership.
+pub const FORMAT_VERSION: u32 = 11;
 
 /// Upper bound for one decode (guards against corrupt length prefixes).
 const DECODE_LIMIT: u64 = 1 << 31;
@@ -154,7 +156,7 @@ struct LegacyBodyV7 {
     resources: sim_engine::legacy_v7::LegacySimResources,
     world: world::WorldSave,
     systems: Vec<(String, Vec<u8>)>,
-    steward: sim_core::colony::steward::StewardState,
+    steward: legacy_steward::LegacyStewardState,
 }
 
 /// Format8 stores the original two sparse content maps, with no illness origins.
@@ -183,7 +185,7 @@ struct LegacyBodyV8 {
     resources: sim_engine::legacy_v7::LegacySimResourcesV8,
     world: world::WorldSave,
     systems: Vec<(String, Vec<u8>)>,
-    steward: sim_core::colony::steward::StewardState,
+    steward: legacy_steward::LegacyStewardState,
     content_state: LegacyContentStateV8,
 }
 const LEGACY_V8_BUNDLED_REVISION: &str = "catalog-v1-fnv1a64:12e812cb24fbd015:38733";
@@ -203,6 +205,17 @@ struct Body {
     world: world::WorldSave,
     systems: Vec<(String, Vec<u8>)>,
     steward: sim_core::colony::steward::StewardState,
+    content_state: sim_core::colony::content_state::ContentState,
+}
+
+/// Published format10 body, before independent defence state.
+#[derive(Deserialize)]
+struct LegacyBodyV10 {
+    current_tick: u64,
+    resources: SimResources,
+    world: world::WorldSave,
+    systems: Vec<(String, Vec<u8>)>,
+    steward: legacy_steward::LegacyStewardState,
     content_state: sim_core::colony::content_state::ContentState,
 }
 
@@ -255,6 +268,7 @@ pub fn load_with(
     let legacy_v7 = version == Some(7u32.to_le_bytes().as_slice());
     let legacy_v8 = version == Some(8u32.to_le_bytes().as_slice());
     let legacy_v9 = version == Some(9u32.to_le_bytes().as_slice());
+    let legacy_v10 = version == Some(10u32.to_le_bytes().as_slice());
     if legacy || legacy_v7 || legacy_v8 || legacy_v9 {
         sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
             .map_err(|error| SaveError::Decode(error.to_string()))?;
@@ -276,7 +290,7 @@ pub fn load_with(
             resources: old.resources.into(),
             world: old.world,
             systems: old.systems,
-            steward: old.steward,
+            steward: old.steward.into(),
             content_state: Default::default(),
         }
     } else {
@@ -296,7 +310,7 @@ pub fn load_with(
                 resources: old.resources.into(),
                 world: old.world,
                 systems: old.systems,
-                steward: old.steward,
+                steward: old.steward.into(),
                 content_state: old.content_state.into(),
             }
         } else if legacy_v9 {
@@ -313,7 +327,7 @@ pub fn load_with(
                 resources: old.resources,
                 world: old.world,
                 systems: old.systems,
-                steward: old.steward,
+                steward: old.steward.into(),
                 content_state: old.content_state.into(),
             }
         } else {
@@ -324,7 +338,19 @@ pub fn load_with(
                     catalog.revision()
                 )));
             }
-            decode(&envelope.payload).map_err(SaveError::Decode)?
+            if legacy_v10 {
+                let old: LegacyBodyV10 = decode(&envelope.payload).map_err(SaveError::Decode)?;
+                Body {
+                    current_tick: old.current_tick,
+                    resources: old.resources,
+                    world: old.world,
+                    systems: old.systems,
+                    steward: old.steward.into(),
+                    content_state: old.content_state,
+                }
+            } else {
+                decode(&envelope.payload).map_err(SaveError::Decode)?
+            }
         }
     };
     let mut resources = body.resources;
@@ -343,19 +369,18 @@ pub fn load_with(
     content_validation::validate_illness(&resources, &world).map_err(SaveError::Decode)?;
     let mut engine = SimEngine::new(1, 1, MaterialRegistry::new());
     register(&mut engine);
-    if legacy {
+    if legacy || legacy_v7 || legacy_v8 || legacy_v9 || legacy_v10 {
         let registered = engine.system_states().map_err(SaveError::Systems)?;
-        if let Some(index) = registered
-            .iter()
-            .position(|(name, _)| name == "StewardSystem")
-        {
-            if index > body.systems.len() {
-                return Err(SaveError::Systems(
-                    "v6 system list is shorter than the migration insertion point".into(),
-                ));
+        // Walk registration order so both v6 additions get their final positions.
+        for (index, (name, state)) in registered.iter().enumerate() {
+            if name == "StewardDefenceSystem" || (legacy && name == "StewardSystem") {
+                if index > body.systems.len() {
+                    return Err(SaveError::Systems(
+                        "legacy system list is shorter than its migration insertion point".into(),
+                    ));
+                }
+                body.systems.insert(index, (name.clone(), state.clone()));
             }
-            body.systems
-                .insert(index, ("StewardSystem".into(), Vec::new()));
         }
     }
     engine
@@ -376,7 +401,13 @@ fn read_header(bytes: &[u8]) -> Result<&[u8], SaveError> {
     let mut word = [0u8; 4];
     word.copy_from_slice(version);
     let found = u32::from_le_bytes(word);
-    if found != FORMAT_VERSION && found != 6 && found != 7 && found != 8 && found != 9 {
+    if found != FORMAT_VERSION
+        && found != 6
+        && found != 7
+        && found != 8
+        && found != 9
+        && found != 10
+    {
         return Err(SaveError::Version {
             found,
             expected: FORMAT_VERSION,

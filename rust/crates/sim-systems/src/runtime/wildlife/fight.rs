@@ -65,6 +65,14 @@ pub fn resolve_fights(world: &mut World, res: &mut SimResources) {
             res.colony.fights.remove(&key);
             continue;
         };
+        if matches!(
+            (attacker, defender),
+            (Fighter::Animal(_), Fighter::Person(_))
+        ) && crate::runtime::rooms::roofed(res, d)
+        {
+            res.colony.fights.remove(&key);
+            continue;
+        }
         if sim_core::nav::chebyshev(a, d) > 1 {
             res.colony.fights.remove(&key);
             continue;
@@ -131,6 +139,15 @@ fn hit_person(
         Err(_) => false,
     };
     if dead {
+        let fatal_animal = match attacker {
+            Fighter::Animal(attacker) => res
+                .colony
+                .wildlife
+                .animals
+                .get(&attacker)
+                .map(|animal| (attacker, animal.kind)),
+            Fighter::Person(_) => None,
+        };
         drop_fights_of(res, Fighter::Person(id));
         crate::runtime::survival::despawn_agent(
             world,
@@ -141,6 +158,17 @@ fn hit_person(
             DeathReason::Combat,
             res.current_tick,
         );
+        if !world.contains(e) {
+            if let Some((attacker, kind)) = fatal_animal {
+                res.fatal_animal_attacks
+                    .push(sim_engine::FatalAnimalAttack {
+                        tick: res.current_tick,
+                        victim: id,
+                        attacker,
+                        kind,
+                    });
+            }
+        }
     }
 }
 

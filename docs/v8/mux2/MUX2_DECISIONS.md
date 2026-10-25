@@ -30,4 +30,26 @@ The goal calls this an ADR0035 amendment, but repository ADR0035 is terrain colo
 
 Quiet radius is measured from the village hearth. Retreat releases owned defenders immediately; otherwise require60 consecutive ticks with no threatening wolf within24tiles, resetting on re-entry. Recruitment records actual accepted count once per batch. Existing StewardAction event value remains its monotonic sequence; a new mechanical Chronicle event may carry defence count. This is a behavior/event type, not a content enum.
 
-Initial existing-API regressions: `steward_defence`0passed/3failed and `colony_flee_mux2`0passed/5failed before production edits (external defence-red.log/flee-red.log). The latter includes a pending wolf bite after roof entry; immunity must apply at fight resolution as well as target selection.
+Initial existing-API regressions: `steward_defence`0passed/3failed. The first `colony_flee_mux2` run had four behavioural failures and one missing-BodyHealth fixture error (external flee-red.log). After correcting that fixture, haul-flee-red2.log records five actual behavioural failures before production edits, including a pending wolf bite after roof entry. Immunity must apply at fight resolution as well as target selection.
+
+Recruit once per approach response, not every frame: normal critical-need self-undrafting must allow eating rather than immediate automatic re-recruitment. Existing defenders can update targets; a new pack or a retired pack entering the camp radius permits a new response. This preserves the specified approach trigger without inventing an extra hunger eligibility exclusion.
+
+## D6 — Baseline measurements and causal limits
+
+Diagnostic commit `15b282a1e` and the frozen debug bridge completed both windowed baseline arms with no run errors and complete instrumentation. At1×, after10seconds,10frames exceeded33ms and7 exceeded50ms; maximum210.816ms, minute counts[3,1,2,1,3]. At½×,21frames exceeded33ms and6 exceeded50ms; maximum201.641ms, minute counts[3,1,4,3,10]. Both fail the unchanged bar. Raw frames and source/library hashes are in stall-before/stall-report.json; startup spikes remain recorded.
+
+Some slow frames are dominated by GroundLayer work outside chunk-bake spans; others have no corresponding measured script spike. These are causal leads, not proof that minimap, alerts or GC caused the stalls. Add finer ground and native simulation timing before selecting fixes. Native GDScript has no tracing GC; reference-count destruction costs remain part of the measured frame.
+
+The controlled hauling regression fails2positive cases and passes4legality/control cases: sustained splitting leaves144new fuel on the ground and0stocked within1440ticks. This proves starvation in the controlled workload, but does not yet prove the cause of historical seed5's90ground fuel. Reproduce that saved-evidence scenario separately and retain any different cause.
+
+The evaluation observer uses exact transient fatal-animal records from the resolver, not generic Combat deaths or proximity inference. These records do not enter saved state or influence policy. A physical-wall housing oracle replaces the older roof-plus-door shortcut only for the new evaluation. The old scorer remains unchanged.
+
+## D7 — First implemented simulation policy, before calibration
+
+The first policy uses single-batch approach response, at most4eligible defenders, HP>=50, one-day manual veto, deterministic augmenting physical-weapon assignment and complete proposed-team weapon/health/distance/id ranking. This fixes measured3-of4 under-recruitment and a measured3-spears-plus-axe selection despite a feasible4-spear team. Manual claims remain fixed. Fast source commands export/replay before flight; ordinary sources remain after assignment. OFF defence state participates in fingerprints when nondefault. Defence16/fingerprint1 pass, including a720tick full-engine JSON replay.
+
+Flight/race/roof attribution tests12 and existing wildlife tests12 pass. Fuel hauling moves before competing jobs only at that worker's Haul priority; full or incompatible or unreachable stockpiles and higher player priorities still prevent it. Hauling11pass. Historical seed5's old binary reproduced the90ground/0stock state; its loaded geometry has9compatible reachable cells, no fuel reservations and one worker repeatedly hunting/chopping. This is broader same-priority starvation, not only split-before-haul. Raw reproduction and inspection are preserved under hauling/.
+
+The migration fixture initially failed because its process had not installed the content catalogue; corrected bootstrap loads all4genuine format10 files, resaves format11 and verifies continuation. Retain both v10-migration.log and v10-migration2.log. Legacy wire layout test also passes. The paired evaluation validator requires identical source/policy/binary provenance and complete32seed arms; OFF bar failures are descriptive, not acceptance failures. Observer4 and scorer14tests pass. Calibration and held-out runs have not occurred at this checkpoint.
+
+Visibility candidate1/2 are diagnostic pixel evidence only: a concurrent test build could replace the on-disk bridge during capture. Preserve those reports but do not use them as final binary-bound acceptance. The amended harness hashes the bridge and all relevant inputs at start/end and fails any mutation; all subsequent acceptance captures serialize builds and Godot, with frozen source. Baseline visibility and stall captures were frozen and remain valid.

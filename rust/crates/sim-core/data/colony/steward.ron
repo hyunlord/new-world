@@ -5,4 +5,5 @@
  (id: 4, label: "MUX_STEWARD_RULE_4", scope: All, cooldown: 360, condition: Production, action: Bills(recipes: [(HaftAxe, 2), (KnapBlade, 4)], winter_recipe: SplitFirewood, days: 12)),
  (id: 5, label: "MUX_STEWARD_RULE_5", scope: Food, cooldown: 1440, condition: FoodDeficit, action: Hunt(item: Meat, animal: Deer, knowledge: "tracking", days: 3, radius: 5)),
  (id: 6, label: "MUX_STEWARD_RULE_6", scope: All, cooldown: 1440, condition: KnowledgeRisk, action: Teach),
+ (id: 7, label: "MUX_STEWARD_RULE_7", scope: All, cooldown: 1, condition: ThreatApproaching, action: Defence(max_defenders: 4, min_hp: 50, release_tiles: 24, release_ticks: 60)),
 ])

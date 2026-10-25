@@ -35,7 +35,7 @@ pub(super) struct LegacyBodyV9 {
     pub resources: SimResources,
     pub world: super::world::WorldSave,
     pub systems: Vec<(String, Vec<u8>)>,
-    pub steward: sim_core::colony::steward::StewardState,
+    pub steward: super::legacy_steward::LegacyStewardState,
     pub content_state: LegacyContentStateV9,
 }
 

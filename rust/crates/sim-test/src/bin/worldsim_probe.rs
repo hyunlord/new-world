@@ -3,6 +3,7 @@ fn main() -> std::process::ExitCode {
     let args: Vec<_> = std::env::args().skip(1).collect();
     if args.iter().any(|arg| arg == "--help" || arg == "-h") {
         println!("usage: worldsim_probe --scene colony --seeds a..b --days N --workers 1..8 --out DIR [--commands FILE] [--commands-out DIR] [--check-determinism]");
+        println!("M-UX2: --steward on --defence on|off --days 48 --mux2-observe --mux2-policy-sha256 HEX (no player commands; external receipt verification required)");
         println!("colony observation: --b4-observe --b4-manifest FILE --b4-manifest-sha256 HEX (all three required; external SHA256 verified by runner/scorer)");
         println!("usage: worldsim_probe --scene colony --seeds S..S+1 --ascii --tick T [--rect x,y,w,h] [--commands FILE] [--ascii-legend] [--out FILE] [--people-json FILE]");
         println!("usage: worldsim_probe --scene baseline --seeds a..b --days N --sample-every N --workers 1..8 --out DIR [--check-determinism] [--clock-samples HH:MM,...] [--agent-trace] [--chronicle-out DIR]");

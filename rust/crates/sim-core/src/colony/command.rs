@@ -330,6 +330,11 @@ pub enum Command {
         /// Ordinary command, never another envelope or policy change.
         command: Box<Command>,
     },
+    /// Independently permit automatic defence.
+    SetStewardDefence {
+        /// Enable defence when the overall steward is on.
+        on: bool,
+    },
 }
 
 impl Command {
@@ -372,6 +377,7 @@ impl Command {
             Self::Trade { .. } => "trade",
             Self::SetSteward { .. } => "set_steward",
             Self::Steward { .. } => "steward",
+            Self::SetStewardDefence { .. } => "set_steward_defence",
         }
     }
 }

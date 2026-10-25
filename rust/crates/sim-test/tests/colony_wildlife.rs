@@ -633,7 +633,7 @@ fn an_undrafted_person_near_a_wolf_runs_for_a_roofed_room_and_a_drafted_one_stan
     let people = adults(&engine);
     let (_, runner) = people[0];
     let (soldier_id, soldier) = people[1];
-    let start = (at.0 + 3, at.1 + 12);
+    let start = (at.0 + 3, at.1 + 9);
     place(&mut engine, runner, start);
     place(&mut engine, soldier, (start.0 + 2, start.1));
     // Everyone else far away inside the room, so the wolf has these two.
@@ -691,13 +691,45 @@ fn an_undrafted_person_near_a_wolf_runs_for_a_roofed_room_and_a_drafted_one_stan
     assert!(engine.resources.colony.wildlife.tallies.flights >= 1);
 }
 
-/// M5.5: with no roofed room the refuge is the hearth (`flee::refuge`).
+/// M-UX2: a reachable hearth is a refuge only when an armed defender is there.
 #[test]
-fn without_a_roofed_room_the_refuge_is_the_hearth() {
-    let engine = sim_test::colony_engine(0);
+fn without_a_roofed_room_the_hearth_requires_a_present_armed_defender() {
+    let mut engine = sim_test::colony_engine(0);
+    sim_systems::runtime::nav::ensure(&mut engine.resources);
     let h = hearth(&engine);
-    let to = wildlife::flee::refuge(&engine.resources, (h.0 + 10, h.1), (h.0 + 15, h.1), 8);
-    assert_eq!(to, h);
+    let pos = (h.0 + 1, h.1);
+    let wolf = (h.0 + 8, h.1);
+    assert!(engine.resources.nav.path(pos, h).is_some());
+    assert_ne!(
+        wildlife::flee::refuge(&engine.world, &engine.resources, pos, wolf, 8),
+        h
+    );
+    let (id, defender) = adults(&engine)[0];
+    place(&mut engine, defender, pos);
+    spear(&mut engine, defender);
+    assert!(
+        submit(
+            &mut engine,
+            Command::SetDrafted {
+                agent: id,
+                drafted: true
+            }
+        )
+        .accepted
+    );
+    assert_eq!(
+        wildlife::flee::refuge(&engine.world, &engine.resources, pos, wolf, 8),
+        h
+    );
+    // A draft alone is insufficient when the weapon is gone.
+    engine
+        .world
+        .remove_one::<Tool>(defender)
+        .expect("remove weapon");
+    assert_ne!(
+        wildlife::flee::refuge(&engine.world, &engine.resources, pos, wolf, 8),
+        h
+    );
 }
 
 /// M5.5 (goal §3.1.2): a fleeing person strikes back at a wolf at half the weapon's damage.

@@ -2,4 +2,4 @@
 mod rules;
 mod state;
 pub use rules::{parse_rules, rules, Action, Condition, Rule, RuleFile};
-pub use state::{OwnedOrder, StewardScope, StewardState, Target};
+pub use state::{DefenceState, OwnedOrder, StewardScope, StewardState, Target};

@@ -1,7 +1,9 @@
 //! Priority 125, interval 360: after assignment, plan ordinary orders in data order.
 //! Reads: colony, people, registered rules. Writes: ordinary command effects and steward provenance.
 //! Events: StewardAction for accepted ordinary orders; no RNG draws.
+mod arming;
 mod completion;
+pub mod defence;
 pub mod lifecycle;
 mod planning;
 mod production;
@@ -29,7 +31,7 @@ impl RuntimeSystem for StewardSystem {
         if res.steward.replay {
             let pending = std::mem::take(&mut res.steward.pending);
             for (tick, command) in pending {
-                if tick <= res.current_tick {
+                if tick <= res.current_tick && !defence::source(&command) {
                     issue(world, res, command);
                 } else {
                     res.steward.pending.push((tick, command));

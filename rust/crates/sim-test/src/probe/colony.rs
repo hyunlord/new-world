@@ -80,6 +80,10 @@ pub struct ColonyArgs {
     pub neighbours: String,
     /// Explicit automatic assistant opt-in; probes default to off.
     pub steward: bool,
+    /// Explicit defence arm; absent retains historical probe setup.
+    pub defence: Option<bool>,
+    /// Opt-in M-UX2 observer policy receipt digest, validated externally.
+    pub mux2_policy: Option<String>,
     /// Opt-in read-only B4 observer with externally verified metadata digest.
     pub b4: Option<super::b4::Config>,
 }
@@ -101,11 +105,21 @@ impl ColonyArgs {
             story: "on".into(),
             neighbours: "on".into(),
             steward: false,
+            defence: None,
+            mux2_policy: None,
             b4: None,
         };
+        let mut mux2_observe = false;
         let (mut observe, mut manifest, mut digest) = (false, None, None);
         let mut args = args.into_iter();
         while let Some(flag) = args.next() {
+            if flag == "--mux2-observe" {
+                if mux2_observe {
+                    return Err("duplicate --mux2-observe".into());
+                }
+                mux2_observe = true;
+                continue;
+            }
             if flag == "--b4-observe" {
                 if observe {
                     return Err("duplicate --b4-observe".into());
@@ -121,6 +135,23 @@ impl ColonyArgs {
                 .next()
                 .ok_or_else(|| format!("missing value for {flag}"))?;
             match flag.as_str() {
+                "--defence" if matches!(value.as_str(), "on" | "off") => {
+                    if parsed.defence.replace(value == "on").is_some() {
+                        return Err("duplicate --defence".into());
+                    }
+                }
+                "--mux2-policy-sha256" => {
+                    if value.len() != 64
+                        || !value
+                            .bytes()
+                            .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
+                    {
+                        return Err("invalid M-UX2 policy SHA256".into());
+                    }
+                    if parsed.mux2_policy.replace(value).is_some() {
+                        return Err("duplicate M-UX2 policy digest".into());
+                    }
+                }
                 "--b4-manifest" => {
                     if manifest.replace(PathBuf::from(value)).is_some() {
                         return Err("duplicate --b4-manifest".into());
@@ -187,6 +218,19 @@ impl ColonyArgs {
                     .into(),
             ),
         };
+        if mux2_observe != parsed.mux2_policy.is_some() {
+            return Err("M-UX2 observer requires explicit policy SHA256".into());
+        }
+        if mux2_observe
+            && (!parsed.steward
+                || parsed.defence.is_none()
+                || parsed.commands.is_some()
+                || parsed.story != "on"
+                || parsed.neighbours != "on"
+                || parsed.days != 48)
+        {
+            return Err("M-UX2 requires 48 days, steward on, explicit defence arm, story/neighbours on and no player script".into());
+        }
         Ok(parsed)
     }
 }
@@ -901,11 +945,16 @@ pub fn resolve(
     pending_avoid: &mut Vec<(u32, u32)>,
 ) -> Result<Vec<Command>, String> {
     if spec["source"].as_str() == Some("Steward") {
-        if spec["phase"].as_str() != Some("after_assignment") {
-            return Err("Steward source requires after_assignment phase".into());
-        }
         let rule = u16::try_from(spec["rule"].as_u64().ok_or("Steward source needs rule")?)
             .map_err(|_| "invalid rule")?;
+        let phase = if sim_systems::runtime::steward::defence::is_rule(rule) {
+            "before_flight"
+        } else {
+            "after_assignment"
+        };
+        if spec["phase"].as_str() != Some(phase) {
+            return Err(format!("Steward source rule {rule} requires {phase} phase"));
+        }
         let mut inner = spec.clone();
         if let Some(object) = inner.as_object_mut() {
             object.remove("source");
@@ -1426,6 +1475,9 @@ pub fn resolve(
             let (x0, y0, x1, y1) = rect(spec)?;
             vec![Command::CancelHunt { x0, y0, x1, y1 }]
         }
+        ("set_steward_defence", None) => vec![Command::SetStewardDefence {
+            on: spec["on"].as_bool().ok_or("set_steward_defence needs on")?,
+        }],
         ("set_steward", None) => vec![Command::SetSteward {
             on: spec["on"].as_bool().ok_or("set_steward needs on")?,
             scope: match spec["scope"].as_str().unwrap_or("all") {
@@ -1483,12 +1535,17 @@ pub fn command_json(tick: u64, cmd: &Command) -> Value {
     if let Command::Steward { rule, command } = cmd {
         let mut v = command_json(tick, command);
         v["source"] = json!("Steward");
-        v["phase"] = json!("after_assignment");
+        v["phase"] = json!(if sim_systems::runtime::steward::defence::source(cmd) {
+            "before_flight"
+        } else {
+            "after_assignment"
+        });
         v["rule"] = json!(rule);
         return v;
     }
     let mut v = match cmd {
         Command::Steward { .. } => return Value::Null,
+        Command::SetStewardDefence { on } => json!({"on":on}),
         Command::SetSteward { on, scope } => {
             json!({"on": on, "scope": match scope { sim_core::colony::steward::StewardScope::All => "all", sim_core::colony::steward::StewardScope::Housing => "housing", sim_core::colony::steward::StewardScope::Food => "food" }})
         }
@@ -1638,7 +1695,10 @@ pub fn colony_fingerprint(engine: &SimEngine) -> String {
         // M5.5: the neighbours and their visitors.
         c.neighbours,
     );
-    if engine.resources.steward.enabled || !engine.resources.steward.owned.is_empty() {
+    if engine.resources.steward.enabled
+        || !engine.resources.steward.owned.is_empty()
+        || engine.resources.steward.defence != Default::default()
+    {
         let mut state = engine.resources.steward.clone();
         state.replay = false;
         state.pending.clear();
@@ -1744,6 +1804,14 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
                 watch.after_command(e, before, &result);
             }
         }
+        if let Some(on) = args.defence {
+            if !replay {
+                let result = submit(e, Command::SetStewardDefence { on });
+                if !result.accepted {
+                    return Err("defence setup command rejected".into());
+                }
+            }
+        }
     }
     let total = args.days * DAY;
     let mut next = 0usize;
@@ -1763,6 +1831,10 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
     let mut m5 = super::m5::M5Watch::new();
     let mut m55 = super::m55::M55Watch::new();
     let mut steward_watch = args.steward.then(super::steward::StewardWatch::default);
+    let mut mux2_watch = args
+        .mux2_policy
+        .as_ref()
+        .map(|_| super::mux2::Mux2Watch::default());
     let mut waiting: Vec<usize> = Vec::new();
     // `"every_days"` entries: (tick of the next application, entry), M3.
     let mut repeats: Vec<(u64, usize)> = Vec::new();
@@ -1850,6 +1922,9 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
         m5.after_tick(&engine);
         m55.after_tick(&engine);
         if let Some(watch) = steward_watch.as_mut() {
+            watch.after_tick(&engine);
+        }
+        if let Some(watch) = mux2_watch.as_mut() {
             watch.after_tick(&engine);
         }
         if let Some(t) = twin.as_mut() {
@@ -1980,6 +2055,14 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
     if let Some(watch) = b4 {
         summary["b4"] = serde_json::to_value(watch.report(&engine))
             .map_err(|e| format!("B4 serialization: {e}"))?;
+    }
+    if let Some(watch) = mux2_watch {
+        let mut measured = watch.report(&engine);
+        measured["inputs"] = json!({"steward":args.steward,"defence":args.defence,
+            "story":args.story,"neighbours":args.neighbours,"player_script":args.commands.is_some(),
+            "policy_sha256":args.mux2_policy,"source_sha":std::env::var("WORLDSIM_GIT_SHA").unwrap_or_else(|_| "unknown".into()),
+            "defence_enabled_end":engine.resources.steward.defence.enabled});
+        summary["mux2"] = measured;
     }
     if let Some(watch) = steward_watch {
         summary["mux"] = watch.report(&engine);
@@ -2160,6 +2243,8 @@ mod tests {
             story: "on".into(),
             neighbours: "on".into(),
             steward: false,
+            defence: None,
+            mux2_policy: None,
             b4: None,
         };
         run(&first).expect("scripted run");
@@ -2203,6 +2288,8 @@ mod tests {
             story: "on".into(),
             neighbours: "on".into(),
             steward: false,
+            defence: None,
+            mux2_policy: None,
             b4: None,
         };
         run(&first).expect("scripted run");
@@ -2244,5 +2331,46 @@ mod tests {
                 resolve(&engine, &command_json(360, &cmd), &mut Vec::new()).expect("concrete");
             assert_eq!(back, vec![cmd]);
         }
+    }
+}
+
+#[cfg(test)]
+mod mux2_args_tests {
+    use super::*;
+    fn args(extra: &[&str]) -> Result<ColonyArgs, String> {
+        let mut values: Vec<String> = [
+            "--scene",
+            "colony",
+            "--steward",
+            "on",
+            "--days",
+            "48",
+            "--mux2-observe",
+            "--mux2-policy-sha256",
+        ]
+        .into_iter()
+        .map(str::to_owned)
+        .collect();
+        values.push("a".repeat(64));
+        values.extend(extra.iter().map(|s| (*s).to_owned()));
+        ColonyArgs::parse(values)
+    }
+    #[test]
+    fn evaluation_requires_explicit_arm_and_equivalent_inputs() {
+        for arm in ["on", "off"] {
+            assert!(args(&["--defence", arm]).is_ok());
+        }
+        assert!(args(&[]).is_err());
+        for bad in [
+            ["--commands", "player.json"],
+            ["--story", "no-beasts"],
+            ["--neighbours", "off"],
+            ["--steward", "off"],
+            ["--days", "47"],
+        ] {
+            assert!(args(&["--defence", "on", bad[0], bad[1]]).is_err());
+        }
+        let old = ColonyArgs::parse(Vec::<String>::new()).expect("legacy defaults");
+        assert!(old.defence.is_none() && old.mux2_policy.is_none());
     }
 }

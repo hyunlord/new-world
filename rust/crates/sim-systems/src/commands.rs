@@ -98,8 +98,26 @@ fn apply_at(world: &mut World, res: &mut SimResources, cmd: Command, tick: u64) 
     } else {
         crate::runtime::steward::lifecycle::prepare_player(res, &cmd, tick)
     };
+    let manual = if source {
+        None
+    } else {
+        match &cmd {
+            Command::SetDrafted { agent, .. }
+            | Command::DraftMove { agent, .. }
+            | Command::DraftAttack { agent, .. }
+            | Command::DraftAttackPerson { agent, .. } => Some(*agent),
+            _ => None,
+        }
+    };
     let result = apply_inner(world, res, cmd);
     if result.accepted {
+        if let Some(agent) = manual {
+            res.steward.defence.owned_ids.remove(&agent);
+            res.steward
+                .defence
+                .manual_until
+                .insert(agent, tick.saturating_add(res.ticks_per_day));
+        }
         if let Some(protection) = protection {
             crate::runtime::steward::lifecycle::protect_player(res, protection);
         }
@@ -114,6 +132,10 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
         return CommandResult::rejected(RejectReason::NoColony);
     };
     match cmd {
+        Command::SetStewardDefence { on } => {
+            res.steward.defence.enabled = on;
+            CommandResult::ok(1)
+        }
         Command::SetSteward { on, scope } => {
             res.steward.enabled = on;
             res.steward.scope = scope;
@@ -122,14 +144,16 @@ fn apply_inner(world: &mut World, res: &mut SimResources, cmd: Command) -> Comma
         Command::Steward { rule, command } => {
             if matches!(
                 *command,
-                Command::Steward { .. } | Command::SetSteward { .. }
+                Command::Steward { .. }
+                    | Command::SetSteward { .. }
+                    | Command::SetStewardDefence { .. }
             ) {
                 return CommandResult::rejected(RejectReason::Unknown);
             }
             let targets = crate::runtime::steward::lifecycle::targets(res, &command);
             let result = apply_inner(world, res, (*command).clone());
             if result.accepted {
-                crate::runtime::steward::lifecycle::accepted(res, rule, *command, targets);
+                crate::runtime::steward::lifecycle::accepted(world, res, rule, *command, targets);
             }
             result
         }
@@ -599,7 +623,7 @@ fn set_drafted(
         .get::<&sim_core::colony::people::Drafted>(entity)
         .is_ok();
     if now == drafted {
-        return CommandResult::rejected(RejectReason::Nothing);
+        return CommandResult::ok(0);
     }
     if drafted {
         if child {

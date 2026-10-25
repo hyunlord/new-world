@@ -1,4 +1,4 @@
-//! FleeSystem: undrafted people near a hunting wolf drop their work and run for a roofed room, else the hearth, else away from the wolf.
+//! FleeSystem: undrafted people seek a roof they can reach before a wolf, else a defended hearth, else away.
 //!
 //! Priority: 123 (`FLEE_PRIORITY`). Interval: 3 ticks. Gate: `WildlifeRule::flee`.
 //! Reads: `Agent`, `Position`, `Drafted`, `Fleeing`, `Hunger`, `Thirst`, `Job`; `SimResources.colony` (wildlife, rooms), `nav`, `building_kinds` (the hearth), `rules`
@@ -19,8 +19,8 @@
 //!   the flight is a survival choice), and the person walks (`Seeking { Job }`
 //!   with a `SeekTarget`, as a drafted person walks) to the nearest tile of a
 //!   roofed room they reach before the wolf, else to the hearth if they reach
-//!   it first, else to the tile `flee_tiles` steps away from the wolf; a refuge
-//!   the wolf comes to reach first is given up for a new one ([`refuge`]).
+//!   it with defenders present, else to the tile `flee_tiles` steps away from
+//!   the wolf. Refuge selection uses route travel times and repeats every 30 ticks.
 //!
 //! A flight whose `until` has passed ends: `Fleeing` and the `SeekTarget` are
 //! removed and the person is `Idle`. The decision seam (`jobs::seam::holders`)
@@ -33,7 +33,8 @@ use sim_core::colony::people::{Drafted, Fleeing};
 use sim_core::colony::wildlife::AnimalState;
 use sim_core::colony::CancelReason;
 use sim_core::components::{
-    Activity, Agent, AgentId, AgentState, Hunger, Position, SeekTarget, TargetKind, Thirst,
+    Activity, Agent, AgentId, AgentState, BodyHealth, Child, Hunger, Position, SeekTarget,
+    TargetKind, Thirst,
 };
 use sim_core::rules::WildlifeRule;
 use sim_engine::{RuntimeSystem, SimResources};
@@ -65,25 +66,91 @@ pub fn threats(res: &SimResources) -> Vec<(u32, (u32, u32))> {
         .collect()
 }
 
-/// Where a person at `pos` runs from a wolf at `wolf`: the nearest reachable tile of a roofed room (`(distance, y, x)`)
-/// that they reach before the wolf (nearer to them than to it); else the hearth, if they reach it first; else
-/// `reach` steps away from the wolf (M5.5 calibration r1, DECISIONS D15: a refuge past the wolf is no refuge).
-pub fn refuge(res: &SimResources, pos: (u32, u32), wolf: (u32, u32), reach: u32) -> (u32, u32) {
-    let region = res.nav.region_of(pos);
-    let first = |t: (u32, u32)| chebyshev(pos, t) < chebyshev(wolf, t);
-    let room = res
+/// Choose the shortest traversable roof route that beats the nearest wolf's travel time.
+/// Ties use tile order `(y, x)`; an unreachable wolf cannot win the race. A defended,
+/// reachable hearth is the fallback, followed by walking away from the threat.
+pub fn refuge(
+    world: &World,
+    res: &SimResources,
+    pos: (u32, u32),
+    wolf: (u32, u32),
+    reach: u32,
+) -> (u32, u32) {
+    if crate::runtime::rooms::roofed(res, pos) {
+        return pos;
+    }
+    let person_interval = res.rules.agent.move_interval_ticks.max(1);
+    let wolf_interval = super::AnimalSystem.tick_interval();
+    let base = super::rule(res);
+    let wolf_speed = res
+        .colony
+        .wildlife
+        .wolves()
+        .filter(|a| a.pos == wolf)
+        .filter_map(|a| {
+            base.as_ref()
+                .map(|r| a.kind.definition().resolve_rule(r).wolf_chase_tiles)
+        })
+        .max()
+        .or_else(|| base.map(|r| r.wolf_chase_tiles))
+        .unwrap_or(1)
+        .max(1);
+    let mut best: Option<(usize, u32, u32)> = None;
+    let mut candidates: Vec<_> = res
         .colony
         .rooms
         .values()
         .filter(|r| r.roofed)
         .flat_map(|r| r.tiles.iter().copied())
-        .filter(|t| res.nav.passable(*t) && res.nav.reaches(region, *t) && first(*t))
-        .min_by_key(|t| (chebyshev(pos, *t), t.1, t.0));
-    if let Some(t) = room {
-        return t;
+        .filter(|tile| res.nav.passable(*tile))
+        .map(|tile| (chebyshev(pos, tile), tile.1, tile.0))
+        .collect();
+    candidates.sort_unstable();
+    for (lower_bound, y, x) in candidates {
+        if best.is_some_and(|b| u64::from(lower_bound) > b.0 as u64) {
+            break;
+        }
+        let tile = (x, y);
+        let Some(path) = res.nav.path(pos, tile) else {
+            continue;
+        };
+        let candidate = (path.len(), tile.1, tile.0);
+        if best.is_some_and(|b| candidate >= b) {
+            continue;
+        }
+        // Movement ran before flight; wolves can move later in this same tick.
+        let person_ticks = (path.len() as u64)
+            .saturating_mul(person_interval)
+            .saturating_sub(res.current_tick % person_interval);
+        let beaten = res.nav.path(wolf, tile).is_some_and(|wolf_path| {
+            let moves = (wolf_path.len() as u64).div_ceil(u64::from(wolf_speed));
+            let wait = (wolf_interval - res.current_tick % wolf_interval) % wolf_interval;
+            let wolf_ticks = moves
+                .saturating_sub(1)
+                .saturating_mul(wolf_interval)
+                .saturating_add(wait);
+            wolf_ticks <= person_ticks
+        });
+        if !beaten {
+            best = Some(candidate);
+        }
     }
-    if let Some(h) = crate::worldgen::colony::hearth(res).filter(|h| first(*h)) {
-        return h;
+    if let Some((_, y, x)) = best {
+        return (x, y);
+    }
+    if let Some(h) = crate::worldgen::colony::hearth(res) {
+        let defended = world
+            .query::<(&Position, &Drafted, &BodyHealth)>()
+            .iter()
+            .any(|(entity, (p, _, health))| {
+                !health.is_dead()
+                    && world.get::<&Child>(entity).is_err()
+                    && chebyshev((p.x, p.y), h) <= 2
+                    && super::draft::armed(world, entity)
+            });
+        if defended && res.nav.path(pos, h).is_some() {
+            return h;
+        }
     }
     let mut at = pos;
     for _ in 0..reach {
@@ -178,6 +245,25 @@ impl RuntimeSystem for FleeSystem {
                 }
             }
         }
+        if now.is_multiple_of(30) && !wolves.is_empty() {
+            let already: std::collections::BTreeSet<AgentId> =
+                near.iter().map(|row| row.0).collect();
+            for (entity, (agent, position, flight)) in
+                world.query::<(&Agent, &Position, &Fleeing)>().iter()
+            {
+                if flight.until <= now || already.contains(&agent.id) {
+                    continue;
+                }
+                let pos = (position.x, position.y);
+                if let Some(&(wid, wpos)) = wolves
+                    .iter()
+                    .min_by_key(|(wid, wpos)| (chebyshev(pos, *wpos), *wid))
+                {
+                    near.push((agent.id, entity, pos, (wid, wpos)));
+                }
+            }
+            near.sort_by_key(|row| row.0);
+        }
         let critical = res
             .rules
             .agent
@@ -195,17 +281,25 @@ impl RuntimeSystem for FleeSystem {
                 continue;
             }
             if let Ok(flight) = world.get::<&Fleeing>(entity).map(|f| *f) {
-                // Renewed; a refuge the wolf now reaches first is given up for a new one.
-                let to = if chebyshev(wpos, flight.to) <= chebyshev(pos, flight.to)
-                    && !arrived(res, pos, flight.to)
-                {
-                    refuge(res, pos, wpos, rule.flee_tiles)
+                let to = if crate::runtime::rooms::roofed(res, pos) {
+                    pos
+                } else if now.is_multiple_of(30) || !res.nav.reachable(pos, flight.to) {
+                    refuge(world, res, pos, wpos, rule.flee_tiles)
                 } else {
                     flight.to
                 };
                 if let Ok(mut f) = world.get::<&mut Fleeing>(entity) {
-                    f.until = now + rule.flee_ticks;
+                    if chebyshev(pos, wpos) <= rule.flee_tiles {
+                        f.until = now + rule.flee_ticks;
+                    }
                     f.to = to;
+                }
+                if arrived(res, pos, to) {
+                    let _ = world.remove_one::<SeekTarget>(entity);
+                    if let Ok(mut state) = world.get::<&mut AgentState>(entity) {
+                        *state = HOLD;
+                    }
+                    continue;
                 }
                 if to != flight.to {
                     let _ = world.insert_one(entity, SeekTarget::new(to));
@@ -213,12 +307,6 @@ impl RuntimeSystem for FleeSystem {
                         *state = WALK;
                     }
                     continue;
-                }
-                if arrived(res, pos, flight.to) {
-                    let _ = world.remove_one::<SeekTarget>(entity);
-                    if let Ok(mut state) = world.get::<&mut AgentState>(entity) {
-                        *state = HOLD;
-                    }
                 }
                 continue;
             }
@@ -229,7 +317,7 @@ impl RuntimeSystem for FleeSystem {
                 crate::runtime::jobs::cancel(world, res, entity, CancelReason::Needs);
             }
             let _ = world.remove_one::<Activity>(entity);
-            let to = refuge(res, pos, wpos, rule.flee_tiles);
+            let to = refuge(world, res, pos, wpos, rule.flee_tiles);
             let _ = world.insert_one(
                 entity,
                 Fleeing {

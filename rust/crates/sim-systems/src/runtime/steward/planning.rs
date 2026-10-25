@@ -33,6 +33,7 @@ pub fn plan(world: &World, res: &SimResources, rule: &Rule) -> Vec<Command> {
     };
     let adults = world.query::<&Agent>().without::<&Child>().iter().count() as u32;
     match &rule.action {
+        Action::Defence { .. } => Vec::new(),
         Action::Stockpile {
             base_cells,
             divisor,
@@ -824,6 +825,9 @@ mod rule_coverage {
         sim_core::colony::content::bootstrap(sim_core::colony::content::BootSelection::Bundled)
             .expect("bundled content");
         for rule in &sim_core::colony::steward::rules().expect("rules").rules {
+            if matches!(rule.action, Action::Defence { .. }) {
+                continue;
+            }
             let mut engine = crate::worldgen::build_world_with(
                 &crate::worldgen::WorldGenConfig::colony(29),
                 sim_core::rules::WorldRules::colony(29),
@@ -855,6 +859,7 @@ mod rule_coverage {
                     .expect("knowledge");
             }
             match &rule.action {
+                Action::Defence { .. } => continue,
                 Action::Hunt { animal, .. } => {
                     for settlement in engine.resources.settlements.values_mut() {
                         settlement.stockpile.insert(ResourceKind::Food, 0);
@@ -897,6 +902,7 @@ mod rule_coverage {
             let commands = plan(&engine.world, &engine.resources, rule);
             assert!(!commands.is_empty(), "positive rule {}", rule.id);
             match &rule.action {
+                Action::Defence { .. } => continue,
                 Action::Stockpile { .. } => {
                     for command in commands {
                         assert!(

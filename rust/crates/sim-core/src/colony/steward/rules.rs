@@ -20,6 +20,8 @@ pub enum Condition {
     FoodDeficit,
     /// A knowledge node has one practitioner.
     KnowledgeRisk,
+    /// Predators are approaching the colony.
+    ThreatApproaching,
 }
 /// Ordinary-order planning mechanics; all content choices reside in this data.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -83,6 +85,17 @@ pub enum Action {
     },
     /// Teach endangered knowledge to its best eligible candidate.
     Teach,
+    /// Fast predator response, independently switchable from basic orders.
+    Defence {
+        /// Maximum automatically drafted adults.
+        max_defenders: u16,
+        /// Minimum whole health points.
+        min_hp: u16,
+        /// Nearby threat radius in tiles.
+        release_tiles: u32,
+        /// Consecutive quiet ticks before release.
+        release_ticks: u64,
+    },
 }
 /// One fixed-order rule.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -178,6 +191,21 @@ pub fn parse_rules(text: &str) -> Result<RuleFile, String> {
                 },
             ) => crate::colony::knowledge::id(knowledge).is_some() && *days > 0,
             (Condition::KnowledgeRisk, Action::Teach) => true,
+            (
+                Condition::ThreatApproaching,
+                Action::Defence {
+                    max_defenders,
+                    min_hp,
+                    release_tiles,
+                    release_ticks,
+                },
+            ) => {
+                *max_defenders > 0
+                    && *min_hp > 0
+                    && *min_hp <= 100
+                    && *release_tiles > 0
+                    && *release_ticks > 0
+            }
             _ => false,
         };
         if !valid {

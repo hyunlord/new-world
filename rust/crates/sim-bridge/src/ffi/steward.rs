@@ -10,6 +10,12 @@ use sim_engine::{SimEngine, SimResources};
 pub struct StewardView {
     /// Whether automatic planning is enabled.
     pub enabled: bool,
+    /// Independent automatic defence toggle.
+    pub defence_enabled: bool,
+    /// Actual count from the most recent recruitment batch.
+    pub defence_count: u16,
+    /// Defenders still owned by automation.
+    pub defence_active_count: usize,
     /// All=0, housing=1, food=2.
     pub scope: u8,
     /// Successful automatic action sequence.
@@ -38,15 +44,32 @@ pub fn collect_steward(res: &SimResources) -> StewardView {
         .ok()
         .and_then(|data| data.rules.iter().find(|r| Some(r.id) == state.last_rule))
         .map_or_else(String::new, |r| r.label.clone());
-    let accepted_rules = state
+    let mut accepted_rules: Vec<u16> = state
         .owned
         .iter()
         .map(|r| r.rule)
         .collect::<std::collections::BTreeSet<_>>()
         .into_iter()
         .collect();
+    if state.defence.last_count > 0 {
+        if let Ok(data) = rules() {
+            accepted_rules.extend(
+                data.rules
+                    .iter()
+                    .filter(|r| {
+                        matches!(r.action, sim_core::colony::steward::Action::Defence { .. })
+                    })
+                    .map(|r| r.id),
+            );
+            accepted_rules.sort_unstable();
+            accepted_rules.dedup();
+        }
+    }
     StewardView {
         enabled: state.enabled,
+        defence_enabled: state.defence.enabled,
+        defence_count: state.defence.last_count,
+        defence_active_count: state.defence.owned_ids.len(),
         scope: state.scope.code(),
         sequence: state.sequence,
         last_rule: state.last_rule,
@@ -68,6 +91,12 @@ pub fn submit_set_steward(engine: &mut SimEngine, on: bool, scope: i64) -> Comma
 pub(super) fn steward_to_dict(v: &StewardView) -> VarDictionary {
     let mut d = VarDictionary::new();
     d.set("enabled", v.enabled);
+    d.set("defence_enabled", v.defence_enabled);
+    d.set("defence_count", i64::from(v.defence_count));
+    d.set(
+        "defence_active_count",
+        i64::try_from(v.defence_active_count).unwrap_or(i64::MAX),
+    );
     d.set("scope", i64::from(v.scope));
     d.set("sequence", i64::try_from(v.sequence).unwrap_or(i64::MAX));
     d.set("last_rule", v.last_rule.map_or(-1, i64::from));
@@ -81,4 +110,9 @@ pub(super) fn steward_to_dict(v: &StewardView) -> VarDictionary {
     }
     d.set("rules", labels);
     d
+}
+
+/// Log the independent defence policy change through the ordinary command path.
+pub fn submit_set_steward_defence(engine: &mut SimEngine, on: bool) -> CommandResult {
+    sim_systems::commands::submit(engine, Command::SetStewardDefence { on })
 }

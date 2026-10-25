@@ -144,7 +144,24 @@ pub fn protect_player(res: &mut SimResources, protection: PlayerProtection) {
     }
 }
 /// Apply the same successful source metadata for live and replay commands.
-pub fn accepted(res: &mut SimResources, rule: u16, command: Command, targets: Vec<Target>) {
+pub fn accepted(
+    world: &mut hecs::World,
+    res: &mut SimResources,
+    rule: u16,
+    command: Command,
+    targets: Vec<Target>,
+) {
+    if super::defence::is_rule(rule) {
+        if let Command::SetDrafted { agent, drafted } = command {
+            if drafted {
+                super::defence::assign_arming(world, res, agent);
+                res.steward.defence.owned_ids.insert(agent);
+            } else {
+                res.steward.defence.owned_ids.remove(&agent);
+            }
+        }
+        return;
+    }
     let cooldown = rules()
         .ok()
         .and_then(|d| d.rules.iter().find(|r| r.id == rule))

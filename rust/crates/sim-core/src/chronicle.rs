@@ -153,11 +153,13 @@ pub enum ChronicleKind {
     Eureka = 44,
     /// Automatic ordinary order; cause is its data rule id, value its sequence.
     StewardAction = 45,
+    /// Automatic defence batch; cause is rule id, value is actual recruited count.
+    StewardDefence = 46,
 }
 
 impl ChronicleKind {
     /// Every kind in discriminant order.
-    pub const ALL: [ChronicleKind; 46] = [
+    pub const ALL: [ChronicleKind; 47] = [
         Self::Born,
         Self::FoundingMember,
         Self::Paired,
@@ -204,6 +206,7 @@ impl ChronicleKind {
         Self::TraderLeft,
         Self::Eureka,
         Self::StewardAction,
+        Self::StewardDefence,
     ];
 
     /// Stable numeric discriminant.
@@ -260,6 +263,7 @@ impl ChronicleKind {
             Self::TraderLeft => "trader_left",
             Self::Eureka => "eureka",
             Self::StewardAction => "steward_action",
+            Self::StewardDefence => "steward_defence",
         }
     }
 }
@@ -711,10 +715,10 @@ mod tests {
         // M-UX: kind 45 appended; 0–44 unchanged.
         assert_eq!(ChronicleKind::StewardAction.as_u8(), 45);
         assert_eq!(ChronicleKind::StewardAction.as_str(), "steward_action");
-        assert_eq!(ChronicleKind::ALL.len(), 46);
+        assert_eq!(ChronicleKind::ALL.len(), 47);
         let names: std::collections::BTreeSet<&str> =
             ChronicleKind::ALL.iter().map(|k| k.as_str()).collect();
-        assert_eq!(names.len(), 46);
+        assert_eq!(names.len(), 47);
         assert_eq!(DepartCause::TopUp.as_u8(), 4);
     }
 

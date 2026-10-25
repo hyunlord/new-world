@@ -13,7 +13,9 @@
 //! M2 goal 3.6 order — serving in each round the people with that level for it,
 //! highest skill for it first, then ascending `AgentId` (M3 goal 3.4); without
 //! it (M1 rules) each person in `AgentId` order takes the first work type with a
-//! target. Targets lie within
+//! target. Economy rounds first recover loose fuel at the worker's hauling
+//! priority, so equal-priority production cannot leave usable fuel stranded.
+//! Targets lie within
 //! `job_scan_radius` (Chebyshev), nearest first, ties by `(y, x)` (goal 7.2),
 //! found through the spatial index (`SimResources.spatial`, M1.5 goal 6.2).
 //! Reservations are written at once, so a later agent this tick sees them.
@@ -138,6 +140,7 @@ enum Search {
     QuarryNode,
     Deadwood,
     Loose,
+    LooseFuel,
     OpenCell(ItemSpec),
     ClearStack,
     DigMark,
@@ -159,6 +162,7 @@ struct Exhausted {
     quarry_node: Memo,
     deadwood: Memo,
     loose: Memo,
+    loose_fuel: Memo,
     clear: Memo,
     dig: Memo,
     decon: Memo,
@@ -178,6 +182,7 @@ impl Exhausted {
             Search::QuarryNode => &mut self.quarry_node,
             Search::Deadwood => &mut self.deadwood,
             Search::Loose => &mut self.loose,
+            Search::LooseFuel => &mut self.loose_fuel,
             Search::ClearStack => &mut self.clear,
             Search::DigMark => &mut self.dig,
             Search::DeconMark => &mut self.decon,
@@ -716,60 +721,75 @@ fn pick_work(
                     }
                 }
             }
-            // The nearest loose stack, to the stockpile cell nearest that stack
-            // with room for it. Stacks whose spec no cell takes (a memo found
-            // none this tick) are skipped; the predicate only grows stricter
-            // within the tick, so the `Loose` memo stays valid.
-            loop {
-                let blocked: Vec<ItemSpec> = ex
-                    .open_cell
-                    .iter()
-                    .filter(|(_, memo)| memo.empty)
-                    .map(|(spec, _)| *spec)
-                    .collect();
-                let loose = search(
-                    &index.ground,
-                    pos,
-                    radius,
-                    ex.memo(Search::Loose),
-                    |t, _| {
-                        stack_of(t, None, Some(false))
-                            && colony
-                                .ground_items
-                                .get(&t)
-                                .is_some_and(|stack| !blocked.contains(&stack.spec()))
-                    },
-                );
-                let Some((from, ())) = loose else {
-                    return restock(res, ctx, pos, ex);
-                };
-                let spec = colony.ground_items.get(&from)?.spec();
-                let open = |cell: (u32, u32)| {
-                    room_on(res, cell, spec) > 0
-                        && !colony.reservations.contains_key(&ReserveKey::Cell(cell))
-                        && reach(cell)
-                };
-                let cell = search(
-                    &index.cells,
-                    from,
-                    u32::MAX,
-                    ex.memo(Search::OpenCell(spec)),
-                    |c, _| open(c),
-                )
-                .map(|(to, ())| prefer_covered(res, ctx, from, to, &open));
-                if let Some(to) = cell {
-                    let amount = rule
-                        .carry(spec.kind)
-                        .min(count(from))
-                        .min(room_on(res, to, spec));
-                    return Some((JobKind::Haul { from, to }, amount, spec.kind));
-                }
-                // The whole map has no cell for `spec`: mark it (the memo may
-                // have `seen` a cell earlier this tick), so the next round
-                // skips stacks of it and the loop ends.
-                ex.memo(Search::OpenCell(spec)).empty = true;
-            }
+            loose_haul(res, ctx, pos, ex, false).or_else(|| restock(res, ctx, pos, ex))
         }
+    }
+}
+
+/// The nearest loose stack with a reachable compatible destination. Fuel
+/// recovery has its own source memo so a fuel miss cannot hide other items.
+fn loose_haul(
+    res: &SimResources,
+    ctx: &Ctx,
+    pos: (u32, u32),
+    ex: &mut Exhausted,
+    fuel_only: bool,
+) -> Option<Pick> {
+    let colony = &res.colony;
+    let index = &res.spatial.colony;
+    loop {
+        let blocked: Vec<ItemSpec> = ex
+            .open_cell
+            .iter()
+            .filter(|(_, memo)| memo.empty)
+            .map(|(spec, _)| *spec)
+            .collect();
+        let source = if fuel_only {
+            Search::LooseFuel
+        } else {
+            Search::Loose
+        };
+        let (from, ()) = search(
+            &index.ground,
+            pos,
+            ctx.rule.job_scan_radius,
+            ex.memo(source),
+            |tile, _| {
+                !colony.zone_of_tile.contains_key(&tile)
+                    && !colony.reservations.contains_key(&ReserveKey::Stack(tile))
+                    && res.nav.reaches(ctx.region, tile)
+                    && colony.ground_items.get(&tile).is_some_and(|stack| {
+                        stack.count > 0
+                            && (!fuel_only || stack.kind.definition().fuel_units == Some(1))
+                            && !blocked.contains(&stack.spec())
+                    })
+            },
+        )?;
+        let stack = colony.ground_items.get(&from)?;
+        let spec = stack.spec();
+        let open = |cell: (u32, u32)| {
+            room_on(res, cell, spec) > 0
+                && !colony.reservations.contains_key(&ReserveKey::Cell(cell))
+                && res.nav.reaches(ctx.region, cell)
+        };
+        let cell = search(
+            &index.cells,
+            from,
+            u32::MAX,
+            ex.memo(Search::OpenCell(spec)),
+            |cell, _| open(cell),
+        )
+        .map(|(to, ())| prefer_covered(res, ctx, from, to, &open));
+        if let Some(to) = cell {
+            let amount = ctx
+                .rule
+                .carry(spec.kind)
+                .min(stack.count)
+                .min(room_on(res, to, spec));
+            return Some((JobKind::Haul { from, to }, amount, spec.kind));
+        }
+        // A full-map miss remains valid as this tick only adds reservations.
+        ex.memo(Search::OpenCell(spec)).empty = true;
     }
 }
 
@@ -1160,13 +1180,21 @@ impl RuntimeSystem for JobAssignSystem {
         // that work. M3 (goal 3.4, M3 DECISIONS D3): within a level, one round
         // per work type (tie-break order), and in it the people with that level
         // for it ordered by their skill for it, highest first, then `AgentId`.
-        // Without the economy one pass over every work type per person (M1).
-        let rounds: Vec<(u8, Option<WorkType>)> = if rule.economy.is_some() {
+        // Recover loose fuel before competing work at the same hauling priority.
+        // Higher priorities still run first; disabled hauling never enters this
+        // round. Without the economy keep the original per-person M1 pass.
+        let rounds: Vec<(u8, Option<WorkType>, bool)> = if rule.economy.is_some() {
             (1..=sim_core::colony::skills::LOWEST_PRIORITY)
-                .flat_map(|pass| WorkType::ALL.into_iter().map(move |w| (pass, Some(w))))
+                .flat_map(|pass| {
+                    std::iter::once((pass, Some(WorkType::Haul), true)).chain(
+                        WorkType::ALL
+                            .into_iter()
+                            .map(move |w| (pass, Some(w), false)),
+                    )
+                })
                 .collect()
         } else {
-            vec![(0, None)]
+            vec![(0, None, false)]
         };
         let mut assigned: std::collections::BTreeSet<AgentId> = std::collections::BTreeSet::new();
         // M4: today's apprenticeship sessions first (both partners must be free).
@@ -1190,7 +1218,7 @@ impl RuntimeSystem for JobAssignSystem {
             .collect();
         craft_skills.sort_unstable();
         craft_skills.dedup();
-        for (pass, work) in rounds {
+        for (pass, work, fuel_only) in rounds {
             let mut order: Vec<&Row> = available
                 .iter()
                 .filter(|row| {
@@ -1223,9 +1251,13 @@ impl RuntimeSystem for JobAssignSystem {
                     practice,
                 };
                 let ex = exhausted.entry(ctx.region).or_default();
-                let found = match work {
-                    Some(w) => pick_work(resources, &ctx, w, pos, ex),
-                    None => pick(resources, &ctx, &priorities, pass, pos, ex),
+                let found = if fuel_only {
+                    loose_haul(resources, &ctx, pos, ex, true)
+                } else {
+                    match work {
+                        Some(w) => pick_work(resources, &ctx, w, pos, ex),
+                        None => pick(resources, &ctx, &priorities, pass, pos, ex),
+                    }
                 };
                 let Some((kind, amount, item)) = found else {
                     continue;

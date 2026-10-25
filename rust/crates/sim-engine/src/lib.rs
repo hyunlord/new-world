@@ -293,6 +293,19 @@ fn empty_blocking_cache() -> MaterialBlockingCache {
     MaterialBlockingCache::build(&MaterialRegistry::new())
 }
 
+/// Exact transient provenance for an actual fatal animal hit; never saved or read by policy.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct FatalAnimalAttack {
+    /// Simulation tick at resolution.
+    pub tick: u64,
+    /// Person actually removed by the fatal hit.
+    pub victim: sim_core::components::AgentId,
+    /// Attacking animal's stable identity.
+    pub attacker: u32,
+    /// Registered species at the fatal hit, retaining behavior category.
+    pub kind: sim_core::colony::wildlife::AnimalKind,
+}
+
 /// Shared world state owned by the engine.
 ///
 /// `hecs` enforces single-writer semantics on the [`World`]; this struct
@@ -364,6 +377,10 @@ pub struct SimResources {
     /// Persisted separately in the v8 body; empty for historical bundled worlds.
     #[serde(skip)]
     pub content_state: sim_core::colony::content_state::ContentState,
+
+    /// Fatal animal hits this tick; cleared before every normal/profiled tick.
+    #[serde(skip)]
+    pub fatal_animal_attacks: Vec<FatalAnimalAttack>,
 
     /// FFI-originated building placement events, drained each tick by
     /// `BuildingStampSystem`. Pushed by `sim_bridge::WorldSimNode::on_building_placed`
@@ -763,6 +780,7 @@ impl SimResources {
             current_tick: 0,
             steward: Default::default(),
             content_state: Default::default(),
+            fatal_animal_attacks: Vec::new(),
             building_event_queue: VecDeque::new(),
             causal_log: CausalLogStorage::new(),
             next_event_id: AtomicU64::new(0),
@@ -1063,6 +1081,7 @@ impl SimEngine {
     fn tick_inner(&mut self, mut profile: Option<&mut TickProfile>) {
         let tick_start = profile.as_ref().map(|_| std::time::Instant::now());
         self.resources.current_tick = self.current_tick;
+        self.resources.fatal_animal_attacks.clear();
         // V7 viz-D — prune the display-only recent-deaths buffer once entries
         // age past the retain window. `saturating_sub` guards the defensive
         // `entry.tick > current_tick` case (age 0, kept). Order-independent →

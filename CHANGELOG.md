@@ -7,8 +7,18 @@ tags `v7-final-sim` and `v7-final-art`.
 
 ## M-UX2 — 2026-10-26 (in progress)
 
-- Added: owner playtest contract preserved first at `f2103ad47`, isolated `v8/mux2` worktree, strict visibility/stall and defence/flee regression preparation. Initial defence regression fails 3/3 and flee regression fails 5/5 against the unchanged implementation, confirming missing behavior. No acceptance or publication claim yet.
+- Added: owner playtest contract preserved first at `f2103ad47`, isolated `v8/mux2` worktree, strict visibility/stall and defence/flee regressions. Initial defence regression fails3/3; after repairing one missing-health fixture, all5 flee cases fail on actual behavior. Original failed runs remain recorded. No acceptance or publication claim yet.
 - Records: scope, frozen dependency input and unchanged acceptance bars are in `docs/v8/mux2/MUX2_DECISIONS.md`. Prior M-UX failures remain historical evidence.
+
+### Added
+- Independent default-on steward defence, fast approach response, player-intent protection and deterministic physical-weapon assignment. Save11 freezes v7–10 layouts; Chronicle46 carries actual batch count. Focused defence16, fingerprint1, actual v10 migration1 covering4saves and legacy-wire1 pass; full gate and natural-world acceptance remain pending.
+- Opt-in immutable M-UX2 observation, exact transient fatal-animal provenance, physical-wall housing checks and paired ON/OFF scorer. Observer4 and scorer14 focused tests pass. Both32-world arms must match frozen provenance; only ON thresholds govern acceptance. No held-out results yet.
+- Optional native/script frame profiling, including system/prune/snapshot-freeze timing; simulation never reads it. The original debug baseline fails the stall bar at both zooms; no improvement claim yet.
+
+### Changed
+- Flight chooses reachable safe roofs using actual routes and speeds, rechecks every30ticks, and uses a defended hearth only as fallback. Pending bites cannot kill a person after roof entry. Flee/wildlife24 focused tests pass.
+- Fuel hauling precedes competing work at the worker's same Haul priority while preserving higher priorities, Haul=0 and existing jobs. Historical seed5 reproduced90loose fuel with reachable capacity and repeated Hunt/Chop selection; expanded regressions change4fail/7pass to11pass.
+- These are intentional colony-policy changes: expect different orders, survival, fuel stocks and colony fingerprints, including OFF colonies affected by flight/hauling. Baseline identity and broader comparisons remain pending; do not call them behavior-preserving.
 
 ## M-UX + REVIEW — 2026-10-25 (in progress)
 

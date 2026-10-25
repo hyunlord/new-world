@@ -102,7 +102,7 @@ use super::story::{
 use godot::classes::INode;
 use godot::prelude::*;
 use sim_core::influence::InfluenceChannel;
-use sim_engine::{BuildingPlacedEvent, SimEngine, SimResources};
+use sim_engine::{BuildingPlacedEvent, SimEngine, SimResources, TickProfile};
 use sim_systems::worldgen::DEFAULT_GAME_SEED;
 
 /// Godot `Node` subclass wrapping a [`SimEngine`] instance.
@@ -128,7 +128,50 @@ pub struct WorldSimNode {
     /// [`clamp_sim_speed`]. Determinism is unaffected — only how much
     /// wall-time feeds the fixed-timestep loop changes, never `FIXED_DT`.
     sim_speed: f64,
+    mux2_profile: Option<Mux2Profile>,
     base: Base<Node>,
+}
+
+/// Optional wall-time counters; never read by simulation systems.
+struct Mux2Profile {
+    tick: TickProfile,
+    epoch: u64,
+    frame: i64,
+    frame_ticks: u32,
+    executed_ticks: u64,
+    process_ns: u64,
+    tick_ns: u64,
+}
+
+impl Mux2Profile {
+    fn new(engine: &SimEngine, epoch: u64) -> Self {
+        let mut tick = engine.new_tick_profile();
+        tick.tick_us.reserve(MAX_TICKS_PER_FRAME as usize);
+        Self {
+            tick,
+            epoch,
+            frame: -1,
+            frame_ticks: 0,
+            executed_ticks: 0,
+            process_ns: 0,
+            tick_ns: 0,
+        }
+    }
+}
+
+fn mux2_elapsed_ns(start: std::time::Instant) -> u64 {
+    u64::try_from(start.elapsed().as_nanos()).unwrap_or(u64::MAX)
+}
+
+impl WorldSimNode {
+    fn reset_mux2_profile(&mut self) {
+        if let Some(profile) = self.mux2_profile.as_ref() {
+            self.mux2_profile = Some(Mux2Profile::new(
+                &self.engine,
+                profile.epoch.saturating_add(1),
+            ));
+        }
+    }
 }
 
 /// Ticks fed per real second at 1× (ADR 0004, M1): one tick is one simulated
@@ -175,15 +218,44 @@ impl INode for WorldSimNode {
         // accumulator. Only the INPUT to the Gaffer loop is scaled; FIXED_DT
         // and the MAX_ITERS_PER_FRAME guard below are unchanged, so per-tick
         // determinism is preserved.
+        let process_start = self
+            .mux2_profile
+            .as_ref()
+            .map(|_| std::time::Instant::now());
+        if self
+            .mux2_profile
+            .as_ref()
+            .is_some_and(|p| p.tick.systems.len() != self.engine.system_count())
+        {
+            self.reset_mux2_profile();
+        }
+        if let Some(profile) = self.mux2_profile.as_mut() {
+            profile.frame = godot::classes::Engine::singleton().get_process_frames() as i64;
+            profile.frame_ticks = 0;
+            // Retain capacity and cumulative system/prune counters; bound per-tick samples to this frame.
+            profile.tick.tick_us.clear();
+            profile.tick.ticks = 0;
+        }
         self.accumulator += delta * self.sim_speed;
         let mut iters: u32 = 0;
         while self.accumulator >= FIXED_DT && iters < MAX_ITERS_PER_FRAME {
-            self.engine.tick();
+            if let Some(profile) = self.mux2_profile.as_mut() {
+                let tick_start = std::time::Instant::now();
+                self.engine.tick_profiled(&mut profile.tick);
+                profile.tick_ns = profile.tick_ns.saturating_add(mux2_elapsed_ns(tick_start));
+                profile.frame_ticks += 1;
+                profile.executed_ticks = profile.executed_ticks.saturating_add(1);
+            } else {
+                self.engine.tick();
+            }
             self.accumulator -= FIXED_DT;
             iters += 1;
         }
         if self.accumulator > FIXED_DT * MAX_ITERS_PER_FRAME as f64 {
             self.accumulator = FIXED_DT;
+        }
+        if let (Some(profile), Some(start)) = (self.mux2_profile.as_mut(), process_start) {
+            profile.process_ns = profile.process_ns.saturating_add(mux2_elapsed_ns(start));
         }
     }
 }
@@ -204,13 +276,56 @@ impl WorldSimNode {
             return None;
         }
         let engine = build_game_engine(DEFAULT_GAME_SEED);
+        let mux2_profile = (std::env::var("WORLDSIM_MUX2_PROFILE").as_deref() == Ok("1"))
+            .then(|| Mux2Profile::new(&engine, 0));
         Some(Gd::from_init_fn(move |base| Self {
             engine,
             world_seed: DEFAULT_GAME_SEED,
             accumulator: 0.0,
             sim_speed: 1.0,
+            mux2_profile,
             base,
         }))
+    }
+
+    /// Optional native process/tick counters for the rendered-frame stall harness.
+    /// Cumulative nanoseconds reset only when epoch changes; disabled by default.
+    #[func]
+    fn mux2_native_timings(&self) -> VarDictionary {
+        let mut out = VarDictionary::new();
+        let Some(profile) = self.mux2_profile.as_ref() else {
+            out.set("status", "DISABLED");
+            return out;
+        };
+        out.set("status", "MEASURED");
+        out.set("epoch", profile.epoch as i64);
+        out.set("frame", profile.frame);
+        out.set("frame_ticks", profile.frame_ticks);
+        out.set("executed_ticks", profile.executed_ticks as i64);
+        let mut totals = VarDictionary::new();
+        totals.set("process", profile.process_ns as i64);
+        totals.set("tick", profile.tick_ns as i64);
+        totals.set("prune", profile.tick.prune_ns as i64);
+        totals.set(
+            "process_residual",
+            profile.process_ns.saturating_sub(profile.tick_ns) as i64,
+        );
+        let mut systems = VarDictionary::new();
+        let mut systems_ns: u64 = 0;
+        for system in &profile.tick.systems {
+            systems.set(system.name.as_str(), system.total_ns as i64);
+            systems_ns = systems_ns.saturating_add(system.total_ns);
+        }
+        totals.set(
+            "tick_residual",
+            profile
+                .tick_ns
+                .saturating_sub(systems_ns)
+                .saturating_sub(profile.tick.prune_ns) as i64,
+        );
+        out.set("totals_ns", totals);
+        out.set("systems_ns", systems);
+        out
     }
 
     /// Immutable definitions; each call creates a defensive projection.
@@ -231,6 +346,7 @@ impl WorldSimNode {
     fn reset_world(&mut self, seed: i64) -> bool {
         self.world_seed = seed as u64;
         self.engine = build_game_engine(self.world_seed);
+        self.reset_mux2_profile();
         self.accumulator = 0.0;
         self.base_mut()
             .call_deferred("emit_signal", &["world_reset".to_variant()]);
@@ -245,6 +361,7 @@ impl WorldSimNode {
     fn reset_world_stress(&mut self, seed: i64, agents: i64) -> bool {
         self.world_seed = seed as u64;
         self.engine = build_stress_engine(self.world_seed, agents.clamp(1, 5000) as u32);
+        self.reset_mux2_profile();
         self.accumulator = 0.0;
         self.base_mut()
             .call_deferred("emit_signal", &["world_reset".to_variant()]);
@@ -276,6 +393,7 @@ impl WorldSimNode {
             Ok(engine) => {
                 self.world_seed = engine.resources.world_seed;
                 self.engine = engine;
+                self.reset_mux2_profile();
                 self.accumulator = 0.0;
                 self.base_mut()
                     .call_deferred("emit_signal", &["world_reset".to_variant()]);
@@ -828,6 +946,15 @@ impl WorldSimNode {
             &mut self.engine,
             on,
             scope,
+        ))
+    }
+
+    /// Change independent automatic defence through the ordinary command log.
+    #[func]
+    fn cmd_set_steward_defence(&mut self, on: bool) -> VarDictionary {
+        result_to_dict(super::steward::submit_set_steward_defence(
+            &mut self.engine,
+            on,
         ))
     }
 
