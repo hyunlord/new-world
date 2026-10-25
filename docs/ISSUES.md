@@ -59,3 +59,6 @@ M-UX 작업 중인 누적 기록. Stage C에서 V8-0 이후 모든 보고서·�
 | ISS-282 | 새 데이터 팩의 긴 시험 경고 제목이 수량을 가리고 첫 캡처의 미니맵이 비어 있음 | M-EXT data-only-window-first visual EXT-V1/V2 | process | fixed | 첫 기능36/0·시각 REVISE 보존. 둘째 창40/0, EN/KO 제목·수량폭 통과, 실제 미니맵 캡처와 scoped시각 PASS; 기존 ISS274 줄바꿈 별도 유지 | — |
 
 | ISS-283 | 보조 M5 UI 두 실행에서 시험 설정 격리 환경 변수를 누락함 | M-EXT ecology-m5-ui-first/second, 2026-10-25 12:07 KST | process | open | 공유 settings.cfg 갱신시각이 실행과 겹침; 실행 전 사본 없음으로 변경범위·복원 불명. 사후 사본·SHA 보존, 임의 복원 안 함. 명시적 외부 경로 없으면 시험 시작 거부 guard 음성 검사 통과; 격리 재실행43/0 및 공유 파일 SHA·mtime 불변 확인. 앞선 변경범위는 여전히 불명 | — |
+
+| ISS-284 | B6 언어 서버 도구 연결 종료로 LSP 진단을 얻지 못함 | M-EXT B6 lsp/status·lsp/diagnostics: Transport closed | process | open | 실제 응답 보존; compiler·clippy·회귀 시험으로 검증을 계속하되 LSP clean으로 주장하지 않음. 도구 서버 복구는 이 제품 패스에서 미수행 | — |
+| ISS-285 | 자원 스냅숏 추출 파일에서 시험 모듈 뒤 production 항목이 남아 strict clippy 실패 | M-EXT B6 b6-clippy-first: items_after_test_module | process | fixed | 기존 시험 본문을 변경 없이 파일 끝으로 이동. 두 번째 strict clippy exit0·bridge51·fmt 통과; 첫 실패 로그 보존 | — |

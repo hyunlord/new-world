@@ -195,3 +195,5 @@
 
 - 2026-10-25 — M-UX Stage B core `e90b7bb86` 커밋: items/blueprints/recipes와 명시적 카탈로그·format8 이행. 최종 safety2 기준선228748값 차이0·OFF9요약·ON8시드 요약/명령8개 literal 동일. 미게시이며 후속 압력·동물/format9/B3 검증 중: 과거 저장4·novel illness1·windowed pack40/0 통과와 시각 실패 수정 기록은 전체 Stage B gate를 대신하지 않는다. 공유 시험 설정 누락 ISS283도 별도 보존([검토](v8/review/CODE_REVIEW_2026-10.md)).
 - 2026-10-25 — M-EXT 압력·동물 데이터와 일곱 계열 실제 확장 시험 단위 검증: 기준선228748값 차이0·OFF9요약·ON8시드 요약/명령8개 동일, 과거 저장4·core378·새 질병/포식자 실제 경로 통과. 창 UI284·팩40·격리M543·배율220 검사 통과; 전체 B 게시와 기존 시각·설정 사고 해결은 별개([검증](v8/mux/B_ECOLOGY_VERIFICATION.md), D37).
+
+- 2026-10-25 — M-EXT B6 자원 snapshot과 Food/Water/Sleep 도메인 추출: 전후 focused bridge51·decision21→22·통합128, 실제 renderer 일치 및 identity228748값 차이0·OFF9·ON요약/명령8개 동일. 제품2087해시 불변; 첫 clippy 실패 수정과 LSP 불가 ISS284 보존. 전체 B gate·게시 전([검증](v8/mux/B6_VERIFICATION.md), ADR0039/D38).

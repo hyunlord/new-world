@@ -1,12 +1,12 @@
 # 코드 검토 2026-10 — B1 조사와 Stage B 구현 중간 검증
 
-**B1 검토 문서 통합 / Stage B IN_PROGRESS / 전체 gate·게시 미완료.** 갱신: **2026-10-25 12:23 KST**. 기준 HEAD는 안전망을 통과한 첫 핵심 리팩터링 `e90b7bb86339d1c83b9fb061f6ae36ba2b448f1e`이며 아래 현재 집계는 그 위의 **미커밋 작업 트리**다. 이 문서는 구현 완료나 삭제 승인이 아니다.
+**B1 검토 문서 통합 / Stage B IN_PROGRESS / 전체 gate·게시 미완료.** 갱신: **2026-10-25 12:50 KST**. 기준 HEAD는 안전망을 통과한 압력·동물 확장 `76f572fffeb2a2312eb823c9e04a49b9bfc45927`이며 아래 현재 집계는 그 위의 **미커밋 작업 트리**다. 이 문서는 구현 완료나 삭제 승인이 아니다.
 
 ## 현재 판정과 읽는 방법
 
 B1의 아키텍처·콘텐츠 enum·하드코딩·baseline·dead code·중복·결정성·성능·시험·문서 검토를 아래 기존 조사 전문과 함께 보존한다. 기존 전문의 경로·행·수치는 해당 조사 시점의 근거다. **현재 상태는 이 앞부분이 우선**하며, 과거의 PENDING, 닫힌 enum, HUD→ArtSpriteLibrary 설명을 현재 사실로 재사용하지 않는다. 전체 파일을 이번에 다시 읽거나 전체 트리 compiler-certified census를 완료했다고 주장하지 않는다.
 
-원본 조사들의 범위·SHA·제외 해소·동적 참조 한계는 뒤의 보존 전문에 있다. B1 도구 실행은 보완됐으나 구현 후 모든 변경분의 의미 검토, 전체 gate와 B3 일곱 family의 실행 증거는 남아 있다. 원시 로그·probe·캡처는 저장소에 복사하지 않았다. 외부 증거 루트는 `/Users/rexxa/work/mux-data/`다. 이 절의 링크는 해당 작업 환경의 원본 파일을 가리킨다.
+원본 조사들의 범위·SHA·제외 해소·동적 참조 한계는 뒤의 보존 전문에 있다. B1 도구 실행과 B3 일곱 family 실제 실행 증거는 확보했다. B6 두 도메인 추출의 최종 안전망도 통과했다([검증](../mux/B6_VERIFICATION.md)). 후속 행동 변경과 전체 gate는 남아 있다. 원시 로그·probe·캡처는 저장소에 복사하지 않았다. 외부 증거 루트는 `/Users/rexxa/work/mux-data/`다. 이 절의 링크는 해당 작업 환경의 원본 파일을 가리킨다.
 
 ## 실행 증거: 완료 범위와 남은 범위
 
@@ -30,14 +30,14 @@ B1의 아키텍처·콘텐츠 enum·하드코딩·baseline·dead code·중복·�
 
 ## 현재 규모: 같은 단위로 해석할 것
 
-2026-10-25 12:25 KST에 해당 폴더 아래 `.rs`/`.gd` 텍스트를 열어 물리 줄 수를 집계했다. 주석·빈 줄·inline test를 포함하며 generated macro expansion과 비텍스트 asset은 제외한다. enum은 줄 시작의 선택적 `pub(...)` + `enum Name` 정규식 선언 수다. **cfg(test) 분리/매크로 확장/타입 해석을 하지 않은 raw lexical count**이며 과거 production92와 같은 통계가 아니다.
+2026-10-25 12:50 KST에 해당 폴더 아래 `.rs`/`.gd` 텍스트를 열어 물리 줄 수를 집계했다. 주석·빈 줄·inline test를 포함하며 generated macro expansion과 비텍스트 asset은 제외한다. enum은 줄 시작의 선택적 `pub(...)` + `enum Name` 정규식 선언 수다. **cfg(test) 분리/매크로 확장/타입 해석을 하지 않은 raw lexical count**이며 과거 production92와 같은 통계가 아니다.
 
 | 범위 | 파일 | 물리 LOC | raw enum 선언 |
 |---|---:|---:|---:|
 | sim-core/src | 133 | 26,965 | 86 |
 | sim-engine/src | 2 | 1,844 | 0 |
-| sim-systems/src | 103 | 39,678 | 17 |
-| sim-bridge/src | 29 | 11,383 | 6 |
+| sim-systems/src | 104 | 39,786 | 17 |
+| sim-bridge/src | 30 | 11,396 | 6 |
 | sim-test 전체 Rust | 159 | 91,013 | 4 |
 | scripts 전체 GDScript | 70 | 19,388 | 1 |
 
@@ -48,7 +48,7 @@ B1의 아키텍처·콘텐츠 enum·하드코딩·baseline·dead code·중복·�
 | 우선 | 현재 문제 / 진척 | 근거 | 다음 조치·위험·행동 경계 |
 |---|---|---|---|
 | P1 | item/recipe/blueprint registry와 legacy save 첫 단위 커밋 완료; 후속 family 별도 검증 | `content/ids.rs`, `data/colony/items.ron`, `blueprints.ron`, `recipes.ron`; core/save receipt | core safety2/ON2 확인. 후속 단위는 새 안전망·gate 필요; 순서·코드·material·tool wear 보존 |
-| P1 | pressure/animal open-ID 및 B3 일곱 family 실제 실행 통과, 최종 source 안전망·gate 미완료 | MUX_GOAL B3: item, recipe, blueprint/style, pressure, animal, knowledge, alert/lesson | 실제 world/UI 증거 확보, 최종 binary 안전망은 대기. resolver 등록만으로 PASS 금지. B2 시간 여유 조항으로 B3 요구를 면제하지 않음 |
+| P1 | pressure/animal open-ID 및 B3 일곱 family 실제 실행·최종 단위 안전망 통과, B gate 미완료 | MUX_GOAL B3: item, recipe, blueprint/style, pressure, animal, knowledge, alert/lesson | 실제 world/UI 증거와 ecology 최종 binary identity/OFF/ON 확보. 전체 B gate는 대기. resolver 등록만으로 PASS 금지. B2 시간 여유 조항으로 B3 요구를 면제하지 않음 |
 | P1 | shelf cutter selector 불일치 발견 후 현재 source 수정 | [base audit](/Users/rexxa/work/mux-data/stage-b/base-data-audit.md), `runtime/jobs/craft.rs:184`는 현재 `knife_uses` | 기존 잘못된 `wildlife.knife_uses`는 bundled4 대신8회 사용. 현재 소스 수정과 해당 실행 binary의 증거를 구분; 과거 진단을 삭제하지 않음 |
 | P2 | HUD는 semantic binding으로 이행했으나 원본 raster는 살아 있음 | `scripts/ui/panels/art_ui.gd:76–96`, `assets/v8art/bindings.json:547–673` | 15개 UI binding이 `assets/art/atlas/world_0.png` 사용. atlas 전체 삭제 금지 |
 | P2 | 무호출 frame helper와 마지막 legacy library dependency | [current dead-code audit](/Users/rexxa/work/mux-data/stage-b/dead-code-current.md), `wood_visuals.gd:6,30–59` | 8개 helper+ART preload 제거 뒤 library/UID 후보. `daylight_controller.gd:94`의 settlement는 보존. 이 문서는 삭제 실행 아님 |
@@ -462,3 +462,7 @@ ARCHITECTURE의97 API items 설명(:225), Steward Writes `?`(:179), offset 생�
 - 같은 소스에서 `cargo clippy --workspace --all-targets -- -W dead_code` exit0, 24.48초. 원문 `stage-b/review/clippy-dead-code.log`. 경고 없음은 미사용 데이터/GDScript 증명이 아니다.
 - `rustup toolchain list`는 stable/1.93.1만, cargo 명령 목록에 udeps 없음. nightly/udeps는 NOT_RUN; 새 도구를 설치하지 않았다.
 - frozen Stage A release `worldsim_perf stress --seeds 15100..15101 --agents 1000 --side 64 --days 1 --feed fed --rules baseline`: 1,440ticks(steady1,380), mean0.88171087ms, p99.9 1.667ms, max1.687ms, alive1,000. AgentDecisionSystem steady863.994297ms, 626.082824µs/call, tick time의 **71.007724%**. 단일 seed/1일 fed stress 표본이며 전체 게임/장기 프레임 성능 주장이 아니다. `stage-b/review/b1-tool-receipt.json`에 원문 해시와 설정/결과를 기록했다.
+
+## B6 두 도메인 추출 현재 검증
+
+ADR0039/D38에 따라 resource snapshot facade1481→1238줄과 child256줄, decision 본체3494→3487줄(새 회귀46줄 포함)과 child114줄을 분리했다. 기본 소비 세 동작만 옮기며 GatherFood/Idle/routine은 유지한다. 전체 LOC 감소나 실행속도 개선 주장은 없다. 수정 전 bridge51/decision21/통합128, 신규 야간 경계1, 수정 후 bridge51/decision22/통합128 및 strict clippy/fmt가 통과했다. 실제 렌더러 일치도 사람10명·외형10개로 통과했다. 최종 새 바이너리 identity/OFF/ON은 실행 중이다. 첫 clippy 실패와 LSP Transport closed는 ISS285/284로 구분한다([단위 검증](../mux/B6_VERIFICATION.md)).

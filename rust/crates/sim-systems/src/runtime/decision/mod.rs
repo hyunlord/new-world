@@ -12,6 +12,7 @@
 //! `social_decision`, etc. — all priority 12x slots share the
 //! "decision tier" of the schedule.
 
+mod consume;
 mod forage;
 mod memory_bias;
 pub(crate) mod needs;

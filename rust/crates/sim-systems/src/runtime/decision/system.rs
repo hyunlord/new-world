@@ -80,9 +80,8 @@ use super::memory_bias::{
 };
 use super::needs::{
     actionable_need_with_fatigue_threshold, clock_in_window, fatigue_threshold_at,
-    person_night_rest, NeedAvailability, CRITICAL_NEED, FATIGUE_CONSUME_AMOUNT, FATIGUE_THRESHOLD,
-    HUNGER_CONSUME_AMOUNT, HUNGER_THRESHOLD, SOCIAL_THRESHOLD, THIRST_CONSUME_AMOUNT,
-    THIRST_THRESHOLD,
+    person_night_rest, NeedAvailability, CRITICAL_NEED, FATIGUE_THRESHOLD, HUNGER_THRESHOLD,
+    SOCIAL_THRESHOLD, THIRST_THRESHOLD,
 };
 use super::routine::{idle_equivalent, is_activity, PlacesCache, RoutineTick};
 use super::targets::{
@@ -2320,37 +2319,14 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 }
                             }
                             TargetKind::Food => {
-                                // V7 Section 16-α0 — source guard: a tile at the
-                                // RESOURCE_SOURCE_INFINITE sentinel never depletes.
-                                // Finite tiles keep decrement-and-remove (Assertions
-                                // 16/17). Legacy rules retain unconditional relief; strict rules require food.
-                                let food_present = resources
-                                    .food_tiles
-                                    .get(&key)
-                                    .is_some_and(|counter| *counter > 0);
-                                if resources.rules.agent.strict_consume && !food_present {
-                                    *state = AgentState::Idle;
-                                    continue;
-                                }
-                                if let Some(counter) = resources.food_tiles.get_mut(&key) {
-                                    food_version += 1;
-                                    if *counter != RESOURCE_SOURCE_INFINITE {
-                                        resources.tallies.food_harvested += u64::from(*counter > 0);
-                                        *counter = counter.saturating_sub(1);
-                                        if *counter == 0 {
-                                            resources.food_tiles.remove(&key);
-                                        }
-                                    }
-                                }
-                                if let Some(h) = hunger_opt {
-                                    h.value = (h.value - HUNGER_CONSUME_AMOUNT).max(0.0);
-                                    resources.tallies.meals_eaten += 1;
-                                    resources.tallies.meals_without_food +=
-                                        u64::from(!food_present);
-                                    // Pass 5, display-only: a resolved ground meal.
-                                    resources.tallies.ground_meals += 1;
-                                }
-                                *state = AgentState::Idle;
+                                super::consume::consume_food(
+                                    resources,
+                                    key,
+                                    state,
+                                    hunger_opt,
+                                    &mut food_version,
+                                );
+                                continue;
                             }
                             // Direction-2 slice 2-2 — Gather PICKUP (carry, NOT eat):
                             // transfer ground Food into the agent's Inventory. Mirrors
@@ -2568,51 +2544,21 @@ impl RuntimeSystem for AgentDecisionSystem {
                                 *state = AgentState::Idle;
                             }
                             TargetKind::Water => {
-                                // V7 Section 16-α0 — source guard (mirror of Food).
-                                if let Some(counter) = resources.water_tiles.get_mut(&key) {
-                                    if *counter != RESOURCE_SOURCE_INFINITE {
-                                        *counter = counter.saturating_sub(1);
-                                        if *counter == 0 {
-                                            resources.water_tiles.remove(&key);
-                                        }
-                                    }
-                                }
-                                if let Some(t) = thirst_opt {
-                                    t.value = (t.value - THIRST_CONSUME_AMOUNT).max(0.0);
-                                }
-                                *state = AgentState::Idle;
+                                super::consume::consume_water(resources, key, state, thirst_opt);
+                                continue;
                             }
                             TargetKind::Sleep => {
-                                if let Some(rule) = night_rest {
-                                    let urgent_hunger = availability.food
-                                        && hunger_opt.as_ref().is_some_and(|need| {
-                                            f64::from(need.value) > rule.wake_preempt
-                                        });
-                                    let urgent_thirst = availability.water
-                                        && thirst_opt
-                                            .as_ref()
-                                            .is_some_and(|need| need.value > rule.wake_preempt);
-                                    if urgent_hunger || urgent_thirst {
-                                        *state = AgentState::Idle;
-                                    } else if let Some(sleep) = sleep_opt {
-                                        sleep.fatigue =
-                                            (sleep.fatigue - rule.recovery_per_tick).max(0.0);
-                                    }
-                                    continue;
-                                }
-                                // V7 Section 16-α0 — source guard (mirror of Food).
-                                if let Some(counter) = resources.sleep_tiles.get_mut(&key) {
-                                    if *counter != RESOURCE_SOURCE_INFINITE {
-                                        *counter = counter.saturating_sub(1);
-                                        if *counter == 0 {
-                                            resources.sleep_tiles.remove(&key);
-                                        }
-                                    }
-                                }
-                                if let Some(s) = sleep_opt {
-                                    s.fatigue = (s.fatigue - FATIGUE_CONSUME_AMOUNT).max(0.0);
-                                }
-                                *state = AgentState::Idle;
+                                super::consume::consume_sleep(
+                                    resources,
+                                    key,
+                                    state,
+                                    hunger_opt.as_deref(),
+                                    thirst_opt.as_deref(),
+                                    sleep_opt,
+                                    night_rest,
+                                    availability,
+                                );
+                                continue;
                             }
                             // V7 Phase 6-α: ConstructionSite consume is β scope.
                             // The ConstructionSystem (β) is the sole owner of
@@ -3098,6 +3044,7 @@ impl RuntimeSystem for AgentDecisionSystem {
 
 #[cfg(test)]
 mod tests {
+    use super::super::needs::{FATIGUE_CONSUME_AMOUNT, HUNGER_CONSUME_AMOUNT};
     use super::*;
     use sim_core::material::MaterialRegistry;
     use sim_engine::SimEngine;
@@ -3426,6 +3373,52 @@ mod tests {
         }
         let fatigue = e.world.get::<&Sleep>(entity).unwrap().fatigue;
         assert!((fatigue - (40.0 - 70.0 * 0.12)).abs() < 1e-9, "{fatigue}");
+    }
+
+    #[test]
+    fn night_sleep_ignores_critical_needs_without_available_sources() {
+        for (hunger, thirst, food_available, water_available) in [
+            (100.0, 0.0, false, true),
+            (0.0, 100.0, true, false),
+            (100.0, 100.0, false, false),
+        ] {
+            // Given an asleep person at night with an urgent but unavailable need.
+            let (mut engine, entity) = sleeper(
+                1260,
+                None,
+                AgentState::Consuming {
+                    target: TargetKind::Sleep,
+                },
+                40.0,
+            );
+            engine.resources.rules.agent.need_fallthrough = true;
+            engine
+                .world
+                .insert(entity, (Hunger::new(hunger, 0.0), Thirst::new(thirst, 0.0)))
+                .expect("critical needs");
+            engine.resources.sleep_tiles.insert((5, 5), 2);
+            if food_available {
+                engine.resources.food_tiles.insert((6, 5), 1);
+            }
+            if water_available {
+                engine.resources.water_tiles.insert((6, 5), 1);
+            }
+
+            // When the public decision tick resolves the nighttime consume action.
+            AgentDecisionSystem::new().tick(&mut engine.world, &mut engine.resources);
+
+            // Then unavailable needs do not wake the person or consume their sleep tile.
+            assert_eq!(
+                *engine.world.get::<&AgentState>(entity).expect("state"),
+                AgentState::Consuming {
+                    target: TargetKind::Sleep
+                },
+                "hunger={hunger}, thirst={thirst}"
+            );
+            let fatigue = engine.world.get::<&Sleep>(entity).expect("sleep").fatigue;
+            assert!((fatigue - 39.88).abs() < 1e-9, "night recovery: {fatigue}");
+            assert_eq!(engine.resources.sleep_tiles.get(&(5, 5)), Some(&2));
+        }
     }
 
     #[test]
