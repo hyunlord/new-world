@@ -13,3 +13,7 @@ External evidence under `/Users/rexxa/work/mux-data/stage-c-github-1/`: original
 - Corrected publisher SHA256:b53f471d9da811cb178dd794773b10a3717546d3ee1e0734502d3b458fab15a7.
 
 The original anchor has311 rows; the later fixed process incident adds312 without changing the105 OPEN set. Full C gate and branch publication are separate checks.
+
+## Follow-up observation ISS313
+
+C gate1's tail-latency observation was registered at clean `d113e2c9827c78cdf527432929bcac70e9c8b58a` as new OPEN ISS313, GitHub#618. Direct canonical-URL GET verified its exact body/title/perf label and open state; the immutable original105 issue bodies and journals were preserved. A subsequent independent all-state list verified all106 OPEN issues (#513–#618) and unchanged59. Raw evidence: `/Users/rexxa/work/mux-data/stage-c-github-2/journal.json`, `all-106-final.json`, `final-verification.json`. Final registry313=175fixed/106open/30deferred/2won't fix. The earlier105 observation remains historical, not silently rewritten.

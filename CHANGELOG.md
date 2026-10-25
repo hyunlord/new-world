@@ -593,3 +593,4 @@ are gone from the bridge.
 - Changed seven named issue statuses after published B proof;105 unresolved rows await GitHub mirrors. C cleanup safety passed at93a99ce16.
 - Added verified GitHub mirrors for105 OPEN rows (#513–#617), protected existing#59, and ISS312/lesson26 for safe read-after-write recovery. Registry now312:175fixed/105open/30deferred/2won't fix.
 - Added C full gate1 proof (36/36 at8ea4baa49), preserving natural tail-latency increase as ISS313 OPEN; registry313 with106 OPEN.
+- Added GitHub#618 for ISS313; all106 OPEN mappings verified without altering the original105 issue bodies or existing#59.

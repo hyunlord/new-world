@@ -1,6 +1,6 @@
 ## 구현 완료 보고 — M-UX + 검토
 
-**Stage A·B 게시 완료 / C gate1 36/36 PASS / A8 수용 FAILED 유지.** C 정리·안전망·원장313건·교훈26개를 마쳤다. 기존 미해결105건은 GitHub#513–#617에 등록·검증했고, C gate1의 꼬리 지연 관측ISS313을 추가했다. C gate1은 깨끗한 `8ea4baa49b9c8f144d5b47f0b4cc6e2656cf7f37`에서2026-10-25 21:56:53 KST 종료했다. 이 보고서를 포함한 문서 마감 HEAD도 전체 게이트를 통과한 후에만 게시한다. 최종 게시·원격 일치·작업 트리 제거의 실제 결과는 최종 메시지와 외부 완료 영수증에 기록한다. 이전 실패와 오너 수용 미확인 상태는 기술 게이트와 구분한다.
+**Stage A·B 게시 완료 / C gate1 36/36 PASS / A8 수용 FAILED 유지.** C 정리·안전망·원장313건·교훈26개를 마쳤다. 미해결106건은 GitHub#513–#618에 등록·검증했고, C gate1의 꼬리 지연 관측ISS313을 포함한다. C gate1은 깨끗한 `8ea4baa49b9c8f144d5b47f0b4cc6e2656cf7f37`에서2026-10-25 21:56:53 KST 종료했다. 이 보고서를 포함한 문서 마감 HEAD도 전체 게이트를 통과한 후에만 게시한다. 최종 게시·원격 일치·작업 트리 제거의 실제 결과는 최종 메시지와 외부 완료 영수증에 기록한다. 이전 실패와 오너 수용 미확인 상태는 기술 게이트와 구분한다.
 
 ### 구현 의도
 
@@ -58,7 +58,7 @@ p2 `7bce14c96c479e7e391c5a4716f92b8889a0b30d`는311건을 통합했고, 후속 �
 
 ISS305/306/308/309/310의 시험수리와 ISS307 외부 wrapper guard, ISS311 제목 위반을 구분한다. ISS311은 역사적 process won't fix로 원SHA/제목을 유지하며 승인 없는 amend/rebase를 하지 않는다. 7개 한정 결함의 종결은 원장에 범위와 근거를 보존하며, 제품 전체·과거 실패·오너 수용의 일괄 해결을 뜻하지 않는다.
 
-GitHub는 미해결105건을 **[#513](https://github.com/hyunlord/new-world/issues/513)–[#617](https://github.com/hyunlord/new-world/issues/617)**에 등록했다. 원장에 각 번호를 되썼고, 전체 목록의 ID·번호·본문SHA·라벨·상태를 독립 대조했다. 중복0, 기존#59의 내용과 수정 시각은 불변이다. 첫 두 생성 후 목록 반영 지연으로 중단한 기록은 보존했다. 동일 journal로 복구하고 반환URL·번호 직접 조회로 검증했으며 생성 요청을 중복하지 않았다. ISS312는 이 과정의 수정 완료 기록이다. ISS313은 C gate1의 원인 미확인 tail-latency 관측으로 추가한 공개 이슈이며 후속 번호를 원장에 기록한다. [검증](C_GITHUB_VERIFICATION.md), [전체 이슈 원장](../../ISSUES.md).
+GitHub는 최초105건 #513–#617에 후속ISS313 [#618](https://github.com/hyunlord/new-world/issues/618)을 더해 **미해결106건 #513–#618**을 등록했다. 원장에 각 번호를 되썼고, 전체 목록의 ID·번호·본문SHA·라벨·상태를 독립 대조했다. 중복0, 기존#59의 내용과 수정 시각은 불변이다. 첫 두 생성 후 목록 반영 지연으로 중단한 기록은 보존했다. 동일 journal로 복구하고 반환URL·번호 직접 조회로 검증했으며 생성 요청을 중복하지 않았다. ISS312는 이 과정의 수정 완료 기록이다. ISS313은 원인 미확인 tail-latency 관측으로#618에 등록했고 원장에 번호를 기록했다. 전체106건을 다시 대조했으며 기존105건의 본문을 바꾸지 않았다. [검증](C_GITHUB_VERIFICATION.md), [전체 이슈 원장](../../ISSUES.md).
 
 p2에서25개, 후속ISS312로 총26개 교훈과 HISTORY/archive 포인터·기존 testing/pitfalls 예방 규칙을 설치했다. 내용은 관측기는 제품 동작을 바꾸지 않아야 하고, fixed fixture와 자연 결과는 서로 다른 증거다. 시험 설정은 외부 경로를 명시하고, source/binary/ignored lock provenance를 빌드 전에 묶으며, 그림의 bounded 판정·오너 승인을 구별한다. SHA object 해소·UNRESOLVED terminal 분리·interrupt 완료 guard·commit subject 검증 규칙을 포함한다. 교훈은 [LESSONS.md](../../LESSONS.md)에 설치된 예방 규칙과 연결했다. C gate1 문서검사와 전체36단계를 통과했고, 최종 문서 커밋의 gate·게시는 완료 영수증으로 구분한다.
 
@@ -92,7 +92,7 @@ UI는 정지 tick1 미니맵345µs 상한과 UI14 545µs 불확정 이력을 구
 
 ### 변경된 파일 목록 (단계·커밋별)
 
-아래 각 commit 링크의 Files changed가 실제 경로 목록이다. `git diff --name-only/--shortstat parent commit`로 현지 객체에서 확인했으며 커밋별 수정경로 수는 중복 포함이라 단계별 unique합계와 다르다.
+아래 각 commit 링크의 Files changed가 실제 경로 목록이다. 마지막 후속 문서 커밋은 ISS313의#618 링크·106건 검증·이력·로드맵·이 보고서만 마감하며, 자신의 미래 SHA를 본문에 만들어 넣지 않는다. 실제 최종 커밋과 전체 파일 목록은 최종 메시지의 링크로 제공한다. `git diff --name-only/--shortstat parent commit`로 현지 객체에서 확인했으며 커밋별 수정경로 수는 중복 포함이라 단계별 unique합계와 다르다.
 
 - [Stage A 전체 변경](https://github.com/hyunlord/new-world/compare/67a6232ab41a4bf5051b11303bcac97543b111f0...ca9f531ca6ef700ca223d99dba14d834b94b45da): 154 files changed, 15681 insertions(+), 496 deletions(-).
 - [Stage B p1–p11 전체 변경](https://github.com/hyunlord/new-world/compare/ca9f531ca6ef700ca223d99dba14d834b94b45da...5e20c65a1d52ba2a96a6e524614d3a7679f31a44): 290 files changed, 27196 insertions(+), 3338 deletions(-). B는19:56:18 KST publication receipt에서 두 ref에 게시됨을 확인했다; 이 편집에서 네트워크를 다시 조회하지 않았다.
@@ -129,6 +129,7 @@ UI는 정지 tick1 미니맵345µs 상한과 UI14 545µs 불확정 이력을 구
 | C | [93a99ce16](https://github.com/hyunlord/new-world/commit/93a99ce161ea51d7a729e918698b87238995d820) | v8-mux(C p1): Remove unused atlas helpers while preserving live rendering | 11경로; 11 files changed, 48 insertions(+), 171 deletions(-) |
 | C | [7bce14c96](https://github.com/hyunlord/new-world/commit/7bce14c96c479e7e391c5a4716f92b8889a0b30d) | v8-mux(C p2): Preserve unresolved history and evidence before issue publication | 9경로; 9 files changed, 518 insertions(+), 20 deletions(-) |
 | C | [8ea4baa49](https://github.com/hyunlord/new-world/commit/8ea4baa49b9c8f144d5b47f0b4cc6e2656cf7f37) | v8-mux(C p3): Make every unresolved issue traceable without losing failed evidence | 8경로; 8 files changed, 306 insertions(+), 108 deletions(-) |
+| C | [d113e2c98](https://github.com/hyunlord/new-world/commit/d113e2c9827c78cdf527432929bcac70e9c8b58a) | v8-mux(C p4): Preserve the green gate and unresolved tail latency before publication | 9경로; 9 files changed, 42 insertions(+), 19 deletions(-) |
 
 ### 확인된 제한사항
 
@@ -153,7 +154,6 @@ baseline/V7 연구 분리는 **보존 상태에서 별도 결정 필요**다. St
 | B focused repair | `5e20c65a1d52ba2a96a6e524614d3a7679f31a44` | Rust3/Python133/bridge/Locale/strict/clippy **focused PASS**, full gate 대체 아님 |
 | B gate2 | `5e20c65a1d52ba2a96a6e524614d3a7679f31a44` | **PASS exit0,36/36**. clean18:49:48–19:54:54 KST; debug2228/0/5ignored·release2227/0/5ignored.19:56:18 KST wip/main 모두 exact HEAD 게시 확인 |
 | C p1 cleanup | `93a99ce161ea51d7a729e918698b87238995d820` | 집중·창 및 safety PASS(20/20literal·원본identity). 후속C gate1 36/36 통과; 최종문서 HEAD gate·게시 별도 |
-
 | C gate1 | `8ea4baa49b9c8f144d5b47f0b4cc6e2656cf7f37` | **PASS exit0,36/36**,20:48:29–21:56:53 KST; debug/release각2228/0/5. source/lock변경0. natural tail 증가 기록 유지 |
 
 문서 마감 커밋은 동일한36단계를 다시 실행한 뒤 게시한다. 실제 최종 HEAD/원격 ref/작업 트리 제거 결과는 외부 `stage-c-publication.json`·`stage-c-worktree-removal.json` 및 최종 오너 메시지에 남긴다. 보고서 자체의 미래 SHA를 만들려고 amend하거나 검증 이력을 다시 쓰지 않는다.
