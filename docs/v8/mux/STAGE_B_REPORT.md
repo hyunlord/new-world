@@ -26,7 +26,7 @@
 | B p4 observer | `f0d5140a257628a6aeb470deb12ea8c6787fa286` | 원본/9OFF/정확한 ON, 관측 OFF/ON 요약·명령·save4000 동일. 첫 ON 입력 오류 보존 |
 | B p5 population | `bbae211b3ee8cf8651cbe43d1014831b8a606001` | 경계10, 원본/9OFF 동일, 보정8×48. 자연 보정에서 cap 사건0이므로 자연 개선 주장은 없음 |
 | B p6 trader | `54a55a421361d9c24268e1b3a6a5d2c2d1c6c211` | 경계15·observer8·기존 이웃16·저장7·과거 이행4, 원본 동일; OFF3동일/6교역·경제 차이 보존 |
-| H meat haul | 커밋 전 최종 검토 | 정상 대조4/예상 실패3→최종23통과, 기존 회귀33통과; 보정8×48 VALID, 원본 동일·OFF2동일/7차이 보존 |
+| B p7 meat haul | `bdbd4fb2ea9c5b446648778ea7b0b2da14635049` | 정상 대조4/예상 실패3→최종23통과, 기존 회귀33통과; 보정8×48 VALID, 원본 동일·OFF2동일/7차이 보존 |
 
 원본 identity의 Chronicle/raw 동일성은 기존 git_sha 제외·정규화 계약을 따른다. byte-identical로 명시한 colony summary/command/save 비교와 구분한다. 모든 상세 실패/수정/실행 조건은 각 검증 문서와 `MUX_DECISIONS.md`에 남긴다.
 
