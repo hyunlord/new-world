@@ -1,16 +1,18 @@
-# M-UX Stage A 진행 보고서 — 초안
+# M-UX Stage A 구현·검증 보고서
 
-**상태: IN_PROGRESS / NOT_PUBLISHED. A8 구현은 있으나 수용 기준은 FAILED다.** 최신 통합 창 UI run14는 **268 PASS**, 배율 run5는 **220 PASS**다. UI14 실제 8장 검토는 **92/100 PASS**, scale5 실제 9장 검토는 **91/100 PASS**다. 스튜어드 보정 round1–round5는 모두 FAIL이며, D30에 따라 최대 6회 중 5회에서 정책을 동결했다. 이후 시드 1000–1031 ×48일 held-out ON 평가를 완료했으나 침상 **30/32(필요 32)**·장작 **21/32(필요 24)**·생존 **22/32(필요 32)**로 FAIL이다. 평가 후 정책 보정은 하지 않는다. OFF candidate-a4/a5/opt1과 paired held-out OFF는 PASS다. D29 p9는 `91f029e9e`로 커밋됐고 8시드 ON 요약·명령·저장 동등성은 PASS다. 프로파일 변경 전 전체 sim-test는 1403 PASS / 0 FAIL / 1 ignored로 완료됐다. active-perf-2의 ON 최대 지연은 500592 µs로 여전히 크며 통제된 성능 개선은 주장하지 않는다. D34 profile1은 p10 `78af5e245`로 커밋됐고 실제 자동 게임플레이 4개 phase가 완료됐다. ON 평균 FPS는 1x/4x 118.216/114.380이지만 최대649.902/646.191 ms 및 반복73–99 ms 지연이 남아 ISS030은 열려 있다. D32 겨울 장작 집계와 D33 알림·언어·원인 패널 보정은 커밋됐고 학습 128개·알림 254개·strict run5 및 GPU 지면 run4 검사는 통과했다. 물리 입력은 NOT_VERIFIED, 전체 게이트·게시도 PENDING이다. 기준 면제나 전체 목표 달성 선언은 없다.
+**기술 게이트 PASS: p12 `f38d488f4`, 35/35 단계, status 0. A8 수용 기준은 FAILED다.** 2026-10-25 09:07:08 KST에 두 번째 전체 게이트가 끝났으며 debug/release는 각각 **2,060 PASS / 0 FAIL / 1 ignored**다. 첫 게이트의 Chronicle 테스트·문서 목록 실패는 보존하고 최소 수정 후 재검증했다. 이 보고서 작성 시점에는 보고서 갱신을 포함한 최종 커밋의 gate3와 게시가 **PENDING / NOT_PUBLISHED**다. 최종 게시에는 그 정확한 커밋의 gate status 0과 두 원격 SHA 일치가 필요하다.
 
-이 문서는 이후 실제 결과로 교체할 중간 증거 기록이다. 각 로그는 실행 당시 소스를 검사했으며, 아래 검사들을 하나의 최종 소스에 대한 게이트 결과로 합산하지 않는다.
+UI14는 268검사·실제 8장 검토92점, 배율5는 220검사·9장 검토91점으로 통과했다. 그러나 물리 입력은 **NOT_VERIFIED**이며, 집사는 보정1–5 및 held-out의 침상30/32·장작21/32·생존22/32 기준을 충족하지 못했다. 정책은 동결했고 평가 후 보정하지 않는다. D29/D34 이후에도 정상 debug 플레이에 반복73–99ms 지연이 남아 **ISS030 OPEN**이다. 기술 게이트 통과는 기준 면제·사용자 승인·FPS 불변·전체 목표 달성을 뜻하지 않는다.
+
+개별 UI·측정 로그는 실행 당시 소스의 증거이며, 서로 다른 실행을 하나의 최종 검사로 합산하지 않는다. 완료된 전체 게이트 영수증과 이전 실패·구성요소 검사를 아래에서 구별한다.
 
 ## 대상과 증거 경계
 
 - 작업 경로: `/Users/rexxa/work/new-world-mux-dev`, 브랜치 `v8/mux`.
-- 현재 소스 기준: `78af5e245` (D34 p10 로컬 커밋; D29 p9 `91f029e9e`, D33 `c20e1fdee`, D32 `f1532878b` 포함). **D34 profile1은 Cargo.toml의 sim-systems opt-level1 변경으로 커밋됐다. 공유 작업 트리와 개별 검증 시점을 구별한다.** 최종 exact-HEAD 게이트 영수증은 아직 없다.
-- 요구사항: [MUX_GOAL.md](MUX_GOAL.md). 선택과 실패 이력: [MUX_DECISIONS.md](MUX_DECISIONS.md), 특히 D3–D7, D9–D33.
+- gate2 검증 소스: `f38d488f43156145a44898671e77b26b3ee6c496` (p12). D29 `91f029e9e`, D34 `78af5e245`, D35 최소 수리까지 포함한 깨끗한 HEAD다. 이 문서 갱신을 포함한 후속 커밋의 gate3는 별도이며, 아래 gate2 결과를 그 커밋의 결과로 전용하지 않는다.
+- 요구사항: [MUX_GOAL.md](MUX_GOAL.md). 선택과 실패 이력: [MUX_DECISIONS.md](MUX_DECISIONS.md), 특히 D3–D7, D9–D35.
 - 원시 로그·캡처·동결 바이너리는 `/Users/rexxa/work/mux-data/`에 보관한다. 다른 체크아웃에서 실행한 결과를 이 패스의 검증으로 사용하지 않는다.
-- `v8/wip`·`v8/main` 게시 및 Stage A 완료 선언: **NOT_PUBLISHED**. 현재 결과는 전체 게이트를 대신하지 않는다.
+- 문서 준비 시점(2026-10-25 09:07 KST 이후)의 게시 상태: **NOT_PUBLISHED**. 최종 exact-HEAD 게이트와 게시 영수증은 `/Users/rexxa/work/mux-data/gate-stage-a-3/` 및 `stage-a-publication.json`에 별도로 기록한다. 아직 생성되지 않은 영수증을 완료 근거로 사용하지 않는다.
 
 ## A1–A10 구현 현황
 
@@ -164,7 +166,7 @@ D33 부정 대조는 기존 코드에서 **193검사 중 18 FAIL**(`d33-negative
 
 D29는 기존 순수 tuple 키의 `sort_by_key`를 `sort_by_cached_key`로 바꾸는 제한된 최적화다. 후보·순서·정책은 바꾸지 않는다. **8시드 ×48일 ON 전체 요약(원본 round5와도 동일), 8개 실제 명령 로그, seed5의 69120-tick 전체 저장이 변경 전후 literal byte 동일**이며 candidate-opt1 OFF 안전망도 통과했다. D29 p9는 `91f029e9e`로 커밋됐다. 프로파일 변경 전 전체 sim-test는 exit 0, 1403 passed / 0 failed / 1 ignored, 102 result summaries로 완료됐다. ignored 항목은 이 실행의 PASS로 세지 않으며 별도 v6 증거를 유지한다. [D29 검증 기록](D29_VERIFICATION.md)을 참조한다.
 
-일반 debug 브리지를 다시 빌드한 active-perf-2는 exit 0으로 ON/OFF 각 1441 tick을 완료했다. advance-call 평균은 ON **2422.547 µs**, OFF **1634.375 µs**, 최대는 ON **500592 µs**, OFF **10872 µs**다. ON tick0/360/720/1080/1440 경계는 **500592/238384/320699/182202/16250 µs**였다. `d29-active-comparison.json`에 이전 측정과 함께 보존한다. 순차 개발 진단이며 조용한 환경의 교차 release 비교가 아니므로 보정된 속도 향상률은 주장하지 않는다. 큰 지연이 남고 1 tick/frame 계측이므로 정상 게임 FPS 수용도 아니다. 이후 실제 자동 누적기 gameplay run1과 D34 profile1 gameplay run2는 완료됐다. 아래 D34 증거와 구별한다. 최종 전체 게이트·게시도 남아 있다.
+일반 debug 브리지를 다시 빌드한 active-perf-2는 exit 0으로 ON/OFF 각 1441 tick을 완료했다. advance-call 평균은 ON **2422.547 µs**, OFF **1634.375 µs**, 최대는 ON **500592 µs**, OFF **10872 µs**다. ON tick0/360/720/1080/1440 경계는 **500592/238384/320699/182202/16250 µs**였다. `d29-active-comparison.json`에 이전 측정과 함께 보존한다. 순차 개발 진단이며 조용한 환경의 교차 release 비교가 아니므로 보정된 속도 향상률은 주장하지 않는다. 큰 지연이 남고 1 tick/frame 계측이므로 정상 게임 FPS 수용도 아니다. 이후 실제 자동 누적기 gameplay run1과 D34 profile1 gameplay run2는 완료됐다. 아래 D34 증거와 구별한다. 이 측정 당시에는 최종 게이트·게시가 남아 있었다. 이후 p12 gate2 결과는 아래에 기록한다.
 
 D34 profile1은 `rust/Cargo.toml`에서 sim-systems 패키지의 dev opt-level만1로 변경했다(p10 `78af5e245`). 컴파일러 감사는 debug assertions·기본 overflow checks 유지를 확인했다. 673개 소스 해시 확인 및 ON/OFF tick1441 debug 저장 두 개의 literal byte 동일성을 기록했다. 이는 전 시드 안전성이나 새 프로파일 전체 테스트 통과가 아니다.
 
@@ -176,24 +178,40 @@ D32(`f1532878b`)는 목표와 알림 모두에서 전역 사용 가능 장작을
 
 현재 문서 화면은 [UI14 HUD 8장](../../images/mux_contact_sheet.png)과 [렌더러 비교 12장](../../images/mux_compare_sheet.png)이다. 렌더러 시트 마지막 4장은 실제 건설이 아닌 render-only 눈 fixture로 명시했다. 이전 [mart21 화면 모음](https://github.com/hyunlord/new-world/blob/67a6232ab41a4bf5051b11303bcac97543b111f0/docs/images/mart21_contact_sheet.png)은 기준 커밋 `67a6232a`에 보존한다.
 
-## Stage A 완료 전에 필요한 증거
+## 게시 조건과 남은 수용 한계
 
-1. round1–round5 실패와 동결 소스·바이너리를 보존한다. D30에 따라 held-out 검사 뒤 정책을 더 보정하지 않는다.
-2. 완료된 held-out ON 실패(침상·장작·생존)를 유지한다. 기준 면제나 Stage A 전체 목표 달성을 선언하지 않는다.
-3. candidate-a5/opt1 및 paired held-out OFF 통과 영수증을 보존하고 최종 소스 게이트와 대조한다.
-4. 커밋된 D29의 ON/OFF 동등성을 보존하고 완료된 자동 게임플레이 측정의 지연을 유지하고 D34 새 프로파일의 통과한 scoped tests/safety를 보존하고 최종 게이트를 검증한다. 이전 1.05초와 최신 약 0.50초 최대 지연을 모두 유지하며 paused UI 비용이나 통제되지 않은 속도 향상률로 대체하지 않는다.
-5. comparison6·scale-run5·UI14 증거를 최종 소스와 대조하고 관련 변경 시 새 검증을 수행한다. 물리 입력은 현재 NOT_VERIFIED다.
-6. 최종 정확한 커밋에서 전체 게이트와 steward 2시드 ×24일 fixture를 실행한다. 기능 로컬 커밋 `beacbdcd8`은 최종 게이트·게시 증거가 아니다. 게시 시에는 승인된 경로와 원격 SHA 일치를 기록한다.
-7. 기술 게이트와 A8 평가 실패를 분리해 보고한다. 전체 게이트·push는 PENDING이며 현재 상태는 **IN_PROGRESS / NOT_PUBLISHED**다.
+1. 보고서 갱신을 포함한 최종 커밋에서 gate3를 실행하고, status 0인 그 HEAD만 `v8/wip` 다음 `v8/main`에 fast-forward로 게시한다. 거절되면 강제 갱신하지 않는다. 현재 완료 영수증은 p12 gate2이며 게시 결과가 아니다.
+2. round1–5와 held-out 실패, 원래 기준, 동결 소스·바이너리를 보존한다. 정책을 더 보정하거나 A8 수용을 선언하지 않는다.
+3. D29 ON/OFF 동등성, D34 실제 debug 저장·별도 scoped tests·OFF 안전망 및 이전1.05초 지연을 보존한다. 최신 정상 플레이의650/646ms 최대 프레임(시작 포함)과 반복73–99ms 지연을 정지 UI 비용으로 대체하지 않는다.
+4. comparison6·scale5·UI14의 실제 화면과 물리 입력 NOT_VERIFIED를 구별한다. B1 소스 검토 BR-TR03은 UI의 roofed-only 시험 조건이 probe의 roofed AND !dug AND doors-nonempty보다 약함을 확인했다. 실제 집 캡처가 실패했다는 판정은 아니며, dug/doorless 부정 대조는 아직 실행하지 않았다. 정확히48일인 동결 A8 결과에는 별도 BR-TR05(48일 이후 최종 생존 표본)의 문제가 적용되지 않는다.
+5. Stage B 제품 수정은 Stage A 게시와 원격 SHA 확인 이후 시작한다. 검토·레지스트리 전환·Stage C 기록 작업은 아직 완료되지 않았다.
 
 기준선 perf 실행은 2026-10-25 06:55:07 KST에 exit0으로 완료됐다. natural median mean0.253830 ms·p990.511 ms, quick mean0.383802 ms, stress_v26 mean0.369900 ms이며 이는 기준선 자료다. 후보 대비 속도 향상률을 뜻하지 않는다. AF01 전용 `ui-perf-2`는 exit0으로 완료됐고 정지 tick1 장면에서345µs 상한을 확인했다. UI14의545µs 상한 불확실성은 해당 실행 이력으로 보존한다.
 
 ## 첫 전체 게이트 — 실패 기록 (2026-10-25 08:03:24 KST)
 
-깨끗한 `6b0f572e4afa0a5d642793b8201386a81838239c`에서35단계를 모두 실행했고 **status1, 32/35단계 exit0**이다. debug/release는 각각2059통과·1실패·1제외이며 같은 Chronicle 종류 수 기대값45(실제46)가 실패했다. 문서 목록 검사는 DESIGN.md 한 경로가 누락됐다. 이 두 원인을 D35에서 최소 수정하며 최초 실패 로그를 보존한다. 새 커밋의 전체 게이트와 게시 결과는 아직 없다.
+깨끗한 `6b0f572e4afa0a5d642793b8201386a81838239c`에서35단계를 모두 실행했고 **status1, 32/35단계 exit0**이다. debug/release는 각각2059통과·1실패·1제외이며 같은 Chronicle 종류 수 기대값45(실제46)가 실패했다. 문서 목록 검사는 DESIGN.md 한 경로가 누락됐다. 이 두 원인을 D35에서 최소 수정하며 최초 실패 로그를 보존한다. 이 첫 게이트 종료 당시에는 새 커밋의 전체 게이트와 게시 결과가 없었다. 후속 gate2 결과는 아래에 기록한다.
 
 나머지 결과: identity228748값 차이0, Chronicle64파일은git_sha를 제외하고 일치(19683항목); raw sample64파일은 기존 비교 규칙(git_sha와 제거된0값 키5개)을 적용해 일치했다. 원시 파일 전체의 무조건 바이트 동일을 뜻하지 않는다. 결정성, M1테스트58, 런처6/6, 렌더러 일치, 저장 왕복, 경제soak4시드×20일(사망0·KnowledgeLost0), F10 8/8, 이야기·이웃 각각2시드×48일, 해석기39재질/352수목 차이0, 렌더러45검사, 집사2시드×24일 결정성·원장·예약 검사는 통과했다. 집사 fixture는 A8 held-out 수용 실패를 대체하지 않는다.
 
 자연 장면3회 중앙평균은 기준선0.253829912ms→후보0.253133183ms로+10% 초과가 없었다. 표준 bench 시간·할당·RSS 상한도 통과했다. nav N1000 이동129.0µs/tick은600µs 보고 예산 이내다. 이들은 release 측정이며 기존 debug 게임플레이의 반복 지연과 FPS 제한을 해소한 증거가 아니다. 원시 근거: `/Users/rexxa/work/mux-data/gate-stage-a-1/gate.txt`와 같은 디렉터리의 단계별 로그·perf/bench 자료.
 
-D35 최소 수정 후 동일 Chronicle 테스트는 debug/release 각각1통과·0실패이며 fmt도 통과했다. 문서 목록은2221경로·1944행·누락0건이고 새 행과 규칙의 정확한 일치도 확인했다. 이는 범위 검사 결과이며 새 전체 게이트는 대기 중이다.
+D35 최소 수정 후 동일 Chronicle 테스트는 debug/release 각각1통과·0실패이며 fmt도 통과했다. 문서 목록은2221경로·1944행·누락0건이고 새 행과 규칙의 정확한 일치도 확인했다. 이는 당시 범위 검사 결과다. 이후 아래 gate2가 완료됐다.
+
+
+## 두 번째 전체 게이트 — 기술 PASS
+
+| 항목 | 확인된 결과 |
+|---|---|
+| 소스 | p12 `f38d488f43156145a44898671e77b26b3ee6c496`, 시작 dirty 0 |
+| 종료 | 2026-10-25 09:07:08 KST, 프로세스 exit0·gate status0 |
+| 단계 | **35/35 exit0**; perf/nav 보고 항목도 결과를 별도로 보존 |
+| Rust workspace | debug **2060/0/1**, release **2060/0/1** (PASS/FAIL/ignored); ignored v6 fixture는 기존 별도 실행 증거와 구별 |
+| 첫 실패 재검증 | sim-core 전체355 unit PASS(Chronicle 회귀 포함), 문서 목록2221경로·1944행·누락0 |
+| 정적·실행 검사 | fmt, bridge build/import, clippy, forbidden math, strict, smoke, bridge API, docs, Python, M1 58검사, 런처6/6, schema, 렌더러 일치·저장 왕복 통과 |
+| 동일성·결정성 | 228748값 차이0·편측0; Chronicle64파일/19683항목(git_sha 제외), raw sample64파일(기존 git_sha·제거된0값 키 규칙), baseline/colony 결정성·명령 재생 통과 |
+| 장기 fixture | soak4×20일 원장·예약·사망0·KnowledgeLost0; F10 8/8; story/neighbours 각2×48일; steward2×24일 결정성·원장·예약 통과 |
+| 아트 | manifest, resolver39재질/352수목 차이0, extensibility grep, renderer45검사 통과 |
+| 성능 | 자연 장면3회 중앙평균 **0.253345ms**, 기준선0.253830ms 대비 +10% 초과 없음. quick 평균0.360378ms; 표준 bench 시간·할당·RSS 상한 통과. nav N1000 이동128µs/tick, 보고 예산600µs 이내 |
+
+원본: `/Users/rexxa/work/mux-data/gate-stage-a-2/gate.txt`, 단계별 로그와 `receipt.json`. gate.txt SHA256은 `d38ff003671c2b15eefd21dd7d63d68d172dce7e597783d2fba987f0d0f9ed98`다. 단계35개와 종료 상태를 영수증에서 직접 확인했다. release 성능·24일 fixture 결과는 debug 지연·전체 UI 예산·A8의48일 held-out 수용을 대체하지 않는다.

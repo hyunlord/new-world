@@ -188,3 +188,5 @@
 - 2026-10-25 — M-UX D34 p10 커밋(`78af5e245`): profile1 새 단위10·통합9/1제외·명시적v6마이그레이션1 통과, OFF안전망9 literal 요약·228748값 차이0·상세64파일 동일(git_sha 제외). 기준선perf exit0·06:55:07 KST 완료. AF01 UI14 상한545µs 불확실성은 유지하고 전용ui-perf-2 exit0·stable=true·각600표본 완료, 시작/워밍업 포함345µs(272+73)는 정지tick1 장면만 통과(전체UI/FPS 주장 없음). ISS030열림·A8FAILED·최종게이트/게시 대기 유지([검증](v8/mux/D34_VERIFICATION.md)).
 
 - 2026-10-25 — M-UX Stage A gate1 실패(`6b0f572e4`,08:03:24 KST,status1):35단계 중32단계 exit0. debug/release 각각2059통과·1실패·1제외로 Chronicle 안정성 시험의 기대45/실제46이 같게 실패했고, inventory는2221경로·1943행 중 DESIGN.md만 미포함. 나머지 단계와35번 steward2시드×24일 결정론·원장은 통과했다. ISS031/032는 최소 수정 후 새 전체 게이트 대기 OPEN; A8FAILED와 게시 대기는 유지한다(원시 로그 `/Users/rexxa/work/mux-data/gate-stage-a-1/`, [이슈](ISSUES.md)).
+
+- 2026-10-25 — M-UX Stage A gate2 기술 통과(p12 `f38d488f43156145a44898671e77b26b3ee6c496`, clean,09:07:08 KST,exit0):35/35단계 exit0, debug/release 각각2060통과·0실패·1제외. gate1 실패는 보존하고 ISS031/032를 p12 수정·gate2로 닫았다. 공개28건은 구현 결함 범위에서 fixed,003/006/009/030은 open; 물리NOT_VERIFIED·A8FAILED·잔여지연은 유지한다. 문서 준비 시점 p13 보고 HEAD gate3·게시 대기이며 미래 통과를 주장하지 않는다(영수증 `/Users/rexxa/work/mux-data/gate-stage-a-2/gate.txt`, [이슈](ISSUES.md)).

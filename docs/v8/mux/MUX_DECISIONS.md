@@ -14,17 +14,17 @@
 | Step | Status | Evidence / next action |
 |---|---|---|
 | A0 isolated checkout, original goal, safety capture | COMPLETE | 382893842 instruments; base identity + nine fixtures complete, exact coverage/invariants pass |
-| A1–A4 camera, controls, minimap, data-driven help | IMPLEMENTED / QA | Main scene integrated; camera27/minimap38 PASS; controls/help scale220 PASS; final source strict check pending |
-| A5/A7 alerts and learning helper | IMPLEMENTED / QA | Alerts247/learning100 PASS; ui-run8 167 PASS; scale-run4 220 PASS and screenshot review92; physical input NOT_VERIFIED |
-| A8 steward, replay, save and calibration | IMPLEMENTED / QA | Immutable rounds1–4 FAIL; round3 fuel3/alive5, round4 fuel5/alive4 of8; D27 preregistered before round5, two rounds remain; candidate-a3 OFF identity +9 fixtures PASS, a4 PENDING; held-out unused |
-| A6/A9 optional goals/settings and A10 rendering | IMPLEMENTED / QA | Scale-run4 220 PASS; D21 CPU/actual GPU run3 failures0; comparison6 all20 captures reviewed90 PASS, disclosed minor limits; no drops |
-| A11 UI/runtime/held-out evaluation, full gate, publish/report | PENDING | UI8 actual completed house tick2880:10 roofed beds/10 assigned living people; single-world round3 source only. Final gate/held-out/active full-game FPS pending; IN_PROGRESS / NOT_PUBLISHED |
-| B1 whole-tree review and prioritized cleanup plan | PENDING | Review precedes refactors |
+| A1–A4 camera, controls, minimap, data-driven help | IMPLEMENTED / TECHNICAL QA | camera27/minimap38, UI14 268 and scale5 220 pass; p12 gate2 strict/full gate pass; physical input NOT_VERIFIED |
+| A5/A7 alerts and learning helper | IMPLEMENTED / TECHNICAL QA | alerts254/learning128, UI14 visual92 and scale5 visual91; source and runtime regressions retained |
+| A8 steward, replay, save and calibration | IMPLEMENTED / ACCEPTANCE FAILED | rounds1–5 FAIL; D30 freezes policy after5ofmax6. Held-out1000–1031 stock32/beds30/cold31/fuel21/alive22/ledger32; beds/fuel/alive fail. OFF literal safety passes; no held-out tuning |
+| A6/A9 optional goals/settings and A10 rendering | IMPLEMENTED / TECHNICAL QA | no drops; scale5 220, D21 CPU/actual GPU evidence and comparison6 visual90; p12 gate2 renderer/resolver pass; disclosed visual limits remain |
+| A11 UI/runtime/held-out evaluation, full gate, publish/report | GATE2 PASS / PUBLICATION PENDING | p12 f38d488f4 clean gate2 35/35 exit0 at2026-10-25 09:07:08 KST; both test profiles2060/0/1. Report-commit gate3 and publication pending as of preparation; ISS030 actual recurring debug stalls remain |
+| B1 whole-tree review and prioritized cleanup plan | READ-ONLY PREPARATION | source inventories,92 production enum census,48 system registrations, test-health and reviewed execution plan prepared externally; runtime profile/checks and final review document pending |
 | B2/B3 registries and data-only extension gate | PENDING | At least items/blueprints/recipes mandatory |
 | B4/B5 measured behavior changes; B6 safe refactors | PENDING | Separate commits and fixtures |
 | B7 full gate, publish/report | PENDING | No completion claimed |
 | C1 proof-backed dead-code cleanup | PENDING | Preserve frozen baseline/research paths |
-| C2 issue/history backfill and GitHub mirrors | PENDING | Initial registry started; gh authenticated as hyunlord; backfill pending |
+| C2 issue/history backfill and GitHub mirrors | PARTIAL RECORDS / EXTERNAL DRAFT | public32 rows reconciled after gate2; historical external draft268 entries requires final B/C status refresh. No GitHub issues created; authenticated access verified earlier |
 | C3 final gate, publish, clean removal and report | PENDING | Owner launcher checkout remains untouched |
 
 ## D9 — Preserve signed terrain contrast by lifting the darkest land preparation
@@ -299,3 +299,5 @@ Keep every historical discriminant assertion and the enumeration/unique-name che
 This is a test/documentation-tool repair, not a gameplay refactor or another Steward calibration round. Targeted debug/release checks and a new clean committed full gate are required before publication. First-run performance and all passing steps remain evidence for that exact earlier HEAD; they do not transfer a green gate to this change. ISS031/032 track the omissions; A8 FAILED and ISS030 remain unchanged.
 
 D35 targeted verification: the formerly failing exact Chronicle test passes once in debug and once in release (both0failures); fmt passes. Inventory closure now reports2221tracked paths/1944rows/0uncovered, and an independent rule-to-row equality assertion passes. These scoped results do not replace the required fresh full gate.
+
+D35 full verification: p12 f38d488f43156145a44898671e77b26b3ee6c496 starts clean and completes gate2 at2026-10-25 09:07:08 KST, status0,35/35steps exit0. Both workspace profiles2060passed/0failed/1ignored; inventory2221paths/1944rows/0uncovered. First gate failures remain historical evidence. Identity228748values/0differences, Chronicle64files exceptgit_sha, raw samples under existing comparison rules, all fixtures and art checks pass. Performance reports no natural mean above+10percent; release benchmark ceilings pass. This does not accept A8 or resolve debug latency. The documentation-only report update requires its own clean-HEAD gate3 before publication, per D6; final receipt remains external to avoid rewriting a checked commit merely to embed its own hash.

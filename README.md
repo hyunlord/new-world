@@ -9,9 +9,9 @@
 
 자세한 방향은 [docs/VISION.md](docs/VISION.md), 진행 상황은 [docs/ROADMAP.md](docs/ROADMAP.md).
 
-> 지금(M-ART2.1)은 방과 창고, 제작·작업 우선순위, 기술 전승, 징집, 이주민·교역을 갖춘 정착지다. 기본 확대는 1×이고 64px 타일과 채택된 사람·자연 아트를 쓴다. 아래의 첫 플레이 순서와 전체 조작표로 시작한다.
+> 현재 정착지는 방과 창고, 제작·작업 우선순위, 기술 전승, 징집, 이주민·교역을 갖춘 정착지다. 기본 확대는 1×이고 64px 타일과 채택된 사람·자연 아트를 쓴다. 아래의 첫 플레이 순서와 전체 조작표로 시작한다.
 
-**지금 화면:** [M-UX 화면 모음](docs/images/mux_contact_sheet.png) (실제 창 UI14 268검사,8장: 조작·미니맵·도움말·시험용 알림 이동·원인 기록·영어 조작·학습·실제 자동 건설). [물·물가·겨울 눈 비교](docs/images/mux_compare_sheet.png) (12장; 마지막4장은 렌더 전용 벽·나무 눈 시험). [Stage A 진행 보고](docs/v8/mux/STAGE_A_REPORT.md); 최종 게이트·생존 평가·배포 여부는 보고서에 별도 표시한다. D29 정렬 키 캐시는 `91f029e9e`로 커밋됐고 프로파일 변경 전 전체 sim-test는 1403통과·0실패·1제외다. D34 p10 `78af5e245` dev opt1 적용 후 자동 게임플레이4phase를 측정했다. ON 평균FPS는1x/4x118.216/114.380이지만 시작 포함 최대약650/646ms·반복73–99ms 지연이 남는다. FPS 불변·속도 향상·지연 해결은 주장하지 않으며 새 프로파일 단위10·통합9(1제외)·별도v6 1 및 OFF 안전망9개/228748값 차이0 검사는 통과했다. 기준선 perf는 완료됐으나 전용 미니맵 측정은 정지tick1 장면에서345µs 상한을 확인했다(전체 UI/FPS 판정 아님). A8 생존 수용은 FAILED, 최종 게이트·게시는 대기 중이다.
+**지금 화면:** [M-UX 화면 모음](docs/images/mux_contact_sheet.png)과 [물·물가·겨울 눈 비교](docs/images/mux_compare_sheet.png), 검증 범위는 [Stage A 보고](docs/v8/mux/STAGE_A_REPORT.md)에서 확인한다. Stage A 기술 gate2는 `f38d488f43156145a44898671e77b26b3ee6c496`에서 35/35 통과했으며, 이 문서 준비 시점(2026-10-25 09:07 KST 이후)에는 보고 커밋의 gate3·게시가 **PENDING / NOT_PUBLISHED**다. A8 수용은 **FAILED**, 물리 트랙패드 검증은 미완료이며, ISS030의 반복 73–99ms·시작 포함 최대 약 650/646ms 지연은 남아 있다(미니맵 345µs 상한은 정지 tick1 장면만의 결과이며 전체 UI/FPS 판정이 아니다).
 
 ## 빌드와 실행
 
@@ -146,10 +146,10 @@ version: main (기본), wip, m1, v8-0, v7, 커밋/태그/브랜치
 ## 게이트
 
 ```bash
-bash tools/v8/gate.sh /path/to/log_dir      # 34단계: fmt, 빌드, 가져오기, 테스트, clippy, 결정론, identity, 문서, M1 테스트, 정착지 결정론, 재생, UID, 실행 확인 …
+bash tools/v8/gate.sh /path/to/log_dir      # 35단계: fmt, 빌드, 가져오기, 테스트, clippy, 결정론, identity, 문서, M1 테스트, 정착지 결정론, 재생, UID, 실행 확인 …
 ```
 
-`v8/main`은 게이트가 모두 통과한 커밋으로만 옮긴다. 34단계 각각의 설명은 `.claude/skills/worldsim-testing/SKILL.md`(절 C)와 `tools/v8/gate.sh` 머리말에 있다.
+`v8/main`은 게이트가 모두 통과한 커밋으로만 옮긴다. 35단계 각각의 설명은 `.claude/skills/worldsim-testing/SKILL.md`(절 C)와 `tools/v8/gate.sh` 머리말에 있다.
 
 ## 문서 지도
 
