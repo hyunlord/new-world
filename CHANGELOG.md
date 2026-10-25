@@ -596,3 +596,5 @@ are gone from the bridge.
 - Added GitHub#618 for ISS313; all106 OPEN mappings verified without altering the original105 issue bodies or existing#59.
 
 - Recorded C gate2 FAIL35/36 atbcea734a (standing n200/side64 p99), fixed-schedule six-run diagnosis, ISS314 OPEN and lesson27. No product/threshold/ledger change; final clean documentation head requires a new full gate. Registry314:175fixed/107open/30deferred/2won't fix.
+
+- Added GitHub#619 for ISS314; all107 OPEN mappings and unchanged original106/#59 verified after preserving the initial list delay. Final gate3 remains a separate publication prerequisite.

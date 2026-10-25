@@ -17,3 +17,10 @@ The original anchor has311 rows; the later fixed process incident adds312 withou
 ## Follow-up observation ISS313
 
 C gate1's tail-latency observation was registered at clean `d113e2c9827c78cdf527432929bcac70e9c8b58a` as new OPEN ISS313, GitHub#618. Direct canonical-URL GET verified its exact body/title/perf label and open state; the immutable original105 issue bodies and journals were preserved. A subsequent independent all-state list verified all106 OPEN issues (#513–#618) and unchanged59. Raw evidence: `/Users/rexxa/work/mux-data/stage-c-github-2/journal.json`, `all-106-final.json`, `final-verification.json`. Final registry313=175fixed/106open/30deferred/2won't fix. The earlier105 observation remains historical, not silently rewritten.
+
+
+## Follow-up standing benchmark failure ISS314
+
+ISS314 was anchored at clean `2553eb6cf5fbe79d630471316edb02981a3ffe71` and created as#619. Canonical direct GET verified its exact title/body/perf label/open state at2026-10-25 23:22:34 KST. The first list still lacked619; the creation journal stayed verified and no second create was sent. A read-only list at23:23:08 then found619. Separate reconciliation at23:23:34 verified all107 OPEN registry IDs uniquely, unchanged original106 title/body/state/labels/update metadata, and unchanged59. Registry314=175fixed/107open/30deferred/2won't fix. The known read-after-write delay remains recorded under the existing ISS312 lesson, not a new product defect.
+
+Raw evidence `/Users/rexxa/work/mux-data/stage-c-github-3/`: journal.json, first-list-visibility-failure.txt, after-list-read1.json, all-107-final.json and final-verification.json. Issue619 body SHA256 `03dd7225377de0d3373daf69aa55a5574c9ffa5503d63e162643575478c16a19`; final raw list SHA256 `e9fdc6615190987cb43bcd5d8e938916d4d49c650693fb2c0746919af5b3449b`. No existing issue was edited or closed. GitHub registration does not authorize publication of the failed gate2 commit; D49 requires a fresh full gate on the final clean documentation head.

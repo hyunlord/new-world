@@ -1,6 +1,6 @@
 ## 구현 완료 보고 — M-UX + 검토
 
-**Stage A·B 게시 완료 / C gate1 PASS·gate2 35/36 FAIL / A8 수용 FAILED 유지.** C 정리·안전망·원장314건·교훈27개를 기록했다. 기존 미해결106건은 GitHub#513–#618에 등록·검증했고, gate2의 벤치마크 실패ISS314로 OPEN107건이 됐다(추가 GitHub 연결 대기). C gate1은 깨끗한 `8ea4baa49b9c8f144d5b47f0b4cc6e2656cf7f37`에서2026-10-25 21:56:53 KST 종료했다. 이 보고서를 포함한 문서 마감 HEAD도 전체 게이트를 통과한 후에만 게시한다. 최종 게시·원격 일치·작업 트리 제거의 실제 결과는 최종 메시지와 외부 완료 영수증에 기록한다. 이전 실패와 오너 수용 미확인 상태는 기술 게이트와 구분한다.
+**Stage A·B 게시 완료 / C gate1 PASS·gate2 35/36 FAIL / A8 수용 FAILED 유지.** C 정리·안전망·원장314건·교훈27개를 기록했다. 기존 미해결106건은 GitHub#513–#618에 등록·검증했고, gate2의 벤치마크 실패ISS314를#619로 등록해 OPEN107건 모두를23:23:34 KST 대조했다. C gate1은 깨끗한 `8ea4baa49b9c8f144d5b47f0b4cc6e2656cf7f37`에서2026-10-25 21:56:53 KST 종료했다. 이 보고서를 포함한 문서 마감 HEAD도 전체 게이트를 통과한 후에만 게시한다. 최종 게시·원격 일치·작업 트리 제거의 실제 결과는 최종 메시지와 외부 완료 영수증에 기록한다. 이전 실패와 오너 수용 미확인 상태는 기술 게이트와 구분한다.
 
 ### 구현 의도
 
@@ -58,7 +58,7 @@ p2 `7bce14c96c479e7e391c5a4716f92b8889a0b30d`는311건을 통합했고, 후속 �
 
 ISS305/306/308/309/310의 시험수리와 ISS307 외부 wrapper guard, ISS311 제목 위반을 구분한다. ISS311은 역사적 process won't fix로 원SHA/제목을 유지하며 승인 없는 amend/rebase를 하지 않는다. 7개 한정 결함의 종결은 원장에 범위와 근거를 보존하며, 제품 전체·과거 실패·오너 수용의 일괄 해결을 뜻하지 않는다.
 
-GitHub는 최초105건 #513–#617에 후속ISS313 [#618](https://github.com/hyunlord/new-world/issues/618)을 더해 **미해결106건 #513–#618**을 등록했다. 원장에 각 번호를 되썼고, 전체 목록의 ID·번호·본문SHA·라벨·상태를 독립 대조했다. 중복0, 기존#59의 내용과 수정 시각은 불변이다. 첫 두 생성 후 목록 반영 지연으로 중단한 기록은 보존했다. 동일 journal로 복구하고 반환URL·번호 직접 조회로 검증했으며 생성 요청을 중복하지 않았다. ISS312는 이 과정의 수정 완료 기록이다. ISS313은 원인 미확인 tail-latency 관측으로#618에 등록했고 원장에 번호를 기록했다. 전체106건을 다시 대조했으며 기존105건의 본문을 바꾸지 않았다. [검증](C_GITHUB_VERIFICATION.md), [전체 이슈 원장](../../ISSUES.md).
+GitHub는 최초105건 #513–#617에 ISS313 [#618](https://github.com/hyunlord/new-world/issues/618), ISS314 [#619](https://github.com/hyunlord/new-world/issues/619)를 더해 **미해결107건 #513–#619**을 등록했다. 원장에 각 번호를 되썼고, 전체 목록의 ID·번호·본문SHA·라벨·상태를 독립 대조했다. 중복0, 기존#59의 내용과 수정 시각은 불변이다. 첫 두 생성 후 목록 반영 지연으로 중단한 기록은 보존했다. 동일 journal로 복구하고 반환URL·번호 직접 조회로 검증했으며 생성 요청을 중복하지 않았다. ISS312는 이 과정의 수정 완료 기록이다. ISS313은 원인 미확인 tail-latency 관측으로#618에 등록했고 원장에 번호를 기록했다. 이후 전체107건을 다시 대조했으며 기존106건의 본문을 바꾸지 않았다. ISS314 생성 직후 목록 지연도 직접 조회·읽기 재확인으로 해소했고 중복 생성하지 않았다. [검증](C_GITHUB_VERIFICATION.md), [전체 이슈 원장](../../ISSUES.md).
 
 p2에서25개, 후속ISS312·ISS314로 총27개 교훈과 HISTORY/archive 포인터·기존 testing/pitfalls 예방 규칙을 설치했다. 내용은 관측기는 제품 동작을 바꾸지 않아야 하고, fixed fixture와 자연 결과는 서로 다른 증거다. 시험 설정은 외부 경로를 명시하고, source/binary/ignored lock provenance를 빌드 전에 묶으며, 그림의 bounded 판정·오너 승인을 구별한다. SHA object 해소·UNRESOLVED terminal 분리·interrupt 완료 guard·commit subject 검증 규칙을 포함한다. 교훈은 [LESSONS.md](../../LESSONS.md)에 설치된 예방 규칙과 연결했다. C gate1 문서검사와 전체36단계를 통과했고, 최종 문서 커밋의 gate·게시는 완료 영수증으로 구분한다.
 
@@ -133,6 +133,7 @@ UI는 정지 tick1 미니맵345µs 상한과 UI14 545µs 불확정 이력을 구
 | C | [8ea4baa49](https://github.com/hyunlord/new-world/commit/8ea4baa49b9c8f144d5b47f0b4cc6e2656cf7f37) | v8-mux(C p3): Make every unresolved issue traceable without losing failed evidence | 8경로; 8 files changed, 306 insertions(+), 108 deletions(-) |
 | C | [d113e2c98](https://github.com/hyunlord/new-world/commit/d113e2c9827c78cdf527432929bcac70e9c8b58a) | v8-mux(C p4): Preserve the green gate and unresolved tail latency before publication | 9경로; 9 files changed, 42 insertions(+), 19 deletions(-) |
 | C | [bcea734ae](https://github.com/hyunlord/new-world/commit/bcea734ae63f47cf2de605dba407808b9d1340de) | v8-mux(C p5): Finish the owner record with every open issue linked | 6경로;14삽입/7삭제; gate2 bench FAIL 보존 |
+| C | [2553eb6cf](https://github.com/hyunlord/new-world/commit/2553eb6cf5fbe79d630471316edb02981a3ffe71) | v8-mux(C p6): Preserve a failed final gate before investigating timing variation | 10경로;79삽입/6삭제; 진단·ISS314·교훈27 |
 
 
 C gate2는35/36·exit1이다. n200 p99×1.136·side64 p99×1.122의 원래 실패를 보존했다. 고정6회 교차 진단에서18장면의 결과는 같지만 첫 쌍 혼잡·tail 변동이 있어 원인 확정 불가다. ISS314 OPEN, 기준·장부·제품 변경 없이 새 전체 gate를 별도로 기록한다. [실패와 진단](C_GATE2_DIAGNOSTIC.md).
