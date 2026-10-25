@@ -13,8 +13,10 @@
 #   (yellow) or drafted (red, `people.drafted_outline_px` wide) outline; otherwise, at night away from a fire, the same 1-px outline in the pale
 #   `people.night_halo_rgba` at up to `people.night_halo_alpha` × DaylightController.dark_at(feet) (craft rule 5:
 #   a halo where people could be lost; MART2_DECISIONS D17). Sleepers sharing a tile fan out for drawing only.
-# LOD: below camera zoom `lod.people_below_zoom` bodies hide and this node draws each person as a filled circle of
-#   `lod.marker_px` SCREEN pixels in its top's colour (people/top_colours.json) with a 1-px ink ring, plus at
+# LOD: at or below camera zoom `lod.marker_zoom_max` bodies hide; half zoom retains route-I figures and shadows.
+#   Half bodies draw above scenery with a pale contour; overlapping true art is translucent. Exact coincident feet
+#   get a full-snapshot count badge above the figures; repeated inspection clicks cycle those stable identities.
+#   At quarter zoom `lod.marker_fill_px` SCREEN pixels in top colour have bright, household and dark-outline rings, plus at
 #   `lod.glyph_zoom` an activity glyph (axe working, log carrying, zz sleeping, ! fleeing). The disc's ring is the
 #   person's household colour (M-ART2.1 §2.3): a household is a couple and the children of its members — an adult's
 #   key is the lower AgentId of themselves and a living partner, a child's is their living mother's household, else
@@ -33,6 +35,8 @@ const ArtData = preload("res://scripts/world/art/art_data.gd")
 const Tone = preload("res://scripts/world/art/tone.gd")
 const SettlementSelection = preload("res://scripts/core/settlement_selection.gd")
 const StoryText = preload("res://scripts/ui/story_text.gd")
+const OverlayLabel = preload("res://scripts/world/colony/overlay_layer.gd")
+const MarkerLayout = preload("res://scripts/world/colony/marker_layout.gd")
 const VARIANT_SHADER: Shader = preload("res://shaders/person_variant.gdshader")
 ## Snapshot state codes (bridge contract, not content): consuming; target kinds sleep and job.
 const STATE_CONSUMING: int = 3
@@ -87,6 +91,12 @@ var _daylight: Node = null
 var _markers: LodMarkers = null
 var _ringed: Array[Person] = []
 var _marker_px: int = 10
+var _half_shader: Shader
+var _half_rim: Color = Color(0.95, 0.95, 0.88, 1)
+var _half_rim_px: float = 1.0
+var _half_overlap_alpha: float = 0.8
+var _opaque_rects: Dictionary = {}
+var _coincident_badges: Array[Dictionary] = []
 var _household_key: int = 0
 ## AgentId → household key from the last kin columns (looked up when markers refresh, so new people get theirs).
 var _household_of: Dictionary = {}
@@ -117,6 +127,8 @@ class Person:
 	var fleeing: bool = false
 	var top_colour: Color = Color.WHITE
 	var outline: Color = Color(0, 0, 0, 0)
+	var readable: bool = false
+	var marker_position: Vector2 = Vector2.ZERO
 	var shadow: Sprite2D
 	var body: Sprite2D
 	var mat: ShaderMaterial
@@ -124,7 +136,14 @@ class Person:
 
 
 func _ready() -> void:
-	z_index = 6
+	# Share the exact route-I recolour shader; only half zoom bypasses night lighting.
+	_half_shader = Shader.new()
+	_half_shader.code = VARIANT_SHADER.code.replace("shader_type canvas_item;", "shader_type canvas_item;\nrender_mode unshaded;")
+	z_as_relative = false
+	z_index = 4095
+	var marker_material: CanvasItemMaterial = CanvasItemMaterial.new()
+	marker_material.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
+	material = marker_material
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_world = get_node_or_null("../World")
 	_font = load("res://assets/fonts/galmuri/Galmuri11.ttf") as Font
@@ -142,6 +161,8 @@ func _on_world_reset() -> void:
 	for person: Person in _persons.values():
 		person.queue_free()
 	_persons.clear()
+	_coincident_badges.clear()
+	queue_redraw()
 	_household_key = 0
 	_household_of = {}
 
@@ -276,6 +297,9 @@ func _update(delta: float) -> void:
 		_drafted_px = float(ArtData.param("people.drafted_outline_px", 2))
 		_halo_rgba = _rgba("people.night_halo_rgba", Color(0.91, 0.89, 0.81))
 		_halo_alpha = clampf(float(ArtData.param("people.night_halo_alpha", 0.0)), 0.0, 1.0)
+		_half_rim = _rgba("people.half_rim_rgba", Color(0.95, 0.95, 0.88, 1))
+		_half_rim_px = clampf(float(ArtData.param("people.half_rim_px", 1)), 0.0, 2.0)
+		_half_overlap_alpha = clampf(float(ArtData.param("people.half_overlap_alpha", 0.8)), 0.5, 1.0)
 		for person: Person in _persons.values():
 			person.shadow.texture = _shadow_tex
 			person.outline = Color(-1, -1, -1, -1)
@@ -307,7 +331,7 @@ func _update(delta: float) -> void:
 	var inspector: Node = get_node_or_null("/root/Main/UI/AgentInspectorPanel")
 	_selected_bits = int(inspector.call("get_selected_entity_bits")) if inspector != null and (inspector as Control).visible else -1
 	_zoom = _camera_zoom()
-	var lod: bool = _zoom < float(ArtData.param("lod.people_below_zoom", 1.0)) - 0.001
+	var lod: bool = _zoom <= float(ArtData.param("lod.marker_zoom_max", 0.25)) + 0.001
 	if lod:
 		_update_households(snap)
 	var any_sleep: bool = false
@@ -381,11 +405,21 @@ func _update(delta: float) -> void:
 			# Markers only (drawn by this node): no frame, mask or shader work for a hidden body.
 			continue
 		_set_frame(person, pose, bob)
+		var readable: bool = _zoom < 1.0 and not lod
+		if person.readable != readable:
+			person.readable = readable
+			person.mat.shader = _half_shader if readable else VARIANT_SHADER
+			person.body.z_as_relative = not readable
+			person.body.z_index = 4094 if readable else 0
+			person.body.self_modulate = Color.WHITE
+			person.outline = Color(-1, -1, -1, -1)
 		var outline: Color = _no_outline
 		if person.selected:
 			outline = _selection_rgba
 		elif person.drafted:
 			outline = _drafted_rgba
+		elif readable:
+			outline = _half_rim
 		elif _halo_alpha > 0.0 and _daylight != null:
 			var a: float = roundf(_halo_alpha * float(_daylight.call("dark_at", person.position)) * float(HALO_STEPS)) / float(HALO_STEPS)
 			if a > 0.0:
@@ -394,7 +428,10 @@ func _update(delta: float) -> void:
 			person.outline = outline
 			person.mat.set_shader_parameter("outline_color", outline)
 			# The drafted mark is wider (`people.drafted_outline_px`): a 1-px red line is lost on dark skin and fur at 1×.
-			person.mat.set_shader_parameter("outline_px", _drafted_px if outline == _drafted_rgba else _outline_px)
+			var width: float = _drafted_px if outline == _drafted_rgba else _outline_px
+			if readable:
+				width = maxf(width, _half_rim_px / maxf(_zoom, 0.01))
+			person.mat.set_shader_parameter("outline_px", width)
 	for key: int in _persons.keys():
 		var person: Person = _persons[key]
 		if person.seen != _frame:
@@ -409,10 +446,107 @@ func _update(delta: float) -> void:
 			person.position = person.from_pos.lerp(person.to_pos, person.elapsed / person.duration).round()
 		else:
 			person.position = person.to_pos
+	if not lod and _zoom < 1.0:
+		_show_overlapping_figures()
+	elif not _coincident_badges.is_empty():
+		_coincident_badges.clear()
+		queue_redraw()
 	if lod or _lod:
 		_lod = lod
 		_refresh_markers()
 	_lod = lod
+
+
+## At half zoom, let genuine coincident art show through; bodies keep their original feet and shadows.
+## Cache opaque frame extents and use tile-size spatial buckets, avoiding all-pairs work at population1000.
+func _show_overlapping_figures() -> void:
+	var buckets: Dictionary = {}
+	var rectangles: Dictionary = {}
+	var overlaps: Dictionary = {}
+	for person: Person in _persons.values():
+		var texture: Texture2D = person.body.texture
+		if texture == null:
+			continue
+		var key: int = texture.get_instance_id()
+		if not _opaque_rects.has(key):
+			var image: Image = texture.get_image()
+			if image.is_compressed():
+				image.decompress()
+			_opaque_rects[key] = image.get_used_rect()
+		var used: Rect2i = _opaque_rects[key]
+		if person.body.flip_h:
+			used.position.x = texture.get_width() - used.end.x
+		var rectangle: Rect2 = Rect2(person.position + person.body.offset + Vector2(used.position), Vector2(used.size))
+		rectangles[person.bits] = rectangle
+		var first: Vector2i = Vector2i((rectangle.position / float(View.TILE)).floor())
+		var last: Vector2i = Vector2i((rectangle.end / float(View.TILE)).floor())
+		for y: int in range(first.y, last.y + 1):
+			for x: int in range(first.x, last.x + 1):
+				var cell: Vector2i = Vector2i(x, y)
+				for other: int in buckets.get(cell, []):
+					if rectangle.intersects(rectangles[other]):
+						overlaps[person.bits] = true
+						overlaps[other] = true
+				if not buckets.has(cell):
+					buckets[cell] = []
+				buckets[cell].append(person.bits)
+	for person: Person in _persons.values():
+		person.body.self_modulate = Color(1, 1, 1, _half_overlap_alpha if overlaps.has(person.bits) else 1.0)
+	_update_coincident_badges(rectangles)
+
+
+## Counts come from the full person snapshot, never body visibility. Counterfactual body hides cannot alter a badge.
+func _update_coincident_badges(rectangles: Dictionary) -> void:
+	var groups: Dictionary = {}
+	for person: Person in _persons.values():
+		var cell: Vector2i = Vector2i((person.position * _zoom).round())
+		if not groups.has(cell):
+			groups[cell] = []
+		groups[cell].append(person.bits)
+	var has_group: bool = false
+	for group: Array in groups.values():
+		has_group = has_group or group.size() > 1
+	if not has_group:
+		if not _coincident_badges.is_empty():
+			_coincident_badges.clear()
+			queue_redraw()
+		return
+	var badges: Array[Dictionary] = []
+	var canvas: Transform2D = get_global_transform_with_canvas()
+	var inverse: Transform2D = canvas.affine_inverse()
+	var blocked: Array[Rect2] = []
+	for rectangle: Rect2 in rectangles.values():
+		blocked.append(canvas * rectangle)
+	var ui: Node = get_node_or_null("/root/Main/UI")
+	if ui != null:
+		MarkerLayout.ui_rects(ui, blocked)
+	for group: Array in groups.values():
+		if group.size() < 2:
+			continue
+		var members: Array[int] = []
+		for bits: int in group:
+			members.append(bits)
+		members.sort_custom(func(a: int, b: int) -> bool: return (_persons[a] as Person).agent_id < (_persons[b] as Person).agent_id)
+		var bounds: Rect2 = rectangles.get(members[0], drawn_rect(members[0]))
+		for bits: int in members:
+			bounds = bounds.merge(rectangles.get(bits, drawn_rect(bits)))
+		var text: String = str(members.size())
+		var px: int = int(ArtData.param("labels.font_px", 24))
+		var pad: float = floorf(float(px) / 4.0)
+		var size: Vector2 = _font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, px) if _font != null else Vector2(px, px)
+		var inv: float = 1.0 / maxf(_zoom, 0.01) if bool(ArtData.param("labels.follow_camera", true)) else 1.0
+		var local_size: Vector2 = Vector2(size.x + pad * 2.0, px + pad) * inv
+		var screen_size: Vector2 = (canvas * Rect2(Vector2.ZERO, local_size)).size
+		var figure: Rect2 = canvas * bounds
+		var placed: Rect2 = MarkerLayout.badge(figure, screen_size, get_viewport_rect(), blocked)
+		blocked.append(placed)
+		var anchor: Vector2 = inverse * Vector2(placed.get_center().x, placed.end.y)
+		var badge_rect: Rect2 = inverse * placed
+		var leader: PackedVector2Array = MarkerLayout.badge_leader(figure, placed)
+		badges.append({"members": members, "anchor": anchor, "text": text, "rect": badge_rect, "leader_from": inverse * leader[0], "leader_to": inverse * leader[1]})
+	if badges != _coincident_badges:
+		_coincident_badges = badges
+		queue_redraw()
 
 
 func _rgba(path: String, fallback: Color) -> Color:
@@ -453,7 +587,7 @@ func _draw_marks(person: Person) -> void:
 		person.marks.draw_rect(Rect2(-1, head - 2, 3, 2), FLEE_MARK)
 
 
-## LOD markers (below `lod.people_below_zoom`): discs and glyphs by the MultiMesh child (lod_markers.gd); this node
+## LOD markers (at or below `lod.marker_zoom_max`): batched discs and glyphs; this node
 ## draws only the selection and drafted rings around their discs.
 func _refresh_markers() -> void:
 	var t0: int = Time.get_ticks_usec()
@@ -462,19 +596,19 @@ func _refresh_markers() -> void:
 		queue_redraw()
 		last_draw_usec = Time.get_ticks_usec() - t0
 		return
-	var sizes: Dictionary = ArtData.param("lod.marker_px", {})
-	var key: String = "0.25" if _zoom < 0.375 else "0.5"
-	var px: int = int(sizes.get(key, 10 if key == "0.5" else 6))
-	var glyphs: bool = absf(_zoom - float(ArtData.param("lod.glyph_zoom", 0.5))) < 0.01
+	var px: int = int(ArtData.param("lod.marker_fill_px", 14))
+	var glyphs: bool = absf(_zoom - float(ArtData.param("lod.glyph_zoom", 0.25))) < 0.01
 	var points: PackedVector2Array = PackedVector2Array()
 	var colours: PackedColorArray = PackedColorArray()
 	var rings: PackedColorArray = PackedColorArray()
 	var ids: PackedInt32Array = PackedInt32Array()
+	var stable_ids: PackedInt64Array = PackedInt64Array()
 	var palette: Array = ArtData.param("lod.household_ring_rgb", [])
 	points.resize(_persons.size())
 	colours.resize(_persons.size())
 	rings.resize(_persons.size())
 	ids.resize(_persons.size())
+	stable_ids.resize(_persons.size())
 	var k: int = 0
 	_ringed.clear()
 	for person: Person in _persons.values():
@@ -482,11 +616,16 @@ func _refresh_markers() -> void:
 		colours[k] = person.top_colour
 		rings[k] = _ring_colour(int(_household_of.get(person.agent_id, -1)), palette)
 		ids[k] = GLYPH_OF.get(person.activity, -1)
+		stable_ids[k] = person.agent_id
 		if person.selected or person.drafted:
 			_ringed.append(person)
 		k += 1
-	_markers.show_markers(points, colours, ids, px, _zoom, glyphs, _rgba("lod.ring_rgba", INK), rings)
-	_marker_px = px
+	_markers.show_markers(points, colours, ids, px, _zoom, glyphs, _rgba("lod.ring_rgba", INK), rings, ArtData.param("lod", {}), stable_ids)
+	k = 0
+	for person: Person in _persons.values():
+		person.marker_position = _markers.point_at(k)
+		k += 1
+	_marker_px = _markers.total_px()
 	queue_redraw()
 	last_draw_usec = Time.get_ticks_usec() - t0
 
@@ -543,11 +682,19 @@ func household_of(agent_id: int) -> int:
 
 func _draw() -> void:
 	if not _lod:
+		if _zoom < 1.0 and _font != null:
+			for badge: Dictionary in _coincident_badges:
+				draw_line(badge["leader_from"], badge["leader_to"], INK, 2.0 / maxf(_zoom, 0.01))
+				draw_line(badge["leader_from"], badge["leader_to"], _half_rim, 1.0 / maxf(_zoom, 0.01))
+				OverlayLabel.draw_label(self, _font, str(badge["text"]), badge["anchor"], _zoom)
 		return
 	var onepx: float = 1.0 / maxf(_zoom, 0.01)
 	var r: float = _marker_px * 0.5 * onepx
 	for person: Person in _ringed:
-		draw_arc(person.position, r + onepx, 0.0, TAU, 16, _selection_rgba if person.selected else _drafted_rgba, 1.5 * onepx)
+		if person.drafted:
+			draw_arc(person.marker_position, r + onepx, 0.0, TAU, 32, _drafted_rgba, 2.0 * onepx)
+		if person.selected:
+			draw_arc(person.marker_position, r + (3.0 if person.drafted else 1.0) * onepx, 0.0, TAU, 32, _selection_rgba, 2.0 * onepx)
 
 
 func _camera_zoom() -> float:
@@ -582,15 +729,24 @@ func drawn_rect(bits: int) -> Rect2:
 	if person == null:
 		return Rect2()
 	if _lod:
-		var r: float = 6.0 / maxf(_zoom, 0.01)
-		return Rect2(person.position - Vector2(r, r), Vector2(2 * r, 2 * r))
+		var mark_px: float = 4.0 if person.selected and person.drafted else (2.0 if person.selected or person.drafted else 0.0)
+		var r: float = (_marker_px * 0.5 + mark_px) / maxf(_zoom, 0.01)
+		return Rect2(person.marker_position - Vector2(r, r), Vector2(2 * r, 2 * r))
 	if person.activity == "sleep":
 		return Rect2(person.position + Vector2(-28, -36), Vector2(56, 40))
 	return Rect2(person.position + Vector2(-20, -60), Vector2(40, 64))
 
 
-## Entity bits of the person drawn at world position `p` (the lowest on screen wins), or -1.
-func entity_at(p: Vector2) -> int:
+## Default picking retains lowest-on-screen priority. Explicit inspection cycles exact coincident members by stable ID.
+func entity_at(p: Vector2, cycle_selection: bool = false) -> int:
+	if cycle_selection and not _lod and _zoom < 1.0:
+		for badge: Dictionary in _coincident_badges:
+			var members: Array[int] = badge["members"]
+			var hit: bool = (badge["rect"] as Rect2).has_point(p)
+			for bits: int in members:
+				hit = hit or drawn_rect(bits).has_point(p)
+			if hit:
+				return members[(members.find(_selected_bits) + 1) % members.size()]
 	var best: int = -1
 	var best_y: float = -INF
 	for person: Person in _persons.values():

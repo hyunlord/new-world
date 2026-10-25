@@ -3,6 +3,7 @@
 # Run windowed: --manifest /absolute/manifest.json --out /absolute/new-directory. No product hooks.
 extends SceneTree
 
+const Provenance = preload("res://tools/v8/mux2_visibility_provenance.gd")
 const Metrics = preload("res://tools/v8/mux2_visibility_metrics.gd")
 const Store = preload("res://scripts/ui/mux/settings_store.gd")
 var _out: String
@@ -39,6 +40,11 @@ func _run() -> void:
 	if DirAccess.make_dir_recursive_absolute(_out) != OK:
 		quit(1)
 		return
+	var provenance_start: Dictionary = Provenance.capture(manifest_path)
+	_write(_out.path_join("provenance-start.json"), provenance_start)
+	var start_hashes: Dictionary = provenance_start["hashes"]
+	for missing: String in Provenance.changes(start_hashes, start_hashes):
+		_failures.append("missing/unreadable input at start " + missing)
 	var value: Variant = JSON.parse_string(FileAccess.get_file_as_string(manifest_path))
 	if not value is Dictionary or int(value.get("schema", 0)) != 1 or not value.get("scenes") is Array:
 		push_error("MUX2_VISIBILITY invalid manifest")
@@ -59,7 +65,12 @@ func _run() -> void:
 		await _save_scenes(row)
 	if seen.size() != 4 or _scenes.size() != 8:
 		_failures.append("incomplete eight-scene coverage")
-	var report: Dictionary = {"schema": 1, "manifest_sha256": FileAccess.get_sha256(manifest_path), "bridge_sha256": FileAccess.get_sha256("res://rust/target/debug/libsim_bridge.dylib"), "render_params_sha256": FileAccess.get_sha256("res://assets/v8art/render_params.json"), "scenes": _scenes, "failures": _failures, "pass": _failures.is_empty(), "ground_control": "same camera/daylight; only GroundLayer visible; includes actual baked walls; no fabricated pixels", "attribution": "leave-one-person-out framebuffer difference; unchanged shadows and activity glyphs cannot count"}
+	var provenance_end: Dictionary = Provenance.capture(manifest_path)
+	_write(_out.path_join("provenance-end.json"), provenance_end)
+	var changed_inputs: Array[String] = Provenance.changes(start_hashes, provenance_end["hashes"])
+	for changed: String in changed_inputs:
+		_failures.append("input mutated/unreadable during capture " + changed)
+	var report: Dictionary = {"schema": 2, "manifest_sha256": start_hashes.get(manifest_path, ""), "bridge_sha256": start_hashes.get(Provenance.BRIDGE, ""), "render_params_sha256": start_hashes.get("res://assets/v8art/render_params.json", ""), "provenance_start": provenance_start, "provenance_end": provenance_end, "changed_inputs": changed_inputs, "inputs_unchanged": changed_inputs.is_empty(), "scenes": _scenes, "failures": _failures, "pass": _failures.is_empty(), "ground_control": "same camera/daylight; only GroundLayer visible; includes actual baked walls; no fabricated pixels", "attribution": "leave-one-person-out framebuffer difference; unchanged shadows and activity glyphs cannot count"}
 	_write(_out.path_join("visibility.json"), report)
 	print("MUX2_VISIBILITY_DONE " + JSON.stringify({"scenes": _scenes.size(), "failures": _failures.size(), "pass": _failures.is_empty()}))
 	quit(0 if _failures.is_empty() else 1)

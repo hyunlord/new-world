@@ -93,3 +93,11 @@ Frozen calibration1 saves3/5 were continued for the final1440ticks before policy
 Calibration2 policy b98c3aa81c1932dc6f8008211236fe7f6811ee23e40815a32b1f394c5690394f is frozen before execution. All8worlds/48days are complete, source/binary drift false. Stock/housing/winter/alive/wolf/ledger each8/8; exposed fuel protection4/8 with no observed depletion and four not-exposed worlds. Aggregate FAIL remains preserved against required6/8 fuel; no event forcing, changed denominator or threshold. No held-out outcomes have been accessed. Two of at most four calibration rounds are used; no additional tuning is justified by missing exposure.
 
 Optional house-phase RAII timing emits only under WORLDSIM_MUX2_PROFILE=1, records early returns and never feeds simulation control. Broader final identity/intentional-OFF-delta accounting, full gate and held-out acceptance remain pending.
+
+## D12 — Preserve figures and make coincident people explicit
+
+Half-scale retains route-I figures at true anchors/shadows; quarter alone uses the configured bright-ring markers. Crowded figures keep their real positions: a stable overlap-count badge and inspector click cycling communicate coincident people. Badge placement checks all silhouettes, viewport, UI and other badges; leader checks use actual segment intersections, not oversized bounding boxes. Normal attack picking does not cycle.
+
+Candidate4 passed all eight pixel checks but independent review rejected its badge hiding adjacent agent4. Candidate5 resolves that finding and independently passes all eight static images. Immutable-input GPU minima are half109/78/136/84 and quarter318/384, above unchanged60/140 bars. The layout correction's original failed screen-bounds control is retained; current marker21 and coincident17 checks pass. Selection/draft fixture uses actual clicks and ordinary commands:21 checks and four real crops pass, with unchanged inputs. These focused state checks do not replace visibility thresholds.
+
+This is scoped visual acceptance on genuine historical v10 scenes, not current-policy, FPS, full-gate or owner acceptance. Fresh policy scenes and N1000 half-scale FPS remain pending. Count badges identify multiplicity; exactly coincident bodies remain composite, not artificially separated.

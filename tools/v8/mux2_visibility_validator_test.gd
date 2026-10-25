@@ -3,6 +3,7 @@
 extends SceneTree
 
 const Metrics = preload("res://tools/v8/mux2_visibility_metrics.gd")
+const Provenance = preload("res://tools/v8/mux2_visibility_provenance.gd")
 var _failures: int = 0
 var _checks: int = 0
 
@@ -27,6 +28,12 @@ func _image(count: int, colour: Color) -> Image:
 
 
 func _run() -> void:
+	var digest: String = "a".repeat(64)
+	_check("unchanged_inputs", Provenance.changes({"source": digest}, {"source": digest}).is_empty())
+	_check("mutated_input_rejected", Provenance.changes({"source": digest}, {"source": "b".repeat(64)}) == ["source"])
+	_check("deleted_input_rejected", Provenance.changes({"source": digest}, {}) == ["source"])
+	_check("added_input_rejected", Provenance.changes({}, {"source": digest}) == ["source"])
+	_check("missing_at_both_ends_rejected", Provenance.changes({"bridge": ""}, {"bridge": ""}) == ["bridge"])
 	var ground: Image = _image(0, Color.WHITE)
 	for bar: int in [60, 140]:
 		for count: int in [bar - 1, bar]:

@@ -7,9 +7,9 @@
 #   2. anchor placement in all four facings: the frame's lowest opaque row is within 2 px of its anchor y; the body is
 #      offset so the anchor pixel (mirrored for W) lands on the person's feet, and the feet are the tile's base point
 #      (tile_left + 32, tile_top + 43) on screen (the canvas transform of the base point);
-#   3. the LOD switch at the thresholds: markers below `lod.people_below_zoom`, sprites at and above it;
-#   4. a params reload changes what is drawn: a copy of render_params.json with `lod.people_below_zoom` 0.4 (in
-#      user://) is reloaded through ArtData.reload_params (the F12 path) and ½× then shows sprites;
+#   3. the LOD switch: markers at quarter zoom, route-I sprites at half and above;
+#   4. a params reload changes what is drawn: a copy of render_params.json with `lod.marker_zoom_max` 0.5 (in
+#      user://) is reloaded through ArtData.reload_params (the F12 path) and ½× then shows markers until restored;
 #   5. the variant tint is deterministic: the shader parameters of a person are a pure function of (look, variant).
 #   Prints MART2_PEOPLE lines and MART2_PEOPLE_DONE failures=N; exits 1 on any failure.
 # Bridge methods called: reset_world, cmd_set_steward, get_steward, get_time_snapshot, advance_ticks (direct).
@@ -123,13 +123,13 @@ func _check_lod(layer: Node, camera: Camera2D) -> void:
 		await process_frame
 		await process_frame
 		seen[z] = bool(layer.call("lod_active"))
-	var below: float = float(ArtData.param("lod.people_below_zoom", 1.0))
-	_check("lod_switch", seen[1.0] == false and seen[2.0] == false and seen[0.5] == true and seen[0.25] == true, "threshold %.2f: %s" % [below, seen])
+	var maximum: float = float(ArtData.param("lod.marker_zoom_max", 0.25))
+	_check("lod_switch", seen[1.0] == false and seen[2.0] == false and seen[0.5] == false and seen[0.25] == true, "marker maximum %.2f: %s" % [maximum, seen])
 
 
 func _check_reload(layer: Node, camera: Camera2D) -> void:
 	var copy: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(ArtData.ROOT + "render_params.json"))
-	(copy["lod"] as Dictionary)["people_below_zoom"] = 0.4
+	(copy["lod"] as Dictionary)["marker_zoom_max"] = 0.5
 	var path: String = "user://mart2_params_test.json"
 	var f: FileAccess = FileAccess.open(path, FileAccess.WRITE)
 	f.store_string(JSON.stringify(copy))
@@ -146,7 +146,7 @@ func _check_reload(layer: Node, camera: Camera2D) -> void:
 	await process_frame
 	await process_frame
 	var lod_back: bool = bool(layer.call("lod_active"))
-	_check("params_reload", ok and ArtData.params_version() == version + 2 and not lod_after and lod_back, "reload ok %s, version %d → %d, at ½× with threshold 0.4 markers=%s, after restoring markers=%s" % [ok, version, ArtData.params_version(), lod_after, lod_back])
+	_check("params_reload", ok and ArtData.params_version() == version + 2 and lod_after and not lod_back, "reload ok %s, version %d → %d, at ½× with marker maximum0.5 markers=%s, after restoring markers=%s" % [ok, version, ArtData.params_version(), lod_after, lod_back])
 
 
 func _check_tint(layer: Node, snap: Dictionary) -> void:

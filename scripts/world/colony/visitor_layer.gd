@@ -7,9 +7,9 @@
 #   sprite) between them east of its tile, so the two never cover each other at the hearth. Each person's look is a
 #   keyed hash of (group number, person) among the manifest looks whose age is in bindings `visitors.look_ages` — no
 #   names; no variant tint (visitors are strangers seen from afar). Facing: E while the group steps east, E flipped
-#   west, else S. Below 1× (`lod.people_below_zoom`) the figures are hidden and this node (z 3, above the world layer)
-#   draws each person as a filled circle in `visitors.lod_colour` with a 1-px ink ring (`lod.marker_px` screen
-#   pixels). Groups ease from tile to tile like the animals (a jump of more than two tiles, as after advance_ticks, is
+#   west, else S. At quarter zoom (`lod.marker_zoom_max`) the figures hide and the shared unshaded marker batch
+#   draws `visitors.lod_colour` fills with bright, neutral household and dark outline rings above the world.
+#   Half zoom retains route-I figures. Groups ease from tile to tile (a jump of more than two tiles is
 #   placed at once). Under the mouse a group shows "이주민 4명 · 붉은바위" / "교역 무리 · 붉은바위" on a dark backing box.
 #   The drawn rects are the click targets (`wave_at`, `caravan_at`): order_tool.gd opens the migrant dialog or the
 #   trade dialog on a click.
@@ -43,11 +43,16 @@ var _hover: String = ""
 var _drawn: bool = false
 var _lod: bool = false
 var _zoom: float = 1.0
+const LodMarkers = preload("res://scripts/world/colony/lod_markers.gd")
+var _markers: LodMarkers = null
 
 
 func _ready() -> void:
 	z_as_relative = false
-	z_index = 3
+	z_index = 4095
+	_markers = LodMarkers.new()
+	_markers.name = "VisitorMarkers"
+	add_child(_markers)
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_font = load(FONT_PATH) as Font
 	_world = get_node_or_null("../World")
@@ -74,7 +79,7 @@ func _process(delta: float) -> void:
 		return
 	_frame += 1
 	_zoom = get_viewport().get_canvas_transform().x.x
-	_lod = _zoom < float(ArtData.param("lod.people_below_zoom", 1.0)) - 0.001
+	_lod = _zoom <= float(ArtData.param("lod.marker_zoom_max", 0.25)) + 0.001
 	var read: Dictionary = SimReads.read(_world_sim, "get_neighbours")
 	NeighbourText.observe(read)
 	var duration: float = _step_seconds()
@@ -100,6 +105,7 @@ func _process(delta: float) -> void:
 			group["at"] = group["to"]
 			group["facing"] = 0
 		_place(group)
+	_refresh_markers()
 	_hover = group_at(get_global_mouse_position())
 	var needs: bool = _hover != "" or (_lod and not _groups.is_empty())
 	if needs or _drawn:
@@ -221,35 +227,37 @@ func _anchor_of(tex: Texture2D) -> Vector2:
 
 
 func _draw() -> void:
-	var inv: float = 1.0 / maxf(0.05, _zoom)
-	if _lod:
-		var lc: Variant = (ArtData.bindings().get("visitors", {}) as Dictionary).get("lod_colour", [196, 182, 150])
-		var fill: Color = Color8(int(lc[0]), int(lc[1]), int(lc[2])) if lc is Array and (lc as Array).size() >= 3 else Color.WHITE
-		var rv: Variant = ArtData.param("lod.ring_rgba", [35, 29, 23, 255])
-		var ring: Color = Color8(int(rv[0]), int(rv[1]), int(rv[2]), int(rv[3])) if rv is Array and (rv as Array).size() == 4 else Color8(35, 29, 23)
-		var r: float = _marker_px() * 0.5 * inv
-		for key: String in _groups.keys():
-			var group: Dictionary = _groups[key]
-			var base: Vector2 = (group["at"] as Vector2) + Vector2(View.BASE)
-			for off: Vector2 in _offsets(group):
-				var c: Vector2 = base + off - Vector2(0, r)
-				draw_circle(c, r + inv, ring)
-				draw_circle(c, r, fill)
 	if _hover != "" and _groups.has(_hover) and _font != null:
 		_hover_box(_groups[_hover])
 
 
 func _marker_px() -> float:
-	var table: Variant = ArtData.param("lod.marker_px", {})
-	var best: float = 8.0
-	var best_d: float = INF
-	if table is Dictionary:
-		for k: Variant in (table as Dictionary).keys():
-			var d: float = absf(float(str(k)) - _zoom)
-			if d < best_d:
-				best_d = d
-				best = float((table as Dictionary)[k])
-	return best
+	return float(_markers.total_px())
+
+
+func _refresh_markers() -> void:
+	if not _lod:
+		_markers.hide_markers()
+		return
+	var lc: Variant = (ArtData.bindings().get("visitors", {}) as Dictionary).get("lod_colour", [196, 182, 150])
+	var fill: Color = Color8(int(lc[0]), int(lc[1]), int(lc[2])) if lc is Array and (lc as Array).size() >= 3 else Color.WHITE
+	var rv: Variant = ArtData.param("lod.ring_rgba", [35, 29, 23, 255])
+	var ink: Color = Color8(int(rv[0]), int(rv[1]), int(rv[2]), int(rv[3])) if rv is Array and (rv as Array).size() == 4 else Color8(35, 29, 23)
+	var points: PackedVector2Array = PackedVector2Array()
+	var colours: PackedColorArray = PackedColorArray()
+	for group: Dictionary in _groups.values():
+		var base: Vector2 = (group["at"] as Vector2) + Vector2(View.BASE)
+		for off: Vector2 in _offsets(group):
+			points.append(base + off)
+			colours.append(fill)
+	_markers.show_markers(points, colours, PackedInt32Array(), int(ArtData.param("lod.marker_fill_px", 14)), _zoom, false, ink, PackedColorArray(), ArtData.param("lod", {}))
+	var index: int = 0
+	for group: Dictionary in _groups.values():
+		var placed: PackedVector2Array = PackedVector2Array()
+		for _off: Vector2 in _offsets(group):
+			placed.append(_markers.point_at(index))
+			index += 1
+		group["marker_points"] = placed
 
 
 func _hover_box(group: Dictionary) -> void:
@@ -270,13 +278,17 @@ func _rect_of(group: Dictionary) -> Rect2:
 	var anchor: Vector2 = _anchor_of(null)
 	var out: Rect2 = Rect2()
 	var first: bool = true
+	var index: int = 0
 	for off: Vector2 in _offsets(group):
 		var r: Rect2 = Rect2(base + off - anchor, canvas)
 		if _lod:
 			var m: float = _marker_px() / maxf(0.05, _zoom)
-			r = Rect2(base + off - Vector2(m * 0.5, m), Vector2(m, m))
+			var placed: PackedVector2Array = group.get("marker_points", PackedVector2Array())
+			var centre: Vector2 = placed[index] if index < placed.size() else base + off
+			r = Rect2(centre - Vector2.ONE * m * 0.5, Vector2(m, m))
 		out = r if first else out.merge(r)
 		first = false
+		index += 1
 	return out
 
 

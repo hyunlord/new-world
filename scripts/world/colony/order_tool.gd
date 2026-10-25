@@ -573,7 +573,7 @@ func click_world(world_pos: Vector2, tile: Vector2i) -> void:
 			migrants.call("open_wave", wave)
 			return
 	var agents: Node = get_node_or_null("../AgentLayer")
-	var bits: int = int(agents.call("entity_at", world_pos)) if agents != null else -1
+	var bits: int = int(agents.call("entity_at", world_pos, true)) if agents != null else -1
 	if bits >= 0:
 		var detail: Dictionary = _world_sim.call("get_agent_detail", bits)
 		var inspector: Node = get_node_or_null("/root/Main/UI/AgentInspectorPanel")
