@@ -1,7 +1,7 @@
 //! JobAssignSystem: gives available colonists a job — by work type: Craft > Build (deliver, then build) > Quarry > Chop > Split > Haul.
 //!
 //! Priority: 124 (`JOB_ASSIGN_PRIORITY`). Interval: 1 tick. Gate: `WorldRules.colony`.
-//! Reads: `Agent`, `Position`, `AgentState`, `Job`, `Child`, `PorterTrip`; `SimResources.colony` (trees, designations, ground items, zones, reservations, footprints), `combat_pairs`, `rules.colony`; colony sites (`ColonySite`, `MaterialNeeds`, `ConstructionSite`)
+//! Reads: `Agent`, `Position`, `AgentState`, `Job`, `Child`, `PorterTrip`, `Hunger`, `Thirst`, `Sleep`, `Temperament`; `SimResources.colony` (trees, designations, ground items, zones, reservations, footprints), `combat_pairs`, `rules.colony`; colony sites (`ColonySite`, `MaterialNeeds`, `ConstructionSite`)
 //! Writes: `Job`, `SeekTarget`, `AgentState` (`Seeking { Job }`); `SimResources.colony.reservations`, `colony.tallies`, `spatial.colony` (rebuilt when the overlay changed)
 //! Events: none
 //!
@@ -1083,8 +1083,8 @@ impl RuntimeSystem for JobAssignSystem {
         );
         let knowledge_rule = rule.knowledge;
         let gating = knowledge_rule.is_some();
-        // M3 (DECISIONS D16): a person whose hunger or thirst is at its seek
-        // threshold is about to leave for food or water; no new job then.
+        // A person already due for food, water or an available bed must not
+        // claim a reservation that the decision pass will immediately release.
         let needy = |e: Entity| needy(world, resources, e);
         let mut available: Vec<Row> = world
             .query::<(
@@ -1362,8 +1362,8 @@ pub(super) fn in_combat(res: &SimResources, id: AgentId) -> bool {
     res.combat_pairs.iter().any(|&(a, b)| a == id || b == id)
 }
 
-/// M3 (DECISIONS D16): whether `e`'s hunger or thirst is at its seek threshold
-/// (with built space only) — about to leave for food or water: no new job then.
+/// M3: needs already due to interrupt work must not claim a new reservation.
+/// Sleep uses the decision's personal night window and requires a real bed.
 pub(super) fn needy(world: &World, res: &SimResources, e: Entity) -> bool {
     use crate::runtime::decision::needs as n;
     res.rules.colony.is_some_and(|c| c.space.is_some())
@@ -1372,7 +1372,43 @@ pub(super) fn needy(world: &World, res: &SimResources, e: Entity) -> bool {
             .is_ok_and(|h| h.value >= n::HUNGER_THRESHOLD)
             || world
                 .get::<&sim_core::components::Thirst>(e)
-                .is_ok_and(|t| t.value >= n::THIRST_THRESHOLD))
+                .is_ok_and(|t| t.value >= n::THIRST_THRESHOLD)
+            || sleep_due(world, res, e))
+}
+
+/// Match the sleep decision before reserving work, without withholding jobs
+/// when there is nowhere to sleep.
+fn sleep_due(world: &World, res: &SimResources, entity: Entity) -> bool {
+    use crate::runtime::decision::needs as n;
+    if !res.sleep_tiles.values().any(|amount| *amount > 0) {
+        return false;
+    }
+    let day_tick = (res.ticks_per_day != 0).then(|| {
+        res.current_tick
+            .saturating_add(res.rules.clock_offset_ticks)
+            % res.ticks_per_day
+    });
+    let temperament = world.get::<&sim_core::components::Temperament>(entity).ok();
+    let rest = n::person_night_rest(
+        res.rules.agent.night_rest,
+        res.rules.agent.temperament,
+        temperament.as_ref().map(|value| &**value),
+        day_tick,
+    );
+    let threshold = rest.map_or(n::FATIGUE_THRESHOLD, |rule| rule.fatigue_threshold);
+    let sleep = world.get::<&sim_core::components::Sleep>(entity).ok();
+    n::actionable_need_with_fatigue_threshold(
+        None,
+        None,
+        sleep.as_ref().map(|value| &**value),
+        n::NeedAvailability {
+            food: false,
+            water: false,
+            sleep: true,
+        },
+        threshold,
+    )
+    .is_some()
 }
 
 #[cfg(test)]

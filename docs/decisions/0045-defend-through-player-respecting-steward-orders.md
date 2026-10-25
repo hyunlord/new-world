@@ -20,6 +20,10 @@ Civilian flight compares actual reachable navigation paths and person/wolf trave
 
 Fuel-only hauling receives a round at each worker's own Haul priority, before other jobs at that same priority. Higher explicit priorities and disabled Haul remain authoritative; stockpile acceptance, space, reachability and reservations still apply. M1 assignment remains unchanged. This addresses equal-priority starvation without introducing free fuel, forced delivery or a global priority override.
 
+The goal requires a physically walled home. Housing capacity and completion therefore require every exposed cardinal room edge to be constructed, including a real door; natural enclosure alone does not count. New candidate footprints reject natural boundary cells, and reuse existing physical walls. On constrained terrain an old stockpile may remain outdoors; flatland stockpile/hearth roofing remains tested.
+
+Built-space work eligibility also reuses the decision system's existing actionable sleep threshold, personal night window and real bed availability. An exhausted person must reach sleep instead of taking a reservation that is immediately cancelled. This intentionally changes colony work timing while preserving explicit priorities and the no-bed fallback; it does not apply to M1.
+
 Exact fatal-animal records (`FatalAnimalAttack`) are transient observer evidence: `SimResources.fatal_animal_attacks` is serde-skipped and cleared at tick start. It does not become saved policy or infer causation from proximity. The opt-in `mux2_native_timings` bridge method is a read-only performance diagnostic, outside the simulation policy API.
 
 ## Alternatives considered

@@ -5,6 +5,8 @@
 mod arming;
 mod completion;
 pub mod defence;
+mod house_profile;
+mod housing;
 pub mod lifecycle;
 mod planning;
 mod production;

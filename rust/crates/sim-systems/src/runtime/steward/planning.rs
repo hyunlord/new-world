@@ -10,6 +10,9 @@ use sim_core::colony::{
 use sim_core::components::{Agent, Child, Life, Position, Temperament};
 use sim_engine::SimResources;
 use std::{cmp::Reverse, collections::BTreeSet};
+#[cfg(test)]
+#[path = "housing_tests.rs"]
+mod housing_tests;
 type Tile = (u32, u32);
 fn distance(a: Tile, b: Tile) -> u32 {
     a.0.abs_diff(b.0).max(a.1.abs_diff(b.1))
@@ -312,6 +315,7 @@ fn house(
     action: &Action,
     reserve_only: bool,
 ) -> HousePlan {
+    let mut profile = super::house_profile::HouseProfile::new(res.current_tick, reserve_only);
     let Action::House {
         wall,
         door,
@@ -342,7 +346,7 @@ fn house(
                 .room_of_tile
                 .get(tile)
                 .and_then(|id| res.colony.rooms.get(id))
-                .is_some_and(|room| room.roofed)
+                .is_some_and(|room| super::housing::constructed(res, room))
         })
         .count() as u32;
     let beds = (world.query::<&Agent>().iter().count() as u32)
@@ -375,6 +379,7 @@ fn house(
     let inside = |tile: Tile, x: u32, y: u32, width: u32, height: u32| {
         tile.0 > x && tile.0 <= x + width && tile.1 > y && tile.1 <= y + height
     };
+    profile.phase(1);
     // Prefix counts make candidate capacity checks constant-time, independent of envelope area.
     let stride = res.tile_grid.width as usize + 1;
     let mut capacity = vec![0usize; stride * (res.tile_grid.height as usize + 1)];
@@ -402,6 +407,7 @@ fn house(
             - capacity[top * stride + right]
             - capacity[bottom * stride + left]
     };
+    profile.phase(2);
     let mut local_origins = BTreeSet::new();
     let mut origins: BTreeSet<_> = candidates(res, hearth)
         .into_iter()
@@ -445,6 +451,8 @@ fn house(
             heights
         })
         .collect();
+    profile.phase(3);
+    profile.candidates(locations.len());
     locations.sort_by_cached_key(|&(x, y, width, height)| {
         (
             Reverse(
@@ -461,6 +469,7 @@ fn house(
             width,
         )
     });
+    profile.phase(4);
     let camp_radius = sim_core::colony::steward::rules()
         .ok()
         .and_then(|data| {
@@ -475,6 +484,7 @@ fn house(
         knowledge::gates().designation(sim_core::colony::Designation::Chop),
     );
     for (x, y, width, height) in locations {
+        profile.visit();
         if x + width + 2 >= res.tile_grid.width || y + height + 2 >= res.tile_grid.height {
             continue;
         }
@@ -549,7 +559,11 @@ fn house(
             for xx in x..=x + width + 1 {
                 let tile = (xx, yy);
                 if crate::runtime::rooms::bounds(res, tile) {
-                    // Existing terrain/walls already enclose; never build or dig on them.
+                    // Reuse constructed walls, but never substitute terrain for a house wall.
+                    if res.tile_grid.wall_material[res.tile_grid.idx(xx, yy)].is_none() {
+                        valid = false;
+                        break;
+                    }
                     continue;
                 }
                 let tree = res.colony.trees.contains_key(&tile);
@@ -964,13 +978,29 @@ mod shared_home_tests {
                 &crate::worldgen::WorldGenConfig::colony(seed),
                 sim_core::rules::WorldRules::colony(seed),
             );
+            // This fixture tests shared-home capacity and transient people on buildable ground.
+            // Natural obstructions have separate physical-perimeter regressions.
+            let hearth = hearth_tiles(&e.resources)[0];
+            for y in
+                hearth.1.saturating_sub(20)..=(hearth.1 + 20).min(e.resources.tile_grid.height - 1)
+            {
+                for x in hearth.0.saturating_sub(20)
+                    ..=(hearth.0 + 20).min(e.resources.tile_grid.width - 1)
+                {
+                    let index = e.resources.tile_grid.idx(x, y);
+                    e.resources.tile_grid.terrain_type[index] = sim_core::TerrainType::Plain;
+                    e.resources.colony.nodes.remove(&(x, y));
+                }
+            }
             let rules = sim_core::colony::steward::rules().expect("rules");
             for c in plan(&e.world, &e.resources, &rules.rules[0]) {
                 assert!(crate::commands::apply_command(&mut e.world, &mut e.resources, c).accepted);
             }
-            // Completed-harvest fixture retains natural terrain, nodes and fixed buildings.
+            // Completed harvest leaves fixed buildings in the controlled camp.
             e.resources.colony.trees.clear();
             e.resources.content_state.tree_materials.clear();
+            let nav = crate::runtime::nav::build(&e.resources);
+            e.resources.nav.install(nav);
             let hearth = hearth_tiles(&e.resources)[0];
             for (_, p) in e.world.query::<&mut Position>().iter() {
                 p.x = hearth.0;
@@ -1000,11 +1030,69 @@ mod shared_home_tests {
             let x1 = walls.iter().map(|t| t.0).max().expect("wall");
             let y0 = walls.iter().map(|t| t.1).min().expect("wall");
             let y1 = walls.iter().map(|t| t.1).max().expect("wall");
+            let Action::House {
+                bed,
+                door,
+                max_beds,
+                service_cells,
+                ..
+            } = rules.rules[2].action
+            else {
+                panic!("house rule")
+            };
+            let required = (e.world.query::<&Agent>().iter().count() as u32).min(max_beds);
+            let planned_beds = ready
+                .commands
+                .iter()
+                .filter(|command| {
+                    matches!(command,
+                Command::PlaceBlueprint { kind, .. } if *kind == bed)
+                })
+                .count();
             assert_eq!(
-                (x1 - x0 - 1) * (y1 - y0 - 1),
-                40,
-                "compact envelope seed={seed}"
+                planned_beds, required as usize,
+                "all people get beds seed={seed}"
             );
+            let usable = (y0 + 1..y1)
+                .flat_map(|y| (x0 + 1..x1).map(move |x| (x, y)))
+                .filter(|tile| {
+                    !e.resources.colony.zone_of_tile.contains_key(tile)
+                        && crate::commands::check_space_after_tree_clear(
+                            &e.resources,
+                            &BTreeSet::new(),
+                            bed,
+                            *tile,
+                            false,
+                        )
+                        .is_ok()
+                })
+                .count();
+            assert!(
+                usable >= planned_beds + service_cells as usize,
+                "preserve usable service capacity seed={seed}"
+            );
+            let boundary: BTreeSet<_> = ready
+                .commands
+                .iter()
+                .filter_map(|command| match command {
+                    Command::PlaceBlueprint { kind, x, y } if kind.is_wall() || *kind == door => {
+                        Some((*x, *y))
+                    }
+                    _ => None,
+                })
+                .collect();
+            for tile in (x0 + 1..x1)
+                .flat_map(|x| [(x, y0), (x, y1)])
+                .chain((y0 + 1..y1).flat_map(|y| [(x0, y), (x1, y)]))
+            {
+                assert!(
+                    boundary.contains(&tile)
+                        || e.resources.tile_grid.wall_material
+                            [e.resources.tile_grid.idx(tile.0, tile.1)]
+                        .is_some(),
+                    "physical perimeter seed={seed} tile={tile:?}"
+                );
+            }
             assert!(e
                 .resources
                 .colony
@@ -1241,3 +1329,7 @@ mod shared_home_tests {
         );
     }
 }
+
+#[cfg(test)]
+#[path = "bills_optimization_tests.rs"]
+mod bills_optimization_tests;
