@@ -4,6 +4,7 @@ mod agent_trace;
 pub(crate) mod area_floor;
 mod args;
 pub mod ascii;
+pub mod b4;
 pub mod chronicle_out;
 pub mod churn;
 pub mod colony;

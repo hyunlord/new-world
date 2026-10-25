@@ -632,3 +632,7 @@ Selected source revision includes exact logical source names and bytes, includin
 ## M-UX bounded domain extraction (ADR 0039)
 
 `runtime/decision/consume.rs` holds only the existing Food/Water/Sleep consumption actions; `decision/system.rs` retains orchestration, targeting, GatherFood/GatherWood, routine replay and structural mutation order. `ffi/snapshot/resources.rs` owns resource collection/marshalling and its depletion tests, re-exported through the existing facade. No new runtime system or public API was introduced.
+
+## 16. Opt-in policy evaluation observations (B4, ADR 0040)
+
+`sim-test/src/probe/b4.rs` and its child modules retain immutable pre-tick craft inputs and reconcile persistent completion tallies, including deceased agents. Colony probe command/before/after seams record daily, migration, caravan and explicitly unresolved haul observations. This is probe-owned state, not a runtime system or save field. The three B4 CLI options are an explicit complete opt-in; ordinary output remains unchanged when absent. `sim-test/tests/b4_controlled.rs` exercises real cold filtering and paid craft finish boundaries. `tools/v8/b4_score.py` independently validates exact input hashes, full coverage and integer/keyed arithmetic. Natural exposure denominators, controlled mechanisms and outcome acceptance remain separate; raw artifacts live outside the repository.

@@ -197,3 +197,5 @@
 - 2026-10-25 — M-EXT 압력·동물 데이터와 일곱 계열 실제 확장 시험 단위 검증: 기준선228748값 차이0·OFF9요약·ON8시드 요약/명령8개 동일, 과거 저장4·core378·새 질병/포식자 실제 경로 통과. 창 UI284·팩40·격리M543·배율220 검사 통과; 전체 B 게시와 기존 시각·설정 사고 해결은 별개([검증](v8/mux/B_ECOLOGY_VERIFICATION.md), D37).
 
 - 2026-10-25 — M-EXT B6 자원 snapshot과 Food/Water/Sleep 도메인 추출: 전후 focused bridge51·decision21→22·통합128, 실제 renderer 일치 및 identity228748값 차이0·OFF9·ON요약/명령8개 동일. 제품2087해시 불변; 첫 clippy 실패 수정과 LSP 불가 ISS284 보존. 전체 B gate·게시 전([검증](v8/mux/B6_VERIFICATION.md), ADR0039/D38).
+
+- 2026-10-25 — M-EXT B4 정책 변경 전 관측·산술 사전등록([ADR0040](decisions/0040-measure-policy-changes-with-read-only-observers.md), D39). 보정8시드×48일의 제작1773건과 제어 cold2304행·craft32건 독립 재계산 일치; tick100/4000 저장·명령 동일성 확인. 최초 fixture ID가정·lint 실패 보존. 최종 identity228748차이0·OFF9·ON요약/명령8개·48일 관측OFF/ON·저장4000 동일. 최초 ON 입력 오류와 정확한 재실행 기록 보존; 홀드아웃 미실행·B 게시 대기([검증](v8/mux/B4_O_VERIFICATION.md)).

@@ -80,6 +80,8 @@ pub struct ColonyArgs {
     pub neighbours: String,
     /// Explicit automatic assistant opt-in; probes default to off.
     pub steward: bool,
+    /// Opt-in read-only B4 observer with externally verified metadata digest.
+    pub b4: Option<super::b4::Config>,
 }
 
 impl ColonyArgs {
@@ -99,9 +101,18 @@ impl ColonyArgs {
             story: "on".into(),
             neighbours: "on".into(),
             steward: false,
+            b4: None,
         };
+        let (mut observe, mut manifest, mut digest) = (false, None, None);
         let mut args = args.into_iter();
         while let Some(flag) = args.next() {
+            if flag == "--b4-observe" {
+                if observe {
+                    return Err("duplicate --b4-observe".into());
+                }
+                observe = true;
+                continue;
+            }
             if flag == "--check-determinism" {
                 parsed.check_determinism = true;
                 continue;
@@ -110,6 +121,16 @@ impl ColonyArgs {
                 .next()
                 .ok_or_else(|| format!("missing value for {flag}"))?;
             match flag.as_str() {
+                "--b4-manifest" => {
+                    if manifest.replace(PathBuf::from(value)).is_some() {
+                        return Err("duplicate --b4-manifest".into());
+                    }
+                }
+                "--b4-manifest-sha256" => {
+                    if digest.replace(value).is_some() {
+                        return Err("duplicate --b4-manifest-sha256".into());
+                    }
+                }
                 "--scene" if value == "colony" => {}
                 "--seeds" => {
                     let (a, b) = value
@@ -158,6 +179,14 @@ impl ColonyArgs {
                     .into(),
             ),
         }
+        parsed.b4 = match (observe, manifest, digest) {
+            (false, None, None) => None,
+            (true, Some(path), Some(hash)) => Some(super::b4::Config::load(&path, &hash)?),
+            _ => return Err(
+                "B4 needs --b4-observe, --b4-manifest PATH and --b4-manifest-sha256 HEX together"
+                    .into(),
+            ),
+        };
         Ok(parsed)
     }
 }
@@ -1687,19 +1716,33 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
     let mut twin = args
         .check_determinism
         .then(|| probe_world(seed, &args.story, &args.neighbours));
+    let mut b4 = args
+        .b4
+        .clone()
+        .map(|config| super::b4::B4Watch::new(&engine, config, args.days * DAY))
+        .transpose()?;
     let replay = script
         .iter()
         .any(|entry| entry.spec["source"].as_str() == Some("Steward"));
-    for e in std::iter::once(&mut engine).chain(twin.iter_mut()) {
+    for (index, e) in std::iter::once(&mut engine)
+        .chain(twin.iter_mut())
+        .enumerate()
+    {
         e.resources.steward.replay = replay;
         if args.steward && !replay {
-            submit(
-                e,
-                Command::SetSteward {
-                    on: true,
-                    scope: sim_core::colony::steward::StewardScope::All,
-                },
-            );
+            let command = Command::SetSteward {
+                on: true,
+                scope: sim_core::colony::steward::StewardScope::All,
+            };
+            let before = if index == 0 {
+                b4.as_ref().map(|watch| watch.before_command(e, &command))
+            } else {
+                None
+            };
+            let result = submit(e, command);
+            if let (Some(watch), Some(before)) = (b4.as_mut(), before) {
+                watch.after_command(e, before, &result);
+            }
         }
     }
     let total = args.days * DAY;
@@ -1755,7 +1798,11 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
                     }
                     continue;
                 }
+                let before = b4.as_ref().map(|watch| watch.before_command(&engine, &cmd));
                 let result = submit(&mut engine, cmd.clone());
+                if let (Some(watch), Some(before)) = (b4.as_mut(), before) {
+                    watch.after_command(&engine, before, &result);
+                }
                 if let Some(t) = twin.as_mut() {
                     if submit(t, cmd.clone()) != result {
                         return Err(format!(
@@ -1790,6 +1837,9 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
         if let Some(watch) = steward_watch.as_mut() {
             watch.before_tick(&engine);
         }
+        if let Some(watch) = b4.as_mut() {
+            watch.before_tick(&engine);
+        }
         let started = Instant::now();
         engine.tick();
         tick_ns.push(started.elapsed().as_nanos() as u64);
@@ -1814,6 +1864,10 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
             if first_bad.is_null() {
                 first_bad = json!({"tick": tick, "problem": problem});
             }
+        }
+        if let Some(watch) = b4.as_mut() {
+            watch.conservation(ledger_bad, reserve_bad);
+            watch.after_tick(&engine);
         }
         if hut_done_tick.is_none() && engine.resources.colony.tallies.huts_built > 0 {
             hut_done_tick = Some(tick);
@@ -1923,6 +1977,10 @@ fn run_seed(args: &ColonyArgs, script: &[ScriptEntry], seed: u64) -> Result<Seed
     summary["m4"] = knowledge.report(&engine);
     summary["m5"] = m5.report(&engine);
     summary["m55"] = m55.report(&engine);
+    if let Some(watch) = b4 {
+        summary["b4"] = serde_json::to_value(watch.report(&engine))
+            .map_err(|e| format!("B4 serialization: {e}"))?;
+    }
     if let Some(watch) = steward_watch {
         summary["mux"] = watch.report(&engine);
     }
@@ -2102,6 +2160,7 @@ mod tests {
             story: "on".into(),
             neighbours: "on".into(),
             steward: false,
+            b4: None,
         };
         run(&first).expect("scripted run");
         let replay = ColonyArgs {
@@ -2144,6 +2203,7 @@ mod tests {
             story: "on".into(),
             neighbours: "on".into(),
             steward: false,
+            b4: None,
         };
         run(&first).expect("scripted run");
         let replay = ColonyArgs {

@@ -7,6 +7,8 @@ tags `v7-final-sim` and `v7-final-art`.
 
 ## M-UX + REVIEW — 2026-10-25 (in progress)
 
+- Added (B4 O, unit verified): opt-in immutable probe observations, controlled apparel/craft fixtures, strict independent arithmetic scorer and frozen evaluation preregistration (ADR0040/D39). Eight calibration worlds complete48days; all1773 primary craft events reconcile, controlled2304cold rows/32paid craft finishes validate. Ordinary summaries, command logs and saves match B6 with observation OFF/ON at ticks100/4000. Final original identity/nine OFF/no-player-orders ON comparisons pass, as do final48-day observation OFF/ON and post-craft save equality. Held-out acceptance is NOT_CLAIMED; first ON input mismatch and corrected rerun remain recorded.
+
 - Changed (B6, unit verified): resource snapshot collection and basic Food/Water/Sleep consumption now live in cohesive child modules behind the original facades. Focused tests, rebuilt renderer agreement and fresh original identity/nine literal OFF/frozen Stage A ON comparisons pass; full Stage B gate remains pending. No performance improvement claimed.
 
 - Stage B core checkpoint `e90b7bb86` is committed with original identity, nine literal OFF summaries and frozen Stage A ON summary/eight logs identical; core372/save14 and historical continuation3 pass. It is not published. Stage A p13 gate3 completed35/35 and was published to both targets; its held-out failures remain unchanged.

@@ -62,3 +62,10 @@ M-UX 작업 중인 누적 기록. Stage C에서 V8-0 이후 모든 보고서·�
 
 | ISS-284 | B6 언어 서버 도구 연결 종료로 LSP 진단을 얻지 못함 | M-EXT B6 lsp/status·lsp/diagnostics: Transport closed | process | open | 실제 응답 보존; compiler·clippy·회귀 시험으로 검증을 계속하되 LSP clean으로 주장하지 않음. 도구 서버 복구는 이 제품 패스에서 미수행 | — |
 | ISS-285 | 자원 스냅숏 추출 파일에서 시험 모듈 뒤 production 항목이 남아 strict clippy 실패 | M-EXT B6 b6-clippy-first: items_after_test_module | process | fixed | 기존 시험 본문을 변경 없이 파일 끝으로 이동. 두 번째 strict clippy exit0·bridge51·fmt 통과; 첫 실패 로그 보존 | — |
+
+| ISS-286 | B4 제어 시험이 새 엔진 Agent ID 시작값을1로 가정함 | M-EXT O controlled-first, D39 | process | fixed | 실제 allocator는0부터 시작해288cold·32craft fixture가 무효로 실패. 공개 allocator로0을 예약하고 사전등록1–8 유지; second 실제 시험2통과, cold2304·paid craft32 VALID. 첫 실패·무효 원자료 보존. 독립 scorer35시험·보정1773craft/2304cold 재계산 및 최종 identity·9OFF·ON2 통과 | — |
+
+| ISS-287 | B4 관측기 모듈 순서와 내부 enum 표기가 fmt·strict clippy 실패 | M-EXT O o-fmt-first/o-clippy-first, D39 | process | fixed | 모듈 선언 정렬·동치 is_none_or·Bpt/Bpth 내부명과 명시적 serde 외부명 유지. 재검사 fmt·strict clippy·관측7시험 통과; 첫 실패 원문 보존 | — |
+
+| ISS-288 | B4 O의 steward ON 비교에 기준에 없던 M5.5 명령 스크립트를 추가함 | M-EXT O o-on1-differences.json, 2026-10-25 | process | fixed | 기존 기준은 플레이어 명령 없는 ON 실행인데 --commands를 추가해30882경로 차이 발생. 실패 출력·입력 구성·독립 감사 보존. 원래 no-script ON2에서 요약·명령8개 literal 동일; 소스·golden 변경 없음 | — |
+| ISS-289 | B4 O 첫 release 빌드를 저장소 루트에서 실행해 Cargo.toml을 찾지 못함 | M-EXT O o-probe-build-first.log | process | fixed | 소스 변경 없이 rust/에서 재실행해6.34초 빌드 성공, 최종 재빌드6.19초 exit0. 최초 작업 디렉터리 오류 로그 보존 | — |
